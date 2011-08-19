@@ -1,13 +1,13 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
-//  Copyright (c) 2006, mjackson
+//  Copyright (c) 2006, Michael A. Jackson
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
 //  This code was written under United States Air Force Contract number
 //                           FA8650-04-C-5229
 //
-///////////////////////////////////////////////////////////////////////////////
+
 #ifndef _WIN32DEFINES_H_
 #define _WIN32DEFINES_H_
 

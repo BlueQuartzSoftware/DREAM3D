@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,9 +28,13 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AIMPluginFrame.h"
+#include "DREAM3DPluginFrame.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
@@ -40,7 +45,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame::AIMPluginFrame(QWidget *parent) :
+DREAM3DPluginFrame::DREAM3DPluginFrame(QWidget *parent) :
 QFrame(parent),
 m_StatusBar(NULL)
 {
@@ -49,7 +54,7 @@ m_StatusBar(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMPluginFrame::~AIMPluginFrame()
+DREAM3DPluginFrame::~DREAM3DPluginFrame()
 {
 
 }
@@ -57,7 +62,7 @@ AIMPluginFrame::~AIMPluginFrame()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AIMPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit)
+bool DREAM3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLineEdit* lineEdit)
 {
   QFileInfo fileinfo(outFilePath);
   QDir parent (fileinfo.dir() );
@@ -76,7 +81,7 @@ bool AIMPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLineEdit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AIMPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
+bool DREAM3DPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
 //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
@@ -95,7 +100,7 @@ bool AIMPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AIMPluginFrame::setStatusBar(QStatusBar* statusBar)
+void DREAM3DPluginFrame::setStatusBar(QStatusBar* statusBar)
 {
   this->m_StatusBar = statusBar;
 }
@@ -103,7 +108,7 @@ void AIMPluginFrame::setStatusBar(QStatusBar* statusBar)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStatusBar* AIMPluginFrame::statusBar()
+QStatusBar* DREAM3DPluginFrame::statusBar()
 {
   return this->m_StatusBar;
 }
@@ -111,7 +116,7 @@ QStatusBar* AIMPluginFrame::statusBar()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AIMPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle)
+bool DREAM3DPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle)
 {
 
   if (le->text().isEmpty() == true)

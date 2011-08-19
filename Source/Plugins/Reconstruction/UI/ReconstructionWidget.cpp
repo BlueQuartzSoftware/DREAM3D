@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ReconstructionWidget.h"
@@ -53,29 +58,29 @@
 #include "DREAM3D/Common/PhaseType.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/Dream3DQtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
+#include "EbsdLib/QualityMetricFilter.h"
+#include "EbsdLib/H5EbsdVolumeReader.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+#include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
+#include "EbsdLib/HKL/CtfFields.h"
 
-#include "Reconstruction/EbsdSupport/H5EbsdVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5AngVolumeReader.h"
-#include "Reconstruction/EbsdSupport/H5CtfVolumeReader.h"
 
-#include "Reconstruction/UI/AngFilterFields.h"
-#include "Reconstruction/UI/CtfFilterFields.h"
+
 #include "Reconstruction/UI/QualityMetricTableModel.h"
-#include "Reconstruction/QualityMetricFilter.h"
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ReconstructionWidget::ReconstructionWidget(QWidget *parent) :
-AIMPluginFrame(parent),
+DREAM3DPluginFrame(parent),
 m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),
@@ -282,7 +287,7 @@ void ReconstructionWidget::setupGui()
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
+  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::Reconstruction::VisualizationVizFile.c_str() );
 
 
   m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
@@ -306,13 +311,13 @@ void ReconstructionWidget::checkIOFiles()
 {
   this->verifyPathExists(m_OutputDir->text(), this->m_OutputDir);
 
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::Reconstruction,m_, H5VoxelFile)
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction,m_, H5VoxelFile)
 
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , VisualizationVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DownSampledVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , HDF5GrainFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::Reconstruction, m_ , DxFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , PhFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , VisualizationVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , DownSampledVizFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , HDF5GrainFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , DxFile)
+  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::SyntheticBuilder, m_ , PhFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -423,9 +428,9 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     int size = h5Reader->getNumPhases();
 
     std::vector<std::string> phaseTypeStrings;
-    AIM::PhaseType::getPhaseTypeStrings(phaseTypeStrings);
-    std::vector<AIM::Reconstruction::PhaseType> phaseTypeEnums;
-    AIM::PhaseType::getPhaseTypeEnums(phaseTypeEnums);
+    DREAM3D::PhaseType::getPhaseTypeStrings(phaseTypeStrings);
+    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypeEnums;
+    DREAM3D::PhaseType::getPhaseTypeEnums(phaseTypeEnums);
 
     // Remove all the items
     phaseTypeList->clear();
@@ -433,7 +438,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     for (int i = 0; i < size; i++)
     {
 
-      phaseTypeList->addItem(AIM::PhaseType::PrimaryStr().c_str());
+      phaseTypeList->addItem(DREAM3D::PhaseType::PrimaryStr().c_str());
       QListWidgetItem* item = phaseTypeList->item(i);
       item->setSizeHint(QSize(50, 25));
       QComboBox* cb = new QComboBox(phaseTypeList);
@@ -502,13 +507,13 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     // Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
     {
-      AngFilterFields fields;
-      m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
+      AngFields fields;
+      m_QualityMetricTableModel->setPossibleFields(fields.getFilterFields<QStringList>());
     }
     else if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
     {
-      CtfFilterFields fields;
-      m_QualityMetricTableModel->setPossibleFields(fields.getFieldNames());
+      CtfFields fields;
+      m_QualityMetricTableModel->setPossibleFields(fields.getFilterFields<QStringList>());
     }
     // Set the ItemDelegate for the table.
     QAbstractItemDelegate* aid = m_QualityMetricTableModel->getItemDelegate();
@@ -566,7 +571,7 @@ void ReconstructionWidget::on_m_OutputDirBtn_clicked()
     if (verifyPathExists(outputFile, m_OutputDir) == true )
     {
       checkIOFiles();
-      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  AIM::Reconstruction::VisualizationVizFile.c_str() );
+      QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::Reconstruction::VisualizationVizFile.c_str() );
     }
   }
 }
@@ -684,15 +689,15 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   }
   SANITY_CHECK_INPUT(m_ , OutputDir)
 
-  std::vector<AIM::Reconstruction::PhaseType> phaseTypes(1, AIM::Reconstruction::UnknownPhaseType);
+  std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(1, DREAM3D::Reconstruction::UnknownPhaseType);
   int count = phaseTypeList->count();
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
     QListWidgetItem* item = phaseTypeList->item(i);
     QComboBox* cb = qobject_cast<QComboBox*> (phaseTypeList->itemWidget(item));
-    AIM::Reconstruction::PhaseType enPtValue = static_cast<AIM::Reconstruction::PhaseType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    if (enPtValue >= AIM::Reconstruction::UnknownPhaseType)
+    DREAM3D::Reconstruction::PhaseType enPtValue = static_cast<DREAM3D::Reconstruction::PhaseType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= DREAM3D::Reconstruction::UnknownPhaseType)
     {
       QString msg("The Phase Type for phase ");
 //      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary, Precipitate or Transformation.");
@@ -728,7 +733,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setMergeTwins(m_MergeTwins->isChecked() );
   m_Reconstruction->setFillinSample(m_FillinSample->isChecked() );
 
-  AIM::Reconstruction::AlignmentMethod alignmeth = static_cast<AIM::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
+  DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
   Ebsd::Orientation orientation = static_cast<Ebsd::Orientation>(m_Orientation->currentIndex());

@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
@@ -37,7 +43,9 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "TSLLib/AngPhase.h"
+#include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/AIMArray.hpp"
@@ -48,9 +56,8 @@
 
 #include "Reconstruction/ReconstructionFunc.h"
 
-#include "EbsdSupport/AbstractAngDataLoader.h"
-#include "EbsdSupport/AngDataLoader.h"
-#include "EbsdSupport/H5AngDataLoader.h"
+
+
 
 
 
@@ -80,24 +87,22 @@ int main(int argc, char **argv)
 
   ReconstructionFunc::Pointer m = ReconstructionFunc::New();
 
-  AbstractEbsdDataLoader::Pointer oimDataLoader = H5AngVolumeReader::New();
+  H5EbsdVolumeReader::Pointer oimDataLoader = H5AngVolumeReader::New();
   H5AngVolumeReader* h5io = dynamic_cast<H5AngVolumeReader*>(oimDataLoader.get());
   h5io->setFilename(m_H5AngFile);
 
-  // Read the Header
-  err = h5io->readZHeader(zStart, zEnd, m->resz);
-  h5io->setZStartIndex(zStart);
-  h5io->setZEndIndex(zEnd);
+  zStart = h5io->getZStart();
+  zEnd = h5io->getZEnd();
 
   // Get the dimensions
-  err = h5io->getSizeAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+  err = h5io->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
 
-  h5io->setZStartIndex(zStart);
-  h5io->setZEndIndex(zEnd);
-  h5io->setOrientation(Ang::NoOrientation);
+  h5io->setSliceStart(zStart);
+  h5io->setSliceEnd(zEnd);
+  h5io->setOrientation(Ebsd::NoOrientation);
 
-  AIM::Reconstruction::AlignmentMethod m_AlignmentMethod = AIM::Reconstruction::UnknownAlignmentMethod;
-  std::vector<AIM::Reconstruction::PhaseType> m_PhaseTypes;
+  DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
+  std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes;
   std::vector<float> precipFractions;
   std::vector<Ebsd::CrystalStructure> crystalStructures;
   std::vector<AngPhase::Pointer> phases = h5io->getPhases();
@@ -105,11 +110,11 @@ int main(int argc, char **argv)
   m_PhaseTypes.resize(phases.size() + 1);
   precipFractions.resize(phases.size() + 1);
   crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-  m_PhaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
+  m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
   precipFractions[0] = -1.0f;
   for(size_t i=0;i<phases.size();i++)
   {
-    int phaseID = phases[i]->getPhase();
+    int phaseID = phases[i]->getPhaseIndex();
     Ebsd::Ang::PhaseSymmetry symmetry = phases[i]->getSymmetry();
     Ebsd::CrystalStructure crystal_structure = Ebsd::UnknownCrystalStructure;
     if(symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = Ebsd::Cubic;
@@ -119,11 +124,14 @@ int main(int argc, char **argv)
     precipFractions[phaseID] = -1.0f;
   }
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
-                m->resx, m->resy, m->resz, 0, 0, 0, 0, 0, 0, 0,
-                crystalStructures, m_PhaseTypes, precipFractions,
-                m_AlignmentMethod);
+                m->resx, m->resy, m->resz,
+                0, 0, 0,
+                0, 0, crystalStructures,
+                m_PhaseTypes, precipFractions, m_AlignmentMethod);
   std::cout << "Loading EBSD Data...." << std::endl;
-  oimDataLoader->loadData(m.get());
+  std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;
+
+  err = h5io->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_QualityMetricFilters);
   m->initializeQuats();
 
   std::cout << "Writing VTK file" << std::endl;

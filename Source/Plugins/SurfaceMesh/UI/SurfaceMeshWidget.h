@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef _SURFACEMESHWIDGET_H_
@@ -37,19 +42,19 @@
 
 #include "ui_SurfaceMeshWidget.h"
 
-#include "QtSupport/AIMPluginFrame.h"
+#include "QtSupport/DREAM3DPluginFrame.h"
 #include "QSurfaceMesh.h"
 
 /**
  * @class SurfaceMeshWidget SurfaceMeshWidget.h Plugins/SurfaceMesh/UI/SurfaceMeshWidget.h
  * @brief This class represents the User Interface for the Surface Meshing module
- * of the AIMRepresentation program. The user interface subclasses QFrame which
+ * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 30, 2011
  * @version 1.0
  */
-class SurfaceMeshWidget : public AIMPluginFrame, private Ui::SurfaceMeshWidget
+class SurfaceMeshWidget : public DREAM3DPluginFrame, private Ui::SurfaceMeshWidget
 {
   Q_OBJECT
 

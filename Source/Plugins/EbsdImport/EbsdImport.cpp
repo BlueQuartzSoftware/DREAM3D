@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,8 +28,12 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "OIMImport.h"
+#include "EbsdImport.h"
 
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/MXAFileInfo.h"
@@ -41,16 +46,16 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
-class OIMImportFunc
+class EbsdImportFunc
 {
   public:
-    MXA_SHARED_POINTERS(OIMImportFunc);
-    MXA_STATIC_NEW_MACRO(OIMImportFunc);
+    MXA_SHARED_POINTERS(EbsdImportFunc);
+    MXA_STATIC_NEW_MACRO(EbsdImportFunc);
 
-    virtual ~OIMImportFunc() {
+    virtual ~EbsdImportFunc() {
       if (*m_FileId > 0)
       {
-        std::cout << "OIMImportFunc Closing HDF5 File" << std::endl;
+        std::cout << "EbsdImportFunc Closing HDF5 File" << std::endl;
         H5Utilities::closeFile(*m_FileId);
       }
     }
@@ -58,18 +63,18 @@ class OIMImportFunc
     hid_t* m_FileId;
 
 protected:
-  OIMImportFunc() :m_FileId(NULL) {}
+  EbsdImportFunc() :m_FileId(NULL) {}
 
 private:
-  OIMImportFunc(const OIMImportFunc&); // Copy Constructor Not Implemented
-  void operator=(const OIMImportFunc&); // Operator '=' Not Implemented
+  EbsdImportFunc(const EbsdImportFunc&); // Copy Constructor Not Implemented
+  void operator=(const EbsdImportFunc&); // Operator '=' Not Implemented
 
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OIMImport::OIMImport( ) :
+EbsdImport::EbsdImport( ) :
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_ZResolution(1.0)
@@ -79,19 +84,19 @@ m_ZResolution(1.0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OIMImport::~OIMImport()
+EbsdImport::~EbsdImport()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OIMImport::execute()
+void EbsdImport::execute()
 {
   herr_t err = 0;
   hid_t fileId = -1;
   // This is just a dummy variable to keep the macros happy
-  OIMImportFunc::Pointer m = OIMImportFunc::New();
+  EbsdImportFunc::Pointer m = EbsdImportFunc::New();
   m->m_FileId = &fileId;
 
   // Start the Benchmark clock
@@ -99,11 +104,11 @@ void OIMImport::execute()
 
   if (m_OutputFile.empty() == true)
   {
-    std::string s("OIMImport Error: The output file was not set correctly or is empty. The current value is '");
+    std::string s("EbsdImport Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");
     updateProgressAndMessage(s.c_str(), 100);
     err = -1;
-    CHECK_FOR_ERROR(OIMImportFunc, "OIMImport input filename was empty", err)
+    CHECK_FOR_ERROR(EbsdImportFunc, "EbsdImport input filename was empty", err)
     return;
   }
   // Create File
@@ -111,17 +116,17 @@ void OIMImport::execute()
   if (fileId < 0) {
     setCancel(true);
     updateProgressAndMessage("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.", 100);
-    CHECK_FOR_ERROR(OIMImportFunc, "Output HDF5 file could not be created. Check permissions on parent folder??", err)
+    CHECK_FOR_ERROR(EbsdImportFunc, "Output HDF5 file could not be created. Check permissions on parent folder??", err)
     return;
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Start Index Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z Start Index Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z End Index Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z End Index Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Z Resolution Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z Resolution Scalar", err)
 
   EbsdImporter::Pointer fileImporter;
 
@@ -131,13 +136,13 @@ void OIMImport::execute()
   if (ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer );
-    CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
+    CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Manufacturer Scalar", err)
     fileImporter = H5AngImporter::New();
   }
   else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer );
-    CHECK_FOR_ERROR(OIMImportFunc, "Could not write the Manufacturer Scalar", err)
+    CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Manufacturer Scalar", err)
     fileImporter = H5CtfImporter::New();
   }
   else
@@ -193,21 +198,21 @@ void OIMImport::execute()
 
     if (err < 0)
     {
-      CHECK_FOR_ERROR(OIMImportFunc, "Could not write dataset for slice.", err)
+      CHECK_FOR_ERROR(EbsdImportFunc, "Could not write dataset for slice.", err)
     }
     indices.push_back(z);
     ++z;
-    CHECK_FOR_CANCELED(OIMImportFunc, "OIMImport was Canceled", import_data)
+    CHECK_FOR_CANCELED(EbsdImportFunc, "EbsdImport was Canceled", import_data)
   }
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, xDim);
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the XPoints Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XPoints Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, yDim);
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the YPoints Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the YPoints Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the XResolution Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XResolution Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
-  CHECK_FOR_ERROR(OIMImportFunc, "Could not write the YResolution Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the YResolution Scalar", err)
 
   if (false == getCancel())
   {
@@ -218,7 +223,7 @@ void OIMImport::execute()
   }
   err = H5Utilities::closeFile(fileId);
   // err = H5Fclose(fileId);
-  m = OIMImportFunc::NullPointer();
+  m = EbsdImportFunc::NullPointer();
   updateProgressAndMessage("Import Complete", 100);
 }
 

@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "H5ReconStatsReader.h"
@@ -77,13 +82,13 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 std::string H5ReconStatsReader::getDistributionType(int phase,
                                                     const std::string &group,
-                                                    AIM::Reconstruction::DistributionType &dt)
+                                                    DREAM3D::Reconstruction::DistributionType &dt)
 {
   herr_t err = 0;
 
   std::string index = StringUtils::numToString(phase);
 
-  std::string path = AIM::HDF5::Reconstruction + "/" + index + "/" + group;
+  std::string path = DREAM3D::HDF5::Reconstruction + "/" + index + "/" + group;
   hid_t fileId = H5Utilities::openFile(m_FileName, false);\
 
   if (fileId < 0)
@@ -91,7 +96,7 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
     return std::string();
   }
   std::string data;
-  err = H5Lite::readStringAttribute(fileId, path, AIM::HDF5::DistributionType, data);
+  err = H5Lite::readStringAttribute(fileId, path, DREAM3D::HDF5::DistributionType, data);
 
   err = H5Utilities::closeFile(fileId);
   if (err < 0)
@@ -99,21 +104,21 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
     data.clear();
   }
 
-  if (data.compare(AIM::HDF5::BetaDistribution) == 0)
+  if (data.compare(DREAM3D::HDF5::BetaDistribution) == 0)
   {
-    dt = AIM::Reconstruction::Beta;
+    dt = DREAM3D::Reconstruction::Beta;
   }
-  else if (data.compare(AIM::HDF5::LogNormalDistribution) == 0)
+  else if (data.compare(DREAM3D::HDF5::LogNormalDistribution) == 0)
   {
-    dt = AIM::Reconstruction::LogNormal;
+    dt = DREAM3D::Reconstruction::LogNormal;
   }
-  else if (data.compare(AIM::HDF5::PowerLawDistribution) == 0)
+  else if (data.compare(DREAM3D::HDF5::PowerLawDistribution) == 0)
   {
-    dt = AIM::Reconstruction::Power;
+    dt = DREAM3D::Reconstruction::Power;
   }
   else
   {
-    dt = AIM::Reconstruction::UnknownDistributionType;
+    dt = DREAM3D::Reconstruction::UnknownDistributionType;
   }
   return data;
 }
@@ -129,7 +134,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(fileId, m_FileName)
-  OPEN_RECONSTRUCTION_GROUP(reconGid, AIM::HDF5::Reconstruction.c_str(), fileId)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Reconstruction.c_str(), fileId)
 
   // Get a list of all the groups
   std::list<std::string> names;
@@ -146,7 +151,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
     phases.push_back(i);
     hid_t gid = H5Gopen(reconGid,(*pString).c_str(), H5P_DEFAULT);
     unsigned int xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);
-    err = H5Lite::readScalarDataset(gid, AIM::HDF5::CrystalStructure, xtal);
+    err = H5Lite::readScalarDataset(gid, DREAM3D::HDF5::CrystalStructure, xtal);
     if (err < 0)
     {
       xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);

@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "MicrostructureStatistics.h"
@@ -79,11 +84,11 @@ void MicrostructureStatistics::execute()
   m = MicrostructureStatisticsFunc::New();
 
 
-  MAKE_OUTPUT_FILE_PATH ( graindataFile, AIM::MicroStats::GrainDataFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, AIM::MicroStats::DeformationStatsFile);
-  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, AIM::MicroStats::IPFDeformVTKFile);
-  MAKE_OUTPUT_FILE_PATH ( reconVisFile, AIM::Reconstruction::VisualizationVizFile);
-  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, AIM::MicroStats::H5StatisticsFile)
+  MAKE_OUTPUT_FILE_PATH ( graindataFile, DREAM3D::MicroStats::GrainDataFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformStatsFile, DREAM3D::MicroStats::DeformationStatsFile);
+  MAKE_OUTPUT_FILE_PATH ( reconDeformIPFFile, DREAM3D::MicroStats::IPFDeformVTKFile);
+  MAKE_OUTPUT_FILE_PATH ( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
+  MAKE_OUTPUT_FILE_PATH ( hdf5ResultsFile, DREAM3D::MicroStats::H5StatisticsFile)
 
 
   updateProgressAndMessage("Reading the Voxel Dimensions and Resolution", 2);
@@ -234,7 +239,7 @@ void MicrostructureStatistics::execute()
   /* ********** This section writes the VTK files for visualization *** */
   if (m_WriteVtkFile) {
     updateProgressAndMessage(("Writing VTK Visualization File"), 98);
-    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, AIM::Reconstruction::VisualizationVizFile);
+    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile);
 
     // Setup all the classes that will help us write the Scalars to the VTK File
     std::vector<VtkScalarWriter*> scalarsToWrite;

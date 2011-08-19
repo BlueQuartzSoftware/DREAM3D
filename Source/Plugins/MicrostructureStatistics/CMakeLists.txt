@@ -36,13 +36,13 @@ set (MicrostructureStatisticsPlugin_UI_HDRS
     ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsWidget.h
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.h
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
 set (MicrostructureStatisticsPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/MicrostructureStatisticsWidget.cpp
-    ${PROJECT_CODE_DIR}/QtSupport/AIMPluginFrame.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
 
 # -- Run MOC and UIC on the necessary files   

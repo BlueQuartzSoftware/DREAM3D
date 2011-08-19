@@ -1,13 +1,38 @@
-////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-//  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
-//  All rights reserved.
-//  BSD License: http://www.opensource.org/licenses/bsd-license.html
-//
-// This code was partly written under US Air Force Contract FA8650-07-D-5800
-//
-///////////////////////////////////////////////////////////////////////////////
+/* ============================================================================
+ * Copyright (c) 2009, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2009, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "GrainGeneratorFunc.h"
 
@@ -72,15 +97,15 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   m_OrientatioOps.push_back(m_OrthoOps.get());
 
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
   m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
   m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
   m_CylinderOps = DREAM3D::CylinderOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
   m_UnknownShapeOps = DREAM3D::ShapeOps::New();
-  m_ShapeOps[AIM::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
 
 //  voxels.reset(NULL);
   GGseed = MXA::getMilliSeconds();
@@ -159,7 +184,7 @@ void GrainGeneratorFunc::initializeArrays(std::vector<Ebsd::CrystalStructure> st
   // Initialize the first slot in these arrays since they should never be used
   crystruct[0] = Ebsd::UnknownCrystalStructure;
   phasefraction[0] = 0.0;
-  phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
+  phaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
   pptFractions[0] = -1.0;
 
   mindiameter.resize(size+1);
@@ -343,59 +368,59 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 
     /* Read the PhaseFraction Value*/
       std::vector<float> pFraction;
-    err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseFraction, pFraction);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
     phasefraction[phase] = pFraction.front();
 
     std::vector<unsigned int> phasetypes;
-    err = h5io->readStatsDataset(phase, AIM::HDF5::PhaseType, phasetypes);
-    phaseType[phase] = static_cast<AIM::Reconstruction::PhaseType>(phasetypes[0]);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
+    phaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType>(phasetypes[0]);
 
     // If the Phase Type is Precipitate then we need the pptFraction on Boundary
-    if (phaseType[phase] == AIM::Reconstruction::PrecipitatePhase)
+    if (phaseType[phase] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
       float f = -1.0f;
-      err = h5io->readScalarAttribute(phase, AIM::HDF5::PhaseType, AIM::HDF5::PrecipitateBoundaryFraction, f);
+      err = h5io->readScalarAttribute(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, f);
       if (err < 0) {
         f = -1.0f;
       }
       pptFractions[phase] = f;
     }
-    if (phaseType[phase] != AIM::Reconstruction::PrecipitatePhase) pptFractions[phase] = -1.0;
+    if (phaseType[phase] != DREAM3D::Reconstruction::PrecipitatePhase) pptFractions[phase] = -1.0;
 
     /* Read the BinNumbers data set */
     std::vector<float> bins;
-    err = h5io->readStatsDataset(phase, AIM::HDF5::BinNumber, bins);
-    CHECK_STATS_READ_ERROR(err, AIM::HDF5::Reconstruction, AIM::HDF5::BinNumber)
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::BinNumber, bins);
+    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::BinNumber)
     numdiameterbins[phase] = bins.size();
     size_t nBins = bins.size();
 
     /* Read the Grain_Diameter_Info Data */
-    err = h5io->readStatsDataset(phase, AIM::HDF5::Grain_Diameter_Info, grainDiamInfo);
-    CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Diameter_Info)
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
+    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Diameter_Info)
 
     binstepsize[phase] = grainDiamInfo[0];
     maxdiameter[phase]  = grainDiamInfo[1];
     mindiameter[phase] = grainDiamInfo[2];
 
     /* Read the Grain_Size_Distribution Data */
-    err = h5io->readStatsDataset(phase, AIM::HDF5::Grain_Size_Distribution, double_data);
-    CHECK_STATS_READ_ERROR(err,  AIM::HDF5::Reconstruction, AIM::HDF5::Grain_Size_Distribution)
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
+    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Size_Distribution)
     avgdiam[phase] = double_data[0];
     sddiam[phase] = double_data[1];
 
-    AIM::Reconstruction::DistributionType dt;
+    DREAM3D::Reconstruction::DistributionType dt;
     std::string disType;
 
     /* Read the Shape Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVBoverA_Distributions, bovera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVCoverA_Distributions, covera, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVCoverB_Distributions, coverb, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, bovera, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions, covera, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions, coverb, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
 
     /* Read the Omega3 Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVOmega3_Distributions, omega3, AIM::Reconstruction::Beta, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions, omega3, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
 
     /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
-    READ_3_COLUMN_STATS_DATA(err, phase, phase, AIM::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, AIM::Reconstruction::Power, AIM::HDF5::Alpha, AIM::HDF5::Beta, AIM::HDF5::Exp_k, AIM::HDF5::PowerLawColumnCount);
+    READ_3_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, DREAM3D::Reconstruction::Power, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::Exp_k, DREAM3D::HDF5::PowerLawColumnCount);
   }
   return err;
 }
@@ -429,10 +454,10 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   {
     totaldensity = 0.0;
       phase = phases[i];
-    err = h5io->readStatsDataset(phase, AIM::HDF5::AxisOrientation, density);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
     if (err < 0)
     {
-    GGF_CHECK_READ_ERROR(readAxisOrientationData, AIM::HDF5::AxisOrientation)
+    GGF_CHECK_READ_ERROR(readAxisOrientationData, DREAM3D::HDF5::AxisOrientation)
     //FIXME: This should probably return an ERROR because nothing was read
     return 10;
     }
@@ -470,10 +495,10 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   for(size_t i = 0; i< size ;i++)
   {
       phase = phases[i];
-    err = h5io->readStatsDataset(phase, AIM::HDF5::ODF, density);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::ODF, density);
     if (err < 0)
     {
-    GGF_CHECK_READ_ERROR(readODFData, AIM::HDF5::ODF)
+    GGF_CHECK_READ_ERROR(readODFData, DREAM3D::HDF5::ODF)
     //FIXME: This should probably return an ERROR because nothing was read
     return 10;
     }
@@ -513,10 +538,10 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   for(size_t i = 0; i< size ;i++)
   {
       phase = phases[i];
-    err = h5io->readStatsDataset(phase, AIM::HDF5::MisorientationBins, density);
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::MisorientationBins, density);
     if (err < 0)
     {
-    GGF_CHECK_READ_ERROR(readMisorientationData, AIM::HDF5::MisorientationBins)
+    GGF_CHECK_READ_ERROR(readMisorientationData, DREAM3D::HDF5::MisorientationBins)
      //FIXME: This should probably return an ERROR because nothing was read
     return 10;
     }
@@ -542,7 +567,7 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
 
 void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 {
-  AIM_RANDOMNG_NEW_SEEDED(GGseed)
+  DREAM3D_RANDOMNG_NEW_SEEDED(GGseed)
 
   int good = 0;
   float r1 = 1;
@@ -557,8 +582,8 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   while(volgood == 0)
   {
     volgood = 1;
-    u = rg.Random();
-    diam = rg.RandNorm(avgdiam[phase],sddiam[phase]);
+    u = rg.genrand_res53();
+    diam = rg.genrand_norm(avgdiam[phase],sddiam[phase]);
     diam = exp(diam);
     if(diam >= maxdiameter[phase]) volgood = 0;
     if(diam < mindiameter[phase]) volgood = 0;
@@ -575,7 +600,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
       a1 = bovera[phase][diameter-1][0];
       b1 = bovera[phase][diameter-1][1];
     }
-    r2 = rg.RandBeta(a1,b1);
+    r2 = rg.genrand_beta(a1,b1);
     a2 = covera[phase][diameter][0];
     b2 = covera[phase][diameter][1];
     if(a2 == 0)
@@ -583,7 +608,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
       a2 = covera[phase][diameter-1][0];
       b2 = covera[phase][diameter-1][1];
     }
-    r3 = rg.RandBeta(a2,b2);
+    r3 = rg.genrand_beta(a2,b2);
     float cob = r3/r2;
     a3 = coverb[phase][diameter][0];
     b3 = coverb[phase][diameter][1];
@@ -593,12 +618,12 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
       b3 = coverb[phase][diameter-1][1];
     }
     float prob = ((gamma((a3+b3))/(gamma(a3)*gamma(b3)))*(powf(cob,(a3-1)))*(powf((1-cob),(b3-1))));
-    float check = rg.Random();
+    float check = rg.genrand_res53();
     if(prob > check) good = 1;
     if(cob > 1) good = 0;
 	good = 1;
   }
-  float random = rg.Random();
+  float random = rg.genrand_res53();
   int bin=0;
   for(int i=0;i<(36*36*36);i++)
   {
@@ -608,7 +633,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   m_OrientatioOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float m = omega3[phase][diameter][0];
   float s = omega3[phase][diameter][1];
-  float omega3 = rg.RandBeta(m,s);
+  float omega3 = rg.genrand_beta(m,s);
   m_Grains[gnum]->volume = vol;
   m_Grains[gnum]->equivdiameter = diam;
   m_Grains[gnum]->radius1 = r1;
@@ -626,7 +651,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 
 void  GrainGeneratorFunc::insert_grain(size_t gnum)
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   float dist;
 //  float Nvalue = 0;
@@ -658,11 +683,11 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   m_Grains[gnum]->planelist = new std::vector<int>(0);}
 
 
-  AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
 
 
   // init any values for each of the Shape Ops
-  for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
     (*ops).second->init();
   }
@@ -751,7 +776,7 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 
 void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   float dist;
 //  float Nvalue = 0;
@@ -775,10 +800,10 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float covera = m_Grains[gnum]->radius3;
   float omega3 = m_Grains[gnum]->omega3;
   float radcur1 = 1;
-  AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[gnum]->phase];
 
   // init any values for each of the Shape Ops
-  for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
     (*ops).second->init();
   }
@@ -1287,7 +1312,7 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
 
 void  GrainGeneratorFunc::pack_grains()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   totalvol = 0;
   float change1, change2, change3;
@@ -1304,7 +1329,7 @@ void  GrainGeneratorFunc::pack_grains()
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType.size();++i)
   {
-    if(phaseType[i] == AIM::Reconstruction::PrimaryPhase)
+    if(phaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
     {
     primaryphases.push_back(i);
     primaryphasefractions.push_back(phasefraction[i]);
@@ -1328,7 +1353,7 @@ void  GrainGeneratorFunc::pack_grains()
   while (currentvol < totalvol)
   {
     GGseed++;
-    random = rg.Random();
+    random = rg.genrand_res53();
     for (size_t j = 0; j < primaryphases.size();++j)
     {
       if (random < primaryphasefractions[j])
@@ -1395,9 +1420,9 @@ void  GrainGeneratorFunc::pack_grains()
   insert_grain(i);
   for(int iter=0;iter<10;iter++)
   {
-    xc = rg.Random() * (xpoints * resx);
-    yc = rg.Random() * (ypoints * resy);
-    zc = rg.Random() * (zpoints * resz);
+    xc = rg.genrand_res53() * (xpoints * resx);
+    yc = rg.genrand_res53() * (ypoints * resy);
+    zc = rg.genrand_res53() * (zpoints * resz);
     move_grain(i, xc, yc, zc);
       currentfillingerror = check_fillingerror(i, -1000);
     if(currentfillingerror < bestcurrentfillingerror)
@@ -1435,7 +1460,7 @@ void  GrainGeneratorFunc::pack_grains()
     newgrain = m_Grains.size();
     m_Grains.resize(newgrain+1);
     m_Grains[newgrain] = Grain::New();
-      random = rg.Random();
+      random = rg.genrand_res53();
       for (size_t j = 0; j < primaryphases.size();++j)
       {
         if (random < primaryphasefractions[j])
@@ -1446,9 +1471,9 @@ void  GrainGeneratorFunc::pack_grains()
       }
       generate_grain(newgrain, phase);
     GGseed++;
-    xc = rg.Random() * (xpoints * resx);
-    yc = rg.Random() * (ypoints * resy);
-    zc = rg.Random() * (zpoints * resz);
+    xc = rg.genrand_res53() * (xpoints * resx);
+    yc = rg.genrand_res53() * (ypoints * resy);
+    zc = rg.genrand_res53() * (zpoints * resz);
     m_Grains[newgrain]->centroidx = xc;
     m_Grains[newgrain]->centroidy = yc;
     m_Grains[newgrain]->centroidz = zc;
@@ -1476,7 +1501,7 @@ void  GrainGeneratorFunc::pack_grains()
   // this option removes a grain
     if (option == 1)
     {
-    size_t random = int(rg.Random() * m_Grains.size());
+    size_t random = int(rg.genrand_res53() * m_Grains.size());
       if (random == 0) random = 1;
       if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(-1000, random);
       if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(-1000, random);
@@ -1497,12 +1522,12 @@ void  GrainGeneratorFunc::pack_grains()
   // this option removes one grain and adds another grain
     if (option == 2)
     {
-    size_t random1 = int(rg.Random() * m_Grains.size());
+    size_t random1 = int(rg.genrand_res53() * m_Grains.size());
       if (random1 == 0) random1 = 1;
     newgrain = m_Grains.size();
     m_Grains.resize(newgrain+1);
     m_Grains[newgrain] = Grain::New();
-      random = rg.Random();
+      random = rg.genrand_res53();
       for (size_t j = 0; j < primaryphases.size();++j)
       {
         if (random < primaryphasefractions[j])
@@ -1513,9 +1538,9 @@ void  GrainGeneratorFunc::pack_grains()
       }
       generate_grain(newgrain, phase);
     GGseed++;
-    xc = rg.Random() * (xpoints * resx);
-    yc = rg.Random() * (ypoints * resy);
-    zc = rg.Random() * (zpoints * resz);
+    xc = rg.genrand_res53() * (xpoints * resx);
+    yc = rg.genrand_res53() * (ypoints * resy);
+    zc = rg.genrand_res53() * (zpoints * resz);
     m_Grains[newgrain]->centroidx = xc;
     m_Grains[newgrain]->centroidy = yc;
     m_Grains[newgrain]->centroidz = zc;
@@ -1545,12 +1570,12 @@ void  GrainGeneratorFunc::pack_grains()
   // this option removes a grain and replaces it with another grain at the same centroid
     if (option == 3)
     {
-      size_t random1 = int(rg.Random() * m_Grains.size());
+      size_t random1 = int(rg.genrand_res53() * m_Grains.size());
       if (random1 == 0) random1 = 1;
     newgrain = m_Grains.size();
     m_Grains.resize(newgrain+1);
     m_Grains[newgrain] = Grain::New();
-      random = rg.Random();
+      random = rg.genrand_res53();
       for (size_t j = 0; j < primaryphases.size();++j)
       {
         if (random < primaryphasefractions[j])
@@ -1677,10 +1702,10 @@ void GrainGeneratorFunc::assign_voxels()
     zc = m_Grains[i]->centroidz;
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    AIM::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
+    DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
 
     // init any values for each of the Shape Ops
-    for (std::map<AIM::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
       (*ops).second->init();
     }
@@ -1915,7 +1940,7 @@ void GrainGeneratorFunc::assign_voxels()
 }
 void  GrainGeneratorFunc::assign_eulers()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
  // int gnum = 0;
   int numbins = 0;
@@ -1933,7 +1958,7 @@ void  GrainGeneratorFunc::assign_eulers()
   }
   for(size_t i=1;i<m_Grains.size();i++)
   {
-    random = rg.Random();
+    random = rg.genrand_res53();
     choose = 0;
     totaldensity = 0;
     phase = m_Grains[i]->phase;
@@ -2177,7 +2202,7 @@ void  GrainGeneratorFunc::fillin_precipitates()
 
 void  GrainGeneratorFunc::place_precipitates()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
@@ -2192,7 +2217,7 @@ void  GrainGeneratorFunc::place_precipitates()
   double totalprecipitatefractions = 0.0;
   for (size_t i = 1; i < phaseType.size();++i)
   {
-    if(phaseType[i] == AIM::Reconstruction::PrecipitatePhase)
+    if(phaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
 	    precipitatephases.push_back(i);
 	    precipitatephasefractions.push_back(phasefraction[i]);
@@ -2208,7 +2233,7 @@ void  GrainGeneratorFunc::place_precipitates()
   while(totalprecipvol < totalvol*totalprecipitatefractions)
   {
     GGseed++;
-    random = rg.Random();
+    random = rg.genrand_res53();
     for (size_t j = 0; j < precipitatephases.size();++j)
     {
       if (random < precipitatephasefractions[j])
@@ -2221,10 +2246,10 @@ void  GrainGeneratorFunc::place_precipitates()
   m_Grains[currentnumgrains] = Grain::New();
     generate_grain(currentnumgrains, phase);
   precipboundaryfraction = pptFractions[phase];
-  random = rg.Random();
+  random = rg.genrand_res53();
   if(random <= precipboundaryfraction)
   {
-    random2 = int(rg.Random()*double(totalpoints-1));
+    random2 = int(rg.genrand_res53()*double(totalpoints-1));
     while(surfacevoxels[random2] == 0 || grain_indicies[random2] > numprimarygrains)
     {
       random2++;
@@ -2233,7 +2258,7 @@ void  GrainGeneratorFunc::place_precipitates()
   }
   else if(random > precipboundaryfraction)
   {
-    random2 = rg.Random()*(totalpoints-1);
+    random2 = rg.genrand_res53()*(totalpoints-1);
     while(surfacevoxels[random2] != 0 || grain_indicies[random2] > numprimarygrains)
     {
       random2++;
@@ -2283,7 +2308,7 @@ void  GrainGeneratorFunc::place_precipitates()
 
 void GrainGeneratorFunc::adjust_boundaries()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   int neighpoints[6];
   neighpoints[0] = -xpoints*ypoints;
@@ -2329,13 +2354,13 @@ void GrainGeneratorFunc::adjust_boundaries()
     while (good == 0)
     {
       good = 1;
-      selectedgrain = int(rg.Random() * m_Grains.size());
+      selectedgrain = int(rg.genrand_res53() * m_Grains.size());
       if (selectedgrain >= m_Grains.size()) selectedgrain = m_Grains.size()-1;
       if (selectedgrain == 0) selectedgrain = 1;
       if (m_Grains[selectedgrain]->surfacegrain > 0) good = 0;
     }
     growth = 1;
-    random = rg.Random();
+    random = rg.genrand_res53();
     if(random < 0.5) growth = -1;
     nucleus = 0;
     count = 0;
@@ -2650,7 +2675,7 @@ void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vec
 
 void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   float random;
   int good;
@@ -2676,7 +2701,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
   while (good == 0)
   {
     good = 1;
-    selectedgrain1 = int(rg.Random() * m_Grains.size());
+    selectedgrain1 = int(rg.genrand_res53() * m_Grains.size());
     if (selectedgrain1 == 0) selectedgrain1 = 1;
     if (selectedgrain1 == m_Grains.size()) selectedgrain1 = m_Grains.size() - 1;
     if (m_Grains[selectedgrain1]->surfacegrain > 0) good = 0;
@@ -2688,7 +2713,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
   OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
   int phase = m_Grains[selectedgrain1]->phase;
   g1odfbin = m_OrientatioOps[crystruct[phase]]->getOdfBin(r1, r2, r3);
-  random = rg.Random();
+  random = rg.genrand_res53();
   int choose = 0;
   totaldensity = 0;
   for (int i = 0; i < numbins; i++)
@@ -2752,7 +2777,7 @@ void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, flo
 
 void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   int good = 0;
   float deltaerror;
@@ -2779,10 +2804,10 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
   while (good == 0)
   {
     good = 1;
-    selectedgrain1 = int(rg.Random() * m_Grains.size());
+    selectedgrain1 = int(rg.genrand_res53() * m_Grains.size());
     if (selectedgrain1 == 0) selectedgrain1 = 1;
     if (selectedgrain1 == m_Grains.size()) selectedgrain1 = m_Grains.size() - 1;
-    selectedgrain2 = int(rg.Random() * m_Grains.size());
+    selectedgrain2 = int(rg.genrand_res53() * m_Grains.size());
     if (selectedgrain2 == 0) selectedgrain2 = 1;
     if (selectedgrain2 == m_Grains.size()) selectedgrain2 = m_Grains.size() - 1;
     if (m_Grains[selectedgrain1]->surfacegrain > 0 || m_Grains[selectedgrain2]->surfacegrain > 0) good = 0;
@@ -2917,7 +2942,7 @@ void GrainGeneratorFunc::switchOrientations( int &badtrycount, int &numbins, flo
 
 void GrainGeneratorFunc::matchCrystallography()
 {
-  AIM_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW()
 
   int numbins = 0;
 
@@ -2945,7 +2970,7 @@ void GrainGeneratorFunc::matchCrystallography()
     }
     iterations++;
     badtrycount++;
-    random = rg.Random();
+    random = rg.genrand_res53();
 
     if(random < 0.5)  // SwapOutOrientation
     {
@@ -3056,9 +3081,9 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
   ofstream outFile;
   outFile.open(filename.c_str());
   outFile << m_Grains.size() << std::endl;
-  char space = AIM::GrainData::Delimiter;
-  outFile << AIM::GrainData::GrainID  << space
-          << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << std::endl;
+  char space = DREAM3D::GrainData::Delimiter;
+  outFile << DREAM3D::GrainData::GrainID  << space
+          << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << std::endl;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     outFile << i << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 << endl;
@@ -3070,12 +3095,12 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
   ofstream outFile;
   outFile.open(filename.c_str());
-  char space = AIM::GrainData::Delimiter;
+  char space = DREAM3D::GrainData::Delimiter;
   outFile << m_Grains.size() << std::endl;
-  outFile << AIM::GrainData::GrainID  << space
-      << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2 << space
-      << AIM::GrainData::EquivDiam << space
-      << AIM::GrainData::B_Over_A << space << AIM::GrainData::C_Over_A << space << AIM::GrainData::Omega3 << std::endl;
+  outFile << DREAM3D::GrainData::GrainID  << space
+      << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
+      << DREAM3D::GrainData::EquivDiam << space
+      << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3 << std::endl;
 
   for (size_t i = 1; i < m_Grains.size(); i++)
   {

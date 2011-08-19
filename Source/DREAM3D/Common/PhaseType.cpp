@@ -1,15 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
 //  Copyright (c) 2011, Michael A. Jackson. BlueQuartz Software
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
 //
-///////////////////////////////////////////////////////////////////////////////
+
 
 #include "PhaseType.h"
 
-using namespace AIM;
+using namespace DREAM3D;
 
 PhaseType::PhaseType() {}
 PhaseType::~PhaseType() {}

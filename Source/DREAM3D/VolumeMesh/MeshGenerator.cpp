@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 // Broderick-Groeber Diagram Maker.cpp : Defines the entry point for the console application.
@@ -98,7 +103,7 @@ float globalvolmeshvol = 0.0f;
 float globalsurfmeshvol = 0.0f;
 float avgarea = 0.0f;
 int32_t seeder = time(0);
-AIMRandomNG rg;
+DREAM3DRandom rg;
 }
 
 
@@ -1451,7 +1456,7 @@ void create_finalnodesandtriangles()
     if (originalnode[i].nodekilled != 1)
     {
       originalnode[i].set_finalnumber(count);
-      float random1 = 2.0f * (rg.Random() - 0.5);
+      float random1 = 2.0f * (rg.genrand_res53() - 0.5);
       float x = originalnode[i].xc;
       float y = originalnode[i].yc;
       float z = originalnode[i].zc;
@@ -2037,9 +2042,9 @@ void make_nodes(int iter)
   int grainnodecount = nodesvector[iter].size();
   while (grainnodecount < 3500)
   {
-    float xp = rg.Random();
-    float yp = rg.Random();
-    float zp = rg.Random();
+    float xp = rg.genrand_res53();
+    float yp = rg.genrand_res53();
+    float zp = rg.genrand_res53();
     int x = xp / resx;
     int y = yp / resy;
     int z = zp / resz;
@@ -2061,7 +2066,7 @@ void make_nodes(int iter)
           dist = (zbuffer[iter][1][x][y] - zp);
         float prob = 2.0 * (0.5 - dist);
         prob = powf(prob, 2);
-        float random = rg.Random();
+        float random = rg.genrand_res53();
         if (random <= prob)
         {
           xp = (xp * (maxx - minx)) + minx;

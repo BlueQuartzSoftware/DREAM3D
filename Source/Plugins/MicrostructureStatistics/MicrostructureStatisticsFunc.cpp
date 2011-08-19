@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "MicrostructureStatisticsFunc.h"
@@ -241,7 +246,7 @@ void MicrostructureStatisticsFunc::initializeArrays()
 
   // Initialize the first slot in these arrays since they should never be used
   phasefraction[0] = 0.0;
-  phaseType[0] = AIM::Reconstruction::UnknownPhaseType;
+  phaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
   pptFractions[0] = -1.0;
 
   mindiameter = m_MinDiameter->WritePointer(0, size);
@@ -2644,15 +2649,15 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   size_t numgrains = m_Grains.size();
   outFile.open(graindataFile.c_str());
   outFile << numgrains-1 << endl;
-  char space = AIM::GrainData::Delimiter;
-  outFile  << AIM::GrainData::GrainID;
+  char space = DREAM3D::GrainData::Delimiter;
+  outFile  << DREAM3D::GrainData::GrainID;
 
-  if(writeavgorientations == true) outFile   << space << AIM::GrainData::Phi1 << space << AIM::GrainData::PHI<< space << AIM::GrainData::Phi2;
-  if(writesizes == true) outFile << space << AIM::GrainData::EquivDiam;
-  if(writeshapes == true) outFile << space << AIM::GrainData::B_Over_A << space << AIM::GrainData::C_Over_A << space << AIM::GrainData::Omega3;
-  if(writesizes == true) outFile << space << AIM::GrainData::OutsideBoundingBox;
-  if(writeneighbors == true) outFile << space << AIM::GrainData::NumNeighbors;
-  outFile << space << AIM::GrainData::SurfaceGrain;
+  if(writeavgorientations == true) outFile   << space << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2;
+  if(writesizes == true) outFile << space << DREAM3D::GrainData::EquivDiam;
+  if(writeshapes == true) outFile << space << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3;
+  if(writesizes == true) outFile << space << DREAM3D::GrainData::OutsideBoundingBox;
+  if(writeneighbors == true) outFile << space << DREAM3D::GrainData::NumNeighbors;
+  outFile << space << DREAM3D::GrainData::SurfaceGrain;
   outFile << endl;
   for (size_t i = 1; i < numgrains; i++)
   {

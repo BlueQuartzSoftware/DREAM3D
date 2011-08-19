@@ -1,11 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
+
 //
-//  Copyright (c) 2008, mjackson
+//  Copyright (c) 2008, Michael A. Jackson for BlueQuartz Software
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
 //
-///////////////////////////////////////////////////////////////////////////////
+
 #ifndef _FILEWRITER_H_
 #define _FILEWRITER_H_
 

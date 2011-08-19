@@ -86,13 +86,17 @@ include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
 set(EbsdLib_SRCS 
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.cpp
     ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.cpp
-)
+    ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeReader.cpp
+    ${EbsdLib_SOURCE_DIR}/QualityMetricFilter.cpp
+    )
 set(EbsdLib_HDRS
     ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.h
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.h
+    ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeReader.h
     ${EbsdLib_SOURCE_DIR}/EbsdHeaderEntry.h
     ${EbsdLib_SOURCE_DIR}/EbsdLibDLLExport.h
     ${EbsdLib_SOURCE_DIR}/EbsdSetGetMacros.h
+    ${EbsdLib_SOURCE_DIR}/QualityMetricFilter.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/" "${EbsdLib_HDRS}" "${EbsdLib_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

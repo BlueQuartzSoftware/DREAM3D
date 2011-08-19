@@ -42,7 +42,7 @@ target_link_libraries(ODFTest DREAM3DLib)
 
 # --------
 add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp 
-                            ${DREAM3D_SOURCE_DIR}/Source/Plugins/OIMImport/OIMImport.cpp)
+                            ${DREAM3D_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
 target_link_libraries(AngReaderTest DREAM3DLib)
 
 # --------
@@ -88,3 +88,8 @@ target_link_libraries(CtfReaderTest EbsdLib)
 add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest DREAM3DLib)
 MXA_ADD_TEST(StatsGenTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsGenTest)
+
+# --------
+add_executable(RNGTest ${AIMTest_SOURCE_DIR}/RNGTest.cpp)
+target_link_libraries(RNGTest DREAM3DLib)
+

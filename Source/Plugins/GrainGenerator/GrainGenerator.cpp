@@ -1,8 +1,6 @@
-
-
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -15,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -29,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "GrainGenerator.h"
@@ -160,8 +163,8 @@ void GrainGenerator::execute()
     {
       VTKStructureReader::Pointer reader = VTKStructureReader::New();
       reader->setInputFileName(m_StructureFile);
-      reader->setGrainIdScalarName(AIM::VTK::GrainIdScalarName);
-      reader->setPhaseIdScalarName(AIM::VTK::PhaseIdScalarName);
+      reader->setGrainIdScalarName(DREAM3D::VTK::GrainIdScalarName);
+      reader->setPhaseIdScalarName(DREAM3D::VTK::PhaseIdScalarName);
       err = reader->readStructure(m.get());
       CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error getting size and resolution from VTK Voxel File", err);
     }
@@ -231,7 +234,7 @@ void GrainGenerator::execute()
   m->measure_misorientations();
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", measure_misorientations)
 
-  MAKE_OUTPUT_FILE_PATH ( eulerFile , AIM::SyntheticBuilder::GrainAnglesFile)
+  MAKE_OUTPUT_FILE_PATH ( eulerFile , DREAM3D::SyntheticBuilder::GrainAnglesFile)
 
 
   updateProgressAndMessage(("Matching Crystallography"), 65);
@@ -245,7 +248,7 @@ void GrainGenerator::execute()
 
   /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
-  MAKE_OUTPUT_FILE_PATH ( h5VoxelFile, AIM::SyntheticBuilder::H5VoxelFile)
+  MAKE_OUTPUT_FILE_PATH ( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile)
   H5VoxelWriter::Pointer h5VoxelWriter = H5VoxelWriter::New();
   if (h5VoxelWriter.get() == NULL)
   {
@@ -262,7 +265,7 @@ void GrainGenerator::execute()
   if(m_WriteGrainData)
   {
     updateProgressAndMessage(("Writing Grain Data"), 88);
-    MAKE_OUTPUT_FILE_PATH ( GrainDataFile, AIM::MicroStats::GrainDataFile);
+    MAKE_OUTPUT_FILE_PATH ( GrainDataFile, DREAM3D::MicroStats::GrainDataFile);
     m->write_graindata(GrainDataFile);
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
   }
@@ -270,7 +273,7 @@ void GrainGenerator::execute()
   /* ********** This section writes the VTK files for visualization *** */
   if (m_WriteVtkFile) {
     updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, AIM::Reconstruction::VisualizationVizFile);
+    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile);
 
     // Setup all the classes that will help us write the Scalars to the VTK File
     std::vector<VtkScalarWriter*> scalarsToWrite;
@@ -322,7 +325,7 @@ void GrainGenerator::execute()
   /* **********   This CMU's ph format */
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
   if (m_WritePhFile) {
-    MAKE_OUTPUT_FILE_PATH ( phFile, AIM::Reconstruction::PhFile);
+    MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
     PhWriter phWriter;
     err = phWriter.writeGrainPhFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
@@ -333,7 +336,7 @@ void GrainGenerator::execute()
   if (m_WriteHDF5GrainFile)
   {
     updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 96);
-    MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, AIM::Reconstruction::HDF5GrainFile);
+    MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, DREAM3D::Reconstruction::HDF5GrainFile);
     H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
     err = h5GrainWriter->writeHDF5GrainsFile<GrainGeneratorFunc>(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the HDF5 Grain file format.", err);

@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -306,12 +307,12 @@ int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float n1, float n
 void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
                                                 int choose, float &synea1, float &synea2, float &synea3)
 {
-  AIM_RANDOMNG_NEW()
-  float random = rg.Random();
+  DREAM3D_RANDOMNG_NEW()
+  float random = rg.genrand_res53();
   float synh1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
-  random = rg.Random();
+  random = rg.genrand_res53();
   float synh2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
-  random = rg.Random();
+  random = rg.genrand_res53();
   float synh3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
   float hmag = sqrt((synh1 * synh1 + synh2 * synh2 + synh3 * synh3));
   float angle = powf((8 * hmag * hmag * hmag), (1.0 / 3.0));
@@ -330,12 +331,12 @@ void OrientationMath::_calcDetermineHomochoricValues( float step[3], float phi[3
 {
   float random;
 
-  AIM_RANDOMNG_NEW()
-  random = rg.Random();
+  DREAM3D_RANDOMNG_NEW()
+  random = rg.genrand_res53();
   r1 = (step[0] * phi[0]) + (step[0] * random);
-  random = rg.Random();
+  random = rg.genrand_res53();
   r2 = (step[1] * phi[1]) + (step[1] * random);
-  random = rg.Random();
+  random = rg.genrand_res53();
   r3 = (step[2] * phi[2]) + (step[2] * random);
 }
 

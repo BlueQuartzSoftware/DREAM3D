@@ -18,7 +18,7 @@
 
 #include "DREAM3D/Common/Constants.h"
 
-#include "QtSupport/AIM_QtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 
@@ -29,7 +29,7 @@
 //
 // -----------------------------------------------------------------------------
 @PluginName@Widget::@PluginName@Widget(QWidget *parent) :
-AIMPluginFrame(parent),
+DREAM3DPluginFrame(parent),
 m_@PluginName@(NULL),
 m_WorkerThread(NULL),
 

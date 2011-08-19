@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Grober (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef _RECONSTRUCTION_H_
@@ -44,11 +49,13 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/QualityMetricFilter.h"
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
+
 #include "ReconstructionFunc.h"
-#include "QualityMetricFilter.h"
+
 
 /**
 * @class Reconstruction Reconstruction AIM/Reconstruction.h/Reconstruction.h
@@ -72,7 +79,7 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY(std::vector<AIM::Reconstruction::PhaseType>, PhaseTypes)
+    MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     MXA_INSTANCE_PROPERTY(bool, MergeTwins)
@@ -83,7 +90,7 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
 
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY(AIM::Reconstruction::AlignmentMethod, AlignmentMethod)
+    MXA_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
@@ -135,7 +142,7 @@ class Reconstruction : public AbstractPipeline
 
       precipFractions.resize(phases.size() + 1);
       crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-      m_PhaseTypes[0] = AIM::Reconstruction::UnknownPhaseType;
+      m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
       precipFractions[0] = -1.0f;
       for(size_t i=0;i<phases.size();i++)
       {

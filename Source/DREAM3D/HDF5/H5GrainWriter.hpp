@@ -13,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -128,14 +129,14 @@ for (int k = 0; k < 8; k++) {\
 
 #define H5GW_GRAIN_LOOP_2() \
 err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);\
-err = h5writer->writeFieldData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);\
+err = h5writer->writeFieldData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
 size_t size = r->m_Grains[i]->neighborlist->size();\
 if (size > 0) {\
-err = h5writer->writeFieldData<int> (hdfPath, *(r->m_Grains[i]->neighborlist), AIM::Representation::Neighbor_Grain_ID_List.c_str(), 1);\
+err = h5writer->writeFieldData<int> (hdfPath, *(r->m_Grains[i]->neighborlist), DREAM3D::HDF5::Neighbor_Grain_ID_List.c_str(), 1);\
 }\
-err = h5writer->writeCellData<int> (hdfPath, grainName, AIM::Representation::Grain_ID.c_str(), 1);\
-err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, AIM::Representation::IPFColor.c_str(), 3);\
-err = h5writer->writeCellData<int32_t> (hdfPath, phaseValues, AIM::Representation::Phase.c_str(), 1);
+err = h5writer->writeCellData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
+err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, DREAM3D::HDF5::IPFColor.c_str(), 3);\
+err = h5writer->writeCellData<int32_t> (hdfPath, phaseValues, DREAM3D::HDF5::Phase.c_str(), 1);
 
 
 
@@ -210,7 +211,7 @@ class  H5GrainWriter
         }
         H5GW_GRAIN_LOOP_2()
 
-        err = h5writer->writeCellData<float> (hdfPath, imageQuality, AIM::Representation::ImageQuality.c_str(), 1);
+        err = h5writer->writeCellData<float> (hdfPath, imageQuality, DREAM3D::HDF5::ImageQuality.c_str(), 1);
       }
 
       err = h5writer->writeObjectIndex(hdfPaths);
