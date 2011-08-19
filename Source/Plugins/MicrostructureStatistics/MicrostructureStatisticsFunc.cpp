@@ -485,6 +485,11 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains()
 	if(m_Grains[j]->centroidz >= boundbox[6]) outside = 1;
     m_Grains[j]->outsideboundbox = outside;
   }
+  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+  {
+	  if(m_Grains[grain_indicies[i]]->outsideboundbox == 1) surfacevoxels[i] = 1;
+	  if(m_Grains[grain_indicies[i]]->outsideboundbox == 0) surfacevoxels[i] = 0;
+  }
 }
 void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
 {

@@ -541,12 +541,12 @@ void ReconstructionFunc::align_sections()
   int graincount1, graincount2;
   int xshift = 0;
   int yshift = 0;
-  int tempxshift = 0;
-  int tempyshift = 0;
+  int newxshift = 0;
+  int newyshift = 0;
+  int oldxshift = 0;
+  int oldyshift = 0;
   int count = 0;
-  int step = 0;
   int slice = 0;
-  int nsteps = 0;
   int xspot, yspot;
   float w;
   float n1, n2, n3;
@@ -568,6 +568,15 @@ void ReconstructionFunc::align_sections()
     for (int b = 0; b < 2; b++)
     {
       shifts[a][b] = 0;
+    }
+  }
+  int** misorients = new int *[xpoints];
+  for (int a = 0; a < xpoints; a++)
+  {
+    misorients[a] = new int[ypoints];
+    for (int b = 0; b < ypoints; b++)
+    {
+      misorients[a][b] = 0;
     }
   }
   if (alignmeth == AIM::Reconstruction::OuterBoundary)
@@ -611,8 +620,6 @@ void ReconstructionFunc::align_sections()
         }
       }
     }
-    tempxshift = 0;
-    tempyshift = 0;
     if (alignmeth == AIM::Reconstruction::OuterBoundary)
     {
       curxcentroid = 0;
@@ -632,124 +639,136 @@ void ReconstructionFunc::align_sections()
       curxcentroid = curxcentroid / float(count);
       curycentroid = curycentroid / float(count);
     }
-	if (alignmeth >= AIM::Reconstruction::Misorientation)
+	if (alignmeth == AIM::Reconstruction::Misorientation || alignmeth == AIM::Reconstruction::MutualInformation)
     {
-      for (int a = 0; a < 2; a++)
+      oldxshift = -1;
+      oldyshift = -1;
+      newxshift = 0;
+	  newyshift = 0;
+	  for (int a = 0; a < xpoints; a++)
+	  {
+		for (int b = 0; b < ypoints; b++)
+		{
+		  misorients[a][b] = 0;
+		}
+	  }
+      while(newxshift != oldxshift || newyshift != oldyshift)
       {
-        if (a == 0) step = 2, nsteps = 5;
-        if (a == 1) step = 1, nsteps = 2;
-        for (int j = -nsteps; j < (nsteps + 1); j++)
+	    oldxshift = newxshift;  
+	    oldyshift = newyshift;  
+        for (int j = -3; j < 4; j++)
         {
-          for (int k = -nsteps; k < (nsteps + 1); k++)
+          for (int k = -3; k < 4; k++)
           {
             disorientation = 0;
             count = 0;
-            for (int l = 0; l < ypoints; l=l+4)
-            {
-              for (int m = 0; m < xpoints; m=m+4)
-              {
-                count++;
-                if ((l + (j * step) + tempyshift) >= 0 && (l + (j * step) + tempyshift) < ypoints && (m + (k * step) + tempxshift) >= 0 && (m + (k * step)
-                    + tempxshift) < xpoints)
-                {
-                  refposition = ((slice + 1) * xpoints * ypoints) + (l * xpoints) + m;
-                  curposition = (slice * xpoints * ypoints) + ((l + (j * step) + tempyshift) * xpoints) + (m + (k * step) + tempxshift);
-                  refgnum = grain_indicies[refposition];
-                  curgnum = grain_indicies[curposition];
-                  if (alignmeth == AIM::Reconstruction::MutualInformation)
-                  {
-                    if (curgnum >= 0 && refgnum >= 0)
-                    {
-                      mutualinfo12[curgnum][refgnum]++;
-                      mutualinfo1[curgnum]++;
-                      mutualinfo2[refgnum]++;
-                    }
-                  }
-                  if (alignmeth == AIM::Reconstruction::Misorientation)
-                  {
-                    if (goodVoxels[refposition] == true && goodVoxels[curposition] == true)
-                    {
-                      w = 10000.0;
-                      q1[1] = quats[refposition*5 + 1];
-                      q1[2] = quats[refposition*5 + 2];
-                      q1[3] = quats[refposition*5 + 3];
-                      q1[4] = quats[refposition*5 + 4];
-                      phase1 = crystruct[phases[refposition]];
-                      q2[1] = quats[curposition*5 + 1];
-                      q2[2] = quats[curposition*5 + 2];
-                      q2[3] = quats[curposition*5 + 3];
-                      q2[4] = quats[curposition*5 + 4];
-                      phase2 = crystruct[phases[curposition]];
-                      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-                      if (w > misorientationtolerance) disorientation++;
-                    }
-                    if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
-                    if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
-                  }
-                }
-                else
-                {
-                  if (alignmeth == AIM::Reconstruction::MutualInformation)
-                  {
-                    mutualinfo12[0][0]++;
-                    mutualinfo1[0]++;
-                    mutualinfo2[0]++;
-                  }
-                  //if (alignmeth == AIM::Reconstruction::Misorientation) disorientation = disorientation;
-                }
-              }
-            }
-            if (alignmeth == AIM::Reconstruction::MutualInformation)
-            {
-              float ha = 0;
-              float hb = 0;
-              float hab = 0;
-              for (int b = 0; b < graincount1; b++)
-              {
-                mutualinfo1[b] = mutualinfo1[b] / float(count);
-                if (mutualinfo1[b] != 0) ha = ha + mutualinfo1[b] * log(mutualinfo1[b]);
-              }
-              for (int c = 0; c < graincount2; c++)
-              {
-                mutualinfo2[c] = mutualinfo2[c] / float(count);
-                if (mutualinfo2[c] != 0) hb = hb + mutualinfo2[c] * log(mutualinfo2[c]);
-              }
-              for (int b = 0; b < graincount1; b++)
-              {
-                for (int c = 0; c < graincount2; c++)
-                {
-                  mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
-                  if (mutualinfo12[b][c] != 0) hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]);
-                  float value = 0;
-                  if (mutualinfo1[b] > 0 && mutualinfo2[c] > 0) value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c]));
-                  if (value != 0) disorientation = disorientation + (mutualinfo12[b][c] * log(value));
-                }
-              }
-              for (int b = 0; b < graincount1; b++)
-              {
-                for (int c = 0; c < graincount2; c++)
-                {
-                  mutualinfo12[b][c] = 0;
-                  mutualinfo1[b] = 0;
-                  mutualinfo2[c] = 0;
-                }
-              }
-              //    float disorientation2 = ha + hb - hab;
-              disorientation = 1.0 / disorientation;
-            }
-            if (disorientation < mindisorientation)
-            {
-              xshift = (k * step) + tempxshift;
-              yshift = (j * step) + tempyshift;
-              mindisorientation = disorientation;
-            }
+			if(misorients[k+oldxshift+int(xpoints/2)][j+oldyshift+int(ypoints/2)] == 0 && abs(k+oldxshift) < (xpoints/2) && (j+oldyshift) < (ypoints/2))
+			{
+				for (int l = 0; l < ypoints; l=l+4)
+				{
+				  for (int m = 0; m < xpoints; m=m+4)
+				  {
+					count++;
+					if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < ypoints && (m + k + oldxshift) >= 0 && (m + k + oldxshift) < xpoints)
+					{
+					  refposition = ((slice + 1) * xpoints * ypoints) + (l * xpoints) + m;
+					  curposition = (slice * xpoints * ypoints) + ((l + j + oldyshift) * xpoints) + (m + k + oldxshift);
+					  refgnum = grain_indicies[refposition];
+					  curgnum = grain_indicies[curposition];
+					  if (alignmeth == AIM::Reconstruction::MutualInformation)
+					  {
+						if (curgnum >= 0 && refgnum >= 0)
+						{
+						  mutualinfo12[curgnum][refgnum]++;
+						  mutualinfo1[curgnum]++;
+						  mutualinfo2[refgnum]++;
+						}
+					  }
+					  if (alignmeth == AIM::Reconstruction::Misorientation)
+					  {
+						if (goodVoxels[refposition] == true && goodVoxels[curposition] == true)
+						{
+						  w = 10000.0;
+						  q1[1] = quats[refposition*5 + 1];
+						  q1[2] = quats[refposition*5 + 2];
+						  q1[3] = quats[refposition*5 + 3];
+						  q1[4] = quats[refposition*5 + 4];
+						  phase1 = crystruct[phases[refposition]];
+						  q2[1] = quats[curposition*5 + 1];
+						  q2[2] = quats[curposition*5 + 2];
+						  q2[3] = quats[curposition*5 + 3];
+						  q2[4] = quats[curposition*5 + 4];
+						  phase2 = crystruct[phases[curposition]];
+						  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+						  if (w > misorientationtolerance) disorientation++;
+						}
+						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
+						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
+					  }
+					}
+					else
+					{
+					  if (alignmeth == AIM::Reconstruction::MutualInformation)
+					  {
+						mutualinfo12[0][0]++;
+						mutualinfo1[0]++;
+						mutualinfo2[0]++;
+					  }
+					  //if (alignmeth == AIM::Reconstruction::Misorientation) disorientation = disorientation;
+					}
+				  }
+				}
+				if (alignmeth == AIM::Reconstruction::MutualInformation)
+				{
+				  float ha = 0;
+				  float hb = 0;
+				  float hab = 0;
+				  for (int b = 0; b < graincount1; b++)
+				  {
+					mutualinfo1[b] = mutualinfo1[b] / float(count);
+					if (mutualinfo1[b] != 0) ha = ha + mutualinfo1[b] * log(mutualinfo1[b]);
+				  }
+				  for (int c = 0; c < graincount2; c++)
+				  {
+					mutualinfo2[c] = mutualinfo2[c] / float(count);
+					if (mutualinfo2[c] != 0) hb = hb + mutualinfo2[c] * log(mutualinfo2[c]);
+				  }
+				  for (int b = 0; b < graincount1; b++)
+				  {
+					for (int c = 0; c < graincount2; c++)
+					{
+					  mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
+					  if (mutualinfo12[b][c] != 0) hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]);
+					  float value = 0;
+					  if (mutualinfo1[b] > 0 && mutualinfo2[c] > 0) value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c]));
+					  if (value != 0) disorientation = disorientation + (mutualinfo12[b][c] * log(value));
+					}
+				  }
+				  for (int b = 0; b < graincount1; b++)
+				  {
+					for (int c = 0; c < graincount2; c++)
+					{
+					  mutualinfo12[b][c] = 0;
+					  mutualinfo1[b] = 0;
+					  mutualinfo2[c] = 0;
+					}
+				  }
+				  //    float disorientation2 = ha + hb - hab;
+				  disorientation = 1.0 / disorientation;
+				}
+				misorients[k+oldxshift+int(xpoints/2)][j+oldyshift+int(ypoints/2)] = disorientation;
+				if (disorientation < mindisorientation)
+				{
+				  newxshift = k + oldxshift;
+				  newyshift = j + oldyshift;
+				  mindisorientation = disorientation;
+				}
+			}
           }
         }
-        tempxshift = xshift;
-        tempyshift = yshift;
       }
-      shifts[iter][0] = shifts[iter - 1][0] + xshift;
-      shifts[iter][1] = shifts[iter - 1][1] + yshift;
+      shifts[iter][0] = shifts[iter - 1][0] + newxshift;
+      shifts[iter][1] = shifts[iter - 1][1] + newyshift;
     }
     if (alignmeth == AIM::Reconstruction::OuterBoundary)
     {
