@@ -680,7 +680,7 @@ void ReconstructionFunc::align_sections()
 					  curposition = (slice * xpoints * ypoints) + ((l + j + oldyshift) * xpoints) + (m + k + oldxshift);
 					  refgnum = grain_indicies[refposition];
 					  curgnum = grain_indicies[curposition];
-					  if (alignmeth == AIM::Reconstruction::MutualInformation)
+					  if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
 					  {
 						if (curgnum >= 0 && refgnum >= 0)
 						{
@@ -713,7 +713,7 @@ void ReconstructionFunc::align_sections()
 					}
 					else
 					{
-					  if (alignmeth == AIM::Reconstruction::MutualInformation)
+					  if (alignmeth == DREAM3D::Reconstruction::MutualInformation)
 					  {
 						mutualinfo12[0][0]++;
 						mutualinfo1[0]++;

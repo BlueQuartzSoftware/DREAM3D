@@ -654,22 +654,13 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   DREAM3D_RANDOMNG_NEW()
 
   float dist;
-//  float Nvalue = 0;
-//  float Nvaluedist = 0;
-//  float bestNvaluedist = 1000000;
-//  float Gvalue = 0;
-//  float Gvaluedist = 0;
-//  float bestGvaluedist = 1000000;
   float inside = -1;
- // int index;
   int column, row, plane;
   int centercolumn, centerrow, centerplane;
- // int shiftcolumn, shiftrow, shiftplane;
   int xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-//  float ellipfunc = 0;
   float volcur = m_Grains[gnum]->volume;
   float bovera = m_Grains[gnum]->radius2;
   float covera = m_Grains[gnum]->radius3;
@@ -737,7 +728,6 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
     {
-
 		for(int iter3 = zmin; iter3 < zmax+1; iter3++)
 		{
 		  column = iter1;
@@ -760,8 +750,7 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
-      inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-
+		    inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 			if(inside >= 0)
 			{
 				m_Grains[gnum]->columnlist->push_back(column);
@@ -779,12 +768,6 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   DREAM3D_RANDOMNG_NEW()
 
   float dist;
-//  float Nvalue = 0;
-//  float Nvaluedist = 0;
-//  float bestNvaluedist = 1000000;
-//  float Gvalue = 0;
-//  float Gvaluedist = 0;
-//  float bestGvaluedist = 1000000;
   float inside = -1;
   int index;
   int column, row, plane;
@@ -792,7 +775,6 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-//  float ellipfunc = 0;
   float insidecount = 0;
   std::vector<int> insidelist(1000,-1);
   float volcur = m_Grains[gnum]->volume;
@@ -865,7 +847,6 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
   {
     for(int iter2 = ymin; iter2 < ymax+1; iter2++)
     {
-
 		for(int iter3 = zmin; iter3 < zmax+1; iter3++)
 		{
 		  column = iter1;
@@ -901,9 +882,7 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
-      inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-
-
+		    inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 			if(inside >= 0)
 			{
 				int currentpoint = index;
@@ -931,12 +910,10 @@ void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
 void GrainGeneratorFunc::move_grain(size_t gnum, float xc, float yc, float zc)
 {
   std::vector<int> voxellist(1000,-1);
- // int voxelcount = 0;
   int column, row, plane;
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
   int shiftcolumn, shiftrow, shiftplane;
-//  int index;
   float oxc = m_Grains[gnum]->centroidx;
   float oyc = m_Grains[gnum]->centroidy;
   float ozc = m_Grains[gnum]->centroidz;
@@ -993,7 +970,7 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
       }
     }
   }
-//  determine_neighbors(gnum, -1);
+  determine_neighbors(gnum, -1);
 }
 
 void  GrainGeneratorFunc::add_grain(size_t gnum)
@@ -1024,7 +1001,7 @@ void  GrainGeneratorFunc::add_grain(size_t gnum)
       }
     }
   }
-//  determine_neighbors(gnum, 1);
+  determine_neighbors(gnum, 1);
 }
 
 void GrainGeneratorFunc::determine_neighbors(size_t gnum, int add)
@@ -1341,7 +1318,6 @@ void  GrainGeneratorFunc::pack_grains()
   {
     primaryphasefractions[i] = primaryphasefractions[i]/totalprimaryfractions;
     if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i-1];
-    //if(i == 0) primaryphasefractions[i] = primaryphasefractions[i];
   }
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
@@ -1364,8 +1340,8 @@ void  GrainGeneratorFunc::pack_grains()
     }
     generate_grain(gid, phase);
     currentvol = currentvol + m_Grains[gid]->volume;
-  gid++;
-  m_Grains.resize(gid+1);
+	gid++;
+	m_Grains.resize(gid+1);
     m_Grains[gid] = Grain::New();
   }
   // initialize the sim and goal size distributions for the primary phases
@@ -1382,8 +1358,8 @@ void  GrainGeneratorFunc::pack_grains()
     float input = 0;
     for (size_t j=0;j<grainsizedist[i].size();j++)
     {
-    input = ((float(j)*grainsizediststep[i])+(grainsizediststep[i]/2.0))+(mindiameter[phase]/2.0);
-    grainsizedist[i][j] = (grainsizediststep[i]/(input*sddiam[phase]*root2pi))*exp(-((log(float(input))-avgdiam[phase])*(log(float(input))-avgdiam[phase]))/(2*sddiam[phase]*sddiam[phase]));
+	    input = ((float(j)*grainsizediststep[i])+(grainsizediststep[i]/2.0))+(mindiameter[phase]/2.0);
+	    grainsizedist[i][j] = (grainsizediststep[i]/(input*sddiam[phase]*root2pi))*exp(-((log(float(input))-avgdiam[phase])*(log(float(input))-avgdiam[phase]))/(2*sddiam[phase]*sddiam[phase]));
     }
   }
   // initialize the sim and goal neighbor distribution for the primary phases
@@ -1396,47 +1372,45 @@ void  GrainGeneratorFunc::pack_grains()
     simneighbordist[i].resize(numdiameterbins[phase]);
     for (size_t j=0;j<neighbordist[i].size();j++)
     {
-    neighbordist[i][j].resize(3);
-    simneighbordist[i][j].resize(3);
-    neighbordist[i][j][0] = neighborparams[phase][j][0]*powf(0.5,neighborparams[phase][j][2])+neighborparams[phase][j][1];
-    neighbordist[i][j][1] = neighborparams[phase][j][0]*powf(1.5,neighborparams[phase][j][2])+neighborparams[phase][j][1];
-    neighbordist[i][j][2] = neighborparams[phase][j][0]*powf(2.5,neighborparams[phase][j][2])+neighborparams[phase][j][1];
+	    neighbordist[i][j].resize(3);
+	    simneighbordist[i][j].resize(3);
+	    neighbordist[i][j][0] = neighborparams[phase][j][0]*powf(0.5,neighborparams[phase][j][2])+neighborparams[phase][j][1];
+	    neighbordist[i][j][1] = neighborparams[phase][j][0]*powf(1.5,neighborparams[phase][j][2])+neighborparams[phase][j][1];
+	    neighbordist[i][j][2] = neighborparams[phase][j][0]*powf(2.5,neighborparams[phase][j][2])+neighborparams[phase][j][1];
     }
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 50 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
   oldfillingerror = 1;
-  int check = 0;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     bestcurrentfillingerror = 100000000000000.0;
     m_Grains[i]->active = 1;
-  xc = sizex/2.0;
-  yc = sizey/2.0;
-  zc = sizez/2.0;
-  m_Grains[i]->centroidx = xc;
-  m_Grains[i]->centroidy = yc;
-  m_Grains[i]->centroidz = zc;
-  insert_grain(i);
-  for(int iter=0;iter<10;iter++)
-  {
-    xc = rg.genrand_res53() * (xpoints * resx);
-    yc = rg.genrand_res53() * (ypoints * resy);
-    zc = rg.genrand_res53() * (zpoints * resz);
-    move_grain(i, xc, yc, zc);
-      currentfillingerror = check_fillingerror(i, -1000);
-    if(currentfillingerror < bestcurrentfillingerror)
-    {
-      bestcurrentfillingerror = currentfillingerror;
-      bestxc = xc;
-      bestyc = yc;
-      bestzc = zc;
-    }
-  }
-  move_grain(i, bestxc, bestyc, bestzc);
+	xc = sizex/2.0;
+	yc = sizey/2.0;
+	zc = sizez/2.0;
+	m_Grains[i]->centroidx = xc;
+	m_Grains[i]->centroidy = yc;
+	m_Grains[i]->centroidz = zc;
+	insert_grain(i);
+	for(int iter=0;iter<10;iter++)
+	{
+		xc = rg.genrand_res53() * (xpoints * resx);
+		yc = rg.genrand_res53() * (ypoints * resy);
+		zc = rg.genrand_res53() * (zpoints * resz);
+		move_grain(i, xc, yc, zc);
+		currentfillingerror = check_fillingerror(i, -1000);
+		if(currentfillingerror < bestcurrentfillingerror)
+		{
+		  bestcurrentfillingerror = currentfillingerror;
+		  bestxc = xc;
+		  bestyc = yc;
+		  bestzc = zc;
+		}
+	}
+	move_grain(i, bestxc, bestyc, bestzc);
     add_grain(i);
-  oldfillingerror = bestcurrentfillingerror;
-  check = check + m_Grains[i]->columnlist->size();
+	oldfillingerror = bestcurrentfillingerror;
   }
   // determine initial filling, size distribution and neighbor distribution errors
   oldsizedisterror = check_sizedisterror(-1000, -1000);
@@ -1445,21 +1419,20 @@ void  GrainGeneratorFunc::pack_grains()
   ofstream outFile;
   string filename = "error.txt";
   outFile.open(filename.c_str());
-  outFile << check << endl;
   // begin swaping/moving/adding/removing grains to try to improve packing
   for (int iteration = 0; iteration < (500000); iteration++)
   {
-  change1 = 0;
+	change1 = 0;
     change2 = 0;
     change3 = 0;
     int option = iteration % 4;
-	if(iteration%25 == 0) outFile << oldfillingerror << "	" << m_Grains.size() << endl;
+	if(iteration%25 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << m_Grains.size() << endl;
   // this option adds a grain
-  if (option == 0)
+    if (option == 0)
     {
-    newgrain = m_Grains.size();
-    m_Grains.resize(newgrain+1);
-    m_Grains[newgrain] = Grain::New();
+      newgrain = m_Grains.size();
+      m_Grains.resize(newgrain+1);
+      m_Grains[newgrain] = Grain::New();
       random = rg.genrand_res53();
       for (size_t j = 0; j < primaryphases.size();++j)
       {
@@ -1470,14 +1443,14 @@ void  GrainGeneratorFunc::pack_grains()
         }
       }
       generate_grain(newgrain, phase);
-    GGseed++;
-    xc = rg.genrand_res53() * (xpoints * resx);
-    yc = rg.genrand_res53() * (ypoints * resy);
-    zc = rg.genrand_res53() * (zpoints * resz);
-    m_Grains[newgrain]->centroidx = xc;
-    m_Grains[newgrain]->centroidy = yc;
-    m_Grains[newgrain]->centroidz = zc;
-    insert_grain(newgrain);
+      GGseed++;
+      xc = rg.genrand_res53() * (xpoints * resx);
+      yc = rg.genrand_res53() * (ypoints * resy);
+      zc = rg.genrand_res53() * (zpoints * resz);
+      m_Grains[newgrain]->centroidx = xc;
+      m_Grains[newgrain]->centroidy = yc;
+      m_Grains[newgrain]->centroidz = zc;
+      insert_grain(newgrain);
       if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(newgrain, -1000);
       if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(newgrain, -1000);
       if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(newgrain, -1000);
@@ -1493,15 +1466,15 @@ void  GrainGeneratorFunc::pack_grains()
         oldsizedisterror = currentsizedisterror;
         acceptedmoves++;
       }
-    else
-    {
-      m_Grains.resize(newgrain);
-    }
+      else
+      {
+        m_Grains.resize(newgrain);
+      }
     }
   // this option removes a grain
     if (option == 1)
     {
-    size_t random = int(rg.genrand_res53() * m_Grains.size());
+      size_t random = int(rg.genrand_res53() * m_Grains.size());
       if (random == 0) random = 1;
       if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(-1000, random);
       if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(-1000, random);
@@ -1512,7 +1485,7 @@ void  GrainGeneratorFunc::pack_grains()
       if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
       {
         remove_grain(random);
-    m_Grains.erase(m_Grains.begin()+random);
+		m_Grains.erase(m_Grains.begin()+random);
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
@@ -1522,59 +1495,11 @@ void  GrainGeneratorFunc::pack_grains()
   // this option removes one grain and adds another grain
     if (option == 2)
     {
-    size_t random1 = int(rg.genrand_res53() * m_Grains.size());
-      if (random1 == 0) random1 = 1;
-    newgrain = m_Grains.size();
-    m_Grains.resize(newgrain+1);
-    m_Grains[newgrain] = Grain::New();
-      random = rg.genrand_res53();
-      for (size_t j = 0; j < primaryphases.size();++j)
-      {
-        if (random < primaryphasefractions[j])
-        {
-          phase = primaryphases[j];
-          break;
-        }
-      }
-      generate_grain(newgrain, phase);
-    GGseed++;
-    xc = rg.genrand_res53() * (xpoints * resx);
-    yc = rg.genrand_res53() * (ypoints * resy);
-    zc = rg.genrand_res53() * (zpoints * resz);
-    m_Grains[newgrain]->centroidx = xc;
-    m_Grains[newgrain]->centroidy = yc;
-    m_Grains[newgrain]->centroidz = zc;
-    insert_grain(newgrain);
-      if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(newgrain, random1);
-      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(newgrain, random1);
-      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(newgrain, random1);
-      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror)/oldfillingerror;
-      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror)/oldsizedisterror;
-      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror)/oldneighborhooderror;
-     if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
-      {
-        m_Grains[newgrain]->active = 1;
-        add_grain(newgrain);
-        remove_grain(random1);
-    m_Grains.erase(m_Grains.begin()+random1);
-        oldfillingerror = currentfillingerror;
-        oldneighborhooderror = currentneighborhooderror;
-        oldsizedisterror = currentsizedisterror;
-        acceptedmoves++;
-      }
-    else
-    {
-      m_Grains.resize(newgrain);
-    }
-    }
-  // this option removes a grain and replaces it with another grain at the same centroid
-    if (option == 3)
-    {
       size_t random1 = int(rg.genrand_res53() * m_Grains.size());
       if (random1 == 0) random1 = 1;
-    newgrain = m_Grains.size();
-    m_Grains.resize(newgrain+1);
-    m_Grains[newgrain] = Grain::New();
+      newgrain = m_Grains.size();
+      m_Grains.resize(newgrain+1);
+      m_Grains[newgrain] = Grain::New();
       random = rg.genrand_res53();
       for (size_t j = 0; j < primaryphases.size();++j)
       {
@@ -1585,14 +1510,14 @@ void  GrainGeneratorFunc::pack_grains()
         }
       }
       generate_grain(newgrain, phase);
-    GGseed++;
-    xc = m_Grains[random1]->centroidx;
-    yc = m_Grains[random1]->centroidy;
-    zc = m_Grains[random1]->centroidz;
-    m_Grains[newgrain]->centroidx = xc;
-    m_Grains[newgrain]->centroidy = yc;
-    m_Grains[newgrain]->centroidz = zc;
-    insert_grain(newgrain);
+      GGseed++;
+      xc = rg.genrand_res53() * (xpoints * resx);
+      yc = rg.genrand_res53() * (ypoints * resy);
+      zc = rg.genrand_res53() * (zpoints * resz);
+      m_Grains[newgrain]->centroidx = xc;
+      m_Grains[newgrain]->centroidy = yc;
+      m_Grains[newgrain]->centroidz = zc;
+      insert_grain(newgrain);
       if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(newgrain, random1);
       if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(newgrain, random1);
       if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(newgrain, random1);
@@ -1604,16 +1529,64 @@ void  GrainGeneratorFunc::pack_grains()
         m_Grains[newgrain]->active = 1;
         add_grain(newgrain);
         remove_grain(random1);
-    m_Grains.erase(m_Grains.begin()+random1);
+		m_Grains.erase(m_Grains.begin()+random1);
         oldfillingerror = currentfillingerror;
         oldneighborhooderror = currentneighborhooderror;
         oldsizedisterror = currentsizedisterror;
         acceptedmoves++;
       }
-    else
-    {
-      m_Grains.resize(newgrain);
+      else
+      {
+        m_Grains.resize(newgrain);
+      }
     }
+  // this option removes a grain and replaces it with another grain at the same centroid
+    if (option == 3)
+    {
+      size_t random1 = int(rg.genrand_res53() * m_Grains.size());
+      if (random1 == 0) random1 = 1;
+      newgrain = m_Grains.size();
+      m_Grains.resize(newgrain+1);
+      m_Grains[newgrain] = Grain::New();
+      random = rg.genrand_res53();
+      for (size_t j = 0; j < primaryphases.size();++j)
+      {
+        if (random < primaryphasefractions[j])
+        {
+          phase = primaryphases[j];
+          break;
+        }
+      }
+      generate_grain(newgrain, phase);
+      GGseed++;
+      xc = m_Grains[random1]->centroidx;
+      yc = m_Grains[random1]->centroidy;
+      zc = m_Grains[random1]->centroidz;
+      m_Grains[newgrain]->centroidx = xc;
+      m_Grains[newgrain]->centroidy = yc;
+      m_Grains[newgrain]->centroidz = zc;
+      insert_grain(newgrain);
+      if (fillingerrorweight > 0) currentfillingerror = check_fillingerror(newgrain, random1);
+      if (sizedisterrorweight > 0) currentsizedisterror = check_sizedisterror(newgrain, random1);
+      if (neighborhooderrorweight > 0) currentneighborhooderror = check_neighborhooderror(newgrain, random1);
+      if (fillingerrorweight > 0) change1 = (currentfillingerror - oldfillingerror)/oldfillingerror;
+      if (sizedisterrorweight > 0) change2 = (currentsizedisterror - oldsizedisterror)/oldsizedisterror;
+      if (neighborhooderrorweight > 0) change3 = (currentneighborhooderror - oldneighborhooderror)/oldneighborhooderror;
+      if (fillingerrorweight * change1 + sizedisterrorweight * change2 + neighborhooderrorweight * change3 < 0)
+      {
+        m_Grains[newgrain]->active = 1;
+        add_grain(newgrain);
+        remove_grain(random1);
+		m_Grains.erase(m_Grains.begin()+random1);
+        oldfillingerror = currentfillingerror;
+        oldneighborhooderror = currentneighborhooderror;
+        oldsizedisterror = currentsizedisterror;
+        acceptedmoves++;
+      }
+      else
+      {
+        m_Grains.resize(newgrain);
+      }
     }
   }
   outFile.close();
@@ -1635,21 +1608,20 @@ void  GrainGeneratorFunc::pack_grains()
   outFile << "LOOKUP_TABLE default" << endl;
   for (int i = 0; i < (packingzpoints); i++)
   {
-  for (int j = 0; j < (packingypoints); j++)
-  {
-    for (int k = 0; k < (packingxpoints); k++)
+    for (int j = 0; j < (packingypoints); j++)
+    {
+      for (int k = 0; k < (packingxpoints); k++)
       {
-      int name = grainowners[k][j][i];
-      if(i%20 == 0 && i > 0) outFile << endl;
+        int name = grainowners[k][j][i];
+        if(i%20 == 0 && i > 0) outFile << endl;
         outFile << "     ";
-      if(name < 100) outFile << " ";
-      if(name < 10) outFile << " ";
-      outFile << name;
+        if(name < 100) outFile << " ";
+        if(name < 10) outFile << " ";
+        outFile << name;
+      }
     }
   }
-  }
   outFile.close();
-
 }
 
 void GrainGeneratorFunc::assign_voxels()

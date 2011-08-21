@@ -47,6 +47,10 @@
 
 #include "EbsdLib/HKL/CtfConstants.h"
 
+#define PI_OVER_2f       1.57079632679489661f
+#define THREE_PI_OVER_2f 4.71238898038468985f
+#define TWO_PIf          6.28318530717958647f
+#define ONE_PIf          3.14159265358979323f
 
 #define SHUFFLE_ARRAY(name, var, type)\
   { type* f = allocateArray<type>(totalDataRows);\
@@ -361,8 +365,7 @@ int H5CtfReader::readData(hid_t parId)
     for(size_t col = 0; col < nCols; ++col)
     {
     // Do we transform the data
-#if 0
-      if (getUserOrigin() == Ebsd::Ctf::UpperRightOrigin)
+      if (getUserOrigin() == Ebsd::UpperRightOrigin)
       {
       offset = (row*nCols)+((nCols-1)-col);
       if (p1[i] - PI_OVER_2f < 0.0)
@@ -374,7 +377,7 @@ int H5CtfReader::readData(hid_t parId)
         p1[i] = p1[i] - PI_OVER_2f;
       }
       }
-      else if (getUserOrigin() == Ebsd::Ctf::UpperLeftOrigin)
+      else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
       {
       if (p1[i] + PI_OVER_2f > TWO_PIf)
       {
@@ -393,7 +396,7 @@ int H5CtfReader::readData(hid_t parId)
         p[i] = p[i] + ONE_PIf;
       }
       }
-      else if (getUserOrigin() == Ebsd::Ctf::LowerLeftOrigin)
+      else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
       {
       offset = (((nRows-1)-row)*nCols)+col;
       if (p1[i] + PI_OVER_2f > TWO_PIf)
@@ -405,11 +408,10 @@ int H5CtfReader::readData(hid_t parId)
         p1[i] = p1[i] + PI_OVER_2f;
       }
       }
-      else if (getUserOrigin() == Ebsd::Ctf::LowerRightOrigin)
+      else if (getUserOrigin() == Ebsd::LowerRightOrigin)
       {
       offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
       }
-#endif
       if (getUserOrigin() == Ebsd::NoOrientation)
       {
         // If the user/programmer sets "NoOrientation" then we simply read the data
