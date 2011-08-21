@@ -895,52 +895,62 @@ void MicrostructureStatisticsFunc::find_moments()
 void MicrostructureStatisticsFunc::find_axes()
 {
   float I1, I2, I3;
+  float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
+  float a, b, c, d, f, g, h;
+  float rsquare, r, theta;
+  float A, B, C;
+  float r1, r2, r3;
+  float bovera, covera;
+  float value;
   size_t numgrains = m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    float Ixx = m_Grains[i]->Ixx;
-    float Iyy = m_Grains[i]->Iyy;
-    float Izz = m_Grains[i]->Izz;
-    float Ixy = m_Grains[i]->Ixy;
-    float Iyz = m_Grains[i]->Iyz;
-    float Ixz = m_Grains[i]->Ixz;
-    float a = 1;
-    float b = -Ixx - Iyy - Izz;
-    float c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
-    float d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
-    float f = ((3 * c / a) - ((b / a) * (b / a))) / 3;
-    float g = ((2 * (b / a) * (b / a) * (b / a)) - (9 * b * c / (a * a)) + (27 * (d / a))) / 27;
-    float h = (g * g / 4) + (f * f * f / 27);
-    float rsquare = (g * g / 4) - h;
-    float r = sqrt(rsquare);
-    float theta = 0;
+    Ixx = m_Grains[i]->Ixx;
+    Iyy = m_Grains[i]->Iyy;
+    Izz = m_Grains[i]->Izz;
+    Ixy = m_Grains[i]->Ixy;
+    Iyz = m_Grains[i]->Iyz;
+    Ixz = m_Grains[i]->Ixz;
+    a = 1;
+    b = -Ixx - Iyy - Izz;
+    c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
+    d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
+    f = ((3 * c / a) - ((b / a) * (b / a))) / 3;
+    g = ((2 * (b / a) * (b / a) * (b / a)) - (9 * b * c / (a * a)) + (27 * (d / a))) / 27;
+    h = (g * g / 4) + (f * f * f / 27);
+    rsquare = (g * g / 4) - h;
+    r = sqrt(rsquare);
+    theta = 0;
     if (r == 0)
     {
       theta = 0;
     }
     if (r != 0)
     {
-      theta = acos(-g / (2 * r));
+	  value = -g / (2 * r);
+	  if(value > 1) value = 1;
+	  if(value < -1) value = -1;
+      theta = acos(value);
     }
-    float r1 = 2 * powf(r, 0.33333333333) * cosf(theta / 3) - (b / (3 * a));
-    float r2 = -powf(r, 0.33333333333) * (cosf(theta / 3) - (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
-    float r3 = -powf(r, 0.33333333333) * (cosf(theta / 3) + (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
+    r1 = 2 * powf(r, 0.33333333333) * cosf(theta / 3) - (b / (3 * a));
+    r2 = -powf(r, 0.33333333333) * (cosf(theta / 3) - (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
+    r3 = -powf(r, 0.33333333333) * (cosf(theta / 3) + (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
     m_Grains[i]->radius1 = r1;
     m_Grains[i]->radius2 = r2;
     m_Grains[i]->radius3 = r3;
     I1 = (15 * r1) / (4 * m_pi);
     I2 = (15 * r2) / (4 * m_pi);
     I3 = (15 * r3) / (4 * m_pi);
-    float A = (I1 + I2 - I3) / 2;
-    float B = (I1 + I3 - I2) / 2;
-    float C = (I2 + I3 - I1) / 2;
+    A = (I1 + I2 - I3) / 2;
+    B = (I1 + I3 - I2) / 2;
+    C = (I2 + I3 - I1) / 2;
     a = (A * A * A * A) / (B * C);
     a = powf(a, 0.1);
     b = B / A;
     b = sqrt(b) * a;
     c = A / (a * a * a * b);
-    float bovera = b / a;
-    float covera = c / a;
+    bovera = b / a;
+    covera = c / a;
   //  float coverb = c / b;
     m_Grains[i]->aspectratio1 = bovera;
     m_Grains[i]->aspectratio2 = covera;
