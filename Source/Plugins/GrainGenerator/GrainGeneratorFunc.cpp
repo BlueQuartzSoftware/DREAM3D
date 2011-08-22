@@ -1355,10 +1355,13 @@ void  GrainGeneratorFunc::pack_grains()
     grainsizediststep[i] = ((2*maxdiameter[phase])-(mindiameter[phase]/2.0))/grainsizedist[i].size();
     float root2pi = sqrt((2.0 * 3.1415926535897));
     float input = 0;
+	float previoustotal = 0;
     for (size_t j=0;j<grainsizedist[i].size();j++)
     {
 	    input = (float(j+1)*grainsizediststep[i])+(mindiameter[phase]/2.0);
-	    grainsizedist[i][j] = (grainsizediststep[i]/(input*sddiam[phase]*root2pi))*exp(-((log(float(input))-avgdiam[phase])*(log(float(input))-avgdiam[phase]))/(2*sddiam[phase]*sddiam[phase]));
+		if(logf(input) <= avgdiam[phase]) grainsizedist[i][j] = 0.5 - 0.5*(erf((avgdiam[phase]-logf(float(input)))/(sqrtf(2*sddiam[phase]*sddiam[phase])))) - previoustotal;
+		if(logf(input) > avgdiam[phase]) grainsizedist[i][j] = 0.5 + 0.5*(erf((logf(float(input))-avgdiam[phase])/(sqrtf(2*sddiam[phase]*sddiam[phase])))) - previoustotal;
+		previoustotal = previoustotal + grainsizedist[i][j];
     }
   }
   // initialize the sim and goal neighbor distribution for the primary phases
