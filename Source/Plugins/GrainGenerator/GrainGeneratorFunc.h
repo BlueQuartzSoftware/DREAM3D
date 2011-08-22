@@ -147,7 +147,6 @@ public:
 	  std::vector<float> sizetest;
 
 	  std::vector<std::vector<std::vector<int> > > grainowners;
-	  std::vector<std::vector<std::vector<int> > > goalgrainowners;
 
 	  std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
