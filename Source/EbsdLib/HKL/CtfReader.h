@@ -75,7 +75,8 @@ class EbsdLib_EXPORT CtfReader
     EBSD_INSTANCE_STRING_PROPERTY( FileName )
     EBSD_INSTANCE_PROPERTY(int, NumFields);
 
-    EBSD_INSTANCE_STRING_PROPERTY(CompleteHeader);
+    EBSD_INSTANCE_STRING_PROPERTY(OriginalHeader);
+    void appendOriginalHeader(const std::string &more);
 
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ebsd::Ctf::ChannelTextFile)
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
@@ -192,7 +193,7 @@ class EbsdLib_EXPORT CtfReader
 
   private:
      bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
-     bool m_headerComplete;
+     bool m_HeaderComplete;
      size_t m_NumberOfElements;
 
      std::vector<std::string> tokenize(char* buf, char delimiter);

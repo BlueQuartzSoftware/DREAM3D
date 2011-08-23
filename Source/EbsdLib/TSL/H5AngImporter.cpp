@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -239,7 +239,7 @@ int H5AngImporter::importFile(hid_t fileId, int z, const std::string &angFile)
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, SampleID, Ebsd::Ang::SampleId)
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, ScanID, Ebsd::Ang::ScanId)
 
-  std::string angCompleteHeader = reader.getCompleteHeader();
+  std::string angCompleteHeader = reader.getOriginalHeader();
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, angCompleteHeader);
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, angFile);
 
