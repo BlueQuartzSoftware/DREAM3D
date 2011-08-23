@@ -351,6 +351,7 @@ int H5AngReader::readData(hid_t parId)
   std::vector<size_t> shuffleTable(totalDataRows, 0);
 
   size_t i = 0;
+
   for(size_t row = 0; row < nRows; ++row)
   {
 	  for(size_t col = 0; col < nCols; ++col)
@@ -358,50 +359,111 @@ int H5AngReader::readData(hid_t parId)
     // Do we transform the data
 		  if (getUserOrigin() == Ebsd::UpperRightOrigin)
 		  {
-			offset = (row*nCols)+((nCols-1)-col);
-			if (p1[i] - PI_OVER_2f < 0.0)
-			{
-			  p1[i] = p1[i] + THREE_PI_OVER_2f;
-			}
-			else
-			{
-			  p1[i] = p1[i] - PI_OVER_2f;
-			}
+			  if (getUserZDir() == Ebsd::IntoSlice)
+			  {
+				offset = (((nCols-1)-col)*nRows)+(row);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
+			  if (getUserZDir() == Ebsd::OutofSlice)
+			  {
+				offset = (row*nCols)+((nCols-1)-col);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
 		  }
 		  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
 		  {
-			if (p1[i] + PI_OVER_2f > TWO_PIf)
-			{
-			  p1[i] = p1[i] - THREE_PI_OVER_2f;
-			}
-			else
-			{
-			  p1[i] = p1[i] + PI_OVER_2f;
-			}
-			if (p[i] + ONE_PIf > TWO_PIf)
-			{
-			  p[i] = p[i] - ONE_PIf;
-			}
-			else
-			{
-			  p[i] = p[i] + ONE_PIf;
-			}
+			  if (getUserZDir() == Ebsd::IntoSlice)
+			  {
+				offset = (row*nCols)+(col);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
+			  if (getUserZDir() == Ebsd::OutofSlice)
+			  {
+				offset = (col*nRows)+(row);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
 		  }
 		  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
 		  {
-			offset = (((nRows-1)-row)*nCols)+col;
-			if (p1[i] + PI_OVER_2f > TWO_PIf)
-			{
-			  p1[i] = p1[i] - THREE_PI_OVER_2f;
-			}
-			else
-			{
-			  p1[i] = p1[i] + PI_OVER_2f;
-			}
+			  if (getUserZDir() == Ebsd::IntoSlice)
+			  {
+				offset = (col*nRows)+((nRows-1)-row);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
+			  if (getUserZDir() == Ebsd::OutofSlice)
+			  {
+				offset = (((nRows-1)-row)*nCols)+(col);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
 		  }
 		  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
 		  {
-			offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+			  if (getUserZDir() == Ebsd::IntoSlice)
+			  {
+				offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
+			  if (getUserZDir() == Ebsd::OutofSlice)
+			  {
+				offset = (((nCols-1)-col)*nRows)+((nRows-1)-row);
+				if (p1[i] - PI_OVER_2f < 0.0)
+				{
+				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p1[i] = p1[i] - PI_OVER_2f;
+				}
+			  }
 		  }
 
 		  if (getUserOrigin() == Ebsd::NoOrientation)
@@ -433,6 +495,20 @@ int H5AngReader::readData(hid_t parId)
   }
 
   err = H5Gclose(gid);
+  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
+  if(getAxesFlipped() == true)
+  {
+	setNumOddCols(nRows);
+	setNumEvenCols(nRows);
+	setNumRows(nCols);
+  }
   return err;
 }
 

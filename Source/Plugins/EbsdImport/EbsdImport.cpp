@@ -183,6 +183,8 @@ void EbsdImport::execute()
    * which is going to cause problems because the data is going to be placed
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
+  int biggestxDim = 0;
+  int biggestyDim = 0;
   for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath )
   {
     std::string ebsdFName = *filepath;
@@ -194,7 +196,8 @@ void EbsdImport::execute()
     err = fileImporter->importFile(fileId, z, ebsdFName);
     fileImporter->getDims(xDim, yDim);
     fileImporter->getResolution(xRes, yRes);
-    //FIXME: Should we check the resolution and dims to make sure they match from slice to slice?
+    if(xDim > biggestxDim) biggestxDim = xDim;
+    if(yDim > biggestyDim) biggestyDim = yDim;
 
     if (err < 0)
     {
@@ -205,9 +208,9 @@ void EbsdImport::execute()
     CHECK_FOR_CANCELED(EbsdImportFunc, "EbsdImport was Canceled", import_data)
   }
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, xDim);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XPoints Scalar", err)
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, yDim);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the YPoints Scalar", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XResolution Scalar", err)
