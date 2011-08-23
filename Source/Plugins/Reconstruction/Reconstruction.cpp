@@ -75,7 +75,7 @@ m_MergeColonies(false),
 m_FillinSample(false),
 m_MinAllowedGrainSize(0),
 m_MisorientationTolerance(0.0),
-m_Orientation(Ebsd::NoOrientation),
+m_RefFrameOrigin(Ebsd::NoOrientation),
 m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(true),
 m_WritePhaseId(true),
@@ -406,7 +406,7 @@ void Reconstruction::printSettings(std::ostream &ostream)
 //    PRINT_PROPERTY(ostream, MinSeedImageQuality)
     PRINT_PROPERTY(ostream, MisorientationTolerance)
     PRINT_PROPERTY(ostream, AlignmentMethod)
-    PRINT_PROPERTY(ostream, Orientation)
+    PRINT_PROPERTY(ostream, RefFrameOrigin)
 
     PRINT_PROPERTY(ostream, WriteVtkFile)
     PRINT_PROPERTY(ostream, WritePhaseId)

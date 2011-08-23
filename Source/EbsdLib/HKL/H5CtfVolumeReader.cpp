@@ -145,7 +145,8 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
     H5CtfReader::Pointer reader = H5CtfReader::New();
     reader->setFileName(getFilename());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart() ) );
-    reader->setUserOrigin(getOrientation());
+    reader->setUserOrigin(getRefFrameOrigin());
+    reader->setUserZDir(getRefFrameZDir());
 
     err = reader->readFile();
     if (err < 0)

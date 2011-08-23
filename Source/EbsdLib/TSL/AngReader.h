@@ -67,7 +67,8 @@ class EbsdLib_EXPORT AngReader
     virtual ~AngReader();
 
     /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ebsd::Orientation, UserOrigin)
+	EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, UserOrigin)
+	EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
 
     /** @brief Sets the file name of the ang file to be read */
     EBSD_INSTANCE_STRING_PROPERTY( FileName )

@@ -132,7 +132,8 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, m_, MergeTwins, false);
   READ_CHECKBOX_SETTING(prefs, m_, FillinSample, false);
   READ_COMBO_BOX(prefs, m_, AlignMeth)
-  READ_COMBO_BOX(prefs, m_, Orientation)
+  READ_COMBO_BOX(prefs, m_, RefFrameOrigin)
+  READ_COMBO_BOX(prefs, m_, RefFrameZDir)
 
   READ_SETTING(prefs, m_, MisOrientationTolerance, ok, d, 5.0 , Double);
   READ_SETTING(prefs, m_, MinAllowedGrainSize, ok, i, 8 , Int);
@@ -215,7 +216,8 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
   WRITE_SETTING(prefs, m_, MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, m_, AlignMeth)
-  WRITE_COMBO_BOX(prefs, m_, Orientation)
+  WRITE_COMBO_BOX(prefs, m_, RefFrameOrigin)
+  WRITE_COMBO_BOX(prefs, m_, RefFrameZDir)
 
 
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
@@ -292,7 +294,7 @@ void ReconstructionWidget::setupGui()
 
   m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
-  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth << m_Orientation;
+  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth << m_RefFrameOrigin << m_RefFrameZDir;
   m_WidgetList << m_MinAllowedGrainSize << m_DownSampleFactor << m_MisOrientationTolerance;
   m_WidgetList << m_VisualizationVizFile << m_DownSampledVizFile;
   m_WidgetList << m_H5VoxelFile << m_VtkOptionsBtn;
@@ -736,8 +738,11 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
-  Ebsd::Orientation orientation = static_cast<Ebsd::Orientation>(m_Orientation->currentIndex());
-  m_Reconstruction->setOrientation(orientation);
+  Ebsd::RefFrameOrigin refframeorigin = static_cast<Ebsd::RefFrameOrigin>(m_RefFrameOrigin->currentIndex());
+  m_Reconstruction->setRefFrameOrigin(refframeorigin);
+
+  Ebsd::RefFrameZDir refframezdir = static_cast<Ebsd::RefFrameZDir>(m_RefFrameZDir->currentIndex());
+  m_Reconstruction->setRefFrameZDir(refframezdir);
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
   m_Reconstruction->setMisorientationTolerance(m_MisOrientationTolerance->value());

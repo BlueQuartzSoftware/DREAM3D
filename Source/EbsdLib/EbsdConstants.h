@@ -70,13 +70,19 @@ namespace Ebsd
   }
 
   /** @brief Constants defined for the 5 orientation options */
-  enum Orientation
+  enum RefFrameOrigin
   {
      UpperRightOrigin = 0,
      UpperLeftOrigin = 1,
      LowerLeftOrigin = 2,
      LowerRightOrigin = 3,
      NoOrientation = 4,
+  };
+
+  enum RefFrameZDir
+  {
+     IntoSlice = 0,
+     OutofSlice = 1,
   };
 
   /**

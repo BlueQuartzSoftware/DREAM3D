@@ -342,20 +342,13 @@
         <number>3</number>
        </property>
        <item>
-        <layout class="QGridLayout" name="gridLayout_6" rowstretch="1,1,1,1,1,0">
+        <layout class="QGridLayout" name="gridLayout_6" rowstretch="1,1,1,1,1">
          <property name="rightMargin">
           <number>10</number>
          </property>
          <property name="spacing">
           <number>6</number>
          </property>
-         <item row="1" column="3">
-          <widget class="QCheckBox" name="m_MergeColonies">
-           <property name="text">
-            <string>Merge Colonies</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_5">
            <property name="text">
@@ -471,13 +464,6 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
-          <widget class="QCheckBox" name="m_FillinSample">
-           <property name="text">
-            <string>Rectangularized Sample</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="2" rowspan="5">
           <widget class="Line" name="line_2">
            <property name="orientation">
@@ -488,14 +474,14 @@
          <item row="0" column="3">
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Data Orientation</string>
+            <string>Reference Frame Origin</string>
            </property>
           </widget>
          </item>
          <item row="0" column="4">
-          <widget class="QComboBox" name="m_Orientation">
+          <widget class="QComboBox" name="m_RefFrameOrigin">
            <property name="currentIndex">
-            <number>4</number>
+            <number>0</number>
            </property>
            <item>
             <property name="text">
@@ -524,13 +510,6 @@
            </item>
           </widget>
          </item>
-         <item row="3" column="3">
-          <widget class="QCheckBox" name="m_MergeTwins">
-           <property name="text">
-            <string>Merge Twins</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="5" rowspan="5">
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -543,6 +522,48 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="4" column="3">
+          <widget class="QCheckBox" name="m_MergeTwins">
+           <property name="text">
+            <string>Merge Twins</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QCheckBox" name="m_FillinSample">
+           <property name="text">
+            <string>Rectangularized Sample</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QCheckBox" name="m_MergeColonies">
+           <property name="text">
+            <string>Merge Colonies</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="label_24">
+           <property name="text">
+            <string>Reference Frame Z Direction</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QComboBox" name="m_RefFrameZDir">
+           <item>
+            <property name="text">
+             <string>Into Slice</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Out of Slice</string>
+            </property>
+           </item>
+          </widget>
          </item>
         </layout>
        </item>
@@ -620,6 +641,12 @@
            </attribute>
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>120</number>
            </attribute>
           </widget>
          </item>

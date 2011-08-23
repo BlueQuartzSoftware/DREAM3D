@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 
   h5io->setSliceStart(zStart);
   h5io->setSliceEnd(zEnd);
-  h5io->setOrientation(Ebsd::NoOrientation);
+  h5io->setRefFrameOrigin(Ebsd::NoOrientation);
 
   DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
   std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes;

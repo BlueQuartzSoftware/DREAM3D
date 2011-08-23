@@ -46,6 +46,11 @@
 
 #include "CtfPhase.h"
 
+#define PI_OVER_2f       1.57079632679489661f
+#define THREE_PI_OVER_2f 4.71238898038468985f
+#define TWO_PIf          6.28318530717958647f
+#define ONE_PIf          3.14159265358979323f
+
 #define kBufferSize 1024
 
 // -----------------------------------------------------------------------------
@@ -376,9 +381,8 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
                        &phase, &x,&y, &bCount, &error, &euler1, &euler2, &euler3, &mad, &bc, &bs);
   assert(fields == m_NumFields);
 
-#if 0
   // Do we transform the data
-  if (m_UserOrigin == Ang::UpperRightOrigin)
+  if (m_UserOrigin == Ebsd::UpperRightOrigin)
   {
     offset = (row*nCols)+((nCols-1)-col);
     if (phase - PI_OVER_2f < 0.0)
@@ -390,7 +394,7 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
       phase = phase - PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ang::UpperLeftOrigin)
+  else if (m_UserOrigin == Ebsd::UpperLeftOrigin)
   {
     if (phase + PI_OVER_2f > TWO_PIf)
     {
@@ -409,7 +413,7 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
       x = x + ONE_PIf;
     }
   }
-  else if (m_UserOrigin == Ang::LowerLeftOrigin)
+  else if (m_UserOrigin == Ebsd::LowerLeftOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+col;
     if (phase + PI_OVER_2f > TWO_PIf)
@@ -421,13 +425,13 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
       phase = phase + PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ang::LowerRightOrigin)
+  else if (m_UserOrigin == Ebsd::LowerRightOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
   }
 
 
-  if (m_UserOrigin == Ang::NoOrientation)
+  if (m_UserOrigin == Ebsd::NoOrientation)
   {
     // If the user/programmer sets "NoOrientation" then we simply read the data
     // from the file and copy the values into the arrays without any regard for
@@ -435,7 +439,7 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
     // data as close to the original as possible.
     offset = i;
   }
-#endif
+
   m_Phase[offset] = phase;
   m_X[offset] = x;
   m_Y[offset] = y;

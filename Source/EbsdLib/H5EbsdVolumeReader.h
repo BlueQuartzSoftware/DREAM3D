@@ -68,7 +68,8 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
 
     EBSD_INSTANCE_PROPERTY(bool, Cancel)
 
-    EBSD_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation);
+    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, RefFrameOrigin);
+    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir);
 
     /**
      * @brief This is the actual starting slice that the user wants to start
