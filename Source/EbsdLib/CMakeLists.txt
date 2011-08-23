@@ -91,11 +91,14 @@ set(EbsdLib_SRCS
     )
 set(EbsdLib_HDRS
     ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.h
+    ${EbsdLib_SOURCE_DIR}/EbsdConstants.h
+    ${EbsdLib_SOURCE_DIR}/EbsdHeaderEntry.h
+    ${EbsdLib_SOURCE_DIR}/EbsdImporter.h
+    ${EbsdLib_SOURCE_DIR}/EbsdLibDLLExport.h
+    ${EbsdLib_SOURCE_DIR}/EbsdMacros.h
+    ${EbsdLib_SOURCE_DIR}/EbsdSetGetMacros.h
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.h
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeReader.h
-    ${EbsdLib_SOURCE_DIR}/EbsdHeaderEntry.h
-    ${EbsdLib_SOURCE_DIR}/EbsdLibDLLExport.h
-    ${EbsdLib_SOURCE_DIR}/EbsdSetGetMacros.h
     ${EbsdLib_SOURCE_DIR}/QualityMetricFilter.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/" "${EbsdLib_HDRS}" "${EbsdLib_SRCS}" ${PROJECT_INSTALL_HEADERS})

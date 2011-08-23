@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -43,6 +43,7 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/Utilities/StringUtils.h"
 
 #include "EbsdLib/HKL/CtfConstants.h"
@@ -118,108 +119,6 @@ int H5CtfReader::readFile()
   return err;
 }
 
-#define READ_EBSD_HEADER_DATA(class, type, getName, key)\
-{\
-  type t;\
-  err = H5Lite::readScalarDataset(gid, key, t);\
-  if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5CtfReader Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
-    err = H5Gclose(gid);\
-    return -1; }\
-  else {\
-    EbsdHeaderEntry::Pointer p = m_Headermap[key];\
-    class* c = dynamic_cast<class*>(p.get());\
-    c->setValue(t);\
-  }\
-}
-
-#define READ_EBSD_HEADER_STRING_DATA(class, type, getName, key)\
-{\
-  std::string t;\
-  err = H5Lite::readStringDataset(gid, key, t);\
-  if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5CtfReader Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
-    err = H5Gclose(gid);\
-    return -1; }\
-    else {\
-      EbsdHeaderEntry::Pointer p = m_Headermap[key];\
-      class* c = dynamic_cast<class*>(p.get());\
-      c->setValue(t);\
-    }\
-}
-
-
-#define READ_PHASE_STRING_DATA(pid, fqKey, key, phase)\
-{\
-  std::string t;\
-  err = H5Lite::readStringDataset(pid, fqKey, t);\
-  if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5CtfReader Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
-    err = H5Gclose(pid); H5Gclose(phasesGid);H5Gclose(gid);\
-    return -1; }\
-    else {\
-      phase->set##key(t);\
-    }\
-}
-
-#define READ_PHASE_HEADER_DATA(pid, type, fqKey, key, phase)\
-{\
-  type t;\
-  err = H5Lite::readScalarDataset(pid, fqKey, t);\
-  if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5CtfReader Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
-    err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
-    return -1; }\
-  else {\
-    phase->set##key(t);\
-  }\
-}
-
-#define READ_PHASE_HEADER_DATA_CAST(pid, cast, type, fqKey, key, phase)\
-{\
-  type t;\
-  err = H5Lite::readScalarDataset(pid, fqKey, t);\
-  if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5CtfReader Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
-    err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
-    return -1; }\
-  else {\
-    phase->set##key(static_cast<cast>(t));\
-  }\
-}
-
-#define READ_PHASE_HEADER_ARRAY(pid, type, fqKey, key, phase)\
-{\
-  type t;\
-  err = H5Lite::readVectorDataset(pid, fqKey, t);\
-  if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5CtfReader Error: Could not read Ang Header value "\
-    <<  " to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
-    err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
-    return -1; }\
-  else {\
-    phase->set##key(t);\
-  }\
-}
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -234,23 +133,23 @@ int H5CtfReader::readHeader(hid_t parId)
     return -1;
   }
 
-  READ_EBSD_HEADER_STRING_DATA(CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
-  READ_EBSD_HEADER_STRING_DATA(CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
-  READ_EBSD_HEADER_STRING_DATA(CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-  READ_EBSD_HEADER_STRING_DATA(CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
-  READ_EBSD_HEADER_DATA(CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
   if (phasesGid < 0)
@@ -275,14 +174,14 @@ int H5CtfReader::readHeader(hid_t parId)
     hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
 
-    READ_PHASE_HEADER_ARRAY( pid, std::vector<float>, Ebsd::Ctf::LatticeDimensions, LatticeDimensions, m_CurrentPhase);
-    READ_PHASE_HEADER_ARRAY( pid, std::vector<float>, Ebsd::Ctf::LatticeAngles, LatticeAngles, m_CurrentPhase);
-    READ_PHASE_STRING_DATA(pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA(pid, Ebsd::Ctf::PhaseSymmetry, Ebsd::Ctf::LaueGroup, Symmetry, m_CurrentPhase)
-    READ_PHASE_STRING_DATA(pid, Ebsd::Ctf::Section4, Section4, m_CurrentPhase)
-    READ_PHASE_STRING_DATA(pid, Ebsd::Ctf::Section5, Section5, m_CurrentPhase)
-    READ_PHASE_STRING_DATA(pid, Ebsd::Ctf::Section6, Section6, m_CurrentPhase)
-    READ_PHASE_STRING_DATA(pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeDimensions, LatticeDimensions, m_CurrentPhase);
+    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeAngles, LatticeAngles, m_CurrentPhase);
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseSymmetry, Ebsd::Ctf::LaueGroup, Symmetry, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section4, Section4, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section5, Section5, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section6, Section6, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
 
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
@@ -344,8 +243,6 @@ int H5CtfReader::readData(hid_t parId)
 
 
   int* phase = getPhasePointer();
-//  float* x = getXPointer();
-//  float* y = getYPointer();
   int* bCount = getBandCountPointer();
   int* error = getErrorPointer();
   float* p1 = getEuler1Pointer();

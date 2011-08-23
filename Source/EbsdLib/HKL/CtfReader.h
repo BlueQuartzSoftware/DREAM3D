@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -198,6 +198,7 @@ class EbsdLib_EXPORT CtfReader
      std::vector<std::string> tokenize(char* buf, char delimiter);
 
      int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
+
      /**
       * Checks that the line is the header of the columns for the data.
       *
@@ -208,9 +209,21 @@ class EbsdLib_EXPORT CtfReader
       */
      bool isDataHeaderLine(std::vector<std::string> &columns);
 
+     /**
+      *
+      */
      int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
 
-     void readData(const std::string &line, size_t row, size_t i);
+     /**
+      * @brief Reads a line of Data from the ASCII based file
+      * @param line The current line of data
+      * @param row Current Row of Data
+      * @param i The current index into a flat array
+      * @param xCells Number of X Data Points
+      * @param yCells Number of Y Data Points
+      * @param col The current Column of Data
+      */
+     void readData(const std::string &line, int row, int col, size_t i, int xCells, int yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

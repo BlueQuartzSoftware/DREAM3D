@@ -60,7 +60,7 @@
 
 
 
-
+#define MIKE_G_DEBUG 1
 
 
 // -----------------------------------------------------------------------------
@@ -126,8 +126,10 @@ void Reconstruction::execute()
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     // The GUI code has already added 1 to the end index so nothing special needs to be done
     // for this calculation
-	m->resx = m->resx*2;
-	m->resy = m->resy*2;
+#if MIKE_G_DEBUG
+    m->resx = m->resx*2;
+    m->resy = m->resy*2;
+#endif
     m->zpoints = getZEndIndex() - getZStartIndex() + 1;
     manufacturer = volumeInfoReader->getManufacturer();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
@@ -185,6 +187,8 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Loading Slices"), 4);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
+  ebsdReader->setRefFrameOrigin(m_RefFrameOrigin);
+  ebsdReader->setRefFrameZDir(m_RefFrameZDir);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_QualityMetricFilters);
 
   CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)

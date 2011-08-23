@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -273,11 +273,17 @@ int CtfReader::readFile()
 
   size_t counter = 0;
   char buf[kBufferSize];
-  for(size_t row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
+  int yCells = getYCells();
+  int xCells = getXCells();
+
+  for (int row = 0; row < yCells && in.eof() == false; ++row)
   {
-    in.getline(buf, kBufferSize);
-    readData(buf, row, counter);
-    ++counter;
+    for (int col = 0; col < xCells && in.eof() == false; ++col)
+    {
+      in.getline(buf, kBufferSize);
+      readData(buf, row, col, counter, xCells, yCells);
+      ++counter;
+    }
   }
 
 
@@ -368,9 +374,9 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 }
 
 // -----------------------------------------------------------------------------
-//  Read the data part of the ANG file
+//  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::readData(const std::string &line, size_t row, size_t i)
+void CtfReader::readData(const std::string &line, int row, int col, size_t i, int xCells, int yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */
@@ -384,7 +390,7 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
   // Do we transform the data
   if (m_UserOrigin == Ebsd::UpperRightOrigin)
   {
-    offset = (row*nCols)+((nCols-1)-col);
+    offset = (row*xCells)+((xCells-1)-col);
     if (phase - PI_OVER_2f < 0.0)
     {
       phase = phase + THREE_PI_OVER_2f;
@@ -415,7 +421,7 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
   }
   else if (m_UserOrigin == Ebsd::LowerLeftOrigin)
   {
-    offset = (((nRows-1)-row)*nCols)+col;
+    offset = (((yCells-1)-row)*xCells)+col;
     if (phase + PI_OVER_2f > TWO_PIf)
     {
       phase = phase - THREE_PI_OVER_2f;
@@ -427,7 +433,7 @@ void CtfReader::readData(const std::string &line, size_t row, size_t i)
   }
   else if (m_UserOrigin == Ebsd::LowerRightOrigin)
   {
-    offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+    offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
   }
 
 
