@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -67,8 +67,8 @@ class EbsdLib_EXPORT AngReader
     virtual ~AngReader();
 
     /** @brief Allow the user to set the origin of the scan */
-	EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, UserOrigin)
-	EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
+    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, UserOrigin)
+    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
 
     /** @brief Sets the file name of the ang file to be read */
     EBSD_INSTANCE_STRING_PROPERTY( FileName )
