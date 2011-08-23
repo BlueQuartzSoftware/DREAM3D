@@ -198,7 +198,7 @@ int H5AngReader::readHeader(hid_t parId)
 
   std::string completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
-  setCompleteHeader(completeHeader);
+  setOriginalHeader(completeHeader);
 
   err = H5Gclose(gid);
   return err;

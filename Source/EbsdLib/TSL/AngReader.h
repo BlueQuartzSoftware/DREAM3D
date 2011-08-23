@@ -46,6 +46,7 @@
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/EbsdReader.h"
 #include "AngConstants.h"
 #include "AngHeaderEntry.h"
 #include "AngPhase.h"
@@ -60,22 +61,13 @@
 * @date Mar 1, 2010
 * @version 1.0
 */
-class EbsdLib_EXPORT AngReader
+class EbsdLib_EXPORT AngReader : public EbsdReader
 {
   public:
     AngReader();
     virtual ~AngReader();
 
-    /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, UserOrigin)
-    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
 
-    /** @brief Sets the file name of the ang file to be read */
-    EBSD_INSTANCE_STRING_PROPERTY( FileName )
-    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
-    EBSD_INSTANCE_PROPERTY(int, NumFields);
-
-    EBSD_INSTANCE_STRING_PROPERTY(CompleteHeader);
 
     /** @brief Header Values from the TSL ang file */
 
@@ -136,70 +128,30 @@ class EbsdLib_EXPORT AngReader
     */
     virtual int readHeaderOnly();
 
+    /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+    * and then splats '0' across all the bytes of the memory allocation
+    */
+    virtual void initPointers(size_t numElements);
+
+    /** @brief 'free's the allocated memory and sets the pointer to NULL
+    */
+    virtual void deletePointers();
+
+protected:
+
+
+private:
+//    bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
+//    bool m_HeaderComplete;
+//    size_t m_NumberOfElements;
+
+    AngPhase::Pointer   m_CurrentPhase;
+
 
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
     */
     virtual void parseHeaderLine(char* buf, size_t length);
-
-protected:
-    // Needed by subclasses
-    std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
-
-    /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
-    * and then splats '0' across all the bytes of the memory allocation
-    */
-    void initPointers(size_t numElements);
-
-    /** @brief 'free's the allocated memory and sets the pointer to NULL
-    */
-    void deletePointers();
-
-    /**
-     * @brief Allocats a contiguous chunk of memory to store values from the .ang file
-     * @param numberOfElements The number of elements in the Array. This method can
-     * also optionally produce SSE aligned memory for use with SSE intrinsics
-     * @return Pointer to allocated memory
-     */
-      template<typename T>
-      T* allocateArray(size_t numberOfElements)
-      {
-  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-  #else
-        T*  m_buffer = new T[numberOfElements];
-  #endif
-        m_NumberOfElements = numberOfElements;
-        return m_buffer;
-      }
-
-    /**
-     * @brief Deallocates memory that has been previously allocated. This will set the
-     * value of the pointer passed in as the argument to NULL.
-     * @param ptr The pointer to be freed.
-     */
-      template<typename T>
-      void deallocateArrayData(T* &ptr)
-      {
-        if (ptr != NULL && this->m_ManageMemory == true)
-        {
-  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-          _mm_free(ptr );
-  #else
-          delete[] ptr;
-  #endif
-          ptr = NULL;
-          m_NumberOfElements = 0;
-        }
-      }
-
-private:
-    bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
-    bool m_headerComplete;
-
-    AngPhase::Pointer   m_CurrentPhase;
-
-
 
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse

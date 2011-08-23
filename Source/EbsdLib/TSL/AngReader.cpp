@@ -59,11 +59,7 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader() :
-m_UserOrigin(Ebsd::NoOrientation),
-m_UserZDir(Ebsd::IntoSlice),
-m_FileName(""),
-m_NumberOfElements(0),
-m_ManageMemory(true)
+EbsdReader()
 {
   // Init all the arrays to NULL
   m_Phi1 = NULL;
@@ -77,7 +73,7 @@ m_ManageMemory(true)
   m_SEMSignal = NULL;
   m_Fit = NULL;
 
-  m_NumFields = 8;
+  setNumFields(8);
   // Initialize the map of header key to header value
   m_Headermap[Ebsd::Ang::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::TEMPIXPerUM);
   m_Headermap[Ebsd::Ang::XStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::XStar);
@@ -201,24 +197,26 @@ int AngReader::readHeaderOnly()
 {
   int err = 1;
   char buf[kBufferSize];
-  std::ifstream in(m_FileName.c_str());
-  m_headerComplete = false;
+  std::ifstream in(getFileName().c_str());
+  setHeaderIsComplete(false);
   if (!in.is_open())
   {
-    std::cout << "Ang file could not be opened: " << m_FileName << std::endl;
+    std::cout << "Ang file could not be opened: " << getFileName() << std::endl;
     return -100;
   }
-
-  m_CompleteHeader.clear();
+  std::string origHeader;
+  setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
-  while (!in.eof() && !m_headerComplete)
+  while (!in.eof() && false == getHeaderIsComplete())
   {
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
-    m_CompleteHeader.append(buf);
+    origHeader.append(buf);
   }
+  // Update the Original Header variable
+  setOriginalHeader(origHeader);
   return err;
 }
 
@@ -229,27 +227,29 @@ int AngReader::readFile()
 {
   int err = 1;
   char buf[kBufferSize];
-  m_headerComplete = false;
-  std::ifstream in(m_FileName.c_str());
-
+  std::ifstream in(getFileName().c_str());
+  setHeaderIsComplete(false);
   if (!in.is_open())
   {
-    std::cout << "Ang file could not be opened: " << m_FileName << std::endl;
+    std::cout << "Ang file could not be opened: " << getFileName() << std::endl;
     return -100;
   }
 
-  m_CompleteHeader.clear();
+  std::string origHeader;
+  setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
-  while (!in.eof() && !m_headerComplete)
+  while (!in.eof() && false == getHeaderIsComplete())
   {
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
-    if (m_headerComplete == false) {
-      m_CompleteHeader.append(buf);
+    if (getHeaderIsComplete() == false) {
+      origHeader.append(buf);
     }
   }
+  // Update the Original Header variable
+  setOriginalHeader(origHeader);
 
   // Delete any currently existing pointers
   deletePointers();
@@ -309,16 +309,16 @@ int AngReader::readFile()
   {
 
     std::cout << "Premature End Of File reached.\n"
-        << m_FileName
+        << getFileName()
         << "\nNumRows=" << nRows << " nEvenCols=" << nEvenCols
         << "\ncounter=" << counter << " totalDataRows=" << totalDataRows
         << "\nTotal Data Points Read=" << counter << std::endl;
   }
-  if (m_NumFields < 10)
+  if (getNumFields() < 10)
   {
     this->deallocateArrayData<float > (m_Fit);
   }
-  if (m_NumFields < 9)
+  if (getNumFields() < 9)
   {
     this->deallocateArrayData<float > (m_SEMSignal);
   }
@@ -334,7 +334,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 {
   if (buf[0] != '#')
   {
-    m_headerComplete = true;
+    setHeaderIsComplete(true);
     return;
   }
   // Start at the first character and walk until you find another non-space character
@@ -454,11 +454,12 @@ void AngReader::readData(const std::string &line,
   float p1, p, p2, x, y, iqual, conf, semSignal, fit;
   int ph;
   size_t offset = 0;
-  m_NumFields = sscanf(line.c_str(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
+  size_t fieldsRead = 0;
+  fieldsRead = sscanf(line.c_str(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
 
   // Do we transform the data
-  if (m_UserOrigin == Ebsd::UpperRightOrigin)
+  if (getUserOrigin() == Ebsd::UpperRightOrigin)
   {
     offset = (row*nCols)+((nCols-1)-col);
     if (p1 - PI_OVER_2f < 0.0)
@@ -470,7 +471,7 @@ void AngReader::readData(const std::string &line,
       p1 = p1 - PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ebsd::UpperLeftOrigin)
+  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
   {
     if (p1 + PI_OVER_2f > TWO_PIf)
     {
@@ -489,7 +490,7 @@ void AngReader::readData(const std::string &line,
       p = p + ONE_PIf;
     }
   }
-  else if (m_UserOrigin == Ebsd::LowerLeftOrigin)
+  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+col;
     if (p1 + PI_OVER_2f > TWO_PIf)
@@ -501,12 +502,12 @@ void AngReader::readData(const std::string &line,
       p1 = p1 + PI_OVER_2f;
     }
   }
-  else if (m_UserOrigin == Ebsd::LowerRightOrigin)
+  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
   {
     offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
   }
 
-  if (m_UserOrigin == Ebsd::NoOrientation)
+  if (getUserOrigin() == Ebsd::NoOrientation)
   {
     // If the user/programmer sets "NoOrientation" then we simply read the data
     // from the file and copy the values into the arrays without any regard for
@@ -522,10 +523,10 @@ void AngReader::readData(const std::string &line,
   m_PhaseData[offset] = ph;
   m_X[offset] = x;
   m_Y[offset] = y;
-  if (m_NumFields > 8) {
+  if (getNumFields() > 8) {
     m_SEMSignal[offset] = semSignal;
   }
-  if (m_NumFields > 9)
+  if (getNumFields() > 9)
   {
     m_Fit[offset] = fit;
   }

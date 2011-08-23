@@ -112,6 +112,14 @@ CtfReader::~CtfReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CtfReader::appendOriginalHeader(const std::string &more)
+{
+  m_OriginalHeader.append(more);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CtfReader::initPointers(size_t numElements)
 {
   m_NumberOfElements = numElements;
@@ -203,7 +211,7 @@ int CtfReader::readHeaderOnly()
 {
   int err = 1;
 
-  m_headerComplete = false;
+  m_HeaderComplete = false;
   std::ifstream in(m_FileName.c_str());
 
   if (!in.is_open())
@@ -212,7 +220,8 @@ int CtfReader::readHeaderOnly()
     return -100;
   }
 
-  m_CompleteHeader.clear();
+  std::string origHeader;
+  setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
   // Parse the header
@@ -231,7 +240,7 @@ int CtfReader::readFile()
 {
   int err = 1;
 
-  m_headerComplete = false;
+  m_HeaderComplete = false;
   std::ifstream in(m_FileName.c_str());
 
   if (!in.is_open())
@@ -240,7 +249,10 @@ int CtfReader::readFile()
     return -100;
   }
 
-  m_CompleteHeader.clear();
+  std::string origHeader;
+  setOriginalHeader(origHeader);
+  m_PhaseVector.clear();
+
   m_PhaseVector.clear();
 
   // Parse the header
@@ -492,12 +504,12 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 {
   int err = 0;
   char buf[kBufferSize];
-  while (!reader.eof() && !m_headerComplete)
+  while (!reader.eof() && !m_HeaderComplete)
   {
     ::memset(buf, 0, kBufferSize);
     reader.getline(buf, kBufferSize);
     // Append the line to the complete header
-    m_CompleteHeader.append(buf);
+    appendOriginalHeader(std::string(buf));
 
     // Replace the newline at the end of the line with a NULL character
     int i = 0;
@@ -511,7 +523,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 
     // End when column header line is read
     if (isDataHeaderLine(tokens)) {
-      m_headerComplete = true;
+      m_HeaderComplete = true;
       break;
     }
     headerLines.push_back(tokens);
