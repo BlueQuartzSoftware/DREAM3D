@@ -91,7 +91,8 @@ class Reconstruction : public AbstractPipeline
 
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
-    MXA_INSTANCE_PROPERTY(Ebsd::Orientation, Orientation)
+    MXA_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, RefFrameOrigin)
+    MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
@@ -132,7 +133,8 @@ class Reconstruction : public AbstractPipeline
       reader->setFilename(m_H5AngFile);
       reader->setSliceStart(m_ZStartIndex);
       reader->setSliceEnd(m_ZEndIndex);
-      reader->setOrientation(m_Orientation);
+      reader->setRefFrameOrigin(m_RefFrameOrigin);
+      reader->setRefFrameZDir(m_RefFrameZDir);
 
       //FIXME: Mike Groeber: Take a look at this setup for the PhaseTypes. I am
       // putting in UnknownTypes just to have something. You can change to suit

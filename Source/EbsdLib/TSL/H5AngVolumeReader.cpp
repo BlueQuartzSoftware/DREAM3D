@@ -226,7 +226,8 @@ int H5AngVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFilename());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()) );
-    reader->setUserOrigin(getOrientation());
+    reader->setUserOrigin(getRefFrameOrigin());
+    reader->setUserZDir(getRefFrameZDir());
 
     err = reader->readFile();
     if (err < 0)

@@ -105,8 +105,10 @@ int main(int argc, char **argv)
     cmd.add(CrystalStructure);
     TCLAP::ValueArg<int>  AlignMeth( "", "alignment", "Alignment Method [0] OuterBoundary [1] Misorientation [2] Mutual Information", false, 0, "Default=0");
     cmd.add(AlignMeth);
-    TCLAP::ValueArg<int>  Orientation( "", "orientation", "OIM Data Orientation [0] Upper Right [1] Upper Left [2] Lower Left [3] Lower Right [4] None", false, 4, "Default=4");
-    cmd.add(Orientation);
+    TCLAP::ValueArg<int>  RefFrameOrigin( "", "refframeorigin", "OIM Data Orientation [0] Upper Right [1] Upper Left [2] Lower Left [3] Lower Right [4] None", false, 4, "Default=4");
+    cmd.add(RefFrameOrigin);
+    TCLAP::ValueArg<int>  RefFrameZDir( "", "refframezdir", "OIM Z Direction [0] Into Slice [1] Out of Slice", false, 0, "Default=0");
+    cmd.add(RefFrameOrigin);
 
     TCLAP::ValueArg<int>  MinAllowedGrainSize( "", "minGrainSize", "What is the minimum allowed grain size", false, 50, "Default=50");
     cmd.add(MinAllowedGrainSize);
@@ -160,8 +162,10 @@ int main(int argc, char **argv)
     DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
 
     m_Reconstruction->setAlignmentMethod(alignmeth);
-    Ebsd::Orientation orient = static_cast<Ebsd::Orientation>(Orientation.getValue());
-    m_Reconstruction->setOrientation(orient);
+	Ebsd::RefFrameOrigin orient = static_cast<Ebsd::RefFrameOrigin>(RefFrameOrigin.getValue());
+    m_Reconstruction->setRefFrameOrigin(orient);
+    Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(RefFrameZDir.getValue());
+    m_Reconstruction->setRefFrameZDir(zdir);
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
     m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
