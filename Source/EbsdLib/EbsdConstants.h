@@ -65,8 +65,11 @@ namespace Ebsd
     // DREAM.3D we are going to settle on using these names for consistency
     const std::string XResolution("X Resolution");
     const std::string YResolution("Y Resolution");
-    const std::string XPoints("X Points");
-    const std::string YPoints("Y Points");
+
+    // We store the Maximum number of X and Y Points for the given volume. This
+    // allows us to store slices that have different XY voxel dimensions.
+    const std::string XPoints("Max X Points");
+    const std::string YPoints("Max Y Points");
   }
 
   /** @brief Constants defined for the 5 orientation options */
