@@ -138,6 +138,11 @@ class EbsdLib_EXPORT AngReader
     virtual int readHeaderOnly();
 
 
+    /** @brief Parses the value from a single line of the header section of the TSL .ang file
+    * @param line The line to parse
+    */
+    virtual void parseHeaderLine(char* buf, size_t length);
+
 protected:
     // Needed by subclasses
     std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
@@ -196,10 +201,6 @@ private:
     AngPhase::Pointer   m_CurrentPhase;
 
 
-    /** @brief Parses the value from a single line of the header section of the TSL .ang file
-    * @param line The line to parse
-    */
-    void parseHeaderLine(char* buf, size_t length);
 
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
