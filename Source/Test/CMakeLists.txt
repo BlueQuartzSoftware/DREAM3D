@@ -93,3 +93,8 @@ MXA_ADD_TEST(StatsGenTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsGenTest)
 add_executable(RNGTest ${AIMTest_SOURCE_DIR}/RNGTest.cpp)
 target_link_libraries(RNGTest DREAM3DLib)
 
+
+# --------
+add_executable(ResFixer ${AIMTest_SOURCE_DIR}/ResFixer.cpp)
+target_link_libraries(ResFixer EbsdLib MXADataModel)
+
