@@ -58,6 +58,7 @@
 // -----------------------------------------------------------------------------
 CtfReader::CtfReader() :
 m_UserOrigin(Ebsd::NoOrientation),
+m_UserZDir(Ebsd::IntoSlice),
 m_FileName(""),
 m_ManageMemory(true),
 m_NumberOfElements(0)
