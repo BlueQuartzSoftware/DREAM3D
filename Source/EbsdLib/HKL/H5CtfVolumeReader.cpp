@@ -110,7 +110,7 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
                                 int* phases, bool* goodVoxels,
-                                int xpoints, int ypoints, int zpoints,
+                                int xpoints, int ypoints, int zpoints, Ebsd::RefFrameZDir ZDir,
                                 std::vector<QualityMetricFilter::Pointer> filters)
 {
 
@@ -125,6 +125,9 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
   int readerIndex;
   int xpointstemp;
   int ypointstemp;
+  int xstop;
+  int ystop;
+  int zval;
 
   float* euler1Ptr = NULL;
   float* euler2Ptr = NULL;
@@ -172,16 +175,31 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
     // Figure out which are good voxels
     AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
 
+    if(getAxesFlipped() ==true)
+	{
+		xstartspot = (ypoints - ypointstemp) / 2;
+	    ystartspot = (xpoints - xpointstemp) / 2;
+		xstop = ypointstemp;
+		ystop = xpointstemp;
+	}
+	else if(getAxesFlipped() == false)
+	{
+	    xstartspot = (xpoints - xpointstemp) / 2;
+		ystartspot = (ypoints - ypointstemp) / 2;
+		xstop = xpointstemp;
+		ystop = ypointstemp;
+	}
 
-    xstartspot = (xpoints - xpointstemp) / 2;
-    ystartspot = (ypoints - ypointstemp) / 2;
+	if(ZDir == 0) zval = slice;
+	if(ZDir == 1) zval = (zpoints-1) - slice;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
-    for (int j = 0; j < ypointstemp; j++)
+    for (int j = 0; j < ystop; j++)
     {
-      for (int i = 0; i < xpointstemp; i++)
+      for (int i = 0; i < xstop; i++)
       {
-        index = ((zpoints - 1 - slice) * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
+        if(getAxesFlipped() == true) index = (zval * xpoints * ypoints) + ((j + ystartspot) * ypoints) + (i + xstartspot);
+        else if(getAxesFlipped() == false) index = (zval * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
         euler1s[index] = euler1Ptr[readerIndex]; // Phi1
         euler2s[index] = euler2Ptr[readerIndex]; // Phi
         euler3s[index] = euler3Ptr[readerIndex]; // Phi2
