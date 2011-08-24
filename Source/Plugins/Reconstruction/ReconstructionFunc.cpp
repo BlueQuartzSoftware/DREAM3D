@@ -215,7 +215,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
     surfacevoxels[i] = 0;
     alreadychecked[i] = 0;
     unassigned[i] = 0;
-    goodVoxels[i] = true; // All Voxels are "Good"
+    goodVoxels[i] = false; // All Voxels are "Bad"
   }
 
 }
