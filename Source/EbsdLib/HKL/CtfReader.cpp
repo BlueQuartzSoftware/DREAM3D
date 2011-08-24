@@ -307,8 +307,8 @@ int CtfReader::readFile()
   if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
   if(getAxesFlipped() == true)
   {
-	setYCells(yCells);
-	setXCells(xCells);
+	setYCells(xCells);
+	setXCells(yCells);
   }
   return err;
 }

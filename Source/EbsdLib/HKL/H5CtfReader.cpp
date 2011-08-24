@@ -422,8 +422,8 @@ int H5CtfReader::readData(hid_t parId)
   if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
   if(getAxesFlipped() == true)
   {
-	setYCells(nRows);
-	setXCells(nCols);
+	setXCells(nRows);
+	setYCells(nCols);
   }
   return err;
 }
