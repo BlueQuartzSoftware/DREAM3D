@@ -362,13 +362,13 @@ int H5AngReader::readData(hid_t parId)
 			  if (getUserZDir() == Ebsd::IntoSlice)
 			  {
 				offset = (((nCols-1)-col)*nRows)+(row);
-				if (p1[i] - PI_OVER_2f < 0.0)
+				if (p[i] - ONE_PIf < 0.0)
 				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				  p[i] = p[i] + ONE_PIf;
 				}
 				else
 				{
-				  p1[i] = p1[i] - PI_OVER_2f;
+				  p[i] = p[i] - ONE_PIf;
 				}
 			  }
 			  if (getUserZDir() == Ebsd::OutofSlice)
@@ -389,25 +389,33 @@ int H5AngReader::readData(hid_t parId)
 			  if (getUserZDir() == Ebsd::IntoSlice)
 			  {
 				offset = (row*nCols)+(col);
-				if (p1[i] - PI_OVER_2f < 0.0)
+				if (p[i] - ONE_PIf < 0.0)
 				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				  p[i] = p[i] + ONE_PIf;
 				}
 				else
 				{
-				  p1[i] = p1[i] - PI_OVER_2f;
+				  p[i] = p[i] - ONE_PIf;
+				}
+				if (p2[i] - PI_OVER_2f < 0.0)
+				{
+				  p2[i] = p2[i] + THREE_PI_OVER_2f;
+				}
+				else
+				{
+				  p2[i] = p2[i] - PI_OVER_2f;
 				}
 			  }
 			  if (getUserZDir() == Ebsd::OutofSlice)
 			  {
 				offset = (col*nRows)+(row);
-				if (p1[i] - PI_OVER_2f < 0.0)
+				if (p1[i] - ONE_PIf < 0.0)
 				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				  p1[i] = p1[i] + ONE_PIf;
 				}
 				else
 				{
-				  p1[i] = p1[i] - PI_OVER_2f;
+				  p1[i] = p1[i] - ONE_PIf;
 				}
 			  }
 		  }
@@ -416,25 +424,33 @@ int H5AngReader::readData(hid_t parId)
 			  if (getUserZDir() == Ebsd::IntoSlice)
 			  {
 				offset = (col*nRows)+((nRows-1)-row);
-				if (p1[i] - PI_OVER_2f < 0.0)
+				if (p[i] - ONE_PIf < 0.0)
 				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				  p[i] = p[i] + ONE_PIf;
 				}
 				else
 				{
-				  p1[i] = p1[i] - PI_OVER_2f;
+				  p[i] = p[i] - ONE_PIf;
 				}
+				if (p2[i] - ONE_PIf < 0.0)
+				{
+				  p2[i] = p2[i] + ONE_PIf;
+				}
+				else
+				{
+				  p2[i] = p2[i] - ONE_PIf;
+				}	
 			  }
 			  if (getUserZDir() == Ebsd::OutofSlice)
 			  {
 				offset = (((nRows-1)-row)*nCols)+(col);
-				if (p1[i] - PI_OVER_2f < 0.0)
+				if (p1[i] - THREE_PI_OVER_2f < 0.0)
 				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				  p1[i] = p1[i] + PI_OVER_2f;
 				}
 				else
 				{
-				  p1[i] = p1[i] - PI_OVER_2f;
+				  p1[i] = p1[i] - THREE_PI_OVER_2f;
 				}
 			  }
 		  }
@@ -443,26 +459,26 @@ int H5AngReader::readData(hid_t parId)
 			  if (getUserZDir() == Ebsd::IntoSlice)
 			  {
 				offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
-				if (p1[i] - PI_OVER_2f < 0.0)
+				if (p[i] - ONE_PIf < 0.0)
 				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
+				  p[i] = p[i] + ONE_PIf;
 				}
 				else
 				{
-				  p1[i] = p1[i] - PI_OVER_2f;
+				  p[i] = p[i] - ONE_PIf;
 				}
+				if (p2[i] - THREE_PI_OVER_2f < 0.0)
+				{
+				  p2[i] = p2[i] + PI_OVER_2f;
+				}
+				else
+				{
+				  p2[i] = p2[i] - THREE_PI_OVER_2f;
+				}	
 			  }
 			  if (getUserZDir() == Ebsd::OutofSlice)
 			  {
 				offset = (((nCols-1)-col)*nRows)+((nRows-1)-row);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
 			  }
 		  }
 
