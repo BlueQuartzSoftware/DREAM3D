@@ -45,22 +45,7 @@
 #include <algorithm>
 
 #include "CtfPhase.h"
-
-#define PI_OVER_2f       1.57079632679489661f
-#define THREE_PI_OVER_2f 4.71238898038468985f
-#define TWO_PIf          6.28318530717958647f
-#define ONE_PIf          3.14159265358979323f
-
-#define kBufferSize 1024
-
-#define SHUFFLE_ARRAY(name, var, type)\
-  { type* f = allocateArray<type>(totalDataRows);\
-  for (size_t i = 0; i < totalDataRows; ++i)\
-  {\
-    size_t nIdx = shuffleTable[i];\
-    f[nIdx] = var[i];\
-  }\
-  set##name##Pointer(f); }
+#include "EbsdLib/EbsdMacros.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -650,58 +635,18 @@ void CtfReader::setYDimension(int ydim)
   setYCells(ydim);
 }
 
-
-#define CTF_PRINT_HEADER_VALUE(var, out)\
- out << #var << ": " << get##var () << std::endl;
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CtfReader::printHeader(std::ostream &out)
-{
-  std::cout << "-------------------- CtfReader Header Values --------------------" << std::endl;
-  CTF_PRINT_HEADER_VALUE(Channel, out);
-  CTF_PRINT_HEADER_VALUE(Prj, out);
-  CTF_PRINT_HEADER_VALUE(Author, out);
-  CTF_PRINT_HEADER_VALUE(JobMode, out);
-  CTF_PRINT_HEADER_VALUE(XCells, out);
-  CTF_PRINT_HEADER_VALUE(YCells, out);
-  CTF_PRINT_HEADER_VALUE(XStep, out);
-  CTF_PRINT_HEADER_VALUE(YStep, out);
-  CTF_PRINT_HEADER_VALUE(AcqE1, out);
-  CTF_PRINT_HEADER_VALUE(AcqE2, out);
-  CTF_PRINT_HEADER_VALUE(AcqE3, out);
-  CTF_PRINT_HEADER_VALUE(Euler, out);
-  CTF_PRINT_HEADER_VALUE(Mag, out);
-  CTF_PRINT_HEADER_VALUE(Coverage, out);
-  CTF_PRINT_HEADER_VALUE(Device, out);
-  CTF_PRINT_HEADER_VALUE(KV, out);
-  CTF_PRINT_HEADER_VALUE(TiltAngle, out);
-  CTF_PRINT_HEADER_VALUE(TiltAxis, out);
-  CTF_PRINT_HEADER_VALUE(NumPhases, out);
-  int nPhases = getNumPhases();
-  for (int p = 0; p < nPhases; ++p)
-  {
-    out << "### Phase " << p << std::endl;
-    m_PhaseVector[p]->printSelf(out);
-  }
-
-  std::cout << "----------------------------------------" << std::endl;
-}
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void CtfReader::transformData()
 {
-  int* phase = getPhasePointer();
-  int* bCount = getBandCountPointer();
-  int* error = getErrorPointer();
   float* p1 = getEuler1Pointer();
   float* p = getEuler2Pointer();
   float* p2 = getEuler3Pointer();
 
+  int* ph = getPhasePointer();
+  int* bCount = getBandCountPointer();
+  int* error = getErrorPointer();
   float* mad = getMeanAngularDeviationPointer();
   int* bc = getBandContrastPointer();
   int* bs = getBandSlopePointer();
@@ -842,7 +787,7 @@ void CtfReader::transformData()
     }
   }
 
-  SHUFFLE_ARRAY(Phase, phase, int)
+  SHUFFLE_ARRAY(Phase, ph, int)
   SHUFFLE_ARRAY(BandCount, bCount, int)
   SHUFFLE_ARRAY(Error, error, int)
   SHUFFLE_ARRAY(Euler1, p1, float)
@@ -853,3 +798,42 @@ void CtfReader::transformData()
   SHUFFLE_ARRAY(BandSlope, bs, int)
 
 }
+
+#define CTF_PRINT_HEADER_VALUE(var, out)\
+ out << #var << ": " << get##var () << std::endl;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CtfReader::printHeader(std::ostream &out)
+{
+  std::cout << "-------------------- CtfReader Header Values --------------------" << std::endl;
+  CTF_PRINT_HEADER_VALUE(Channel, out);
+  CTF_PRINT_HEADER_VALUE(Prj, out);
+  CTF_PRINT_HEADER_VALUE(Author, out);
+  CTF_PRINT_HEADER_VALUE(JobMode, out);
+  CTF_PRINT_HEADER_VALUE(XCells, out);
+  CTF_PRINT_HEADER_VALUE(YCells, out);
+  CTF_PRINT_HEADER_VALUE(XStep, out);
+  CTF_PRINT_HEADER_VALUE(YStep, out);
+  CTF_PRINT_HEADER_VALUE(AcqE1, out);
+  CTF_PRINT_HEADER_VALUE(AcqE2, out);
+  CTF_PRINT_HEADER_VALUE(AcqE3, out);
+  CTF_PRINT_HEADER_VALUE(Euler, out);
+  CTF_PRINT_HEADER_VALUE(Mag, out);
+  CTF_PRINT_HEADER_VALUE(Coverage, out);
+  CTF_PRINT_HEADER_VALUE(Device, out);
+  CTF_PRINT_HEADER_VALUE(KV, out);
+  CTF_PRINT_HEADER_VALUE(TiltAngle, out);
+  CTF_PRINT_HEADER_VALUE(TiltAxis, out);
+  CTF_PRINT_HEADER_VALUE(NumPhases, out);
+  int nPhases = getNumPhases();
+  for (int p = 0; p < nPhases; ++p)
+  {
+    out << "### Phase " << p << std::endl;
+    m_PhaseVector[p]->printSelf(out);
+  }
+
+  std::cout << "----------------------------------------" << std::endl;
+}
+
