@@ -300,8 +300,8 @@ int CtfReader::readData(std::ifstream &in)
    {
      for (size_t col = 0; col < xCells && in.eof() == false; ++col)
      {
-       if (in.eof() == false) break;
        in.getline(buf, kBufferSize);
+       if (in.eof() == false) break;
        parseDataLine(buf, row, col, counter, xCells, yCells);
        ++counter;
      }
