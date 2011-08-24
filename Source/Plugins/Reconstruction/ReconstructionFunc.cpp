@@ -414,6 +414,7 @@ void ReconstructionFunc::find_border()
   int currentpoint = 0;
   int neighbor = 0;
   int col, row, plane;
+  int noborder = 0;
   Ebsd::CrystalStructure phase1, phase2;
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
@@ -431,107 +432,110 @@ void ReconstructionFunc::find_border()
   while (goodVoxels[index] == true)
   {
     index++;
-    if(index == totalpoints) break;
+    if(index == totalpoints) noborder = 1;
   }
-  voxelslist[count] = index;
-  grain_indicies[index] = 0;
-  checked[index] = 1;
-  count++;
-  for (size_t i = 0; i < count; i++)
+  if(noborder == 0)
   {
-    index = voxelslist[i];
-    col = index % xpoints;
-    row = (index / xpoints) % ypoints;
-    plane = index / (xpoints * ypoints);
-    for (int j = 0; j < 6; j++)
-    {
-      good = 1;
-      neighbor = index + neighpoints[j];
-      if (j == 0 && plane == 0) good = 0;
-      if (j == 5 && plane == (zpoints - 1)) good = 0;
-      if (j == 1 && row == 0) good = 0;
-      if (j == 4 && row == (ypoints - 1)) good = 0;
-      if (j == 2 && col == 0) good = 0;
-      if (j == 3 && col == (xpoints - 1)) good = 0;
-      if (good == 1 && checked[neighbor] == 0)
-      {
-        if (goodVoxels[neighbor] == false)
-        {
-          grain_indicies[neighbor] = 0;
-          checked[neighbor] = 1;
-          voxelslist[count] = neighbor;
-          count++;
-          if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-        }
-      }
-    }
-  }
-  voxelslist.clear();
-  voxelslist.resize(initialVoxelsListSize, -1);
-  count = 0;
-  for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
-  {
-    checked[iter] = 0;
-    if(grain_indicies[iter] == -1)
-	{
-		voxelslist[count] = iter;
-		checked[iter] = 1;
-		count++;
-        if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
- 	}
-  }
-  for (size_t j = 0; j < count; j++)
-  {
-    currentpoint = voxelslist[j];
-    col = currentpoint % xpoints;
-    row = (currentpoint / xpoints) % ypoints;
-    plane = currentpoint / (xpoints * ypoints);
-    q1[0] = 0;
-    q1[1] = quats[currentpoint*5 + 1];
-    q1[2] = quats[currentpoint*5 + 2];
-    q1[3] = quats[currentpoint*5 + 3];
-    q1[4] = quats[currentpoint*5 + 4];
-    phase1 = crystruct[phases[currentpoint]];
-    for (int i = 0; i < 6; i++)
-    {
-      good = 1;
-      neighbor = currentpoint + neighbors[i];
-      if (i == 0 && plane == 0) good = 0;
-      if (i == 5 && plane == (zpoints - 1)) good = 0;
-      if (i == 1 && row == 0) good = 0;
-      if (i == 4 && row == (ypoints - 1)) good = 0;
-      if (i == 2 && col == 0) good = 0;
-      if (i == 3 && col == (xpoints - 1)) good = 0;
-      if (good == 1 && grain_indicies[neighbor] == -1 && checked[neighbor] == 0)
-      {
-        voxelslist[count] = neighbor;
-        checked[neighbor] = 1;
-        count++;
-        if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-      }
-      if (good == 1 && grain_indicies[neighbor] == 0)
-      {
-        w = 10000.0;
-        q2[0] = 0;
-        q2[1] = quats[neighbor*5 + 1];
-        q2[2] = quats[neighbor*5 + 2];
-        q2[3] = quats[neighbor*5 + 3];
-        q2[4] = quats[neighbor*5 + 4];
-        phase2 = crystruct[phases[neighbor]];
-        if (phase1 == phase2) 
+	  voxelslist[count] = index;
+	  grain_indicies[index] = 0;
+	  checked[index] = 1;
+	  count++;
+	  for (size_t i = 0; i < count; i++)
+	  {
+		index = voxelslist[i];
+		col = index % xpoints;
+		row = (index / xpoints) % ypoints;
+		plane = index / (xpoints * ypoints);
+		for (int j = 0; j < 6; j++)
 		{
-          w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-        }
-        if (w < misorientationtolerance)
-        {
-          grain_indicies[neighbor] = -1;
-          checked[neighbor] = 1;
-          voxelslist[count] = neighbor;
-          count++;
-          if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-        }
-      }
-    }
+		  good = 1;
+		  neighbor = index + neighpoints[j];
+		  if (j == 0 && plane == 0) good = 0;
+		  if (j == 5 && plane == (zpoints - 1)) good = 0;
+		  if (j == 1 && row == 0) good = 0;
+		  if (j == 4 && row == (ypoints - 1)) good = 0;
+		  if (j == 2 && col == 0) good = 0;
+		  if (j == 3 && col == (xpoints - 1)) good = 0;
+		  if (good == 1 && checked[neighbor] == 0)
+		  {
+			if (goodVoxels[neighbor] == false)
+			{
+			  grain_indicies[neighbor] = 0;
+			  checked[neighbor] = 1;
+			  voxelslist[count] = neighbor;
+			  count++;
+			  if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+			}
+		  }
+		}
+	  }
+	  voxelslist.clear();
+	  voxelslist.resize(initialVoxelsListSize, -1);
+	  count = 0;
+	  for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
+	  {
+		checked[iter] = 0;
+		if(grain_indicies[iter] == -1)
+		{
+			voxelslist[count] = iter;
+			checked[iter] = 1;
+			count++;
+			if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+ 		}
+	  }
+	  for (size_t j = 0; j < count; j++)
+	  {
+		currentpoint = voxelslist[j];
+		col = currentpoint % xpoints;
+		row = (currentpoint / xpoints) % ypoints;
+		plane = currentpoint / (xpoints * ypoints);
+		q1[0] = 0;
+		q1[1] = quats[currentpoint*5 + 1];
+		q1[2] = quats[currentpoint*5 + 2];
+		q1[3] = quats[currentpoint*5 + 3];
+		q1[4] = quats[currentpoint*5 + 4];
+		phase1 = crystruct[phases[currentpoint]];
+		for (int i = 0; i < 6; i++)
+		{
+		  good = 1;
+		  neighbor = currentpoint + neighbors[i];
+		  if (i == 0 && plane == 0) good = 0;
+		  if (i == 5 && plane == (zpoints - 1)) good = 0;
+		  if (i == 1 && row == 0) good = 0;
+		  if (i == 4 && row == (ypoints - 1)) good = 0;
+		  if (i == 2 && col == 0) good = 0;
+		  if (i == 3 && col == (xpoints - 1)) good = 0;
+		  if (good == 1 && grain_indicies[neighbor] == -1 && checked[neighbor] == 0)
+		  {
+			voxelslist[count] = neighbor;
+			checked[neighbor] = 1;
+			count++;
+			if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+		  }
+		  if (good == 1 && grain_indicies[neighbor] == 0)
+		  {
+			w = 10000.0;
+			q2[0] = 0;
+			q2[1] = quats[neighbor*5 + 1];
+			q2[2] = quats[neighbor*5 + 2];
+			q2[3] = quats[neighbor*5 + 3];
+			q2[4] = quats[neighbor*5 + 4];
+			phase2 = crystruct[phases[neighbor]];
+			if (phase1 == phase2) 
+			{
+			  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+			}
+			if (w < misorientationtolerance)
+			{
+			  grain_indicies[neighbor] = -1;
+			  checked[neighbor] = 1;
+			  voxelslist[count] = neighbor;
+			  count++;
+			  if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+			}
+		  }
+		}
+	  }
   }
   voxelslist.clear();
 }
