@@ -202,7 +202,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
   alreadychecked = m_AlreadyChecked->WritePointer(0, totalpoints);
   unassigned = m_Unassigned->WritePointer(0, totalpoints);
 
-  goodVoxels = m_GoodVoxels->WritePointer(0, totalpoints);
+  goodVoxels = m_GoodVoxels->WritePointer(false, totalpoints);
 
   for(int i=0;i<totalpoints;i++)
   {
