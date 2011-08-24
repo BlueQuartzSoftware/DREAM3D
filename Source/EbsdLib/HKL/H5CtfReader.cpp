@@ -116,6 +116,9 @@ int H5CtfReader::readFile()
 
   err = H5Gclose(gid);
   err = H5Fclose(fileId);
+
+  checkAndFlipAxisDimensions();
+
   return err;
 }
 
@@ -394,21 +397,8 @@ int H5CtfReader::readData(hid_t parId)
   SHUFFLE_ARRAY(BandContrast, bc, int)
   SHUFFLE_ARRAY(BandSlope, bs, int)
 
-
   err = H5Gclose(gid);
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getAxesFlipped() == true)
-  {
-	setYCells(nRows);
-	setXCells(nCols);
-  }
+
   return err;
 }
 

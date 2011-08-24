@@ -57,13 +57,8 @@
 //
 // -----------------------------------------------------------------------------
 CtfReader::CtfReader() :
-m_UserOrigin(Ebsd::NoOrientation),
-m_UserZDir(Ebsd::IntoSlice),
-m_FileName(""),
-m_ManageMemory(true),
-m_NumberOfElements(0)
+EbsdReader()
 {
-
   m_Phase = NULL;
   m_X = NULL;
   m_Y = NULL;
@@ -76,7 +71,8 @@ m_NumberOfElements(0)
   m_BC = NULL;
   m_BS = NULL;
 
-  m_NumFields = 11;
+  setNumFields(11);
+
 
   // Initialize the map of header key to header value
   m_Headermap[Ebsd::Ctf::ChannelTextFile] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::ChannelTextFile);
@@ -98,6 +94,10 @@ m_NumberOfElements(0)
   m_Headermap[Ebsd::Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAngle);
   m_Headermap[Ebsd::Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
   m_Headermap[Ebsd::Ctf::NumPhases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::NumPhases);
+
+  setXCells(-1);
+  setYCells(-1);
+
 }
 
 
@@ -112,17 +112,9 @@ CtfReader::~CtfReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfReader::appendOriginalHeader(const std::string &more)
-{
-  m_OriginalHeader.append(more);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void CtfReader::initPointers(size_t numElements)
 {
-  m_NumberOfElements = numElements;
+  setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   m_Phase = allocateArray<int > (numElements);
   m_X = allocateArray<float > (numElements);
@@ -211,12 +203,12 @@ int CtfReader::readHeaderOnly()
 {
   int err = 1;
 
-  m_HeaderComplete = false;
-  std::ifstream in(m_FileName.c_str());
+  setHeaderIsComplete(false);
+  std::ifstream in(getFileName().c_str());
 
   if (!in.is_open())
   {
-    std::cout << "Ang file could not be opened: " << m_FileName << std::endl;
+    std::cout << "Ang file could not be opened: " << getFileName() << std::endl;
     return -100;
   }
 
@@ -228,8 +220,6 @@ int CtfReader::readHeaderOnly()
   std::vector<std::vector<std::string> > headerLines;
   err = getHeaderLines(in, headerLines);
   err = parseHeaderLines(headerLines);
-
-
   return err;
 }
 
@@ -240,12 +230,12 @@ int CtfReader::readFile()
 {
   int err = 1;
 
-  m_HeaderComplete = false;
-  std::ifstream in(m_FileName.c_str());
+  setHeaderIsComplete(false);
+  std::ifstream in(getFileName().c_str());
 
   if (!in.is_open())
   {
-    std::cout << "ctf file could not be opened: " << m_FileName << std::endl;
+    std::cout << "ctf file could not be opened: " << getFileName() << std::endl;
     return -100;
   }
 
@@ -265,13 +255,13 @@ int CtfReader::readFile()
   // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
-  m_NumberOfElements = getXCells() * getYCells();
-  if (m_NumberOfElements < 1)
+  setNumberOfElements(getXCells() * getYCells());
+  if (getNumberOfElements() < 1)
   {
     return -200;
   }
   // Allocate all the memory needed
-  initPointers(m_NumberOfElements);
+  initPointers(getNumberOfElements());
   if (m_Phase == NULL) {return -1;}
   if (m_X == NULL) {return -1;}
   if (m_Y == NULL) {return -1;}
@@ -300,28 +290,16 @@ int CtfReader::readFile()
   }
 
 
-  if (counter != m_NumberOfElements && in.eof() == true)
+  if (counter != getNumberOfElements() && in.eof() == true)
   {
     std::cout << "Premature End Of File reached.\n"
-        << m_FileName
-        << "\nNumRows=" << m_NumberOfElements
+        << getFileName()
+        << "\nNumRows=" << getNumberOfElements()
         << "\ncounter=" << counter
         << "\nTotal Data Points Read=" << counter << std::endl;
   }
 
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getAxesFlipped() == true)
-  {
-	setYCells(yCells);
-	setXCells(xCells);
-  }
+  checkAndFlipAxisDimensions();
   return err;
 }
 
@@ -411,7 +389,7 @@ void CtfReader::readData(const std::string &line, int row, int col, size_t i, in
   size_t offset = i;
   int fields = sscanf(line.c_str(), "%d\t%f\t%f\t%d\t%d\t%f\t%f\t%f\t%f\t%d\t%d",
                        &phase, &x,&y, &bCount, &error, &p1, &p, &p2, &mad, &bc, &bs);
-  assert(fields == m_NumFields);
+  assert(fields == getNumFields());
 
   // Do we transform the data
 	  if (getUserOrigin() == Ebsd::UpperRightOrigin)
@@ -576,7 +554,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 {
   int err = 0;
   char buf[kBufferSize];
-  while (!reader.eof() && !m_HeaderComplete)
+  while (!reader.eof() && false == getHeaderIsComplete())
   {
     ::memset(buf, 0, kBufferSize);
     reader.getline(buf, kBufferSize);
@@ -595,7 +573,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 
     // End when column header line is read
     if (isDataHeaderLine(tokens)) {
-      m_HeaderComplete = true;
+      setHeaderIsComplete(true);
       break;
     }
     headerLines.push_back(tokens);
@@ -616,6 +594,39 @@ bool CtfReader::isDataHeaderLine(std::vector<std::string> &columns)
         return false;
 
     return true;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::getXDimension()
+{
+  return getXCells();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CtfReader::setXDimension(int xdim)
+{
+  setXCells(xdim);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::getYDimension()
+{
+  return getYCells();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CtfReader::setYDimension(int ydim)
+{
+  setYCells(ydim);
 }
 
 

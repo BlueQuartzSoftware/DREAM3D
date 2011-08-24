@@ -117,11 +117,10 @@ int H5AngReader::readFile()
 
   err = H5Gclose(gid);
   err = H5Fclose(fileId);
+
+  checkAndFlipAxisDimensions();
   return err;
 }
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -299,14 +298,7 @@ int H5AngReader::readData(hid_t parId)
     return -1;
   }
 
-//  float xstep = getXStep();
-//  float ystep = getYStep();
-//  float xMaxValue = static_cast<float > ((nEvenCols - 1) * xstep);
-//  float yMaxValue = static_cast<float > ((nRows - 1) * ystep);
-
-  //double progress = 0.0;
   size_t totalDataRows = nRows * nEvenCols;
- // int counter = 0;
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
   if (gid < 0)
@@ -338,8 +330,6 @@ int H5AngReader::readData(hid_t parId)
   float* p1 = getPhi1Pointer();
   float* p = getPhiPointer();
   float* p2 = getPhi2Pointer();
-//  float* x = getXPosPointer();
-//  float* y = getYPosPointer();
   float* iqual = getImageQualityPointer();
   float* conf = getConfidenceIndexPointer();
   int* ph = getPhasePointer();
@@ -495,20 +485,7 @@ int H5AngReader::readData(hid_t parId)
   }
 
   err = H5Gclose(gid);
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getAxesFlipped() == true)
-  {
-	setNumOddCols(nRows);
-	setNumEvenCols(nRows);
-	setNumRows(nCols);
-  }
+
   return err;
 }
 

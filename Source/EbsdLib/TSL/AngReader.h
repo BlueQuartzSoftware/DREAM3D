@@ -66,7 +66,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
   public:
     AngReader();
     virtual ~AngReader();
-    
+
     /** @brief Header Values from the TSL ang file */
 
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, TEMpixPerum, Ebsd::Ang::TEMPIXPerUM)
@@ -135,14 +135,15 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     */
     virtual void deletePointers();
 
+    virtual int getXDimension();
+    virtual void setXDimension(int xdim);
+    virtual int getYDimension();
+    virtual void setYDimension(int ydim);
+
 protected:
 
 
 private:
-//    bool m_ManageMemory;  // We are going to forcibly manage the memory. There is currently NO option otherwise.
-//    bool m_HeaderComplete;
-//    size_t m_NumberOfElements;
-
     AngPhase::Pointer   m_CurrentPhase;
 
 

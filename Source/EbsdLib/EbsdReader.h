@@ -56,7 +56,7 @@ class EbsdLib_EXPORT EbsdReader
 
     /** @brief Allow the user to set the origin of the scan */
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, UserOrigin)
-    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)  
+    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
     EBSD_INSTANCE_PROPERTY(bool, AxesFlipped)
 
     /** @brief Sets the file name of the ang file to be read */
@@ -74,6 +74,15 @@ class EbsdLib_EXPORT EbsdReader
     EBSD_INSTANCE_PROPERTY(bool, HeaderIsComplete);
     EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
 
+    /*
+     * Different manufacturers call this value different thingsl. TSL = NumRows | NumCols,
+     * HKL=XCells
+     * These methods should be implemented by subclasses to return the proper value.
+     */
+    virtual int getXDimension() = 0;
+    virtual void setXDimension(int xdim) = 0;
+    virtual int getYDimension() = 0;
+    virtual void setYDimension(int ydim) = 0;
 
 
     /**
@@ -152,6 +161,8 @@ class EbsdLib_EXPORT EbsdReader
   protected:
     // Needed by subclasses
     std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
+
+    bool checkAndFlipAxisDimensions();
 
   private:
     EbsdReader(const EbsdReader&); // Copy Constructor Not Implemented
