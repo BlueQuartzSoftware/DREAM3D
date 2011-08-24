@@ -140,4 +140,21 @@
 
 
 
+#define PI_OVER_2f       1.57079632679489661f
+#define THREE_PI_OVER_2f 4.71238898038468985f
+#define TWO_PIf          6.28318530717958647f
+#define ONE_PIf          3.14159265358979323f
+
+#define kBufferSize 1024
+
+#define SHUFFLE_ARRAY(name, var, type)\
+  { type* f = allocateArray<type>(totalDataRows);\
+  for (size_t i = 0; i < totalDataRows; ++i)\
+  {\
+    size_t nIdx = shuffleTable[i];\
+    f[nIdx] = var[i];\
+  }\
+  set##name##Pointer(f); }
+
+
 #endif /* EBSDMACROS_H_ */

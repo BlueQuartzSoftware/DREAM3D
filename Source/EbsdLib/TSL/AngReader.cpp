@@ -45,24 +45,7 @@
 
 
 #include "AngConstants.h"
-
-
-#define PI_OVER_2f       1.57079632679489661f
-#define THREE_PI_OVER_2f 4.71238898038468985f
-#define TWO_PIf          6.28318530717958647f
-#define ONE_PIf          3.14159265358979323f
-
-#define kBufferSize 1024
-
-
-#define SHUFFLE_ARRAY(name, var, type)\
-  { type* f = allocateArray<type>(totalDataRows);\
-  for (size_t i = 0; i < totalDataRows; ++i)\
-  {\
-    size_t nIdx = shuffleTable[i];\
-    f[nIdx] = var[i];\
-  }\
-  set##name##Pointer(f); }
+#include "EbsdLib/EbsdMacros.h"
 
 
 
@@ -669,32 +652,32 @@ void AngReader::transformData()
   float* p1 = getPhi1Pointer();
   float* p = getPhiPointer();
   float* p2 = getPhi2Pointer();
+
+  int* ph = getPhasePointer();
   float* iqual = getImageQualityPointer();
   float* conf = getConfidenceIndexPointer();
-  int* ph = getPhasePointer();
   float* semSignal = getSEMSignalPointer();
   float* fit = getFitPointer();
 
   size_t offset = 0;
 
-  size_t nCols = getNumEvenCols();
-  size_t nRows = getNumRows();
-  size_t totalDataRows = nCols * nRows;
+  size_t yCells = getNumRows();
+  size_t xCells = getNumEvenCols();
+  size_t totalDataRows = yCells * xCells;
 
   std::vector<size_t> shuffleTable(totalDataRows, 0);
 
   size_t i = 0;
-
-  for(size_t row = 0; row < nRows; ++row)
+  for(size_t row = 0; row < yCells; ++row)
   {
-    for(size_t col = 0; col < nCols; ++col)
+    for(size_t col = 0; col < xCells; ++col)
     {
     // Do we transform the data
       if (getUserOrigin() == Ebsd::UpperRightOrigin)
       {
         if (getUserZDir() == Ebsd::IntoSlice)
         {
-        offset = (((nCols-1)-col)*nRows)+(row);
+        offset = (((xCells-1)-col)*yCells)+(row);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -706,7 +689,7 @@ void AngReader::transformData()
         }
         if (getUserZDir() == Ebsd::OutofSlice)
         {
-        offset = (row*nCols)+((nCols-1)-col);
+        offset = (row*xCells)+((xCells-1)-col);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -721,7 +704,7 @@ void AngReader::transformData()
       {
         if (getUserZDir() == Ebsd::IntoSlice)
         {
-        offset = (row*nCols)+(col);
+        offset = (row*xCells)+(col);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -733,7 +716,7 @@ void AngReader::transformData()
         }
         if (getUserZDir() == Ebsd::OutofSlice)
         {
-        offset = (col*nRows)+(row);
+        offset = (col*yCells)+(row);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -748,7 +731,7 @@ void AngReader::transformData()
       {
         if (getUserZDir() == Ebsd::IntoSlice)
         {
-        offset = (col*nRows)+((nRows-1)-row);
+        offset = (col*yCells)+((yCells-1)-row);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -760,7 +743,7 @@ void AngReader::transformData()
         }
         if (getUserZDir() == Ebsd::OutofSlice)
         {
-        offset = (((nRows-1)-row)*nCols)+(col);
+        offset = (((yCells-1)-row)*xCells)+(col);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -775,7 +758,7 @@ void AngReader::transformData()
       {
         if (getUserZDir() == Ebsd::IntoSlice)
         {
-        offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+        offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -787,7 +770,7 @@ void AngReader::transformData()
         }
         if (getUserZDir() == Ebsd::OutofSlice)
         {
-        offset = (((nCols-1)-col)*nRows)+((nRows-1)-row);
+        offset = (((xCells-1)-col)*yCells)+((yCells-1)-row);
         if (p1[i] - PI_OVER_2f < 0.0)
         {
           p1[i] = p1[i] + THREE_PI_OVER_2f;
@@ -807,7 +790,7 @@ void AngReader::transformData()
       // data as close to the original as possible.
       offset = i;
       }
-      shuffleTable[(row*nCols)+col] = offset;
+      shuffleTable[(row*xCells)+col] = offset;
       ++i;
     }
   }

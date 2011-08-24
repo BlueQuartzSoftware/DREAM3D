@@ -35,8 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
-
 #include "H5CtfReader.h"
 
 
@@ -47,11 +45,6 @@
 #include "EbsdLib/Utilities/StringUtils.h"
 
 #include "EbsdLib/HKL/CtfConstants.h"
-
-#define PI_OVER_2f       1.57079632679489661f
-#define THREE_PI_OVER_2f 4.71238898038468985f
-#define TWO_PIf          6.28318530717958647f
-#define ONE_PIf          3.14159265358979323f
 
 
 // -----------------------------------------------------------------------------
