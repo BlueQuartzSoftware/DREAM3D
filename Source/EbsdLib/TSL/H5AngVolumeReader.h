@@ -81,7 +81,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      */
     int loadData(float* euler1s, float* euler2s, float* euler3s,
                  int* phases, bool* goodVoxels,
-                 int xpoints, int ypoints, int zpoints,
+                 int xpoints, int ypoints, int zpoints, Ebsd::RefFrameZDir ZDir,
                  std::vector<QualityMetricFilter::Pointer> filters);
 
     /**

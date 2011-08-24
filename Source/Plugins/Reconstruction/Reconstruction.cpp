@@ -189,7 +189,14 @@ void Reconstruction::execute()
   ebsdReader->setSliceEnd(m_ZEndIndex);
   ebsdReader->setRefFrameOrigin(m_RefFrameOrigin);
   ebsdReader->setRefFrameZDir(m_RefFrameZDir);
-  err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_QualityMetricFilters);
+  err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
+  if(ebsdReader->getAxesFlipped() == true)
+  {
+	  int tempxpoints = m->xpoints;
+	  int tempypoints = m->ypoints;
+	  m->xpoints = tempypoints;
+	  m->ypoints = tempxpoints;
+  }
 
   CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
 

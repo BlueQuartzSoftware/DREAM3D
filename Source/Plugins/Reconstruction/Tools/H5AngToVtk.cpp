@@ -131,7 +131,7 @@ int main(int argc, char **argv)
   std::cout << "Loading EBSD Data...." << std::endl;
   std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;
 
-  err = h5io->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_QualityMetricFilters);
+  err = h5io->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, Ebsd::OutofSlice, m_QualityMetricFilters);
   m->initializeQuats();
 
   std::cout << "Writing VTK file" << std::endl;
