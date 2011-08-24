@@ -53,15 +53,6 @@
 #define TWO_PIf          6.28318530717958647f
 #define ONE_PIf          3.14159265358979323f
 
-#define SHUFFLE_ARRAY(name, var, type)\
-  { type* f = allocateArray<type>(totalDataRows);\
-  for (size_t i = 0; i < totalDataRows; ++i)\
-  {\
-    size_t nIdx = shuffleTable[i];\
-    f[nIdx] = var[i];\
-  }\
-  set##name##Pointer(f); }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -116,6 +107,8 @@ int H5CtfReader::readFile()
 
   err = H5Gclose(gid);
   err = H5Fclose(fileId);
+
+  transformData();
 
   checkAndFlipAxisDimensions();
 
@@ -209,12 +202,12 @@ int H5CtfReader::readData(hid_t parId)
 
   // Delete any currently existing pointers
   deletePointers();
+
+  size_t yCells = getYCells();
+  size_t xCells = getXCells();
+  size_t totalDataRows = yCells * xCells;
+
   // Initialize new pointers
-  size_t nRows = getYCells();
-  size_t nCols = getXCells();
-  size_t totalDataRows = nRows * nCols;
-
-
   initPointers(totalDataRows);
   if (NULL == getPhasePointer() || NULL == getXPointer() || NULL == getYPointer()
       || NULL == getBandCountPointer()  || NULL == getErrorPointer()
@@ -243,162 +236,8 @@ int H5CtfReader::readData(hid_t parId)
   err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::MeanAngularDeviation, getMeanAngularDeviationPointer());
   err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BandContrast, getBandContrastPointer());
   err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BandSlope, getBandSlopePointer());
-
-
-  int* phase = getPhasePointer();
-  int* bCount = getBandCountPointer();
-  int* error = getErrorPointer();
-  float* p1 = getEuler1Pointer();
-  float* p = getEuler2Pointer();
-  float* p2 = getEuler3Pointer();
-
-  float* mad = getMeanAngularDeviationPointer();
-  int* bc = getBandContrastPointer();
-  int* bs = getBandSlopePointer();
-
-  size_t offset = 0;
-  std::vector<size_t> shuffleTable(totalDataRows, 0);
-
-  size_t i = 0;
-  for(size_t row = 0; row < nRows; ++row)
-  {
-    for(size_t col = 0; col < nCols; ++col)
-    {
-    // Do we transform the data
-		  if (getUserOrigin() == Ebsd::UpperRightOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (((nCols-1)-col)*nRows)+(row);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (row*nCols)+((nCols-1)-col);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-		  }
-		  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (row*nCols)+(col);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (col*nRows)+(row);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-		  }
-		  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (col*nRows)+((nRows-1)-row);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (((nRows-1)-row)*nCols)+(col);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-		  }
-		  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (((nCols-1)-col)*nRows)+((nRows-1)-row);
-				if (p1[i] - PI_OVER_2f < 0.0)
-				{
-				  p1[i] = p1[i] + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1[i] = p1[i] - PI_OVER_2f;
-				}
-			  }
-		  }
-
-		  if (getUserOrigin() == Ebsd::NoOrientation)
-		  {
-			// If the user/programmer sets "NoOrientation" then we simply read the data
-			// from the file and copy the values into the arrays without any regard for
-			// the true X and Y positions in the grid. We are simply trying to keep the
-			// data as close to the original as possible.
-			offset = i;
-		  }
-      shuffleTable[(row*nCols)+col] = offset;
-      ++i;
-    }
-  }
-
-  SHUFFLE_ARRAY(Phase, phase, int)
-  SHUFFLE_ARRAY(BandCount, bCount, int)
-  SHUFFLE_ARRAY(Error, error, int)
-  SHUFFLE_ARRAY(Euler1, p1, float)
-  SHUFFLE_ARRAY(Euler2, p, float)
-  SHUFFLE_ARRAY(Euler3, p2, float)
-  SHUFFLE_ARRAY(MeanAngularDeviation, mad, float)
-  SHUFFLE_ARRAY(BandContrast, bc, int)
-  SHUFFLE_ARRAY(BandSlope, bs, int)
-
   err = H5Gclose(gid);
 
   return err;
-}
 
+}

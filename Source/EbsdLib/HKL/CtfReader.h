@@ -43,6 +43,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <fstream>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLibConfiguration.h"
@@ -145,6 +146,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     virtual void setYDimension(int ydim);
 
 
+    virtual void transformData();
+
     virtual void printHeader(std::ostream &out);
 
   protected:
@@ -170,6 +173,9 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
       */
      int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
 
+
+     int readData(std::ifstream &in);
+
      /**
       * @brief Reads a line of Data from the ASCII based file
       * @param line The current line of data
@@ -179,7 +185,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
       * @param yCells Number of Y Data Points
       * @param col The current Column of Data
       */
-     void readData(const std::string &line, int row, int col, size_t i, int xCells, int yCells );
+     void parseDataLine(const std::string &line, int row, int col, size_t i, int xCells, int yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented
