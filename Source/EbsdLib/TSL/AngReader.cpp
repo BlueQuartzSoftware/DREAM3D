@@ -322,8 +322,20 @@ int AngReader::readFile()
   {
     this->deallocateArrayData<float > (m_SEMSignal);
   }
-
-
+  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
+  if(getAxesFlipped() == true)
+  {
+	setNumOddCols(nRows);
+	setNumEvenCols(nRows);
+	setNumRows(nEvenCols);
+  }
   return err;
 }
 
@@ -459,62 +471,124 @@ void AngReader::readData(const std::string &line,
 
 
   // Do we transform the data
-  if (getUserOrigin() == Ebsd::UpperRightOrigin)
-  {
-    offset = (row*nCols)+((nCols-1)-col);
-    if (p1 - PI_OVER_2f < 0.0)
-    {
-      p1 = p1 + THREE_PI_OVER_2f;
-    }
-    else
-    {
-      p1 = p1 - PI_OVER_2f;
-    }
-  }
-  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
-  {
-    if (p1 + PI_OVER_2f > TWO_PIf)
-    {
-      p1 = p1 - THREE_PI_OVER_2f;
-    }
-    else
-    {
-      p1 = p1 + PI_OVER_2f;
-    }
-    if (p + ONE_PIf > TWO_PIf)
-    {
-      p = p - ONE_PIf;
-    }
-    else
-    {
-      p = p + ONE_PIf;
-    }
-  }
-  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
-  {
-    offset = (((nRows-1)-row)*nCols)+col;
-    if (p1 + PI_OVER_2f > TWO_PIf)
-    {
-      p1 = p1 - THREE_PI_OVER_2f;
-    }
-    else
-    {
-      p1 = p1 + PI_OVER_2f;
-    }
-  }
-  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
-  {
-    offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
-  }
+	  if (getUserOrigin() == Ebsd::UpperRightOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (((nCols-1)-col)*nRows)+(row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (row*nCols)+((nCols-1)-col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
+	  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (row*nCols)+(col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (col*nRows)+(row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
+	  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (col*nRows)+((nRows-1)-row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (((nRows-1)-row)*nCols)+(col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
+	  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (((nCols-1)-col)*nRows)+((nRows-1)-row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
 
-  if (getUserOrigin() == Ebsd::NoOrientation)
-  {
-    // If the user/programmer sets "NoOrientation" then we simply read the data
-    // from the file and copy the values into the arrays without any regard for
-    // the true X and Y positions in the grid. We are simply trying to keep the
-    // data as close to the original as possible.
-    offset = i;
-  }
+	  if (getUserOrigin() == Ebsd::NoOrientation)
+	  {
+		// If the user/programmer sets "NoOrientation" then we simply read the data
+		// from the file and copy the values into the arrays without any regard for
+		// the true X and Y positions in the grid. We are simply trying to keep the
+		// data as close to the original as possible.
+		offset = i;
+	  }
+
   m_Phi1[offset] = p1;
   m_Phi[offset] = p;
   m_Phi2[offset] = p2;

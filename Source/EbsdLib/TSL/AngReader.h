@@ -66,9 +66,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
   public:
     AngReader();
     virtual ~AngReader();
-
-
-
+    
     /** @brief Header Values from the TSL ang file */
 
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, TEMpixPerum, Ebsd::Ang::TEMPIXPerUM)
