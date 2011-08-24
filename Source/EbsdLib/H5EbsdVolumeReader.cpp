@@ -102,9 +102,9 @@ AIMArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<Qual
     bool* currentArrayPtr = currentArray->GetPointer(0);
     for (size_t p = 0; p < nPoints; ++p)
     {
-      if (baseArrayPtr[p] == false || currentArrayPtr[p] == false)
+      if (baseArrayPtr[p] == true && currentArrayPtr[p] == true)
       {
-        baseArrayPtr[p] = false;
+        baseArrayPtr[p] = true;
       }
     }
   }
