@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -126,13 +126,6 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     int readHeader(hid_t parId);
 
     /**
-     * @brief Reads the data section of the file
-     * @param Valid HDF5 Group ID
-     * @return error condition
-     */
-    int readData(hid_t parId);
-
-    /**
      * @brief Returns a vector of AngPhase objects corresponding to the phases
      * present in the file
      */
@@ -147,6 +140,13 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
      * @param phase The AngPhase to parse the HKL Family data
      */
     int readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase);
+
+    /**
+     * @brief Reads the data section of the file
+     * @param Valid HDF5 Group ID
+     * @return error condition
+     */
+    int readData(hid_t parId);
 
   private:
     AngPhase::Pointer   m_CurrentPhase;

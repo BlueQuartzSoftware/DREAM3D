@@ -74,6 +74,7 @@ EbsdReader()
   m_Fit = NULL;
 
   setNumFields(8);
+
   // Initialize the map of header key to header value
   m_Headermap[Ebsd::Ang::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::TEMPIXPerUM);
   m_Headermap[Ebsd::Ang::XStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::XStar);
@@ -113,6 +114,7 @@ AngReader::~AngReader()
 // -----------------------------------------------------------------------------
 void AngReader::initPointers(size_t numElements)
 {
+  setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   m_Phi1 = allocateArray<float > (numElements);
   m_Phi = allocateArray<float > (numElements);
@@ -135,6 +137,7 @@ void AngReader::initPointers(size_t numElements)
   ::memset(m_Y, 0, numBytes);
   ::memset(m_SEMSignal, 0, numBytes);
   ::memset(m_Fit, 0, numBytes);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -322,20 +325,9 @@ int AngReader::readFile()
   {
     this->deallocateArrayData<float > (m_SEMSignal);
   }
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getAxesFlipped() == true)
-  {
-	setNumOddCols(nRows);
-	setNumEvenCols(nRows);
-	setNumRows(nEvenCols);
-  }
+
+  checkAndFlipAxisDimensions();
+
   return err;
 }
 
@@ -604,5 +596,39 @@ void AngReader::readData(const std::string &line,
   {
     m_Fit[offset] = fit;
   }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AngReader::getXDimension()
+{
+  return getNumEvenCols();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngReader::setXDimension(int xdim)
+{
+  setNumEvenCols(xdim);
+  setNumOddCols(xdim);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AngReader::getYDimension()
+{
+  return getNumRows();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngReader::setYDimension(int ydim)
+{
+  setNumRows(ydim);
 }
 
