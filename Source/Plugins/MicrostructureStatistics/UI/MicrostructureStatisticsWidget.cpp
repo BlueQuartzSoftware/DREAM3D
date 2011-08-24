@@ -339,9 +339,14 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   SANITY_CHECK_INPUT(m_, OutputDir)
 
 
+  m_ComputeGrainSize = false;
+  m_ComputeGrainShapes = false;
+  m_ComputeNumNeighbors = false;
+  m_ComputeAverageOrientations = false;
   if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainSize == true) m_ComputeGrainSize = true;
   if(m_H5StatisticsFile->isChecked() == true || m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
   if(m_H5StatisticsFile->isChecked() == true || m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
+  if(m_WriteAverageOrientations == true) m_ComputeAverageOrientations = true;
   if(m_GrainDataFile->isChecked() == false)
   {
 	m_WriteGrainSize = false;
@@ -529,17 +534,6 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
     m_WriteGrainShapes = d.getValue("Grain Shape");
     m_WriteNumNeighbors = d.getValue("Number Neighbors");
     m_WriteAverageOrientations = d.getValue("Average Orientations");
-    if(m_WriteGrainSize == true) m_ComputeGrainSize = true;
-    if(m_WriteGrainShapes == true) m_ComputeGrainShapes = true;
-    if(m_WriteNumNeighbors == true) m_ComputeNumNeighbors = true;
-    if(m_WriteAverageOrientations == true) m_ComputeAverageOrientations = true;
-    if(m_H5StatisticsFile->isChecked() == false)
-	  {
-	    if(m_WriteGrainSize == false) m_ComputeGrainSize = false;
-	    if(m_WriteGrainShapes == false) m_ComputeGrainShapes = false;
-	    if(m_WriteNumNeighbors == false) m_ComputeNumNeighbors = false;
-		  if(m_WriteAverageOrientations == false) m_ComputeAverageOrientations = false;
-	  }
   }
 
 }

@@ -154,6 +154,7 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
       std::cout << "H5CtfVolumeReader Error: There was an issue loading the data from the hdf5 file." << std::endl;
       return -1;
     }
+	setAxesFlipped(reader->getAxesFlipped());
     readerIndex = 0;
     xpointstemp = reader->getXCells();
     ypointstemp = reader->getYCells();

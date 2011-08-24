@@ -309,6 +309,19 @@ int CtfReader::readFile()
         << "\nTotal Data Points Read=" << counter << std::endl;
   }
 
+  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
+  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
+  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
+  if(getAxesFlipped() == true)
+  {
+	setYCells(yCells);
+	setXCells(xCells);
+  }
   return err;
 }
 
@@ -393,80 +406,139 @@ void CtfReader::readData(const std::string &line, int row, int col, size_t i, in
 {
   /* When reading the data there should be at least 11 cols of data.
    */
-  float x, y,  euler1, euler2, euler3, mad;
+  float x, y,  p1, p, p2, mad;
   int phase, bCount, error, bc, bs;
   size_t offset = i;
   int fields = sscanf(line.c_str(), "%d\t%f\t%f\t%d\t%d\t%f\t%f\t%f\t%f\t%d\t%d",
-                       &phase, &x,&y, &bCount, &error, &euler1, &euler2, &euler3, &mad, &bc, &bs);
+                       &phase, &x,&y, &bCount, &error, &p1, &p, &p2, &mad, &bc, &bs);
   assert(fields == m_NumFields);
 
   // Do we transform the data
-  if (m_UserOrigin == Ebsd::UpperRightOrigin)
-  {
-    offset = (row*xCells)+((xCells-1)-col);
-    if (phase - PI_OVER_2f < 0.0)
-    {
-      phase = phase + THREE_PI_OVER_2f;
-    }
-    else
-    {
-      phase = phase - PI_OVER_2f;
-    }
-  }
-  else if (m_UserOrigin == Ebsd::UpperLeftOrigin)
-  {
-    if (phase + PI_OVER_2f > TWO_PIf)
-    {
-      phase = phase - THREE_PI_OVER_2f;
-    }
-    else
-    {
-      phase = phase + PI_OVER_2f;
-    }
-    if (x + ONE_PIf > TWO_PIf)
-    {
-      x = x - ONE_PIf;
-    }
-    else
-    {
-      x = x + ONE_PIf;
-    }
-  }
-  else if (m_UserOrigin == Ebsd::LowerLeftOrigin)
-  {
-    offset = (((yCells-1)-row)*xCells)+col;
-    if (phase + PI_OVER_2f > TWO_PIf)
-    {
-      phase = phase - THREE_PI_OVER_2f;
-    }
-    else
-    {
-      phase = phase + PI_OVER_2f;
-    }
-  }
-  else if (m_UserOrigin == Ebsd::LowerRightOrigin)
-  {
-    offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
-  }
+	  if (getUserOrigin() == Ebsd::UpperRightOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (((xCells-1)-col)*yCells)+(row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (row*xCells)+((xCells-1)-col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
+	  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (row*xCells)+(col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (col*yCells)+(row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
+	  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (col*yCells)+((yCells-1)-row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (((yCells-1)-row)*xCells)+(col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
+	  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
+	  {
+		  if (getUserZDir() == Ebsd::IntoSlice)
+		  {
+			offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+		  if (getUserZDir() == Ebsd::OutofSlice)
+		  {
+			offset = (((xCells-1)-col)*yCells)+((yCells-1)-row);
+			if (p1 - PI_OVER_2f < 0.0)
+			{
+			  p1 = p1 + THREE_PI_OVER_2f;
+			}
+			else
+			{
+			  p1 = p1 - PI_OVER_2f;
+			}
+		  }
+	  }
 
-
-  if (m_UserOrigin == Ebsd::NoOrientation)
-  {
-    // If the user/programmer sets "NoOrientation" then we simply read the data
-    // from the file and copy the values into the arrays without any regard for
-    // the true X and Y positions in the grid. We are simply trying to keep the
-    // data as close to the original as possible.
-    offset = i;
-  }
-
+	  if (getUserOrigin() == Ebsd::NoOrientation)
+	  {
+		// If the user/programmer sets "NoOrientation" then we simply read the data
+		// from the file and copy the values into the arrays without any regard for
+		// the true X and Y positions in the grid. We are simply trying to keep the
+		// data as close to the original as possible.
+		offset = i;
+	  }
   m_Phase[offset] = phase;
   m_X[offset] = x;
   m_Y[offset] = y;
   m_BandCount[offset] = bCount;
   m_Error[offset] = error;
-  m_Euler1[offset] = euler1;
-  m_Euler2[offset] = euler2;
-  m_Euler3[offset] = euler3;
+  m_Euler1[offset] = p1;
+  m_Euler2[offset] = p;
+  m_Euler3[offset] = p2;
   m_MAD[offset] = mad;
   m_BC[offset] = bc;
   m_BS[offset] = bs;
