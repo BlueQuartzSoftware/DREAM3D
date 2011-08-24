@@ -120,6 +120,12 @@ class EbsdLib_EXPORT EbsdReader
     */
     virtual void deletePointers() = 0;
 
+  /**
+   * @brief
+   */
+    virtual void transformData() = 0;
+
+
     /**
      * @brief Allocats a contiguous chunk of memory to store values from the .ang file
      * @param numberOfElements The number of elements in the Array. This method can

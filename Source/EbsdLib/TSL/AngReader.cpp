@@ -55,6 +55,17 @@
 #define kBufferSize 1024
 
 
+#define SHUFFLE_ARRAY(name, var, type)\
+  { type* f = allocateArray<type>(totalDataRows);\
+  for (size_t i = 0; i < totalDataRows; ++i)\
+  {\
+    size_t nIdx = shuffleTable[i];\
+    f[nIdx] = var[i];\
+  }\
+  set##name##Pointer(f); }
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -254,10 +265,24 @@ int AngReader::readFile()
   // Update the Original Header variable
   setOriginalHeader(origHeader);
 
+  err = readData(in);
+  if (err < 0) { return err;}
+
+  transformData();
+
+  checkAndFlipAxisDimensions();
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AngReader::readData(std::ifstream &in)
+{
   // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
-  size_t numElements = 0;
+  size_t totalDataRows = 0;
 
   std::string grid = getGrid();
 
@@ -272,9 +297,9 @@ int AngReader::readFile()
   else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
   {
    // if (nCols > 0) { numElements = nRows * nCols; }
-    if (nOddCols > 0) { numElements = nRows * nOddCols;/* nCols = nOddCols;*/ }
-    else if (nEvenCols > 0) { numElements = nRows * nEvenCols; /* nCols = nEvenCols; */ }
-    else { numElements = 0; }
+    if (nOddCols > 0) { totalDataRows = nRows * nOddCols;/* nCols = nOddCols;*/ }
+    else if (nEvenCols > 0) { totalDataRows = nRows * nEvenCols; /* nCols = nEvenCols; */ }
+    else { totalDataRows = 0; }
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0)
   {
@@ -286,25 +311,29 @@ int AngReader::readFile()
     return -300;
   }
 
-  initPointers(numElements);
-
-  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2 || NULL == m_Iq || NULL == m_SEMSignal || NULL == m_Ci || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
+  initPointers(totalDataRows);
+  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2
+      || NULL == m_Iq || NULL == m_SEMSignal || NULL == m_Ci
+      || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
   {
     return -1;
   }
 
-  //double progress = 0.0;
-  size_t totalDataRows = nRows * nEvenCols;
+
   size_t counter = 0;
-  for(int row = 0; row < nRows && in.eof() == false; ++row)
+  char buf[kBufferSize];
+
+  for(int row = 0; row < nRows; ++row)
   {
-    for(int col = 0; col < nEvenCols && in.eof() == false; ++col)
+    for(int col = 0; col < nEvenCols; ++col)
     {
-      this->readData(buf, nEvenCols, col, nRows, row, counter);
+      this->parseDataLine(buf, nEvenCols, col, nRows, row, counter);
       // Read the next line of data
       in.getline(buf, kBufferSize);
+      if (in.eof() == false) break;
       ++counter;
     }
+    if (in.eof() == false) break;
   }
 
 
@@ -326,9 +355,7 @@ int AngReader::readFile()
     this->deallocateArrayData<float > (m_SEMSignal);
   }
 
-  checkAndFlipAxisDimensions();
-
-  return err;
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -436,7 +463,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::readData(const std::string &line,
+void AngReader::parseDataLine(const std::string &line,
                          int nCols, int col, int nRows, int row, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
@@ -461,7 +488,7 @@ void AngReader::readData(const std::string &line,
   size_t fieldsRead = 0;
   fieldsRead = sscanf(line.c_str(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
-
+#if 0
   // Do we transform the data
 	  if (getUserOrigin() == Ebsd::UpperRightOrigin)
 	  {
@@ -580,7 +607,9 @@ void AngReader::readData(const std::string &line,
 		// data as close to the original as possible.
 		offset = i;
 	  }
-
+#else
+	  offset = i;
+#endif
   m_Phi1[offset] = p1;
   m_Phi[offset] = p;
   m_Phi2[offset] = p2;
@@ -632,3 +661,170 @@ void AngReader::setYDimension(int ydim)
   setNumRows(ydim);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngReader::transformData()
+{
+  float* p1 = getPhi1Pointer();
+  float* p = getPhiPointer();
+  float* p2 = getPhi2Pointer();
+  float* iqual = getImageQualityPointer();
+  float* conf = getConfidenceIndexPointer();
+  int* ph = getPhasePointer();
+  float* semSignal = getSEMSignalPointer();
+  float* fit = getFitPointer();
+
+  size_t offset = 0;
+
+  size_t nCols = getNumEvenCols();
+  size_t nRows = getNumRows();
+  size_t totalDataRows = nCols * nRows;
+
+  std::vector<size_t> shuffleTable(totalDataRows, 0);
+
+  size_t i = 0;
+
+  for(size_t row = 0; row < nRows; ++row)
+  {
+    for(size_t col = 0; col < nCols; ++col)
+    {
+    // Do we transform the data
+      if (getUserOrigin() == Ebsd::UpperRightOrigin)
+      {
+        if (getUserZDir() == Ebsd::IntoSlice)
+        {
+        offset = (((nCols-1)-col)*nRows)+(row);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+        if (getUserZDir() == Ebsd::OutofSlice)
+        {
+        offset = (row*nCols)+((nCols-1)-col);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+      }
+      else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
+      {
+        if (getUserZDir() == Ebsd::IntoSlice)
+        {
+        offset = (row*nCols)+(col);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+        if (getUserZDir() == Ebsd::OutofSlice)
+        {
+        offset = (col*nRows)+(row);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+      }
+      else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
+      {
+        if (getUserZDir() == Ebsd::IntoSlice)
+        {
+        offset = (col*nRows)+((nRows-1)-row);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+        if (getUserZDir() == Ebsd::OutofSlice)
+        {
+        offset = (((nRows-1)-row)*nCols)+(col);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+      }
+      else if (getUserOrigin() == Ebsd::LowerRightOrigin)
+      {
+        if (getUserZDir() == Ebsd::IntoSlice)
+        {
+        offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+        if (getUserZDir() == Ebsd::OutofSlice)
+        {
+        offset = (((nCols-1)-col)*nRows)+((nRows-1)-row);
+        if (p1[i] - PI_OVER_2f < 0.0)
+        {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+        }
+        else
+        {
+          p1[i] = p1[i] - PI_OVER_2f;
+        }
+        }
+      }
+
+      if (getUserOrigin() == Ebsd::NoOrientation)
+      {
+      // If the user/programmer sets "NoOrientation" then we simply read the data
+      // from the file and copy the values into the arrays without any regard for
+      // the true X and Y positions in the grid. We are simply trying to keep the
+      // data as close to the original as possible.
+      offset = i;
+      }
+      shuffleTable[(row*nCols)+col] = offset;
+      ++i;
+    }
+  }
+
+  SHUFFLE_ARRAY(Phi1, p1, float)
+  SHUFFLE_ARRAY(Phi, p, float)
+  SHUFFLE_ARRAY(Phi2, p2, float)
+  SHUFFLE_ARRAY(ImageQuality, iqual, float)
+  SHUFFLE_ARRAY(ConfidenceIndex, conf, float)
+  SHUFFLE_ARRAY(Phase, ph, int)
+  if (NULL != semSignal)
+  {
+    SHUFFLE_ARRAY(SEMSignal, semSignal, float)
+  }
+  if (NULL != fit)
+  {
+    SHUFFLE_ARRAY(Fit, fit, float)
+  }
+
+}

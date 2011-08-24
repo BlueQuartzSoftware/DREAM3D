@@ -140,6 +140,8 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     virtual int getYDimension();
     virtual void setYDimension(int ydim);
 
+    virtual void transformData();
+
 protected:
 
 
@@ -150,12 +152,14 @@ private:
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
     */
-    virtual void parseHeaderLine(char* buf, size_t length);
+    void parseHeaderLine(char* buf, size_t length);
+
+    int readData(std::ifstream &in);
 
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void readData(const std::string &line, int nCols, int currentCol, int nRows, int currentRow, size_t counter);
+    void parseDataLine(const std::string &line, int nCols, int currentCol, int nRows, int currentRow, size_t counter);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented
