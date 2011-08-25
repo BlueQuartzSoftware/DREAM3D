@@ -45,8 +45,16 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdHeaderEntry.h"
 
-/*
+/**
+ * @class EbsdReader EbsdReader.h EbsdLib/EbsdReader.h
+ * @brief This class is the super class to read an Ebsd data file. This class is
+ * meant to be subclassed for each manufacturer so that custom readers and parsers
+ * can be written for those data files. The current subclasses are for TSL (.ang)
+ * and HKL (.ctf) data files and their HDF5 versions also.
  *
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 24, 2011
+ * @version 1.0
  */
 class EbsdLib_EXPORT EbsdReader
 {
@@ -59,31 +67,54 @@ class EbsdLib_EXPORT EbsdReader
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
     EBSD_INSTANCE_PROPERTY(bool, AxesFlipped)
 
-    /** @brief Sets the file name of the ang file to be read */
-    EBSD_INSTANCE_STRING_PROPERTY( FileName )
+    /** @brief Sets the file name of the ebsd file to be read */
+    EBSD_INSTANCE_STRING_PROPERTY(FileName);
+    /** @brief The Number of Columns of Data in the Ebsd Data file */
     EBSD_INSTANCE_PROPERTY(int, NumFields);
 
+    /** @brief The unchanged header from teh data file */
     EBSD_INSTANCE_STRING_PROPERTY(OriginalHeader);
+    /**
+     * @brief Appends text to the current Original Header Text
+     * @param more The text to be appended
+     */
     void appendOriginalHeader(const std::string &more);
 
 
     /* These variables pertain to the memory that this class or subclass will allocate
      * for the various columns of data and how that memory is managed.
      */
+    /** @brief Will this class be responsible for deallocating the memory for the data arrays */
     EBSD_INSTANCE_PROPERTY(bool, ManageMemory);
+    /** @brief Has the complete header been read */
     EBSD_INSTANCE_PROPERTY(bool, HeaderIsComplete);
+    /** @brief The number of elements in a column of data. This should be rows * columns */
     EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
 
     /*
      * Different manufacturers call this value different thingsl. TSL = NumRows | NumCols,
-     * HKL=XCells
-     * These methods should be implemented by subclasses to return the proper value.
+     * HKL=XCells. These methods should be implemented by subclasses to return the proper value.
+     */
+    /**
+     * @brief Returns the X Dimension of the data. This method is pure virtual
+     * and should be implemented by subclasses.
      */
     virtual int getXDimension() = 0;
+    /**
+     * @brief Sets the X Dimension of the data. This method is pure virtual
+     * and should be implemented by subclasses.
+     */
     virtual void setXDimension(int xdim) = 0;
+    /**
+     * @brief Returns the Y Dimension of the data. This method is pure virtual
+     * and should be implemented by subclasses.
+     */
     virtual int getYDimension() = 0;
+    /**
+     * @brief Sets the Y Dimension of the data. This method is pure virtual
+     * and should be implemented by subclasses.
+     */
     virtual void setYDimension(int ydim) = 0;
-
 
     /**
      * @brief Returns the pointer to the data for a given field
@@ -99,14 +130,15 @@ class EbsdLib_EXPORT EbsdReader
     virtual Ebsd::NumType getPointerType(const std::string &fieldName) = 0;
 
     /**
-    * @brief Reads the complete TSL .ang file.
-    * @return 1 on success
+    * @brief Reads the complete EBSD data file storing all columns of data and the
+    * header values in memory
+    * @return 0 or positive value on success
     */
     virtual int readFile() = 0;
 
     /**
-    * @brief Reads ONLY the header portion of the TSL .ang file
-    * @return 1 on success
+    * @brief Reads ONLY the header portion of the EBSD Data file.
+    * @return 0 or positive value on success
     */
     virtual int readHeaderOnly() = 0;
 
@@ -121,7 +153,8 @@ class EbsdLib_EXPORT EbsdReader
     virtual void deletePointers() = 0;
 
   /**
-   * @brief
+   * @brief Performs an "in-place" spacial and crystalographic reference frame
+   * transformation based on the user origin and user Z direction
    */
     virtual void transformData() = 0;
 
@@ -135,7 +168,7 @@ class EbsdLib_EXPORT EbsdReader
       template<typename T>
       T* allocateArray(size_t numberOfElements)
       {
-  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
         T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
   #else
         T*  m_buffer = new T[numberOfElements];
@@ -154,7 +187,7 @@ class EbsdLib_EXPORT EbsdReader
       {
         if (ptr != NULL && this->m_ManageMemory == true)
         {
-  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
           _mm_free(ptr );
   #else
           delete[] ptr;
@@ -165,9 +198,14 @@ class EbsdLib_EXPORT EbsdReader
       }
 
   protected:
-    // Needed by subclasses
     std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
 
+    /**
+     * @brief Checks to see if the X and Y Axis dimensions should be flipped based
+     * of the type of transformation being performed and will swap the dimension
+     * values if the combination of UserOrigin and ZDirection dictates the swap
+     * @return True if the axis dimensions were flipped.
+     */
     bool checkAndFlipAxisDimensions();
 
   private:

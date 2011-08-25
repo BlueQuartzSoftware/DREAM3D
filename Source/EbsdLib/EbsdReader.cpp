@@ -42,11 +42,14 @@
 EbsdReader::EbsdReader() :
 m_UserOrigin(Ebsd::NoOrientation),
 m_UserZDir(Ebsd::IntoSlice),
+m_AxesFlipped(false),
 m_FileName(""),
+m_NumFields(0),
+m_OriginalHeader(""),
 m_ManageMemory(true),
+m_HeaderIsComplete(false),
 m_NumberOfElements(0)
 {
-  m_NumFields = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -54,7 +57,6 @@ m_NumberOfElements(0)
 // -----------------------------------------------------------------------------
 EbsdReader::~EbsdReader()
 {
-
 }
 
 // -----------------------------------------------------------------------------
