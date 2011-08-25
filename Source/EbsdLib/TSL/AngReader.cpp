@@ -270,18 +270,18 @@ int AngReader::readData(std::ifstream &in)
   std::string grid = getGrid();
 
   int nOddCols = getNumOddCols();
-  int nEvenCols = getNumEvenCols();
-  int nRows = getNumRows();
+  int nEvexCells = getNumEvenCols();
+  int yCells = getNumRows();
 
-  if (nRows < 1)
+  if (yCells < 1)
   {
     return -200;
   }
   else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
   {
-   // if (nCols > 0) { numElements = nRows * nCols; }
-    if (nOddCols > 0) { totalDataRows = nRows * nOddCols;/* nCols = nOddCols;*/ }
-    else if (nEvenCols > 0) { totalDataRows = nRows * nEvenCols; /* nCols = nEvenCols; */ }
+   // if (xCells > 0) { numElements = yCells * xCells; }
+    if (nOddCols > 0) { totalDataRows = yCells * nOddCols;/* xCells = nOddCols;*/ }
+    else if (nEvexCells > 0) { totalDataRows = yCells * nEvexCells; /* xCells = nEvexCells; */ }
     else { totalDataRows = 0; }
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0)
@@ -306,11 +306,11 @@ int AngReader::readData(std::ifstream &in)
   size_t counter = 0;
   char buf[kBufferSize];
 
-  for(int row = 0; row < nRows; ++row)
+  for(int row = 0; row < yCells; ++row)
   {
-    for(int col = 0; col < nEvenCols; ++col)
+    for(int col = 0; col < nEvexCells; ++col)
     {
-      this->parseDataLine(buf, nEvenCols, col, nRows, row, counter);
+      this->parseDataLine(buf, nEvexCells, col, yCells, row, counter);
       // Read the next line of data
       in.getline(buf, kBufferSize);
       if (in.eof() == false) break;
@@ -325,7 +325,7 @@ int AngReader::readData(std::ifstream &in)
 
     std::cout << "Premature End Of File reached.\n"
         << getFileName()
-        << "\nNumRows=" << nRows << " nEvenCols=" << nEvenCols
+        << "\nNumRows=" << yCells << " nEvexCells=" << nEvexCells
         << "\ncounter=" << counter << " totalDataRows=" << totalDataRows
         << "\nTotal Data Points Read=" << counter << std::endl;
   }
@@ -447,7 +447,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
 void AngReader::parseDataLine(const std::string &line,
-                         int nCols, int col, int nRows, int row, size_t i)
+                         int xCells, int col, int yCells, int row, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
@@ -477,7 +477,7 @@ void AngReader::parseDataLine(const std::string &line,
 	  {
 		  if (getUserZDir() == Ebsd::IntoSlice)
 		  {
-			offset = (((nCols-1)-col)*nRows)+(row);
+			offset = (((xCells-1)-col)*yCells)+(row);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -489,7 +489,7 @@ void AngReader::parseDataLine(const std::string &line,
 		  }
 		  if (getUserZDir() == Ebsd::OutofSlice)
 		  {
-			offset = (row*nCols)+((nCols-1)-col);
+			offset = (row*xCells)+((xCells-1)-col);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -504,7 +504,7 @@ void AngReader::parseDataLine(const std::string &line,
 	  {
 		  if (getUserZDir() == Ebsd::IntoSlice)
 		  {
-			offset = (row*nCols)+(col);
+			offset = (row*xCells)+(col);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -516,7 +516,7 @@ void AngReader::parseDataLine(const std::string &line,
 		  }
 		  if (getUserZDir() == Ebsd::OutofSlice)
 		  {
-			offset = (col*nRows)+(row);
+			offset = (col*yCells)+(row);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -531,7 +531,7 @@ void AngReader::parseDataLine(const std::string &line,
 	  {
 		  if (getUserZDir() == Ebsd::IntoSlice)
 		  {
-			offset = (col*nRows)+((nRows-1)-row);
+			offset = (col*yCells)+((yCells-1)-row);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -543,7 +543,7 @@ void AngReader::parseDataLine(const std::string &line,
 		  }
 		  if (getUserZDir() == Ebsd::OutofSlice)
 		  {
-			offset = (((nRows-1)-row)*nCols)+(col);
+			offset = (((yCells-1)-row)*xCells)+(col);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -558,7 +558,7 @@ void AngReader::parseDataLine(const std::string &line,
 	  {
 		  if (getUserZDir() == Ebsd::IntoSlice)
 		  {
-			offset = (((nRows-1)-row)*nCols)+((nCols-1)-col);
+			offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -570,7 +570,7 @@ void AngReader::parseDataLine(const std::string &line,
 		  }
 		  if (getUserZDir() == Ebsd::OutofSlice)
 		  {
-			offset = (((nCols-1)-col)*nRows)+((nRows-1)-row);
+			offset = (((xCells-1)-col)*yCells)+((yCells-1)-row);
 			if (p1 - PI_OVER_2f < 0.0)
 			{
 			  p1 = p1 + THREE_PI_OVER_2f;
@@ -669,131 +669,147 @@ void AngReader::transformData()
 
   size_t i = 0;
   for(size_t row = 0; row < yCells; ++row)
-  {
-    for(size_t col = 0; col < xCells; ++col)
     {
-    // Do we transform the data
-      if (getUserOrigin() == Ebsd::UpperRightOrigin)
+      for(size_t col = 0; col < xCells; ++col)
       {
-        if (getUserZDir() == Ebsd::IntoSlice)
+      // Do we transform the data
+        if (getUserOrigin() == Ebsd::UpperRightOrigin)
         {
-        offset = (((xCells-1)-col)*yCells)+(row);
-        if (p1[i] - PI_OVER_2f < 0.0)
+          if (getUserZDir() == Ebsd::IntoSlice)
+          {
+          offset = (((xCells-1)-col)*yCells)+(row);
+          if (p[i] - ONE_PIf < 0.0)
+          {
+            p[i] = p[i] + ONE_PIf;
+          }
+          else
+          {
+            p[i] = p[i] - ONE_PIf;
+          }
+          }
+          if (getUserZDir() == Ebsd::OutofSlice)
+          {
+          offset = (row*xCells)+((xCells-1)-col);
+          if (p1[i] - PI_OVER_2f < 0.0)
+          {
+            p1[i] = p1[i] + THREE_PI_OVER_2f;
+          }
+          else
+          {
+            p1[i] = p1[i] - PI_OVER_2f;
+          }
+          }
+        }
+        else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
         {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
+          if (getUserZDir() == Ebsd::IntoSlice)
+          {
+          offset = (row*xCells)+(col);
+          if (p[i] - ONE_PIf < 0.0)
+          {
+            p[i] = p[i] + ONE_PIf;
+          }
+          else
+          {
+            p[i] = p[i] - ONE_PIf;
+          }
+          if (p2[i] - PI_OVER_2f < 0.0)
+          {
+            p2[i] = p2[i] + THREE_PI_OVER_2f;
+          }
+          else
+          {
+            p2[i] = p2[i] - PI_OVER_2f;
+          }
+          }
+          if (getUserZDir() == Ebsd::OutofSlice)
+          {
+          offset = (col*yCells)+(row);
+          if (p1[i] - ONE_PIf < 0.0)
+          {
+            p1[i] = p1[i] + ONE_PIf;
+          }
+          else
+          {
+            p1[i] = p1[i] - ONE_PIf;
+          }
+          }
         }
-        else
+        else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
         {
-          p1[i] = p1[i] - PI_OVER_2f;
+          if (getUserZDir() == Ebsd::IntoSlice)
+          {
+          offset = (col*yCells)+((yCells-1)-row);
+          if (p[i] - ONE_PIf < 0.0)
+          {
+            p[i] = p[i] + ONE_PIf;
+          }
+          else
+          {
+            p[i] = p[i] - ONE_PIf;
+          }
+          if (p2[i] - ONE_PIf < 0.0)
+          {
+            p2[i] = p2[i] + ONE_PIf;
+          }
+          else
+          {
+            p2[i] = p2[i] - ONE_PIf;
+          }
+          }
+          if (getUserZDir() == Ebsd::OutofSlice)
+          {
+          offset = (((yCells-1)-row)*xCells)+(col);
+          if (p1[i] - THREE_PI_OVER_2f < 0.0)
+          {
+            p1[i] = p1[i] + PI_OVER_2f;
+          }
+          else
+          {
+            p1[i] = p1[i] - THREE_PI_OVER_2f;
+          }
+          }
         }
-        }
-        if (getUserZDir() == Ebsd::OutofSlice)
+        else if (getUserOrigin() == Ebsd::LowerRightOrigin)
         {
-        offset = (row*xCells)+((xCells-1)-col);
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
+          if (getUserZDir() == Ebsd::IntoSlice)
+          {
+          offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
+          if (p[i] - ONE_PIf < 0.0)
+          {
+            p[i] = p[i] + ONE_PIf;
+          }
+          else
+          {
+            p[i] = p[i] - ONE_PIf;
+          }
+          if (p2[i] - THREE_PI_OVER_2f < 0.0)
+          {
+            p2[i] = p2[i] + PI_OVER_2f;
+          }
+          else
+          {
+            p2[i] = p2[i] - THREE_PI_OVER_2f;
+          }
+          }
+          if (getUserZDir() == Ebsd::OutofSlice)
+          {
+          offset = (((xCells-1)-col)*yCells)+((yCells-1)-row);
+          }
         }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-        }
-      }
-      else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
-      {
-        if (getUserZDir() == Ebsd::IntoSlice)
-        {
-        offset = (row*xCells)+(col);
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-        }
-        if (getUserZDir() == Ebsd::OutofSlice)
-        {
-        offset = (col*yCells)+(row);
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-        }
-      }
-      else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
-      {
-        if (getUserZDir() == Ebsd::IntoSlice)
-        {
-        offset = (col*yCells)+((yCells-1)-row);
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-        }
-        if (getUserZDir() == Ebsd::OutofSlice)
-        {
-        offset = (((yCells-1)-row)*xCells)+(col);
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-        }
-      }
-      else if (getUserOrigin() == Ebsd::LowerRightOrigin)
-      {
-        if (getUserZDir() == Ebsd::IntoSlice)
-        {
-        offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-        }
-        if (getUserZDir() == Ebsd::OutofSlice)
-        {
-        offset = (((xCells-1)-col)*yCells)+((yCells-1)-row);
-        if (p1[i] - PI_OVER_2f < 0.0)
-        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
-        }
-        else
-        {
-          p1[i] = p1[i] - PI_OVER_2f;
-        }
-        }
-      }
 
-      if (getUserOrigin() == Ebsd::NoOrientation)
-      {
-      // If the user/programmer sets "NoOrientation" then we simply read the data
-      // from the file and copy the values into the arrays without any regard for
-      // the true X and Y positions in the grid. We are simply trying to keep the
-      // data as close to the original as possible.
-      offset = i;
+        if (getUserOrigin() == Ebsd::NoOrientation)
+        {
+        // If the user/programmer sets "NoOrientation" then we simply read the data
+        // from the file and copy the values into the arrays without any regard for
+        // the true X and Y positions in the grid. We are simply trying to keep the
+        // data as close to the original as possible.
+        offset = i;
+        }
+        shuffleTable[(row*xCells)+col] = offset;
+        ++i;
       }
-      shuffleTable[(row*xCells)+col] = offset;
-      ++i;
     }
-  }
 
   SHUFFLE_ARRAY(Phi1, p1, float)
   SHUFFLE_ARRAY(Phi, p, float)
