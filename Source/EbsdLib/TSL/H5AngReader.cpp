@@ -308,7 +308,6 @@ int H5AngReader::readData(hid_t parId)
     setNumFields(8);
   }
 
-
   err = H5Gclose(gid);
 
   return err;

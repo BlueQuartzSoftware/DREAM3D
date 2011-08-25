@@ -229,8 +229,8 @@ int H5CtfReader::readData(hid_t parId)
   err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::MeanAngularDeviation, getMeanAngularDeviationPointer());
   err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BandContrast, getBandContrastPointer());
   err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BandSlope, getBandSlopePointer());
+
   err = H5Gclose(gid);
 
   return err;
-
 }
