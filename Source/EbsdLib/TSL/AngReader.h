@@ -154,7 +154,7 @@ private:
     */
     void parseHeaderLine(char* buf, size_t length);
 
-    int readData(std::ifstream &in);
+    int readData(std::ifstream &in, char* buf, size_t bufSize);
 
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
