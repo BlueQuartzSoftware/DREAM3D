@@ -85,5 +85,7 @@ bool EbsdReader::checkAndFlipAxisDimensions()
     int xCells = getXDimension();
     setYDimension(xCells);
     setXDimension(yCells);
+    return true;
   }
+  return false;
 }
