@@ -67,7 +67,7 @@ EbsdReader()
   m_SEMSignal = NULL;
   m_Fit = NULL;
 
-  setNumFields(8);
+  setNumFields(10);
 
   // Initialize the map of header key to header value
   m_Headermap[Ebsd::Ang::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::TEMPIXPerUM);
@@ -248,7 +248,8 @@ int AngReader::readFile()
   // Update the Original Header variable
   setOriginalHeader(origHeader);
 
-  err = readData(in);
+  // We need to pass in the buffer because it has the first line of data
+  err = readData(in, buf, kBufferSize);
   if (err < 0) { return err;}
 
   transformData();
@@ -260,7 +261,7 @@ int AngReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AngReader::readData(std::ifstream &in)
+int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 {
   // Delete any currently existing pointers
   deletePointers();
@@ -304,19 +305,19 @@ int AngReader::readData(std::ifstream &in)
 
 
   size_t counter = 0;
-  char buf[kBufferSize];
 
   for(int row = 0; row < yCells; ++row)
   {
     for(int col = 0; col < nEvexCells; ++col)
     {
       this->parseDataLine(buf, nEvexCells, col, yCells, row, counter);
-      // Read the next line of data
-      in.getline(buf, kBufferSize);
-      if (in.eof() == false) break;
       ++counter;
+      ::memset(buf, 0, bufSize); // Clear the buffer
+      in.getline(buf, kBufferSize);// Read the next line of data
+      if (in.eof() == true) break;
+
     }
-    if (in.eof() == false) break;
+    if (in.eof() == true) break;
   }
 
 
@@ -465,8 +466,8 @@ void AngReader::parseDataLine(const std::string &line,
    * Some TSL ang files do NOT have all 10 columns. Assume these are lacking the last
    * 2 columns and all the other columns are the same as above.
    */
-  float p1, p, p2, x, y, iqual, conf, semSignal, fit;
-  int ph;
+  float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, iqual=-1.0f, conf=-1.0f, semSignal=-1.0f, fit=-1.0f;
+  int ph = -1;
   size_t offset = 0;
   size_t fieldsRead = 0;
   fieldsRead = sscanf(line.c_str(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
@@ -480,10 +481,10 @@ void AngReader::parseDataLine(const std::string &line,
   m_PhaseData[offset] = ph;
   m_X[offset] = x;
   m_Y[offset] = y;
-  if (getNumFields() > 8) {
+  if (fieldsRead > 8) {
     m_SEMSignal[offset] = semSignal;
   }
-  if (getNumFields() > 9)
+  if (fieldsRead > 9)
   {
     m_Fit[offset] = fit;
   }
