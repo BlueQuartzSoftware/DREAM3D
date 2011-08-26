@@ -38,7 +38,6 @@
 
 #include <cmath>
 
-
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
@@ -50,12 +49,11 @@
 //#include "DREAM3D/Common/Constants.h"
 //#include "DREAM3D/Common/OrientationMath.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 H5CtfVolumeReader::H5CtfVolumeReader() :
-H5EbsdVolumeReader()
+    H5EbsdVolumeReader()
 {
 
 }
@@ -67,7 +65,6 @@ H5CtfVolumeReader::~H5CtfVolumeReader()
 {
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -88,7 +85,6 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   }
   herr_t err = 0;
 
-
   hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   H5CtfReader::Pointer reader = H5CtfReader::New();
   reader->setHDF5Path(index);
@@ -104,23 +100,22 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   return m_Phases;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
-                                int* phases, bool* goodVoxels,
-                                int xpoints, int ypoints, int zpoints, Ebsd::RefFrameZDir ZDir,
+int H5CtfVolumeReader::loadData(float* euler1s,
+                                float* euler2s,
+                                float* euler3s,
+                                int* phases,
+                                bool* goodVoxels,
+                                int xpoints,
+                                int ypoints,
+                                int zpoints,
+                                Ebsd::RefFrameZDir ZDir,
                                 std::vector<QualityMetricFilter::Pointer> filters)
 {
-
   int index = 0;
   int err = -1;
-#if !defined (WIN32)
-   #warning This whole method needs to be validated
-#else
-  #pragma NOTE(This whole method needs to be validated)
-#endif
 
   int readerIndex;
   int xpointstemp;
@@ -147,7 +142,7 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
   {
     H5CtfReader::Pointer reader = H5CtfReader::New();
     reader->setFileName(getFilename());
-    reader->setHDF5Path(StringUtils::numToString(slice + getZStart() ) );
+    reader->setHDF5Path(StringUtils::numToString(slice + getZStart()));
     reader->setUserOrigin(getRefFrameOrigin());
     reader->setUserZDir(getRefFrameZDir());
 
@@ -157,7 +152,7 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
       std::cout << "H5CtfVolumeReader Error: There was an issue loading the data from the hdf5 file." << std::endl;
       return -1;
     }
-	setAxesFlipped(reader->getAxesFlipped());
+    setAxesFlipped(reader->getAxesFlipped());
     readerIndex = 0;
     xpointstemp = reader->getXCells();
     ypointstemp = reader->getYCells();
@@ -166,7 +161,7 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
     euler3Ptr = reader->getEuler3Pointer();
     phasePtr = reader->getPhasePointer();
     // Gather some information about the filters and types in order to run the QualityMetric Filter
-    for(size_t i = 0; i < filters.size(); ++i)
+    for (size_t i = 0; i < filters.size(); ++i)
     {
       dataPointers[i] = reader->getPointerByName(filters[i]->getFieldName());
       dataTypes[i] = reader->getPointerType(filters[i]->getFieldName());
@@ -175,36 +170,37 @@ int H5CtfVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
     // Figure out which are good voxels
     AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
 
-    if(getAxesFlipped() ==true)
-	{
-		xstartspot = (ypoints - ypointstemp) / 2;
-	    ystartspot = (xpoints - xpointstemp) / 2;
-		xstop = ypointstemp;
-		ystop = xpointstemp;
-	}
-	else if(getAxesFlipped() == false)
-	{
-	    xstartspot = (xpoints - xpointstemp) / 2;
-		ystartspot = (ypoints - ypointstemp) / 2;
-		xstop = xpointstemp;
-		ystop = ypointstemp;
-	}
+    if (getAxesFlipped() == true)
+    {
+      xstartspot = (ypoints - ypointstemp) / 2;
+      ystartspot = (xpoints - xpointstemp) / 2;
+      xstop = ypointstemp;
+      ystop = xpointstemp;
+    }
+    else if (getAxesFlipped() == false)
+    {
+      xstartspot = (xpoints - xpointstemp) / 2;
+      ystartspot = (ypoints - ypointstemp) / 2;
+      xstop = xpointstemp;
+      ystop = ypointstemp;
+    }
 
-	if(ZDir == 0) zval = slice;
-	if(ZDir == 1) zval = (zpoints-1) - slice;
+    if (ZDir == 0) zval = slice;
+    if (ZDir == 1) zval = (zpoints - 1) - slice;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ystop; j++)
     {
       for (int i = 0; i < xstop; i++)
       {
-        if(getAxesFlipped() == true) index = (zval * xpoints * ypoints) + ((j + ystartspot) * ypoints) + (i + xstartspot);
-        else if(getAxesFlipped() == false) index = (zval * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
+        if (getAxesFlipped() == true) index = (zval * xpoints * ypoints) + ((j + ystartspot) * ypoints) + (i + xstartspot);
+        else if (getAxesFlipped() == false) index = (zval * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
         euler1s[index] = euler1Ptr[readerIndex]; // Phi1
         euler2s[index] = euler2Ptr[readerIndex]; // Phi
         euler3s[index] = euler3Ptr[readerIndex]; // Phi2
         phases[index] = phasePtr[readerIndex] + 1; // Phase Add 1 to the phase number because .ctf files are zero based for phases
-        if (NULL != good_voxels.get()) {
+        if (NULL != good_voxels.get())
+        {
           goodVoxels[index] = good_voxels->GetValue(readerIndex);
         }
 
