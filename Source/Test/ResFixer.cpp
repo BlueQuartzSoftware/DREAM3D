@@ -56,15 +56,19 @@
 
 #define kBufferSize 1024
 
-class AngResFixer : public AngReader
+class AngResFixer
 {
   public:
     AngResFixer();
     virtual~AngResFixer() {};
 
-    virtual int readFile();
+    virtual int fixFile();
     std::string headerWord(char* buf, size_t length);
+    int fixHeaderValues(std::iostream &in,
+                       std::vector<std::string> &headerLines);
 
+    /** @brief Sets the file name of the ebsd file to be read */
+    MXA_INSTANCE_STRING_PROPERTY(FileName);
     MXA_INSTANCE_STRING_PROPERTY(OutputFileName)
     MXA_INSTANCE_PROPERTY(float, XStepFix);
     MXA_INSTANCE_PROPERTY(float, YStepFix);
@@ -78,9 +82,9 @@ class AngResFixer : public AngReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AngResFixer::AngResFixer() :
-    AngReader()
-{}
+AngResFixer::AngResFixer()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -112,62 +116,100 @@ std::string AngResFixer::headerWord(char* buf, size_t length)
   return word;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AngResFixer::readFile()
+int AngResFixer::fixHeaderValues(std::iostream &in,
+                                std::vector<std::string> &headerLines)
 {
-
-  int err = 1;
+  int err = 0;
   char buf[kBufferSize];
-
-  std::ifstream in(getFileName().c_str());
-
-  if (!in.is_open())
-  {
-    std::cout << "Ang file could not be opened: " << getFileName() << std::endl;
-    return -100;
-  }
-
-  FILE* out = fopen(m_OutputFileName.c_str(), "wb");
-  bool xStepComplete = false;
-  bool yStepComplete = false;
-
-
   ::memset(buf, 0, kBufferSize);
   in.getline(buf, kBufferSize);
   while (!in.eof() )
   {
+    int i = 0;
+    while (buf[i] != 0) { ++i; }
+    buf[i] = 10; //Add back in the \n character
 
-    if (in.gcount() > 0 && xStepComplete && yStepComplete)
+//    i = 0;
+//    std::cout << "-------------------" << std::endl;
+//    std::cout << buf;
+//    while (buf[i] != 0) { printf("%d ", buf[i]); ++i; }
+//    printf("\n");
+
+
+    std::string word = headerWord(buf, kBufferSize);
+    if (word.size() > 0 && word.compare(Ebsd::Ang::XStep) == 0)
     {
-      fprintf(out, "%s\n", buf);
+      ::memset(buf, 0, kBufferSize);
+      snprintf(buf, kBufferSize, "# XSTEP: %06f\r\n", m_XStepFix);
     }
-    else
+    else if (word.size() > 0 && word.compare(Ebsd::Ang::YStep) == 0)
     {
-      std::string word = headerWord(buf, kBufferSize);
-      if (word.length() == 0)
-      {
-        fprintf(out, "%s\n", buf);
-      }
-      else if (word.compare(Ebsd::Ang::XStep) == 0)
-      {
-        xStepComplete = true;
-        fprintf(out, "# XSTEP: %06f\r\n", m_XStepFix);
-      }
-      else if (word.compare(Ebsd::Ang::YStep) == 0)
-      {
-        yStepComplete = true;
-        fprintf(out, "# YSTEP: %06f\r\n", m_YStepFix);
-      }
-      else
-      {
-        fprintf(out, "%s\n", buf);
-      }
+      ::memset(buf, 0, kBufferSize);
+      snprintf(buf, kBufferSize, "# YSTEP: %06f\r\n", m_YStepFix);
     }
+    headerLines.push_back(std::string(buf));
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
+  }
+  return err;
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AngResFixer::fixFile()
+{
+
+  int err = 0;
+
+  AngReader reader;
+  reader.setFileName(m_FileName);
+  err |= reader.readFile();
+  if (err != 0)
+  {
+    return err;
+  }
+
+  std::vector<std::string> headerLines;
+  std::stringstream in(reader.getOriginalHeader());
+  err = fixHeaderValues(in, headerLines);
+
+
+  FILE* out = fopen(m_OutputFileName.c_str(), "wb");
+
+  // Write out the header
+  for (std::vector<std::string>::iterator hline = headerLines.begin(); hline != headerLines.end(); ++hline )
+  {
+    fprintf(out, "%s", (*hline).c_str());
+  }
+
+  float* p1 = reader.getPhi1Pointer();
+  float* p = reader.getPhiPointer();
+  float* p2 = reader.getPhi2Pointer();
+  float* x = reader.getXPosPointer();
+  float* y = reader.getYPosPointer();
+  float* iqual = reader.getImageQualityPointer();
+  float* conf = reader.getConfidenceIndexPointer();
+  int* ph = reader.getPhasePointer();
+  float* semSignal = reader.getSEMSignalPointer();
+  float* fit = reader.getFitPointer();
+
+  size_t count = reader.getNumberOfElements();
+  float xstep_old = reader.getXStep();
+  float ystep_old = reader.getYStep();
+  float xFactor = m_XStepFix / reader.getXStep();
+  float yFactor = m_YStepFix / reader.getYStep();
+
+  for(size_t i = 0; i < count; ++i)
+  {
+    fprintf(out, "  %.5f  %.5f  %.5f  %.5f  %.5f  %.1f  %0.3f %d  %d  %.3f\n", p1[i], p[i], p2[i],
+            x[i]*xFactor, y[i]*yFactor, iqual[i], conf[i], ph[i], (int)(semSignal[i]), fit[i]);
   }
 
   fclose(out);
@@ -230,14 +272,10 @@ int main(int argc, char **argv)
         fixer.setYStepFix(yres.getValue());
         std::string outFile = outputDir.getValue() + MXADir::Separator + MXAFileInfo::filename(*file);
         fixer.setOutputFileName(outFile);
-        fixer.readFile();
+        fixer.fixFile();
         std::cout << "   + Complete" << std::endl;
       }
     }
-
-
-
-
 
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
