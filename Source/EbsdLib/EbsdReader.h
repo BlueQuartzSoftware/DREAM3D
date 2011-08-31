@@ -173,7 +173,7 @@ class EbsdLib_EXPORT EbsdReader
   #else
         T*  m_buffer = new T[numberOfElements];
   #endif
-        m_NumberOfElements = numberOfElements;
+  //      m_NumberOfElements = numberOfElements;
         return m_buffer;
       }
 
@@ -193,7 +193,7 @@ class EbsdLib_EXPORT EbsdReader
           delete[] ptr;
   #endif
           ptr = NULL;
-          m_NumberOfElements = 0;
+   //       m_NumberOfElements = 0;
         }
       }
 
