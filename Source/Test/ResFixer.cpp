@@ -56,6 +56,10 @@
 
 #define kBufferSize 1024
 
+#if _MSC_VER
+#define snprintf _snprintf
+#endif
+
 class AngResFixer
 {
   public:
@@ -131,13 +135,6 @@ int AngResFixer::fixHeaderValues(std::iostream &in,
     int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
-
-//    i = 0;
-//    std::cout << "-------------------" << std::endl;
-//    std::cout << buf;
-//    while (buf[i] != 0) { printf("%d ", buf[i]); ++i; }
-//    printf("\n");
-
 
     std::string word = headerWord(buf, kBufferSize);
     if (word.size() > 0 && word.compare(Ebsd::Ang::XStep) == 0)
