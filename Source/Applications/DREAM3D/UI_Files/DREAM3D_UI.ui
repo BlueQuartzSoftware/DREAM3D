@@ -84,7 +84,6 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionDREAM_3D_Help"/>
     <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>

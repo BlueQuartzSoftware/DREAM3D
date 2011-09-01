@@ -32,6 +32,9 @@ is for the new plugin at which point you will be prompted to enter that path int
 CMake.
 
 @section filedescription File Descriptions
+  For example, if you wanted to create a plugin called "GrainAnalyzer" then you
+would end up with the following files:
+
 
 @code
 CMakeLists.txt
@@ -40,7 +43,7 @@ compiling the DREAM.3D application
 @endcode
 
 @code
-MyClass.{h|cpp}
+GrainAnalyzer.{h|cpp}
   This file defines the C++ class that holds the input variables. It inherits from
 AbstractPipeline and the user needs to implement the execute() method. In the current
 architecture of DREAM.3D the execute() method handles the high level set of method
@@ -48,28 +51,28 @@ calls to perform your algorithm.
 @endcode
 
 @code
-MyClassFunc.{h|cpp}
+GrainAnalyzerFunc.{h|cpp}
   This file contains all the internal data structures that you may need to execute
 your algorithm. This is an optional class and some plugins (EbsdImport) do not
 actually use it.
 @endcode
 
 @code
-UI/MyClassPlugin.{h|cpp}
+UI/GrainAnalyzerPlugin.{h|cpp}
   This C++ object inherits from QObject and DREAM3DPluginInterface and contains
 the needed code to allow the plugin to be loaded by DREAM.3D. The file that is generated
 should be sufficient as it stands and should not need anything implemented.
 @endcode
 
 @code
-UI/MyClassWidget.{h|cpp}
+UI/GrainAnalyzerWidget.{h|cpp}
   This file implements the QWidget that will be presented to the user when the plugin
 is invoked by the user through the Graphical User Interface. The programmer is urged
 to use QDesigner to graphically design their user interface.
 @endcode
 
 @code
-UI/MyClassWidget.ui
+UI/GrainAnalyzerWidget.ui
   This is a base file that can be used as a starting point for writing the user interface
 for the plugin. The file can be opened with QDesigner and more widgets added to
 interface as the programmer sees fit.
@@ -81,11 +84,16 @@ UI/Icons.qrc
 @endcode
 
 @code
-UI/MyClass.png
+UI/GrainAnalyzer.png
   This file is a default icon for the plugin. The programmer is urged to create a different
 icon in its place.
 @endcode
 
-
+@section comments1 Misc Comments
+  Most of the plugins also have a console version of the code that can be run from
+a termninal environment. While template code is not available at this time the
+programmer can optionally create this type of program/executable if they see fit.
+Inspecting some of the other plugins should yield the proper clues on how to set
+everything up in both code and CMake.
 
 */
