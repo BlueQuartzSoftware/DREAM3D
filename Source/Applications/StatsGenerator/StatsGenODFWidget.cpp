@@ -507,8 +507,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   curve = m_PlotCurves[1];
   curve->setData(x011d, y011d);
   curve->setStyle(QwtPlotCurve::Dots);
-  curve->setSymbol(symbol);
- // curve->attach(m_ODF_011Plot);
+//  curve->setSymbol(symbol);
+  curve->attach(m_ODF_011Plot);
   m_ODF_011Plot->replot();
 
   curve = m_PlotCurves[2];
