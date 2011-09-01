@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -52,6 +52,7 @@ class SGODFTableModel;
 class StatsGenMDFWidget;
 class QwtPlot;
 class QwtPlotCurve;
+class QwtPlotMarker;
 
 /**
  * @class StatsGenODFWidget StatsGenODFWidget.h StatsGenerator/StatsGenODFWidget.h
@@ -92,6 +93,9 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     StatsGenMDFWidget* getMDFWidget();
 
+    void drawODFPlotGrid(QwtPlot* plot);
+
+
     protected slots:
       void on_m_CalculateODFBtn_clicked();
       void on_addODFTextureBtn_clicked();
@@ -100,12 +104,17 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     protected:
       MXA_INSTANCE_PROPERTY(bool, Initializing)
 
+
     private:
       int      m_PhaseIndex;
       Ebsd::CrystalStructure      m_CrystalStructure;
       SGODFTableModel*        m_ODFTableModel;
       StatsGenMDFWidget*      m_MDFWidget;
       QVector<QwtPlotCurve*>  m_PlotCurves;
+      QwtPlotMarker*          m_PlotGrid;
+      QwtPlotCurve*           m_CircleGrid;
+      QwtPlotCurve*           m_RotCross0;
+      QwtPlotCurve*           m_RotCross1;
 
       StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
       void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented
