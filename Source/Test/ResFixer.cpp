@@ -143,12 +143,12 @@ int AngResFixer::fixHeaderValues(std::iostream &in,
     if (word.size() > 0 && word.compare(Ebsd::Ang::XStep) == 0)
     {
       ::memset(buf, 0, kBufferSize);
-      snprintf(buf, kBufferSize, "# XSTEP: %06f\r\n", m_XStepFix);
+      _snprintf(buf, kBufferSize, "# XSTEP: %06f\r\n", m_XStepFix);
     }
     else if (word.size() > 0 && word.compare(Ebsd::Ang::YStep) == 0)
     {
       ::memset(buf, 0, kBufferSize);
-      snprintf(buf, kBufferSize, "# YSTEP: %06f\r\n", m_YStepFix);
+      _snprintf(buf, kBufferSize, "# YSTEP: %06f\r\n", m_YStepFix);
     }
     headerLines.push_back(std::string(buf));
     ::memset(buf, 0, kBufferSize);
