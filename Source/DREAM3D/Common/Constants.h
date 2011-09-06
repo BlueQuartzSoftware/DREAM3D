@@ -310,6 +310,7 @@ namespace DREAM3D
      const std::string GAMScalarName("GAM");
      const std::string LMGScalarName("LMG");
      const std::string PhaseIdScalarName("PhaseID");
+     const std::string GoodVoxelScalarName("GoodVoxel");
      const std::string ImageQualityScalarName("ImageQuality");
      const std::string SurfaceVoxelScalarName("SurfaceVoxel");
   }

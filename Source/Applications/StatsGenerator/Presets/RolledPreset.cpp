@@ -231,8 +231,8 @@ void RolledPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
   {
-    alpha = (0 * i) + (1.1+(28.9*(1.0/(m_AspectRatio1/m_AspectRatio2)))) + (rg.genrand_res53());
-    beta = (0 * i) + (30-(28.9*(1.0/(m_AspectRatio1/m_AspectRatio2)))) + (rg.genrand_res53());
+    alpha = (0 * i) + (1.1+(28.9*(1.0/(m_AspectRatio2/m_AspectRatio1)))) + (rg.genrand_res53());
+    beta = (0 * i) + (30-(28.9*(1.0/(m_AspectRatio2/m_AspectRatio1)))) + (rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
