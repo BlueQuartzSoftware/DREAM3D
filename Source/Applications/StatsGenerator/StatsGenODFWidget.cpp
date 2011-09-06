@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -47,6 +47,8 @@
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
 
 #include "DREAM3D/Common/Texture.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
@@ -311,7 +313,8 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
-  //plot->setCanvasBackground(QColor(Qt::white));
+  plot->setCanvasBackground(QColor(Qt::white));
+  plot->setCanvasLineWidth(2);
   plot->canvas()->setFrameShape(QFrame::NoFrame);
 
   // Lock the Axis Min/Max to -1 to 1 effectively cropping the plot. If there are
@@ -326,7 +329,81 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, m_EnableAxisDecorations);
   plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, m_EnableAxisDecorations);
   plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, m_EnableAxisDecorations);
+
+
+  drawODFPlotGrid(plot);
 }
+
+// -----------------------------------------------------------------------------
+//  We should just subclass QwtPlotGrid and do all the drawing there.
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
+{
+  // Draw the accepted Inverse Pole Grid Style
+
+  // Draw the Horizontal and Vertical Lines that form the central cross
+  m_PlotGrid = new QwtPlotMarker();
+  m_PlotGrid->attach(plot);
+  m_PlotGrid->setLineStyle(QwtPlotMarker::Cross);
+  m_PlotGrid->setLinePen(QPen(Qt::darkMagenta, 1, Qt::SolidLine));
+  m_PlotGrid->setXValue(0);
+  m_PlotGrid->setYValue(0);
+
+  // Draw the outer Circle
+  QwtArray<double> circleX(900); // 900 because our plots are hard set to 450 pixels
+  QwtArray<double> circleY(900);
+  float inc = 2.0/449.0;
+
+  for(int i = 0; i < 450; ++i)
+  {
+    circleX[i] = 1.0 - (i * inc);
+    circleX[450+i] = -1.0 + (i * inc);
+
+    circleY[i] = sqrt(1.0-(circleX[i]*circleX[i]));
+    circleY[450+i] = -circleY[i];
+  }
+  m_CircleGrid = new QwtPlotCurve;
+  m_CircleGrid->setData(circleX, circleY);
+  QColor c = QColor(Qt::darkMagenta);
+  c.setAlpha(255);
+  m_CircleGrid->setPen(QPen(c));
+  m_CircleGrid->setStyle(QwtPlotCurve::Lines);
+  m_CircleGrid->attach(plot);
+
+  // Draw the Rotated Central cross
+  {
+    QwtArray<double> rotCrossX(2);
+    QwtArray<double> rotCrossY(2);
+    rotCrossX[0] = 0.7071067811f;
+    rotCrossY[0] = sqrt(1.0-(rotCrossX[0]*rotCrossX[0]));
+    rotCrossX[1] = -0.7071067811f;
+    rotCrossY[1] = -sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
+    m_RotCross0 = new QwtPlotCurve;
+    m_RotCross0->setData(rotCrossX, rotCrossY);
+    QColor c = QColor(Qt::darkMagenta);
+    c.setAlpha(200);
+    m_RotCross0->setPen(QPen(c));
+    m_RotCross0->setStyle(QwtPlotCurve::Lines);
+    m_RotCross0->attach(plot);
+  }
+
+  {
+    QwtArray<double> rotCrossX(2);
+    QwtArray<double> rotCrossY(2);
+    rotCrossX[0] = 0.7071067811f;
+    rotCrossY[0] = -sqrt(1.0-(rotCrossX[0]*rotCrossX[0]));
+    rotCrossX[1] = -0.7071067811f;
+    rotCrossY[1] = sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
+    m_RotCross1 = new QwtPlotCurve;
+    m_RotCross1->setData(rotCrossX, rotCrossY);
+    QColor c = QColor(Qt::darkMagenta);
+    c.setAlpha(200);
+    m_RotCross1->setPen(QPen(c));
+    m_RotCross1->setStyle(QwtPlotCurve::Lines);
+    m_RotCross1->attach(plot);
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -417,21 +494,27 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     y111d[i] = y111[i];
   }
 
+//  QwtSymbol symbol;
+//  symbol.setStyle(QwtSymbol::Ellipse);
+//  symbol.setSize(1,1);
   QwtPlotCurve* curve = m_PlotCurves[0];
   curve->setData(x001d, y001d);
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_001Plot);
+ // curve->setSymbol(symbol);
   m_ODF_001Plot->replot();
 
   curve = m_PlotCurves[1];
   curve->setData(x011d, y011d);
   curve->setStyle(QwtPlotCurve::Dots);
+//  curve->setSymbol(symbol);
   curve->attach(m_ODF_011Plot);
   m_ODF_011Plot->replot();
 
   curve = m_PlotCurves[2];
   curve->setData(x111d, y111d);
   curve->setStyle(QwtPlotCurve::Dots);
+ // curve->setSymbol(symbol);
   curve->attach(m_ODF_111Plot);
   m_ODF_111Plot->replot();
 

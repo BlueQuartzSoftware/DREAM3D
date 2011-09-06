@@ -37,7 +37,7 @@
 
 #include "H5CtfReader.h"
 
-
+#include "MXA/Utilities/StringUtils.h"
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "EbsdLib/EbsdConstants.h"
@@ -166,12 +166,18 @@ int H5CtfReader::readHeader(hid_t parId)
     READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeDimensions, LatticeDimensions, m_CurrentPhase);
     READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeAngles, LatticeAngles, m_CurrentPhase);
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseSymmetry, Ebsd::Ctf::LaueGroup, Symmetry, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::PhaseSymmetry, int, Ebsd::Ctf::LaueGroup, Symmetry, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section4, Section4, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section5, Section5, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section6, Section6, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
-
+    
+    //FIXME: Validate this Code to make sure we give the phase index the correct
+    // value. For TSL .ang files we started using a +1 offset, do we do the 
+    // same thing here? 
+    int pIndex = 0;
+    StringUtils::stringToNum(pIndex, *phaseGroupName);
+    m_CurrentPhase->setPhaseIndex(pIndex);
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
