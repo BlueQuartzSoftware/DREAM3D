@@ -89,10 +89,17 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   H5CtfReader::Pointer reader = H5CtfReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
+  if (err < 0)
+  {
+    std::cout  << "Error reading the header information from the .h5ebsd file" << std::endl;
+    err = H5Gclose(gid);
+    err = H5Fclose(fileId);
+    return m_Phases;
+  }
   m_Phases = reader->getPhases();
   if (err < 0)
   {
-    std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
+    std::cout << "Error reading the .HDF5 EBSD Header data" << std::endl;
     err = H5Gclose(gid);
     err = H5Fclose(fileId);
     return m_Phases;

@@ -355,6 +355,11 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       EbsdHeaderEntry::Pointer p5 = m_Headermap[line[11]];
       p5->parseValue(const_cast<char*>(line[12].c_str()), 0, line[12].length());
     }
+    else if (line[0].compare("Channel Text File") == 0)
+    {
+      // We do not really do anything with this entry
+      //  EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
+    }
     else  // This is the generic Catch all
     {
       EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
@@ -587,7 +592,9 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
     // Replace the newline at the end of the line with a NULL character
     int i = 0;
     while(buf[i] != 0 ) {++i;}
-    buf[i-1] = 0;
+    if (buf[i-1] < 32) {
+      buf[i-1] = 0;
+    }
 
     std::vector<std::string> tokens = tokenize(buf, '\t');
 

@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -46,6 +46,10 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
+/**
+ * @brief Just a dummy class in order to make the EBSDImoprt work with some
+ * of the other source codes.
+ */
 class EbsdImportFunc
 {
   public:

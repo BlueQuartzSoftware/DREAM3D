@@ -140,6 +140,10 @@ class Reconstruction : public AbstractPipeline
       // putting in UnknownTypes just to have something. You can change to suit
       // your needs.
       std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
+      if (phases.size() == 0)
+      {
+        return -1;
+      }
       crystalStructures.resize(phases.size()+1);
 
       precipFractions.resize(phases.size() + 1);
