@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -1353,7 +1353,7 @@ void  GrainGeneratorFunc::pack_grains()
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
     grainsizediststep[i] = ((2*maxdiameter[phase])-(mindiameter[phase]/2.0))/grainsizedist[i].size();
-    float root2pi = sqrt((2.0 * 3.1415926535897));
+  //  float root2pi = sqrt((2.0 * 3.1415926535897));
     float input = 0;
 	float previoustotal = 0;
     for (size_t j=0;j<grainsizedist[i].size();j++)
