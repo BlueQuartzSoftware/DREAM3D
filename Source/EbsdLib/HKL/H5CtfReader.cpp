@@ -171,10 +171,9 @@ int H5CtfReader::readHeader(hid_t parId)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section5, Section5, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section6, Section6, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
-    
-    //FIXME: Validate this Code to make sure we give the phase index the correct
-    // value. For TSL .ang files we started using a +1 offset, do we do the 
-    // same thing here? 
+
+    // For HKL Imports, the phase index is the HDF5 Group Name for this phase so
+    // convert the phaseGroupName string variable into an integer
     int pIndex = 0;
     StringUtils::stringToNum(pIndex, *phaseGroupName);
     m_CurrentPhase->setPhaseIndex(pIndex);

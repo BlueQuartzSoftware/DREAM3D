@@ -149,7 +149,7 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     int readData(hid_t parId);
 
   private:
-    AngPhase::Pointer   m_CurrentPhase;
+ //   AngPhase::Pointer   m_CurrentPhase;
     std::vector<AngPhase::Pointer> m_Phases;
 
     H5AngReader(const H5AngReader&); // Copy Constructor Not Implemented

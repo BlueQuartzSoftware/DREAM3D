@@ -58,11 +58,11 @@
 
 
 /**
-* @class Reconstruction Reconstruction AIM/Reconstruction.h/Reconstruction.h
+* @class Reconstruction Reconstruction Plugins/Reconstruction/Reconstruction.h
 * @brief This class serves as the main entry point to execute the reconstruction codes
 *
 * @author Michael A. Jackson for BlueQuartz Software
-* @author Dr. Michael Groeber, USAFRL
+* @author Dr. Michael Groeber, US AFRL
 * @date Nov 3, 2009
 * @version 1.0
 */
@@ -97,7 +97,6 @@ class Reconstruction : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
-//    MXA_INSTANCE_PROPERTY(bool, WriteImageQuality)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
 
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
@@ -112,6 +111,10 @@ class Reconstruction : public AbstractPipeline
     */
     virtual void execute();
 
+    /**
+     * @brief This will output the settings that this class is using to the std::ostream object
+     * @param stream The std::ostream object to print to
+     */
     virtual void printSettings(std::ostream &stream);
 
   protected:
@@ -125,6 +128,14 @@ class Reconstruction : public AbstractPipeline
     void operator=(const Reconstruction&);  // Operator '=' Not Implemented
 
 
+    /**
+     * @brief This method reads the values for the phase type, crystal structure
+     * and precipitate fractions from the EBSD file.
+     * @param reader The EbsdReader instance
+     * @param precipFractions Container to hold the precipitate fractions (out)
+     * @param crystalStructures Container to hold the crystal structures (out)
+     * @return Zero/Positive on Success - Negative on error.
+     */
     template<typename EbsdReader, typename EbsdPhase>
     int loadInfo(EbsdReader* reader,
                  std::vector<float> &precipFractions,
@@ -136,17 +147,16 @@ class Reconstruction : public AbstractPipeline
       reader->setRefFrameOrigin(m_RefFrameOrigin);
       reader->setRefFrameZDir(m_RefFrameZDir);
 
-      //FIXME: Mike Groeber: Take a look at this setup for the PhaseTypes. I am
-      // putting in UnknownTypes just to have something. You can change to suit
-      // your needs.
       std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
       if (phases.size() == 0)
       {
         return -1;
       }
-      crystalStructures.resize(phases.size()+1);
-
       precipFractions.resize(phases.size() + 1);
+      crystalStructures.resize(phases.size() + 1);
+
+      // Initialize the zero'th element to unknowns. The other elements will
+      // be filled in based on values from the data file
       crystalStructures[0] = Ebsd::UnknownCrystalStructure;
       m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
       precipFractions[0] = -1.0f;

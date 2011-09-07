@@ -169,7 +169,7 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
   hid_t fileId = H5Utilities::openFile(getFilename(), true);
   if (fileId < 0)
   {
-    std::cout << "Error" << std::endl;
+    std::cout << "Error: Could not open .h5ebsd file for reading." << std::endl;
     return m_Phases;
   }
   herr_t err = 0;
@@ -179,6 +179,13 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
   H5AngReader::Pointer reader = H5AngReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
+  if (err < 0)
+  {
+    std::cout  << "Error reading the header information from the .h5ebsd file" << std::endl;
+    err = H5Gclose(gid);
+    err = H5Fclose(fileId);
+    return m_Phases;
+  }
   m_Phases = reader->getPhases();
   if (err < 0)
   {
@@ -193,9 +200,15 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
-                                int* phases, bool* goodVoxels,
-                                int xpoints, int ypoints, int zpoints, Ebsd::RefFrameZDir ZDir,
+int H5AngVolumeReader::loadData(float* euler1s,
+                                float* euler2s,
+                                float* euler3s,
+                                int* phases,
+                                bool* goodVoxels,
+                                int xpoints,
+                                int ypoints,
+                                int zpoints,
+                                Ebsd::RefFrameZDir ZDir,
                                 std::vector<QualityMetricFilter::Pointer> filters)
 {
   int index = 0;
@@ -238,7 +251,7 @@ int H5AngVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
       std::cout << "H5AngDataLoader Error: There was an issue loading the data from the hdf5 file." << std::endl;
       return -1;
     }
-	setAxesFlipped(reader->getAxesFlipped());
+    setAxesFlipped(reader->getAxesFlipped());
     readerIndex = 0;
     xpointstemp = reader->getNumEvenCols();
     ypointstemp = reader->getNumRows();
@@ -257,20 +270,20 @@ int H5AngVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
     // Figure out which are good voxels
     AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
 
-    if(getAxesFlipped() ==true)
-	{
-		xstartspot = (ypoints - xpointstemp) / 2;
-	    ystartspot = (xpoints - ypointstemp) / 2;
-		xstop = xpointstemp;
-		ystop = ypointstemp;
-	}
-	else if(getAxesFlipped() == false)
-	{
-	    xstartspot = (xpoints - xpointstemp) / 2;
-		ystartspot = (ypoints - ypointstemp) / 2;
-		xstop = xpointstemp;
-		ystop = ypointstemp;
-	}
+    if(getAxesFlipped() == true)
+    {
+      xstartspot = (ypoints - xpointstemp) / 2;
+      ystartspot = (xpoints - ypointstemp) / 2;
+      xstop = xpointstemp;
+      ystop = ypointstemp;
+    }
+    else if(getAxesFlipped() == false)
+    {
+      xstartspot = (xpoints - xpointstemp) / 2;
+      ystartspot = (ypoints - ypointstemp) / 2;
+      xstop = xpointstemp;
+      ystop = ypointstemp;
+    }
 
 	if(ZDir == 0) zval = slice;
 	if(ZDir == 1) zval = (zpoints-1) - slice;

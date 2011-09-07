@@ -308,7 +308,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
 
   size_t counter = 0;
-
+  // The buf variable already has the first line of data in it
   for(int row = 0; row < yCells; ++row)
   {
     for(int col = 0; col < nEvexCells; ++col)
