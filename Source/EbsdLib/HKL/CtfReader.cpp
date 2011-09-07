@@ -284,14 +284,14 @@ int CtfReader::readData(std::ifstream &in)
 
    for (size_t row = 0; row < yCells ; ++row)
    {
-     for (size_t col = 0; col < xCells && in.eof() == false; ++col)
+     for (size_t col = 0; col < xCells; ++col)
      {
        in.getline(buf, kBufferSize);
-       if (in.eof() == false) break;
+       if (in.eof() == true) break;
        parseDataLine(buf, row, col, counter, xCells, yCells);
        ++counter;
      }
-     if (in.eof() == false) break;
+     if (in.eof() == true) break;
    }
 
 
@@ -322,7 +322,8 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
       p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
       int nPhases = getNumPhases();
-      for (int p = 0; p < nPhases; ++p)
+      // We start the Phase Index at "1" instead of Zero by convention
+      for (int p = 1; p <= nPhases; ++p)
       {
         ++i; // Increment the outer loop
         line = headerLines[i];

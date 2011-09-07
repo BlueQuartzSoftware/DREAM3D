@@ -46,8 +46,6 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/HKL/H5CtfReader.h"
 
-//#include "DREAM3D/Common/Constants.h"
-//#include "DREAM3D/Common/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //
