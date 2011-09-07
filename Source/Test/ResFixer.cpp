@@ -198,8 +198,8 @@ int AngResFixer::fixFile()
   float* fit = reader.getFitPointer();
 
   size_t count = reader.getNumberOfElements();
-  float xstep_old = reader.getXStep();
-  float ystep_old = reader.getYStep();
+ // float xstep_old = reader.getXStep();
+ // float ystep_old = reader.getYStep();
   float xFactor = m_XStepFix / reader.getXStep();
   float yFactor = m_YStepFix / reader.getYStep();
 
