@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -113,11 +113,13 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
 
   private slots:
     // slots for our worker thread to communicate
-    virtual void threadHasMessage(QString message);
+    virtual void addErrorMessage(QString message);
+    virtual void addWarningMessage(QString message);
+    virtual void addProgressMessage(QString message);
 
     /* Reconstruction Thread communicates throught these methods */
-    virtual void threadFinished();
-    virtual void threadProgressed(int value);
+    virtual void pipelineComplete();
+    virtual void pipelineProgress(int value);
 
   private:
     QList<QWidget*>             m_WidgetList;

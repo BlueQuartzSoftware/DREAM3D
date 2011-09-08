@@ -16,6 +16,7 @@ Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin);
 m_InputWidget(NULL)
 {
   m_InputWidget = new @PluginName@Widget(NULL);
+  m_InputWidget->setPlugin(static_cast<Dream3DPluginInterface*>(this));
 }
 
 // -----------------------------------------------------------------------------

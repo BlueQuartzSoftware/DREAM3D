@@ -45,6 +45,7 @@
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QSurfaceMesh.h"
 
+
 /**
  * @class SurfaceMeshWidget SurfaceMeshWidget.h Plugins/SurfaceMesh/UI/SurfaceMeshWidget.h
  * @brief This class represents the User Interface for the Surface Meshing module
@@ -98,11 +99,13 @@ class SurfaceMeshWidget : public DREAM3DPluginFrame, private Ui::SurfaceMeshWidg
 
   private slots:
     // slots for our worker thread to communicate
-    virtual void threadHasMessage(QString message);
+    virtual void addErrorMessage(QString message);
+    virtual void addWarningMessage(QString message);
+    virtual void addProgressMessage(QString message);
 
     /* Surface Mesh Thread communicates throught these methods */
-    virtual void threadFinished();
-    virtual void threadProgressed(int value);
+    virtual void pipelineComplete();
+    virtual void pipelineProgress(int value);
 
     void on_m_InputFile_textChanged(const QString & text);
     void on_m_OutputDir_textChanged(const QString & text);

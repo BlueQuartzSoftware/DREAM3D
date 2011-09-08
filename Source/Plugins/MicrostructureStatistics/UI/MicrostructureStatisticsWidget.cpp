@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -59,6 +59,7 @@
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 
 #include "MicrostructureStatistics/MicrostructureStatistics.h"
+#include "MicrostructureStatisticsPlugin.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -327,7 +328,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
     if (m_MicrostructureStatistics != NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
-      emit cancelProcess();
+      emit cancelPipeline();
     }
     return;
   }
@@ -415,21 +416,27 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   connect(m_MicrostructureStatistics, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
 
   // When the QThread finishes, tell this object that it has finished.
-  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( threadFinished() ));
+  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( pipelineComplete() ));
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
+  connect(m_MicrostructureStatistics, SIGNAL (updateProgress(int)), this, SLOT(pipelineProgress(int) ));
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
+  connect(m_MicrostructureStatistics, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_MicrostructureStatistics, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_MicrostructureStatistics, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ), m_MicrostructureStatistics, SLOT (on_CancelWorker() ), Qt::DirectConnection);
+  connect(this, SIGNAL(cancelPipeline() ), m_MicrostructureStatistics, SLOT (on_CancelWorker() ), Qt::DirectConnection);
 
   setWidgetListEnabled(false);
   emit
-  processStarted();
+  pipelineStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 }
@@ -437,14 +444,14 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::threadFinished()
+void MicrostructureStatisticsWidget::pipelineComplete()
 {
   // std::cout << "MicrostructureStatisticsWidget::grainGenerator_Finished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
   emit
-  processEnded();
+  pipelineEnded();
   checkIOFiles();
   m_MicrostructureStatistics->deleteLater();
 }
@@ -452,20 +459,9 @@ void MicrostructureStatisticsWidget::threadFinished()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::threadProgressed(int val)
+void MicrostructureStatisticsWidget::pipelineProgress(int val)
 {
   this->m_progressBar->setValue(val);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicrostructureStatisticsWidget::threadHasMessage(QString message)
-{
-  if (NULL != this->statusBar())
-  {
-    this->statusBar()->showMessage(message);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -538,3 +534,31 @@ void MicrostructureStatisticsWidget::on_m_GrainFileOptionsBtn_clicked()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::addErrorMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsDisplayName).append(" Error");
+  displayDialogBox(title, message, QMessageBox::Critical);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::addWarningMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsDisplayName).append(" Warning");
+  displayDialogBox(title, message, QMessageBox::Warning);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::addProgressMessage(QString message)
+{
+  if (NULL != this->statusBar()) {
+    this->statusBar()->showMessage(message);
+  }
+}

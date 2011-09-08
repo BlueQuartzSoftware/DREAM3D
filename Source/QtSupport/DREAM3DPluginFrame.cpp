@@ -56,7 +56,6 @@ m_StatusBar(NULL)
 // -----------------------------------------------------------------------------
 DREAM3DPluginFrame::~DREAM3DPluginFrame()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -163,3 +162,21 @@ bool DREAM3DPluginFrame::sanityCheckOutputDirectory(QLineEdit* le, QString msgTi
   return true;
 
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DPluginFrame::displayDialogBox(QString title, QString text, QMessageBox::Icon icon)
+{
+
+  QMessageBox msgBox;
+  msgBox.setText(title);
+  msgBox.setInformativeText(text);
+  msgBox.setStandardButtons(QMessageBox::Ok);
+  msgBox.setDefaultButton(QMessageBox::Ok);
+  msgBox.setIcon(icon);
+  msgBox.exec();
+}
+
+
