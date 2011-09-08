@@ -3061,7 +3061,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
     }
   }
 }
-
+//FIXME: This should return an erorr condition
 void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 {
   ofstream outFile;
@@ -3077,6 +3077,7 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
   outFile.close();
 }
 
+//FIXME: This should return an erorr condition
 void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
   ofstream outFile;
