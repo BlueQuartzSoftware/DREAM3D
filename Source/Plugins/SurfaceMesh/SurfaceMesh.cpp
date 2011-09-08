@@ -218,6 +218,9 @@ void SurfaceMesh::execute()
   int dims[3];
   float scaling[3];
   err = reader->getSizeAndResolution(dims, scaling);
+  CHECK_FOR_ERROR(SurfaceMeshFunc, "Error reading the size and dimensions data from the input file", err);
+  CHECK_FOR_CANCELED(SurfaceMeshFunc, "Surface Mesh was canceled", getSizeAndResolution);
+
   // Initialize our SurfaceMeshFunc Variable
   // Add a layer of padding around the volume which are going to be our boundary voxels
   m->xDim = dims[0] + 2;
@@ -254,7 +257,9 @@ void SurfaceMesh::execute()
   int yFileDim = m->yDim - 2;
   int zFileDim = m->zDim - 2;
   size_t totalBytes = xFileDim * yFileDim * sizeof(int);
-  int* fileVoxelLayer = (int*)(malloc(totalBytes));
+ // int* fileVoxelLayer = (int*)(malloc(totalBytes));
+  DECLARE_WRAPPED_ARRAY(fileVoxelLayer, m_FileVoxelLayer, int)
+  fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
   size_t offset = 0;
 
   std::stringstream ss;
@@ -269,6 +274,7 @@ void SurfaceMesh::execute()
 #endif
     err = reader->readHyperSlab(xFileDim, yFileDim, i, fileVoxelLayer);
     CHECK_FOR_ERROR(SurfaceMeshFunc, "Error Loading Slice Data as a Hyperslab from HDF5 file", err)
+    CHECK_FOR_CANCELED(SurfaceMeshFunc, "Surface Mesh was canceled", readHyperSlab);
 
     // Copy the Voxels from layer 2 to Layer 1;
     ::memcpy(&(m->voxels[1]), &(m->voxels[1 + m->NSP]), m->NSP * sizeof(int));
@@ -313,21 +319,10 @@ void SurfaceMesh::execute()
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     err = m->writeNodesFile(i, cNodeID, NodesFile);
-    if (err < 0)
-    {
-      setErrorCondition(-1);
-      updateProgressAndMessage(("Error Writing Nodes Temp File"), 100);
-      free(fileVoxelLayer);
-      return;
-    }
+    CHECK_FOR_ERROR(SurfaceMeshFunc, "Error writing nodes temp file", err)
+
     err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
-    if (err < 0)
-    {
-      setErrorCondition(-1);
-      updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
-      free(fileVoxelLayer);
-      return;
-    }
+    CHECK_FOR_ERROR(SurfaceMeshFunc, "Error writing triangle temp file", err)
 
     if (m_WriteSTLFile == true)
     {
@@ -341,6 +336,11 @@ void SurfaceMesh::execute()
       m->cTriangle.clear();
     }
   }
+  if (this->getCancel() ) {
+
+  }
+  CHECK_FOR_CANCELED(SurfaceMeshFunc, "Surface Mesh was canceled", readHyperSlab);
+
   ss.str("");
   ss << "Marching Cubes Between Layers " << zFileDim - 1 << " and " << zFileDim << " of " << zFileDim;
   updateProgressAndMessage((ss.str().c_str()), (zFileDim * 90 / zFileDim));
@@ -377,21 +377,10 @@ void SurfaceMesh::execute()
   // std::cout << "nNodes: " << nNodes << std::endl;
   // Output nodes and triangles...
   err = m->writeNodesFile(i, cNodeID, NodesFile);
-  if (err < 0)
-  {
-    setErrorCondition(-1);
-    updateProgressAndMessage(("Error Writing Nodes Temp File"), 100);
-    free(fileVoxelLayer);
-    return;
-  }
+  CHECK_FOR_ERROR(SurfaceMeshFunc, "Error writing nodes temp file", err)
+
   err = m->writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
-  if (err < 0)
-  {
-    setErrorCondition(-1);
-    updateProgressAndMessage(("Error Writing Triangles Temp File"), 100);
-    free(fileVoxelLayer);
-    return;
-  }
+  CHECK_FOR_ERROR(SurfaceMeshFunc, "Error writing triangle temp file", err)
 
   // Write the last layers of the STL Files
   if (m_WriteSTLFile == true)
@@ -417,9 +406,6 @@ void SurfaceMesh::execute()
   }
 
 //------------ All Done with Marching Cubes-------------------
-  free(fileVoxelLayer);
-  fileVoxelLayer = NULL;
-
 
   m = SurfaceMeshFunc::NullPointer(); // Clean up the memory
 
@@ -449,15 +435,18 @@ void SurfaceMesh::execute()
   updateProgressAndMessage(msg.c_str(), 95);
   meshing::SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
   writer->setInputFileName(VisualizationFile);
-  writer->writeVTKFile(VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
-
-  updateProgressAndMessage(("Surface Meshing Complete"), 100);
+  err = writer->writeVTKFile(VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
   if (m_DeleteTempFiles == true)
   {
     // Delete the intermediate files
     MXADir::remove(NodesFile);
     MXADir::remove(TrianglesFile);
   }
+
+  CHECK_FOR_ERROR(SurfaceMeshFunc, "Error vtk output file", err)
+
+  updateProgressAndMessage(("Surface Meshing Complete"), 100);
+
 
 }
 
