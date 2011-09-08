@@ -117,19 +117,13 @@ void Reconstruction::execute()
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
     volumeInfoReader->setFilename(m_H5AngFile);
     err = volumeInfoReader->readVolumeInfo();
-    if (err < 0)
-    {
-      updateProgressAndMessage("Error reading Volume Information from File.", 100);
-      return;
-    }
+    CHECK_FOR_ERROR(ReconstructionFunc, "Error reading Volume Information from File.", err);
+
     volumeInfoReader->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     // The GUI code has already added 1 to the end index so nothing special needs to be done
     // for this calculation
-#if MIKE_G_DEBUG
-    m->resx = m->resx*2;
-    m->resy = m->resy*2;
-#endif
+
     m->zpoints = getZEndIndex() - getZStartIndex() + 1;
     manufacturer = volumeInfoReader->getManufacturer();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
@@ -161,15 +155,11 @@ void Reconstruction::execute()
   }
   else
   {
-    updateProgressAndMessage("ReconstructionFunc Error: No Manufacturer Set for EBSD data", 100);
+    CHECK_FOR_ERROR(ReconstructionFunc, "ReconstructionFunc Error: No Manufacturer Set for EBSD data", -1);
     return;
   }
 
-  if (err < 0)
-  {
-    updateProgressAndMessage("ReconstructionFunc Error: Phase and Crystal Structure Information", 100);
-     return;
-  }
+  CHECK_FOR_ERROR(ReconstructionFunc, "Error reading Phase and Crystal Structure Information", err);
 
 
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
@@ -190,6 +180,7 @@ void Reconstruction::execute()
   ebsdReader->setRefFrameOrigin(m_RefFrameOrigin);
   ebsdReader->setRefFrameZDir(m_RefFrameZDir);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
+  CHECK_FOR_ERROR(ReconstructionFunc, "Error loading data from input file.", err)
   if(ebsdReader->getAxesFlipped() == true)
   {
 	  int tempxpoints = m->xpoints;
@@ -198,7 +189,6 @@ void Reconstruction::execute()
 	  m->ypoints = tempxpoints;
   }
 
-  CHECK_FOR_ERROR(ReconstructionFunc, "Reconstruction was canceled", err)
 
   m->initializeQuats();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", loadData)
@@ -281,9 +271,7 @@ void Reconstruction::execute()
   H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
   if (h5VolWriter.get() == NULL)
   {
-    updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
-    m = ReconstructionFunc::NullPointer();  // Clean up the memory
-    return;
+    CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", -1)
   }
   h5VolWriter->setFilename(hdf5VolumeFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
@@ -381,7 +369,7 @@ void Reconstruction::execute()
     updateProgressAndMessage(("Writing Out Dx Grain File."), 99);
     MAKE_OUTPUT_FILE_PATH( dxGrainFile, DREAM3D::Reconstruction::DxFile);
     DxGrainIdWriter::Pointer dxWriter = DxGrainIdWriter::New();
-//    err = dxWriter->writeGrainFile(dxGrainFile, m->voxels.get(), m->xpoints, m->ypoints, m->zpoints);
+    err = dxWriter->writeGrainFile<int>(dxGrainFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Dx Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
