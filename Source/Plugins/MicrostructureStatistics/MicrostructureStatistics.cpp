@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -100,7 +100,7 @@ void MicrostructureStatistics::execute()
   err = h5Reader->getSizeAndResolution(dims, spacing);
   if (err < 0)
   {
-    updateProgressAndMessage("Error Reading the Dimensions and Resolution from the File.", 100);
+    CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Reading the Dimensions and Resolution from the input File.", err);
     setErrorCondition(err);
     return;
   }
@@ -125,12 +125,7 @@ void MicrostructureStatistics::execute()
 
   updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
   err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->totalpoints);
-  if (err < 0)
-  {
-    updateProgressAndMessage("Error Reading the Voxel Data from the File.", 100);
-    setErrorCondition(err);
-    return;
-  }
+  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Reading the Voxel Data from the File.", err);
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  readVoxelData)
 
 // We need to allocate the proper number of grains, assign the voxel list to them
@@ -140,6 +135,7 @@ void MicrostructureStatistics::execute()
   updateProgressAndMessage(("Finding Surface Grains"), 20);
   if(m->zpoints > 1) m->find_surfacegrains();
   if(m->zpoints == 1) m->find_surfacegrains2D();
+  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Finding Surface Grains", err);
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_surfacegrains2D)
 
   // Start Computing the statistics
@@ -148,11 +144,13 @@ void MicrostructureStatistics::execute()
 	  updateProgressAndMessage(("Determining Grain Sizes"), 25);
 	  if(m->zpoints > 1) m->find_centroids();
 	  if(m->zpoints == 1)m->find_centroids2D();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error determining the grain size", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
 
 	  updateProgressAndMessage(("Determining Bounding Box"), 28);
 	  if(m->zpoints > 1) m->find_boundingboxgrains();
 	  if(m->zpoints == 1)m->find_boundingboxgrains2D();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error determining the bounding box", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_centroids2D)
   }
 
@@ -161,11 +159,13 @@ void MicrostructureStatistics::execute()
 	  updateProgressAndMessage(("Finding Grain Moments"), 30);
 	  if(m->zpoints > 1) m->find_moments();
 	  if(m->zpoints == 1) m->find_moments2D();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Finding the Grain Moments", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_moments2D)
 
 	  updateProgressAndMessage(("Finding Grain Principal Axes Lengths"), 35);
 	  if(m->zpoints > 1) m->find_axes();
 	  if(m->zpoints == 1) m->find_axes2D();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Finding the Grain Principal Axes Length", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_axes2D)
   }
 
@@ -173,10 +173,12 @@ void MicrostructureStatistics::execute()
   {
 	  updateProgressAndMessage(("Finding Neighbors"), 45);
 	  m->find_neighbors();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error finding neighbors", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_neighbors)
 
 	  updateProgressAndMessage(("Defining Neighborhoods"), 55);
 	  m->define_neighborhood();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error defining neighborhoods", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  define_neighborhood)
   }
 
@@ -184,6 +186,7 @@ void MicrostructureStatistics::execute()
   {
 	  updateProgressAndMessage(("Finding Average Orientations For Grains"), 60);
 	  m->find_grainorientations();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error finding average orientations for Grains", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
   }
 
@@ -195,25 +198,31 @@ void MicrostructureStatistics::execute()
 	  updateProgressAndMessage(("Finding Grain Axes ODF"), 65);
 	  if(m->zpoints > 1) m->find_vectors(h5io);
 	  if(m->zpoints == 1) m->find_vectors2D(h5io);
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Finding Grain Axes ODF.", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_vectors2D)
 
 	  updateProgressAndMessage(("Finding Euler ODF"), 70);
 	  m->find_eulerodf(h5io);
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Finding Euler ODF", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_eulerodf)
 
 	  updateProgressAndMessage(("Measuring Misorientations"), 75);
 	  m->measure_misorientations(h5io);
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error measuring misorientations", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  measure_misorientations)
 
 	  updateProgressAndMessage(("Writing Statistics"), 85);
 	  if(m->zpoints > 1) { m->volume_stats(h5io, m_BinStepSize); }
 	  if(m->zpoints == 1) { m->volume_stats2D(h5io, m_BinStepSize); }
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error writing statistics file.", err);
+	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  volume_stats)
   }
 
   if(m_WriteKernelMisorientations == true)
   {
 	  updateProgressAndMessage(("Finding Reference Orientations For Grains"), 90);
 	  m->find_grain_and_kernel_misorientations();
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error finding reference orientations for Grains", err);
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
   }
 
@@ -234,6 +243,7 @@ void MicrostructureStatistics::execute()
   {
 	  updateProgressAndMessage(("Writing Grain Data"), 95);
 	  m->write_graindata(graindataFile, m_WriteGrainSize, m_WriteGrainShapes, m_WriteNumNeighbors, m_WriteAverageOrientations);
+	  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error writing grain data file.", err);
   }
 
   /* ********** This section writes the VTK files for visualization *** */
@@ -282,13 +292,11 @@ void MicrostructureStatistics::execute()
     VTKRectilinearGridFileWriter vtkWriter;
     vtkWriter.setWriteBinaryFiles(m_WriteBinaryVTKFiles);
     err = vtkWriter.write<MicrostructureStatisticsFunc>(vtkVizFile, m.get(), scalarsToWrite);
-
     // Now Delete all the Scalar Helpers that we just created and used.
     for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter )
     {
       delete (*iter);
     }
-
 
     CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "The MicrostructureStatisticsFunc threw an Error writing the VTK file format.", err);
   }
