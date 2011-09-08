@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -105,7 +105,7 @@ void GrainGenerator::execute()
   H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5StatsFile);
   if (h5reader.get() == NULL)
   {
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error Opening the HDF5 Input file", -1)
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Opening the HDF5 Input file", -1)
     return;
   }
 
@@ -125,36 +125,39 @@ void GrainGenerator::execute()
 
     updateProgressAndMessage(("Loading Stats Data"), 5);
     err = m->readReconStatsData(h5reader);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Reading the Statistics Data", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "readReconStatsData Was canceled", readReconStatsData)
 
     updateProgressAndMessage(("Loading Axis Orientation Data"), 10);
     err = m->readAxisOrientationData(h5reader);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Axis Orientation Data", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "readAxisOrientationData Was canceled", readAxisOrientationData);
 
     updateProgressAndMessage(("Packing Grains"), 25);
     m->pack_grains();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Packing Grains", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", pack_grains)
 
     updateProgressAndMessage(("Assigning Voxels"), 30);
     m->assign_voxels();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Assigning Voxels", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_voxels)
 
     updateProgressAndMessage(("Filling Gaps"), 40);
     m->fill_gaps();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Filling Gaps", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
-
-//    updateProgressAndMessage(("Adjusting Boundaries"), 42);
-//    m->adjust_boundaries();
-//    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", adjust_boundaries)
   }
   else if (m_AlreadyFormed == true)
   {
     updateProgressAndMessage(("Loading Stats Data"), 10);
     err = m->readReconStatsData(h5reader);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Reading the Statistics Data", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "readReconStatsData Was canceled", readReconStatsData)
 
     updateProgressAndMessage(("Loading Axis Orientation Data"), 25);
     err = m->readAxisOrientationData(h5reader);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Axis Orientation Data", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "readAxisOrientationData Was canceled", readAxisOrientationData);
 
     updateProgressAndMessage(("Reading Structure"), 40);
@@ -204,6 +207,7 @@ void GrainGenerator::execute()
 
   updateProgressAndMessage(("Finding Neighbors"), 44);
   m->find_neighbors();
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Finding Neighbors", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_neighbors)
 
 
@@ -211,27 +215,33 @@ void GrainGenerator::execute()
   {
     updateProgressAndMessage(("Placing Precipitates"), 45);
     m->place_precipitates();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error placing precipitates", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", place_precipitates)
 
     updateProgressAndMessage(("Filling In Precipitates"), 47);
     m->fillin_precipitates();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error filling precipitates", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
   }
 
   updateProgressAndMessage(("Loading ODF Data"), 48);
   err = m->readODFData(h5reader);
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading ODF Data", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readODFData)
 
   updateProgressAndMessage(("Loading Misorientation Data"), 50);
   err = m->readMisorientationData(h5reader);
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Misorientation Data", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readMisorientationData)
 
   updateProgressAndMessage(("Assigning Eulers"), 60);
   m->assign_eulers();
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error assigning Euler angles", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_eulers)
 
   updateProgressAndMessage(("Measuring Misorientations"), 65);
   m->measure_misorientations();
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Measuring misorientations", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", measure_misorientations)
 
   MAKE_OUTPUT_FILE_PATH ( eulerFile , DREAM3D::SyntheticBuilder::GrainAnglesFile)
@@ -239,11 +249,13 @@ void GrainGenerator::execute()
 
   updateProgressAndMessage(("Matching Crystallography"), 65);
   m->matchCrystallography();
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Matching Crystallography", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", matchCrystallography)
 
   updateProgressAndMessage(("Writing Euler Angles"), 81);
 
   m->write_eulerangles(eulerFile);
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Euler Angles", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_eulerangles)
 
   /** ********** This section writes the Voxel Data for the Stats Module ****/
@@ -252,7 +264,7 @@ void GrainGenerator::execute()
   H5VoxelWriter::Pointer h5VoxelWriter = H5VoxelWriter::New();
   if (h5VoxelWriter.get() == NULL)
   {
-    updateProgressAndMessage("The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", 100);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", -1);
     m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
     return;
   }
@@ -267,6 +279,7 @@ void GrainGenerator::execute()
     updateProgressAndMessage(("Writing Grain Data"), 88);
     MAKE_OUTPUT_FILE_PATH ( GrainDataFile, DREAM3D::MicroStats::GrainDataFile);
     m->write_graindata(GrainDataFile);
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Grain Data File", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
   }
 
@@ -315,10 +328,10 @@ void GrainGenerator::execute()
     {
       delete (*iter);
     }
-
-
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the VTK file format.", err);
+
   }
+
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeVisualizationFile)
   /* ******* End VTK Visualization File Writing Section ****** */
 
