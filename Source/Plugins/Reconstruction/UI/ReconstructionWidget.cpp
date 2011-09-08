@@ -72,9 +72,9 @@
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 #include "EbsdLib/HKL/CtfFields.h"
 
-
-
 #include "Reconstruction/UI/QualityMetricTableModel.h"
+#include "ReconstructionPlugin.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -669,7 +669,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
     if(m_Reconstruction != NULL)
     {
       std::cout << "canceling from GUI...." << std::endl;
-      emit cancelProcess();
+      emit cancelPipeline();
     }
     return;
   }
@@ -783,24 +783,29 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   // When the QThread finishes, tell this object that it has finished.
   connect(m_WorkerThread, SIGNAL(finished()),
-          this, SLOT( threadFinished() ) );
+          this, SLOT( pipelineComplete() ) );
 
   // Send Progress from the Reconstruction to this object for display
   connect(m_Reconstruction, SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) );
+    this, SLOT(pipelineProgress(int) ) );
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (updateMessage(QString)),
-          this, SLOT(threadHasMessage(QString) ) );
+  connect(m_Reconstruction, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_Reconstruction, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_Reconstruction, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ),
+  connect(this, SIGNAL(cancelPipeline() ),
           m_Reconstruction, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
 
   setWidgetListEnabled(false);
-  emit processStarted();
+  emit pipelineStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 }
@@ -834,13 +839,13 @@ void ReconstructionWidget::setupQualityMetricFilters(QReconstruction* r)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::threadFinished()
+void ReconstructionWidget::pipelineComplete()
 {
  // std::cout << "ReconstructionWidget::threadFinished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->progressBar->setValue(0);
-  emit processEnded();
+  emit pipelineEnded();
   checkIOFiles();
   m_Reconstruction->deleteLater();
 }
@@ -848,20 +853,9 @@ void ReconstructionWidget::threadFinished()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::threadProgressed(int val)
+void ReconstructionWidget::pipelineProgress(int val)
 {
   this->progressBar->setValue( val );
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReconstructionWidget::threadHasMessage(QString message)
-{
-  if (NULL != this->statusBar()) {
-    this->statusBar()->showMessage(message);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -909,6 +903,34 @@ void ReconstructionWidget::on_m_HDF5GrainFile_stateChanged(int state)
       QMessageBox::Ok);
       return;
       }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::addErrorMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::ReconstructionDisplayName).append(" Error");
+  displayDialogBox(title, message, QMessageBox::Critical);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::addWarningMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::ReconstructionDisplayName).append(" Warning");
+  displayDialogBox(title, message, QMessageBox::Warning);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionWidget::addProgressMessage(QString message)
+{
+  if (NULL != this->statusBar()) {
+    this->statusBar()->showMessage(message);
   }
 }
 

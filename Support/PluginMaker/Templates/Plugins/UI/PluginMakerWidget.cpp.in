@@ -23,7 +23,7 @@
 #include "QtSupport/QCheckboxDialog.h"
 
 #include "@PluginName@/@PluginName@.h"
-
+#include "@PluginName@Plugin.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -204,20 +204,29 @@ void @PluginName@Widget::on_m_GoBtn_clicked()
 
   // When the QThread finishes, tell this object that it has finished.
   connect(m_WorkerThread, SIGNAL(finished()),
-          this, SLOT( threadFinished() ) );
+          this, SLOT( pipelineComplete() ) );
 
   // Send Progress from the Reconstruction to this object for display
   connect(m_@PluginName@, SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) );
-
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_@PluginName@, SIGNAL (updateMessage(QString)),
-          this, SLOT(threadHasMessage(QString) ) );
+    this, SLOT(pipelineProgress(int) ) );
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelProcess() ),
           m_@PluginName@, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+  
+  // Send progress messages from Pipeline to this object for display
+  connect(m_@PluginName@, SIGNAL (progressMessage(QString)), 
+          this, SLOT(addProgressMessage(QString) ));
+
+  // Send progress messages from Pipeline to this object for display
+  connect(m_@PluginName@, SIGNAL (warningMessage(QString)), 
+          this, SLOT(addWarningMessage(QString) ));
+
+  // Send progress messages from Pipeline to this object for display
+  connect(m_@PluginName@, SIGNAL (errorMessage(QString)), 
+          this, SLOT(addErrorMessage(QString) ));
+
 
 
   setWidgetListEnabled(false);
@@ -229,7 +238,7 @@ void @PluginName@Widget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void @PluginName@Widget::threadFinished()
+void @PluginName@Widget::pipelineComplete()
 {
  // std::cout << "@PluginName@Widget::@PluginName@_Finished()" << std::endl;
   m_GoBtn->setText("Go");
@@ -243,17 +252,49 @@ void @PluginName@Widget::threadFinished()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void @PluginName@Widget::threadProgressed(int val)
+void @PluginName@Widget::pipelineProgress(int val)
 {
   this->m_progressBar->setValue( val );
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::addErrorMessage(QString message)
+{
 
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void @PluginName@Widget::threadHasMessage(QString message)
+void @PluginName@Widget::addWarningMessage(QString message)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::addErrorMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::@PluginName@DisplayName).append(" Error");
+  displayDialogBox(title, message, QMessageBox::Critical);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::addWarningMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::@PluginName@DisplayName).append(" Warning");
+  displayDialogBox(title, message, QMessageBox::Warning);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Widget::addProgressMessage(QString message)
 {
   if (NULL != this->statusBar()) {
     this->statusBar()->showMessage(message);

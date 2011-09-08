@@ -100,7 +100,21 @@ class DREAM3DLib_EXPORT AbstractPipeline
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineMessage(const char* message);
+    virtual void pipelineProgressMessage(const char* message);
+
+    /**
+     * @brief This message reports some human readable message suitable for display
+     * on a GUI or printed to a console or possibly saved to a log file
+     * @param message
+     */
+    virtual void pipelineWarningMessage(const char* message);
+
+    /**
+     * @brief This message reports some human readable message suitable for display
+     * on a GUI or printed to a console or possibly saved to a log file
+     * @param message
+     */
+    virtual void pipelineErrorMessage(const char* message);
 
     /**
      * @brief This method is called from the run() method just before exiting and
@@ -135,7 +149,7 @@ class DREAM3DLib_EXPORT AbstractPipeline
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
-              pipelineMessage(#Message);\
+              pipelineProgressMessage(#Message);\
               pipelineProgress(0);\
               pipelineFinished();\
               m = FuncClass::NullPointer();\
@@ -148,7 +162,7 @@ class DREAM3DLib_EXPORT AbstractPipeline
     if(err < 0) {\
       setErrorCondition(err);\
       std::string msg = std::string(Message);\
-      pipelineMessage(msg.c_str());\
+      pipelineErrorMessage(msg.c_str());\
       pipelineProgress(0);\
       pipelineFinished();\
       m = FuncClass::NullPointer();\

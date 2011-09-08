@@ -46,7 +46,11 @@
 #include "@CLASS_NAME@/@CLASS_NAME@.h"
 
 #include <QtCore/QObject>
-
+/**
+* @brief This is a subclass of the @CLASS_NAME@ class that controls this pipeline
+* execution. This class is here to simply wrap the methods with Qt's signals and
+* slots mechanism to push messages and progress to the Qt based GUI.
+*/
 class Q@CLASS_NAME@ : public QObject, public @CLASS_NAME@
 {
   Q_OBJECT
@@ -58,20 +62,62 @@ class Q@CLASS_NAME@ : public QObject, public @CLASS_NAME@
     }
     virtual ~Q@CLASS_NAME@() {}
 
+    /**
+     * @brief Either prints a message or sends the message to the User Interface
+     * @param message The message to print
+     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
+     */
     virtual void updateProgressAndMessage(const char* message, int value)
     {
       emit updateProgress(value);
-      emit updateMessage(QString(message));
+      emit progressMessage(QString(message));
     }
 
+    /**
+     * @brief This method reports progress such that a user interface element such
+     * as a progress bar could be updated. It is assumed the value will fluctuate
+     * between 0 and 100.
+     * @param value
+     */
     virtual void pipelineProgress(int value)
     {
       emit updateProgress(value);
     }
-    virtual void pipelineMessage(const char* message)
+    
+    /**
+     * @brief This message reports some human readable message suitable for display
+     * on a GUI or printed to a console or possibly saved to a log file
+     * @param message
+     */
+    virtual void pipelineProgressMessage(const char* message)
     {
-      emit updateMessage(QString(message));
+      emit progressMessage(QString(message));
     }
+    
+    /**
+     * @brief This message reports some human readable message suitable for display
+     * on a GUI or printed to a console or possibly saved to a log file
+     * @param message
+     */
+    virtual void pipelineWarningMessage(const char* message)
+    {
+      emit warningMessage(QString(message));
+    }
+    
+    /**
+     * @brief This message reports some human readable message suitable for display
+     * on a GUI or printed to a console or possibly saved to a log file
+     * @param message
+     */
+    virtual void pipelineErrorMessage(const char* message)
+    {
+      emit errorMessage(QString(message));
+    }
+    
+    /**
+     * @brief This method is called from the run() method just before exiting and
+     * signals the end of the pipeline execution
+     */
     virtual void pipelineFinished()
     {
       emit finished();
@@ -80,10 +126,12 @@ class Q@CLASS_NAME@ : public QObject, public @CLASS_NAME@
     /**
      * Qt Signals for connections
      */
-  signals:
-    void updateMessage(QString message);
-    void updateProgress(int value);
-    void finished();
+     signals:
+       void progressMessage(QString message);
+       void warningMessage(QString message);
+       void errorMessage(QString message);
+       void updateProgress(int value);
+       void finished();
 
   public slots:
     /**

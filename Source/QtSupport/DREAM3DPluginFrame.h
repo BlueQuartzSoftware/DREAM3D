@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -43,8 +43,10 @@
 #include <QtCore/QSettings>
 #include <QtGui/QStatusBar>
 #include <QtGui/QIcon>
+#include <QtGui/QMessageBox>
 
 class QLineEdit;
+
 
 /**
  * @class AIMPluginFrame AIMPluginFrame.h AIM/GUI/AIMPluginFrame.h
@@ -61,8 +63,9 @@ class DREAM3DPluginFrame : public QFrame
     Q_OBJECT;
 
   public:
-    DREAM3DPluginFrame(QWidget *parent = 0);
+    DREAM3DPluginFrame(QWidget *parent = NULL);
     virtual ~DREAM3DPluginFrame();
+
 
     /**
       * @brief Reads the Preferences from the users pref file
@@ -126,47 +129,68 @@ class DREAM3DPluginFrame : public QFrame
      */
     virtual bool sanityCheckOutputDirectory(QLineEdit* le, QString msgTitle);
 
-
+    /**
+     * @brief Displays a Type Dialog box used for errors that occur
+     * during the execution of the program.
+     * @param title
+     * @param text
+     */
+    virtual void displayDialogBox(QString title, QString text, QMessageBox::Icon icon);
 
     signals:
 
     /**
      * @brief Signal emitted when a process is started
      */
-      void processStarted();
+      void pipelineStarted();
 
       /**
        * @brief Signal Emitted when a process has ended.
        */
-      void processEnded();
+      void pipelineEnded();
 
       /**
        * @brief Signal Emitted when the process has been canceled.
        */
-      void cancelProcess();
+      void cancelPipeline();
 
       /**
        * @brief Signal emitted when a message is available for display to the user
        * @param
        */
-      void processMessage(const QString &);
+      void pipelineWarningMessage(const QString &);
+      void pipelineErrorMessage(const QString &);
 
     private slots:
+
       /**
-       * @brief Slot to catch when a thread has a message to display
+       * @brief Slot to add an Error message to display to the user
+       * @param message
        */
-      virtual void threadHasMessage(QString message) = 0;
+      virtual void addErrorMessage(QString message) = 0;
+
+      /**
+       * @brief Slot to add a Warning message to display to the user
+       * @param message
+       */
+      virtual void addWarningMessage(QString message) = 0;
+
+      /**
+       * @brief Slot to add a Progress message to display to the user
+       * @param message
+       */
+      virtual void addProgressMessage(QString message) = 0;
 
       /**
        * @brief Slot to catch signals when the processing thread is finished.
        */
-      virtual void threadFinished() = 0;
+      virtual void pipelineComplete() = 0;
 
       /**
        * @brief Slot to catch signals when a processing thread has made progress
        * @param value The value of the progress, Typically between 0 and 100.
        */
-      virtual void threadProgressed(int value) = 0;
+      virtual void pipelineProgress(int value) = 0;
 
     private:
       QStatusBar*    m_StatusBar;

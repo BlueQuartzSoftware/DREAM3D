@@ -118,19 +118,18 @@ void EbsdImport::execute()
   // Create File
   fileId = H5Utilities::createFile(m_OutputFile);
   if (fileId < 0) {
-    setCancel(true);
-    updateProgressAndMessage("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.", 100);
-    CHECK_FOR_ERROR(EbsdImportFunc, "Output HDF5 file could not be created. Check permissions on parent folder??", err)
+    err = -1;
+    CHECK_FOR_ERROR(EbsdImportFunc, "The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.", err)
     return;
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z Start Index Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z Start Index Scalar to the HDF5 File", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z End Index Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z End Index Scalar to the HDF5 File", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z Resolution Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z Resolution Scalar to the HDF5 File", err)
 
   EbsdImporter::Pointer fileImporter;
 
@@ -140,18 +139,19 @@ void EbsdImport::execute()
   if (ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer );
-    CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Manufacturer Scalar", err)
+    CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Manufacturer Data to the HDF5 File", err)
     fileImporter = H5AngImporter::New();
   }
   else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer );
-    CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Manufacturer Scalar", err)
+    CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Manufacturer Data to the HDF5 File", err)
     fileImporter = H5CtfImporter::New();
   }
   else
   {
-    updateProgressAndMessage("The File extension was not detected correctly", 100);
+    err = -1;
+    CHECK_FOR_ERROR(EbsdImportFunc, "The File extension was not detected correctly", err);
     setErrorCondition(-1);
     return;
   }
@@ -196,8 +196,8 @@ void EbsdImport::execute()
     progress = (int)(100.0f * (float)(progress)/total);
     std::string msg = "Importing: " + ebsdFName;
     updateProgressAndMessage(msg.c_str(), progress );
-    //H5AngImporter::Pointer conv = H5AngImporter::New();
     err = fileImporter->importFile(fileId, z, ebsdFName);
+    CHECK_FOR_ERROR(EbsdImportFunc, "Could not read raw EBSD Data file", err)
     fileImporter->getDims(xDim, yDim);
     fileImporter->getResolution(xRes, yRes);
     if(xDim > biggestxDim) biggestxDim = xDim;
@@ -205,7 +205,7 @@ void EbsdImport::execute()
 
     if (err < 0)
     {
-      CHECK_FOR_ERROR(EbsdImportFunc, "Could not write dataset for slice.", err)
+      CHECK_FOR_ERROR(EbsdImportFunc, "Could not write dataset for slice to HDF5 file", err)
     }
     indices.push_back(z);
     ++z;
@@ -213,13 +213,13 @@ void EbsdImport::execute()
   }
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XPoints Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XPoints Scalar to HDF5 file", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the YPoints Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the YPoints Scalar to HDF5 file", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XResolution Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the XResolution Scalar to HDF5 file", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the YResolution Scalar", err)
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the YResolution Scalar to HDF5 file", err)
 
   if (false == getCancel())
   {

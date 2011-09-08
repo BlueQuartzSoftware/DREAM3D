@@ -124,11 +124,13 @@ class GrainGeneratorWidget : public DREAM3DPluginFrame, private Ui::GrainGenerat
   private slots:
 
     // slots for our worker thread to communicate
-    virtual void threadHasMessage(QString message);
+    virtual void addErrorMessage(QString message);
+    virtual void addWarningMessage(QString message);
+    virtual void addProgressMessage(QString message);
 
     /* Reconstruction Thread communicates throught these methods */
-    virtual void threadFinished();
-    virtual void threadProgressed(int value);
+    virtual void pipelineComplete();
+    virtual void pipelineProgress(int value);
 
 
   private:

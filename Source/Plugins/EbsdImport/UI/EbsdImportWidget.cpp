@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -50,6 +50,7 @@
 #include <QtGui/QListWidget>
 
 #include "DREAM3D/Common/Constants.h"
+#include "EbsdImportPlugin.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/Dream3DQtMacros.h"
 
@@ -248,7 +249,7 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   {
     if (m_EbsdImport != NULL)
     {
-      emit cancelProcess();
+      emit cancelPipeline();
     }
     return;
   }
@@ -308,20 +309,30 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   connect(m_EbsdImport, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
 
   // When the QThread finishes, tell this object that it has finished.
-  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( threadFinished() ));
+  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( pipelineComplete() ));
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_EbsdImport, SIGNAL (updateProgress(int)), this, SLOT(threadProgressed(int) ));
-
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_EbsdImport, SIGNAL (updateMessage(QString)), this, SLOT(threadHasMessage(QString) ));
+  connect(m_EbsdImport, SIGNAL (updateProgress(int)), this, SLOT(pipelineProgress(int) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ), m_EbsdImport, SLOT (on_CancelWorker() ), Qt::DirectConnection);
+  connect(this, SIGNAL(cancelPipeline() ), m_EbsdImport, SLOT (on_CancelWorker() ), Qt::DirectConnection);
+
+  // Send progress messages from Pipeline to this object for display
+  connect(m_EbsdImport, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
+
+  // Send progress messages from Pipeline to this object for display
+  connect(m_EbsdImport, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
+
+  // Send progress messages from Pipeline to this object for display
+  connect(m_EbsdImport, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
+
+  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // We need a Direct Connection so the
+  connect(this, SIGNAL(cancelPipeline() ), m_EbsdImport, SLOT (on_CancelWorker() ), Qt::DirectConnection);
 
   setWidgetListEnabled(false);
-  emit processStarted();
+  emit pipelineStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 
@@ -532,20 +543,20 @@ void EbsdImportWidget::m_findEbsdMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdImportWidget::threadFinished()
+void EbsdImportWidget::pipelineComplete()
 {
  // std::cout << "EbsdImportWidget::threadFinished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
-  emit processEnded();
+  emit pipelineEnded();
   m_EbsdImport->deleteLater();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdImportWidget::threadProgressed(int val)
+void EbsdImportWidget::pipelineProgress(int val)
 {
   this->m_progressBar->setValue( val );
 }
@@ -553,9 +564,26 @@ void EbsdImportWidget::threadProgressed(int val)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdImportWidget::threadHasMessage(QString message)
+void EbsdImportWidget::addErrorMessage(QString message)
 {
- // std::cout << "EbsdImportWidget::threadHasMessage()" << std::endl;
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::EbsdImportDisplayName).append(" Error");
+  displayDialogBox(title, message, QMessageBox::Critical);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdImportWidget::addWarningMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::EbsdImportDisplayName).append(" Warning");
+  displayDialogBox(title, message, QMessageBox::Warning);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdImportWidget::addProgressMessage(QString message)
+{
   if (NULL != this->statusBar()) {
     this->statusBar()->showMessage(message);
   }

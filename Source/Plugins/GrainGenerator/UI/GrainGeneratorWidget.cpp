@@ -61,6 +61,7 @@
 #include "QtSupport/QCheckboxDialog.h"
 
 #include "GrainGenerator/GrainGenerator.h"
+#include "GrainGeneratorPlugin.h"
 
 const static float m_pi = M_PI;
 
@@ -477,7 +478,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
     if(m_GrainGenerator!= NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
-      emit cancelProcess();
+      emit cancelPipeline();
     }
     return;
   }
@@ -572,24 +573,29 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   // When the QThread finishes, tell this object that it has finished.
   connect(m_WorkerThread, SIGNAL(finished()),
-          this, SLOT( threadFinished() ) );
+          this, SLOT( pipelineComplete() ) );
 
   // Send Progress from the Reconstruction to this object for display
   connect(m_GrainGenerator, SIGNAL (updateProgress(int)),
-    this, SLOT(threadProgressed(int) ) );
+    this, SLOT(pipelineProgress(int) ) );
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_GrainGenerator, SIGNAL (updateMessage(QString)),
-          this, SLOT(threadHasMessage(QString) ) );
+  connect(m_GrainGenerator, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_GrainGenerator, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_GrainGenerator, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ),
+  connect(this, SIGNAL(cancelPipeline() ),
           m_GrainGenerator, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
 
   setWidgetListEnabled(false);
-  emit processStarted();
+  emit pipelineStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 }
@@ -785,13 +791,13 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainGeneratorWidget::threadFinished()
+void GrainGeneratorWidget::pipelineComplete()
 {
  // std::cout << "GrainGeneratorWidget::grainGenerator_Finished()" << std::endl;
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
-  emit processEnded();
+  emit pipelineEnded();
   checkIOFiles();
   m_GrainGenerator->deleteLater();
 }
@@ -799,29 +805,9 @@ void GrainGeneratorWidget::threadFinished()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainGeneratorWidget::threadProgressed(int val)
+void GrainGeneratorWidget::pipelineProgress(int val)
 {
   this->m_progressBar->setValue( val );
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::threadHasMessage(QString message)
-{
-  if (NULL != this->statusBar()) {
-    this->statusBar()->showMessage(message);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GrainGeneratorWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
-{
-  checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -868,5 +854,42 @@ void GrainGeneratorWidget::on_m_HDF5GrainFile_stateChanged(int state)
       QMessageBox::Ok);
       return;
       }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
+{
+  checkIOFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::addErrorMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorDisplayName).append(" Error");
+  displayDialogBox(title, message, QMessageBox::Critical);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::addWarningMessage(QString message)
+{
+  QString title = QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorDisplayName).append(" Warning");
+  displayDialogBox(title, message, QMessageBox::Warning);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::addProgressMessage(QString message)
+{
+  if (NULL != this->statusBar()) {
+    this->statusBar()->showMessage(message);
   }
 }
