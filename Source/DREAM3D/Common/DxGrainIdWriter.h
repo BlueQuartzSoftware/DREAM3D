@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -135,10 +135,10 @@ class  DREAM3DLib_EXPORT DxGrainIdWriter
           // Write the actual voxel data
           for (int x = 0; x < xDim; ++x)
           {
-            if (voxels[index].grain_index == 0) {
+            if (voxels[index] == 0) {
                 out << "0" << " ";
             } else {
-            out << voxels[index].grain_index << " ";
+            out << voxels[index] << " ";
             }
             ++index;
           }
@@ -180,7 +180,7 @@ class  DREAM3DLib_EXPORT DxGrainIdWriter
 
 
       out.close();
-#if (__APPLE__)
+#if 0
       out.open("/tmp/m3cmesh.raw", std::ios_base::binary);
       out.write((const char*)(&xDim), 4);
       out.write((const char*)(&yDim), 4);
@@ -189,7 +189,7 @@ class  DREAM3DLib_EXPORT DxGrainIdWriter
       int32_t d = 0;
       for(int index = 0; index < totalPoints; ++index)
       {
-        d = voxels[index].grain_index;
+        d = voxels[index];
         if (d == 0) { d = -3;}
         out.write((const char*)(&d), sizeof(d));
       }
