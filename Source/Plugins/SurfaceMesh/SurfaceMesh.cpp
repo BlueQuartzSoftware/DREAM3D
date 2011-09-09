@@ -496,14 +496,14 @@ int SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> 
     g1 = m->cTriangle[i]->ngrainname[1];
     if (gidToSTLWriter[g0].get() == NULL)
     {
-      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "_STL_Files/";
+      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
       stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
       gidToSTLWriter[g0] = STLWriter::CreateNewSTLWriter(g0, stlFile);
     }
     if (gidToSTLWriter[g1].get() == NULL)
     {
-      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "_STL_Files/";
+      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
       stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g1)).append(".stl");
       gidToSTLWriter[g1] = STLWriter::CreateNewSTLWriter(g1, stlFile);
