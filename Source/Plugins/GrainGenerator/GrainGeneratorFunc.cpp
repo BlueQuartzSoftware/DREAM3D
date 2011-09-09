@@ -59,6 +59,7 @@
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
+#define ERROR_TXT_OUT 0
 
 //const static float m_onepointthree = 1.33333333333f;
 const static float m_pi = M_PI;
@@ -1418,9 +1419,11 @@ void  GrainGeneratorFunc::pack_grains()
   oldsizedisterror = check_sizedisterror(-1000, -1000);
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   oldfillingerror = check_fillingerror(-1000, -1000);
+#if ERROR_TXT_OUT
   ofstream outFile;
   string filename = "error.txt";
   outFile.open(filename.c_str());
+#endif
   // begin swaping/moving/adding/removing grains to try to improve packing
   for (int iteration = 0; iteration < (500000); iteration++)
   {
@@ -1428,7 +1431,11 @@ void  GrainGeneratorFunc::pack_grains()
     change2 = 0;
     change3 = 0;
     int option = iteration % 4;
-	if(iteration%25 == 0) outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << m_Grains.size() << endl;
+#if ERROR_TXT_OUT
+	if(iteration%25 == 0) {
+	  outFile << oldfillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << m_Grains.size() << endl;
+	}
+#endif
   // this option adds a grain
     if (option == 0)
     {
@@ -1603,7 +1610,9 @@ void  GrainGeneratorFunc::pack_grains()
       }
     }
   }
+#if ERROR_TXT_OUT
   outFile.close();
+
 
 //  ofstream outFile;
   filename = "test.vtk";
@@ -1636,6 +1645,7 @@ void  GrainGeneratorFunc::pack_grains()
     }
   }
   outFile.close();
+#endif
 }
 
 void GrainGeneratorFunc::assign_voxels()
