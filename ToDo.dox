@@ -13,9 +13,9 @@ so it can be integrated with the other documentation pages.
 @li Add Stacking Order and Orientation to EbsdImnport Plugin to be written to the .h5ebsd file
 @li Add display of stacking order and Orientation to Reconstruction plugin
 @li add over ride of stacking order and Orientation to Reconstruction plugin
-@li enhance Progress/Warning/Error messages from the pipeline to display in the GUI
+@li <b>DONE</b> (MAJ 9/8/11) - enhance Progress/Warning/Error messages from the pipeline to display in the GUI
 @li Add Subvolume Cropping to the Microstructure statistics plugin
-@li Create a "Temp File" class that creates a temp file and then deletes the file when the variable goes out of scope.
+@li <b>DONE</b> (MAJ 9/9/11) - Create a "Temp File" class that creates a temp file and then deletes the file when the variable goes out of scope.
 
 
 @section todohkl HKL Support
