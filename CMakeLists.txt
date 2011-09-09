@@ -408,7 +408,6 @@ endif()
 option(DREAM3D_CREATE_PLUGIN "Create the Skeleton Code for a new Pipeline and GUI Plugin" OFF)
 if (DREAM3D_CREATE_PLUGIN)
     add_subdirectory(${PROJECT_SOURCE_DIR}/Support/PluginMaker ${PROJECT_BINARY_DIR}/PluginMaker)
-    set (DREAM3D_CREATE_PLUGIN OFF CACHE BOOL "" FORCE)
 endif()
 
 # This should be the last line in this file:

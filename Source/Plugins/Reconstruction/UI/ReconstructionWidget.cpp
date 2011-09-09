@@ -785,23 +785,28 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   connect(m_WorkerThread, SIGNAL(finished()),
           this, SLOT( pipelineComplete() ) );
 
-  // Send Progress from the Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (updateProgress(int)),
-    this, SLOT(pipelineProgress(int) ) );
-
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
-
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
-
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
-
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelPipeline() ),
           m_Reconstruction, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+
+  // Send Progress from the Reconstruction to this object for display
+  connect(m_Reconstruction, SIGNAL (updateProgress(int)),
+          this, SLOT(pipelineProgress(int) ) );
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_Reconstruction, SIGNAL (progressMessage(QString)),
+          this, SLOT(addProgressMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_Reconstruction, SIGNAL (warningMessage(QString)),
+          this, SLOT(addWarningMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_Reconstruction, SIGNAL (errorMessage(QString)),
+          this, SLOT(addErrorMessage(QString) ));
+
+
 
 
   setWidgetListEnabled(false);

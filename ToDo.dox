@@ -4,17 +4,26 @@
 This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
-@section todohkl HKL Support
-@li During reading of the .ctf file or the .h5ebsd file the Euler angles need to be adjusted properly
-@li During reading of the .ctf file or the .h5ebsd file the orientation needs to be adjusted properly
-@li Add new QualityMetric Filter type to Reconstruction Pipeline
-@li <b>DONE</b> (MAJ 2011/08/14) - Fix Preset file reading so that the new Quality Metric Filters now work
-
 
 @section todomisc Misc Bugs
 @li  Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
 @li  <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
 @li  <b>DONE</b> (MAJ 2011/07/18) - Allow other developers to include their own plugins that are possibly from a different repository
+@li Create a Vtk to H5Voxel convertor program
+@li Add Stacking Order and Orientation to EbsdImnport Plugin to be written to the .h5ebsd file
+@li Add display of stacking order and Orientation to Reconstruction plugin
+@li add over ride of stacking order and Orientation to Reconstruction plugin
+@li enhance Progress/Warning/Error messages from the pipeline to display in the GUI
+@li Add Subvolume Cropping to the Microstructure statistics plugin
+@li Create a "Temp File" class that creates a temp file and then deletes the file when the variable goes out of scope.
+
+
+@section todohkl HKL Support
+@li   <b>DONE</b> (MAG 2011/08/20) - During reading of the .ctf file or the .h5ebsd file the Euler angles need to be adjusted properly
+@li <b>DONE</b> (MAG 2011/08/20) - During reading of the .ctf file or the .h5ebsd file the orientation needs to be adjusted properly
+@li  <b>DONE</b> (MAJ 2011/08/20) - Add new QualityMetric Filter type to Reconstruction Pipeline
+@li <b>DONE</b> (MAJ 2011/08/14) - Fix Preset file reading so that the new Quality Metric Filters now work
+
 
 @section ang_import Ang Import:
 @li <b>DONE</b> (MAJ 2011/06/13) - Better Display of errors when importing to help user fix their data

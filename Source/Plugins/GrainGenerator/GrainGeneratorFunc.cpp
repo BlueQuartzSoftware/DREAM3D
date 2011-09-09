@@ -387,13 +387,13 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
     /* Read the BinNumbers data set */
     std::vector<float> bins;
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::BinNumber, bins);
-    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::BinNumber)
+    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::BinNumber)
     numdiameterbins[phase] = bins.size();
     size_t nBins = bins.size();
 
     /* Read the Grain_Diameter_Info Data */
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
-    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Diameter_Info)
+    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Statistics, DREAM3D::HDF5::Grain_Diameter_Info)
 
     binstepsize[phase] = grainDiamInfo[0];
     maxdiameter[phase]  = grainDiamInfo[1];
@@ -401,7 +401,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 
     /* Read the Grain_Size_Distribution Data */
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
-    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Size_Distribution)
+    CHECK_STATS_READ_ERROR(err,  DREAM3D::HDF5::Statistics, DREAM3D::HDF5::Grain_Size_Distribution)
     avgdiam[phase] = double_data[0];
     sddiam[phase] = double_data[1];
 

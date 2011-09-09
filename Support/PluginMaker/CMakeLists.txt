@@ -10,10 +10,16 @@
 #--////////////////////////////////////////////////////////////////////////////
 project(PluginMaker NONE)
 
-set(DREAM3D_Plugin_Name "MyClass" CACHE STRING "The Name of the new Pipeline Class" )
+set(DREAM3D_Plugin_Name "" CACHE STRING "The Name of the new Pipeline Class" )
 set(PluginName ${DREAM3D_Plugin_Name})
 
-if (0)
+if ( "${PluginName}" STREQUAL "")
+
+
+else()
+    # We only want to generate this one time. 
+    set (DREAM3D_CREATE_PLUGIN OFF CACHE BOOL "" FORCE)
+if (1)
     set(PluginMaker_PluginDir ${DREAM3D_BINARY_DIR}/PluginMaker/${PluginName}/UI)
     set(PluginMaker_LibDir ${DREAM3D_BINARY_DIR}/PluginMaker/${PluginName})
 else()
@@ -21,8 +27,8 @@ else()
     # source directory which means anything that has the same name that you have selected
     # WILL BE OVERWRITTEN without warning. You have been warned. This is here for 
     # debugging this build system and should NOT be enabled for general use.
-    set(PluginMaker_PluginDir ${DREAM3D_SOURCE_DIR}/${DREAM3D_Plugin_Name}/UI)
-    set(PluginMaker_LibDir ${DREAM3D_SOURCE_DIR}/${DREAM3D_Plugin_Name})
+    set(PluginMaker_PluginDir ${DREAM3D_SOURCE_DIR}/Source/Plugins/${DREAM3D_Plugin_Name}/UI)
+    set(PluginMaker_LibDir ${DREAM3D_SOURCE_DIR}/Source/Plugins/${DREAM3D_Plugin_Name})
 endif()
 
 # Create a directory for the Plugin Files
@@ -73,3 +79,5 @@ message(STATUS "You MUST Move the new Plguin directory into the proper spot in t
 message(STATUS "located at ${PROJECT_CODE_DIR}/Plugins")
 message(STATUS "You also may want to create your own custom toolbar icon and store")
 message(STATUS "it in the ${DREAM3D_Plugin_Name}.png file")
+
+endif()

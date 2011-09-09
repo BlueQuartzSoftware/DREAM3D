@@ -804,23 +804,23 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 
   std::vector<unsigned int> xtal;
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::CrystalStructure, xtal);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::CrystalStructure)
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::CrystalStructure)
   m_CrystalStructure = static_cast<Ebsd::CrystalStructure>(xtal[0]);
 
   std::vector<unsigned int> pt;
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, pt);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::PhaseType)
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PhaseType)
   m_PhaseType = static_cast<DREAM3D::Reconstruction::PhaseType>(pt[0]);
 
   std::vector<float> phaseFraction;
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, phaseFraction);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::PhaseFraction)
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PhaseFraction)
   m_PhaseFraction = phaseFraction[0];
 
   m_PptFraction = -1.0;
   if (DREAM3D::Reconstruction::PrecipitatePhase == m_PhaseType) {
     err = reader->readScalarAttribute<float>(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, m_PptFraction);
-    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::PrecipitateBoundaryFraction)
+    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PrecipitateBoundaryFraction)
   }
 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
@@ -835,11 +835,11 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   /* Read the BinNumbers data set */
   std::vector<float> bins;
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::BinNumber, bins);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::BinNumber)
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::BinNumber)
 
   /* Read the Grain_Diameter_Info Data */
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Diameter_Info)
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::Grain_Diameter_Info)
 
   binStepSize = grainDiamInfo[0];
   m_BinStepSize->blockSignals(true);
@@ -848,7 +848,7 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
 
   /* Read the Grain_Size_Distribution Data */
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Reconstruction, DREAM3D::HDF5::Grain_Size_Distribution)
+  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::Grain_Size_Distribution)
 
   mu = double_data[0];
   sigma = double_data[1];
