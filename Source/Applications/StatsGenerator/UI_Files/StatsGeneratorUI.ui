@@ -48,7 +48,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../Resources/icons/images/Icons.qrc">
+         <iconset resource="../../../../Resources/icons/images/Icons.qrc">
           <normaloff>:/plus.png</normaloff>:/plus.png</iconset>
         </property>
        </widget>
@@ -65,7 +65,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../Resources/icons/images/Icons.qrc">
+         <iconset resource="../../../../Resources/icons/images/Icons.qrc">
           <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
         </property>
        </widget>
@@ -82,7 +82,7 @@
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset resource="../../../Resources/icons/images/Icons.qrc">
+         <iconset resource="../../../../Resources/icons/images/Icons.qrc">
           <normaloff>:/preferences.png</normaloff>:/preferences.png</iconset>
         </property>
        </widget>
@@ -122,7 +122,7 @@
     </property>
     <widget class="QMenu" name="menu_RecentFiles">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>Recent Files</string>
