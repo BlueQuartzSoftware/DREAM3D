@@ -259,7 +259,7 @@ int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int p
 {
   int err = -1;
   std::string index = StringUtils::numToString(phase);
-  std::string path = "/" + DREAM3D::HDF5::Reconstruction + "/" + index  + "/" + DREAM3D::HDF5::MDFWeights;
+  std::string path = "/" + DREAM3D::HDF5::Statistics + "/" + index  + "/" + DREAM3D::HDF5::MDFWeights;
 
   //FIXME: Do we load the ODF data array at all or generate a new one?
 
