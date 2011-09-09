@@ -49,11 +49,14 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
 
-#include "DREAM3D/Common/Constants.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/Dream3DQtMacros.h"
+#include "QtSupport/QCheckboxDialog.h"
+
+#include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
+
 #include "Meshing/SMVtkFileIO.h"
 
 #include "SurfaceMeshPlugin.h"
@@ -112,8 +115,8 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "SurfaceMesh_")
 
   READ_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles, true);
-  READ_CHECKBOX_SETTING(prefs, m_, ConformalMesh, true);
-  READ_CHECKBOX_SETTING(prefs, m_, BinaryVtkFiles, true);
+  READ_BOOL_SETTING(prefs, m_, WriteConformalMesh, true);
+  READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
   READ_CHECKBOX_SETTING(prefs, m_, SmoothMesh, false);
   READ_CHECKBOX_SETTING(prefs, m_, LockQuadPoints, false);
@@ -133,8 +136,8 @@ void SurfaceMeshWidget::writeSettings(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
 
   WRITE_CHECKBOX_SETTING(prefs, m_, WriteSTLFiles)
-  WRITE_CHECKBOX_SETTING(prefs, m_, ConformalMesh)
-  WRITE_CHECKBOX_SETTING(prefs, m_, BinaryVtkFiles)
+  WRITE_BOOL_SETTING(prefs, m_, WriteConformalMesh, false);
+  WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
 
   WRITE_BOOL_SETTING(prefs, m_, SmoothMesh, m_SmoothMesh->isChecked() );
@@ -170,7 +173,6 @@ void SurfaceMeshWidget::setupGui()
   m_WidgetList << m_ScalarsName << xDim << yDim << zDim;
   m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_VisualizationVizFile << m_DeleteTempFiles;
-  m_WidgetList << m_BinaryVtkFiles << m_ConformalMesh;
 //  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
 }
 
@@ -179,7 +181,14 @@ void SurfaceMeshWidget::setupGui()
 // -----------------------------------------------------------------------------
 void SurfaceMeshWidget::checkIOFiles()
 {
-
+  CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::SurfaceMesh, m_, VisualizationVizFile)
+    {
+//  QString absPath = m_OutputDir->text() + QDir::separator() + "STL_Files/";
+//  absPath = QDir::toNativeSeparators(absPath);
+//  QFileInfo fi(absPath);
+    QString fileName = QString("STL_Files/") + m_OutputFilePrefix->text() + "*.stl";
+    m_WriteSTLFiles->setText(fileName);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -298,8 +307,8 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_SurfaceMesh->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
   m_SurfaceMesh->setDeleteTempFiles(m_DeleteTempFiles->isChecked());
-  m_SurfaceMesh->setBinaryVTKFile(m_BinaryVtkFiles->isChecked());
-  m_SurfaceMesh->setConformalMesh(m_ConformalMesh->isChecked());
+  m_SurfaceMesh->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
+  m_SurfaceMesh->setWriteConformalMesh(m_WriteConformalMesh);
   m_SurfaceMesh->setWriteSTLFile(m_WriteSTLFiles->isChecked());
 
   m_SurfaceMesh->setSmoothMesh(m_SmoothMesh->isChecked());
@@ -349,6 +358,30 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshWidget::on_m_VtkOptionsBtn_clicked()
+{
+  QVector<QString> options;
+  options.push_back("Write Conformal Mesh");
+  options.push_back("Write Binary VTK File");
+  QCheckboxDialog d(options, this);
+  d.setWindowTitle(QString("VTK Output Options"));
+
+  d.setValue("Write Conformal Mesh", m_WriteConformalMesh);
+  d.setValue("Write Binary VTK File", m_WriteBinaryVTKFile);
+
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    m_WriteConformalMesh = d.getValue("Write Conformal Mesh");
+    m_WriteBinaryVTKFile = d.getValue("Write Binary VTK File");
+  }
+
+}
+
 
 // -----------------------------------------------------------------------------
 //

@@ -95,6 +95,36 @@
 
 #define USE_VTK_FILE_UTILS 1
 
+/**
+ * @brief This class is a wrapper for an absolute path to a temp file or any
+ * file that you want to be automatically deleted when the variable goes out
+ * of scope.
+ * @author Mike Jackson for BlueQuartz Software
+ */
+class SMTempFile
+{
+  public:
+    MXA_SHARED_POINTERS(SMTempFile)
+    MXA_STATIC_NEW_MACRO(SMTempFile)
+    virtual ~SMTempFile()
+    {
+      if (m_AutoDelete == true) {
+      MXADir::remove(m_FilePath); }
+    }
+
+    MXA_INSTANCE_STRING_PROPERTY(FilePath);
+    MXA_INSTANCE_PROPERTY(bool, AutoDelete);
+
+  protected:
+    SMTempFile()
+    {}
+  private:
+    SMTempFile(const SMTempFile&); // Copy Constructor Not Implemented
+    void operator=(const SMTempFile&); // Operator '=' Not Implemented
+};
+
+
+
 using namespace meshing;
 
 // -----------------------------------------------------------------------------
@@ -106,8 +136,8 @@ SurfaceMesh::SurfaceMesh() :
     m_ScalarName(DREAM3D::VTK::GrainIdScalarName),
     m_OutputDirectory(""),
     m_OutputFilePrefix("SurfaceMesh_"),
-    m_ConformalMesh(true),
-    m_BinaryVTKFile(false),
+    m_WriteConformalMesh(true),
+    m_WriteBinaryVTKFiles(false),
     m_WriteSTLFile(false),
     m_DeleteTempFiles(true),
     m_SmoothMesh(false),
@@ -135,8 +165,18 @@ void SurfaceMesh::execute()
 
   updateProgressAndMessage(("Running Surface Meshing"), 0);
   int err = 0;
+
   MAKE_OUTPUT_FILE_PATH( NodesFile, DREAM3D::SurfaceMesh::NodesFileBin)
+  SMTempFile::Pointer tempNodesFile = SMTempFile::New();
+  tempNodesFile->setFilePath(NodesFile);
+  tempNodesFile->setAutoDelete(this->m_DeleteTempFiles);
+
+
   MAKE_OUTPUT_FILE_PATH( TrianglesFile, DREAM3D::SurfaceMesh::TrianglesFileBin)
+  SMTempFile::Pointer tempTriangleFile = SMTempFile::New();
+  tempTriangleFile->setFilePath(TrianglesFile);
+  tempTriangleFile->setAutoDelete(this->m_DeleteTempFiles);
+
   MAKE_OUTPUT_FILE_PATH( VisualizationFile, DREAM3D::SurfaceMesh::VisualizationVizFile)
 
   m = SurfaceMeshFunc::New();
@@ -148,11 +188,7 @@ void SurfaceMesh::execute()
   {
     if (MXADir::mkdir(m_OutputDirectory, true) == false)
     {
-      setCancel(true);
-      setErrorCondition(1);
-      CHECK_FOR_CANCELED(SurfaceMeshFunc, "SurfaceMesh could not create the output directory", outputDirCreation)
-      updateProgressAndMessage(("Could not create output directory."), 100);
-      return;
+      CHECK_FOR_ERROR(SurfaceMeshFunc, "SurfaceMesh could not create the output directory", -1)
     }
   }
 
@@ -257,9 +293,9 @@ void SurfaceMesh::execute()
   int yFileDim = m->yDim - 2;
   int zFileDim = m->zDim - 2;
   size_t totalBytes = xFileDim * yFileDim * sizeof(int);
- // int* fileVoxelLayer = (int*)(malloc(totalBytes));
-  DECLARE_WRAPPED_ARRAY(fileVoxelLayer, m_FileVoxelLayer, int)
-  fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
+
+  AIMArray<int>::Pointer m_FileVoxelLayer = AIMArray<int>::CreateArray(0);
+  int* fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
   size_t offset = 0;
 
   std::stringstream ss;
@@ -386,11 +422,13 @@ void SurfaceMesh::execute()
   if (m_WriteSTLFile == true)
   {
     m_GrainChecker->addData(nTriangle, cTriID, m->cTriangle, m->cVertex);
-    writeSTLFiles(nTriangle, gidToSTLWriter);
+    err |= writeSTLFiles(nTriangle, gidToSTLWriter);
     for (std::map<int, STLWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
     {
-      (*iter).second->writeNumTrianglesToFile();
+      err |= (*iter).second->writeNumTrianglesToFile();
     }
+    CHECK_FOR_ERROR(SurfaceMeshFunc, "Error writing STL file", err)
+
   }
 
   m_GrainChecker->analyzeGrains();
@@ -435,48 +473,39 @@ void SurfaceMesh::execute()
   updateProgressAndMessage(msg.c_str(), 95);
   meshing::SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
   writer->setInputFileName(VisualizationFile);
-  err = writer->writeVTKFile(VisualizationFile, NodesFile, TrianglesFile, m_BinaryVTKFile, m_ConformalMesh);
-  if (m_DeleteTempFiles == true)
-  {
-    // Delete the intermediate files
-    MXADir::remove(NodesFile);
-    MXADir::remove(TrianglesFile);
-  }
+  err = writer->writeVTKFile(VisualizationFile, NodesFile, TrianglesFile, m_WriteBinaryVTKFiles, m_WriteConformalMesh);
 
   CHECK_FOR_ERROR(SurfaceMeshFunc, "Error vtk output file", err)
 
   updateProgressAndMessage(("Surface Meshing Complete"), 100);
-
-
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter)
+int SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter)
 {
 // First loop through All the triangles adding up how many triangles are
 // in each grain and create STL Files for each Grain if needed
   std::map<int, int> grainIdMap;
   int g0, g1;
+  int err =0;
   for (int i = 0; i < nTriangle; ++i)
   {
     g0 = m->cTriangle[i]->ngrainname[0];
     g1 = m->cTriangle[i]->ngrainname[1];
     if (gidToSTLWriter[g0].get() == NULL)
     {
-      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STLFiles/";
+      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "_STL_Files/";
       MXADir::mkdir(stlFile, true);
-      stlFile.append(StringUtils::numToString(g0)).append(".stl");
+      stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
       gidToSTLWriter[g0] = STLWriter::CreateNewSTLWriter(g0, stlFile);
     }
     if (gidToSTLWriter[g1].get() == NULL)
     {
-      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STLFiles/";
+      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "_STL_Files/";
       MXADir::mkdir(stlFile, true);
-      stlFile.append(StringUtils::numToString(g1)).append(".stl");
+      stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g1)).append(".stl");
       gidToSTLWriter[g1] = STLWriter::CreateNewSTLWriter(g1, stlFile);
     }
     grainIdMap[m->cTriangle[i]->ngrainname[0]]++;
@@ -521,8 +550,8 @@ void SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer>
     STLWriter::Pointer writer = gidToSTLWriter[gid];
     if (NULL != writer.get())
     {
-      writer->writeTriangleBlock(nTriangle, cTriangle, m->cVertex);
+      err |= writer->writeTriangleBlock(nTriangle, cTriangle, m->cVertex);
     }
   }
-
+  return err;
 }
