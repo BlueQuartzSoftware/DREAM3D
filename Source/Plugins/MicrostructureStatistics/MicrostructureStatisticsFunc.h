@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -108,8 +108,8 @@ class MicrostructureStatisticsFunc
     DECLARE_WRAPPED_ARRAY(phasefraction, m_PhaseFraction, float);
     DECLARE_WRAPPED_ARRAY(totalvol, m_TotalVol, float);
     DECLARE_WRAPPED_ARRAY(totalaxes, m_TotalAxes, float);
-    DECLARE_WRAPPED_ARRAY(maxdiameter, m_MaxDiameter, int);
-    DECLARE_WRAPPED_ARRAY(mindiameter, m_MinDiameter, int);
+    DECLARE_WRAPPED_ARRAY(maxdiameter, m_MaxDiameter, float);
+    DECLARE_WRAPPED_ARRAY(mindiameter, m_MinDiameter, float);
 
 
     std::vector<Grain::Pointer> m_Grains;
