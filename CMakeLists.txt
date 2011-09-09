@@ -299,6 +299,7 @@ if (DREAM3D_BUILD_QT_APPS)
             GrainGenerator 
             SurfaceMesh 
             MicrostructureStatistics 
+	    Extrapolation2Dto3D
         )
         
         foreach(p ${DREAM3D_PLUGIN_LIST})
