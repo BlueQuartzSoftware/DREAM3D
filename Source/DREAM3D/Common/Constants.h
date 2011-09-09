@@ -96,7 +96,8 @@ namespace DREAM3D
     const std::string IPFColor("IPFColor");
     const std::string Phase("Phase");
 
-    const std::string Reconstruction("Reconstruction");
+    const std::string Statistics("Statistics");
+//    const std::string Reconstruction("Reconstruction");
     const std::string AxisOrientation("AxisOrientation");
     const std::string AxisODFWeights("AxisODF-Weights");
     const std::string ODF("ODF");

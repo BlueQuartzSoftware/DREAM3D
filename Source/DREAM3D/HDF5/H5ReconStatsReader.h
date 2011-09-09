@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
       herr_t retErr = 0;
       OPEN_HDF5_FILE(fileId, m_FileName)
 
-      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Reconstruction.c_str(), fileId)
+      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Statistics.c_str(), fileId)
 
       std::string index = StringUtils::numToString(phase);
       hid_t pid = H5Gopen(reconGid, index.c_str(), H5P_DEFAULT);
@@ -160,7 +160,7 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
       herr_t retErr = 0;
       OPEN_HDF5_FILE(fileId, m_FileName)
 
-      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Reconstruction.c_str(), fileId)
+      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Statistics.c_str(), fileId)
 
       std::string index = StringUtils::numToString(phase);
       hid_t pid = H5Gopen(reconGid, index.c_str(), H5P_DEFAULT);
@@ -189,7 +189,7 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
       herr_t retErr = 0;
       double value;
       OPEN_HDF5_FILE(fileId, m_FileName)
-      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Reconstruction.c_str(), fileId)
+      OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Statistics.c_str(), fileId)
       // Ensure the size of the data vector is lage enough:
       if (phase >= data.size() )
       {
