@@ -96,6 +96,7 @@ class SurfaceMeshWidget : public DREAM3DPluginFrame, private Ui::SurfaceMeshWidg
     void on_m_OutputDirBtn_clicked();
 
     void on_m_GoBtn_clicked();
+    void on_m_VtkOptionsBtn_clicked();
 
   private slots:
     // slots for our worker thread to communicate
@@ -115,6 +116,8 @@ class SurfaceMeshWidget : public DREAM3DPluginFrame, private Ui::SurfaceMeshWidg
     QList<QWidget*>             m_WidgetList;
     QSurfaceMesh*               m_SurfaceMesh;
     QThread*                    m_WorkerThread;
+    bool                        m_WriteConformalMesh;
+    bool                        m_WriteBinaryVTKFile;
 
     QString m_OpenDialogLastDirectory;
 

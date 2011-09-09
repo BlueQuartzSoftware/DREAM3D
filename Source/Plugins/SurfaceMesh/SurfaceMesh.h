@@ -251,8 +251,8 @@ class SurfaceMesh : public AbstractPipeline
 
     MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
-    MXA_INSTANCE_PROPERTY(bool, ConformalMesh)
-    MXA_INSTANCE_PROPERTY(bool, BinaryVTKFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteConformalMesh)
+    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteSTLFile)
 
     MXA_INSTANCE_PROPERTY(bool, DeleteTempFiles)
@@ -268,7 +268,7 @@ class SurfaceMesh : public AbstractPipeline
      */
     void execute();
 
-    void writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter );
+    int writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter );
 
   protected:
 

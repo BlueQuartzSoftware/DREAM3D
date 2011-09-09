@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -109,7 +109,7 @@ int H5ReconStatsWriter::writePhaseInformation(int phase,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   std::vector<hsize_t> dims(1);
@@ -186,7 +186,7 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase, float maxdiameter, floa
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   std::vector<hsize_t> dims(1);
@@ -336,7 +336,7 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
   std::vector<hsize_t> dims(1);
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
@@ -588,7 +588,7 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, unsigned long lon
     return -1;
   }
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1; // Single Dimension
 
@@ -618,7 +618,7 @@ int H5ReconStatsWriter::writeMDFWeights(int phase, uint64_t* dims,
     return -1;
   }
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1; // Single Dimension
 
@@ -665,7 +665,7 @@ int H5ReconStatsWriter::writeMicroTextureData(int phase, float* microbin, size_t
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   std::vector<hsize_t> dims(1);
@@ -697,7 +697,8 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, floa
 {
   herr_t err = 0;
   herr_t retErr = 0;
-  OPEN_HDF5_FILE(m_FileName)CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  OPEN_HDF5_FILE(m_FileName);
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int size = 36 * 36 * 36;
@@ -743,7 +744,7 @@ int H5ReconStatsWriter::writeAxisODFWeights(int phase, unsigned long long int *d
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1;
@@ -801,7 +802,7 @@ int H5ReconStatsWriter::writeODFData(int phase,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1;
@@ -831,7 +832,7 @@ int H5ReconStatsWriter::writeODFWeights(int phase, unsigned long long int *dims,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(m_FileName)
-  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Reconstruction)
+  CREATE_RECONSTRUCTION_GROUP(DREAM3D::HDF5::Statistics)
 
   hid_t pid = H5Utilities::createGroup(gid, StringUtils::numToString(phase));
   int32_t rank = 1;

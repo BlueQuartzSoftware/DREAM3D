@@ -88,7 +88,7 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
 
   std::string index = StringUtils::numToString(phase);
 
-  std::string path = DREAM3D::HDF5::Reconstruction + "/" + index + "/" + group;
+  std::string path = DREAM3D::HDF5::Statistics + "/" + index + "/" + group;
   hid_t fileId = H5Utilities::openFile(m_FileName, false);\
 
   if (fileId < 0)
@@ -134,7 +134,7 @@ int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
   herr_t err = 0;
   herr_t retErr = 0;
   OPEN_HDF5_FILE(fileId, m_FileName)
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Reconstruction.c_str(), fileId)
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Statistics.c_str(), fileId)
 
   // Get a list of all the groups
   std::list<std::string> names;

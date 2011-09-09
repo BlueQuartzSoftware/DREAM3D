@@ -159,7 +159,7 @@ void @PluginName@Widget::on_m_GoBtn_clicked()
     if(m_@PluginName@!= NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
-      emit cancelProcess();
+      emit cancelPipeline();
     }
     return;
   }
@@ -190,15 +190,15 @@ void @PluginName@Widget::on_m_GoBtn_clicked()
  
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
-   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * @PluginName@ object. Since the @PluginName@ object has been moved to another
    * thread of execution and the actual QThread lives in *this* thread then the
    * type of connection will be a Queued connection.
    */
-  // When the thread starts its event loop, start the Reconstruction going
+  // When the thread starts its event loop, start the @PluginName@ going
   connect(m_WorkerThread, SIGNAL(started()),
           m_@PluginName@, SLOT(run()));
 
-  // When the Reconstruction ends then tell the QThread to stop its event loop
+  // When the @PluginName@ ends then tell the QThread to stop its event loop
   connect(m_@PluginName@, SIGNAL(finished() ),
           m_WorkerThread, SLOT(quit()) );
 
@@ -206,31 +206,31 @@ void @PluginName@Widget::on_m_GoBtn_clicked()
   connect(m_WorkerThread, SIGNAL(finished()),
           this, SLOT( pipelineComplete() ) );
 
-  // Send Progress from the Reconstruction to this object for display
-  connect(m_@PluginName@, SIGNAL (updateProgress(int)),
-    this, SLOT(pipelineProgress(int) ) );
-
-  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // If the use clicks on the "Cancel" button send a message to the @PluginName@ object
   // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelProcess() ),
+  connect(this, SIGNAL(cancelPipeline() ),
           m_@PluginName@, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
   
-  // Send progress messages from Pipeline to this object for display
+  // Send Progress from the @PluginName@ to this object for display
+  connect(m_@PluginName@, SIGNAL (updateProgress(int)), 
+          this, SLOT(pipelineProgress(int) ) );
+
+  // Send progress messages from @PluginName@ to this object for display
   connect(m_@PluginName@, SIGNAL (progressMessage(QString)), 
           this, SLOT(addProgressMessage(QString) ));
 
-  // Send progress messages from Pipeline to this object for display
+  // Send progress messages from @PluginName@ to this object for display
   connect(m_@PluginName@, SIGNAL (warningMessage(QString)), 
           this, SLOT(addWarningMessage(QString) ));
 
-  // Send progress messages from Pipeline to this object for display
+  // Send progress messages from @PluginName@ to this object for display
   connect(m_@PluginName@, SIGNAL (errorMessage(QString)), 
           this, SLOT(addErrorMessage(QString) ));
 
 
 
   setWidgetListEnabled(false);
-  emit processStarted();
+  emit pipelineStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
 }
@@ -244,7 +244,7 @@ void @PluginName@Widget::pipelineComplete()
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
-  emit processEnded();
+  emit pipelineEnded();
   checkIOFiles();
   m_@PluginName@->deleteLater();
 }
@@ -255,22 +255,6 @@ void @PluginName@Widget::pipelineComplete()
 void @PluginName@Widget::pipelineProgress(int val)
 {
   this->m_progressBar->setValue( val );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void @PluginName@Widget::addErrorMessage(QString message)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void @PluginName@Widget::addWarningMessage(QString message)
-{
-
 }
 
 // -----------------------------------------------------------------------------
