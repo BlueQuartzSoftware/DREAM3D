@@ -296,18 +296,10 @@ void Reconstruction::execute()
 
     if (m_WritePhaseId == true){
       VtkScalarWriter* w0 =
-//        static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(m.get()));
         static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<ReconstructionFunc>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
-
-/*    if (m_WriteImageQuality == true) {
-      VtkScalarWriter* w0 =
-        static_cast<VtkScalarWriter*>(new VoxelImageQualityScalarWriter<ReconstructionFunc>(m.get()));
-      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
-      scalarsToWrite.push_back(w0);
-    }*/
 
     if (m_WriteIPFColor == true) {
       VtkScalarWriter* w0 =
