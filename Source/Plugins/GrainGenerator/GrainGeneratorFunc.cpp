@@ -568,7 +568,6 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
 
   int good = 0;
   float r1 = 1;
-  float u=0 ;
   float a1=0,a2=0,a3=0;
   float b1=0,b2=0,b3=0;
   float r2=0,r3=0;
@@ -579,7 +578,6 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   while(volgood == 0)
   {
     volgood = 1;
-    u = rg.genrand_res53();
     diam = rg.genrand_norm(avgdiam[phase],sddiam[phase]);
     diam = exp(diam);
     if(diam >= maxdiameter[phase]) volgood = 0;

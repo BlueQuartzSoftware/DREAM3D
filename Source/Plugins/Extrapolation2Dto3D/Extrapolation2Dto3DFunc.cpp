@@ -19,156 +19,10 @@ Extrapolation2Dto3DFunc::~Extrapolation2Dto3DFunc()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Extrapolation2Dto3DFunc::loadtwodimxgrains(string inname1)
-{ 
-    ifstream inputFile;
-    inputFile.open(inname1.c_str());
-	int gnum;
-	double area;
-	double a;
-	double b;
-	int nnum;
-	double x1;
-	double y1;
-    double x2;
-	double y2;
-	double ea1;
-	double ea2;
-	double ea3;
-	int count = 0;
-	int surfacegrain;
-	inputFile >> numtwodimxgrains;
-	for (long k = 0; k < numtwodimxgrains; k++)
-    {
-		inputFile >> gnum >> area >> a >> b >> nnum >> x1 >> y1 >> x2 >> y2 >> ea1 >> ea2 >> ea3 >> surfacegrain;
-		if(x1 != 1 && y1 != 1 && surfacegrain != 1)
-		{
-			twodimxgrain[k].set(gnum, area,a,b,nnum,x1,y1,x2,y2,ea1,ea2,ea3);
-			int arbin = (b/a)/0.1;
-			if(arbin > 9) arbin = 9;
-			int orbin = 0;
-			int fix = 1;
-			if(y1 < 0) fix = -1;
-			if(y1 > 0) fix = 1;
-			orbin = 20-acos(x1*fix)/double(0.15707);
-			if(y1 == 0) orbin = 19;
-			if(orbin > 19) orbin = 19;
-			actxface[orbin][arbin] = actxface[orbin][arbin]+(1.0);
-			count++;
-			averagearea5 = averagearea5+area;
-		}
-    }
-	averagearea5 = averagearea5/double(count);
-    inputFile.close();
-}
-
-void Extrapolation2Dto3DFunc::loadtwodimygrains(string inname2)
-{ 
-    ifstream inputFile;
-    inputFile.open(inname2.c_str());
-	int gnum;
-	double area;
-	double a;
-	double b;
-	int nnum;
-    double x1;
-	double y1;
-    double x2;
-	double y2;
-	double ea1;
-	double ea2;
-	double ea3;
-	int count = 0;
-	int surfacegrain;
-	inputFile >> numtwodimygrains;
-	for (long k = 0; k < numtwodimygrains; k++)
-    {
-		inputFile >> gnum >> area >> a >> b >> nnum >> x1 >> y1 >> x2 >> y2 >> ea1 >> ea2 >> ea3 >> surfacegrain;
-		if(x1 != 1 && y1 != 1 && surfacegrain != 1)
-		{
-			twodimygrain[k].set(gnum, area,a,b,nnum,x1,y1,x2,y2,ea1,ea2,ea3);
-			int arbin = (b/a)/0.1;
-			if(arbin > 9) arbin = 9;
-			int orbin = 0;
-			int fix = 1;
-			if(y1 < 0) fix = -1;
-			if(y1 > 0) fix = 1;
-			orbin = 20-acos(x1*fix)/double(0.15707);
-			if(y1 == 0) orbin = 19;
-			if(orbin > 19) orbin = 19;
-			actyface[orbin][arbin] = actyface[orbin][arbin]+(1.0);
-			count++;
-			averagearea6 = averagearea6+area;
-		}
-    }
-	averagearea6 = averagearea6/double(count);
-    inputFile.close();
-}
-
-void Extrapolation2Dto3DFunc::loadtwodimzgrains(string inname3)
-{ 
-    ifstream inputFile;
-    inputFile.open(inname3.c_str());
-	int gnum;
-	double area;
-	double a;
-	double b;
-	int nnum;
-    double x1;
-	double y1;
-    double x2;
-	double y2;
-	double ea1;
-	double ea2;
-	double ea3;
-	int count = 0;
-	int surfacegrain;
-	inputFile >> numtwodimzgrains;
-	for (long k = 0; k < numtwodimzgrains; k++)
-    {
-		inputFile >> gnum >> area >> a >> b >> nnum >> x1 >> y1 >> x2 >> y2 >> ea1 >> ea2 >> ea3 >> surfacegrain;
-		if(x1 != 1 && y1 != 1 && surfacegrain != 1)
-		{
-			twodimzgrain[k].set(gnum, area,a,b,nnum,x1,y1,x2,y2,ea1,ea2,ea3);
-			int arbin = (b/a)/0.1;
-			if(arbin > 9) arbin = 9;
-			int orbin = 0;
-			int fix = 1;
-			if(y1 < 0) fix = -1;
-			if(y1 > 0) fix = 1;
-			orbin = 20-acos(x1*fix)/double(0.15707);
-			if(y1 == 0) orbin = 19;
-			if(orbin > 19) orbin = 19;
-			actzface[orbin][arbin] = actzface[orbin][arbin]+(1.0);
-			count++;
-			averagearea7 = averagearea7+area;
-		}
-    }
-	averagearea7 = averagearea7/double(count);
-    inputFile.close();
-}
-
-void Extrapolation2Dto3DFunc::load_ellipsoids(string inname5)
-{
-    ifstream inputFile;
-    inputFile.open(inname5.c_str());
-	double a1 = 0;
-	double a2 = 0;
-	double a1delta = 0;
-	double a2delta = 0;
-	for(int i = 0; i < 136; i++)
-	{
-		inputFile >> a1 >> a2 >> a1delta >> a2delta;
-		elliptype[i][0] = a1;
-		elliptype[i][1] = a2;
-		elliptype[i][2] = a1delta;
-		elliptype[i][3] = a2delta;
-	}
-	inputFile.close();
-}
-
 void Extrapolation2Dto3DFunc::find_bincontributions()
 {
+    DREAM3D_RANDOMNG_NEW_SEEDED(GGseed)
+
 	int count = 0;
 	double go[3][3];
 	double ea1 = 0;
@@ -236,7 +90,7 @@ void Extrapolation2Dto3DFunc::find_bincontributions()
 					a2 = a2 + (0.5*a2delta);
 					a3 = a3 + (0.5*a3delta);
 					a3 = a3*a2;
-					double random3 = rg.Random();
+					double random3 = rg.genrand_res53();
 					double selectedrad = sizeprobbin[0][1];
 					for(int tempiter = 0; tempiter < 501; tempiter++)
 					{
@@ -314,7 +168,7 @@ void Extrapolation2Dto3DFunc::find_bincontributions()
 							for(int iter5=0;iter5<10;iter5++)
 							{
 								double pt = (3.1415926535897*axis1*axis2*axis3)/area5;
-								double random = rg.Random();
+								double random = rg.genrand_res53();
 								double ps = pt*random;
 								double sectionarea = area5*(1-((ps*ps)/(pt*pt)));
 								totalarea5 = totalarea5+sectionarea;
@@ -374,7 +228,7 @@ void Extrapolation2Dto3DFunc::find_bincontributions()
 							for(int iter6=0;iter6<10;iter6++)
 							{
 								double pt = (3.1415926535897*axis1*axis2*axis3)/area6;
-								double random = rg.Random();
+								double random = rg.genrand_res53();
 								double ps = pt*random;
 								double sectionarea = area6*(1-((ps*ps)/(pt*pt)));
 								totalarea6 = totalarea6+sectionarea;
@@ -434,7 +288,7 @@ void Extrapolation2Dto3DFunc::find_bincontributions()
 							for(int iter7=0;iter7<10;iter7++)
 							{
 								double pt = (3.1415926535897*axis1*axis2*axis3)/area7;
-								double random = rg.Random();
+								double random = rg.genrand_res53();
 								double ps = pt*random;
 								double sectionarea = area7*(1-((ps*ps)/(pt*pt)));
 								totalarea7 = totalarea7+sectionarea;
@@ -623,117 +477,10 @@ void Extrapolation2Dto3DFunc::find_bincontributions()
 	}
 }
 
-void Extrapolation2Dto3DFunc::find_3Dpoints()
-{	
-	string outname4;
-	outname4 = "out4.txt";
-	ofstream outFile; 
-    outFile.open(outname4.c_str());
-	int counter = 0;
-	double go[3][3];
-	double previouscontribution = 0;
-	for(int iter=0;iter<5000;iter++)
-	{
-		double prob = rg.Random();
-		int bin1 = 0;
-		int bin2 = 0;
-		int bin3 = 0;
-		int jumpout = 0;
-		previouscontribution = 0;
-		for(int i=0;i<18;i++)
-		{
-			if((eulerbin[i+1][0][0][0]/totalcount)>prob || i == 17)
-			{
-				for(int j=0;j<18;j++)
-				{
-					if((eulerbin[i][j+1][0][0]/totalcount)>prob || j == 17)
-					{
-						for(int k=0;k<18;k++)
-						{
-							double contributiononly100 = (eulerbin[i][j][k][0]/totalcount);
-							if(contributiononly100 < prob && contributiononly100 != previouscontribution)
-							{
-								bin1 = i;
-								bin2 = j;
-								bin3 = k;
-							}
-							previouscontribution = (eulerbin[i][j][k][0]/totalcount);
-							if(prob<previouscontribution) jumpout = 1;
-							if(jumpout == 1) {break;}
-						}
-					}
-					if(jumpout == 1) {break;}
-				}
-			}
-			if(jumpout == 1) {break;}
-		}
-		double rn1 = rg.Random();
-		rn1 = rn1-0.5;
-		rn1 = rn1*2.0;
-		double rn2 = rg.Random();
-		rn2 = rn2-0.5;
-		rn2 = rn2*2.0;
-		double rn3 = rg.Random();
-		rn3 = rn3-0.5;
-		rn3 = rn3*2.0;
-		double ea1 = (10*0.0174532*bin1)+(5*0.0174532)+(5*rn1*0.0174532);
-		double ea2 = (10*0.0174532*(bin2))+(5*0.0174532)+(5*rn2*0.0174532);
-		double ea3 = (10*0.0174532*(bin3))+(5*0.0174532)+(5*rn3*0.0174532);
-		go[0][0] = cos(ea1)*cos(ea3)-sin(ea1)*sin(ea3)*cos(ea2);
-		go[0][1] = sin(ea1)*cos(ea3)+cos(ea1)*sin(ea3)*cos(ea2);
-		go[0][2] = sin(ea3)*sin(ea2);		
-		go[1][0] = -cos(ea1)*sin(ea3)-sin(ea1)*cos(ea3)*cos(ea2);	
-		go[1][1] = -sin(ea1)*sin(ea3)+cos(ea1)*cos(ea3)*cos(ea2);
-		go[1][2] =  cos(ea3)*sin(ea2);	
-		go[2][0] =  sin(ea1)*sin(ea2);
-		go[2][1] = -cos(ea1)*sin(ea2);
-		go[2][2] =  cos(ea2);
-		outFile << "Box(" << go[0][0]-0.003125 << "," << go[1][0]-0.003125 << "," << go[2][0]-0.003125 << "," << go[0][0]+0.003125 << "," << go[1][0]+0.003125 << "," << go[2][0]+0.003125 << ",1,0,0,1);" << endl;
-		outFile << "Box(" << -go[0][0]-0.003125 << "," << -go[1][0]-0.003125 << "," << -go[2][0]-0.003125 << "," << -go[0][0]+0.003125 << "," << -go[1][0]+0.003125 << "," << -go[2][0]+0.003125 << ",1,0,0,1);" << endl;
-		outFile << "Box(" << go[0][1]-0.003125 << "," << go[1][1]-0.003125 << "," << go[2][1]-0.003125 << "," << go[0][1]+0.003125 << "," << go[1][1]+0.003125 << "," << go[2][1]+0.003125 << ",0,1,0,1);" << endl;
-		outFile << "Box(" << -go[0][1]-0.003125 << "," << -go[1][1]-0.003125 << "," << -go[2][1]-0.003125 << "," << -go[0][1]+0.003125 << "," << -go[1][1]+0.003125 << "," << -go[2][1]+0.003125 << ",0,1,0,1);" << endl;
-		outFile << "Box(" << go[0][2]-0.003125 << "," << go[1][2]-0.003125 << "," << go[2][2]-0.003125 << "," << go[0][2]+0.003125 << "," << go[1][2]+0.003125 << "," << go[2][2]+0.003125 << ",0,0,1,1);" << endl;
-		outFile << "Box(" << -go[0][2]-0.003125 << "," << -go[1][2]-0.003125 << "," << -go[2][2]-0.003125 << "," << -go[0][2]+0.003125 << "," << -go[1][2]+0.003125 << "," << -go[2][2]+0.003125 << ",0,0,1,1);" << endl;
-		counter++;
-	}
-	outFile.close();
-}
-
-void Extrapolation2Dto3DFunc::find_adjustment()
+void Extrapolation2Dto3DFunc::find_pixels()
 {
-	totaladjust5=0;
-	totaladjust6=0;
-	totaladjust7=0;
-	double previous = 0;
-	for(int i=0;i<18;i++)
-	{
-		for(int j=0;j<18;j++)
-		{
-			for(int k=0;k<18;k++)
-			{
-				totaladjust5 = totaladjust5 + (((eulerbin[i][j][k][0]/totalcount)-previous)*eulerbin[i][j][k][2]);
-				totaladjust6 = totaladjust6 + (((eulerbin[i][j][k][0]/totalcount)-previous)*eulerbin[i][j][k][3]);
-				totaladjust7 = totaladjust7 + (((eulerbin[i][j][k][0]/totalcount)-previous)*eulerbin[i][j][k][4]);
-				previous = (eulerbin[i][j][k][0]/totalcount);
-			}
-		}
-	}
-}
+    DREAM3D_RANDOMNG_NEW_SEEDED(GGseed)
 
-void Extrapolation2Dto3DFunc::find_lognormal()
-{
-	double prob = 0;
-	double rad = 0;
-	for(int i = 0; i < 501; i++)
-	{
-		sizeprobbin[i][0] = prob;
-		sizeprobbin[i][1] = rad;
-	}
-}
-
-
-void Extrapolation2Dto3DFunc::find_pixels(long numsections)
-{
 	for(long temp1 = 0; temp1 < 136; temp1++)
 	{
 		for(long temp3 = 0; temp3 < 10; temp3++)
@@ -761,7 +508,7 @@ void Extrapolation2Dto3DFunc::find_pixels(long numsections)
 		int obin1 = 0;
 		int obin2 = 0;
 		int obin3 = 0;
-		double orientrandom = rg.Random();
+		double orientrandom = rg.genrand_res53();
 		for(int d = 0; d < 18; d++)
 		{
 			if((eulerbin[d+1][0][0][0]/totalcount)>orientrandom || d == 17)
@@ -784,13 +531,13 @@ void Extrapolation2Dto3DFunc::find_pixels(long numsections)
 				}
 			}
 		}
-		double rn1 = rg.Random();
+		double rn1 = rg.genrand_res53();
 		rn1 = rn1-0.5;
 		rn1 = rn1*2.0;
-		double rn2 = rg.Random();
+		double rn2 = rg.genrand_res53();
 		rn2 = rn2-0.5;
 		rn2 = rn2*2.0;
-		double rn3 = rg.Random();
+		double rn3 = rg.genrand_res53();
 		rn3 = rn3-0.5;
 		rn3 = rn3*2.0;
 		double phi = (10*0.0174532*obin1)+(5*0.0174532)+(5*rn1*0.0174532);
@@ -810,9 +557,9 @@ void Extrapolation2Dto3DFunc::find_pixels(long numsections)
 		double axis3 = 0;
 		double bovera = 0;
 		double coverb = 0;
-		double random1 = rg.Random();
-		double random2 = rg.Random();
-		double random3 = rg.Random();
+		double random1 = rg.genrand_res53();
+		double random2 = rg.genrand_res53();
+		double random3 = rg.genrand_res53();
 		double ar1 = 0;
 		double ar2 = 0;
 		double ar1delta = 0;
@@ -877,7 +624,7 @@ void Extrapolation2Dto3DFunc::find_pixels(long numsections)
 				}
 				double centerarea = (3.1415926535897*(pow(r1squared,0.5))*(pow(r2squared,0.5)));
 				double pt = (3.1415926535897*axis1*axis2*axis3)/centerarea;
-				double random = rg.Random();
+				double random = rg.genrand_res53();
 				double ps = pt*random;
 				area = centerarea*(1-((ps*ps)/(pt*pt)));
 			}
@@ -905,7 +652,7 @@ void Extrapolation2Dto3DFunc::find_pixels(long numsections)
 				}
 				double centerarea = (3.1415926535897*(pow(r1squared,0.5))*(pow(r2squared,0.5)));
 				double pt = (3.1415926535897*axis1*axis2*axis3)/centerarea;
-				double random = rg.Random();
+				double random = rg.genrand_res53();
 				double ps = pt*random;
 				area = centerarea*(1-((ps*ps)/(pt*pt)));
 			}
@@ -933,7 +680,7 @@ void Extrapolation2Dto3DFunc::find_pixels(long numsections)
 				}
 				double centerarea = (3.1415926535897*(pow(r1squared,0.5))*(pow(r2squared,0.5)));
 				double pt = (3.1415926535897*axis1*axis2*axis3)/centerarea;
-				double random = rg.Random();
+				double random = rg.genrand_res53();
 				double ps = pt*random;
 				area = centerarea*(1-((ps*ps)/(pt*pt)));
 			}
@@ -1104,7 +851,7 @@ void Extrapolation2Dto3DFunc::find_pixels(long numsections)
 	}
 }
 
-void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwodimygrains,int numtwodimzgrains)
+void Extrapolation2Dto3DFunc::generate_3dgrains()
 {
 	for(int ix = 0; ix < numtwodimxgrains; ix++)
 	{
@@ -1486,10 +1233,10 @@ void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwod
 						curmaxarea = area;
 					}
 				}
-				double randomnum1 = rg.Random();
+				double randomnum1 = rg.genrand_res53();
 				bovera = a1+(randomnum1*a1delta);
 				if(bovera > 1) bovera = 1;
-				double randomnum2 = rg.Random();
+				double randomnum2 = rg.genrand_res53();
 				coverb = a2+(randomnum2*a2delta);
 				if(coverb > 1) coverb = 1;
 				double adjust = 0;
@@ -1540,7 +1287,7 @@ void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwod
 				double ea2 = twodimxgrain[curgrain].euler2;
 				double ea3 = twodimxgrain[curgrain].euler3;
 				double grainrad = pow((grainarea/3.1415926535897),0.5);
-				double randomnum3 = rg.Random();
+				double randomnum3 = rg.genrand_res53();
 				double adjustment = adjust+(randomnum3*adjustdelta);
 				double maxgrainrad = grainrad/adjustment;
 				double maxgrainarea = 3.1415926535897*maxgrainrad*maxgrainrad;
@@ -1577,10 +1324,10 @@ void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwod
 						curmaxarea = area;
 					}
 				}
-				double randomnum1 = rg.Random();
+				double randomnum1 = rg.genrand_res53();
 				bovera = a1+(randomnum1*a1delta);
 				if(bovera > 1) bovera = 1;
-				double randomnum2 = rg.Random();
+				double randomnum2 = rg.genrand_res53();
 				coverb = a2+(randomnum2*a2delta);
 				if(coverb > 1) coverb = 1;
 				double adjust = 0;
@@ -1631,7 +1378,7 @@ void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwod
 				double ea2 = twodimygrain[curgrain].euler2;
 				double ea3 = twodimygrain[curgrain].euler3;
 				double grainrad = pow((grainarea/3.1415926535897),0.5);
-				double randomnum3 = rg.Random();
+				double randomnum3 = rg.genrand_res53();
 				double adjustment = adjust+(randomnum3*adjustdelta);
 				double maxgrainrad = grainrad/adjustment;
 				double maxgrainarea = 3.1415926535897*maxgrainrad*maxgrainrad;
@@ -1668,10 +1415,10 @@ void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwod
 						curmaxarea = area;
 					}
 				}
-				double randomnum1 = rg.Random();
+				double randomnum1 = rg.genrand_res53();
 				bovera = a1+(randomnum1*a1delta);
 				if(bovera > 1) bovera = 1;
-				double randomnum2 = rg.Random();
+				double randomnum2 = rg.genrand_res53();
 				coverb = a2+(randomnum2*a2delta);
 				if(coverb > 1) coverb = 1;
 				double adjust = 0;
@@ -1722,7 +1469,7 @@ void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwod
 				double ea2 = twodimzgrain[curgrain].euler2;
 				double ea3 = twodimzgrain[curgrain].euler3;
 				double grainrad = pow((grainarea/3.1415926535897),0.5);
-				double randomnum3 = rg.Random();
+				double randomnum3 = rg.genrand_res53();
 				double adjustment = adjust+(randomnum3*adjustdelta);
 				double maxgrainrad = grainrad/adjustment;
 				double maxgrainarea = 3.1415926535897*maxgrainrad*maxgrainrad;
@@ -1749,484 +1496,7 @@ void Extrapolation2Dto3DFunc::generate_3dgrains(int numtwodimxgrains,int numtwod
 	}
 }
 
-void Extrapolation2Dto3DFunc::volume_stats(int num3dgrains, string outname3)
-{
-	double actualgrains = 0;
-	double misocount = 0;
-	double avgvol = 0;
-	double avglnvol = 0;
-	double avgneigh = 0;
-	double avglnneigh = 0;
-	double avgbovera = 0;
-	double avgcovera = 0;
-	double avgcoverb = 0;
-	double avgsurfarea = 0;
-	double avgdiam = 0;
-	double avglogdiam = 0;
-	double avgdiam2 = 0;
-	double avgschmid = 0;
-	double avgem = 0;
-	double neighcount = 0;
-	double maxvol = 0;
-	double maxneigh = 0;
-	double maxsurfarea = 0;
-	double maxdiam = 0;
-	double maxbovera = 0;
-	double maxcovera = 0;
-	double maxcoverb = 0;
-	double maxschmid = 0;
-	double maxem = 0;
-	double svn[100][5];
-	double svs[100][5];
-	double svbovera[100][5];
-	double svcovera[100][5];
-	double svcoverb[100][5];
-	double svsa[100][5];
-	double svschmid[100][5];
-	double svem[100][5];
-	for(int temp = 0; temp < 100; temp++)
-	{
-		for(int temp2 = 0; temp2 < 5; temp2++)
-		{
-			svn[temp][temp2] = 0;
-			svs[temp][temp2] = 0;
-			svbovera[temp][temp2] = 0;
-			svcovera[temp][temp2] = 0;
-			svcoverb[temp][temp2] = 0;
-			svsa[temp][temp2] = 0;
-			svschmid[temp][temp2] = 0;
-			svem[temp][temp2] = 0;
-		}
-	}
-	for(int i = 0; i < num3dgrains; i++)
-	{
-		actualgrains++;
-		int vol = threedimgrain[i].grainvolume;
-		double logvol = log(double(vol));
-		double rad3 = 0.75*(1/3.1415926535897)*vol;
-		double diam = 2*pow(rad3,0.333333333);
-		int diamint = diam;
-		double logdiam = log(diam);
-		double a = threedimgrain[i].majoraxis;
-		double b = threedimgrain[i].intermediateaxis;
-		double c = threedimgrain[i].minoraxis;
-		double bovera = b/a;
-		double covera = c/a;
-		double coverb = c/b;
-		int nnum = threedimgrain[i].neighnum;
-		double lognnum = log(double(nnum));
-		avgvol = avgvol+vol;
-		avglnvol = avglnvol+logvol;
-		avgneigh = avgneigh+nnum;
-		avglnneigh = avglnneigh+lognnum;
-		avgbovera = avgbovera+bovera;
-		avgcovera = avgcovera+covera;
-		avgcoverb = avgcoverb+coverb;
-		avgdiam = avgdiam + diam;
-		avglogdiam = avglogdiam+logdiam;
-		svn[diamint][0]++;
-		svbovera[diamint][0]++;
-		svcovera[diamint][0]++;
-		svcoverb[diamint][0]++;
-		svn[diamint][1] = svn[diamint][1] + nnum;
-		svn[diamint][3] = svn[diamint][3] + lognnum;
-		svbovera[diamint][1] = svbovera[diamint][1] + bovera;
-		svcovera[diamint][1] = svcovera[diamint][1] + covera;
-		svcoverb[diamint][1] = svcoverb[diamint][1] + coverb;
-		if(vol > maxvol) maxvol = vol;
-		if(nnum > maxneigh) maxneigh = nnum;
-		if(bovera > maxbovera) maxbovera = bovera;
-		if(covera > maxcovera) maxcovera = covera;
-		if(coverb > maxcoverb) maxcoverb = coverb;
-		if(diam > maxdiam) maxdiam = diam;
-	}
-	int maxdiamint = maxdiam;
-	for(int temp3 = 0; temp3 < (maxdiamint+1); temp3++)
-	{
-		if(svn[temp3][0] != 0)
-		{
-			svn[temp3][1] = svn[temp3][1]/svn[temp3][0];
-			svn[temp3][3] = svn[temp3][3]/svn[temp3][0];
-			svbovera[temp3][1] = svbovera[temp3][1]/svbovera[temp3][0];
-			svcovera[temp3][1] = svcovera[temp3][1]/svcovera[temp3][0];
-			svcoverb[temp3][1] = svcoverb[temp3][1]/svcoverb[temp3][0];
-		}
-	}
-	avgvol = avgvol/actualgrains;
-	avglnvol = avglnvol/actualgrains;
-	avgneigh = avgneigh/actualgrains;
-	avglnneigh = avglnneigh/actualgrains;
-	avgbovera = avgbovera/actualgrains;
-	avgcovera = avgcovera/actualgrains;
-	avgcoverb = avgcoverb/actualgrains;
-	avgdiam = avgdiam/actualgrains;
-	avglogdiam = avglogdiam/actualgrains;
-	maxvol = maxvol/avgvol;
-	int vbw = 1;
-	int nbw = 3;
-	double sbw1 = 1.0/25.0;
-	double sbw2 = 1.0/25.0;
-	double sbw3 = 1.0/25.0;
-	double vbin[25];
-	double nbin[25];
-	double sbin1[25];
-	double sbin2[25];
-	double sbin3[25];
-	double svnbin[100][25];
-	double svboverabin[100][25];
-	double svcoverabin[100][25];
-	double svcoverbbin[100][25];
-//	double misobin[10];
-//	double microbin[10];
-	for(int a = 0; a < 100; a++)
-	{
-		for(int b = 0; b < 25; b++)
-		{
-			svnbin[a][b] = 0;
-			svboverabin[a][b] = 0;
-			svcoverabin[a][b] = 0;
-			svcoverbbin[a][b] = 0;
-		}
-	}
-	for(int c = 0; c < 25; c++)
-	{
-		vbin[c] = 0;
-		nbin[c] = 0;
-		sbin1[c] = 0;
-		sbin2[c] = 0;
-		sbin3[c] = 0;
-	}
-/*	for(int e = 0; e < 10; e++)
-	{
-		misobin[e] = 0;
-		microbin[e] = 0;
-	}
-*/	double sdvol = 0;
-	double sdlnvol = 0;
-	double sdneigh = 0;
-	double sdlnneigh = 0;
-	double sdbovera = 0;
-	double sdcovera = 0;
-	double sdcoverb = 0;
-	double sddiam = 0;
-	double sdlogdiam = 0;
-	for(int j = 0; j < num3dgrains; j++)
-	{
-		int vol = threedimgrain[j].grainvolume;
-		double logvol = log(double(vol));
-		double rad3 = 0.75*(1/3.1415926535897)*vol;
-		double diam = 2*pow(rad3,0.333333333);
-		int diamint = diam;
-		double logdiam = log(diam);
-		double a = threedimgrain[j].majoraxis;
-		double b = threedimgrain[j].intermediateaxis;
-		double c = threedimgrain[j].minoraxis;
-		double bovera = b/a;
-		double covera = c/a;
-		double coverb = c/b;
-		int nnum = threedimgrain[j].neighnum;
-		double lognnum = log(double(nnum));
-		sdvol = sdvol + ((vol-avgvol)*(vol-avgvol));		
-		sdlnvol = sdlnvol + ((logvol-avglnvol)*(logvol-avglnvol));		
-		sdneigh = sdneigh + ((nnum-avgneigh)*(nnum-avgneigh));		
-		sdlnneigh = sdlnneigh + ((lognnum-avglnneigh)*(lognnum-avglnneigh));		
-		sdbovera = sdbovera + ((bovera-avgbovera)*(bovera-avgbovera));		
-		sdcovera = sdcovera + ((covera-avgcovera)*(covera-avgcovera));		
-		sdcoverb = sdcoverb + ((coverb-avgcoverb)*(coverb-avgcoverb));		
-		sddiam = sddiam + ((diam-avgdiam)*(diam-avgdiam));
-		sdlogdiam = sdlogdiam + ((logdiam-avglogdiam)*(logdiam-avglogdiam));
-		svn[diamint][2] = svn[diamint][2] + ((nnum-svn[diamint][1])*(nnum-svn[diamint][1]));		
-		svn[diamint][4] = svn[diamint][4] + ((lognnum-svn[diamint][3])*(lognnum-svn[diamint][3]));		
-		svbovera[diamint][2] = svbovera[diamint][2] + ((bovera-svbovera[diamint][1])*(bovera-svbovera[diamint][1]));		
-		svcovera[diamint][2] = svcovera[diamint][2] + ((covera-svcovera[diamint][1])*(covera-svcovera[diamint][1]));		
-		svcoverb[diamint][2] = svcoverb[diamint][2] + ((coverb-svcoverb[diamint][1])*(coverb-svcoverb[diamint][1]));		
-		vol = vol/avgvol;
-		int vcur = vol/vbw;
-		if(vcur >= 25) vcur = 24;
-		int ncur = nnum/nbw;
-		if(ncur >= 25) ncur = 24;
-		int s1cur = bovera/sbw1;
-		if(s1cur >= 25) s1cur = 24;
-		int s2cur = covera/sbw2;
-		if(s2cur >= 25) s2cur = 24;
-		int s3cur = coverb/sbw3;
-		if(s3cur >= 25) s3cur = 24;
-		vbin[vcur]++;
-		nbin[ncur]++;
-		sbin1[s1cur]++;
-		sbin2[s2cur]++;
-		sbin3[s3cur]++;
-		svnbin[diamint][ncur]++;
-		svboverabin[diamint][s1cur]++;
-		svcoverabin[diamint][s2cur]++;
-		svcoverbbin[diamint][s3cur]++;
-	}
-	for(int temp4 = 0; temp4 < (maxdiamint+1); temp4++)
-	{
-		if(svn[temp4][0] != 0)
-		{
-			svn[temp4][2] = svn[temp4][2]/svn[temp4][0];
-			svn[temp4][4] = svn[temp4][4]/svn[temp4][0];
-			svbovera[temp4][2] = svbovera[temp4][2]/svbovera[temp4][0];
-			svcovera[temp4][2] = svcovera[temp4][2]/svcovera[temp4][0];
-			svcoverb[temp4][2] = svcoverb[temp4][2]/svcoverb[temp4][0];
-			svbovera[temp4][3] = svbovera[temp4][1]*(((svbovera[temp4][1]*(1-svbovera[temp4][1]))/svbovera[temp4][2])-1);
-			svbovera[temp4][4] = (1-svbovera[temp4][1])*(((svbovera[temp4][1]*(1-svbovera[temp4][1]))/svbovera[temp4][2])-1);
-			svcovera[temp4][3] = svcovera[temp4][1]*(((svcovera[temp4][1]*(1-svcovera[temp4][1]))/svcovera[temp4][2])-1);
-			svcovera[temp4][4] = (1-svcovera[temp4][1])*(((svcovera[temp4][1]*(1-svcovera[temp4][1]))/svcovera[temp4][2])-1);
-			svcoverb[temp4][3] = svcoverb[temp4][1]*(((svcoverb[temp4][1]*(1-svcoverb[temp4][1]))/svcoverb[temp4][2])-1);
-			svcoverb[temp4][4] = (1-svcoverb[temp4][1])*(((svcoverb[temp4][1]*(1-svcoverb[temp4][1]))/svcoverb[temp4][2])-1);
-			svn[temp4][2] = pow(svn[temp4][2],0.5);
-			svn[temp4][4] = pow(svn[temp4][4],0.5);
-			svbovera[temp4][2] = pow(svbovera[temp4][2],0.5);
-			svcovera[temp4][2] = pow(svcovera[temp4][2],0.5);
-			svcoverb[temp4][2] = pow(svcoverb[temp4][2],0.5);
-		}
-	}
-	sdvol = sdvol/actualgrains;
-	sdlnvol = sdlnvol/actualgrains;
-	sdneigh = sdneigh/actualgrains;
-	sdlnneigh = sdlnneigh/actualgrains;
-	sdbovera = sdbovera/actualgrains;
-	sdcovera = sdcovera/actualgrains;
-	sdcoverb = sdcoverb/actualgrains;
-	sddiam = sddiam/actualgrains;
-	sdlogdiam = sdlogdiam/actualgrains;
-	double volvar = sdvol;
-	double vollnvar = sdlnvol;
-	double neighvar = sdneigh;
-	double neighlnvar = sdlnneigh;
-	double boveravar = sdbovera;
-	double coveravar = sdcovera;
-	double coverbvar = sdcoverb;
-	double diamvar = sddiam;
-	double logdiamvar = sdlogdiam;
-	double pbovera = avgbovera*(((avgbovera*(1-avgbovera))/boveravar)-1);
-	double qbovera = (1-avgbovera)*(((avgbovera*(1-avgbovera))/boveravar)-1);
-	double pcovera = avgcovera*(((avgcovera*(1-avgcovera))/coveravar)-1);
-	double qcovera = (1-avgcovera)*(((avgcovera*(1-avgcovera))/coveravar)-1);
-	double pcoverb = avgcoverb*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
-	double qcoverb = (1-avgcoverb)*(((avgcoverb*(1-avgcoverb))/coverbvar)-1);
-	sdvol = pow(sdvol,0.5);
-	sdlnvol = pow(sdlnvol,0.5);
-	sdneigh = pow(sdlnneigh,0.5);
-	sdlnneigh = pow(sdneigh,0.5);
-	sdbovera = pow(sdbovera,0.5);
-	sdcovera = pow(sdcovera,0.5);
-	sdcoverb = pow(sdcoverb,0.5);
-	sddiam = pow(sddiam,0.5);
-	sdlogdiam = pow(sdlogdiam,0.5);
-	double svncr = 0;
-	double svboveracr = 0;
-	double svcoveracr = 0;
-	double svcoverbcr = 0;
-	for(int temp5 = 0; temp5 < (maxdiamint+1); temp5++)
-	{
-		svncr = svncr + (svn[temp5][0]*((svn[temp5][1]-avgneigh)*(svn[temp5][1]-avgneigh)));
-		svboveracr = svboveracr + (svbovera[temp5][0]*((svbovera[temp5][1]-avgbovera)*(svbovera[temp5][1]-avgbovera)));
-		svcoveracr = svcoveracr + (svcovera[temp5][0]*((svcovera[temp5][1]-avgcovera)*(svcovera[temp5][1]-avgcovera)));
-		svcoverbcr = svcoverbcr + (svcoverb[temp5][0]*((svcoverb[temp5][1]-avgcoverb)*(svcoverb[temp5][1]-avgcoverb)));
-	}
-	svncr = svncr/(actualgrains*neighvar);
-	svboveracr = svboveracr/(actualgrains*boveravar);
-	svcoveracr = svcoveracr/(actualgrains*coveravar);
-	svcoverbcr = svcoverbcr/(actualgrains*coverbvar);
-    ofstream outFile; 
-    outFile.open(outname3.c_str());
-	outFile << "INDIVIDUAL DISTRIBUTIONS" << endl;
-	outFile << endl;
-	outFile << "Parameter" << "	" << "Avg." << "	" << "Std. Dev." << endl;
-	outFile << "Volume" << "	" << avgvol << "	" << sdvol << endl;
-	outFile << "Volume" << "	" << avglnvol << "	" << sdlnvol << endl;
-	outFile << "Neighbors" << "	" << avgneigh << "	" << sdneigh << endl;
-	outFile << "Neighbors" << "	" << avglnneigh << "	" << sdlnneigh << endl;
-	outFile << "b/a" << "	" << avgbovera << "	" << sdbovera << endl;
-	outFile << "c/a" << "	" << avgcovera << "	" << sdcovera << endl;
-	outFile << "c/b" << "	" << avgcoverb << "	" << sdcoverb <<  endl;
-	outFile << "Diameter" << "	" << avgdiam << "	" << sddiam << endl;
-	outFile << endl;
-	outFile << "Volume Bin" << "	" << "Count" << "	" << "Neighbor Bin" << "	" << "Count" << "	" << "b/a Bin" << "	" << "Count" << "	" << "c/a Bin" << "	" << "Count" << "	" << "c/b Bin" << "	" << "Count" << endl;
-	for(int temp6 = 0; temp6 < 25; temp6++)
-	{
-		outFile << (vbw*temp6) << "	" << vbin[temp6]/actualgrains << "	" << (nbw*temp6) << "	" << nbin[temp6]/actualgrains << "	" << (sbw1*temp6) << "	" << sbin1[temp6]/actualgrains << "	" << (sbw2*temp6) << "	" << sbin2[temp6]/actualgrains << "	" << (sbw3*temp6) << "	" << sbin3[temp6]/actualgrains << endl; 
-	}
-	outFile << endl;
-	outFile << "CORRELATIONS" << endl;
-	outFile << endl;
-	outFile << "Size V Neighbors" << "	" << svncr << endl;
-	outFile << "Size V b/a" << "	" << svboveracr << endl;
-	outFile << "Size V c/a" << "	" << svcoveracr << endl;
-	outFile << "Size V c/b" << "	" << svcoverbcr << endl;
-	outFile << endl;
-	outFile << "Diameter" << "	" << "Count" << "	" << "Avg. Neighbors" << "	" << "Std. Dev. Neighbors" << "	" << "Avg. Ln Neighbors" << "	" << "Std. Dev.  Ln Neighbors" << "	" << "Avg. Neighbor Diameter" << "	" << "Std. Dev. Neighbor Diameter" << "	" <<"Avg. b/a" << "	" << "Std. Dev. b/a" << "	" << "Avg. c/a" << "	" << "Std. Dev. c/a" << "	" << "Avg. c/b" << "	" << "Std. Dev. c/b" << "	" <<"P b/a" << "	" << "Q Dev. b/a" << "	" << "P c/a" << "	" << "Q Dev. c/a" << "	" << "P c/b" << "	" << "Q Dev. c/b" << endl; 
-	for(int temp7 = 0; temp7 < (maxdiamint+1); temp7++)
-	{
-		outFile << temp7 << "	" << svn[temp7][0] << "	" << svn[temp7][1] << "	" << svn[temp7][2] << "	" << svn[temp7][3] << "	" << svn[temp7][4] << "	" << svs[temp7][1] << "	" << svs[temp7][2] << "	" << svbovera[temp7][1] << "	" << svbovera[temp7][2] << "	" << svcovera[temp7][1] << "	" << svcovera[temp7][2] << "	" << svcoverb[temp7][1] << "	" << svcoverb[temp7][2] << "	" << svbovera[temp7][3] << "	" << svbovera[temp7][4] << "	" << svcovera[temp7][3] << "	" << svcovera[temp7][4] << "	" << svcoverb[temp7][3] << "	" << svcoverb[temp7][4] << endl; 
-	}
-	outFile << endl;
-	for(int temp8 = 0; temp8 < 25; temp8++)
-	{
-		for(int temp9 = 0; temp9 < (maxdiamint+1); temp9++)
-		{
-			outFile << (svnbin[temp9][temp8]/svn[temp9][0]) << "	";
-		}
-		outFile << endl;
-	}
-	outFile << endl;
-	for(int temp12 = 0; temp12 < 25; temp12++)
-	{
-		for(int temp13 = 0; temp13 < (maxdiamint+1); temp13++)
-		{
-			outFile << (svboverabin[temp13][temp12]/svn[temp13][0]) << "	";
-		}
-		outFile << endl;
-	}
-	outFile << endl;
-	for(int temp14 = 0; temp14 < 25; temp14++)
-	{
-		for(int temp15 = 0; temp15 < (maxdiamint+1); temp15++)
-		{
-			outFile << (svcoverabin[temp15][temp14]/svn[temp15][0]) << "	";
-		}
-		outFile << endl;
-	}
-	outFile << endl;
-	for(int temp16 = 0; temp16 < 25; temp16++)
-	{
-		for(int temp17 = 0; temp17 < (maxdiamint+1); temp17++)
-		{
-			outFile << (svcoverbbin[temp17][temp16]/svn[temp17][0]) << "	";
-		}
-		outFile << endl;
-	}
-	outFile << endl;
-}
-
-void Extrapolation2Dto3DFunc::writeAllData (string writename1)
-{
-    ofstream outFile; 
-    outFile.open(writename1.c_str());
-	for(int i=0;i<18;i++)
-	{
-		for(int j=0;j<18;j++)
-		{
-			for(int k=0;k<18;k++)
-			{
-				outFile << i << "	" << j << "	" << k << "	" << (eulerbin[i][j][k][0]/totalcount) << endl;
-			}
-		}
-	}
-	outFile.close();
-}
-
-void Extrapolation2Dto3DFunc::write3dgrains(string writename2, int num3dgrains)
-{
-	ofstream outFile; 
-    outFile.open(writename2.c_str());
-	for(int i = 0; i < num3dgrains; i++)
-	{
-		double vol = threedimgrain[i].grainvolume;
-		double a = threedimgrain[i].majoraxis;
-		double b = threedimgrain[i].intermediateaxis;
-		double c = threedimgrain[i].minoraxis;
-		int nnum = threedimgrain[i].neighnum;
-		int etype = threedimgrain[i].ellipsoidtype;
-		outFile << vol << "	" << a << "	" << b << "	" << c << "	" << nnum << "	" << etype << endl;
-	}
-	outFile.close();
-}
-void Extrapolation2Dto3DFunc::write_eulerangles(string writename3, int num3dgrains)
-{
-    ofstream outFile; 
-    outFile.open(writename3.c_str());
-	outFile << num3dgrains << endl;
-	for(int i = 0; i < num3dgrains; i++)
-	{
-		double ea1 = threedimgrain[i].euler1;
-		double ea2 = threedimgrain[i].euler2;
-		double ea3 = threedimgrain[i].euler3;
-		outFile << ea1 << "	" << ea2 << "	" << ea3 << endl;
-	}
-	outFile.close();
-	
-}
-void Extrapolation2Dto3DFunc::write_axisorientations(string writename4)
-{
-    ofstream outFile; 
-    outFile.open(writename4.c_str());
-	double previouscontribution = 0;
-	outFile << 10000 << endl;
-	for(int i = 0; i < 10000; i++)
-	{
-		double prob = rg.Random();
-		int bin1 = 0;
-		int bin2 = 0;
-		int bin3 = 0;
-		int jumpout = 0;
-		previouscontribution = 0;
-		for(int i=0;i<18;i++)
-		{
-			if((eulerbin[i+1][0][0][0]/totalcount)>prob || i == 17)
-			{
-				for(int j=0;j<18;j++)
-				{
-					if((eulerbin[i][j+1][0][0]/totalcount)>prob || j == 17)
-					{
-						for(int k=0;k<18;k++)
-						{
-							double contributiononly100 = (eulerbin[i][j][k][0]/totalcount);
-							if(contributiononly100 < prob && contributiononly100 != previouscontribution)
-							{
-								bin1 = i;
-								bin2 = j;
-								bin3 = k;
-							}
-							previouscontribution = (eulerbin[i][j][k][0]/totalcount);
-							if(prob<previouscontribution) jumpout = 1;
-							if(jumpout == 1) {break;}
-						}
-					}
-					if(jumpout == 1) {break;}
-				}
-			}
-			if(jumpout == 1) {break;}
-		}
-		double rn1 = rg.Random();
-		rn1 = rn1-0.5;
-		rn1 = rn1*2.0;
-		double rn2 = rg.Random();
-		rn2 = rn2-0.5;
-		rn2 = rn2*2.0;
-		double rn3 = rg.Random();
-		rn3 = rn3-0.5;
-		rn3 = rn3*2.0;
-		double g1ea1 = (10*0.0174532*bin1)+(5*0.0174532)+(5*rn1*0.0174532);
-		double g1ea2 = (10*0.0174532*(bin2))+(5*0.0174532)+(5*rn2*0.0174532);
-		double g1ea3 = (10*0.0174532*(bin3))+(5*0.0174532)+(5*rn3*0.0174532);
-		double go[3][3];		
-		go[0][0] = cos(g1ea1)*cos(g1ea3)-sin(g1ea1)*sin(g1ea3)*cos(g1ea2);
-		go[0][1] = sin(g1ea1)*cos(g1ea3)+cos(g1ea1)*sin(g1ea3)*cos(g1ea2);
-		go[0][2] = sin(g1ea3)*sin(g1ea2);			
-		go[1][0] = -cos(g1ea1)*sin(g1ea3)-sin(g1ea1)*cos(g1ea3)*cos(g1ea2);	
-		go[1][1] = -sin(g1ea1)*sin(g1ea3)+cos(g1ea1)*cos(g1ea3)*cos(g1ea2);
-		go[1][2] =  cos(g1ea3)*sin(g1ea2);		
-		go[2][0] =  sin(g1ea1)*sin(g1ea2);
-		go[2][1] = -cos(g1ea1)*sin(g1ea2);
-		go[2][2] =  cos(g1ea2);
-		double r1x = go[0][0];
-		double r1y = go[1][0];
-		double r1z = go[2][0];
-		double r2x = go[0][1];
-		double r2y = go[1][1];
-		double r2z = go[2][1];
-		double r3x = go[0][2];
-		double r3y = go[1][2];
-		double r3z = go[2][2];
-		outFile << r1x << "	" << r1y << "	" << r1z << "	" << r2x << "	" << r2y << "	" << r2z << "	" << r3x << "	" << r3y << "	" << r3z << endl;
-	}
-	outFile.close();
-}
-void Extrapolation2Dto3DFunc::volume_stats(int num3dgrains, string writename5, string writename6, string writename7, string writename8, string writename9, string writename10, string writename11, string writename12, string writename13)
+void Extrapolation2Dto3DFunc::volume_stats()
 {
 	double actualgrains = 0;
 	double misocount = 0;
@@ -2799,7 +2069,7 @@ void Extrapolation2Dto3DFunc::volume_stats(int num3dgrains, string writename5, s
 		orand[temp50][0] = texindex;
 		orand[temp50][1] = texstrength;
 	}	
-    ofstream outFile; 
+/*    ofstream outFile; 
     outFile.open(writename5.c_str());
 	outFile << "INDIVIDUAL DISTRIBUTIONS" << endl;
 	outFile << endl;
@@ -3028,5 +2298,5 @@ void Extrapolation2Dto3DFunc::volume_stats(int num3dgrains, string writename5, s
 	{
 		outFile8 << (microbin[i]/actualgrains) << endl;
 	}
-	outFile8.close();
+	outFile8.close();*/
 }
