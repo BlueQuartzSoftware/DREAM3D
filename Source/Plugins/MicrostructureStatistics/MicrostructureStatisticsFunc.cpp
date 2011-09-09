@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -144,8 +144,8 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   m_PhaseFraction = AIMArray<float>::CreateArray(0);
   m_TotalVol = AIMArray<float>::CreateArray(0);
   m_TotalAxes = AIMArray<float>::CreateArray(0);
-  m_MaxDiameter = AIMArray<int>::CreateArray(0);
-  m_MinDiameter = AIMArray<int>::CreateArray(0);
+  m_MaxDiameter = AIMArray<float>::CreateArray(0);
+  m_MinDiameter = AIMArray<float>::CreateArray(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -469,7 +469,7 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains()
 				if(coords[j] > boundbox[j]) dist[j] = (coords[j]-boundbox[j]);
 				if(coords[j] < boundbox[j]) move = 0;
 			}
-			if(j%2 == 0)			
+			if(j%2 == 0)
 			{
 				if(coords[j] < boundbox[j]) dist[j] = (boundbox[j]-coords[j]);
 				if(coords[j] > boundbox[j]) move = 0;
@@ -540,7 +540,7 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
 				if(coords[j] > boundbox[j]) removevol[j] = areas[j]*(coords[j]-boundbox[j]);
 				if(coords[j] < boundbox[j]) move = 0;
 			}
-			if(j%2 == 0)			
+			if(j%2 == 0)
 			{
 				if(coords[j] < boundbox[j]) removevol[j] = areas[j]*(boundbox[j]-coords[j]);
 				if(coords[j] > boundbox[j]) move = 0;
@@ -699,8 +699,8 @@ void MicrostructureStatisticsFunc::find_centroids()
     radcubed = m_Grains[i]->volume/vol_term;
     diameter = 2.0*powf(radcubed, 0.3333333333);
     m_Grains[i]->equivdiameter = diameter;
-    if(int(diameter) > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = int(diameter);
-    if(int(diameter) < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = int(diameter);
+    if(diameter > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = diameter;
+    if(diameter < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = diameter;
 	totalvol[m_Grains[i]->phase] = totalvol[m_Grains[i]->phase] + m_Grains[i]->volume;
 	allvol = allvol + m_Grains[i]->volume;
   }
@@ -714,8 +714,8 @@ void MicrostructureStatisticsFunc::find_centroids2D()
   //  int count = 0;
   for(size_t i=0;i<crystruct.size();i++)
   {
-	  maxdiameter[i] = 0;
-	  mindiameter[i] = 100000;
+	  maxdiameter[i] = 0.0;
+	  mindiameter[i] = 100000.0;
 	  phasefraction[i] = 0;
   }
   float x, y;
@@ -752,8 +752,8 @@ void MicrostructureStatisticsFunc::find_centroids2D()
     radsquared = m_Grains[i]->volume / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_Grains[i]->equivdiameter = diameter;
-    if (int(diameter) > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = int(diameter);
-    if (int(diameter) < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = int(diameter);
+    if (diameter > maxdiameter[m_Grains[i]->phase]) maxdiameter[m_Grains[i]->phase] = diameter;
+    if (diameter < mindiameter[m_Grains[i]->phase]) mindiameter[m_Grains[i]->phase] = diameter;
 	totalvol[m_Grains[i]->phase] = totalvol[m_Grains[i]->phase] + m_Grains[i]->volume;
   }
   for(size_t i=1;i<crystruct.size();i++)
@@ -966,7 +966,7 @@ void MicrostructureStatisticsFunc::find_vectors(H5ReconStatsWriter::Pointer h5io
 	  totalaxes[i] = 0.0;
 	  axisodf[i] = new float[36*36*36];
 	  for(int j=0;j<(36*36*36);j++)
-	  {	
+	  {
 		axisodf[i][j] = 0.0;
 	  }
   }
@@ -1470,7 +1470,7 @@ void MicrostructureStatisticsFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5
 	  totalaxes[i] = 0.0;
 	  axisodf[i] = new float[18 * 18 * 18];
 	  for(int j=0;j<(18*18*18);j++)
-	  {	
+	  {
 		axisodf[i][j] = 0.0;
 	  }
   }

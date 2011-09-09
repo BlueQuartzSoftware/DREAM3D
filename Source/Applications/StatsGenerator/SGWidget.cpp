@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -60,7 +60,7 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
-
+#include "DREAM3D/Common/AIMMath.h"
 #include "DREAM3D/HDF5/H5ReconStatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
@@ -479,7 +479,7 @@ void SGWidget::on_m_MinSigmaCutOff_textChanged(const QString &text)
 void SGWidget::on_m_MaxSigmaCutOff_textChanged(const QString &text)
 {
   updateSizeDistributionPlot();
-  m_MinSigmaCutOff->setFocus();
+  m_MaxSigmaCutOff->setFocus();
   calculateNumberOfBins();
 }
 
@@ -538,7 +538,7 @@ int SGWidget::computeBinsAndCutOffs( float mu, float sigma,
                                      QwtArray<float> &y)
 {
   int err = 0;
-  int size = 100;
+  int size = 250;
 
   StatsGen sg;
   err = sg.GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
@@ -793,9 +793,9 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   setWidgetListEnabled(true);
   float mu = 1.0f;
   float sigma = 1.0f;
-  float minCutOff = 1.0f;
-  float maxCutOff = 1.0f;
-  float binStepSize, xMax, yMax;
+  float minCutOff = 5.0f;
+  float maxCutOff = 5.0f;
+  float binStepSize, maxGrainSize, minGrainSize;
   std::vector<float> grainDiamInfo;
   std::vector<float> double_data;
   int err = 0;
@@ -845,6 +845,8 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   m_BinStepSize->blockSignals(true);
   m_BinStepSize->setValue(grainDiamInfo[0]);
   m_BinStepSize->blockSignals(false);
+  maxGrainSize = grainDiamInfo[1];
+  minGrainSize = grainDiamInfo[2];
 
   /* Read the Grain_Size_Distribution Data */
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
@@ -861,48 +863,37 @@ int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
   m_Mu_SizeDistribution->blockSignals(false);
   m_Sigma_SizeDistribution->blockSignals(false);
 
-  int nBins = (int)(bins.size());
-
-  StatsGen sg;
-  int computedNBins = 0;
-  minCutOff = 0.0;
-  while (computedNBins != nBins)
-  {
-    computedNBins = sg.computeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binStepSize, xMax, yMax);
-    //    std::cout << "nBins: " << nBins << std::endl;
-    //    std::cout << "computedNBins: " << computedNBins << std::endl;
-    //    std::cout << "cutoff: " << cutoff << std::endl;
-    minCutOff++;
-  }
+  minCutOff = (mu - log(minGrainSize))/sigma;
+  maxCutOff = (log(maxGrainSize) - mu)/sigma;
 
   m_MinSigmaCutOff->blockSignals(true);
-  m_MinSigmaCutOff->setText(QString::number(minCutOff - 1.0));
+  m_MinSigmaCutOff->setText(QString::number(minCutOff));
   m_MinSigmaCutOff->blockSignals(false);
 
   m_MaxSigmaCutOff->blockSignals(true);
-  m_MaxSigmaCutOff->setText(QString::number(maxCutOff - 1.0));
+  m_MaxSigmaCutOff->setText(QString::number(maxCutOff));
   m_MaxSigmaCutOff->blockSignals(false);
 
   // Update the Size/Weights Plot
   updateSizeDistributionPlot();
-  calculateNumberOfBins();
+  m_NumberBinsGenerated->setText(QString::number(bins.size()));
 
   // Now have each of the plots read it's own data
   QVector<float> qbins = QVector<float>::fromStdVector(bins);
   m_Omega3Plot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
-  m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
+  m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_BOverAPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
-  m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
+  m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_COverAPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
-  m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
+  m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_COverBPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
-  m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
+  m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_NeighborPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
-  m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff - 1.0, maxCutOff -1.0, binStepSize);
+  m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 
   // Read the ODF Data
