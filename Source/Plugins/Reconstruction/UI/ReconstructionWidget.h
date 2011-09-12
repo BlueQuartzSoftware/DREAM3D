@@ -42,6 +42,8 @@
 
 #include "ui_ReconstructionWidget.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QReconstruction.h"
 
@@ -87,6 +89,13 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
 
 
     virtual void checkIOFiles();
+
+    QString getRefFrameOrigin(Ebsd::RefFrameOrigin o);
+
+    QString getRefFrameZDir(Ebsd::RefFrameZDir o);
+
+
+
 
 #if 0
     /**

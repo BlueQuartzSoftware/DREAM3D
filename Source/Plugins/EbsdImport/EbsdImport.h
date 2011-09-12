@@ -49,6 +49,8 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/MXATypes.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
@@ -77,7 +79,8 @@ class EbsdImport : public AbstractPipeline
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(float, ZResolution)
     MXA_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList);
-
+    MXA_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, RefFrameOrigin)
+    MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
     /**
      * @brief Main method to run the operation
