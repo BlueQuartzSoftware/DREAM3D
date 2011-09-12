@@ -47,7 +47,7 @@ set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
 set (CMP_PROJECT_NAME "${PROJECT_NAME}")
 set (CMP_ENABLE_PLUGINS "0")
 set (CMP_LIB_SEARCH_DIRS "")
-set(CMP_GENERATE_VERSION_STRING 1)
+set (CMP_GENERATE_VERSION_STRING 1)
 
 # Extra Variables that need to be set before all the configured files are generated.
 set (EbsdLib_HDF5_SUPPORT 1)
@@ -56,17 +56,6 @@ mark_as_advanced(EbsdLib_ENABLE_HDF5)
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
-# --------------------------------------------------------------------
-# Generate a Header file with Compile Version variables
-# --------------------------------------------------------------------
-#cmpVersionStringsFromGit(GENERATED_FILE_PATH ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DVersion.h 
-#                         NAMESPACE "DREAM3D"
-#                         cmpProjectName "DREAM3D" )
-#
-# Create our header files
-#configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
-#               ${EbsdLib_BINARY_DIR}/EbsdLibVersion.h  )
-#
 configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
                ${EbsdLib_BINARY_DIR}/EbsdLibConfiguration.h)   
 
