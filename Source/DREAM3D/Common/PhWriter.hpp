@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -37,7 +37,6 @@
 #ifndef PHWRITER_HPP_
 #define PHWRITER_HPP_
 
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -56,8 +55,12 @@
 class PhWriter
 {
   public:
-    PhWriter() {}
-    virtual ~PhWriter() {}
+    PhWriter()
+    {
+    }
+    virtual ~PhWriter()
+    {
+    }
 
     template<typename T>
     int writeGrainPhFile(const std::string &filename, T &grain_index, int xpoints, int ypoints, int zpoints)
@@ -66,13 +69,13 @@ class PhWriter
       int totalpoints = xpoints * ypoints * zpoints;
       // Change the name of the input filename for outout
       // std::vector<std::string> tokens;
-     // std::string delimeters = "."; // Only a period
+      // std::string delimeters = "."; // Only a period
       //  std::tokenize(filename, tokens, delimeters);
 
       //OutputName = tokens[0] + ".ph";
       std::ofstream outfile;
       outfile.open(filename.c_str());
-      if (!outfile)
+      if(!outfile)
       {
         std::cout << "Failed to open: " << filename << std::endl;
         return -1;
@@ -89,17 +92,17 @@ class PhWriter
       int grains = 0;
       typedef std::map<int, bool>::iterator iterator;
       for (iterator i = used.begin(); i != used.end(); i++)
-        {
-        if ((*i).second == true)
+      {
+        if((*i).second == true)
         {
           grains++;
-        }}
+        }
+      }
 
       //std::cout<<grains<< " " << used.size() << std::endl;
 
-
-      outfile << "     " << xpoints << "     " << ypoints << "     " << zpoints << std::endl;
-      outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << std::endl;
+      outfile << "     " << xpoints << "     " << ypoints << "     " << zpoints << "\n";
+      outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";
       outfile << " 3.000 0.000 0.000          0        \n"; // << grains << endl;
 
       int count = 0;
@@ -107,24 +110,21 @@ class PhWriter
       {
         outfile << std::setw(6) << grain_index[k];
         count++;
-        if (count == 20)
+        if(count == 20)
         {
-          outfile << std::endl;
+          outfile << "\n";
           count = 0;
         }
         //                    outfile << grid[i][j][k] << endl;
       }
-      outfile << std::endl;
+      outfile << "\n";
       outfile.close();
       return 0;
     }
-
-
 
   private:
     PhWriter(const PhWriter&); // Copy Constructor Not Implemented
     void operator=(const PhWriter&); // Operator '=' Not Implemented
 };
-
 
 #endif /* PHWRITER_HPP_ */
