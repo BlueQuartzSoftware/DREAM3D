@@ -166,10 +166,10 @@ int H5CtfReader::readHeader(hid_t parId)
     READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeDimensions, LatticeDimensions, m_CurrentPhase);
     READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeAngles, LatticeAngles, m_CurrentPhase);
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::PhaseSymmetry, int, Ebsd::Ctf::LaueGroup, Symmetry, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section4, Section4, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section5, Section5, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Section6, Section6, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal1, Internal1, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal2, Internal2, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
 
     // For HKL Imports, the phase index is the HDF5 Group Name for this phase so
