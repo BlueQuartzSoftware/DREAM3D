@@ -73,7 +73,7 @@ int main(int argc, char **argv)
   int err = 0;
   try
   {
-    TCLAP::CmdLine cmd("DREAM.3D Volume Meshing", ' ', DREAM3D::Version::Complete);
+    TCLAP::CmdLine cmd("DREAM.3D Volume Meshing", ' ', DREAM3DLib::Version::Complete);
 
     TCLAP::ValueArg<std::string > nodesfile("", "nodesfile", "Input Nodes File", false, "", "Input Nodes File");
     cmd.add(nodesfile);

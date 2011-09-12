@@ -59,6 +59,7 @@ include_directories(${PROJECT_CODE_DIR}
 
 # --------------------------------------------------------------------
 # Generate the License File Headers
+set(PROJECT_PREFIX "DREAM3D")
 include(${DREAM3D_SOURCE_DIR}/License/License.cmake)
 
 # List the source files here

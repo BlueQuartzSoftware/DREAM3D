@@ -367,7 +367,7 @@ int main(int argc, char **argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("PhToHDF5", ' ', DREAM3D::Version::Complete);
+    TCLAP::CmdLine cmd("PhToHDF5", ' ', DREAM3DLib::Version::Complete);
 
     TCLAP::ValueArg<std::string> phFileArg( "p", "phfile", "Ph Input File", true, "", "Ph Input File");
     cmd.add(phFileArg);
