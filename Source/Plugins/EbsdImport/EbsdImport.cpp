@@ -39,7 +39,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "EbsdLib/EbsdConstants.h"
+
 #include "EbsdLib/EbsdImporter.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
@@ -130,6 +130,13 @@ void EbsdImport::execute()
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z End Index Scalar to the HDF5 File", err)
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Z Resolution Scalar to the HDF5 File", err)
+
+  unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Stacking Order Scalar to the HDF5 File", err)
+  ui = static_cast<unsigned int>(m_RefFrameOrigin);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReferenceOrigin, ui);
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reference Origin Scalar to the HDF5 File", err)
 
   EbsdImporter::Pointer fileImporter;
 

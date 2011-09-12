@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
-    <height>684</height>
+    <width>774</width>
+    <height>685</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -284,8 +284,51 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="m_EbsdManufacturer">
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
           <property name="text">
            <string>XXX</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Reference Frame Origin:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_24">
+          <property name="text">
+           <string>Stacking Order:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="m_ReferenceOrigin">
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string>Unknown Origin</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="m_StackingOrder">
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string>Unknown Stacking Order</string>
           </property>
          </widget>
         </item>
@@ -471,45 +514,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="3">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Reference Frame Origin</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QComboBox" name="m_RefFrameOrigin">
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <item>
-            <property name="text">
-             <string>Upper Right</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Upper Left</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Lower Left</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Lower Right</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>No Transform</string>
-            </property>
-           </item>
-          </widget>
-         </item>
          <item row="0" column="5" rowspan="5">
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -542,27 +546,6 @@
            <property name="text">
             <string>Merge Colonies</string>
            </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLabel" name="label_24">
-           <property name="text">
-            <string>Reference Frame Z Direction</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="4">
-          <widget class="QComboBox" name="m_RefFrameZDir">
-           <item>
-            <property name="text">
-             <string>Into Slice</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Out of Slice</string>
-            </property>
-           </item>
           </widget>
          </item>
         </layout>

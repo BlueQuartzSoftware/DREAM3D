@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -40,8 +40,24 @@
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#define EBSD_VOLREADER_READ_HEADER(fileId, path, var)\
+    err = H5Lite::readScalarDataset(fileId, path, var);\
+    if (err < 0) {\
+      std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
+      err = H5Fclose(fileId);\
+      return err;\
+    }
 
+
+#define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, type, cast)\
+    { cast t;\
+    err = H5Lite::readScalarDataset(fileId, path, t);\
+    if (err < 0) {\
+      std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
+      err = H5Fclose(fileId);\
+      return err;\
+    }\
+    var = static_cast<type>(t); }
 
 // -----------------------------------------------------------------------------
 //
@@ -69,13 +85,6 @@ H5EbsdVolumeInfo::~H5EbsdVolumeInfo()
 
 }
 
-#define EBSD_VOLREADER_READ_HEADER(fileId, path, var)\
-    err = H5Lite::readScalarDataset(fileId, path, var);\
-    if (err < 0) {\
-      std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
-      err = H5Fclose(fileId);\
-      return err;\
-    }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -118,6 +127,10 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::XResolution, m_XRes);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::YResolution, m_YRes);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZResolution, m_ZRes);
+
+  EBSD_VOLREADER_READ_HEADER_CAST(fileId, Ebsd::H5::ReferenceOrigin, m_ReferenceOrigin, Ebsd::RefFrameOrigin, unsigned int);
+  EBSD_VOLREADER_READ_HEADER_CAST(fileId, Ebsd::H5::StackingOrder, m_StackingOrder, Ebsd::RefFrameZDir, unsigned int);
+
 
   m_Manufacturer = "";
   err = H5Lite::readStringDataset(fileId, Ebsd::H5::Manufacturer, m_Manufacturer);
@@ -294,4 +307,32 @@ int H5EbsdVolumeInfo::getNumPhases()
     if (err < 0) { return 0; }
   }
   return m_NumPhases;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::RefFrameOrigin H5EbsdVolumeInfo::getReferenceOrigin()
+{
+  int err = -1;
+  if (m_ValuesAreCached == false)
+  {
+    err = readVolumeInfo();
+    if (err < 0) { return Ebsd::NoOrientation; }
+  }
+  return m_ReferenceOrigin;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::RefFrameZDir H5EbsdVolumeInfo::getStackingOrder()
+{
+  int err = -1;
+  if (m_ValuesAreCached == false)
+  {
+    err = readVolumeInfo();
+    if (err < 0) { return Ebsd::UnknownRefFrameZDirection; }
+  }
+  return m_StackingOrder;
 }
