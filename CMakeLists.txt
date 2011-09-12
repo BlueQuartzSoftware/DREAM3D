@@ -366,6 +366,11 @@ if (DREAM3D_BUILD_QT_APPS)
     add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
    endif()
    
+   if (DREAM3D_BUILD_STATS_GENERATOR OR DREAM3D_BUILD_GUI)
+     install(FILES ${DREAM3D_SOURCE_DIR}/Documentation/DREAM3D_v2_Manual.docx
+             DESTINATION Docs)
+   endif()
+   
 else()
     set (DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
     set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
