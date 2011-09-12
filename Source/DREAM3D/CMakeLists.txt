@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( DREAM3DLib )
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.5)
 
 SET (DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 IF (BUILD_SHARED_LIBS)
@@ -31,11 +31,18 @@ D3DCompileDir(Common)
 D3DCompileDir(HDF5)
 
 
-#--------------------------
-# Add any additional Pipeline Groups here
-
 
 # --------------------------------------------------------------------
+# Generate a Header file with Compile Version variables
+# --------------------------------------------------------------------
+cmpVersionStringsFromGit(GENERATED_FILE_PATH ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DVersion.h 
+                         NAMESPACE "${PROJECT_NAME}"
+                         cmpProjectName "${PROJECT_NAME}" )
+configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
+               ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DConfiguration.h)
+
+
+#--------------------------
 include_directories(${HDF5_INCLUDE_DIR})
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${PROJECT_CODE_DIR}/ANG ) 

@@ -73,9 +73,9 @@ configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpPrimitiveTypes.h.in
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
 if( ${CMP_GENERATE_VERSION_STRING} )
-cmpGenerateVersionString( "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}" 
-                          "${CMP_PROJECT_NAMESPACE}" 
-                          "${CMP_PROJECT_NAME}")
+    cmpVersionStringsFromGit( GENERATED_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}" 
+                          NAMESPACE "${CMP_PROJECT_NAMESPACE}" 
+                          cmpProjectName "${CMP_PROJECT_NAME}")
 endif()
 
 cmp_IDE_GENERATED_PROPERTIES( "Generated" 
