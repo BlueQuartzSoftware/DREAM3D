@@ -87,7 +87,7 @@ class GrainGeneratorFunc;
  * @date May 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VTKStructureReader : public VTKFileReader, public AbstractStructureReader
+class VTKStructureReader : public VTKFileReader, public AbstractStructureReader
 {
   public:
     MXA_SHARED_POINTERS(VTKStructureReader)

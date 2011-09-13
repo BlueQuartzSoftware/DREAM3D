@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -222,7 +222,9 @@ int SMVtkFileIO::primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::st
   {
     m_InputFile.getline(buf, kBufferSize); // Read Line 9
     ::memset(buf, 0, kBufferSize);
-
+    ::memset(text1, 0, kBufferSize);
+    ::memset(text2, 0, kBufferSize);
+    ::memset(text3, 0, kBufferSize);
     readLine(m_InputFile, buf, kBufferSize); // Read Line 10
     int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
     if (n != 4)
@@ -236,9 +238,7 @@ int SMVtkFileIO::primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::st
     {
       return -1;
     }
-    ::memset(text1, 0, kBufferSize);
-    ::memset(text2, 0, kBufferSize);
-    ::memset(text3, 0, kBufferSize);
+
     readLine(m_InputFile, buf, kBufferSize); // Read Line 11
 
     // Check to make sure we are reading the correct set of scalars and if we are
@@ -247,13 +247,14 @@ int SMVtkFileIO::primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::st
     {
       for (int z = 0; z < zpoints - 1; ++z)
       {
-        skipVolume(m_InputFile, m_IntByteSize, xpoints, ypoints, zpoints);
+        ignoreData(m_InputFile, m_IntByteSize, text3, xpoints, ypoints, zpoints);
       }
     }
     else
     {
       keepReading = false;
     }
+
   }
   // We are now queued up to read the data
   m_HeaderComplete = true;

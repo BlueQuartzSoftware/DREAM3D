@@ -49,15 +49,12 @@
 #include "EbsdLib/Utilities/StringUtils.h"
 
 
-//#include "DREAM3D/Common/Constants.h"
-
 #define AIM_STRING std::string
 
 #define CHECK_FOR_CANCELED(AClass)\
     if (m_Cancel == true){\
       break; }
 
-using namespace Ang;
 
 // -----------------------------------------------------------------------------
 //

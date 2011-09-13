@@ -44,16 +44,9 @@ set (HDF5_VTK_BRIDGE "0")
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-set (VERSION_GEN_NAME "MXA")
-set (VERSION_GEN_NAMESPACE "MXA")
-set (PROJECT_PREFIX "MXA")
-set (VERSION_GEN_COMPLETE  "1.0.0")
-set (VERSION_GEN_VER_MAJOR "1")
-set (VERSION_GEN_VER_MINOR "0")
-set (VERSION_GEN_VER_PATCH "0")
-
-configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
-               ${CMP_HEADER_DIR}/MXAVersion.h  )
+cmpVersionStringsFromGit(GENERATED_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.h 
+                         NAMESPACE "MXA"
+                         cmpProjectName "MXA" )
 
 configure_file(${PROJECT_RESOURCES_DIR}/MXACMake/MXAConfiguration.h.in
                ${CMP_HEADER_DIR}/${CMP_EXTRA_CONFIGURATION_FILE})
