@@ -119,7 +119,9 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   {
     instream.getline(buf, kBufferSize); // Read Line 9
     ::memset(buf, 0, kBufferSize);
-
+    ::memset(text1, 0, kBufferSize);
+    ::memset(text2, 0, kBufferSize);
+    ::memset(text3, 0, kBufferSize);
     readLine(instream, buf, kBufferSize); // Read Line 10
     int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
     if (n != 4)
@@ -133,9 +135,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
     {
       return -1;
     }
-    ::memset(text1, 0, kBufferSize);
-    ::memset(text2, 0, kBufferSize);
-    ::memset(text3, 0, kBufferSize);
+
     readLine(instream, buf, kBufferSize); // Read Line 11
 
     // Check to make sure we are reading the correct set of scalars and if we are
@@ -225,10 +225,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
     }
     else
     {
-      for (int z = 0; z < m->zpoints - 1; ++z)
-      {
-        skipVolume(instream, typeByteSize, m->xpoints, m->ypoints, m->zpoints);
-      }
+      err |= ignoreData(instream, typeByteSize, text3,  m->xpoints, m->ypoints, m->zpoints);
     }
 
   }

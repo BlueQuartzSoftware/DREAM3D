@@ -174,34 +174,34 @@ int VTKRectilinearGridFileReader::readFile()
 
   int dim = 0;
   // Now parse the X, coordinates.
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
+ // ::memset(buf, 0, kBufferSize);
+  err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err || dim != dims[0])
   {
     return -1;
   }
-  err = skipVolume(instream, 4, dim, 1, 1);
+  err = skipVolume<float>(instream, 4, dim, 1, 1);
 
   // Now parse the Y coordinates.
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
+ // ::memset(buf, 0, kBufferSize);
+  err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err || dim != dims[0])
   {
     return -1;
   }
-  err = skipVolume(instream, 4, 1, dim, 1);
+  err = skipVolume<float>(instream, 4, 1, dim, 1);
 
   // Now parse the Z coordinates.
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
+//  ::memset(buf, 0, kBufferSize);
+  err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err || dim != dims[0])
   {
     return -1;
   }
-  err = skipVolume(instream, 4, 1, 1, dim);
+  err = skipVolume<float>(instream, 4, 1, 1, dim);
 
 
 
@@ -225,15 +225,15 @@ int VTKRectilinearGridFileReader::readFile()
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   m_GrainIds = AIMArray<int>::CreateArray(totalVoxels);
 
-
+  readLine(instream, buf, kBufferSize);
 
   int i = 0;
   while (needGrainIds == true)
   {
-    instream.getline(buf, kBufferSize);
-    ::memset(buf, 0, kBufferSize);
-
     readLine(instream, buf, kBufferSize);
+    ::memset(text1, 0, kBufferSize);
+    ::memset(text2, 0, kBufferSize);
+    ::memset(text3, 0, kBufferSize);
     int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
     if (n != 4)
     {
@@ -246,9 +246,7 @@ int VTKRectilinearGridFileReader::readFile()
     {
       return -1;
     }
-    ::memset(text1, 0, kBufferSize);
-    ::memset(text2, 0, kBufferSize);
-    ::memset(text3, 0, kBufferSize);
+
     readLine(instream, buf, kBufferSize); // Read Line 11
 
     // Check to make sure we are reading the correct set of scalars and if we are
@@ -275,7 +273,7 @@ int VTKRectilinearGridFileReader::readFile()
     }
     else
     {
-        skipVolume(instream, typeByteSize, dims[0], dims[1], dims[2]);
+        ignoreData(instream, typeByteSize, text3, dims[0], dims[1], dims[2]);
     }
 
   }
