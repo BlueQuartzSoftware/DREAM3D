@@ -254,7 +254,7 @@ int VTKRectilinearGridFileReader::readFile()
 
     if (m_GrainIdScalarName.compare(scalarName) == 0)
     {
-      std::map<int, int> grainIdMap;
+    //  std::map<int, int> grainIdMap;
       if (getFileIsBinary() == true)
       {
         instream.read(reinterpret_cast<char*> (m_GrainIds->GetPointer(0)), totalVoxels);
@@ -266,7 +266,7 @@ int VTKRectilinearGridFileReader::readFile()
         {
           instream >> grain_index;
           m_GrainIds->SetValue(i, grain_index);
-          grainIdMap[grain_index]++;
+       //   grainIdMap[grain_index]++;
         }
       }
       needGrainIds = false;
