@@ -113,13 +113,14 @@ public:
 	double averageselectedrad;
 	int zerocount;
 
+	void loadtwodimxgrains(const std::string & filename);
+	void loadtwodimygrains(const std::string & filename);
+	void loadtwodimzgrains(const std::string & filename);	
 	void find_bincontributions();
 	void find_3Dpoints();
 	void find_adjustment();
 	void find_lognormal();
 	void find_pixels();
-	void generate_3dgrains();
-	void volume_stats();
 
 
 protected:
