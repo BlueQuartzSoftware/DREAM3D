@@ -45,6 +45,7 @@ add_definitions(-DDREAM3D_USE_QT)
                 
 # --------------------------------------------------------------------
 # Generate the License File Headers
+set(PROJECT_PREFIX "StatsGenerator")
 include(${DREAM3D_SOURCE_DIR}/License/License.cmake)
            
 set (StatsGenerator_SRCS 

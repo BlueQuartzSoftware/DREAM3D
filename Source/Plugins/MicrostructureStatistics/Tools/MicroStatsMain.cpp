@@ -113,7 +113,7 @@ int main(int argc, char **argv)
   {
 
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("DREAM.3D Microstructure Statistics", ' ', DREAM3D::Version::Complete);
+    TCLAP::CmdLine cmd("DREAM.3D Microstructure Statistics", ' ', DREAM3DLib::Version::Complete);
 
     TCLAP::ValueArg<std::string>   voxelFile( "i", "input", "HDF5 Voxel File", true, "", "HDF5 Voxel File");
     cmd.add(voxelFile);

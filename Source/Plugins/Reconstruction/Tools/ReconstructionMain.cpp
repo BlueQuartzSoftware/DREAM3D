@@ -81,7 +81,7 @@ int main(int argc, char **argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("DREAM.3D Reconstruction", ' ', DREAM3D::Version::Complete);
+    TCLAP::CmdLine cmd("DREAM.3D Reconstruction", ' ', DREAM3DLib::Version::Complete);
 
     TCLAP::ValueArg<std::string> h5InputFile( "i", "input", "HDF5 Input File", false, "", "HDF5 Input File");
     cmd.add(h5InputFile);

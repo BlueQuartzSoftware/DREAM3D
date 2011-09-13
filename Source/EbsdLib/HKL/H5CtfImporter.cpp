@@ -346,6 +346,7 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
   std::vector<CtfPhase::Pointer> phases = reader.getPhaseVector();
+  Ebsd::Ctf::LaueGroupStrings laueGroupStrings;
   for (std::vector<CtfPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     CtfPhase* p = (*phase).get();
@@ -354,10 +355,22 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
     WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeDimensions, Ebsd::Ctf::LatticeDimensions);
     WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeAngles, Ebsd::Ctf::LatticeAngles);
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Ctf::PhaseName)
-    WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, Ebsd::Ctf::LaueGroup)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Section4, Ebsd::Ctf::Section4)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Section5, Ebsd::Ctf::Section5)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Section6, Ebsd::Ctf::Section6)
+    WRITE_PHASE_HEADER_DATA((*phase), int, LaueGroup, Ebsd::Ctf::LaueGroup)
+
+    err = H5Lite::writeStringAttribute(pid, Ebsd::Ctf::LaueGroup, "Name",
+                                       laueGroupStrings.getString(p->getLaueGroup()));
+    if (err < 0) {
+          std::ostringstream ss;
+          ss << "H5CtfImporter Error: Could not write Ctf Attribute 'Name' to Dataset '" << Ebsd::Ctf::LaueGroup
+          << "'" << std::endl;
+          progressMessage(ss.str(), 100);
+          err = H5Gclose(pid);
+          return -1;
+    }
+
+    WRITE_PHASE_HEADER_DATA((*phase), int, SpaceGroup, Ebsd::Ctf::SpaceGroup)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Internal1, Ebsd::Ctf::Internal1)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Internal2, Ebsd::Ctf::Internal2)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Comment, Ebsd::Ctf::Comment)
     err = H5Gclose(pid);
   }

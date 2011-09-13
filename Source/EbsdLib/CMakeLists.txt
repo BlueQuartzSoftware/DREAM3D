@@ -43,30 +43,18 @@ set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
 set (CMP_TYPES_FILE_NAME "EbsdLibTypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "EbsdLibVersion.h")
 set (CMP_EXTRA_CONFIGURATION_FILE "EbsdLibConfiguration.h")
-set (CMP_PROJECT_NAMESPACE "Ebsd")
-set (CMP_PROJECT_NAME "Ebsd")
+set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
+set (CMP_PROJECT_NAME "${PROJECT_NAME}")
 set (CMP_ENABLE_PLUGINS "0")
 set (CMP_LIB_SEARCH_DIRS "")
-INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+set (CMP_GENERATE_VERSION_STRING 1)
 
+# Extra Variables that need to be set before all the configured files are generated.
 set (EbsdLib_HDF5_SUPPORT 1)
 option(EbsdLib_ENABLE_HDF5 "Enable the use of HDF5 functionality" ON)
 mark_as_advanced(EbsdLib_ENABLE_HDF5)
 
-# --------------------------------------------------------------------
-# Generate a Header file with Compile Version variables
-# --------------------------------------------------------------------
-set (VERSION_GEN_NAME "EbsdLib")
-set (VERSION_GEN_NAMESPACE "EbsdLib")
-set (PROJECT_PREFIX "EbsdLib")
-set (VERSION_GEN_COMPLETE  "1.0.0")
-set (VERSION_GEN_VER_MAJOR "1")
-set (VERSION_GEN_VER_MINOR "0")
-set (VERSION_GEN_VER_PATCH "0")
-
-# Create our header files
-configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
-               ${EbsdLib_BINARY_DIR}/EbsdLibVersion.h  )
+INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
                ${EbsdLib_BINARY_DIR}/EbsdLibConfiguration.h)   

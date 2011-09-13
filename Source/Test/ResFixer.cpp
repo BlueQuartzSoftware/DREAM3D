@@ -222,7 +222,7 @@ int main(int argc, char **argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("ResFixer", ' ', DREAM3D::Version::Complete);
+    TCLAP::CmdLine cmd("ResFixer", ' ', DREAM3DLib::Version::Complete);
 
     TCLAP::ValueArg<float> xres( "x", "xres", "New X Resolution", true, 0.0f, "New X Resolution");
     cmd.add(xres);

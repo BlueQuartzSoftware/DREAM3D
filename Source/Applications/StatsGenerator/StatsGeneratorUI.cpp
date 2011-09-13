@@ -642,10 +642,10 @@ void StatsGeneratorUI::adjustWindowTitle()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
-  ApplicationAboutBoxDialog about(DREAM3D::LicenseList, this);
+  ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3D::Version::PackageComplete.c_str());
+  version.append(DREAM3DLib::Version::PackageComplete.c_str());
   about.setApplicationInfo(an, version);
   about.exec();
 }

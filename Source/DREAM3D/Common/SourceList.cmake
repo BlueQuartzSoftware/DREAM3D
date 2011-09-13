@@ -6,6 +6,7 @@ SET (DREAM3D_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/DLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DxGrainIdWriter.h
@@ -80,9 +81,11 @@ SET (DREAM3DLIB_VTKUtils_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileWriters.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKWriterMacros.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKRectilinearGridFileReader.h
 )
 SET (DREAM3DLIB_VTKUtils_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKFileReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/VTKUtils/VTKRectilinearGridFileReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common/VTKUtils" "${DREAM3DLIB_VTKUtils_HDRS}" "${DREAM3DLIB_VTKUtils_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
