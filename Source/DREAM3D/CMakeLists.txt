@@ -5,12 +5,15 @@
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
-#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
-#--
 #--////////////////////////////////////////////////////////////////////////////
+
+#///////////////////////////////////////////////////////////////////////////////
+#// This code was partly written under US Air Force Contract FA8650-07-D-5800
+#///////////////////////////////////////////////////////////////////////////////
+
 # set project's name
 PROJECT( DREAM3DLib )
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.5)
 
 SET (DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 IF (BUILD_SHARED_LIBS)
@@ -19,6 +22,30 @@ IF (BUILD_SHARED_LIBS)
         ADD_DEFINITIONS("-DDREAM3DLib_BUILT_AS_DYNAMIC_LIB")
     ENDIF (WIN32)
 ENDIF (BUILD_SHARED_LIBS)
+
+SET (PROJECT_PREFIX "DREAM3D" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+set (DREAM3D_INSTALL_FILES 0)
+#-------------------------------------------------------------------------------
+# Include the cmp project to perform all the basic configuration tests for the 
+# project.
+#------------------------------------------------------------------------------- 
+set (CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
+set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+set (CMP_TYPES_FILE_NAME "DREAM3DLibTypes.h")
+set (CMP_VERSION_HEADER_FILE_NAME "DREAM3DVersion.h")
+set (CMP_EXTRA_CONFIGURATION_FILE "DREAM3DConfiguration.h")
+set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
+set (CMP_PROJECT_NAME "${PROJECT_NAME}")
+set (CMP_ENABLE_PLUGINS "0")
+set (CMP_LIB_SEARCH_DIRS "")
+set (CMP_GENERATE_VERSION_STRING 1)
+
+
+INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+
+configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
+               ${DREAM3D_BINARY_DIR}/DREAM3D/${CMP_EXTRA_CONFIGURATION_FILE})
+
 
 set(Project_SRCS "")
 Macro(D3DCompileDir DirName)
@@ -31,11 +58,9 @@ D3DCompileDir(Common)
 D3DCompileDir(HDF5)
 
 
+
+
 #--------------------------
-# Add any additional Pipeline Groups here
-
-
-# --------------------------------------------------------------------
 include_directories(${HDF5_INCLUDE_DIR})
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${PROJECT_CODE_DIR}/ANG ) 

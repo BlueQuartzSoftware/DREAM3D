@@ -34,11 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
-
-#ifndef _EbsdSetGetMacros_h_
-#define _EbsdSetGetMacros_h_
+#ifndef DREAM3DSETGETMACROS_H_
+#define DREAM3DSETGETMACROS_H_
 
 #include <string>
 #include <iostream>
@@ -70,7 +67,7 @@
  * boost::shared_ptr<>
  * @param thisClass The name of the class.
  */
-#define EBSD_NULL_SHARED_POINTER(thisClass)\
+#define DREAM3D_NULL_SHARED_POINTER(thisClass)\
   static Pointer NullPointer(void)\
   { \
     return Pointer(static_cast<thisClass*>(NULL));\
@@ -85,7 +82,7 @@
   typedef thisClass                      Self;\
   typedef QSharedPointer< Self >        Pointer;\
   typedef QSharedPointer<const Self >  ConstPointer;\
-  EBSD_NULL_SHARED_POINTER(thisClass)
+  DREAM3D_NULL_SHARED_POINTER(thisClass)
 
 #endif
 
@@ -93,16 +90,16 @@
  * @brief Creates some basic typedefs that can be used throughout the code to
  * reference the class.
  */
-#define EBSD_SHARED_POINTERS(thisClass)\
+#define DREAM3D_SHARED_POINTERS(thisClass)\
   typedef thisClass                      Self;\
   typedef boost::shared_ptr<Self >        Pointer;\
   typedef boost::shared_ptr<const Self >  ConstPointer;\
   typedef boost::weak_ptr<thisClass > WeakPointer;\
   typedef boost::weak_ptr<thisClass > ConstWeakPointer;\
-  EBSD_NULL_SHARED_POINTER(thisClass)
+  DREAM3D_NULL_SHARED_POINTER(thisClass)
 
 
-#define EBSD_STATIC_NEW_SUPERCLASS(superclass, theclass)\
+#define DREAM3D_STATIC_NEW_SUPERCLASS(superclass, theclass)\
   static superclass::Pointer New()\
   {\
     theclass* ptr = new theclass();\
@@ -114,14 +111,14 @@
 /**
  * @brief Creates a typedef that points to the superclass of this class
  */
-#define EBSD_SUPERCLASS_POINTER(SuperClass)\
+#define DREAM3D_SUPERCLASS_POINTER(SuperClass)\
   typedef SuperClass::Pointer SuperClass;
 
 
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
  */
-#define EBSD_NEW_SUPERCLASS(thisClass, SuperClass)\
+#define DREAM3D_NEW_SUPERCLASS(thisClass, SuperClass)\
   typedef SuperClass::Pointer SuperClass##Type;\
   static SuperClass##Type New##SuperClass(void) \
 { \
@@ -132,14 +129,14 @@
 /**
  * @brief Implements a Static 'New' Method for a class
  */
-#define EBSD_STATIC_NEW_MACRO(thisClass) \
+#define DREAM3D_STATIC_NEW_MACRO(thisClass) \
 static Pointer New(void) \
 { \
   Pointer sharedPtr (new thisClass); \
   return sharedPtr; \
 }
 
-#define EBSD_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args) \
+#define DREAM3D_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args) \
 static Pointer New args \
 { \
   Pointer sharedPtr (new thisClass); \
@@ -148,7 +145,7 @@ static Pointer New args \
 
 /** Macro used to add standard methods to all classes, mainly type
  * information. */
-#define EBSD_TYPE_MACRO(thisClass) \
+#define DREAM3D_TYPE_MACRO(thisClass) \
     virtual const char* getNameOfClass() const \
         {return #thisClass;}
 
@@ -158,89 +155,117 @@ static Pointer New args \
 * @brief Creates a std::string constant for the Property so that the property
 * can be retrieved by name.
 */
-#define EBSD_PROPERTY_CONSTANT(prpty) \
+#define DREAM3D_PROPERTY_CONSTANT(prpty) \
   const std::string prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define EBSD_SET_PROPERTY(type, prpty) \
+#define DREAM3D_SET_PROPERTY(type, prpty) \
   void set##prpty(type value) { this->m_##prpty = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define EBSD_GET_PROPERTY(type, prpty) \
+#define DREAM3D_GET_PROPERTY(type, prpty) \
   type get##prpty() { return m_##prpty; }
 
 
 
-#define EBSD_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
+#define DREAM3D_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
   private:\
       type   m_##prpty;\
   public:\
-    virtual EBSD_SET_PROPERTY(type, prpty)\
-    virtual EBSD_GET_PROPERTY(type, prpty)
+    virtual DREAM3D_SET_PROPERTY(type, prpty)\
+    virtual DREAM3D_GET_PROPERTY(type, prpty)
 
 
-#define EBSD_INSTANCE_PROPERTY(type, prpty)\
+#define DREAM3D_INSTANCE_PROPERTY(type, prpty)\
   private:\
       type   m_##prpty;\
   public:\
-    EBSD_SET_PROPERTY(type, prpty)\
-    EBSD_GET_PROPERTY(type, prpty)
+    DREAM3D_SET_PROPERTY(type, prpty)\
+    DREAM3D_GET_PROPERTY(type, prpty)
 
 
 
-#define EBSD_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
+#define DREAM3D_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
   void set##prpty(type value[2]) {\
       varname[0] = value[0]; varname[1] = value[1]; }\
   void set##prpty(type value_0, type value_1) {\
       varname[0] = value_0; varname[1] = value_1; }
 
-#define EBSD_GET_2DVECTOR_PROPERTY(type, prpty, varname)\
+#define DREAM3D_GET_2DVECTOR_PROPERTY(type, prpty, varname)\
   void get##prpty(type value[2]) {\
       value[0] = varname[0]; value[1] = varname[1]; }\
   void get##prpty(type &value_0, type &value_1) {\
       value_0 = varname[0]; value_1 = varname[1]; }
 
 
-#define EBSD_INSTANCE_2DVECTOR_PROPERTY(type, prpty)\
+#define DREAM3D_INSTANCE_2DVECTOR_PROPERTY(type, prpty)\
   private:\
     type   m_##prpty[2];\
   public:\
-    EBSD_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
-    EBSD_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
+    DREAM3D_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
+    DREAM3D_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
+
+
+#define DREAM3D_SET_VEC3_PROPERTY(type, prpty, varname)\
+  void set##prpty(type value[3]) {\
+      varname[0] = value[0]; varname[1] = value[1]; varname[2] = value[2]; }\
+  void set##prpty(type value_0, type value_1, type value_2) {\
+      varname[0] = value_0; varname[1] = value_1; varname[2] = value_2; }
+
+#define DREAM3D_GET_VEC3_PROPERTY(type, prpty, varname)\
+  void get##prpty(type value[3]) {\
+      value[0] = varname[0]; value[1] = varname[1]; value[2] = varname[2]; }\
+  void get##prpty(type &value_0, type &value_1, type &value_2) {\
+      value_0 = varname[0]; value_1 = varname[1]; value_2 = varname[2]; }
+
+
+#define DREAM3D_INSTANCE_VEC3_PROPERTY(type, prpty)\
+  private:\
+    type   m_##prpty[3];\
+  public:\
+    DREAM3D_SET_VEC3_PROPERTY(type, prpty, m_##prpty)\
+    DREAM3D_GET_VEC3_PROPERTY(type, prpty, m_##prpty)
+
+
+
+#define DREAM3D_CONTAINER_TYPE(thisClass, container) \
+    typedef container<thisClass >     ContainerT; \
+    typedef boost::shared_ptr< container<thisClass > > ContainerPType;
+
 
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define EBSD_SET_STRING_PROPERTY( prpty, varname) \
+#define DREAM3D_SET_STRING_PROPERTY( prpty, varname) \
   void set##prpty(const std::string &value) { this->varname = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define EBSD_GET_STRING_PROPERTY( prpty, varname) \
+#define DREAM3D_GET_STRING_PROPERTY( prpty, varname) \
   std::string get##prpty() { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
  */
-#define EBSD_INSTANCE_STRING_PROPERTY(prpty)\
+#define DREAM3D_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
   std::string      m_##prpty;\
   public:\
-  EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
-  EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
+  DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
+  DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
 
-#define EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(prpty)\
+#define DREAM3D_VIRTUAL_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
   std::string      m_##prpty;\
   public:\
-    virtual EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
-    virtual EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
+    virtual DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
+    virtual DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
 // -----------------------------------------------------------------------------
 //
@@ -248,7 +273,7 @@ static Pointer New args \
 /**
  * @brief Creates a "setter" method to set the property.
  */
-#define EbsdHeader_SET_PROPERTY( HeaderType, type, prpty, key) \
+#define DREAM3DHeader_SET_PROPERTY( HeaderType, type, prpty, key) \
   void set##prpty(type value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
@@ -257,20 +282,20 @@ static Pointer New args \
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
  */
-#define EbsdHeader_GET_PROPERTY(HeaderType, type, prpty, key) \
+#define DREAM3DHeader_GET_PROPERTY(HeaderType, type, prpty, key) \
   type get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
       std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
 
 
-#define EbsdHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)\
+#define DREAM3DHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)\
   public:\
-    EbsdHeader_SET_PROPERTY(HeaderType, type, prpty, key)\
-    EbsdHeader_GET_PROPERTY(HeaderType, type, prpty, key)
+    DREAM3DHeader_SET_PROPERTY(HeaderType, type, prpty, key)\
+    DREAM3DHeader_GET_PROPERTY(HeaderType, type, prpty, key)
 
 
-#define EBSD_POINTER_PROPERTY(name, var, type)\
+#define DREAM3D_POINTER_PROPERTY(name, var, type)\
 private:\
   type* m_##var;\
 public:\
@@ -292,7 +317,7 @@ void set##name##Pointer(type* f)\
 
 // These are simple over-rides from the boost distribution because we don't want the entire boost distribution just
 // for a few boost headers
-namespace Ebsd
+namespace DREAM3D
 {
   class bad_lexical_cast : public std::runtime_error {
   public:
@@ -320,4 +345,7 @@ namespace Ebsd
   }
 }
 
-#endif /* _EbsdSetGetMacros_h_  */
+
+
+
+#endif /* DREAM3DSETGETMACROS_H_ */

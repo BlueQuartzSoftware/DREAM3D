@@ -51,7 +51,7 @@ class GrainGeneratorFunc;
  * @date May 23, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DXStructureReader : public AbstractStructureReader
+class DXStructureReader : public AbstractStructureReader
 {
   public:
     MXA_SHARED_POINTERS(DXStructureReader)

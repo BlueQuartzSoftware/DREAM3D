@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -140,7 +140,53 @@ class DREAM3DLib_EXPORT VTKFileReader
      */
     size_t parseByteSize(char text[256]);
 
-    int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim);
+    int ignoreData(std::ifstream &in, int byteSize, char* type, int xDim, int yDim, int zDim);
+
+    int nonPrintables(char* buf, size_t bufSize);
+
+
+    template<typename T>
+    int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim)
+    {
+      int err = 0;
+      if (getFileIsBinary() == true)
+      {
+        int* buffer = new int[xDim];
+        for (int z = 0; z < zDim; ++z)
+        {
+          for (int y = 0; y < yDim; ++y)
+          {
+            // Read all the xpoints in one shot into a buffer
+            inStream.read(reinterpret_cast<char* > (buffer), (xDim * byteSize));
+            if (inStream.gcount() != (xDim * byteSize))
+            {
+              std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
+                  << " vs " << (xDim * byteSize) << std::endl;
+              return -1;
+            }
+          }
+        }
+        delete buffer;
+      }
+      else
+      {
+        T tmp;
+        for (int z = 0; z < zDim; ++z)
+        {
+          for (int y = 0; y < yDim; ++y)
+          {
+            for (int x = 0; x < xDim; ++x)
+            {
+              inStream >> tmp;
+            //  std::cout << inStream.tellg() << " ";
+            }
+           // std::cout << "" << std::endl;
+          }
+        }
+      }
+      return err;
+    }
+
 
   protected:
     VTKFileReader();

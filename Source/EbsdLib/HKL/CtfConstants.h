@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,6 +41,7 @@
 #define _HKLConstants_h_
 
 #include <string>
+#include <vector>
 
 #define DECLARE_STRING_CONST(var)\
   const std::string var(#var);
@@ -51,11 +52,50 @@ namespace Ebsd {
 namespace Ctf
 {
 
-  enum PhaseSymmetry {
-    CubicSymmetry = 11,
-    HexagonalSymmetry = 9,
-    UnknownSymmetry = 999,
+  enum LaueGroupTable {
+    LG_Triclinic = 1,
+    LG_Monoclinic = 2,
+    LG_Orthorhombic = 3,
+    LG_Tetragonal_Low = 4,
+    LG_Tetragonal_High = 5,
+    LG_Trigonal_Low = 6,
+    LG_Trigonal_High = 7,
+    LG_Hexagonal_Low = 8,
+    LG_Hexagonal_High = 9,
+    LG_Cubic_Low = 10,
+    LG_Cubic_High = 11,
+    UnknownSymmetry = 12,
   };
+
+  class LaueGroupStrings
+   {
+     public:
+       LaueGroupStrings() {
+         m_Values.push_back("Unknown(0)");
+         m_Values.push_back("Triclinic -1");
+         m_Values.push_back("Monoclinic 2/m");
+         m_Values.push_back("Orthorhombic mmm");
+         m_Values.push_back("Tetragonal-Low 4/m");
+         m_Values.push_back("Tetragonal-High 4/mmm");
+         m_Values.push_back("Trigonal-Low -3");
+         m_Values.push_back("Trigonal-High -3m");
+         m_Values.push_back("Hexagonal-Low 6/m");
+         m_Values.push_back("Hexagonal-High 6/mmm");
+         m_Values.push_back("Cubic-Low m3");
+         m_Values.push_back("Cubic-High m3m");
+         m_Values.push_back("Unknown(12)");
+       }
+       virtual ~LaueGroupStrings() {};
+
+       std::string getString(LaueGroupTable i)
+       {
+         return m_Values[static_cast<size_t>(i)];
+       }
+     private:
+
+       std::vector<std::string> m_Values;
+
+   };
 
   const std::string FileExt("ctf");
 
@@ -87,9 +127,9 @@ namespace Ctf
   DECLARE_STRING_CONST(LatticeAngles);
   DECLARE_STRING_CONST(PhaseName);
   DECLARE_STRING_CONST(LaueGroup);
-  DECLARE_STRING_CONST(Section4);
-  DECLARE_STRING_CONST(Section5);
-  DECLARE_STRING_CONST(Section6);
+  DECLARE_STRING_CONST(SpaceGroup);
+  DECLARE_STRING_CONST(Internal1);
+  DECLARE_STRING_CONST(Internal2);
   DECLARE_STRING_CONST(Comment);
 
   // These are the names of the Data Columns

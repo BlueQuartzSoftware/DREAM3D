@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -70,11 +70,11 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeDimensions); // 1x3 array
     EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeAngles); // 1x3 array
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName);
-    EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::PhaseSymmetry, Symmetry); // <== Laue Group
+    EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::LaueGroupTable, LaueGroup); // <== Laue Group
 
-    EBSD_INSTANCE_STRING_PROPERTY(Section4);
-    EBSD_INSTANCE_STRING_PROPERTY(Section5);
-    EBSD_INSTANCE_STRING_PROPERTY(Section6);
+    EBSD_INSTANCE_PROPERTY(int, SpaceGroup);
+    EBSD_INSTANCE_STRING_PROPERTY(Internal1);
+    EBSD_INSTANCE_STRING_PROPERTY(Internal2);
     EBSD_INSTANCE_STRING_PROPERTY(Comment);
 
 

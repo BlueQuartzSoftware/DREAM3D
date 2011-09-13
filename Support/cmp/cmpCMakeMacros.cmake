@@ -790,6 +790,60 @@ macro(cmpGenerateVersionString GENERATED_FILE_PATH NAMESPACE cmpProjectName)
 endmacro()
 
 #-------------------------------------------------------------------------------
+# We are going to use Git functionality to create a version number for our package
+# The specific functionality we are going to use is the 'git describe' function
+# which should return the latest tag, the number commits since that tag and the
+# SHA1 of that commit. If we fail to find git then we fall back to a manually
+# entered version number.
+#
+function(cmpVersionStringsFromGit)
+    set(options)
+    set(oneValueArgs GENERATED_FILE_PATH NAMESPACE cmpProjectName)
+    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    
+    
+#    message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
+#    message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
+#    message(STATUS "GVS_GENERATED_FILE_PATH: ${GVS_GENERATED_FILE_PATH}")
+    
+    Find_package(Git)
+
+    if (GIT_FOUND)
+        execute_process(COMMAND ${GIT_EXECUTABLE} describe
+            OUTPUT_VARIABLE DVERS
+            RESULT_VARIABLE did_run
+         )
+        string(STRIP ${DVERS} DVERS)
+      #  message(STATUS "DVERS: ${DVERS}")
+        string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
+      #  message(STATUS "VERSION_LIST: ${VERSION_LIST}")
+        list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
+        list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
+        list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
+    
+        set (VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
+        set (VERSION_GEN_NAME "${GVS_cmpProjectName}")
+
+        set (${GVS_cmpProjectName}_VER_MAJOR ${VERSION_GEN_VER_MAJOR} CACHE STRING "Major Version String")
+        set (${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "Minor Version String")
+        set (${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "Patch Version String")
+        set(VERSION_GEN_COMPLETE "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" )
+        set(${GVS_cmpProjectName}_VERSION "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" CACHE STRING "Full Version Number")
+         
+        mark_as_advanced(${GVS_cmpProjectName}_VERSION ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
+        set (PROJECT_PREFIX "${GVS_cmpProjectName}")
+        configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_FILE_PATH}  )
+    #    MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
+        
+        
+    else()
+       cmpGenerateVersionString( ${GVS_GENERATED_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
+    
+    endif()
+
+endfunction()
+
+#-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files
 #
