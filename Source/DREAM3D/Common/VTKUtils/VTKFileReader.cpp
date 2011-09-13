@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -94,6 +94,21 @@ int VTKFileReader::parseInt3V(const char* input, int* output, int defaultValue)
   return 0;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VTKFileReader::nonPrintables(char* buf, size_t bufSize)
+{
+  int n = 0;
+  for (size_t i = 0; i < bufSize; ++i)
+  {
+    if (buf[i] < 33 && buf[i] > 0) { n++; }
+  }
+  return n;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -101,20 +116,25 @@ int VTKFileReader::readLine(std::istream &in, char* buf, int bufSize)
 {
 
   bool readAnotherLine = true;
+  size_t gcount = in.gcount();
   while ( readAnotherLine == true && in.gcount() != 0) {
     // Zero out the buffer
     ::memset(buf, 0, bufSize);
     // Read a line up to a '\n' which will catch windows and unix line endings but
     // will leave a trailing '\r' at the end of the string
     in.getline(buf, bufSize, '\n');
-    if (buf[in.gcount()-2] == '\r')
+    gcount = in.gcount();
+    if (gcount > 1 && buf[in.gcount()-2] == '\r')
     {
       buf[in.gcount()-2] = 0;
     }
-    if (strlen(buf) != 0)
+    int len = strlen(buf);
+    int np = nonPrintables(buf, bufSize);
+    if (len != np)
     {
       readAnotherLine = false;
     }
+
   }
   return static_cast<int>(in.gcount());
 }
@@ -148,6 +168,38 @@ size_t VTKFileReader::parseByteSize(char text[256])
   if (strcmp(text, cdouble) == 0 ) { return  8;}
   return 0;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VTKFileReader::ignoreData(std::ifstream &in, int byteSize, char* text, int xDim, int yDim, int zDim)
+{
+  char cunsigned_char [64] = "unsigned_char";
+  char cchar [64] = "char";
+  char cunsigned_short [64] = "unsigned_short";
+  char cshort [64] = "short";
+  char cunsigned_int [64] = "unsigned_int";
+  char cint [64] = "int";
+  char cunsigned_long [64] = " unsigned_long";
+  char clong [64] = "long";
+  char cfloat [64] = "float";
+  char cdouble [64] = " double";
+  int err = 0;
+  if (strcmp(text, cunsigned_char) == 0 ) {
+    err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cunsigned_short) == 0 ) { err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cshort) == 0 ) {err |= skipVolume<short>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cunsigned_int) == 0 ) { err |= skipVolume<unsigned int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cint) == 0 ) { err |= skipVolume<int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cunsigned_long) == 0 ) { err |= skipVolume<unsigned long long int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, clong) == 0 ) { err |= skipVolume<long long int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cfloat) == 0 ) { err |= skipVolume<float>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cdouble) == 0 ) { err |= skipVolume<double>(in, byteSize, xDim, yDim, zDim);}
+  return err;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -226,44 +278,3 @@ int VTKFileReader::readHeader()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VTKFileReader::skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim)
-{
-  int err = 0;
-  if (getFileIsBinary() == true)
-  {
-    int* buffer = new int[xDim];
-    for (int z = 0; z < zDim; ++z)
-    {
-      for (int y = 0; y < yDim; ++y)
-      {
-        // Read all the xpoints in one shot into a buffer
-        inStream.read(reinterpret_cast<char* > (buffer), (xDim * byteSize));
-        if (inStream.gcount() != (xDim * byteSize))
-        {
-          std::cout << logTime() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
-              << " vs " << (xDim * byteSize) << std::endl;
-          return -1;
-        }
-      }
-    }
-    delete buffer;
-  }
-  else
-  {
-    int tmp;
-    for (int z = 0; z < zDim; ++z)
-    {
-      for (int y = 0; y < yDim; ++y)
-      {
-        for (int x = 0; x < xDim; ++x)
-        {
-          inStream >> tmp;
-        }
-      }
-    }
-  }
-  return err;
-}

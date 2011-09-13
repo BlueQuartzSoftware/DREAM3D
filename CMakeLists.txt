@@ -34,6 +34,8 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
+
+if (0)
 # We are going to use Git functionality to create a version number for our package
 # The specific functionality we are going to use is the 'git describe' function
 # which should return the latest tag, the number commits since that tag and the
@@ -67,6 +69,9 @@ endif()
 
 set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
 
+endif()
+
+
 set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
 
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
@@ -90,27 +95,14 @@ set (CMP_PROJECT_NAME "MXA")
 set (CMP_ENABLE_PLUGINS "1")
 set (CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/DREAM3D_PluginList.txt)
 set (CMP_LIB_SEARCH_DIRS "")
-set(CMP_GENERATE_VERSION_STRING 0)
+set(CMP_GENERATE_VERSION_STRING 1)
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 # We do NOT want to install any of the headers
 SET (DREAM3D_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 
-# --------------------------------------------------------------------
-# Generate a Header file with Compile Version variables
-# --------------------------------------------------------------------
-set (VERSION_GEN_NAME "DREAM3D")
-set (VERSION_GEN_NAMESPACE "DREAM3D")
-set (PROJECT_PREFIX "DREAM3D")
-set (VERSION_GEN_COMPLETE  ${DREAM3D_VERSION})
-set (VERSION_GEN_VER_MAJOR ${DREAM3D_VER_MAJOR})
-set (VERSION_GEN_VER_MINOR ${DREAM3D_VER_MINOR})
-set (VERSION_GEN_VER_PATCH ${DREAM3D_VER_PATCH})
-configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
-               ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DVersion.h  )
 
-configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
-               ${DREAM3D_BINARY_DIR}/DREAM3D/DREAM3DConfiguration.h)
+               
 #-- Create a JavaScript file that can be uploaded to the web server that will automatically
 # update the download links to the latest version
 configure_file(${PROJECT_RESOURCES_DIR}/downloadcreator.js.in 
