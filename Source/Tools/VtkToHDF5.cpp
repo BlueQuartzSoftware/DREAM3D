@@ -239,7 +239,7 @@ int main(int argc, char **argv)
 
   try
   {
-#if _WIN32
+#if 0
     std::string vFile = "C:\\Data\\Test.vtk";
     std::string h5File = "C:\\Data\\Test.h5voxel";
     std::string eulerFile = "C:\\Data\\Test.euler";
