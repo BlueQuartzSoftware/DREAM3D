@@ -1423,7 +1423,7 @@ void  GrainGeneratorFunc::pack_grains()
   outFile.open(filename.c_str());
 #endif
   // begin swaping/moving/adding/removing grains to try to improve packing
-  for (int iteration = 0; iteration < (500000); iteration++)
+  for (int iteration = 0; iteration < (25000); iteration++)
   {
 	change1 = 0;
     change2 = 0;
@@ -1984,13 +1984,14 @@ void  GrainGeneratorFunc::fill_gaps()
   int good = 1;
   int inside = 0;
   int timestep = 100;
+  int col, row, plane;
   float x, y, z;
   float xc, yc, zc;
   float xp, yp, zp;
   float ga[3][3];
   size_t numGrains = m_Grains.size();
   gsizes.resize(numGrains, 0);
-  ellipfuncs.resize(totalpoints,1000.0);
+  ellipfuncs.resize(totalpoints,-1000.0);
   int neighpoint;
   int neighpoints[6];
 
@@ -2014,19 +2015,19 @@ void  GrainGeneratorFunc::fill_gaps()
         count++;
         // Reset all values of 'n' to zero. Use memset for this as it is much faster
         ::memset( &(n[1]), 0, sizeof(int) * (numGrains-1) );
-        x = i % xpoints;
-        y = (i / xpoints) % ypoints;
-        z = i / (xpoints * ypoints);
+        col = i % xpoints;
+        row = (i / xpoints) % ypoints;
+        plane = i / (xpoints * ypoints);
         for (int j = 0; j < 6; j++)
         {
           good = 1;
           neighpoint = i + neighpoints[j];
-          if (j == 0 && z == 0) good = 0;
-          if (j == 5 && z == (zpoints - 1)) good = 0;
-          if (j == 1 && y == 0) good = 0;
-          if (j == 4 && y == (ypoints - 1)) good = 0;
-          if (j == 2 && x == 0) good = 0;
-          if (j == 3 && x == (xpoints - 1)) good = 0;
+          if (j == 0 && plane == 0) good = 0;
+          if (j == 5 && plane == (zpoints - 1)) good = 0;
+          if (j == 1 && row == 0) good = 0;
+          if (j == 4 && row == (ypoints - 1)) good = 0;
+          if (j == 2 && col == 0) good = 0;
+          if (j == 3 && col == (xpoints - 1)) good = 0;
           if (good == 1)
           {
             if (grain_indicies[neighpoint] > 0)
@@ -2043,7 +2044,7 @@ void  GrainGeneratorFunc::fill_gaps()
 				zc = m_Grains[grain_indicies[neighpoint]]->centroidz;
 				float radcur1 = 0.0f;
 				//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-				DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
+				DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[grain_indicies[neighpoint]]->phase];
 
 				// init any values for each of the Shape Ops
 				for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -2075,9 +2076,9 @@ void  GrainGeneratorFunc::fill_gaps()
 				ga[2][1] = -cosf(phi1) * sinf(PHI);
 				ga[2][2] = cosf(PHI);
 
-				x = x - xc;
-	            y = y - yc;
-	            z = z - zc;
+				x = (col*resx) - xc;
+	            y = (row*resy) - yc;
+	            z = (plane*resz) - zc;
 	            xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
 	            yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
 	            zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
