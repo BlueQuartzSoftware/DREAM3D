@@ -43,6 +43,20 @@ void Extrapolation2Dto3D::execute()
 
   updateProgressAndMessage(("Cleaning Data"), 16);
   m->find_pixels();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   CHECK_FOR_CANCELED(Extrapolation2Dto3DFunc, "2D to 3D Extrapolation was canceled", loadtwodimygrains)
 
   updateProgressAndMessage(("Generation Completed"), 100);

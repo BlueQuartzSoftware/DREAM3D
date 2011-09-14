@@ -3092,14 +3092,14 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
   outFile.open(filename.c_str());
   char space = DREAM3D::GrainData::Delimiter;
   outFile << m_Grains.size() << std::endl;
-  outFile << DREAM3D::GrainData::GrainID  << space
+  outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
       << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
       << DREAM3D::GrainData::EquivDiam << space
       << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3 << std::endl;
 
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
-    outFile << i << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 <<
+	  outFile << i << space << m_Grains[i]->phase << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 <<
 		space << m_Grains[i]->equivdiameter << space << m_Grains[i]->radius2 << space << m_Grains[i]->radius3 <<
 		space << m_Grains[i]->omega3 << endl;
   }
