@@ -1323,7 +1323,7 @@ void  GrainGeneratorFunc::pack_grains()
   m_Grains.resize(2);
   m_Grains[1] = Grain::New();
   float factor = 1.0;
-  if(periodic_boundaries == false) factor = 1.2;
+  if(periodic_boundaries == false) factor = 1.1;
   while (currentvol < (factor*totalvol))
   {
     GGseed++;
@@ -1657,20 +1657,12 @@ void GrainGeneratorFunc::assign_voxels()
   neighpoints[4] = xpoints;
   neighpoints[5] = (xpoints * ypoints);
   int oldname;
-  // int size;
   int column, row, plane;
   float inside;
-//  float Nvalue = 0;
-//  float Nvaluedist = 0;
-//  float bestNvaluedist = 1000000;
-//  float Gvalue = 0;
-//  float Gvaluedist = 0;
-//  float bestGvaluedist = 1000000;
   float xc, yc, zc;
   float xp, yp, zp;
   float dist;
   float x, y, z;
-//  int phase;
   int xmin, xmax, ymin, ymax, zmin, zmax;
 
   initializeAttributes();
@@ -1794,8 +1786,6 @@ void GrainGeneratorFunc::assign_voxels()
             float axis2comp = yp / radcur2;
             float axis3comp = zp / radcur3;
             inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-
-
             if (inside >= 0)
             {
               int currentpoint = index;
@@ -1988,22 +1978,24 @@ void  GrainGeneratorFunc::assign_eulers()
 
 void  GrainGeneratorFunc::fill_gaps()
 {
-  std::vector<int> neighs;
-  std::vector<int> remove;
   std::vector<int> gsizes;
+  std::vector<float> ellipfuncs;
   int count = 1;
   int good = 1;
+  int inside = 0;
+  int timestep = 100;
   float x, y, z;
+  float xc, yc, zc;
+  float xp, yp, zp;
+  float ga[3][3];
   size_t numGrains = m_Grains.size();
   gsizes.resize(numGrains, 0);
+  ellipfuncs.resize(totalpoints,1000.0);
   int neighpoint;
   int neighpoints[6];
 
   // Create a self cleaning array of integers.
   NEW_SHARED_ARRAY(n, int, numGrains)
-
-  int grainname = 0;
-  int grain = 0;
 
   neighpoints[0] = -xpoints * ypoints;
   neighpoints[1] = -xpoints;
@@ -2014,10 +2006,10 @@ void  GrainGeneratorFunc::fill_gaps()
   while (count != 0)
   {
     count = 0;
+	timestep = timestep - 1;
     for (int i = 0; i < totalpoints; i++)
     {
-      grainname = grain_indicies[i]; //FIXME: Hot Spot - 8.6 seconds on a 30 second profile
-      if (grainname <= 0)
+      if (grain_indicies[i] <= 0)
       {
         count++;
         // Reset all values of 'n' to zero. Use memset for this as it is much faster
@@ -2037,44 +2029,79 @@ void  GrainGeneratorFunc::fill_gaps()
           if (j == 3 && x == (xpoints - 1)) good = 0;
           if (good == 1)
           {
-            grain = grain_indicies[neighpoint];
-            if (grain > 0)
+            if (grain_indicies[neighpoint] > 0)
             {
-              neighs.push_back(grain);
-            }
+			  n[grain_indicies[neighpoint]]++;
+			  if (n[grain_indicies[neighpoint]] == 1 && grain_indicies[neighpoint] != neighbors[i])
+			  {
+				float volcur = m_Grains[grain_indicies[neighpoint]]->volume;
+				float bovera = m_Grains[grain_indicies[neighpoint]]->radius2;
+				float covera = m_Grains[grain_indicies[neighpoint]]->radius3;
+				float omega3 = m_Grains[grain_indicies[neighpoint]]->omega3;
+				xc = m_Grains[grain_indicies[neighpoint]]->centroidx;
+				yc = m_Grains[grain_indicies[neighpoint]]->centroidy;
+				zc = m_Grains[grain_indicies[neighpoint]]->centroidz;
+				float radcur1 = 0.0f;
+				//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
+				DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
+
+				// init any values for each of the Shape Ops
+				for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+				{
+				  (*ops).second->init();
+				}
+				// Create our Argument Map
+				std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
+				shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
+				shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
+				shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
+				shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+
+				radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+
+				float radcur2 = (radcur1 * bovera);
+				float radcur3 = (radcur1 * covera);
+				float phi1 = m_Grains[grain_indicies[neighpoint]]->axiseuler1;
+				float PHI = m_Grains[grain_indicies[neighpoint]]->axiseuler2;
+				float phi2 = m_Grains[grain_indicies[neighpoint]]->axiseuler3;
+				float ga[3][3];
+				ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
+				ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
+				ga[0][2] = sinf(phi2) * sinf(PHI);
+				ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
+				ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
+				ga[1][2] = cosf(phi2) * sinf(PHI);
+				ga[2][0] = sinf(phi1) * sinf(PHI);
+				ga[2][1] = -cosf(phi1) * sinf(PHI);
+				ga[2][2] = cosf(PHI);
+
+				x = x - xc;
+	            y = y - yc;
+	            z = z - zc;
+	            xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
+	            yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
+	            zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+	            float axis1comp = xp / radcur1;
+	            float axis2comp = yp / radcur2;
+	            float axis3comp = zp / radcur3;
+	            inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+				if(inside > ellipfuncs[i])
+				{
+					ellipfuncs[i] = inside;
+					neighbors[i] = grain_indicies[neighpoint];
+				}
+			  }
+			}
           }
-        }
-        int current = 0;
-        int most = 0;
-        int curgrain = 0;
-        int size = int(neighs.size());
-        for (int k = 0; k < size; k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-          if (current > most)
-          {
-            most = current;
-            curgrain = neighbor;
-          }
-        }
-        if (size > 0)
-        {
-          neighbors[i] = curgrain;
-          neighs.clear();
         }
       }
     }
-    int neighbor = 0;
     for (int j = 0; j < totalpoints; j++)
     {
-      grainname = grain_indicies[j]; //FIXME: Hot Spot - 6.3 seconds on 30 sec profile
-      neighbor = neighbors[j]; //FIXME: Hot Spot - 3.4 seconds on a 30 Sec Profile
-      if (grainname <= 0 && neighbor > 0)
+      if (grain_indicies[j] <= 0 && neighbors[j] > 0 && ellipfuncs[j] > (timestep*0.01))
       {
-        grain_indicies[j] = neighbor;
-        phases[j] = m_Grains[neighbor]->phase;
+        grain_indicies[j] = neighbors[j];
+        phases[j] = m_Grains[neighbors[j]]->phase;
       }
     }
   }
@@ -2087,7 +2114,6 @@ void  GrainGeneratorFunc::fill_gaps()
   }
 
   // Copy all the data back from the temp array
-//  float aConstantValue = resx * resy * resz * 0.75f * m_one_over_pi;
   for (size_t i = 1; i < numGrains; i++)
   {
     m_Grains[i]->numvoxels = gsizes[i];
@@ -2666,6 +2692,7 @@ void GrainGeneratorFunc::MC_LoopBody2(int phase, size_t neighbor, int j,std::vec
   simmdf[phase][curmisobin] = simmdf[phase][curmisobin] - (neighsurfarea / totalsurfacearea[phase]);
   simmdf[phase][newmisobin] = simmdf[phase][newmisobin] + (neighsurfarea / totalsurfacearea[phase]);
 }
+
 
 void GrainGeneratorFunc::swapOutOrientation( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
