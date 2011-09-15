@@ -48,6 +48,7 @@
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
+#include <QtGui/QButtonGroup>
 
 #include "DREAM3D/Common/Constants.h"
 #include "EbsdImportPlugin.h"
@@ -110,6 +111,21 @@ void EbsdImportWidget::setupGui()
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex << m_zSpacing;
   m_ErrorMessage->setVisible(false);
+
+  m_StackingGroup = new QButtonGroup;
+  m_StackingGroup->addButton(m_StackLowToHigh);
+  m_StackingGroup->addButton(m_StackHighToLow);
+
+  m_OriginGroup = new QButtonGroup;
+  m_OriginGroup->addButton(m_OriginUpperLeft);
+  m_OriginGroup->addButton(m_OriginLowerLeft);
+  m_OriginGroup->addButton(m_OriginUpperRight);
+  m_OriginGroup->addButton(m_OriginLowerRight);
+
+
+  connect(m_StackLowToHigh, SIGNAL(toggled(bool)),
+          this, SLOT(stackingOrderChanged(bool)));
+
 }
 
 
@@ -227,7 +243,7 @@ void EbsdImportWidget::on_m_InputDir_textChanged(const QString & text)
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputFile->setText(outPath);
     verifyPathExists(m_OutputFile->text(), m_OutputFile);
-    m_generateExampleOimInputFile();
+    m_generateExampleEbsdInputFile();
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
     m_InputDir->blockSignals(false);
@@ -236,6 +252,28 @@ void EbsdImportWidget::on_m_InputDir_textChanged(const QString & text)
   {
     m_FileListView->clear();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::RefFrameOrigin EbsdImportWidget::getRefFrameOrigin()
+{
+  if (m_OriginUpperRight->isChecked()) return Ebsd::UpperRightOrigin;
+  if (m_OriginUpperLeft->isChecked()) return Ebsd::UpperLeftOrigin;
+  if (m_OriginLowerLeft->isChecked()) return Ebsd::LowerLeftOrigin;
+  if (m_OriginLowerRight->isChecked()) return Ebsd::LowerRightOrigin;
+  return Ebsd::NoOrientation;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::RefFrameZDir EbsdImportWidget::getRefFrameZDir()
+{
+  if (m_StackLowToHigh->isChecked()) return Ebsd::IntoSlice;
+  if (m_StackHighToLow->isChecked()) return Ebsd::OutofSlice;
+  return Ebsd::UnknownRefFrameZDirection;
 }
 
 // -----------------------------------------------------------------------------
@@ -287,6 +325,10 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   m_EbsdImport->setZStartIndex(m_ZStartIndex->value());
   m_EbsdImport->setZEndIndex(m_ZEndIndex->value());
   m_EbsdImport->setZResolution(m_zSpacing->text().toFloat(&ok));
+
+  m_EbsdImport->setRefFrameOrigin( getRefFrameOrigin() );
+  m_EbsdImport->setRefFrameZDir( getRefFrameZDir() );
+
 
   int fileCount = m_FileListView->count();
   std::vector<std::string> fileList;
@@ -341,9 +383,17 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EbsdImportWidget::stackingOrderChanged(bool checked)
+{
+  // m_generateExampleEbsdInputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EbsdImportWidget::on_m_ZEndIndex_valueChanged(int value)
 {
-  m_generateExampleOimInputFile();
+  m_generateExampleEbsdInputFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -351,7 +401,7 @@ void EbsdImportWidget::on_m_ZEndIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void EbsdImportWidget::on_m_ZStartIndex_valueChanged(int value)
 {
-  m_generateExampleOimInputFile();
+  m_generateExampleEbsdInputFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -359,7 +409,7 @@ void EbsdImportWidget::on_m_ZStartIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void EbsdImportWidget::on_m_TotalDigits_valueChanged(int value)
 {
-    m_generateExampleOimInputFile();
+    m_generateExampleEbsdInputFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -367,7 +417,7 @@ void EbsdImportWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void EbsdImportWidget::on_m_FileExt_textChanged(const QString &string)
 {
-  m_generateExampleOimInputFile();
+  m_generateExampleEbsdInputFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -375,7 +425,7 @@ void EbsdImportWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 void EbsdImportWidget::on_m_FileSuffix_textChanged(const QString &string)
 {
-  m_generateExampleOimInputFile();
+  m_generateExampleEbsdInputFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -383,13 +433,13 @@ void EbsdImportWidget::on_m_FileSuffix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 void EbsdImportWidget::on_m_FilePrefix_textChanged(const QString &string)
 {
-  m_generateExampleOimInputFile();
+  m_generateExampleEbsdInputFile();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdImportWidget::m_generateExampleOimInputFile()
+void EbsdImportWidget::m_generateExampleEbsdInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -404,10 +454,20 @@ void EbsdImportWidget::m_generateExampleOimInputFile()
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
   bool hasMissingFiles = false;
-  for (int i = start; i <= end; ++i)
+  int index = 0;
+  end = m_ZEndIndex->value() - start + 1;
+  for (int i = 0; i < end; ++i)
   {
+    if (m_StackLowToHigh->isChecked())
+    {
+       index = start + i;
+    }
+    else
+    {
+      index = end - i;
+    }
     filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-        .arg(QString::number(i), m_TotalDigits->value(), '0')
+        .arg(QString::number(index), m_TotalDigits->value(), '0')
         .arg(m_FileSuffix->text()).arg(m_FileExt->text());
     QString filePath = m_InputDir->text() + QDir::separator() + filename;
     filePath = QDir::toNativeSeparators(filePath);
@@ -423,6 +483,10 @@ void EbsdImportWidget::m_generateExampleOimInputFile()
       item->setIcon(redDot);
     }
   }
+
+
+
+
   if (hasMissingFiles == true)
   {
     m_ErrorMessage->setVisible(true);

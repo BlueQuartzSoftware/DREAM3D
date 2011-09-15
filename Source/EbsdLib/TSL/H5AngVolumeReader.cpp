@@ -285,8 +285,8 @@ int H5AngVolumeReader::loadData(float* euler1s,
       ystop = ypointstemp;
     }
 
-	if(ZDir == 0) zval = slice;
-	if(ZDir == 1) zval = (zpoints-1) - slice;
+    if(ZDir == Ebsd::IntoSlice) zval = slice;
+    if(ZDir == Ebsd::OutofSlice) zval = (zpoints-1) - slice;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ystop; j++)

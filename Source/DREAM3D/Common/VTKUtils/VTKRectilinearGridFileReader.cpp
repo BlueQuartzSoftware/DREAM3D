@@ -119,7 +119,7 @@ int VTKRectilinearGridFileReader::readHeader()
   err = parseInt3V(buf, dims, 0);
   setDims(dims);
 
-  setScaling(0.0f, 0.0f, 0.0f);
+  setScaling(1.0f, 1.0f, 1.0f);
   setOrigin(0.0f, 0.0f, 0.0f);
 
 
@@ -181,7 +181,9 @@ int VTKRectilinearGridFileReader::readFile()
   {
     return -1;
   }
-  err = skipVolume<float>(instream, 4, dim, 1, 1);
+  float xscale = 1.0f;
+  err = skipVolume<float>(instream, 4, dim, 1, 1, xscale);
+
 
   // Now parse the Y coordinates.
  // ::memset(buf, 0, kBufferSize);
@@ -191,7 +193,8 @@ int VTKRectilinearGridFileReader::readFile()
   {
     return -1;
   }
-  err = skipVolume<float>(instream, 4, 1, dim, 1);
+  float yscale = 1.0f;
+  err = skipVolume<float>(instream, 4, 1, dim, 1, yscale);
 
   // Now parse the Z coordinates.
 //  ::memset(buf, 0, kBufferSize);
@@ -201,8 +204,12 @@ int VTKRectilinearGridFileReader::readFile()
   {
     return -1;
   }
-  err = skipVolume<float>(instream, 4, 1, 1, dim);
-
+  float zscale = 1.0f;
+  err = skipVolume<float>(instream, 4, 1, 1, dim, zscale);
+  // This makes a very bad assumption that the Rectilinear grid has even spacing
+  // along each axis which it does NOT have to have. Since this class is specific
+  // to the DREAM.3D package this is a safe assumption.
+  setScaling(xscale, yscale, zscale);
 
 
   // Now we need to search for the 'GrainID' and

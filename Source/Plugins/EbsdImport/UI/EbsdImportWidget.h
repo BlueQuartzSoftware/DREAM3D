@@ -43,6 +43,7 @@
 #include "ui_EbsdImportWidget.h"
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QEbsdImport.h"
+#include "EbsdLib/EbsdConstants.h"
 
 
 /**
@@ -92,7 +93,9 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
     void m_findEbsdMaxSliceAndPrefix();
-    void m_generateExampleOimInputFile();
+    void m_generateExampleEbsdInputFile();
+    Ebsd::RefFrameOrigin getRefFrameOrigin();
+    Ebsd::RefFrameZDir getRefFrameZDir();
 
   protected slots:
     /* OIM Data Import Slots */
@@ -121,12 +124,17 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
     virtual void pipelineComplete();
     virtual void pipelineProgress(int value);
 
+    void stackingOrderChanged(bool checked);
+
   private:
     QList<QWidget*>             m_WidgetList;
     QEbsdImport*                 m_EbsdImport;
     QThread*                    m_WorkerThread;
+    QButtonGroup*               m_StackingGroup;
+    QButtonGroup*               m_OriginGroup;
 
     QString m_OpenDialogLastDirectory;
+
     EbsdImportWidget(const EbsdImportWidget&); // Copy Constructor Not Implemented
     void operator=(const EbsdImportWidget&); // Operator '=' Not Implemented
 };
