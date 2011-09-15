@@ -146,25 +146,65 @@ class DREAM3DLib_EXPORT VTKFileReader
 
 
     template<typename T>
+    int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim, T &diff)
+    {
+      int err = 0;
+      size_t totalSize = xDim * yDim * zDim;
+      if (getFileIsBinary() == true)
+      {
+        T* buffer = new T[totalSize];
+        // Read all the xpoints in one shot into a buffer
+        inStream.read(reinterpret_cast<char* > (buffer), (totalSize * sizeof(T)));
+        if (inStream.gcount() != (totalSize * sizeof(T)))
+        {
+          std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
+              << " vs " << (totalSize * sizeof(T)) << std::endl;
+          return -1;
+        }
+        if (totalSize > 1) {
+          diff = buffer[totalSize-1] - buffer[totalSize-2];
+        }
+        else
+        {
+          diff = buffer[totalSize];
+        }
+        delete buffer;
+      }
+      else
+      {
+        T tmp;
+        T t2;
+        for (size_t x = 0; x < totalSize; ++x)
+        {
+          if(x == 1)
+          {
+            t2 = tmp;
+          }
+          inStream >> tmp;
+          if(x == 1)
+          {
+            diff = tmp - t2;
+          }
+        }
+      }
+      return err;
+    }
+
+    template<typename T>
     int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim)
     {
       int err = 0;
-      if (getFileIsBinary() == true)
+      if(getFileIsBinary() == true)
       {
-        int* buffer = new int[xDim];
-        for (int z = 0; z < zDim; ++z)
+        size_t totalSize = xDim * yDim * zDim;
+        T* buffer = new T[totalSize];
+        // Read all the xpoints in one shot into a buffer
+        inStream.read(reinterpret_cast<char*>(buffer), (totalSize * sizeof(T)));
+        if(inStream.gcount() != (totalSize * sizeof(T)))
         {
-          for (int y = 0; y < yDim; ++y)
-          {
-            // Read all the xpoints in one shot into a buffer
-            inStream.read(reinterpret_cast<char* > (buffer), (xDim * byteSize));
-            if (inStream.gcount() != (xDim * byteSize))
-            {
-              std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
-                  << " vs " << (xDim * byteSize) << std::endl;
-              return -1;
-            }
-          }
+          std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
+              << (totalSize * sizeof(T)) << std::endl;
+          return -1;
         }
         delete buffer;
       }
@@ -178,9 +218,7 @@ class DREAM3DLib_EXPORT VTKFileReader
             for (int x = 0; x < xDim; ++x)
             {
               inStream >> tmp;
-            //  std::cout << inStream.tellg() << " ";
             }
-           // std::cout << "" << std::endl;
           }
         }
       }

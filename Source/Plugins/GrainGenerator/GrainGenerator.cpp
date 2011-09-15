@@ -270,7 +270,7 @@ void GrainGenerator::execute()
   }
   h5VoxelWriter->setFilename(h5VoxelFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
-  err = h5VoxelWriter->writeVoxelData<GrainGeneratorFunc>(m.get());
+  err = h5VoxelWriter->writeData<GrainGeneratorFunc>(m.get());
   CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
 
   /************ This writes the grain data if desired*/

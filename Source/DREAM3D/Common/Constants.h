@@ -243,6 +243,7 @@ namespace DREAM3D
   namespace GrainData
   {
     const std::string GrainID("Grain_ID");
+    const std::string PhaseID("Phase_ID");
     const std::string Phi1("Phi1");
     const std::string PHI("PHI");
     const std::string Phi2("Phi2");
