@@ -134,10 +134,18 @@ void EbsdImport::execute()
   unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Stacking Order Scalar to the HDF5 File", err)
+  std::string s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
+  err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Stacking Order Name Attribute to the HDF5 File", err)
+
+
+
   ui = static_cast<unsigned int>(m_RefFrameOrigin);
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReferenceOrigin, ui);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reference Origin Scalar to the HDF5 File", err)
-
+  s = Ebsd::ReferenceOrigin::Utils::getStringForEnum(m_RefFrameOrigin);
+  err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::ReferenceOrigin, "Name", s);
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reference Origin Name Attribute to the HDF5 File", err)
   EbsdImporter::Pointer fileImporter;
 
   // Write the Manufacturer of the OIM file here

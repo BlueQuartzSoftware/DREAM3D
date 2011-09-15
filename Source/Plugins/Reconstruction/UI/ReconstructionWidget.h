@@ -42,7 +42,7 @@
 
 #include "ui_ReconstructionWidget.h"
 
-#include "EbsdLib/EbsdConstants.h"
+
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QReconstruction.h"
@@ -89,23 +89,6 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
 
 
     virtual void checkIOFiles();
-
-    QString getRefFrameOrigin(Ebsd::RefFrameOrigin o);
-
-    QString getRefFrameZDir(Ebsd::RefFrameZDir o);
-
-
-
-
-#if 0
-    /**
-     * @brief Returns the EBSD Collection System manufacturer.
-     * @param ebsdFile The path to the HDF5 based File to look for the manufacturer
-     * at the path /Manufacturer
-     */
-    virtual std::string getEbsdManufacturer(const std::string &ebsdFile);
-#endif
-
 
   protected slots:
 

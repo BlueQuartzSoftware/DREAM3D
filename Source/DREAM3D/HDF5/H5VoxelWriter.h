@@ -47,6 +47,7 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -115,6 +116,16 @@ class DREAM3DLib_EXPORT H5VoxelWriter
     int writeStructuredPoints(int volDims[3], float spacing[3], float origin[3], bool appendFile = true);
 
     /**
+     *
+     */
+    int writeCrystalStructures(const std::vector<Ebsd::CrystalStructure> &crystruct, bool appendFile = true);
+
+    /**
+     *
+     */
+    int writePhaseTypes(const std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType, bool appendFile = true);
+
+    /**
      * @brief Writes a Complete .h5voxel file with all scalar and field data
      * @param A class implementing the "*Func" interface
      * @return Negative Value on Error
@@ -124,47 +135,20 @@ class DREAM3DLib_EXPORT H5VoxelWriter
     {
       int err = -1;
 
-      AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-      h5writer->setFileName(m_Filename);
-      err = h5writer->openFile(false);
-      if (err < 0)
-      {
-        return -1;
-      }
-      std::vector<int> fieldData(m->crystruct.size());
-      for (size_t i = 0; i < m->crystruct.size(); ++i)
-      {
-        fieldData[i] = m->crystruct[i];
-      }
+      err = writeCrystalStructures(m->crystruct, false);
+      if (err < 0) { return err; }
 
-      err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData,
-                                          DREAM3D::VTK::CrystalStructureName.c_str(), 1);
-      if (err < 0)
-      {
-        std::cout << "Error Writing Field Data '" << DREAM3D::VTK::CrystalStructureName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
-        return err;
-      }
-
-      for (size_t i = 0; i < m->crystruct.size(); ++i)
-      {
-        fieldData[i] = m->phaseType[i];
-      }
-      err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
-      if (err < 0)
-      {
-        std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
-        return err;
-      }
-      err = h5writer->closeFile();
-
-      err = writeEulerData(m->euler1s, m->euler2s, m->euler3s, true);
+      err = writePhaseTypes(m->phaseType, true);
       if (err < 0) { return err; }
 
 
-      err = writeGrainIds(m->grain_indicies, true);
+      err = writeEulerData(m->euler1s, m->euler2s, m->euler3s, m->totalpoints, true);
       if (err < 0) { return err; }
 
-      err = writePhaseIds(m->phases, true);
+      err = writeGrainIds(m->grain_indicies, m->totalpoints, true);
+      if (err < 0) { return err; }
+
+      err = writePhaseIds(m->phases, m->totalpoints, true);
       if (err < 0) { return err; }
 
       int volDims[3] =
