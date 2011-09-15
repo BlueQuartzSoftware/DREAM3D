@@ -42,17 +42,23 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+#include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Common/LogTime.h"
 
-#include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/DREAM3DVersion.h"
+#include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AIMArray.hpp"
 #include "DREAM3D/HDF5/VTKH5Constants.h"
+#include "DREAM3D/HDF5/H5VoxelWriter.h"
 #include "DREAM3D/Common/VTKUtils/VTKRectilinearGridFileReader.h"
 
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
+
+#define TEST 0
 
 hid_t m_FileId = 0;
 
@@ -151,6 +157,45 @@ int writeScalarData(const std::string &hdfPath,
   return err;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class GrainIdVoxels
+{
+  public:
+    MXA_SHARED_POINTERS(GrainIdVoxels);
+    MXA_STATIC_NEW_MACRO(GrainIdVoxels);
+    MXA_TYPE_MACRO(GrainIdVoxels);
+
+    virtual ~GrainIdVoxels() {}
+
+    float resx;
+    float resy;
+    float resz;
+
+    int xpoints;
+    int ypoints;
+    int zpoints;
+    int totalpoints;
+    std::vector<Ebsd::CrystalStructure>                    crystruct;
+    std::vector<DREAM3D::Reconstruction::PhaseType>        phaseType;
+
+    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
+    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
+    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
+    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
+
+  protected:
+    GrainIdVoxels() {}
+  private:
+    GrainIdVoxels(const GrainIdVoxels&); // Copy Constructor Not Implemented
+    void operator=(const GrainIdVoxels&); // Operator '=' Not Implemented
+};
+
+
+
 /**
  *
  * @param h5File
@@ -232,14 +277,18 @@ int ReadEulerFile(const std::string &filename, std::map<int, EulerSet> &gidToEul
 }
 
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 
-  std::cout << "Starting Vtk to HDF5 Merging..." << std::endl;
+  std::cout << "Starting Vtk to HDF5 Conversion..." << std::endl;
 
   try
   {
-#if _WIN32
+#if TEST
     std::string vFile = "C:\\Data\\Test.vtk";
     std::string h5File = "C:\\Data\\Test.h5voxel";
     std::string eulerFile = "C:\\Data\\Test.euler";
@@ -250,8 +299,8 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<std::string> vtkFile( "i", "vtkfile", "VTK Rectilinear Input File", true, "", "Vtk Input File");
     cmd.add(vtkFile);
 
-    TCLAP::ValueArg<std::string> angleFileArg( "e", "eulerfile", "Euler Angle File", false, "", "Euler Angle File");
-    cmd.add(angleFileArg);
+//    TCLAP::ValueArg<std::string> angleFileArg( "e", "eulerfile", "Euler Angle File", false, "", "Euler Angle File");
+//    cmd.add(angleFileArg);
 
     TCLAP::ValueArg<std::string> h5InputFileArg( "t", "h5file", "Target HDF5 File", true, "", "Target HDF5 File");
     cmd.add(h5InputFileArg);
@@ -268,7 +317,7 @@ int main(int argc, char **argv)
 
     std::string vFile = vtkFile.getValue();
     std::string h5File = h5InputFileArg.getValue();
-    std::string eulerFile = angleFileArg.getValue();
+  //  std::string eulerFile = angleFileArg.getValue();
 
 #endif
 
@@ -294,6 +343,30 @@ int main(int argc, char **argv)
     std::cout << "Vtk File has dimensions: " << nx << " x " << ny << " x " << nz << std::endl;
     voxels = reader->getGrainIds();
 
+
+    H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
+    if (h5VolWriter.get() == NULL)
+    {
+      std::cout << "Could not create H5VoxelWriter." << std::endl;
+      return EXIT_FAILURE;
+    }
+    h5VolWriter->setFilename(h5File);
+    err = h5VolWriter->writeGrainIds(voxels->GetPointer(0), voxels->GetNumberOfTuples(), false);
+    if (err < 0)
+    {
+      return EXIT_FAILURE;
+    }
+    int volDims[3] = { nx, ny, nz };
+    float spacing[3] = {1.0f, 1.0f, 1.0f};
+    reader->getScaling(spacing);
+    float origin[3] = { 0.0f, 0.0f, 0.0f };
+    err = h5VolWriter->writeStructuredPoints(volDims, spacing, origin, true);
+    if (err < 0)
+    {
+      return EXIT_FAILURE;
+    }
+
+#if 0
     std::cout << "Now Overwriting the GrainID data set in the HDF5 file...." << std::endl;
     err = writeVtkDataToHDF5File(h5File, voxels, nz, ny, nz);
     if (err < 0)
@@ -340,17 +413,14 @@ int main(int argc, char **argv)
       }
       std::cout << "+ Done Writing the Euler Angle Data." << std::endl;
     }
-
+#endif
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
   {
     std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
-  std::cout << "Successfully completed the merge." << std::endl;
-
-  return EXIT_SUCCESS;
-
+  std::cout << "Successfully completed the Writing of the .h5voxel." << std::endl;
 
   return EXIT_SUCCESS;
 }

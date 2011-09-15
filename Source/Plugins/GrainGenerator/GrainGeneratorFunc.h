@@ -107,7 +107,7 @@ public:
     float sizey;
     float sizez;
 
-    unsigned long long int GGseed;
+	unsigned long long int GGseed;
 
     float resx;
     float resy;
