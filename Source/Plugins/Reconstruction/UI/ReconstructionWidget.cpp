@@ -64,6 +64,7 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/QualityMetricFilter.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
@@ -374,32 +375,6 @@ void ReconstructionWidget::on_m_OIMH5Btn_clicked()
 
 }
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::string ReconstructionWidget::getEbsdManufacturer(const std::string &ebsdFile)
-{
-  std::string data;
-  hid_t fileId = H5Utilities::openFile(ebsdFile, true);
-  if (fileId < 0)
-  {
-    return data;
-  }
-
-  int err = H5Lite::readStringDataset(fileId, Ebsd::H5::Manufacturer, data);
-  if (err < 0)
-  {
-    data = "";
-    err = H5Utilities::closeFile(fileId);
-    return data;
-  }
-
-  err = H5Utilities::closeFile(fileId);
-  return data;
-}
-#endif
-
 
 // -----------------------------------------------------------------------------
 //
@@ -505,8 +480,8 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     // Cache the Manufacturer from the File
     m_EbsdManufacturer->setText(fileManufact);
 
-    m_StackingOrder->setText((getRefFrameZDir(h5Reader->getStackingOrder())));
-    m_ReferenceOrigin->setText((getRefFrameOrigin(h5Reader->getReferenceOrigin())));
+    m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
+    m_ReferenceOrigin->setText(QString::fromStdString(Ebsd::ReferenceOrigin::Utils::getStringForEnum(h5Reader->getReferenceOrigin())));
 
     // Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
@@ -531,29 +506,6 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
   }
 
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString ReconstructionWidget::getRefFrameOrigin(Ebsd::RefFrameOrigin o)
-{
-  if (o ==  Ebsd::UpperRightOrigin) return QString("Upper Right");
-  if (o ==  Ebsd::UpperLeftOrigin) return QString("Upper Left");
-  if (o ==  Ebsd::LowerLeftOrigin) return QString("Lower Left");
-  if (o ==  Ebsd::LowerRightOrigin) return QString("Lower Right");
-  return QString("Unknown");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString ReconstructionWidget::getRefFrameZDir(Ebsd::RefFrameZDir o)
-{
-  if (o == Ebsd::IntoSlice) return QString("Low to High");
-  if (o == Ebsd::OutofSlice) return QString("High to Low");
-  return QString("Unkown");
-}
-
 
 
 // -----------------------------------------------------------------------------
@@ -764,13 +716,10 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
-#warning THIS NEEDS TO BE FIXED
-  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//  Ebsd::RefFrameOrigin refframeorigin = static_cast<Ebsd::RefFrameOrigin>(m_RefFrameOrigin->currentIndex());
-//  m_Reconstruction->setRefFrameOrigin(refframeorigin);
+
+  m_Reconstruction->setRefFrameOrigin(Ebsd::ReferenceOrigin::Utils::getEnumForString(m_ReferenceOrigin->text().toStdString()));
 //
-//  Ebsd::RefFrameZDir refframezdir = static_cast<Ebsd::RefFrameZDir>(m_RefFrameZDir->currentIndex());
-//  m_Reconstruction->setRefFrameZDir(refframezdir);
+  m_Reconstruction->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
   m_Reconstruction->setMisorientationTolerance(m_MisOrientationTolerance->value());

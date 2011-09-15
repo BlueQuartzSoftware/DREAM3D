@@ -84,12 +84,69 @@ namespace Ebsd
      NoOrientation = 4,
   };
 
+  namespace ReferenceOrigin
+  {
+    const std::string UpperRight ("Upper Right");
+    const std::string UpperLeft ("Upper Left");
+    const std::string LowerLeft ("Lower Left");
+    const std::string LowerRight ("Lower Right");
+    const std::string NoOrientation("No Orientation");
+    class Utils
+    {
+      public:
+        static std::string getStringForEnum(RefFrameOrigin v)
+        {
+          if (UpperRightOrigin == v) return Ebsd::ReferenceOrigin::UpperRight;
+          if (UpperLeftOrigin == v) return Ebsd::ReferenceOrigin::UpperLeft;
+          if (LowerLeftOrigin == v) return Ebsd::ReferenceOrigin::LowerLeft;
+          if (LowerRightOrigin == v) return Ebsd::ReferenceOrigin::LowerRight;
+          return Ebsd::ReferenceOrigin::NoOrientation;
+        }
+
+        static RefFrameOrigin getEnumForString(const std::string &v)
+        {
+          if (Ebsd::ReferenceOrigin::UpperRight.compare(v) == 0) return UpperRightOrigin;
+          if (Ebsd::ReferenceOrigin::UpperLeft.compare(v) == 0) return UpperLeftOrigin;
+          if (Ebsd::ReferenceOrigin::LowerLeft.compare(v) == 0) return LowerLeftOrigin;
+          if (Ebsd::ReferenceOrigin::LowerRight.compare(v) == 0) return LowerRightOrigin;
+          return Ebsd::NoOrientation;
+        }
+    };
+  }
+
+
   enum RefFrameZDir
   {
      IntoSlice = 0,
      OutofSlice = 1,
      UnknownRefFrameZDirection
   };
+
+  namespace StackingOrder {
+    const std::string LowToHigh("Low To High");
+    const std::string HighToLow("High To Low");
+    const std::string UnknownStackingOrder("Unknown Stacking Order");
+
+    class Utils
+    {
+      public:
+        static std::string getStringForEnum(RefFrameZDir v)
+        {
+          if (IntoSlice == v) return Ebsd::StackingOrder::LowToHigh;
+          if (OutofSlice == v) return Ebsd::StackingOrder::HighToLow;
+          return Ebsd::StackingOrder::UnknownStackingOrder;
+        }
+
+        static RefFrameZDir getEnumForString(const std::string &v)
+        {
+          if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) return IntoSlice;
+          if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) return OutofSlice;
+          return Ebsd::UnknownRefFrameZDirection;
+        }
+    };
+  }
+
+
 
 
   /**

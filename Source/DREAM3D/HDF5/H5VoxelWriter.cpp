@@ -180,3 +180,70 @@ int H5VoxelWriter::writeStructuredPoints(int volDims[3], float spacing[3], float
   }
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructure>  &crystruct, bool appendFile)
+ {
+   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+   h5writer->setFileName(m_Filename);
+   int err = h5writer->openFile(appendFile);
+   if (err < 0)
+   {
+     return -1;
+   }
+
+   err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+   if (err < 0)
+   {
+     std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+     return err;
+   }
+   std::vector<int> fieldData(crystruct.size());
+   for (size_t i = 0; i < crystruct.size(); ++i)
+   {
+     fieldData[i] = crystruct[i];
+   }
+   err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData,
+                                       DREAM3D::VTK::CrystalStructureName.c_str(), 1);
+   if (err < 0)
+   {
+     std::cout << "Error Writing Field Data '" << DREAM3D::VTK::CrystalStructureName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+   }
+   return err;
+ }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType, bool appendFile)
+{
+  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+  h5writer->setFileName(m_Filename);
+  int err = h5writer->openFile(appendFile);
+  if (err < 0)
+  {
+    return -1;
+  }
+
+  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+  if (err < 0)
+  {
+    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    return err;
+  }
+
+  std::vector<int> fieldData(phaseType.size());
+  for (size_t i = 0; i < phaseType.size(); ++i)
+  {
+    fieldData[i] = phaseType[i];
+  }
+  err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
+  if (err < 0)
+  {
+    std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+  }
+  return err;
+}
+
