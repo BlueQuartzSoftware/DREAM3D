@@ -6,22 +6,23 @@ so it can be integrated with the other documentation pages.
 
 
 @section todomisc Misc Bugs
-@li  Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
-@li  <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
-@li  <b>DONE</b> (MAJ 2011/07/18) - Allow other developers to include their own plugins that are possibly from a different repository
-@li Create a Vtk to H5Voxel convertor program
-@li Add Stacking Order and Orientation to EbsdImnport Plugin to be written to the .h5ebsd file
-@li Add display of stacking order and Orientation to Reconstruction plugin
+@li Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
 @li add over ride of stacking order and Orientation to Reconstruction plugin
-@li <b>DONE</b> (MAJ 9/8/11) - enhance Progress/Warning/Error messages from the pipeline to display in the GUI
 @li Add Subvolume Cropping to the Microstructure statistics plugin
+
+@li <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
+@li <b>DONE</b> (MAJ 2011/07/18) - Allow other developers to include their own plugins that are possibly from a different repository
+@li <b>DONE</b> (MAJ 2011/09/15) - Create a Vtk to H5Voxel convertor program
+@li <b>DONE</b> (MAJ 2011/09/14) - Add Stacking Order and Orientation to EbsdImnport Plugin to be written to the .h5ebsd file
+@li <b>DONE</b> (MAJ 2011/09/14) - Add display of stacking order and Orientation to Reconstruction plugin
+@li <b>DONE</b> (MAJ 9/8/11) - enhance Progress/Warning/Error messages from the pipeline to display in the GUI
 @li <b>DONE</b> (MAJ 9/9/11) - Create a "Temp File" class that creates a temp file and then deletes the file when the variable goes out of scope.
 
 
 @section todohkl HKL Support
-@li   <b>DONE</b> (MAG 2011/08/20) - During reading of the .ctf file or the .h5ebsd file the Euler angles need to be adjusted properly
+@li <b>DONE</b> (MAG 2011/08/20) - During reading of the .ctf file or the .h5ebsd file the Euler angles need to be adjusted properly
 @li <b>DONE</b> (MAG 2011/08/20) - During reading of the .ctf file or the .h5ebsd file the orientation needs to be adjusted properly
-@li  <b>DONE</b> (MAJ 2011/08/20) - Add new QualityMetric Filter type to Reconstruction Pipeline
+@li <b>DONE</b> (MAJ 2011/08/20) - Add new QualityMetric Filter type to Reconstruction Pipeline
 @li <b>DONE</b> (MAJ 2011/08/14) - Fix Preset file reading so that the new Quality Metric Filters now work
 
 
@@ -30,9 +31,9 @@ so it can be integrated with the other documentation pages.
 
 @section reconstruction Reconstruction:
 @li Fix Reconstruction Command line application with QualityMetric Filters
+@li Indicate with a set of images what is meant for the "Orientation" of the OIM Data
 @li <b>DONE</b> (MAJ 2011/07/25) - output a ph file in the reconstruction tab.
 @li <b>DONE</b> (MAG 2011/06/08) - Fix 2 Phase bug - Bad output file is written
-@li Indicate with a set of images what is meant for the "Orientation" of the OIM Data
 @li <b>DONE</b> (MAJ 2011/06/13) - Put pop-up on check of h5grain to let them know they need special Paraview.
 @li <b>DONE</b> (MAJ 2011/05/27) - Set output prefix based on the name of the input file
 @li <b>DONE</b> (MAJ 2011/06/07) - Write RectilinearGrid for VTK files with Optional Scalars
