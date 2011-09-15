@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,6 +41,7 @@
 
 #include "EbsdLib/EbsdLibTypes.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdConstants.h"
 
 /**
  * @class H5EbsdVolumeInfo H5EbsdVolumeInfo.h EbsdLib/H5EbsdVolumeInfo.h
@@ -139,6 +140,9 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      */
     virtual int getNumPhases();
 
+    virtual Ebsd::RefFrameOrigin getReferenceOrigin();
+    virtual Ebsd::RefFrameZDir getStackingOrder();
+
   protected:
     H5EbsdVolumeInfo();
 
@@ -154,6 +158,8 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     int m_ZEnd;
     std::string m_Manufacturer;
     int m_NumPhases;
+    Ebsd::RefFrameOrigin m_ReferenceOrigin;
+    Ebsd::RefFrameZDir   m_StackingOrder;
 
     H5EbsdVolumeInfo(const H5EbsdVolumeInfo&); //Not Implemented
     void operator=(const H5EbsdVolumeInfo&); //Not Implemented

@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -47,6 +47,7 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
@@ -90,13 +91,65 @@ class DREAM3DLib_EXPORT H5VoxelWriter
 
     MXA_INSTANCE_STRING_PROPERTY(Filename);
 
+    /**
+     *
+     */
+    int writeEulerData(float* e1,
+                       float* e2,
+                       float* e3,
+                       size_t totalPoints,
+                       bool appendFile = true);
+
+    /**
+     *
+     */
+    int writeGrainIds(int* grain_indicies, size_t totalPoints, bool appendFile = true);
+
+    /**
+     *
+     */
+    int writePhaseIds(int* phases, size_t totalPoints, bool appendFile = true);
+
+    /**
+     *
+     */
+    int writeStructuredPoints(int volDims[3], float spacing[3], float origin[3], bool appendFile = true);
+
+    /**
+     *
+     */
+    int writeCrystalStructures(const std::vector<Ebsd::CrystalStructure> &crystruct, bool appendFile = true);
+
+    /**
+     *
+     */
+    int writePhaseTypes(const std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType, bool appendFile = true);
+
+    /**
+     * @brief Writes a Complete .h5voxel file with all scalar and field data
+     * @param A class implementing the "*Func" interface
+     * @return Negative Value on Error
+     */
     template<typename T>
-    int writeVoxelData(T* m)
+    int writeData(T* m)
     {
       int err = -1;
-      AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-      h5writer->setFileName(m_Filename);
-      err = h5writer->openFile(false);
+
+      err = writeCrystalStructures(m->crystruct, false);
+      if (err < 0) { return err; }
+
+      err = writePhaseTypes(m->phaseType, true);
+      if (err < 0) { return err; }
+
+
+      err = writeEulerData(m->euler1s, m->euler2s, m->euler3s, m->totalpoints, true);
+      if (err < 0) { return err; }
+
+      err = writeGrainIds(m->grain_indicies, m->totalpoints, true);
+      if (err < 0) { return err; }
+
+      err = writePhaseIds(m->phases, m->totalpoints, true);
+      if (err < 0) { return err; }
 
       int volDims[3] =
       { m->xpoints, m->ypoints, m->zpoints };
@@ -104,61 +157,9 @@ class DREAM3DLib_EXPORT H5VoxelWriter
       { m->resx, m->resy, m->resz };
       float origin[3] =
       { 0.0f, 0.0f, 0.0f };
-      // This just creates the group and writes the header information
-      h5writer->writeStructuredPoints(DREAM3D::HDF5::VoxelDataName, volDims, spacing, origin);
+      err = writeStructuredPoints(volDims, spacing, origin, true);
+      if (err < 0) { return err; }
 
-      // We now need to write the actual voxel data
-      int numComp = 1; //
-      int totalPoints = m->totalpoints;
-      int32_t rank = 1;
-      hsize_t dims[2] = { totalPoints, numComp };
-      std::vector<int> datai1(totalPoints * 1);
-      std::vector<int> datai2(totalPoints * 1);
-      std::vector<float> dataf(totalPoints * 3);
-      for (int i = 0; i < totalPoints; ++i)
-      {
-        datai1[i] = m->grain_indicies[i];
-        datai2[i] = m->phases[i];
-        dataf[i * 3] = m->euler1s[i];
-        dataf[i * 3 + 1] = m->euler2s[i];
-        dataf[i * 3 + 2] = m->euler3s[i];
-      }
-      err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, datai1, DREAM3D::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
-      err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, datai2, DREAM3D::VTK::PhaseIdScalarName.c_str(), numComp, rank, dims);
-      // Setup the nx3 table of Euler Angles which means setting both the dims and NumComp variables
-      numComp = 3;
-      rank = 2;
-      dims[0] = totalPoints;
-      dims[1] = numComp;
-      err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, dataf, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
-      if (err < 0)
-      {
-        std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
-      }
-
-      std::vector<int> fieldData(m->crystruct.size());
-      for (size_t i = 0; i < m->crystruct.size(); ++i)
-      {
-        fieldData[i] = m->crystruct[i];
-      }
-
-      err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::CrystalStructureName.c_str(), 1);
-      if (err < 0)
-      {
-        std::cout << "Error Writing Field Data '" << DREAM3D::VTK::CrystalStructureName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
-      }
-
-      for (size_t i = 0; i < m->crystruct.size(); ++i)
-      {
-        fieldData[i] = m->phaseType[i];
-      }
-      err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
-      if (err < 0)
-      {
-        std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
-      }
-
-      err = h5writer->closeFile();
       return err;
     }
 
