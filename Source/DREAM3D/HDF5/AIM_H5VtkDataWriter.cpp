@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -120,6 +120,9 @@ int AIM_H5VtkDataWriter::writeStructuredPoints(const std::string &hdfPath, int v
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
+  if (err < 0)  {
+    return err;
+  }
   hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
 
   int32_t rank =1;
@@ -146,7 +149,7 @@ int AIM_H5VtkDataWriter::writeStructuredPoints(const std::string &hdfPath, int v
     std::cout << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << std::endl;
   }
 
-  err = H5Gclose(gid);
+  err |= H5Gclose(gid);
   return err;
 }
 

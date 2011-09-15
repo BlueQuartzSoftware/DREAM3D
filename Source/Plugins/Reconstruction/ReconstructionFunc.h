@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -110,9 +110,9 @@ class ReconstructionFunc
 
     float misorientationtolerance;
 
-    vector<Ebsd::CrystalStructure> crystruct;
-    vector<DREAM3D::Reconstruction::PhaseType>        phaseType;
-    std::vector<float>                            pptFractions;
+    std::vector<Ebsd::CrystalStructure>               crystruct;
+    std::vector<DREAM3D::Reconstruction::PhaseType>   phaseType;
+    std::vector<float>                                pptFractions;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
@@ -172,13 +172,13 @@ class ReconstructionFunc
                     int minAllowedGrSize,
                     float dwnSmplFact,
                     float misoTol,
-                    vector<Ebsd::CrystalStructure> crystalStructures,
-                    vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
+                    std::vector<Ebsd::CrystalStructure> crystalStructures,
+                    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                     std::vector<float> precipFractions,
                     int alignmentMethod);
 
 
-	void initializeQuats();
+	  void initializeQuats();
     void find_border();
     void form_grains();
     void form_grains_sections();
@@ -189,7 +189,7 @@ class ReconstructionFunc
     void merge_containedgrains();
     void reorder_grains();
     int remove_smallgrains(size_t numgrains);
-	void fillin_sample();
+	  void fillin_sample();
     void cleanup_data();
     void merge_twins();
     void merge_colonies();
