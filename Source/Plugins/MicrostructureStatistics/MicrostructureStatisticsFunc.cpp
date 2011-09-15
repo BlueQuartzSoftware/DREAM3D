@@ -1301,8 +1301,19 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
               }
             }
           }
-          kernelmisorientations[neighbor] = totalmisorientation / (float)numVoxel;
-          if (numVoxel == 0) kernelmisorientations[neighbor] = 0;
+          if(numVoxel == 0)
+          {
+            kernelmisorientations[neighbor] = 0;
+          }
+          else if(neighbor < m_KernelMisorientations->GetNumberOfTuples())
+          {
+            kernelmisorientations[neighbor] = totalmisorientation / (float)numVoxel;
+          }
+          else
+          {
+            kernelmisorientations[neighbor] = 0;
+          }
+
           q2[0] = 1;
           q2[1] = m_Grains[grain_indicies[point]]->avg_quat[1] / m_Grains[grain_indicies[point]]->avg_quat[0];
           q2[2] = m_Grains[grain_indicies[point]]->avg_quat[2] / m_Grains[grain_indicies[point]]->avg_quat[0];
