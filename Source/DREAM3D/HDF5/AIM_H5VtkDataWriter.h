@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -102,6 +102,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
     virtual ~AIM_H5VtkDataWriter();
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
+    MXA_INSTANCE_PROPERTY(hid_t, FileId);
 
     /**
      * @brief Opens or Creates an HDF5 file to write data into
@@ -259,7 +260,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
      */
     template<typename T>
     int writeScalarData(const std::string &hdfPath,
-                        const std::vector<T> &scalar_data,
+                        T* data,
                         const char *label,
                         int numComp, int32_t rank, hsize_t* dims)
     {
@@ -282,7 +283,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
         return err;
       }
 
-      T* data = const_cast<T*>(&(scalar_data.front()));
+      //T* data = const_cast<T*>(&(scalar_data.front()));
 
 
       std::string name (label);
@@ -344,9 +345,6 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
       return err;
     }
 
-  protected:
-    AIM_H5VtkDataWriter();
-
     /**
      * @brief
      * @param hdfGroupPath
@@ -356,9 +354,12 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
      */
     int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
+  protected:
+    AIM_H5VtkDataWriter();
+
 
   private:
-    hid_t m_FileId;
+
 
     AIM_H5VtkDataWriter(const AIM_H5VtkDataWriter&); // Copy Constructor Not Implemented
     void operator=(const AIM_H5VtkDataWriter&); // Operator '=' Not Implemented
