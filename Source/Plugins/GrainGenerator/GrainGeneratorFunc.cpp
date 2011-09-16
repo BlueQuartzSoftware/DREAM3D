@@ -1393,7 +1393,7 @@ void  GrainGeneratorFunc::pack_grains()
 	m_Grains[i]->centroidy = yc;
 	m_Grains[i]->centroidz = zc;
 	insert_grain(i);
-	for(int iter=0;iter<1;iter++)
+	for(int iter=0;iter<10;iter++)
 	{
 		xc = rg.genrand_res53() * (xpoints * resx);
 		yc = rg.genrand_res53() * (ypoints * resy);
@@ -1422,7 +1422,7 @@ void  GrainGeneratorFunc::pack_grains()
   outFile.open(filename.c_str());
 #endif
   // begin swaping/moving/adding/removing grains to try to improve packing
-  for (int iteration = 0; iteration < (2000); iteration++)
+  for (int iteration = 0; iteration < (250000); iteration++)
   {
 	change1 = 0;
     change2 = 0;
@@ -1989,7 +1989,8 @@ void  GrainGeneratorFunc::fill_gaps()
   float x, y, z;
   float xc, yc, zc;
   float xp, yp, zp;
-  float ga[3][3];
+  float ***ga;
+  float phi1, PHI, phi2;
   float maxellipfunc = 0;
   size_t numGrains = m_Grains.size();
   gsizes.resize(numGrains, 0);
@@ -1997,6 +1998,27 @@ void  GrainGeneratorFunc::fill_gaps()
   badvoxels.resize(1000,-1);
   int neighpoint;
   int neighpoints[6];
+  ga = new float **[numGrains];
+  for (int a = 1; a < numGrains; a++)
+  {
+	ga[a] = new float *[3];
+	for(int b = 0; b < 3; b++)
+	{
+		ga[a][b] = new float [3];
+	}
+	phi1 = m_Grains[a]->axiseuler1;
+	PHI = m_Grains[a]->axiseuler2;
+	phi2 = m_Grains[a]->axiseuler3;
+	ga[a][0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
+	ga[a][0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
+	ga[a][0][2] = sinf(phi2) * sinf(PHI);
+	ga[a][1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
+	ga[a][1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
+	ga[a][1][2] = cosf(phi2) * sinf(PHI);
+	ga[a][2][0] = sinf(phi1) * sinf(PHI);
+	ga[a][2][1] = -cosf(phi1) * sinf(PHI);
+	ga[a][2][2] = cosf(PHI);
+  }
 
   // Create a self cleaning array of integers.
   NEW_SHARED_ARRAY(n, int, numGrains)
@@ -2072,39 +2094,21 @@ void  GrainGeneratorFunc::fill_gaps()
 				shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
 
 				radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
-
 				float radcur2 = (radcur1 * bovera);
 				float radcur3 = (radcur1 * covera);
-				float phi1 = m_Grains[neighgrain]->axiseuler1;
-				float PHI = m_Grains[neighgrain]->axiseuler2;
-				float phi2 = m_Grains[neighgrain]->axiseuler3;
-				float ga[3][3];
-				ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
-				ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
-				ga[0][2] = sinf(phi2) * sinf(PHI);
-				ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
-				ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
-				ga[1][2] = cosf(phi2) * sinf(PHI);
-				ga[2][0] = sinf(phi1) * sinf(PHI);
-				ga[2][1] = -cosf(phi1) * sinf(PHI);
-				ga[2][2] = cosf(PHI);
 
 				x = (col*resx) - xc;
 				y = (row*resy) - yc;
 				z = (plane*resz) - zc;
-				xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
-				yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
-				zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+				xp = (x * ga[neighgrain][0][0]) + (y * ga[neighgrain][1][0]) + (z * ga[neighgrain][2][0]);
+				yp = (x * ga[neighgrain][0][1]) + (y * ga[neighgrain][1][1]) + (z * ga[neighgrain][2][1]);
+				zp = (x * ga[neighgrain][0][2]) + (y * ga[neighgrain][1][2]) + (z * ga[neighgrain][2][2]);
 				float axis1comp = xp / radcur1;
 				float axis2comp = yp / radcur2;
 				float axis3comp = zp / radcur3;
 				inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 				if(inside > ellipfuncs[point])
 				{
-					if(inside > 0.99)
-					{
-						int stop = 0;
-					}
 					ellipfuncs[point] = inside;
 					neighbors[point] = neighgrain;
 				}
@@ -2125,7 +2129,7 @@ void  GrainGeneratorFunc::fill_gaps()
 		if(ellipfuncs[point] > maxellipfunc) maxellipfunc = ellipfuncs[point];
       }
     }
-	timestep = maxellipfunc/0.01;
+//	timestep = maxellipfunc/0.01;
     badvoxels.erase(std::remove(badvoxels.begin(), badvoxels.end(), -1), badvoxels.end());
   }
   gsizes.resize(numGrains, 0);
