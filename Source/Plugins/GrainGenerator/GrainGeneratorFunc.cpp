@@ -617,7 +617,6 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
     float check = rg.genrand_res53();
     if(prob > check) good = 1;
     if(cob > 1) good = 0;
-	good = 1;
   }
   float random = rg.genrand_res53();
   int bin=0;
@@ -1394,7 +1393,7 @@ void  GrainGeneratorFunc::pack_grains()
 	m_Grains[i]->centroidy = yc;
 	m_Grains[i]->centroidz = zc;
 	insert_grain(i);
-	for(int iter=0;iter<10;iter++)
+	for(int iter=0;iter<1;iter++)
 	{
 		xc = rg.genrand_res53() * (xpoints * resx);
 		yc = rg.genrand_res53() * (ypoints * resy);
@@ -1423,7 +1422,7 @@ void  GrainGeneratorFunc::pack_grains()
   outFile.open(filename.c_str());
 #endif
   // begin swaping/moving/adding/removing grains to try to improve packing
-  for (int iteration = 0; iteration < (250000); iteration++)
+  for (int iteration = 0; iteration < (2000); iteration++)
   {
 	change1 = 0;
     change2 = 0;
@@ -1991,6 +1990,7 @@ void  GrainGeneratorFunc::fill_gaps()
   float xc, yc, zc;
   float xp, yp, zp;
   float ga[3][3];
+  float maxellipfunc = 0;
   size_t numGrains = m_Grains.size();
   gsizes.resize(numGrains, 0);
   ellipfuncs.resize(totalpoints,-1000.0);
@@ -2101,6 +2101,10 @@ void  GrainGeneratorFunc::fill_gaps()
 				inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 				if(inside > ellipfuncs[point])
 				{
+					if(inside > 0.99)
+					{
+						int stop = 0;
+					}
 					ellipfuncs[point] = inside;
 					neighbors[point] = neighgrain;
 				}
@@ -2109,6 +2113,7 @@ void  GrainGeneratorFunc::fill_gaps()
 		  }
 		}
     }
+	maxellipfunc = 0;
     for (int i = 0; i < badvoxels.size(); i++)
     {
 	  int point = badvoxels[i];
@@ -2117,8 +2122,10 @@ void  GrainGeneratorFunc::fill_gaps()
         grain_indicies[point] = neighbors[point];
         phases[point] = m_Grains[neighbors[point]]->phase;
 		badvoxels[i] = -1;
+		if(ellipfuncs[point] > maxellipfunc) maxellipfunc = ellipfuncs[point];
       }
     }
+	timestep = maxellipfunc/0.01;
     badvoxels.erase(std::remove(badvoxels.begin(), badvoxels.end(), -1), badvoxels.end());
   }
   gsizes.resize(numGrains, 0);
