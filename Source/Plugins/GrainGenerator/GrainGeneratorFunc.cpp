@@ -205,8 +205,6 @@ void GrainGeneratorFunc::initializeArrays(std::vector<Ebsd::CrystalStructure> st
   actualmdf.resize(size+1);
   simmdf.resize(size+1);
   axisodf.resize(size+1);
-  actualmicrotex.resize(size+1);
-  simmicrotex.resize(size+1);
   for(size_t i= 1; i < size+1; ++i)
   {
     if(crystruct[i] == Ebsd::Hexagonal) nElements = 36*36*12;
@@ -227,12 +225,6 @@ void GrainGeneratorFunc::initializeArrays(std::vector<Ebsd::CrystalStructure> st
     initValue = (1.0/float(nElements));
     axisodf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
-    nElements = 10;
-    initValue = (1.0/float(nElements));
-    actualmicrotex[i] = SharedFloatArray(new float [nElements]);
-    GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
-    simmicrotex[i] = SharedFloatArray(new float [nElements]);
-    GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
   }
 }
 

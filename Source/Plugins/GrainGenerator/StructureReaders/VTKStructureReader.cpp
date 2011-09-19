@@ -79,7 +79,6 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(0, m->totalpoints);
   m->quats = m->m_Quats->WritePointer(0, m->totalpoints*5);
   m->m_Quats->SetNumberOfComponents(5);
-  m->numowners.resize(m->totalpoints);
 
  // for(int i=0;i<m->totalpoints;i++)
  // {
