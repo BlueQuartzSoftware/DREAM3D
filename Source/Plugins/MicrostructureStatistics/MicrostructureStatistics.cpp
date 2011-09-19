@@ -125,7 +125,7 @@ void MicrostructureStatistics::execute()
 
   updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
   err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->totalpoints);
-  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, "Error Reading the Voxel Data from the File.", err);
+  CHECK_FOR_ERROR(MicrostructureStatisticsFunc, (h5Reader->getErrorMessage()), err);
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  readVoxelData)
 
 // We need to allocate the proper number of grains, assign the voxel list to them
