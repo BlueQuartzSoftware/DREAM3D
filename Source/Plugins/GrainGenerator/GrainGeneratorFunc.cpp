@@ -205,8 +205,6 @@ void GrainGeneratorFunc::initializeArrays(std::vector<Ebsd::CrystalStructure> st
   actualmdf.resize(size+1);
   simmdf.resize(size+1);
   axisodf.resize(size+1);
-  actualmicrotex.resize(size+1);
-  simmicrotex.resize(size+1);
   for(size_t i= 1; i < size+1; ++i)
   {
     if(crystruct[i] == Ebsd::Hexagonal) nElements = 36*36*12;
@@ -227,12 +225,6 @@ void GrainGeneratorFunc::initializeArrays(std::vector<Ebsd::CrystalStructure> st
     initValue = (1.0/float(nElements));
     axisodf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
-    nElements = 10;
-    initValue = (1.0/float(nElements));
-    actualmicrotex[i] = SharedFloatArray(new float [nElements]);
-    GG_INIT_DOUBLE_ARRAY(actualmicrotex[i], initValue, nElements);
-    simmicrotex[i] = SharedFloatArray(new float [nElements]);
-    GG_INIT_DOUBLE_ARRAY(simmicrotex[i], 0.0, nElements);
   }
 }
 
@@ -617,7 +609,6 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
     float check = rg.genrand_res53();
     if(prob > check) good = 1;
     if(cob > 1) good = 0;
-	good = 1;
   }
   float random = rg.genrand_res53();
   int bin=0;
@@ -1986,20 +1977,38 @@ void  GrainGeneratorFunc::fill_gaps()
   float inside = 0;
   int timestep = 100;
   int col, row, plane;
-  int grain, neighgrain;
   float x, y, z;
   float xc, yc, zc;
   float xp, yp, zp;
-  float ga[3][3];
+  float ***ga;
+  float phi1, PHI, phi2;
   size_t numGrains = m_Grains.size();
   gsizes.resize(numGrains, 0);
   ellipfuncs.resize(totalpoints,-1000.0);
   badvoxels.resize(1000,-1);
   int neighpoint;
   int neighpoints[6];
-
-  // Create a self cleaning array of integers.
-  NEW_SHARED_ARRAY(n, int, numGrains)
+  ga = new float **[numGrains];
+  for (int a = 1; a < numGrains; a++)
+  {
+	ga[a] = new float *[3];
+	for(int b = 0; b < 3; b++)
+	{
+		ga[a][b] = new float [3];
+	}
+	phi1 = m_Grains[a]->axiseuler1;
+	PHI = m_Grains[a]->axiseuler2;
+	phi2 = m_Grains[a]->axiseuler3;
+	ga[a][0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
+	ga[a][0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
+	ga[a][0][2] = sinf(phi2) * sinf(PHI);
+	ga[a][1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
+	ga[a][1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
+	ga[a][1][2] = cosf(phi2) * sinf(PHI);
+	ga[a][2][0] = sinf(phi1) * sinf(PHI);
+	ga[a][2][1] = -cosf(phi1) * sinf(PHI);
+	ga[a][2][2] = cosf(PHI);
+  }
 
   neighpoints[0] = -xpoints * ypoints;
   neighpoints[1] = -xpoints;
@@ -2007,119 +2016,60 @@ void  GrainGeneratorFunc::fill_gaps()
   neighpoints[3] = 1;
   neighpoints[4] = xpoints;
   neighpoints[5] = xpoints * ypoints;
-  count = 0;
+
   for (int i = 0; i < totalpoints; i++)
   {
     if (grain_indicies[i] <= 0)
     {
-      badvoxels[count] = i;
-      count++;
-      if (count >= badvoxels.size()) badvoxels.resize(count + 1000, -1);
-	}
-  }
-  badvoxels.erase(std::remove(badvoxels.begin(), badvoxels.end(), -1), badvoxels.end());
-  while (badvoxels.size() != 0)
-  {
-    count = 0;
-	timestep = timestep - 1;
-	for(int i = 0; i < badvoxels.size(); i++)
-	{
-		int point = badvoxels[i];
-		// Reset all values of 'n' to zero. Use memset for this as it is much faster
-		::memset( &(n[1]), 0, sizeof(int) * (numGrains-1) );
-		col = point % xpoints;
-		row = (point / xpoints) % ypoints;
-		plane = point / (xpoints * ypoints);
-		for (int j = 0; j < 6; j++)
+	  col = i % xpoints;
+	  row = (i / xpoints) % ypoints;
+	  plane = i / (xpoints * ypoints);
+	  for (int j = 1; j < numGrains; j++)
+	  {
+		float volcur = m_Grains[j]->volume;
+		float bovera = m_Grains[j]->radius2;
+		float covera = m_Grains[j]->radius3;
+		float omega3 = m_Grains[j]->omega3;
+		xc = m_Grains[j]->centroidx;
+		yc = m_Grains[j]->centroidy;
+		zc = m_Grains[j]->centroidz;
+		float radcur1 = 0.0f;
+		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
+		DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[j]->phase];
+
+		// init any values for each of the Shape Ops
+		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
 		{
-		  good = 1;
-		  neighpoint = point + neighpoints[j];
-		  if (j == 0 && plane == 0) good = 0;
-		  if (j == 5 && plane == (zpoints - 1)) good = 0;
-		  if (j == 1 && row == 0) good = 0;
-		  if (j == 4 && row == (ypoints - 1)) good = 0;
-		  if (j == 2 && col == 0) good = 0;
-		  if (j == 3 && col == (xpoints - 1)) good = 0;
-		  if (good == 1)
-		  {
-			neighgrain = grain_indicies[neighpoint];
-			if (neighgrain > 0)
-			{
-			  n[neighgrain]++;
-			  if (n[neighgrain] == 1 && neighgrain != neighbors[point])
-			  {
-				float volcur = m_Grains[neighgrain]->volume;
-				float bovera = m_Grains[neighgrain]->radius2;
-				float covera = m_Grains[neighgrain]->radius3;
-				float omega3 = m_Grains[neighgrain]->omega3;
-				xc = m_Grains[neighgrain]->centroidx;
-				yc = m_Grains[neighgrain]->centroidy;
-				zc = m_Grains[neighgrain]->centroidz;
-				float radcur1 = 0.0f;
-				//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-				DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[neighgrain]->phase];
-
-				// init any values for each of the Shape Ops
-				for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
-				{
-				  (*ops).second->init();
-				}
-				// Create our Argument Map
-				std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
-				shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
-				shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
-				shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
-				shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
-
-				radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
-
-				float radcur2 = (radcur1 * bovera);
-				float radcur3 = (radcur1 * covera);
-				float phi1 = m_Grains[neighgrain]->axiseuler1;
-				float PHI = m_Grains[neighgrain]->axiseuler2;
-				float phi2 = m_Grains[neighgrain]->axiseuler3;
-				float ga[3][3];
-				ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
-				ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
-				ga[0][2] = sinf(phi2) * sinf(PHI);
-				ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
-				ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
-				ga[1][2] = cosf(phi2) * sinf(PHI);
-				ga[2][0] = sinf(phi1) * sinf(PHI);
-				ga[2][1] = -cosf(phi1) * sinf(PHI);
-				ga[2][2] = cosf(PHI);
-
-				x = (col*resx) - xc;
-				y = (row*resy) - yc;
-				z = (plane*resz) - zc;
-				xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
-				yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
-				zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
-				float axis1comp = xp / radcur1;
-				float axis2comp = yp / radcur2;
-				float axis3comp = zp / radcur3;
-				inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-				if(inside > ellipfuncs[point])
-				{
-					ellipfuncs[point] = inside;
-					neighbors[point] = neighgrain;
-				}
-			  }
-			}
-		  }
+		  (*ops).second->init();
 		}
-    }
-    for (int i = 0; i < badvoxels.size(); i++)
-    {
-	  int point = badvoxels[i];
-      if (neighbors[point] > 0 && ellipfuncs[point] > (timestep*0.01))
-      {
-        grain_indicies[point] = neighbors[point];
-        phases[point] = m_Grains[neighbors[point]]->phase;
-		badvoxels[i] = -1;
-      }
-    }
-    badvoxels.erase(std::remove(badvoxels.begin(), badvoxels.end(), -1), badvoxels.end());
+		// Create our Argument Map
+		std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
+		shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
+		shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
+		shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
+		shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+
+		radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+		float radcur2 = (radcur1 * bovera);
+		float radcur3 = (radcur1 * covera);
+
+		x = (col*resx) - xc;
+		y = (row*resy) - yc;
+		z = (plane*resz) - zc;
+		xp = (x * ga[j][0][0]) + (y * ga[j][1][0]) + (z * ga[j][2][0]);
+		yp = (x * ga[j][0][1]) + (y * ga[j][1][1]) + (z * ga[j][2][1]);
+		zp = (x * ga[j][0][2]) + (y * ga[j][1][2]) + (z * ga[j][2][2]);
+		float axis1comp = xp / radcur1;
+		float axis2comp = yp / radcur2;
+		float axis3comp = zp / radcur3;
+		inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+		if(inside > ellipfuncs[i])
+		{
+			ellipfuncs[i] = inside;
+			grain_indicies[i] = j;
+		}
+	  }
+	}
   }
   gsizes.resize(numGrains, 0);
   int name = 0;
