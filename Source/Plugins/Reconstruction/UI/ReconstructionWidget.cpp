@@ -58,7 +58,7 @@
 #include "DREAM3D/Common/PhaseType.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/Dream3DQtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
 #include "H5Support/H5Utilities.h"

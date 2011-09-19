@@ -51,7 +51,7 @@
 
 
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/Dream3DQtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
 #include "DREAM3D/Common/Constants.h"
