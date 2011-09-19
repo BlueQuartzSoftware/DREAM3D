@@ -29,12 +29,14 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <stdlib.h>
+#include <math.h>
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <map>
+#include <limits>
 
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
@@ -276,7 +278,36 @@ int ReadEulerFile(const std::string &filename, std::map<int, EulerSet> &gidToEul
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void renumberGrains(AIMArray<int>::Pointer grains)
+{
+  int index = 0;
 
+  std::map<int, int> grain_map;
+  int nValue = 0;
+
+  size_t size = grains->GetNumberOfTuples();
+
+  // Get all
+  for(size_t i = 0; i < size; ++i)
+  {
+    int gid = grains->GetValue(i);
+    if ( grain_map.find(gid) == grain_map.end() )
+    {
+      grain_map[gid] = index;
+      nValue = index;
+      ++index;
+    }
+    else
+    {
+      nValue = grain_map[gid];
+    }
+    grains->SetValue(i, nValue);
+  }
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -343,6 +374,7 @@ int main(int argc, char **argv)
     std::cout << "Vtk File has dimensions: " << nx << " x " << ny << " x " << nz << std::endl;
     voxels = reader->getGrainIds();
 
+    renumberGrains(voxels);
 
     H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
     if (h5VolWriter.get() == NULL)
@@ -366,54 +398,47 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
-#if 0
-    std::cout << "Now Overwriting the GrainID data set in the HDF5 file...." << std::endl;
-    err = writeVtkDataToHDF5File(h5File, voxels, nz, ny, nz);
-    if (err < 0)
+    AIMArray<float>::Pointer e1 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
+    AIMArray<float>::Pointer e2 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
+    AIMArray<float>::Pointer e3 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
+
+    float f_nan = std::numeric_limits<float>::quiet_NaN();
+    size_t totalVoxels = voxels->GetNumberOfTuples();
+
+    for(size_t i = 0; i < totalVoxels; ++i)
     {
-     std::cout << "There was an error writing the grain id data. Check other errors for possible clues." << std::endl;
-     return EXIT_FAILURE;
+      e1->SetValue(i, f_nan);
+      e2->SetValue(i, f_nan);
+      e3->SetValue(i, f_nan);
     }
-    std::cout << "+ Done Writing the Grain ID Data." << std::endl;
 
-
-    std::map<int, EulerSet> gidToEulerMap;
-    if (eulerFile.empty() == false)
+    // Write dummy values for the Euler Angles which will be float NaN so we are
+    // very obvious that this file is not quite correct and is just a hack.
+    err = h5VolWriter->writeEulerData(e1->GetPointer(0), e2->GetPointer(0), e3->GetPointer(0), totalVoxels, true);
+    if ( err < 0)
     {
-      std::cout << "Reading the Euler Angle Data...." << std::endl;
-      err = ReadEulerFile(eulerFile, gidToEulerMap);
-      if (err < 0)
-      {
-        std::cout << "Error Reading the Euler Angle File" << std::endl;
-        return EXIT_FAILURE;
-      }
-
-    // Over Write the Euler Angles if the Euler File was supplied
-
-      std::cout << "Now Over Writing the Euler Angles data in the HDF5 file....." << std::endl;
-      int totalPoints = nx * ny * nz;
-      int numComp = 3;
-      // Loop over each Voxel getting its Grain ID and then setting the Euler Angle
-      AIMArray<float>::Pointer dataf = AIMArray<float>::CreateArray(totalPoints * 3);
-      for (int i = 0; i < totalPoints; ++i)
-      {
-        EulerSet& angle = gidToEulerMap[voxels->GetValue(i)];
-        dataf->SetValue(i*3, angle.e0);
-        dataf->SetValue(i * 3 + 1, angle.e1);
-        dataf->SetValue(i * 3 + 2, angle.e2);
-      }
-      // This is going to be a 2 Dimension Table Data set.
-      int32_t rank = 2;
-      hsize_t dims[2] = {totalPoints, numComp};
-      err = writeEulerDataToHDF5File(h5File, dataf, numComp, rank, dims);
-      if (err < 0)
-      {
-       std::cout << "There was an error writing the Euler Angle data. Check other errors for possible clues." << std::endl;
-       return EXIT_FAILURE;
-      }
-      std::cout << "+ Done Writing the Euler Angle Data." << std::endl;
+      return EXIT_FAILURE;
     }
-#endif
+
+    // Now we are going to re-use the grain Id array as the phase id array and write
+    // the phase id array to the hdf5 file.
+    for(size_t i = 0; i < totalVoxels; ++i)
+    {
+      voxels->SetValue(i, 1);
+    }
+
+
+    err = h5VolWriter->writePhaseIds(voxels->GetPointer(0), totalVoxels, true);
+    if ( err < 0)
+    {
+      return EXIT_FAILURE;
+    }
+
+    std::vector<Ebsd::CrystalStructure> crystruct(2, Ebsd::UnknownCrystalStructure);
+    err = h5VolWriter->writeCrystalStructures(crystruct, true);
+
+    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2, DREAM3D::Reconstruction::UnknownPhaseType);
+    err = h5VolWriter->writePhaseTypes(phaseTypes, true);
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
   {
