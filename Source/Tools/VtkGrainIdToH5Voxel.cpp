@@ -330,6 +330,9 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<std::string> vtkFile( "i", "vtkfile", "VTK Rectilinear Input File", true, "", "Vtk Input File");
     cmd.add(vtkFile);
 
+    TCLAP::SwitchArg renumber ("r", "renumber", "Optional - Adding this flag will cause all the grains to be renumbered.", false);
+    cmd.add(renumber);
+
 //    TCLAP::ValueArg<std::string> angleFileArg( "e", "eulerfile", "Euler Angle File", false, "", "Euler Angle File");
 //    cmd.add(angleFileArg);
 
@@ -374,7 +377,9 @@ int main(int argc, char **argv)
     std::cout << "Vtk File has dimensions: " << nx << " x " << ny << " x " << nz << std::endl;
     voxels = reader->getGrainIds();
 
-    renumberGrains(voxels);
+    if (renumber.getValue()) {
+      renumberGrains(voxels);
+    }
 
     H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
     if (h5VolWriter.get() == NULL)

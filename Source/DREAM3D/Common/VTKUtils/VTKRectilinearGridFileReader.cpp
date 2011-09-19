@@ -177,7 +177,7 @@ int VTKRectilinearGridFileReader::readFile()
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
-  if (err || dim != dims[0])
+  if (err < 0 || dim != dims[0])
   {
     return -1;
   }
@@ -189,7 +189,7 @@ int VTKRectilinearGridFileReader::readFile()
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
-  if (err || dim != dims[0])
+  if (err < 0 || dim != dims[0])
   {
     return -1;
   }
@@ -200,7 +200,7 @@ int VTKRectilinearGridFileReader::readFile()
 //  ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
-  if (err || dim != dims[0])
+  if (err < 0 || dim != dims[0])
   {
     return -1;
   }
