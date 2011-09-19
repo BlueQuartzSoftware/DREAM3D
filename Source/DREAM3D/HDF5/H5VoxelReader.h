@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -75,6 +75,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
     virtual ~H5VoxelReader();
 
     MXA_INSTANCE_STRING_PROPERTY(Filename);
+    MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
     int getSizeAndResolution(int volDims[3], float spacing[3]);
 
@@ -82,113 +83,16 @@ class DREAM3DLib_EXPORT H5VoxelReader
 
 
 
-
+/**
+ *
+ */
 	int readVoxelData(AIMArray<int>::Pointer grain_indicies,
 	                  AIMArray<int>::Pointer phases,
 	                  AIMArray<float>::Pointer euler1s,
 	                  AIMArray<float>::Pointer euler2s,
 	                  AIMArray<float>::Pointer euler3s,
 	                  std::vector<Ebsd::CrystalStructure> &crystruct,
-                    int totalpoints)
-{
-  int err = 0;
-  if (m_Filename.empty() == true)
-  {
-    std::cout << "H5ReconVolumeReader Error; Filename was empty" << std::endl;
-    return -1;
-  }
-
-  OPEN_HDF5_FILE(fileId, m_Filename)
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId)
-  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid)
-
-  int* iData = (int*)(malloc(totalpoints * sizeof(int)));
-
-  // Read in the Grain ID data
-  err = H5Lite::readPointerDataset(scalarGid, DREAM3D::VTK::GrainIdScalarName, iData);
-  if (err < 0)
-  {
-    std::cout << "H5ReconVolumeReader Error Reading the Grain IDs" << std::endl;
-    free(iData);
-    err = H5Gclose(scalarGid);
-    err = H5Gclose(reconGid);
-    err = H5Fclose(fileId);
-    return err;
-  }
-  for(int i = 0; i < totalpoints; ++i)
-  {
-    grain_indicies->SetValue(i, iData[i]);
-  }
-
-  // Read the Phase ID data
-  err = H5Lite::readPointerDataset(scalarGid, DREAM3D::VTK::PhaseIdScalarName, iData);
-  if (err < 0)
-  {
-    std::cout << "H5ReconVolumeReader Error Reading the Phase IDs" << std::endl;
-    free(iData);
-    err = H5Gclose(scalarGid);
-    err = H5Gclose(reconGid);
-    err = H5Fclose(fileId);
-    return err;
-  }
-  for(int i = 0; i < totalpoints; ++i)
-  {
-    phases->SetValue(i, iData[i]);
-  }
-  free(iData);
-
-
-  // Read in the Euler Angles Data
-  float* fData = (float*)(malloc(totalpoints * 3 * sizeof(float)));
-  err = H5Lite::readPointerDataset(scalarGid, DREAM3D::VTK::EulerAnglesName, fData);
-  if (err < 0)
-  {
-    std::cout << "H5ReconVolumeReader Error Reading the Euler Angles" << std::endl;
-    free(fData);
-    err = H5Gclose(scalarGid);
-    err = H5Gclose(reconGid);
-    err = H5Fclose(fileId);
-    return err;
-  }
-  for(int i = 0; i < totalpoints; ++i)
-  {
-    euler1s->SetValue(i, fData[i*3]);
-    euler2s->SetValue(i, fData[i*3+1]);
-    euler3s->SetValue(i, fData[i*3+2]);
-  }
-  free(fData);
-  // Close the group as we are done with it.
-  err = H5Gclose(scalarGid);
-
-  // Open the Field Data Group
-  OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_FIELD_DATA_GROUP_NAME, reconGid)
-
-  // Read the CrystalStructure Field Data
-  std::vector<unsigned int> xtals;
-  err = H5Lite::readVectorDataset(fieldGid, DREAM3D::VTK::CrystalStructureName, xtals);
-  if (err < 0)
-  {
-    std::cout << "H5ReconVolumeReader Error Reading the Crystal Structure Field Data" << std::endl;
-    err = H5Gclose(fieldGid);
-    err = H5Gclose(reconGid);
-    err = H5Fclose(fileId);
-    return err;
-  }
-  crystruct.resize(xtals.size());
-  for (size_t i =0; i < xtals.size(); ++i)
-  {
-    crystruct[i] = static_cast<Ebsd::CrystalStructure>(xtals[i]);
-  }
-
-
-  // Close all the HDF5 Groups and close the file
-  err = H5Gclose(fieldGid);
-  err = H5Gclose(reconGid);
-  err = H5Fclose(fileId);
-
-  return err;
-}
-
+                    int totalpoints);
 
 
   protected:
