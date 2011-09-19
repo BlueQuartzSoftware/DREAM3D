@@ -132,7 +132,8 @@ public:
     std::vector<float>                                 pptFractions;
     std::vector<DREAM3D::SyntheticBuilder::ShapeType>      shapeTypes;
 
-    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+	// Voxel Attribute Arrays
+	DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
     DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
@@ -140,27 +141,22 @@ public:
     DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
+	
+	std::vector<std::vector<std::vector<int> > > grainowners;
 
-    std::vector<int> numowners;
+	std::vector<Grain::Pointer> m_Grains;
+	std::vector<float> sizetest;
 
-    std::vector<Grain::Pointer> m_Grains;
-	  std::vector<float> sizetest;
-
-	  std::vector<std::vector<std::vector<int> > > grainowners;
-
-	  std::vector<SharedFloatArray> actualodf;
+	std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
-    std::vector<SharedFloatArray> axisodf;
-
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
-    std::vector<SharedFloatArray> actualmicrotex;
-    std::vector<SharedFloatArray> simmicrotex;
+    std::vector<SharedFloatArray> axisodf;
 
-	  std::vector<int> primaryphases;
-	  std::vector<double> primaryphasefractions;
-	  std::vector<int> precipitatephases;
-	  std::vector<double> precipitatephasefractions;
+	std::vector<int> primaryphases;
+	std::vector<double> primaryphasefractions;
+	std::vector<int> precipitatephases;
+	std::vector<double> precipitatephasefractions;
 
     std::vector<int> takencheck;
     std::vector<std::vector<std::vector<float> > > bovera;
@@ -168,7 +164,8 @@ public:
     std::vector<std::vector<std::vector<float> > > coverb;
     std::vector<std::vector<std::vector<float> > > omega3;
     std::vector<std::vector<std::vector<float> > > neighborparams;
-    std::vector<std::vector<float> > grainsizedist;
+
+	std::vector<std::vector<float> > grainsizedist;
     std::vector<std::vector<float> > simgrainsizedist;
     std::vector<std::vector<std::vector<float> > > neighbordist;
     std::vector<std::vector<std::vector<float> > > simneighbordist;
@@ -192,7 +189,6 @@ public:
     std::vector<float> sddiam;
     std::vector<int> numdiameterbins;
     int worstgrain;
-//    std::vector<float> totalaxes;
 
     float totalvol;
     float totalprecipvol;
@@ -206,17 +202,8 @@ public:
     float neighborhooderrorweight;
     float sizedisterrorweight;
 
-#if 0
-    void initialize(int32_t m_NumGrains, int32_t m_ShapeClass,
-                    float m_XResolution, float m_YResolution, float m_ZResolution,
-                    float m_fillingerrorweight, float m_neighborhooderrorweight, float m_sizedisterrorweight,
-                    int32_t m_Precipitates, float m_FractionPrecipitates,
-                    std::vector<Ebsd::CrystalStructure> m_CrystalStructure,
-                    std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseType);
-
-#endif
 	void initializeAttributes();
-	  void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
+	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
     void initialize_packinggrid();
 
     void write_eulerangles(const std::string & filename);
