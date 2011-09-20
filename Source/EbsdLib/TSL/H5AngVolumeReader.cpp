@@ -166,7 +166,7 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
   std::string index = StringUtils::numToString(getZStart());
 
   // Open the hdf5 file and read the data
-  hid_t fileId = H5Utilities::openFile(getFilename(), true);
+  hid_t fileId = H5Utilities::openFile(getFileName(), true);
   if (fileId < 0)
   {
     std::cout << "Error: Could not open .h5ebsd file for reading." << std::endl;
@@ -240,7 +240,7 @@ int H5AngVolumeReader::loadData(float* euler1s,
   for (int slice = 0; slice < zpoints; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();
-    reader->setFileName(getFilename());
+    reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()) );
     reader->setUserOrigin(getRefFrameOrigin());
     reader->setUserZDir(getRefFrameZDir());
