@@ -22,7 +22,7 @@
 * @date 
 * @version 1.0
 */
-class DREAM3DLib_EXPORT Extrapolation2Dto3D : public AbstractPipeline
+class Extrapolation2Dto3D : public AbstractPipeline
 {
   public:
     MXA_SHARED_POINTERS(Extrapolation2Dto3D);
