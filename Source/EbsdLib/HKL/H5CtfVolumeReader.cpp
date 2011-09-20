@@ -75,7 +75,7 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   std::string index = StringUtils::numToString(getZStart());
 
   // Open the hdf5 file and read the data
-  hid_t fileId = H5Utilities::openFile(getFilename(), true);
+  hid_t fileId = H5Utilities::openFile(getFileName(), true);
   if (fileId < 0)
   {
     std::cout << "Error" << std::endl;
@@ -146,7 +146,7 @@ int H5CtfVolumeReader::loadData(float* euler1s,
   for (int slice = 0; slice < zpoints; ++slice)
   {
     H5CtfReader::Pointer reader = H5CtfReader::New();
-    reader->setFileName(getFilename());
+    reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()));
     reader->setUserOrigin(getRefFrameOrigin());
     reader->setUserZDir(getRefFrameZDir());

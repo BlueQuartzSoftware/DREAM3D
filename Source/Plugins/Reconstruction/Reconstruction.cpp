@@ -115,7 +115,7 @@ void Reconstruction::execute()
   // Get the Size and Resolution of the Volume
   {
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
-    volumeInfoReader->setFilename(m_H5AngFile);
+    volumeInfoReader->setFileName(m_H5AngFile);
     err = volumeInfoReader->readVolumeInfo();
     CHECK_FOR_ERROR(ReconstructionFunc, "Error reading Volume Information from File.", err);
 
