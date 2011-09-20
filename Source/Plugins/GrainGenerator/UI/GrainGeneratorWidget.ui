@@ -371,17 +371,17 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="3">
-         <widget class="QLabel" name="est_numgrains">
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="4" rowspan="5">
          <widget class="Line" name="line">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLabel" name="m_EstimatedGrains">
+          <property name="text">
+           <string>0</string>
           </property>
          </widget>
         </item>

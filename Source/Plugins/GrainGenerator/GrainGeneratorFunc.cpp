@@ -1319,9 +1319,9 @@ void  GrainGeneratorFunc::pack_grains()
   {
     GGseed++;
     random = rg.genrand_res53();
-    for (size_t j = 0; j < primaryphases.size();++j)
+    for (size_t j = 0; j < primaryphases.size(); ++j)
     {
-      if (random < primaryphasefractions[j])
+      if(random < primaryphasefractions[j])
       {
         phase = primaryphases[j];
         break;
@@ -1329,8 +1329,8 @@ void  GrainGeneratorFunc::pack_grains()
     }
     generate_grain(gid, phase);
     currentvol = currentvol + m_Grains[gid]->volume;
-	gid++;
-	m_Grains.resize(gid+1);
+    gid++;
+    m_Grains.resize(gid + 1);
     m_Grains[gid] = Grain::New();
   }
   // initialize the sim and goal size distributions for the primary phases

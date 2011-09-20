@@ -367,72 +367,76 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     m_OutputFilePrefix->setText(fi.baseName() + QString("_"));
 
     // Open the HDF5 Stats file
-       H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
-       if (h5reader.get() == NULL)
-       {
-         return;
-       }
-       // Read the Phase and Crystal Structure information from the Stats File
-       std::vector<int> phases;
-       std::vector<Ebsd::CrystalStructure> structures;
-       int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
-       if (err < 0)
-       {
-         return;
-       }
+    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
+    if(h5reader.get() == NULL)
+    {
+      return;
+    }
+    // Read the Phase and Crystal Structure information from the Stats File
+    std::vector<int> phases;
+    std::vector<Ebsd::CrystalStructure> structures;
+    int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
+    if(err < 0)
+    {
+      return;
+    }
 
-       int size = phases.size();
-       std::vector<std::string> shapeTypeStrings;
-       DREAM3D::ShapeType::getShapeTypeStrings(shapeTypeStrings);
-       std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypeEnums;
-       DREAM3D::ShapeType::getShapeTypeEnums(shapeTypeEnums);
+    int size = phases.size();
+    std::vector<std::string> shapeTypeStrings;
+    DREAM3D::ShapeType::getShapeTypeStrings(shapeTypeStrings);
+    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypeEnums;
+    DREAM3D::ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
+    // Remove all the items from the GUI and from the internal tracking Lists
+    QLayoutItem *child;
+    while ((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != 0)
+    {
+      delete child;
+    }
+    m_ShapeTypeLabels.clear();
+    m_ShapeTypeCombos.clear();
 
-       // Remove all the items from the GUI and from the internal tracking Lists
-       QLayoutItem *child;
-       while ( (formLayout_2->count() > 0)  && (child = formLayout_2->takeAt(0)) != 0) {
-           delete child;
-       }
-       m_ShapeTypeLabels.clear();
-       m_ShapeTypeCombos.clear();
+    // Create a whole new QWidget to hold everything
+    m_ShapeTypeScrollContents = new QWidget();
+    m_ShapeTypeScrollContents->setObjectName(QString::fromUtf8("m_ShapeTypeScrollContents"));
+    formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
+    formLayout_2->setContentsMargins(4, 4, 4, 4);
+    formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+    formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+    formLayout_2->setHorizontalSpacing(6);
+    formLayout_2->setVerticalSpacing(6);
+    m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
 
-       // Create a whole new QWidget to hold everything
-       m_ShapeTypeScrollContents = new QWidget();
-       m_ShapeTypeScrollContents->setObjectName(QString::fromUtf8("m_ShapeTypeScrollContents"));
-       formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
-       formLayout_2->setContentsMargins(4, 4, 4, 4);
-       formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
-       formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
-       formLayout_2->setHorizontalSpacing(6);
-       formLayout_2->setVerticalSpacing(6);
-       m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
+    for (int i = 0; i < size; i++)
+    {
+      QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
+      QString str("Phase ");
+      str.append(QString::number(i, 10));
+      str.append(":");
+      shapeTypeLabel->setText(str);
+      shapeTypeLabel->setObjectName(str);
+      m_ShapeTypeLabels << shapeTypeLabel;
 
-       for (int i = 0; i < size; i++)
-       {
-         QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
-         QString str ("Phase ");
-         str.append(QString::number(i, 10));
-         str.append(":");
-         shapeTypeLabel->setText(str);
-         shapeTypeLabel->setObjectName(str);
-         m_ShapeTypeLabels << shapeTypeLabel;
+      formLayout_2->setWidget(i, QFormLayout::LabelRole, shapeTypeLabel);
 
-         formLayout_2->setWidget(i, QFormLayout::LabelRole, shapeTypeLabel);
+      QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
+      str.append(" ComboBox");
+      cb->setObjectName(str);
+      for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
+      {
+        cb->addItem(QString::fromStdString(shapeTypeStrings[s]), shapeTypeEnums[s]);
+        cb->setItemData(s, shapeTypeEnums[s], Qt::UserRole);
+      }
+      m_ShapeTypeCombos << cb;
+      formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
+    }
 
-         QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
-         str.append(" ComboBox");
-         cb->setObjectName(str);
-         for(size_t s = 0; s < shapeTypeStrings.size(); ++s)
-         {
-           cb->addItem(QString::fromStdString( shapeTypeStrings[s]), shapeTypeEnums[s] );
-           cb->setItemData(s, shapeTypeEnums[s], Qt::UserRole);
-         }
-         m_ShapeTypeCombos << cb;
-         formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
-       }
-
+    // Estimate the number of grains
+    estimateNumGrainsSetup();
 
   }
+
+
 
 }
 
@@ -663,7 +667,7 @@ void GrainGeneratorWidget::estimateNumGrainsSetup()
   yres = m_YResolution->value();
   zres = m_ZResolution->value();
   int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
-  est_numgrains->setText(QString::number(est_ngrains));
+  m_EstimatedGrains->setText(QString::number(est_ngrains));
 }
 
 // -----------------------------------------------------------------------------
@@ -765,22 +769,22 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     random = rg.genrand_res53();
     for (size_t j = 0; j < primaryphases.size(); ++j)
     {
-      if (random < primaryphasefractions[j])
+      if(random < primaryphasefractions[j])
       {
         phase = primaryphases[j];
         break;
       }
     }
-	while(volgood == 0)
-	{
-	  volgood = 1;
-	  u = rg.genrand_res53();
-	  diam = rg.genrand_norm(avgdiam[phase],sddiam[phase]);
-	  diam = exp(diam);
-	  if(diam >= maxdiameter[phase]) volgood = 0;
-	  if(diam < mindiameter[phase]) volgood = 0;
-	  vol = (4.0/3.0)*(m_pi)*((diam * 0.5f)*(diam * 0.5f)*(diam * 0.5f));
-	}
+    while (volgood == 0)
+    {
+      volgood = 1;
+      u = rg.genrand_res53();
+      diam = rg.genrand_norm(avgdiam[phase], sddiam[phase]);
+      diam = exp(diam);
+      if(diam >= maxdiameter[phase]) volgood = 0;
+      if(diam < mindiameter[phase]) volgood = 0;
+      vol = (4.0 / 3.0) * (m_pi) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
+    }
     currentvol = currentvol + vol;
     gid++;
   }
