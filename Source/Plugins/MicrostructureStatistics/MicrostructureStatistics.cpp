@@ -47,7 +47,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 
 // -----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ void MicrostructureStatistics::execute()
   updateProgressAndMessage("Reading the Voxel Dimensions and Resolution", 2);
   // Load up the voxel data
   H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-  h5Reader->setFilename(m_InputFile);
+  h5Reader->setFileName(m_InputFile);
   int dims[3];
   float spacing[3];
   err = h5Reader->getSizeAndResolution(dims, spacing);
@@ -124,7 +124,7 @@ void MicrostructureStatistics::execute()
   m->initializeAttributes();
 
   updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
-  err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->totalpoints);
+  err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalpoints);
   CHECK_FOR_ERROR(MicrostructureStatisticsFunc, (h5Reader->getErrorMessage()), err);
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  readVoxelData)
 
@@ -193,7 +193,7 @@ void MicrostructureStatistics::execute()
   if(m_WriteH5StatsFile == true)
   {
 	  // Create a new Writer for the Stats Data.
-	  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+	  H5StatsWriter::Pointer h5io = H5StatsWriter::New(hdf5ResultsFile);
 
 	  updateProgressAndMessage(("Finding Grain Axes ODF"), 65);
 	  if(m->zpoints > 1) m->find_vectors(h5io);

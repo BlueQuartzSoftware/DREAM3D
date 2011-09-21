@@ -102,7 +102,7 @@ void GrainGenerator::execute()
   START_CLOCK()
 
   // Open the HDF5 Stats file
-  H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5StatsFile);
+  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   if (h5reader.get() == NULL)
   {
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Opening the HDF5 Input file", -1)
@@ -175,7 +175,7 @@ void GrainGenerator::execute()
     {
       // Load up the voxel data
       H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-      h5Reader->setFilename(m_StructureFile);
+      h5Reader->setFileName(m_StructureFile);
       int dims[3];
       float spacing[3];
       err = h5Reader->getSizeAndResolution(dims, spacing);
@@ -195,7 +195,7 @@ void GrainGenerator::execute()
       m->initializeAttributes();
 
       updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
-      err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->totalpoints);
+      err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalpoints);
       CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error reading voxel data from HDF5 Voxel File", err);
     }
     else
@@ -268,7 +268,7 @@ void GrainGenerator::execute()
     m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
     return;
   }
-  h5VoxelWriter->setFilename(h5VoxelFile);
+  h5VoxelWriter->setFileName(h5VoxelFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
   err = h5VoxelWriter->writeData<GrainGeneratorFunc>(m.get());
   CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);

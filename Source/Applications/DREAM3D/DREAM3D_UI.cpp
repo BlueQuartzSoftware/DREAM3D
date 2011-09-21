@@ -57,7 +57,7 @@
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/Dream3DQtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"

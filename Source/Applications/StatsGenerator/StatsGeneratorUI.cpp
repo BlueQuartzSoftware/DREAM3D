@@ -477,7 +477,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
   // Instantiate a new HDF5 writer object
-  H5ReconStatsWriter::Pointer writer = H5ReconStatsWriter::New(m_FilePath.toStdString());
+  H5StatsWriter::Pointer writer = H5StatsWriter::New(m_FilePath.toStdString());
   // Loop on all the phases
   int nPhases = m_SGWidgets.size();
   for(int i = 0; i < nPhases; ++i)
@@ -487,8 +487,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
     err = sgwidget->writeDataToHDF5(writer);
   }
   // Force the clean up of the writer by assigning a NULL pointer which will
-  // have the effect of executing the destructor of the H5ReconStatsWriter Class
-  writer = H5ReconStatsWriter::NullPointer();
+  // have the effect of executing the destructor of the H5StatsWriter Class
+  writer = H5StatsWriter::NullPointer();
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);
@@ -581,7 +581,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   }
 
   // Instantiate a Reader object
-  H5ReconStatsReader::Pointer reader = H5ReconStatsReader::New(m_FilePath.toStdString());
+  H5StatsReader::Pointer reader = H5StatsReader::New(m_FilePath.toStdString());
 
   // Get the list of Phases from the HDF5 file
   std::vector<int> phases;

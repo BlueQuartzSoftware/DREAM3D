@@ -27,7 +27,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT Extrapolation2Dto3DFunc
+class  Extrapolation2Dto3DFunc
 {
 public:
     MXA_SHARED_POINTERS(Extrapolation2Dto3DFunc)

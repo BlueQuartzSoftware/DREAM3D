@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -55,22 +55,22 @@
 
 
 /**
- * @class H5ReconStatsWriter H5ReconStatsWriter.h AIM/Common/HDF5/H5ReconStatsWriter.h
+ * @class H5StatsWriter H5StatsWriter.h AIM/Common/HDF5/H5StatsWriter.h
  * @brief This class writes Reconstruction Module Statistical data to an HDF5 file
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Michael A. Groeber for USAF Research Laboratory
  * @date Apr 15, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT H5ReconStatsWriter
+class DREAM3DLib_EXPORT H5StatsWriter
 {
   public:
-    MXA_SHARED_POINTERS(H5ReconStatsWriter);
-    MXA_STATIC_NEW_MACRO(H5ReconStatsWriter);
+    MXA_SHARED_POINTERS(H5StatsWriter);
+    MXA_STATIC_NEW_MACRO(H5StatsWriter);
 
     static Pointer New(const std::string &filename);
 
-    virtual ~H5ReconStatsWriter();
+    virtual ~H5StatsWriter();
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
 
@@ -139,12 +139,12 @@ class DREAM3DLib_EXPORT H5ReconStatsWriter
                               Ebsd::CrystalStructure xtal,
                               float phasefraction, float pptFraction);
   protected:
-    H5ReconStatsWriter();
+    H5StatsWriter();
   private:
     hid_t m_FileId;
 
-    H5ReconStatsWriter(const H5ReconStatsWriter&); // Copy Constructor Not Implemented
-    void operator=(const H5ReconStatsWriter&); // Operator '=' Not Implemented
+    H5StatsWriter(const H5StatsWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5StatsWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* _H5RECONSTRUCTIONIO_H_ */

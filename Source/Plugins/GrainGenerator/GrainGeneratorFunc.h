@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -78,8 +78,8 @@
 #include "DREAM3D/Common/ShapeOps/EllipsoidOps.h"
 #include "DREAM3D/Common/ShapeOps/SuperEllipsoidOps.h"
 
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
 
 
 
@@ -142,7 +142,7 @@ public:
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
-	
+
 	std::vector<std::vector<std::vector<int> > > grainowners;
 
 	std::vector<Grain::Pointer> m_Grains;
@@ -208,10 +208,10 @@ public:
     void initialize_packinggrid();
 
     void write_eulerangles(const std::string & filename);
-    int readReconStatsData(H5ReconStatsReader::Pointer h5io);
-    int readAxisOrientationData(H5ReconStatsReader::Pointer h5io);
-    int readODFData(H5ReconStatsReader::Pointer h5io);
-    int readMisorientationData(H5ReconStatsReader::Pointer h5io);
+    int readReconStatsData(H5StatsReader::Pointer h5io);
+    int readAxisOrientationData(H5StatsReader::Pointer h5io);
+    int readODFData(H5StatsReader::Pointer h5io);
+    int readMisorientationData(H5StatsReader::Pointer h5io);
 
     void pack_grains();
     void generate_grain(int, int);

@@ -60,7 +60,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
 
     virtual ~H5EbsdVolumeInfo();
 
-    EBSD_INSTANCE_STRING_PROPERTY(Filename);
+    EBSD_INSTANCE_STRING_PROPERTY(FileName);
 
     /**
      * @brief Reads all the volume header values

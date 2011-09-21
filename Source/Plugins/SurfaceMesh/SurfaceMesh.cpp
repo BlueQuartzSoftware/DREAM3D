@@ -249,7 +249,7 @@ void SurfaceMesh::execute()
 #endif
 
   H5VoxelReader::Pointer reader = H5VoxelReader::New();
-  reader->setFilename(m_InputFile);
+  reader->setFileName(m_InputFile);
 
   int dims[3];
   float scaling[3];

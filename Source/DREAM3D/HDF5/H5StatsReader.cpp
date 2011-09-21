@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -34,12 +34,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5ReconStatsReader.h"
+#include "H5StatsReader.h"
 
 
 #define CHECK_STATS_READ_ERROR(err, name)\
 if (err < 0) {\
-  std::cout << "H5ReconStatsReader Error: Could not read the " << name << " Group Data" << std::endl;\
+  std::cout << "H5StatsReader Error: Could not read the " << name << " Group Data" << std::endl;\
     std::cout << "  File: " << __FILE__ << std::endl;\
     std::cout << "  Line: " << __LINE__ << std::endl;\
 return err; }
@@ -47,23 +47,23 @@ return err; }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconStatsReader::H5ReconStatsReader()
+H5StatsReader::H5StatsReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconStatsReader::~H5ReconStatsReader()
+H5StatsReader::~H5StatsReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
+H5StatsReader::Pointer H5StatsReader::New(const std::string &filename)
 {
-  Pointer sharedPtr(new H5ReconStatsReader);
+  Pointer sharedPtr(new H5StatsReader);
   sharedPtr->setFileName(filename);
   hid_t fileId = H5Utilities::openFile(filename, true);
   if (fileId < 0)
@@ -80,7 +80,7 @@ H5ReconStatsReader::Pointer H5ReconStatsReader::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string H5ReconStatsReader::getDistributionType(int phase,
+std::string H5StatsReader::getDistributionType(int phase,
                                                     const std::string &group,
                                                     DREAM3D::Reconstruction::DistributionType &dt)
 {
@@ -126,7 +126,7 @@ std::string H5ReconStatsReader::getDistributionType(int phase,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
+int H5StatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
                                   std::vector<Ebsd::CrystalStructure> &xtals)
 {
   phases.clear();
