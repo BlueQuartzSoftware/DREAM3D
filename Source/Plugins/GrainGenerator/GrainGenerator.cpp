@@ -144,7 +144,7 @@ void GrainGenerator::execute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_voxels)
 
     updateProgressAndMessage(("Filling Gaps"), 40);
-    m->fill_gaps();
+    m->assign_gaps();
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Filling Gaps", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
   }
