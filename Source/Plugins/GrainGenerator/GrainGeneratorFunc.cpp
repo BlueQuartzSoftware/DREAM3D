@@ -333,7 +333,7 @@ return err; }
   }\
 }
 
-int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
+int GrainGeneratorFunc::readReconStatsData(H5StatsReader::Pointer h5io)
 {
   int err = -1;
   std::vector<float> grainDiamInfo;
@@ -428,7 +428,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5io)
+int  GrainGeneratorFunc::readAxisOrientationData(H5StatsReader::Pointer h5io)
 {
   std::vector<float> density;
   int err = 0;
@@ -472,7 +472,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   return err;
 }
 
-int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
+int GrainGeneratorFunc::readODFData(H5StatsReader::Pointer h5io)
 {
   std::vector<float> density;
   int err = 0;
@@ -515,7 +515,7 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
+int GrainGeneratorFunc::readMisorientationData(H5StatsReader::Pointer h5io)
 {
   std::vector<float> density;
   int err = 0;
@@ -1323,9 +1323,9 @@ void GrainGeneratorFunc::pack_grains()
   {
     GGseed++;
     random = rg.genrand_res53();
-    for (size_t j = 0; j < primaryphases.size();++j)
+    for (size_t j = 0; j < primaryphases.size(); ++j)
     {
-      if (random < primaryphasefractions[j])
+      if(random < primaryphasefractions[j])
       {
         phase = primaryphases[j];
         break;
@@ -1333,8 +1333,8 @@ void GrainGeneratorFunc::pack_grains()
     }
     generate_grain(gid, phase);
     currentvol = currentvol + m_Grains[gid]->volume;
-	gid++;
-	m_Grains.resize(gid+1);
+    gid++;
+    m_Grains.resize(gid + 1);
     m_Grains[gid] = Grain::New();
   }
   // initialize the sim and goal size distributions for the primary phases

@@ -61,7 +61,7 @@
 #include <qwt_plot_marker.h>
 
 #include "DREAM3D/Common/AIMMath.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/DefaultStatsPreset.h"
@@ -719,7 +719,7 @@ void SGWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
+int SGWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
 {
   if (m_PhaseIndex < 1)
   {
@@ -788,7 +788,7 @@ int SGWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase)
+int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
 {
   setWidgetListEnabled(true);
   float mu = 1.0f;

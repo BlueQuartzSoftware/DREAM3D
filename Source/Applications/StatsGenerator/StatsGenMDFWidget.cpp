@@ -255,7 +255,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase)
+int StatsGenMDFWidget::readDataFromHDF5(H5StatsReader::Pointer reader,int phase)
 {
   int err = -1;
   std::string index = StringUtils::numToString(phase);
@@ -290,7 +290,7 @@ int StatsGenMDFWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,int p
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer)
+int StatsGenMDFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
 {
   int err = 0;
   int retErr = 0;

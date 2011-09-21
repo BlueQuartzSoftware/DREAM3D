@@ -62,7 +62,7 @@ class   STLWriter
     static Pointer CreateNewSTLWriter(int gid, const std::string &filename)
     {
       Pointer stlWriter = STLWriter::New();
-      stlWriter->setFilename(filename);
+      stlWriter->setFileName(filename);
       stlWriter->setGrainID(gid);
       int err = stlWriter->openFile("wb");
       if (err < 0)
@@ -77,7 +77,7 @@ class   STLWriter
     }
     virtual ~STLWriter();
 
-    MXA_INSTANCE_STRING_PROPERTY(Filename)
+    MXA_INSTANCE_STRING_PROPERTY(FileName)
     MXA_INSTANCE_PROPERTY(int, TriangleCount)
     MXA_INSTANCE_PROPERTY(int, GrainID)
 

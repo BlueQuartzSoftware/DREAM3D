@@ -112,10 +112,10 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   int err = -1;
   m_ValuesAreCached = false;
   int retErr = 0;
-  hid_t fileId = H5Utilities::openFile(m_Filename, true);
+  hid_t fileId = H5Utilities::openFile(m_FileName, true);
   if (fileId < 0)
   {
-    std::cout << "Error Opening file '" << m_Filename << "'" << std::endl;
+    std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
     return -1;
   }
 

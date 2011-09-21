@@ -141,7 +141,7 @@ class Reconstruction : public AbstractPipeline
                  std::vector<float> &precipFractions,
                  std::vector<Ebsd::CrystalStructure> &crystalStructures)
     {
-      reader->setFilename(m_H5AngFile);
+      reader->setFileName(m_H5AngFile);
       reader->setSliceStart(m_ZStartIndex);
       reader->setSliceEnd(m_ZEndIndex);
       reader->setRefFrameOrigin(m_RefFrameOrigin);

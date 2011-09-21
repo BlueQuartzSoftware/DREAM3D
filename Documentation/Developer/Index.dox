@@ -10,6 +10,10 @@ If you would like to make changes to the DREAM.3D applications then you will nee
 to be able to compile DREAM.3D your self. This page will attemp to describe the
 prerequisites that are needed to compile DREAM.3D
 
+@subpage codeguidelines Best Practices for Portable Code in DREAM.3D
+  This section details some basic coding guidelines for developers wishing to
+constribute to DREAM.3D
+
 @subpage writingplugins "Writing Plugins"
 These documents will show you what needs to be written in order to create a plugin
 for the DREAM.3D environment
@@ -28,13 +32,30 @@ few C++ classes and compiling the application.
   This page details the internal organization of the HDF5 file that contains the
 EBSD volume data.
 
-@subpage h5voxelvolume "HDF5 Reconstruction Voxel Volume Data File"
+@subpage h5voxelvolume "HDF5 Voxel Volume Data File"
   This page details the internal organization of the HDF5 file that contains the
-voxel volume data from the reconstruction.
+voxel volume data.
 
 @subpage surfacemeshing "Surface Meshing File Specifications"
  This page details some of the input/intermediate/output files that are used in the
 Surface Mesh Plugin.
+
+@section versionhistory Version History
+<b>Version 2</b>
+  This is a major release of the DREAM.3D suite of applications. This release includes
+all the following enhancments:
+
+@li Created CMake and Source code Templates for developers to easily create a new plugin
+@li Restructured lots of low level code for speed and memory enhancements
+@li Added ability to set the Reference Frame Origin and Stacking Order during the
+    import of EBSD data files
+@li Added ability to import Oxford Instrument/HKL .ctf files in addition to TSL .ang files
+@li Added flexible "Quality Metric" filters to the reconstruction plugin to determin
+which voxels are considered good or bad
+@li Updated to HDF5 Version 1.8.7
+
+
+
 
 
 */

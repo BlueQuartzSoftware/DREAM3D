@@ -44,8 +44,8 @@
 #include <MXA/Common/MXASetGetMacros.h>
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
 
 
 class SGODFTableModel;
@@ -81,8 +81,8 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     Ebsd::CrystalStructure getCrystalStructure();
 
-    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
-    int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
+    int writeDataToHDF5(H5StatsWriter::Pointer writer);
+    int readDataFromHDF5(H5StatsReader::Pointer reader, int phase);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 

@@ -58,7 +58,7 @@
 #include "DREAM3D/Common/PhaseType.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/Dream3DQtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
 #include "H5Support/H5Utilities.h"
@@ -399,7 +399,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 
     // Read the Phase information from the .h5ang file
     H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
-    h5Reader->setFilename(m_H5InputFile->text().toStdString() );
+    h5Reader->setFileName(m_H5InputFile->text().toStdString() );
     h5Reader->setSliceStart(m_ZStartIndex->value());
 
     int size = h5Reader->getNumPhases();
@@ -569,7 +569,7 @@ void ReconstructionWidget::m_SetSliceInfo()
     return;
   }
 
-  reader->setFilename(m_H5InputFile->text().toStdString());
+  reader->setFileName(m_H5InputFile->text().toStdString());
   if (reader->readVolumeInfo() >= 0)
   {
     float x, y, z;

@@ -40,8 +40,8 @@
 #include "ui_SGWidget.h"
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
@@ -95,8 +95,8 @@ class SGWidget : public QWidget, private Ui::SGWidget
     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
     int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
-    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
-    int readDataFromHDF5(H5ReconStatsReader::Pointer reader, int phase);
+    int writeDataToHDF5(H5StatsWriter::Pointer writer);
+    int readDataFromHDF5(H5StatsReader::Pointer reader, int phase);
 
   public slots:
     void on_m_GenerateDefaultData_clicked();

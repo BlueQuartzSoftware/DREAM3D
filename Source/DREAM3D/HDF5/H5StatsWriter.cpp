@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5ReconStatsWriter.h"
+#include "H5StatsWriter.h"
 
 #include <string>
 
@@ -67,23 +67,23 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconStatsWriter::H5ReconStatsWriter()
+H5StatsWriter::H5StatsWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconStatsWriter::~H5ReconStatsWriter()
+H5StatsWriter::~H5StatsWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
+H5StatsWriter::Pointer H5StatsWriter::New(const std::string &filename)
 {
-  Pointer sharedPtr(new H5ReconStatsWriter);
+  Pointer sharedPtr(new H5StatsWriter);
   sharedPtr->setFileName(filename);
   hid_t fileId = H5Utilities::createFile(filename);
   if (fileId < 0)
@@ -101,7 +101,7 @@ H5ReconStatsWriter::Pointer H5ReconStatsWriter::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writePhaseInformation(int phase,
+int H5StatsWriter::writePhaseInformation(int phase,
                                               DREAM3D::Reconstruction::PhaseType  phaseType,
                                               Ebsd::CrystalStructure xtal,
                                               float phasefraction, float pptFraction)
@@ -178,7 +178,7 @@ int H5ReconStatsWriter::writePhaseInformation(int phase,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeSizeDistribution(int phase, float maxdiameter, float mindiameter,
+int H5StatsWriter::writeSizeDistribution(int phase, float maxdiameter, float mindiameter,
                                               float binStepSize,
                                               float avglogdiam, float sdlogdiam,
                                               size_t &numberOfBins)
@@ -244,7 +244,7 @@ int H5ReconStatsWriter::writeSizeDistribution(int phase, float maxdiameter, floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<float> H5ReconStatsWriter::generateBins(int phase, float maxDiameter, float minDiameter, float diameterStep)
+std::vector<float> H5StatsWriter::generateBins(int phase, float maxDiameter, float minDiameter, float diameterStep)
 {
   std::vector<float> bins;
   float d = minDiameter;
@@ -259,7 +259,7 @@ std::vector<float> H5ReconStatsWriter::generateBins(int phase, float maxDiameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeBetaDistribution(int phase, const std::string &hdf5GroupName,
+int H5StatsWriter::writeBetaDistribution(int phase, const std::string &hdf5GroupName,
                            std::vector<float> &alpha,
                            std::vector<float> &beta)
 {
@@ -281,7 +281,7 @@ int H5ReconStatsWriter::writeBetaDistribution(int phase, const std::string &hdf5
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeLogNormalDistribution(int phase, const std::string &hdf5GroupName,
+int H5StatsWriter::writeLogNormalDistribution(int phase, const std::string &hdf5GroupName,
                                                     std::vector<float> &average,
                                                     std::vector<float> &stdDev )
 {
@@ -303,7 +303,7 @@ int H5ReconStatsWriter::writeLogNormalDistribution(int phase, const std::string 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writePowerDistribution(int phase, const std::string &hdf5GroupName,
+int H5StatsWriter::writePowerDistribution(int phase, const std::string &hdf5GroupName,
                                                std::vector<float> &alpha,
                                                std::vector<float> &k,
                                                std::vector<float> &beta)
@@ -328,7 +328,7 @@ int H5ReconStatsWriter::writePowerDistribution(int phase, const std::string &hdf
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disType,
+int H5StatsWriter::writeDistributionData(int phase, const std::string &disType,
                           const std::string &hdf5GroupName,
                           std::vector<std::string> &columnHeaders,
                           std::vector<std::vector<float> > &colData)
@@ -398,7 +398,7 @@ int H5ReconStatsWriter::writeDistributionData(int phase, const std::string &disT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
+int H5StatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
                                          DREAM3D::Reconstruction::PhaseType phaseType,
                                          float phasefraction, float pptFraction,
                                          float maxdiameter, float mindiameter, float diamStepSize,
@@ -515,7 +515,7 @@ int H5ReconStatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeVolumeStats2D(int phase,
+int H5StatsWriter::writeVolumeStats2D(int phase,
                                            Ebsd::CrystalStructure xtal,
                                            DREAM3D::Reconstruction::PhaseType phaseType,
                                            float phasefraction, float pptFraction,
@@ -578,7 +578,7 @@ int H5ReconStatsWriter::writeVolumeStats2D(int phase,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeMisorientationBinsData(int phase, unsigned long long int* nElements, float* misobins)
+int H5StatsWriter::writeMisorientationBinsData(int phase, unsigned long long int* nElements, float* misobins)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -607,7 +607,7 @@ int H5ReconStatsWriter::writeMisorientationBinsData(int phase, unsigned long lon
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeMDFWeights(int phase, uint64_t* dims,
+int H5StatsWriter::writeMDFWeights(int phase, uint64_t* dims,
                                         float* angles, float* axes, float* weights)
 {
   herr_t err = 0;
@@ -660,7 +660,7 @@ int H5ReconStatsWriter::writeMDFWeights(int phase, uint64_t* dims,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeMicroTextureData(int phase, float* microbin, size_t nElements, float actualgrains)
+int H5StatsWriter::writeMicroTextureData(int phase, float* microbin, size_t nElements, float actualgrains)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -693,7 +693,7 @@ int H5ReconStatsWriter::writeMicroTextureData(int phase, float* microbin, size_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, float totalaxes)
+int H5StatsWriter::writeAxisOrientationData(int phase, float* axisodf, float totalaxes)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -738,7 +738,7 @@ int H5ReconStatsWriter::writeAxisOrientationData(int phase, float* axisodf, floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeAxisODFWeights(int phase, unsigned long long int *dims,
+int H5StatsWriter::writeAxisODFWeights(int phase, unsigned long long int *dims,
                         float* e1, float* e2, float* e3, float* weights, float* sigmas)
 {
   herr_t err = 0;
@@ -795,7 +795,7 @@ int H5ReconStatsWriter::writeAxisODFWeights(int phase, unsigned long long int *d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeODFData(int phase,
+int H5StatsWriter::writeODFData(int phase,
                                      unsigned long long* dims,
                                      float* eulerodf)
 {
@@ -825,7 +825,7 @@ int H5ReconStatsWriter::writeODFData(int phase,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5ReconStatsWriter::writeODFWeights(int phase, unsigned long long int *dims,
+int H5StatsWriter::writeODFWeights(int phase, unsigned long long int *dims,
                                                   float* e1, float* e2, float* e3,
                                                   float* weights, float* sigmas)
 {

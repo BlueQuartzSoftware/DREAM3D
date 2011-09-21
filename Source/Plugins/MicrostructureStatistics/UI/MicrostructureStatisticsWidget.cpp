@@ -50,10 +50,10 @@
 #include <QtGui/QListWidgetItem>
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
 
-#include "QtSupport/Dream3DQtMacros.h"
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
@@ -203,7 +203,7 @@ void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &t
 
     // Load up the voxel data
     H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-    h5Reader->setFilename(m_InputFile->text().toStdString());
+    h5Reader->setFileName(m_InputFile->text().toStdString());
     int dims[3];
     float spacing[3];
     int err = h5Reader->getSizeAndResolution(dims, spacing);

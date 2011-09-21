@@ -14,26 +14,53 @@ one is as follows:
 
 The nodes file is made up of n number of node records where each node has the following
 fields:
-@li Node ID; 4 Byte Unsigned Int
-@li Node Kind: 4 Byte Unsigned Int
-@li X Pos: 4 Byte Floating Point number
-@li Y Pos: 4 Byte Floating Point number
-@li Z Pos: 4 Byte Floating Point number
- The total byte count of each Node Record is 20 bytes
 
+<b>The total byte count of each Node Record is 20 bytes</b>
+
+  <table border>
+  <tr>
+      <td><b> Node Id </b></td>
+      <td><b> Node Kind </b></td>
+      <td><b> X Position </b></td>
+      <td><b> Y Position </b></td>
+      <td><b> Z Position </b></td>
+   </tr>
+
+   <tr>
+      <td>4 Byte Unsigned Int</td>
+      <td>4 Byte Unsigned Int</td>
+      <td>4 Byte Floating Point</td>
+      <td>4 Byte Floating Point</td>
+      <td>4 Byte Floating Point</td>
+   </tr>
+ </table>
 
 @subsection sm3 Triangle File
 
 The Triangle file is made up of Triangle Records where each record is make up of
 the following fields:
 
-@li ID: The triangle ID 4 Byte Unsigned Int.
-@li N1: The first Node's index into the Nodes Array. 4 Byte Unsigned Int
-@li N2: The second Node's index into the Nodes Array. 4 Byte Unsigned Int
-@li N3: The third Node's index into the Nodes Array. 4 Byte Unsigned Int
-@li Grain ID 1: The First grain the triangle belongs to. 4 Byte Unsigned Int
-@li Grain ID 2: The Second grain the triangle belongs to. 4 Byte Unsigned Int
- The total byte count for each Triangle Record is 24 bytes
+  <table border>
+  <tr>
+      <td><b> Triangle Id </b></td>
+      <td><b> The first Node's index into the Nodes Array </b></td>
+       <td><b> The second Node's index into the Nodes Array </b></td>
+   <td><b> The third Node's index into the Nodes Array </b></td>
+      <td><b> Grain ID 1 </b></td>
+      <td><b> Grain ID 2 </b></td>
+   </tr>
+
+   <tr>
+      <td>4 Byte Unsigned Int</td>
+      <td>4 Byte Unsigned Int</td>
+      <td>4 Byte Unsigned Int</td>
+      <td>4 Byte Unsigned Int</td>
+      <td>4 Byte Unsigned Int</td>
+      <td>4 Byte Unsigned Int</td>
+   </tr>
+ </table>
+
+<b>The total byte count for each Triangle Record is 24 bytes</b>
 
 Each Triangle is shared between 2 grains.
 

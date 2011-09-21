@@ -62,7 +62,7 @@ int H5VoxelWriter::writeEulerData(float* e1,
 {
   int err = -1;
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(m_Filename);
+  h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
   {
@@ -99,7 +99,7 @@ int H5VoxelWriter::writeGrainIds(int* grain_indicies, size_t totalPoints, bool a
 {
   int err = -1;
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(m_Filename);
+  h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
   {
@@ -129,7 +129,7 @@ int H5VoxelWriter::writePhaseIds(int* phases, size_t totalPoints, bool appendFil
 {
   int err = -1;
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(m_Filename);
+  h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
   {
@@ -160,7 +160,7 @@ int H5VoxelWriter::writeStructuredPoints(int volDims[3], float spacing[3], float
 {
   int err = -1;
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(m_Filename);
+  h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
   {
@@ -187,7 +187,7 @@ int H5VoxelWriter::writeStructuredPoints(int volDims[3], float spacing[3], float
 int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructure>  &crystruct, bool appendFile)
  {
    AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-   h5writer->setFileName(m_Filename);
+   h5writer->setFileName(m_FileName);
    int err = h5writer->openFile(appendFile);
    if (err < 0)
    {
@@ -220,7 +220,7 @@ int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructu
 int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType, bool appendFile)
 {
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
-  h5writer->setFileName(m_Filename);
+  h5writer->setFileName(m_FileName);
   int err = h5writer->openFile(appendFile);
   if (err < 0)
   {

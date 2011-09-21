@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 
   H5EbsdVolumeReader::Pointer oimDataLoader = H5AngVolumeReader::New();
   H5AngVolumeReader* h5io = dynamic_cast<H5AngVolumeReader*>(oimDataLoader.get());
-  h5io->setFilename(m_H5AngFile);
+  h5io->setFileName(m_H5AngFile);
 
   zStart = h5io->getZStart();
   zEnd = h5io->getZEnd();
