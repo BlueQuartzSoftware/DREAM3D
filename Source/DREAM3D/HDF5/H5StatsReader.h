@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -57,21 +57,21 @@
 #include "DREAM3D/HDF5/H5Macros.h"
 
 /**
- * @class H5ReconStatsReader H5ReconStatsReader.h AIM/Common/HDF5/H5ReconStatsReader.h
+ * @class H5StatsReader H5StatsReader.h AIM/Common/HDF5/H5StatsReader.h
  * @brief This class reads the statistics that are produced from a Reconstruction
  * run or through the StatsGenerator program.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Apr 21, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT H5ReconStatsReader
+class DREAM3DLib_EXPORT H5StatsReader
 {
   public:
-    MXA_SHARED_POINTERS(H5ReconStatsReader);
-    MXA_STATIC_NEW_MACRO(H5ReconStatsReader);
+    MXA_SHARED_POINTERS(H5StatsReader);
+    MXA_STATIC_NEW_MACRO(H5StatsReader);
     static Pointer New(const std::string &filename);
 
-    virtual ~H5ReconStatsReader();
+    virtual ~H5StatsReader();
 
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
@@ -228,12 +228,12 @@ class DREAM3DLib_EXPORT H5ReconStatsReader
 
 
   protected:
-    H5ReconStatsReader();
+    H5StatsReader();
   private:
     hid_t m_FileId;
 
-    H5ReconStatsReader(const H5ReconStatsReader&); // Copy Constructor Not Implemented
-    void operator=(const H5ReconStatsReader&); // Operator '=' Not Implemented
+    H5StatsReader(const H5StatsReader&); // Copy Constructor Not Implemented
+    void operator=(const H5StatsReader&); // Operator '=' Not Implemented
 
 };
 

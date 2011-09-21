@@ -66,7 +66,7 @@
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
 #include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
 
 class MicrostructureStatisticsFunc
 {
@@ -148,22 +148,22 @@ class MicrostructureStatisticsFunc
     void find_neighbors();
     void define_neighborhood();
     void find_euclidean_map();
-    void find_vectors(H5ReconStatsWriter::Pointer h5io);
+    void find_vectors(H5StatsWriter::Pointer h5io);
     void find_centroids();
     void find_moments();
     void find_axes();
     void find_colors();
     void find_schmids();
-    void find_vectors2D(H5ReconStatsWriter::Pointer h5io);
+    void find_vectors2D(H5StatsWriter::Pointer h5io);
     void find_centroids2D();
     void find_moments2D();
     void find_axes2D();
     void deformation_stats(const std::string &filename, const std::string &filename2);
     void write_graindata(const std::string &graindataFile, bool writesizes, bool writeshapes, bool writeneighbors, bool writeavgorientations);
-    void find_eulerodf(H5ReconStatsWriter::Pointer h5io);
-    void measure_misorientations(H5ReconStatsWriter::Pointer h5io);
-    int volume_stats(H5ReconStatsWriter::Pointer h5io, float BinStepSize);
-    int volume_stats2D(H5ReconStatsWriter::Pointer h5io, float BinStepSize);
+    void find_eulerodf(H5StatsWriter::Pointer h5io);
+    void measure_misorientations(H5StatsWriter::Pointer h5io);
+    int volume_stats(H5StatsWriter::Pointer h5io, float BinStepSize);
+    int volume_stats2D(H5StatsWriter::Pointer h5io, float BinStepSize);
     void find_grain_and_kernel_misorientations();
     void find_grainorientations();
     float find_xcoord(size_t index);

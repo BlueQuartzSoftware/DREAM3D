@@ -131,7 +131,7 @@ void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
+int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
                                          QVector<float>  &binNumbers,
                                          const std::string &hdf5GroupName)
 {
@@ -200,7 +200,7 @@ int StatsGenPlotWidget::readDataFromHDF5(H5ReconStatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::loadTableData(H5ReconStatsReader::Pointer reader,
+void StatsGenPlotWidget::loadTableData(H5StatsReader::Pointer reader,
                                        QVector<float> binNumbers,
                                        std::vector<std::string> names,
                                        const std::string &hdf5GroupName)
@@ -232,7 +232,7 @@ void StatsGenPlotWidget::loadTableData(H5ReconStatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::writeDataToHDF5(H5ReconStatsWriter::Pointer writer,
+int StatsGenPlotWidget::writeDataToHDF5(H5StatsWriter::Pointer writer,
                                         const std::string &hdf5GroupName)
 {
   int err = 0;

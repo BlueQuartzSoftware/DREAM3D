@@ -956,7 +956,7 @@ void MicrostructureStatisticsFunc::find_axes()
     m_Grains[i]->aspectratio2 = covera;
   }
 }
-void MicrostructureStatisticsFunc::find_vectors(H5ReconStatsWriter::Pointer h5io)
+void MicrostructureStatisticsFunc::find_vectors(H5StatsWriter::Pointer h5io)
 {
   float **axisodf;
   axisodf = new float *[crystruct.size()];
@@ -1472,7 +1472,7 @@ void MicrostructureStatisticsFunc::find_axes2D()
     m_Grains[i]->radius2 = r2;
   }
 }
-void MicrostructureStatisticsFunc::find_vectors2D(H5ReconStatsWriter::Pointer h5io)
+void MicrostructureStatisticsFunc::find_vectors2D(H5StatsWriter::Pointer h5io)
 {
   float **axisodf;
   axisodf = new float *[crystruct.size()];
@@ -1580,7 +1580,7 @@ void MicrostructureStatisticsFunc::find_grainorientations()
   }
 }
 
-void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5io)
+void MicrostructureStatisticsFunc::find_eulerodf(H5StatsWriter::Pointer h5io)
 {
   size_t bin;
   size_t numgrains = m_Grains.size();
@@ -1637,7 +1637,7 @@ void MicrostructureStatisticsFunc::find_eulerodf(H5ReconStatsWriter::Pointer h5i
 }
 
 
-void MicrostructureStatisticsFunc::measure_misorientations(H5ReconStatsWriter::Pointer h5io)
+void MicrostructureStatisticsFunc::measure_misorientations(H5StatsWriter::Pointer h5io)
 {
   float n1, n2, n3;
   float r1, r2, r3;
@@ -1838,7 +1838,7 @@ void MicrostructureStatisticsFunc::find_schmids()
   }
 }
 
-int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io, float sizebinstepsize)
+int MicrostructureStatisticsFunc::volume_stats(H5StatsWriter::Pointer h5io, float sizebinstepsize)
 {
   int retErr = 0;
   float actualgrains = 0;
@@ -1998,7 +1998,7 @@ int MicrostructureStatisticsFunc::volume_stats(H5ReconStatsWriter::Pointer h5io,
   return retErr;
 }
 
-int MicrostructureStatisticsFunc::volume_stats2D(H5ReconStatsWriter::Pointer h5io, float sizebinstepsize)
+int MicrostructureStatisticsFunc::volume_stats2D(H5StatsWriter::Pointer h5io, float sizebinstepsize)
 {
   int retErr = 0;
   float actualgrains = 0;

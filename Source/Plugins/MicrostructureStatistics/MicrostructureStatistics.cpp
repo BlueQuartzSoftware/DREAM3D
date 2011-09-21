@@ -47,7 +47,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 
 // -----------------------------------------------------------------------------
@@ -193,7 +193,7 @@ void MicrostructureStatistics::execute()
   if(m_WriteH5StatsFile == true)
   {
 	  // Create a new Writer for the Stats Data.
-	  H5ReconStatsWriter::Pointer h5io = H5ReconStatsWriter::New(hdf5ResultsFile);
+	  H5StatsWriter::Pointer h5io = H5StatsWriter::New(hdf5ResultsFile);
 
 	  updateProgressAndMessage(("Finding Grain Axes ODF"), 65);
 	  if(m->zpoints > 1) m->find_vectors(h5io);

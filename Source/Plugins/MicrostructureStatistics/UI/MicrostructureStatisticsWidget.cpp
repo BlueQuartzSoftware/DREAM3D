@@ -50,8 +50,8 @@
 #include <QtGui/QListWidgetItem>
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
 
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"

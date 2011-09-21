@@ -41,8 +41,8 @@
 #include "ui_StatsGenMDFWidget.h"
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 
@@ -72,8 +72,8 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
     MXA_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
 
-    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer);
-    int readDataFromHDF5(H5ReconStatsReader::Pointer reader,int phase);
+    int writeDataToHDF5(H5StatsWriter::Pointer writer);
+    int readDataFromHDF5(H5StatsReader::Pointer reader,int phase);
 
   QwtArray<float> generateODFData();
 
