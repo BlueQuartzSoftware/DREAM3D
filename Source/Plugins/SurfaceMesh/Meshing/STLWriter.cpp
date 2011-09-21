@@ -72,11 +72,11 @@ STLWriter::~STLWriter()
 // -----------------------------------------------------------------------------
 int STLWriter::openFile(const char* mode)
 {
-  if (m_Filename.empty() == true)
+  if (m_FileName.empty() == true)
   {
     return -1;
   }
-  m_File = fopen(m_Filename.c_str(), mode);
+  m_File = fopen(m_FileName.c_str(), mode);
   if (NULL == m_File)
   {
     return -2;
@@ -154,7 +154,7 @@ int STLWriter::writeTriangleBlock(int numTriangles, const std::vector<Patch::Poi
   err = openFile("ab");
   if (err < 0)
   {
-    std::cout << "STLWriter: Could not open file: '" << m_Filename << "' to write the data into." << std::endl;
+    std::cout << "STLWriter: Could not open file: '" << m_FileName << "' to write the data into." << std::endl;
     return -1;
   }
   //size_t curPos = 0;
@@ -219,7 +219,7 @@ int STLWriter::writeNumTrianglesToFile()
   // at any point in the file. Yes this will slow us down even more
   int err =0;
 
-  FILE* out = fopen(m_Filename.c_str(), "r+b");
+  FILE* out = fopen(m_FileName.c_str(), "r+b");
   fseek(out, 80L, SEEK_SET);
   fwrite( (char*)(&m_TriangleCount), 1, 4, out);
   fclose(out);

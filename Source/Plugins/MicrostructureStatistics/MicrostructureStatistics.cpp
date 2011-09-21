@@ -94,7 +94,7 @@ void MicrostructureStatistics::execute()
   updateProgressAndMessage("Reading the Voxel Dimensions and Resolution", 2);
   // Load up the voxel data
   H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-  h5Reader->setFilename(m_InputFile);
+  h5Reader->setFileName(m_InputFile);
   int dims[3];
   float spacing[3];
   err = h5Reader->getSizeAndResolution(dims, spacing);

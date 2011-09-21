@@ -231,7 +231,7 @@ void SurfaceMeshWidget::on_m_InputFile_textChanged(const QString & text)
 
     // Load up the voxel data
     H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-    h5Reader->setFilename(m_InputFile->text().toStdString());
+    h5Reader->setFileName(m_InputFile->text().toStdString());
     int dims[3];
     float spacing[3];
     int err = h5Reader->getSizeAndResolution(dims, spacing);

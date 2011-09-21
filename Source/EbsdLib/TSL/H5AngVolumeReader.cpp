@@ -74,10 +74,10 @@ int H5AngVolumeReader::readZHeader(int &zStart, int &zEnd, float &zRes)
 {
   int err = -1;
   int retErr = 0;
-  hid_t fileId = H5Utilities::openFile(m_Filename, true);
+  hid_t fileId = H5Utilities::openFile(m_FileName, true);
   if (fileId < 0)
   {
-    std::cout << "Error Opening file '" << m_Filename << "'" << std::endl;
+    std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
     return -1;
   }
   err = H5Lite::readScalarDataset(fileId, Ebsd::H5::ZResolution, zRes);
@@ -116,7 +116,7 @@ int H5AngVolumeReader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpo
   xpoints = 0;
   ypoints = 0;
 
-  hid_t fileId = H5Utilities::openFile(m_Filename, true);
+  hid_t fileId = H5Utilities::openFile(m_FileName, true);
   if (fileId < 0)
   {
     std::cout << "Error - Could not open HDF5 based OIM file" << std::endl;

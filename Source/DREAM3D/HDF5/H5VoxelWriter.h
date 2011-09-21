@@ -89,7 +89,7 @@ class DREAM3DLib_EXPORT H5VoxelWriter
 
     virtual ~H5VoxelWriter();
 
-    MXA_INSTANCE_STRING_PROPERTY(Filename);
+    MXA_INSTANCE_STRING_PROPERTY(FileName);
 
     /**
      *
