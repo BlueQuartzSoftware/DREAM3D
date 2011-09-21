@@ -90,7 +90,7 @@ int main(int argc, char **argv)
   int err = 0;
 
   H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-  h5Reader->setFilename(iFile);
+  h5Reader->setFileName(iFile);
 
   int dims[3];
   float spacing[3];

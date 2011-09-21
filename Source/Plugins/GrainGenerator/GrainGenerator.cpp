@@ -175,7 +175,7 @@ void GrainGenerator::execute()
     {
       // Load up the voxel data
       H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-      h5Reader->setFilename(m_StructureFile);
+      h5Reader->setFileName(m_StructureFile);
       int dims[3];
       float spacing[3];
       err = h5Reader->getSizeAndResolution(dims, spacing);
@@ -268,7 +268,7 @@ void GrainGenerator::execute()
     m = GrainGeneratorFunc::NullPointer();  // Clean up the memory
     return;
   }
-  h5VoxelWriter->setFilename(h5VoxelFile);
+  h5VoxelWriter->setFileName(h5VoxelFile);
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
   err = h5VoxelWriter->writeData<GrainGeneratorFunc>(m.get());
   CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);

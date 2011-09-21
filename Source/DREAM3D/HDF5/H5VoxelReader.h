@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 
     virtual ~H5VoxelReader();
 
-    MXA_INSTANCE_STRING_PROPERTY(Filename);
+    MXA_INSTANCE_STRING_PROPERTY(FileName);
     MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
     int getSizeAndResolution(int volDims[3], float spacing[3]);

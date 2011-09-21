@@ -79,7 +79,7 @@ class TestException : public std::exception
     * @param lineNumber
     */
      TestException(const std::string &what, const std::string &filename, int lineNumber) :
-      m_Message(what), m_Filename(filename), m_LineNumber(lineNumber)
+      m_Message(what), m_FileName(filename), m_LineNumber(lineNumber)
     {
     }
 
@@ -89,7 +89,7 @@ class TestException : public std::exception
      TestException(const TestException &te)
      {
        m_Message = (&te)->getMessage();
-       m_Filename = te.getFilename();
+       m_FileName = te.getFilename();
        m_LineNumber = te.getLineNumber();
      }
 
@@ -101,15 +101,15 @@ class TestException : public std::exception
      std::string what() {
        std::stringstream ss;
        ss << "    Reason: " << m_Message << std::endl;
-       ss << "    File:   " << m_Filename << std::endl;
+       ss << "    File:   " << m_FileName << std::endl;
        ss << "    Line:   " << m_LineNumber;
        return ss.str();
      }
 
      MXA_INSTANCE_STRING_PROPERTY(Message)
        std::string getMessage() const { return m_Message; }
-     MXA_INSTANCE_STRING_PROPERTY(Filename)
-       std::string getFilename() const { return m_Filename; }
+     MXA_INSTANCE_STRING_PROPERTY(FileName)
+       std::string getFilename() const { return m_FileName; }
 
      MXA_INSTANCE_PROPERTY(int, LineNumber)
        int getLineNumber() const { return m_LineNumber; }

@@ -387,7 +387,7 @@ int main(int argc, char **argv)
       std::cout << "Could not create H5VoxelWriter." << std::endl;
       return EXIT_FAILURE;
     }
-    h5VolWriter->setFilename(h5File);
+    h5VolWriter->setFileName(h5File);
     err = h5VolWriter->writeGrainIds(voxels->GetPointer(0), voxels->GetNumberOfTuples(), false);
     if (err < 0)
     {

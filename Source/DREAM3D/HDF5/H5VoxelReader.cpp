@@ -59,13 +59,13 @@ int H5VoxelReader::getSizeAndResolution(int volDims[3], float spacing[3])
 {
   int err = 0;
 
-  if(m_Filename.empty() == true)
+  if(m_FileName.empty() == true)
   {
     std::cout << "H5ReconVolumeReader Error; Filename was empty" << std::endl;
     return -1;
   }
 
-  OPEN_HDF5_FILE(fileId, m_Filename)OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId)
+  OPEN_HDF5_FILE(fileId, m_FileName)OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId)
 
   err = H5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
   if(err < 0)
@@ -97,11 +97,11 @@ int H5VoxelReader::readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelL
 {
   int err = 0;
 
-  if(m_Filename.empty() == true)
+  if(m_FileName.empty() == true)
   {
     std::cout << "H5ReconVolumeReader Error; Filename was empty" << std::endl;
     return -1;
-  }OPEN_HDF5_FILE(fileId, m_Filename)OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId)OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid)
+  }OPEN_HDF5_FILE(fileId, m_FileName)OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId)OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid)
 
   hid_t dataset;
   hid_t filespace;
@@ -147,13 +147,13 @@ int H5VoxelReader::readVoxelData(AIMArray<int>::Pointer grain_indicies,
                   int totalpoints)
 {
   int err = 0;
-  if(m_Filename.empty() == true)
+  if(m_FileName.empty() == true)
   {
     m_ErrorMessage = "H5ReconVolumeReader Error; Filename was empty";
     return -1;
   }
 
-  OPEN_HDF5_FILE(fileId, m_Filename);
+  OPEN_HDF5_FILE(fileId, m_FileName);
   OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId);
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
 
