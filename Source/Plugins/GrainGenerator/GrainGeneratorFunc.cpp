@@ -117,21 +117,23 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   a = CosOfHalf;
 
   grain_indicies = NULL;
+  unassigned = NULL;
+  ellipfuncs = NULL;
   phases = NULL;
   euler1s = NULL;
   euler2s = NULL;
   euler3s = NULL;
-  neighbors = NULL;
   surfacevoxels = NULL;
   quats = NULL;
   totalsurfacearea = NULL;
 
   m_GrainIndicies = AIMArray<int>::CreateArray(0);
+  m_Unassigned = AIMArray<bool>::CreateArray(0);
+  m_Ellipfuncs = AIMArray<float>::CreateArray(0);
   m_Phases = AIMArray<int>::CreateArray(0);
   m_Euler1s = AIMArray<float>::CreateArray(0);
   m_Euler2s = AIMArray<float>::CreateArray(0);
   m_Euler3s = AIMArray<float>::CreateArray(0);
-  m_Neighbors = AIMArray<int>::CreateArray(0);
   m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
   m_Quats = AIMArray<float>::CreateArray(0);
   m_TotalSurfaceArea = AIMArray<float>::CreateArray(0);
@@ -152,22 +154,24 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 void GrainGeneratorFunc::initializeAttributes()
 {
   grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
+  unassigned = m_Unassigned->WritePointer(false, totalpoints);
+  ellipfuncs = m_Ellipfuncs->WritePointer(0, totalpoints);
   phases = m_Phases->WritePointer(0, totalpoints);
   euler1s = m_Euler1s->WritePointer(0, totalpoints);
   euler2s = m_Euler2s->WritePointer(0, totalpoints);
   euler3s = m_Euler3s->WritePointer(0, totalpoints);
-  neighbors = m_Neighbors->WritePointer(0, totalpoints);
   surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
   quats = m_Quats->WritePointer(0, totalpoints*5);
   m_Quats->SetNumberOfComponents(5);
 	for(int i=0;i<totalpoints;i++)
 	{
 		grain_indicies[i] = 0;
+		unassigned[i] = false;
+		ellipfuncs[i] = 0;
 		phases[i] = 0;
 		euler1s[i] = -1;
 		euler2s[i] = -1;
 		euler3s[i] = -1;
-		neighbors[i] = -1;
 		surfacevoxels[i] = 0;
 	}
 }
@@ -555,7 +559,7 @@ int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
+void GrainGeneratorFunc::generate_grain(int gnum, int phase)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(GGseed)
 
@@ -636,7 +640,7 @@ void  GrainGeneratorFunc::generate_grain(int gnum, int phase)
   m_Grains[gnum]->neighbordistfunc[2] = 0;
 }
 
-void  GrainGeneratorFunc::insert_grain(size_t gnum)
+void GrainGeneratorFunc::insert_grain(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
 
@@ -750,7 +754,7 @@ void  GrainGeneratorFunc::insert_grain(size_t gnum)
   }
 }
 
-void  GrainGeneratorFunc::insert_precipitate(size_t gnum)
+void GrainGeneratorFunc::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
 
@@ -929,7 +933,7 @@ void GrainGeneratorFunc::move_grain(size_t gnum, float xc, float yc, float zc)
     m_Grains[gnum]->planelist->at(i) = plane;
   }
 }
-void  GrainGeneratorFunc::remove_grain(size_t gnum)
+void GrainGeneratorFunc::remove_grain(size_t gnum)
 {
   int index;
   int col, row, plane;
@@ -960,7 +964,7 @@ void  GrainGeneratorFunc::remove_grain(size_t gnum)
   determine_neighbors(gnum, -1);
 }
 
-void  GrainGeneratorFunc::add_grain(size_t gnum)
+void GrainGeneratorFunc::add_grain(size_t gnum)
 {
   int index;
   int col, row, plane;
@@ -1274,7 +1278,7 @@ float GrainGeneratorFunc::check_fillingerror(int gadd, int gremove)
   return fillingerror;
 }
 
-void  GrainGeneratorFunc::pack_grains()
+void GrainGeneratorFunc::pack_grains()
 {
   DREAM3D_RANDOMNG_NEW()
 
@@ -1658,11 +1662,10 @@ void GrainGeneratorFunc::assign_voxels()
 
   initializeAttributes();
   NEW_SHARED_ARRAY(gsizes, int, m_Grains.size())
-  NEW_SHARED_ARRAY(unassigned, int, totalpoints)
 
   for (int i = 0; i < totalpoints; i++)
   {
-    unassigned[i] = 0;
+    unassigned[i] = false;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
@@ -1785,9 +1788,9 @@ void GrainGeneratorFunc::assign_voxels()
                 oldname = grain_indicies[currentpoint];
                 gsizes[oldname] = gsizes[oldname] - 1;
                 grain_indicies[currentpoint] = -1;
-                unassigned[currentpoint] = 1;
+                unassigned[currentpoint] = true;
               }
-              if (grain_indicies[currentpoint] == 0 && unassigned[currentpoint] == 0)
+              if (grain_indicies[currentpoint] == 0 && unassigned[currentpoint] == false)
               {
                 grain_indicies[currentpoint] = i;
                 gsizes[i]++;
@@ -1797,10 +1800,6 @@ void GrainGeneratorFunc::assign_voxels()
         }
       }
     }
-    m_Grains[i]->centroidx = xc;
-    m_Grains[i]->centroidy = yc;
-    m_Grains[i]->centroidz = zc;
-    m_Grains[i]->numvoxels = gsizes[i];
   }
   NEW_SHARED_ARRAY(newnames, int, m_Grains.size())
   int goodcount = 1;
@@ -1816,19 +1815,173 @@ void GrainGeneratorFunc::assign_voxels()
   }
   for (int i = 0; i < totalpoints; i++)
   {
+    unassigned[i] = false;
     if (grain_indicies[i] > 0)
     {
-      unassigned[i] = 0;
 	  grain_indicies[i] = newnames[grain_indicies[i]];
-    }
-    if (grain_indicies[i] <= 0)
-    {
-      unassigned[i] = 0;
-	//  grain_indicies[i] = grain_indicies[i];
     }
   }
   m_Grains.resize(goodcount);
-  vector<vector<int> > vlists;
+}
+void GrainGeneratorFunc::assign_gaps()
+{
+  int index;
+  int timestep = 250;
+  int neighpoints[6];
+  neighpoints[0] = -(xpoints * ypoints);
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = (xpoints * ypoints);
+  int unassignedcount = 1;
+  int column, row, plane;
+  float inside;
+  float xc, yc, zc;
+  float xp, yp, zp;
+  float dist;
+  float x, y, z;
+  int xmin, xmax, ymin, ymax, zmin, zmax;
+
+  for (int i = 0; i < totalpoints; i++)
+  {
+	if (grain_indicies[i] <= 0) unassigned[i] = 1;
+  }
+  while (unassignedcount != 0)
+  {
+	  unassignedcount = 0;
+	  timestep = timestep + 5;
+	  for (size_t i = 1; i < m_Grains.size(); i++)
+	  {
+		float volcur = m_Grains[i]->volume;
+		float bovera = m_Grains[i]->radius2;
+		float covera = m_Grains[i]->radius3;
+		float omega3 = m_Grains[i]->omega3;
+		xc = m_Grains[i]->centroidx;
+		yc = m_Grains[i]->centroidy;
+		zc = m_Grains[i]->centroidz;
+		float radcur1 = 0.0f;
+		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
+		DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[i]->phase];
+
+		// init any values for each of the Shape Ops
+		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+		{
+		  (*ops).second->init();
+		}
+		// Create our Argument Map
+		std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
+		shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
+		shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
+		shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
+		shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+
+		radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+
+		float radcur2 = (radcur1 * bovera);
+		float radcur3 = (radcur1 * covera);
+		radcur1 = (double(timestep)/100.0)*radcur1;
+		radcur2 = (double(timestep)/100.0)*radcur2;
+		radcur3 = (double(timestep)/100.0)*radcur3;
+		float phi1 = m_Grains[i]->axiseuler1;
+		float PHI = m_Grains[i]->axiseuler2;
+		float phi2 = m_Grains[i]->axiseuler3;
+		float ga[3][3];
+		ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
+		ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
+		ga[0][2] = sinf(phi2) * sinf(PHI);
+		ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
+		ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
+		ga[1][2] = cosf(phi2) * sinf(PHI);
+		ga[2][0] = sinf(phi1) * sinf(PHI);
+		ga[2][1] = -cosf(phi1) * sinf(PHI);
+		ga[2][2] = cosf(PHI);
+		column = (xc - (resx / 2)) / resx;
+		row = (yc - (resy / 2)) / resy;
+		plane = (zc - (resz / 2)) / resz;
+		xmin = int(column - ((radcur1 / resx) + 1));
+		xmax = int(column + ((radcur1 / resx) + 1));
+		ymin = int(row - ((radcur1 / resy) + 1));
+		ymax = int(row + ((radcur1 / resy) + 1));
+		zmin = int(plane - ((radcur1 / resz) + 1));
+		zmax = int(plane + ((radcur1 / resz) + 1));
+		if (periodic_boundaries == true)
+		{
+		  if (xmin < -xpoints) xmin = -xpoints;
+		  if (xmax > 2 * xpoints - 1) xmax = (2 * xpoints - 1);
+		  if (ymin < -ypoints) ymin = -ypoints;
+		  if (ymax > 2 * ypoints - 1) ymax = (2 * ypoints - 1);
+		  if (zmin < -zpoints) zmin = -zpoints;
+		  if (zmax > 2 * zpoints - 1) zmax = (2 * zpoints - 1);
+		}
+		if (periodic_boundaries == false)
+		{
+		  if (xmin < 0) xmin = 0;
+		  if (xmax > xpoints - 1) xmax = xpoints - 1;
+		  if (ymin < 0) ymin = 0;
+		  if (ymax > ypoints - 1) ymax = ypoints - 1;
+		  if (zmin < 0) zmin = 0;
+		  if (zmax > zpoints - 1) zmax = zpoints - 1;
+		}
+		for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
+		{
+		  for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
+		  {
+			for (int iter3 = zmin; iter3 < zmax + 1; iter3++)
+			{
+			  column = iter1;
+			  row = iter2;
+			  plane = iter3;
+			  if (iter1 < 0) column = iter1 + xpoints;
+			  if (iter1 > xpoints - 1) column = iter1 - xpoints;
+			  if (iter2 < 0) row = iter2 + ypoints;
+			  if (iter2 > ypoints - 1) row = iter2 - ypoints;
+			  if (iter3 < 0) plane = iter3 + zpoints;
+			  if (iter3 > zpoints - 1) plane = iter3 - zpoints;
+			  index = (plane * xpoints * ypoints) + (row * xpoints) + column;
+			  if(unassigned[index] == 1)
+			  {
+				  inside = -1;
+				  x = float(column) * resx;
+				  y = float(row) * resy;
+				  z = float(plane) * resz;
+				  if (iter1 < 0) x = x - sizex;
+				  if (iter1 > xpoints - 1) x = x + sizex;
+				  if (iter2 < 0) y = y - sizey;
+				  if (iter2 > ypoints - 1) y = y + sizey;
+				  if (iter3 < 0) z = z - sizez;
+				  if (iter3 > zpoints - 1) z = z + sizez;
+				  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+				  dist = sqrtf(dist);
+				  if (dist < radcur1)
+				  {
+					x = x - xc;
+					y = y - yc;
+					z = z - zc;
+					xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
+					yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
+					zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+					float axis1comp = xp / radcur1;
+					float axis2comp = yp / radcur2;
+					float axis3comp = zp / radcur3;
+					inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+					if (inside >= 0 && inside > ellipfuncs[index])
+					{
+						grain_indicies[index] = i;
+						ellipfuncs[index] = inside;
+					}
+				  }
+			  }
+			}
+		  }
+		}
+	  }
+	  for (int i = 0; i < totalpoints; i++)
+	  {
+		if (grain_indicies[i] <= 0) unassignedcount++;
+	  }
+  }
+/*  vector<vector<int> > vlists;
   vlists.resize(m_Grains.size());
   vector<int> currentvlist;
   size_t count;
@@ -1907,13 +2060,13 @@ void GrainGeneratorFunc::assign_voxels()
 		}
 		currentvlist.clear();
 	}
-  }
+  }*/
   for (int i = 0; i < totalpoints; i++)
   {
 	  if(grain_indicies[i] > 0) phases[i] = m_Grains[grain_indicies[i]]->phase;
   }
 }
-void  GrainGeneratorFunc::assign_eulers()
+void GrainGeneratorFunc::assign_eulers()
 {
   DREAM3D_RANDOMNG_NEW()
 
@@ -1967,135 +2120,17 @@ void  GrainGeneratorFunc::assign_eulers()
   }
 }
 
-void  GrainGeneratorFunc::fill_gaps()
-{
-  std::vector<int> badvoxels;
-  std::vector<int> gsizes;
-  std::vector<float> ellipfuncs;
-  int count = 1;
-  int good = 1;
-  float inside = 0;
-  int timestep = 100;
-  int col, row, plane;
-  float x, y, z;
-  float xc, yc, zc;
-  float xp, yp, zp;
-  float ***ga;
-  float phi1, PHI, phi2;
-  size_t numGrains = m_Grains.size();
-  gsizes.resize(numGrains, 0);
-  ellipfuncs.resize(totalpoints,-1000.0);
-  badvoxels.resize(1000,-1);
-  int neighpoint;
-  int neighpoints[6];
-  ga = new float **[numGrains];
-  for (int a = 1; a < numGrains; a++)
-  {
-	ga[a] = new float *[3];
-	for(int b = 0; b < 3; b++)
-	{
-		ga[a][b] = new float [3];
-	}
-	phi1 = m_Grains[a]->axiseuler1;
-	PHI = m_Grains[a]->axiseuler2;
-	phi2 = m_Grains[a]->axiseuler3;
-	ga[a][0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
-	ga[a][0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
-	ga[a][0][2] = sinf(phi2) * sinf(PHI);
-	ga[a][1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
-	ga[a][1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
-	ga[a][1][2] = cosf(phi2) * sinf(PHI);
-	ga[a][2][0] = sinf(phi1) * sinf(PHI);
-	ga[a][2][1] = -cosf(phi1) * sinf(PHI);
-	ga[a][2][2] = cosf(PHI);
-  }
-
-  neighpoints[0] = -xpoints * ypoints;
-  neighpoints[1] = -xpoints;
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = xpoints;
-  neighpoints[5] = xpoints * ypoints;
-
-  for (int i = 0; i < totalpoints; i++)
-  {
-    if (grain_indicies[i] <= 0)
-    {
-	  col = i % xpoints;
-	  row = (i / xpoints) % ypoints;
-	  plane = i / (xpoints * ypoints);
-	  for (int j = 1; j < numGrains; j++)
-	  {
-		float volcur = m_Grains[j]->volume;
-		float bovera = m_Grains[j]->radius2;
-		float covera = m_Grains[j]->radius3;
-		float omega3 = m_Grains[j]->omega3;
-		xc = m_Grains[j]->centroidx;
-		yc = m_Grains[j]->centroidy;
-		zc = m_Grains[j]->centroidz;
-		float radcur1 = 0.0f;
-		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-		DREAM3D::SyntheticBuilder::ShapeType shapeclass = shapeTypes[m_Grains[j]->phase];
-
-		// init any values for each of the Shape Ops
-		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
-		{
-		  (*ops).second->init();
-		}
-		// Create our Argument Map
-		std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
-		shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
-		shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
-		shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
-		shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
-
-		radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
-		float radcur2 = (radcur1 * bovera);
-		float radcur3 = (radcur1 * covera);
-
-		x = (col*resx) - xc;
-		y = (row*resy) - yc;
-		z = (plane*resz) - zc;
-		xp = (x * ga[j][0][0]) + (y * ga[j][1][0]) + (z * ga[j][2][0]);
-		yp = (x * ga[j][0][1]) + (y * ga[j][1][1]) + (z * ga[j][2][1]);
-		zp = (x * ga[j][0][2]) + (y * ga[j][1][2]) + (z * ga[j][2][2]);
-		float axis1comp = xp / radcur1;
-		float axis2comp = yp / radcur2;
-		float axis3comp = zp / radcur3;
-		inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-		if(inside > ellipfuncs[i])
-		{
-			ellipfuncs[i] = inside;
-			grain_indicies[i] = j;
-		}
-	  }
-	}
-  }
-  gsizes.resize(numGrains, 0);
-  int name = 0;
-  for (int i = 0; i < totalpoints; i++)
-  {
-    name = grain_indicies[i];
-    gsizes[name]++;
-  }
-
-  // Copy all the data back from the temp array
-  for (size_t i = 1; i < numGrains; i++)
-  {
-    m_Grains[i]->numvoxels = gsizes[i];
-  }
-  gsizes.clear();
-}
-
 void  GrainGeneratorFunc::fillin_precipitates()
 {
   std::vector<int> neighs;
   std::vector<int> remove;
   std::vector<int> gsizes;
+  std::vector<int> neighbors;
   int count = 1;
   int good = 1;
   float x, y, z;
   gsizes.resize(m_Grains.size(),0);
+  neighbors.resize(totalpoints,0);
   int neighpoint;
   int neighpoints[6];
   std::vector<int> n(m_Grains.size());
