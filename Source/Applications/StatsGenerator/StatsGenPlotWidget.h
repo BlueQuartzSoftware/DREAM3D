@@ -42,8 +42,8 @@
 #include "ui_StatsGenPlotWidget.h"
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
 
 class SGAbstractTableModel;
 class QwtPlotZoomer;
@@ -70,8 +70,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setPlotTitle(QString title);
 
-    int writeDataToHDF5(H5ReconStatsWriter::Pointer writer, const std::string &hdf5GroupName);
-    int readDataFromHDF5(H5ReconStatsReader::Pointer reader,
+    int writeDataToHDF5(H5StatsWriter::Pointer writer, const std::string &hdf5GroupName);
+    int readDataFromHDF5(H5StatsReader::Pointer reader,
                          QVector<float>  &bins,
                          const std::string &hdf5GroupName);
 
@@ -108,7 +108,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
                                    float minCutOff, float maxCutOff,
                                    float binStepSize);
 
-    void loadTableData(H5ReconStatsReader::Pointer reader,
+    void loadTableData(H5StatsReader::Pointer reader,
                        QVector<float> bins,
                        std::vector<std::string> names,
                        const std::string &hdf5GroupName);

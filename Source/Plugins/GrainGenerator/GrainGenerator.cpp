@@ -102,7 +102,7 @@ void GrainGenerator::execute()
   START_CLOCK()
 
   // Open the HDF5 Stats file
-  H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5StatsFile);
+  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   if (h5reader.get() == NULL)
   {
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Opening the HDF5 Input file", -1)

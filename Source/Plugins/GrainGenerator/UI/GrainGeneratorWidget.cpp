@@ -53,8 +53,8 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/ShapeType.h"
-#include "DREAM3D/HDF5/H5ReconStatsReader.h"
-#include "DREAM3D/HDF5/H5ReconStatsWriter.h"
+#include "DREAM3D/HDF5/H5StatsReader.h"
+#include "DREAM3D/HDF5/H5StatsWriter.h"
 
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
@@ -367,7 +367,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     m_OutputFilePrefix->setText(fi.baseName() + QString("_"));
 
     // Open the HDF5 Stats file
-    H5ReconStatsReader::Pointer h5reader = H5ReconStatsReader::New(m_H5InputStatisticsFile->text().toStdString());
+    H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5InputStatisticsFile->text().toStdString());
     if(h5reader.get() == NULL)
     {
       return;
@@ -691,7 +691,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   std::vector<float> mindiameter;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
-  H5ReconStatsReader::Pointer h5Reader = H5ReconStatsReader::New();
+  H5StatsReader::Pointer h5Reader = H5StatsReader::New();
   h5Reader->setFileName(m_H5InputStatisticsFile->text().toStdString());
   int err = h5Reader->getPhaseAndCrystalStructures(phases, structures);
   if (err < 0 || phases.size() == 0)

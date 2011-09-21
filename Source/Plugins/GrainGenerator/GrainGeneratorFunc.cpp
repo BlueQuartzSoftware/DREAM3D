@@ -329,7 +329,7 @@ return err; }
   }\
 }
 
-int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
+int GrainGeneratorFunc::readReconStatsData(H5StatsReader::Pointer h5io)
 {
   int err = -1;
   std::vector<float> grainDiamInfo;
@@ -424,7 +424,7 @@ int GrainGeneratorFunc::readReconStatsData(H5ReconStatsReader::Pointer h5io)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5io)
+int  GrainGeneratorFunc::readAxisOrientationData(H5StatsReader::Pointer h5io)
 {
   std::vector<float> density;
   int err = 0;
@@ -468,7 +468,7 @@ int  GrainGeneratorFunc::readAxisOrientationData(H5ReconStatsReader::Pointer h5i
   return err;
 }
 
-int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
+int GrainGeneratorFunc::readODFData(H5StatsReader::Pointer h5io)
 {
   std::vector<float> density;
   int err = 0;
@@ -511,7 +511,7 @@ int GrainGeneratorFunc::readODFData(H5ReconStatsReader::Pointer h5io)
   return err;
 }
 
-int GrainGeneratorFunc::readMisorientationData(H5ReconStatsReader::Pointer h5io)
+int GrainGeneratorFunc::readMisorientationData(H5StatsReader::Pointer h5io)
 {
   std::vector<float> density;
   int err = 0;
