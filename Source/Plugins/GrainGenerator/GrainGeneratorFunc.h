@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -141,7 +141,7 @@ public:
     DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
-	
+
 	std::vector<std::vector<std::vector<int> > > grainowners;
 
 	std::vector<Grain::Pointer> m_Grains;
