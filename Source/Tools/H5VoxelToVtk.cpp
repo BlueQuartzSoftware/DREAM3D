@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -103,6 +103,7 @@ int main(int argc, char **argv)
   }
 
   std::vector<Ebsd::CrystalStructure> crystruct;
+  std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
 
   DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
   DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
@@ -125,7 +126,7 @@ int main(int argc, char **argv)
   euler3s = m_Euler3s->WritePointer(0, totalpoints);
 
   std::cout << "Reading Voxel Data" << std::endl;
-  err = h5Reader->readVoxelData(m_GrainIndicies, m_Phases, m_Euler1s, m_Euler2s, m_Euler3s, crystruct, totalpoints);
+  err = h5Reader->readVoxelData(m_GrainIndicies, m_Phases, m_Euler1s, m_Euler2s, m_Euler3s, crystruct, phaseType, totalpoints);
   if (err < 0)
   {
     std::cout << "Error reading h5voxel file." << std::endl;
