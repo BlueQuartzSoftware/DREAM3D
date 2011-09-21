@@ -7,9 +7,8 @@ so it can be integrated with the other documentation pages.
 
 @section todomisc Misc Bugs
 @li Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
-@li add over ride of stacking order and Orientation to Reconstruction plugin
-@li Add Subvolume Cropping to the Microstructure statistics plugin
-
+@li Add over ride of stacking order and Orientation to Reconstruction plugin
+@li <b>DONE</b> (MAJ 2011/09/21) - Add Subvolume Cropping Utility (V2 Only)
 @li <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
 @li <b>DONE</b> (MAJ 2011/07/18) - Allow other developers to include their own plugins that are possibly from a different repository
 @li <b>DONE</b> (MAJ 2011/09/15) - Create a Vtk to H5Voxel convertor program
@@ -56,12 +55,13 @@ into the user interface
 @li Implement Surface Mesh Smoothing
 
 @section twotothree 2D to 3D Module:
-@li Create new tab for this interface which will generate 3D Stats from a set of 2D statistics or input files
+@li <b>DONE</b> (MAG 2011/09/21) - Create new tab for this interface which will generate 3D Stats from a set of 2D statistics or input files
 
 @section microstats Microstructure Statistics Module:
 @li <b>DONE</b> (MAG 2011/06/08) - Move all the stats functions to their own class out of the Reconstruction and GrainGenerator modules
 @li <b>DONE</b> (MAJ 2011/05/28) - Add new tab "Microstructure Statistics" which will use existing grain structure files as the input.
 @li <b>DONE</b> (MAG 2011/06/08) - Stop Calculating MicroTexture
+@li Add command line options to the MicroStats utility to replicate the GUI more faithfully
 
 
 @section statsgen StatsGenerator
