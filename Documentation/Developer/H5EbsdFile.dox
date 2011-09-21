@@ -1,6 +1,6 @@
 /*!
 
-@page h5ebsdfile "HDF5 EBSD Data File Specification"
+@page h5ebsdfile HDF5 EBSD Data File Specification
 
 
 @section h5ebsd1 Introduction
@@ -16,24 +16,75 @@ deal with the basic volume information is the same for every file.
 /-|
   | Index  HDF Dataset
   | Manufacturer  HDF Dataset
-  | X Points  HDF Dataset
-  | Y Points  HDF Dataset
-  | X Step  HDF Dataset
-  | Y Step  HDF Dataset
+  | Max X Points  HDF Dataset
+  | Max Y Points  HDF Dataset
+  | Reference Origin HDF Dataset
+  | Stacking Order HDF Dataset
+  | X Resolution  HDF Dataset
+  | Y Resolution  HDF Dataset
+  | Z Resolution  HDF Dataset
   | ZEndIndex  HDF Dataset
-  | ZResolution  HDF Dataset
   | ZStartIndex  HDF Dataset
   | "EBSD Slice Group" HDF Group
      |- "Data" HDF Group
      |- "Header" HDF Group
          |- "Phases" HDF Group
 
-
-
 @endcode
 
 
 @section h5ebsd3 Detailed Description
+
+
+There are four enumerated values for the Reference Origin as defined in the
+EbsdLibConstants.h file
+@code
+  enum RefFrameOrigin
+  {
+     UpperRightOrigin = 0,
+     UpperLeftOrigin = 1,
+     LowerLeftOrigin = 2,
+     LowerRightOrigin = 3,
+     NoOrientation = 4,
+  };
+@endcode
+In addition the data set has an attribute attached to it that has a human readable
+version and is one of:
+@code
+    const std::string UpperRight ("Upper Right");
+    const std::string UpperLeft ("Upper Left");
+    const std::string LowerLeft ("Lower Left");
+    const std::string LowerRight ("Lower Right");
+    const std::string NoOrientation("No Orientation");
+@endcode
+
+The <b>Stacking Order</b> refers to the order in which the z slices are stacked
+together when they are read from the file. The enumerations are also in the
+EbsdLibConstants.h header file:
+@code
+  enum RefFrameZDir
+  {
+     IntoSlice = 0, // Low to High
+     OutofSlice = 1, // High to Low
+     UnknownRefFrameZDirection
+  };
+
+    const std::string LowToHigh("Low To High");
+    const std::string HighToLow("High To Low");
+    const std::string UnknownStackingOrder("Unknown Stacking Order");
+@endcode
+
+  As a further explanation if the ordering is <tt><b>"Low To High"</b></tt> then the
+slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example
+if your data set is numbered from 23 to 86 with file names of the form Slice_023.ang
+and you select "Low To High" then the data inside of file Slice_023.ang will be
+positioned at Z=0 during any method that has to deal with the data. The opposite
+of this is if the user were to select to have their data <tt><b>"High to Low"</b></tt>
+in which case the file with name Slice_086.ang will be positioned at Z=0 and the
+file with name "Slice_023.ang" will be positioned at Z=64.\n
+
+
+The <b>Manufacturer</b> currently is either <i>TSL</i> or <i>HKL</i>
 
 
 

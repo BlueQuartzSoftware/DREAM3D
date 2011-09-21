@@ -35,7 +35,7 @@ The minimal version needed is HDF5 Version 1.8. <p>
 <hr/>
 
 <h3>Boost</h3>
-One should use a minimum version of 1.36 in order to compile the source
+One should use a minimum version of 1.44 in order to compile the source
 codes. One can download the boost sources from www.boost.org. On all platforms the 
 user should strive to compile boost as static libraries with dynamic linkage to 
 the C and C++ standard libraries. 

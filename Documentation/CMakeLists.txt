@@ -58,6 +58,7 @@ set (LATEX_AUTHOR "")
 # Latex/PDF output
 set (DOCUMENTATION_SOURCE_FILES
     ${DREAM3D_SOURCE_DIR}/ToDo.dox
+    ${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.dox
     ${PROJECT_SOURCE_DIR}/Developer/Compiling.dox
     ${PROJECT_SOURCE_DIR}/Developer/WritingPlugin.dox
     ${PROJECT_SOURCE_DIR}/Developer/H5EbsdFile.dox
