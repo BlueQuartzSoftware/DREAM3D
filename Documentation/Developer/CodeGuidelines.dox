@@ -1,0 +1,252 @@
+/*!
+
+ \page codeguidelines Best Practices for Portable Code
+
+
+\section rule_5 Source Code Line Endings
+  All source code line endings will be in "Unix" style "\n". Every text editor understands these line
+  endings on every platform <strong>except</strong> the "Notepad" application on Windows which
+  probably should never be used to write code in the first place.
+
+\section rule_6 Use of Tabs
+  Spaces should be used instead of hard tabs. This helps file portability across different editors.
+
+
+
+\section rule_14 Always use an Include Guard
+Always use an "include guard" in your headers.
+\code
+#ifndef _MY_HEADER_H_
+#define _MY_HEADER_H_
+
+
+#endif
+\endcode
+
+\par Discussion
+  Include guards are <tt>#define</tt> preprocessor used in header files that ensures
+the header is only ever included <b>once</b> during the compiling process for a
+given source file. If these guards are NOT included then it is up to the programmer
+to make sure that headers are only included a single time which can become time-consuming
+and impossible in some situations with larger projects.
+
+
+
+	\section rule_1 Use Only ANSI-C99 Integer Types
+	The ANSI-C99 standard defines typedefs for 8, 16, 32 and 64 bit integer types. These should be used
+	if possible. Platform specific types such as  \code __int64  \endcode and ambiguous types such as
+\code
+long int
+signed long int
+unsigned long int \endcode
+	should be avoided at all costs.
+
+	\par Discussion
+	This is because  the number of bytes that a  "long" variable occupies will change depending  on CPU type and
+compiler being  used. This can have  an impact on pointer  arithmetic and binary file  IO just to name  a few
+instances. All Unix  systems have a <em>stdint.h</em>  file included with the compiler.  The Microsoft Visual
+Studio Compiler does NOT have this file included. There are lots of examples of creating one on the internet.
+An exemplar file is  also included with the Electronic Imaging software distribution  that is generated using
+CMake.
+	\par C99 Integer Types
+	\code
+int8_t    8 Bit Singed Integer
+uint8_t   8 Bit UnSinged Integer
+int16_t   16 Bit Singed Integer
+uint16_t  16 Bit UnSinged Integer
+int32_t   32 Bit Singed Integer
+uint32_t  32 Bit UnSinged Integer
+int64_t   64 Bit Singed Integer
+uint64_t  64 Bit UnSinged Integer
+	\endcode
+
+\section rule_8 Special Constants
+\p NULL should be used in conjunction with a Pointer ONLY.\n
+0 (Zero) should be used in conjunction with numeric values.
+\par Examples
+\code
+    int* value = NULL;//Good
+    int* value = 0;//Bad
+
+    int i = 0;//Good
+    int i = NULL;//Bad \endcode
+
+
+\section var_init Variable Initialization
+<strong>Never</strong> rely on the compiler to initialize variables or pointers for you. Always initialize
+your variables before first use.
+\code
+ int i; // Bad, unless this is pure "C" then you have NO choice
+ i = 0; // Good. The variable has a known starting value
+ float* f = NULL; // Good (If the compiler will let you do this)
+ char buffer[512]; // Allocation of char buffer but will be filled with junk
+ memset(buffer, 0, 512); // Good. Splat Zeros across the array.
+\endcode
+\par  Rationale
+  Initializing your own variables ensures that you are starting from a known state when execution
+of the code reaches that point. Subtle bugs can occur if you do not initialize your variables and
+then perform checks on them to see if they are valid. A classic example is the following:
+\code
+int* ptr;
+if (!ptr) { initializePointer(ptr); }
+\endcode
+When compiled in Debug on <em>some</em> compilers this will execute as you would expect. The problems come
+when the code is compiled in <em>Release</em> mode. The <tt>ptr</tt> variable will <b>NOT</b> be set to
+<tt>NULL</tt> but instead some random memory address. As you can see this would cause problems because the
+initialization code that should have been running will be skipped because the conditional <tt>if (!ptr) </tt>
+will be true. Do not get caught with this bug. Initialize your variables.
+
+\section array_initialization Array Initialization
+	\verbatim
+define MY_ARRAY_SIZE  10;
+int array[10];              // Good - Will compile on all platforms
+int array[MY_ARRAY_SIZE];   // Good - Will compile on all Platforms
+const int size = 10;
+int array[size];            // Bad - Will NOT compile on all platforms.
+	\endverbatim
+	\par Discussion
+	An array is declared as <em>datatype name[constant-size]</em> and groups one or more instances of a datatype
+into  one addressable  place. Constant-size  may be  an expression,  but the  expression must  evaluate to  a
+constant.
+
+
+\section rule_7 The dereference operator `*` and the address-of operator `&` will be directly connected with the type-specifier.
+
+\par Examples:
+\code
+int32*   p; // Correct
+int32   *p; // Incorrect
+int32*   p, q; // Probably error.
+\endcode
+
+\par Discussion:
+The <tt>int32*  p;</tt> form emphasizes type over syntax while the <tt>int32 *p;</tt> form
+emphasizes syntax over type. Although both forms are equally valid C++, the heavy
+emphasis on types in C++ suggests that <tt>int32* p;</tt> is the preferable form.
+
+
+
+
+\section rule_12 Never Assume CPU Capabilities
+When writing code never assume that a CPU has a specific capability such as SSE. Use
+a <tt>\#define</tt> block to either test for the capability at runtime or write a generic version
+of your code will work on any machine and then write the specific implementation of
+the code that is bracketed by a <tt>\#ifdef</tt> block.
+
+\code
+#ifdef HAS_SSE_3
+  SSE3 specific code
+#else
+  Generic Code or error message stating the cpu is missing the functionality
+#endif
+
+\endcode
+
+
+
+\section rule_13 Copyright \& License Information
+Always include a Copyright and/or license block at the start of <b>every</b> source
+file. It is good practice to document in the source code any copyright
+or licensing restrictions in every file that you write. An example license block is
+shown below.
+
+\code
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2007, 2010 Michael A. Jackson for BlueQuartz Software
+//  All rights reserved.
+//  BSD License: http://www.opensource.org/licenses/bsd-license.html
+//
+///////////////////////////////////////////////////////////////////////////////
+\endcode
+More stringent notices can also be written into the source code.
+\code
+// ***************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (qt-info@nokia.com)
+**
+** This file is part of the QtCore module of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:LGPL$
+** Commercial Usage
+** Licensees holding valid Qt Commercial licenses may use this file in
+** accordance with the Qt Commercial License Agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Nokia.
+**
+** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 2.1 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU Lesser General Public License version 2.1 requirements
+** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+**
+** In addition, as a special exception, Nokia gives you certain additional
+** rights.  These rights are described in the Nokia Qt LGPL Exception
+** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 3.0 as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU General Public License version 3.0 requirements will be
+** met: http://www.gnu.org/copyleft/gpl.html.
+**
+** If you have questions regarding the use of this file, please contact
+** Nokia at qt-info@nokia.com.
+** $QT_END_LICENSE$
+**
+***************************************************************************
+\endcode
+
+\section rule_10 Always Implement the "Big Three" in C++ Classes
+  When writing C++ classes the programmer will always define the "Big Three" which are
+  defined as
+  \li copy constructor
+  \li copy assignment operator
+  \li destructor
+
+The programmer should <strong>never</strong> allow the compiler to implement these methods.
+This will happen if they are not explicitly defined in the class declaration. Further more
+if the destructor is declared <tt>public</tt> then it <strong>will</strong> have the
+<b>virtual</b> modifier applied to the declaration.
+
+\code
+class A
+{
+  public:
+     A();
+     virtual ~A();
+  private:
+   A(const A&);               //Copy Constructor Not Implemented
+   void operator=(const A&);  //Copy Assignment Not Implemented
+};
+\endcode
+
+  \section rule_3 String Constants
+  String constants in C++ should be declared as
+\verbatim
+const std::string MyFile("SomeFile.dat");\endverbatim
+  and it is a good idea to group like-constants into a namespace.
+  \verbatim
+namespace MyConstants {
+    const std::string MyFile("SoimeFile");
+}
+  \endverbatim
+
+  When using ANSI "C" one should use a char* for constant strings:
+  \verbatim
+const char* MyFile "SomeFile.dat";
+const char MyFile[5] = { 'a', '.', 'd', 'a', 't'};
+  \endverbatim
+  \par Rationale
+  Using this type of approach allows for quicker code updates when constant values need to be changed.
+
+
+
+*/
+

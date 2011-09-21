@@ -1,7 +1,7 @@
 /*!
  *
 
-@page h5voxelvolume HDF5 Reconstruction Voxel File
+@page h5voxelvolume HDF5 Voxel File (.h5voxel)
 
 
 @section h1 Introduction
@@ -22,6 +22,7 @@ in the MicrostructureStatistics Module.
          |- "PhaseID" HDF Dataset
      |- "FIELD_DATA" HDF Group
          |-"CrystalStructure" HDF Dataset
+         |-"PhaseType" HDF Dataset
 @endcode
 
 @section h3 Detailed Description
@@ -109,6 +110,13 @@ in the MicrostructureStatistics Module.
                                 structure mapping. The Zeroth index is always a
                                 value of "999". The real list starts with index 1.</td>
    </tr>
+   <tr>
+      <td> PhaseType </td>
+      <td> - HDF Dataset. 32 Bit Int. List of Phase ID to Phase Type
+                                mapping. The Zeroth index is always a
+                                value of "999". The real list starts with index 1.</td>
+   </tr>
+
    </table>
 
 @section h4 Enumeration Values for the Crystal Structure
@@ -120,6 +128,17 @@ in the MicrostructureStatistics Module.
         OrthoRhombic = 2,
         AxisOrthoRhombic = 3,
         UnknownCrystalStructure = 999
+    };
+@endcode
+
+@section h5 Enumeration Values for the Phase Type
+
+@code
+    enum PhaseType {
+      PrimaryPhase = 0,
+      PrecipitatePhase = 1,
+      TransformationPhase = 2,
+      UnknownPhaseType = 999
     };
 @endcode
 

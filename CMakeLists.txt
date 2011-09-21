@@ -387,8 +387,9 @@ if(DREAM3D_BUILD_DOCS)
   if (NOT DOXYGEN_FOUND)
     message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
   endif()
+  
   # Add a target that builds just the High Level User Manuals/Tutorial type documentation
-  # add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
   
   # Generating the API Docs will also include the other "Developer Documentation"
   option(DREAM3D_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
