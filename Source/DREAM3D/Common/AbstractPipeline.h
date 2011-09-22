@@ -81,42 +81,6 @@ class DREAM3DLib_EXPORT AbstractPipeline
     virtual void execute() = 0;
 
     /**
-     * @brief Either prints a message or sends the message to the User Interface
-     * @param message The message to print
-     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
-     */
-    virtual void updateProgressAndMessage(const char* message, int progress);
-
-    /**
-     * @brief This method reports progress such that a user interface element such
-     * as a progress bar could be updated. It is assumed the value will fluctuate
-     * between 0 and 100.
-     * @param value
-     */
-    virtual void pipelineProgress(int value);
-
-    /**
-     * @brief This message reports some human readable message suitable for display
-     * on a GUI or printed to a console or possibly saved to a log file
-     * @param message
-     */
-    virtual void pipelineProgressMessage(const char* message);
-
-    /**
-     * @brief This message reports some human readable message suitable for display
-     * on a GUI or printed to a console or possibly saved to a log file
-     * @param message
-     */
-    virtual void pipelineWarningMessage(const char* message);
-
-    /**
-     * @brief This message reports some human readable message suitable for display
-     * on a GUI or printed to a console or possibly saved to a log file
-     * @param message
-     */
-    virtual void pipelineErrorMessage(const char* message);
-
-    /**
      * @brief This method is called from the run() method just before exiting and
      * signals the end of the pipeline execution
      */

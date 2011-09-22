@@ -68,6 +68,7 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/Grain.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
+#include "DREAM3D/Common/Observable.h"
 #include "DREAM3D/Common/OrientationMath.h"
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
@@ -84,7 +85,7 @@ using namespace std;
  * @author Michael A. Groeber (US Air Force Research Laboratory)
  * @version 2.0
  */
-class ReconstructionFunc
+class ReconstructionFunc : public Observable
 {
   public:
     MXA_SHARED_POINTERS(ReconstructionFunc)

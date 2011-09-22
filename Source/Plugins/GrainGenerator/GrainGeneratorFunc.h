@@ -66,6 +66,7 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/Grain.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
+#include "DREAM3D/Common/Observable.h"
 
 #include "DREAM3D/Common/OrientationMath.h"
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
@@ -90,7 +91,7 @@
  * @date
  * @version 1.0
  */
-class GrainGeneratorFunc
+class GrainGeneratorFunc : public Observable
 {
 public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)

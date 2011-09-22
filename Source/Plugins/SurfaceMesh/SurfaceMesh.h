@@ -77,6 +77,9 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/Common/Observer.h"
+
+
 #include "SurfaceMeshFunc.h"
 #include "Meshing/STLWriter.h"
 
@@ -229,7 +232,7 @@ class GrainChecker
 * @date Nov 3, 2009
 * @version 1.0
 */
-class SurfaceMesh : public AbstractPipeline
+class SurfaceMesh : public AbstractPipeline, public Observer
 {
   public:
     MXA_SHARED_POINTERS(SurfaceMesh);
