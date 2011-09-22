@@ -1,28 +1,49 @@
-message(STATUS "Extrapolation2Dto3DPlugin Being Configured")
+#///////////////////////////////////////////////////////////////////////////////
+#  Copyright (c) 2011, Michael A. Groeber. AFRL
+#  All rights reserved.
+#  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#///////////////////////////////////////////////////////////////////////////////
 project(Extrapolation2Dto3DPlugin)
 
 set(PLUGIN_NAME Extrapolation2Dto3D)
 
+include_directories(${PROJECT_SOURCE_DIR} 
+                    ${PROJECT_SOURCE_DIR}/..
+                    ${PROJECT_BINARY_DIR}
+                    ${PROJECT_CODE_DIR} )
+
+SET (Extrapolation2Dto3D_HDRS
+  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3D.h
+  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3DFunc.h
+)
+
+SET (Extrapolation2Dto3D_SRCS
+  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3D.cpp
+  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3DFunc.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "Extrapolation2Dto3D" "${Extrapolation2Dto3D_HDRS}" "${Extrapolation2Dto3D_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${Extrapolation2Dto3D_HDRS}
+            DESTINATION include/DREAM3D/Extrapolation2Dto3D
+            COMPONENT Headers   )
+endif()
+
+                    
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    include( ${QT_USE_FILE} )
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
+if(DREAM3D_BUILD_GUI)
+    if(NOT QT4_FOUND)
+        message(FATAL_ERROR "Qt 4 is Needed for this project.")
+    endif()
+include( ${QT_USE_FILE} )
+message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
 add_definitions(-DDREAM3D_USE_QT)
 if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
-include_directories(${PROJECT_SOURCE_DIR} 
-                    ${PROJECT_SOURCE_DIR}/..
-                    ${PROJECT_BINARY_DIR}
-                    ${PROJECT_CODE_DIR}
-                    ${PROJECT_CODE_DIR}/QtSupport
-                    ${DREAM3D_BINARY_DIR}/QtSupport
-)
+include_directories(${PROJECT_CODE_DIR}/QtSupport
+                    ${DREAM3D_BINARY_DIR}/QtSupport )
 
 set(CLASS_NAME "Extrapolation2Dto3D")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -52,25 +73,6 @@ QT4_WRAP_CPP( Extrapolation2Dto3DPlugin_Generated_MOC_SRCS ${Extrapolation2Dto3D
 
 cmp_IDE_SOURCE_PROPERTIES("Extrapolation2Dto3D/UI/" "${Extrapolation2Dto3DPlugin_UI_HDRS}" "${Extrapolation2Dto3DPlugin_UI_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${Extrapolation2Dto3DPlugin_Generated_UI_HDRS};${Extrapolation2Dto3DPlugin_Generated_RC_SRCS}" "${Extrapolation2Dto3DPlugin_Generated_MOC_SRCS}" "0")
-
-
-SET (Extrapolation2Dto3D_HDRS
-  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3D.h
-  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3DFunc.h
-)
-
-SET (Extrapolation2Dto3D_SRCS
-  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3D.cpp
-  ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3DFunc.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "Extrapolation2Dto3D" "${Extrapolation2Dto3D_HDRS}" "${Extrapolation2Dto3D_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
-    INSTALL (FILES ${Extrapolation2Dto3D_HDRS}
-            DESTINATION include/DREAM3D/Extrapolation2Dto3D
-            COMPONENT Headers   )
-endif()
-
-
 
 set (Extrapolation2Dto3DPlugin_PROJECT_SRCS
     ${Extrapolation2Dto3DPlugin_UI_SRCS}
@@ -118,5 +120,35 @@ install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/Extrapolation2Dto3D
         COMPONENT Applications )
   
+endif()
+
+
+
+# Create a Command line tool for the SurfaceMesh
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "tools")
+if (WIN32)
+    set (install_dir ".")
+endif()
+IF ( DREAM3D_BUILD_CLI_TOOLS )
+#COMPILE_TOOL(
+#    TARGET SurfaceMesh
+#    SOURCES ${PROJECT_SOURCE_DIR}/Tools/SurfaceMeshMain.cpp     ${SurfaceMesh_HDRS}
+#                                                                ${SurfaceMesh_SRCS}
+#                                                                ${MESHING_SRCS}
+#                                                                ${MESHING_HDRS}
+#                                                                ${SMOOTHING_SRCS}
+#                                                                ${SMOOTHING_HDRS}
+#    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+#    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+#    VERSION_MINOR ${DREAM3D_VER_MINOR}
+#    VERSION_PATCH ${DREAM3D_VER_PATCH}
+#    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+#    COMPONENT     Applications
+#    INSTALL_DEST  "${install_dir}" 
+#    LINK_LIBRARIES DREAM3DLib
+#)
+endif()
 
 

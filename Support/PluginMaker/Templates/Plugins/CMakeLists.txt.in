@@ -3,26 +3,43 @@ project(@PluginName@Plugin)
 
 set(PLUGIN_NAME @PluginName@)
 
+include_directories(${PROJECT_SOURCE_DIR} 
+                    ${PROJECT_SOURCE_DIR}/..
+                    ${PROJECT_BINARY_DIR}
+                    ${PROJECT_CODE_DIR} )
+
+#-- Non Qt based source files
+SET (@PluginName@_HDRS
+  ${PROJECT_SOURCE_DIR}/@PluginName@.h
+  ${PROJECT_SOURCE_DIR}/@PluginName@Func.h
+)
+
+SET (@PluginName@_SRCS
+  ${PROJECT_SOURCE_DIR}/@PluginName@.cpp
+  ${PROJECT_SOURCE_DIR}/@PluginName@Func.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "@PluginName@" "${@PluginName@_HDRS}" "${@PluginName@_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${@PluginName@_HDRS}
+            DESTINATION include/DREAM3D/@PluginName@
+            COMPONENT Headers   )
+endif()
+
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    include( ${QT_USE_FILE} )
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
+if(DREAM3D_BUILD_GUI)
+    if(NOT QT4_FOUND)
+        message(FATAL_ERROR "Qt 4 is Needed for this project.")
+    endif()
+include( ${QT_USE_FILE} )
+message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
 add_definitions(-DDREAM3D_USE_QT)
 if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
-include_directories(${PROJECT_SOURCE_DIR} 
-                    ${PROJECT_SOURCE_DIR}/..
-                    ${PROJECT_BINARY_DIR}
-                    ${PROJECT_CODE_DIR}
-                    ${PROJECT_CODE_DIR}/QtSupport
-                    ${DREAM3D_BINARY_DIR}/QtSupport
-)
+include_directories(${PROJECT_CODE_DIR}/QtSupport
+                    ${DREAM3D_BINARY_DIR}/QtSupport )
 
 set(CLASS_NAME "@PluginName@")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -54,24 +71,6 @@ cmp_IDE_SOURCE_PROPERTIES("@PluginName@/UI/" "${@PluginName@Plugin_UI_HDRS}" "${
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${@PluginName@Plugin_Generated_UI_HDRS};${@PluginName@Plugin_Generated_RC_SRCS}" "${@PluginName@Plugin_Generated_MOC_SRCS}" "0")
 
 
-SET (@PluginName@_HDRS
-  ${PROJECT_SOURCE_DIR}/@PluginName@.h
-  ${PROJECT_SOURCE_DIR}/@PluginName@Func.h
-)
-
-SET (@PluginName@_SRCS
-  ${PROJECT_SOURCE_DIR}/@PluginName@.cpp
-  ${PROJECT_SOURCE_DIR}/@PluginName@Func.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "@PluginName@" "${@PluginName@_HDRS}" "${@PluginName@_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
-    INSTALL (FILES ${@PluginName@_HDRS}
-            DESTINATION include/DREAM3D/@PluginName@
-            COMPONENT Headers   )
-endif()
-
-
-
 set (@PluginName@Plugin_PROJECT_SRCS
     ${@PluginName@Plugin_UI_SRCS}
     ${@PluginName@Plugin_UI_HDRS}
@@ -82,6 +81,7 @@ set (@PluginName@Plugin_PROJECT_SRCS
     ${@PluginName@_HDRS}
     ${@PluginName@_SRCS}
 )
+
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
@@ -117,6 +117,34 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/@PluginName@
         COMPONENT Applications )
+
+endif()
   
+# Create a Command line tool for the @PluginName@
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "tools")
+if (WIN32)
+    set (install_dir ".")
+endif()
+
+IF ( DREAM3D_BUILD_CLI_TOOLS )
+
+#COMPILE_TOOL(
+#    TARGET @PluginName@
+#    SOURCES ${PROJECT_SOURCE_DIR}/Tools/@PluginName@Main.cpp ${PROJECT_SOURCE_DIR}/@PluginName@.cpp  ${@PluginName@_HDRS}
+#    ${@PluginName@_SRCS}
+#    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+#    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+#    VERSION_MINOR ${DREAM3D_VER_MINOR}
+#    VERSION_PATCH ${DREAM3D_VER_PATCH}
+#    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+#    COMPONENT     Applications
+#    INSTALL_DEST  "${install_dir}" 
+#    LINK_LIBRARIES DREAM3DLib MXADataModel
+#)
+
+endif()
+
 
 

@@ -7,59 +7,10 @@ project(SurfaceMeshPlugin)
 
 set(PLUGIN_NAME SurfaceMesh)
 
-# ------------------------------------------------------------------------------
-#  Qt 4 Section
-# ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    include( ${QT_USE_FILE} )
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
-add_definitions(-DDREAM3D_USE_QT)
-if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
-endif()
-
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
 include_directories(${PROJECT_CODE_DIR} )
-include_directories(${PROJECT_CODE_DIR}/QtSupport )
-include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
-set(CLASS_NAME "SurfaceMesh")
-SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
-configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
-                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
-
-
-set (SurfaceMeshPlugin_UI_HDRS
-    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
-    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.h
-    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.h
-    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
-    )
-    
-set (SurfaceMeshPlugin_UI_SRCS 
-    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.cpp
-    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.cpp
-    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
-    )
-
-# -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( SurfaceMeshPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
-    
-QT4_WRAP_UI( SurfaceMeshPlugin_Generated_UI_HDRS 
-            ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.ui )
-
-QT4_WRAP_CPP( SurfaceMeshPlugin_Generated_MOC_SRCS ${SurfaceMeshPlugin_UI_HDRS} )
-
-
-cmp_IDE_SOURCE_PROPERTIES("SurfaceMesh/UI/" "${SurfaceMeshPlugin_UI_HDRS}" "${SurfaceMeshPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${SurfaceMeshPlugin_Generated_UI_HDRS};${SurfaceMeshPlugin_Generated_RC_SRCS}" "${SurfaceMeshPlugin_Generated_MOC_SRCS}" "0")
-
-
-
-
+#-- Non Qt based source files
 SET (SurfaceMesh_HDRS
   ${PROJECT_SOURCE_DIR}/SurfaceMesh.h
   ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.h
@@ -113,6 +64,56 @@ if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
 endif()
 
 
+# ------------------------------------------------------------------------------
+#  Qt 4 Section
+# ------------------------------------------------------------------------------
+if(DREAM3D_BUILD_GUI)
+    if(NOT QT4_FOUND)
+        message(FATAL_ERROR "Qt 4 is Needed for this project.")
+    endif()
+include( ${QT_USE_FILE} )
+message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
+add_definitions(-DDREAM3D_USE_QT)
+if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
+endif()
+
+
+include_directories(${PROJECT_CODE_DIR}/QtSupport )
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+
+set(CLASS_NAME "SurfaceMesh")
+SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
+configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
+                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
+
+
+set (SurfaceMeshPlugin_UI_HDRS
+    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
+    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.h
+    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.h
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
+    )
+    
+set (SurfaceMeshPlugin_UI_SRCS 
+    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshPlugin.cpp
+    ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
+    )
+
+# -- Run MOC and UIC on the necessary files   
+QT4_ADD_RESOURCES( SurfaceMeshPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
+    
+QT4_WRAP_UI( SurfaceMeshPlugin_Generated_UI_HDRS 
+            ${PROJECT_SOURCE_DIR}/UI/SurfaceMeshWidget.ui )
+
+QT4_WRAP_CPP( SurfaceMeshPlugin_Generated_MOC_SRCS ${SurfaceMeshPlugin_UI_HDRS} )
+
+
+cmp_IDE_SOURCE_PROPERTIES("SurfaceMesh/UI/" "${SurfaceMeshPlugin_UI_HDRS}" "${SurfaceMeshPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${SurfaceMeshPlugin_Generated_UI_HDRS};${SurfaceMeshPlugin_Generated_RC_SRCS}" "${SurfaceMeshPlugin_Generated_MOC_SRCS}" "0")
+
+
 #-- Gather all the project source files in this variable
 set (SurfaceMeshPlugin_PROJECT_SRCS
     ${SurfaceMeshPlugin_UI_SRCS}
@@ -164,7 +165,10 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
-  
+
+endif()
+
+
 # Create a Command line tool for the SurfaceMesh
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
