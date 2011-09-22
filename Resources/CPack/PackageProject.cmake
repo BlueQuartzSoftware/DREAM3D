@@ -28,6 +28,10 @@ if (MSVC)
     ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 endif()
 
+# Add a short ReadMe file for OS X that warns of moving the applications
+if (APPLE)
+install(FILES ${PROJECT_RESOURCES_DIR}/CPack/OS_X_ReadMe.txt DESTINATION .)
+endif()
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DREAM3D Tools")
 SET(CPACK_PACKAGE_VENDOR "BlueQuartz Software, Michael A. Jackson")
