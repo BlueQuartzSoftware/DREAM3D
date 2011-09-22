@@ -7,28 +7,45 @@ project(ReconstructionPlugin)
 
 set(PLUGIN_NAME Reconstruction)
 
+include_directories(${PROJECT_SOURCE_DIR} 
+                    ${PROJECT_BINARY_DIR}
+                    ${PROJECT_SOURCE_DIR}/..
+                    ${PROJECT_SOURCE_DIR}/UI
+                    ${PROJECT_CODE_DIR})
+#-- Non Qt Sources
+SET (Reconstruction_HDRS
+  ${PROJECT_SOURCE_DIR}/Reconstruction.h
+  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
+)
+
+SET (Reconstruction_SRCS
+  ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
+  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${Reconstruction_HDRS}
+            DESTINATION include/DREAM3D/Reconstruction
+            COMPONENT Headers   )
+endif()
+
+                   
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    include( ${QT_USE_FILE} )
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
+if(DREAM3D_BUILD_GUI)
+    if(NOT QT4_FOUND)
+        message(FATAL_ERROR "Qt 4 is Needed for this project.")
+    endif()
+include( ${QT_USE_FILE} )
+message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
 add_definitions(-DDREAM3D_USE_QT)
 if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR} 
-                    ${PROJECT_BINARY_DIR}
-                    ${PROJECT_SOURCE_DIR}/..
-                    ${PROJECT_SOURCE_DIR}/UI
-                    ${PROJECT_CODE_DIR}
-                    ${PROJECT_CODE_DIR}/QtSupport
-                    ${DREAM3D_BINARY_DIR}/QtSupport
-)
+include_directories(${PROJECT_CODE_DIR}/QtSupport
+                    ${DREAM3D_BINARY_DIR}/QtSupport )
 
 
 set(CLASS_NAME "Reconstruction")
@@ -62,23 +79,6 @@ QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_UI_
 
 cmp_IDE_SOURCE_PROPERTIES("Reconstruction/UI/" "${ReconstructionPlugin_UI_HDRS};${ReconstructionPlugin_Misc_HDRS}" "${ReconstructionPlugin_UI_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS};${ReconstructionPlugin_Generated_RC_SRCS}" "${ReconstructionPlugin_Generated_MOC_SRCS};${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h" "0")
-
-#-- Non Qt Sources
-SET (Reconstruction_HDRS
-  ${PROJECT_SOURCE_DIR}/Reconstruction.h
-  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
-)
-
-SET (Reconstruction_SRCS
-  ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
-  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
-    INSTALL (FILES ${Reconstruction_HDRS}
-            DESTINATION include/DREAM3D/Reconstruction
-            COMPONENT Headers   )
-endif()
 
 
 #-- Gather all the Project Source files in this variable
@@ -130,6 +130,10 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
+        
+        
+endif()
+
 
 IF ( DREAM3D_BUILD_CLI_TOOLS )
 #-- Include the CMake commands to build the Comand line tools

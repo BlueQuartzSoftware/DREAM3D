@@ -240,7 +240,6 @@ function(DREAM3D_COMPILE_PLUGIN)
     
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME} Plugin" ON)
     if (DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Enabled")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})  
     else()
         message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")
@@ -279,96 +278,96 @@ if (DREAM3D_BUILD_QT_APPS)
    # Build the static QtSupport library - which MUST be a static library or the linking
    # will not work due to signals/slots mechanism.
    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
-  
-   # Build the DREAM3D Application  
-   option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
-   if (DREAM3D_BUILD_GUI)
-   
-        #-----------------
-        # These are the core plugins
-        set (DREAM3D_PLUGIN_LIST
-            EbsdImport 
-            Reconstruction 
-            GrainGenerator 
-            SurfaceMesh 
-            MicrostructureStatistics 
-	    Extrapolation2Dto3D
-        )
-        
-        foreach(p ${DREAM3D_PLUGIN_LIST})
-            DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p} 
-                                   PLUGIN_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Source/Plugins/${p})
-        endforeach()
-  
-        #- Add in the Main DREAM.3D Application 
-        ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
+endif()
 
- 
-        #- Now set up the dependency between the main application and each of the plugins so that
-        #- things like Visual Studio are forced to rebuild the plugins when launching
-        #- the DREAM3D application 
-        foreach(p ${DREAM3D_PLUGIN_LIST})
-            if (DREAM3D_BUILD_PLUGIN_${p})
-                add_dependencies(${p}Plugin DREAM3D)
-            endif()
-        endforeach()
-        
-        
-        # --- Look for user defined external Plugins that the user has entered 
-        # into CMake-GUI or through CCMake by the user.
-        set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
-        
-        #-- Attempt to look in our local source directory for the plugin. Anywhere else
-        # and the user will have to put the entire path into CMake manually.
-        foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
-            
-            if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
-              #  add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
-                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
-                       PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
-            else()            
-                message(STATUS "Looking for Plugin: ${userPlugin}...")
-                if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
-                    message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}")
-                    set(${userPlugin}_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin} CACHE PATH "Path to ${userPlugin} directory")
-                endif()
-               # message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
-                if(EXISTS ${${userPlugin}_SOURCE_DIR})
-                    #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}")
-                    if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
-                        #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
-                        set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
-                        DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
-                                                PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
-                        #add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
-                        #message(STATUS "Plugin: ${userPlugin} Found")
-                    endif()
-                else()
-                    message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")
-                endif()
-            endif()
-
-        endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
-
-
-   endif()
-   
-   # Build the StatsGenerator Application
-   OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-   if (DREAM3D_BUILD_STATS_GENERATOR)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
-   endif()
-   
-   if (DREAM3D_BUILD_STATS_GENERATOR OR DREAM3D_BUILD_GUI)
-     install(FILES ${DREAM3D_SOURCE_DIR}/Documentation/DREAM3D_v2_Manual.docx
-             DESTINATION Docs)
-   endif()
-   
-else()
+# Forcibly set some options to OFF if we are NOT build the GUI apps using the Qt frameworks
+if (NOT DREAM3D_BUILD_QT_APPS)
     set (DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
     set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
+
+   
+#-----------------
+# These are the core plugins
+set (DREAM3D_PLUGIN_LIST
+    EbsdImport 
+    Reconstruction 
+    GrainGenerator 
+    SurfaceMesh 
+    MicrostructureStatistics 
+    Extrapolation2Dto3D
+)
+
+foreach(p ${DREAM3D_PLUGIN_LIST})
+    DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p} 
+                           PLUGIN_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Source/Plugins/${p})
+endforeach()
+  
+ # Build the DREAM3D Application  
+option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
+if (DREAM3D_BUILD_GUI AND DREAM3D_BUILD_QT_APPS)
+    #- Add in the Main DREAM.3D Application 
+    ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
+    #- Now set up the dependency between the main application and each of the plugins so that
+    #- things like Visual Studio are forced to rebuild the plugins when launching
+    #- the DREAM3D application 
+    foreach(p ${DREAM3D_PLUGIN_LIST})
+        if (DREAM3D_BUILD_PLUGIN_${p})
+            add_dependencies(${p}Plugin DREAM3D)
+        endif()
+    endforeach()
+endif()  
+
+# --- Look for user defined external Plugins that the user has entered 
+# into CMake-GUI or through CCMake by the user.
+set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
+
+#-- Attempt to look in our local source directory for the plugin. Anywhere else
+# and the user will have to put the entire path into CMake manually.
+foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
+    
+    if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
+      #  add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+        DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
+               PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
+    else()            
+        message(STATUS "Looking for Plugin: ${userPlugin}...")
+        if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
+            message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}")
+            set(${userPlugin}_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin} CACHE PATH "Path to ${userPlugin} directory")
+        endif()
+       # message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
+        if(EXISTS ${${userPlugin}_SOURCE_DIR})
+            #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}")
+            if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
+                #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
+                set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
+                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
+                                        PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
+                #add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+                #message(STATUS "Plugin: ${userPlugin} Found")
+            endif()
+        else()
+            message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")
+        endif()
+    endif()
+
+endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
+
+
+# Build the StatsGenerator Application
+OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
+if (DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
+    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
+endif()
+   
+# Add installation rule for the User Manual
+if (DREAM3D_BUILD_QT_APPS)
+    install(FILES ${DREAM3D_SOURCE_DIR}/Documentation/DREAM3D_v2_Manual.docx
+    DESTINATION Docs)
+endif()
+   
 # add the Command line utilities
 IF ( DREAM3D_BUILD_CLI_TOOLS )
     add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/Tools ${DREAM3D_BINARY_DIR}/Tools)
