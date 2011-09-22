@@ -151,6 +151,7 @@ if (WIN32)
     set (install_dir ".")
 endif()
 
+IF ( DREAM3D_BUILD_CLI_TOOLS )
 COMPILE_TOOL(
     TARGET GrainGenerator
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/GrainGeneratorMain.cpp ${PROJECT_SOURCE_DIR}/GrainGenerator.cpp  ${GrainGenerator_HDRS}
@@ -167,5 +168,5 @@ COMPILE_TOOL(
     DEFINITION   "SVG_3D_LIBRARY"
     LINK_LIBRARIES DREAM3DLib MXADataModel
 )
-
+endif()
 

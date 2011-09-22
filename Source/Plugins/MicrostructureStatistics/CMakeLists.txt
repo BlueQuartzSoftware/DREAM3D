@@ -135,6 +135,7 @@ set(install_dir "tools")
 if (WIN32)
     set (install_dir ".")
 endif()
+IF ( DREAM3D_BUILD_CLI_TOOLS )
 COMPILE_TOOL(
     TARGET MicroStats
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/MicroStatsMain.cpp 
@@ -149,6 +150,6 @@ COMPILE_TOOL(
     INSTALL_DEST  "${install_dir}" 
     LINK_LIBRARIES DREAM3DLib
 )
-
+endif()
   
   
