@@ -134,11 +134,12 @@ public:
 
 	// Voxel Attribute Arrays
 	DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+	DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, bool)
+	DECLARE_WRAPPED_ARRAY(ellipfuncs, m_Ellipfuncs, float)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
     DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
-    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
 
@@ -228,7 +229,7 @@ public:
     float check_sizedisterror(int gadd, int gremove);
     float check_fillingerror(int gadd, int gremove);
     void assign_voxels();
-    void fill_gaps();
+    void assign_gaps();
     void fillin_precipitates();
 	void adjust_boundaries();
     void place_precipitates();
