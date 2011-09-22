@@ -75,7 +75,8 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   m->euler1s = m->m_Euler1s->WritePointer(0, m->totalpoints);
   m->euler2s = m->m_Euler2s->WritePointer(0, m->totalpoints);
   m->euler3s = m->m_Euler3s->WritePointer(0, m->totalpoints);
-  m->neighbors = m->m_Neighbors->WritePointer(0, m->totalpoints);
+  m->unassigned = m->m_Unassigned->WritePointer(0, m->totalpoints);
+  m->ellipfuncs = m->m_Ellipfuncs->WritePointer(0, m->totalpoints);
   m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(0, m->totalpoints);
   m->quats = m->m_Quats->WritePointer(0, m->totalpoints*5);
   m->m_Quats->SetNumberOfComponents(5);

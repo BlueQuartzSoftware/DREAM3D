@@ -319,11 +319,6 @@ int main(int argc, char **argv)
 
   try
   {
-#if TEST
-    std::string vFile = "C:\\Data\\Test.vtk";
-    std::string h5File = "C:\\Data\\Test.h5voxel";
-    std::string eulerFile = "C:\\Data\\Test.euler";
-#else
     // Handle program options passed on command line.
     TCLAP::CmdLine cmd("VtkToHDF5", ' ', DREAM3DLib::Version::Complete);
 
@@ -353,7 +348,6 @@ int main(int argc, char **argv)
     std::string h5File = h5InputFileArg.getValue();
   //  std::string eulerFile = angleFileArg.getValue();
 
-#endif
 
     AIMArray<int>::Pointer voxels;
     int nx = 0;
@@ -412,9 +406,12 @@ int main(int argc, char **argv)
 
     for(size_t i = 0; i < totalVoxels; ++i)
     {
-      e1->SetValue(i, f_nan);
-      e2->SetValue(i, f_nan);
-      e3->SetValue(i, f_nan);
+//      e1->SetValue(i, f_nan);
+//      e2->SetValue(i, f_nan);
+//      e3->SetValue(i, f_nan);
+      e1->SetValue(i, 0.0);
+      e2->SetValue(i, 0.0);
+      e3->SetValue(i, 0.0);
     }
 
     // Write dummy values for the Euler Angles which will be float NaN so we are
@@ -439,10 +436,10 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
-    std::vector<Ebsd::CrystalStructure> crystruct(2, Ebsd::UnknownCrystalStructure);
+	std::vector<Ebsd::CrystalStructure> crystruct(2, Ebsd::Cubic);
     err = h5VolWriter->writeCrystalStructures(crystruct, true);
 
-    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2, DREAM3D::Reconstruction::UnknownPhaseType);
+	std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2, DREAM3D::Reconstruction::PrimaryPhase);
     err = h5VolWriter->writePhaseTypes(phaseTypes, true);
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
