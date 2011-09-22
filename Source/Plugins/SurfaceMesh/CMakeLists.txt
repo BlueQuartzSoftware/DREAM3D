@@ -172,6 +172,7 @@ set(install_dir "tools")
 if (WIN32)
     set (install_dir ".")
 endif()
+IF ( DREAM3D_BUILD_CLI_TOOLS )
 COMPILE_TOOL(
     TARGET SurfaceMesh
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/SurfaceMeshMain.cpp     ${SurfaceMesh_HDRS}
@@ -189,4 +190,4 @@ COMPILE_TOOL(
     INSTALL_DEST  "${install_dir}" 
     LINK_LIBRARIES DREAM3DLib
 )
-
+endif()

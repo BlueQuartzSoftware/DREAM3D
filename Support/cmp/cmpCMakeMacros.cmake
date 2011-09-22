@@ -239,9 +239,16 @@ function(BuildQtAppBundle)
         set (OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT 
                     "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
         
+        set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
+            "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_OptimizeBundle.sh")
+        
         CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
                 "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
-         
+
+        set(PROJECT_INSTALL_DIR ${osx_app_name}.app)
+        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/ThinAndShareLibraries.sh.in"
+                "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
+                
         install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
     endif(APPLE)
     
@@ -316,11 +323,17 @@ function(BuildToolBundle)
         list(APPEND lib_search_dirs "${QAB_LIB_SEARCH_DIRS}")
         
         set (OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT 
-                    "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
-        
+            "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteTool.cmake")
+        set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
+            "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_OptimizeTool.sh")
+
+        set(PROJECT_INSTALL_DIR "tools")
         CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.cmake.in"
                 "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
-         
+        
+        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.sh.in"
+                "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
+                
         install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
     endif(APPLE)
 endfunction()

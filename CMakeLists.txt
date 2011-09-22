@@ -133,13 +133,14 @@ IF (BUILD_SHARED_LIBS)
 ENDIF (BUILD_SHARED_LIBS)
 
 # ---------- Find Boost Headers/Libraries -----------------------
-SET (Boost_FIND_REQUIRED TRUE)
+#SET (Boost_FIND_REQUIRED FALSE)
 SET (Boost_DEBUG FALSE)
 set (Boost_USE_MULTITHREADED TRUE)
 set (Boost_USE_STATIC_LIBS TRUE)
 SET (Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.0" "1.44.0" "1.44" "1.41" "1.41.0" "1.39" "1.39.0")
-SET (MXA_BOOST_COMPONENTS "")
-FIND_PACKAGE(Boost COMPONENTS  ${MXA_BOOST_COMPONENTS} )
+set (Boost_FIND_COMPONENTS "")
+set (Boost_NO_BOOST_CMAKE 1)
+FIND_PACKAGE(Boost)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
@@ -410,4 +411,6 @@ endif()
 
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
+
+
 

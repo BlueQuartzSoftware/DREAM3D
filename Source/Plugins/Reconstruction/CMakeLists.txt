@@ -130,7 +130,9 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
-  
+
+IF ( DREAM3D_BUILD_CLI_TOOLS )
 #-- Include the CMake commands to build the Comand line tools
 include(${PROJECT_SOURCE_DIR}/Tools/Tools.cmake)
+endif()
 
