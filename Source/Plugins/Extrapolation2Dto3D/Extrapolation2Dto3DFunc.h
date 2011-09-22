@@ -6,19 +6,24 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include <boost/shared_array.hpp>
 
-#include <MXA/MXATypes.h>
-#include <MXA/Common/MXASetGetMacros.h>
+#include <stdlib.h>
+
 #include <string>
 #include <iostream>
 #include <cmath>
 #include <fstream>
 #include <list>
-#include <time.h>
-#include <stdlib.h>
+
+#include <boost/shared_array.hpp>
+
+#include "MXA/MXATypes.h"
+#include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/Common/LogTime.h"
+
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
+#include "DREAM3D/Common/Observable.h"
 
 /**
  * @class Extrapolation2Dto3DFunc Extrapolation2Dto3DFunc.h AIM/Common/Extrapolation2Dto3DFunc.h
@@ -27,7 +32,7 @@
  * @date
  * @version 1.0
  */
-class  Extrapolation2Dto3DFunc
+class  Extrapolation2Dto3DFunc : public Observable
 {
 public:
     MXA_SHARED_POINTERS(Extrapolation2Dto3DFunc)
@@ -115,7 +120,7 @@ public:
 
 	void loadtwodimxgrains(const std::string & filename);
 	void loadtwodimygrains(const std::string & filename);
-	void loadtwodimzgrains(const std::string & filename);	
+	void loadtwodimzgrains(const std::string & filename);
 	void find_bincontributions();
 	void find_3Dpoints();
 	void find_adjustment();
@@ -125,7 +130,7 @@ public:
 
 protected:
     Extrapolation2Dto3DFunc();
-    
+
 private:
     Extrapolation2Dto3DFunc(const Extrapolation2Dto3DFunc& );
     void operator =(const Extrapolation2Dto3DFunc& );

@@ -109,6 +109,7 @@ void Reconstruction::execute()
 
   // Create the ReconstructionFunc object
   m = ReconstructionFunc::New();
+  m->addObserver(static_cast<Observer*>(this));
 
  // updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
   std::string manufacturer;

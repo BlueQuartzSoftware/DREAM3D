@@ -91,6 +91,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Grain.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
+#include "DREAM3D/Common/Observable.h"
 
 #include "Meshing/Patch.h"
 #include "Meshing/Face.h"
@@ -102,7 +103,7 @@
 using namespace meshing;
 
 
-class SurfaceMeshFunc
+class SurfaceMeshFunc : public Observable
 {
 
 public:

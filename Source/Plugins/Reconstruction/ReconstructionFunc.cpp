@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -156,6 +156,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
                                     vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions, int alignmentMethod)
 {
+  notify("Initializing Variables", 0, Observable::UpdateProgressValueAndMessage);
 
   mergetwinsoption = (mrgTwins == true) ? 1 : 0;
   mergecoloniesoption = (mrgColonies == true) ? 1 : 0;
@@ -521,7 +522,7 @@ void ReconstructionFunc::find_border()
 			q2[3] = quats[neighbor*5 + 3];
 			q2[4] = quats[neighbor*5 + 4];
 			phase2 = crystruct[phases[neighbor]];
-			if (phase1 == phase2) 
+			if (phase1 == phase2)
 			{
 			  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			}
@@ -663,8 +664,8 @@ void ReconstructionFunc::align_sections()
 	  }
       while(newxshift != oldxshift || newyshift != oldyshift)
       {
-	    oldxshift = newxshift;  
-	    oldyshift = newyshift;  
+	    oldxshift = newxshift;
+	    oldyshift = newyshift;
         for (int j = -3; j < 4; j++)
         {
           for (int k = -3; k < 4; k++)
@@ -1024,6 +1025,8 @@ void ReconstructionFunc::form_grains()
   float* grainquats = &(m_grainQuats.front());
   int* gphases = &(m_grainPhases.front());
 
+  notify("Form Grains - Growing/Aglomerating Grains", 0, Observable::UpdateProgressMessage);
+
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
   {
@@ -1138,6 +1141,7 @@ void ReconstructionFunc::form_grains()
     }
   }
 
+  notify("Form Grains -Merging Grains", 0, Observable::UpdateProgressMessage);
 
   SharedIntArray mergedgrainNames(new int[graincount]);
   int* mergedgrain_indicies = mergedgrainNames.get();
@@ -1251,6 +1255,8 @@ void ReconstructionFunc::form_grains()
     m_Grains[g] = Grain::New();
   }
 
+  notify("Form Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
+
   goodgraincount = remove_smallgrains(goodgraincount);
   oldSize = m_Grains.size();
   m_Grains.resize(goodgraincount);
@@ -1281,10 +1287,12 @@ void ReconstructionFunc::assign_badpoints()
   neighpoints[4] = xpoints;
   neighpoints[5] = xpoints * ypoints;
 
+  notify("Assigning Bad Voxels", 0, Observable::UpdateProgressMessage);
+
   while (count != 0)
   {
     count = 0;
-    for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
+    for (int i = 0; i < totalpoints; i++)
     {
       int grainname = grain_indicies[i];
       if (grainname == 0) unassigned[i] = 1;
