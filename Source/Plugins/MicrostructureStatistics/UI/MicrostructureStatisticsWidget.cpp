@@ -350,18 +350,18 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
   if(m_WriteAverageOrientations == true) m_ComputeAverageOrientations = true;
   if(m_GrainDataFile->isChecked() == false)
   {
-	m_WriteGrainSize = false;
-	m_WriteGrainShapes = false;
-	m_WriteNumNeighbors = false;
-	m_WriteAverageOrientations = false;
+    m_WriteGrainSize = false;
+    m_WriteGrainShapes = false;
+    m_WriteNumNeighbors = false;
+    m_WriteAverageOrientations = false;
   }
   if(m_VisualizationVizFile->isChecked() == false)
   {
-	m_WriteSurfaceVoxelScalars = false;
-	m_WritePhaseIdScalars = false;
-	m_WriteKernelMisorientationsScalars = false;
-	m_WriteIPFColorScalars = false;
-	m_WriteBinaryVTKFile = false;
+    m_WriteSurfaceVoxelScalars = false;
+    m_WritePhaseIdScalars = false;
+    m_WriteKernelMisorientationsScalars = false;
+    m_WriteIPFColorScalars = false;
+    m_WriteBinaryVTKFile = false;
   }
 
   if (m_WorkerThread != NULL)
