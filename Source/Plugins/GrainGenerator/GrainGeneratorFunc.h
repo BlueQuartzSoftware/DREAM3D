@@ -216,13 +216,6 @@ public:
     int readODFData(H5StatsReader::Pointer h5io);
     int readMisorientationData(H5StatsReader::Pointer h5io);
 
-    /// Duplicated Methods in PackGrains* Classes
-//    void generate_grain(int, int);
-//    float check_sizedisterror(int gadd, int gremove);
-//    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
-//
-
-
     void assign_eulers();
     void insert_precipitate(size_t grainNum);
 
