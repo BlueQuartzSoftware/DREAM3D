@@ -146,6 +146,8 @@ public:
 	std::vector<std::vector<std::vector<int> > > grainowners;
 
 	std::vector<Grain::Pointer> m_Grains;
+    std::vector<int> gsizes;
+    std::vector<int> newnames;
 	std::vector<float> sizetest;
 
 	std::vector<SharedFloatArray> actualodf;
@@ -230,6 +232,7 @@ public:
     float check_fillingerror(int gadd, int gremove);
     void assign_voxels();
     void assign_gaps();
+    void cleanup_grains();
     void fillin_precipitates();
 	void adjust_boundaries();
     void place_precipitates();
