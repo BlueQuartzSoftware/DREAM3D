@@ -146,7 +146,12 @@ void GrainGenerator::execute()
     updateProgressAndMessage(("Filling Gaps"), 40);
     m->assign_gaps();
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Filling Gaps", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_gaps)
+
+    updateProgressAndMessage(("Cleaning Grains"), 40);
+    m->cleanup_grains();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Cleaning Grains", err)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", cleanup_grains)
   }
   else if (m_AlreadyFormed == true)
   {

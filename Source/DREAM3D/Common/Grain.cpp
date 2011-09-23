@@ -54,7 +54,6 @@ outsideboundbox(0),
 twinnewnumber(-1),
 colonynewnumber(-1),
 slipsystem(0),
-packquality(0.0),
 phase(0),
 centroidx(0.0),
 centroidy(0.0),
@@ -83,7 +82,6 @@ axiseuler2(0.0),
 axiseuler3(0.0),
 volume(0.0),
 equivdiameter(0.0),
-neigherror(0.0),
 radius1(0.0),
 radius2(0.0),
 radius3(0.0),
@@ -171,7 +169,6 @@ void Grain::deepCopy(Grain::Pointer grain)
   twinnewnumber = grain->twinnewnumber;
   colonynewnumber = grain->colonynewnumber;
   slipsystem = grain->slipsystem;
-  packquality = grain->packquality;
 
   centroidx = grain->centroidx ;
   centroidy = grain->centroidy ;
@@ -200,7 +197,6 @@ void Grain::deepCopy(Grain::Pointer grain)
   axiseuler3 = grain->axiseuler3 ;
   volume = grain->volume ;
   equivdiameter = grain->equivdiameter ;
-  neigherror = grain->neigherror ;
   radius1 = grain->radius1 ;
   radius2 = grain->radius2 ;
   radius3 = grain->radius3 ;

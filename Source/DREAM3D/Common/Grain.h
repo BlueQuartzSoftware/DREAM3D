@@ -115,7 +115,6 @@ class DREAM3DLib_EXPORT Grain
     int twinnewnumber;
     int colonynewnumber;
     int slipsystem;
-    float packquality;
     int phase;
     float centroidx;
     float centroidy;
@@ -145,7 +144,6 @@ class DREAM3DLib_EXPORT Grain
     float axiseuler3;
     float volume;
     float equivdiameter;
-    float neigherror;
     float radius1;
     float radius2;
     float radius3;
