@@ -208,7 +208,7 @@ public:
 
 	void initializeAttributes();
 	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
-    void initialize_packinggrid();
+
 
     void write_eulerangles(const std::string & filename);
     int readReconStatsData(H5StatsReader::Pointer h5io);
@@ -216,21 +216,16 @@ public:
     int readODFData(H5StatsReader::Pointer h5io);
     int readMisorientationData(H5StatsReader::Pointer h5io);
 
-    void pack_grains();
-    void generate_grain(int, int);
+    /// Duplicated Methods in PackGrains* Classes
+//    void generate_grain(int, int);
+//    float check_sizedisterror(int gadd, int gremove);
+//    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
+//
+
+
     void assign_eulers();
-    void insert_grain(size_t grainNum);
     void insert_precipitate(size_t grainNum);
-    void move_grain(size_t grainNum, float xc, float yc, float zc);
-    void add_grain(size_t grainNum);
-    void remove_grain(size_t grainNum);
-    void determine_neighbors(size_t grainNum, int add);
-	void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
-	void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
-	void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
-    float check_neighborhooderror(int gadd, int gremove);
-    float check_sizedisterror(int gadd, int gremove);
-    float check_fillingerror(int gadd, int gremove);
+
     void assign_voxels();
     void assign_gaps();
     void cleanup_grains();
@@ -260,15 +255,17 @@ public:
 
     int writePhFormat(const std::string &file);
 
+    std::vector<OrientationMath*>    m_OrientatioOps;
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
+
 protected:
     GrainGeneratorFunc();
 private:
-    std::vector<OrientationMath*>    m_OrientatioOps;
+
     OrientationMath::Pointer         m_CubicOps;
     OrientationMath::Pointer         m_HexOps;
     OrientationMath::Pointer         m_OrthoOps;
 
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
     DREAM3D::ShapeOps::Pointer                m_UnknownShapeOps;
     DREAM3D::ShapeOps::Pointer                m_CubicOctohedronOps;
     DREAM3D::ShapeOps::Pointer                m_CylinderOps;

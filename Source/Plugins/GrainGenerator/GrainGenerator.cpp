@@ -49,8 +49,12 @@
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 #include "GrainGenerator/StructureReaders/VTKStructureReader.h"
 #include "GrainGenerator/StructureReaders/DXStructureReader.h"
+#include "GrainGenerator/Algorithms/PackGrainsGen2.h"
+#include "GrainGenerator/Algorithms/PackGrainsGen3.h"
 
 
+#define PACKGRAINS_GEN2
+//#define PACKGRAINS_GEN3
 
 
 // -----------------------------------------------------------------------------
@@ -134,7 +138,15 @@ void GrainGenerator::execute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "readAxisOrientationData Was canceled", readAxisOrientationData);
 
     updateProgressAndMessage(("Packing Grains"), 25);
-    m->pack_grains();
+#ifdef PACKGRAINS_GEN2
+    PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
+#elif defined PACKGRAINS_GEN3
+    PackGrainsGen3::Pointer pack_grains = PackGrainsGen3::New();
+#endif
+    pack_grains->addObserver(static_cast<Observer*>(this));
+    pack_grains->setGrainGenFunc(m.get());
+    pack_grains->execute();
+    err = pack_grains->getErrorCondition();
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Packing Grains", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", pack_grains)
 

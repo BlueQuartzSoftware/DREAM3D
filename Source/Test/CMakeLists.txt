@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(AIMTest)
+project(DREAM3DTest)
 
 # --------------------------------------------------------------------------
 macro(MXA_ADD_TEST testname Exename)
@@ -25,7 +25,7 @@ endmacro()
 
 if (0)
 set (srcs
-    ${AIMTest_SOURCE_DIR}/AngDirectoryPatternTest.cpp
+    ${DREAM3DTest_SOURCE_DIR}/AngDirectoryPatternTest.cpp
     ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ANG/AngDirectoryPatterns.cpp
     ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/Common/Grain.cpp
     )
@@ -37,64 +37,68 @@ include_directories(${DREAM3D_SOURCE_DIR}/Source/Applications)
 include_directories(${DREAM3D_SOURCE_DIR}/Source/Plugins)
 
 # --------
-add_executable(ODFTest ${AIMTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
+add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
 target_link_libraries(ODFTest DREAM3DLib)
 
 # --------
-add_executable(AngReaderTest ${AIMTest_SOURCE_DIR}/AngReaderTest.cpp 
+add_executable(AngReaderTest ${DREAM3DTest_SOURCE_DIR}/AngReaderTest.cpp 
                             ${DREAM3D_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
 target_link_libraries(AngReaderTest DREAM3DLib)
 
 # --------
-add_executable(VoxelTest ${AIMTest_SOURCE_DIR}/VoxelTest.cpp)
+add_executable(VoxelTest ${DREAM3DTest_SOURCE_DIR}/VoxelTest.cpp)
 #target_link_libraries(VoxelTest DREAM3DLib)
 
 # --------
-add_executable(GrainDataReaderTest ${AIMTest_SOURCE_DIR}/GrainDataReaderTest.cpp
-                                ${AIMTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
+add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
+                                ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
 
 # --------
-add_executable(TextureTest ${AIMTest_SOURCE_DIR}/TextureTest.cpp)
+add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 
 
 # --------
-add_executable(VTKFileWritersTest ${AIMTest_SOURCE_DIR}/VTKFileWritersTest.cpp
+add_executable(VTKFileWritersTest ${DREAM3DTest_SOURCE_DIR}/VTKFileWritersTest.cpp
                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/Reconstruction/ReconstructionFunc.cpp
-                ${DREAM3D_SOURCE_DIR}/Source/Plugins/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
+                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
+                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
+                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
 )
 target_link_libraries(VTKFileWritersTest DREAM3DLib)
 
 # --------
-add_executable(PhWriterTest ${AIMTest_SOURCE_DIR}/PhWriterTest.cpp)
+add_executable(PhWriterTest ${DREAM3DTest_SOURCE_DIR}/PhWriterTest.cpp)
 target_link_libraries(PhWriterTest DREAM3DLib)
 
 # --------
-add_executable(DxTest ${AIMTest_SOURCE_DIR}/DxTest.cpp 
+add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp 
                         ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
+                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
+                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
                         ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
 target_link_libraries(DxTest DREAM3DLib)
 
 # --------
-add_executable(SurfaceMeshTest ${AIMTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
+add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
 target_link_libraries(SurfaceMeshTest DREAM3DLib)
 
 # --------
-add_executable(CtfReaderTest ${AIMTest_SOURCE_DIR}/CtfReaderTest.cpp)
+add_executable(CtfReaderTest ${DREAM3DTest_SOURCE_DIR}/CtfReaderTest.cpp)
 target_link_libraries(CtfReaderTest EbsdLib)
 
 # --------
-add_executable(StatsGenTest ${AIMTest_SOURCE_DIR}/StatsGenTest.cpp)
+add_executable(StatsGenTest ${DREAM3DTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest DREAM3DLib)
 MXA_ADD_TEST(StatsGenTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsGenTest)
 
 # --------
-add_executable(RNGTest ${AIMTest_SOURCE_DIR}/RNGTest.cpp)
+add_executable(RNGTest ${DREAM3DTest_SOURCE_DIR}/RNGTest.cpp)
 target_link_libraries(RNGTest DREAM3DLib)
 
 
 # --------
-add_executable(ResFixer ${AIMTest_SOURCE_DIR}/ResFixer.cpp)
+add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
 target_link_libraries(ResFixer EbsdLib MXADataModel)
 
