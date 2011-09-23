@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -48,6 +48,7 @@
 #include "DREAM3D/Common/Constants.h"
 #include "MicrostructureStatisticsFunc.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/Common/Observer.h"
 
 /**
 * @class MicrostructureStatistics MicrostructureStatistics AIM/MicrostructureStatistics.h/MicrostructureStatistics.h
@@ -58,7 +59,7 @@
 * @date May 30, 2011
 * @version 1.0
 */
-class MicrostructureStatistics  : public AbstractPipeline
+class MicrostructureStatistics  : public AbstractPipeline, public Observer
 {
 
   public:

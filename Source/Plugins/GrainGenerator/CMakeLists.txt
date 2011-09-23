@@ -7,56 +7,11 @@ project(GrainGeneratorPlugin)
 
 set(PLUGIN_NAME GrainGenerator)
 
-# ------------------------------------------------------------------------------
-#  Qt 4 Section
-# ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    include( ${QT_USE_FILE} )
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
-add_definitions(-DDREAM3D_USE_QT)
-if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
-endif()
-
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
 include_directories(${PROJECT_CODE_DIR} )
-include_directories(${PROJECT_CODE_DIR}/QtSupport )
-include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
-
-set(CLASS_NAME "GrainGenerator")
-SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
-configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
-                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
-
-set (GrainGeneratorPlugin_UI_HDRS
-    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
-    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorPlugin.h
-    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.h
-    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
-    )
-    
-set (GrainGeneratorPlugin_UI_SRCS 
-    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorPlugin.cpp
-    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.cpp
-    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
-    )
-
-# -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( GrainGeneratorPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
-    
-QT4_WRAP_UI( GrainGeneratorPlugin_Generated_UI_HDRS 
-            ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.ui )
-
-QT4_WRAP_CPP( GrainGeneratorPlugin_Generated_MOC_SRCS ${GrainGeneratorPlugin_UI_HDRS} )
-
-cmp_IDE_SOURCE_PROPERTIES("GrainGenerator/UI/" "${GrainGeneratorPlugin_UI_HDRS}" "${GrainGeneratorPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${GrainGeneratorPlugin_Generated_UI_HDRS};${GrainGeneratorPlugin_Generated_RC_SRCS}" "${GrainGeneratorPlugin_Generated_MOC_SRCS}" "0")
 
 
-#-- Now set any other source files that do not need Qt.
+#-- Now set source files that do not need Qt.
 SET (GrainGenerator_HDRS
   ${PROJECT_SOURCE_DIR}/GrainGenerator.h
   ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.h
@@ -91,6 +46,53 @@ if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
             COMPONENT Headers   )
 endif()
 
+# ------------------------------------------------------------------------------
+#  Qt 4 Section
+# ------------------------------------------------------------------------------
+if(DREAM3D_BUILD_GUI)
+    if(NOT QT4_FOUND)
+        message(FATAL_ERROR "Qt 4 is Needed for this project.")
+    endif()
+include( ${QT_USE_FILE} )
+message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
+
+include_directories(${PROJECT_CODE_DIR}/QtSupport )
+include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+
+
+add_definitions(-DDREAM3D_USE_QT)
+if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
+endif()
+set(CLASS_NAME "GrainGenerator")
+SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
+configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
+                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
+
+set (GrainGeneratorPlugin_UI_HDRS
+    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
+    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorPlugin.h
+    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.h
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
+    )
+    
+set (GrainGeneratorPlugin_UI_SRCS 
+    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorPlugin.cpp
+    ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.cpp
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
+    )
+
+# -- Run MOC and UIC on the necessary files   
+QT4_ADD_RESOURCES( GrainGeneratorPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
+    
+QT4_WRAP_UI( GrainGeneratorPlugin_Generated_UI_HDRS 
+            ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.ui )
+
+QT4_WRAP_CPP( GrainGeneratorPlugin_Generated_MOC_SRCS ${GrainGeneratorPlugin_UI_HDRS} )
+
+cmp_IDE_SOURCE_PROPERTIES("GrainGenerator/UI/" "${GrainGeneratorPlugin_UI_HDRS}" "${GrainGeneratorPlugin_UI_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${GrainGeneratorPlugin_Generated_UI_HDRS};${GrainGeneratorPlugin_Generated_RC_SRCS}" "${GrainGeneratorPlugin_Generated_MOC_SRCS}" "0")
+
 
 set (GrainGeneratorPlugin_PROJECT_SRCS
     ${GrainGeneratorPlugin_UI_SRCS}
@@ -104,6 +106,7 @@ set (GrainGeneratorPlugin_PROJECT_SRCS
     ${StructureReaders_HDRS}
     ${StructureReaders_SRCS}
 )
+
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
@@ -141,7 +144,7 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
-
+endif()
   
 # Create a Command line tool for the GrainGenerator
 # --------------------------------------------------------------------
@@ -151,6 +154,7 @@ if (WIN32)
     set (install_dir ".")
 endif()
 
+IF ( DREAM3D_BUILD_CLI_TOOLS )
 COMPILE_TOOL(
     TARGET GrainGenerator
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/GrainGeneratorMain.cpp ${PROJECT_SOURCE_DIR}/GrainGenerator.cpp  ${GrainGenerator_HDRS}
@@ -167,5 +171,5 @@ COMPILE_TOOL(
     DEFINITION   "SVG_3D_LIBRARY"
     LINK_LIBRARIES DREAM3DLib MXADataModel
 )
-
+endif()
 

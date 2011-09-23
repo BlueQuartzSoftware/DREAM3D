@@ -9,20 +9,21 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/Common/Observer.h"
+
+
 #include "Extrapolation2Dto3DFunc.h"
-
-
 
 /**
 * @class Extrapolation2Dto3D Extrapolation2Dto3D.h AIM/Extrapolation2Dto3D/Extrapolation2Dto3D.h
 * @brief This class serves as the main entry point to execute the Extrapolation2Dto3D
 * pipeline
-* @author 
-* @author 
-* @date 
+* @author
+* @author
+* @date
 * @version 1.0
 */
-class Extrapolation2Dto3D : public AbstractPipeline
+class Extrapolation2Dto3D : public AbstractPipeline, public Observer
 {
   public:
     MXA_SHARED_POINTERS(Extrapolation2Dto3D);

@@ -66,6 +66,7 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/Grain.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
+#include "DREAM3D/Common/Observable.h"
 
 #include "DREAM3D/Common/OrientationMath.h"
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
@@ -90,7 +91,7 @@
  * @date
  * @version 1.0
  */
-class GrainGeneratorFunc
+class GrainGeneratorFunc : public Observable
 {
 public:
     MXA_SHARED_POINTERS(GrainGeneratorFunc)
@@ -107,7 +108,7 @@ public:
     float sizey;
     float sizez;
 
-	unsigned long long int GGseed;
+    unsigned long long int GGseed;
 
     float resx;
     float resy;
@@ -133,9 +134,9 @@ public:
     std::vector<DREAM3D::SyntheticBuilder::ShapeType>      shapeTypes;
 
 	// Voxel Attribute Arrays
-	DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-	DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, bool)
-	DECLARE_WRAPPED_ARRAY(ellipfuncs, m_Ellipfuncs, float)
+    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+    DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, bool)
+    DECLARE_WRAPPED_ARRAY(ellipfuncs, m_Ellipfuncs, float)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
     DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);

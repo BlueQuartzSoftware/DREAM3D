@@ -53,6 +53,8 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/Common/Observer.h"
+
 
 #include "ReconstructionFunc.h"
 
@@ -66,7 +68,7 @@
 * @date Nov 3, 2009
 * @version 1.0
 */
-class Reconstruction : public AbstractPipeline
+class Reconstruction : public AbstractPipeline, public Observer
 {
   public:
     MXA_SHARED_POINTERS(Reconstruction);

@@ -18,6 +18,8 @@ SET (DREAM3D_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/PhWriter.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
 )
 
 SET (DREAM3D_Common_SRCS
@@ -30,6 +32,8 @@ SET (DREAM3D_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3D_Common_HDRS}" "${DREAM3D_Common_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )

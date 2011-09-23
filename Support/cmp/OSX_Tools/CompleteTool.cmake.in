@@ -10,7 +10,7 @@
 # -----------------------------------------------------------------------------------
 
 message (STATUS "#------------ Starting OS X Tool Fixup --------------------------")
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 #-- Need this for link line stuff?
 if(COMMAND cmake_policy)
@@ -45,20 +45,20 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
 
   # By default, embed things right next to the main bundle executable:
   #
-  set(path "@executable_path/lib")
+  set(path "@executable_path/../lib")
 
   set(overridden 0)
   # Embed .dylibs right next to the main bundle executable:
   #
   if(item MATCHES "\\.dylib$")
-    set(path "@executable_path/lib")
+    set(path "@executable_path/../lib")
     set(overridden 1)
   endif(item MATCHES "\\.dylib$")
 
   # Embed .so right next to the main bundle executable:
   #
   if(item MATCHES "\\.so$")
-    set(path "@executable_path/plugins")
+    set(path "@executable_path/../plugins")
     set(overridden 1)
   endif(item MATCHES "\\.so$")
   
@@ -66,7 +66,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   #
   if(NOT overridden)
     if(item MATCHES "[^/]+\\.framework/")
-      set(path "@executable_path/Frameworks")
+      set(path "@executable_path/../Frameworks")
       set(overridden 1)
     endif(item MATCHES "[^/]+\\.framework/")
   endif(NOT overridden)
@@ -83,8 +83,18 @@ endfunction(gp_item_default_embedded_path_override)
 
 # -- Run the BundleUtilities cmake code
 include(BundleUtilities)
-fixup_bundle("${CMAKE_INSTALL_PREFIX}/tools/@osx_app_name@" 
+#fixup_bundle("${CMAKE_INSTALL_PREFIX}/tools/@osx_app_name@" 
              # Plugins to Install
-             "@app_plugin_list@"
+#             "@app_plugin_list@"
              # Directories to Search for Libraries
-             "@lib_search_dirs@")
+#             "@lib_search_dirs@")
+
+             # Now we need to fix up the package to have a shared Frameworks and lib directory
+list(APPEND @osx_app_name@archs "@CMAKE_OSX_ARCHITECTURES@" )
+list(LENGTH @osx_app_name@archs @osx_app_name@archLength )
+message(STATUS "@osx_app_name@archLength: ${@osx_app_name@archLength}")
+if (@osx_app_name@archLength EQUAL 1)    
+    # Move the frameworks from the contents of the .app bundle out to top level of the install directory
+    execute_process(COMMAND /bin/bash @OPTIMIZE_BUNDLE_SHELL_SCRIPT@ ${CMAKE_INSTALL_PREFIX})
+endif()
+             
