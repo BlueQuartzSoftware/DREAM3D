@@ -46,11 +46,13 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
+#include "DREAM3D/Common/Observable.h"
+
 /**
  * @brief Just a dummy class in order to make the EBSDImoprt work with some
  * of the other source codes.
  */
-class EbsdImportFunc
+class EbsdImportFunc: public Observable
 {
   public:
     MXA_SHARED_POINTERS(EbsdImportFunc);

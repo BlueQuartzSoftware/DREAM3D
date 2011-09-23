@@ -7,22 +7,43 @@ project(MicrostructureStatisticsPlugin)
 
 set(PLUGIN_NAME MicrostructureStatistics)
 
+include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
+include_directories(${PROJECT_CODE_DIR} )
+
+#-- Non Qt based Source files
+SET (MicrostructureStatistics_HDRS
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.h
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.h
+  ${PROJECT_SOURCE_DIR}/Algo.hpp
+)
+
+SET (MicrostructureStatistics_SRCS
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.cpp
+  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "MicrostructureStatistics" "${MicrostructureStatistics_HDRS}" "${MicrostructureStatistics_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${MicrostructureStatistics_HDRS}
+            DESTINATION include/DREAM3D/MicrostructureStatistics
+            COMPONENT Headers   )
+endif()
+
+
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    include( ${QT_USE_FILE} )
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
+if(DREAM3D_BUILD_GUI)
+    if(NOT QT4_FOUND)
+        message(FATAL_ERROR "Qt 4 is Needed for this project.")
+    endif()
+include( ${QT_USE_FILE} )
+message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
 add_definitions(-DDREAM3D_USE_QT)
 if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/..)
-include_directories(${PROJECT_CODE_DIR} )
+
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
 include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
 
@@ -55,23 +76,6 @@ QT4_WRAP_CPP( MicrostructureStatisticsPlugin_Generated_MOC_SRCS ${Microstructure
 
 cmp_IDE_SOURCE_PROPERTIES("MicrostructureStatistics/UI/" "${MicrostructureStatisticsPlugin_UI_HDRS}" "${MicrostructureStatisticsPlugin_UI_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${MicrostructureStatisticsPlugin_Generated_UI_HDRS};${MicrostructureStatisticsPlugin_Generated_RC_SRCS}" "${MicrostructureStatisticsPlugin_Generated_MOC_SRCS}" "0")
-
-SET (MicrostructureStatistics_HDRS
-  ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.h
-  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.h
-  ${PROJECT_SOURCE_DIR}/Algo.hpp
-)
-
-SET (MicrostructureStatistics_SRCS
-  ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.cpp
-  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "MicrostructureStatistics" "${MicrostructureStatistics_HDRS}" "${MicrostructureStatistics_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
-    INSTALL (FILES ${MicrostructureStatistics_HDRS}
-            DESTINATION include/DREAM3D/MicrostructureStatistics
-            COMPONENT Headers   )
-endif()
 
 
 set (MicrostructureStatisticsPlugin_PROJECT_SRCS
@@ -124,7 +128,7 @@ file(COPY ${${PLUGIN_NAME}_HELP_FILES}
 install(FILES ${${PLUGIN_NAME}_HELP_FILES}
         DESTINATION Help/${PLUGIN_NAME}
         COMPONENT Applications )
-  
+endif() 
 
   
   
@@ -135,6 +139,7 @@ set(install_dir "tools")
 if (WIN32)
     set (install_dir ".")
 endif()
+IF ( DREAM3D_BUILD_CLI_TOOLS )
 COMPILE_TOOL(
     TARGET MicroStats
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/MicroStatsMain.cpp 
@@ -149,6 +154,6 @@ COMPILE_TOOL(
     INSTALL_DEST  "${install_dir}" 
     LINK_LIBRARIES DREAM3DLib
 )
-
+endif()
   
   

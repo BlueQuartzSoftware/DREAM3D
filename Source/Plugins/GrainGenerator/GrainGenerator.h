@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -43,6 +43,9 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/Common/Observer.h"
+
+
 #include "GrainGeneratorFunc.h"
 
 /**
@@ -54,7 +57,7 @@
 * @date Nov 3, 2009
 * @version 1.0
 */
-class GrainGenerator : public AbstractPipeline
+class GrainGenerator : public AbstractPipeline, public Observer
 {
   public:
     MXA_SHARED_POINTERS(GrainGenerator);

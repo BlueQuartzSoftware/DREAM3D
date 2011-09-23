@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +12,9 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,44 +26,70 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include "AbstractPipeline.h"
+#include "Observable.h"
+#include "Observer.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractPipeline::AbstractPipeline() :
-    m_ErrorCondition(0), m_Cancel(false)
+Observable::Observable()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Observable::~Observable()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractPipeline::~AbstractPipeline()
+void Observable::addObserver(Observer* observer)
 {
-
+  m_Observers.push_back(observer);
 }
-
+void Observable::removeObserver(Observer* observer)
+{
+  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
+  {
+    if ((*iter) == observer)
+    {
+      m_Observers.erase(iter);
+      break;
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractPipeline::pipelineFinished()
+void Observable::notify(const char* msg, int progress, ObserverAspect a)
 {
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractPipeline::run()
-{
-  execute();
-  pipelineFinished();
+  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
+  {
+    switch(a)
+    {
+      case UpdateProgressValue:
+        (*iter)->pipelineProgress(progress);
+        break;
+      case UpdateProgressMessage:
+        (*iter)->pipelineProgressMessage(msg);
+        break;
+      case UpdateWarningMessage:
+        (*iter)->pipelineWarningMessage(msg);
+        break;
+      case UpdateErrorMessage:
+        (*iter)->pipelineErrorMessage(msg);
+        break;
+      case UpdateProgressValueAndMessage:
+        (*iter)->updateProgressAndMessage(msg, progress);
+        break;
+      default:
+        break;
+    }
+  }
 }
