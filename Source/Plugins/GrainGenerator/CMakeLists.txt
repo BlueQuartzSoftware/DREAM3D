@@ -15,11 +15,15 @@ include_directories(${PROJECT_CODE_DIR} )
 SET (GrainGenerator_HDRS
   ${PROJECT_SOURCE_DIR}/GrainGenerator.h
   ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.h
 )
 
 SET (GrainGenerator_SRCS
   ${PROJECT_SOURCE_DIR}/GrainGenerator.cpp
   ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
