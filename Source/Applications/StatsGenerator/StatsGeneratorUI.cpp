@@ -462,7 +462,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
     QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
                                                   m_FilePath,
-                                                   tr("HDF5 Files (*.h5stats *.h5)") );
+                                                   tr("HDF5 Files (*.h5stats)") );
     if ( true == h5file.isEmpty() ){ return;  }
     m_FilePath = h5file;
     QFileInfo fi (m_FilePath);

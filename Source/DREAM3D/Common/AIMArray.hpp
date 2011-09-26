@@ -41,6 +41,10 @@
   AIMArray<type>::Pointer priVar;\
   type* pubVar;
 
+#define INIT_AIMARRAY(var, type)\
+  var = AIMArray<type>::CreateArray(0);\
+  var->SetName(#var);
+
 /**
  * @class AIMArray AIMArray.hpp PathToHeader/AIMArray.hpp
  * @brief Template class for wrapping raw arrays of data.
