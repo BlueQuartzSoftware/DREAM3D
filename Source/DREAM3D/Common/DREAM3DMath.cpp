@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "DREAM3DMath.h"
-#include <numeric>
+#include <limits>
 
 
 
@@ -154,7 +154,7 @@ float DREAM3DMath::gammastirf(float x)
     result = 2.50662827463100050242*y*w;
     return result;
 }
-float DREAM3DMath::DREAM3DMath::LnGamma(float x, float& sgngam)
+float DREAM3DMath::LnGamma(float x, float& sgngam)
 {
     float result;
     float a;
