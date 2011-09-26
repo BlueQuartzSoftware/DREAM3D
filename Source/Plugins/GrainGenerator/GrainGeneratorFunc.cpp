@@ -59,7 +59,7 @@
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
-#define ERROR_TXT_OUT 1
+#define ERROR_TXT_OUT 0
 #define ERROR_TXT_OUT1 0
 
 //const static float m_onepointthree = 1.33333333333f;
