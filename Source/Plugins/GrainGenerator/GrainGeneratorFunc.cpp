@@ -63,7 +63,7 @@
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
-#define ERROR_TXT_OUT 1
+#define ERROR_TXT_OUT 0
 #define ERROR_TXT_OUT1 0
 
 //const static float m_onepointthree = 1.33333333333f;
@@ -132,16 +132,16 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   quats = NULL;
   totalsurfacearea = NULL;
 
-  m_GrainIndicies = AIMArray<int>::CreateArray(0);
-  m_Unassigned = AIMArray<bool>::CreateArray(0);
-  m_Ellipfuncs = AIMArray<float>::CreateArray(0);
-  m_Phases = AIMArray<int>::CreateArray(0);
-  m_Euler1s = AIMArray<float>::CreateArray(0);
-  m_Euler2s = AIMArray<float>::CreateArray(0);
-  m_Euler3s = AIMArray<float>::CreateArray(0);
-  m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
-  m_Quats = AIMArray<float>::CreateArray(0);
-  m_TotalSurfaceArea = AIMArray<float>::CreateArray(0);
+INIT_AIMARRAY(m_GrainIndicies,int);
+INIT_AIMARRAY(m_Unassigned,bool);
+INIT_AIMARRAY(m_Ellipfuncs,float);
+INIT_AIMARRAY(m_Phases,int);
+INIT_AIMARRAY(m_Euler1s,float);
+INIT_AIMARRAY(m_Euler2s,float);
+INIT_AIMARRAY(m_Euler3s,float);
+INIT_AIMARRAY(m_SurfaceVoxels,float);
+INIT_AIMARRAY(m_Quats,float);
+INIT_AIMARRAY(m_TotalSurfaceArea,float);
 
 }
 

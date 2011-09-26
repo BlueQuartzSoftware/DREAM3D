@@ -121,21 +121,21 @@ zpoints(0)
   goodVoxels = NULL;
 
 
-  m_GrainIndicies = AIMArray<int>::CreateArray(0);
-  m_Phases = AIMArray<int>::CreateArray(0);
-  m_Euler1s = AIMArray<float>::CreateArray(0);
-  m_Euler2s = AIMArray<float>::CreateArray(0);
-  m_Euler3s = AIMArray<float>::CreateArray(0);
-  m_Neighbors = AIMArray<int>::CreateArray(0);
-  m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
-  m_GoodVoxels = AIMArray<bool>::CreateArray(0);
-  m_Quats = AIMArray<float>::CreateArray(0);
+INIT_AIMARRAY(m_GrainIndicies,int);
+INIT_AIMARRAY(m_Phases,int);
+INIT_AIMARRAY(m_Euler1s,float);
+INIT_AIMARRAY(m_Euler2s,float);
+INIT_AIMARRAY(m_Euler3s,float);
+INIT_AIMARRAY(m_Neighbors,int);
+INIT_AIMARRAY(m_SurfaceVoxels,float);
+INIT_AIMARRAY(m_GoodVoxels,bool);
+INIT_AIMARRAY(m_Quats,float);
 
-  m_AlreadyChecked = AIMArray<int>::CreateArray(0);
-  m_Unassigned = AIMArray<int>::CreateArray(0);
-  m_GrainCounts = AIMArray<int>::CreateArray(0);
+INIT_AIMARRAY(m_AlreadyChecked,int);
+INIT_AIMARRAY(m_Unassigned,int);
+INIT_AIMARRAY(m_GrainCounts,int);
 
-  m_GoodVoxels = AIMArray<bool>::CreateArray(0);
+INIT_AIMARRAY(m_GoodVoxels,bool);
 }
 
 // -----------------------------------------------------------------------------

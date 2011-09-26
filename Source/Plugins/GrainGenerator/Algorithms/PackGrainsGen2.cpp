@@ -585,32 +585,31 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 }
 void PackGrainsGen2::remove_grain(size_t gnum)
 {
-  int index;
   int col, row, plane;
-  for (size_t i = 0; i < m->m_Grains[gnum]->columnlist->size(); i++)
+  size_t size = m->m_Grains[gnum]->columnlist->size();
+  std::vector<int>& columnlist = *(m->m_Grains[gnum]->columnlist);
+  std::vector<int>& rowlist = *(m->m_Grains[gnum]->rowlist);
+  std::vector<int>& planelist = *(m->m_Grains[gnum]->planelist);
+  for (size_t i = 0; i < size; i++)
   {
-    index = -1;
+	col = columnlist[i];
+	row = rowlist[i];
+	plane = planelist[i];
     if(m->periodic_boundaries == true)
     {
-      col = m->m_Grains[gnum]->columnlist->at(i);
-      row = m->m_Grains[gnum]->rowlist->at(i);
-      plane = m->m_Grains[gnum]->planelist->at(i);
-      if(col < 0) col = m->m_Grains[gnum]->columnlist->at(i) + m->packingxpoints;
-      if(col > m->packingxpoints - 1) col = m->m_Grains[gnum]->columnlist->at(i) - m->packingxpoints;
-      if(row < 0) row = m->m_Grains[gnum]->rowlist->at(i) + m->packingypoints;
-      if(row > m->packingypoints - 1) row = m->m_Grains[gnum]->rowlist->at(i) - m->packingypoints;
-      if(plane < 0) plane = m->m_Grains[gnum]->planelist->at(i) + m->packingzpoints;
-      if(plane > m->packingzpoints - 1) plane = m->m_Grains[gnum]->planelist->at(i) - m->packingzpoints;
+      if(col < 0) col = col + m->packingxpoints;
+      if(col > m->packingxpoints - 1) col = col - m->packingxpoints;
+      if(row < 0) row = row + m->packingypoints;
+      if(row > m->packingypoints - 1) row = row - m->packingypoints;
+      if(plane < 0) plane = plane + m->packingzpoints;
+      if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
       m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
     }
     if(m->periodic_boundaries == false)
     {
-      if(m->m_Grains[gnum]->columnlist->at(i) >= 0 && m->m_Grains[gnum]->columnlist->at(i) <= m->packingxpoints - 1 && m->m_Grains[gnum]->rowlist->at(i) >= 0
-          && m->m_Grains[gnum]->rowlist->at(i) <= m->packingypoints - 1 && m->m_Grains[gnum]->planelist->at(i) >= 0
-          && m->m_Grains[gnum]->planelist->at(i) <= m->packingzpoints - 1)
+      if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0 && row <= m->packingypoints - 1 && plane >= 0 && plane <= m->packingzpoints - 1)
       {
-        m->grainowners[m->m_Grains[gnum]->columnlist->at(i)][m->m_Grains[gnum]->rowlist->at(i)][m->m_Grains[gnum]->planelist->at(i)] =
-            m->grainowners[m->m_Grains[gnum]->columnlist->at(i)][m->m_Grains[gnum]->rowlist->at(i)][m->m_Grains[gnum]->planelist->at(i)] - 1;
+        m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
       }
     }
   }
@@ -619,31 +618,33 @@ void PackGrainsGen2::remove_grain(size_t gnum)
 
 void PackGrainsGen2::add_grain(size_t gnum)
 {
-  int index;
   int col, row, plane;
-  for (size_t i = 0; i < m->m_Grains[gnum]->columnlist->size(); i++)
+  size_t size = m->m_Grains[gnum]->columnlist->size();
+  std::vector<int>& columnlist = *(m->m_Grains[gnum]->columnlist);
+  std::vector<int>& rowlist = *(m->m_Grains[gnum]->rowlist);
+  std::vector<int>& planelist = *(m->m_Grains[gnum]->planelist);
+  for (size_t i = 0; i < size; i++)
   {
-    index = -1;
+	col = columnlist[i];
+	row = rowlist[i];
+	plane = planelist[i];
     if(m->periodic_boundaries == true)
     {
-      col = m->m_Grains[gnum]->columnlist->at(i);
-      row = m->m_Grains[gnum]->rowlist->at(i);
-      plane = m->m_Grains[gnum]->planelist->at(i);
-      if(col < 0) col = m->m_Grains[gnum]->columnlist->at(i) + m->packingxpoints;
-      if(col > m->packingxpoints - 1) col = m->m_Grains[gnum]->columnlist->at(i) - m->packingxpoints;
-      if(row < 0) row = m->m_Grains[gnum]->rowlist->at(i) + m->packingypoints;
-      if(row > m->packingypoints - 1) row = m->m_Grains[gnum]->rowlist->at(i) - m->packingypoints;
-      if(plane < 0) plane = m->m_Grains[gnum]->planelist->at(i) + m->packingzpoints;
-      if(plane > m->packingzpoints - 1) plane = m->m_Grains[gnum]->planelist->at(i) - m->packingzpoints;
+      if(col < 0) col = col + m->packingxpoints;
+      if(col > m->packingxpoints - 1) col = col - m->packingxpoints;
+      if(row < 0) row = row + m->packingypoints;
+      if(row > m->packingypoints - 1) row = row - m->packingypoints;
+      if(plane < 0) plane = plane + m->packingzpoints;
+      if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
       m->grainowners[col][row][plane]++;
     }
     if(m->periodic_boundaries == false)
     {
-      if(m->m_Grains[gnum]->columnlist->at(i) >= 0 && m->m_Grains[gnum]->columnlist->at(i) <= m->packingxpoints - 1 && m->m_Grains[gnum]->rowlist->at(i) >= 0
-          && m->m_Grains[gnum]->rowlist->at(i) <= m->packingypoints - 1 && m->m_Grains[gnum]->planelist->at(i) >= 0
-          && m->m_Grains[gnum]->planelist->at(i) <= m->packingzpoints - 1)
+      if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0
+          && row <= m->packingypoints - 1 && plane >= 0
+          && plane <= m->packingzpoints - 1)
       {
-        m->grainowners[m->m_Grains[gnum]->columnlist->at(i)][m->m_Grains[gnum]->rowlist->at(i)][m->m_Grains[gnum]->planelist->at(i)]++;
+        m->grainowners[col][row][plane]++;
       }
     }
   }
