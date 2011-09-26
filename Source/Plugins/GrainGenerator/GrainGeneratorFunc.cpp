@@ -1044,6 +1044,7 @@ void GrainGeneratorFunc::cleanup_grains()
 	  int neighbor;
 	  int column, row, plane;
 	  int index;
+	  float minsize = 0;
 	  gsizes.resize(m_Grains.size());
 	  for (int i = 1; i < m_Grains.size(); i++)
 	  {
@@ -1057,6 +1058,8 @@ void GrainGeneratorFunc::cleanup_grains()
 	  {
 		if(unassigned[i] == false && grain_indicies[i] > 0)
 		{
+			minsize = mindiameter[phases[i]]*mindiameter[phases[i]]*mindiameter[phases[i]]*M_PI/6.0;
+			minsize = int(minsize/(resx*resy*resz));
 			currentvlist.push_back(i);
 			count = 0;
 			while(count < currentvlist.size())
@@ -1100,18 +1103,18 @@ void GrainGeneratorFunc::cleanup_grains()
 				}
 				count++;
 			}
-			if(vlists[grain_indicies[currentvlist[0]]].size() > 0)
+			if(vlists[grain_indicies[i]].size() > 0)
 			{
-				if(vlists[grain_indicies[currentvlist[0]]].size() < currentvlist.size())
+				if(vlists[grain_indicies[i]].size() < currentvlist.size())
 				{
-					for (size_t k = 0; k < vlists[grain_indicies[currentvlist[0]]].size(); k++)
+					for (size_t k = 0; k < vlists[grain_indicies[i]].size(); k++)
 					{
-						grain_indicies[vlists[grain_indicies[currentvlist[0]]][k]] = -1;
+						grain_indicies[vlists[grain_indicies[i]][k]] = -1;
 					}
-					vlists[grain_indicies[currentvlist[0]]].resize(currentvlist.size());
-					vlists[grain_indicies[currentvlist[0]]].swap(currentvlist);
+					vlists[grain_indicies[i]].resize(currentvlist.size());
+					vlists[grain_indicies[i]].swap(currentvlist);
 				}
-				else if(vlists[grain_indicies[currentvlist[0]]].size() >= currentvlist.size())
+				else if(vlists[grain_indicies[i]].size() >= currentvlist.size())
 				{
 					for (size_t k = 0; k < currentvlist.size(); k++)
 					{
@@ -1119,10 +1122,20 @@ void GrainGeneratorFunc::cleanup_grains()
 					}
 				}
 			}
-			else if(vlists[grain_indicies[currentvlist[0]]].size() == 0)
+			if(vlists[grain_indicies[i]].size() == 0)
 			{
-				vlists[grain_indicies[currentvlist[0]]].resize(currentvlist.size());
-				vlists[grain_indicies[currentvlist[0]]].swap(currentvlist);
+				if(currentvlist.size() >= minsize)
+				{
+					vlists[grain_indicies[i]].resize(currentvlist.size());
+					vlists[grain_indicies[i]].swap(currentvlist);
+				}
+				if(currentvlist.size() < minsize)
+				{
+					for (size_t k = 0; k < currentvlist.size(); k++)
+					{
+						grain_indicies[currentvlist[k]] = -1;
+					}
+				}
 			}
 			currentvlist.clear();
 		}
