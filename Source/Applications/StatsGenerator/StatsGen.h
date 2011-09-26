@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,7 +41,7 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
 #include "DREAM3D/Common/OrientationMath.h"
@@ -78,11 +78,11 @@ class StatsGen
       x.resize(size);
       y.resize(size);
       value = alpha;
-      gammap = gamma(value);
+      gammap = DREAM3DMath::Gamma(value);
       value = beta;
-      gammaq = gamma(value);
+      gammaq = DREAM3DMath::Gamma(value);
       value = alpha + beta;
-      gammapq = gamma(value);
+      gammapq = DREAM3DMath::Gamma(value);
       for (int i = 0; i < size; i++)
       {
         betain = (i * (1.0 / float(size))) + ((1.0 / float(size)) / 2.0);
@@ -185,12 +185,6 @@ class StatsGen
       return err;
     }
 
-    /**
-     * @brief
-     * @param value
-     * @return
-     */
-    float gamma(float value);
 
     /**
      * @brief  This method will generate ODF data for 3 scatter plots which are the

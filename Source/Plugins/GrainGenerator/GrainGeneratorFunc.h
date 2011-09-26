@@ -175,9 +175,9 @@ public:
     std::vector<std::vector<std::vector<float> > > simneighbordist;
     std::vector<std::vector<std::vector<int> > > boundaries;
 
-    float machineepsilon;
-    float maxrealnumber;
-    float minrealnumber;
+//    float machineepsilon;
+//    float maxrealnumber;
+//    float minrealnumber;
     int numorients;
     int numeulers;
     int resdiff;
@@ -223,7 +223,7 @@ public:
     void assign_gaps();
     void cleanup_grains();
     void fillin_precipitates();
-	void adjust_boundaries();
+    void adjust_boundaries();
     void place_precipitates();
     void find_neighbors();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
@@ -232,16 +232,8 @@ public:
     void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
     void matchCrystallography();
     void measure_misorientations();
-	void write_graindata(const std::string & filename);
-    float gamma(float);
-    float erf(float);
-    float erfc(float);
-    float gammastirf(float);
-    float lngamma(float, float& );
-    float incompletebeta(float, float, float);
-    float incompletebetafe(float, float, float, float, float);
-    float incompletebetafe2(float, float, float, float, float);
-    float incompletebetaps(float, float, float, float);
+    void write_graindata(const std::string & filename);
+
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);

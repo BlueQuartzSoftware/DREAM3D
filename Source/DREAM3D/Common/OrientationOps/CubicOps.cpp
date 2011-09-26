@@ -36,7 +36,7 @@
 #include "CubicOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 
 
   const static float m_pi = M_PI;

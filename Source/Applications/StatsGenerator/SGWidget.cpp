@@ -60,7 +60,7 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 #include "DREAM3D/HDF5/H5StatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"

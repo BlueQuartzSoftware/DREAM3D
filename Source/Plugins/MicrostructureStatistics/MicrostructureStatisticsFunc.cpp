@@ -55,7 +55,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 //-- AIM Includes
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
