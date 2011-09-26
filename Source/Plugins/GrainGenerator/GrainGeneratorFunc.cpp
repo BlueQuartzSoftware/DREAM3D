@@ -139,7 +139,7 @@ INIT_AIMARRAY(m_Phases,int);
 INIT_AIMARRAY(m_Euler1s,float);
 INIT_AIMARRAY(m_Euler2s,float);
 INIT_AIMARRAY(m_Euler3s,float);
-INIT_AIMARRAY(m_SurfaceVoxels,float);
+INIT_AIMARRAY(m_SurfaceVoxels,int);
 INIT_AIMARRAY(m_Quats,float);
 INIT_AIMARRAY(m_TotalSurfaceArea,float);
 
