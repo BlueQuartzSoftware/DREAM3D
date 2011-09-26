@@ -66,6 +66,7 @@ lacking still.
 
 #include <math.h>
 
+#include "DREAM3D/DREAM3DLibTypes.h"
 
 #ifndef M_E
 #define M_E            2.7182818284590452354   /* e */
@@ -130,15 +131,15 @@ class DREAM3DMath
   public:
     virtual ~DREAM3DMath();
 
-    static float Gamma(float);
-    static float erf(float);
-    static float erfc(float);
-    static float gammastirf(float);
-    static float LnGamma(float, float& );
-    static float incompletebeta(float, float, float);
-    static float incompletebetafe(float, float, float, float, float);
-    static float incompletebetafe2(float, float, float, float, float);
-    static float incompletebetaps(float, float, float, float);
+    static DREAM3DLib_EXPORT float Gamma(float);
+    static DREAM3DLib_EXPORT float erf(float);
+    static DREAM3DLib_EXPORT float erfc(float);
+    static DREAM3DLib_EXPORT float gammastirf(float);
+    static DREAM3DLib_EXPORT float LnGamma(float, float& );
+    static DREAM3DLib_EXPORT float incompletebeta(float, float, float);
+    static DREAM3DLib_EXPORT float incompletebetafe(float, float, float, float, float);
+    static DREAM3DLib_EXPORT float incompletebetafe2(float, float, float, float, float);
+    static DREAM3DLib_EXPORT float incompletebetaps(float, float, float, float);
 
   protected:
     DREAM3DMath();
