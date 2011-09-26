@@ -31,6 +31,9 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
+
+#include "DREAM3D/DREAM3DLibTypes.h"
+
 /**
  * @class Observer Observer.h DREAM3D/Common/Observer.h
  * @brief This class implmements the <b>Observer</b> pattern from the <b>Gang of
@@ -40,7 +43,7 @@
  * @date Sep 22, 2011
  * @version 1.0
  */
-class Observer
+class DREAM3DLib_EXPORT Observer
 {
   public:
     Observer();
