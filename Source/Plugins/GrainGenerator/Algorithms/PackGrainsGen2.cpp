@@ -37,7 +37,7 @@
 #include "PackGrainsGen2.h"
 #include <map>
 
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 #include "DREAM3D/Common/Constants.h"
 
 const static float m_pi = M_PI;
@@ -134,7 +134,7 @@ void PackGrainsGen2::generate_grain(int gnum, int phase)
       a3 = m->coverb[phase][diameter - 1][0];
       b3 = m->coverb[phase][diameter - 1][1];
     }
-    float prob = ((gamma((a3 + b3)) / (gamma(a3) * gamma(b3))) * (powf(cob, (a3 - 1))) * (powf((1 - cob), (b3 - 1))));
+    float prob = ((DREAM3DMath::Gamma((a3 + b3)) / (DREAM3DMath::Gamma(a3) * DREAM3DMath::Gamma(b3))) * (powf(cob, (a3 - 1))) * (powf((1 - cob), (b3 - 1))));
     float check = rg.genrand_res53();
     if(prob > check) good = 1;
     if(cob > 1) good = 0;

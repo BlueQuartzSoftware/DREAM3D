@@ -36,7 +36,7 @@
 
 #include "SuperEllipsoidOps.h"
 
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 
 const static float m_pi = M_PI;
 
@@ -116,10 +116,10 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
 
   for (int i = 0; i < 41; i++)
   {
-    float a = gamma(1.0 + 1.0 / ShapeClass2Omega3[i][1]);
-    float b = gamma(5.0 / ShapeClass2Omega3[i][1]);
-    float c = gamma(3.0 / ShapeClass2Omega3[i][1]);
-    float d = gamma(1.0 + 3.0 / ShapeClass2Omega3[i][1]);
+    float a = DREAM3DMath::Gamma(1.0 + 1.0 / ShapeClass2Omega3[i][1]);
+    float b = DREAM3DMath::Gamma(5.0 / ShapeClass2Omega3[i][1]);
+    float c = DREAM3DMath::Gamma(3.0 / ShapeClass2Omega3[i][1]);
+    float d = DREAM3DMath::Gamma(1.0 + 3.0 / ShapeClass2Omega3[i][1]);
     ShapeClass2Omega3[i][0] = powf(20.0 * ((a*a*a) * b) / (c * powf(d, 5.0 / 3.0)), 3) / (2000.0 * M_PI * M_PI / 9.0);
     Nvaluedist = fabsf(omega3 - ShapeClass2Omega3[i][0]);
     if (Nvaluedist < bestNvaluedist)
@@ -128,8 +128,8 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
       Nvalue = ShapeClass2Omega3[i][1];
     }
   }
-  float beta1 = (gamma((1.0 / Nvalue))*gamma((1.0/Nvalue)))/gamma((2.0/Nvalue));
-  float beta2 = (gamma((2.0 / Nvalue))*gamma((1.0/Nvalue)))/gamma((3.0/Nvalue));
+  float beta1 = (DREAM3DMath::Gamma((1.0 / Nvalue))*DREAM3DMath::Gamma((1.0/Nvalue)))/DREAM3DMath::Gamma((2.0/Nvalue));
+  float beta2 = (DREAM3DMath::Gamma((2.0 / Nvalue))*DREAM3DMath::Gamma((1.0/Nvalue)))/DREAM3DMath::Gamma((3.0/Nvalue));
   radcur1 = (volcur * (3.0 / 2.0) * (1.0 / bovera) * (1.0 / covera) * ((Nvalue * Nvalue) / 4.0) * (1.0 / beta1) * (1.0 / beta2));
   radcur1 = powf(radcur1, 0.333333333333);
   return radcur1;

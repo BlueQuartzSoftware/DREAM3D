@@ -37,7 +37,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 
 #define MULT_QUAT(q1, q2, out)\
     out[1] = q2[4] * q1[1] + q2[1] * q1[4] + q2[3] * q1[2] - q2[2] * q1[3];\
