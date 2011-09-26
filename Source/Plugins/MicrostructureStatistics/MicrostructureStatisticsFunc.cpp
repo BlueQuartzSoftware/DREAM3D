@@ -80,6 +80,9 @@ const static float m_pi = M_PI;
 
 using namespace std;
 
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -119,33 +122,34 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   maxdiameter = NULL;
   mindiameter = NULL;
 
-  m_GrainIndicies = AIMArray<int>::CreateArray(0);
-  m_Phases = AIMArray<int>::CreateArray(0);
-  m_Euler1s = AIMArray<float>::CreateArray(0);
-  m_Euler2s = AIMArray<float>::CreateArray(0);
-  m_Euler3s = AIMArray<float>::CreateArray(0);
-  m_Neighbors = AIMArray<int>::CreateArray(0);
-  m_SurfaceVoxels = AIMArray<float>::CreateArray(0);
-  m_Quats = AIMArray<float>::CreateArray(0);
-  m_GrainCounts = AIMArray<int>::CreateArray(0);
 
-  m_GrainMisorientations = AIMArray<float>::CreateArray(0);
-  m_MisorientationGradients = AIMArray<float>::CreateArray(0);
-  m_KernelMisorientations = AIMArray<float>::CreateArray(0);
+INIT_AIMARRAY(m_GrainIndicies,int);
+INIT_AIMARRAY(m_Phases,int);
+INIT_AIMARRAY(m_Euler1s,float);
+INIT_AIMARRAY(m_Euler2s,float);
+INIT_AIMARRAY(m_Euler3s,float);
+INIT_AIMARRAY(m_Neighbors,int);
+INIT_AIMARRAY(m_SurfaceVoxels,float);
+INIT_AIMARRAY(m_Quats,float);
+INIT_AIMARRAY(m_GrainCounts,int);
 
-  m_NeighborLists = AIMArray<float>::CreateArray(0);
-  m_NearestNeighbors = AIMArray<float>::CreateArray(0);
-  m_NearestNeighborDistances = AIMArray<float>::CreateArray(0);
+INIT_AIMARRAY(m_GrainMisorientations,float);
+INIT_AIMARRAY(m_MisorientationGradients,float);
+INIT_AIMARRAY(m_KernelMisorientations,float);
 
-  m_GrainCenters = AIMArray<float>::CreateArray(0);
-  m_GrainMoments = AIMArray<float>::CreateArray(0);
+INIT_AIMARRAY(m_NeighborLists,float);
+INIT_AIMARRAY(m_NearestNeighbors,float);
+INIT_AIMARRAY(m_NearestNeighborDistances,float);
 
-  m_TotalSurfaceArea = AIMArray<float>::CreateArray(0);
-  m_PhaseFraction = AIMArray<float>::CreateArray(0);
-  m_TotalVol = AIMArray<float>::CreateArray(0);
-  m_TotalAxes = AIMArray<float>::CreateArray(0);
-  m_MaxDiameter = AIMArray<float>::CreateArray(0);
-  m_MinDiameter = AIMArray<float>::CreateArray(0);
+INIT_AIMARRAY(m_GrainCenters,float);
+INIT_AIMARRAY(m_GrainMoments,float);
+
+INIT_AIMARRAY(m_TotalSurfaceArea,float);
+INIT_AIMARRAY(m_PhaseFraction,float);
+INIT_AIMARRAY(m_TotalVol,float);
+INIT_AIMARRAY(m_TotalAxes,float);
+INIT_AIMARRAY(m_MaxDiameter,float);
+INIT_AIMARRAY(m_MinDiameter,float);
 }
 
 // -----------------------------------------------------------------------------
@@ -220,10 +224,18 @@ void MicrostructureStatisticsFunc::initializeAttributes()
 {
   grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
   phases = m_Phases->WritePointer(0, totalpoints);
-  euler1s = m_Euler1s->WritePointer(-1, totalpoints);
-  euler2s = m_Euler2s->WritePointer(-1, totalpoints);
-  euler3s = m_Euler3s->WritePointer(-1, totalpoints);
-  neighbors = m_Neighbors->WritePointer(-1, totalpoints);
+  euler1s = m_Euler1s->WritePointer(0, totalpoints);
+  euler2s = m_Euler2s->WritePointer(0, totalpoints);
+  euler3s = m_Euler3s->WritePointer(0, totalpoints);
+  neighbors = m_Neighbors->WritePointer(0, totalpoints);
+  for (size_t i = 0; i < totalpoints; ++i)
+  {
+    euler1s[i] = -1.0f;
+    euler2s[i] = -1.0f;
+    euler3s[i] = -1.0f;
+    neighbors[i] = -1;
+  }
+  
   surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
   quats = m_Quats->WritePointer(0, totalpoints * 5);
   m_Quats->SetNumberOfComponents(5);
