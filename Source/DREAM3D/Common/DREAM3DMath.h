@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -125,6 +125,27 @@ lacking still.
 
 #endif
 
+class DREAM3DMath
+{
+  public:
+    virtual ~DREAM3DMath();
 
+    static float Gamma(float);
+    static float erf(float);
+    static float erfc(float);
+    static float gammastirf(float);
+    static float LnGamma(float, float& );
+    static float incompletebeta(float, float, float);
+    static float incompletebetafe(float, float, float, float, float);
+    static float incompletebetafe2(float, float, float, float, float);
+    static float incompletebetaps(float, float, float, float);
+
+  protected:
+    DREAM3DMath();
+
+  private:
+    DREAM3DMath(const DREAM3DMath&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DMath&); // Operator '=' Not Implemented
+};
 
 #endif /* _EMMATH_H_ */
