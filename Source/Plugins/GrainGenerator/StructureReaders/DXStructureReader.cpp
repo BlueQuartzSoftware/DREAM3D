@@ -172,8 +172,6 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   m->unassigned = m->m_Unassigned->WritePointer(0, m->totalpoints);
   m->ellipfuncs = m->m_Ellipfuncs->WritePointer(0, m->totalpoints);
   m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(0, m->totalpoints);
-  m->quats = m->m_Quats->WritePointer(0, m->totalpoints*5);
-  m->m_Quats->SetNumberOfComponents(5);
 
  // for(int i=0;i<m->totalpoints;i++)
  // {

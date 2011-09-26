@@ -142,7 +142,6 @@ public:
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, int);
-    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
 
 	std::vector<std::vector<std::vector<int> > > grainowners;
 
