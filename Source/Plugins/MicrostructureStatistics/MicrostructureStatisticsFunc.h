@@ -138,7 +138,7 @@ class MicrostructureStatisticsFunc : public Observable
     bool computeneighbors;
 
 
-	  void initializeAttributes();
+	void initializeAttributes();
     void initializeGrains();
     void initializeArrays();
 
