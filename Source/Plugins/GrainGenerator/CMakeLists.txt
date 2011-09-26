@@ -15,15 +15,11 @@ include_directories(${PROJECT_CODE_DIR} )
 SET (GrainGenerator_HDRS
   ${PROJECT_SOURCE_DIR}/GrainGenerator.h
   ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.h
 )
 
 SET (GrainGenerator_SRCS
   ${PROJECT_SOURCE_DIR}/GrainGenerator.cpp
   ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" "0")
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
@@ -47,6 +43,24 @@ cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/StructureReaders" "${StructureReaders
 if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${StructureReaders_HDRS}
             DESTINATION include/DREAM3D/StructureReaders
+            COMPONENT Headers   )
+endif()
+
+
+#-- Add in the Structure Readers for the Grain Generator
+SET (Algorithms_HDRS
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.h
+)
+
+SET (Algorithms_SRCS
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/Algorithms" "${Algorithms_HDRS}" "${Algorithms_SRCS}" "0")
+if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+    INSTALL (FILES ${Algorithms_HDRS}
+            DESTINATION include/DREAM3D/Algorithms
             COMPONENT Headers   )
 endif()
 
@@ -109,6 +123,8 @@ set (GrainGeneratorPlugin_PROJECT_SRCS
     ${GrainGenerator_SRCS}
     ${StructureReaders_HDRS}
     ${StructureReaders_SRCS}
+    ${Algorithms_HDRS}
+    ${Algorithms_SRCS}
 )
 
 
