@@ -250,9 +250,9 @@ void PackGrainsGen2::execute()
     {
       input = (float(j + 1) * m->grainsizediststep[i]) + (m->mindiameter[phase] / 2.0);
       if(logf(input) <= m->avgdiam[phase]) m->grainsizedist[i][j] = 0.5
-          - 0.5 * (erf((m->avgdiam[phase] - logf(float(input))) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
+          - 0.5 * (DREAM3DMath::erf((m->avgdiam[phase] - logf(float(input))) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
       if(logf(input) > m->avgdiam[phase]) m->grainsizedist[i][j] = 0.5
-          + 0.5 * (erf((logf(float(input)) - m->avgdiam[phase]) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
+          + 0.5 * (DREAM3DMath::erf((logf(float(input)) - m->avgdiam[phase]) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
       previoustotal = previoustotal + m->grainsizedist[i][j];
     }
   }

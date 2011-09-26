@@ -34,6 +34,9 @@
 
 #include <vector>
 
+#include "DREAM3D/DREAM3DLibTypes.h"
+
+
 class Observer;
 
 /**
@@ -50,7 +53,7 @@ class Observer;
  * @date Sep 22, 2011
  * @version 1.0
  */
-class Observable
+class DREAM3DLib_EXPORT Observable
 {
   public:
     Observable();
