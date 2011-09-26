@@ -196,14 +196,20 @@ void MicrostructureStatisticsFunc::initializeGrains()
     grain->active = 1;
   }
 
-#if 0
   // Loop over the Grains and initialize them as necessary
   size_t gSize = m_Grains.size();
   for (int g = 0; g < gSize; ++g)
   {
-
+    grain = m_Grains[g];
+    if (NULL == grain.get())
+    {
+      m_Grains[g] = Grain::New();
+      grain = m_Grains[g];
+      // Assign a new voxel list pointer to it
+      grain->voxellist = new std::vector<int>(0);
+	  grain->phase = 0;
+    }
   }
-#endif
 }
 
 
@@ -883,6 +889,7 @@ void MicrostructureStatisticsFunc::find_moments()
     float omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
     if (omega3 > 1) omega3 = 1;
+	if(vol5 == 0) omega3 = 0;
     m_Grains[i]->Ixx = grainmoments[i*6 + 0];
     m_Grains[i]->Iyy = grainmoments[i*6 + 1];
     m_Grains[i]->Izz = grainmoments[i*6 + 2];
@@ -920,6 +927,7 @@ void MicrostructureStatisticsFunc::find_axes()
     h = (g * g / 4) + (f * f * f / 27);
     rsquare = (g * g / 4) - h;
     r = sqrt(rsquare);
+	if(rsquare < 0) r = 0;
     theta = 0;
     if (r == 0)
     {
@@ -952,6 +960,7 @@ void MicrostructureStatisticsFunc::find_axes()
     bovera = b / a;
     covera = c / a;
   //  float coverb = c / b;
+	if(A == 0 || B == 0 || C == 0) bovera = 0, covera = 0;
     m_Grains[i]->aspectratio1 = bovera;
     m_Grains[i]->aspectratio2 = covera;
   }
