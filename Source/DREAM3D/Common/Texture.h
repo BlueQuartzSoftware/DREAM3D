@@ -41,7 +41,7 @@
 #include "MXA/MXATypes.h"
 #include "MXA/Common/LogTime.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/AIMMath.h"
+#include "DREAM3D/Common/DREAM3DMath.h"
 #include "DREAM3D/Common/OrientationMath.h"
 #include "DREAM3D/Common/OrientationOps/CubicOps.h"
 #include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
