@@ -176,7 +176,7 @@ float DREAM3DMath::DREAM3DMath::LnGamma(float x, float& sgngam)
     if(x < -34.0)
     {
         q = -x;
-        w = DREAM3DMath::LnGamma(q, tmp);
+        w = LnGamma(q, tmp);
         p = int(floor(q));
         i = int(floor(p+0.5));
         if( i%2==0 )
@@ -453,7 +453,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
         }
         return result;
     }
-    y = y+t+DREAM3DMath::LnGamma(a+b, sg)-DREAM3DMath::LnGamma(a, sg)-DREAM3DMath::LnGamma(b, sg);
+    y = y+t+LnGamma(a+b, sg)-LnGamma(a, sg)-LnGamma(b, sg);
     y = y+log(w/a);
     if(y < minlog)
     {
@@ -721,7 +721,7 @@ float DREAM3DMath::incompletebetaps(float a, float b, float x, float maxgam)
     }
     else
     {
-        t = DREAM3DMath::LnGamma(a+b, sg)-DREAM3DMath::LnGamma(a, sg)-DREAM3DMath::LnGamma(b, sg)+u+log(s);
+        t = LnGamma(a+b, sg)-LnGamma(a, sg)-LnGamma(b, sg)+u+log(s);
         if(t < log(minrealnumber))
         {
             s = 0.0;
