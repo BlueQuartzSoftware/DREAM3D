@@ -1348,7 +1348,7 @@ void ReconstructionFunc::assign_badpoints()
         }
       }
     }
-    for (int j = 0; j < (xpoints * ypoints * zpoints); j++)
+    for (int j = 0; j < totalpoints; j++)
     {
       int grainname = grain_indicies[j];
       int neighbor = neighbors[j];
@@ -1358,6 +1358,9 @@ void ReconstructionFunc::assign_badpoints()
         m_Grains[neighbor]->numvoxels++;
       }
     }
+//    std::stringstream ss;
+//     ss << "Assigning Bad Voxels count = " << count;
+//    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
 }
 
