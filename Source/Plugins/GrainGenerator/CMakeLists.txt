@@ -177,10 +177,13 @@ endif()
 IF ( DREAM3D_BUILD_CLI_TOOLS )
 COMPILE_TOOL(
     TARGET GrainGenerator
-    SOURCES ${PROJECT_SOURCE_DIR}/Tools/GrainGeneratorMain.cpp ${PROJECT_SOURCE_DIR}/GrainGenerator.cpp  ${GrainGenerator_HDRS}
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/GrainGeneratorMain.cpp ${PROJECT_SOURCE_DIR}/GrainGenerator.cpp  
+    ${GrainGenerator_HDRS}
     ${GrainGenerator_SRCS}
     ${StructureReaders_HDRS}
     ${StructureReaders_SRCS}
+    ${Algorithms_HDRS}
+    ${Algorithms_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
