@@ -52,7 +52,7 @@ if (r->crystruct[phase] == Ebsd::Cubic) {\
   q1[2] = r->m_Grains[r->grain_indicies[i]]->avg_quat[2];\
   q1[3] = r->m_Grains[r->grain_indicies[i]]->avg_quat[3];\
   q1[4] = r->m_Grains[r->grain_indicies[i]]->avg_quat[4];\
-  OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
+  OIMColoring::CalculateHexIPFColor(r->m_Grains[r->grain_indicies[i]]->euler1, r->m_Grains[r->grain_indicies[i]]->euler2, r->m_Grains[r->grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
 }\
 ipfColor[j * 3] = rgb[0];\
 ipfColor[j * 3 + 1] = rgb[1];\
