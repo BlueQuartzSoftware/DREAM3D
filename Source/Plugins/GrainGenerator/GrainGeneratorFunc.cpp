@@ -63,8 +63,6 @@
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
-#define ERROR_TXT_OUT 0
-#define ERROR_TXT_OUT1 0
 
 //const static float m_onepointthree = 1.33333333333f;
 const static float m_pi = M_PI;
@@ -1099,9 +1097,10 @@ void GrainGeneratorFunc::cleanup_grains()
 				}
 				count++;
 			}
-			if(vlists[grain_indicies[i]].size() > 0)
+			size_t size = vlists[grain_indicies[i]].size();
+			if(size > 0)
 			{
-				if(vlists[grain_indicies[i]].size() < currentvlist.size())
+				if(size < currentvlist.size())
 				{
 					for (size_t k = 0; k < vlists[grain_indicies[i]].size(); k++)
 					{
@@ -1110,7 +1109,7 @@ void GrainGeneratorFunc::cleanup_grains()
 					vlists[grain_indicies[i]].resize(currentvlist.size());
 					vlists[grain_indicies[i]].swap(currentvlist);
 				}
-				else if(vlists[grain_indicies[i]].size() >= currentvlist.size())
+				else if(size >= currentvlist.size())
 				{
 					for (size_t k = 0; k < currentvlist.size(); k++)
 					{
@@ -1118,7 +1117,7 @@ void GrainGeneratorFunc::cleanup_grains()
 					}
 				}
 			}
-			if(vlists[grain_indicies[i]].size() == 0)
+			else if(size == 0)
 			{
 				if(currentvlist.size() >= minsize)
 				{
