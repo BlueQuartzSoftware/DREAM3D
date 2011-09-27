@@ -9,6 +9,7 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"
+#include "DREAM3D/Common/Observer.h"
 #include "@PluginName@Func.h"
 
 
@@ -22,7 +23,7 @@
 * @date 
 * @version 1.0
 */
-class @PluginName@ : public AbstractPipeline
+class @PluginName@ : public AbstractPipeline, public Observer
 {
   public:
     MXA_SHARED_POINTERS(@PluginName@);
