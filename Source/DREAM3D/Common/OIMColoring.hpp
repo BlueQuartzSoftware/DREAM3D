@@ -258,32 +258,46 @@ class OIMColoring
     }
 
 
-
-    template <typename K>
-    void static CalculateHexIPFColor(float* q1, K* refDir, unsigned char* rgb)
+    /**
+     * @brief Wrapper for convenience - Generates an RGB color based on the Inverse
+     * Pole Figure coloring for a Hex Crystal Structure
+     * @param eulers The euler angles which MUST be encode into the array in the following order:
+     * phi1, Phi, phi2
+     * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010)
+     * @param rgb A pointer to store the RGB value into
+     */
+    template<typename T, typename K>
+    static void CalculateHexIPFColor(T* eulers, K* refDir, unsigned char* rgb)
     {
-      OIMColoring::CalculateHexIPFColor(q1, refDir[0], refDir[1], refDir[2], rgb);
+      OIMColoring::CalculateHexIPFColor<T>(eulers[0], eulers[1], eulers[2],
+                                       refDir[0], refDir[1], refDir[2],rgb);
     }
 
-
-
-/**
- * @brief Calculates the IPF Color in RGB for a Hexagonal Crystal Structure.
- * @param q1 Quaternion to calculate the RGB value for
- * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
- */
-    template <typename K>
-    void static CalculateHexIPFColor(float q1[5],
-                                     K refDir0, K refDir1, K refDir2,
-                                     unsigned char* rgb)
-    {
+    /**
+     * @brief Generates an RGB color based on the Inverse Pole Figure coloring
+     * for a Hex Crystal Structure
+     * @param phi1 The phi1 euler Angle
+     * @param phi The Phi euler Angle
+     * @param phi2 The phi2 euler Angle
+     * @param refDir0 The first component of the Reference direction vector
+     * @param refDir1 The Second component of the Reference direction vector
+     * @param refDir2 The third component of the Reference direction vector
+     * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
+     */
+    template <typename T, typename K>
+    static void CalculateHexIPFColor(T phi1, T phi, T phi2,
+                                 K refDir0, K refDir1, K refDir2,
+                                 unsigned char* rgb)
+	{
       float qc[5];
+      float q1[5];
       float g[3][3];
       float p[3];
       float d[3];
-      float theta, phi;
+      float theta, phi_local;
       float _rgb[3] = { 0.0, 0.0, 0.0 };
 
+	  OrientationMath::eulertoQuat(q1, phi1, phi, phi2);
       for (int j = 0; j < 12; j++)
       {
 //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
@@ -330,13 +344,13 @@ class OIMColoring
 
           theta = (180.0 / MXA_PI) * acos(theta);
           _rgb[0] = (90.0 - theta) / 90.0;
-          phi = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
-          if (phi > 1) phi = 1;
+          phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
+          if (phi_local > 1) phi_local = 1;
 
-          if (phi < -1) phi = -1;
+          if (phi_local < -1) phi_local = -1;
 
-          phi = (180.0 / MXA_PI) * acos(phi);
-          _rgb[1] = (1 - _rgb[0]) * ((30.0 - phi) / 30.0);
+          phi_local = (180.0 / MXA_PI) * acos(phi_local);
+          _rgb[1] = (1 - _rgb[0]) * ((30.0 - phi_local) / 30.0);
           _rgb[2] = (1 - _rgb[0]) - _rgb[1];
         }
       }

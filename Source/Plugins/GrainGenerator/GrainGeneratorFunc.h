@@ -141,8 +141,7 @@ public:
     DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
-    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
-    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
+    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, int);
 
 	std::vector<std::vector<std::vector<int> > > grainowners;
 
@@ -199,7 +198,7 @@ public:
     int numneighbins;
     float volcheck;
     int ownercheck;
-    float currentfillingerror, oldfillingerror;
+    float currentfillingerror, fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
     float fillingerrorweight;
