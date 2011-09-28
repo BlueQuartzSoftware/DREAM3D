@@ -53,7 +53,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/OIMColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/IO/DxGrainIdWriter.h"
+#include "DREAM3DLib/IO/DxWriter.hpp"
 #include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
@@ -340,8 +340,8 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
   if (m_WritePhFile) {
     MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
-    PhWriter phWriter;
-    err = phWriter.writeGrainPhFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
+    PhWriter::Pointer phWriter = PhWriter::New();
+    err = phWriter->writeFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Reconstruction threw an Error writing the Ph file format.", err);
   }
 
@@ -361,8 +361,8 @@ void Reconstruction::execute()
   {
     updateProgressAndMessage(("Writing Out Dx Grain File."), 99);
     MAKE_OUTPUT_FILE_PATH( dxGrainFile, DREAM3D::Reconstruction::DxFile);
-    DxGrainIdWriter::Pointer dxWriter = DxGrainIdWriter::New();
-    err = dxWriter->writeGrainFile<int>(dxGrainFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
+    DxWriter::Pointer dxWriter = DxWriter::New();
+    err = dxWriter->writeFile<int>(dxGrainFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(ReconstructionFunc, "The Dx Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 

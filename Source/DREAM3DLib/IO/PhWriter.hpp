@@ -43,8 +43,11 @@
 #include <iomanip>
 #include <map>
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
 /**
- * @class PhWriter PhWriter.h DREAM3D/Common/PhWriter.h
+ * @class PhWriter PhWriter.h DREAM3D/IO/PhWriter.h
  * @brief This class writes a "Ph" file from the Grain Generator Data but is templated
  * so that possibly other classes can use this writing method. This code was adapted
  * from code supplied by S. Sintay and J. Tucker.
@@ -55,15 +58,16 @@
 class PhWriter
 {
   public:
-    PhWriter()
-    {
-    }
+    DREAM3D_SHARED_POINTERS(PhWriter);
+    DREAM3D_STATIC_NEW_MACRO(PhWriter);
+    DREAM3D_TYPE_MACRO(PhWriter);
+
     virtual ~PhWriter()
     {
     }
 
     template<typename T>
-    int writeGrainPhFile(const std::string &filename, T &grain_index, int xpoints, int ypoints, int zpoints)
+    int writeFile(const std::string &filename, T &grain_index, int xpoints, int ypoints, int zpoints)
     {
       std::string OutputName;
       int totalpoints = xpoints * ypoints * zpoints;
@@ -103,7 +107,7 @@ class PhWriter
 
       outfile << "     " << xpoints << "     " << ypoints << "     " << zpoints << "\n";
       outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";
-      outfile << " 3.000 0.000 0.000          0        \n"; // << grains << endl;
+      outfile << " 0.000 0.000 0.000          0        \n"; // << grains << endl;
 
       int count = 0;
       for (int k = 0; k < totalpoints; k++)
@@ -120,6 +124,11 @@ class PhWriter
       outfile << "\n";
       outfile.close();
       return 0;
+    }
+
+  protected:
+    PhWriter()
+    {
     }
 
   private:

@@ -69,16 +69,22 @@ add_executable(VTKFileWritersTest ${DREAM3DTest_SOURCE_DIR}/VTKFileWritersTest.c
 target_link_libraries(VTKFileWritersTest DREAM3DLib)
 
 # --------
-add_executable(PhWriterTest ${DREAM3DTest_SOURCE_DIR}/PhWriterTest.cpp)
-target_link_libraries(PhWriterTest DREAM3DLib)
+add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp)
+target_link_libraries(PhIOTest DREAM3DLib)
+add_test(PhIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PhIOTest)
 
 # --------
-add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp 
-                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
-                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
-                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
-                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
-target_link_libraries(DxTest DREAM3DLib)
+add_executable(DxIOTest ${DREAM3DTest_SOURCE_DIR}/DxIOTest.cpp)
+target_link_libraries(DxIOTest DREAM3DLib)
+add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)
+
+# --------
+#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp 
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
+#target_link_libraries(DxTest DREAM3DLib)
 
 # --------
 add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)

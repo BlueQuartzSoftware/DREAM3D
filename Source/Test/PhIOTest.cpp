@@ -35,29 +35,90 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <stdlib.h>
+#include <iostream>
 #include <vector>
 
+#include "MXA/Utilities/MXADir.h"
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/IO/PhWriter.hpp"
+#include "DREAM3DLib/IO/PhReader.h"
 
-int main(int argc, char **argv)
+#include "UnitTestSupport.hpp"
+
+#define REMOVE_TEST_FILES 1
+
+namespace PhIOTest
 {
+  const std::string PhIOTestFile("PhIOTest.ph");
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
+#if REMOVE_TEST_FILES
+  MXADir::remove(PhIOTest::PhIOTestFile);
+#endif
+}
 
+
+int TestPhWriter()
+{
   std::vector<int> grain_indices(27);
+  for (int i = 0; i < 27; ++i)
+  {
+    grain_indices[i] = i + 100;
+  }
   int xpoints = 3;
   int ypoints = 3;
   int zpoints = 3;
 
 
-  PhWriter writer;
-  int err = writer.writeGrainPhFile("test.ph", grain_indices, xpoints, ypoints, zpoints);
-  if (err < 0)
+  PhWriter::Pointer writer = PhWriter::New();
+  int err = writer->writeFile(PhIOTest::PhIOTestFile, grain_indices, xpoints, ypoints, zpoints);
+  MXA_REQUIRE_EQUAL(err, 0);
+  return EXIT_SUCCESS;
+}
+
+int TestPhReader()
+{
+
+  PhReader::Pointer reader = PhReader::New();
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
+  std::vector<int> grain_indices;
+  int err = reader->readFile(PhIOTest::PhIOTestFile, grain_indices, nx, ny, nz);
+  MXA_REQUIRE_EQUAL(err, 0);
+  MXA_REQUIRE_EQUAL(nx, 3);
+  MXA_REQUIRE_EQUAL(ny, 3);
+  MXA_REQUIRE_EQUAL(nz, 3);
+
+  for (int i = 0; i < 27; ++i)
   {
-    return EXIT_FAILURE;
+    MXA_REQUIRE_EQUAL( (i+100), grain_indices[i] );
   }
 
 
   return EXIT_SUCCESS;
 }
+
+
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv) {
+  int err = EXIT_SUCCESS;
+
+  MXA_REGISTER_TEST( TestPhWriter() );
+  MXA_REGISTER_TEST( TestPhReader() );
+
+  MXA_REGISTER_TEST( RemoveTestFiles() );
+  PRINT_TEST_SUMMARY();
+  return err;
+}
+
 
 
 

@@ -41,27 +41,26 @@
 #include <iostream>
 #include <fstream>
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /*
  *
  */
-class  DREAM3DLib_EXPORT DxGrainIdWriter
+class DxWriter
 {
   public:
-    MXA_SHARED_POINTERS(DxGrainIdWriter)
-    MXA_STATIC_NEW_MACRO(DxGrainIdWriter)
-    MXA_TYPE_MACRO(DxGrainIdWriter)
+    DREAM3D_SHARED_POINTERS(DxWriter)
+    DREAM3D_STATIC_NEW_MACRO(DxWriter)
+    DREAM3D_TYPE_MACRO(DxWriter)
 
-    DxGrainIdWriter();
-    virtual ~DxGrainIdWriter();
+    DxWriter() {}
+    virtual ~DxWriter() {}
 
-    MXA_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
+    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
     template<typename T>
-    int writeGrainFile(const std::string &filename, T* voxels, int xDim, int yDim, int zDim)
+    int writeFile(const std::string &filename, T* voxels, int xDim, int yDim, int zDim)
     {
       int err = 0;
       int totalPoints = (xDim*yDim*zDim);
@@ -200,8 +199,8 @@ class  DREAM3DLib_EXPORT DxGrainIdWriter
     }
 
   private:
-    DxGrainIdWriter(const DxGrainIdWriter&); // Copy Constructor Not Implemented
-    void operator=(const DxGrainIdWriter&); // Operator '=' Not Implemented
+    DxWriter(const DxWriter&); // Copy Constructor Not Implemented
+    void operator=(const DxWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* DXGRAINIDWRITER_H_ */
