@@ -324,7 +324,7 @@ float DREAM3DMath::erfc(float x)
     }
     if(x < 0.5)
     {
-        result = 1.0-erf(x);
+        result = 1.0-DREAM3DMath::erf(x);
         return result;
     }
     if(x >= 10)
