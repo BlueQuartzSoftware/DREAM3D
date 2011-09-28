@@ -34,7 +34,7 @@
 
 #include <vector>
 
-#include "DREAM3D/DREAM3DLibTypes.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 
 class Observer;

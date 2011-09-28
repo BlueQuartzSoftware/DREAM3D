@@ -44,7 +44,7 @@
 #include <vector>
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"

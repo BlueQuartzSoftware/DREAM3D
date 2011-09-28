@@ -47,7 +47,7 @@
 
 #include "EbsdLib/TSL/AngReader.h"
 
-#include "DREAM3D/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Common/LogTime.h"

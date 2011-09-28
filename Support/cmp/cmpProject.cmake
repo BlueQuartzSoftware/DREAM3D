@@ -36,8 +36,8 @@ if (NOT DEFINED CMP_VERSION_HEADER_FILE_NAME)
     set (CMP_VERSION_HEADER_FILE_NAME "cmpVersion.h")
 endif()
 
-if (NOT DEFINED CMP_EXTRA_CONFIGURATION_FILE)
-    set (CMP_EXTRA_CONFIGURATION_FILE "")
+if (NOT DEFINED CMP_TOP_HEADER_FILE)
+    set (CMP_TOP_HEADER_FILE "")
 endif()
 
 if (NOT DEFINED CMP_PROJECT_NAME)
@@ -68,6 +68,7 @@ configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpConfiguration.h.in
                ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME} )
 configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpPrimitiveTypes.h.in
                ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME} )
+
 
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables

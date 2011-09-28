@@ -39,10 +39,10 @@ set (H5Support_INSTALL_FILES 0)
 # project.
 #------------------------------------------------------------------------------- 
 set (CMP_HEADER_DIR ${H5Support_BINARY_DIR})
-set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+set (CMP_CONFIGURATION_FILE_NAME "H5SupportConfiguration.h")
 set (CMP_TYPES_FILE_NAME "H5SupportTypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "H5SupportVersion.h")
-set (CMP_EXTRA_CONFIGURATION_FILE "H5SupportConfiguration.h")
+set (CMP_TOP_HEADER_FILE "H5Support.h")
 set (CMP_PROJECT_NAMESPACE "H5Support")
 set (CMP_PROJECT_NAME "H5Support")
 set (CMP_ENABLE_PLUGINS "0")
@@ -75,7 +75,7 @@ configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in
                ${H5Support_BINARY_DIR}/H5SupportVersion.h  )
 
 configure_file(${H5Support_SOURCE_DIR}/H5SupportConfiguration.h.in
-               ${H5Support_BINARY_DIR}/H5SupportConfiguration.h)   
+               ${H5Support_BINARY_DIR}/${CMP_TOP_HEADER_FILE})   
 
 include_directories(${H5Support_SOURCE_DIR}/..)            
 include_directories(${H5Support_SOURCE_DIR})

@@ -40,11 +40,13 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+
 
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
+
+#include "DREAM3DLib/DREAM3DLib.h"
 
 typedef boost::shared_ptr<std::vector<int> >    IntVectorType;
 typedef boost::shared_ptr<std::vector<float> > FloatVectorType;

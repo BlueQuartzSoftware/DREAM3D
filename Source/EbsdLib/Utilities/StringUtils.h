@@ -43,7 +43,7 @@
 #define STRINGUTILITIES_H_
 
 //-- MXA Includes
-#include <MXA/Common/DLLExport.h>
+#include "MXA/MXADLLExport.h"
 
 
 //-- STL Includes

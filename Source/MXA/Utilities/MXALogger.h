@@ -13,7 +13,7 @@
 #error REMOVE THE DEFINITION YOU DONT NEED IT ANYMORE
 #endif
 
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 #include <MXA/Common/LogTime.h>
 #include <MXA/Common/MXASetGetMacros.h>
 

@@ -24,7 +24,7 @@ SET (DREAM3DLib_ShapeOps_SRCS
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/SuperEllipsoidOps.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ShapeOps" "${DREAM3DLib_ShapeOps_HDRS}" "${DREAM3DLib_ShapeOps_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_ShapeOps_HDRS}
             DESTINATION include/DREAM3D/ShapeOps
             COMPONENT Headers   )

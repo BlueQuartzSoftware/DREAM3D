@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <DREAM3D/DREAM3DVersion.h>
+#include "DREAM3DLib/DREAM3DVersion.h"
 
 #include <MXA/Common/LogTime.h>
 #include <MXA/Utilities/MXALogger.h>

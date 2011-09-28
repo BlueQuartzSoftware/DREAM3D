@@ -36,7 +36,7 @@
 
 #include "Reconstruction.h"
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
 
@@ -49,7 +49,7 @@
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/VTKUtils/VTKFileWriters.hpp"

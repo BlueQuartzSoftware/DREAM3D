@@ -41,9 +41,9 @@
 
 #include <vector>
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 
@@ -52,7 +52,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/HDF5/H5Macros.h"
 

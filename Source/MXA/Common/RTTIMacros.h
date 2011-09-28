@@ -19,7 +19,7 @@
 
 
 
-#include <MXA/Common/DLLExport.h>
+#include "MXA/MXADLLExport.h"
 
 #include <typeinfo>
 

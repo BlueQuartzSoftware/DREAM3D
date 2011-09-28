@@ -12,7 +12,7 @@
 SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/DLLExport.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
@@ -43,7 +43,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_Common_HDRS}
             DESTINATION include/DREAM3D/Common
             COMPONENT Headers   )

@@ -49,7 +49,7 @@
 #include "MXA/Common/LogTime.h"
 
 #include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3D/HDF5/VTKH5Constants.h"
 
 

@@ -14,7 +14,7 @@
   please file a bug report.
 #endif
 
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 #include <MXA/Common/Win32Defines.h> // This will define WINDOWS_LARGE_FILE_SUPPORT to true, which is what we want
 
 

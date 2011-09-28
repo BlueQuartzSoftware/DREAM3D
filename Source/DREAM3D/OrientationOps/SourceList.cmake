@@ -22,7 +22,7 @@ SET (DREAM3DLib_OrientationOps_SRCS
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrthoRhombicOps.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/OrientationOps" "${DREAM3DLib_OrientationOps_HDRS}" "${DREAM3DLib_OrientationOps_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_OrientationOps_HDRS}
             DESTINATION include/DREAM3D/OrientationOps
             COMPONENT Headers   )

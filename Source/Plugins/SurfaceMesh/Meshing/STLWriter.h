@@ -41,7 +41,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Utilities/StringUtils.h"
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "Patch.h"
 #include "Node.h"
 

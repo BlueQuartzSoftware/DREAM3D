@@ -9,7 +9,7 @@ SET (DREAM3D_VolumeMesh_SRCS
 #  ${DREAM3DLib_SOURCE_DIR}/VolumeMesh/VolumeMesh.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/VolumeMesh" "${DREAM3D_VolumeMesh_HDRS}" "${DREAM3D_VolumeMesh_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3D_VolumeMesh_HDRS}
             DESTINATION include/DREAM3D/VolumeMesh
             COMPONENT Headers   )

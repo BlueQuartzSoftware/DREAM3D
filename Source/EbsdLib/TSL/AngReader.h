@@ -44,7 +44,7 @@
 
 
 #include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdReader.h"
 #include "AngConstants.h"

@@ -30,7 +30,7 @@
 #ifndef UNITTESTSUPPORT_HPP_
 #define UNITTESTSUPPORT_HPP_
 
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 #include <MXA/Common/MXASetGetMacros.h>
 //#include <MXA/Core/MXADataModel.h>
 //#include <MXA/Core/MXADataDimension.h>

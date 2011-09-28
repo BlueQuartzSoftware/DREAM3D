@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -33,31 +33,39 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ABSTRACTEBSDFIELDS_H_
-#define ABSTRACTEBSDFIELDS_H_
 
+
+#ifndef _PHReader_h_
+#define _PHReader_h_
 
 #include <string>
 #include <vector>
 
+#include <DREAM3D/>
 
-#include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/EbsdConstants.h"
-
-
-/*
- *
+/**
+ * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
+ * @brief
+ * @author mjackson
+ * @date Sep 28, 2011
+ * @version $Revision$
  */
-class EbsdLib_EXPORT AbstractEbsdFields
+class PHReader
 {
   public:
-    AbstractEbsdFields();
-    virtual ~AbstractEbsdFields();
+    PHReader();
+    virtual ~PHReader();
 
-    virtual std::vector<std::string> getFieldNames() = 0;
+    int readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz);
 
+  protected:
+
+  private:
+    PHReader(const PHReader&); //Not Implemented
+    void operator=(const PHReader&); //Not Implemented
 
 };
 
-#endif /* ABSTRACTEBSDFIELDS_H_ */
+#endif //_PHReader_h_
+
+
