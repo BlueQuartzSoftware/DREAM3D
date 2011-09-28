@@ -52,7 +52,7 @@ if (r->crystruct[phase] == Ebsd::Cubic) {\
   q1[2] = r->m_Grains[r->grain_indicies[i]]->avg_quat[2];\
   q1[3] = r->m_Grains[r->grain_indicies[i]]->avg_quat[3];\
   q1[4] = r->m_Grains[r->grain_indicies[i]]->avg_quat[4];\
-  OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
+  OIMColoring::CalculateHexIPFColor(r->m_Grains[r->grain_indicies[i]]->euler1, r->m_Grains[r->grain_indicies[i]]->euler2, r->m_Grains[r->grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
 }\
 ipfColor[j * 3] = rgb[0];\
 ipfColor[j * 3 + 1] = rgb[1];\
@@ -193,13 +193,12 @@ class  H5GrainWriter
                                           RefDirection[0], RefDirection[1], RefDirection[2],
                                           rgb, hkl);
           }
-          if (r->crystruct[phase] == Ebsd::Hexagonal)
+          else if (r->crystruct[phase] == Ebsd::Hexagonal)
           {
-            q1[0] = r->quats[i][1];
-            q1[1] = r->quats[i][2];
-            q1[2] = r->quats[i][3];
-            q1[3] = r->quats[i][4];
-            OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+            OIMColoring::CalculateHexIPFColor(r->euler1s[vid],
+                                              r->euler2s[vid],
+                                              r->euler3s[vid],
+                                              RefDirection[0], RefDirection[1], RefDirection[2], rgb);
           }
           ipfColor[j * 3] = rgb[0];
           ipfColor[j * 3 + 1] = rgb[1];
