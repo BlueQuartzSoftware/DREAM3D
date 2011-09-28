@@ -60,7 +60,7 @@ using namespace std;
 const static float m_pi = M_PI;
 
 #define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 0
+#define ERROR_TXT_OUT1 1
 
 // -----------------------------------------------------------------------------
 //
@@ -206,7 +206,7 @@ void PackGrainsGen2::execute()
   int newgrain;
   float check;
   float xc, yc, zc;
-  float bestxc, bestyc, bestzc, bestcurrentfillingerror;
+  float oldxc, oldyc, oldzc;
   m->currentfillingerror = 0, m->oldfillingerror = 0;
   m->currentneighborhooderror = 0, m->oldneighborhooderror = 0;
   m->currentsizedisterror = 0, m->oldsizedisterror = 0;
@@ -346,10 +346,9 @@ void PackGrainsGen2::execute()
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  m->oldfillingerror = 1;
+  m->fillingerror = 1;
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    bestcurrentfillingerror = 100000000000000.0;
     m->m_Grains[i]->active = 1;
     xc = m->sizex / 2.0;
     yc = m->sizey / 2.0;
@@ -358,31 +357,34 @@ void PackGrainsGen2::execute()
     m->m_Grains[i]->centroidy = yc;
     m->m_Grains[i]->centroidz = zc;
     insert_grain(i);
+	m->fillingerror = check_fillingerror(i,-1000);
     for (int iter = 0; iter < 10; iter++)
     {
       xc = rg.genrand_res53() * (m->xpoints * m->resx);
       yc = rg.genrand_res53() * (m->ypoints * m->resy);
       zc = rg.genrand_res53() * (m->zpoints * m->resz);
+	  oldxc = m->m_Grains[i]->centroidx;
+	  oldyc = m->m_Grains[i]->centroidy;
+	  oldzc = m->m_Grains[i]->centroidz;
+	  m->oldfillingerror = m->fillingerror;
+	  m->fillingerror = check_fillingerror(-1000,i);
       move_grain(i, xc, yc, zc);
       m->currentfillingerror = check_fillingerror(i, -1000);
-      if(m->currentfillingerror < bestcurrentfillingerror)
+      if(m->currentfillingerror <= m->oldfillingerror)
       {
-        bestcurrentfillingerror = m->currentfillingerror;
-        bestxc = xc;
-        bestyc = yc;
-        bestzc = zc;
+		m->fillingerror = m->currentfillingerror;
       }
+	  else if(m->currentfillingerror > m->oldfillingerror)
+	  {
+		m->fillingerror = m->currentfillingerror;
+		m->fillingerror = check_fillingerror(-1000,i);
+		move_grain(i, oldxc, oldyc, oldzc);
+		m->fillingerror = check_fillingerror(i,-1000);
+	  }
     }
-    move_grain(i, bestxc, bestyc, bestzc);
-	m->m_Grains[i]->centroidx = bestxc;
-	m->m_Grains[i]->centroidy = bestyc;
-	m->m_Grains[i]->centroidz = bestzc;
-    add_grain(i);
-    m->oldfillingerror = bestcurrentfillingerror;
   }
   // determine initial filling and neighbor distribution errors
   m->oldneighborhooderror = check_neighborhooderror(-1000, -1000);
-  m->oldfillingerror = check_fillingerror(-1000, -1000);
 #if ERROR_TXT_OUT
   ofstream outFile;
   string filename = "error.txt";
@@ -397,7 +399,7 @@ void PackGrainsGen2::execute()
 #if ERROR_TXT_OUT
     if(iteration%25 == 0)
     {
-      outFile << m->oldfillingerror << " " << m->oldsizedisterror << "  " << m->oldneighborhooderror << "  " << m->m_Grains.size() << endl;
+      outFile << iteration << "	" << m->oldfillingerror << "	" << m->oldsizedisterror << "	" << m->oldneighborhooderror << "	" << m->m_Grains.size() << "	" << acceptedmoves << endl;
     }
 #endif
     // this option moves one grain
@@ -410,25 +412,27 @@ void PackGrainsGen2::execute()
       xc = rg.genrand_res53() * (m->xpoints * m->resx);
       yc = rg.genrand_res53() * (m->ypoints * m->resy);
       zc = rg.genrand_res53() * (m->zpoints * m->resz);
-	  check = m->oldfillingerror;
-	  m->oldfillingerror = check_fillingerror(-1000,randomgrain);
-	  remove_grain(randomgrain);
+	  oldxc = m->m_Grains[randomgrain]->centroidx;
+	  oldyc = m->m_Grains[randomgrain]->centroidy;
+	  oldzc = m->m_Grains[randomgrain]->centroidz;
+	  m->oldfillingerror = m->fillingerror;
+	  m->fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
 	  m->currentfillingerror = check_fillingerror(randomgrain,-1000);
 //      m->currentneighborhooderror = check_neighborhooderror(-1000, random);
 //      change2 = (m->currentneighborhooderror * m->currentneighborhooderror) - (m->oldneighborhooderror * m->oldneighborhooderror);
-	  if(m->currentfillingerror < check)
+	  if(m->currentfillingerror < m->oldfillingerror)
       {
-        add_grain(randomgrain);
-        m->oldfillingerror = m->currentfillingerror;
+		m->fillingerror = m->currentfillingerror;
 //        m->oldneighborhooderror = m->currentneighborhooderror;
         acceptedmoves++;
       }
-	  else if(m->currentfillingerror > check)
+	  else if(m->currentfillingerror > m->oldfillingerror)
 	  {
-		  move_grain(randomgrain, m->m_Grains[randomgrain]->centroidx, m->m_Grains[randomgrain]->centroidy, m->m_Grains[randomgrain]->centroidz);
-		  add_grain(randomgrain);
-		  m->oldfillingerror = check;
+		m->fillingerror = m->currentfillingerror;
+		m->fillingerror = check_fillingerror(-1000,randomgrain);
+		move_grain(randomgrain, oldxc, oldyc, oldzc);
+		m->fillingerror = check_fillingerror(randomgrain,-1000);
 	  }
     }
     // this option removes a grain and replaces it with another grain at the same centroid
@@ -538,74 +542,6 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
     planelist[i] = plane;
   }
 }
-void PackGrainsGen2::remove_grain(size_t gnum)
-{
-  int col, row, plane;
-  size_t size = m->m_Grains[gnum]->columnlist->size();
-  std::vector<int>& columnlist = *(m->m_Grains[gnum]->columnlist);
-  std::vector<int>& rowlist = *(m->m_Grains[gnum]->rowlist);
-  std::vector<int>& planelist = *(m->m_Grains[gnum]->planelist);
-  for (size_t i = 0; i < size; i++)
-  {
-	col = columnlist[i];
-	row = rowlist[i];
-	plane = planelist[i];
-    if(m->periodic_boundaries == true)
-    {
-      if(col < 0) col = col + m->packingxpoints;
-      if(col > m->packingxpoints - 1) col = col - m->packingxpoints;
-      if(row < 0) row = row + m->packingypoints;
-      if(row > m->packingypoints - 1) row = row - m->packingypoints;
-      if(plane < 0) plane = plane + m->packingzpoints;
-      if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
-      m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
-    }
-    if(m->periodic_boundaries == false)
-    {
-      if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0 && row <= m->packingypoints - 1 && plane >= 0 && plane <= m->packingzpoints - 1)
-      {
-        m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
-      }
-    }
-  }
-  determine_neighbors(gnum, -1);
-}
-
-void PackGrainsGen2::add_grain(size_t gnum)
-{
-  int col, row, plane;
-  size_t size = m->m_Grains[gnum]->columnlist->size();
-  std::vector<int>& columnlist = *(m->m_Grains[gnum]->columnlist);
-  std::vector<int>& rowlist = *(m->m_Grains[gnum]->rowlist);
-  std::vector<int>& planelist = *(m->m_Grains[gnum]->planelist);
-  for (size_t i = 0; i < size; i++)
-  {
-	col = columnlist[i];
-	row = rowlist[i];
-	plane = planelist[i];
-    if(m->periodic_boundaries == true)
-    {
-      if(col < 0) col = col + m->packingxpoints;
-      if(col > m->packingxpoints - 1) col = col - m->packingxpoints;
-      if(row < 0) row = row + m->packingypoints;
-      if(row > m->packingypoints - 1) row = row - m->packingypoints;
-      if(plane < 0) plane = plane + m->packingzpoints;
-      if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
-      m->grainowners[col][row][plane]++;
-    }
-    if(m->periodic_boundaries == false)
-    {
-      if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0
-          && row <= m->packingypoints - 1 && plane >= 0
-          && plane <= m->packingzpoints - 1)
-      {
-        m->grainowners[col][row][plane]++;
-      }
-    }
-  }
-  determine_neighbors(gnum, 1);
-}
-
 void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
 {
   float x, y, z;
@@ -825,7 +761,7 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
 
 float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
 {
-  float fillingerror = m->oldfillingerror * float(m->packingtotalpoints);
+  float fillingerror = m->fillingerror * float(m->packingtotalpoints);
   int col, row, plane;
   if(gadd > 0)
   {
@@ -848,12 +784,14 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
         if(plane < 0) plane = plane + m->packingzpoints;
         if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
         fillingerror = fillingerror + (2 * m->grainowners[col][row][plane] - 1);
+		m->grainowners[col][row][plane]++;
       }
       if(m->periodic_boundaries == false)
       {
         if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0 && row <= m->packingypoints - 1 && plane >= 0 && plane <= m->packingzpoints - 1)
         {
           fillingerror = fillingerror + (2 * m->grainowners[col][row][plane] - 1);
+		  m->grainowners[col][row][plane]++;
         }
       }
     }
@@ -878,12 +816,14 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
         if(plane < 0) plane = plane + m->packingzpoints;
         if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
         fillingerror = fillingerror + (-2 * m->grainowners[col][row][plane] + 3);
+		m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
       }
       if(m->periodic_boundaries == false)
       {
         if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0 && row <= m->packingypoints - 1 && plane >= 0 && plane <= m->packingzpoints - 1)
         {
           fillingerror = fillingerror + (-2 * m->grainowners[col][row][plane] + 3);
+		  m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
         }
       }
     }
