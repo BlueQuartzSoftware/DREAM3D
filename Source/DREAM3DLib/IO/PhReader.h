@@ -41,7 +41,8 @@
 #include <string>
 #include <vector>
 
-#include <DREAM3D/>
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
  * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
@@ -50,19 +51,24 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class PHReader
+class PhReader
 {
   public:
-    PHReader();
-    virtual ~PHReader();
+    DREAM3D_SHARED_POINTERS(PhReader);
+    DREAM3D_STATIC_NEW_MACRO(PhReader);
+    DREAM3D_TYPE_MACRO(PhReader);
+    virtual ~PhReader();
 
     int readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz);
-
+    void tokenize(const std::string& str,
+                          std::vector<std::string>& tokens,
+                          const std::string& delimiters = " ");
   protected:
+    PhReader();
 
   private:
-    PHReader(const PHReader&); //Not Implemented
-    void operator=(const PHReader&); //Not Implemented
+    PhReader(const PhReader&); //Not Implemented
+    void operator=(const PhReader&); //Not Implemented
 
 };
 

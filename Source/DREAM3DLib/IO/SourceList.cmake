@@ -10,12 +10,15 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (DREAM3DLib_IO_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/IO/DxGrainIdWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/IO/DxWriter.hpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/DxReader.h
   ${DREAM3DLib_SOURCE_DIR}/IO/PhWriter.hpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/PhReader.h
 )
 
 SET (DREAM3DLib_IO_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/IO/DxGrainIdWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/DxReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/PhReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/IO" "${DREAM3DLib_IO_HDRS}" "${DREAM3DLib_IO_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -33,20 +33,39 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "DxGrainIdWriter.h"
 
+#ifndef _DXREADER_H_
+#define _DXREADER_H_
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DxGrainIdWriter::DxGrainIdWriter() :
-m_AddSurfaceLayer(true)
+#include <string>
+#include <vector>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+/**
+ * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
+ * @brief
+ * @author mjackson
+ * @date Sep 28, 2011
+ * @version $Revision$
+ */
+class DxReader
 {
-}
+  public:
+    DREAM3D_SHARED_POINTERS(DxReader);
+    DREAM3D_STATIC_NEW_MACRO(DxReader);
+    DREAM3D_TYPE_MACRO(DxReader);
+    virtual ~DxReader();
+    int readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz);
+    void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ");
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DxGrainIdWriter::~DxGrainIdWriter()
-{
-}
+  protected:
+    DxReader();
+
+  private:
+    DxReader(const DxReader&); // Copy Constructor Not Implemented
+    void operator=(const DxReader&); // Operator '=' Not Implemented
+};
+
+#endif /* DXREADER_H_ */

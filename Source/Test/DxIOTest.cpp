@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,8 +28,105 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <stdlib.h>
+#include <iostream>
+#include <vector>
+
+#include "MXA/Utilities/MXADir.h"
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IO/DxWriter.hpp"
+#include "DREAM3DLib/IO/DxReader.h"
+
+#include "UnitTestSupport.hpp"
+
+#define REMOVE_TEST_FILES 1
+
+namespace DxIOTest
+{
+  const std::string DxIOTestFile("DxIOTest.dx");
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
+#if REMOVE_TEST_FILES
+  MXADir::remove(DxIOTest::DxIOTestFile);
+#endif
+}
+
+
+int TestDxWriter()
+{
+  std::vector<int> grain_indices(27);
+  for (int i = 0; i < 27; ++i)
+  {
+    grain_indices[i] = i + 100;
+  }
+  int xpoints = 3;
+  int ypoints = 3;
+  int zpoints = 3;
+
+
+  DxWriter::Pointer writer = DxWriter::New();
+  int err = writer->writeFile(DxIOTest::DxIOTestFile, &(grain_indices.front()), xpoints, ypoints, zpoints);
+  MXA_REQUIRE_EQUAL(err, 0);
+  return EXIT_SUCCESS;
+}
+
+int TestDxReader()
+{
+
+  DxReader::Pointer reader = DxReader::New();
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
+  std::vector<int> grain_indices;
+  int err = reader->readFile(DxIOTest::DxIOTestFile, grain_indices, nx, ny, nz);
+  MXA_REQUIRE_EQUAL(err, 0);
+  MXA_REQUIRE_EQUAL(nx, 3);
+  MXA_REQUIRE_EQUAL(ny, 3);
+  MXA_REQUIRE_EQUAL(nz, 3);
+
+  for (int i = 0; i < 27; ++i)
+  {
+    MXA_REQUIRE_EQUAL( (i+100), grain_indices[i] );
+  }
+
+
+  return EXIT_SUCCESS;
+}
+
+
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv) {
+  int err = EXIT_SUCCESS;
+
+  MXA_REGISTER_TEST( TestDxWriter() );
+  MXA_REGISTER_TEST( TestDxReader() );
+
+  MXA_REGISTER_TEST( RemoveTestFiles() );
+  PRINT_TEST_SUMMARY();
+  return err;
+}
+
+
+
+
+
+
+
+
+#if 0
 #include <iostream>
 
 
@@ -69,4 +168,6 @@ int main(int argc, char **argv)
   std::cout << "Done." << std::endl;
   return EXIT_SUCCESS;
 }
+
+#endif
 

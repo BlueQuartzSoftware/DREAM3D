@@ -40,6 +40,8 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/IO/DxWriter.hpp"
 #include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
@@ -356,8 +358,8 @@ void GrainGenerator::execute()
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
   if (m_WritePhFile) {
     MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
-    PhWriter phWriter;
-    err = phWriter.writeGrainPhFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
+    PhWriter::Pointer phWriter = PhWriter::New();
+    err = phWriter->writeFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
   }
 
