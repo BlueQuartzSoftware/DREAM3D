@@ -69,15 +69,15 @@
 #include "DREAM3D/Common/Observable.h"
 
 #include "DREAM3D/Common/OrientationMath.h"
-#include "DREAM3D/Common/OrientationOps/CubicOps.h"
-#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
-#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3D/OrientationOps/CubicOps.h"
+#include "DREAM3D/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/OrientationOps/OrthoRhombicOps.h"
 
-#include "DREAM3D/Common/ShapeOps/ShapeOps.h"
-#include "DREAM3D/Common/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3D/Common/ShapeOps/CylinderOps.h"
-#include "DREAM3D/Common/ShapeOps/EllipsoidOps.h"
-#include "DREAM3D/Common/ShapeOps/SuperEllipsoidOps.h"
+#include "DREAM3D/ShapeOps/ShapeOps.h"
+#include "DREAM3D/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3D/ShapeOps/CylinderOps.h"
+#include "DREAM3D/ShapeOps/EllipsoidOps.h"
+#include "DREAM3D/ShapeOps/SuperEllipsoidOps.h"
 
 #include "DREAM3D/HDF5/H5StatsWriter.h"
 #include "DREAM3D/HDF5/H5StatsReader.h"

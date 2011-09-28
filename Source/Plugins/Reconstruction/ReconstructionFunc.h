@@ -70,9 +70,9 @@
 #include "DREAM3D/Common/DREAM3DRandom.h"
 #include "DREAM3D/Common/Observable.h"
 #include "DREAM3D/Common/OrientationMath.h"
-#include "DREAM3D/Common/OrientationOps/CubicOps.h"
-#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
-#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3D/OrientationOps/CubicOps.h"
+#include "DREAM3D/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/OrientationOps/OrthoRhombicOps.h"
 
 
 using namespace std;
