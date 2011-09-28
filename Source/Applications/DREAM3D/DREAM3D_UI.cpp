@@ -52,8 +52,8 @@
 
 
 //-- DREAM3D Includes
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/DREAM3DVersion.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
 #include "QtSupport/QR3DFileCompleter.h"

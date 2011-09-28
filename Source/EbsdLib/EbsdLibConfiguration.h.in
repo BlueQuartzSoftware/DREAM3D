@@ -2,14 +2,24 @@
 * again to regenerate this file.
 */
 
+
+#ifndef _EBSDLIB_H_
+#define _EBSDLIB_H_
+
+
 /* Define to 1 if EbsdLibCommon was built as a dynamic library */
 #cmakedefine EbsdLib_BUILT_AS_DYNAMIC_LIB @EbsdLib_BUILT_AS_DYNAMIC_LIB@
-
 
 /* Did we compile with HDF5 support */
 #define EbsdLib_HDF5_SUPPORT @EbsdLib_HDF5_SUPPORT@
 
+/* Include the Overall Configuration header file */
+#include "@PROJECT_NAME@/@CMP_CONFIGURATION_FILE_NAME@"
+
+/* Include the Typedefs Header */
+#include "@PROJECT_NAME@/@CMP_TYPES_FILE_NAME@"
 
 /* Include the DLL export preprocessor defines */
 #include "@PROJECT_NAME@/@PROJECT_NAME@DLLExport.h"
 
+#endif

@@ -43,8 +43,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/VTKUtils/VTKFileReader.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/VTKUtils/VTKFileReader.h"
 
 
 #define kBufferSize 1024

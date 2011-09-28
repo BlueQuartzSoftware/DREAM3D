@@ -23,15 +23,15 @@
 #define MXAENDIAN_H_
 
 
-#include "MXA/MXATypes.h"
+//-- Needed for the memcpy function
+#include <string.h>
 
 #include <iosfwd>
 #include <string>
 
-//-- Needed for the memcpy function
-#include <string.h>
 
 
+#include "MXA/MXA.h"
 
 //
 //  For 1025, which, in binary is:

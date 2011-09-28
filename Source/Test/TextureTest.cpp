@@ -38,8 +38,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "DREAM3D/Common/Texture.h"
-#include "DREAM3D/Common/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
 
 
 /**

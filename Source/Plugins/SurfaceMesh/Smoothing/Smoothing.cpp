@@ -86,7 +86,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "DREAM3D/Common/Constants.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "LinearAlgebra.h"
 #include "Triangle.hpp"
 #include "Node.hpp"

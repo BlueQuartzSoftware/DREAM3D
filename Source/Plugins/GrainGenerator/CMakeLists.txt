@@ -22,7 +22,7 @@ SET (GrainGenerator_SRCS
   ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${GrainGenerator_HDRS}
             DESTINATION include/DREAM3D/GrainGenerator
             COMPONENT Headers   )
@@ -40,7 +40,7 @@ SET (StructureReaders_SRCS
   ${PROJECT_SOURCE_DIR}/StructureReaders/VTKStructureReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/StructureReaders" "${StructureReaders_HDRS}" "${StructureReaders_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${StructureReaders_HDRS}
             DESTINATION include/DREAM3D/StructureReaders
             COMPONENT Headers   )
@@ -58,7 +58,7 @@ SET (Algorithms_SRCS
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/Algorithms" "${Algorithms_HDRS}" "${Algorithms_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${Algorithms_HDRS}
             DESTINATION include/DREAM3D/Algorithms
             COMPONENT Headers   )
@@ -75,7 +75,7 @@ include( ${QT_USE_FILE} )
 message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
 
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
-include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
 
 add_definitions(-DDREAM3D_USE_QT)
@@ -130,11 +130,11 @@ set (GrainGeneratorPlugin_PROJECT_SRCS
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin/plugins  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 add_library(GrainGeneratorPlugin MODULE ${GrainGeneratorPlugin_PROJECT_SRCS})
 target_link_libraries(GrainGeneratorPlugin 
-                    MXADataModel
+                    MXA
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}   
                     ${QT_QTGUI_LIBRARY}
@@ -145,7 +145,7 @@ PluginProperties(GrainGeneratorPlugin "_debug" "${DREAM3D_VERSION}"
 
 
 if (NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
 set(${PLUGIN_NAME}_HELP_FILES
@@ -192,7 +192,7 @@ COMPILE_TOOL(
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}" 
     DEFINITION   "SVG_3D_LIBRARY"
-    LINK_LIBRARIES DREAM3DLib MXADataModel
+    LINK_LIBRARIES DREAM3DLib MXA
 )
 endif()
 

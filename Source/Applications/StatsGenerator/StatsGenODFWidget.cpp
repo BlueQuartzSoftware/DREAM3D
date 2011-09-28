@@ -50,7 +50,7 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 
-#include "DREAM3D/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"

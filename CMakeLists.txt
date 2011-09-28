@@ -8,7 +8,7 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-project (DREAM3D)
+project (DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.3)
 
 include (CMakeParseArguments)
@@ -72,53 +72,28 @@ set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PAT
 endif()
 
 
-set (CMP_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Support/cmp)
-
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
-SET (PROJECT_RESOURCES_DIR ${DREAM3D_SOURCE_DIR}/Resources)
-SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+SET (PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
+#SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 SET (EXE_DEBUG_EXTENSION "_debug")
 SET (PROJECT_INSTALL_HEADERS "0")
 SET (PROJECT_INSTALL_EXECUTABLES "1")
 
-#-------------------------------------------------------------------------------
-# Include the cmp project to perform all the basic configuration tests for the 
-# project.
-#------------------------------------------------------------------------------- 
-set (CMP_HEADER_DIR ${DREAM3D_BINARY_DIR}/MXA)
-set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
-set (CMP_TYPES_FILE_NAME "MXATypes.h")
-set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
-set (CMP_EXTRA_CONFIGURATION_FILE "MXAConfiguration.h")
-set (CMP_PROJECT_NAMESPACE "MXA")
-set (CMP_PROJECT_NAME "MXA")
+set (CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Support/cmp)
+INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 set (CMP_ENABLE_PLUGINS "1")
 set (CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/DREAM3D_PluginList.txt)
+file(WRITE ${CMP_PLUGIN_LIST_FILE} "")
+set (CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
+file(WRITE ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
+file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set (CMP_LIB_SEARCH_DIRS "")
-set(CMP_GENERATE_VERSION_STRING 1)
-INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 
-# We do NOT want to install any of the headers
-SET (DREAM3D_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
-
-
-               
-#-- Create a JavaScript file that can be uploaded to the web server that will automatically
-# update the download links to the latest version
-configure_file(${PROJECT_RESOURCES_DIR}/downloadcreator.js.in 
-                ${DREAM3D_BINARY_DIR}/downloadcreator.js)                          
 # --------------------------------------------------------------------
-# Generate our ReadMe and License Files
-configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
-                ${PROJECT_BINARY_DIR}/License.txt )
-configure_file(${PROJECT_SOURCE_DIR}/ReadMe.txt.in
-                ${PROJECT_BINARY_DIR}/ReadMe.txt )
-
-SET (MXA_INSTALL_FILES "0")
-SET (MXA_SOURCE_DIR ${PROJECT_CODE_DIR})
-
-# Include some directories for the compiler
-include_directories(${PROJECT_BINARY_DIR})
+# Over ride CMake's built in module directory by prepending cmp's module
+# directory first
+SET (CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
 # Build shared libraries
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
@@ -161,14 +136,6 @@ ENDIF(HDF5_FOUND)
 
 
 # --------------------------------------------------------------------
-# Add in some compiler definitions
-# --------------------------------------------------------------------
-IF ( CMAKE_BUILD_TYPE MATCHES Debug )
-  ADD_DEFINITIONS(-DDEBUG)
-  ADD_DEFINITIONS(-Wall)
-ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
-
-# --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set (DREAM3D_USE_PARALLEL_ALGORITHMS "")
@@ -189,6 +156,53 @@ if (DREAM3D_USE_MULTITHREADED_ALGOS)
 endif()
 
 
+#-------------------------------------------------------------------------------
+# Include the cmp project to perform all the basic configuration tests for the 
+# project.
+#------------------------------------------------------------------------------- 
+#set (CMP_HEADER_DIR ${PROJECT_BINARY_DIR}/MXA)
+#set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+#set (CMP_TYPES_FILE_NAME "MXATypes.h")
+#set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
+#set (CMP_TOP_HEADER_FILE "MXAConfiguration.h")
+#set (CMP_PROJECT_NAMESPACE "MXA")
+#set (CMP_PROJECT_NAME "MXA")
+
+#set(CMP_GENERATE_VERSION_STRING 1)
+#INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+
+# We do NOT want to install any of the headers
+SET (DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
+
+
+               
+#-- Create a JavaScript file that can be uploaded to the web server that will automatically
+# update the download links to the latest version
+configure_file(${PROJECT_RESOURCES_DIR}/downloadcreator.js.in 
+                ${PROJECT_BINARY_DIR}/downloadcreator.js)                          
+# --------------------------------------------------------------------
+# Generate our ReadMe and License Files
+configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
+                ${PROJECT_BINARY_DIR}/License.txt )
+configure_file(${PROJECT_SOURCE_DIR}/ReadMe.txt.in
+                ${PROJECT_BINARY_DIR}/ReadMe.txt )
+
+#SET (MXA_INSTALL_FILES "0")
+#SET (MXA_SOURCE_DIR ${PROJECT_CODE_DIR})
+
+# Include some directories for the compiler
+include_directories(${PROJECT_BINARY_DIR})
+
+
+
+# --------------------------------------------------------------------
+# Add in some compiler definitions
+# --------------------------------------------------------------------
+IF ( CMAKE_BUILD_TYPE MATCHES Debug )
+  ADD_DEFINITIONS(-DDEBUG)
+  ADD_DEFINITIONS(-Wall)
+ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
+
 # --------------------------------------------------------------------
 # If was are using GCC, make the compiler messages on a single line
 IF(CMAKE_COMPILER_IS_GNUCC)
@@ -207,45 +221,23 @@ option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applicati
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/H5Support ${DREAM3D_BINARY_DIR}/H5Support)
-include_directories (${DREAM3D_BINARY_DIR})
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
+include_directories (${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/MXA ${DREAM3D_BINARY_DIR}/MXA)
-include_directories (${DREAM3D_BINARY_DIR})
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/MXA ${PROJECT_BINARY_DIR}/MXA)
+include_directories (${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary EBSD Sources into a library
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/EbsdLib ${DREAM3D_BINARY_DIR}/EbsdLib)
-include_directories (${DREAM3D_BINARY_DIR})
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
+include_directories (${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
-# -- Add in the AIM Common Sources into a static library
-include_directories(${DREAM3D_SOURCE_DIR}/Source)
-add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ ${DREAM3D_BINARY_DIR}/DREAM3D)
-
-
-# --------------------------------------------------------------------
-# This function optionally compiles a named plugin when compiling DREAM3D
-# This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
-# the programmer can use to enable/disable the compiling of specific plugins
-# Arguments:
-# PLUGIN_NAME The name of the Plugin
-# PLUGIN_SOURCE_DIR The source directory for the plugin
-function(DREAM3D_COMPILE_PLUGIN)
-    set(options)
-    set(oneValueArgs PLUGIN_NAME PLUGIN_SOURCE_DIR)
-    cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-    
-    option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME} Plugin" ON)
-    if (DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})  
-    else()
-        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")
-    endif()
-
-endfunction()
+# -- Add in the DREAM3D Sources into a static library
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
@@ -277,17 +269,38 @@ if (DREAM3D_BUILD_QT_APPS)
    
    # Build the static QtSupport library - which MUST be a static library or the linking
    # will not work due to signals/slots mechanism.
-   add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/QtSupport ${DREAM3D_BINARY_DIR}/QtSupport)
+   add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
 endif()
 
-# Forcibly set some options to OFF if we are NOT build the GUI apps using the Qt frameworks
+# Forcibly set some options to OFF if we are NOT building the GUI apps using the Qt frameworks
 if (NOT DREAM3D_BUILD_QT_APPS)
     set (DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
     set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
 
-   
+# --------------------------------------------------------------------
+# This function optionally compiles a named plugin when compiling DREAM3D
+# This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
+# the programmer can use to enable/disable the compiling of specific plugins
+# Arguments:
+# PLUGIN_NAME The name of the Plugin
+# PLUGIN_SOURCE_DIR The source directory for the plugin
+function(DREAM3D_COMPILE_PLUGIN)
+    set(options)
+    set(oneValueArgs PLUGIN_NAME PLUGIN_SOURCE_DIR)
+    cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    
+    option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME} Plugin" ON)
+    if (DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
+        #message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Adding Plugin")
+        add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})  
+    else()
+        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")
+    endif()
+
+endfunction()
+  
 #-----------------
 # These are the core plugins
 set (DREAM3D_PLUGIN_LIST
@@ -299,16 +312,18 @@ set (DREAM3D_PLUGIN_LIST
     Extrapolation2Dto3D
 )
 
-foreach(p ${DREAM3D_PLUGIN_LIST})
-    DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p} 
-                           PLUGIN_SOURCE_DIR ${DREAM3D_SOURCE_DIR}/Source/Plugins/${p})
-endforeach()
-  
  # Build the DREAM3D Application  
 option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
+
+foreach(p ${DREAM3D_PLUGIN_LIST})
+    DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p} 
+                           PLUGIN_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/${p})
+endforeach()
+  
+
 if (DREAM3D_BUILD_GUI AND DREAM3D_BUILD_QT_APPS)
     #- Add in the Main DREAM.3D Application 
-    ADD_SUBDIRECTORY( ${DREAM3D_SOURCE_DIR}/Source/Applications/DREAM3D ${DREAM3D_BINARY_DIR}/Applications/DREAM3D)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
     #- Now set up the dependency between the main application and each of the plugins so that
     #- things like Visual Studio are forced to rebuild the plugins when launching
     #- the DREAM3D application 
@@ -328,7 +343,7 @@ set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra Exter
 foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
     
     if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
-      #  add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+      #  add_subdirectory(${${userPlugin}_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${userPlugin}) 
         DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
                PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
     else()            
@@ -345,7 +360,7 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
                 set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
                 DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
                                         PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
-                #add_subdirectory(${${userPlugin}_SOURCE_DIR} ${DREAM3D_BINARY_DIR}/Plugins/${userPlugin}) 
+                #add_subdirectory(${${userPlugin}_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${userPlugin}) 
                 #message(STATUS "Plugin: ${userPlugin} Found")
             endif()
         else()
@@ -359,25 +374,25 @@ endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 # Build the StatsGenerator Application
 OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
 if (DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator ${DREAM3D_BINARY_DIR}/Applications/StatsGenerator)
+    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
 endif()
    
 # Add installation rule for the User Manual
 if (DREAM3D_BUILD_QT_APPS)
-    install(FILES ${DREAM3D_SOURCE_DIR}/Documentation/DREAM3D_v2_Manual.docx
+    install(FILES ${DREAM3DProj_SOURCE_DIR}/Documentation/DREAM3D_v2_Manual.docx
     DESTINATION Docs)
 endif()
    
 # add the Command line utilities
 IF ( DREAM3D_BUILD_CLI_TOOLS )
-    add_subdirectory( ${DREAM3D_SOURCE_DIR}/Source/Tools ${DREAM3D_BINARY_DIR}/Tools)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if (DREAM3D_BUILD_TESTING)
     ENABLE_TESTING()
-    add_subdirectory(${DREAM3D_SOURCE_DIR}/Source/Test ${DREAM3D_BINARY_DIR}/Test)
+    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 
 # Should we build the documentation using DOxygen

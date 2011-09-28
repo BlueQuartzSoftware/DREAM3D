@@ -9,7 +9,7 @@
 #ifndef _FILEWRITER_H_
 #define _FILEWRITER_H_
 
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 
 #include <fstream>
 #define WRITER64_OUTPUT_STREAM std::ofstream

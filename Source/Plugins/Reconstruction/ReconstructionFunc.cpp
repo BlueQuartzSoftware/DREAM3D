@@ -54,10 +54,10 @@
 #include "MXA/Utilities/MXADir.h"
 
 //-- AIM Includes
-#include "DREAM3D/Common/DREAM3DMath.h"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\

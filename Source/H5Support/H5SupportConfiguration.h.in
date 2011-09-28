@@ -2,9 +2,20 @@
 * again to regenerate this file.
 */
 
+#ifndef _H5SUPPORT_H_
+#define _H5SUPPORT_H_
+
+
 /* Define to 1 if H5Support was built as a dynamic library */
 #cmakedefine H5Support_BUILT_AS_DYNAMIC_LIB @H5Support_BUILT_AS_DYNAMIC_LIB@
+
+/* Include the Overall Configuration header file */
+#include "@PROJECT_NAME@/@CMP_CONFIGURATION_FILE_NAME@"
+
+/* Include the Typedefs Header */
+#include "@PROJECT_NAME@/@CMP_TYPES_FILE_NAME@"
 
 /* Include the DLL export preprocessor defines */
 #include "@PROJECT_NAME@/@PROJECT_NAME@DLLExport.h"
 
+#endif

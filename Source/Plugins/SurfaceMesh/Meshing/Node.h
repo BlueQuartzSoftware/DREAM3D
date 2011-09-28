@@ -73,7 +73,7 @@
 
 #include <vector>
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 namespace meshing {
 /**

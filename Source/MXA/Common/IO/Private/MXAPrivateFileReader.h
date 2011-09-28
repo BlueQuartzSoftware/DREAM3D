@@ -9,7 +9,6 @@
 #ifndef _MXAPRIVATE_FILEREADER_H_
 #define _MXAPRIVATE_FILEREADER_H_
 
-#include <MXA/MXATypes.h>
 
 // Hard set our stream buffer to 4096 bytes
 #define BUFF_SIZE 4096
@@ -20,6 +19,9 @@
 #include <vector>
 #include <stdexcept>
 #include <fstream>
+
+#include "MXA/MXA.h"
+
 #define READER64_INPUT_STREAM std::ifstream
 
 /**

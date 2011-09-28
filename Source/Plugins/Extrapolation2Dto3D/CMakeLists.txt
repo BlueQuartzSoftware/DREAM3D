@@ -22,7 +22,7 @@ SET (Extrapolation2Dto3D_SRCS
   ${PROJECT_SOURCE_DIR}/Extrapolation2Dto3DFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "Extrapolation2Dto3D" "${Extrapolation2Dto3D_HDRS}" "${Extrapolation2Dto3D_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${Extrapolation2Dto3D_HDRS}
             DESTINATION include/DREAM3D/Extrapolation2Dto3D
             COMPONENT Headers   )
@@ -43,7 +43,7 @@ if (MSVC)   # Do not generate manifests for the plugins - caused issues loading 
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
 include_directories(${PROJECT_CODE_DIR}/QtSupport
-                    ${DREAM3D_BINARY_DIR}/QtSupport )
+                    ${DREAM3DProj_BINARY_DIR}/QtSupport )
 
 set(CLASS_NAME "Extrapolation2Dto3D")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -87,11 +87,11 @@ set (Extrapolation2Dto3DPlugin_PROJECT_SRCS
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin/plugins  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 add_library(Extrapolation2Dto3DPlugin MODULE ${Extrapolation2Dto3DPlugin_PROJECT_SRCS})
 target_link_libraries(Extrapolation2Dto3DPlugin 
-                    MXADataModel
+                    MXA
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}   
                     ${QT_QTGUI_LIBRARY}
@@ -101,7 +101,7 @@ PluginProperties(Extrapolation2Dto3DPlugin "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
 

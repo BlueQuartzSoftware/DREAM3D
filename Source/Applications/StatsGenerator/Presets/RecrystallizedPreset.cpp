@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RecrystallizedPreset.h"
-#include "DREAM3D/Common/DREAM3DRandom.h"
+
 
 #include "StatsGenerator/Presets/Dialogs/RecrystallizedPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
@@ -44,6 +44,7 @@
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 // -----------------------------------------------------------------------------
 //

@@ -41,7 +41,7 @@
 #include <iostream>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdHeaderEntry.h"
 
 

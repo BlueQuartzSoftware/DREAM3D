@@ -21,7 +21,7 @@
 #include <hdf5.h>
 
 
-#include <H5Support/H5SupportTypes.h>
+#include <H5Support/H5Support.h>
 #include <H5Support/H5Lite.h>
 
 

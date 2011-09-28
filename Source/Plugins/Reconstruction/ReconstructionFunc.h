@@ -60,19 +60,19 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/AIMArray.hpp"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/Grain.h"
-#include "DREAM3D/Common/DREAM3DRandom.h"
-#include "DREAM3D/Common/Observable.h"
-#include "DREAM3D/Common/OrientationMath.h"
-#include "DREAM3D/Common/OrientationOps/CubicOps.h"
-#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
-#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/Grain.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 
 using namespace std;

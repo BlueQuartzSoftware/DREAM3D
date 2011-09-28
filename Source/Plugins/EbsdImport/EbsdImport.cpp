@@ -46,7 +46,7 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
-#include "DREAM3D/Common/Observable.h"
+#include "DREAM3DLib/Common/Observable.h"
 
 /**
  * @brief Just a dummy class in order to make the EBSDImoprt work with some

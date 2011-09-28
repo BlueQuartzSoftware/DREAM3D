@@ -22,7 +22,7 @@ SET (MicrostructureStatistics_SRCS
   ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "MicrostructureStatistics" "${MicrostructureStatistics_HDRS}" "${MicrostructureStatistics_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${MicrostructureStatistics_HDRS}
             DESTINATION include/DREAM3D/MicrostructureStatistics
             COMPONENT Headers   )
@@ -45,7 +45,7 @@ endif()
 
 
 include_directories(${PROJECT_CODE_DIR}/QtSupport )
-include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
 set(CLASS_NAME "MicrostructureStatistics")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -92,11 +92,11 @@ set (MicrostructureStatisticsPlugin_PROJECT_SRCS
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin/plugins  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 add_library(MicrostructureStatisticsPlugin MODULE ${MicrostructureStatisticsPlugin_PROJECT_SRCS})
 target_link_libraries(MicrostructureStatisticsPlugin 
-                    MXADataModel
+                    MXA
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}   
                     ${QT_QTGUI_LIBRARY}
@@ -106,7 +106,7 @@ PluginProperties(MicrostructureStatisticsPlugin "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
 

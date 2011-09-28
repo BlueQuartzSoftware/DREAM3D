@@ -54,8 +54,8 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
 
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 #include "Meshing/SMVtkFileIO.h"
 

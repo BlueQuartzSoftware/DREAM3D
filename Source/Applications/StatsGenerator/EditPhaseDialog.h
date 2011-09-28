@@ -43,7 +43,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3D/Common/Constants.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class EditPhaseDialog EditPhaseDialog.h StatsGenerator/EditPhaseDialog.h

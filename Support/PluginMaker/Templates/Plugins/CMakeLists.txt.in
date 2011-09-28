@@ -19,7 +19,7 @@ SET (@PluginName@_SRCS
   ${PROJECT_SOURCE_DIR}/@PluginName@Func.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "@PluginName@" "${@PluginName@_HDRS}" "${@PluginName@_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${@PluginName@_HDRS}
             DESTINATION include/DREAM3D/@PluginName@
             COMPONENT Headers   )
@@ -39,7 +39,7 @@ if (MSVC)   # Do not generate manifests for the plugins - caused issues loading 
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
 include_directories(${PROJECT_CODE_DIR}/QtSupport
-                    ${DREAM3D_BINARY_DIR}/QtSupport )
+                    ${DREAM3DProj_BINARY_DIR}/QtSupport )
 
 set(CLASS_NAME "@PluginName@")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
@@ -85,11 +85,11 @@ set (@PluginName@Plugin_PROJECT_SRCS
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin/plugins  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 add_library(@PluginName@Plugin MODULE ${@PluginName@Plugin_PROJECT_SRCS})
 target_link_libraries(@PluginName@Plugin 
-                    MXADataModel
+                    MXA
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}   
                     ${QT_QTGUI_LIBRARY}
@@ -99,7 +99,7 @@ PluginProperties(@PluginName@Plugin "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
 
