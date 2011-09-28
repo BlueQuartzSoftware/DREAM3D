@@ -196,7 +196,7 @@ void MicrostructureStatisticsFunc::initializeGrains()
       grain->phase = phases[i];
     }
     grain->voxellist->push_back(i);
-    grain->numvoxels = grain->voxellist->size();
+    grain->numvoxels = static_cast<size_t>(grain->voxellist->size());
     grain->active = 1;
   }
 
@@ -348,7 +348,7 @@ void MicrostructureStatisticsFunc::find_neighbors()
 	        }
 	        nlist->at(nnum) = grain_indicies[neighbor];
 	        nnum++;
-	        m_Grains[grain]->numneighbors = nnum;
+	        m_Grains[grain]->numneighbors = static_cast<int>(nnum);
 	      }
 	    }
 	}
