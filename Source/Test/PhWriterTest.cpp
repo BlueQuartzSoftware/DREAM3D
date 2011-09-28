@@ -37,7 +37,7 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "DREAM3D/IO/PhWriter.hpp"
+#include "DREAM3DLib/IO/PhWriter.hpp"
 
 int main(int argc, char **argv)
 {

@@ -22,8 +22,8 @@
 #include "MXA/Common/LogTime.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3D/Common/DREAM3DRandom.h"
-#include "DREAM3D/Common/Observable.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/Observable.h"
 
 /**
  * @class Extrapolation2Dto3DFunc Extrapolation2Dto3DFunc.h AIM/Common/Extrapolation2Dto3DFunc.h

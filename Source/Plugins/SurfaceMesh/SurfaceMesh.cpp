@@ -76,7 +76,7 @@
 #include "MXA/Utilities/StringUtils.h"
 
 
-#include "DREAM3D/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "Smoothing/Smoothing.h"
 #include "Meshing/SMVtkFileIO.h"
 

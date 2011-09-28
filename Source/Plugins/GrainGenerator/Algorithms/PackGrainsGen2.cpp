@@ -54,8 +54,8 @@
 
 using namespace std;
 
-#include "DREAM3D/Common/DREAM3DMath.h"
-#include "DREAM3D/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 0

@@ -52,8 +52,8 @@
 #include "EbsdLib/EbsdConstants.h"
 
 // DREAM3D Includes
-#include "DREAM3D/Common/DREAM3DMath.h"
-#include "DREAM3D/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 

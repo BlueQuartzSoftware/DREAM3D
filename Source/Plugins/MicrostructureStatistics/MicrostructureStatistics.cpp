@@ -43,12 +43,12 @@
 #include "EbsdLib/TSL/AngDirectoryPatterns.h"
 #include "EbsdLib/TSL/AngReader.h"
 
-#include "DREAM3D/Common/Constants.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3D/HDF5/H5StatsWriter.h"
-#include "DREAM3D/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/HDF5/H5StatsWriter.h"
+#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 // -----------------------------------------------------------------------------
 //

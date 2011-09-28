@@ -41,7 +41,7 @@
 
 #include <MXA/Common/MXASetGetMacros.h>
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3D/VTKUtils/VTKFileReader.h"
+#include "DREAM3DLib/VTKUtils/VTKFileReader.h"
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 
 class GrainGeneratorFunc;

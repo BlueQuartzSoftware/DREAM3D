@@ -36,7 +36,7 @@
 
 #include "EditPhaseDialog.h"
 
-#include "DREAM3D/Common/PhaseType.h"
+#include "DREAM3DLib/Common/PhaseType.h"
 
 // -----------------------------------------------------------------------------
 //
