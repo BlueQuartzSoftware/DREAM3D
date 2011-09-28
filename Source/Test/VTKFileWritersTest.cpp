@@ -41,7 +41,7 @@
 #include <string>
 
 
-#include "DREAM3D/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 #include "Reconstruction/ReconstructionFunc.h"
 #include "MicrostructureStatistics/MicrostructureStatisticsFunc.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"

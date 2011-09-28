@@ -237,7 +237,7 @@ include_directories (${PROJECT_BINARY_DIR})
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a static library
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3D/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)

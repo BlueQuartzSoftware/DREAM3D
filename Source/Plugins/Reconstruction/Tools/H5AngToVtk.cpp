@@ -48,10 +48,10 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3D/Common/AIMArray.hpp"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/VTKUtils/VTKWriterMacros.h"
-#include "DREAM3D/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
 
 #include "Reconstruction/ReconstructionFunc.h"

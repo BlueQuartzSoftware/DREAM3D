@@ -51,9 +51,9 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/QualityMetricFilter.h"
 
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/AbstractPipeline.h"
-#include "DREAM3D/Common/Observer.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractPipeline.h"
+#include "DREAM3DLib/Common/Observer.h"
 
 
 #include "ReconstructionFunc.h"

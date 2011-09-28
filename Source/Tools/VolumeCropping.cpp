@@ -33,10 +33,10 @@
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
-#include "Dream3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 
-#include "Dream3D/HDF5/H5VoxelReader.h"
-#include "Dream3D/HDF5/H5VoxelWriter.h"
+#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 
 
 

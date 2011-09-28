@@ -50,13 +50,13 @@
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3D/IO/DxGrainIdWriter.h"
-#include "DREAM3D/IO/PhWriter.hpp"
-#include "DREAM3D/HDF5/H5VoxelWriter.h"
-#include "DREAM3D/HDF5/H5GrainWriter.hpp"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/IO/DxGrainIdWriter.h"
+#include "DREAM3DLib/IO/PhWriter.hpp"
+#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
+#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
 
 

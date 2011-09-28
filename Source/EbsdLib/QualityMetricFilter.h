@@ -41,7 +41,7 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdLib.h"
-#include "DREAM3D/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/AIMArray.hpp"
 
 namespace Detail {
   namespace QualityMetricFilter

@@ -54,8 +54,8 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/PhaseType.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/PhaseType.h"
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"

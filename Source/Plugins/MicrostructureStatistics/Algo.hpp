@@ -46,7 +46,7 @@
 #endif
 
 #include "MicrostructureStatisticsFunc.h"
-#include "DREAM3D/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
 
 #if AIM_USE_PARALLEL_ALGORITHMS
 class ParallelRenumberGrains
