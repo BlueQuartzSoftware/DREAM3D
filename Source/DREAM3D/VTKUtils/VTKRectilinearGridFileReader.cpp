@@ -225,7 +225,7 @@ int VTKRectilinearGridFileReader::readFile()
   std::string scalarName;
   int typeByteSize = 0;
 
-  size_t index = 0;
+  //size_t index = 0;
   //Cell Data is one less in each direction
   setDims(dims[0] -1, dims[1] -1, dims[2] -1);
   getDims(dims);
@@ -234,7 +234,7 @@ int VTKRectilinearGridFileReader::readFile()
 
   readLine(instream, buf, kBufferSize);
 
-  int i = 0;
+ // int i = 0;
   while (needGrainIds == true)
   {
     readLine(instream, buf, kBufferSize);

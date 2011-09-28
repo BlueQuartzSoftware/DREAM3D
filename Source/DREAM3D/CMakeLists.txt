@@ -50,20 +50,28 @@ configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
 set(Project_SRCS "")
 Macro(D3DCompileDir DirName)
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
-    set (Project_SRCS ${Project_SRCS} ${DREAM3D_${DirName}_SRCS} ${DREAM3D_${DirName}_HDRS})
+    set (Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
 endMacro()
 
 
 D3DCompileDir(Common)
 D3DCompileDir(HDF5)
+D3DCompileDir(IO)
+D3DCompileDir(OrientationOps)
+D3DCompileDir(ShapeOps)
+D3DCompileDir(VTKUtils)
 
+#message(STATUS "------------------------------------")
+#foreach(file ${Project_SRCS})
+#  message(STATUS "${file}")
+#endforeach(file ${Project_SRCS})
+#message(STATUS "------------------------------------")
 
 
 
 #--------------------------
-include_directories(${HDF5_INCLUDE_DIR})
+include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
-include_directories( ${PROJECT_CODE_DIR}/ANG ) 
 include_directories( ${DREAM3DLib_BINARY_DIR} )
 
 

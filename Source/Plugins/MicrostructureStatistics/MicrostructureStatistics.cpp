@@ -46,7 +46,7 @@
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
-#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3D/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3D/HDF5/H5StatsWriter.h"
 #include "DREAM3D/HDF5/H5VoxelReader.h"
 

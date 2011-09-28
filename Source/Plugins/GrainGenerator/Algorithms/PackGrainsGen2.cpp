@@ -40,7 +40,12 @@
 #include "DREAM3D/Common/DREAM3DMath.h"
 #include "DREAM3D/Common/Constants.h"
 
+#define ERROR_TXT_OUT 1
+#define ERROR_TXT_OUT1 0
+
 const static float m_pi = M_PI;
+
+using namespace std;
 
 // -----------------------------------------------------------------------------
 //

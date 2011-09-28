@@ -43,9 +43,9 @@
 #include "DREAM3D/DREAM3DConfiguration.h"
 #include "DREAM3D/Common/DREAM3DMath.h"
 #include "DREAM3D/Common/OrientationMath.h"
-#include "DREAM3D/Common/OrientationOps/CubicOps.h"
-#include "DREAM3D/Common/OrientationOps/HexagonalOps.h"
-#include "DREAM3D/Common/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3D/OrientationOps/CubicOps.h"
+#include "DREAM3D/OrientationOps/HexagonalOps.h"
+#include "DREAM3D/OrientationOps/OrthoRhombicOps.h"
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h

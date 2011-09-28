@@ -54,7 +54,7 @@
 #include "DREAM3D/Common/AIMArray.hpp"
 #include "DREAM3D/HDF5/VTKH5Constants.h"
 #include "DREAM3D/HDF5/H5VoxelWriter.h"
-#include "DREAM3D/Common/VTKUtils/VTKRectilinearGridFileReader.h"
+#include "DREAM3D/VTKUtils/VTKRectilinearGridFileReader.h"
 
 
 #define APPEND_DATA_TRUE 1

@@ -37,7 +37,7 @@
 
 #include "MXA/Common/LogTime.h"
 
-#include "DREAM3D/Common/OrientationOps/CubicOps.h"
+#include "DREAM3D/OrientationOps/CubicOps.h"
 
 
 	const static float m_pi = M_PI;

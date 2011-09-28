@@ -33,7 +33,7 @@
 
 #include "GrainGenerator/GrainGeneratorFunc.h"
 #include "GrainGenerator/StructureReaders/DXStructureReader.h"
-#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3D/VTKUtils/VTKFileWriters.hpp"
 
 
 
