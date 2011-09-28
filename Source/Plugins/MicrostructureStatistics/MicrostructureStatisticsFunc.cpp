@@ -1778,7 +1778,7 @@ void MicrostructureStatisticsFunc::find_colors()
       }
       if (crystruct[m_Grains[i]->phase] == Ebsd::Hexagonal)
       {
-        OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+        OIMColoring::CalculateHexIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
         m_Grains[i]->red = rgb[0] / 255.0;
         m_Grains[i]->green = rgb[1] / 255.0;
         m_Grains[i]->blue = rgb[2] / 255.0;
