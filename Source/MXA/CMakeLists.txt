@@ -3,11 +3,7 @@
 #  All rights reserved.
 #  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #///////////////////////////////////////////////////////////////////////////////
-project(MXADataModel)
-
-set (MXA_SOURCE_DIR ${PROJECT_CODE_DIR} )
-set (Project_SRCS "")
-set (Project_HDRS "")
+project(MXA)
 
 SET (MXA_BUILT_AS_DYNAMIC_LIB)
 IF (BUILD_SHARED_LIBS)
@@ -17,9 +13,34 @@ IF (BUILD_SHARED_LIBS)
     ENDIF (WIN32)
 ENDIF (BUILD_SHARED_LIBS)
 
+SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
+if (NOT PROJECT_RESOURCES_DIR)
+SET (PROJECT_RESOURCES_DIR ${MXA_SOURCE_DIR}/Resources)
+endif()
+if (NOT DEFINED CMP_SOURCE_DIR)
+set(CMP_SOURCE_DIR ${MXA_SOURCE_DIR}/Support/cmp)
+endif()
+
+SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+set (MXA_INSTALL_FILES 0)
+#-------------------------------------------------------------------------------
+# Include the cmp project to perform all the basic configuration tests for the 
+# project.
+#------------------------------------------------------------------------------- 
+set (CMP_HEADER_DIR ${MXA_BINARY_DIR})
+set (CMP_CONFIGURATION_FILE_NAME "MXAConfiguration.h")
+set (CMP_TYPES_FILE_NAME "MXATypes.h")
+set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
+set (CMP_TOP_HEADER_FILE "MXA.h")
+set (CMP_PROJECT_NAMESPACE "MXA")
+set (CMP_PROJECT_NAME "MXA")
+set (CMP_ENABLE_PLUGINS "0")
+set (CMP_LIB_SEARCH_DIRS "")
+INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
+
 
 Macro(MXACompileDir DirName)
-    include(${MXADataModel_SOURCE_DIR}/${DirName}/SourceList.cmake)
+    include(${MXA_SOURCE_DIR}/${DirName}/SourceList.cmake)
     set (Project_SRCS ${Project_SRCS} ${MXA_${DirName}_SRCS} ${MXA_${DirName}_HDRS})
 endMacro()
 
@@ -32,9 +53,9 @@ set (Project_SRCS
     ${Project_SRCS} 
     )
 
-include_directories(${MXADataModel_SOURCE_DIR}/..)
-include_directories(${MXADataModel_BINARY_DIR})
-include_directories(${MXADataModel_BINARY_DIR}/..)
+include_directories(${MXA_SOURCE_DIR}/..)
+include_directories(${MXA_BINARY_DIR})
+include_directories(${MXA_BINARY_DIR}/..)
 
 
 set (MXA_TIFF_SUPPORT "0")
@@ -47,14 +68,15 @@ set (HDF5_VTK_BRIDGE "0")
 cmpVersionStringsFromGit(GENERATED_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.h 
                          NAMESPACE "MXA"
                          cmpProjectName "MXA" )
+                         
 
-configure_file(${PROJECT_RESOURCES_DIR}/MXACMake/MXAConfiguration.h.in
-               ${CMP_HEADER_DIR}/${CMP_EXTRA_CONFIGURATION_FILE})
+configure_file(${MXA_SOURCE_DIR}/MXAConfiguration.h.in
+               ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE})
                
 # add_definitions(-DQT_CORE_LIB)
 
 add_library(${PROJECT_NAME} ${LIB_TYPE}  ${Project_SRCS})
-target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
+target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} MXA)
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION})
 
 set(install_dir "tools")

@@ -40,11 +40,11 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3D/Common/PhWriter.hpp"
-#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3D/HDF5/H5GrainWriter.hpp"
-#include "DREAM3D/HDF5/H5VoxelWriter.h"
-#include "DREAM3D/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/IO/PhWriter.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
+#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
+#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 #include "GrainGenerator/StructureReaders/VTKStructureReader.h"

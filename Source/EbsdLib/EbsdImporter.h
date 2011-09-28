@@ -40,7 +40,7 @@
 
 #include "hdf5.h"
 
-#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
 /**

@@ -46,16 +46,16 @@
 #include <string>
 #include <vector>
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/AIMArray.hpp"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/VTKUtils/VTKWriterMacros.h"
-#include "DREAM3D/Common/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
-#include "DREAM3D/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 
 typedef struct {

@@ -42,7 +42,7 @@
 
 
 #include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 
 

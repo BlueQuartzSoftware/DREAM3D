@@ -47,14 +47,14 @@
 #include <string>
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
-#include "DREAM3D/Common/Constants.h"
-#include "DREAM3D/Common/AbstractPipeline.h"
-#include "DREAM3D/Common/Observer.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractPipeline.h"
+#include "DREAM3DLib/Common/Observer.h"
 
 /**
  * @class EbsdImport EbsdImport.h EbsdImport/EbsdImport.h

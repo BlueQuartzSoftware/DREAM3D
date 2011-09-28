@@ -43,7 +43,7 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 #include "GrainGenerator/GrainGeneratorFunc.h"
 

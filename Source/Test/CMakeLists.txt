@@ -26,23 +26,23 @@ endmacro()
 if (0)
 set (srcs
     ${DREAM3DTest_SOURCE_DIR}/AngDirectoryPatternTest.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/ANG/AngDirectoryPatterns.cpp
-    ${DREAM3D_SOURCE_DIR}/Source/DREAM3D/Common/Grain.cpp
+    ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3D/ANG/AngDirectoryPatterns.cpp
+    ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3D/Common/Grain.cpp
     )
 add_executable(AngDirectoryPattern ${srcs})
 target_link_libraries(AngDirectoryPattern MXA)
 endif()
 
-include_directories(${DREAM3D_SOURCE_DIR}/Source/Applications)
-include_directories(${DREAM3D_SOURCE_DIR}/Source/Plugins)
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Applications)
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins)
 
 # --------
-add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3D_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
+add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
 target_link_libraries(ODFTest DREAM3DLib)
 
 # --------
 add_executable(AngReaderTest ${DREAM3DTest_SOURCE_DIR}/AngReaderTest.cpp 
-                            ${DREAM3D_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
+                            ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
 target_link_libraries(AngReaderTest DREAM3DLib)
 
 # --------
@@ -60,11 +60,11 @@ target_link_libraries(TextureTest DREAM3DLib)
 
 # --------
 add_executable(VTKFileWritersTest ${DREAM3DTest_SOURCE_DIR}/VTKFileWritersTest.cpp
-                ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
-                ${DREAM3D_SOURCE_DIR}/Source/Plugins/Reconstruction/ReconstructionFunc.cpp
-                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
-                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
-                 ${DREAM3D_SOURCE_DIR}/Source/Plugins/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
+                ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
+                ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/Reconstruction/ReconstructionFunc.cpp
+                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
+                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
+                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
 )
 target_link_libraries(VTKFileWritersTest DREAM3DLib)
 
@@ -74,10 +74,10 @@ target_link_libraries(PhWriterTest DREAM3DLib)
 
 # --------
 add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp 
-                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
-                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
-                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
-                        ${DREAM3D_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
+                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
+                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
+                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
+                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
 target_link_libraries(DxTest DREAM3DLib)
 
 # --------
@@ -100,5 +100,5 @@ target_link_libraries(RNGTest DREAM3DLib)
 
 # --------
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
-target_link_libraries(ResFixer EbsdLib MXADataModel)
+target_link_libraries(ResFixer EbsdLib MXA)
 

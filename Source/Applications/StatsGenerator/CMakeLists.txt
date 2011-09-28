@@ -46,7 +46,7 @@ add_definitions(-DDREAM3D_USE_QT)
 # --------------------------------------------------------------------
 # Generate the License File Headers
 set(PROJECT_PREFIX "StatsGenerator")
-include(${DREAM3D_SOURCE_DIR}/License/License.cmake)
+include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
            
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
@@ -198,7 +198,7 @@ include_directories(${HDF5_INCLUDE_DIR})
 include_directories(${StatsGenerator_SOURCE_DIR} )
 include_directories(${StatsGenerator_SOURCE_DIR}/.. )
 include_directories(${StatsGenerator_BINARY_DIR} )
-include_directories(${DREAM3D_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
 IF(APPLE)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)

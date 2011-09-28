@@ -6,13 +6,13 @@
 # create Resource files for the various license files that are used and 
 # also create a header file that lists all the License Files
 set(LICENSE_FILES 
-                   ${DREAM3D_SOURCE_DIR}/License.txt.in
-                   ${DREAM3D_SOURCE_DIR}/ReadMe.txt.in
-                   ${DREAM3D_SOURCE_DIR}/License/Boost.license
-                   ${DREAM3D_SOURCE_DIR}/License/MXA.license
-                   ${DREAM3D_SOURCE_DIR}/License/Qt.license
-                   ${DREAM3D_SOURCE_DIR}/License/Qwt.license
-                   ${DREAM3D_SOURCE_DIR}/License/HDF5.license
+                   ${DREAM3DProj_SOURCE_DIR}/License.txt.in
+                   ${DREAM3DProj_SOURCE_DIR}/ReadMe.txt.in
+                   ${DREAM3DProj_SOURCE_DIR}/License/Boost.license
+                   ${DREAM3DProj_SOURCE_DIR}/License/MXA.license
+                   ${DREAM3DProj_SOURCE_DIR}/License/Qt.license
+                   ${DREAM3DProj_SOURCE_DIR}/License/Qwt.license
+                   ${DREAM3DProj_SOURCE_DIR}/License/HDF5.license
            )
 set(QRC_LICENSE_FILES "")
 set(LICENSE_HEADER_FILE  ${PROJECT_BINARY_DIR}/DREAM3D/License/${PROJECT_NAME}LicenseFiles.h)

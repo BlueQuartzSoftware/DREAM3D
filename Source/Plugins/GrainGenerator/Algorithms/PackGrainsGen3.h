@@ -39,7 +39,7 @@
 
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3D/Common/Observable.h"
+#include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 

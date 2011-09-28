@@ -43,12 +43,12 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 
-#include "DREAM3D/Common/Constants.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "MicrostructureStatisticsFunc.h"
-#include "DREAM3D/Common/AbstractPipeline.h"
-#include "DREAM3D/Common/Observer.h"
+#include "DREAM3DLib/Common/AbstractPipeline.h"
+#include "DREAM3DLib/Common/Observer.h"
 
 /**
 * @class MicrostructureStatistics MicrostructureStatistics AIM/MicrostructureStatistics.h/MicrostructureStatistics.h

@@ -47,7 +47,7 @@
 #include <string>
 
 
-#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
 namespace Ang {

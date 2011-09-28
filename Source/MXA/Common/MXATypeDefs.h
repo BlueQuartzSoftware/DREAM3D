@@ -19,7 +19,7 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/shared_array.hpp>
 
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 
 
 /** @file MXATypeDefs.h
