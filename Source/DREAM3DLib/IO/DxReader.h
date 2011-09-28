@@ -50,7 +50,7 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class DxReader
+class DREAM3DLib_EXPORT DxReader
 {
   public:
     DREAM3D_SHARED_POINTERS(DxReader);

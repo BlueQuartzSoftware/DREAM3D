@@ -51,7 +51,7 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class PhReader
+class DREAM3DLib_EXPORT PhReader
 {
   public:
     DREAM3D_SHARED_POINTERS(PhReader);
