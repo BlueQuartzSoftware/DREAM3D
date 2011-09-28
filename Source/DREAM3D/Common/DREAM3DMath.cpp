@@ -87,7 +87,7 @@ float DREAM3DMath::Gamma(float x)
        -0.54e-14f,
         0.14e-14f};
 
-    if (x > 171.0f) return 1e308;    // This value is an overflow flag.
+        if (x > 171.0f) return std::numeric_limits<float>::max();    // This value is an overflow flag.
     if (x == (int)x) {
         if (x > 0.0) {
             ga = 1.0;               // use factorial
@@ -96,7 +96,7 @@ float DREAM3DMath::Gamma(float x)
             }
          }
          else
-            ga = 1e308;
+            ga = std::numeric_limits<float>::max();
      }
      else {
         if (fabs(x) > 1.0) {
@@ -114,10 +114,10 @@ float DREAM3DMath::Gamma(float x)
         for (k=23;k>=0;k--) {
             gr = gr*z+g[k];
         }
-        ga = 1.0/(gr*z);
-        if (fabs(x) > 1.0) {
+        ga = 1.0f/(gr*z);
+        if (fabs(x) > 1.0f) {
             ga *= r;
-            if (x < 0.0) {
+            if (x < 0.0f) {
                 ga = -1 * m_pi/(x*ga*sinf(m_pi*x));
             }
         }
@@ -135,23 +135,23 @@ float DREAM3DMath::gammastirf(float x)
     float stir;
 
     w = 1/x;
-    stir = 7.87311395793093628397E-4;
-    stir = -2.29549961613378126380E-4+w*stir;
-    stir = -2.68132617805781232825E-3+w*stir;
-    stir = 3.47222221605458667310E-3+w*stir;
-    stir = 8.33333333333482257126E-2+w*stir;
-    w = 1+w*stir;
+    stir = 7.87311395793093628397E-4f;
+    stir = -2.29549961613378126380E-4f+w*stir;
+    stir = -2.68132617805781232825E-3f+w*stir;
+    stir = 3.47222221605458667310E-3f+w*stir;
+    stir = 8.33333333333482257126E-2f+w*stir;
+    w = 1.0f+w*stir;
     y = exp(x);
-    if(x > 143.01608)
+    if(x > 143.01608f)
     {
-        v = powf(x, 0.5*x-0.25);
+        v = powf(x, 0.5f*x-0.25);
         y = v*(v/y);
     }
     else
     {
-        y = powf(x, x-0.5)/y;
+        y = powf(x, x-0.5f)/y;
     }
-    result = 2.50662827463100050242*y*w;
+    result = 2.50662827463100050242f*y*w;
     return result;
 }
 float DREAM3DMath::LnGamma(float x, float& sgngam)
@@ -230,24 +230,24 @@ float DREAM3DMath::LnGamma(float x, float& sgngam)
         }
         p = p-2;
         x = x+p;
-        b = -1378.25152569120859100;
-        b = -38801.6315134637840924+x*b;
-        b = -331612.992738871184744+x*b;
-        b = -1162370.97492762307383+x*b;
-        b = -1721737.00820839662146+x*b;
-        b = -853555.664245765465627+x*b;
-        c = 1;
-        c = -351.815701436523470549+x*c;
-        c = -17064.2106651881159223+x*c;
-        c = -220528.590553854454839+x*c;
-        c = -1139334.44367982507207+x*c;
-        c = -2532523.07177582951285+x*c;
-        c = -2018891.41433532773231+x*c;
+        b = -1378.25152569120859100f;
+        b = -38801.6315134637840924f+x*b;
+        b = -331612.992738871184744f+x*b;
+        b = -1162370.97492762307383f+x*b;
+        b = -1721737.00820839662146f+x*b;
+        b = -853555.664245765465627f+x*b;
+        c = 1.0f;
+        c = -351.815701436523470549f+x*c;
+        c = -17064.2106651881159223f+x*c;
+        c = -220528.590553854454839f+x*c;
+        c = -1139334.44367982507207f+x*c;
+        c = -2532523.07177582951285f+x*c;
+        c = -2018891.41433532773231f+x*c;
         p = x*b/c;
         result = log(z)+p;
         return result;
     }
-    q = (x-0.5)*log(x)-x+ls2pi;
+    q = (x-0.5f)*log(x)-x+ls2pi;
     if(x >= 100000000)
     {
         result = q;
@@ -256,15 +256,15 @@ float DREAM3DMath::LnGamma(float x, float& sgngam)
     p = 1/(x*x);
     if(x >= 1000.0)
     {
-        q = q+((7.9365079365079365079365*0.0001*p-2.7777777777777777777778*0.001)*p+0.0833333333333333333333)/x;
+        q = q+((7.9365079365079365079365f*0.0001f*p-2.7777777777777777777778f*0.001f)*p+0.0833333333333333333333f)/x;
     }
     else
     {
-        a = 8.11614167470508450300*0.0001;
-        a = -5.95061904284301438324*0.0001+p*a;
-        a = 7.93650340457716943945*0.0001+p*a;
-        a = -2.77777777730099687205*0.001+p*a;
-        a = 8.33333333333331927722*0.01+p*a;
+        a = 8.11614167470508450300f*0.0001f;
+        a = -5.95061904284301438324f*0.0001f+p*a;
+        a = 7.93650340457716943945f*0.0001f+p*a;
+        a = -2.77777777730099687205f*0.001f+p*a;
+        a = 8.33333333333331927722f*0.01f+p*a;
         q = q+a/x;
     }
     result = q;
@@ -286,21 +286,21 @@ float DREAM3DMath::erf(float x)
     if(x < 0.5)
     {
         xsq = x*x;
-        p = 0.007547728033418631287834;
-        p = 0.288805137207594084924010+xsq*p;
-        p = 14.3383842191748205576712+xsq*p;
-        p = 38.0140318123903008244444+xsq*p;
-        p = 3017.82788536507577809226+xsq*p;
-        p = 7404.07142710151470082064+xsq*p;
-        p = 80437.3630960840172832162+xsq*p;
-        q = 0.0;
-        q = 1.00000000000000000000000+xsq*q;
-        q = 38.0190713951939403753468+xsq*q;
-        q = 658.070155459240506326937+xsq*q;
-        q = 6379.60017324428279487120+xsq*q;
-        q = 34216.5257924628539769006+xsq*q;
-        q = 80437.3630960840172826266+xsq*q;
-        result = s*1.1283791670955125738961589031*x*p/q;
+        p = 0.007547728033418631287834f;
+        p = 0.288805137207594084924010f+xsq*p;
+        p = 14.3383842191748205576712f+xsq*p;
+        p = 38.0140318123903008244444f+xsq*p;
+        p = 3017.82788536507577809226f+xsq*p;
+        p = 7404.07142710151470082064f+xsq*p;
+        p = 80437.3630960840172832162f+xsq*p;
+        q = 0.0f;
+        q = 1.00000000000000000000000f+xsq*q;
+        q = 38.0190713951939403753468f+xsq*q;
+        q = 658.070155459240506326937f+xsq*q;
+        q = 6379.60017324428279487120f+xsq*q;
+        q = 34216.5257924628539769006f+xsq*q;
+        q = 80437.3630960840172826266f+xsq*q;
+        result = s*1.1283791670955125738961589031f*x*p/q;
         return result;
     }
     if(x >= 10)
@@ -322,7 +322,7 @@ float DREAM3DMath::erfc(float x)
         result = 2-erfc(-x);
         return result;
     }
-    if(x < 0.5)
+    if(x < 0.5f)
     {
         result = 1.0-DREAM3DMath::erf(x);
         return result;
@@ -332,24 +332,24 @@ float DREAM3DMath::erfc(float x)
         result = 0;
         return result;
     }
-    p = 0.0;
-    p = 0.5641877825507397413087057563+x*p;
-    p = 9.675807882987265400604202961+x*p;
-    p = 77.08161730368428609781633646+x*p;
-    p = 368.5196154710010637133875746+x*p;
-    p = 1143.262070703886173606073338+x*p;
-    p = 2320.439590251635247384768711+x*p;
-    p = 2898.0293292167655611275846+x*p;
-    p = 1826.3348842295112592168999+x*p;
-    q = 1.0;
-    q = 17.14980943627607849376131193+x*q;
-    q = 137.1255960500622202878443578+x*q;
-    q = 661.7361207107653469211984771+x*q;
-    q = 2094.384367789539593790281779+x*q;
-    q = 4429.612803883682726711528526+x*q;
-    q = 6089.5424232724435504633068+x*q;
-    q = 4958.82756472114071495438422+x*q;
-    q = 1826.3348842295112595576438+x*q;
+    p = 0.0f;
+    p = 0.5641877825507397413087057563f+x*p;
+    p = 9.675807882987265400604202961f+x*p;
+    p = 77.08161730368428609781633646f+x*p;
+    p = 368.5196154710010637133875746f+x*p;
+    p = 1143.262070703886173606073338f+x*p;
+    p = 2320.439590251635247384768711f+x*p;
+    p = 2898.0293292167655611275846f+x*p;
+    p = 1826.3348842295112592168999f+x*p;
+    q = 1.0f;
+    q = 17.14980943627607849376131193f+x*q;
+    q = 137.1255960500622202878443578f+x*q;
+    q = 661.7361207107653469211984771f+x*q;
+    q = 2094.384367789539593790281779f+x*q;
+    q = 4429.612803883682726711528526f+x*q;
+    q = 6089.5424232724435504633068f+x*q;
+    q = 4958.82756472114071495438422f+x*q;
+    q = 1826.3348842295112595576438f+x*q;
     result = exp(-(x*x))*p/q;
     return result;
 }
@@ -370,9 +370,9 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
     float minlog;
     float maxlog;
 
-    big = 4.503599627370496e15;
-    biginv = 2.22044604925031308085e-16;
-    maxgam = 171.624376956302725;
+    big = 4.503599627370496e15f;
+    biginv = 2.22044604925031308085e-16f;
+    maxgam = 171.624376956302725f;
     minlog = log(minrealnumber);
     maxlog = log(maxrealnumber);
     if(x == 0)
@@ -386,12 +386,12 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
         return result;
     }
     flag = 0;
-    if((b*x) <= 1.0 && x <= 0.95)
+    if((b*x) <= 1.0f && x <= 0.95f)
     {
         result = incompletebetaps(a, b, x, maxgam);
         return result;
     }
-    w = 1.0-x;
+    w = 1.0f-x;
     if(x > (a/(a+b)))
     {
         flag = 1;
@@ -405,7 +405,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
     {
         xc = w;
     }
-    if(flag == 1 && (b*x) <= 1.0 && x <=0.95)
+    if(flag == 1 && (b*x) <= 1.0f && x <=0.95f)
     {
         t = incompletebetaps(a, b, x, maxgam);
         if(t <= k_MachineEpsilon)
@@ -418,7 +418,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
         }
         return result;
     }
-    y = x*(a+b-2.0)-(a-1.0);
+    y = x*(a+b-2.0f)-(a-1.0f);
     if(y < 0.0)
     {
         w = incompletebetafe(a, b, x, big, biginv);
@@ -444,7 +444,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
             }
             else
             {
-                result = 1.0-t;
+                result = 1.0f-t;
             }
         }
         else
@@ -457,7 +457,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
     y = y+log(w/a);
     if(y < minlog)
     {
-        t = 0.0;
+        t = 0.0f;
     }
     else
     {
@@ -471,7 +471,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
         }
         else
         {
-            t = 1.0-t;
+            t = 1.0f-t;
         }
     }
     result = t;
@@ -504,17 +504,17 @@ float DREAM3DMath::incompletebetafe(float a, float b, float x, float big, float 
     k1 = a;
     k2 = a+b;
     k3 = a;
-    k4 = a+1.0;
-    k5 = 1.0;
-    k6 = b-1.0;
+    k4 = a+1.0f;
+    k5 = 1.0f;
+    k6 = b-1.0f;
     k7 = k4;
-    k8 = a+2.0;
-    pkm2 = 0.0;
-    qkm2 = 1.0;
-    pkm1 = 1.0;
-    qkm1 = 1.0;
-    ans = 1.0;
-    r = 1.0;
+    k8 = a+2.0f;
+    pkm2 = 0.0f;
+    qkm2 = 1.0f;
+    pkm1 = 1.0f;
+    qkm1 = 1.0f;
+    ans = 1.0f;
+    r = 1.0f;
     n = 0;
     thresh = 3.0*k_MachineEpsilon;
     do
@@ -537,27 +537,27 @@ float DREAM3DMath::incompletebetafe(float a, float b, float x, float big, float 
         {
             r = pk/qk;
         }
-        if(r != 0)
+        if(r != 0.0f)
         {
             t = fabs((ans-r)/r);
             ans = r;
         }
         else
         {
-            t = 1.0;
+            t = 1.0f;
         }
         if(t < thresh)
         {
             break;
         }
-        k1 = k1+1.0;
-        k2 = k2+1.0;
-        k3 = k3+2.0;
-        k4 = k4+2.0;
-        k5 = k5+1.0;
-        k6 = k6-1.0;
-        k7 = k7+2.0;
-        k8 = k8+2.0;
+        k1 = k1+1.0f;
+        k2 = k2+1.0f;
+        k3 = k3+2.0f;
+        k4 = k4+2.0f;
+        k5 = k5+1.0f;
+        k6 = k6-1.0f;
+        k7 = k7+2.0f;
+        k8 = k8+2.0f;
         if((fabs(qk)+fabs(pk)) > big)
         {
             pkm2 = pkm2*biginv;
@@ -604,22 +604,22 @@ float DREAM3DMath::incompletebetafe2(float a, float b, float x, float big, float
     int n;
 
     k1 = a;
-    k2 = b-1.0;
+    k2 = b-1.0f;
     k3 = a;
-    k4 = a+1.0;
-    k5 = 1.0;
+    k4 = a+1.0f;
+    k5 = 1.0f;
     k6 = a+b;
-    k7 = a+1.0;
-    k8 = a+2.0;
-    pkm2 = 0.0;
-    qkm2 = 1.0;
-    pkm1 = 1.0;
-    qkm1 = 1.0;
-    z = x/(1.0-x);
-    ans = 1.0;
-    r = 1.0;
+    k7 = a+1.0f;
+    k8 = a+2.0f;
+    pkm2 = 0.0f;
+    qkm2 = 1.0f;
+    pkm1 = 1.0f;
+    qkm1 = 1.0f;
+    z = x/(1.0f-x);
+    ans = 1.0f;
+    r = 1.0f;
     n = 0;
-    thresh = 3.0*k_MachineEpsilon;
+    thresh = 3.0f*k_MachineEpsilon;
     do
     {
         xk = -z*k1*k2/(k3*k4);
@@ -640,27 +640,27 @@ float DREAM3DMath::incompletebetafe2(float a, float b, float x, float big, float
         {
             r = pk/qk;
         }
-        if(r != 0)
+        if(r != 0.0f)
         {
             t = fabs((ans-r)/r);
             ans = r;
         }
         else
         {
-            t = 1.0;
+            t = 1.0f;
         }
         if(t < thresh)
         {
             break;
         }
-        k1 = k1+1.0;
-        k2 = k2-1.0;
-        k3 = k3+2.0;
-        k4 = k4+2.0;
-        k5 = k5+1.0;
-        k6 = k6+1.0;
-        k7 = k7+2.0;
-        k8 = k8+2.0;
+        k1 = k1+1.0f;
+        k2 = k2-1.0f;
+        k3 = k3+2.0f;
+        k4 = k4+2.0f;
+        k5 = k5+1.0f;
+        k6 = k6+1.0f;
+        k7 = k7+2.0f;
+        k8 = k8+2.0f;
         if((fabs(qk)+fabs(pk)) > big)
         {
             pkm2 = pkm2*biginv;
