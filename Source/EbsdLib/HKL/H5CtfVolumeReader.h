@@ -41,7 +41,7 @@
 
 //-- EbsdLib Includes
 #include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/QualityMetricFilter.h"

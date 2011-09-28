@@ -33,7 +33,7 @@
 
 #include <string>
 
-#include "DREAM3D/DREAM3DLibTypes.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3D/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3D/Common/AIMArray.hpp"
 

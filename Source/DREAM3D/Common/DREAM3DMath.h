@@ -66,7 +66,7 @@ lacking still.
 
 #include <math.h>
 
-#include "DREAM3D/DREAM3DLibTypes.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 #ifndef M_E
 #define M_E            2.7182818284590452354   /* e */

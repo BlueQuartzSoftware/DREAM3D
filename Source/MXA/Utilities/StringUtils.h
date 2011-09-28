@@ -11,8 +11,7 @@
 #ifndef STRINGUTILITIES_H_
 #define STRINGUTILITIES_H_
 
-//-- MXA Includes
-#include <MXA/Common/DLLExport.h>
+
 
 
 //-- STL Includes
@@ -23,7 +22,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 
 //TODO: Create Test Suite for these Methods
 

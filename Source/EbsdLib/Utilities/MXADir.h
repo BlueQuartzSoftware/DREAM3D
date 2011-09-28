@@ -42,7 +42,7 @@
 #include <vector>
 
 //-- MXA Includes
-#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdLib.h"
 
 #define MXADir AngMXADir
 

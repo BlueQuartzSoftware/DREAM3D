@@ -40,7 +40,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/EbsdLibConfiguration.h"
+#include "EbsdLib/EbsdLib.h"
 #include "DREAM3D/Common/AIMArray.hpp"
 
 namespace Detail {

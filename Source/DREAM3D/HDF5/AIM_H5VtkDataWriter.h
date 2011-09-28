@@ -49,11 +49,11 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Common/LogTime.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 
 class ReconstructionFunc;

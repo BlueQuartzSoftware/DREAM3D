@@ -42,7 +42,13 @@
 /* Should we use Boost Shared_Pointer Wrapped strings*/
 #cmakedefine MXA_USE_SHARED_STRINGS @MXA_USE_SHARED_STRINGS@
 
-/* The Following include MUST appear AFTER MXA_BUILT_AS_DYNAMIC_LIB has been defined */
-#include "MXA/Common/DLLExport.h"
+/* Include the Overall Configuration header file */
+#include "@PROJECT_NAME@/@CMP_CONFIGURATION_FILE_NAME@"
+
+/* Include the Typedefs Header */
+#include "@PROJECT_NAME@/@CMP_TYPES_FILE_NAME@"
+
+/* Include the DLL export preprocessor defines */
+#include "@PROJECT_NAME@/@PROJECT_NAME@DLLExport.h"
 
 #endif /* _MXA_CONFIGURATION_H_ */

@@ -44,7 +44,7 @@
 
 #include <vector>
 
-#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/HKL/CtfPhase.h"

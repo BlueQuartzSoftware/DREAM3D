@@ -69,8 +69,8 @@
 #include <set>
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXATypes.h"
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "MXA/MXA.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 namespace meshing
 {

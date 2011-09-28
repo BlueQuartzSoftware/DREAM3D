@@ -25,8 +25,9 @@
 #include <hdf5.h>
 #include <H5Tpublic.h>
 
+#include "H5Support/H5Support.h"
 #include "H5Support/H5SupportDLLExport.h"
-#include "H5Support/H5SupportTypes.h"
+
 
 
 /* H5LITE_USE_H5Support_CONSTRUCTS is used to include H5SupportDataModel Specific classes in

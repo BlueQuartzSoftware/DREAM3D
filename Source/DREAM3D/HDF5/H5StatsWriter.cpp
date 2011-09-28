@@ -40,7 +40,7 @@
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 

@@ -36,7 +36,7 @@
 
 #include <MXA/Utilities/MXAFileSystemPath.h>
 #include <EbsdLib/TSL/AngDirectoryPatterns.h>
-#include <DREAM3D/Common/Grain.h>
+#include "DREAM3D/Common/Grain.h"
 
 //--C++ Includes
 #include <string>

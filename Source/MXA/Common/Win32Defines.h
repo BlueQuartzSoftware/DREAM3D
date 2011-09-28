@@ -15,7 +15,7 @@
   #include <cstdlib>
   #include <string>
   #include <stdio.h>
-  #include <MXA/MXATypes.h>
+  #include "MXA/MXA.h"
 /*
 "It's a known, long-standing bug in the compiler system's headers.  For
 some reason the manufacturer, in its infinite wisdom, chose to #define

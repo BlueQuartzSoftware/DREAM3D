@@ -39,10 +39,10 @@ set (EbsdLib_INSTALL_FILES 0)
 # project.
 #------------------------------------------------------------------------------- 
 set (CMP_HEADER_DIR ${EbsdLib_BINARY_DIR})
-set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+set (CMP_CONFIGURATION_FILE_NAME "EbsdLibConfiguration.h")
 set (CMP_TYPES_FILE_NAME "EbsdLibTypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "EbsdLibVersion.h")
-set (CMP_EXTRA_CONFIGURATION_FILE "EbsdLibConfiguration.h")
+set (CMP_TOP_HEADER_FILE "EbsdLib.h")
 set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
 set (CMP_PROJECT_NAME "${PROJECT_NAME}")
 set (CMP_ENABLE_PLUGINS "0")
@@ -57,7 +57,7 @@ mark_as_advanced(EbsdLib_ENABLE_HDF5)
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
-               ${EbsdLib_BINARY_DIR}/EbsdLibConfiguration.h)   
+               ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})   
 
 # Setup the Include Directories
 include_directories(${EbsdLib_SOURCE_DIR}/..)            

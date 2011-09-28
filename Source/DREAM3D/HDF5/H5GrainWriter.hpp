@@ -37,7 +37,7 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3D/Common/OIMColoring.hpp"
 #include "DREAM3D/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3D/HDF5/VTKH5Constants.h"

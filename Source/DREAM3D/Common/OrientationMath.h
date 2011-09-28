@@ -34,7 +34,7 @@
 #define _OrientationMath_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/DREAM3DRandom.h"
 #include "DREAM3D/Common/DREAM3DMath.h"

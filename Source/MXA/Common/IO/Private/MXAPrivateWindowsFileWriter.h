@@ -9,7 +9,7 @@
 #ifndef WINDOWSFILEWRITER_H_
 #define WINDOWSFILEWRITER_H_
 
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 
 #if defined (_MSC_VER)
 #include <MXA/Common/Win32Defines.h>

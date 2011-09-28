@@ -24,16 +24,16 @@ IF (BUILD_SHARED_LIBS)
 ENDIF (BUILD_SHARED_LIBS)
 
 SET (PROJECT_PREFIX "DREAM3D" CACHE STRING "The Prefix to be used for Preprocessor definitions")
-set (DREAM3D_INSTALL_FILES 0)
+set (PROJECT_INSTALL_HEADERS 0)
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the 
 # project.
 #------------------------------------------------------------------------------- 
 set (CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
-set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+set (CMP_CONFIGURATION_FILE_NAME "DREAM3DConfiguration.h")
 set (CMP_TYPES_FILE_NAME "DREAM3DLibTypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "DREAM3DVersion.h")
-set (CMP_EXTRA_CONFIGURATION_FILE "DREAM3DConfiguration.h")
+set (CMP_TOP_HEADER_FILE "DREAM3DLib.h")
 set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
 set (CMP_PROJECT_NAME "${PROJECT_NAME}")
 set (CMP_ENABLE_PLUGINS "0")
@@ -42,9 +42,8 @@ set (CMP_GENERATE_VERSION_STRING 1)
 
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
-
-configure_file(${DREAM3D_SOURCE_DIR}/Source/DREAM3D/DREAM3DConfiguration.h.in
-               ${DREAM3D_BINARY_DIR}/DREAM3D/${CMP_EXTRA_CONFIGURATION_FILE})
+configure_file(${DREAM3DLib_SOURCE_DIR}/DREAM3DConfiguration.h.in
+               ${DREAM3DProj_BINARY_DIR}/DREAM3DLib/${CMP_TOP_HEADER_FILE})
 
 
 set(Project_SRCS "")
@@ -77,7 +76,7 @@ include_directories( ${DREAM3DLib_BINARY_DIR} )
 
 #-- Add a library for the AIMCommon Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} MXADataModel EbsdLib ${TBB_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} MXA EbsdLib ${TBB_LIBRARIES} )
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

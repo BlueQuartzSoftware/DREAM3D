@@ -40,7 +40,7 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Common/LogTime.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 /**
  * @class AbstractPipeline AbstractPipeline.h DREAM3D/Common/AbstractPipeline.h

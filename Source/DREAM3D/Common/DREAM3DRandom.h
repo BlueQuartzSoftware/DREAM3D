@@ -36,10 +36,10 @@
 #ifndef DREAM3DRANDOM_H_
 #define DREAM3DRANDOM_H_
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/LogTime.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 #define MERSENNNE_TWISTER_N 624
 #define M 397

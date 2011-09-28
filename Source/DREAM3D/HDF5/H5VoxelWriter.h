@@ -44,12 +44,12 @@
 
 #include <boost/shared_array.hpp>
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/HDF5/AIM_H5VtkDataWriter.h"
 

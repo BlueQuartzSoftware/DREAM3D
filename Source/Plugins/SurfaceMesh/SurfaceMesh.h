@@ -73,7 +73,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include <MXA/MXATypes.h>
+#include "MXA/MXA.h"
 
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/Common/AbstractPipeline.h"

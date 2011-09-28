@@ -46,10 +46,10 @@
 #include <string>
 #include <vector>
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 #include "MXA/Common/MXASetGetMacros.h"
 
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3D/Common/AIMArray.hpp"
 #include "DREAM3D/Common/Constants.h"
 #include "DREAM3D/VTKUtils/VTKWriterMacros.h"

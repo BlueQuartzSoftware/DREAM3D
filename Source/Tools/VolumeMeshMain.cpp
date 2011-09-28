@@ -46,7 +46,7 @@
 
 #include "DREAM3D/Common/Constants.h"
 #include <DREAM3D/Common/DREAM3DVersion.h>
-#include <DREAM3D/Common/AIMArray.hpp>
+#include "DREAM3D/Common/AIMArray.hpp"
 
 #include <AIM/VolumeMesh/VolumeMesh.h>
 

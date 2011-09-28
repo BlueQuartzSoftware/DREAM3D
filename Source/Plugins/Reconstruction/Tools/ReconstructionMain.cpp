@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -45,11 +45,11 @@
 #include <MXA/Utilities/MXALogger.h>
 #include <MXA/Utilities/MXADir.h>
 
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3D/Common/Constants.h"
-#include <DREAM3D/DREAM3DVersion.h>
-#include <DREAM3D/Common/AIMArray.hpp>
-#include <DREAM3D/Common/Grain.h>
-#include <Reconstruction/Reconstruction.h>
+#include "DREAM3D/Common/AIMArray.hpp"
+#include "DREAM3D/Common/Grain.h"
+#include "Reconstruction/Reconstruction.h"
 
 
 #define RECONSTRUCTION_MANUAL_DEBUG 0

@@ -50,7 +50,7 @@
 #include <vector>
 #include <string>
 
-#include "EbsdLib/EbsdLibTypes.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdImporter.h"
 #include "EbsdLib/TSL/AngReader.h"

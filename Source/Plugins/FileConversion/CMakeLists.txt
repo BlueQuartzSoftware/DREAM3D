@@ -19,7 +19,7 @@ SET (FileConversion_SRCS
   ${PROJECT_SOURCE_DIR}/FileConversionFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FileConversion" "${FileConversion_HDRS}" "${FileConversion_SRCS}" "0")
-if ( ${DREAM3D_INSTALL_FILES} EQUAL 1 )
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${FileConversion_HDRS}
             DESTINATION include/DREAM3D/FileConversion
             COMPONENT Headers   )
@@ -85,11 +85,11 @@ set (FileConversionPlugin_PROJECT_SRCS
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin/plugins  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 add_library(FileConversionPlugin MODULE ${FileConversionPlugin_PROJECT_SRCS})
 target_link_libraries(FileConversionPlugin 
-                    MXADataModel
+                    MXA
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}   
                     ${QT_QTGUI_LIBRARY}
@@ -99,7 +99,7 @@ PluginProperties(FileConversionPlugin "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3D_BINARY_DIR}/Bin  )
+  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
 
