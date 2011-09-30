@@ -42,15 +42,15 @@
 // -----------------------------------------------------------------------------
 Grain::Grain() :
 nucleus(0),
-active(0),
+active(false),
 numvoxels(0),
 numneighbors(0),
 newgrainname(0),
-gotcontainedmerged(0),
-gottwinmerged(0),
-gotcolonymerged(0),
-surfacegrain(0),
-outsideboundbox(0),
+gotcontainedmerged(false),
+gottwinmerged(false),
+gotcolonymerged(false),
+surfacegrain(false),
+outsideboundbox(false),
 twinnewnumber(-1),
 colonynewnumber(-1),
 slipsystem(0),
@@ -85,7 +85,7 @@ equivdiameter(0.0),
 radius1(0.0),
 radius2(0.0),
 radius3(0.0),
-lowanglefraction(0.0)
+packquality(0.0)
 {
   voxellist = NULL; //new std::vector<int>;
   columnlist = NULL; //new std::vector<int>;
@@ -200,7 +200,7 @@ void Grain::deepCopy(Grain::Pointer grain)
   radius1 = grain->radius1 ;
   radius2 = grain->radius2 ;
   radius3 = grain->radius3 ;
-  lowanglefraction = grain->lowanglefraction;
+  packquality = grain->packquality;
   COPY_ARRAY_5(avg_quat, grain);
   COPY_ARRAY_3(neighbordistfunc, grain);
 
