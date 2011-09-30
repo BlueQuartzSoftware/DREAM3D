@@ -135,7 +135,6 @@ public:
 
 	// Voxel Attribute Arrays
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-    DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, bool)
     DECLARE_WRAPPED_ARRAY(ellipfuncs, m_Ellipfuncs, float)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
     DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
@@ -157,9 +156,9 @@ public:
     std::vector<SharedFloatArray> axisodf;
 
 	std::vector<int> primaryphases;
-	std::vector<double> primaryphasefractions;
+	std::vector<float> primaryphasefractions;
 	std::vector<int> precipitatephases;
-	std::vector<double> precipitatephasefractions;
+	std::vector<float> precipitatephasefractions;
 
     std::vector<int> takencheck;
     std::vector<std::vector<std::vector<float> > > bovera;

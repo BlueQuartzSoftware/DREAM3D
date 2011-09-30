@@ -115,7 +115,6 @@ zpoints(0)
   surfacevoxels = NULL;
   quats = NULL;
   alreadychecked = NULL;
-//  unassigned = NULL;
   graincounts = NULL;
 
   goodVoxels = NULL;
