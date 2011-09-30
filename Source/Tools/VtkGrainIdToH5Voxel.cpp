@@ -54,7 +54,7 @@
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
-#include "DREAM3DLib/VTKUtils/VTKRectilinearGridFileReader.h"
+#include "DREAM3DLib/VTKUtils/GrainIdVtkRectilinearGridReader.h"
 
 
 #define APPEND_DATA_TRUE 1
@@ -360,7 +360,7 @@ int main(int argc, char **argv)
 
 
     std::cout << "Reading the Vtk data file...." << std::endl;
-    VTKRectilinearGridFileReader::Pointer reader = VTKRectilinearGridFileReader::New();
+    GrainIdVtkRectilinearGridReader::Pointer reader = GrainIdVtkRectilinearGridReader::New();
     reader->setInputFileName(vFile);
     int err = reader->readFile();
     if (err < 0)

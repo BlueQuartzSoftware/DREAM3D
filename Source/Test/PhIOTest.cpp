@@ -84,7 +84,7 @@ int TestPhWriter()
 
   PhWriter<int>::Pointer writer = PhWriter<int>::New();
   int err = writer->writeFile(Detail::TestFile, &(grain_indices.front()), nx, ny, nz);
-  MXA_REQUIRE_EQUAL(err, 0);
+  DREAM3D_REQUIRE_EQUAL(err, 0);
   return EXIT_SUCCESS;
 }
 
@@ -100,15 +100,15 @@ int TestPhReader()
   int nz = 0;
   std::vector<int> grain_indices;
   int err = reader->readFile(Detail::TestFile, grain_indices, nx, ny, nz);
-  MXA_REQUIRE_EQUAL(err, 0);
-  MXA_REQUIRE_EQUAL(nx, Detail::XSize);
-  MXA_REQUIRE_EQUAL(ny, Detail::YSize);
-  MXA_REQUIRE_EQUAL(nz, Detail::ZSize);
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+  DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
   int size = Detail::XSize * Detail::YSize * Detail::ZSize;
 
   for (int i = 0; i < size; ++i)
   {
-    MXA_REQUIRE_EQUAL( (i+Detail::Offset), grain_indices[i] );
+    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), grain_indices[i] );
   }
 
 
@@ -122,10 +122,10 @@ int TestPhReader()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
-  MXA_REGISTER_TEST( TestPhWriter() );
-  MXA_REGISTER_TEST( TestPhReader() );
+  DREAM3D_REGISTER_TEST( TestPhWriter() );
+  DREAM3D_REGISTER_TEST( TestPhReader() );
 
-  MXA_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
   PRINT_TEST_SUMMARY();
   return err;
 }

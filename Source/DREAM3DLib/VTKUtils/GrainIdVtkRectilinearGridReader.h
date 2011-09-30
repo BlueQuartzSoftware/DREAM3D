@@ -31,21 +31,25 @@
 #ifndef VTKRECTILINEARGRIDREADER_H_
 #define VTKRECTILINEARGRIDREADER_H_
 
+#include <string.h> // needed for the ::memcpy function below
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AIMArray.hpp"
-
+#include "DREAM3DLib/IO/DREAM3DFileReader.h"
 #include "VTKFileReader.h"
 
-class DREAM3DLib_EXPORT VTKRectilinearGridFileReader : public VTKFileReader
+class DREAM3DLib_EXPORT GrainIdVtkRectilinearGridReader: public VTKFileReader,
+                                                         public DREAM3DFileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileReader);
+    DREAM3D_SHARED_POINTERS(GrainIdVtkRectilinearGridReader);
     DREAM3D_TYPE_MACRO(VTKRectilinearGridFileReader)
-    DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileReader);
-    virtual ~VTKRectilinearGridFileReader();
+    DREAM3D_STATIC_NEW_MACRO(GrainIdVtkRectilinearGridReader);
+    DREAM3D_STATIC_NEW_SUPERCLASS(DREAM3DFileReader, GrainIdVtkRectilinearGridReader);
+
+    virtual ~GrainIdVtkRectilinearGridReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName)
     DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, GrainIds);
@@ -60,13 +64,29 @@ class DREAM3DLib_EXPORT VTKRectilinearGridFileReader : public VTKFileReader
 
     int readFile();
 
+    virtual int readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
+    {
+      setInputFileName(FileName);
+      int err = readFile();
+      if (err < 0)
+      {
+        return err;
+      }
+      getDims(nx, ny, nz);
+      int totalpoints = nx * ny * nz;
+      data.resize(totalpoints);
+      // Copy the data from the AIMArray into the std::vector<int>
+      ::memcpy( &(data.front()), getGrainIds()->GetPointer(0), totalpoints * sizeof(int));
+      return err;
+    }
+
   protected:
-    VTKRectilinearGridFileReader();
+    GrainIdVtkRectilinearGridReader();
 
   private:
 
-    VTKRectilinearGridFileReader(const VTKRectilinearGridFileReader&); // Copy Constructor Not Implemented
-    void operator=(const VTKRectilinearGridFileReader&); // Operator '=' Not Implemented
+    GrainIdVtkRectilinearGridReader(const GrainIdVtkRectilinearGridReader&); // Copy Constructor Not Implemented
+    void operator=(const GrainIdVtkRectilinearGridReader&); // Operator '=' Not Implemented
 };
 
 #endif /* VTKRECTILINEARGRIDREADER_H_ */

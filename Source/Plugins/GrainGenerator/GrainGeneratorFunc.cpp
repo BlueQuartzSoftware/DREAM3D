@@ -129,14 +129,14 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   totalsurfacearea = NULL;
 
 
-INIT_AIMARRAY(m_GrainIndicies,int);
-INIT_AIMARRAY(m_Ellipfuncs,float);
-INIT_AIMARRAY(m_Phases,int);
-INIT_AIMARRAY(m_Euler1s,float);
-INIT_AIMARRAY(m_Euler2s,float);
-INIT_AIMARRAY(m_Euler3s,float);
-INIT_AIMARRAY(m_SurfaceVoxels,char);
-INIT_AIMARRAY(m_TotalSurfaceArea,float);
+  INIT_AIMARRAY(m_GrainIndicies,int);
+  INIT_AIMARRAY(m_Ellipfuncs,float);
+  INIT_AIMARRAY(m_Phases,int);
+  INIT_AIMARRAY(m_Euler1s,float);
+  INIT_AIMARRAY(m_Euler2s,float);
+  INIT_AIMARRAY(m_Euler3s,float);
+  INIT_AIMARRAY(m_SurfaceVoxels,char);
+  INIT_AIMARRAY(m_TotalSurfaceArea,float);
 
 }
 
@@ -1032,7 +1032,7 @@ void GrainGeneratorFunc::cleanup_grains()
 	  int index;
 	  float minsize = 0;
 	  gsizes.resize(m_Grains.size());
-	  for (int i = 1; i < m_Grains.size(); i++)
+	  for (size_t i = 1; i < m_Grains.size(); i++)
 	  {
 		gsizes[i] = 0;
 	  }
@@ -1129,16 +1129,16 @@ void GrainGeneratorFunc::cleanup_grains()
 	  }
 	  newnames.resize(m_Grains.size());
 	  int goodcount = 1;
-	  for (int i = 1; i < m_Grains.size(); i++)
-	  {
-		newnames[i] = 0;
-		if (gsizes[i] > 0)
-		{
-		  m_Grains[goodcount] = m_Grains[i];
-		  newnames[i] = goodcount;
-		  goodcount++;
-		}
-	  }
+	  for (size_t i = 1; i < m_Grains.size(); i++)
+    {
+      newnames[i] = 0;
+      if(gsizes[i] > 0)
+      {
+        m_Grains[goodcount] = m_Grains[i];
+        newnames[i] = goodcount;
+        goodcount++;
+      }
+    }
 	  for (int i = 0; i < totalpoints; i++)
 	  {
 		if (grain_indicies[i] > 0)

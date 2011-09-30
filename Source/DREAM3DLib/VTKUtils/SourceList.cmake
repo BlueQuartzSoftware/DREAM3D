@@ -13,11 +13,11 @@ SET (DREAM3DLib_VTKUtils_HDRS
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileReader.h
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileWriters.hpp
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKWriterMacros.h
-  ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKRectilinearGridFileReader.h
+  ${DREAM3DLib_SOURCE_DIR}/VTKUtils/GrainIdVtkRectilinearGridReader.h
 )
 SET (DREAM3DLib_VTKUtils_SRCS
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKFileReader.cpp
-  ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKRectilinearGridFileReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/VTKUtils/GrainIdVtkRectilinearGridReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/VTKUtils" "${DREAM3DLib_VTKUtils_HDRS}" "${DREAM3DLib_VTKUtils_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

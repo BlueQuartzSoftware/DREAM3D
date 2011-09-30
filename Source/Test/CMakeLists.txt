@@ -67,6 +67,7 @@ add_executable(VTKFileWritersTest ${DREAM3DTest_SOURCE_DIR}/VTKFileWritersTest.c
                  ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
 )
 target_link_libraries(VTKFileWritersTest DREAM3DLib)
+add_test(VTKFileWritersTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/VTKFileWritersTest)
 
 # --------
 add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp)
