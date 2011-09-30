@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "VTKRectilinearGridFileReader.h"
+#include "GrainIdVtkRectilinearGridReader.h"
 
 #include <map>
 
@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VTKRectilinearGridFileReader::VTKRectilinearGridFileReader() :
+GrainIdVtkRectilinearGridReader::GrainIdVtkRectilinearGridReader() :
 m_GrainIdScalarName(DREAM3D::VTK::GrainIdScalarName)
 {
 
@@ -51,14 +51,14 @@ m_GrainIdScalarName(DREAM3D::VTK::GrainIdScalarName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VTKRectilinearGridFileReader::~VTKRectilinearGridFileReader()
+GrainIdVtkRectilinearGridReader::~GrainIdVtkRectilinearGridReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKRectilinearGridFileReader::readHeader()
+int GrainIdVtkRectilinearGridReader::readHeader()
 {
 
   int err = 0;
@@ -130,7 +130,7 @@ int VTKRectilinearGridFileReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKRectilinearGridFileReader::parseCoordinateLine(const char* input, int &value)
+int GrainIdVtkRectilinearGridReader::parseCoordinateLine(const char* input, int &value)
 {
   char text[256];
   char text1[256];
@@ -148,7 +148,7 @@ int VTKRectilinearGridFileReader::parseCoordinateLine(const char* input, int &va
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKRectilinearGridFileReader::readFile()
+int GrainIdVtkRectilinearGridReader::readFile()
 {
   int err = 0;
 
@@ -189,7 +189,7 @@ int VTKRectilinearGridFileReader::readFile()
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[0])
+  if (err < 0 || dim != dims[1])
   {
     return -1;
   }
@@ -200,7 +200,7 @@ int VTKRectilinearGridFileReader::readFile()
 //  ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[0])
+  if (err < 0 || dim != dims[2])
   {
     return -1;
   }
@@ -264,7 +264,19 @@ int VTKRectilinearGridFileReader::readFile()
     //  std::map<int, int> grainIdMap;
       if (getFileIsBinary() == true)
       {
-        instream.read(reinterpret_cast<char*> (m_GrainIds->GetPointer(0)), totalVoxels);
+        // Splat 0xAB across the entire array. that way if the read messes up we
+        //  can more easily diagnose the problem.
+        ::memset(m_GrainIds->GetPointer(0), 0xAB, sizeof(int) * totalVoxels);
+        instream.read(reinterpret_cast<char*> (m_GrainIds->GetPointer(0)), sizeof(int) * totalVoxels);
+        int t;
+        // We need to Byte Swap (Possibly) from the Big Endian format stored by
+        // the vtk binary file into what ever system we are running.
+        for (size_t i = 0; i < totalVoxels; ++i)
+        {
+          t = m_GrainIds->GetValue(i);
+          MXA::Endian::FromBigToSystem::convert<int>(t);
+          m_GrainIds->SetValue(i, t);
+        }
       }
       else // ASCII VTK File
       {

@@ -41,11 +41,13 @@
 
 #include "DREAM3DLib/IO/DREAM3DFileReader.h"
 #include "DREAM3DLib/IO/DREAM3DFileWriter.h"
-
 #include "DREAM3DLib/IO/DxReader.h"
 #include "DREAM3DLib/IO/DxWriter.hpp"
 #include "DREAM3DLib/IO/PhReader.h"
 #include "DREAM3DLib/IO/PhWriter.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/VTKUtils/GrainIdVtkRectilinearGridReader.h"
+
 
 namespace Detail {
 class FCWrapper
@@ -111,6 +113,7 @@ void FileConversion::execute()
     std::string inputExtension = MXAFileInfo::extension(m_InputFilePath);
     if (inputExtension.compare("vtk") == 0)
     {
+      reader = GrainIdVtkRectilinearGridReader::NewDREAM3DFileReader();
     }
     else if (inputExtension.compare("ph") == 0)
     {
@@ -134,6 +137,7 @@ void FileConversion::execute()
   std::string outputExtension = MXAFileInfo::extension(m_OutputFilePath);
   if (outputExtension.compare("vtk") == 0)
   {
+    writer = GrainIdVtkRectilinearGridWriter<int>::NewDREAM3DFileWriter();
   }
   else if (outputExtension.compare("ph") == 0)
   {
