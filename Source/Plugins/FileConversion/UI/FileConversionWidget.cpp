@@ -58,7 +58,8 @@ FileConversionWidget::~FileConversionWidget()
 void FileConversionWidget::readSettings(QSettings &prefs)
 {
   prefs.beginGroup("FileConversion");
-
+  READ_FILEPATH_SETTING(prefs, m_, InputFilePath, "");
+  READ_FILEPATH_SETTING(prefs, m_, OutputFilePath, "");
   prefs.endGroup();
 
 }
@@ -69,7 +70,8 @@ void FileConversionWidget::readSettings(QSettings &prefs)
 void FileConversionWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("FileConversion");
-
+  WRITE_STRING_SETTING(prefs, m_, InputFilePath)
+  WRITE_STRING_SETTING(prefs, m_, OutputFilePath)
   prefs.endGroup();
 }
 
@@ -191,7 +193,8 @@ void FileConversionWidget::on_m_GoBtn_clicked()
   m_FileConversion->moveToThread(m_WorkerThread);
 
   // Pull the values from the GUI and push them into the m_FileConversion variable
-
+  m_FileConversion->setInputFilePath(m_InputFilePath->text().toStdString() );
+  m_FileConversion->setOutputFilePath(m_OutputFilePath->text().toStdString());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * FileConversion object. Since the FileConversion object has been moved to another
@@ -294,6 +297,8 @@ void FileConversionWidget::addProgressMessage(QString message)
 // -----------------------------------------------------------------------------
 void FileConversionWidget::on_m_InputFilePath_textChanged(const QString text)
 {
+  if (verifyPathExists(m_InputFilePath->text(), m_InputFilePath) )
+  {
    QFileInfo fi(m_InputFilePath->text());
    if (fi.exists() && fi.isFile())
    {
@@ -319,6 +324,7 @@ void FileConversionWidget::on_m_InputFilePath_textChanged(const QString text)
        m_FileType->setText("Unknown File Extension");
      }
    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -326,7 +332,7 @@ void FileConversionWidget::on_m_InputFilePath_textChanged(const QString text)
 // -----------------------------------------------------------------------------
 void FileConversionWidget::on_m_OutputFilePath_textChanged(const QString text)
 {
-std::cout << "on_m_OutputFilePath_textChanged" << std::endl;
+ // std::cout << "on_m_OutputFilePath_textChanged" << std::endl;
 }
 
 

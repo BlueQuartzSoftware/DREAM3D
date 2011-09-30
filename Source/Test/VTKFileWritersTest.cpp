@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -79,6 +79,18 @@ int main(int argc, char **argv)
   r->resy = 0.50;
   r->resz = 0.75;
 
+  std::vector<Ebsd::CrystalStructure> crystalStructures(2);
+  std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2);
+  std::vector<float> precipFractions(2);
+
+  r->initialize(5,5,5, 0.35, 0.35, 0.55, false, false, 25, 1.0, 5.0, crystalStructures , phaseTypes ,precipFractions ,0);
+
+  for (size_t i = 0; i < 5*5*5; ++i)
+  {
+    r->surfacevoxels[i] = 0;
+  }
+
+
 //  ScalarWrapper* gidWriter
 //      = static_cast<ScalarWrapper*>(new GrainIdWriter<ReconstructionFunc>(r.get()) );
 //
@@ -107,7 +119,7 @@ int main(int argc, char **argv)
 //  scalarsToWrite.push_back(w5);
 
   VTKRectilinearGridFileWriter writer;
-  writer.write<ReconstructionFunc>("/tmp/vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
+  writer.write<ReconstructionFunc>("vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
 
   return 0;
 }

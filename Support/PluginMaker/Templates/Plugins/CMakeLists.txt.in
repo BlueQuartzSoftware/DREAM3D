@@ -1,12 +1,14 @@
-message(STATUS "@PluginName@Plugin Being Configured")
+
 project(@PluginName@Plugin)
 
 set(PLUGIN_NAME @PluginName@)
 
-include_directories(${PROJECT_SOURCE_DIR} 
-                    ${PROJECT_SOURCE_DIR}/..
-                    ${PROJECT_BINARY_DIR}
-                    ${PROJECT_CODE_DIR} )
+# Get the Directory where the plugin lives
+get_filename_component(PluginPath ${PROJECT_SOURCE_DIR} PATH)
+include_directories(${DREAM3DProj_BINARY_DIR}
+                    ${DREAM3DProj_BINARY_DIR}/QtSupport
+                    ${PluginPath} 
+                    ${PROJECT_BINARY_DIR} )
 
 #-- Non Qt based source files
 SET (@PluginName@_HDRS

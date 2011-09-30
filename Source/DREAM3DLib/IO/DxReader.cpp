@@ -56,42 +56,6 @@ DxReader::~DxReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-/*
- void tokenize(const std::string& str, std::vector<std::string>& tokens, const
- std::string& delimiters = " ")
- ====================================================================
- Taken from http://www.oopweb.com/CPP/Documents/CPPHOWTO/Volume/C++Programming-HOWTO-7.html
-
- "A very common operation with std::strings, is to tokenize it with a
- delimiter of your own choice. This way you can easily split the
- std::string up in smaller pieces, without fiddling with the find()
- methods too much. In C, you could use strtok() for character arrays,
- but no equal function exists for std::strings. This means you have to
- make your own. Here is a couple of suggestions, use what suits your
- best."
- ====================================================================
- */
-void DxReader::tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters)
-{
-  // Skip delimiters at beginning.
-  std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-
-  // Find first "non-delimiter".
-  std::string::size_type pos = str.find_first_of(delimiters, lastPos);
-
-  while (std::string::npos != pos || std::string::npos != lastPos)
-  {
-    // Found a token, add it to the vector.
-    tokens.push_back(str.substr(lastPos, pos - lastPos));
-
-    // Skip delimiters.  Note the "not_of"
-    lastPos = str.find_first_not_of(delimiters, pos);
-
-    // Find next "non-delimiter"
-    pos = str.find_first_of(delimiters, lastPos);
-  }
-}
-
 int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
 {
   std::string line;
@@ -174,7 +138,7 @@ int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, in
   pos1 = 0;
   while (pos1 == 0)
   { // continue until we find the keyword
-    for (int i = 0; i < tokens.size(); i++)
+    for (size_t i = 0; i < tokens.size(); i++)
     {
       if(tokens[i] == "items")
       {
@@ -220,7 +184,10 @@ int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, in
     //    if(tokens.size()==20)
     //      finished_header = true;
 
-    if(finished_header && ((tokens[0] == "attribute") || data.size() == nz * ny * nx)) finished_data = true;
+    if(finished_header && ((tokens[0] == "attribute") || static_cast<int>(data.size()) == nz * ny * nx))
+    {
+      finished_data = true;
+    }
 
     if(finished_header && !finished_data)
     {

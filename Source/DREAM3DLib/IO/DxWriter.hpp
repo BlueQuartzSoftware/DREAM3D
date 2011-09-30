@@ -43,23 +43,31 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IO/DREAM3DFileWriter.h"
+
 
 /*
  *
  */
-class DxWriter
+template<typename T>
+class DxWriter : public DREAM3DFileWriter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(DxWriter)
-    DREAM3D_STATIC_NEW_MACRO(DxWriter)
-    DREAM3D_TYPE_MACRO(DxWriter)
-
-    DxWriter() {}
+    DREAM3D_SHARED_POINTERS(DxWriter<T>)
+    DREAM3D_STATIC_NEW_MACRO(DxWriter<T>)
+    DREAM3D_TYPE_MACRO(DxWriter<T>)
+    static typename DREAM3DFileWriter<T>::Pointer NewDREAM3DFileWriter()
+    {
+      DxWriter<T>* ptr = new DxWriter<T>();
+      typename DREAM3DFileWriter<T>::Pointer shared_ptr(dynamic_cast<DREAM3DFileWriter<T>*>(ptr));
+      return shared_ptr;
+    }
+    DxWriter() : m_AddSurfaceLayer(false) {}
     virtual ~DxWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
-    template<typename T>
+
     int writeFile(const std::string &filename, T* voxels, int xDim, int yDim, int zDim)
     {
       int err = 0;

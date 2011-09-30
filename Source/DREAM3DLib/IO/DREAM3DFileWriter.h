@@ -34,56 +34,44 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FileConversion_H_
-#define FileConversion_H_
-
-
+#ifndef _DREAM3DFileWriter_h_
+#define _DREAM3DFileWriter_h_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/AbstractPipeline.h"
-#include "DREAM3DLib/Common/Observer.h"
-#include "FileConversionFunc.h"
-
-
 
 /**
-* @class FileConversion FileConversion.h AIM/FileConversion/FileConversion.h
-* @brief This class serves as the main entry point to execute the FileConversion
-* pipeline
-* @author
-* @author
-* @date
-* @version 1.0
-*/
-class FileConversion : public AbstractPipeline, public Observer
+ * @class DREAM3DFileWriter DREAM3DFileWriter.h DREAM3DLib/IO/DREAM3DFileWriter.h
+ * @brief
+ * @author mjackson
+ * @date Sep 29, 2011
+ * @version $Revision$
+ */
+template<typename T>
+class DREAM3DFileWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FileConversion);
-    DREAM3D_TYPE_MACRO(FileConversion);
-    DREAM3D_STATIC_NEW_MACRO(FileConversion);
+    DREAM3D_SHARED_POINTERS(DREAM3DFileWriter<T>);
+    DREAM3D_STATIC_NEW_MACRO(DREAM3DFileWriter<T>);
+    DREAM3D_TYPE_MACRO(DREAM3DFileWriter<T>);
 
-    virtual ~FileConversion();
+    virtual ~DREAM3DFileWriter()
+    {
+    }
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFilePath);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePath);
 
-    /**
-    * @brief Main method to run the operation
-    */
-    virtual void execute();
+    virtual int writeFile(const std::string &filename, T* grain_index, int xpoints, int ypoints, int zpoints)
+    {
+      return -1;
+    }
 
   protected:
-    FileConversion();
-
+    DREAM3DFileWriter() {}
   private:
-    FileConversionFunc::Pointer m;
+    DREAM3DFileWriter(const DREAM3DFileWriter&); //Not Implemented
+    void operator=(const DREAM3DFileWriter&); //Not Implemented
 
-    FileConversion(const FileConversion&);    // Copy Constructor Not Implemented
-    void operator=(const FileConversion&);  // Operator '=' Not Implemented
 };
 
+#endif //_DREAM3DFileWriter_h_
 
-
-#endif /* FileConversion_H_ */

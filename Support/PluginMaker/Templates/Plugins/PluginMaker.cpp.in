@@ -27,8 +27,7 @@ void @PluginName@::execute()
   int err = 0;
   // Instantiate our @PluginName@Func object
   m = @PluginName@Func::New();
-  // Initialize some benchmark timers
-  START_CLOCK()
+
 
   /****************************************************************
   * Put your Pipeline Code Here

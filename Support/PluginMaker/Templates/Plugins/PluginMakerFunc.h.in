@@ -8,15 +8,14 @@
 
 #include <boost/shared_array.hpp>
 
-#include <MXA/MXATypes.h>
-#include <MXA/Common/MXASetGetMacros.h>
-
-#include "DREAM3D/DREAM3DConfiguration.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 /**
  * @class @PluginName@Func @PluginName@Func.h AIM/Common/@PluginName@Func.h
- * @brief
+ * @brief This class holds data associated with the pipeline for the @PluginName@
+ * plugin.
  * @author
  * @date
  * @version 1.0
@@ -24,8 +23,9 @@
 class @PluginName@Func
 {
 public:
-    MXA_SHARED_POINTERS(@PluginName@Func)
-    MXA_STATIC_NEW_MACRO(@PluginName@Func)
+    DREAM3D_SHARED_POINTERS(@PluginName@Func)
+    DREAM3D_TYPE_MACRO(@PluginName@Func)
+    DREAM3D_STATIC_NEW_MACRO(@PluginName@Func);
 
     virtual ~@PluginName@Func();
 

@@ -1,12 +1,21 @@
-message(STATUS "FileConversionPlugin Being Configured")
+#--////////////////////////////////////////////////////////////////////////////
+#  Copyright (c) 2011, Michael A. Jackson. BlueQuartz Software
+#--  All rights reserved.
+#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#--
+#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
+#--
+#--////////////////////////////////////////////////////////////////////////////
 project(FileConversionPlugin)
 
 set(PLUGIN_NAME FileConversion)
 
-include_directories(${PROJECT_SOURCE_DIR} 
-                    ${PROJECT_SOURCE_DIR}/..
-                    ${PROJECT_BINARY_DIR}
-                    ${PROJECT_CODE_DIR} )
+# Get the Directory where the plugin lives
+get_filename_component(PluginPath ${PROJECT_SOURCE_DIR} PATH)
+include_directories(${DREAM3DProj_BINARY_DIR}
+                    ${DREAM3DProj_BINARY_DIR}/QtSupport
+                    ${PluginPath} 
+                    ${PROJECT_BINARY_DIR} )
 
 #-- Non Qt based source files
 SET (FileConversion_HDRS
