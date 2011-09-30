@@ -115,7 +115,6 @@ zpoints(0)
   surfacevoxels = NULL;
   quats = NULL;
   alreadychecked = NULL;
-  unassigned = NULL;
   graincounts = NULL;
 
   goodVoxels = NULL;
@@ -130,12 +129,10 @@ zpoints(0)
   INIT_AIMARRAY(m_SurfaceVoxels,char);
   INIT_AIMARRAY(m_GoodVoxels,bool);
   INIT_AIMARRAY(m_Quats,float);
-
-  INIT_AIMARRAY(m_AlreadyChecked,int);
-  INIT_AIMARRAY(m_Unassigned,int);
+  INIT_AIMARRAY(m_AlreadyChecked,bool);
   INIT_AIMARRAY(m_GrainCounts,int);
-
   INIT_AIMARRAY(m_GoodVoxels,bool);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -201,7 +198,6 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
   m_Quats->SetNumberOfComponents(5);
 
   alreadychecked = m_AlreadyChecked->WritePointer(0, totalpoints);
-  unassigned = m_Unassigned->WritePointer(0, totalpoints);
 
   goodVoxels = m_GoodVoxels->WritePointer(0, totalpoints);
 
@@ -214,8 +210,7 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
     euler3s[i] = -1;
     neighbors[i] = -1;
     surfacevoxels[i] = 0;
-    alreadychecked[i] = 0;
-    unassigned[i] = 0;
+    alreadychecked[i] = false;
     goodVoxels[i] = false; // All Voxels are "Bad"
   }
 
@@ -421,12 +416,12 @@ void ReconstructionFunc::find_border()
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   size_t totalPoints = xpoints * ypoints * zpoints;
 
-  AIMArray<int>::Pointer checkedPtr = AIMArray<int>::CreateArray(totalPoints);
-  int *checked = checkedPtr->GetPointer(0);
+  AIMArray<bool>::Pointer checkedPtr = AIMArray<bool>::CreateArray(totalPoints);
+  bool *checked = checkedPtr->GetPointer(0);
 
   for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
   {
-    checked[iter] = 0;
+    checked[iter] = false;
   }
   index = 0;
 
@@ -439,7 +434,7 @@ void ReconstructionFunc::find_border()
   {
 	  voxelslist[count] = index;
 	  grain_indicies[index] = 0;
-	  checked[index] = 1;
+	  checked[index] = true;
 	  count++;
 	  for (size_t i = 0; i < count; i++)
 	  {
@@ -457,12 +452,12 @@ void ReconstructionFunc::find_border()
 		  if (j == 4 && row == (ypoints - 1)) good = 0;
 		  if (j == 2 && col == 0) good = 0;
 		  if (j == 3 && col == (xpoints - 1)) good = 0;
-		  if (good == 1 && checked[neighbor] == 0)
+		  if (good == 1 && checked[neighbor] == false)
 		  {
 			if (goodVoxels[neighbor] == false)
 			{
 			  grain_indicies[neighbor] = 0;
-			  checked[neighbor] = 1;
+			  checked[neighbor] = true;
 			  voxelslist[count] = neighbor;
 			  count++;
 			  if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
@@ -475,11 +470,11 @@ void ReconstructionFunc::find_border()
 	  count = 0;
 	  for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
 	  {
-		checked[iter] = 0;
+		checked[iter] = false;
 		if(grain_indicies[iter] == -1)
 		{
 			voxelslist[count] = iter;
-			checked[iter] = 1;
+			checked[iter] = true;
 			count++;
 			if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
  		}
@@ -506,10 +501,10 @@ void ReconstructionFunc::find_border()
 		  if (i == 4 && row == (ypoints - 1)) good = 0;
 		  if (i == 2 && col == 0) good = 0;
 		  if (i == 3 && col == (xpoints - 1)) good = 0;
-		  if (good == 1 && grain_indicies[neighbor] == -1 && checked[neighbor] == 0)
+		  if (good == 1 && grain_indicies[neighbor] == -1 && checked[neighbor] == false)
 		  {
 			voxelslist[count] = neighbor;
-			checked[neighbor] = 1;
+			checked[neighbor] = true;
 			count++;
 			if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
 		  }
@@ -529,7 +524,7 @@ void ReconstructionFunc::find_border()
 			if (w < misorientationtolerance)
 			{
 			  grain_indicies[neighbor] = -1;
-			  checked[neighbor] = 1;
+			  checked[neighbor] = true;
 			  voxelslist[count] = neighbor;
 			  count++;
 			  if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
@@ -1295,11 +1290,9 @@ void ReconstructionFunc::assign_badpoints()
     for (int i = 0; i < totalpoints; i++)
     {
       int grainname = grain_indicies[i];
-      if (grainname == 0) unassigned[i] = 1;
       if (grainname <= -1)
       {
         count++;
-        unassigned[i] = 1;
         for (size_t c = 1; c < numgrains; c++)
         {
           n[c] = 0;
@@ -1372,10 +1365,9 @@ void ReconstructionFunc::merge_containedgrains()
     int grainname = grain_indicies[i];
     if (m_Grains[grainname]->numneighbors == 1)
     {
-      m_Grains[grainname]->gotcontainedmerged = 1;
+      m_Grains[grainname]->gotcontainedmerged = true;
       grain_indicies[i] = m_Grains[grainname]->neighborlist->at(0);
       m_Grains[m_Grains[grainname]->neighborlist->at(0)]->numvoxels++;
-      unassigned[i] = 1;
     }
   }
 
@@ -1431,18 +1423,15 @@ void ReconstructionFunc::reorder_grains()
   {
     m_Grains[i]->nucleus = -1;
 	m_Grains[i]->voxellist->resize(1,0);
-	m_Grains[i]->gotcontainedmerged = 0;
+	m_Grains[i]->gotcontainedmerged = false;
   }
 
   // Reset the "already checked" to 0 for all voxels
   for (int i = 0; i < totalpoints; i++)
   {
-    alreadychecked[i] = 0;
-    if(unassigned[i] == 0)
-    {
-      gnum = grain_indicies[i];
-      m_Grains[gnum]->nucleus = i;
-    }
+    alreadychecked[i] = false;
+    gnum = grain_indicies[i];
+    m_Grains[gnum]->nucleus = i;
   }
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -1465,7 +1454,7 @@ void ReconstructionFunc::reorder_grains()
         m_Grains[currentgrain]->voxellist->resize(initialVoxelsListSize,-1);
       }
       m_Grains[currentgrain]->voxellist->at(size) = nucleus;
-      alreadychecked[nucleus] = 1;
+      alreadychecked[nucleus] = true;
       grain_indicies[nucleus] = currentgrain;
       if (currentgrain > maxGrain) maxGrain = currentgrain;
       size++;
@@ -1479,19 +1468,16 @@ void ReconstructionFunc::reorder_grains()
         col = currentpoint % xpoints;
         row = (currentpoint / xpoints) % ypoints;
         plane = currentpoint / (xpoints * ypoints);
-        if(unassigned[currentpoint] == 0)
+        for (int k = 0; k < 5; k++)
         {
-          for (int k = 0; k < 5; k++)
-          {
             q1[k] = quats[nucleus*5 + k];
             q2[k] = quats[currentpoint*5 + k];
-          }
-          m_OrientationOps[phase]->getNearestQuat(q1,q2);
-          for (int k = 0; k < 5; k++)
-          {
+        }
+        m_OrientationOps[phase]->getNearestQuat(q1,q2);
+        for (int k = 0; k < 5; k++)
+        {
             quats[currentpoint*5 + k] = q2[k];
             m_Grains[currentgrain]->avg_quat[k] = m_Grains[currentgrain]->avg_quat[k] + quats[currentpoint*5 + k];
-          }
         }
         for (int k = 0; k < 26; k++)
         {
@@ -1503,13 +1489,13 @@ void ReconstructionFunc::reorder_grains()
           if ((k == 6 || k == 7 || k == 8 || k == 14 || k == 15 || k == 16 || k == 23 || k == 24 || k == 25) && row == (ypoints - 1)) good = 0;
           if ((k == 0 || k == 3 || k == 6 || k == 9 || k == 12 || k == 14 || k == 17 || k == 20 || k == 23) && col == 0) good = 0;
           if ((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints - 1)) good = 0;
-          if (good == 1 && alreadychecked[neighbor] == 0)
+          if (good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = grain_indicies[neighbor];
             if (grainname == i)
             {
               m_Grains[currentgrain]->voxellist->at(size) = neighbor;
-              alreadychecked[neighbor] = 1;
+              alreadychecked[neighbor] = true;
               grain_indicies[neighbor] = currentgrain;
               if (currentgrain > maxGrain) maxGrain = currentgrain;
               size++;
@@ -1542,7 +1528,6 @@ void ReconstructionFunc::reorder_grains()
 	if(grain_indicies[i] >= (int)(currentgrain) )
     {
       grain_indicies[i] = -2;
-	  unassigned[i] = 1;
     }
   }
   assign_badpoints();
@@ -1613,18 +1598,14 @@ void ReconstructionFunc::fillin_sample()
           {
             grain_indicies[point] = -1;
             neighbors[point] = -1;
-            unassigned[point] = 1;
           }
           grain_indicies[newvoxelcount] = grain_indicies[point];
           neighbors[newvoxelcount] = neighbors[point];
-          unassigned[newvoxelcount] = unassigned[point];
           phases[newvoxelcount] = phases[point];
           euler1s[newvoxelcount] = euler1s[point];
           euler2s[newvoxelcount] = euler2s[point];
           euler3s[newvoxelcount] = euler3s[point];
           surfacevoxels[newvoxelcount] = surfacevoxels[point];
-//          confidences[newvoxelcount] = confidences[point];
-//          imagequalities[newvoxelcount] = imagequalities[point];
           goodVoxels[newvoxelcount] = goodVoxels[point];
           alreadychecked[newvoxelcount] = alreadychecked[point];
           newvoxelcount++;
@@ -1678,7 +1659,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
   neighpoints[25] = (xpoints * ypoints) + xpoints + 1;
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
-    alreadychecked[i] = 0;
+    alreadychecked[i] = false;
 	gnum = grain_indicies[i];
 	if(gnum >= 0) m_Grains[gnum]->nucleus = i;
   }
@@ -1687,7 +1668,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
       size = 0;
       int nucleus = m_Grains[i]->nucleus;
       voxelslist[size] = nucleus;
-      alreadychecked[nucleus] = 1;
+      alreadychecked[nucleus] = true;
       grain_indicies[nucleus] = currentgrain;
       size++;
       for (size_t j = 0; j < size; j++)
@@ -1706,13 +1687,13 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
           if ((k == 6 || k == 7 || k == 8 || k == 14 || k == 15 || k == 16 || k == 23 || k == 24 || k == 25) && row == (ypoints - 1)) good = 0;
           if ((k == 0 || k == 3 || k == 6 || k == 9 || k == 12 || k == 14 || k == 17 || k == 20 || k == 23) && col == 0) good = 0;
           if ((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints - 1)) good = 0;
-          if (good == 1 && alreadychecked[neighbor] == 0)
+          if (good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = static_cast<size_t>(grain_indicies[neighbor]);
             if (grainname == i)
             {
               voxelslist[size] = neighbor;
-              alreadychecked[neighbor] = 1;
+              alreadychecked[neighbor] = true;
               grain_indicies[neighbor] = currentgrain;
               size++;
               if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
@@ -1723,7 +1704,7 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
       voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
     if(voxelslist.size() >= static_cast<size_t>(minallowedgrainsize) )
     {
-      m_Grains[currentgrain]->active = 1;
+      m_Grains[currentgrain]->active = true;
       m_Grains[currentgrain]->numvoxels = voxelslist.size();
       currentgrain++;
       voxelslist.clear();
@@ -1760,7 +1741,6 @@ float ReconstructionFunc::find_zcoord(size_t index)
 
 void ReconstructionFunc::merge_twins()
 {
-  int twinmerged = 1;
   float angcur = 180;
   vector<int > twinlist;
   float w;
@@ -1807,7 +1787,7 @@ void ReconstructionFunc::merge_twins()
             if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
             if (twin == 1)
             {
-              m_Grains[neigh]->gottwinmerged = twinmerged;
+              m_Grains[neigh]->gottwinmerged = true;
               m_Grains[neigh]->twinnewnumber = i;
               twinlist.push_back(neigh);
             }
@@ -1820,8 +1800,7 @@ void ReconstructionFunc::merge_twins()
   for (int k = 0; k < (xpoints * ypoints * zpoints); k++)
   {
     int grainname = grain_indicies[k];
-    int gottwinmerged = m_Grains[grainname]->gottwinmerged;
-    if (gottwinmerged == 1)
+    if (m_Grains[grainname]->gottwinmerged == true)
     {
       int twinnewnumber = m_Grains[grainname]->twinnewnumber;
       grain_indicies[k] = twinnewnumber;
@@ -1831,7 +1810,6 @@ void ReconstructionFunc::merge_twins()
 
 void ReconstructionFunc::merge_colonies()
 {
-  int colonymerged = 1;
   float angcur = 180;
   vector<int > colonylist;
   float w;
@@ -1891,7 +1869,7 @@ void ReconstructionFunc::merge_colonies()
             }
             if (colony == 1)
             {
-              m_Grains[neigh]->gotcolonymerged = colonymerged;
+              m_Grains[neigh]->gotcolonymerged = true;
               m_Grains[neigh]->colonynewnumber = i;
               colonylist.push_back(neigh);
             }
@@ -1904,8 +1882,7 @@ void ReconstructionFunc::merge_colonies()
   for (int k = 0; k < (xpoints * ypoints * zpoints); k++)
   {
     int grainname = grain_indicies[k];
-    int gotcolonymerged = m_Grains[grainname]->gotcolonymerged;
-    if (gotcolonymerged == 1)
+    if (m_Grains[grainname]->gotcolonymerged == true)
     {
       int colonynewnumber = m_Grains[grainname]->colonynewnumber;
       grain_indicies[k] = colonynewnumber;
@@ -1938,8 +1915,7 @@ void ReconstructionFunc::renumber_grains3()
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-    int gottwinmerged = m_Grains[i]->gottwinmerged;
-    if (gottwinmerged != 1)
+    if (m_Grains[i]->gottwinmerged != true)
     {
       newnames[i] = graincount;
       float ea1good = m_Grains[i]->euler1;

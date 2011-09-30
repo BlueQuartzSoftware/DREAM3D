@@ -125,8 +125,7 @@ class ReconstructionFunc : public Observable
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
     DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
 
-    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, int);
-    DECLARE_WRAPPED_ARRAY(unassigned, m_Unassigned, int);
+    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
 
     // Is the voxel considered Good or Bad, did it pass the Quality Metric Filters
     DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);

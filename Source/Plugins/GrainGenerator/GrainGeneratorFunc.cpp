@@ -120,7 +120,6 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   a = CosOfHalf;
 
   grain_indicies = NULL;
-  unassigned = NULL;
   ellipfuncs = NULL;
   phases = NULL;
   euler1s = NULL;
@@ -129,15 +128,15 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   surfacevoxels = NULL;
   totalsurfacearea = NULL;
 
-  INIT_AIMARRAY(m_GrainIndicies,int);
-  INIT_AIMARRAY(m_Unassigned,bool);
-  INIT_AIMARRAY(m_Ellipfuncs,float);
-  INIT_AIMARRAY(m_Phases,int);
-  INIT_AIMARRAY(m_Euler1s,float);
-  INIT_AIMARRAY(m_Euler2s,float);
-  INIT_AIMARRAY(m_Euler3s,float);
-  INIT_AIMARRAY(m_SurfaceVoxels,char);
-  INIT_AIMARRAY(m_TotalSurfaceArea,float);
+
+INIT_AIMARRAY(m_GrainIndicies,int);
+INIT_AIMARRAY(m_Ellipfuncs,float);
+INIT_AIMARRAY(m_Phases,int);
+INIT_AIMARRAY(m_Euler1s,float);
+INIT_AIMARRAY(m_Euler2s,float);
+INIT_AIMARRAY(m_Euler3s,float);
+INIT_AIMARRAY(m_SurfaceVoxels,char);
+INIT_AIMARRAY(m_TotalSurfaceArea,float);
 
 }
 
@@ -154,20 +153,20 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
 void GrainGeneratorFunc::initializeAttributes()
 {
+
   const size_t startIndex = 0;
   const size_t endIndex = totalpoints;
   grain_indicies = m_GrainIndicies->WritePointer(startIndex, endIndex);
-  unassigned = m_Unassigned->WritePointer(startIndex, endIndex);
   ellipfuncs = m_Ellipfuncs->WritePointer(startIndex, endIndex);
   phases = m_Phases->WritePointer(startIndex, endIndex);
   euler1s = m_Euler1s->WritePointer(startIndex, endIndex);
   euler2s = m_Euler2s->WritePointer(startIndex, endIndex);
   euler3s = m_Euler3s->WritePointer(startIndex, endIndex);
   surfacevoxels = m_SurfaceVoxels->WritePointer(startIndex, endIndex);
+
 	for(int i=0;i<totalpoints;i++)
 	{
 		grain_indicies[i] = 0;
-		unassigned[i] = false;
 		ellipfuncs[i] = 0;
 		phases[i] = 0;
 		euler1s[i] = -1;
@@ -706,10 +705,6 @@ void GrainGeneratorFunc::assign_voxels()
   initializeAttributes();
   gsizes.resize(m_Grains.size());
 
-  for (int i = 0; i < totalpoints; i++)
-  {
-    unassigned[i] = false;
-  }
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
     gsizes[i] = 0;
@@ -831,9 +826,8 @@ void GrainGeneratorFunc::assign_voxels()
                 oldname = grain_indicies[currentpoint];
                 gsizes[oldname] = gsizes[oldname] - 1;
                 grain_indicies[currentpoint] = -1;
-                unassigned[currentpoint] = true;
               }
-              if (grain_indicies[currentpoint] == 0 && unassigned[currentpoint] == false)
+              if (grain_indicies[currentpoint] == 0)
               {
                 grain_indicies[currentpoint] = i;
                 gsizes[i]++;
@@ -858,7 +852,6 @@ void GrainGeneratorFunc::assign_voxels()
   }
   for (int i = 0; i < totalpoints; i++)
   {
-    unassigned[i] = false;
     if (grain_indicies[i] > 0)
     {
 	  grain_indicies[i] = newnames[grain_indicies[i]];
@@ -879,14 +872,10 @@ void GrainGeneratorFunc::assign_gaps()
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
 
-  for (int i = 0; i < totalpoints; i++)
-  {
-	if (grain_indicies[i] <= 0) unassigned[i] = true;
-  }
   while (unassignedcount != 0)
   {
 	  unassignedcount = 0;
-	  timestep = timestep + 5;
+	  timestep = timestep + 10;
 	  for (size_t i = 1; i < m_Grains.size(); i++)
 	  {
 		float volcur = m_Grains[i]->volume;
@@ -975,7 +964,7 @@ void GrainGeneratorFunc::assign_gaps()
 			  if (iter3 < 0) plane = iter3 + zpoints;
 			  if (iter3 > zpoints - 1) plane = iter3 - zpoints;
 			  index = (plane * xpoints * ypoints) + (row * xpoints) + column;
-			  if(unassigned[index] == true)
+			  if(grain_indicies[index] <= 0)
 			  {
 				  inside = -1;
 				  x = float(column) * resx;
@@ -1015,7 +1004,6 @@ void GrainGeneratorFunc::assign_gaps()
 	  for (int i = 0; i < totalpoints; i++)
 	  {
 		if (grain_indicies[i] <= 0) unassignedcount++;
-		if (grain_indicies[i] > 0) unassigned[i] = false;
 	  }
   }
   for (int i = 0; i < totalpoints; i++)
@@ -1035,6 +1023,8 @@ void GrainGeneratorFunc::cleanup_grains()
 	  vector<vector<int> > vlists;
 	  vlists.resize(m_Grains.size());
 	  vector<int> currentvlist;
+	  vector<bool> checked;
+	  checked.resize(totalpoints,false);
 	  size_t count;
 	  int good;
 	  int neighbor;
@@ -1048,11 +1038,7 @@ void GrainGeneratorFunc::cleanup_grains()
 	  }
 	  for (int i = 0; i < totalpoints; i++)
 	  {
-		unassigned[i] = false;
-	  }
-	  for (int i = 0; i < totalpoints; i++)
-	  {
-		if(unassigned[i] == false && grain_indicies[i] > 0)
+		if(checked[i] == false && grain_indicies[i] > 0)
 		{
 			minsize = mindiameter[phases[i]]*mindiameter[phases[i]]*mindiameter[phases[i]]*M_PI/6.0;
 			minsize = int(minsize/(resx*resy*resz));
@@ -1076,10 +1062,10 @@ void GrainGeneratorFunc::cleanup_grains()
 						if (j == 4 && row == (ypoints - 1)) good = 0;
 						if (j == 2 && column == 0) good = 0;
 						if (j == 3 && column == (xpoints - 1)) good = 0;
-						if (good == 1 && grain_indicies[neighbor] == grain_indicies[index] && unassigned[neighbor] == false)
+						if (good == 1 && grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
 						{
 							currentvlist.push_back(neighbor);
-							unassigned[neighbor] = true;
+							checked[neighbor] = true;
 						}
 					}
 					else if (periodic_boundaries == true)
@@ -1090,10 +1076,10 @@ void GrainGeneratorFunc::cleanup_grains()
 						if (j == 4 && row == (ypoints - 1)) neighbor = neighbor - (xpoints*ypoints);
 						if (j == 2 && column == 0) neighbor = neighbor + (xpoints);
 						if (j == 3 && column == (xpoints - 1)) neighbor = neighbor - (xpoints);
-						if (grain_indicies[neighbor] == grain_indicies[index] && unassigned[neighbor] == false)
+						if (grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
 						{
 							currentvlist.push_back(neighbor);
-							unassigned[neighbor] = true;
+							checked[neighbor] = true;
 						}
 					}
 				}
@@ -1155,11 +1141,9 @@ void GrainGeneratorFunc::cleanup_grains()
 	  }
 	  for (int i = 0; i < totalpoints; i++)
 	  {
-		unassigned[i] = true;
 		if (grain_indicies[i] > 0)
 		{
 		  grain_indicies[i] = newnames[grain_indicies[i]];
-		  unassigned[i] = false;
 		}
 	  }
 	  m_Grains.resize(goodcount);
