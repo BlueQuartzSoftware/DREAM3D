@@ -1624,7 +1624,6 @@ void  GrainGeneratorFunc::find_neighbors()
   {
     totalsurfacearea[i] = 0.0f;
   }
-  int surfacegrain = 1;
   int nListSize = 100;
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
@@ -1656,11 +1655,11 @@ void  GrainGeneratorFunc::find_neighbors()
       plane = j / (xpoints * ypoints);
       if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) && zpoints != 1)
       {
-        m_Grains[grain]->surfacegrain = surfacegrain;
+        m_Grains[grain]->surfacegrain = true;
       }
       if ((column == 0 || column == (xpoints - 1) || row == 0 || row == (ypoints - 1)) && zpoints == 1)
       {
-        m_Grains[grain]->surfacegrain = surfacegrain;
+        m_Grains[grain]->surfacegrain = true;
       }
       for (int k = 0; k < 6; k++)
       {

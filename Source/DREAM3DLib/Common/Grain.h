@@ -103,15 +103,15 @@ class DREAM3DLib_EXPORT Grain
      * THE NEW VARIABLES OTHERWISE BAD THINGS CAN HAPPEN.
      */
     int nucleus;
-    int active;
+    bool active;
     int numvoxels;
     int numneighbors;
     int newgrainname;
-    int gotcontainedmerged;
-    int gottwinmerged;
-    int gotcolonymerged;
-    int surfacegrain;
-    int outsideboundbox;
+    bool gotcontainedmerged;
+    bool gottwinmerged;
+    bool gotcolonymerged;
+    bool surfacegrain;
+    bool outsideboundbox;
     int twinnewnumber;
     int colonynewnumber;
     int slipsystem;
@@ -147,7 +147,7 @@ class DREAM3DLib_EXPORT Grain
     float radius1;
     float radius2;
     float radius3;
-    float lowanglefraction;
+    float packquality;
     float avg_quat[5];
 #if CORRUPT_TEST
     unsigned long long int* test5;
