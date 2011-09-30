@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -136,15 +136,41 @@ class name : public VtkScalarWriter\
     T* r;\
     name(const name&); \
     void operator=(const name&);\
-};\
+};
+
+#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, const_name, type, scalar, format)\
+template<typename T>\
+class name : public VtkScalarWriter\
+{\
+  public:\
+    name(T* r) : r(r) {}\
+    virtual ~name(){}\
+  int writeScalars(FILE* f)  {\
+    int err = 0;\
+    std::string file;\
+    size_t total = r->xpoints * r->ypoints * r->zpoints;\
+    if (m_WriteBinaryFiles == true) {\
+      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, const_name, type, scalar)\
+    }    else    {\
+      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, const_name, type, scalar, format)\
+    }\
+    return err;\
+  }\
+  private:\
+    T* r;\
+    name(const name&); \
+    void operator=(const name&);\
+};
+
 
 
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, DREAM3D::VTK::PhaseIdScalarName, int, phases, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGoodVoxelScalarWriter, r, DREAM3D::VTK::GoodVoxelScalarName, int, goodVoxels, "%d ")
 // VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
 //VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, AIM::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelSurfaceVoxelScalarWriter, r, DREAM3D::VTK::SurfaceVoxelScalarName, float, surfacevoxels, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
+VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, DREAM3D::VTK::SurfaceVoxelScalarName, char, surfacevoxels, "%d ")
+
 
 /**
  * @brief This class will write the IPF colors to a Scalar array in the VTK file

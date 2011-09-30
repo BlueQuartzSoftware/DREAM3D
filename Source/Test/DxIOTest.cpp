@@ -46,11 +46,15 @@
 
 #include "UnitTestSupport.hpp"
 
-#define REMOVE_TEST_FILES 1
+#define REMOVE_TEST_FILES 0
 
-namespace DxIOTest
+namespace Detail
 {
-  const std::string DxIOTestFile("DxIOTest.dx");
+  static const std::string TestFile("DxIOTest.dx");
+  static const int XSize = 3;
+  static const int YSize = 4;
+  static const int ZSize = 5;
+  static const int Offset = 100;
 }
 // -----------------------------------------------------------------------------
 //
@@ -58,29 +62,35 @@ namespace DxIOTest
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(DxIOTest::DxIOTestFile);
+  MXADir::remove(Detail::TestFile);
 #endif
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TestDxWriter()
 {
-  std::vector<int> grain_indices(27);
-  for (int i = 0; i < 27; ++i)
+  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  std::vector<int> grain_indices(size);
+  for (int i = 0; i < size; ++i)
   {
-    grain_indices[i] = i + 100;
+    grain_indices[i] = i + Detail::Offset;
   }
-  int xpoints = 3;
-  int ypoints = 3;
-  int zpoints = 3;
+  int nx = Detail::XSize;
+  int ny = Detail::YSize;
+  int nz = Detail::ZSize;
 
 
-  DxWriter::Pointer writer = DxWriter::New();
-  int err = writer->writeFile(DxIOTest::DxIOTestFile, &(grain_indices.front()), xpoints, ypoints, zpoints);
+  DxWriter<int>::Pointer writer = DxWriter<int>::New();
+  int err = writer->writeFile(Detail::TestFile, &(grain_indices.front()), nx, ny, nz);
   MXA_REQUIRE_EQUAL(err, 0);
   return EXIT_SUCCESS;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TestDxReader()
 {
 
@@ -89,15 +99,16 @@ int TestDxReader()
   int ny = 0;
   int nz = 0;
   std::vector<int> grain_indices;
-  int err = reader->readFile(DxIOTest::DxIOTestFile, grain_indices, nx, ny, nz);
+  int err = reader->readFile(Detail::TestFile, grain_indices, nx, ny, nz);
   MXA_REQUIRE_EQUAL(err, 0);
-  MXA_REQUIRE_EQUAL(nx, 3);
-  MXA_REQUIRE_EQUAL(ny, 3);
-  MXA_REQUIRE_EQUAL(nz, 3);
+  MXA_REQUIRE_EQUAL(nx, Detail::XSize);
+  MXA_REQUIRE_EQUAL(ny, Detail::YSize);
+  MXA_REQUIRE_EQUAL(nz, Detail::ZSize);
+  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
 
-  for (int i = 0; i < 27; ++i)
+  for (int i = 0; i < size; ++i)
   {
-    MXA_REQUIRE_EQUAL( (i+100), grain_indices[i] );
+    MXA_REQUIRE_EQUAL( (i+Detail::Offset), grain_indices[i] );
   }
 
 
@@ -118,12 +129,6 @@ int main(int argc, char **argv) {
   PRINT_TEST_SUMMARY();
   return err;
 }
-
-
-
-
-
-
 
 
 #if 0

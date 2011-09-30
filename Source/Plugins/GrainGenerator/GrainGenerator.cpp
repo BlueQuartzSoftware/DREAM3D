@@ -358,7 +358,7 @@ void GrainGenerator::execute()
   updateProgressAndMessage(("Writing Ph Voxel File"), 95);
   if (m_WritePhFile) {
     MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
-    PhWriter::Pointer phWriter = PhWriter::New();
+    PhWriter<int>::Pointer phWriter = PhWriter<int>::New();
     err = phWriter->writeFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
   }

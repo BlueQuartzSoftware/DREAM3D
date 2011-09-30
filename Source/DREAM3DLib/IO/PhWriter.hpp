@@ -45,6 +45,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IO/DREAM3DFileWriter.h"
 
 /**
  * @class PhWriter PhWriter.h DREAM3D/IO/PhWriter.h
@@ -55,19 +56,27 @@
  * @date Jun 7, 2011
  * @version 1.0
  */
-class PhWriter
+template<typename T>
+class PhWriter : public DREAM3DFileWriter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(PhWriter);
-    DREAM3D_STATIC_NEW_MACRO(PhWriter);
-    DREAM3D_TYPE_MACRO(PhWriter);
+    DREAM3D_SHARED_POINTERS(PhWriter<T>);
+    DREAM3D_STATIC_NEW_MACRO(PhWriter<T>);
+    DREAM3D_TYPE_MACRO(PhWriter<T>);
+
+    static typename DREAM3DFileWriter<T>::Pointer NewDREAM3DFileWriter()
+    {
+      PhWriter<T>* ptr = new PhWriter<T>();
+      typename DREAM3DFileWriter<T>::Pointer shared_ptr(dynamic_cast<DREAM3DFileWriter<T>*>(ptr));
+      return shared_ptr;
+    }
 
     virtual ~PhWriter()
     {
     }
 
-    template<typename T>
-    int writeFile(const std::string &filename, T &grain_index, int xpoints, int ypoints, int zpoints)
+
+    int writeFile(const std::string &filename, T* grain_index, int xpoints, int ypoints, int zpoints)
     {
       std::string OutputName;
       int totalpoints = xpoints * ypoints * zpoints;

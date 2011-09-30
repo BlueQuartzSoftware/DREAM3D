@@ -35,43 +35,6 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   )
 
 
-if (0)
-# We are going to use Git functionality to create a version number for our package
-# The specific functionality we are going to use is the 'git describe' function
-# which should return the latest tag, the number commits since that tag and the
-# SHA1 of that commit. If we fail to find git then we fall back to a manually
-# entered version number.
-Find_package(Git)
-
-if (GIT_FOUND)
-    execute_process(COMMAND ${GIT_EXECUTABLE} describe
-        OUTPUT_VARIABLE DVERS
-        RESULT_VARIABLE did_run
-     )
-    string(STRIP ${DVERS} DVERS)
-  #  message(STATUS "DVERS: ${DVERS}")
-    string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
-  #  message(STATUS "VERSION_LIST: ${VERSION_LIST}")
-    list(GET VERSION_LIST 0 DREAM3D_VER_MAJOR)
-    list(GET VERSION_LIST 1 DREAM3D_VER_MINOR)
-    list(GET VERSION_LIST 2 DREAM3D_VER_PATCH)
-
-    set(DREAM3D_VER_MAJOR "${DREAM3D_VER_MAJOR}" CACHE STRING "Major Version Number" FORCE)
-    set(DREAM3D_VER_MINOR "${DREAM3D_VER_MINOR}" CACHE STRING "Minor Version Number" FORCE)
-    set(DREAM3D_VER_PATCH "${DREAM3D_VER_PATCH}" CACHE STRING "Patch Version Number" FORCE)
-else()
-    # if we fail to find Git then use some sort of Date Scheme
-    set(DREAM3D_VER_MAJOR "2011" CACHE STRING "Major Version Number" FORCE)
-    set(DREAM3D_VER_MINOR "07" CACHE STRING "Minor Version Number" FORCE)
-    set(DREAM3D_VER_PATCH "06" CACHE STRING "Patch Version Number" FORCE)
-
-endif()
-
-set(DREAM3D_VERSION "${DREAM3D_VER_MAJOR}.${DREAM3D_VER_MINOR}.${DREAM3D_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
-
-endif()
-
-
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 SET (PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
 #SET (PROJECT_PREFIX "MXA" CACHE STRING "The Prefix to be used for Preprocessor definitions")
@@ -187,13 +150,8 @@ configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
 configure_file(${PROJECT_SOURCE_DIR}/ReadMe.txt.in
                 ${PROJECT_BINARY_DIR}/ReadMe.txt )
 
-#SET (MXA_INSTALL_FILES "0")
-#SET (MXA_SOURCE_DIR ${PROJECT_CODE_DIR})
-
 # Include some directories for the compiler
 include_directories(${PROJECT_BINARY_DIR})
-
-
 
 # --------------------------------------------------------------------
 # Add in some compiler definitions
@@ -310,6 +268,7 @@ set (DREAM3D_PLUGIN_LIST
     SurfaceMesh 
     MicrostructureStatistics 
     Extrapolation2Dto3D
+    FileConversion
 )
 
  # Build the DREAM3D Application  

@@ -33,57 +33,61 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef FileConversion_H_
-#define FileConversion_H_
-
-
+#ifndef DREAM3DFILEREADER_H_
+#define DREAM3DFILEREADER_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/AbstractPipeline.h"
-#include "DREAM3DLib/Common/Observer.h"
-#include "FileConversionFunc.h"
 
-
-
-/**
-* @class FileConversion FileConversion.h AIM/FileConversion/FileConversion.h
-* @brief This class serves as the main entry point to execute the FileConversion
-* pipeline
-* @author
-* @author
-* @date
-* @version 1.0
-*/
-class FileConversion : public AbstractPipeline, public Observer
+class DREAM3DLib_EXPORT DREAM3DFileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(FileConversion);
-    DREAM3D_TYPE_MACRO(FileConversion);
-    DREAM3D_STATIC_NEW_MACRO(FileConversion);
 
-    virtual ~FileConversion();
+    DREAM3D_SHARED_POINTERS(DREAM3DFileReader)
+    DREAM3D_STATIC_NEW_MACRO(DREAM3DFileReader);
+    DREAM3D_TYPE_MACRO(DREAM3DFileReader);
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFilePath);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePath);
+    virtual ~DREAM3DFileReader() {};
+
+    virtual int readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
+    {
+      return -1;
+    }
 
     /**
-    * @brief Main method to run the operation
-    */
-    virtual void execute();
+     * @brief
+     * @param str
+     * @param tokens
+     * @param delimiters
+     */
+    void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ")
+    {
+      // Skip delimiters at beginning.
+      std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+
+      // Find first "non-delimiter".
+      std::string::size_type pos = str.find_first_of(delimiters, lastPos);
+
+      while (std::string::npos != pos || std::string::npos != lastPos)
+      {
+        // Found a token, add it to the vector.
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+
+        // Skip delimiters.  Note the "not_of"
+        lastPos = str.find_first_not_of(delimiters, pos);
+
+        // Find next "non-delimiter"
+        pos = str.find_first_of(delimiters, lastPos);
+      }
+    }
 
   protected:
-    FileConversion();
+    DREAM3DFileReader(){};
 
   private:
-    FileConversionFunc::Pointer m;
-
-    FileConversion(const FileConversion&);    // Copy Constructor Not Implemented
-    void operator=(const FileConversion&);  // Operator '=' Not Implemented
+    DREAM3DFileReader(const DREAM3DFileReader&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DFileReader&); // Operator '=' Not Implemented
 };
 
 
-
-#endif /* FileConversion_H_ */
+#endif /* DREAM3DFILEREADER_H_ */

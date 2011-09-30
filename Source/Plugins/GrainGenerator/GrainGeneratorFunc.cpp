@@ -129,15 +129,15 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   surfacevoxels = NULL;
   totalsurfacearea = NULL;
 
-INIT_AIMARRAY(m_GrainIndicies,int);
-INIT_AIMARRAY(m_Unassigned,bool);
-INIT_AIMARRAY(m_Ellipfuncs,float);
-INIT_AIMARRAY(m_Phases,int);
-INIT_AIMARRAY(m_Euler1s,float);
-INIT_AIMARRAY(m_Euler2s,float);
-INIT_AIMARRAY(m_Euler3s,float);
-INIT_AIMARRAY(m_SurfaceVoxels,int);
-INIT_AIMARRAY(m_TotalSurfaceArea,float);
+  INIT_AIMARRAY(m_GrainIndicies,int);
+  INIT_AIMARRAY(m_Unassigned,bool);
+  INIT_AIMARRAY(m_Ellipfuncs,float);
+  INIT_AIMARRAY(m_Phases,int);
+  INIT_AIMARRAY(m_Euler1s,float);
+  INIT_AIMARRAY(m_Euler2s,float);
+  INIT_AIMARRAY(m_Euler3s,float);
+  INIT_AIMARRAY(m_SurfaceVoxels,char);
+  INIT_AIMARRAY(m_TotalSurfaceArea,float);
 
 }
 
@@ -154,14 +154,16 @@ GrainGeneratorFunc::~GrainGeneratorFunc()
 
 void GrainGeneratorFunc::initializeAttributes()
 {
-  grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
-  unassigned = m_Unassigned->WritePointer(false, totalpoints);
-  ellipfuncs = m_Ellipfuncs->WritePointer(0, totalpoints);
-  phases = m_Phases->WritePointer(0, totalpoints);
-  euler1s = m_Euler1s->WritePointer(0, totalpoints);
-  euler2s = m_Euler2s->WritePointer(0, totalpoints);
-  euler3s = m_Euler3s->WritePointer(0, totalpoints);
-  surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
+  const size_t startIndex = 0;
+  const size_t endIndex = totalpoints;
+  grain_indicies = m_GrainIndicies->WritePointer(startIndex, endIndex);
+  unassigned = m_Unassigned->WritePointer(startIndex, endIndex);
+  ellipfuncs = m_Ellipfuncs->WritePointer(startIndex, endIndex);
+  phases = m_Phases->WritePointer(startIndex, endIndex);
+  euler1s = m_Euler1s->WritePointer(startIndex, endIndex);
+  euler2s = m_Euler2s->WritePointer(startIndex, endIndex);
+  euler3s = m_Euler3s->WritePointer(startIndex, endIndex);
+  surfacevoxels = m_SurfaceVoxels->WritePointer(startIndex, endIndex);
 	for(int i=0;i<totalpoints;i++)
 	{
 		grain_indicies[i] = 0;
@@ -2109,7 +2111,7 @@ void GrainGeneratorFunc::matchCrystallography()
     }
     }
   }
-  float q[5];
+ // float q[5];
   for(int i = 0; i < totalpoints; i++)
   {
     euler1s[i] = m_Grains[grain_indicies[i]]->euler1;
