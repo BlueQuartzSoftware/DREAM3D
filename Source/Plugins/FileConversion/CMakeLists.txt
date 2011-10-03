@@ -21,11 +21,16 @@ include_directories(${DREAM3DProj_BINARY_DIR}
 SET (FileConversion_HDRS
   ${PROJECT_SOURCE_DIR}/FileConversion.h
   ${PROJECT_SOURCE_DIR}/FileConversionFunc.h
+  ${PROJECT_SOURCE_DIR}/GrainIdReader.h
+  ${PROJECT_SOURCE_DIR}/GrainIdWriter.h
+  ${PROJECT_SOURCE_DIR}/VtkGrainIdReader.h
+
 )
 
 SET (FileConversion_SRCS
   ${PROJECT_SOURCE_DIR}/FileConversion.cpp
   ${PROJECT_SOURCE_DIR}/FileConversionFunc.cpp
+    ${PROJECT_SOURCE_DIR}/VtkGrainIdReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FileConversion" "${FileConversion_HDRS}" "${FileConversion_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
@@ -137,23 +142,13 @@ if (WIN32)
     set (install_dir ".")
 endif()
 
+
 IF ( DREAM3D_BUILD_CLI_TOOLS )
-
-#COMPILE_TOOL(
-#    TARGET FileConversion
-#    SOURCES ${PROJECT_SOURCE_DIR}/Tools/FileConversionMain.cpp ${PROJECT_SOURCE_DIR}/FileConversion.cpp  ${FileConversion_HDRS}
-#    ${FileConversion_SRCS}
-#    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-#    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-#    VERSION_MINOR ${DREAM3D_VER_MINOR}
-#    VERSION_PATCH ${DREAM3D_VER_PATCH}
-#    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-#    COMPONENT     Applications
-#    INSTALL_DEST  "${install_dir}" 
-#    LINK_LIBRARIES DREAM3DLib MXADataModel
-#)
-
+#-- Include the CMake commands to build the Comand line tools
+include(${PROJECT_SOURCE_DIR}/Tools/Tools.cmake)
 endif()
+
+
 
 
 

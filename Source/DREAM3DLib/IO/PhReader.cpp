@@ -56,11 +56,10 @@ PhReader::~PhReader()
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
+int  PhReader::readFile()
 {
   std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
@@ -68,17 +67,19 @@ int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, i
   //std::vector<int> data; /* vector to store the data */
 
   int error, spin; /* dummy variables */
-  //int nx, ny, nz;
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
 
-  std::ifstream InFile;
-  InFile.open(FileName.c_str());
-  if(!InFile)
+  std::ifstream inFile;
+  inFile.open(getFileName().c_str());
+  if(!inFile)
     {
-    std::cout << "Failed to open: " << FileName << std::endl;
+    std::cout << "Failed to open: " << getFileName() << std::endl;
       return -1;
     }
 
-  getline(InFile, line, '\n');
+  getline(inFile, line, '\n');
   tokenize(line,tokens,delimeters);
 
   // Process the header information from the PH file.
@@ -90,11 +91,9 @@ int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, i
 
   //  cout << "INFO: PH file grid size: " << nx << "\t" << ny << "\t" << nz << endl;;
 
-  //MCgrid3D* grid = new grid(nx,ny,nz);
-
   // Get the remaining two lines of the header and ignore
-  getline(InFile, line, '\n');
-  getline(InFile, line, '\n');
+  getline(inFile, line, '\n');
+  getline(inFile, line, '\n');
 
   //The PH file has a unique format of 20 entries on each line. I have
   //now idea who initiated this insanity but I am about to propetuate
@@ -102,30 +101,42 @@ int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, i
   //
   //The most simple thing todo is to read the entire dataset into one
   //long vector and then read that vector to assign values to the grid
+  size_t index = 0;
+  setDimensions(nx, ny, nz);
+  m_Data = AIMArray<int>::CreateArray(nx * ny * nz);
 
-  while(getline(InFile, line, '\n') != NULL)
-    {
-      tokens.clear();
-      error = 0;
-      tokenize(line,tokens,delimeters);
-      //        cout << line << endl;
-      //        for(int i=0; i < tokens.size(); i++ )
-      //              cout << setw(6) << tokens[i];
-      //        cout << endl;
-
-      for(size_t in_spins=0; in_spins < tokens.size(); in_spins++)
+  while (getline(inFile, line, '\n') != NULL)
   {
-    error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
-    data.push_back(spin);
-  }
-      //        if(error != 20)
-      //              {
-      //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
-      //              }
+    tokens.clear();
+    error = 0;
+    tokenize(line, tokens, delimeters);
+    //        cout << line << endl;
+    //        for(int i=0; i < tokens.size(); i++ )
+    //              cout << setw(6) << tokens[i];
+    //        cout << endl;
+
+    for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
+    {
+      error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
+      m_Data->SetValue(index, spin);
+      ++index;
     }
+    //        if(error != 20)
+    //              {
+    //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
+    //              }
+  }
+
+  if(index != static_cast<size_t>(nz * ny * nx))
+  {
+    std::cout << "ERROR: data size does not match header dimensions" << std::endl;
+    std::cout << "\t" << index << "\t" << nz * nx * ny << std::endl;
+    return -1;
+    inFile.close();
+  }
+
 
   tokens.clear();
-
-  InFile.close();
+  inFile.close();
   return 0;
 }

@@ -45,7 +45,6 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IO/DREAM3DFileWriter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/OIMColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
@@ -633,102 +632,6 @@ class VtkMiscFileWriter
     VtkMiscFileWriter(const VtkMiscFileWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkMiscFileWriter&); // Operator '=' Not Implemented
 };
-
-
-/**
- * @brief This class is here solely to help the GrainIdVtkRectilinearGridWriter
- * class write data. It is here to implement the bare minimum of public variables
- * in order to use the templated classes above.
- */
-namespace VtkFileWriter
-{
-  class VtkGrainIdHelper
-  {
-    public:
-      DREAM3D_SHARED_POINTERS(VtkGrainIdHelper);
-      DREAM3D_STATIC_NEW_MACRO(VtkGrainIdHelper);
-      virtual ~VtkGrainIdHelper() {};
-
-      float resx;
-      float resy;
-      float resz;
-
-      int xpoints;
-      int ypoints;
-      int zpoints;
-      int totalpoints;
-      int* grain_indicies;
-
-    protected:
-      VtkGrainIdHelper() {
-        grain_indicies = NULL;
-      }
-    private:
-      VtkGrainIdHelper(const VtkGrainIdHelper&); // Copy Constructor Not Implemented
-      void operator=(const VtkGrainIdHelper&); // Operator '=' Not Implemented
-  };
-}
-
-/**
- * @brief This class exists solely to help convert files from ph and dx format
- * into vtk format. It will ONLY write out GrainId values to a vtkRectilinearGrid
- * file of binary type.
- */
-template<typename T>
-class GrainIdVtkRectilinearGridWriter : public DREAM3DFileWriter<T>
-{
-  public:
-    DREAM3D_SHARED_POINTERS(GrainIdVtkRectilinearGridWriter<T>);
-    DREAM3D_STATIC_NEW_MACRO(GrainIdVtkRectilinearGridWriter<T>);
-    DREAM3D_TYPE_MACRO(GrainIdVtkRectilinearGridWriter<T>);
-
-    static typename DREAM3DFileWriter<T>::Pointer NewDREAM3DFileWriter()
-    {
-      GrainIdVtkRectilinearGridWriter<T>* ptr = new GrainIdVtkRectilinearGridWriter<T>();
-      typename DREAM3DFileWriter<T>::Pointer shared_ptr(dynamic_cast<DREAM3DFileWriter<T>*>(ptr));
-      return shared_ptr;
-    }
-
-    virtual ~GrainIdVtkRectilinearGridWriter() { }
-
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-
-    int writeFile(const std::string &filename, T* grain_index,
-                        int xpoints, int ypoints, int zpoints)
-    {
-      VtkFileWriter::VtkGrainIdHelper::Pointer r = VtkFileWriter::VtkGrainIdHelper::New();
-      r->xpoints = xpoints;
-      r->ypoints = ypoints;
-      r->zpoints = zpoints;
-      r->resx = m_Resolution[0];
-      r->resy = m_Resolution[0];
-      r->resz = m_Resolution[0];
-      r->grain_indicies = grain_index;
-
-      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<VtkFileWriter::VtkGrainIdHelper>(r.get()));
-      std::vector<VtkScalarWriter*> scalarsToWrite;
-      w0->m_WriteBinaryFiles = m_WriteBinaryFiles;
-      scalarsToWrite.push_back(w0);
-      VTKRectilinearGridFileWriter writer;
-      writer.setWriteBinaryFiles(m_WriteBinaryFiles);
-      writer.write<VtkFileWriter::VtkGrainIdHelper>(filename, r.get(), scalarsToWrite);
-      return 0;
-    }
-
-  protected:
-    GrainIdVtkRectilinearGridWriter() {
-      m_Resolution[0] = 1.0f;
-      m_Resolution[1] = 1.0f;
-      m_Resolution[1] = 1.0f;
-      m_WriteBinaryFiles = true;
-    }
-
-  private:
-    GrainIdVtkRectilinearGridWriter(const GrainIdVtkRectilinearGridWriter&); // Copy Constructor Not Implemented
-    void operator=(const GrainIdVtkRectilinearGridWriter&); // Operator '=' Not Implemented
-};
-
 
 
 #endif /* _VTKFILEWRITERS_HPP_ */
