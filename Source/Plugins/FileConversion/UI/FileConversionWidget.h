@@ -52,6 +52,8 @@ class FileConversionWidget : public DREAM3DPluginFrame, private Ui::FileConversi
 
     virtual void checkIOFiles();
 
+    void checkFile(QLineEdit* lineEdit, QLabel* label);
+
   protected slots:
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();

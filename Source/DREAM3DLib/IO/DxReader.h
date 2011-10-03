@@ -42,7 +42,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IO/DREAM3DFileReader.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/IO/FileReader.h"
 
 /**
  * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
@@ -51,17 +52,21 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class DREAM3DLib_EXPORT DxReader : public DREAM3DFileReader
+class DREAM3DLib_EXPORT DxReader : public DREAM3D::FileReader
 {
   public:
     DREAM3D_SHARED_POINTERS(DxReader);
     DREAM3D_STATIC_NEW_MACRO(DxReader);
     DREAM3D_TYPE_MACRO(DxReader);
-    DREAM3D_STATIC_NEW_SUPERCLASS(DREAM3DFileReader, DxReader);
-
+  //  DREAM3D_STATIC_NEW_SUPERCLASS(DREAM3DFileReader, DxReader);
 
     virtual ~DxReader();
-    int readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz);
+
+    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, Data);
+
+
+
+    virtual int readFile();
 
   protected:
     DxReader();

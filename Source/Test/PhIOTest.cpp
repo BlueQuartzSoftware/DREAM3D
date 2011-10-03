@@ -41,6 +41,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/IO/PhReader.h"
 
@@ -72,18 +73,21 @@ void RemoveTestFiles()
 int TestPhWriter()
 {
   int size = Detail::XSize * Detail::YSize * Detail::ZSize;
-  std::vector<int> grain_indices(size);
+  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
-    grain_indices[i] = i + Detail::Offset;
+    grainIds->SetValue(i, i + Detail::Offset);
   }
   int nx = Detail::XSize;
   int ny = Detail::YSize;
   int nz = Detail::ZSize;
 
 
-  PhWriter<int>::Pointer writer = PhWriter<int>::New();
-  int err = writer->writeFile(Detail::TestFile, &(grain_indices.front()), nx, ny, nz);
+  PhWriter::Pointer writer = PhWriter::New();
+  writer->setFileName(Detail::TestFile);
+  writer->setData(grainIds);
+  writer->setDimensions(nx, ny, nz);
+  int err = writer->writeFile();
   DREAM3D_REQUIRE_EQUAL(err, 0);
   return EXIT_SUCCESS;
 }
@@ -95,22 +99,25 @@ int TestPhReader()
 {
 
   PhReader::Pointer reader = PhReader::New();
+  reader->setFileName(Detail::TestFile);
   int nx = 0;
   int ny = 0;
   int nz = 0;
-  std::vector<int> grain_indices;
-  int err = reader->readFile(Detail::TestFile, grain_indices, nx, ny, nz);
+
+  int err = reader->readFile( );
   DREAM3D_REQUIRE_EQUAL(err, 0);
+
+  reader->getDimensions(nx, ny, nz);
   DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
-  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
 
+  AIMArray<int>::Pointer data = reader->getData();
+  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
   for (int i = 0; i < size; ++i)
   {
-    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), grain_indices[i] );
+    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), data->GetValue(i) );
   }
-
 
   return EXIT_SUCCESS;
 }

@@ -33,61 +33,84 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef DREAM3DFILEREADER_H_
-#define DREAM3DFILEREADER_H_
+
+#ifndef FILEREADER_H_
+#define FILEREADER_H_
+
+#include <vector>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IO/DREAM3DDataFile.h"
 
-class DREAM3DLib_EXPORT DREAM3DFileReader
+
+namespace DREAM3D
 {
-  public:
 
-    DREAM3D_SHARED_POINTERS(DREAM3DFileReader)
-    DREAM3D_STATIC_NEW_MACRO(DREAM3DFileReader);
-    DREAM3D_TYPE_MACRO(DREAM3DFileReader);
+  /*
+   *
+   */
+  class DREAM3DLib_EXPORT FileReader : public DREAM3DDataFile
+  {
+    public:
+      FileReader();
+      virtual ~FileReader();
 
-    virtual ~DREAM3DFileReader() {};
+      virtual int readHeader(){return -1;}
 
-    virtual int readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
-    {
-      return -1;
-    }
+      virtual int readFile(){return -1;}
 
-    /**
-     * @brief
-     * @param str
-     * @param tokens
-     * @param delimiters
-     */
-    void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ")
-    {
-      // Skip delimiters at beginning.
-      std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+      /**
+      * @brief This function parses 3 floating point values from a comma delimited string
+      * @param input
+      * @param output
+      * @param defaultValue The value to set if the parsing fails
+      * @return Zero on Success, Negative on Error
+      */
+     int parseFloat3V(const char* input, float* output, float defaultValue);
 
-      // Find first "non-delimiter".
-      std::string::size_type pos = str.find_first_of(delimiters, lastPos);
+     /**
+      * @brief This function parses 3 integer values from a comma delimited string
+      * @param input
+      * @param output
+      * @param defaultValue The value to set if the parsing fails
+      * @return Zero on Success, Negative on Error
+      */
+     int parseInt3V(const char* input, int* output, int defaultValue);
 
-      while (std::string::npos != pos || std::string::npos != lastPos)
-      {
-        // Found a token, add it to the vector.
-        tokens.push_back(str.substr(lastPos, pos - lastPos));
-
-        // Skip delimiters.  Note the "not_of"
-        lastPos = str.find_first_not_of(delimiters, pos);
-
-        // Find next "non-delimiter"
-        pos = str.find_first_of(delimiters, lastPos);
-      }
-    }
-
-  protected:
-    DREAM3DFileReader(){};
-
-  private:
-    DREAM3DFileReader(const DREAM3DFileReader&); // Copy Constructor Not Implemented
-    void operator=(const DREAM3DFileReader&); // Operator '=' Not Implemented
-};
+     /**
+      * @brief Reads a single line from a buffer
+      * @param in The input stream
+      * @param buf The buffer
+      * @param bufSize The size of the buffer
+      * @return
+      */
+     int readLine(std::istream &in, char* buf, int bufSize);
 
 
-#endif /* DREAM3DFILEREADER_H_ */
+
+     /**
+      * @brief
+      * @param buf
+      * @param bufSize
+      * @return
+      */
+     int nonPrintables(char* buf, size_t bufSize);
+
+     /**
+      * @brief
+      * @param str
+      * @param tokens
+      * @param delimiters
+      */
+     void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ");
+
+
+    private:
+      FileReader(const FileReader&); // Copy Constructor Not Implemented
+      void operator=(const FileReader&); // Operator '=' Not Implemented
+  };
+
+} /* namespace DREAM3D */
+#endif /* FILEREADER_H_ */

@@ -34,44 +34,39 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DREAM3DFileWriter_h_
-#define _DREAM3DFileWriter_h_
+#ifndef DREAM3DDATAFILE_H_
+#define DREAM3DDATAFILE_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-/**
- * @class DREAM3DFileWriter DREAM3DFileWriter.h DREAM3DLib/IO/DREAM3DFileWriter.h
- * @brief
- * @author mjackson
- * @date Sep 29, 2011
- * @version $Revision$
- */
-template<typename T>
-class DREAM3DFileWriter
+
+class DREAM3DLib_EXPORT DREAM3DDataFile
 {
   public:
-    DREAM3D_SHARED_POINTERS(DREAM3DFileWriter<T>);
-    DREAM3D_STATIC_NEW_MACRO(DREAM3DFileWriter<T>);
-    DREAM3D_TYPE_MACRO(DREAM3DFileWriter<T>);
-
-    virtual ~DREAM3DFileWriter()
+    DREAM3DDataFile()
     {
+      m_Dimensions[0] = 0;
+      m_Dimensions[1] = 0;
+      m_Dimensions[2] = 0;
+      m_Resolution[0] = 1.0f;
+      m_Resolution[1] = 1.0f;
+      m_Resolution[2] = 1.0f;
+      m_Origin[0] = 0.0f;
+      m_Origin[1] = 0.0f;
+      m_Origin[2] = 0.0f;
     }
+    virtual ~DREAM3DDataFile() {}
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileName);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(int, Dimensions);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
 
-    virtual int writeFile(const std::string &filename, T* grain_index, int xpoints, int ypoints, int zpoints)
-    {
-      return -1;
-    }
-
-  protected:
-    DREAM3DFileWriter() {}
   private:
-    DREAM3DFileWriter(const DREAM3DFileWriter&); //Not Implemented
-    void operator=(const DREAM3DFileWriter&); //Not Implemented
+    DREAM3DDataFile(const DREAM3DDataFile&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DDataFile&); // Operator '=' Not Implemented
 
 };
 
-#endif //_DREAM3DFileWriter_h_
 
+#endif /* DREAM3DDATAFILE_H_ */

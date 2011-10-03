@@ -56,7 +56,7 @@ DxReader::~DxReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
+int DxReader::readFile()
 {
   std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
@@ -66,15 +66,15 @@ int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, in
   int error, spin; /* dummy variables */
   //int nx, ny, nz;
 
-  std::ifstream InFile;
-  InFile.open(FileName.c_str());
-  if(!InFile)
+  std::ifstream inFile;
+  inFile.open(getFileName().c_str());
+  if(!inFile)
   {
-    std::cout << "Failed to open: " << FileName << std::endl;
+    std::cout << "Failed to open: " << getFileName() << std::endl;
     exit(0);
   }
 
-  getline(InFile, line, '\n');
+  getline(inFile, line, '\n');
   tokenize(line, tokens, delimeters);
 
   // Process the header information and look for the std::string "counts"
@@ -94,17 +94,21 @@ int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, in
     if(pos1 == 0)
     {
       tokens.clear();
-      getline(InFile, line, '\n');
+      getline(inFile, line, '\n');
       tokenize(line, tokens, delimeters);
       if(tokens.size() == 20)
       {
         std::cout << "ERROR: Unable to read data dimensions from the header" << std::endl;
-        InFile.close();
+        inFile.close();
         return -1;
       }
     }
 
   }
+
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
 
   if(pos1 != 0)
   {
@@ -150,12 +154,12 @@ int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, in
     if(pos1 == 0)
     {
       tokens.clear();
-      getline(InFile, line, '\n');
+      getline(inFile, line, '\n');
       tokenize(line, tokens, delimeters);
       if(tokens.size() == 20)
       {
         std::cout << "ERROR: Unable to locate the last header line" << std::endl;
-        InFile.close();
+        inFile.close();
         return -1;
       }
     }
@@ -173,7 +177,10 @@ int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, in
   finished_header = true;
   //  finished_header = false;
   finished_data = false;
-  while (getline(InFile, line, '\n') != NULL)
+  size_t index = 0;
+  setDimensions(nx, ny, nz);
+  m_Data = AIMArray<int>::CreateArray(nx * ny * nz);
+  while (getline(inFile, line, '\n') != NULL)
   {
 
     // Get the remaining lines of the header and ignore
@@ -184,31 +191,36 @@ int DxReader::readFile(std::string FileName, std::vector<int> &data, int &nx, in
     //    if(tokens.size()==20)
     //      finished_header = true;
 
-    if(finished_header && ((tokens[0] == "attribute") || static_cast<int>(data.size()) == nz * ny * nx))
+    if(finished_header && ((tokens[0] == "attribute") || static_cast<int>(index) == nz * ny * nx))
     {
       finished_data = true;
     }
+
+    // Allocate the AIMArray at this point:
+
+
 
     if(finished_header && !finished_data)
     {
       for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
       {
         error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
-        data.push_back(spin);
+        m_Data->SetValue(index, spin);
+        ++index;
       }
     }
   }
 
-  if(data.size() != static_cast<size_t>(nz * ny * nx))
+  if(index != static_cast<size_t>(nz * ny * nx))
   {
     std::cout << "ERROR: data size does not match header dimensions" << std::endl;
-    std::cout << "\t" << data.size() << "\t" << nz * nx * ny << std::endl;
+    std::cout << "\t" << index << "\t" << nz * nx * ny << std::endl;
     return -1;
-    InFile.close();
+    inFile.close();
   }
 
   tokens.clear();
-  InFile.close();
+  inFile.close();
   return 0;
 }
 

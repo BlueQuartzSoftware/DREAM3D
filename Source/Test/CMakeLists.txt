@@ -57,8 +57,8 @@ add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest
 add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 
-
 # --------
+if(0)
 add_executable(VTKFileWritersTest ${DREAM3DTest_SOURCE_DIR}/VTKFileWritersTest.cpp
                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/Reconstruction/ReconstructionFunc.cpp
@@ -68,6 +68,7 @@ add_executable(VTKFileWritersTest ${DREAM3DTest_SOURCE_DIR}/VTKFileWritersTest.c
 )
 target_link_libraries(VTKFileWritersTest DREAM3DLib)
 add_test(VTKFileWritersTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/VTKFileWritersTest)
+endif(0)
 
 # --------
 add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp)

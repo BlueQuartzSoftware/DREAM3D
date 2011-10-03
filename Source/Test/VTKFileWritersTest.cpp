@@ -44,7 +44,6 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/VTKUtils/GrainIdVtkRectilinearGridReader.h"
 #include "Reconstruction/ReconstructionFunc.h"
 #include "MicrostructureStatistics/MicrostructureStatisticsFunc.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
@@ -101,7 +100,7 @@ int TestVtkGrainIdWriter()
 int TestVtkGrainIdReader()
 {
 
-  GrainIdVtkRectilinearGridReader::Pointer reader = GrainIdVtkRectilinearGridReader::New();
+  VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
   int nx = 0;
   int ny = 0;
   int nz = 0;
