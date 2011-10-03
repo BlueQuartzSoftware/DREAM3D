@@ -376,12 +376,6 @@ if(DREAM3D_BUILD_DOCS)
   
 endif()
 
-# Option to have CMake Generate the Skeleton Code for a UI Plugin
-option(DREAM3D_CREATE_PLUGIN "Create the Skeleton Code for a new Pipeline and GUI Plugin" OFF)
-if (DREAM3D_CREATE_PLUGIN)
-    add_subdirectory(${PROJECT_SOURCE_DIR}/Support/PluginMaker ${PROJECT_BINARY_DIR}/PluginMaker)
-endif()
-
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 
