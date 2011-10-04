@@ -321,8 +321,10 @@ void PackGrainsGen2::execute()
   }
   // Perform add and subtract options until size distribution is matched
   // Once size distribution is matched, no grains can enter or leave set
-  while (m->oldsizedisterror < 0.999)
+  int timesthrough = 0;
+  while (m->oldsizedisterror < 0.999 && timesthrough < 100000)
   {
+    timesthrough++;
     m->GGseed++;
     random = rg.genrand_res53();
     // this option adds a grain
@@ -960,10 +962,10 @@ void PackGrainsGen2::insert_grain(size_t gnum)
         y = float(row) * m->packingresy;
         z = float(plane) * m->packingresz;
         inside = -1;
-        dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
-        dist = sqrt(dist);
-        if(dist < radcur1)
-        {
+//        dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+//        dist = sqrt(dist);
+//        if(dist < 1*radcur1)
+//        {
           x = x - xc;
           y = y - yc;
           z = z - zc;
@@ -980,7 +982,7 @@ void PackGrainsGen2::insert_grain(size_t gnum)
             m->m_Grains[gnum]->rowlist->push_back(row);
             m->m_Grains[gnum]->planelist->push_back(plane);
           }
-        }
+//        }
       }
     }
   }
