@@ -8,11 +8,8 @@
 
 #include <boost/shared_array.hpp>
 
-#include "MXA/MXA.h"
-#include <MXA/Common/MXASetGetMacros.h>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
  * @class FileConversionFunc FileConversionFunc.h AIM/Common/FileConversionFunc.h
@@ -24,8 +21,9 @@
 class FileConversionFunc
 {
 public:
-    MXA_SHARED_POINTERS(FileConversionFunc)
-    MXA_STATIC_NEW_MACRO(FileConversionFunc)
+    DREAM3D_SHARED_POINTERS(FileConversionFunc)
+    DREAM3D_TYPE_MACRO(FileConversionFunc)
+    DREAM3D_STATIC_NEW_MACRO(FileConversionFunc);
 
     virtual ~FileConversionFunc();
 
@@ -34,7 +32,7 @@ public:
 
 protected:
     FileConversionFunc();
-    
+
 private:
     FileConversionFunc(const FileConversionFunc& );
     void operator =(const FileConversionFunc& );

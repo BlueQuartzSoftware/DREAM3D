@@ -120,18 +120,19 @@ zpoints(0)
   goodVoxels = NULL;
 
 
-INIT_AIMARRAY(m_GrainIndicies,int);
-INIT_AIMARRAY(m_Phases,int);
-INIT_AIMARRAY(m_Euler1s,float);
-INIT_AIMARRAY(m_Euler2s,float);
-INIT_AIMARRAY(m_Euler3s,float);
-INIT_AIMARRAY(m_Neighbors,int);
-INIT_AIMARRAY(m_SurfaceVoxels,float);
-INIT_AIMARRAY(m_GoodVoxels,bool);
-INIT_AIMARRAY(m_Quats,float);
+  INIT_AIMARRAY(m_GrainIndicies,int);
+  INIT_AIMARRAY(m_Phases,int);
+  INIT_AIMARRAY(m_Euler1s,float);
+  INIT_AIMARRAY(m_Euler2s,float);
+  INIT_AIMARRAY(m_Euler3s,float);
+  INIT_AIMARRAY(m_Neighbors,int);
+  INIT_AIMARRAY(m_SurfaceVoxels,char);
+  INIT_AIMARRAY(m_GoodVoxels,bool);
+  INIT_AIMARRAY(m_Quats,float);
+  INIT_AIMARRAY(m_AlreadyChecked,bool);
+  INIT_AIMARRAY(m_GrainCounts,int);
+  INIT_AIMARRAY(m_GoodVoxels,bool);
 
-INIT_AIMARRAY(m_AlreadyChecked,bool);
-INIT_AIMARRAY(m_GrainCounts,int);
 }
 
 // -----------------------------------------------------------------------------
@@ -148,8 +149,8 @@ ReconstructionFunc::~ReconstructionFunc()
 // -----------------------------------------------------------------------------
 void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
                                     bool mrgTwins, bool mrgColonies, int minAllowedGrSize,
-                                    float dwnSmplFact, float misoTol, vector<Ebsd::CrystalStructure> crystalStructures,
-                                    vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
+                                    float dwnSmplFact, float misoTol, std::vector<Ebsd::CrystalStructure> crystalStructures,
+                                    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions, int alignmentMethod)
 {
   notify("Initializing Variables", 0, Observable::UpdateProgressValueAndMessage);

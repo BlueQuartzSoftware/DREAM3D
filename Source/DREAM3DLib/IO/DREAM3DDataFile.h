@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,47 +28,45 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef VTKRECTILINEARGRIDREADER_H_
-#define VTKRECTILINEARGRIDREADER_H_
+#ifndef DREAM3DDATAFILE_H_
+#define DREAM3DDATAFILE_H_
 
-#include <string>
-
-#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
 
-#include "VTKFileReader.h"
 
-class DREAM3DLib_EXPORT VTKRectilinearGridFileReader : public VTKFileReader
+class DREAM3DLib_EXPORT DREAM3DDataFile
 {
   public:
-    DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileReader);
-    DREAM3D_TYPE_MACRO(VTKRectilinearGridFileReader)
-    DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileReader);
-    virtual ~VTKRectilinearGridFileReader();
+    DREAM3DDataFile()
+    {
+      m_Dimensions[0] = 0;
+      m_Dimensions[1] = 0;
+      m_Dimensions[2] = 0;
+      m_Resolution[0] = 1.0f;
+      m_Resolution[1] = 1.0f;
+      m_Resolution[2] = 1.0f;
+      m_Origin[0] = 0.0f;
+      m_Origin[1] = 0.0f;
+      m_Origin[2] = 0.0f;
+    }
+    virtual ~DREAM3DDataFile() {}
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName)
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, GrainIds);
-
-    int parseCoordinateLine(const char* input, int &value);
-
-    /**
-     * @brief Reads the VTK header and sets the values that are described in the header
-     * @return Error Condition. Negative is Error.
-     */
-    int readHeader();
-
-    int readFile();
-
-  protected:
-    VTKRectilinearGridFileReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileName);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(int, Dimensions);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
 
   private:
+    DREAM3DDataFile(const DREAM3DDataFile&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DDataFile&); // Operator '=' Not Implemented
 
-    VTKRectilinearGridFileReader(const VTKRectilinearGridFileReader&); // Copy Constructor Not Implemented
-    void operator=(const VTKRectilinearGridFileReader&); // Operator '=' Not Implemented
 };
 
-#endif /* VTKRECTILINEARGRIDREADER_H_ */
+
+#endif /* DREAM3DDATAFILE_H_ */

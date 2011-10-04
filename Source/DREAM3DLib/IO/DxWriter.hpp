@@ -43,38 +43,50 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/IO/FileWriter.h"
+
 
 /*
  *
  */
-class DxWriter
+
+class DxWriter : public DREAM3D::FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(DxWriter)
     DREAM3D_STATIC_NEW_MACRO(DxWriter)
     DREAM3D_TYPE_MACRO(DxWriter)
+    static DREAM3D::FileWriter::Pointer NewDREAM3DFileWriter()
+    {
+      DxWriter* ptr = new DxWriter();
+      DREAM3D::FileWriter::Pointer shared_ptr(dynamic_cast<DREAM3D::FileWriter*>(ptr));
+      return shared_ptr;
+    }
 
-    DxWriter() {}
     virtual ~DxWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
+    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, Data);
 
-    template<typename T>
-    int writeFile(const std::string &filename, T* voxels, int xDim, int yDim, int zDim)
+
+    virtual int writeFile()
     {
       int err = 0;
-      int totalPoints = (xDim*yDim*zDim);
-      // std::cout << "Write Dx Grain File:  x, y, z: " << xDim << " " << yDim << " " << zDim << std::endl;
+      int dims[3];
+      getDimensions(dims);
+      int totalPoints = dims[0] * dims[1] * dims[2];
+      // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
 
-      std::ofstream out(filename.c_str(), std::ios_base::binary);
+      std::ofstream out(getFileName().c_str(), std::ios_base::binary);
       if (out.is_open() == false)
       {
         return -1;
       }
 
-      int fileXDim = xDim;
-      int fileYDim = yDim;
-      int fileZDim = zDim;
+      int fileXDim = dims[0];
+      int fileYDim = dims[1];
+      int fileZDim = dims[2];
 
       int posXDim = fileXDim + 1;
       int posYDim = fileYDim + 1;
@@ -82,9 +94,9 @@ class DxWriter
 
       if (m_AddSurfaceLayer)
       {
-         fileXDim = xDim + 2;
-         fileYDim = yDim + 2;
-         fileZDim = zDim + 2;
+         fileXDim = dims[0] + 2;
+         fileYDim = dims[1] + 2;
+         fileZDim = dims[2] + 2;
 
          posXDim = fileXDim + 1;
          posYDim = fileYDim + 1;
@@ -114,7 +126,7 @@ class DxWriter
       }
 
       int index = 0;
-      for (int z = 0; z < zDim; ++z)
+      for (int z = 0; z < dims[2]; ++z)
       {
         // Add a leading surface Row for this plane if needed
         if (m_AddSurfaceLayer)
@@ -124,7 +136,7 @@ class DxWriter
           }
           out << std::endl;
         }
-        for (int y = 0; y < yDim; ++y)
+        for (int y = 0; y < dims[1]; ++y)
         {
           // write leading surface voxel for this row
           if (m_AddSurfaceLayer)
@@ -132,12 +144,12 @@ class DxWriter
             out << "-5 ";
           }
           // Write the actual voxel data
-          for (int x = 0; x < xDim; ++x)
+          for (int x = 0; x < dims[0]; ++x)
           {
-            if (voxels[index] == 0) {
+            if (m_Data->GetValue(index) == 0) {
                 out << "0" << " ";
             } else {
-            out << voxels[index] << " ";
+            out << m_Data->GetValue(index) << " ";
             }
             ++index;
           }
@@ -181,14 +193,14 @@ class DxWriter
       out.close();
 #if 0
       out.open("/tmp/m3cmesh.raw", std::ios_base::binary);
-      out.write((const char*)(&xDim), 4);
-      out.write((const char*)(&yDim), 4);
-      out.write((const char*)(&zDim), 4);
-      totalPoints = xDim * yDim * zDim;
+      out.write((const char*)(&dims[0]), 4);
+      out.write((const char*)(&dims[1]), 4);
+      out.write((const char*)(&dims[2]), 4);
+      totalPoints = dims[0] * dims[1] * dims[2];
       int32_t d = 0;
       for(int index = 0; index < totalPoints; ++index)
       {
-        d = voxels[index];
+        d = grainIds[index];
         if (d == 0) { d = -3;}
         out.write((const char*)(&d), sizeof(d));
       }
@@ -197,6 +209,9 @@ class DxWriter
 #endif
       return err;
     }
+
+  protected:
+    DxWriter() : DREAM3D::FileWriter(), m_AddSurfaceLayer(false) {}
 
   private:
     DxWriter(const DxWriter&); // Copy Constructor Not Implemented

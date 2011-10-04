@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -120,6 +120,25 @@
     return -1;\
   }\
   }
+
+
+#define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(ptr, name, type, var)\
+  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
+  fprintf(f, "LOOKUP_TABLE default\n");\
+  { \
+  type* gn = new type[total];\
+  for (size_t i = 0; i < total; i++) {\
+    gn[i] = ptr->var[i];\
+  }\
+  size_t totalWritten = fwrite(gn, sizeof(type), total, f);\
+  delete[] gn;\
+  if (totalWritten != total)  {\
+    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    fclose(f);\
+    return -1;\
+  }\
+ }
+
 
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(ptr, name, type, var, FORMAT)\
   fprintf(f, "SCALARS %s float 1\n", name.c_str());\

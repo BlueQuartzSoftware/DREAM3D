@@ -40,8 +40,9 @@
 #include <fstream>
 
 
-#include <MXA/Common/MXASetGetMacros.h>
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IO/FileReader.h"
 
 /**
  * @class VTKFileReader VTKFileReader.h PathToHeader/VTKFileReader.h
@@ -83,22 +84,19 @@
  * @date May 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VTKFileReader
+class DREAM3DLib_EXPORT VTKFileReader : public DREAM3D::FileReader
 {
   public:
-    MXA_SHARED_POINTERS(VTKFileReader)
-    MXA_TYPE_MACRO(VTKFileReader)
-    MXA_STATIC_NEW_MACRO(VTKFileReader)
+    DREAM3D_SHARED_POINTERS(VTKFileReader)
+    DREAM3D_TYPE_MACRO(VTKFileReader)
+    DREAM3D_STATIC_NEW_MACRO(VTKFileReader)
 
     virtual ~VTKFileReader();
 
-    MXA_INSTANCE_STRING_PROPERTY(InputFileName)
-    MXA_INSTANCE_STRING_PROPERTY(Comment)
-    MXA_INSTANCE_STRING_PROPERTY(DatasetType)
-    MXA_INSTANCE_VEC3_PROPERTY(int, Dims)
-    MXA_INSTANCE_VEC3_PROPERTY(float, Scaling)
-    MXA_INSTANCE_VEC3_PROPERTY(float, Origin)
-    MXA_INSTANCE_PROPERTY(bool, FileIsBinary)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFileName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
+    DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
+    DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
 
     /**
      * @brief Reads the VTK header and sets the values that are described in the header
@@ -107,31 +105,11 @@ class DREAM3DLib_EXPORT VTKFileReader
     int readHeader();
 
     /**
-     * @brief This function parses 3 floating point values from a comma delimited string
-     * @param input
-     * @param output
-     * @param defaultValue The value to set if the parsing fails
-     * @return Zero on Success, Negative on Error
+     * @brief This method should be re-implemented in a subclass
      */
-    int parseFloat3V(const char* input, float* output, float defaultValue);
-
-    /**
-     * @brief This function parses 3 integer values from a comma delimited string
-     * @param input
-     * @param output
-     * @param defaultValue The value to set if the parsing fails
-     * @return Zero on Success, Negative on Error
-     */
-    int parseInt3V(const char* input, int* output, int defaultValue);
-
-    /**
-     * @brief Reads a single line from a buffer
-     * @param in The input stream
-     * @param buf The buffer
-     * @param bufSize The size of the buffer
-     * @return
-     */
-    int readLine(std::istream &in, char* buf, int bufSize);
+    virtual int readFile() {
+      return -1;
+    }
 
     /**
      * @brief Parses the byte size from a data set declaration line
@@ -140,11 +118,14 @@ class DREAM3DLib_EXPORT VTKFileReader
      */
     size_t parseByteSize(char text[256]);
 
+    /**
+     *
+     */
     int ignoreData(std::ifstream &in, int byteSize, char* type, int xDim, int yDim, int zDim);
 
-    int nonPrintables(char* buf, size_t bufSize);
-
-
+    /**
+     *
+     */
     template<typename T>
     int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim, T &diff)
     {

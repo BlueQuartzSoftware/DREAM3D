@@ -41,16 +41,21 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/IO/PhReader.h"
 
 #include "UnitTestSupport.hpp"
 
-#define REMOVE_TEST_FILES 1
+#define REMOVE_TEST_FILES 0
 
-namespace PhIOTest
+namespace Detail
 {
-  const std::string PhIOTestFile("PhIOTest.ph");
+  const std::string TestFile("PhIOTest.ph");
+  static const int XSize = 5;
+  static const int YSize = 4;
+  static const int ZSize = 3;
+  static const int Offset = 200;
 }
 // -----------------------------------------------------------------------------
 //
@@ -58,48 +63,61 @@ namespace PhIOTest
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(PhIOTest::PhIOTestFile);
+  MXADir::remove(PhIOTest::TestFile);
 #endif
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TestPhWriter()
 {
-  std::vector<int> grain_indices(27);
-  for (int i = 0; i < 27; ++i)
+  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
+  for (int i = 0; i < size; ++i)
   {
-    grain_indices[i] = i + 100;
+    grainIds->SetValue(i, i + Detail::Offset);
   }
-  int xpoints = 3;
-  int ypoints = 3;
-  int zpoints = 3;
+  int nx = Detail::XSize;
+  int ny = Detail::YSize;
+  int nz = Detail::ZSize;
 
 
   PhWriter::Pointer writer = PhWriter::New();
-  int err = writer->writeFile(PhIOTest::PhIOTestFile, grain_indices, xpoints, ypoints, zpoints);
-  MXA_REQUIRE_EQUAL(err, 0);
+  writer->setFileName(Detail::TestFile);
+  writer->setData(grainIds);
+  writer->setDimensions(nx, ny, nz);
+  int err = writer->writeFile();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
   return EXIT_SUCCESS;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TestPhReader()
 {
 
   PhReader::Pointer reader = PhReader::New();
+  reader->setFileName(Detail::TestFile);
   int nx = 0;
   int ny = 0;
   int nz = 0;
-  std::vector<int> grain_indices;
-  int err = reader->readFile(PhIOTest::PhIOTestFile, grain_indices, nx, ny, nz);
-  MXA_REQUIRE_EQUAL(err, 0);
-  MXA_REQUIRE_EQUAL(nx, 3);
-  MXA_REQUIRE_EQUAL(ny, 3);
-  MXA_REQUIRE_EQUAL(nz, 3);
 
-  for (int i = 0; i < 27; ++i)
+  int err = reader->readFile( );
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+
+  reader->getDimensions(nx, ny, nz);
+  DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
+
+  AIMArray<int>::Pointer data = reader->getData();
+  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  for (int i = 0; i < size; ++i)
   {
-    MXA_REQUIRE_EQUAL( (i+100), grain_indices[i] );
+    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), data->GetValue(i) );
   }
-
 
   return EXIT_SUCCESS;
 }
@@ -111,10 +129,10 @@ int TestPhReader()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
-  MXA_REGISTER_TEST( TestPhWriter() );
-  MXA_REGISTER_TEST( TestPhReader() );
+  DREAM3D_REGISTER_TEST( TestPhWriter() );
+  DREAM3D_REGISTER_TEST( TestPhReader() );
 
-  MXA_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
   PRINT_TEST_SUMMARY();
   return err;
 }

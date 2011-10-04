@@ -117,35 +117,35 @@ class DREAM3DLib_EXPORT Texture
       bin3 = bin / (18 * 18);
       for (int j = -sigmas[i]; j <= sigmas[i]; j++)
       {
-        int jsqrd = j*j;
-        for (int k = -sigmas[i]; k <= sigmas[i]; k++)
-        {
-          int ksqrd = k*k;
-          for (int l = -sigmas[i]; l <= sigmas[i]; l++)
+          int jsqrd = j * j;
+          for (int k = -sigmas[i]; k <= sigmas[i]; k++)
           {
-            int lsqrd = l*l;
-            addbin1 = bin1 + int(j);
-            addbin2 = bin2 + int(k);
-            addbin3 = bin3 + int(l);
-            if (addbin1 < 0) addbin1 = addbin1 + 18;
-            if (addbin1 >= 18) addbin1 = addbin1 - 18;
-            if (addbin2 < 0) addbin2 = addbin2 + 18;
-            if (addbin2 >= 18) addbin2 = addbin2 - 18;
-            if (addbin3 < 0) addbin3 = addbin3 + 18;
-            if (addbin3 >= 18) addbin3 = addbin3 - 18;
-            addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
-            dist = powf((jsqrd +ksqrd + lsqrd), 0.5);
-            fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
-            if (dist <= int(sigmas[i]))
+            int ksqrd = k * k;
+            for (int l = -sigmas[i]; l <= sigmas[i]; l++)
             {
-              addweight = (weights[i] * fraction);
-			  if(sigmas[i] == 0.0) addweight = weights[i];
-              odf[addbin] = odf[addbin]+addweight;
-			  totaladdweight = totaladdweight + addweight;
+              int lsqrd = l * l;
+              addbin1 = bin1 + int(j);
+              addbin2 = bin2 + int(k);
+              addbin3 = bin3 + int(l);
+              if(addbin1 < 0) addbin1 = addbin1 + 18;
+              if(addbin1 >= 18) addbin1 = addbin1 - 18;
+              if(addbin2 < 0) addbin2 = addbin2 + 18;
+              if(addbin2 >= 18) addbin2 = addbin2 - 18;
+              if(addbin3 < 0) addbin3 = addbin3 + 18;
+              if(addbin3 >= 18) addbin3 = addbin3 - 18;
+              addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
+              dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
+              fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
+              if(dist <= int(sigmas[i]))
+              {
+                addweight = (weights[i] * fraction);
+                if(sigmas[i] == 0.0) addweight = weights[i];
+                odf[addbin] = odf[addbin] + addweight;
+                totaladdweight = totaladdweight + addweight;
+              }
             }
           }
         }
-      }
     }
 	if(totaladdweight > odfsize)
 	{

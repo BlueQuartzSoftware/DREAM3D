@@ -34,46 +34,83 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DXREADER_H_
-#define _DXREADER_H_
+#ifndef FILEREADER_H_
+#define FILEREADER_H_
 
-#include <string>
 #include <vector>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
-#include "DREAM3DLib/IO/FileReader.h"
+#include "DREAM3DLib/IO/DREAM3DDataFile.h"
 
-/**
- * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
- */
-class DREAM3DLib_EXPORT DxReader : public DREAM3D::FileReader
+
+namespace DREAM3D
 {
-  public:
-    DREAM3D_SHARED_POINTERS(DxReader);
-    DREAM3D_STATIC_NEW_MACRO(DxReader);
-    DREAM3D_TYPE_MACRO(DxReader);
-  //  DREAM3D_STATIC_NEW_SUPERCLASS(DREAM3DFileReader, DxReader);
 
-    virtual ~DxReader();
+  /*
+   *
+   */
+  class DREAM3DLib_EXPORT FileReader : public DREAM3DDataFile
+  {
+    public:
+      FileReader();
+      virtual ~FileReader();
 
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, Data);
+      virtual int readHeader(){return -1;}
+
+      virtual int readFile(){return -1;}
+
+      /**
+      * @brief This function parses 3 floating point values from a comma delimited string
+      * @param input
+      * @param output
+      * @param defaultValue The value to set if the parsing fails
+      * @return Zero on Success, Negative on Error
+      */
+     int parseFloat3V(const char* input, float* output, float defaultValue);
+
+     /**
+      * @brief This function parses 3 integer values from a comma delimited string
+      * @param input
+      * @param output
+      * @param defaultValue The value to set if the parsing fails
+      * @return Zero on Success, Negative on Error
+      */
+     int parseInt3V(const char* input, int* output, int defaultValue);
+
+     /**
+      * @brief Reads a single line from a buffer
+      * @param in The input stream
+      * @param buf The buffer
+      * @param bufSize The size of the buffer
+      * @return
+      */
+     int readLine(std::istream &in, char* buf, int bufSize);
 
 
 
-    virtual int readFile();
+     /**
+      * @brief
+      * @param buf
+      * @param bufSize
+      * @return
+      */
+     int nonPrintables(char* buf, size_t bufSize);
 
-  protected:
-    DxReader();
+     /**
+      * @brief
+      * @param str
+      * @param tokens
+      * @param delimiters
+      */
+     void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ");
 
-  private:
-    DxReader(const DxReader&); // Copy Constructor Not Implemented
-    void operator=(const DxReader&); // Operator '=' Not Implemented
-};
 
-#endif /* DXREADER_H_ */
+    private:
+      FileReader(const FileReader&); // Copy Constructor Not Implemented
+      void operator=(const FileReader&); // Operator '=' Not Implemented
+  };
+
+} /* namespace DREAM3D */
+#endif /* FILEREADER_H_ */

@@ -100,13 +100,12 @@
 
 
 #define DREAM3D_STATIC_NEW_SUPERCLASS(superclass, theclass)\
-  static superclass::Pointer New()\
+  static superclass::Pointer New##superclass()\
   {\
     theclass* ptr = new theclass();\
     superclass::Pointer shared_ptr (dynamic_cast<superclass*>(ptr) );\
     return shared_ptr;\
   }
-
 
 /**
  * @brief Creates a typedef that points to the superclass of this class

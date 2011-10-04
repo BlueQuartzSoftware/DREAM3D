@@ -45,6 +45,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/IO/FileWriter.h"
 
 /**
  * @class PhWriter PhWriter.h DREAM3D/IO/PhWriter.h
@@ -55,22 +57,32 @@
  * @date Jun 7, 2011
  * @version 1.0
  */
-class PhWriter
+class PhWriter : public DREAM3D::FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(PhWriter);
     DREAM3D_STATIC_NEW_MACRO(PhWriter);
     DREAM3D_TYPE_MACRO(PhWriter);
 
+    static DREAM3D::FileWriter::Pointer NewDREAM3DFileWriter()
+    {
+      PhWriter* ptr = new PhWriter();
+      DREAM3D::FileWriter::Pointer shared_ptr(dynamic_cast<DREAM3D::FileWriter*>(ptr));
+      return shared_ptr;
+    }
+
     virtual ~PhWriter()
     {
     }
 
-    template<typename T>
-    int writeFile(const std::string &filename, T &grain_index, int xpoints, int ypoints, int zpoints)
+    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, Data);
+
+    virtual int writeFile()
     {
-      std::string OutputName;
-      int totalpoints = xpoints * ypoints * zpoints;
+   //   std::string OutputName;
+      int dims[3];
+      getDimensions(dims);
+      int totalpoints = dims[0] * dims[1] * dims[2];
       // Change the name of the input filename for outout
       // std::vector<std::string> tokens;
       // std::string delimeters = "."; // Only a period
@@ -78,19 +90,20 @@ class PhWriter
 
       //OutputName = tokens[0] + ".ph";
       std::ofstream outfile;
-      outfile.open(filename.c_str());
+      outfile.open(getFileName().c_str());
       if(!outfile)
       {
-        std::cout << "Failed to open: " << filename << std::endl;
+        std::cout << "Failed to open: " << getFileName() << std::endl;
         return -1;
       }
+
 
       // Find the unique number of grains
       std::map<int, bool> used;
 
       for (int i = 0; i < totalpoints; ++i)
       {
-        used[grain_index[i]] = true;
+        used[m_Data->GetValue(i)] = true;
       }
 
       int grains = 0;
@@ -103,16 +116,18 @@ class PhWriter
         }
       }
 
+
+
       //std::cout<<grains<< " " << used.size() << std::endl;
 
-      outfile << "     " << xpoints << "     " << ypoints << "     " << zpoints << "\n";
+      outfile << "     " << dims[0] << "     " << dims[1] << "     " << dims[2] << "\n";
       outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";
       outfile << " 0.000 0.000 0.000          0        \n"; // << grains << endl;
 
       int count = 0;
       for (int k = 0; k < totalpoints; k++)
       {
-        outfile << std::setw(6) << grain_index[k];
+        outfile << std::setw(6) << m_Data->GetValue(k);
         count++;
         if(count == 20)
         {
@@ -127,7 +142,8 @@ class PhWriter
     }
 
   protected:
-    PhWriter()
+    PhWriter() :
+      DREAM3D::FileWriter()
     {
     }
 
