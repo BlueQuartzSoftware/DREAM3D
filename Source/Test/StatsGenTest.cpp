@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -77,7 +77,7 @@ void GenHexMDFPlotData()
   // Now generate the actual XY point data that gets plotted.
   err = sg.GenHexMDFPlotData(mdf, x, y, size);
 
-  MXA_REQUIRE(err >= 0)
+  DREAM3D_REQUIRE(err >= 0)
 }
 
 
@@ -93,7 +93,7 @@ void GenHexMDFPlotData()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  MXA_REGISTER_TEST(GenHexMDFPlotData());
+  DREAM3D_REGISTER_TEST(GenHexMDFPlotData());
 
   PRINT_TEST_SUMMARY();
   //return err;

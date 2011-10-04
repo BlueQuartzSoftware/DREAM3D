@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -40,14 +40,89 @@
 #include <vector>
 #include <string>
 
+#include "MXA/Utilities/MXADir.h"
 
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 #include "Reconstruction/ReconstructionFunc.h"
 #include "MicrostructureStatistics/MicrostructureStatisticsFunc.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
+#include "UnitTestSupport.hpp"
 
-int main(int argc, char **argv)
+#define REMOVE_TEST_FILES 0
+
+namespace Detail
+{
+  static const std::string TestFile("VtkIOTest.vtk");
+  static const int XSize = 2;
+  static const int YSize = 10;
+  static const int ZSize = 5;
+  static const int Offset = 66;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
+#if REMOVE_TEST_FILES
+  MXADir::remove(Detail::TestFile);
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TestVtkGrainIdWriter()
+{
+  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  std::vector<int> grain_indices(size);
+  for (int i = 0; i < size; ++i)
+  {
+    grain_indices[i] = i + Detail::Offset;
+  }
+  int nx = Detail::XSize;
+  int ny = Detail::YSize;
+  int nz = Detail::ZSize;
+
+
+  GrainIdVtkRectilinearGridWriter<int>::Pointer writer = GrainIdVtkRectilinearGridWriter<int>::New();
+  writer->setWriteBinaryFiles(true);
+  int err = writer->writeFile(Detail::TestFile, &(grain_indices.front()), nx, ny, nz);
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+  return EXIT_SUCCESS;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TestVtkGrainIdReader()
+{
+
+  VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
+  std::vector<int> grain_indices;
+  int err = reader->readFile(Detail::TestFile, grain_indices, nx, ny, nz);
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+  DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
+  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+
+  for (int i = 0; i < size; ++i)
+  {
+    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), grain_indices[i] );
+  }
+
+
+  return EXIT_SUCCESS;
+}
+
+
+int TestVtkWriters()
 {
 #if 0
   VtkMiscFileWriter::Pointer vtkWriter = VtkMiscFileWriter::New();
@@ -79,6 +154,18 @@ int main(int argc, char **argv)
   r->resy = 0.50;
   r->resz = 0.75;
 
+  std::vector<Ebsd::CrystalStructure> crystalStructures(2);
+  std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2);
+  std::vector<float> precipFractions(2);
+
+  r->initialize(5,5,5, 0.35, 0.35, 0.55, false, false, 25, 1.0, 5.0, crystalStructures , phaseTypes ,precipFractions ,0);
+
+  for (size_t i = 0; i < 5*5*5; ++i)
+  {
+    r->surfacevoxels[i] = 0;
+  }
+
+
 //  ScalarWrapper* gidWriter
 //      = static_cast<ScalarWrapper*>(new GrainIdWriter<ReconstructionFunc>(r.get()) );
 //
@@ -107,8 +194,21 @@ int main(int argc, char **argv)
 //  scalarsToWrite.push_back(w5);
 
   VTKRectilinearGridFileWriter writer;
-  writer.write<ReconstructionFunc>("/tmp/vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
+  writer.write<ReconstructionFunc>("vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
 
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv) {
+  int err = EXIT_SUCCESS;
+
+  DREAM3D_REGISTER_TEST( TestVtkGrainIdWriter() );
+  DREAM3D_REGISTER_TEST( TestVtkGrainIdReader() );
+  DREAM3D_REGISTER_TEST( TestVtkWriters() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  PRINT_TEST_SUMMARY();
+  return err;
+}

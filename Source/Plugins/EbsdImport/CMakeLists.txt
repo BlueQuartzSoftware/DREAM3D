@@ -13,7 +13,6 @@ include_directories(${PROJECT_CODE_DIR} )
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
-message(STATUS "DREAM3D_BUILD_GUI: ${DREAM3D_BUILD_GUI}")
 if(DREAM3D_BUILD_GUI)
     if(NOT QT4_FOUND)
         message(FATAL_ERROR "Qt 4 is Needed for this project.")

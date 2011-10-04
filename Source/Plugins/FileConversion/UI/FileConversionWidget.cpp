@@ -58,7 +58,10 @@ FileConversionWidget::~FileConversionWidget()
 void FileConversionWidget::readSettings(QSettings &prefs)
 {
   prefs.beginGroup("FileConversion");
-
+  READ_FILEPATH_SETTING(prefs, m_, InputFilePath, "");
+  on_m_InputFilePath_textChanged(m_InputFilePath->text());
+  READ_FILEPATH_SETTING(prefs, m_, OutputFilePath, "");
+  on_m_OutputFilePath_textChanged(m_OutputFilePath->text());
   prefs.endGroup();
 
 }
@@ -69,7 +72,8 @@ void FileConversionWidget::readSettings(QSettings &prefs)
 void FileConversionWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("FileConversion");
-
+  WRITE_STRING_SETTING(prefs, m_, InputFilePath)
+  WRITE_STRING_SETTING(prefs, m_, OutputFilePath)
   prefs.endGroup();
 }
 
@@ -191,7 +195,8 @@ void FileConversionWidget::on_m_GoBtn_clicked()
   m_FileConversion->moveToThread(m_WorkerThread);
 
   // Pull the values from the GUI and push them into the m_FileConversion variable
-
+  m_FileConversion->setInputFilePath(m_InputFilePath->text().toStdString() );
+  m_FileConversion->setOutputFilePath(m_OutputFilePath->text().toStdString());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * FileConversion object. Since the FileConversion object has been moved to another
@@ -294,31 +299,7 @@ void FileConversionWidget::addProgressMessage(QString message)
 // -----------------------------------------------------------------------------
 void FileConversionWidget::on_m_InputFilePath_textChanged(const QString text)
 {
-   QFileInfo fi(m_InputFilePath->text());
-   if (fi.exists() && fi.isFile())
-   {
-     QString extension = fi.suffix();
-     if (extension.compare("vtk") == 0)
-     {
-       m_FileType->setText("VTK File");
-     }
-     else if (extension.compare("ph") == 0)
-     {
-       m_FileType->setText("Ph File");
-     }
-     else if (extension.compare("h5voxel") == 0)
-     {
-       m_FileType->setText("HDF5 Voxel File");
-     }
-     else if (extension.compare("dx") == 0)
-     {
-       m_FileType->setText("DX File");
-     }
-     else
-     {
-       m_FileType->setText("Unknown File Extension");
-     }
-   }
+  checkFile(m_InputFilePath, m_InputFileType);
 }
 
 // -----------------------------------------------------------------------------
@@ -326,7 +307,42 @@ void FileConversionWidget::on_m_InputFilePath_textChanged(const QString text)
 // -----------------------------------------------------------------------------
 void FileConversionWidget::on_m_OutputFilePath_textChanged(const QString text)
 {
-std::cout << "on_m_OutputFilePath_textChanged" << std::endl;
+  checkFile(m_OutputFilePath, m_OutputFileType);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FileConversionWidget::checkFile(QLineEdit* lineEdit, QLabel* label)
+{
+  if (verifyPathExists(lineEdit->text(), lineEdit) )
+    {
+     QFileInfo fi(lineEdit->text());
+     if (fi.exists() && fi.isFile())
+     {
+       QString extension = fi.suffix();
+       if (extension.compare("vtk") == 0)
+       {
+         label->setText("VTK File");
+       }
+       else if (extension.compare("ph") == 0)
+       {
+         label->setText("Ph File");
+       }
+       else if (extension.compare("h5voxel") == 0)
+       {
+         label->setText("HDF5 Voxel File");
+       }
+       else if (extension.compare("dx") == 0)
+       {
+         label->setText("DX File");
+       }
+       else
+       {
+         label->setText("Unknown File Extension");
+       }
+     }
+    }
 }
 
 

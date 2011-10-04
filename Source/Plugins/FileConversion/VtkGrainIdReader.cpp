@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "VTKRectilinearGridFileReader.h"
+#include "VtkGrainIdReader.h"
 
 #include <map>
 
@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VTKRectilinearGridFileReader::VTKRectilinearGridFileReader() :
+VtkGrainIdReader::VtkGrainIdReader() :
 m_GrainIdScalarName(DREAM3D::VTK::GrainIdScalarName)
 {
 
@@ -51,27 +51,135 @@ m_GrainIdScalarName(DREAM3D::VTK::GrainIdScalarName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VTKRectilinearGridFileReader::~VTKRectilinearGridFileReader()
+VtkGrainIdReader::~VtkGrainIdReader()
 {
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VtkGrainIdReader::parseFloat3V(const char* input, float* output, float defaultValue)
+{
+  char text[256];
+  int n = sscanf(input, "%s %f %f %f", text, &(output[0]), &(output[1]), &(output[2]) );
+  if (n != 4)
+  {
+    output[0] = output[1] = output[2] = defaultValue;
+    return -1;
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKRectilinearGridFileReader::readHeader()
+int VtkGrainIdReader::parseInt3V(const char* input, int* output, int defaultValue)
+{
+  char text[256];
+  int n = sscanf(input, "%s %d %d %d", text, &(output[0]), &(output[1]), &(output[2]) );
+  if (n != 4)
+  {
+    output[0] = output[1] = output[2] = defaultValue;
+    return -1;
+  }
+  return 0;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VtkGrainIdReader::nonPrintables(char* buf, size_t bufSize)
+{
+  int n = 0;
+  for (size_t i = 0; i < bufSize; ++i)
+  {
+    if (buf[i] < 33 && buf[i] > 0) { n++; }
+  }
+  return n;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+size_t VtkGrainIdReader::parseByteSize(char text[256])
+{
+
+  char cunsigned_char [64] = "unsigned_char";
+  char cchar [64] = "char";
+  char cunsigned_short [64] = "unsigned_short";
+  char cshort [64] = "short";
+  char cunsigned_int [64] = "unsigned_int";
+  char cint [64] = "int";
+  char cunsigned_long [64] = " unsigned_long";
+  char clong [64] = "long";
+  char cfloat [64] = "float";
+  char cdouble [64] = " double";
+
+  if (strcmp(text, cunsigned_char) == 0 ) { return 1;}
+  if (strcmp(text, cchar) == 0 ) { return 1;}
+  if (strcmp(text, cunsigned_short) == 0 ) { return 2;}
+  if (strcmp(text, cshort) == 0 ) { return 2;}
+  if (strcmp(text, cunsigned_int) == 0 ) { return 4;}
+  if (strcmp(text, cint) == 0 ) { return 4;}
+  if (strcmp(text, cunsigned_long) == 0 ) { return 8;}
+  if (strcmp(text, clong) == 0 ) { return 8;}
+  if (strcmp(text, cfloat) == 0 ) { return 4;}
+  if (strcmp(text, cdouble) == 0 ) { return  8;}
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, int xDim, int yDim, int zDim)
+{
+  char cunsigned_char [64] = "unsigned_char";
+  char cchar [64] = "char";
+  char cunsigned_short [64] = "unsigned_short";
+  char cshort [64] = "short";
+  char cunsigned_int [64] = "unsigned_int";
+  char cint [64] = "int";
+  char cunsigned_long [64] = " unsigned_long";
+  char clong [64] = "long";
+  char cfloat [64] = "float";
+  char cdouble [64] = " double";
+  int err = 0;
+  if (strcmp(text, cunsigned_char) == 0 ) {
+    err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cunsigned_short) == 0 ) { err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cshort) == 0 ) {err |= skipVolume<short>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cunsigned_int) == 0 ) { err |= skipVolume<unsigned int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cint) == 0 ) { err |= skipVolume<int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cunsigned_long) == 0 ) { err |= skipVolume<unsigned long long int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, clong) == 0 ) { err |= skipVolume<long long int>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cfloat) == 0 ) { err |= skipVolume<float>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cdouble) == 0 ) { err |= skipVolume<double>(in, byteSize, xDim, yDim, zDim);}
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VtkGrainIdReader::readHeader()
 {
 
   int err = 0;
-  if (getInputFileName().empty() == true)
+  if (m_InputFileName.empty() == true)
   {
     return -1;
   }
 
   std::ifstream instream;
-  instream.open(getInputFileName().c_str());
+  instream.open(m_InputFileName.c_str());
   if (!instream.is_open())
   {
-    std::cout << logTime() << " vtk file could not be opened: " << getInputFileName() << std::endl;
+    std::cout << logTime() << " vtk file could not be opened: " << m_InputFileName << std::endl;
     return -1;
   }
   char buf[kBufferSize];
@@ -101,15 +209,14 @@ int VTKRectilinearGridFileReader::readHeader()
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
   {
-    char text[7];
-    char text1[64];
-    int n = sscanf(buf, "%s %s", text, text1 );
+    char text[256];
+    int n = sscanf(buf, "%s %s", text, &(text[16]) );
     if (n < 2)
     {
       std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
       return -1;
     }
-    std::string dataset(text1);
+    std::string dataset(&(text[16]));
     setDatasetType(dataset);
   }
 
@@ -117,20 +224,34 @@ int VTKRectilinearGridFileReader::readHeader()
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   int dims[3];
   err = parseInt3V(buf, dims, 0);
-  setDims(dims);
+  setDimensions(dims);
 
-  setScaling(1.0f, 1.0f, 1.0f);
-  setOrigin(0.0f, 0.0f, 0.0f);
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
+  float origin[3];
+  err = parseFloat3V(buf, origin, 0.0f);
+  setOrigin(origin);
+
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
+  float resolution[3];
+  err = parseFloat3V(buf, resolution, 1.0f);
+  setResolution(resolution);
+
+  ::memset(buf, 0, kBufferSize);
 
 
   instream.close();
   return err;
+
 }
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKRectilinearGridFileReader::parseCoordinateLine(const char* input, int &value)
+int VtkGrainIdReader::parseCoordinateLine(const char* input, int &value)
 {
   char text[256];
   char text1[256];
@@ -145,10 +266,41 @@ int VTKRectilinearGridFileReader::parseCoordinateLine(const char* input, int &va
   return 0;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKRectilinearGridFileReader::readFile()
+int VtkGrainIdReader::readLine(std::istream &in, char* buf, int bufSize)
+{
+
+  bool readAnotherLine = true;
+  size_t gcount = in.gcount();
+  while ( readAnotherLine == true && in.gcount() != 0) {
+    // Zero out the buffer
+    ::memset(buf, 0, bufSize);
+    // Read a line up to a '\n' which will catch windows and unix line endings but
+    // will leave a trailing '\r' at the end of the string
+    in.getline(buf, bufSize, '\n');
+    gcount = in.gcount();
+    if (gcount > 1 && buf[in.gcount()-2] == '\r')
+    {
+      buf[in.gcount()-2] = 0;
+    }
+    int len = strlen(buf);
+    int np = nonPrintables(buf, bufSize);
+    if (len != np)
+    {
+      readAnotherLine = false;
+    }
+
+  }
+  return static_cast<int>(in.gcount());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VtkGrainIdReader::readGrainIds()
 {
   int err = 0;
 
@@ -169,7 +321,7 @@ int VTKRectilinearGridFileReader::readFile()
   }
 
   int dims[3];
-  getDims(dims);
+  getDimensions(dims);
 
 
   int dim = 0;
@@ -189,7 +341,7 @@ int VTKRectilinearGridFileReader::readFile()
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[0])
+  if (err < 0 || dim != dims[1])
   {
     return -1;
   }
@@ -200,7 +352,7 @@ int VTKRectilinearGridFileReader::readFile()
 //  ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[0])
+  if (err < 0 || dim != dims[2])
   {
     return -1;
   }
@@ -209,7 +361,7 @@ int VTKRectilinearGridFileReader::readFile()
   // This makes a very bad assumption that the Rectilinear grid has even spacing
   // along each axis which it does NOT have to have. Since this class is specific
   // to the DREAM.3D package this is a safe assumption.
-  setScaling(xscale, yscale, zscale);
+  setResolution(xscale, yscale, zscale);
 
 
   // Now we need to search for the 'GrainID' and
@@ -227,8 +379,8 @@ int VTKRectilinearGridFileReader::readFile()
 
   //size_t index = 0;
   //Cell Data is one less in each direction
-  setDims(dims[0] -1, dims[1] -1, dims[2] -1);
-  getDims(dims);
+  setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
+  getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   m_GrainIds = AIMArray<int>::CreateArray(totalVoxels);
 
@@ -264,7 +416,19 @@ int VTKRectilinearGridFileReader::readFile()
     //  std::map<int, int> grainIdMap;
       if (getFileIsBinary() == true)
       {
-        instream.read(reinterpret_cast<char*> (m_GrainIds->GetPointer(0)), totalVoxels);
+        // Splat 0xAB across the entire array. that way if the read messes up we
+        //  can more easily diagnose the problem.
+        ::memset(m_GrainIds->GetPointer(0), 0xAB, sizeof(int) * totalVoxels);
+        instream.read(reinterpret_cast<char*> (m_GrainIds->GetPointer(0)), sizeof(int) * totalVoxels);
+        int t;
+        // We need to Byte Swap (Possibly) from the Big Endian format stored by
+        // the vtk binary file into what ever system we are running.
+        for (size_t i = 0; i < totalVoxels; ++i)
+        {
+          t = m_GrainIds->GetValue(i);
+          MXA::Endian::FromBigToSystem::convert<int>(t);
+          m_GrainIds->SetValue(i, t);
+        }
       }
       else // ASCII VTK File
       {

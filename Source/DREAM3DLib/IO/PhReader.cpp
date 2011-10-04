@@ -59,51 +59,7 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-/*
-  void tokenize(const string& str, std::vector<string>& tokens, const
-  string& delimiters = " ")
-  ====================================================================
-  Taken from http://www.oopweb.com/CPP/Documents/CPPHOWTO/Volume/C++Programming-HOWTO-7.html
-
-  "A very common operation with strings, is to tokenize it with a
-  delimiter of your own choice. This way you can easily split the
-  string up in smaller pieces, without fiddling with the find()
-  methods too much. In C, you could use strtok() for character arrays,
-  but no equal function exists for strings. This means you have to
-  make your own. Here is a couple of suggestions, use what suits your
-  best."
-  ====================================================================
-*/
-void PhReader::tokenize(const std::string& str,
-                      std::vector<std::string>& tokens,
-                      const std::string& delimiters)
-{
-    // Skip delimiters at beginning.
-  std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-
-    // Find first "non-delimiter".
-  std::string::size_type pos     = str.find_first_of(delimiters, lastPos);
-
-    while (std::string::npos != pos || std::string::npos != lastPos)
-    {
-        // Found a token, add it to the vector.
-        tokens.push_back(str.substr(lastPos, pos - lastPos));
-
-        // Skip delimiters.  Note the "not_of"
-        lastPos = str.find_first_not_of(delimiters, pos);
-
-        // Find next "non-delimiter"
-        pos = str.find_first_of(delimiters, lastPos);
-    }
-}
-
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
+int  PhReader::readFile()
 {
   std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
@@ -111,17 +67,19 @@ int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, i
   //std::vector<int> data; /* vector to store the data */
 
   int error, spin; /* dummy variables */
-  //int nx, ny, nz;
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
 
-  std::ifstream InFile;
-  InFile.open(FileName.c_str());
-  if(!InFile)
+  std::ifstream inFile;
+  inFile.open(getFileName().c_str());
+  if(!inFile)
     {
-    std::cout << "Failed to open: " << FileName << std::endl;
+    std::cout << "Failed to open: " << getFileName() << std::endl;
       return -1;
     }
 
-  getline(InFile, line, '\n');
+  getline(inFile, line, '\n');
   tokenize(line,tokens,delimeters);
 
   // Process the header information from the PH file.
@@ -133,11 +91,9 @@ int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, i
 
   //  cout << "INFO: PH file grid size: " << nx << "\t" << ny << "\t" << nz << endl;;
 
-  //MCgrid3D* grid = new grid(nx,ny,nz);
-
   // Get the remaining two lines of the header and ignore
-  getline(InFile, line, '\n');
-  getline(InFile, line, '\n');
+  getline(inFile, line, '\n');
+  getline(inFile, line, '\n');
 
   //The PH file has a unique format of 20 entries on each line. I have
   //now idea who initiated this insanity but I am about to propetuate
@@ -145,30 +101,42 @@ int  PhReader::readFile(std::string FileName, std::vector<int> &data, int &nx, i
   //
   //The most simple thing todo is to read the entire dataset into one
   //long vector and then read that vector to assign values to the grid
+  size_t index = 0;
+  setDimensions(nx, ny, nz);
+  m_Data = AIMArray<int>::CreateArray(nx * ny * nz);
 
-  while(getline(InFile, line, '\n') != NULL)
-    {
-      tokens.clear();
-      error = 0;
-      tokenize(line,tokens,delimeters);
-      //        cout << line << endl;
-      //        for(int i=0; i < tokens.size(); i++ )
-      //              cout << setw(6) << tokens[i];
-      //        cout << endl;
-
-      for(int in_spins=0; in_spins < tokens.size(); in_spins++)
+  while (getline(inFile, line, '\n') != NULL)
   {
-    error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
-    data.push_back(spin);
-  }
-      //        if(error != 20)
-      //              {
-      //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
-      //              }
+    tokens.clear();
+    error = 0;
+    tokenize(line, tokens, delimeters);
+    //        cout << line << endl;
+    //        for(int i=0; i < tokens.size(); i++ )
+    //              cout << setw(6) << tokens[i];
+    //        cout << endl;
+
+    for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
+    {
+      error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
+      m_Data->SetValue(index, spin);
+      ++index;
     }
+    //        if(error != 20)
+    //              {
+    //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
+    //              }
+  }
+
+  if(index != static_cast<size_t>(nz * ny * nx))
+  {
+    std::cout << "ERROR: data size does not match header dimensions" << std::endl;
+    std::cout << "\t" << index << "\t" << nz * nx * ny << std::endl;
+    return -1;
+    inFile.close();
+  }
+
 
   tokens.clear();
-
-  InFile.close();
+  inFile.close();
   return 0;
 }

@@ -359,7 +359,9 @@ void GrainGenerator::execute()
   if (m_WritePhFile) {
     MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
     PhWriter::Pointer phWriter = PhWriter::New();
-    err = phWriter->writeFile(phFile, m->grain_indicies, m->xpoints, m->ypoints, m->zpoints);
+    phWriter->setDimensions(m->xpoints, m->ypoints, m->zpoints);
+    phWriter->setData(m->m_GrainIndicies);
+    err = phWriter->writeFile();
     CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
   }
 

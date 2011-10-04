@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -209,8 +209,8 @@ int CSVGrainDataReader::readFile()
     return -1;
   }
 
-  int counter = 0;
-  for(int row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
+  size_t counter = 0;
+  for(size_t row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
   {
     in.getline(buf, kBufferSize);
     this->readData(buf, row, counter);

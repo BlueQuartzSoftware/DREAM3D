@@ -30,13 +30,8 @@
 #ifndef UNITTESTSUPPORT_HPP_
 #define UNITTESTSUPPORT_HPP_
 
-#include "MXA/MXA.h"
-#include <MXA/Common/MXASetGetMacros.h>
-//#include <MXA/Core/MXADataModel.h>
-//#include <MXA/Core/MXADataDimension.h>
-//#include <MXA/Core/MXADataRecord.h>
-//#include <MXA/Core/MXASupportFile.h>
-//#include <MXA/DataWrappers/MXAAsciiStringData.h>
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 //-- C++ Includes
@@ -48,7 +43,7 @@
 #define NUM_COLS 70
 
 
-namespace mxa
+namespace DREAM3D
 {
 namespace unittest
 {
@@ -106,12 +101,12 @@ class TestException : public std::exception
        return ss.str();
      }
 
-     MXA_INSTANCE_STRING_PROPERTY(Message)
+     DREAM3D_INSTANCE_STRING_PROPERTY(Message)
        std::string getMessage() const { return m_Message; }
-     MXA_INSTANCE_STRING_PROPERTY(FileName)
+     DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
        std::string getFilename() const { return m_FileName; }
 
-     MXA_INSTANCE_PROPERTY(int, LineNumber)
+     DREAM3D_INSTANCE_PROPERTY(int, LineNumber)
        int getLineNumber() const { return m_LineNumber; }
 
   protected:
@@ -129,22 +124,22 @@ class TestException : public std::exception
 // -----------------------------------------------------------------------------
 void TestPassed(const std::string &test)
 {
-  ::memset(mxa::unittest::TestMessage, ' ', NUM_COLS); // Splat Spaces across the entire message
-  mxa::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
+  ::memset(DREAM3D::unittest::TestMessage, ' ', NUM_COLS); // Splat Spaces across the entire message
+  DREAM3D::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
 
-  std::string::size_type size = NUM_COLS - mxa::unittest::SizeOfPassed;
-  ::strncpy( &(mxa::unittest::TestMessage[size]) , mxa::unittest::Passed, mxa::unittest::SizeOfPassed );
+  std::string::size_type size = NUM_COLS - DREAM3D::unittest::SizeOfPassed;
+  ::strncpy( &(DREAM3D::unittest::TestMessage[size]) , DREAM3D::unittest::Passed, DREAM3D::unittest::SizeOfPassed );
   if (test.length() < size )
   {
-    ::strncpy(mxa::unittest::TestMessage, test.c_str(), test.length());
+    ::strncpy(DREAM3D::unittest::TestMessage, test.c_str(), test.length());
   }
   else
   {
-    ::strncpy(mxa::unittest::TestMessage, test.substr(0, size).c_str(), size);
+    ::strncpy(DREAM3D::unittest::TestMessage, test.substr(0, size).c_str(), size);
   }
-  mxa::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
-  std::cout << mxa::unittest::TestMessage << std::endl;
-  mxa::unittest::numTestsPass++;
+  DREAM3D::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
+  std::cout << DREAM3D::unittest::TestMessage << std::endl;
+  DREAM3D::unittest::numTestsPass++;
 }
 
 // -----------------------------------------------------------------------------
@@ -152,90 +147,90 @@ void TestPassed(const std::string &test)
 // -----------------------------------------------------------------------------
 void TestFailed(const std::string &test)
 {
-  ::memset(mxa::unittest::TestMessage, ' ', NUM_COLS); // Splat Spaces across the entire message
-  mxa::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
+  ::memset(DREAM3D::unittest::TestMessage, ' ', NUM_COLS); // Splat Spaces across the entire message
+  DREAM3D::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
 
-  std::string::size_type size = NUM_COLS - mxa::unittest::SizeOfFailed;
-  ::strncpy( &(mxa::unittest::TestMessage[size]) , mxa::unittest::Failed, mxa::unittest::SizeOfFailed );
+  std::string::size_type size = NUM_COLS - DREAM3D::unittest::SizeOfFailed;
+  ::strncpy( &(DREAM3D::unittest::TestMessage[size]) , DREAM3D::unittest::Failed, DREAM3D::unittest::SizeOfFailed );
   if (test.length() < size )
   {
-    ::strncpy(mxa::unittest::TestMessage, test.c_str(), test.length());
+    ::strncpy(DREAM3D::unittest::TestMessage, test.c_str(), test.length());
   }
   else
   {
-    ::strncpy(mxa::unittest::TestMessage, test.substr(0, size).c_str(), size);
+    ::strncpy(DREAM3D::unittest::TestMessage, test.substr(0, size).c_str(), size);
   }
-  mxa::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
-  std::cout << mxa::unittest::TestMessage << std::endl;
-  mxa::unittest::numTestFailed++;
+  DREAM3D::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
+  std::cout << DREAM3D::unittest::TestMessage << std::endl;
+  DREAM3D::unittest::numTestFailed++;
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#define MXA_TEST_THROW_EXCEPTION( P)\
+#define DREAM3D_TEST_THROW_EXCEPTION( P)\
       throw TestException( P, __FILE__, __LINE__);\
 
 
-#define MXA_ASSERT( P )\
+#define DREAM3D_ASSERT( P )\
   assert( (P) );
 
 
-#define MXA_REQUIRE( P ) \
+#define DREAM3D_REQUIRE( P ) \
   { \
   bool b = (P);\
   if ( (b) == (false) ) \
   {\
     std::string s ("Your test required the following\n            '");\
     s = s.append(#P).append("'\n            but this condition was not met.");\
-    MXA_TEST_THROW_EXCEPTION( s )\
+    DREAM3D_TEST_THROW_EXCEPTION( s )\
   }\
   }
 
 
-#define MXA_REQUIRE_NE( L, R )\
+#define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) != (R) )\
   { std::string s ( #L);\
    s = s.append("==").append(#R);\
-   MXA_TEST_THROW_EXCEPTION( s ) }
+   DREAM3D_TEST_THROW_EXCEPTION( s ) }
 
 
-#define MXA_REQUIRE_EQUAL( L, R) \
+#define DREAM3D_REQUIRE_EQUAL( L, R) \
     if ( (L) != (R) )\
     { std::string s ( #L);\
      s = s.append("==").append(#R);\
-    MXA_TEST_THROW_EXCEPTION( s ) }
+    DREAM3D_TEST_THROW_EXCEPTION( s ) }
 
 
-#define MXA_ENTER_TEST( test )\
-  mxa::unittest::CurrentMethod = #test;\
-  mxa::unittest::numTests++;
+#define DREAM3D_ENTER_TEST( test )\
+  DREAM3D::unittest::CurrentMethod = #test;\
+  DREAM3D::unittest::numTests++;
 
 
-#define MXA_LEAVE_TEST( test )\
+#define DREAM3D_LEAVE_TEST( test )\
   TestPassed(#test);\
-  mxa::unittest::CurrentMethod = "";
+  DREAM3D::unittest::CurrentMethod = "";
 
 
-#define MXA_REGISTER_TEST( test )\
+#define DREAM3D_REGISTER_TEST( test )\
     try {\
-      MXA_ENTER_TEST(test);\
+      DREAM3D_ENTER_TEST(test);\
       test;\
-      MXA_LEAVE_TEST(test)\
+      DREAM3D_LEAVE_TEST(test)\
     } catch (TestException& e)\
     {\
-      TestFailed(mxa::unittest::CurrentMethod);\
+      TestFailed(DREAM3D::unittest::CurrentMethod);\
       std::cout << e.what() << std::endl;\
       err = EXIT_FAILURE;\
     }
 
 #define PRINT_TEST_SUMMARY()\
     std::cout << "Test Summary:" << std::endl;\
-    std::cout << "  Tests Passed: " << mxa::unittest::numTestsPass << std::endl;\
-    std::cout << "  Tests Failed: " << mxa::unittest::numTestFailed << std::endl;\
-    std::cout << "  Total Tests:  " << mxa::unittest::numTests << std::endl;\
-    if (mxa::unittest::numTestFailed > 0)\
+    std::cout << "  Tests Passed: " << DREAM3D::unittest::numTestsPass << std::endl;\
+    std::cout << "  Tests Failed: " << DREAM3D::unittest::numTestFailed << std::endl;\
+    std::cout << "  Total Tests:  " << DREAM3D::unittest::numTests << std::endl;\
+    if (DREAM3D::unittest::numTestFailed > 0)\
     {\
       err = EXIT_FAILURE;\
     }\

@@ -121,7 +121,7 @@ class ReconstructionFunc : public Observable
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
     DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
-    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, float);
+    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char);
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
     DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
 

@@ -64,80 +64,6 @@ VTKFileReader::~VTKFileReader()
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VTKFileReader::parseFloat3V(const char* input, float* output, float defaultValue)
-{
-  char text[256];
-  int n = sscanf(input, "%s %f %f %f", text, &(output[0]), &(output[1]), &(output[2]) );
-  if (n != 4)
-  {
-    output[0] = output[1] = output[2] = defaultValue;
-    return -1;
-  }
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VTKFileReader::parseInt3V(const char* input, int* output, int defaultValue)
-{
-  char text[256];
-  int n = sscanf(input, "%s %d %d %d", text, &(output[0]), &(output[1]), &(output[2]) );
-  if (n != 4)
-  {
-    output[0] = output[1] = output[2] = defaultValue;
-    return -1;
-  }
-  return 0;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VTKFileReader::nonPrintables(char* buf, size_t bufSize)
-{
-  int n = 0;
-  for (size_t i = 0; i < bufSize; ++i)
-  {
-    if (buf[i] < 33 && buf[i] > 0) { n++; }
-  }
-  return n;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VTKFileReader::readLine(std::istream &in, char* buf, int bufSize)
-{
-
-  bool readAnotherLine = true;
-  size_t gcount = in.gcount();
-  while ( readAnotherLine == true && in.gcount() != 0) {
-    // Zero out the buffer
-    ::memset(buf, 0, bufSize);
-    // Read a line up to a '\n' which will catch windows and unix line endings but
-    // will leave a trailing '\r' at the end of the string
-    in.getline(buf, bufSize, '\n');
-    gcount = in.gcount();
-    if (gcount > 1 && buf[in.gcount()-2] == '\r')
-    {
-      buf[in.gcount()-2] = 0;
-    }
-    int len = strlen(buf);
-    int np = nonPrintables(buf, bufSize);
-    if (len != np)
-    {
-      readAnotherLine = false;
-    }
-
-  }
-  return static_cast<int>(in.gcount());
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -260,15 +186,21 @@ int VTKFileReader::readHeader()
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
-  err = parseInt3V(buf, m_Dims, 0);
+  int dims[3];
+  err = parseInt3V(buf, dims, 0);
+  setDimensions(dims);
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
-  err = parseFloat3V(buf, m_Origin, 0.0f);
+  float origin[3];
+  err = parseFloat3V(buf, origin, 0.0f);
+  setOrigin(origin);
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
-  err = parseFloat3V(buf, m_Scaling, 1.0f);
+  float resolution[3];
+  err = parseFloat3V(buf, resolution, 1.0f);
+  setResolution(resolution);
 
   ::memset(buf, 0, kBufferSize);
 

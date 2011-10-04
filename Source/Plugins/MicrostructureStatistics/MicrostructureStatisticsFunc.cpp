@@ -123,33 +123,33 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   mindiameter = NULL;
 
 
-INIT_AIMARRAY(m_GrainIndicies,int);
-INIT_AIMARRAY(m_Phases,int);
-INIT_AIMARRAY(m_Euler1s,float);
-INIT_AIMARRAY(m_Euler2s,float);
-INIT_AIMARRAY(m_Euler3s,float);
-INIT_AIMARRAY(m_Neighbors,int);
-INIT_AIMARRAY(m_SurfaceVoxels,float);
-INIT_AIMARRAY(m_Quats,float);
-INIT_AIMARRAY(m_GrainCounts,int);
+  INIT_AIMARRAY(m_GrainIndicies,int);
+  INIT_AIMARRAY(m_Phases,int);
+  INIT_AIMARRAY(m_Euler1s,float);
+  INIT_AIMARRAY(m_Euler2s,float);
+  INIT_AIMARRAY(m_Euler3s,float);
+  INIT_AIMARRAY(m_Neighbors,int);
+  INIT_AIMARRAY(m_SurfaceVoxels,char);
+  INIT_AIMARRAY(m_Quats,float);
+  INIT_AIMARRAY(m_GrainCounts,int);
 
-INIT_AIMARRAY(m_GrainMisorientations,float);
-INIT_AIMARRAY(m_MisorientationGradients,float);
-INIT_AIMARRAY(m_KernelMisorientations,float);
+  INIT_AIMARRAY(m_GrainMisorientations,float);
+  INIT_AIMARRAY(m_MisorientationGradients,float);
+  INIT_AIMARRAY(m_KernelMisorientations,float);
 
-INIT_AIMARRAY(m_NeighborLists,float);
-INIT_AIMARRAY(m_NearestNeighbors,float);
-INIT_AIMARRAY(m_NearestNeighborDistances,float);
+  INIT_AIMARRAY(m_NeighborLists,float);
+  INIT_AIMARRAY(m_NearestNeighbors,float);
+  INIT_AIMARRAY(m_NearestNeighborDistances,float);
 
-INIT_AIMARRAY(m_GrainCenters,float);
-INIT_AIMARRAY(m_GrainMoments,float);
+  INIT_AIMARRAY(m_GrainCenters,float);
+  INIT_AIMARRAY(m_GrainMoments,float);
 
-INIT_AIMARRAY(m_TotalSurfaceArea,float);
-INIT_AIMARRAY(m_PhaseFraction,float);
-INIT_AIMARRAY(m_TotalVol,float);
-INIT_AIMARRAY(m_TotalAxes,float);
-INIT_AIMARRAY(m_MaxDiameter,float);
-INIT_AIMARRAY(m_MinDiameter,float);
+  INIT_AIMARRAY(m_TotalSurfaceArea,float);
+  INIT_AIMARRAY(m_PhaseFraction,float);
+  INIT_AIMARRAY(m_TotalVol,float);
+  INIT_AIMARRAY(m_TotalAxes,float);
+  INIT_AIMARRAY(m_MaxDiameter,float);
+  INIT_AIMARRAY(m_MinDiameter,float);
 }
 
 // -----------------------------------------------------------------------------
@@ -172,7 +172,7 @@ void MicrostructureStatisticsFunc::initializeGrains()
   // Put at least 1 Grain in the Vector
   m_Grains.resize(1);
   size_t curGrainSize = 1;
-  int grainIndex = 0;
+  size_t grainIndex = 0;
   Grain::Pointer grain;
   for (int i = 0; i < totalpoints; ++i)
   {
@@ -202,7 +202,7 @@ void MicrostructureStatisticsFunc::initializeGrains()
 
   // Loop over the Grains and initialize them as necessary
   size_t gSize = m_Grains.size();
-  for (int g = 0; g < gSize; ++g)
+  for (size_t g = 0; g < gSize; ++g)
   {
     grain = m_Grains[g];
     if (NULL == grain.get())
@@ -228,14 +228,14 @@ void MicrostructureStatisticsFunc::initializeAttributes()
   euler2s = m_Euler2s->WritePointer(0, totalpoints);
   euler3s = m_Euler3s->WritePointer(0, totalpoints);
   neighbors = m_Neighbors->WritePointer(0, totalpoints);
-  for (size_t i = 0; i < totalpoints; ++i)
+  for (int i = 0; i < totalpoints; ++i)
   {
     euler1s[i] = -1.0f;
     euler2s[i] = -1.0f;
     euler3s[i] = -1.0f;
     neighbors[i] = -1;
   }
-  
+
   surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
   quats = m_Quats->WritePointer(0, totalpoints * 5);
   m_Quats->SetNumberOfComponents(5);
@@ -322,37 +322,37 @@ void MicrostructureStatisticsFunc::find_neighbors()
   {
     onsurf = 0;
     grain = grain_indicies[j];
-	if(grain > 0)
-	{
-		column = j%xpoints;
-		row = (j/xpoints)%ypoints;
-		plane = j/(xpoints*ypoints);
-        for(int k=0;k<6;k++)
+    if(grain > 0)
+    {
+      column = j % xpoints;
+      row = (j / xpoints) % ypoints;
+      plane = j / (xpoints * ypoints);
+      for (int k = 0; k < 6; k++)
+      {
+        good = 1;
+        neighbor = j + neighpoints[k];
+        if(k == 0 && plane == 0) good = 0;
+        if(k == 5 && plane == (zpoints - 1)) good = 0;
+        if(k == 1 && row == 0) good = 0;
+        if(k == 4 && row == (ypoints - 1)) good = 0;
+        if(k == 2 && column == 0) good = 0;
+        if(k == 3 && column == (xpoints - 1)) good = 0;
+        if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
         {
-	      good = 1;
-	      neighbor = j+neighpoints[k];
-          if(k == 0 && plane == 0) good = 0;
-          if(k == 5 && plane == (zpoints-1)) good = 0;
-          if(k == 1 && row == 0) good = 0;
-          if(k == 4 && row == (ypoints-1)) good = 0;
-          if(k == 2 && column == 0) good = 0;
-          if(k == 3 && column == (xpoints-1)) good = 0;
-	      if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
+          onsurf++;
+          nnum = m_Grains[grain]->numneighbors;
+          std::vector<int>* nlist = m_Grains[grain]->neighborlist;
+          if(nnum >= (nlist->size()))
           {
-	        onsurf++;
-	        nnum = m_Grains[grain]->numneighbors;
-	        std::vector<int>* nlist = m_Grains[grain]->neighborlist;
-	        if (nnum >= (nlist->size()))
-	        {
-	         nlist->resize(nnum + nListSize);
-	        }
-	        nlist->at(nnum) = grain_indicies[neighbor];
-	        nnum++;
-	        m_Grains[grain]->numneighbors = static_cast<int>(nnum);
-	      }
-	    }
-	}
-	surfacevoxels[j] = onsurf;
+            nlist->resize(nnum + nListSize);
+          }
+          nlist->at(nnum) = grain_indicies[neighbor];
+          nnum++;
+          m_Grains[grain]->numneighbors = static_cast<int>(nnum);
+        }
+      }
+    }
+    surfacevoxels[j] = onsurf == 0;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
   {

@@ -54,7 +54,7 @@
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
-#include "DREAM3DLib/VTKUtils/VTKRectilinearGridFileReader.h"
+#include "FileConversion/VtkGrainIdReader.h"
 
 
 #define APPEND_DATA_TRUE 1
@@ -360,14 +360,14 @@ int main(int argc, char **argv)
 
 
     std::cout << "Reading the Vtk data file...." << std::endl;
-    VTKRectilinearGridFileReader::Pointer reader = VTKRectilinearGridFileReader::New();
+    VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
     reader->setInputFileName(vFile);
-    int err = reader->readFile();
+    int err = reader->readGrainIds();
     if (err < 0)
     {
      return EXIT_FAILURE;
     }
-    reader->getDims(nx, ny, nz);
+    reader->getDimensions(nx, ny, nz);
     std::cout << "Vtk File has dimensions: " << nx << " x " << ny << " x " << nz << std::endl;
     voxels = reader->getGrainIds();
 
@@ -389,7 +389,7 @@ int main(int argc, char **argv)
     }
     int volDims[3] = { nx, ny, nz };
     float spacing[3] = {1.0f, 1.0f, 1.0f};
-    reader->getScaling(spacing);
+    reader->getResolution(spacing);
     float origin[3] = { 0.0f, 0.0f, 0.0f };
     err = h5VolWriter->writeStructuredPoints(volDims, spacing, origin, true);
     if (err < 0)

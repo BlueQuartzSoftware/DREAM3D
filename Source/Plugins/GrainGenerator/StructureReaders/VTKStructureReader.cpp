@@ -63,8 +63,8 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   int err = 0;
 
   err = readHeader();
-  getDims(m->xpoints, m->ypoints, m->zpoints);
-  getScaling(m->resx, m->resy, m->resz);
+  getDimensions(m->xpoints, m->ypoints, m->zpoints);
+  getResolution(m->resx, m->resy, m->resz);
   m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
   m->totalvol = float(m->totalpoints) * m->resx * m->resy * m->resz;
   m->sizex = m->xpoints * m->resx;
