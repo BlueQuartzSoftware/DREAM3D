@@ -143,7 +143,7 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
 // -----------------------------------------------------------------------------
 float SuperEllipsoidOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
-  int inside = 1.0;
+  float inside = 1.0;
   axis1comp = fabs(axis1comp);
   axis2comp = fabs(axis2comp);
   axis3comp = fabs(axis3comp);

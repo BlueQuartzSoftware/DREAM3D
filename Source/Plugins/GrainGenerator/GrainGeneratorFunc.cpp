@@ -162,7 +162,7 @@ void GrainGeneratorFunc::initializeAttributes()
 	for(int i=0;i<totalpoints;i++)
 	{
 		grain_indicies[i] = 0;
-		ellipfuncs[i] = 0;
+		ellipfuncs[i] = -1;
 		phases[i] = 0;
 		euler1s[i] = -1;
 		euler2s[i] = -1;
@@ -870,7 +870,7 @@ void GrainGeneratorFunc::assign_gaps()
   while (unassignedcount != 0)
   {
 	  unassignedcount = 0;
-	  timestep = timestep + 10;
+	  timestep = timestep + 5;
 	  for (size_t i = 1; i < m_Grains.size(); i++)
 	  {
 		float volcur = m_Grains[i]->volume;
@@ -900,9 +900,9 @@ void GrainGeneratorFunc::assign_gaps()
 
 		float radcur2 = (radcur1 * bovera);
 		float radcur3 = (radcur1 * covera);
-		radcur1 = (double(timestep)/100.0)*radcur1;
-		radcur2 = (double(timestep)/100.0)*radcur2;
-		radcur3 = (double(timestep)/100.0)*radcur3;
+		radcur1 = (float(timestep)/100.0)*radcur1;
+		radcur2 = (float(timestep)/100.0)*radcur2;
+		radcur3 = (float(timestep)/100.0)*radcur3;
 		float phi1 = m_Grains[i]->axiseuler1;
 		float PHI = m_Grains[i]->axiseuler2;
 		float phi2 = m_Grains[i]->axiseuler3;
