@@ -148,6 +148,10 @@ IF ( DREAM3D_BUILD_CLI_TOOLS )
 include(${PROJECT_SOURCE_DIR}/Tools/Tools.cmake)
 endif()
 
+IF (DREAM3D_BUILD_TESTING)
+    add_subdirectory(Test)
+endif()
+
 
 
 

@@ -190,9 +190,9 @@ void TestFailed(const std::string &test)
 
 
 #define DREAM3D_REQUIRE_NE( L, R )\
-  if ( (L) != (R) )\
+  if ( (L) == (R) )\
   { std::string s ( #L);\
-   s = s.append("==").append(#R);\
+   s = s.append("!=").append(#R);\
    DREAM3D_TEST_THROW_EXCEPTION( s ) }
 
 

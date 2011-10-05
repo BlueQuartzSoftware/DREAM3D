@@ -50,8 +50,6 @@ class  VtkGrainIdReader : public GrainIdReader
 
     virtual ~VtkGrainIdReader();
 
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFileName);
     DREAM3D_INSTANCE_STRING_PROPERTY(Comment);
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType);
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary);
