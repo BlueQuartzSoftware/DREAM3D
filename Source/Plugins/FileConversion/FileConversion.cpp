@@ -232,13 +232,18 @@ void FileConversion::execute()
 
   reader->setFileName(m_InputFilePath);
   err = reader->readGrainIds();
-  CHECK_FOR_ERROR(FileConversionFunc, "Reading the input file failed.", err);
+  CHECK_FOR_ERROR(FileConversionFunc, (reader->getErrorMessage()), err);
   reader->getDimensions(nx, ny, nz);
   float resolution[3];
   reader->getResolution(resolution);
   float origin[3];
   reader->getOrigin(origin);
   AIMArray<int>::Pointer grainIds = reader->getGrainIds();
+  if (grainIds.get() == NULL)
+  {
+    err = -1;
+    CHECK_FOR_ERROR(FileConversionFunc, "Array pointer was NULL", err);
+  }
 
   writer->setFileName(m_OutputFilePath);
   writer->setGrainIds(grainIds);

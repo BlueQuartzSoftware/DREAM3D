@@ -170,16 +170,21 @@ int VtkGrainIdReader::readHeader()
 {
 
   int err = 0;
-  if (m_InputFileName.empty() == true)
+  if (getFileName().empty() == true)
   {
+    std::stringstream ss;
+    ss << "Input filename was empty";
+    setErrorMessage(ss.str());
     return -1;
   }
 
   std::ifstream instream;
-  instream.open(m_InputFileName.c_str());
+  instream.open(getFileName().c_str());
   if (!instream.is_open())
   {
-    std::cout << logTime() << " vtk file could not be opened: " << m_InputFileName << std::endl;
+    std::stringstream ss;
+    ss << "Vtk file could not be opened: " << getFileName();
+    setErrorMessage(ss.str());
     return -1;
   }
   char buf[kBufferSize];
@@ -201,9 +206,9 @@ int VtkGrainIdReader::readHeader()
   else
   {
     err = -1;
-    std::cout << logTime()
-        << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        << std::endl;
+    std::stringstream ss;
+    ss << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file.";
+    setErrorMessage(ss.str());
     return err;
   }
   ::memset(buf, 0, kBufferSize);
@@ -213,7 +218,9 @@ int VtkGrainIdReader::readHeader()
     int n = sscanf(buf, "%s %s", text, &(text[16]) );
     if (n < 2)
     {
-      std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
+      std::stringstream ss;
+      ss << "Error Reading the type of data set. Was expecting 2 fields but got " << n;
+      setErrorMessage(ss.str());
       return -1;
     }
     std::string dataset(&(text[16]));
@@ -226,6 +233,7 @@ int VtkGrainIdReader::readHeader()
   err = parseInt3V(buf, dims, 0);
   setDimensions(dims);
 
+#if 0
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
@@ -233,12 +241,14 @@ int VtkGrainIdReader::readHeader()
   setOrigin(origin);
 
   ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
+  instream.getline(buf, kBufferSize);// Read Line 7 which is the Scaling values
   float resolution[3];
   err = parseFloat3V(buf, resolution, 1.0f);
   setResolution(resolution);
 
   ::memset(buf, 0, kBufferSize);
+#endif
+
 
 
   instream.close();
@@ -305,13 +315,16 @@ int VtkGrainIdReader::readGrainIds()
   int err = 0;
 
   err = readHeader();
+  if (err < 0) { return err; }
 
-  std::string filename = getInputFileName();
+  std::string filename = getFileName();
   std::ifstream instream;
   instream.open(filename.c_str());
   if (!instream.is_open())
   {
-    std::cout << logTime() << " vtk file could not be opened: " << filename << std::endl;
+    std::stringstream ss;
+    ss << logTime() << " vtk file could not be opened: " << filename << std::endl;
+    setErrorMessage(ss.str());
     return -1;
   }
   char buf[kBufferSize];
@@ -331,6 +344,9 @@ int VtkGrainIdReader::readGrainIds()
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[0])
   {
+    std::stringstream ss;
+    ss << "x dimension does not match expected dimension: " << dim << " <--> " << dims[0];
+    setErrorMessage(ss.str());
     return -1;
   }
   float xscale = 1.0f;
@@ -343,6 +359,9 @@ int VtkGrainIdReader::readGrainIds()
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[1])
   {
+    std::stringstream ss;
+    ss << "y dimension does not match expected dimension: " << dim << " <--> " << dims[1];
+    setErrorMessage(ss.str());
     return -1;
   }
   float yscale = 1.0f;
@@ -354,10 +373,19 @@ int VtkGrainIdReader::readGrainIds()
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[2])
   {
+    std::stringstream ss;
+    ss << "z dimension does not match expected dimension: " << dim << " <--> " << dims[2];
+    setErrorMessage(ss.str());
     return -1;
   }
   float zscale = 1.0f;
   err = skipVolume<float>(instream, 4, 1, 1, dim, zscale);
+  if (err < 0)
+  {
+    std::stringstream ss;
+    ss << "Error skipping Volume section of VTK file.";
+    return err;
+  }
   // This makes a very bad assumption that the Rectilinear grid has even spacing
   // along each axis which it does NOT have to have. Since this class is specific
   // to the DREAM.3D package this is a safe assumption.
@@ -383,7 +411,7 @@ int VtkGrainIdReader::readGrainIds()
   getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   m_GrainIds = AIMArray<int>::CreateArray(totalVoxels);
-
+  m_GrainIds->SetName("GrainIds");
   readLine(instream, buf, kBufferSize);
 
  // int i = 0;
@@ -396,7 +424,9 @@ int VtkGrainIdReader::readGrainIds()
     int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
     if (n != 4)
     {
-      std::cout << "Error reading SCALARS header section of VTK file." << std::endl;
+      std::stringstream ss;
+      ss << "Error reading SCALARS header section of VTK file.";
+      setErrorMessage(ss.str());
       return -1;
     }
     scalarName = std::string(text2);
