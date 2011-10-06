@@ -54,39 +54,56 @@ namespace Detail {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  class _H5VoxelReader : public GrainIdReader
+  class H5VoxelGrainIdReader : public GrainIdReader
   {
     public:
-      DREAM3D_SHARED_POINTERS(_H5VoxelReader);
-      DREAM3D_STATIC_NEW_MACRO(_H5VoxelReader);
-      DREAM3D_TYPE_MACRO(_H5VoxelReader);
-      DREAM3D_STATIC_NEW_SUPERCLASS(GrainIdReader, _H5VoxelReader);
+      DREAM3D_SHARED_POINTERS(H5VoxelGrainIdReader);
+      DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdReader);
+      DREAM3D_TYPE_MACRO(H5VoxelGrainIdReader);
+      DREAM3D_STATIC_NEW_SUPERCLASS(GrainIdReader, H5VoxelGrainIdReader);
 
 
-      virtual ~_H5VoxelReader() {}
+      virtual ~H5VoxelGrainIdReader() {}
 
-      int readFile(std::string filePath, std::vector<int> &data, int &nx, int &ny, int &nz)
+      int readGrainIds()
       {
         int err = 0;
         H5VoxelReader::Pointer reader = H5VoxelReader::New();
-        reader->setFileName(filePath);
+        reader->setFileName(getFileName());
         int volDims[3];
         float spacing[3];
-        err = reader->getSizeAndResolution(volDims, spacing);
-        int totalpoints = volDims[0] * volDims[1] * volDims[2];
-        data.resize(totalpoints);
+        float origin[3];
+        err = reader->getSizeResolutionOrigin(volDims, spacing, origin);
+        if (err < 0)
+        {
+          setErrorMessage("Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File");
+          return err;
+        }
+        setDimensions(volDims);
+        setResolution(spacing);
+        setOrigin(origin);
 
-        err = reader->readScalarData<int>(DREAM3D::VTK::GrainIdScalarName, &(data.front()));
+        size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
+        // Create an AIMArray to hold the data
+        AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(totalpoints);
+
+        err = reader->readScalarData<int>(DREAM3D::VTK::GrainIdScalarName, grainIds->GetPointer(0));
+        if (err < 0)
+        {
+          setErrorMessage("Error Reading the GrainIDs from the .h5voxel file.");
+          grainIds = AIMArray<int>::NullPointer();
+        }
+        setGrainIds(grainIds);
         return err;
 
       }
 
     protected:
-      _H5VoxelReader() {}
+      H5VoxelGrainIdReader() {}
 
     private:
-      _H5VoxelReader(const _H5VoxelReader&); // Copy Constructor Not Implemented
-      void operator=(const _H5VoxelReader&); // Operator '=' Not Implemented
+      H5VoxelGrainIdReader(const H5VoxelGrainIdReader&); // Copy Constructor Not Implemented
+      void operator=(const H5VoxelGrainIdReader&); // Operator '=' Not Implemented
 
   };
 
@@ -95,25 +112,27 @@ namespace Detail {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  class _H5VoxelWriter : public GrainIdWriter
+  class H5VoxelGrainIdWriter : public GrainIdWriter
   {
     public:
-       DREAM3D_SHARED_POINTERS(_H5VoxelWriter)
-       DREAM3D_STATIC_NEW_MACRO(_H5VoxelWriter)
-       DREAM3D_TYPE_MACRO(_H5VoxelWriter)
+       DREAM3D_SHARED_POINTERS(H5VoxelGrainIdWriter)
+       DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdWriter)
+       DREAM3D_TYPE_MACRO(H5VoxelGrainIdWriter)
        static GrainIdWriter::Pointer NewDREAM3DFileWriter()
        {
-         _H5VoxelWriter* ptr = new _H5VoxelWriter();
+         H5VoxelGrainIdWriter* ptr = new H5VoxelGrainIdWriter();
          GrainIdWriter::Pointer shared_ptr(dynamic_cast<GrainIdWriter*>(ptr));
          return shared_ptr;
        }
-       _H5VoxelWriter() {}
-       virtual ~_H5VoxelWriter() {}
+       H5VoxelGrainIdWriter() {}
+       virtual ~H5VoxelGrainIdWriter() {}
 
        int writeGrainIds()
-       {/*
-         int err = 0;
+       {
 
+         int err = -1;
+         setErrorMessage(".h5voxel output files are NOT currently supported");
+         /*
          int totalpoints = xpoints * ypoints * zpoints;
 
          H5VoxelWriter::Pointer writer = H5VoxelWriter::New();
@@ -130,13 +149,13 @@ namespace Detail {
          }
 
          err = writer->writeGrainIds(grain_index, totalpoints, true);
-
+        */
 
          return err;
-       */}
+       }
     private:
-       _H5VoxelWriter(const _H5VoxelWriter&); // Copy Constructor Not Implemented
-       void operator=(const _H5VoxelWriter&); // Operator '=' Not Implemented
+       H5VoxelGrainIdWriter(const H5VoxelGrainIdWriter&); // Copy Constructor Not Implemented
+       void operator=(const H5VoxelGrainIdWriter&); // Operator '=' Not Implemented
   };
 }
 
@@ -177,7 +196,7 @@ void FileConversion::execute()
     }
     else if (inputExtension.compare("h5voxel") == 0)
     {
-      //reader = Detail::_H5VoxelReader::NewDREAM3DFileReader();
+      reader = Detail::H5VoxelGrainIdReader::NewGrainIdReader();
     }
     else if (inputExtension.compare("dx") == 0)
     {
@@ -202,7 +221,7 @@ void FileConversion::execute()
   }
   else if (outputExtension.compare("h5voxel") == 0)
   {
-    //writer = Detail::_H5VoxelWriter::NewGrainIdWriter();
+    //writer = Detail::H5VoxelGrainIdWriter::NewGrainIdWriter();
   }
   else if (outputExtension.compare("dx") == 0)
   {
@@ -253,7 +272,7 @@ void FileConversion::execute()
 
   err = writer->writeGrainIds();
 
-  CHECK_FOR_ERROR(FileConversionFunc, "The conversion Failed during the file writing stage.", err);
+  CHECK_FOR_ERROR(FileConversionFunc, (writer->getErrorMessage()), err);
 
   updateProgressAndMessage(("File Conversion Completed"), 100);
 }

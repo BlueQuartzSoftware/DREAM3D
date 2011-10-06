@@ -10,6 +10,8 @@
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QFileConversion.h"
 
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
 class QListWidgetItem;
 
 /**
@@ -28,6 +30,8 @@ class FileConversionWidget : public DREAM3DPluginFrame, private Ui::FileConversi
   public:
     FileConversionWidget(QWidget *parent = 0);
     virtual ~FileConversionWidget();
+
+    DREAM3D_INSTANCE_PROPERTY(QString, OpenDialogLastDirectory)
 
     /**
      * @brief Reads the Preferences from the users pref file
@@ -62,6 +66,12 @@ class FileConversionWidget : public DREAM3DPluginFrame, private Ui::FileConversi
     void on_m_InputFilePath_textChanged(const QString text);
     void on_m_OutputFilePath_textChanged(const QString text);
 
+    void on_m_SelectInputBtn_clicked();
+
+    void on_m_SaveOutputBtn_clicked();
+
+
+
 
   private slots:
     // slots for our worker thread to communicate
@@ -77,7 +87,7 @@ class FileConversionWidget : public DREAM3DPluginFrame, private Ui::FileConversi
     QList<QWidget*> m_WidgetList;
     QFileConversion* m_FileConversion;
     QThread* m_WorkerThread;
-    QString m_OpenDialogLastDirectory;
+
 
     FileConversionWidget(const FileConversionWidget&); // Copy Constructor Not Implemented
     void operator=(const FileConversionWidget&); // Operator '=' Not Implemented
