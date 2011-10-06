@@ -253,9 +253,10 @@ void SurfaceMesh::execute()
 
   int dims[3];
   float scaling[3];
-  err = reader->getSizeAndResolution(dims, scaling);
+  float origin[3];
+  err = reader->getSizeResolutionOrigin(dims, scaling, origin);
   CHECK_FOR_ERROR(SurfaceMeshFunc, "Error reading the size and dimensions data from the input file", err);
-  CHECK_FOR_CANCELED(SurfaceMeshFunc, "Surface Mesh was canceled", getSizeAndResolution);
+  CHECK_FOR_CANCELED(SurfaceMeshFunc, "Surface Mesh was canceled", getSizeResolutionOrigin);
 
   // Initialize our SurfaceMeshFunc Variable
   // Add a layer of padding around the volume which are going to be our boundary voxels

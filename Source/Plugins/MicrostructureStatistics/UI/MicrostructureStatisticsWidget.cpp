@@ -206,7 +206,8 @@ void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &t
     h5Reader->setFileName(m_InputFile->text().toStdString());
     int dims[3];
     float spacing[3];
-    int err = h5Reader->getSizeAndResolution(dims, spacing);
+    float origin[3];
+    int err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
     if (err >= 0)
     {
       xDim->setText(QString::number(dims[0]));
