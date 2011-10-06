@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
     MXA_INSTANCE_STRING_PROPERTY(FileName);
     MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
-    int getSizeAndResolution(int volDims[3], float spacing[3]);
+    int getSizeResolutionOrigin(int volDims[3], float spacing[3], float origin[3]);
 
     int readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelLayer);
 

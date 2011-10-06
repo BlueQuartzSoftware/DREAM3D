@@ -72,7 +72,7 @@ int  PhReader::readFile()
   int nz = 0;
 
   std::ifstream inFile;
-  inFile.open(getFileName().c_str());
+  inFile.open(getFileName().c_str(), std::ios_base::binary);
   if(!inFile)
     {
     std::cout << "Failed to open: " << getFileName() << std::endl;

@@ -361,7 +361,7 @@ int main(int argc, char **argv)
 
     std::cout << "Reading the Vtk data file...." << std::endl;
     VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
-    reader->setInputFileName(vFile);
+    reader->setFileName(vFile);
     int err = reader->readGrainIds();
     if (err < 0)
     {
@@ -401,7 +401,7 @@ int main(int argc, char **argv)
     AIMArray<float>::Pointer e2 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
     AIMArray<float>::Pointer e3 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
 
-    float f_nan = std::numeric_limits<float>::quiet_NaN();
+ //   float f_nan = std::numeric_limits<float>::quiet_NaN();
     size_t totalVoxels = voxels->GetNumberOfTuples();
 
     for(size_t i = 0; i < totalVoxels; ++i)

@@ -22,7 +22,7 @@ Extrapolation2Dto3DFunc::~Extrapolation2Dto3DFunc()
 void Extrapolation2Dto3DFunc::loadtwodimxgrains(const std::string & inname1)
 { 
     ifstream inputFile;
-    inputFile.open(inname1.c_str());
+    inputFile.open(inname1.c_str(), std::ios_base::binary);
 	int gnum;
 	double area;
 	double a;
@@ -65,7 +65,7 @@ void Extrapolation2Dto3DFunc::loadtwodimxgrains(const std::string & inname1)
 void Extrapolation2Dto3DFunc::loadtwodimygrains(const std::string & inname2)
 { 
     ifstream inputFile;
-    inputFile.open(inname2.c_str());
+    inputFile.open(inname2.c_str(), std::ios_base::binary);
 	int gnum;
 	double area;
 	double a;
@@ -108,7 +108,7 @@ void Extrapolation2Dto3DFunc::loadtwodimygrains(const std::string & inname2)
 void Extrapolation2Dto3DFunc::loadtwodimzgrains(const std::string & inname3)
 { 
     ifstream inputFile;
-    inputFile.open(inname3.c_str());
+    inputFile.open(inname3.c_str(), std::ios_base::binary);
 	int gnum;
 	double area;
 	double a;

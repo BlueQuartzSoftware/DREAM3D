@@ -140,7 +140,7 @@ int VTKFileReader::readHeader()
   }
 
   std::ifstream instream;
-  instream.open(m_InputFileName.c_str());
+  instream.open(m_InputFileName.c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
     std::cout << logTime() << " vtk file could not be opened: " << m_InputFileName << std::endl;

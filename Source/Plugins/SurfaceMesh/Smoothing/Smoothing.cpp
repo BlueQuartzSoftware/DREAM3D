@@ -448,7 +448,7 @@ int Smoothing::execute()
     {
       // Open the outputfile
       std::ofstream inpFileOStream;
-      inpFileOStream.open(IterationFile.c_str());
+      inpFileOStream.open(IterationFile.c_str(), std::ios_base::binary);
       if (!inpFileOStream)
       {
         std::cout << "Failed to open: " << IterationFile << std::endl;
@@ -496,7 +496,7 @@ int Smoothing::execute()
 
       MAKE_OUTPUT_FILE_PATH(nodes_smoothed_txt, DREAM3D::SurfaceSmoothing::NodesSmoothedFile);
 
-      inpFileOStream.open(nodes_smoothed_txt.c_str()); // output Sukbin style nodes
+      inpFileOStream.open(nodes_smoothed_txt.c_str(), std::ios_base::binary); // output Sukbin style nodes
       if (!inpFileOStream)
       {
         std::cout << "Failed to open: " << nodes_smoothed_txt << std::endl;
