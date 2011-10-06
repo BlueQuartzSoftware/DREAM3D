@@ -54,7 +54,7 @@ class  VtkGrainIdReader : public GrainIdReader
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType);
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary);
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName);
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, GrainIds);
+
 
     /**
      * @brief Reads the VTK header and sets the values that are described in the header

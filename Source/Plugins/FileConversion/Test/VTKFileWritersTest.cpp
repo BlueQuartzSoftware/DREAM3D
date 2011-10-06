@@ -88,6 +88,7 @@ int TestVtkGrainIdWriter()
   writer->setWriteBinaryFiles(true);
   writer->setFileName(Detail::TestFile);
   writer->setDimensions(nx, ny, nz);
+  writer->setResolution(1.0f, 1.0f, 1.0f);
   writer->setGrainIds(grainIds);
   int err = writer->writeGrainIds();
   DREAM3D_REQUIRE_EQUAL(err, 0);
