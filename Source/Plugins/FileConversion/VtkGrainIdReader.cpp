@@ -179,7 +179,7 @@ int VtkGrainIdReader::readHeader()
   }
 
   std::ifstream instream;
-  instream.open(getFileName().c_str());
+  instream.open(getFileName().c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
     std::stringstream ss;
@@ -290,10 +290,8 @@ int VtkGrainIdReader::readLine(std::istream &in, char* buf, int bufSize)
     ::memset(buf, 0, bufSize);
     // Read a line up to a '\n' which will catch windows and unix line endings but
     // will leave a trailing '\r' at the end of the string
-    std::cout << "File Pointer Before: " << in.tellg() << std::endl;
-    in.getline(buf, bufSize, '\n');
+    in.getline(buf, kBufferSize);
     gcount = in.gcount();
-    std::cout << "File Pointer After: " << in.tellg() << std::endl;
     if (gcount > 1 && buf[in.gcount()-2] == '\r')
     {
       buf[in.gcount()-2] = 0;
@@ -321,7 +319,7 @@ int VtkGrainIdReader::readGrainIds()
 
   std::string filename = getFileName();
   std::ifstream instream;
-  instream.open(filename.c_str());
+  instream.open(filename.c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
     std::stringstream ss;
@@ -329,14 +327,11 @@ int VtkGrainIdReader::readGrainIds()
     setErrorMessage(ss.str());
     return -1;
   }
-  std::iostream::streamoff start = instream.tellg();
-std::iostream::streamoff current;
+
   char buf[kBufferSize];
   for (int i = 0; i < 5; ++i)
   {
     instream.getline(buf, kBufferSize);
-    current = instream.tellg();
-    std::cout << "File Pos: " << current << std::endl;
   }
 
   int dims[3];
@@ -347,8 +342,6 @@ std::iostream::streamoff current;
   // Now parse the X, coordinates.
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
-  current = instream.tellg();
-  std::cout << "File Pos: " << (current) << std::endl;
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[0])
   {
@@ -359,13 +352,11 @@ std::iostream::streamoff current;
   }
   float xscale = 1.0f;
   err = skipVolume<float>(instream, 4, dim, 1, 1, xscale);
-  current = instream.tellg();
-  std::cout << "File Pos: " << (current) << std::endl;
+
   // Now parse the Y coordinates.
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
-  current = instream.tellg();
-  std::cout << "File Pos: " << (current) << std::endl;  err = parseCoordinateLine(buf, dim);
+  err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[1])
   {
     std::stringstream ss;
@@ -375,8 +366,7 @@ std::iostream::streamoff current;
   }
   float yscale = 1.0f;
   err = skipVolume<float>(instream, 4, 1, dim, 1, yscale);
-  current = instream.tellg();
-  std::cout << "File Pos: " << (current) << std::endl;
+ 
   // Now parse the Z coordinates.
 //  ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);

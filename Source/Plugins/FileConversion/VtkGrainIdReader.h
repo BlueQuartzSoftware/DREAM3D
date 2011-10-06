@@ -150,7 +150,12 @@ class  VtkGrainIdReader : public GrainIdReader
            return -1;
          }
          if (totalSize > 1) {
-           diff = buffer[totalSize-1] - buffer[totalSize-2];
+           T t = buffer[totalSize-1];
+           T t1 = buffer[totalSize-2];
+           // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
+           MXA::Endian::FromBigToSystem::convert<T>(t);
+           MXA::Endian::FromBigToSystem::convert<T>(t1);
+           diff =t-t1;
          }
          else
          {

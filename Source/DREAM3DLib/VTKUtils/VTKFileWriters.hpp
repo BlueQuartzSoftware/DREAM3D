@@ -308,9 +308,9 @@ class VTKRectilinearGridFileWriter
           MXA::Endian::FromSystemToBig::convert<T>(d);
           data[idx] = d;
         }
-        int totalWritten = fwrite(data, sizeof(T), npoints, f);
+        size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
         delete[] data;
-        if (totalWritten != npoints)
+        if (totalWritten != static_cast<size_t>(npoints) )
         {
           std::cout << "Error Writing Binary VTK Data into file " << std::endl;
           fclose(f);
@@ -569,9 +569,9 @@ class VtkMiscFileWriter
       int col, row, plane;
       int index;
       int *gnames;
-      int numgrains = r->m_Grains.size();
+      size_t numgrains = r->m_Grains.size();
       gnames = new int[numgrains];
-      for (int i = 0; i < numgrains; i++)
+      for (size_t i = 0; i < numgrains; i++)
       {
         gnames[i] = 0;
       }

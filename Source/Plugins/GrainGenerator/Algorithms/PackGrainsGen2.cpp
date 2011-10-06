@@ -413,7 +413,7 @@ void PackGrainsGen2::execute()
 #if ERROR_TXT_OUT
   ofstream outFile;
   string filename = "error.txt";
-  outFile.open(filename.c_str());
+  outFile.open(filename.c_str(), std::ios_base::binary);
 #endif
   // begin swaping/moving/adding/removing grains to try to improve packing
   int numgrains = m->m_Grains.size();
@@ -500,7 +500,7 @@ void PackGrainsGen2::execute()
 
 //  ofstream outFile;
   filename = "test.vtk";
-  outFile.open(filename.c_str());
+  outFile.open(filename.c_str(), std::ios_base::binary);
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;
