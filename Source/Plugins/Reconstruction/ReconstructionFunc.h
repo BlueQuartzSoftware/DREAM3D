@@ -198,10 +198,6 @@ class ReconstructionFunc : public Observable
     void renumber_grains3();
     void align_sections();
 
-    float find_xcoord(size_t index);
-    float find_ycoord(size_t index);
-    float find_zcoord(size_t index);
-
   protected:
     ReconstructionFunc();
 

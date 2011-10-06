@@ -388,7 +388,7 @@ void MicrostructureStatisticsFunc::find_neighbors()
       m_Grains[i]->neighborlist->push_back(neigh);
       m_Grains[i]->neighborsurfacealist->push_back(area);
     }
-    m_Grains[i]->numneighbors = numneighs;
+	m_Grains[i]->numneighbors = m_Grains[i]->neighborlist->size();
   }
 }
 

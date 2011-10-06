@@ -87,7 +87,7 @@ float DREAM3DMath::Gamma(float x)
        -0.54e-14f,
         0.14e-14f};
 
-        if (x > 171.0f) return std::numeric_limits<float>::max();    // This value is an overflow flag.
+        if (x > 34.0f) return std::numeric_limits<float>::max();    // This value is an overflow flag.
     if (x == (int)x) {
         if (x > 0.0) {
             ga = 1.0;               // use factorial
