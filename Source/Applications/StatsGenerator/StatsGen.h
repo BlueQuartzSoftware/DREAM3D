@@ -213,9 +213,9 @@ class StatsGen
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
-	  int samplevariant = 0;
+	    int samplevariant = 0;
       float svx, svy;
-	  float q1[5];
+	    float q1[5];
       float ea1, ea2, ea3;
       float g[3][3];
       float x, y, z;
