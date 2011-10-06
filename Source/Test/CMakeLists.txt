@@ -58,19 +58,6 @@ add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 
 # --------
-if(0)
-add_executable(VTKFileWritersTest ${DREAM3DTest_SOURCE_DIR}/VTKFileWritersTest.cpp
-                ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
-                ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/Reconstruction/ReconstructionFunc.cpp
-                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
-                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen2.cpp
-                 ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/MicrostructureStatistics/MicrostructureStatisticsFunc.cpp
-)
-target_link_libraries(VTKFileWritersTest DREAM3DLib)
-add_test(VTKFileWritersTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/VTKFileWritersTest)
-endif(0)
-
-# --------
 add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp)
 target_link_libraries(PhIOTest DREAM3DLib)
 add_test(PhIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PhIOTest)
@@ -99,12 +86,10 @@ target_link_libraries(CtfReaderTest EbsdLib)
 # --------
 add_executable(StatsGenTest ${DREAM3DTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest DREAM3DLib)
-MXA_ADD_TEST(StatsGenTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsGenTest)
 
 # --------
 add_executable(RNGTest ${DREAM3DTest_SOURCE_DIR}/RNGTest.cpp)
 target_link_libraries(RNGTest DREAM3DLib)
-
 
 # --------
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)

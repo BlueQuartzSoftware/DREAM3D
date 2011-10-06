@@ -90,7 +90,7 @@ class PhWriter : public DREAM3D::FileWriter
 
       //OutputName = tokens[0] + ".ph";
       std::ofstream outfile;
-      outfile.open(getFileName().c_str());
+      outfile.open(getFileName().c_str(), std::ios_base::binary);
       if(!outfile)
       {
         std::cout << "Failed to open: " << getFileName() << std::endl;

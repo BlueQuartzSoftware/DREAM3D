@@ -61,6 +61,7 @@ class GrainIdWriter : public DREAM3DDataFile
     virtual ~GrainIdWriter() { }
 
     DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, GrainIds);
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
     virtual int writeGrainIds() { return -1; }
 
@@ -101,6 +102,10 @@ class PhGrainIdWriter : public GrainIdWriter
       writer->setResolution(resolution);
       writer->setOrigin(origin);
       int err = writer->writeFile();
+      if (err < 0)
+      {
+        setErrorMessage("Error Writing Ph File");
+      }
       return err;
     }
 
@@ -140,6 +145,10 @@ class DxGrainIdWriter : public GrainIdWriter
       writer->setResolution(resolution);
       writer->setOrigin(origin);
       int err = writer->writeFile();
+      if (err < 0)
+      {
+        setErrorMessage("Error Writing Dx File");
+      }
       return err;
     }
 
@@ -220,8 +229,12 @@ class VtkGrainIdWriter : public GrainIdWriter
       scalarsToWrite.push_back(w0);
       VTKRectilinearGridFileWriter writer;
       writer.setWriteBinaryFiles(m_WriteBinaryFiles);
-      writer.write<VtkFileWriter::VtkGrainIdHelper>(getFileName(), r.get(), scalarsToWrite);
-      return 0;
+      int err = writer.write<VtkFileWriter::VtkGrainIdHelper>(getFileName(), r.get(), scalarsToWrite);
+      if (err < 0)
+      {
+        setErrorMessage("Error Writing vtk File");
+      }
+      return err;
     }
 
   protected:

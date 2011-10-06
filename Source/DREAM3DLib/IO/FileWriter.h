@@ -25,13 +25,13 @@ namespace DREAM3D
     DREAM3D_SHARED_POINTERS(FileWriter)
     DREAM3D_STATIC_NEW_MACRO(FileWriter)
     DREAM3D_TYPE_MACRO(FileWriter)
-      virtual ~FileWriter() {};
+      virtual ~FileWriter();
 
-      virtual int writeHeader() {return -1;}
-      virtual int writeFile() {return -1;}
+      virtual int writeHeader();
+      virtual int writeFile();
 
     protected:
-      FileWriter(){}
+      FileWriter();
 
     private:
       FileWriter(const FileWriter&); // Copy Constructor Not Implemented

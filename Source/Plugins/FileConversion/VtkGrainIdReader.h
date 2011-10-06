@@ -50,13 +50,11 @@ class  VtkGrainIdReader : public GrainIdReader
 
     virtual ~VtkGrainIdReader();
 
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFileName);
     DREAM3D_INSTANCE_STRING_PROPERTY(Comment);
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType);
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary);
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName);
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, GrainIds);
+
 
     /**
      * @brief Reads the VTK header and sets the values that are described in the header
@@ -152,7 +150,12 @@ class  VtkGrainIdReader : public GrainIdReader
            return -1;
          }
          if (totalSize > 1) {
-           diff = buffer[totalSize-1] - buffer[totalSize-2];
+           T t = buffer[totalSize-1];
+           T t1 = buffer[totalSize-2];
+           // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
+           MXA::Endian::FromBigToSystem::convert<T>(t);
+           MXA::Endian::FromBigToSystem::convert<T>(t1);
+           diff =t-t1;
          }
          else
          {

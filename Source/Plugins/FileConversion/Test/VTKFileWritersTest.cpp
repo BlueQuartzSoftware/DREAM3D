@@ -43,12 +43,10 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "Reconstruction/ReconstructionFunc.h"
-#include "MicrostructureStatistics/MicrostructureStatisticsFunc.h"
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "FileConversion/GrainIdWriter.h"
+#include "FileConversion/VtkGrainIdReader.h"
 
-#include "UnitTestSupport.hpp"
+#include "Test/UnitTestSupport.hpp"
 
 #define REMOVE_TEST_FILES 0
 
@@ -76,19 +74,23 @@ void RemoveTestFiles()
 int TestVtkGrainIdWriter()
 {
   int size = Detail::XSize * Detail::YSize * Detail::ZSize;
-  std::vector<int> grain_indices(size);
+  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
-    grain_indices[i] = i + Detail::Offset;
+    grainIds->SetValue(i, i + Detail::Offset);
   }
   int nx = Detail::XSize;
   int ny = Detail::YSize;
   int nz = Detail::ZSize;
 
 
-  GrainIdVtkRectilinearGridWriter<int>::Pointer writer = GrainIdVtkRectilinearGridWriter<int>::New();
+  VtkGrainIdWriter::Pointer writer = VtkGrainIdWriter::New();
   writer->setWriteBinaryFiles(true);
-  int err = writer->writeFile(Detail::TestFile, &(grain_indices.front()), nx, ny, nz);
+  writer->setFileName(Detail::TestFile);
+  writer->setDimensions(nx, ny, nz);
+  writer->setResolution(1.0f, 1.0f, 1.0f);
+  writer->setGrainIds(grainIds);
+  int err = writer->writeGrainIds();
   DREAM3D_REQUIRE_EQUAL(err, 0);
   return EXIT_SUCCESS;
 }
@@ -104,17 +106,25 @@ int TestVtkGrainIdReader()
   int nx = 0;
   int ny = 0;
   int nz = 0;
-  std::vector<int> grain_indices;
-  int err = reader->readFile(Detail::TestFile, grain_indices, nx, ny, nz);
+
+  reader->setFileName(Detail::TestFile);
+  int err = reader->readGrainIds();
+
   DREAM3D_REQUIRE_EQUAL(err, 0);
+
+  reader->getDimensions(nx, ny, nz);
   DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
+
+  AIMArray<int>::Pointer grainIds = reader->getGrainIds();
+  DREAM3D_REQUIRE(NULL != grainIds.get());
+
   int size = Detail::XSize * Detail::YSize * Detail::ZSize;
 
   for (int i = 0; i < size; ++i)
   {
-    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), grain_indices[i] );
+    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), grainIds->GetValue(i) );
   }
 
 
@@ -144,7 +154,7 @@ int TestVtkWriters()
   vtkWriter->writeIPFVizFile(r.get(), "out");
   vtkWriter->writeImageQualityVizFile(r.get(), "out");
   vtkWriter->writeDownSampledVizFile(r.get(), "out");
-#endif
+
 
   ReconstructionFunc::Pointer r = ReconstructionFunc::New();
   r->xpoints = 5;
@@ -195,7 +205,7 @@ int TestVtkWriters()
 
   VTKRectilinearGridFileWriter writer;
   writer.write<ReconstructionFunc>("vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
-
+#endif
   return 0;
 }
 

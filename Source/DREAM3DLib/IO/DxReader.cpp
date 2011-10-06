@@ -67,7 +67,7 @@ int DxReader::readFile()
   //int nx, ny, nz;
 
   std::ifstream inFile;
-  inFile.open(getFileName().c_str());
+  inFile.open(getFileName().c_str(), std::ios_base::binary);
   if(!inFile)
   {
     std::cout << "Failed to open: " << getFileName() << std::endl;
@@ -191,7 +191,7 @@ int DxReader::readFile()
     //    if(tokens.size()==20)
     //      finished_header = true;
 
-    if(finished_header && ((tokens[0] == "attribute") || static_cast<int>(index) == nz * ny * nx))
+    if( static_cast<int>(index) == nz * ny * nx || finished_header && tokens.size() != 0 && tokens[0] == "attribute" )
     {
       finished_data = true;
     }

@@ -2139,7 +2139,7 @@ int MicrostructureStatisticsFunc::volume_stats2D(H5StatsWriter::Pointer h5io, fl
 void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename, const std::string &filename2)
 {
   ofstream outFile;
-  outFile.open(filename.c_str());
+  outFile.open(filename.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
   float km, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
@@ -2678,7 +2678,7 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
  // IntVectorType nlist;
   ofstream outFile;
   size_t numgrains = m_Grains.size();
-  outFile.open(graindataFile.c_str());
+  outFile.open(graindataFile.c_str(), std::ios_base::binary);
   outFile << numgrains-1 << endl;
   char space = DREAM3D::GrainData::Delimiter;
   outFile  << DREAM3D::GrainData::GrainID;

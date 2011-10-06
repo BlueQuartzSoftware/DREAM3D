@@ -236,7 +236,11 @@ if (NOT DREAM3D_BUILD_QT_APPS)
     set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
-
+# ------- Enable the CTest testing. Use make test to run all tests ---------------
+OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
+if (DREAM3D_BUILD_TESTING)
+    ENABLE_TESTING()
+endif()
 # --------------------------------------------------------------------
 # This function optionally compiles a named plugin when compiling DREAM3D
 # This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
@@ -348,9 +352,7 @@ IF ( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
-OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if (DREAM3D_BUILD_TESTING)
-    ENABLE_TESTING()
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 

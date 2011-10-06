@@ -197,7 +197,8 @@ void GrainGenerator::execute()
       h5Reader->setFileName(m_StructureFile);
       int dims[3];
       float spacing[3];
-      err = h5Reader->getSizeAndResolution(dims, spacing);
+      float origin[3];
+      err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
 
       CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error getting size and resolution from HDF5 Voxel File", err);
 

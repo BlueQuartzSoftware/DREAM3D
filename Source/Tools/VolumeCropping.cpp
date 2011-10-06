@@ -111,7 +111,8 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* m
 
   int dims[3];
   float volRes[3];
-  err = reader->getSizeAndResolution(dims, volRes);
+  float origin[3];
+  err = reader->getSizeResolutionOrigin(dims, volRes, origin);
 
 
   std::vector<Ebsd::CrystalStructure> crystruct;
@@ -184,8 +185,6 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* m
   if (err < 0) { return err; }
 
 
-  float origin[3] =
-  { 0.0f, 0.0f, 0.0f };
   err = writer->writeStructuredPoints(volDims, volRes, origin, true);
   if (err < 0) { return err; }
 
@@ -239,7 +238,8 @@ int main(int argc, char **argv)
      reader->setFileName(inputFile.getValue());
      int dims[3];
      float volRes[3];
-     err = reader->getSizeAndResolution(dims, volRes);
+     float origin[3];
+     err = reader->getSizeResolutionOrigin(dims, volRes, origin);
      if (err < 0)
      {
        std::cout << "Error reading the volume dimensions from the input file" << std::endl;

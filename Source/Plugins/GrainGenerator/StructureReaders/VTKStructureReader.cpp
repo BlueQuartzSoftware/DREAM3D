@@ -84,7 +84,7 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
 
   std::string filename = getInputFileName();
   std::ifstream instream;
-  instream.open(filename.c_str());
+  instream.open(filename.c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
     std::cout << logTime() << " vtk file could not be opened: " << filename << std::endl;
