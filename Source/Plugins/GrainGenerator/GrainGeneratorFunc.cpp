@@ -2185,7 +2185,7 @@ void  GrainGeneratorFunc::measure_misorientations ()
 void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 {
   ofstream outFile;
-  outFile.open(filename.c_str());
+  outFile.open(filename.c_str(), std::ios_base::binary);
   outFile << m_Grains.size() << std::endl;
   char space = DREAM3D::GrainData::Delimiter;
   outFile << DREAM3D::GrainData::GrainID  << space
@@ -2201,7 +2201,7 @@ void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
 void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
   ofstream outFile;
-  outFile.open(filename.c_str());
+  outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   outFile << m_Grains.size() << std::endl;
   outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
