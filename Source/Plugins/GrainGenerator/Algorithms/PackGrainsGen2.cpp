@@ -130,38 +130,31 @@ void PackGrainsGen2::generate_grain(int gnum, int phase)
     vol = (4.0 / 3.0) * (m_pi) * ((diam / 2.0) * (diam / 2.0) * (diam / 2.0));
   }
   int diameter = int((diam - m->mindiameter[phase]) / m->binstepsize[phase]);
-  good = 0;
-  while (good == 0)
+  a1 = m->bovera[phase][diameter][0];
+  b1 = m->bovera[phase][diameter][1];
+  if(a1 == 0)
   {
-    a1 = m->bovera[phase][diameter][0];
-    b1 = m->bovera[phase][diameter][1];
-    if(a1 == 0)
-    {
       a1 = m->bovera[phase][diameter - 1][0];
       b1 = m->bovera[phase][diameter - 1][1];
-    }
-    r2 = rg.genrand_beta(a1, b1);
-    a2 = m->covera[phase][diameter][0];
-    b2 = m->covera[phase][diameter][1];
-    if(a2 == 0)
-    {
+  }
+  r2 = rg.genrand_beta(a1, b1);
+/*  a2 = m->covera[phase][diameter][0];
+  b2 = m->covera[phase][diameter][1];
+  if(a2 == 0)
+  {
       a2 = m->covera[phase][diameter - 1][0];
       b2 = m->covera[phase][diameter - 1][1];
-    }
-    r3 = rg.genrand_beta(a2, b2);
-    float cob = r3 / r2;
-    a3 = m->coverb[phase][diameter][0];
-    b3 = m->coverb[phase][diameter][1];
-    if(a3 == 0)
-    {
+  }
+  r3 = rg.genrand_beta(a2, b2);
+  float cob = r3 / r2;
+*/  a3 = m->coverb[phase][diameter][0];
+  b3 = m->coverb[phase][diameter][1];
+  if(a3 == 0)
+  {
       a3 = m->coverb[phase][diameter - 1][0];
       b3 = m->coverb[phase][diameter - 1][1];
-    }
-    float prob = ((DREAM3DMath::Gamma((a3 + b3)) / (DREAM3DMath::Gamma(a3) * DREAM3DMath::Gamma(b3))) * (powf(cob, (a3 - 1))) * (powf((1 - cob), (b3 - 1))));
-    float check = rg.genrand_res53();
-    if(prob > check) good = 1;
-    if(cob > 1) good = 0;
   }
+  r3 = rg.genrand_beta(a3, b3) * r2;
   float random = rg.genrand_res53();
   int bin = 0;
   for (int i = 0; i < (36 * 36 * 36); i++)
@@ -495,8 +488,11 @@ void PackGrainsGen2::execute()
 	  }
     }
   }
-#if ERROR_TXT_OUT1
+#if ERROR_TXT_OUT
   outFile.close();
+#endif
+
+#if ERROR_TXT_OUT1
 
 //  ofstream outFile;
   filename = "test.vtk";

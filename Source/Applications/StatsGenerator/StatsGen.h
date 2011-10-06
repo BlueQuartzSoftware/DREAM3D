@@ -74,6 +74,7 @@ class StatsGen
     int GenBetaPlotData(float alpha, float beta, T &x, T &y, int size)
     {
       int err = 0;
+	  float total = 0;
       float value, gammapq, gammap, gammaq, betain, betaout;
       x.resize(size);
       y.resize(size);
@@ -86,10 +87,15 @@ class StatsGen
       for (int i = 0; i < size; i++)
       {
         betain = (i * (1.0 / float(size))) + ((1.0 / float(size)) / 2.0);
-        betaout = (gammapq / (gammap * gammaq)) * powf(betain, (alpha - 1)) * powf((1 - betain), (beta - 1));
+        betaout = powf(betain, (alpha - 1)) * powf((1 - betain), (beta - 1));
         x[i] = betain;
-        y[i] = betaout * (1.0 / float(size));
+        y[i] = betaout;
+		total = total + betaout;
         if (betaout < 0) err = 1;
+      }
+      for (int i = 0; i < size; i++)
+      {
+        y[i] = y[i]/total;
       }
       return err;
     }

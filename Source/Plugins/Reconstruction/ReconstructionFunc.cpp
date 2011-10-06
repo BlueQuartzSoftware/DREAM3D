@@ -403,7 +403,6 @@ void ReconstructionFunc::find_border()
   float w, n1, n2, n3;
   float q1[5];
   float q2[5];
-  //size_t size = 0;
   int index;
   int good = 0;
   size_t count = 0;
@@ -419,7 +418,7 @@ void ReconstructionFunc::find_border()
   AIMArray<bool>::Pointer checkedPtr = AIMArray<bool>::CreateArray(totalPoints);
   bool *checked = checkedPtr->GetPointer(0);
 
-  for (int iter = 0; iter < (xpoints * ypoints * zpoints); iter++)
+  for (int iter = 0; iter < (totalPoints); iter++)
   {
     checked[iter] = false;
   }
@@ -1369,6 +1368,11 @@ void ReconstructionFunc::merge_containedgrains()
       grain_indicies[i] = m_Grains[grainname]->neighborlist->at(0);
       m_Grains[m_Grains[grainname]->neighborlist->at(0)]->numvoxels++;
     }
+	if (m_Grains[grainname]->numneighbors == 0)
+	{
+      m_Grains[grainname]->gotcontainedmerged = true;
+      grain_indicies[i] = 0;
+	}
   }
 
 }
@@ -1723,22 +1727,6 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
   return currentgrain;
 }
 
-float ReconstructionFunc::find_xcoord(size_t index)
-{
-  float x = resx * float(index % xpoints);
-  return x;
-}
-float ReconstructionFunc::find_ycoord(size_t index)
-{
-  float y = resy * float((index / xpoints) % ypoints);
-  return y;
-}
-float ReconstructionFunc::find_zcoord(size_t index)
-{
-  float z = resz * float(index / (xpoints * ypoints));
-  return z;
-}
-
 void ReconstructionFunc::merge_twins()
 {
   float angcur = 180;
@@ -1957,7 +1945,6 @@ void ReconstructionFunc::renumber_grains3()
 
 void ReconstructionFunc::find_neighbors()
 {
-
   int neighpoints[6];
   neighpoints[0] = -(xpoints * ypoints);
   neighpoints[1] = -xpoints;
@@ -1984,6 +1971,7 @@ void ReconstructionFunc::find_neighbors()
     {
       m_Grains[i]->neighborlist = new std::vector<int>(0);
     }
+	m_Grains[i]->neighborlist->clear();
     m_Grains[i]->neighborlist->resize(nListSize, -1);
   }
 
@@ -2051,7 +2039,7 @@ void ReconstructionFunc::find_neighbors()
       // Push the neighbor grain id back onto the list so we stay synced up
       m_Grains[i]->neighborlist->push_back(neigh);
     }
-    m_Grains[i]->numneighbors = numneighs;
+	m_Grains[i]->numneighbors = m_Grains[i]->neighborlist->size();
   }
   merge_containedgrains();
 
