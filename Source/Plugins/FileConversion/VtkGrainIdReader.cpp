@@ -290,8 +290,10 @@ int VtkGrainIdReader::readLine(std::istream &in, char* buf, int bufSize)
     ::memset(buf, 0, bufSize);
     // Read a line up to a '\n' which will catch windows and unix line endings but
     // will leave a trailing '\r' at the end of the string
+    std::cout << "File Pointer Before: " << in.tellg() << std::endl;
     in.getline(buf, bufSize, '\n');
     gcount = in.gcount();
+    std::cout << "File Pointer After: " << in.tellg() << std::endl;
     if (gcount > 1 && buf[in.gcount()-2] == '\r')
     {
       buf[in.gcount()-2] = 0;
@@ -313,7 +315,7 @@ int VtkGrainIdReader::readLine(std::istream &in, char* buf, int bufSize)
 int VtkGrainIdReader::readGrainIds()
 {
   int err = 0;
-
+  
   err = readHeader();
   if (err < 0) { return err; }
 
@@ -327,10 +329,14 @@ int VtkGrainIdReader::readGrainIds()
     setErrorMessage(ss.str());
     return -1;
   }
+  std::iostream::streamoff start = instream.tellg();
+std::iostream::streamoff current;
   char buf[kBufferSize];
   for (int i = 0; i < 5; ++i)
   {
     instream.getline(buf, kBufferSize);
+    current = instream.tellg();
+    std::cout << "File Pos: " << current << std::endl;
   }
 
   int dims[3];
@@ -341,6 +347,8 @@ int VtkGrainIdReader::readGrainIds()
   // Now parse the X, coordinates.
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
+  current = instream.tellg();
+  std::cout << "File Pos: " << (current) << std::endl;
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[0])
   {
@@ -351,12 +359,13 @@ int VtkGrainIdReader::readGrainIds()
   }
   float xscale = 1.0f;
   err = skipVolume<float>(instream, 4, dim, 1, 1, xscale);
-
-
+  current = instream.tellg();
+  std::cout << "File Pos: " << (current) << std::endl;
   // Now parse the Y coordinates.
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
-  err = parseCoordinateLine(buf, dim);
+  current = instream.tellg();
+  std::cout << "File Pos: " << (current) << std::endl;  err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[1])
   {
     std::stringstream ss;
@@ -366,7 +375,8 @@ int VtkGrainIdReader::readGrainIds()
   }
   float yscale = 1.0f;
   err = skipVolume<float>(instream, 4, 1, dim, 1, yscale);
-
+  current = instream.tellg();
+  std::cout << "File Pos: " << (current) << std::endl;
   // Now parse the Z coordinates.
 //  ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
@@ -410,8 +420,8 @@ int VtkGrainIdReader::readGrainIds()
   setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
   getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
-  m_GrainIds = AIMArray<int>::CreateArray(totalVoxels);
-  m_GrainIds->SetName("GrainIds");
+  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(totalVoxels);
+  grainIds->SetName("GrainIds");
   readLine(instream, buf, kBufferSize);
 
  // int i = 0;
@@ -448,16 +458,16 @@ int VtkGrainIdReader::readGrainIds()
       {
         // Splat 0xAB across the entire array. that way if the read messes up we
         //  can more easily diagnose the problem.
-        ::memset(m_GrainIds->GetPointer(0), 0xAB, sizeof(int) * totalVoxels);
-        instream.read(reinterpret_cast<char*> (m_GrainIds->GetPointer(0)), sizeof(int) * totalVoxels);
+        ::memset(grainIds->GetPointer(0), 0xAB, sizeof(int) * totalVoxels);
+        instream.read(reinterpret_cast<char*> (grainIds->GetPointer(0)), sizeof(int) * totalVoxels);
         int t;
         // We need to Byte Swap (Possibly) from the Big Endian format stored by
         // the vtk binary file into what ever system we are running.
         for (size_t i = 0; i < totalVoxels; ++i)
         {
-          t = m_GrainIds->GetValue(i);
+          t = grainIds->GetValue(i);
           MXA::Endian::FromBigToSystem::convert<int>(t);
-          m_GrainIds->SetValue(i, t);
+          grainIds->SetValue(i, t);
         }
       }
       else // ASCII VTK File
@@ -466,7 +476,7 @@ int VtkGrainIdReader::readGrainIds()
         for (size_t i = 0; i < totalVoxels; ++i)
         {
           instream >> grain_index;
-          m_GrainIds->SetValue(i, grain_index);
+          grainIds->SetValue(i, grain_index);
        //   grainIdMap[grain_index]++;
         }
       }
@@ -478,7 +488,7 @@ int VtkGrainIdReader::readGrainIds()
     }
 
   }
-
+  setGrainIds(grainIds);
   instream.close();
   return err;
 }
