@@ -59,22 +59,23 @@ H5VoxelReader::~H5VoxelReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelReader::getSizeAndResolution(int volDims[3], float spacing[3])
+int H5VoxelReader::getSizeResolutionOrigin(int volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
 
   if(m_FileName.empty() == true)
   {
-    std::cout << "H5ReconVolumeReader Error; Filename was empty" << std::endl;
+    setErrorMessage("H5ReconVolumeReader Error; Filename was empty");
     return -1;
   }
 
-  OPEN_HDF5_FILE(fileId, m_FileName)OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId)
+  OPEN_HDF5_FILE(fileId, m_FileName);
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId);
 
   err = H5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
-    std::cout << "H5ReconVolumeReader Error Reading the Dimensions" << std::endl;
+    setErrorMessage("H5ReconVolumeReader Error Reading the Dimensions");
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;
@@ -82,7 +83,16 @@ int H5VoxelReader::getSizeAndResolution(int volDims[3], float spacing[3])
   err = H5Lite::readPointerDataset(reconGid, H5_SPACING, spacing);
   if(err < 0)
   {
-    std::cout << "H5ReconVolumeReader Error Reading the Spacing (Resolution)" << std::endl;
+    setErrorMessage("H5ReconVolumeReader Error Reading the Spacing (Resolution)");
+    err = H5Gclose(reconGid);
+    err = H5Fclose(fileId);
+    return err;
+  }
+
+  err = H5Lite::readPointerDataset(reconGid, H5_ORIGIN, origin);
+  if(err < 0)
+  {
+    setErrorMessage("H5ReconVolumeReader Error Reading the Origin");
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;

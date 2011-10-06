@@ -94,8 +94,9 @@ int main(int argc, char **argv)
 
   int dims[3];
   float spacing[3];
+  float origin[3];
   std::cout << "Getting Size and Resolution" << std::endl;
-  err = h5Reader->getSizeAndResolution(dims, spacing);
+  err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
   if (err < 0)
   {
     std::cout << "Error Reading the Dimensions and Resolution from the File." << std::endl;
