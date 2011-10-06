@@ -31,14 +31,13 @@
 FileConversionWidget::FileConversionWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_FileConversion(NULL),
-m_WorkerThread(NULL),
-
-#if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
-#else
-m_OpenDialogLastDirectory("~/")
-#endif
+m_WorkerThread(NULL)
 {
+#if defined(Q_WS_WIN)
+m_OpenDialogLastDirectory = ("C:\\");
+#else
+m_OpenDialogLastDirectory = ("~/");
+#endif
   setupUi(this);
   setupGui();
   checkIOFiles();
@@ -172,13 +171,55 @@ void FileConversionWidget::on_m_GoBtn_clicked()
     return;
   }
 
-#if 0
-  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("FileConversion")) )
+
+  QFileInfo fi(m_InputFilePath->text());
+  if (fi.exists() == false)
   {
+    QMessageBox::critical(this, tr("Input File Error"), tr("Input File does not exist. Please check the path."), QMessageBox::Ok);
     return;
   }
-  SANITY_CHECK_INPUT(m_, OutputDir)
-#endif
+
+  if (m_OutputFilePath->text().isEmpty() == true)
+  {
+    QMessageBox::critical(this, tr("Output File Error"), tr("Please select a file name for the converted voxel file to be saved as."), QMessageBox::Ok);
+    return;
+  }
+  QFile file(m_OutputFilePath->text());
+  if (file.exists() == true)
+  {
+    int ret = QMessageBox::warning(this, tr("File Conversion"),
+                                   tr("The Output File Already Exists\nDo you want to over write the existing file?"),
+                                   QMessageBox::No | QMessageBox::Default,
+                                   QMessageBox::Yes,
+                                   QMessageBox::Cancel);
+    if (ret == QMessageBox::Cancel)
+    {
+      return;
+    }
+    else if (ret == QMessageBox::No)
+    {
+      QString outputFile = getOpenDialogLastDirectory() + QDir::separator() + "VoxelFile";
+      outputFile = QFileDialog::getSaveFileName(this, tr("Save Output File As ..."), outputFile, tr("Voxel Files (*.dx *.ph *.vtk *.h5voxel)"));
+      if (outputFile.isNull())
+      {
+        return;
+      }
+      m_OutputFilePath->setText(outputFile);
+    }
+  }
+
+  fi = QFileInfo(m_OutputFilePath->text());
+  QDir outputDir(fi.absolutePath());
+  if (outputDir.exists() == false)
+  {
+    bool ok = outputDir.mkpath(".");
+    if (ok == false)
+    {
+      QMessageBox::critical(this, tr("Output Directory Creation"), tr("The output directory could not be created."), QMessageBox::Ok);
+      return;
+    }
+  }
+
 
 
   if (m_WorkerThread != NULL)
@@ -299,7 +340,10 @@ void FileConversionWidget::addProgressMessage(QString message)
 // -----------------------------------------------------------------------------
 void FileConversionWidget::on_m_InputFilePath_textChanged(const QString text)
 {
+  if (verifyPathExists(m_InputFilePath->text(), m_InputFilePath) )
+    {
   checkFile(m_InputFilePath, m_InputFileType);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -315,10 +359,9 @@ void FileConversionWidget::on_m_OutputFilePath_textChanged(const QString text)
 // -----------------------------------------------------------------------------
 void FileConversionWidget::checkFile(QLineEdit* lineEdit, QLabel* label)
 {
-  if (verifyPathExists(lineEdit->text(), lineEdit) )
-    {
+
      QFileInfo fi(lineEdit->text());
-     if (fi.exists() && fi.isFile())
+ //    if (fi.exists() && fi.isFile())
      {
        QString extension = fi.suffix();
        if (extension.compare("vtk") == 0)
@@ -342,9 +385,38 @@ void FileConversionWidget::checkFile(QLineEdit* lineEdit, QLabel* label)
          label->setText("Unknown File Extension");
        }
      }
-    }
+
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FileConversionWidget::on_m_SelectInputBtn_clicked()
+{
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Voxel Files (*.vtk *.ph *.dx *.h5voxel)") );
+  if ( true == file.isEmpty() ){ return; }
+  QFileInfo fi (file);
+  m_InputFilePath->blockSignals(true);
+  QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
+  m_InputFilePath->setText(p);
+  on_m_InputFilePath_textChanged(m_InputFilePath->text() );
+  m_InputFilePath->blockSignals(false);}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FileConversionWidget::on_m_SaveOutputBtn_clicked()
+{
+  QString file = QFileDialog::getSaveFileName(this, tr("Save Voxel File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("Voxel Files (*.vtk *.ph *.dx *.h5voxel)") );
+  if ( true == file.isEmpty() ){ return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  m_OutputFilePath->setText(fi.absoluteFilePath());
+  m_OpenDialogLastDirectory = fi.path();
+}
 
 

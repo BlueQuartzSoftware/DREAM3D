@@ -149,7 +149,7 @@ include(${PROJECT_SOURCE_DIR}/Tools/Tools.cmake)
 endif()
 
 IF (DREAM3D_BUILD_TESTING)
-    add_subdirectory(Test)
+    add_subdirectory(Test ${FileConversionPlugin_BINARY_DIR}/Test)
 endif()
 
 
