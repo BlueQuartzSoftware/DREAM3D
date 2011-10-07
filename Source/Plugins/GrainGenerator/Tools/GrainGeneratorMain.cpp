@@ -254,10 +254,6 @@ int main(int argc, char **argv)
     m_GrainGenerator->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile.getValue());
 
     m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile.getValue());
-    m_GrainGenerator->setWritePhFile(m_PhFile.getValue());
-
-    m_GrainGenerator->setWriteGrainData(m_writegraindata.getValue());
-
 
     m_GrainGenerator->run();
     err = m_GrainGenerator->getErrorCondition();

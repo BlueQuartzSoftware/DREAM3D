@@ -86,7 +86,6 @@ class GrainGenerator : public AbstractPipeline, public Observer
     MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
 
     MXA_INSTANCE_PROPERTY(bool, PeriodicBoundary)
-    MXA_INSTANCE_PROPERTY(bool, WriteGrainData)
     MXA_INSTANCE_STRING_PROPERTY(StructureFile)
     MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
 
@@ -97,8 +96,6 @@ class GrainGenerator : public AbstractPipeline, public Observer
     MXA_INSTANCE_PROPERTY(bool, WriteSurfaceVoxel)
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
-
-    MXA_INSTANCE_PROPERTY(bool, WritePhFile)
 
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
 

@@ -103,8 +103,6 @@ class Reconstruction : public AbstractPipeline, public Observer
 
     MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteDxFile)
-    MXA_INSTANCE_PROPERTY(bool, WritePhFile)
 
     MXA_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 

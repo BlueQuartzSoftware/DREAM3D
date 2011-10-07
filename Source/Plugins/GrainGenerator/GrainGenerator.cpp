@@ -41,8 +41,6 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/IO/DxWriter.hpp"
-#include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
@@ -76,13 +74,11 @@ m_FillingErrorWeight(0.0),
 m_NeighborhoodErrorWeight(0.0),
 m_SizeDistErrorWeight(0.0),
 m_PeriodicBoundary(true),
-m_WriteGrainData(true),
 m_AlreadyFormed(false),
 m_Precipitates(0),
 m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(false),
 m_WriteIPFColor(false),
-m_WritePhFile(false),
 m_WriteHDF5GrainFile(false)
 {
 //  std::cout << "GrainGenerator Constructor" << std::endl;
@@ -264,19 +260,17 @@ void GrainGenerator::execute()
   CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Measuring misorientations", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", measure_misorientations)
 
-  MAKE_OUTPUT_FILE_PATH ( eulerFile , DREAM3D::SyntheticBuilder::GrainAnglesFile)
-
+  MAKE_OUTPUT_FILE_PATH ( GrainDataFile , DREAM3D::SyntheticBuilder::GrainDataFile)
 
   updateProgressAndMessage(("Matching Crystallography"), 65);
   m->matchCrystallography();
   CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Matching Crystallography", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", matchCrystallography)
 
-  updateProgressAndMessage(("Writing Euler Angles"), 81);
-
-  m->write_eulerangles(eulerFile);
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Euler Angles", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_eulerangles)
+  updateProgressAndMessage(("Writing Grain Data"), 81);
+  m->write_graindata(GrainDataFile);
+  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Grain Data File", err)
+  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
 
   /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
@@ -292,16 +286,6 @@ void GrainGenerator::execute()
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
   err = h5VoxelWriter->writeData<GrainGeneratorFunc>(m.get());
   CHECK_FOR_ERROR(GrainGeneratorFunc, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
-
-  /************ This writes the grain data if desired*/
-  if(m_WriteGrainData)
-  {
-    updateProgressAndMessage(("Writing Grain Data"), 88);
-    MAKE_OUTPUT_FILE_PATH ( GrainDataFile, DREAM3D::MicroStats::GrainDataFile);
-    m->write_graindata(GrainDataFile);
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Grain Data File", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
-  }
 
   /* ********** This section writes the VTK files for visualization *** */
   if (m_WriteVtkFile) {
@@ -354,18 +338,6 @@ void GrainGenerator::execute()
 
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", writeVisualizationFile)
   /* ******* End VTK Visualization File Writing Section ****** */
-
-  /* **********   This CMU's ph format */
-  updateProgressAndMessage(("Writing Ph Voxel File"), 95);
-  if (m_WritePhFile) {
-    MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
-    PhWriter::Pointer phWriter = PhWriter::New();
-    phWriter->setDimensions(m->xpoints, m->ypoints, m->zpoints);
-    phWriter->setData(m->m_GrainIndicies);
-    err = phWriter->writeFile();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "The Grain Generator threw an Error writing the Ph file format.", err);
-  }
-
 
   /* ********** HDF5 Grains File  ********** */
   if (m_WriteHDF5GrainFile)

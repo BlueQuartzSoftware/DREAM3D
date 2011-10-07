@@ -292,8 +292,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>248</width>
-             <height>119</height>
+             <width>308</width>
+             <height>92</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -470,17 +470,24 @@
         <property name="verticalSpacing">
          <number>8</number>
         </property>
-        <item row="0" column="1">
-         <widget class="QLabel" name="m_GrainAnglesFile">
-          <property name="text">
-           <string>Synthetic_GrainAngles.txt</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_8">
           <property name="text">
-           <string>CSV Grain Angles File</string>
+           <string>CSV Grain Data File</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="m_GrainAnglesFile">
+          <property name="text">
+           <string>Synthetic_GrainData.csv</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Voxel Data File</string>
           </property>
          </widget>
         </item>
@@ -497,10 +504,10 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_10">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_12">
           <property name="text">
-           <string>Voxel Data File</string>
+           <string>HDF5 Polydata File</string>
           </property>
          </widget>
         </item>
@@ -514,45 +521,14 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="m_PhFile">
-          <property name="text">
-           <string>Ph File</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>HDF5 Polydata File</string>
-          </property>
-         </widget>
-        </item>
         <item row="3" column="0">
-         <widget class="QLabel" name="label_13">
+         <widget class="QLabel" name="label_14">
           <property name="text">
-           <string>Ph File Format</string>
+           <string>VTK Rectilinear Grid</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_17">
-          <property name="text">
-           <string>CSV Grain Data File</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QCheckBox" name="m_GrainDataFile">
-          <property name="text">
-           <string>Grain Data File</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
+        <item row="3" column="1">
          <widget class="QCheckBox" name="m_VisualizationVizFile">
           <property name="text">
            <string>VTK Visualization File</string>
@@ -562,14 +538,7 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_14">
-          <property name="text">
-           <string>VTK Rectilinear Grid</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
+        <item row="4" column="1">
          <widget class="QPushButton" name="m_VtkOptionsBtn">
           <property name="text">
            <string>VTK Options</string>

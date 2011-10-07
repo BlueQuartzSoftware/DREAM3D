@@ -53,8 +53,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/OIMColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/IO/DxWriter.hpp"
-#include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
@@ -82,8 +80,7 @@ m_WritePhaseId(true),
 //m_WriteImageQuality(true),
 m_WriteIPFColor(true),
 m_WriteDownSampledFile(false),
-m_WriteHDF5GrainFile(false),
-m_WriteDxFile(false)
+m_WriteHDF5GrainFile(false)
 {
 
 }
@@ -336,18 +333,6 @@ void Reconstruction::execute()
 
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", vtk_viz_files)
 
-  /* **********   This is CMU's ph format */
-  updateProgressAndMessage(("Writing Ph Voxel File"), 95);
-  if (m_WritePhFile) {
-    MAKE_OUTPUT_FILE_PATH ( phFile, DREAM3D::Reconstruction::PhFile);
-    PhWriter::Pointer phWriter = PhWriter::New();
-    phWriter->setDimensions(m->xpoints, m->ypoints, m->zpoints);
-    phWriter->setData(m->m_GrainIndicies);
-    err = phWriter->writeFile();
-    CHECK_FOR_ERROR(ReconstructionFunc, "The Reconstruction threw an Error writing the Ph file format.", err);
-  }
-
-
   /* ********** Optionally write the .h5grain file */
   if (m_WriteHDF5GrainFile)
   {
@@ -356,18 +341,6 @@ void Reconstruction::execute()
     H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
     err = h5GrainWriter->writeHDF5GrainsFile<ReconstructionFunc>(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(ReconstructionFunc, "The HDF5 Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
-  }
-
-  /* **********   This is IBM's dx format */
-  if (m_WriteDxFile)
-  {
-    updateProgressAndMessage(("Writing Out Dx Grain File."), 99);
-    MAKE_OUTPUT_FILE_PATH( dxGrainFile, DREAM3D::Reconstruction::DxFile);
-    DxWriter::Pointer dxWriter = DxWriter::New();
-    dxWriter->setDimensions(m->xpoints, m->ypoints, m->zpoints);
-    dxWriter->setData(m->m_GrainIndicies);
-    err = dxWriter->writeFile();
-    CHECK_FOR_ERROR(ReconstructionFunc, "The Dx Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
 
   updateProgressAndMessage(("Reconstruction Complete"), 100);
