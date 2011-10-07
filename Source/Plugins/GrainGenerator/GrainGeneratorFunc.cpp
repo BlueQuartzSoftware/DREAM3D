@@ -2182,22 +2182,6 @@ void  GrainGeneratorFunc::measure_misorientations ()
   }
 }
 //FIXME: This should return an erorr condition
-void GrainGeneratorFunc::write_eulerangles(const std::string &filename)
-{
-  ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
-  outFile << m_Grains.size() << std::endl;
-  char space = DREAM3D::GrainData::Delimiter;
-  outFile << DREAM3D::GrainData::GrainID  << space
-          << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << std::endl;
-  for (size_t i = 1; i < m_Grains.size(); i++)
-  {
-    outFile << i << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 << endl;
-  }
-  outFile.close();
-}
-
-//FIXME: This should return an erorr condition
 void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
   ofstream outFile;

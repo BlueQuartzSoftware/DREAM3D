@@ -158,14 +158,8 @@ namespace DREAM3D
     const std::string H5VoxelFile("VoxelData.h5voxel");
 
     const std::string VisualizationVizFile("Visualization.vtk");//11
-    const std::string IPFVizFile("IPF_Visualization.vtk");//11
-    const std::string DisorientationVizFile("Disorientation_Visualization.vtk");//11
-    const std::string ImageQualityVizFile("ImageQuality_Visualization.vtk");//11
-    const std::string SchmidFactorVizFile("SchmidFactor_Visualization.vtk");//11
     const std::string DownSampledVizFile("DownSampled_Visualization.vtk");//11
     const std::string HDF5GrainFile("Grains.h5grain");
-    const std::string PhFile("VoxelData.ph");
-    const std::string DxFile("VoxelData.dx");
 
 
     enum PhaseType {
@@ -263,13 +257,11 @@ namespace DREAM3D
   {
     /*  Grain Generator Related */
 
-    const std::string GrainAnglesFile("GrainAngles.csv");
+    const std::string GrainDataFile("GrainData.csv");
     const std::string H5VoxelFile("VoxelData.h5voxel");
 
     const std::string VisualizationVizFile("Visualization.vtk");
-    const std::string IPFVizFile("IPF_Visualization.vtk");
     const std::string HDF5GrainFile("Grains.h5grain");
-    const std::string PhFile("VoxelData.ph");
 
     enum Overlap {
         Rigid = 0,             //!<

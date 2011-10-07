@@ -207,8 +207,6 @@ public:
 	void initializeAttributes();
 	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
 
-
-    void write_eulerangles(const std::string & filename);
     int readReconStatsData(H5StatsReader::Pointer h5io);
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
     int readODFData(H5StatsReader::Pointer h5io);
@@ -235,8 +233,6 @@ public:
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
-
-    int writePhFormat(const std::string &file);
 
     std::vector<OrientationMath*>    m_OrientatioOps;
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
