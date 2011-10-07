@@ -70,9 +70,7 @@ m_ZPoints(0),
 m_XResolution(0.0),
 m_YResolution(0.0),
 m_ZResolution(0.0),
-m_FillingErrorWeight(0.0),
 m_NeighborhoodErrorWeight(0.0),
-m_SizeDistErrorWeight(0.0),
 m_PeriodicBoundary(true),
 m_AlreadyFormed(false),
 m_Precipitates(0),
@@ -121,9 +119,7 @@ void GrainGenerator::execute()
     m->resx = m_XResolution;
     m->resy = m_YResolution;
     m->resz = m_ZResolution;
-    m->fillingerrorweight = m_FillingErrorWeight;
     m->neighborhooderrorweight = m_NeighborhoodErrorWeight;
-    m->sizedisterrorweight = m_SizeDistErrorWeight;
 
     updateProgressAndMessage(("Loading Stats Data"), 5);
     err = m->readReconStatsData(h5reader);

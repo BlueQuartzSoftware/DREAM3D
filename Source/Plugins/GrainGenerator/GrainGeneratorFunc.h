@@ -200,9 +200,7 @@ public:
     float currentfillingerror, fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
-    float fillingerrorweight;
     float neighborhooderrorweight;
-    float sizedisterrorweight;
 
 	void initializeAttributes();
 	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);

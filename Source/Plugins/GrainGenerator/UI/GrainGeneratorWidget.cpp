@@ -112,9 +112,7 @@ void GrainGeneratorWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, m_, YResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, m_, ZResolution, ok, d, 0.25 , Double);
-  READ_SETTING(prefs, m_, FillingErrorWeight, ok, d, 1.0 , Double);
   READ_SETTING(prefs, m_, NeighborhoodErrorWeight, ok, d, 1.0 , Double);
-  READ_SETTING(prefs, m_, SizeDistErrorWeight, ok, d, 1.0 , Double);
   m_XPoints->blockSignals(true);
   READ_SETTING(prefs, m_, XPoints, ok, i, 100 , Int);
   m_XPoints->blockSignals(false);
@@ -155,9 +153,7 @@ void GrainGeneratorWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, XResolution )
   WRITE_SETTING(prefs, m_, YResolution )
   WRITE_SETTING(prefs, m_, ZResolution )
-  WRITE_SETTING(prefs, m_, FillingErrorWeight )
   WRITE_SETTING(prefs, m_, NeighborhoodErrorWeight )
-  WRITE_SETTING(prefs, m_, SizeDistErrorWeight )
   WRITE_SETTING(prefs, m_, XPoints )
   WRITE_SETTING(prefs, m_, YPoints )
   WRITE_SETTING(prefs, m_, ZPoints )
@@ -243,8 +239,8 @@ void GrainGeneratorWidget::setupGui()
   }
 
   m_WidgetList << m_H5InputStatisticsFile << m_InputH5StatisticsFileBtn << m_OutputDir << m_OutputDirBtn;
-  m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution << m_FillingErrorWeight;
-  m_WidgetList << m_NeighborhoodErrorWeight << m_SizeDistErrorWeight;
+  m_WidgetList << m_XPoints << m_YPoints << m_ZPoints << m_XResolution << m_YResolution << m_ZResolution;
+  m_WidgetList << m_NeighborhoodErrorWeight;
 
   m_WidgetList << m_HDF5GrainFile << m_VisualizationVizFile << m_VtkOptionsBtn;
   m_WidgetList << m_PeriodicBoundaryConditions << m_OutputFilePrefix;
@@ -405,7 +401,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     {
       QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
       QString str("Phase ");
-      str.append(QString::number(i, 10));
+      str.append(QString::number(i+1, 10));
       str.append(":");
       shapeTypeLabel->setText(str);
       shapeTypeLabel->setObjectName(str);
@@ -517,9 +513,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setXResolution(m_XResolution->value());
   m_GrainGenerator->setYResolution(m_YResolution->value());
   m_GrainGenerator->setZResolution(m_ZResolution->value());
-  m_GrainGenerator->setFillingErrorWeight(m_FillingErrorWeight->value());
   m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
-  m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight->value());
 
   m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
   std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes(1, DREAM3D::SyntheticBuilder::UnknownShapeType);
