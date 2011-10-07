@@ -230,9 +230,7 @@ int main(int argc, char **argv)
     m_GrainGenerator->setYResolution(resolution_values[1]);
     m_GrainGenerator->setZResolution(resolution_values[2]);
 
-    m_GrainGenerator->setFillingErrorWeight(m_FillingErrorWeight.getValue());
     m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight.getValue());
-    m_GrainGenerator->setSizeDistErrorWeight(m_SizeDistErrorWeight.getValue());
 
     m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions.getValue());
 
