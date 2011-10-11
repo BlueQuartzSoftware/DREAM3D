@@ -484,12 +484,12 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains()
 			if(j%2 == 1)
 			{
 				if(coords[j] > boundbox[j]) dist[j] = (coords[j]-boundbox[j]);
-				if(coords[j] < boundbox[j]) move = 0;
+				if(coords[j] <= boundbox[j]) move = 0;
 			}
 			if(j%2 == 0)
 			{
 				if(coords[j] < boundbox[j]) dist[j] = (boundbox[j]-coords[j]);
-				if(coords[j] > boundbox[j]) move = 0;
+				if(coords[j] >= boundbox[j]) move = 0;
 			}
 			if(dist[j] < mindist) mindist = dist[j], sidetomove = j;
 		  }
@@ -552,12 +552,12 @@ void MicrostructureStatisticsFunc::find_boundingboxgrains2D()
 			if(j%2 == 1)
 			{
 				if(coords[j] > boundbox[j]) removevol[j] = areas[j]*(coords[j]-boundbox[j]);
-				if(coords[j] < boundbox[j]) move = 0;
+				if(coords[j] <= boundbox[j]) move = 0;
 			}
 			if(j%2 == 0)
 			{
 				if(coords[j] < boundbox[j]) removevol[j] = areas[j]*(boundbox[j]-coords[j]);
-				if(coords[j] > boundbox[j]) move = 0;
+				if(coords[j] >= boundbox[j]) move = 0;
 			}
 			if(removevol[j] < minremovevol) minremovevol = removevol[j], sidetomove = j;
 		  }
