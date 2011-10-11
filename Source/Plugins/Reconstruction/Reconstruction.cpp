@@ -206,7 +206,7 @@ void Reconstruction::execute()
   m->align_sections();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", align_sections)
 
-  updateProgressAndMessage(("Cleaning Data"), 16);
+/*  updateProgressAndMessage(("Cleaning Data"), 16);
   m->cleanup_data();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", cleanup_data)
 
@@ -261,7 +261,7 @@ void Reconstruction::execute()
     m->characterize_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", characterize_colonies)
   }
-
+*/
 
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
