@@ -2187,7 +2187,7 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
   ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
-  outFile << m_Grains.size() << std::endl;
+  outFile << m_Grains.size()-1 << std::endl;
   outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
       << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
       << DREAM3D::GrainData::EquivDiam << space
