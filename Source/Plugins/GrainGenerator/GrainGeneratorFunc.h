@@ -197,7 +197,7 @@ public:
     int numneighbins;
     float volcheck;
     int ownercheck;
-    float currentfillingerror, fillingerror, oldfillingerror;
+    float fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;

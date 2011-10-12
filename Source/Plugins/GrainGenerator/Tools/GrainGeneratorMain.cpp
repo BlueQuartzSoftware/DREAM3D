@@ -139,14 +139,8 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<std::string>  resolution( "", "resolution", "Comma separated list of floating point values in microns (x,y,x).", true, "0.25,0.25,0.25", "Micron Resolution");
     cmd.add(resolution);
 
-    TCLAP::ValueArg<float>  m_SizeDistErrorWeight( "", "sizedisterror", "Size Distribution Error Weight", false, 1.0, "Size Distribution Error Weight");
-    cmd.add(m_SizeDistErrorWeight);
-
     TCLAP::ValueArg<float>  m_NeighborhoodErrorWeight( "", "neighborhooderror", "Neighborhood Error Weight", false, 1.0, "Neighborhood Error Weight");
     cmd.add(m_NeighborhoodErrorWeight);
-
-    TCLAP::ValueArg<float>  m_FillingErrorWeight( "", "spacefillerror", "Space Filling Error Weight", false, 1.0, "Space Filling Error Weight");
-    cmd.add(m_FillingErrorWeight);
 
     TCLAP::SwitchArg   m_PeriodicBoundaryConditions( "", "periodic", "Enable Periodic Boundary Conditions", false);
     cmd.add(m_PeriodicBoundaryConditions);
@@ -174,12 +168,6 @@ int main(int argc, char **argv)
 
     TCLAP::SwitchArg   m_HDF5GrainFile( "", "hdf5-grain", "Write the HDF5 Grain file (.h5grain).", false);
     cmd.add(m_HDF5GrainFile);
-
-    TCLAP::SwitchArg   m_PhFile( "", "no-phfile", "Disable Writing PH file", true);
-    cmd.add(m_PhFile);
-
-    TCLAP::SwitchArg   m_writegraindata( "", "no-graindata", "Disable the Writing of the Grain Data file", true);
-    cmd.add(m_writegraindata);
 
 
 
