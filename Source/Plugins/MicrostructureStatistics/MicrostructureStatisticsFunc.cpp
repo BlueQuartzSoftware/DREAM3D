@@ -352,7 +352,7 @@ void MicrostructureStatisticsFunc::find_neighbors()
         }
       }
     }
-    surfacevoxels[j] = onsurf == 0;
+//    surfacevoxels[j] = onsurf;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
