@@ -289,7 +289,7 @@ void PackGrainsGen2::execute()
 	  xgrains = powf((m->m_Grains.size()*(m->sizex/m->sizey)*(m->sizex/m->sizez)),(1.0/3.0));
 	  ygrains = xgrains*(m->sizey/m->sizex);
 	  zgrains = xgrains*(m->sizez/m->sizex);
-	  factor = 0.5 * (1.0 - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
+	  factor = 0.25 * (1.0 - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
 	  while (currentvol < ((1+factor) * m->totalvol))
 	  {
 	    iter++;
