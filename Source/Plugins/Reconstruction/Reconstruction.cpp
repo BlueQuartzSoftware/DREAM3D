@@ -59,7 +59,7 @@
 
 
 #define MIKE_G_DEBUG 0
-
+const static float m_pi = M_PI;
 
 // -----------------------------------------------------------------------------
 //
@@ -179,6 +179,16 @@ void Reconstruction::execute()
   ebsdReader->setRefFrameZDir(m_RefFrameZDir);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
   CHECK_FOR_ERROR(ReconstructionFunc, "Error loading data from input file.", err)
+  float radianconversion = m_pi/180.0;
+  if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  {
+	  for(int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
+	  {
+		  m->euler1s[i] = m->euler1s[i] * radianconversion;
+		  m->euler2s[i] = m->euler2s[i] * radianconversion;
+		  m->euler3s[i] = m->euler3s[i] * radianconversion;
+	  }
+  }
   if(ebsdReader->getAxesFlipped() == true)
   {
 	  int tempxpoints = m->xpoints;
@@ -206,7 +216,7 @@ void Reconstruction::execute()
   m->align_sections();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", align_sections)
 
-  updateProgressAndMessage(("Cleaning Data"), 16);
+/*  updateProgressAndMessage(("Cleaning Data"), 16);
   m->cleanup_data();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", cleanup_data)
 
@@ -261,7 +271,7 @@ void Reconstruction::execute()
     m->characterize_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", characterize_colonies)
   }
-
+*/
 
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way

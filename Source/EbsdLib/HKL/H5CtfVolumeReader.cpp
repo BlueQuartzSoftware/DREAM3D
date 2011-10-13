@@ -123,6 +123,8 @@ int H5CtfVolumeReader::loadData(float* euler1s,
   int err = -1;
 
   int readerIndex;
+  int xpointsslice;
+  int ypointsslice;
   int xpointstemp;
   int ypointstemp;
   int xstop;
@@ -159,8 +161,8 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     }
     setAxesFlipped(reader->getAxesFlipped());
     readerIndex = 0;
-    xpointstemp = reader->getXCells();
-    ypointstemp = reader->getYCells();
+    xpointsslice = reader->getXCells();
+    ypointsslice = reader->getYCells();
     euler1Ptr = reader->getEuler1Pointer();
     euler2Ptr = reader->getEuler2Pointer();
     euler3Ptr = reader->getEuler3Pointer();
@@ -173,21 +175,25 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     }
 
     // Figure out which are good voxels
-    AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointstemp * ypointstemp, dataTypes);
+    AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointsslice * ypointsslice, dataTypes);
 
     if (getAxesFlipped() == true)
     {
-      xstartspot = (ypoints - ypointstemp) / 2;
-      ystartspot = (xpoints - xpointstemp) / 2;
-      xstop = ypointstemp;
-      ystop = xpointstemp;
+	  xpointstemp = ypoints;
+	  ypointstemp = xpoints;
+      xstartspot = (ypointstemp - ypointsslice) / 2;
+      ystartspot = (xpointstemp - xpointsslice) / 2;
+      xstop = ypointsslice;
+      ystop = xpointsslice;
     }
     else if (getAxesFlipped() == false)
     {
-      xstartspot = (xpoints - xpointstemp) / 2;
-      ystartspot = (ypoints - ypointstemp) / 2;
-      xstop = xpointstemp;
-      ystop = ypointstemp;
+	  xpointstemp = xpoints;
+	  ypointstemp = ypoints;
+      xstartspot = (xpointstemp - xpointsslice) / 2;
+      ystartspot = (ypointstemp - ypointsslice) / 2;
+      xstop = xpointsslice;
+      ystop = ypointsslice;
     }
 
     if (ZDir == 0) zval = slice;
@@ -198,12 +204,11 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     {
       for (int i = 0; i < xstop; i++)
       {
-        if (getAxesFlipped() == true) index = (zval * xpoints * ypoints) + ((j + ystartspot) * ypoints) + (i + xstartspot);
-        else if (getAxesFlipped() == false) index = (zval * xpoints * ypoints) + ((j + ystartspot) * xpoints) + (i + xstartspot);
+        index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
         euler1s[index] = euler1Ptr[readerIndex]; // Phi1
         euler2s[index] = euler2Ptr[readerIndex]; // Phi
         euler3s[index] = euler3Ptr[readerIndex]; // Phi2
-        phases[index] = phasePtr[readerIndex] + 1; // Phase Add 1 to the phase number because .ctf files are zero based for phases
+        phases[index] = phasePtr[readerIndex]; // Phase Add 1 to the phase number because .ctf files are zero based for phases
         if (NULL != good_voxels.get())
         {
           goodVoxels[index] = good_voxels->GetValue(readerIndex);

@@ -69,11 +69,17 @@ void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
   unsigned int sym = 999;
   stringToNum<unsigned int>(sym, tokens[3]);
   m_LaueGroup = static_cast<Ebsd::Ctf::LaueGroupTable>(sym);
-  stringToNum<int>(m_SpaceGroup, tokens[4]);
-  m_Internal1 = tokens[5];
-  m_Internal2 = tokens[6];
-  m_Comment = tokens[7];
-
+  if(tokens.size() == 8)
+  {
+	  stringToNum<int>(m_SpaceGroup, tokens[4]);
+	  m_Internal1 = tokens[5];
+	  m_Internal2 = tokens[6];
+	  m_Comment = tokens[7];
+  }
+  if(tokens.size() == 5)
+  {
+	  m_Comment = tokens[4];
+  }
 }
 
 // -----------------------------------------------------------------------------
