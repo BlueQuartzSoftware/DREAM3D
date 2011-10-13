@@ -183,8 +183,6 @@ int H5CtfVolumeReader::loadData(float* euler1s,
 	  ypointstemp = xpoints;
       xstartspot = (ypointstemp - ypointsslice) / 2;
       ystartspot = (xpointstemp - xpointsslice) / 2;
-      xstop = ypointsslice;
-      ystop = xpointsslice;
     }
     else if (getAxesFlipped() == false)
     {
@@ -192,17 +190,15 @@ int H5CtfVolumeReader::loadData(float* euler1s,
 	  ypointstemp = ypoints;
       xstartspot = (xpointstemp - xpointsslice) / 2;
       ystartspot = (ypointstemp - ypointsslice) / 2;
-      xstop = xpointsslice;
-      ystop = ypointsslice;
     }
 
     if (ZDir == 0) zval = slice;
     if (ZDir == 1) zval = (zpoints - 1) - slice;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
-    for (int j = 0; j < ystop; j++)
+    for (int j = 0; j < ypointsslice; j++)
     {
-      for (int i = 0; i < xstop; i++)
+      for (int i = 0; i < xpointsslice; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
         euler1s[index] = euler1Ptr[readerIndex]; // Phi1
@@ -213,7 +209,10 @@ int H5CtfVolumeReader::loadData(float* euler1s,
         {
           goodVoxels[index] = good_voxels->GetValue(readerIndex);
         }
-
+		if(goodVoxels[index] == true && phases[index] == 0)
+		{
+			int stop = 0;
+		}
         ++readerIndex;
       }
     }
