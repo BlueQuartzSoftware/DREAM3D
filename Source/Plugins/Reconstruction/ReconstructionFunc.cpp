@@ -304,6 +304,7 @@ void ReconstructionFunc::cleanup_data()
         euler2s[j] = euler2s[bestneighbor];
         euler3s[j] = euler3s[bestneighbor];
         goodVoxels[j] = goodVoxels[bestneighbor];
+		phases[j] = phases[bestneighbor];
         quats[j*5 + 0] = quats[bestneighbor*5 + 0];
         quats[j*5 + 1] = quats[bestneighbor*5 + 1];
         quats[j*5 + 2] = quats[bestneighbor*5 + 2];
@@ -809,6 +810,7 @@ void ReconstructionFunc::align_sections()
           quats[position*5 + 3] = quats[tempposition*5 + 3];
           quats[position*5 + 4] = quats[tempposition*5 + 4];
           goodVoxels[position] = goodVoxels[tempposition];
+		  phases[position] = phases[tempposition];
           grain_indicies[position] = grain_indicies[tempposition];
         }
         if ((yspot + shifts[iter][1]) < 0
@@ -825,6 +827,7 @@ void ReconstructionFunc::align_sections()
           quats[position*5 + 3] = 0.0;
           quats[position*5 + 4] = 1.0;
           goodVoxels[position] = false;
+		  phases[position] = 0;
           grain_indicies[position] = 0;
         }
       }
