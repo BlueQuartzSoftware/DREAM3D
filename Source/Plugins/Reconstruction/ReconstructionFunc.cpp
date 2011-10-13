@@ -1187,13 +1187,13 @@ void ReconstructionFunc::form_grains()
                 q1[2] = grainquats[i * 5 + 2] / grainquats[i * 5];
                 q1[3] = grainquats[i * 5 + 3] / grainquats[i * 5];
                 q1[4] = grainquats[i * 5 + 4] / grainquats[i * 5];
-                phase1 = crystruct[phases[i]];
+                phase1 = crystruct[gphases[i]];
                 q2[0] = grainquats[grain_indicies[neighbor] * 5];
                 q2[1] = grainquats[grain_indicies[neighbor] * 5 + 1] / grainquats[grain_indicies[neighbor] * 5];
                 q2[2] = grainquats[grain_indicies[neighbor] * 5 + 2] / grainquats[grain_indicies[neighbor] * 5];
                 q2[3] = grainquats[grain_indicies[neighbor] * 5 + 3] / grainquats[grain_indicies[neighbor] * 5];
                 q2[4] = grainquats[grain_indicies[neighbor] * 5 + 4] / grainquats[grain_indicies[neighbor] * 5];
-                phase2 = crystruct[phases[grain_indicies[neighbor]]];
+                phase2 = crystruct[gphases[grain_indicies[neighbor]]];
                 if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                 if (w < misorientationtolerance)
                 {
