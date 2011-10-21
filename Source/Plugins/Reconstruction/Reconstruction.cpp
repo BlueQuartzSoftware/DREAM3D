@@ -202,7 +202,7 @@ void Reconstruction::execute()
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", loadData)
 
   updateProgressAndMessage(("Finding Border"), 8);
-  m->find_border();
+//  m->find_border();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_border)
 
   if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)

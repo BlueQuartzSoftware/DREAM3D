@@ -644,7 +644,7 @@ void ReconstructionFunc::align_sections()
       curxcentroid = curxcentroid / float(count);
       curycentroid = curycentroid / float(count);
     }
-	if (alignmeth >= DREAM3D::Reconstruction::Misorientation  || alignmeth == DREAM3D::Reconstruction::MutualInformation)
+	if (alignmeth == DREAM3D::Reconstruction::Misorientation  || alignmeth == DREAM3D::Reconstruction::MutualInformation)
     {
       oldxshift = -1;
       oldyshift = -1;
@@ -719,7 +719,6 @@ void ReconstructionFunc::align_sections()
 						mutualinfo1[0]++;
 						mutualinfo2[0]++;
 					  }
-					  //if (alignmeth == AIM::Reconstruction::Misorientation) disorientation = disorientation;
 					}
 				  }
 				}
