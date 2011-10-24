@@ -151,6 +151,8 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()));
     reader->setUserZDir(getRefFrameZDir());
+    reader->setRotateSlice(getRotateSlice());
+    reader->setReorderArray(getReorderArray());
 
     err = reader->readFile();
     if (err < 0)
@@ -197,10 +199,6 @@ int H5CtfVolumeReader::loadData(float* euler1s,
         {
           goodVoxels[index] = good_voxels->GetValue(readerIndex);
         }
-		if(goodVoxels[index] == true && phases[index] == 0)
-		{
-			int stop = 0;
-		}
         ++readerIndex;
       }
     }

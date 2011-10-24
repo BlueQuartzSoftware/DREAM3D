@@ -94,6 +94,8 @@ class Reconstruction : public AbstractPipeline, public Observer
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
     MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
+    MXA_INSTANCE_PROPERTY(bool, ReorderArray)
+    MXA_INSTANCE_PROPERTY(bool, RotateSlice)
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
@@ -144,6 +146,8 @@ class Reconstruction : public AbstractPipeline, public Observer
       reader->setSliceStart(m_ZStartIndex);
       reader->setSliceEnd(m_ZEndIndex);
       reader->setRefFrameZDir(m_RefFrameZDir);
+      reader->setRotateSlice(m_RotateSlice);
+      reader->setReorderArray(m_ReorderArray);
 
       std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
       if (phases.size() == 0)

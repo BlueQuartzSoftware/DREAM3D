@@ -245,6 +245,8 @@ int H5AngVolumeReader::loadData(float* euler1s,
     reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()) );
     reader->setUserZDir(getRefFrameZDir());
+    reader->setRotateSlice(getRotateSlice());
+    reader->setReorderArray(getReorderArray());
 
     err = reader->readFile();
     if (err < 0)
@@ -270,24 +272,12 @@ int H5AngVolumeReader::loadData(float* euler1s,
     // Figure out which are good voxels
     AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointsslice * ypointsslice, dataTypes);
 
-    if (getAxesFlipped() == true)
-    {
-	  xpointstemp = ypoints;
-	  ypointstemp = xpoints;
-      xstartspot = (ypointstemp - ypointsslice) / 2;
-      ystartspot = (xpointstemp - xpointsslice) / 2;
-      xstop = ypointsslice;
-      ystop = xpointsslice;
-    }
-    else if (getAxesFlipped() == false)
-    {
 	  xpointstemp = xpoints;
 	  ypointstemp = ypoints;
       xstartspot = (xpointstemp - xpointsslice) / 2;
       ystartspot = (ypointstemp - ypointsslice) / 2;
       xstop = xpointsslice;
       ystop = ypointsslice;
-    }
 
 	if(ZDir == Ebsd::LowtoHigh) zval = slice;
 	if(ZDir == Ebsd::HightoLow) zval = (zpoints-1) - slice;

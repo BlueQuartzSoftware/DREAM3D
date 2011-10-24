@@ -72,6 +72,8 @@ m_YRes(0.0f),
 m_ZRes(0.0f),
 m_ZStart(0),
 m_ZEnd(0),
+m_RotateSlice(true),
+m_ReorderArray(true),
 m_NumPhases(0)
 {
 
@@ -129,6 +131,8 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZResolution, m_ZRes);
 
   EBSD_VOLREADER_READ_HEADER_CAST(fileId, Ebsd::H5::StackingOrder, m_StackingOrder, Ebsd::RefFrameZDir, unsigned int);
+  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::RotateSlice, m_RotateSlice);
+  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ReorderArray, m_ReorderArray);
 
 
   m_Manufacturer = "";
@@ -320,4 +324,32 @@ Ebsd::RefFrameZDir H5EbsdVolumeInfo::getStackingOrder()
     if (err < 0) { return Ebsd::UnknownRefFrameZDirection; }
   }
   return m_StackingOrder;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool H5EbsdVolumeInfo::getRotateSlice()
+{
+  int err = -1;
+  if (m_ValuesAreCached == false)
+  {
+    err = readVolumeInfo();
+    if (err < 0) { return true; }
+  }
+  return m_RotateSlice;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool H5EbsdVolumeInfo::getReorderArray()
+{
+  int err = -1;
+  if (m_ValuesAreCached == false)
+  {
+    err = readVolumeInfo();
+    if (err < 0) { return true; }
+  }
+  return m_ReorderArray;
 }

@@ -64,6 +64,8 @@ EbsdImportWidget::EbsdImportWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_EbsdImport(NULL),
 m_WorkerThread(NULL),
+m_RotateSlice(true),
+m_ReorderArray(true),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -313,6 +315,8 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   m_EbsdImport->setZResolution(m_zSpacing->text().toFloat(&ok));
 
   m_EbsdImport->setRefFrameZDir( getRefFrameZDir() );
+  m_EbsdImport->setRotateSlice( m_RotateSlice );
+  m_EbsdImport->setReorderArray( m_ReorderArray );
 
 
   int fileCount = m_FileListView->count();

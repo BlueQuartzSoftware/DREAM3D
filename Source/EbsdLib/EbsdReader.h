@@ -64,6 +64,8 @@ class EbsdLib_EXPORT EbsdReader
 
     /** @brief Allow the user to set the origin of the scan */
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
+    EBSD_INSTANCE_PROPERTY(bool, RotateSlice)
+    EBSD_INSTANCE_PROPERTY(bool, ReorderArray)
 
     /** @brief Sets the file name of the ebsd file to be read */
     EBSD_INSTANCE_STRING_PROPERTY(FileName);
