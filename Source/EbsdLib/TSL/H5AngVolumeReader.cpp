@@ -244,7 +244,6 @@ int H5AngVolumeReader::loadData(float* euler1s,
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()) );
-    reader->setUserOrigin(getRefFrameOrigin());
     reader->setUserZDir(getRefFrameZDir());
 
     err = reader->readFile();
@@ -253,7 +252,6 @@ int H5AngVolumeReader::loadData(float* euler1s,
       std::cout << "H5AngDataLoader Error: There was an issue loading the data from the hdf5 file." << std::endl;
       return -1;
     }
-    setAxesFlipped(reader->getAxesFlipped());
     readerIndex = 0;
     xpointsslice = reader->getNumEvenCols();
     ypointsslice = reader->getNumRows();
@@ -291,8 +289,8 @@ int H5AngVolumeReader::loadData(float* euler1s,
       ystop = ypointsslice;
     }
 
-    if(ZDir == Ebsd::IntoSlice) zval = slice;
-    if(ZDir == Ebsd::OutofSlice) zval = (zpoints-1) - slice;
+	if(ZDir == Ebsd::LowtoHigh) zval = slice;
+	if(ZDir == Ebsd::HightoLow) zval = (zpoints-1) - slice;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ystop; j++)

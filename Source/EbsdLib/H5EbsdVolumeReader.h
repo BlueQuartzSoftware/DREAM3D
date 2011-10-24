@@ -68,7 +68,6 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
 
     EBSD_INSTANCE_PROPERTY(bool, Cancel)
 
-    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, RefFrameOrigin);
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir);
     EBSD_INSTANCE_PROPERTY(bool, AxesFlipped);
 

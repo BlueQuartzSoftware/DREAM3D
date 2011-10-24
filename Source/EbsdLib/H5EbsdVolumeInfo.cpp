@@ -128,7 +128,6 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::YResolution, m_YRes);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZResolution, m_ZRes);
 
-  EBSD_VOLREADER_READ_HEADER_CAST(fileId, Ebsd::H5::ReferenceOrigin, m_ReferenceOrigin, Ebsd::RefFrameOrigin, unsigned int);
   EBSD_VOLREADER_READ_HEADER_CAST(fileId, Ebsd::H5::StackingOrder, m_StackingOrder, Ebsd::RefFrameZDir, unsigned int);
 
 
@@ -307,20 +306,6 @@ int H5EbsdVolumeInfo::getNumPhases()
     if (err < 0) { return 0; }
   }
   return m_NumPhases;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Ebsd::RefFrameOrigin H5EbsdVolumeInfo::getReferenceOrigin()
-{
-  int err = -1;
-  if (m_ValuesAreCached == false)
-  {
-    err = readVolumeInfo();
-    if (err < 0) { return Ebsd::NoOrientation; }
-  }
-  return m_ReferenceOrigin;
 }
 
 // -----------------------------------------------------------------------------

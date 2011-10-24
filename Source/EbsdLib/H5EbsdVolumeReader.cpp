@@ -47,8 +47,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5EbsdVolumeReader::H5EbsdVolumeReader() :
-    m_RefFrameOrigin(Ebsd::NoOrientation)
+H5EbsdVolumeReader::H5EbsdVolumeReader()
 {
 
 }

@@ -140,14 +140,16 @@ void EbsdImport::execute()
   err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Stacking Order Name Attribute to the HDF5 File", err)
 
+  unsigned int flag = 0;
+  if(m_RotateSlice) flag = 1; 
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::RotateSlice, flag);
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Rotate Slice Bool to the HDF5 File", err)
 
+  flag = 0;
+  if(m_ReorderArray) flag = 1; 
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReorderArray, flag);
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reorder Array Bool to the HDF5 File", err)
 
-  ui = static_cast<unsigned int>(m_RefFrameOrigin);
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReferenceOrigin, ui);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reference Origin Scalar to the HDF5 File", err)
-  s = Ebsd::ReferenceOrigin::Utils::getStringForEnum(m_RefFrameOrigin);
-  err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::ReferenceOrigin, "Name", s);
-  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reference Origin Name Attribute to the HDF5 File", err)
   EbsdImporter::Pointer fileImporter;
 
   // Write the Manufacturer of the OIM file here

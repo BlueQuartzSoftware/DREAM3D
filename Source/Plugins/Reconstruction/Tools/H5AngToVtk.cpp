@@ -99,7 +99,6 @@ int main(int argc, char **argv)
 
   h5io->setSliceStart(zStart);
   h5io->setSliceEnd(zEnd);
-  h5io->setRefFrameOrigin(Ebsd::NoOrientation);
 
   DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
   std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes;
@@ -131,7 +130,7 @@ int main(int argc, char **argv)
   std::cout << "Loading EBSD Data...." << std::endl;
   std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;
 
-  err = h5io->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, Ebsd::OutofSlice, m_QualityMetricFilters);
+  err = h5io->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, Ebsd::HightoLow, m_QualityMetricFilters);
   m->initializeQuats();
 
   std::cout << "Writing VTK file" << std::endl;

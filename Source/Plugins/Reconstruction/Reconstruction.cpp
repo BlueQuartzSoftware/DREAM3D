@@ -73,7 +73,6 @@ m_MergeColonies(false),
 m_FillinSample(false),
 m_MinAllowedGrainSize(0),
 m_MisorientationTolerance(0.0),
-m_RefFrameOrigin(Ebsd::NoOrientation),
 m_WriteBinaryVTKFiles(true),
 m_WriteVtkFile(true),
 m_WritePhaseId(true),
@@ -172,10 +171,9 @@ void Reconstruction::execute()
 
   // During the loading of the EBSD data the Quality Metric Filters will be run
   // and fill in the ReconstrucionFunc->goodVoxels array.
-  updateProgressAndMessage(("Loading Slices"), 4);
+  updateProgressAndMessage(("Loading Slices"), 1);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  ebsdReader->setRefFrameOrigin(m_RefFrameOrigin);
   ebsdReader->setRefFrameZDir(m_RefFrameZDir);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
   CHECK_FOR_ERROR(ReconstructionFunc, "Error loading data from input file.", err)
@@ -201,73 +199,69 @@ void Reconstruction::execute()
   m->initializeQuats();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", loadData)
 
-  updateProgressAndMessage(("Finding Border"), 8);
-//  m->find_border();
+  updateProgressAndMessage(("Finding Border"), 10);
+  m->find_border();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_border)
 
   if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
   {
-      updateProgressAndMessage(("Aligning Slices"), 10);
+      updateProgressAndMessage(("Aligning Slices"), 20);
       m->form_grains_sections();
       CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", form_grains_sections)
   }
 
-  updateProgressAndMessage(("Aligning Slices"), 12);
+  updateProgressAndMessage(("Aligning Slices"), 20);
   m->align_sections();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", align_sections)
 
-  updateProgressAndMessage(("Cleaning Data"), 16);
-  m->cleanup_data();
-  CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", cleanup_data)
-
   if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
   {
-      updateProgressAndMessage(("Redefining Border"), 18);
+      updateProgressAndMessage(("Redefining Border"), 20);
       m->find_border();
       CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_border)
   }
 
-  updateProgressAndMessage(("Forming Macro-Grains"), 20);
+  updateProgressAndMessage(("Forming Macro-Grains"), 30);
   m->form_grains();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", form_grains)
 
-  updateProgressAndMessage(("Finding Neighbors"), 24);
+  updateProgressAndMessage(("Finding Neighbors"), 40);
   m->find_neighbors();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_neighbors)
 
-  updateProgressAndMessage(("Reordering Grains"), 28);
+  updateProgressAndMessage(("Reordering Grains"), 50);
   m->reorder_grains();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", reorder_grains)
 
   if(m_FillinSample == true)
   {
-    updateProgressAndMessage(("Creating Smooth Rectangular Sample"), 36);
+    updateProgressAndMessage(("Creating Smooth Rectangular Sample"), 56);
     m->fillin_sample();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", fillin_sample)
   }
 
   if (m_MergeTwins == true)
   {
-    updateProgressAndMessage(("Merging Twins"), 40);
+    updateProgressAndMessage(("Merging Twins"), 60);
     m->merge_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", merge_twins)
 
-    updateProgressAndMessage(("Characterizing Twins"), 40);
+    updateProgressAndMessage(("Characterizing Twins"), 60);
     m->characterize_twins();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", characterize_twins)
 
-    updateProgressAndMessage(("Renumbering Grains"), 40);
+    updateProgressAndMessage(("Renumbering Grains"), 60);
     m->renumber_grains3();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", renumber_grains3)
   }
 
   if (m_MergeColonies == true)
   {
-    updateProgressAndMessage(("Merging Colonies"), 44);
+    updateProgressAndMessage(("Merging Colonies"), 74);
     m->merge_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", merge_colonies)
 
-    updateProgressAndMessage(("Renumbering Grains"), 44);
+    updateProgressAndMessage(("Renumbering Grains"), 74);
     m->characterize_colonies();
     CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", characterize_colonies)
   }
@@ -296,11 +290,14 @@ void Reconstruction::execute()
     // Setup all the classes that will help us write the Scalars to the VTK File
     std::vector<VtkScalarWriter*> scalarsToWrite;
     {
-      VtkScalarWriter* w0 =
-          static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<ReconstructionFunc>(m.get()));
+      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<ReconstructionFunc>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
-    }
+
+	  w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<ReconstructionFunc>(m.get()));
+      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
+      scalarsToWrite.push_back(w0);
+}
 
     if (m_WritePhaseId == true){
       VtkScalarWriter* w0 =
@@ -386,7 +383,6 @@ void Reconstruction::printSettings(std::ostream &ostream)
 //    PRINT_PROPERTY(ostream, MinSeedImageQuality)
     PRINT_PROPERTY(ostream, MisorientationTolerance)
     PRINT_PROPERTY(ostream, AlignmentMethod)
-    PRINT_PROPERTY(ostream, RefFrameOrigin)
 
     PRINT_PROPERTY(ostream, WriteVtkFile)
     PRINT_PROPERTY(ostream, WritePhaseId)

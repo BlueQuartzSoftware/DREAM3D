@@ -475,7 +475,6 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     m_EbsdManufacturer->setText(fileManufact);
 
     m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
-    m_ReferenceOrigin->setText(QString::fromStdString(Ebsd::ReferenceOrigin::Utils::getStringForEnum(h5Reader->getReferenceOrigin())));
 
     // Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
@@ -710,9 +709,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
-
-  m_Reconstruction->setRefFrameOrigin(Ebsd::ReferenceOrigin::Utils::getEnumForString(m_ReferenceOrigin->text().toStdString()));
-//
   m_Reconstruction->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());

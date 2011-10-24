@@ -40,9 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 EbsdReader::EbsdReader() :
-m_UserOrigin(Ebsd::NoOrientation),
-m_UserZDir(Ebsd::IntoSlice),
-m_AxesFlipped(false),
+m_UserZDir(Ebsd::LowtoHigh),
 m_FileName(""),
 m_NumFields(0),
 m_OriginalHeader(""),
@@ -70,24 +68,3 @@ void EbsdReader::appendOriginalHeader(const std::string &more)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool EbsdReader::checkAndFlipAxisDimensions()
-{
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::UpperRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::UpperLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(true);
-  if(getUserOrigin() == Ebsd::LowerLeftOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::IntoSlice) setAxesFlipped(false);
-  if(getUserOrigin() == Ebsd::LowerRightOrigin && getUserZDir() == Ebsd::OutofSlice) setAxesFlipped(true);
-
-  if(getAxesFlipped() == true)
-  {
-    int yCells = getYDimension();
-    int xCells = getXDimension();
-    setYDimension(xCells);
-    setXDimension(yCells);
-    return true;
-  }
-  return false;
-}

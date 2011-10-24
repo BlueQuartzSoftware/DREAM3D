@@ -150,10 +150,6 @@ int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
 //  std::cout << "H5CtfImporter: Importing " << ctfFile << std::endl;
   CtfReader reader;
   reader.setFileName(ctfFile);
-  // This is set to NoOrientation because we want to leave the data intact as it
-  // was received from the instrument. The user can choose to rotate the data as
-  // it is read from the resulting HDF5 data file.
-  reader.setUserOrigin(Ebsd::NoOrientation);
 
   // Now actually read the file
   err = reader.readFile();

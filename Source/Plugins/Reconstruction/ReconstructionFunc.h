@@ -190,7 +190,6 @@ class ReconstructionFunc : public Observable
     void reorder_grains();
     int remove_smallgrains(size_t numgrains);
 	  void fillin_sample();
-    void cleanup_data();
     void merge_twins();
     void merge_colonies();
     void characterize_twins();

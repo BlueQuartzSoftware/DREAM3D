@@ -94,13 +94,13 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
      */
     void m_findEbsdMaxSliceAndPrefix();
     void m_generateExampleEbsdInputFile();
-    Ebsd::RefFrameOrigin getRefFrameOrigin();
     Ebsd::RefFrameZDir getRefFrameZDir();
 
   protected slots:
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();
     void on_m_OutputFileBtn_clicked();
+    void on_m_RefFrameOptionsBtn_clicked();
     void on_m_GoBtn_clicked();
 
     void on_m_FilePrefix_textChanged(const QString &string);
@@ -132,8 +132,12 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
     QThread*                    m_WorkerThread;
     QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;
+    QButtonGroup*               m_zSpacingGroup;
 
-    QString m_OpenDialogLastDirectory;
+	bool m_RotateSlice;
+	bool m_ReorderArray;
+	
+	QString m_OpenDialogLastDirectory;
 
     EbsdImportWidget(const EbsdImportWidget&); // Copy Constructor Not Implemented
     void operator=(const EbsdImportWidget&); // Operator '=' Not Implemented

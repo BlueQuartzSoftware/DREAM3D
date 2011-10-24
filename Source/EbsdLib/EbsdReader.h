@@ -63,9 +63,7 @@ class EbsdLib_EXPORT EbsdReader
     virtual ~EbsdReader();
 
     /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameOrigin, UserOrigin)
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
-    EBSD_INSTANCE_PROPERTY(bool, AxesFlipped)
 
     /** @brief Sets the file name of the ebsd file to be read */
     EBSD_INSTANCE_STRING_PROPERTY(FileName);
@@ -200,13 +198,6 @@ class EbsdLib_EXPORT EbsdReader
   protected:
     std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
 
-    /**
-     * @brief Checks to see if the X and Y Axis dimensions should be flipped based
-     * of the type of transformation being performed and will swap the dimension
-     * values if the combination of UserOrigin and ZDirection dictates the swap
-     * @return True if the axis dimensions were flipped.
-     */
-    bool checkAndFlipAxisDimensions();
 
   private:
     EbsdReader(const EbsdReader&); // Copy Constructor Not Implemented

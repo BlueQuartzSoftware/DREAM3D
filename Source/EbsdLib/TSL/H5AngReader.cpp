@@ -100,7 +100,6 @@ int H5AngReader::readFile()
 
   transformData();
 
-  checkAndFlipAxisDimensions();
   return err;
 }
 

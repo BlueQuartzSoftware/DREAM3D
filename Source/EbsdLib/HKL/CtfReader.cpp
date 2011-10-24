@@ -255,8 +255,6 @@ int CtfReader::readFile()
 
   transformData();
 
-  checkAndFlipAxisDimensions();
-
   return err;
 }
 
@@ -404,145 +402,8 @@ void CtfReader::parseDataLine(const std::string &line, int row, int col, size_t 
                        &phase, &x,&y, &bCount, &error, &p1, &p, &p2, &mad, &bc, &bs);
   assert(fields == getNumFields());
 
-#if 0
+  offset = i;
 
-  // Do we transform the data
-		  if (getUserOrigin() == Ebsd::UpperRightOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (((xCells-1)-col)*yCells)+(row);
-				if (p - ONE_PIf < 0.0)
-				{
-				  p = p + ONE_PIf;
-				}
-				else
-				{
-				  p = p - ONE_PIf;
-				}
-				if (p2 - PI_OVER_2f < 0.0)
-				{
-				  p2 = p2 + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p2 = p2 - PI_OVER_2f;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (col*yCells)+(row);
-				if (p1 - ONE_PIf < 0.0)
-				{
-				  p1 = p1 + ONE_PIf;
-				}
-				else
-				{
-				  p1 = p1 - ONE_PIf;
-				}
-			  }
-		  }
-		  else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (row*xCells)+(col);
-				if (p - ONE_PIf < 0.0)
-				{
-				  p = p + ONE_PIf;
-				}
-				else
-				{
-				  p = p - ONE_PIf;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (row*xCells)+((xCells-1)-col);
-				if (p1 - THREE_PI_OVER_2f < 0.0)
-				{
-				  p1 = p1 + PI_OVER_2f;
-				}
-				else
-				{
-				  p1 = p1 - THREE_PI_OVER_2f;
-				}
-			  }
-		  }
-		  else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (col*yCells)+((yCells-1)-row);
-				if (p - ONE_PIf < 0.0)
-				{
-				  p = p + ONE_PIf;
-				}
-				else
-				{
-				  p = p - ONE_PIf;
-				}
-				if (p2 - THREE_PI_OVER_2f < 0.0)
-				{
-				  p2 = p2 + PI_OVER_2f;
-				}
-				else
-				{
-				  p2 = p2 - THREE_PI_OVER_2f;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (((xCells-1)-col)*yCells)+((yCells-1)-row);
-			  }
-		  }
-		  else if (getUserOrigin() == Ebsd::LowerRightOrigin)
-		  {
-			  if (getUserZDir() == Ebsd::IntoSlice)
-			  {
-				offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
-				if (p - ONE_PIf < 0.0)
-				{
-				  p = p + ONE_PIf;
-				}
-				else
-				{
-				  p = p - ONE_PIf;
-				}
-				if (p2 - ONE_PIf < 0.0)
-				{
-				  p2 = p2 + ONE_PIf;
-				}
-				else
-				{
-				  p2 = p2 - ONE_PIf;
-				}
-			  }
-			  if (getUserZDir() == Ebsd::OutofSlice)
-			  {
-				offset = (((yCells-1)-row)*xCells)+(col);
-				if (p1 - PI_OVER_2f < 0.0)
-				{
-				  p1 = p1 + THREE_PI_OVER_2f;
-				}
-				else
-				{
-				  p1 = p1 - PI_OVER_2f;
-				}
-			  }
-		  }
-
-	  if (getUserOrigin() == Ebsd::NoOrientation)
-	  {
-		// If the user/programmer sets "NoOrientation" then we simply read the data
-		// from the file and copy the values into the arrays without any regard for
-		// the true X and Y positions in the grid. We are simply trying to keep the
-		// data as close to the original as possible.
-		offset = i;
-	  }
-#else
-	  offset = i;
-#endif
   m_Phase[offset] = phase;
   m_X[offset] = x;
   m_Y[offset] = y;
@@ -694,139 +555,14 @@ void CtfReader::transformData()
    {
      for(size_t col = 0; col < xCells; ++col)
      {
-     // Do we transform the data
-       if (getUserOrigin() == Ebsd::UpperRightOrigin)
+       offset = (col*yCells)+(row);
+       if (p1[i] - ONE_PIf < 0.0)
        {
-         if (getUserZDir() == Ebsd::IntoSlice)
-         {
-         offset = (((xCells-1)-col)*yCells)+(row);
-         if (p[i] - ONE_PIf < 0.0)
-         {
-           p[i] = p[i] + ONE_PIf;
-         }
-         else
-         {
-           p[i] = p[i] - ONE_PIf;
-         }
-         if (p2[i] - PI_OVER_2f < 0.0)
-         {
-           p2[i] = p2[i] + THREE_PI_OVER_2f;
-         }
-         else
-         {
-           p2[i] = p2[i] - PI_OVER_2f;
-         }
-         }
-         if (getUserZDir() == Ebsd::OutofSlice)
-         {
-         offset = (col*yCells)+(row);
-         if (p1[i] - ONE_PIf < 0.0)
-         {
            p1[i] = p1[i] + ONE_PIf;
-         }
-         else
-         {
+       }
+       else
+       {
            p1[i] = p1[i] - ONE_PIf;
-         }
-         }
-       }
-       else if (getUserOrigin() == Ebsd::UpperLeftOrigin)
-       {
-         if (getUserZDir() == Ebsd::IntoSlice)
-         {
-         offset = (row*xCells)+(col);
-         if (p[i] - ONE_PIf < 0.0)
-         {
-           p[i] = p[i] + ONE_PIf;
-         }
-         else
-         {
-           p[i] = p[i] - ONE_PIf;
-         }
-         }
-         if (getUserZDir() == Ebsd::OutofSlice)
-         {
-         offset = (row*xCells)+((xCells-1)-col);
-         if (p1[i] - THREE_PI_OVER_2f < 0.0)
-         {
-           p1[i] = p1[i] + PI_OVER_2f;
-         }
-         else
-         {
-           p1[i] = p1[i] - THREE_PI_OVER_2f;
-         }
-         }
-       }
-       else if (getUserOrigin() == Ebsd::LowerLeftOrigin)
-       {
-         if (getUserZDir() == Ebsd::IntoSlice)
-         {
-         offset = (col*yCells)+((yCells-1)-row);
-         if (p[i] - ONE_PIf < 0.0)
-         {
-           p[i] = p[i] + ONE_PIf;
-         }
-         else
-         {
-           p[i] = p[i] - ONE_PIf;
-         }
-         if (p2[i] - THREE_PI_OVER_2f < 0.0)
-         {
-           p2[i] = p2[i] + PI_OVER_2f;
-         }
-         else
-         {
-           p2[i] = p2[i] - THREE_PI_OVER_2f;
-         }
-         }
-         if (getUserZDir() == Ebsd::OutofSlice)
-         {
-         offset = (((xCells-1)-col)*yCells)+((yCells-1)-row);
-         }
-       }
-       else if (getUserOrigin() == Ebsd::LowerRightOrigin)
-       {
-         if (getUserZDir() == Ebsd::IntoSlice)
-         {
-         offset = (((yCells-1)-row)*xCells)+((xCells-1)-col);
-         if (p[i] - ONE_PIf < 0.0)
-         {
-           p[i] = p[i] + ONE_PIf;
-         }
-         else
-         {
-           p[i] = p[i] - ONE_PIf;
-         }
-         if (p2[i] - ONE_PIf < 0.0)
-         {
-           p2[i] = p2[i] + ONE_PIf;
-         }
-         else
-         {
-           p2[i] = p2[i] - ONE_PIf;
-         }
-         }
-         if (getUserZDir() == Ebsd::OutofSlice)
-         {
-         offset = (((yCells-1)-row)*xCells)+(col);
-         if (p1[i] - PI_OVER_2f < 0.0)
-         {
-           p1[i] = p1[i] + THREE_PI_OVER_2f;
-         }
-         else
-         {
-           p1[i] = p1[i] - PI_OVER_2f;
-         }
-         }
-       }
-
-       if (getUserOrigin() == Ebsd::NoOrientation)
-       {
-       // If the user/programmer sets "NoOrientation" then we simply read the data
-       // from the file and copy the values into the arrays without any regard for
-       // the true X and Y positions in the grid. We are simply trying to keep the
-       // data as close to the original as possible.
-       offset = i;
        }
        shuffleTable[(row*xCells)+col] = offset;
        ++i;
