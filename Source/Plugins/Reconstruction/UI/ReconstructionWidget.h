@@ -90,6 +90,9 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
 
     virtual void checkIOFiles();
 
+	bool rotateslice;
+	bool reorderarray;
+
   protected slots:
 
     /* Reconstruction Slots */

@@ -83,7 +83,9 @@ private:
 EbsdImport::EbsdImport( ) :
 m_ZStartIndex(0),
 m_ZEndIndex(0),
-m_ZResolution(1.0)
+m_ZResolution(1.0),
+m_RotateSlice(true),
+m_ReorderArray(true)
 {
 }
 
@@ -141,12 +143,12 @@ void EbsdImport::execute()
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Stacking Order Name Attribute to the HDF5 File", err)
 
   unsigned int flag = 0;
-  if(m_RotateSlice) flag = 1; 
+  if(m_RotateSlice == true) flag = 1; 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::RotateSlice, flag);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Rotate Slice Bool to the HDF5 File", err)
 
   flag = 0;
-  if(m_ReorderArray) flag = 1; 
+  if(m_ReorderArray == true) flag = 1; 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReorderArray, flag);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reorder Array Bool to the HDF5 File", err)
 

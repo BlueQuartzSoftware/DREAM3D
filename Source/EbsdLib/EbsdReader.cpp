@@ -41,6 +41,8 @@
 // -----------------------------------------------------------------------------
 EbsdReader::EbsdReader() :
 m_UserZDir(Ebsd::LowtoHigh),
+m_RotateSlice(1),
+m_ReorderArray(1),
 m_FileName(""),
 m_NumFields(0),
 m_OriginalHeader(""),

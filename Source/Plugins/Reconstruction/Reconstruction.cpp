@@ -175,6 +175,8 @@ void Reconstruction::execute()
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   ebsdReader->setRefFrameZDir(m_RefFrameZDir);
+  ebsdReader->setRotateSlice(m_RotateSlice);
+  ebsdReader->setReorderArray(m_ReorderArray);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
   CHECK_FOR_ERROR(ReconstructionFunc, "Error loading data from input file.", err)
   float radianconversion = m_pi/180.0;
@@ -187,14 +189,6 @@ void Reconstruction::execute()
 		  m->euler3s[i] = m->euler3s[i] * radianconversion;
 	  }
   }
-  if(ebsdReader->getAxesFlipped() == true)
-  {
-	  int tempxpoints = m->xpoints;
-	  int tempypoints = m->ypoints;
-	  m->xpoints = tempypoints;
-	  m->ypoints = tempxpoints;
-  }
-
 
   m->initializeQuats();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", loadData)

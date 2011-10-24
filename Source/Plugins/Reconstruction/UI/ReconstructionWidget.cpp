@@ -89,6 +89,8 @@ m_WritePhaseIdScalars(true),
 //m_WriteImageQualityScalars(true),
 m_WriteIPFColorScalars(true),
 m_WriteBinaryVTKFile(true),
+rotateslice(false),
+reorderarray(false),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -475,8 +477,17 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     m_EbsdManufacturer->setText(fileManufact);
 
     m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
+	
+	rotateslice = h5Reader->getRotateSlice();
+	reorderarray = h5Reader->getReorderArray();
 
-    // Get the list of Possible filter Fields based on the Manufacturer
+	if(rotateslice == true) m_RotateSlice->setText("true");
+	else if(rotateslice == false) m_RotateSlice->setText("false");
+
+	if(reorderarray == true) m_ReorderArray->setText("true");
+	else if(reorderarray == false) m_ReorderArray->setText("false");
+
+	// Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
     {
       AngFields fields;
@@ -710,6 +721,8 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
   m_Reconstruction->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
+  m_Reconstruction->setRotateSlice(rotateslice);
+  m_Reconstruction->setReorderArray(reorderarray);
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
   m_Reconstruction->setMisorientationTolerance(m_MisOrientationTolerance->value());
