@@ -214,14 +214,23 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         {
           index = 0;
         }
-        if (r->crystruct[phase] == Ebsd::Cubic)
-        {
-          OIMColoring::GenerateIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
-        }
-        else if (r->crystruct[phase] == Ebsd::Hexagonal)
-        {
-          OIMColoring::CalculateHexIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
-        }
+		if (phase > 0)
+		{
+			if (r->crystruct[phase] == Ebsd::Cubic)
+			{
+			  OIMColoring::GenerateIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
+			}
+			else if (r->crystruct[phase] == Ebsd::Hexagonal)
+			{
+			  OIMColoring::CalculateHexIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
+			}
+		}
+		else if (phase <= 0) 
+		{
+			rgba[index] = 0.0;
+			rgba[index+1] = 0.0;
+			rgba[index+2] = 0.0;
+		}
         if (true == m_WriteBinaryFiles)
         {
           rgba[index + 3] = 255;

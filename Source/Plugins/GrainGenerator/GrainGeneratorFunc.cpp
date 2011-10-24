@@ -2221,23 +2221,5 @@ float GrainGeneratorFunc::find_zcoord(long long int index)
 
 
 
-//int GrainGeneratorFunc::writePhFormat(const std::string &file)
-//{
-//  int err = 0;
-//
-//  FILE* f = fopen(file.c_str(), "wb");
-//
-//  fprintf(f, "     %d     %d     %d     Written by DREAM.3D\n", xpoints, ypoints, zpoints);
-//  fprintf(f, "'testXX'               0.00 10.792  0.0       %d\n", (int)(m_Grains.size()) );
-//  fprintf(f, "1.000 1.000 1.000       %d\n", (int)(m_Grains.size()));
-//  for(int i = 0; i < totalpoints; ++i)
-//  {
-//    fprintf(f, "    %d\n",  voxels[i].grain_index );
-//  }
-//
-//  fclose(f);
-//
-//  return err;
-//}
 
 

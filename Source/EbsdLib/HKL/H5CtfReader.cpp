@@ -103,8 +103,6 @@ int H5CtfReader::readFile()
 
   transformData();
 
-  checkAndFlipAxisDimensions();
-
   return err;
 }
 

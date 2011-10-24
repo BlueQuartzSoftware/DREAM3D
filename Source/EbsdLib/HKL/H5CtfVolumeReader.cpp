@@ -150,7 +150,6 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     H5CtfReader::Pointer reader = H5CtfReader::New();
     reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()));
-    reader->setUserOrigin(getRefFrameOrigin());
     reader->setUserZDir(getRefFrameZDir());
 
     err = reader->readFile();
@@ -159,7 +158,6 @@ int H5CtfVolumeReader::loadData(float* euler1s,
       std::cout << "H5CtfVolumeReader Error: There was an issue loading the data from the hdf5 file." << std::endl;
       return -1;
     }
-    setAxesFlipped(reader->getAxesFlipped());
     readerIndex = 0;
     xpointsslice = reader->getXCells();
     ypointsslice = reader->getYCells();
@@ -177,21 +175,11 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     // Figure out which are good voxels
     AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointsslice * ypointsslice, dataTypes);
 
-    if (getAxesFlipped() == true)
-    {
-	  xpointstemp = ypoints;
-	  ypointstemp = xpoints;
-      xstartspot = (ypointstemp - ypointsslice) / 2;
-      ystartspot = (xpointstemp - xpointsslice) / 2;
-    }
-    else if (getAxesFlipped() == false)
-    {
-	  xpointstemp = xpoints;
-	  ypointstemp = ypoints;
-      xstartspot = (xpointstemp - xpointsslice) / 2;
-      ystartspot = (ypointstemp - ypointsslice) / 2;
-    }
-
+	xpointstemp = xpoints;
+	ypointstemp = ypoints;
+    xstartspot = (xpointstemp - xpointsslice) / 2;
+    ystartspot = (ypointstemp - ypointsslice) / 2;
+    
     if (ZDir == 0) zval = slice;
     if (ZDir == 1) zval = (zpoints - 1) - slice;
 

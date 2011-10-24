@@ -140,7 +140,6 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      */
     virtual int getNumPhases();
 
-    virtual Ebsd::RefFrameOrigin getReferenceOrigin();
     virtual Ebsd::RefFrameZDir getStackingOrder();
 
   protected:
@@ -158,7 +157,8 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     int m_ZEnd;
     std::string m_Manufacturer;
     int m_NumPhases;
-    Ebsd::RefFrameOrigin m_ReferenceOrigin;
+	bool m_RotateSlice;
+	bool m_ReoderArray;
     Ebsd::RefFrameZDir   m_StackingOrder;
 
     H5EbsdVolumeInfo(const H5EbsdVolumeInfo&); //Not Implemented

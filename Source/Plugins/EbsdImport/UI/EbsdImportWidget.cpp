@@ -48,10 +48,12 @@
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
+#include <QtGui/QListWidgetItem>
 #include <QtGui/QButtonGroup>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "EbsdImportPlugin.h"
+#include "QtSupport/QCheckboxDialog.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 
@@ -117,11 +119,7 @@ void EbsdImportWidget::setupGui()
   m_StackingGroup->addButton(m_StackHighToLow);
 
   m_OriginGroup = new QButtonGroup;
-  m_OriginGroup->addButton(m_OriginUpperLeft);
-  m_OriginGroup->addButton(m_OriginLowerLeft);
-  m_OriginGroup->addButton(m_OriginUpperRight);
-  m_OriginGroup->addButton(m_OriginLowerRight);
-
+  m_OriginGroup->addButton(m_RefFrameOptionsBtn);
 
   connect(m_StackLowToHigh, SIGNAL(toggled(bool)),
           this, SLOT(stackingOrderChanged(bool)));
@@ -257,22 +255,10 @@ void EbsdImportWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::RefFrameOrigin EbsdImportWidget::getRefFrameOrigin()
-{
-  if (m_OriginUpperRight->isChecked()) return Ebsd::UpperRightOrigin;
-  if (m_OriginUpperLeft->isChecked()) return Ebsd::UpperLeftOrigin;
-  if (m_OriginLowerLeft->isChecked()) return Ebsd::LowerLeftOrigin;
-  if (m_OriginLowerRight->isChecked()) return Ebsd::LowerRightOrigin;
-  return Ebsd::NoOrientation;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 Ebsd::RefFrameZDir EbsdImportWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) return Ebsd::IntoSlice;
-  if (m_StackHighToLow->isChecked()) return Ebsd::OutofSlice;
+	if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
+	if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
   return Ebsd::UnknownRefFrameZDirection;
 }
 
@@ -326,7 +312,6 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   m_EbsdImport->setZEndIndex(m_ZEndIndex->value());
   m_EbsdImport->setZResolution(m_zSpacing->text().toFloat(&ok));
 
-  m_EbsdImport->setRefFrameOrigin( getRefFrameOrigin() );
   m_EbsdImport->setRefFrameZDir( getRefFrameZDir() );
 
 
@@ -498,6 +483,30 @@ void EbsdImportWidget::m_generateExampleEbsdInputFile()
   }
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdImportWidget::on_m_RefFrameOptionsBtn_clicked()
+{
+  QVector<QString> options;
+  options.push_back("Rotate Slice");
+  options.push_back("Reorder Array");
+
+  QCheckboxDialog d(options, this);
+  d.setWindowTitle(QString("Reference Frame Options"));
+
+  d.setValue("Rotate Slice", m_RotateSlice);
+  d.setValue("Reorder Array", m_ReorderArray);
+
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+    m_RotateSlice = d.getValue("Rotate Slice");
+    m_ReorderArray = d.getValue("Reorder Array");
+  }
+
+}
 
 // -----------------------------------------------------------------------------
 //
