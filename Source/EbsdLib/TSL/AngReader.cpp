@@ -559,8 +559,8 @@ void AngReader::transformData()
      {
 	   adjustedcol = col;
 	   adjustedrow = row;
-	   if(getRotateSlice() == true) adjustedcol = xCells-adjustedcol, adjustedrow = yCells-adjustedrow;
-	   if(getReorderArray() == true) adjustedrow = yCells-adjustedrow;
+	   if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
+	   if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
        offset = (adjustedrow*xCells)+(adjustedcol);
        if (p1[i] - M_PI_2 < 0.0)
        {
