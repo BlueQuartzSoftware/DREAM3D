@@ -562,14 +562,17 @@ void AngReader::transformData()
 	   if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
 	   if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
        offset = (adjustedrow*xCells)+(adjustedcol);
-       if (p1[i] - M_PI_2 < 0.0)
-       {
-          p1[i] = p1[i] + M_PI_2*3.0;
-       }
-       else
-       {
-          p1[i] = p1[i] - M_PI_2;
-       }
+       if(getAlignEulers() == true)
+	   {
+		   if (p1[i] - M_PI_2 < 0.0)
+		   {
+			  p1[i] = p1[i] + M_PI_2*3.0;
+		   }
+		   else
+		   {
+			  p1[i] = p1[i] - M_PI_2;
+		   }
+	   }
        shuffleTable[(row*xCells)+col] = offset;
        ++i;
       }
