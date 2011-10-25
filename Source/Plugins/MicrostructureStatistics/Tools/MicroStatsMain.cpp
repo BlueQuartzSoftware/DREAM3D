@@ -40,9 +40,9 @@
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
-#include <MXA/Common/LogTime.h>
-#include <MXA/Utilities/MXALogger.h>
-#include <MXA/Utilities/MXADir.h>
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXALogger.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -114,9 +114,17 @@ int main(int argc, char **argv)
     cmd.add(m_InputFile);
     TCLAP::ValueArg<float> m_BinStepSize("", "binstepsize", "Size of each Bin in the Histogram", false, 1.0, "Size of each Bin in the Histogram");
     cmd.add(m_BinStepSize);
-    TCLAP::SwitchArg m_H5StatisticsFile("", "no-h5stats-file", "Disable Writing of the H5 Statistics file", true);
+    TCLAP::SwitchArg m_H5StatisticsFile("", "no-h5stats", "Disable Writing of the H5 Statistics file", true);
     cmd.add(m_H5StatisticsFile);
 
+    /* The switch arguments at first seem to be backward but they are not. The _absence_
+     * of the argument on the command line will set the variable to its default value.
+     * For example, the "no-vtk" switch has a default value of "true" which means
+     * that if the user does NOT use the "--no-vtk" the m_VisualizationVizFile variable
+     * will have a "TRUE" value and the vtk file WILL be written. If the user adds
+     * the "--no-vtk" to the command line then the "m_VisualizationVizFile" variable
+     * will be "FALSE" and the vtk file will NOT be written
+     */
     TCLAP::SwitchArg m_VisualizationVizFile("", "no-vtk", "Disable Writing of VTK File", true);
     cmd.add(m_VisualizationVizFile);
     TCLAP::SwitchArg m_WriteSurfaceVoxelScalars_arg("", "no-surfacevoxels", "Disable Writing of Surface Voxel Scalars", true);
