@@ -37,7 +37,11 @@
 #ifndef EbsdImportWIDGET_H_
 #define EbsdImportWIDGET_H_
 
+#include <string>
+#include <vector>
+
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <QtCore/QSettings>
 
 #include "ui_EbsdImportWidget.h"
@@ -96,6 +100,9 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
     void m_generateExampleEbsdInputFile();
     Ebsd::RefFrameZDir getRefFrameZDir();
 
+    std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
+                                                   bool stackLowToHigh, QString filename);
+
   protected slots:
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();
@@ -136,7 +143,7 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
 
 	bool m_RotateSlice;
 	bool m_ReorderArray;
-	
+
 	QString m_OpenDialogLastDirectory;
 
     EbsdImportWidget(const EbsdImportWidget&); // Copy Constructor Not Implemented
