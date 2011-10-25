@@ -481,11 +481,11 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 	rotateslice = h5Reader->getRotateSlice();
 	reorderarray = h5Reader->getReorderArray();
 
-	if(rotateslice == true) m_RotateSlice->setText("true");
-	else if(rotateslice == false) m_RotateSlice->setText("false");
+	if(rotateslice == true) m_RotateSliceLabel->setText("true");
+	else if(rotateslice == false) m_RotateSliceLabel->setText("false");
 
-	if(reorderarray == true) m_ReorderArray->setText("true");
-	else if(reorderarray == false) m_ReorderArray->setText("false");
+	if(reorderarray == true) m_ReorderArrayLabel->setText("true");
+	else if(reorderarray == false) m_ReorderArrayLabel->setText("false");
 
 	// Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)

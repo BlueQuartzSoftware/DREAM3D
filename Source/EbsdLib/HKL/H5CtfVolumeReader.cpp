@@ -177,11 +177,11 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     // Figure out which are good voxels
     AIMArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointsslice * ypointsslice, dataTypes);
 
-	xpointstemp = xpoints;
-	ypointstemp = ypoints;
+    xpointstemp = xpoints;
+    ypointstemp = ypoints;
     xstartspot = (xpointstemp - xpointsslice) / 2;
     ystartspot = (ypointstemp - ypointsslice) / 2;
-    
+
     if (ZDir == 0) zval = slice;
     if (ZDir == 1) zval = (zpoints - 1) - slice;
 

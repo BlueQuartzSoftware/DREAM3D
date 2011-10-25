@@ -309,7 +309,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="m_RotateSlice">
+         <widget class="QLabel" name="m_RotateSliceLabel">
           <property name="font">
            <font>
             <italic>true</italic>
@@ -340,7 +340,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="m_ReorderArray">
+         <widget class="QLabel" name="m_ReorderArrayLabel">
           <property name="font">
            <font>
             <italic>true</italic>
@@ -643,12 +643,6 @@
            </attribute>
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
-           </attribute>
-           <attribute name="verticalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>120</number>
            </attribute>
           </widget>
          </item>
