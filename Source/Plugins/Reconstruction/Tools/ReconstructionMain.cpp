@@ -145,7 +145,6 @@ int main(int argc, char **argv)
     m_Reconstruction->setZEndIndex(zEndIndex.getValue() + 1);
 
     m_Reconstruction->setMergeColonies(mergeColonies.getValue() );
-   // m_Reconstruction->setAlreadyFormed(alreadyFormed.getValue());
     m_Reconstruction->setMergeTwins(mergeTwins.getValue() );
     m_Reconstruction->setFillinSample(fillinSample.getValue() );
 
@@ -164,7 +163,6 @@ int main(int argc, char **argv)
 //    m_Reconstruction->setMinSeedImageQuality(MinImageQuality.getValue());
 //    m_Reconstruction->setMinSeedConfidence(MinConfidence.getValue());
     m_Reconstruction->setDownSampleFactor(DownSampleFactor.getValue());
-    //m_Reconstruction->setSizeBinStepSize(BinStepSize.getValue());
 
     m_Reconstruction->setOutputDirectory(OutputDir.getValue());
     m_Reconstruction->setOutputFilePrefix(OutputFilePrefix.getValue());
