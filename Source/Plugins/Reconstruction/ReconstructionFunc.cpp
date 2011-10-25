@@ -257,30 +257,30 @@ void ReconstructionFunc::find_border()
   float w, n1, n2, n3;
   float q1[5];
   float q2[5];
-  int index;
+//  int index;
   int good = 0;
   size_t count = 0;
   int currentpoint = 0;
   int neighbor = 0;
   int col, row, plane;
-  int noborder = 0;
+//  int noborder = 0;
   Ebsd::CrystalStructure phase1, phase2;
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   size_t totalPoints = xpoints * ypoints * zpoints;
 
-  for (int iter = 0; iter < (totalPoints); iter++)
+  for (size_t iter = 0; iter < (totalPoints); iter++)
   {
     alreadychecked[iter] = false;
-	if (goodVoxels[iter] == 0) grain_indicies[iter] = 0;
-	if (goodVoxels[iter] == 1)
-	{
-		grain_indicies[iter] = -1;
-		voxelslist[count] = iter;
-		alreadychecked[iter] = true;
-		count++;
-		if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-	}
+    if(goodVoxels[iter] == 0) grain_indicies[iter] = 0;
+    if(goodVoxels[iter] == 1)
+    {
+      grain_indicies[iter] = -1;
+      voxelslist[count] = iter;
+      alreadychecked[iter] = true;
+      count++;
+      if(count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+    }
   }
   for (size_t j = 0; j < count; j++)
   {
@@ -339,8 +339,8 @@ void ReconstructionFunc::align_sections()
   float *mutualinfo1;
   float *mutualinfo2;
   int graincount1, graincount2;
-  int xshift = 0;
-  int yshift = 0;
+//  int xshift = 0;
+//  int yshift = 0;
   int newxshift = 0;
   int newyshift = 0;
   int oldxshift = 0;
@@ -733,8 +733,8 @@ void ReconstructionFunc::form_grains()
   int neighbor;
   float q1[5];
   float q2[5];
-  float qa[5];
-  float qb[5];
+//  float qa[5];
+//  float qb[5];
   float w;
   float n1, n2, n3;
   int randpoint = 0;
@@ -743,9 +743,9 @@ void ReconstructionFunc::form_grains()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
   size_t initialMergeListSize = 10;
-  int vid;
+ // int vid;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
-  std::vector<int>* vlist;
+//  std::vector<int>* vlist;
   std::vector<int> mergelist(initialMergeListSize, -1);
   int neighpoints[6];
   neighpoints[0] = -(xpoints * ypoints);
