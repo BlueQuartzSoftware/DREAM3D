@@ -144,6 +144,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
 
     virtual bool getRotateSlice();
     virtual bool getReorderArray();
+    virtual bool getAlignEulers();
 
   protected:
     H5EbsdVolumeInfo();
@@ -162,6 +163,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     int m_NumPhases;
     bool m_RotateSlice;
     bool m_ReorderArray;
+    bool m_AlignEulers;
 
     std::string m_Manufacturer;
 

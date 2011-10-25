@@ -84,8 +84,9 @@ EbsdImport::EbsdImport( ) :
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_ZResolution(1.0),
-m_ReorderArray(true),
-m_RotateSlice(true)
+m_ReorderArray(false),
+m_RotateSlice(false),
+m_AlignEulers(false)
 {
 
 }
@@ -152,6 +153,11 @@ void EbsdImport::execute()
   if(m_ReorderArray == true) flag = 1;
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReorderArray, flag);
   CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Reorder Array Bool to the HDF5 File", err)
+
+  flag = 0;
+  if(m_AlignEulers == true) flag = 1;
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::AlignEulers, flag);
+  CHECK_FOR_ERROR(EbsdImportFunc, "Could not write the Align Eulers Bool to the HDF5 File", err)
 
   EbsdImporter::Pointer fileImporter;
 

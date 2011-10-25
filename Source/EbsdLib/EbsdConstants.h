@@ -55,6 +55,7 @@ namespace Ebsd
     const std::string StackingOrder("Stacking Order");
     const std::string RotateSlice("RotateSlice");
     const std::string ReorderArray("ReorderArray");
+    const std::string AlignEulers("AlignEulers");
 
     const std::string Manufacturer("Manufacturer");
     const std::string OriginalFile("OriginalFile");
