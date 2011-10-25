@@ -81,6 +81,7 @@ class EbsdImport : public AbstractPipeline, public Observer
     MXA_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList);
     MXA_INSTANCE_PROPERTY(bool, ReorderArray)
     MXA_INSTANCE_PROPERTY(bool, RotateSlice)
+    MXA_INSTANCE_PROPERTY(bool, AlignEulers)
     MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
     /**

@@ -136,6 +136,7 @@ class EbsdImportWidget : public DREAM3DPluginFrame, private Ui::EbsdImportWidget
 
 	bool m_RotateSlice;
 	bool m_ReorderArray;
+	bool m_AlignEulers;
 	
 	QString m_OpenDialogLastDirectory;
 
