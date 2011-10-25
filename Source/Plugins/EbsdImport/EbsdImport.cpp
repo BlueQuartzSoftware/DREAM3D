@@ -185,7 +185,6 @@ void EbsdImport::execute()
   int z = m_ZStartIndex;
   int xDim, yDim;
   float xRes, yRes;
-
   /* There is a frailness about the z index and the file list. The programmer
    * using this code MUST ensure that the list of files that is sent into this
    * class is in the appropriate order to match up with the z index (slice index)

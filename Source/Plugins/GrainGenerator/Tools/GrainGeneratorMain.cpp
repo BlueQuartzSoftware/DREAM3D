@@ -41,9 +41,9 @@
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
-#include <MXA/Common/LogTime.h>
-#include <MXA/Utilities/MXALogger.h>
-#include <MXA/Utilities/MXADir.h>
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXALogger.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -136,8 +136,8 @@ int main(int argc, char **argv)
     cmd.add(voxels);
 
 
-    TCLAP::ValueArg<std::string>  resolution( "", "resolution", "Comma separated list of floating point values in microns (x,y,x).", true, "0.25,0.25,0.25", "Micron Resolution");
-    cmd.add(resolution);
+    TCLAP::ValueArg<std::string>  spacing( "", "spacing", "Comma separated list of floating point values in microns (x,y,x).", true, "0.25,0.25,0.25", "Micron Resolution");
+    cmd.add(spacing);
 
     TCLAP::ValueArg<float>  m_NeighborhoodErrorWeight( "", "neighborhooderror", "Neighborhood Error Weight", false, 1.0, "Neighborhood Error Weight");
     cmd.add(m_NeighborhoodErrorWeight);
@@ -208,15 +208,15 @@ int main(int argc, char **argv)
 
     //TODO: Get the Shape Class from the Command line options
   //  m_GrainGenerator->setShapeTypes(shapeClass.getValue());
-    float resolution_values[3];
-    if (parseValues(resolution.getValue(), "%f", resolution_values) < 0)
+    float spacing_values[3];
+    if (parseValues(spacing.getValue(), "%f", spacing_values) < 0)
     {
-      std::cout << "Error Parsing the Resolution. They should be entered as --resolution 0.25,0.25,0.25" << std::endl;
+      std::cout << "Error Parsing the Resolution. They should be entered as --spacing 0.25,0.25,0.25" << std::endl;
       return EXIT_FAILURE;
     }
-    m_GrainGenerator->setXResolution(resolution_values[0]);
-    m_GrainGenerator->setYResolution(resolution_values[1]);
-    m_GrainGenerator->setZResolution(resolution_values[2]);
+    m_GrainGenerator->setXResolution(spacing_values[0]);
+    m_GrainGenerator->setYResolution(spacing_values[1]);
+    m_GrainGenerator->setZResolution(spacing_values[2]);
 
     m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight.getValue());
 
