@@ -317,6 +317,7 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   m_EbsdImport->setRefFrameZDir( getRefFrameZDir() );
   m_EbsdImport->setRotateSlice( m_RotateSlice );
   m_EbsdImport->setReorderArray( m_ReorderArray );
+  m_EbsdImport->setAlignEulers( m_AlignEulers );
 
 
   int fileCount = m_FileListView->count();
@@ -496,18 +497,21 @@ void EbsdImportWidget::on_m_RefFrameOptionsBtn_clicked()
   QVector<QString> options;
   options.push_back("Rotate Slice");
   options.push_back("Reorder Array");
+  options.push_back("Align Eulers");
 
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("Reference Frame Options"));
 
   d.setValue("Rotate Slice", m_RotateSlice);
   d.setValue("Reorder Array", m_ReorderArray);
+  d.setValue("Align Eulers", m_AlignEulers);
 
   int ret = d.exec();
   if (ret == QDialog::Accepted)
   {
     m_RotateSlice = d.getValue("Rotate Slice");
     m_ReorderArray = d.getValue("Reorder Array");
+    m_AlignEulers = d.getValue("Align Eulers");
   }
 
 }
