@@ -244,7 +244,7 @@ int H5AngVolumeReader::loadData(float* euler1s,
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()) );
-    reader->setUserZDir(getRefFrameZDir());
+    reader->setUserZDir(getStackingOrder());
     reader->setRotateSlice(getRotateSlice());
     reader->setReorderArray(getReorderArray());
 

@@ -145,9 +145,6 @@ class Reconstruction : public AbstractPipeline, public Observer
       reader->setFileName(m_H5AngFile);
       reader->setSliceStart(m_ZStartIndex);
       reader->setSliceEnd(m_ZEndIndex);
-      reader->setRefFrameZDir(m_RefFrameZDir);
-      reader->setRotateSlice(m_RotateSlice);
-      reader->setReorderArray(m_ReorderArray);
 
       std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
       if (phases.size() == 0)
