@@ -47,7 +47,7 @@ for /f "tokens=1" %%Y in (%directory%\batch_count.txt) do (GrainGenerator -i %di
 
 : **** Run Microstructure Statistics
 :: First change the directory to the appropriate one for opening command line program
-for /r %directory% %%X in (*.h5voxel) do (MicroStats -i %%X --outputdir %directory% --binstepsize %binsize% --outputprefix %%~nX %* --no-h5stats-file --no-vtk --no-surfacevoxels --no-phase --no-ipf --no-kernel-miso)
+for /r %directory% %%X in (*.h5voxel) do (MicroStats -i %%X --outputdir %directory% --binstepsize %binsize% --outputprefix %%~nX %* --no-h5stats --no-vtk --no-surfacevoxels --no-phase --no-ipf --no-kernel-miso)
 pause
 
 :: ****Notes about the Microstructure Statistics for-in-do statement****
