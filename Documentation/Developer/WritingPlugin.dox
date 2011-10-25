@@ -7,18 +7,27 @@
   Creating a plugin for the DREAM.3D Application involves many different types of
 files being created and being placed in the correct positions in the project directory.
 To alleviate the developer of the tedious task of creating all of these files there
-is a shortcut that has been written into the current CMake build system files.@n
+is a shortcut that has been written using the CMake build system.@n
 @n
-Launch the CMake-Gui.exe or CMake-GUI.app (or ccmake on Linux) and set the <b>
-DREAM3D_CREATE_PLUGIN</b> cmake variable to <b>ON</b>. Click the "Configure" button
+ The developer needs to clone the git repository using the following command:
+@code
+  git clone ssh://code@scm.bluequartz.net/DREAM3DPluginTemplate.git
+@endcode
+or you can get a compressed archive from the following web site:
+@code
+  http://www.bluequartz.net/gitweb/
+@endcode
+@n
+Launch the CMake-Gui.exe or CMake-GUI.app (or ccmake on Linux). Click the "Configure" button
 or type the 'c' key if using ccmake. This will reveal another variable called <b>
-DREAM3D_Plugin_Name</b>. Enter the Name of your Plugin for this variable. You do
+PluginName</b>. Enter the Name of your Plugin for this variable. You do
 <b>NOT</b> and should NOT end the name with "Plugin". The code will do this step
-for you. Click the "configure" button or type the 'c' key for ccmake and CMake will
+for you. If you want the code generated in another location that is different than
+the default location then set the <b>Plugin_OutputDir</b> CMake variable.
+   Click the "configure" button or type the 'c' key for ccmake and CMake will
 now generate all the necessary files for the new plugin into the current build
 directory. If you look in the build directory for the project you will now see
-a new directory called "PluginMaker". Navigating inside this folder will reveal
-a folder with the name you set in the DREAM3D_Plugin_Name CMake variable. This
+a folder with the name you set in the <b>PluginName</b> CMake variable. This
 folder contains everything you need to start writing your new plugin. <b>Move</b> this
 folder to another location so that it will not get over written the next time CMake
 is executed.@n
@@ -36,58 +45,51 @@ CMake.
 would end up with the following files:
 
 
-@code
-CMakeLists.txt
+@n<b>CMakeLists.txt</b>@n
   This file holds all the CMake commands that are needed to compile the plugin when
 compiling the DREAM.3D application
-@endcode
 
-@code
-GrainAnalyzer.{h|cpp}
+
+@n<b>GrainAnalyzer.{h|cpp}</b>@n
   This file defines the C++ class that holds the input variables. It inherits from
 AbstractPipeline and the user needs to implement the execute() method. In the current
 architecture of DREAM.3D the execute() method handles the high level set of method
 calls to perform your algorithm.
-@endcode
 
-@code
-GrainAnalyzerFunc.{h|cpp}
+
+@n<b>GrainAnalyzerFunc.{h|cpp}</b>@n
   This file contains all the internal data structures that you may need to execute
 your algorithm. This is an optional class and some plugins (EbsdImport) do not
 actually use it.
-@endcode
 
-@code
-UI/GrainAnalyzerPlugin.{h|cpp}
+
+@n<b>UI/GrainAnalyzerPlugin.{h|cpp}</b>@n
   This C++ object inherits from QObject and DREAM3DPluginInterface and contains
 the needed code to allow the plugin to be loaded by DREAM.3D. The file that is generated
 should be sufficient as it stands and should not need anything implemented.
-@endcode
 
-@code
-UI/GrainAnalyzerWidget.{h|cpp}
+
+@n<b>UI/GrainAnalyzerWidget.{h|cpp}</b>@n
   This file implements the QWidget that will be presented to the user when the plugin
 is invoked by the user through the Graphical User Interface. The programmer is urged
 to use QDesigner to graphically design their user interface.
-@endcode
 
-@code
-UI/GrainAnalyzerWidget.ui
+
+@n<b>UI/GrainAnalyzerWidget.ui</b>@n
   This is a base file that can be used as a starting point for writing the user interface
 for the plugin. The file can be opened with QDesigner and more widgets added to
 interface as the programmer sees fit.
-@endcode
 
-@code
-UI/Icons.qrc
+
+@n<b>UI/Icons.qrc</b>@n
   This file defines possible image files that would be used as icons in your user interface.
-@endcode
 
-@code
-UI/GrainAnalyzer.png
+
+
+@n<b>UI/GrainAnalyzer.png</b>@n
   This file is a default icon for the plugin. The programmer is urged to create a different
 icon in its place.
-@endcode
+
 
 @section comments1 Misc Comments
   Most of the plugins also have a console version of the code that can be run from

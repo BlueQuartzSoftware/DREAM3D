@@ -14,14 +14,9 @@ prerequisites that are needed to compile DREAM.3D
   This section details some basic coding guidelines for developers wishing to
 constribute to DREAM.3D
 
-@subpage writingplugins "Writing Plugins"
-These documents will show you what needs to be written in order to create a plugin
-for the DREAM.3D environment
-
 @subpage structurereaders "Structure Readers"
 How to write a "StructureReader" subclass in order to read previously existing
 microstructure representations into the Synthetic Builder module.
-
 
 @subpage microPreset "Microstructure Presets"
 The StatsGenerator has a few predefined sets of statistics for various types of
@@ -39,6 +34,10 @@ voxel volume data.
 @subpage surfacemeshing "Surface Meshing File Specifications"
  This page details some of the input/intermediate/output files that are used in the
 Surface Mesh Plugin.
+
+@subpage writingplugins "Writing Plugins"
+These documents will show you what needs to be written in order to create a plugin
+for the DREAM.3D environment
 
 @section versionhistory Version History
 <b>Version 2</b>
