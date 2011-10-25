@@ -558,8 +558,8 @@ void CtfReader::transformData()
      {
 	   adjustedcol = col;
 	   adjustedrow = row;
-	   if(getRotateSlice() == true) adjustedcol = xCells-adjustedcol, adjustedrow = yCells-adjustedrow;
-	   if(getReorderArray() == true) adjustedrow = yCells-adjustedrow;
+	   if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
+	   if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
        offset = (adjustedrow*xCells)+(adjustedcol);
        if (p1[i] - ONE_PIf < 0.0)
        {
@@ -570,6 +570,10 @@ void CtfReader::transformData()
            p1[i] = p1[i] - ONE_PIf;
        }
        shuffleTable[(row*xCells)+col] = offset;
+	   if(offset < 0 || offset >= (xCells*yCells))
+	   {
+			int stop = 0;
+	   }
        ++i;
      }
    }
