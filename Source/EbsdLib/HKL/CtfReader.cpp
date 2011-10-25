@@ -551,11 +551,16 @@ void CtfReader::transformData()
   std::vector<size_t> shuffleTable(totalDataRows, 0);
 
   size_t i = 0;
+  size_t adjustedcol, adjustedrow;
   for(size_t row = 0; row < yCells; ++row)
    {
      for(size_t col = 0; col < xCells; ++col)
      {
-       offset = (col*yCells)+(row);
+	   adjustedcol = col;
+	   adjustedrow = row;
+	   if(getRotateSlice() == true) adjustedcol = xCells-adjustedcol, adjustedrow = yCells-adjustedrow;
+	   if(getReorderArray() == true) adjustedrow = yCells-adjustedrow;
+       offset = (adjustedrow*xCells)+(adjustedcol);
        if (p1[i] - ONE_PIf < 0.0)
        {
            p1[i] = p1[i] + ONE_PIf;

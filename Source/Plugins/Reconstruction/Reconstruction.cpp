@@ -174,9 +174,6 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Loading Slices"), 1);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  ebsdReader->setRefFrameZDir(m_RefFrameZDir);
-  ebsdReader->setRotateSlice(m_RotateSlice);
-  ebsdReader->setReorderArray(m_ReorderArray);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
   CHECK_FOR_ERROR(ReconstructionFunc, "Error loading data from input file.", err)
   float radianconversion = m_pi/180.0;

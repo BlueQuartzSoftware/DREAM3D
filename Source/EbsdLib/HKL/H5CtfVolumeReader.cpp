@@ -150,7 +150,7 @@ int H5CtfVolumeReader::loadData(float* euler1s,
     H5CtfReader::Pointer reader = H5CtfReader::New();
     reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getZStart()));
-    reader->setUserZDir(getRefFrameZDir());
+    reader->setUserZDir(getStackingOrder());
     reader->setRotateSlice(getRotateSlice());
     reader->setReorderArray(getReorderArray());
 

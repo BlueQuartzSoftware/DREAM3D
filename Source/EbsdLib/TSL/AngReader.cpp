@@ -551,21 +551,26 @@ void AngReader::transformData()
   std::vector<size_t> shuffleTable(totalDataRows, 0);
 
   size_t i = 0;
+  size_t adjustedcol, adjustedrow;
   for(size_t row = 0; row < yCells; ++row)
-    {
-      for(size_t col = 0; col < xCells; ++col)
-      {
-        offset = (((xCells-1)-col)*yCells)+(row);
-        if (p[i] - ONE_PIf < 0.0)
-        {
-            p[i] = p[i] + ONE_PIf;
-        }
-        else
-        {
-            p[i] = p[i] - ONE_PIf;
-        }
-        shuffleTable[(row*xCells)+col] = offset;
-        ++i;
+   {
+     for(size_t col = 0; col < xCells; ++col)
+     {
+	   adjustedcol = col;
+	   adjustedrow = row;
+	   if(getRotateSlice() == true) adjustedcol = xCells-adjustedcol, adjustedrow = yCells-adjustedrow;
+	   if(getReorderArray() == true) adjustedrow = yCells-adjustedrow;
+       offset = (adjustedrow*xCells)+(adjustedcol);
+       if (p1[i] - PI_OVER_2f < 0.0)
+       {
+          p1[i] = p1[i] + THREE_PI_OVER_2f;
+       }
+       else
+       {
+          p1[i] = p1[i] - PI_OVER_2f;
+       }
+       shuffleTable[(row*xCells)+col] = offset;
+       ++i;
       }
     }
 
