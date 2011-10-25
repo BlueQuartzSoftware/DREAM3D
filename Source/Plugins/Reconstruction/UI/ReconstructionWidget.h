@@ -90,8 +90,7 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
 
     virtual void checkIOFiles();
 
-	bool rotateslice;
-	bool reorderarray;
+
 
   protected slots:
 
@@ -143,6 +142,8 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
  //   bool                        m_WriteImageQualityScalars;
     bool                        m_WriteIPFColorScalars;
     bool                        m_WriteBinaryVTKFile;
+    bool rotateslice;
+    bool reorderarray;
 
     QString                     m_OpenDialogLastDirectory;
   //  QString                     m_EbsdManufacturer;

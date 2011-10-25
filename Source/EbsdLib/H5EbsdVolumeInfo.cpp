@@ -72,11 +72,12 @@ m_YRes(0.0f),
 m_ZRes(0.0f),
 m_ZStart(0),
 m_ZEnd(0),
-m_RotateSlice(true),
-m_ReorderArray(true),
-m_NumPhases(0)
+m_StackingOrder(Ebsd::LowtoHigh),
+m_NumPhases(0),
+m_RotateSlice(false),
+m_ReorderArray(false)
 {
-
+    m_Manufacturer = "Unknown";
 }
 
 // -----------------------------------------------------------------------------

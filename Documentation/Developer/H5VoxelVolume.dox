@@ -5,7 +5,7 @@
 
 
 @section h1 Introduction
-  The Voxel data from the Recontruction Module is stored in an HDF5 file for use
+  The Voxel data from the Reconstruction Module is stored in an HDF5 file for use
 in the MicrostructureStatistics Module.
 
 @section h2 HDF5 File Layout
@@ -27,7 +27,7 @@ in the MicrostructureStatistics Module.
 
 @section h3 Detailed Description
 
-@li <b>VoxelData</b> has 2 attributes which are
+@li The <b>VoxelData</b> group has 2 attributes which are
 
 <table border>
 <tr><td><b>Attribute Name</b></td><td><b>Attribute Value</b></td></tr>

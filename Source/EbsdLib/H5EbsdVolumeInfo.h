@@ -158,11 +158,12 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     float m_ZRes;
     int m_ZStart;
     int m_ZEnd;
-    std::string m_Manufacturer;
-    int m_NumPhases;
-	bool m_RotateSlice;
-	bool m_ReorderArray;
     Ebsd::RefFrameZDir   m_StackingOrder;
+    int m_NumPhases;
+    bool m_RotateSlice;
+    bool m_ReorderArray;
+
+    std::string m_Manufacturer;
 
     H5EbsdVolumeInfo(const H5EbsdVolumeInfo&); //Not Implemented
     void operator=(const H5EbsdVolumeInfo&); //Not Implemented

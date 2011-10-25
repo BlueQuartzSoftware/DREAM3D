@@ -46,6 +46,7 @@
 
 #include "AngConstants.h"
 #include "EbsdLib/EbsdMacros.h"
+#include "EbsdLib/EbsdMath.h"
 
 
 
@@ -473,7 +474,7 @@ void AngReader::parseDataLine(const std::string &line,
   size_t offset = 0;
   size_t fieldsRead = 0;
   fieldsRead = sscanf(line.c_str(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
-	
+
   offset = i;
 
   m_Phi1[offset] = p1;
@@ -561,13 +562,13 @@ void AngReader::transformData()
 	   if(getRotateSlice() == true) adjustedcol = xCells-adjustedcol, adjustedrow = yCells-adjustedrow;
 	   if(getReorderArray() == true) adjustedrow = yCells-adjustedrow;
        offset = (adjustedrow*xCells)+(adjustedcol);
-       if (p1[i] - PI_OVER_2f < 0.0)
+       if (p1[i] - M_PI_2 < 0.0)
        {
-          p1[i] = p1[i] + THREE_PI_OVER_2f;
+          p1[i] = p1[i] + M_PI_2*3.0;
        }
        else
        {
-          p1[i] = p1[i] - PI_OVER_2f;
+          p1[i] = p1[i] - M_PI_2;
        }
        shuffleTable[(row*xCells)+col] = offset;
        ++i;

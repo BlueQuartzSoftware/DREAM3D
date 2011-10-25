@@ -46,11 +46,12 @@
 
 #include "CtfPhase.h"
 #include "EbsdLib/EbsdMacros.h"
+#include "EbsdLib/EbsdMath.h"
 
-#define PI_OVER_2f       90.0f
-#define THREE_PI_OVER_2f 270.0f
-#define TWO_PIf          360.0f
-#define ONE_PIf          180.0f
+//#define PI_OVER_2f       90.0f
+//#define THREE_PI_OVER_2f 270.0f
+//#define TWO_PIf          360.0f
+//#define ONE_PIf          180.0f
 
 // -----------------------------------------------------------------------------
 //
@@ -561,13 +562,13 @@ void CtfReader::transformData()
 	   if(getRotateSlice() == true) adjustedcol = xCells-adjustedcol, adjustedrow = yCells-adjustedrow;
 	   if(getReorderArray() == true) adjustedrow = yCells-adjustedrow;
        offset = (adjustedrow*xCells)+(adjustedcol);
-       if (p1[i] - ONE_PIf < 0.0)
+       if (p1[i] - M_PI < 0.0)
        {
-           p1[i] = p1[i] + ONE_PIf;
+           p1[i] = p1[i] + M_PI;
        }
        else
        {
-           p1[i] = p1[i] - ONE_PIf;
+           p1[i] = p1[i] - M_PI;
        }
        shuffleTable[(row*xCells)+col] = offset;
        ++i;
