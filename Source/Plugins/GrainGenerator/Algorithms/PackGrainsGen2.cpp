@@ -111,10 +111,10 @@ void PackGrainsGen2::generate_grain(int gnum, int phase)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(m->GGseed)
 
-  int good = 0;
+//  int good = 0;
   float r1 = 1;
-  float a1 = 0, a2 = 0, a3 = 0;
-  float b1 = 0, b2 = 0, b3 = 0;
+  float a1 = 0,  a3 = 0;
+  float b1 = 0,  b3 = 0;
   float r2 = 0, r3 = 0;
   float diam = 0;
   float vol = 0;
@@ -199,8 +199,8 @@ void PackGrainsGen2::execute()
   int phase;
   size_t randomgrain;
   float random;
-  int newgrain;
-  float check;
+//  int newgrain;
+ // float check;
   float xc, yc, zc;
   float oldxc, oldyc, oldzc;
   m->oldfillingerror = 0;
@@ -498,7 +498,7 @@ void PackGrainsGen2::execute()
 
 void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 {
-  int column, row, plane;
+ // int column, row, plane;
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
   int shiftcolumn, shiftrow, shiftplane;
@@ -825,7 +825,7 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
 
-  float dist;
+//  float dist;
   float inside = -1;
   int column, row, plane;
   int centercolumn, centerrow, centerplane;
