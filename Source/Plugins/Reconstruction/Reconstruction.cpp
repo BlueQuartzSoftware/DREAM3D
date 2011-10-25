@@ -70,7 +70,7 @@ m_OutputDirectory("."),
 m_OutputFilePrefix("Reconstruction_"),
 m_MergeTwins(false),
 m_MergeColonies(false),
-m_FillinSample(false),
+m_RectangularizeSample(false),
 m_MinAllowedGrainSize(0),
 m_MisorientationTolerance(0.0),
 m_WriteBinaryVTKFiles(true),
@@ -224,7 +224,7 @@ void Reconstruction::execute()
   m->reorder_grains();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", reorder_grains)
 
-  if(m_FillinSample == true)
+  if(m_RectangularizeSample == true)
   {
     updateProgressAndMessage(("Creating Smooth Rectangular Sample"), 56);
     m->fillin_sample();
@@ -367,7 +367,7 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, OutputDirectory)
     PRINT_PROPERTY(ostream, MergeTwins)
     PRINT_PROPERTY(ostream, MergeColonies)
-    PRINT_PROPERTY(ostream, FillinSample)
+    PRINT_PROPERTY(ostream, RectangularizeSample)
     PRINT_PROPERTY(ostream, MinAllowedGrainSize)
 //    PRINT_PROPERTY(ostream, MinSeedConfidence)
     PRINT_PROPERTY(ostream, DownSampleFactor)

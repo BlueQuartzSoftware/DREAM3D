@@ -77,6 +77,11 @@ int main(int argc, char **argv)
   std::cout << logTime() << "Starting Reconstruction ... " << std::endl;
   MXALOGGER_METHOD_VARIABLE_INSTANCE
     int err = EXIT_FAILURE;
+  if (true)
+  {
+    std::cout << "Reconstruction Tool is NOT complete and is missing the ability to ingest filters. Please use the GUI version instead" << std::endl;
+    return err;
+  }
 
   try
   {
@@ -91,18 +96,6 @@ int main(int argc, char **argv)
     TCLAP::ValueArg<int>  zEndIndex( "", "zEndIndex", "Ending Slice", false, 0, "Ending Slice");
     cmd.add(zEndIndex);
 
-
-    TCLAP::SwitchArg mergeColonies("", "mergeColonies", "Do you want to merge colonies", false);
-    cmd.add(mergeColonies);
-    TCLAP::SwitchArg alreadyFormed("", "alreadyFormed", "Have you already formed grains", false);
-    cmd.add(alreadyFormed);
-    TCLAP::SwitchArg mergeTwins("", "mergeTwins", "Do you want to merge twins", false);
-    cmd.add(mergeTwins);
-    TCLAP::SwitchArg fillinSample("", "rectangularize", "Rectangularize Sample", false);
-    cmd.add(fillinSample);
-
-    TCLAP::ValueArg<int>  CrystalStructure( "", "crystruct", "Do you have a HCP (0) or FCC (1) material", false, 1, "Default=1");
-    cmd.add(CrystalStructure);
     TCLAP::ValueArg<int>  AlignMeth( "", "alignment", "Alignment Method [0] OuterBoundary [1] Misorientation [2] Mutual Information", false, 0, "Default=0");
     cmd.add(AlignMeth);
 
@@ -110,18 +103,22 @@ int main(int argc, char **argv)
     cmd.add(MinAllowedGrainSize);
     TCLAP::ValueArg<double>  MisOrientationTolerance( "", "misorientationTolerance", "What is the misorientation tolerance (degrees)", false, 4.0, "Default=4.0");
     cmd.add(MisOrientationTolerance);
-    TCLAP::ValueArg<double>  MinImageQuality( "", "minImageQuality", "What is the minimum Image Quality Value", false, 50, "Default=50");
-    cmd.add(MinImageQuality);
-    TCLAP::ValueArg<double>  MinConfidence( "", "minConfidenceIndex", "What is the minimum allowed confidence index", false, 0.1, "Default=0.1");
-    cmd.add(MinConfidence);
+
+    TCLAP::SwitchArg mergeColonies("", "mergeColonies", "Do you want to merge colonies", false);
+    cmd.add(mergeColonies);
+    TCLAP::SwitchArg mergeTwins("", "mergeTwins", "Do you want to merge twins", false);
+    cmd.add(mergeTwins);
+    TCLAP::SwitchArg rectangularize("", "rectangularize", "Rectangularize Sample", false);
+    cmd.add(rectangularize);
+
+    TCLAP::ValueArg<int>  CrystalStructure( "", "crystruct", "Do you have a HCP (0) or FCC (1) material", false, 1, "Default=1");
+    cmd.add(CrystalStructure);
+
     TCLAP::ValueArg<double>  DownSampleFactor( "", "downSampleRes", "Down Sampling Resolution", false, 1.0, "Default=1.0");
     cmd.add(DownSampleFactor);
-    TCLAP::ValueArg<double>  BinStepSize( "", "binStepSize", "Width of each Bin in the Reconstruction Stats", false, 1.0, "Default=1.0");
-    cmd.add(BinStepSize);
 
     TCLAP::ValueArg<std::string> OutputDir("", "outputDir", "Where to write all the output files. If it does not exist it will be created.", true, ".", "/Path/To/Output");
     cmd.add(OutputDir);
-
     TCLAP::ValueArg<std::string> OutputFilePrefix("", "outputFilePrefix", "This is an optional file prefix for each of the output files", false, "Reconstruction_", "Default=Reconstruction_");
     cmd.add(OutputFilePrefix);
 
@@ -133,7 +130,7 @@ int main(int argc, char **argv)
 #if (RECONSTRUCTION_MANUAL_DEBUG == 0)
     if (argc == 1)
     {
-      std::cout << "AIM Reconstruction program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
+      std::cout << "DREAM.3D Reconstruction program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
       return EXIT_FAILURE;
     }
 #endif
@@ -146,7 +143,7 @@ int main(int argc, char **argv)
 
     m_Reconstruction->setMergeColonies(mergeColonies.getValue() );
     m_Reconstruction->setMergeTwins(mergeTwins.getValue() );
-    m_Reconstruction->setFillinSample(fillinSample.getValue() );
+    m_Reconstruction->setRectangularizeSample(rectangularize.getValue() );
 
 #if 0
     Ebsd::CrystalStructure crystruct = static_cast<Ebsd::CrystalStructure>(CrystalStructure.getValue());
@@ -160,20 +157,18 @@ int main(int argc, char **argv)
 
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
     m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
-//    m_Reconstruction->setMinSeedImageQuality(MinImageQuality.getValue());
-//    m_Reconstruction->setMinSeedConfidence(MinConfidence.getValue());
+
     m_Reconstruction->setDownSampleFactor(DownSampleFactor.getValue());
 
     m_Reconstruction->setOutputDirectory(OutputDir.getValue());
     m_Reconstruction->setOutputFilePrefix(OutputFilePrefix.getValue());
     m_Reconstruction->setWriteVtkFile(true);
     m_Reconstruction->setWritePhaseId(true);
-//    m_Reconstruction->setWriteImageQuality(true);
     m_Reconstruction->setWriteIPFColor(true);
     m_Reconstruction->setWriteBinaryVTKFiles(true);
 
     m_Reconstruction->setWriteDownSampledFile(true);
-    m_Reconstruction->setWriteHDF5GrainFile(true);
+    m_Reconstruction->setWriteHDF5GrainFile(false);
 
 #if RECONSTRUCTION_MANUAL_DEBUG
 #if (_WIN32)

@@ -86,7 +86,7 @@ class Reconstruction : public AbstractPipeline, public Observer
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     MXA_INSTANCE_PROPERTY(bool, MergeTwins)
     MXA_INSTANCE_PROPERTY(bool, MergeColonies)
-    MXA_INSTANCE_PROPERTY(bool, FillinSample)
+    MXA_INSTANCE_PROPERTY(bool, RectangularizeSample)
     MXA_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
 
     MXA_INSTANCE_PROPERTY(double, DownSampleFactor)

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>774</width>
-    <height>685</height>
+    <width>768</width>
+    <height>662</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -121,7 +121,7 @@
         <item row="0" column="1">
          <widget class="QLabel" name="xDim">
           <property name="text">
-           <string>100</string>
+           <string>1000</string>
           </property>
          </widget>
         </item>
@@ -297,7 +297,7 @@
         <item row="1" column="0">
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Rotate Slice</string>
+           <string>Rotate Slice:</string>
           </property>
          </widget>
         </item>
@@ -335,7 +335,7 @@
         <item row="2" column="0">
          <widget class="QLabel" name="label_20">
           <property name="text">
-           <string>Reorder Array</string>
+           <string>Reorder Array:</string>
           </property>
          </widget>
         </item>
@@ -374,6 +374,12 @@
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -387,6 +393,12 @@
       <bool>false</bool>
      </property>
      <widget class="QWidget" name="input_parameters_tab">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <attribute name="title">
        <string>Input Parameters</string>
       </attribute>
@@ -528,23 +540,16 @@
          </item>
          <item row="0" column="2" rowspan="5">
           <widget class="Line" name="line_2">
+           <property name="minimumSize">
+            <size>
+             <width>10</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
-         </item>
-         <item row="0" column="5" rowspan="5">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item row="4" column="3">
           <widget class="QCheckBox" name="m_MergeTwins">
@@ -567,24 +572,30 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="4" rowspan="5">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="phase_quality_metric_tab">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <attribute name="title">
        <string>Phases | Quality Metrics</string>
       </attribute>
@@ -620,6 +631,24 @@
          </property>
          <item>
           <widget class="QTableView" name="m_QualityMetricTableView">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="editTriggers">
             <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
            </property>
@@ -713,10 +742,22 @@
        <item row="1" column="0">
         <widget class="QListWidget" name="phaseTypeList">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>150</height>
+          </size>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::AllEditTriggers</set>
@@ -924,7 +965,7 @@
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

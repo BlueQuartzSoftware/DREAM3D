@@ -477,7 +477,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     m_EbsdManufacturer->setText(fileManufact);
 
     m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
-	
+
 	rotateslice = h5Reader->getRotateSlice();
 	reorderarray = h5Reader->getReorderArray();
 
@@ -715,7 +715,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );
   m_Reconstruction->setMergeTwins(m_MergeTwins->isChecked() );
-  m_Reconstruction->setFillinSample(m_FillinSample->isChecked() );
+  m_Reconstruction->setRectangularizeSample(m_FillinSample->isChecked() );
 
   DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
