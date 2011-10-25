@@ -27,9 +27,9 @@ DOxygen and optionally LaTex for your system.
 @subsection qt Qt
   Download Qt from http://qt.nokia.com. One can usually download and install the "Qt SDK"
 which will have everything you need.
- <b>Windows Visual Studion Users</b> Nokia provides pre-built binaries for Qt for Visual Studion (VS)
+ <b>Windows Visual Studio Users</b> Nokia provides pre-built binaries for Qt for Visual Studio (VS)
 BUT they are ONLY 32 bit and they are ONLY for Visual Studio 2008 and ONLY for a specific version
-of Visual Studio 2008. If your version of Visual Studion does NOT match theirs, down to the exact
+of Visual Studio 2008. If your version of Visual Studio does NOT match theirs, down to the exact
 sercurity patches and service packs otherwise you will get errors due to "manifests", C/C++ runtime
 DLL issues and a few other things. If you fall into the category of mismatching versions the easiest,
 thought initially longest, solution is to build Qt from scratch. Or if you need 64 bit support.
@@ -68,11 +68,9 @@ Compile and Install HDF5 into a location of your choice. Export the "HDF5_INSTAL
 environment variable to make configuring DREAM3D with CMake easier.
 
 @section boost Building Boost
- Use git to clone the Boost repository:
-@code
-git clone git://scm.bluequartz.net/support-libraries/mxaboost.git mxaboost
-cd mxaboost
-@endcode
+ Download Boost from the official Boost.org website or build from a subset of boost
+that is provided by the BlueQuartz Git repository at http://www.bluequartz.net/gitweb/?p=MXABoost.git;a=summary
+
 Use CMake to configure Boost for your development environment. After CMake has generated the
 project files, open the IDE or type "make install" on the command line to build and install
 Boost
