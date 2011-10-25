@@ -53,23 +53,75 @@
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
+#include "EbsdLib/H5EbsdVolumeInfo.h"
+#include "EbsdLib/H5EbsdVolumeReader.h"
+#include "EbsdLib/TSL/AngDirectoryPatterns.h"
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
+#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
 #include "Reconstruction/ReconstructionFunc.h"
 
 
 
+#define _CHECK_FOR_ERROR(FuncClass, Message, err)\
+    if(err < 0) {\
+      std::cout << Message << std::endl;\
+      return EXIT_FAILURE;   }
+
+template<typename EbsdReader, typename EbsdPhase>
+int loadInfo(EbsdReader* reader,
+             std::vector<float> &precipFractions,
+             std::vector<Ebsd::CrystalStructure> &crystalStructures,
+             std::vector<DREAM3D::Reconstruction::PhaseType> &m_PhaseTypes)
+{
 
 
+  std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
+  if (phases.size() == 0)
+  {
+    return -1;
+  }
+  precipFractions.resize(phases.size() + 1);
+  crystalStructures.resize(phases.size() + 1);
+  m_PhaseTypes.resize(phases.size() + 1);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
+  // Initialize the zero'th element to unknowns. The other elements will
+  // be filled in based on values from the data file
+  crystalStructures[0] = Ebsd::UnknownCrystalStructure;
+  m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
+  precipFractions[0] = -1.0f;
+  for(size_t i=0;i<phases.size();i++)
+  {
+    int phaseID = phases[i]->getPhaseIndex();
+    crystalStructures[phaseID] = phases[i]->determineCrystalStructure();
+    precipFractions[phaseID] = -1.0f;
+  }
+  return 0;
+}
+
+/**
+ * @brief This program takes an .h5ebsd file and writes out a binary VTK file containing
+ * the IPF Color for each voxel as a rgb triplet. The VTK File is a STRUCTURED_POINTS
+ * file type.
+ * @param argc
+ * @param argv
+ * @return
+ */
 int main(int argc, char **argv)
 {
-  std::cout << "Starting Conversion of H5Ang to VTK with Grain ID and IPF Colors" << std::endl;
+  std::cout << "Starting Conversion of .h5ebsd to VTK with Grain ID and IPF Colors" << std::endl;
   if (argc < 3)
   {
-    std::cout << "This program takes 2 arguments: Input .h5ang file and output vtk file." << std::endl;
+    std::cout << "This program takes 2 arguments: Input .h5ebsd file and output vtk file." << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -79,49 +131,63 @@ int main(int argc, char **argv)
   std::string m_H5AngFile = argv[1];
   std::string vtkFile = argv[2];
 
-  std::cout << "H5Ang File: " << m_H5AngFile << std::endl;
+  std::cout << "h5ebsd File: " << m_H5AngFile << std::endl;
   std::cout << "VTK File: " << vtkFile << std::endl;
 
-  int zStart = 0;
-  int zEnd = 0;
+//  int m_ZStartIndex = 0;
+//  int m_ZEndIndex = 0;
 
   ReconstructionFunc::Pointer m = ReconstructionFunc::New();
+  std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes(1);
+  // updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
+   std::string manufacturer;
+   // Get the Size and Resolution of the Volume
+   {
+     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
+     volumeInfoReader->setFileName(m_H5AngFile);
+     err = volumeInfoReader->readVolumeInfo();
+     _CHECK_FOR_ERROR(ReconstructionFunc, "Error reading Volume Information from File.", err);
 
-  H5EbsdVolumeReader::Pointer oimDataLoader = H5AngVolumeReader::New();
-  H5AngVolumeReader* h5io = dynamic_cast<H5AngVolumeReader*>(oimDataLoader.get());
-  h5io->setFileName(m_H5AngFile);
-
-  zStart = h5io->getZStart();
-  zEnd = h5io->getZEnd();
-
-  // Get the dimensions
-  err = h5io->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
-
-  h5io->setSliceStart(zStart);
-  h5io->setSliceEnd(zEnd);
+     volumeInfoReader->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+     manufacturer = volumeInfoReader->getManufacturer();
+     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
+   }
+   H5EbsdVolumeReader::Pointer ebsdReader;
+   std::vector<float> precipFractions;
+   std::vector<Ebsd::CrystalStructure> crystalStructures;
+   if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+   {
+     ebsdReader = H5AngVolumeReader::New();
+     if (NULL == ebsdReader)
+     {
+       _CHECK_FOR_ERROR(ReconstructionFunc, "Error Creating the proper Ebsd Volume Reader.", -1);
+     }
+     H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
+     angReader->setFileName(m_H5AngFile);
+     angReader->setSliceStart(0);
+     angReader->setSliceEnd(m->zpoints-1);
+     err = loadInfo<H5AngVolumeReader, AngPhase>(angReader, precipFractions, crystalStructures, m_PhaseTypes );
+   }
+   else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+   {
+     ebsdReader = H5CtfVolumeReader::New();
+     if (NULL == ebsdReader)
+     {
+       _CHECK_FOR_ERROR(ReconstructionFunc, "Error Creating the proper Ebsd Volume Reader.", -1);
+     }
+     H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
+     ctfReader->setFileName(m_H5AngFile);
+     ctfReader->setSliceStart(0);
+     ctfReader->setSliceEnd(m->zpoints-1);
+     err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader, precipFractions, crystalStructures, m_PhaseTypes );
+   }
+   else
+   {
+     _CHECK_FOR_ERROR(ReconstructionFunc, "ReconstructionFunc Error: No Manufacturer Set for EBSD data", -1);
+   }
 
   DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
-  std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes;
-  std::vector<float> precipFractions;
-  std::vector<Ebsd::CrystalStructure> crystalStructures;
-  std::vector<AngPhase::Pointer> phases = h5io->getPhases();
-  crystalStructures.resize(phases.size()+1);
-  m_PhaseTypes.resize(phases.size() + 1);
-  precipFractions.resize(phases.size() + 1);
-  crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-  m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
-  precipFractions[0] = -1.0f;
-  for(size_t i=0;i<phases.size();i++)
-  {
-    int phaseID = phases[i]->getPhaseIndex();
-    Ebsd::Ang::PhaseSymmetry symmetry = phases[i]->getSymmetry();
-    Ebsd::CrystalStructure crystal_structure = Ebsd::UnknownCrystalStructure;
-    if(symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = Ebsd::Cubic;
-    else if(symmetry == Ebsd::Ang::HexagonalSymmetry) crystal_structure = Ebsd::Hexagonal;
-    crystalStructures[phaseID] = crystal_structure;
 
-    precipFractions[phaseID] = -1.0f;
-  }
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz,
                 0, 0, 0,
@@ -130,8 +196,9 @@ int main(int argc, char **argv)
   std::cout << "Loading EBSD Data...." << std::endl;
   std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;
 
-  //FIX ME....Read stacking order from .h5ebsd file not assume to be hard-coded
-  err = h5io->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, Ebsd::HightoLow, m_QualityMetricFilters);
+  Ebsd::RefFrameZDir stackingOrder = ebsdReader->getStackingOrder();
+  err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, stackingOrder, m_QualityMetricFilters);
+  // Initialize the Quats so we can generate the IPF Colors
   m->initializeQuats();
 
   std::cout << "Writing VTK file" << std::endl;
@@ -143,8 +210,6 @@ int main(int argc, char **argv)
   VoxelIPFColorScalarWriter<ReconstructionFunc> ipfWriter(m.get());
   ipfWriter.m_WriteBinaryFiles = true;
   ipfWriter.writeScalars(f);
-
- // WRITE_VTK_GRAIN_IDS_ASCII(ptr, AIM::VTK::GrainIdScalarName)
 
   fclose(f);
 
