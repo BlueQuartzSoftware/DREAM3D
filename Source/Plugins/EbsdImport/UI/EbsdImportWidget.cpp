@@ -319,12 +319,17 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   m_EbsdImport->setReorderArray( m_ReorderArray );
 
 
-  int fileCount = m_FileListView->count();
-  std::vector<std::string> fileList;
-  for (int f = 0; f < fileCount; ++f)
-  {
-    fileList.push_back(QDir::toNativeSeparators(m_FileListView->item(f)->text()).toStdString());
-  }
+  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+  m_GeneratedFileNameExample->setText(filename);
+
+  int start = m_ZStartIndex->value();
+  int end = m_ZEndIndex->value() - start + 1;
+  bool hasMissingFiles = false;
+
+  // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
 
   m_EbsdImport->setEbsdFileList(fileList);
 
@@ -369,12 +374,13 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
 
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void EbsdImportWidget::stackingOrderChanged(bool checked)
 {
-  // m_generateExampleEbsdInputFile();
+  m_generateExampleEbsdInputFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -428,6 +434,37 @@ void EbsdImportWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+std::vector<std::string> EbsdImportWidget::generateFileList(int start, int end, bool &hasMissingFiles,
+                                               bool stackLowToHigh, QString filename)
+{
+  int index = 0;
+  std::vector<std::string> fileList;
+
+  for (int i = 0; i < end; ++i)
+    {
+      if (stackLowToHigh)
+      {
+         index = start + i;
+      }
+      else
+      {
+        index = end - i;
+      }
+      filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+          .arg(QString::number(index), m_TotalDigits->value(), '0')
+          .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+      QString filePath = m_InputDir->text() + QDir::separator() + filename;
+      filePath = QDir::toNativeSeparators(filePath);
+      fileList.push_back(filePath.toStdString());
+    }
+  return fileList;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EbsdImportWidget::m_generateExampleEbsdInputFile()
 {
 
@@ -436,30 +473,19 @@ void EbsdImportWidget::m_generateExampleEbsdInputFile()
       .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
-  // Now generate all the file names the user is asking for and populate the table
-  m_FileListView->clear();
   int start = m_ZStartIndex->value();
-  int end = m_ZEndIndex->value();
+  int end = m_ZEndIndex->value() - start + 1;
+  bool hasMissingFiles = false;
+
+  // Now generate all the file names the user is asking for and populate the table
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
+
+  m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
-  bool hasMissingFiles = false;
-  int index = 0;
-  end = m_ZEndIndex->value() - start + 1;
-  for (int i = 0; i < end; ++i)
+  for(std::vector<std::string>::size_type i = 0; i < fileList.size(); ++i)
   {
-    if (m_StackLowToHigh->isChecked())
-    {
-       index = start + i;
-    }
-    else
-    {
-      index = end - i;
-    }
-    filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-        .arg(QString::number(index), m_TotalDigits->value(), '0')
-        .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-    QString filePath = m_InputDir->text() + QDir::separator() + filename;
-    filePath = QDir::toNativeSeparators(filePath);
+    QString filePath(fileList.at(i).c_str());
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem( filePath, m_FileListView);
     if (fi.exists() == true)
@@ -473,17 +499,15 @@ void EbsdImportWidget::m_generateExampleEbsdInputFile()
     }
   }
 
-
-
-
   if (hasMissingFiles == true)
   {
     m_ErrorMessage->setVisible(true);
-    m_ErrorMessage->setText("Alert: File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
+    m_ErrorMessage->setText("Alert: Red Dot File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
   }
   else
   {
-    m_ErrorMessage->setVisible(false);
+    m_ErrorMessage->setVisible(true);
+    m_ErrorMessage->setText("All files exist.");
   }
 }
 
