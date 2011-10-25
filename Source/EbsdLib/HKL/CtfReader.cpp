@@ -555,25 +555,31 @@ void CtfReader::transformData()
   size_t adjustedcol, adjustedrow;
   for(size_t row = 0; row < yCells; ++row)
    {
-    for (size_t col = 0; col < xCells; ++col)
-    {
-      adjustedcol = col;
-      adjustedrow = row;
-      if(getRotateSlice() == true) adjustedcol = xCells - adjustedcol, adjustedrow = yCells - adjustedrow;
-      if(getReorderArray() == true) adjustedrow = yCells - adjustedrow;
-      offset = (adjustedrow * xCells) + (adjustedcol);
-      if(p1[i] - M_PI < 0.0)
-      {
-        p1[i] = p1[i] + M_PI;
-      }
-      else
-      {
-        p1[i] = p1[i] - M_PI;
-      }
-      shuffleTable[(row * xCells) + col] = offset;
-      ++i;
-    }
-  }
+
+     for(size_t col = 0; col < xCells; ++col)
+     {
+	   adjustedcol = col;
+	   adjustedrow = row;
+	   if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
+	   if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
+       offset = (adjustedrow*xCells)+(adjustedcol);
+       if (p1[i] - M_PI < 0.0)
+       {
+           p1[i] = p1[i] + M_PI;
+       }
+       else
+       {
+           p1[i] = p1[i] - M_PI;
+       }
+       shuffleTable[(row*xCells)+col] = offset;
+	   if(offset < 0 || offset >= (xCells*yCells))
+	   {
+			int stop = 0;
+	   }
+       ++i;
+     }
+   }
+
 
   SHUFFLE_ARRAY(Phase, ph, int)
   SHUFFLE_ARRAY(BandCount, bCount, int)
