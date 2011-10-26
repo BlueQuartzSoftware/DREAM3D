@@ -326,7 +326,7 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
-  int end = m_ZEndIndex->value() - start + 1;
+  int end = m_ZEndIndex->value();
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
@@ -441,7 +441,7 @@ std::vector<std::string> EbsdImportWidget::generateFileList(int start, int end, 
   int index = 0;
   std::vector<std::string> fileList;
 
-  for (int i = 0; i < end; ++i)
+  for (int i = 0; i < (end-start)+1; ++i)
     {
       if (stackLowToHigh)
       {
@@ -475,7 +475,7 @@ void EbsdImportWidget::m_generateExampleEbsdInputFile()
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
-  int end = m_ZEndIndex->value() - start + 1;
+  int end = m_ZEndIndex->value();
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table

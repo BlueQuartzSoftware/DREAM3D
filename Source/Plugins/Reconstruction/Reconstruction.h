@@ -86,10 +86,7 @@ class Reconstruction : public AbstractPipeline, public Observer
     MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     MXA_INSTANCE_PROPERTY(bool, MergeTwins)
     MXA_INSTANCE_PROPERTY(bool, MergeColonies)
-    MXA_INSTANCE_PROPERTY(bool, RectangularizeSample)
     MXA_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
-
-    MXA_INSTANCE_PROPERTY(double, DownSampleFactor)
 
     MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
     MXA_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
@@ -102,7 +99,6 @@ class Reconstruction : public AbstractPipeline, public Observer
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
 
-    MXA_INSTANCE_PROPERTY(bool, WriteDownSampledFile)
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
 
     MXA_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)

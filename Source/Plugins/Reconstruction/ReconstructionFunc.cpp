@@ -149,7 +149,7 @@ ReconstructionFunc::~ReconstructionFunc()
 // -----------------------------------------------------------------------------
 void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
                                     bool mrgTwins, bool mrgColonies, int minAllowedGrSize,
-                                    float dwnSmplFact, float misoTol, std::vector<Ebsd::CrystalStructure> crystalStructures,
+                                    float misoTol, std::vector<Ebsd::CrystalStructure> crystalStructures,
                                     std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions, int alignmentMethod)
 {
@@ -158,7 +158,6 @@ void ReconstructionFunc::initialize(int nX, int nY, int nZ, float xRes, float yR
   mergetwinsoption = (mrgTwins == true) ? 1 : 0;
   mergecoloniesoption = (mrgColonies == true) ? 1 : 0;
   minallowedgrainsize = minAllowedGrSize;
-  downsamplefactor = dwnSmplFact;
   misorientationtolerance = misoTol;
   crystruct = crystalStructures;
   phaseType = phaseTypes;
@@ -1185,81 +1184,6 @@ void ReconstructionFunc::reorder_grains()
   find_neighbors();
 }
 
-void ReconstructionFunc::fillin_sample()
-{
-  int col, row, plane;
-  int point;
-  int mincol, maxcol, minrow, maxrow, minplane, maxplane;
-  mincol = xpoints;
-  minrow = ypoints;
-  minplane = zpoints;
-  maxcol = 0;
-  maxrow = 0;
-  maxplane = 0;
-
-  for (int k = 0; k < zpoints; ++k)
-  {
-    for (int j = 0; j < ypoints; ++j)
-    {
-      for (int i = 0; i < xpoints; ++i)
-      {
-        point = (k * xpoints * ypoints) + (j * xpoints) + i;
-        if (grain_indicies[point] > 0)
-        {
-          col = i;
-          row = j;
-          plane = k;
-          if (col < mincol) mincol = col;
-          if (col > maxcol) maxcol = col;
-          if (row < minrow) minrow = row;
-          if (row > maxrow) maxrow = row;
-          if (plane < minplane) minplane = plane;
-          if (plane > maxplane) maxplane = plane;
-        }
-      }
-    }
-  }
-  int newvoxelcount = 0;
-  int newxpoints = (maxcol - mincol) + 1;
-  int newypoints = (maxrow - minrow) + 1;
-  int newzpoints = (maxplane - minplane) + 1;
-  sizex = (maxcol - mincol) * resx;
-  sizey = (maxrow - minrow) * resy;
-  sizez = (maxplane - minplane) * resz;
-  if (newxpoints != xpoints || newypoints != ypoints || newzpoints != zpoints)
-  {
-    for (int k = minplane; k < maxplane + 1; ++k)
-    {
-      for (int j = minrow; j < maxrow + 1; ++j)
-      {
-        for (int i = mincol; i < maxcol + 1; ++i)
-        {
-          point = (k * xpoints * ypoints) + (j * xpoints) + i;
-          if (grain_indicies[point] == 0)
-          {
-            grain_indicies[point] = -1;
-            neighbors[point] = -1;
-          }
-          grain_indicies[newvoxelcount] = grain_indicies[point];
-          neighbors[newvoxelcount] = neighbors[point];
-          phases[newvoxelcount] = phases[point];
-          euler1s[newvoxelcount] = euler1s[point];
-          euler2s[newvoxelcount] = euler2s[point];
-          euler3s[newvoxelcount] = euler3s[point];
-          surfacevoxels[newvoxelcount] = surfacevoxels[point];
-          goodVoxels[newvoxelcount] = goodVoxels[point];
-          alreadychecked[newvoxelcount] = alreadychecked[point];
-          newvoxelcount++;
-        }
-      }
-    }
-    xpoints = newxpoints;
-    ypoints = newypoints;
-    zpoints = newzpoints;
-    totalpoints = (xpoints * ypoints * zpoints);
-  }
-  assign_badpoints();
-}
 int ReconstructionFunc::remove_smallgrains(size_t numgrains)
 {
   size_t initialVoxelsListSize = 1000;

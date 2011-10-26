@@ -133,14 +133,12 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
 
   READ_CHECKBOX_SETTING(prefs, m_, MergeColonies, false);
   READ_CHECKBOX_SETTING(prefs, m_, MergeTwins, false);
-  READ_CHECKBOX_SETTING(prefs, m_, FillinSample, false);
   READ_COMBO_BOX(prefs, m_, AlignMeth)
 //  READ_COMBO_BOX(prefs, m_, RefFrameOrigin)
 //  READ_COMBO_BOX(prefs, m_, RefFrameZDir)
 
   READ_SETTING(prefs, m_, MisOrientationTolerance, ok, d, 5.0 , Double);
   READ_SETTING(prefs, m_, MinAllowedGrainSize, ok, i, 8 , Int);
-  READ_SETTING(prefs, m_, DownSampleFactor, ok, d, 1.0 , Double);
 
   READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
 //  READ_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
@@ -148,7 +146,6 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
   READ_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile, true);
-  READ_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile, true);
   m_HDF5GrainFile->blockSignals(true);
   READ_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile, true);
   m_HDF5GrainFile->blockSignals(false);
@@ -212,7 +209,6 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
 
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeTwins)
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeColonies)
-  WRITE_CHECKBOX_SETTING(prefs, m_, FillinSample)
 
   WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
   WRITE_SETTING(prefs, m_, MisOrientationTolerance)
@@ -226,8 +222,6 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
-  WRITE_CHECKBOX_SETTING(prefs, m_, DownSampledVizFile)
-  WRITE_SETTING(prefs, m_, DownSampleFactor)
   WRITE_CHECKBOX_SETTING(prefs, m_, HDF5GrainFile)
 
   if (NULL != m_QualityMetricTableView->model())
@@ -293,9 +287,9 @@ void ReconstructionWidget::setupGui()
 
   m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
-  m_WidgetList << m_MergeTwins << m_MergeColonies << m_FillinSample << m_AlignMeth;
-  m_WidgetList << m_MinAllowedGrainSize << m_DownSampleFactor << m_MisOrientationTolerance;
-  m_WidgetList << m_VisualizationVizFile << m_DownSampledVizFile;
+  m_WidgetList << m_MergeTwins << m_MergeColonies << m_AlignMeth;
+  m_WidgetList << m_MinAllowedGrainSize << m_MisOrientationTolerance;
+  m_WidgetList << m_VisualizationVizFile;
   m_WidgetList << m_H5VoxelFile << m_VtkOptionsBtn;
   m_WidgetList << m_HDF5GrainFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << phaseTypeList;
@@ -315,7 +309,6 @@ void ReconstructionWidget::checkIOFiles()
   CHECK_QLABEL_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction,m_, H5VoxelFile)
 
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , VisualizationVizFile)
-  CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , DownSampledVizFile)
   CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(DREAM3D::Reconstruction, m_ , HDF5GrainFile)
 }
 
@@ -715,7 +708,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );
   m_Reconstruction->setMergeTwins(m_MergeTwins->isChecked() );
-  m_Reconstruction->setRectangularizeSample(m_FillinSample->isChecked() );
 
   DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
@@ -726,7 +718,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
   m_Reconstruction->setMisorientationTolerance(m_MisOrientationTolerance->value());
-  m_Reconstruction->setDownSampleFactor(m_DownSampleFactor->value());
 
   m_Reconstruction->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_Reconstruction->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
@@ -737,7 +728,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
   m_Reconstruction->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
 
-  m_Reconstruction->setWriteDownSampledFile(m_DownSampledVizFile->isChecked());
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 
   setupQualityMetricFilters(m_Reconstruction);

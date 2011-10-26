@@ -191,7 +191,7 @@ int main(int argc, char **argv)
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz,
                 0, 0, 0,
-                0, 0, crystalStructures,
+                0, crystalStructures,
                 m_PhaseTypes, precipFractions, m_AlignmentMethod);
   std::cout << "Loading EBSD Data...." << std::endl;
   std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;

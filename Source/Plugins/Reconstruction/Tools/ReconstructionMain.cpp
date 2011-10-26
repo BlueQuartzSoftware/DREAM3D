@@ -143,7 +143,6 @@ int main(int argc, char **argv)
 
     m_Reconstruction->setMergeColonies(mergeColonies.getValue() );
     m_Reconstruction->setMergeTwins(mergeTwins.getValue() );
-    m_Reconstruction->setRectangularizeSample(rectangularize.getValue() );
 
 #if 0
     Ebsd::CrystalStructure crystruct = static_cast<Ebsd::CrystalStructure>(CrystalStructure.getValue());
@@ -158,8 +157,6 @@ int main(int argc, char **argv)
     m_Reconstruction->setMinAllowedGrainSize(MinAllowedGrainSize.getValue());
     m_Reconstruction->setMisorientationTolerance(MisOrientationTolerance.getValue());
 
-    m_Reconstruction->setDownSampleFactor(DownSampleFactor.getValue());
-
     m_Reconstruction->setOutputDirectory(OutputDir.getValue());
     m_Reconstruction->setOutputFilePrefix(OutputFilePrefix.getValue());
     m_Reconstruction->setWriteVtkFile(true);
@@ -167,7 +164,6 @@ int main(int argc, char **argv)
     m_Reconstruction->setWriteIPFColor(true);
     m_Reconstruction->setWriteBinaryVTKFiles(true);
 
-    m_Reconstruction->setWriteDownSampledFile(true);
     m_Reconstruction->setWriteHDF5GrainFile(false);
 
 #if RECONSTRUCTION_MANUAL_DEBUG
