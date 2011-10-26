@@ -568,14 +568,7 @@ void CtfReader::transformData()
        offset = (adjustedrow*xCells)+(adjustedcol);
        if(getAlignEulers() == true)
 	   {
-		   if (p1[i] - M_PI < 0.0)
-		   {
-			   p1[i] = p1[i] + M_PI;
-		   }
-		   else
-		   {
-			   p1[i] = p1[i] - M_PI;
-		   }
+		  p1[i] = p1[i];
 	   }
        shuffleTable[(row*xCells)+col] = offset;
 	   if(offset < 0 || offset >= (xCells*yCells))
