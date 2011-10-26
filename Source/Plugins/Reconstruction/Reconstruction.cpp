@@ -70,7 +70,6 @@ m_OutputDirectory("."),
 m_OutputFilePrefix("Reconstruction_"),
 m_MergeTwins(false),
 m_MergeColonies(false),
-m_RectangularizeSample(false),
 m_MinAllowedGrainSize(0),
 m_MisorientationTolerance(0.0),
 m_WriteBinaryVTKFiles(true),
@@ -78,7 +77,6 @@ m_WriteVtkFile(true),
 m_WritePhaseId(true),
 //m_WriteImageQuality(true),
 m_WriteIPFColor(true),
-m_WriteDownSampledFile(false),
 m_WriteHDF5GrainFile(false)
 {
 
@@ -162,7 +160,7 @@ void Reconstruction::execute()
   m->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz,
                 m_MergeTwins, m_MergeColonies, m_MinAllowedGrainSize,
-                m_DownSampleFactor, m_MisorientationTolerance, crystalStructures,
+                m_MisorientationTolerance, crystalStructures,
                 m_PhaseTypes, precipFractions, m_AlignmentMethod);
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
@@ -223,13 +221,6 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Reordering Grains"), 50);
   m->reorder_grains();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", reorder_grains)
-
-  if(m_RectangularizeSample == true)
-  {
-    updateProgressAndMessage(("Creating Smooth Rectangular Sample"), 56);
-    m->fillin_sample();
-    CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", fillin_sample)
-  }
 
   if (m_MergeTwins == true)
   {
@@ -319,14 +310,6 @@ void Reconstruction::execute()
   }
 
 
-  if (m_WriteDownSampledFile) {
-    MAKE_OUTPUT_FILE_PATH ( reconDSVisFile, DREAM3D::Reconstruction::DownSampledVizFile);
-    updateProgressAndMessage(("Writing VTK Down Sampled File"), 98);
-    VtkMiscFileWriter::Pointer vtkWriter = VtkMiscFileWriter::New();
-    err = vtkWriter->writeDownSampledVizFile(m.get(), reconDSVisFile);
-    CHECK_FOR_ERROR(ReconstructionFunc, "The VTK Downsampled file could not be written to. Does the path exist and do you have write access to the output directory.", err);
-  }
-
   /** ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", vtk_viz_files)
@@ -367,10 +350,8 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, OutputDirectory)
     PRINT_PROPERTY(ostream, MergeTwins)
     PRINT_PROPERTY(ostream, MergeColonies)
-    PRINT_PROPERTY(ostream, RectangularizeSample)
     PRINT_PROPERTY(ostream, MinAllowedGrainSize)
 //    PRINT_PROPERTY(ostream, MinSeedConfidence)
-    PRINT_PROPERTY(ostream, DownSampleFactor)
 //    PRINT_PROPERTY(ostream, MinSeedImageQuality)
     PRINT_PROPERTY(ostream, MisorientationTolerance)
     PRINT_PROPERTY(ostream, AlignmentMethod)
@@ -379,6 +360,5 @@ void Reconstruction::printSettings(std::ostream &ostream)
     PRINT_PROPERTY(ostream, WritePhaseId)
 //    PRINT_PROPERTY(ostream, WriteImageQuality)
     PRINT_PROPERTY(ostream, WriteIPFColor)
-    PRINT_PROPERTY(ostream, WriteDownSampledFile)
     PRINT_PROPERTY(ostream, WriteHDF5GrainFile)
 }

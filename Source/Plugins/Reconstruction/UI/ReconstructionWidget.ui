@@ -301,7 +301,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="4" column="0">
          <widget class="QLabel" name="label_24">
           <property name="text">
            <string>Stacking Order:</string>
@@ -320,7 +320,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="4" column="1">
          <widget class="QLabel" name="m_StackingOrder">
           <property name="font">
            <font>
@@ -346,6 +346,20 @@
             <italic>true</italic>
            </font>
           </property>
+          <property name="text">
+           <string>false</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_22">
+          <property name="text">
+           <string>Align Euler Angles</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="m_AlignEulers">
           <property name="text">
            <string>false</string>
           </property>
@@ -551,27 +565,6 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="3">
-          <widget class="QCheckBox" name="m_MergeTwins">
-           <property name="text">
-            <string>Merge Twins</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QCheckBox" name="m_FillinSample">
-           <property name="text">
-            <string>Rectangularized Sample</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QCheckBox" name="m_MergeColonies">
-           <property name="text">
-            <string>Merge Colonies</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="4" rowspan="5">
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -584,6 +577,20 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="3" column="3">
+          <widget class="QCheckBox" name="m_MergeTwins">
+           <property name="text">
+            <string>Merge Twins</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="3">
+          <widget class="QCheckBox" name="m_MergeColonies">
+           <property name="text">
+            <string>Merge Colonies</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -672,6 +679,12 @@
            </attribute>
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>120</number>
            </attribute>
           </widget>
          </item>
@@ -874,30 +887,13 @@
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>VTK Downsampled Voxels</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="m_DownSampledVizFile">
-          <property name="text">
-           <string>Downsampled File</string>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
          <widget class="QLabel" name="label_18">
           <property name="text">
            <string>VTK Rectilinear Grid</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="2" column="1">
          <widget class="QCheckBox" name="m_VisualizationVizFile">
           <property name="text">
            <string>VTK Visualization File</string>
@@ -907,14 +903,14 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="2">
+        <item row="2" column="2">
          <widget class="QPushButton" name="m_VtkOptionsBtn">
           <property name="text">
            <string>VTK Options</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="3">
+        <item row="2" column="3">
          <spacer name="horizontalSpacer_7">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -926,20 +922,6 @@
            </size>
           </property>
          </spacer>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLabel" name="label_46">
-          <property name="text">
-           <string>Down-sample Res.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QDoubleSpinBox" name="m_DownSampleFactor">
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>

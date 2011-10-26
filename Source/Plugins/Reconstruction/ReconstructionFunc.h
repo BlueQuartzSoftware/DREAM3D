@@ -170,7 +170,6 @@ class ReconstructionFunc : public Observable
                     bool mrgTwins,
                     bool mrgColonies,
                     int minAllowedGrSize,
-                    float dwnSmplFact,
                     float misoTol,
                     std::vector<Ebsd::CrystalStructure> crystalStructures,
                     std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
@@ -189,7 +188,6 @@ class ReconstructionFunc : public Observable
     void merge_containedgrains();
     void reorder_grains();
     int remove_smallgrains(size_t numgrains);
-	  void fillin_sample();
     void merge_twins();
     void merge_colonies();
     void characterize_twins();
