@@ -13,55 +13,66 @@
   <img src="image001.png" alt="EBSD Import User Interface">
 
   <ol>
-    <li>Input Directory - Directory where the input files are located
+    <li><b><i>Input Directory</i></b> - Directory where the input files are located
       <ul>
-        <li>a. Total EBSD Files Found - Code will determine how many .ang or .ctf files are present.
-        <li>b. Currently only .ang and .ctf files are supported.
+        <li>Total EBSD Files Found - Code will determine how many .ang or .ctf files are present.
+        <li>Currently only .ang and .ctf files are supported.
       </ul>
-    <li>Parameters
+    <li><b><i>Parameters</i></b>
       <ul>
-        <li>Stacking Order - This parameter describes how the data was acquired in 
-        relation to how the files were named during the acquisition. For example
-        if you acquired your data on a FIB type setup with an EBSD acquisition system
-        and the first set of data was named with a filename of 001.ang and the 
-        last data set that was acquired was named with a filename of 099.ang then
-        the appropriate "Stacking Order" is "Low to High".<br/>
-        &nbsp;&nbsp;If on the other hand your EBSD/FIB machine collected 100 slices
-        and the first slice was named 099.ang and the last was named 000.ang then
-        the appropriate Stacking Order is "High to Low".
-        <li>Display Origin - This describes the spacial reference frame origin for
-        the data set. This should be set for each data set. Use the images below
-        to select the appropriate reference frame origin for your data.<br/>
-        <img src="TSLReferenceFrame.png" alt="TSL Reference Frame Origin">
+        <li><b><i>Stacking Order</i></b> - This parameter sets the order in which the slices will be stacked.
+        If Low to High is selected, then the lowest slice number will be interpreted to be at z = 0
+        and the largest slice number will be interpreted to be at z = (no. of slices * z resolution).
+        If High to Low is selected, then the opposite is the case where the lowest slice number is 
+        interpreted as z = (no. of slices *z resolution) and the largest slice number is z = 0.  The 
+        filenames in the file list should be reordered to disply the choice of stacking order. 
+        <li><b><i>Reference Frame Options</i></b> -  This button brings up a pop-up that asks the user to answer 
+        questions about what post-processing needs to be done to account for details of the  data 
+        collection process.
         <br/>
-        <img src="HKLReferenceFrame.png" alt="HKL Reference Frame Origin">
+        <img src="image002.png" alt="Advanced Reference Frame Options">
         <br/>
+          <ul>
+            <li> <b><i>Rotate 2D scan</i></b> - Generally when EBSD scans are collected in an SEM, the sample is being
+            viewed upside-down and the long working distance of the sample is at the top of the scan.  This 
+            typically means the "top" of you sample is at the bottom of the scan.  If you have applied a 180
+            degree scan rotation to the image in the SEM prior to EBSD collection, then the sample has already been
+            "rotated" and this box should not be check, otherwise it is our suggestion to select this option.
+            <li> <b><i>Set 0,0 position at Lower Left</i></b> - This option accounts for the fact that the commercial EBSD data 
+            collection packages raster through the scan starting at the upper left.  As a result the first data point
+            is not at the actual 0,0 position relative to your sample.  The analysis codes in this package assume the 
+            first data point in the array is the 0,0 coordinate of the spatial reference frame.  Unless you have 
+            reordered the points coming out of the EBSD scan, then we highly recommend you leave this option clicked.
+            <li> <b><i>Align Euler Reference Frame</i></b> - This option addresses the fact that the commercial EBSD collection programs
+            use different reference frames for spatial coordinates and Euler angles.  Clicking this option will bring 
+            these two reference frames into coincidence.  Unless you have rotated the Eulers angles yourself, we recommend
+            you turn this option on.   
+          </ul>
       </ul>
-    <li>Z spacing - This is the spacing between sections
+    <li><b><i>Z spacing</i></b> - This is the spacing between sections
       <ul>
-        <li>a. Note that the x and y spacings are automatically read from
-          the input files.
-        <li>b. If the x and y spacing values change, the ones in the first
+        <li>Note that the x and y spacings are automatically read from
+          the input files.  If the x and y spacing values change, the ones in the first
           section are used.
       </ul>
     
-    <li>Output File - Name and location of desired output .h5ebsd file
+    <li><b><i>Output File</i></b> - Name and location of desired output .h5ebsd file
 
-    <li>File Prefix, Suffix and File Extension - Variables that are combined to generate the list of file names
+    <li><b><i>File Prefix, Suffix and File Extension</i></b> - Variables that are combined to generate the list of file names
       <ul>
-        <li>a. These values should all be automatically determined, but
-          should be checked if uncommon prefixes or suffixes are used.
+        <li>These values may be automatically populated, but
+          should be checked to make sure the proper filenames are appearing in the file list.
       </ul>
-    <li>Start Slice, End Slice and Padding Digits More
+    <li><b><i>Start Slice, End Slice and Padding Digits</i></b> - More
       variables that are combined to generate the list of file names
       <ul>
-        <li>a. Start slice and end slice define the range of data to be
+        <li>Start slice and end slice define the range of data to be
           included in the .h5ang file (i.e. you do not have to import the entire
           dataset).
-        <li>b. Padding digits controls the number of leading zeros that are
+        <li>Padding digits controls the number of leading zeros that are
           present in the filename.
       </ul>
-    <li>File List - This area lists all the files that will be included 
+    <li><b><i>File List</i></b> - This area lists all the files that will be included 
     in the .h5ebsd file based on the inputs chosen.
       <ul>
         <li>The files in the list will have a green dot if they are

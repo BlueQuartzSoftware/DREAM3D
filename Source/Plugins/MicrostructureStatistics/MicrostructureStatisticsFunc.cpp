@@ -2681,7 +2681,7 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   outFile.open(graindataFile.c_str(), std::ios_base::binary);
   outFile << numgrains-1 << endl;
   char space = DREAM3D::GrainData::Delimiter;
-  outFile  << DREAM3D::GrainData::GrainID;
+  outFile  << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::PhaseID;
 
   if(writeavgorientations == true) outFile   << space << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2;
   if(writesizes == true) outFile << space << DREAM3D::GrainData::EquivDiam;
@@ -2692,7 +2692,7 @@ void MicrostructureStatisticsFunc::write_graindata(const std::string &graindataF
   outFile << endl;
   for (size_t i = 1; i < numgrains; i++)
   {
-    outFile << i;
+	outFile << i << space << m_Grains[i]->phase;
     if (writeavgorientations == true) outFile << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3;
     if (writesizes == true) outFile << space << m_Grains[i]->equivdiameter;
     if (writeshapes == true) outFile << space << m_Grains[i]->aspectratio1 << space << m_Grains[i]->aspectratio2 << space << m_Grains[i]->omega3;
