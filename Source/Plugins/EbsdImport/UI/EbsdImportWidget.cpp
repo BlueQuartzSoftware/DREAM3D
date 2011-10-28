@@ -519,9 +519,9 @@ void EbsdImportWidget::m_generateExampleEbsdInputFile()
 void EbsdImportWidget::on_m_RefFrameOptionsBtn_clicked()
 {
   QVector<QString> options;
-  options.push_back("Rotate 2D Scan(s) So Origin of Sample is in Lower Left -- (This Accounts for Samples Being Upside-down with Long WD at the Top of the Scan)");
-  options.push_back("Set 0,0 position of Sample RF at Lower Left -- (This Reorders the Data Array to Remove Computer Graphics Convention of Placing the 0 position of an Array in the Upper Left)");
-  options.push_back("Align Euler RF to Sample RF -- (This Accounts for Disjoined RFs in Commercial EBSD Data Collection Codes)");
+  options.push_back("Rotate 2D Scan(s) So Origin of Sample is in Lower Left \n(This Accounts for Samples Being Upside-down with Long WD at the Top of the Scan)");
+  options.push_back("Set 0,0 position of Sample RF at Lower Left \n(This Reorders the Data Array to Remove Computer Graphics Convention of Placing the 0 position of an Array in the Upper Left)");
+  options.push_back("Align Euler RF to Sample RF \n (This Accountsfor Disjoined RFs in Commercial EBSD Data Collection Codes)");
 
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("Advanced Reference Frame Options"));
