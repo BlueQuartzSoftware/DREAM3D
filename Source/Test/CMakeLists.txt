@@ -37,6 +37,15 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Applications)
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins)
 
 # --------
+add_executable(H5LiteTest ${DREAM3DTest_SOURCE_DIR}/H5LiteTest.cpp)
+target_link_libraries(H5LiteTest H5Support MXA)
+add_test(H5LiteTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5LiteTest)
+
+add_executable(H5UtilitiesTest ${DREAM3DTest_SOURCE_DIR}/H5UtilitiesTest.cpp)
+target_link_libraries(H5UtilitiesTest H5Support MXA)
+add_test(H5UtilitiesTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5UtilitiesTest)
+
+# --------
 add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
 target_link_libraries(ODFTest DREAM3DLib)
 
