@@ -56,6 +56,7 @@
 #include "QtSupport/QCheckboxDialog.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
+#include "EbsdReferenceFrameDialog.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -82,6 +83,7 @@ m_OpenDialogLastDirectory("~/")
 // -----------------------------------------------------------------------------
 EbsdImportWidget::~EbsdImportWidget()
 {
+
 }
 
 
@@ -116,7 +118,7 @@ void EbsdImportWidget::setupGui()
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex << m_zSpacing;
   m_ErrorMessage->setVisible(false);
 
-  m_StackingGroup = new QButtonGroup;
+  m_StackingGroup = new QButtonGroup(this);
   m_StackingGroup->addButton(m_StackLowToHigh);
   m_StackingGroup->addButton(m_StackHighToLow);
 
@@ -518,10 +520,38 @@ void EbsdImportWidget::m_generateExampleEbsdInputFile()
 // -----------------------------------------------------------------------------
 void EbsdImportWidget::on_m_RefFrameOptionsBtn_clicked()
 {
+  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+  //m_GeneratedFileNameExample->setText(filename);
+
+  int start = m_ZStartIndex->value();
+  int end = m_ZEndIndex->value();
+  bool hasMissingFiles = false;
+
+  // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  if (fileList.size() == 0)
+  {
+    return;
+  }
+  QString ebsdFileName = QString::fromStdString(fileList[0]);
+
+  EbsdReferenceFrameDialog d(ebsdFileName, this);
+  d.setEbsdFileName(ebsdFileName);
+  int ret = d.exec();
+  if (ret == QDialog::Accepted)
+  {
+//    m_RotateSlice = d.getValue("Rotate Slice");
+//    m_ReorderArray = d.getValue("Reorder Array");
+//    m_AlignEulers = d.getValue("Align Eulers");
+  }
+
+#if 0
   QVector<QString> options;
-  options.push_back("Rotate 2D Scan(s) So Origin of Sample is in Lower Left -- (This Accounts for Samples Being Upside-down with Long WD at the Top of the Scan)");
-  options.push_back("Set 0,0 position of Sample RF at Lower Left -- (This Reorders the Data Array to Remove Computer Graphics Convention of Placing the 0 position of an Array in the Upper Left)");
-  options.push_back("Align Euler RF to Sample RF -- (This Accounts for Disjoined RFs in Commercial EBSD Data Collection Codes)");
+  options.push_back("Rotate 2D Scan(s) So Origin of Sample is in Lower Left \n (This Accounts for Samples Being Upside-down with Long WD at the Top of the Scan)");
+  options.push_back("Set 0,0 position of Sample RF at Lower Left \n (This Reorders the Data Array to Remove Computer Graphics Convention of Placing the 0 position of an Array in the Upper Left)");
+  options.push_back("Align Euler RF to Sample RF \n (This Accounts for Disjoined RFs in Commercial EBSD Data Collection Codes)");
 
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("Advanced Reference Frame Options"));
@@ -537,6 +567,7 @@ void EbsdImportWidget::on_m_RefFrameOptionsBtn_clicked()
     m_ReorderArray = d.getValue("Reorder Array");
     m_AlignEulers = d.getValue("Align Eulers");
   }
+#endif
 
 }
 
