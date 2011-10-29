@@ -39,12 +39,14 @@ if(DREAM3D_BUILD_GUI)
         ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
         ${PROJECT_SOURCE_DIR}/UI/EbsdImportPlugin.h
         ${PROJECT_SOURCE_DIR}/UI/EbsdImportWidget.h
+        ${PROJECT_SOURCE_DIR}/UI/EbsdReferenceFrameDialog.h
         ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
         )
         
     set (EbsdImportPlugin_UI_SRCS 
         ${PROJECT_SOURCE_DIR}/UI/EbsdImportPlugin.cpp
         ${PROJECT_SOURCE_DIR}/UI/EbsdImportWidget.cpp
+        ${PROJECT_SOURCE_DIR}/UI/EbsdReferenceFrameDialog.cpp
         ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
         )
     
@@ -54,7 +56,9 @@ if(DREAM3D_BUILD_GUI)
     )
         
     QT4_WRAP_UI( EbsdImportPlugin_Generated_UI_HDRS 
-                ${PROJECT_SOURCE_DIR}/UI/EbsdImportWidget.ui )
+                ${PROJECT_SOURCE_DIR}/UI/EbsdImportWidget.ui 
+                ${PROJECT_SOURCE_DIR}/UI/EbsdReferenceFrameDialog.ui
+    )
     
     QT4_WRAP_CPP( EbsdImportPlugin_Generated_MOC_SRCS ${EbsdImportPlugin_UI_HDRS} )
     
