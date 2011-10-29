@@ -94,7 +94,7 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D Developer Documentation"
                      GENERATE_LATEX "YES"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Developer/Images")
 endif()
 
 set (DOCUMENTATION_SOURCE_FILES
@@ -114,7 +114,7 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Developer/Images")
 endif()
 
 if (DOX_GENERATE_RTF)
@@ -129,5 +129,5 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "${DOX_GENERATE_RTF}"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Developer/Images")
 endif()
