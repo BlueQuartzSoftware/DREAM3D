@@ -395,7 +395,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 // -----------------------------------------------------------------------------
 //  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::parseDataLine(const std::string &line, int row, int col, size_t i, int xCells, int yCells )
+void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */

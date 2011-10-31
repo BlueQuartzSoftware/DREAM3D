@@ -144,9 +144,9 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  phi[0] = choose % 36;
-  phi[1] = (choose / 36) % 36;
-  phi[2] = choose / (36 * 36);
+  phi[0] = static_cast<float>(choose % 36);
+  phi[1] = static_cast<float>((choose / 36) % 36);
+  phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineEulerAngles(init, step, phi, choose, synea1, synea2, synea3);
 }
