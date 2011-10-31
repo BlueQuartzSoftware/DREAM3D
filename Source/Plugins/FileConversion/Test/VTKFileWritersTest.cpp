@@ -48,7 +48,7 @@
 
 #include "Test/UnitTestSupport.hpp"
 
-#define REMOVE_TEST_FILES 0
+#define REMOVE_TEST_FILES 1
 
 namespace Detail
 {

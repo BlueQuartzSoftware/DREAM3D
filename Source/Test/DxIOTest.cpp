@@ -46,24 +46,15 @@
 #include "DREAM3DLib/IO/DxReader.h"
 
 #include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
 
-#define REMOVE_TEST_FILES 1
-
-namespace Detail
-{
-  static const std::string TestFile("DxIOTest.dx");
-  static const int XSize = 3;
-  static const int YSize = 4;
-  static const int ZSize = 5;
-  static const int Offset = 100;
-}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(Detail::TestFile);
+  MXADir::remove(UnitTest::DxIOTest::TestFile);
 #endif
 }
 
@@ -72,19 +63,19 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestDxWriter()
 {
-  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
   AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
-    grainIds->SetValue(i, i + Detail::Offset);
+    grainIds->SetValue(i, i + UnitTest::DxIOTest::Offset);
   }
-  int nx = Detail::XSize;
-  int ny = Detail::YSize;
-  int nz = Detail::ZSize;
+  int nx = UnitTest::DxIOTest::XSize;
+  int ny = UnitTest::DxIOTest::YSize;
+  int nz = UnitTest::DxIOTest::ZSize;
 
 
   DxWriter::Pointer writer = DxWriter::New();
-  writer->setFileName(Detail::TestFile);
+  writer->setFileName(UnitTest::DxIOTest::TestFile);
   writer->setData(grainIds);
   writer->setDimensions(nx, ny, nz);
   int err = writer->writeFile();
@@ -99,7 +90,7 @@ int TestDxReader()
 {
 
   DxReader::Pointer reader = DxReader::New();
-  reader->setFileName(Detail::TestFile);
+  reader->setFileName(UnitTest::DxIOTest::TestFile);
   int nx = 0;
   int ny = 0;
   int nz = 0;
@@ -108,14 +99,14 @@ int TestDxReader()
   reader->getDimensions(nx, ny, nz);
   AIMArray<int>::Pointer data = reader->getData();
   DREAM3D_REQUIRE_EQUAL(err, 0);
-  DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
-  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DxIOTest::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DxIOTest::ZSize);
+  int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
 
   for (int i = 0; i < size; ++i)
   {
-    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), data->GetValue(i) );
+    DREAM3D_REQUIRE_EQUAL( (i+UnitTest::DxIOTest::Offset), data->GetValue(i) );
   }
 
 
