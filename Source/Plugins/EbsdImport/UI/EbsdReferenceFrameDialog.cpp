@@ -88,6 +88,8 @@ m_PixmapGraphicsItem(NULL)
   updateGraphicsView();
   m_CurrentCorner = 0;
   m_UpperLeftBtn->setChecked(true);
+  m_ExplanationScrollArea->setVisible(m_ExplanationBtn->isChecked());
+
 }
 
 // -----------------------------------------------------------------------------
@@ -318,4 +320,13 @@ void EbsdReferenceFrameDialog::updateDisplay()
 }
 
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdReferenceFrameDialog::on_m_ExplanationBtn_toggled(bool b)
+{
+  m_ExplanationScrollArea->setVisible(m_ExplanationBtn->isChecked());
+}
 
