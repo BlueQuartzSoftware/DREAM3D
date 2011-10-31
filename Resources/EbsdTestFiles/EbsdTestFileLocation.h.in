@@ -2,7 +2,7 @@
 #define _EbsdTestFileLocation_h_
 #include <string>
 
-#define REMOVE_TEST_FILES 0
+#define REMOVE_TEST_FILES 1
 
 namespace EbsdImportTest {
   const std::string FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
