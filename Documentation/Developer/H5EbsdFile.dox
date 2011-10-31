@@ -1,6 +1,31 @@
 /*!
 
-@page h5ebsdfile HDF5 EBSD Data File Specification
+@page h5ebsdfile EBSD HDF5 Data File Specification
+
+
+@section h5ebsd0 Of Orientations, Reference Frames and Coordinate Systems
+  DREAM.3D's origin follows the sample coordinate system so that the physical
+location of the 0 row and 0 column voxel should visually appear in the lower
+left corner of a computer graphics display.
+
+@image html CoordinateSystem1.png "Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow)"
+@image latex CoordinateSystem1.png "Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow)" width=3in
+
+ Commercial EBSD acquisition systems do not typically follow this convention and
+DREAM.3D needs input from the user so that the proper transformations to the data
+can be applied during the Reconstruction and other analysis. Commercial EBSD software
+packages allow for some initial transformations of the data in which case the
+DREAM.3D environment does not have any way of determining if those transformations
+have already occured. During the import process the user is asked a few questions
+regarding the orientation of their EBSD data in relation to the sample coordinate
+system. Currently there are 3 items that must be answered otherwise undefined behavior
+may occur during any of the analysis algorithms.
+
+@li Some Commercial EBSD acquisition systems allow for a <b>scan rotation</b> which
+rotates the sample coordinate system 180 degrees around the Z axis.
+@li Something here
+@li Should we rotate the Euler angles to bring them in line with the sample
+reference frame?
 
 
 @section h5ebsd1 Introduction
@@ -15,10 +40,12 @@ deal with the basic volume information is the same for every file.
 @code
 /-|
   | Index  HDF Dataset
+  | AlignEulers   HDF Dataset
   | Manufacturer  HDF Dataset
   | Max X Points  HDF Dataset
   | Max Y Points  HDF Dataset
-  | Reference Origin HDF Dataset
+  | ReorderArray  HDF Dataset
+  | RotateSlice   HDF Dataset
   | Stacking Order HDF Dataset
   | X Resolution  HDF Dataset
   | Y Resolution  HDF Dataset
@@ -36,27 +63,6 @@ deal with the basic volume information is the same for every file.
 @section h5ebsd3 Detailed Description
 
 
-There are four enumerated values for the Reference Origin as defined in the
-EbsdLibConstants.h file
-@code
-  enum RefFrameOrigin
-  {
-     UpperRightOrigin = 0,
-     UpperLeftOrigin = 1,
-     LowerLeftOrigin = 2,
-     LowerRightOrigin = 3,
-     NoOrientation = 4,
-  };
-@endcode
-In addition the data set has an attribute attached to it that has a human readable
-version and is one of:
-@code
-    const std::string UpperRight ("Upper Right");
-    const std::string UpperLeft ("Upper Left");
-    const std::string LowerLeft ("Lower Left");
-    const std::string LowerRight ("Lower Right");
-    const std::string NoOrientation("No Orientation");
-@endcode
 
 The <b>Stacking Order</b> refers to the order in which the z slices are stacked
 together when they are read from the file. The enumerations are also in the
