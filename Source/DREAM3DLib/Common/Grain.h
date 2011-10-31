@@ -110,7 +110,7 @@ class DREAM3DLib_EXPORT Grain
     bool gotcontainedmerged;
     bool gottwinmerged;
     bool gotcolonymerged;
-    bool surfacegrain;
+    uint8_t surfacegrain;
     bool outsideboundbox;
     int twinnewnumber;
     int colonynewnumber;

@@ -297,14 +297,14 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
   // Draw the outer Circle
   QwtArray<double> circleX(900); // 900 because our plots are hard set to 450 pixels
   QwtArray<double> circleY(900);
-  float inc = 2.0/449.0;
+  float inc = 2.0f/449.0f;
 
   for(int i = 0; i < 450; ++i)
   {
-    circleX[i] = 1.0 - (i * inc);
-    circleX[450+i] = -1.0 + (i * inc);
+    circleX[i] = 1.0f - (i * inc);
+    circleX[450+i] = -1.0f + (i * inc);
 
-    circleY[i] = sqrt(1.0-(circleX[i]*circleX[i]));
+    circleY[i] = sqrt(1.0f-(circleX[i]*circleX[i]));
     circleY[450+i] = -circleY[i];
   }
   m_CircleGrid = new QwtPlotCurve;

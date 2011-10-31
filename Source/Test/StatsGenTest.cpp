@@ -110,19 +110,19 @@ int main(int argc, char **argv)
   err = sg.GenBetaPlotData(alpha, beta, x, y, size);
 
 
-  float avg = 1.0;
-  float stdDev = 0.5;
+  float avg = 1.0f;
+  float stdDev = 0.5f;
   err = sg.GenLogNormalPlotData(avg, stdDev, x, y, size);
 
-  float k = 1.4;
+  float k = 1.4f;
   err = sg.GenPowerLawPlotData(alpha, k, beta, x, y, size);
 
 
-  float mu = 1.0;
-  float sigma = 1.0;
-  float cutoff = 4.0;
-  float maxCutOff = 4.0;
-  float binstep = 0.75;
+  float mu = 1.0f;
+  float sigma = 1.0f;
+  float cutoff = 4.0f;
+  float maxCutOff = 4.0f;
+  float binstep = 0.75f;
   float max, min;
 
   err = sg.computeNumberOfBins(mu, sigma, cutoff, maxCutOff, binstep, max, min);

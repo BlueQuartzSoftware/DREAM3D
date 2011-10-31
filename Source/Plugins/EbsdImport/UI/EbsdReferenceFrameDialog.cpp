@@ -205,7 +205,7 @@ void EbsdReferenceFrameDialog::loadEbsdData()
       index = (h*width) + w;
       pixel = rgbArray->GetValue(index);
       pixel = qToBigEndian(pixel);
-      image.setPixel(w, h, pixel);
+      image.setPixel((int)w, (int)h, pixel);
     }
   }
   m_EbsdImage = image;

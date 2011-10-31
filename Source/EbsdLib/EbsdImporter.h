@@ -67,7 +67,7 @@ class EbsdLib_EXPORT EbsdImporter
     /**
      * @brief Sets an error condition
      */
-    EBSD_VIRTUAL_INSTANCE_PROPERTY(bool, ErrorCondition);
+    EBSD_VIRTUAL_INSTANCE_PROPERTY(int, ErrorCondition);
 
     /**
      * @brief Cancel the operation
