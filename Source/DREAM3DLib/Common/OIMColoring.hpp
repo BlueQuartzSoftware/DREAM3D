@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -44,8 +44,7 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 
-#define MXA_PI          3.141592653589793
-#define MXA_PI_OVER_4   0.785398163397448
+#define M_PI_OVER_4   0.785398163397448
 
 /**
 * @class OIMColoring OIMColoring.hpp Server/IPFFilter/OIMColoring.hpp
@@ -216,7 +215,7 @@ class OIMColoring
       hkl[1] = static_cast<unsigned char> (k * 100);
       hkl[2] = static_cast<unsigned char> (l * 100);
       T theta = (cd[0] * 0) + (cd[1] * -sqrt(2.0) / 2.0) + (cd[2] * sqrt(2.0) / 2.0);
-      theta = (180.0 / MXA_PI) * acos(theta);
+      theta = (180.0 / M_PI) * acos(theta);
       T red = (90.0 - theta) / 45.0;
       d[0] = (cd[1] * 1) - (cd[2] * 0);
       d[1] = (cd[2] * 0) - (cd[0] * 1);
@@ -229,7 +228,7 @@ class OIMColoring
       d[1] = d[1] / norm;
       d[2] = d[2] / norm;
       T phi_local = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
-      phi_local = (180.0 / MXA_PI) * acos(phi_local);
+      phi_local = (180.0 / M_PI) * acos(phi_local);
       T green = (1 - red) * ((35.26 - phi_local) / 35.26);
       T blue = (1 - red) - green;
       T max = red;
@@ -297,7 +296,7 @@ class OIMColoring
       float theta, phi_local;
       float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-	  OrientationMath::eulertoQuat(q1, phi1, phi, phi2);
+      OrientationMath::eulertoQuat(q1, phi1, phi, phi2);
       for (int j = 0; j < 12; j++)
       {
 //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
@@ -335,21 +334,21 @@ class OIMColoring
         d[0] = d[0] / norm;
         d[1] = d[1] / norm;
         d[2] = d[2] / norm;
-        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * MXA_PI / 180.0))
+        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * M_PI / 180.0))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
           if (theta > 1) theta = 1;
 
           if (theta < -1) theta = -1;
 
-          theta = (180.0 / MXA_PI) * acos(theta);
+          theta = (180.0 / M_PI) * acos(theta);
           _rgb[0] = (90.0 - theta) / 90.0;
           phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
           if (phi_local > 1) phi_local = 1;
 
           if (phi_local < -1) phi_local = -1;
 
-          phi_local = (180.0 / MXA_PI) * acos(phi_local);
+          phi_local = (180.0 / M_PI) * acos(phi_local);
           _rgb[1] = (1 - _rgb[0]) * ((30.0 - phi_local) / 30.0);
           _rgb[2] = (1 - _rgb[0]) - _rgb[1];
         }

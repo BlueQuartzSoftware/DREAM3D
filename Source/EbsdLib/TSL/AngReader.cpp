@@ -279,6 +279,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   if (yCells < 1)
   {
+    std::cout << "NumRows Sanity Check not correct. Check the entry for NROWS in the .ang file" << std::endl;
     return -200;
   }
   else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
@@ -295,6 +296,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   else // Grid was not set
   {
+    std::cout << "Ang file is missing the 'GRID' header entry." << std::endl;
     return -300;
   }
 
@@ -303,6 +305,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
       || NULL == m_Iq || NULL == m_SEMSignal || NULL == m_Ci
       || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
   {
+    std::cout << "Internal pointers were NULL at " __FILE__ << "(" << __LINE__ << ")" << std::endl;
     return -1;
   }
 
