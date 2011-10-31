@@ -86,6 +86,15 @@ namespace Ebsd
      UnknownRefFrameZDirection
   };
 
+  enum EbsdToSampleCoordinateMapping
+  {
+    UpperLeftOrigin = 0,
+    UpperRightOrigin = 1,
+    LowerRightOrigin = 2,
+    LowerLeftOrigin = 3,
+    UnknownCoordinateMapping
+  };
+
   namespace StackingOrder {
     const std::string LowToHigh("Low To High");
     const std::string HighToLow("High To Low");
