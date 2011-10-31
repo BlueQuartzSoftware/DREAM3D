@@ -287,7 +287,7 @@ void ReconstructionWidget::setupGui()
   m_WidgetList << m_H5VoxelFile << m_VtkOptionsBtn;
   m_WidgetList << m_HDF5GrainFile;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << phaseTypeList;
-
+  m_WidgetList << m_QualityMetricTableView << addQualityMetric << removeQualityMetric;
   m_QualityMetricTableModel = new QualityMetricTableModel;
 
 }

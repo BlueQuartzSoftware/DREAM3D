@@ -245,6 +245,9 @@ void GrainGeneratorWidget::setupGui()
   m_WidgetList << m_HDF5GrainFile << m_VisualizationVizFile << m_VtkOptionsBtn;
   m_WidgetList << m_PeriodicBoundaryConditions << m_OutputFilePrefix;
   m_WidgetList << m_H5VoxelFile << m_GrainDataFile;
+
+  m_StructureFile->setVisible(false);
+  m_StructureFileBtn->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------
