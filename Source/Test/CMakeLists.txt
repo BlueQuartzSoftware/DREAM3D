@@ -13,6 +13,9 @@ project(DREAM3DTest)
 
 configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
                ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
+configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
+               ${DREAM3DTest_BINARY_DIR}/TestFileLocations.h @ONLY IMMEDIATE)
+
 include_directories(${DREAM3DTest_BINARY_DIR})
 
 # --------------------------------------------------------------------------
