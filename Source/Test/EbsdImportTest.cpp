@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "EbsdTestFileLocation.h"
+
 
 #include <stdlib.h>
 
@@ -44,11 +44,14 @@
 #include "EbsdLib/Utilities/MXADir.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
-#include "UnitTestSupport.hpp"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
+#include "EbsdLib/HKL/H5CtfReader.h"
+
 
 #include "EbsdImport/EbsdImport.h"
 
-#define REMOVE_TEST_FILES 1
+#include "UnitTestSupport.hpp"
+#include "EbsdTestFileLocation.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -57,6 +60,7 @@ void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
   EbsdDir::remove(EbsdImportTest::H5EbsdOutputFile);
+  EbsdDir::remove(UnitTest::CtfReaderTest::H5EbsdOutputFile);
 #endif
 }
 
@@ -65,7 +69,7 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RunImporter(const std::string file, bool rotateSlice, bool reorderArray, bool alignEulers)
+void RunTslImporter(const std::string file, bool rotateSlice, bool reorderArray, bool alignEulers)
 {
   EbsdImport::Pointer m_EbsdImport = EbsdImport::New();
   m_EbsdImport->setOutputFile(file);
@@ -92,9 +96,9 @@ void RunImporter(const std::string file, bool rotateSlice, bool reorderArray, bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestImporter(bool rotateSlice, bool reorderArray, bool alignEulers)
+void TestTslImporter(bool rotateSlice, bool reorderArray, bool alignEulers)
 {
-  RunImporter(EbsdImportTest::H5EbsdOutputFile, rotateSlice, reorderArray, alignEulers);
+  RunTslImporter(EbsdImportTest::H5EbsdOutputFile, rotateSlice, reorderArray, alignEulers);
   H5EbsdVolumeReader::Pointer reader = H5AngVolumeReader::New();
   reader->setFileName(EbsdImportTest::H5EbsdOutputFile);
   DREAM3D_REQUIRE(reader->getRotateSlice() == rotateSlice)
@@ -106,16 +110,109 @@ void TestImporter(bool rotateSlice, bool reorderArray, bool alignEulers)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestAll()
+void TSLImport()
 {
-  TestImporter(false, true, false);
-  TestImporter(true, false, false);
-  TestImporter(true, true, false);
-  TestImporter(false, false, false);
-  TestImporter(false, true, true);
-  TestImporter(true, false, true);
-  TestImporter(true, true, true);
-  TestImporter(false, false, true);
+  TestTslImporter(false, true, false);
+  TestTslImporter(true, false, false);
+  TestTslImporter(true, true, false);
+  TestTslImporter(false, false, false);
+  TestTslImporter(false, true, true);
+  TestTslImporter(true, false, true);
+  TestTslImporter(true, true, true);
+  TestTslImporter(false, false, true);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RunHklImporter(const std::string outfile, bool rotateSlice, bool reorderArray, bool alignEulers)
+{
+  EbsdImport::Pointer m_EbsdImport = EbsdImport::New();
+  m_EbsdImport->setOutputFile(outfile);
+  m_EbsdImport->setZStartIndex(1);
+  m_EbsdImport->setZEndIndex(2);
+  m_EbsdImport->setZResolution(0.25f);
+
+  m_EbsdImport->setRefFrameZDir( Ebsd::LowtoHigh );
+  m_EbsdImport->setRotateSlice(rotateSlice);
+  m_EbsdImport->setReorderArray(reorderArray);
+  m_EbsdImport->setAlignEulers(alignEulers);
+
+  // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
+  std::vector<std::string> fileList;
+  fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::USInputFile1);
+  fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::USInputFile2);
+
+  m_EbsdImport->setEbsdFileList(fileList);
+  m_EbsdImport->execute();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RunHklEuropeanImporter(const std::string outfile, bool rotateSlice, bool reorderArray, bool alignEulers)
+{
+  EbsdImport::Pointer m_EbsdImport = EbsdImport::New();
+  m_EbsdImport->setOutputFile(outfile);
+  m_EbsdImport->setZStartIndex(1);
+  m_EbsdImport->setZEndIndex(2);
+  m_EbsdImport->setZResolution(0.25f);
+
+  m_EbsdImport->setRefFrameZDir( Ebsd::LowtoHigh );
+  m_EbsdImport->setRotateSlice(rotateSlice);
+  m_EbsdImport->setReorderArray(reorderArray);
+  m_EbsdImport->setAlignEulers(alignEulers);
+
+  // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
+  std::vector<std::string> fileList;
+  fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::EuropeanInputFile1);
+  fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::EuropeanInputFile2);
+
+  m_EbsdImport->setEbsdFileList(fileList);
+  m_EbsdImport->execute();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestHklImporter(bool rotateSlice, bool reorderArray, bool alignEulers)
+{
+  int err = 0;
+  RunTslImporter(UnitTest::CtfReaderTest::H5EbsdOutputFile, rotateSlice, reorderArray, alignEulers);
+  H5EbsdVolumeReader::Pointer reader = H5CtfVolumeReader::New();
+  reader->setFileName(UnitTest::CtfReaderTest::H5EbsdOutputFile);
+  DREAM3D_REQUIRE(reader->getRotateSlice() == rotateSlice)
+  DREAM3D_REQUIRE(reader->getReorderArray() == reorderArray)
+  DREAM3D_REQUIRE(reader->getAlignEulers() == alignEulers)
+  RemoveTestFiles();
+
+  RunHklEuropeanImporter(UnitTest::CtfReaderTest::H5EbsdOutputFile, rotateSlice, reorderArray, alignEulers);
+  reader = H5CtfVolumeReader::New();
+  reader->setFileName(UnitTest::CtfReaderTest::H5EbsdOutputFile);
+  DREAM3D_REQUIRE(reader->getRotateSlice() == rotateSlice)
+  DREAM3D_REQUIRE(reader->getReorderArray() == reorderArray)
+  DREAM3D_REQUIRE(reader->getAlignEulers() == alignEulers)
+
+  H5CtfReader::Pointer sliceReader = H5CtfReader::New();
+  sliceReader->setFileName(UnitTest::CtfReaderTest::H5EbsdOutputFile);
+  sliceReader->setHDF5Path("/1");
+  err = sliceReader->readHeaderOnly();
+  DREAM3D_REQUIRE(err >= 0);
+  float xstep = sliceReader->getXStep();
+  DREAM3D_REQUIRE(xstep == 0.5f);
+  float ystep = sliceReader->getYStep();
+  DREAM3D_REQUIRE(ystep == 0.5f);
+
+  RemoveTestFiles();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HklImport()
+{
+  TestHklImporter(false, true, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -124,7 +221,8 @@ void TestAll()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( TestAll() );
+  DREAM3D_REGISTER_TEST( TSLImport() );
+  DREAM3D_REGISTER_TEST( HklImport() );
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 
   PRINT_TEST_SUMMARY();

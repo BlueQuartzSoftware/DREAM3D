@@ -100,7 +100,14 @@ class EbsdLib_EXPORT CtfPhase
     template<typename T>
     bool stringToNum(T &t, const std::string &s)
     {
-      std::istringstream iss(s);
+      // Filter the line to convert European comma style decimals to US/UK style points
+      std::vector<char> cLine(s.size()+1);
+      ::memcpy( &(cLine.front()), s.c_str(), s.size() + 1);
+      for (size_t c = 0; c < cLine.size(); ++c)
+      {
+        if (cLine[c] == ',') { cLine[c] = '.';}
+      }
+      std::istringstream iss(std::string( &(cLine.front()) ) );
       return !(iss >> t).fail();
     }
 
