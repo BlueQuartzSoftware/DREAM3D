@@ -359,7 +359,12 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLabel" name="m_AlignEulers">
+         <widget class="QLabel" name="m_AlignEulersLabel">
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
           <property name="text">
            <string>false</string>
           </property>

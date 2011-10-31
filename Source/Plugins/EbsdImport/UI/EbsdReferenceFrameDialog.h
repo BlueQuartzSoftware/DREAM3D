@@ -66,6 +66,7 @@ class EbsdReferenceFrameDialog : public QDialog, private Ui::EbsdReferenceFrameD
     void updateGraphicsView();
     void updateDisplay();
 
+
     Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
     bool alignEulers();
 

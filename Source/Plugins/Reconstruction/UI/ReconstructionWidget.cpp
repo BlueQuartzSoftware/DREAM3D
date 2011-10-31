@@ -91,6 +91,7 @@ m_WriteIPFColorScalars(true),
 m_WriteBinaryVTKFile(true),
 rotateslice(false),
 reorderarray(false),
+aligneulers(false),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -134,14 +135,11 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, m_, MergeColonies, false);
   READ_CHECKBOX_SETTING(prefs, m_, MergeTwins, false);
   READ_COMBO_BOX(prefs, m_, AlignMeth)
-//  READ_COMBO_BOX(prefs, m_, RefFrameOrigin)
-//  READ_COMBO_BOX(prefs, m_, RefFrameZDir)
 
   READ_SETTING(prefs, m_, MisOrientationTolerance, ok, d, 5.0 , Double);
   READ_SETTING(prefs, m_, MinAllowedGrainSize, ok, i, 8 , Int);
 
   READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
-//  READ_BOOL_SETTING(prefs, m_, WriteImageQualityScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
@@ -206,16 +204,12 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
   WRITE_SETTING(prefs, m_, ZStartIndex)
   WRITE_SETTING(prefs, m_, ZEndIndex)
 
-
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeTwins)
   WRITE_CHECKBOX_SETTING(prefs, m_, MergeColonies)
 
   WRITE_SETTING(prefs, m_, MinAllowedGrainSize)
   WRITE_SETTING(prefs, m_, MisOrientationTolerance)
   WRITE_COMBO_BOX(prefs, m_, AlignMeth)
-//  WRITE_COMBO_BOX(prefs, m_, RefFrameOrigin)
-//  WRITE_COMBO_BOX(prefs, m_, RefFrameZDir)
-
 
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
@@ -473,12 +467,16 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 
 	rotateslice = h5Reader->getRotateSlice();
 	reorderarray = h5Reader->getReorderArray();
+	aligneulers = h5Reader->getAlignEulers();
 
 	if(rotateslice == true) m_RotateSliceLabel->setText("true");
 	else if(rotateslice == false) m_RotateSliceLabel->setText("false");
 
 	if(reorderarray == true) m_ReorderArrayLabel->setText("true");
 	else if(reorderarray == false) m_ReorderArrayLabel->setText("false");
+
+	if(aligneulers == true) m_AlignEulersLabel->setText("true");
+	else if(aligneulers == false) m_AlignEulersLabel->setText("false");
 
 	// Get the list of Possible filter Fields based on the Manufacturer
     if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
