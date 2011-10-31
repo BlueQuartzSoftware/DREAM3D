@@ -548,7 +548,7 @@ void EbsdImportWidget::on_m_RefFrameOptionsBtn_clicked()
     if (mapping == Ebsd::UpperRightOrigin){ m_RotateSlice = true; m_ReorderArray = false; }
     if (mapping == Ebsd::LowerRightOrigin){ m_RotateSlice = true; m_ReorderArray = true; }
     if (mapping == Ebsd::LowerLeftOrigin){ m_RotateSlice = false; m_ReorderArray = false; }
-
+    m_AlignEulers = d.alignEulers();
   }
 
 #if 0

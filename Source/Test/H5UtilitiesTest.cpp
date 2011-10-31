@@ -9,7 +9,36 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <stdio.h>
+#ifdef _MSC_VER
+#include <cstdlib>
+
+
+/*
+"It's a known, long-standing bug in the compiler system's headers.  For
+some reason the manufacturer, in its infinite wisdom, chose to #define
+macros min() and max() in violation of the upper-case convention and so
+break any legitimate functions with those names, including those in the
+standard C++ library."
+*/
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#define WINDOWS_LARGE_FILE_SUPPORT
+#if _MSC_VER < 1400
+#define snprintf _snprintf
+#else
+#define snprintf sprintf_s
+#endif
+
+#endif
+
+
+//-- C++ includes
 #include <iostream>
+#include <list>
 #include <string>
 
 //--MXA Includes
@@ -22,13 +51,7 @@
 #include "H5Support/H5Utilities.h"
 
 
-
-//-- Boost Test Headers
 #include "UnitTestSupport.hpp"
-
-//-- C++ includes
-#include <list>
-#include <string>
 
 
 
