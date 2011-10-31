@@ -1,0 +1,14 @@
+#ifndef _EbsdTestFileLocation_h_
+#define _EbsdTestFileLocation_h_
+#include <string>
+
+namespace EbsdImportTest {
+  const std::string FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
+  const std::string TestFile1("Test_1.ang");
+  const std::string TestFile2("Test_2.ang");
+  const std::string TestFile3("Test_3.ang");
+  const std::string H5EbsdOutputFile("@DREAM3DTest_BINARY_DIR@/Test.h5ebsd");
+}
+
+
+#endif
