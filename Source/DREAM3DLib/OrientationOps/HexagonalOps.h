@@ -43,9 +43,9 @@
 namespace HexagonalMath {
   namespace Detail {
 
-    static const float HexDim1InitValue = powf((0.75f*((M_PI/2.0f)-sinf((M_PI/2.0f)))),(1.0f/3.0f));
-    static const float HexDim2InitValue = powf((0.75f*((M_PI/2.0f)-sinf((M_PI/2.0f)))),(1.0f/3.0f));
-    static const float HexDim3InitValue = powf((0.75f*((M_PI/6.0f)-sinf((M_PI/6.0f)))),(1.0f/3.0f));
+    static const float HexDim1InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
+    static const float HexDim2InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
+    static const float HexDim3InitValue = powf((0.75f*((float(M_PI)/6.0f)-sinf((float(M_PI)/6.0f)))),(1.0f/3.0f));
     static const float HexDim1StepValue = HexDim1InitValue/18.0f;
     static const float HexDim2StepValue = HexDim1InitValue/18.0f;
     static const float HexDim3StepValue = HexDim1InitValue/6.0f;
