@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>768</width>
-    <height>662</height>
+    <width>859</width>
+    <height>653</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -435,7 +435,7 @@
         <number>3</number>
        </property>
        <item>
-        <layout class="QGridLayout" name="gridLayout_6" rowstretch="1,1,1,1,1">
+        <layout class="QGridLayout" name="gridLayout_6" rowstretch="1,1,1,1">
          <property name="rightMargin">
           <number>10</number>
          </property>
@@ -502,14 +502,14 @@
            </item>
           </widget>
          </item>
-         <item row="3" column="0">
+         <item row="0" column="3">
           <widget class="QLabel" name="label_8">
            <property name="text">
             <string>Min. Grain Size</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="0" column="4">
           <widget class="QSpinBox" name="m_MinAllowedGrainSize">
            <property name="suffix">
             <string> Voxels</string>
@@ -525,14 +525,14 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
+         <item row="1" column="3">
           <widget class="QLabel" name="label_10">
            <property name="text">
             <string>Disorient. Tol.</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
+         <item row="1" column="4">
           <widget class="QDoubleSpinBox" name="m_MisOrientationTolerance">
            <property name="minimumSize">
             <size>
@@ -557,20 +557,21 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2" rowspan="5">
-          <widget class="Line" name="line_2">
-           <property name="minimumSize">
-            <size>
-             <width>10</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
+         <item row="2" column="3">
+          <widget class="QCheckBox" name="m_MergeTwins">
+           <property name="text">
+            <string>Merge Twins</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="4" rowspan="5">
+         <item row="3" column="3">
+          <widget class="QCheckBox" name="m_MergeColonies">
+           <property name="text">
+            <string>Merge Colonies</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5" rowspan="4">
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -583,17 +584,16 @@
            </property>
           </spacer>
          </item>
-         <item row="3" column="3">
-          <widget class="QCheckBox" name="m_MergeTwins">
-           <property name="text">
-            <string>Merge Twins</string>
+         <item row="0" column="2" rowspan="4">
+          <widget class="Line" name="line_2">
+           <property name="minimumSize">
+            <size>
+             <width>10</width>
+             <height>0</height>
+            </size>
            </property>
-          </widget>
-         </item>
-         <item row="4" column="3">
-          <widget class="QCheckBox" name="m_MergeColonies">
-           <property name="text">
-            <string>Merge Colonies</string>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
@@ -684,12 +684,6 @@
            </attribute>
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
-           </attribute>
-           <attribute name="verticalHeaderVisible">
-            <bool>false</bool>
-           </attribute>
-           <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>120</number>
            </attribute>
           </widget>
          </item>
