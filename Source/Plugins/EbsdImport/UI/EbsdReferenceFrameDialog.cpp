@@ -37,10 +37,14 @@
 #include "EbsdReferenceFrameDialog.h"
 
 #include <iostream>
+
+
+#include <QtCore/QPropertyAnimation>
 #include <QtCore/QtEndian>
+#include <QtCore/QStateMachine>
+
 #include <QtGui/QPixmap>
 #include <QtGui/QGraphicsPixmapItem>
-#include <QtCore/QPropertyAnimation>
 
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/OIMColoring.hpp"
@@ -105,6 +109,28 @@ void EbsdReferenceFrameDialog::setEbsdFileName(QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+Ebsd::EbsdToSampleCoordinateMapping EbsdReferenceFrameDialog::getSelectedOrigin()
+{
+  if (m_UpperLeftBtn->isChecked()) { return Ebsd::UpperLeftOrigin; }
+  if (m_UpperRightBtn->isChecked()) { return Ebsd::UpperRightOrigin; }
+  if (m_LowerRightBtn->isChecked()) { return Ebsd::LowerRightOrigin; }
+  if (m_LowerLeftBtn->isChecked()) { return Ebsd::LowerLeftOrigin; }
+  return Ebsd::UnknownCoordinateMapping;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool EbsdReferenceFrameDialog::alignEulers()
+{
+  return m_AlignEulers->isChecked();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EbsdReferenceFrameDialog::loadEbsdData()
 {
   boost::shared_ptr<EbsdReader> ebsdReader(static_cast<EbsdReader*>(NULL));
@@ -159,12 +185,13 @@ void EbsdReferenceFrameDialog::loadEbsdData()
     OIMColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
                                   argb, hkl);
-    uint32_t c = rgbArray->GetValue(i);
-    QColor color(argb[0], argb[1], argb[2]);
-    QRgb qrgb = color.rgba();
-    uint32_t ucolor = static_cast<uint32_t>(qrgb);
-    uint32_t t = rgbArray->GetValue(i);
-    qrgb = ucolor ;
+//    uint32_t c = rgbArray->GetValue(i);
+//    QColor color(argb[0], argb[1], argb[2]);
+//    QRgb qrgb = color.rgba();
+//    uint32_t ucolor = static_cast<uint32_t>(qrgb);
+//    uint32_t t = rgbArray->GetValue(i);
+//    qrgb = ucolor ;
+
   }
 
   QImage image(width, height, QImage::Format_ARGB32);
@@ -287,30 +314,7 @@ void EbsdReferenceFrameDialog::updateGraphicsView()
 // -----------------------------------------------------------------------------
 void EbsdReferenceFrameDialog::updateDisplay()
 {
-
-
-#if 0
- //  std::cout << "EMMPMGraphicsView::updateDisplay()" << std::endl;
-   QPainter painter;
-   QSize pSize(0, 0);
-   if (m_EbsdImage.isNull() == false)
-   {
-    pSize = m_EbsdImage.size();
-   }
-   QImage paintImage(pSize, QImage::Format_ARGB32_Premultiplied);
-   QPoint point(0, 0);
-   painter.begin(&paintImage);
-   painter.setPen(Qt::NoPen);
-   painter.drawImage(point, m_EbsdImage);
-
-   painter.end();
-
-
-   QGraphicsPixmapItem *pixItem = qgraphicsitem_cast<QGraphicsPixmapItem*> (m_PixmapGraphicsItem);
-   pixItem->setPixmap(QPixmap::fromImage(paintImage));
-#endif
    this->update();
-
 }
 
 

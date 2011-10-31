@@ -59,6 +59,10 @@ add_executable(VoxelTest ${DREAM3DTest_SOURCE_DIR}/VoxelTest.cpp)
 #target_link_libraries(VoxelTest DREAM3DLib)
 
 # --------
+add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp)
+target_link_libraries(EbsdImportTest DREAM3DLib)
+
+# --------
 add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
                                 ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
 

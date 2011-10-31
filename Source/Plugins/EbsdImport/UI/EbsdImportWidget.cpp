@@ -543,9 +543,13 @@ void EbsdImportWidget::on_m_RefFrameOptionsBtn_clicked()
   int ret = d.exec();
   if (ret == QDialog::Accepted)
   {
-//    m_RotateSlice = d.getValue("Rotate Slice");
-//    m_ReorderArray = d.getValue("Reorder Array");
-//    m_AlignEulers = d.getValue("Align Eulers");
+
+    Ebsd::EbsdToSampleCoordinateMapping mapping = d.getSelectedOrigin();
+    if (mapping == Ebsd::UpperLeftOrigin){ m_RotateSlice = false; m_ReorderArray = true; }
+    if (mapping == Ebsd::UpperRightOrigin){ m_RotateSlice = true; m_ReorderArray = false; }
+    if (mapping == Ebsd::LowerRightOrigin){ m_RotateSlice = true; m_ReorderArray = true; }
+    if (mapping == Ebsd::LowerLeftOrigin){ m_RotateSlice = false; m_ReorderArray = false; }
+
   }
 
 #if 0
