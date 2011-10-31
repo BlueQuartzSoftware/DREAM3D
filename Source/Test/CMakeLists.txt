@@ -11,6 +11,10 @@
 
 project(DREAM3DTest)
 
+configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
+               ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
+include_directories(${DREAM3DTest_BINARY_DIR})
+
 # --------------------------------------------------------------------------
 macro(MXA_ADD_TEST testname Exename)
     if (NOT APPLE)
@@ -59,8 +63,10 @@ add_executable(VoxelTest ${DREAM3DTest_SOURCE_DIR}/VoxelTest.cpp)
 #target_link_libraries(VoxelTest DREAM3DLib)
 
 # --------
-add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp)
-target_link_libraries(EbsdImportTest DREAM3DLib)
+add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp
+                              ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
+target_link_libraries(EbsdImportTest DREAM3DLib MXA EbsdLib H5Support)
+add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
 
 # --------
 add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
