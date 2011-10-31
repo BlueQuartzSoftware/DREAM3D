@@ -38,13 +38,13 @@
 
 #include <iostream>
 
+
 #include <QtCore/QPropertyAnimation>
 #include <QtCore/QtEndian>
 #include <QtCore/QStateMachine>
 
 #include <QtGui/QPixmap>
 #include <QtGui/QGraphicsPixmapItem>
-
 
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/OIMColoring.hpp"
@@ -109,6 +109,7 @@ void EbsdReferenceFrameDialog::setEbsdFileName(QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
 Ebsd::EbsdToSampleCoordinateMapping EbsdReferenceFrameDialog::getSelectedOrigin()
 {
   if (m_UpperLeftBtn->isChecked()) { return Ebsd::UpperLeftOrigin; }
@@ -190,6 +191,7 @@ void EbsdReferenceFrameDialog::loadEbsdData()
 //    uint32_t ucolor = static_cast<uint32_t>(qrgb);
 //    uint32_t t = rgbArray->GetValue(i);
 //    qrgb = ucolor ;
+
   }
 
   QImage image(width, height, QImage::Format_ARGB32);
@@ -207,9 +209,6 @@ void EbsdReferenceFrameDialog::loadEbsdData()
     }
   }
   m_EbsdImage = image;
-
-
-
 }
 
 // -----------------------------------------------------------------------------

@@ -178,7 +178,7 @@ class ReconstructionFunc : public Observable
 
 
 	  void initializeQuats();
-    void find_border();
+    void threshold_points();
     void form_grains();
     void form_grains_sections();
     void remove_smallgrains();

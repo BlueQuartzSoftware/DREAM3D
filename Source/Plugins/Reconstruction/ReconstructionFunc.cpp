@@ -244,7 +244,7 @@ void ReconstructionFunc::initializeQuats()
     quats[i*5 + 4] = qr[4];
   }
 }
-void ReconstructionFunc::find_border()
+void ReconstructionFunc::threshold_points()
 {
   int neighpoints[6];
   neighpoints[0] = -(xpoints * ypoints);
@@ -272,7 +272,7 @@ void ReconstructionFunc::find_border()
   {
     alreadychecked[iter] = false;
     if(goodVoxels[iter] == 0) grain_indicies[iter] = 0;
-    if(goodVoxels[iter] == 1)
+    if(goodVoxels[iter] == 1 && phases[iter] > 0)
     {
       grain_indicies[iter] = -1;
       voxelslist[count] = iter;
@@ -303,7 +303,7 @@ void ReconstructionFunc::find_border()
 	  if (i == 4 && row == (ypoints - 1)) good = 0;
 	  if (i == 2 && col == 0) good = 0;
 	  if (i == 3 && col == (xpoints - 1)) good = 0;
-	  if (good == 1 && grain_indicies[neighbor] == 0)
+	  if (good == 1 && grain_indicies[neighbor] == 0 && phases[neighbor] > 0)
 	  {
 		w = 10000.0;
 		q2[0] = 0;
@@ -338,8 +338,6 @@ void ReconstructionFunc::align_sections()
   float *mutualinfo1;
   float *mutualinfo2;
   int graincount1, graincount2;
-//  int xshift = 0;
-//  int yshift = 0;
   int newxshift = 0;
   int newyshift = 0;
   int oldxshift = 0;
@@ -446,17 +444,20 @@ void ReconstructionFunc::align_sections()
 						if (goodVoxels[refposition] == true && goodVoxels[curposition] == true)
 						{
 						  w = 10000.0;
-						  q1[1] = quats[refposition*5 + 1];
-						  q1[2] = quats[refposition*5 + 2];
-						  q1[3] = quats[refposition*5 + 3];
-						  q1[4] = quats[refposition*5 + 4];
-						  phase1 = crystruct[phases[refposition]];
-						  q2[1] = quats[curposition*5 + 1];
-						  q2[2] = quats[curposition*5 + 2];
-						  q2[3] = quats[curposition*5 + 3];
-						  q2[4] = quats[curposition*5 + 4];
-						  phase2 = crystruct[phases[curposition]];
-						  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+						  if(phases[refposition] > 0 && phases[curposition] > 0)
+						  {
+							  q1[1] = quats[refposition*5 + 1];
+							  q1[2] = quats[refposition*5 + 2];
+							  q1[3] = quats[refposition*5 + 3];
+							  q1[4] = quats[refposition*5 + 4];
+							  phase1 = crystruct[phases[refposition]];
+							  q2[1] = quats[curposition*5 + 1];
+							  q2[2] = quats[curposition*5 + 2];
+							  q2[3] = quats[curposition*5 + 3];
+							  q2[4] = quats[curposition*5 + 4];
+							  phase2 = crystruct[phases[curposition]];
+							  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+						  }
 						  if (w > misorientationtolerance) disorientation++;
 						}
 						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
@@ -585,7 +586,12 @@ void ReconstructionFunc::align_sections()
   {
     delete [] shifts[a];
   }
+  for (int a = 0; a < xpoints; a++)
+  {
+    delete [] misorients[a];
+  }
   delete [] shifts;
+  delete [] misorients;
 }
 void ReconstructionFunc::form_grains_sections()
 {
@@ -644,24 +650,15 @@ void ReconstructionFunc::form_grains_sections()
           if (x > xpoints - 1) x = x - xpoints;
           if (y > ypoints - 1) y = y - ypoints;
           point = (z * xpoints * ypoints) + (y * xpoints) + x;
-          if (goodVoxels[point] == true && grain_indicies[point] == -1)
+          if (goodVoxels[point] == true && grain_indicies[point] == -1 && phases[point] > 0)
           {
             seed = point;
           }
-          if (seed > -1)
-          {
-            break;
-          }
+          if (seed > -1) break;
         }
-        if (seed > -1)
-        {
-          break;
-        }
+        if (seed > -1) break;
       }
-      if (seed == -1)
-      {
-        noseeds = 1;
-      }
+      if (seed == -1) noseeds = 1;
       if (seed >= 0)
       {
         size = 0;
@@ -692,7 +689,7 @@ void ReconstructionFunc::form_grains_sections()
             if ((i == 5 || i == 6 || i == 7) && row == (ypoints - 1)) good = 0;
             if ((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
             if ((i == 2 || i == 4 || i == 7) && col == (xpoints - 1)) good = 0;
-            if (good == 1 && grain_indicies[neighbor] <= 0)
+            if (good == 1 && grain_indicies[neighbor] <= 0 && phases[neighbor] > 0)
             {
 			  w = 10000.0;
               q2[0] = 0;
@@ -769,7 +766,7 @@ void ReconstructionFunc::form_grains()
     while (seed == -1 && counter < totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalpoints;
-      if (grain_indicies[randpoint] == -1) seed = randpoint;
+      if (grain_indicies[randpoint] == -1 && phases[randpoint] > 0) seed = randpoint;
 
       randpoint++;
       counter++;
@@ -803,7 +800,7 @@ void ReconstructionFunc::form_grains()
           if (i == 4 && row == (ypoints - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
           if (i == 3 && col == (xpoints - 1)) good = 0;
-          if (good == 1 && grain_indicies[neighbor] == -1)
+          if (good == 1 && grain_indicies[neighbor] == -1 && phases[neighbor] > 0)
           {
             w = 10000.0;
             q2[0] = 1;
@@ -887,7 +884,7 @@ void ReconstructionFunc::assign_badpoints()
   }
   for (int i = 0; i < totalpoints; i++)
   {
-		if(alreadychecked[i] == false && grain_indicies[i] <= 0)
+		if(alreadychecked[i] == false && grain_indicies[i] == 0)
 		{
 			currentvlist.push_back(i);
 			count = 0;
@@ -915,17 +912,22 @@ void ReconstructionFunc::assign_badpoints()
 				}
 				count++;
 			}
-			if(currentvlist.size() >= minallowedgrainsize*10)
+			if(currentvlist.size() >= minallowedgrainsize)
 			{
-				m_Grains.resize(numgrains+1);
-	            m_Grains[numgrains] = Grain::New();
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
-					grain_indicies[currentvlist[k]] = numgrains;
-					phases[currentvlist[k]] = -1;
+					grain_indicies[currentvlist[k]] = 0;
+					phases[currentvlist[k]] = 0;
 				}
-				m_Grains[numgrains]->phase = -1;
-				numgrains++;
+				m_Grains[0]->phase = 0;
+			}
+			if(currentvlist.size() < minallowedgrainsize)
+			{
+				for (size_t k = 0; k < currentvlist.size(); k++)
+				{
+					grain_indicies[currentvlist[k]] = -1;
+					phases[currentvlist[k]] = 0;
+				}
 			}
 			currentvlist.clear();
 		}
@@ -938,7 +940,7 @@ void ReconstructionFunc::assign_badpoints()
     for (int i = 0; i < totalpoints; i++)
     {
       int grainname = grain_indicies[i];
-      if (grainname <= 0)
+      if (grainname < 0)
       {
         count++;
         for (size_t c = 1; c < numgrains; c++)
@@ -961,7 +963,7 @@ void ReconstructionFunc::assign_badpoints()
           if (good == 1)
           {
             int grain = grain_indicies[neighpoint];
-			if (grain > 0)
+			if (grain >= 0)
             {
               neighs.push_back(grain);
             }
@@ -993,9 +995,10 @@ void ReconstructionFunc::assign_badpoints()
     {
       int grainname = grain_indicies[j];
       int neighbor = neighbors[j];
-      if (grainname <= 0 && neighbor > 0)
+      if (grainname < 0 && neighbor > 0)
       {
         grain_indicies[j] = neighbor;
+		phases[j] = m_Grains[neighbor]->phase;
       }
     }
 //    std::stringstream ss;
@@ -1029,7 +1032,7 @@ void ReconstructionFunc::reorder_grains()
 {
   size_t initialVoxelsListSize = 1000;
   size_t size = 0;
-  int neighpoints[26];
+  int neighpoints[6];
   int good = 0;
   int neighbor = 0;
   int col, row, plane;
@@ -1041,32 +1044,12 @@ void ReconstructionFunc::reorder_grains()
   size_t currentgrain = 1;
   Ebsd::CrystalStructure phase;
 
-  neighpoints[0] = -(xpoints * ypoints) - xpoints - 1;
-  neighpoints[1] = -(xpoints * ypoints) - xpoints;
-  neighpoints[2] = -(xpoints * ypoints) - xpoints + 1;
-  neighpoints[3] = -(xpoints * ypoints) - 1;
-  neighpoints[4] = -(xpoints * ypoints);
-  neighpoints[5] = -(xpoints * ypoints) + 1;
-  neighpoints[6] = -(xpoints * ypoints) + xpoints - 1;
-  neighpoints[7] = -(xpoints * ypoints) + xpoints;
-  neighpoints[8] = -(xpoints * ypoints) + xpoints + 1;
-  neighpoints[9] = -xpoints - 1;
-  neighpoints[10] = -xpoints;
-  neighpoints[11] = -xpoints + 1;
-  neighpoints[12] = -1;
-  neighpoints[13] = 1;
-  neighpoints[14] = xpoints - 1;
-  neighpoints[15] = xpoints;
-  neighpoints[16] = xpoints + 1;
-  neighpoints[17] = (xpoints * ypoints) - xpoints - 1;
-  neighpoints[18] = (xpoints * ypoints) - xpoints;
-  neighpoints[19] = (xpoints * ypoints) - xpoints + 1;
-  neighpoints[20] = (xpoints * ypoints) - 1;
-  neighpoints[21] = (xpoints * ypoints);
-  neighpoints[22] = (xpoints * ypoints) + 1;
-  neighpoints[23] = (xpoints * ypoints) + xpoints - 1;
-  neighpoints[24] = (xpoints * ypoints) + xpoints;
-  neighpoints[25] = (xpoints * ypoints) + xpoints + 1;
+  neighpoints[0] = -xpoints * ypoints;
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = xpoints * ypoints;
   size_t numgrains = m_Grains.size();
 
   size_t maxGrain = 0;
@@ -1124,16 +1107,16 @@ void ReconstructionFunc::reorder_grains()
             quats[currentpoint*5 + k] = q2[k];
             m_Grains[currentgrain]->avg_quat[k] = m_Grains[currentgrain]->avg_quat[k] + quats[currentpoint*5 + k];
         }
-        for (int k = 0; k < 26; k++)
+        for (int k = 0; k < 6; k++)
         {
           good = 1;
           neighbor = currentpoint + neighpoints[k];
-          if (k < 9 && plane == 0) good = 0;
-          if (k > 16 && plane == (zpoints - 1)) good = 0;
-          if ((k == 0 || k == 1 || k == 2 || k == 9 || k == 10 || k == 11 || k == 17 || k == 18 || k == 19) && row == 0) good = 0;
-          if ((k == 6 || k == 7 || k == 8 || k == 14 || k == 15 || k == 16 || k == 23 || k == 24 || k == 25) && row == (ypoints - 1)) good = 0;
-          if ((k == 0 || k == 3 || k == 6 || k == 9 || k == 12 || k == 14 || k == 17 || k == 20 || k == 23) && col == 0) good = 0;
-          if ((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints - 1)) good = 0;
+          if (k == 0 && plane == 0) good = 0;
+          if (k == 5 && plane == (zpoints - 1)) good = 0;
+          if (k == 1 && row == 0) good = 0;
+          if (k == 4 && row == (ypoints - 1)) good = 0;
+          if (k == 2 && col == 0) good = 0;
+          if (k == 3 && col == (xpoints - 1)) good = 0;
           if (good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = grain_indicies[neighbor];
@@ -1190,38 +1173,18 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
   std::vector<int > voxelslist;
   voxelslist.resize(initialVoxelsListSize,-1);
   size_t size = 0;
-  int neighpoints[26];
+  int neighpoints[6];
   int good = 0;
   int neighbor = 0;
   int col, row, plane;
   int gnum;
   int currentgrain = 1;
-  neighpoints[0] = -(xpoints * ypoints) - xpoints - 1;
-  neighpoints[1] = -(xpoints * ypoints) - xpoints;
-  neighpoints[2] = -(xpoints * ypoints) - xpoints + 1;
-  neighpoints[3] = -(xpoints * ypoints) - 1;
-  neighpoints[4] = -(xpoints * ypoints);
-  neighpoints[5] = -(xpoints * ypoints) + 1;
-  neighpoints[6] = -(xpoints * ypoints) + xpoints - 1;
-  neighpoints[7] = -(xpoints * ypoints) + xpoints;
-  neighpoints[8] = -(xpoints * ypoints) + xpoints + 1;
-  neighpoints[9] = -xpoints - 1;
-  neighpoints[10] = -xpoints;
-  neighpoints[11] = -xpoints + 1;
-  neighpoints[12] = -1;
-  neighpoints[13] = 1;
-  neighpoints[14] = xpoints - 1;
-  neighpoints[15] = xpoints;
-  neighpoints[16] = xpoints + 1;
-  neighpoints[17] = (xpoints * ypoints) - xpoints - 1;
-  neighpoints[18] = (xpoints * ypoints) - xpoints;
-  neighpoints[19] = (xpoints * ypoints) - xpoints + 1;
-  neighpoints[20] = (xpoints * ypoints) - 1;
-  neighpoints[21] = (xpoints * ypoints);
-  neighpoints[22] = (xpoints * ypoints) + 1;
-  neighpoints[23] = (xpoints * ypoints) + xpoints - 1;
-  neighpoints[24] = (xpoints * ypoints) + xpoints;
-  neighpoints[25] = (xpoints * ypoints) + xpoints + 1;
+  neighpoints[0] = -xpoints * ypoints;
+  neighpoints[1] = -xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xpoints;
+  neighpoints[5] = xpoints * ypoints;
   for (int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
     alreadychecked[i] = false;
@@ -1242,16 +1205,16 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
         col = currentpoint % xpoints;
         row = (currentpoint / xpoints) % ypoints;
         plane = currentpoint / (xpoints * ypoints);
-        for (size_t k = 0; k < 26; k++)
+        for (size_t k = 0; k < 6; k++)
         {
           good = 1;
           neighbor = currentpoint + neighpoints[k];
-          if (k < 9 && plane == 0) good = 0;
-          if (k > 16 && plane == (zpoints - 1)) good = 0;
-          if ((k == 0 || k == 1 || k == 2 || k == 9 || k == 10 || k == 11 || k == 17 || k == 18 || k == 19) && row == 0) good = 0;
-          if ((k == 6 || k == 7 || k == 8 || k == 14 || k == 15 || k == 16 || k == 23 || k == 24 || k == 25) && row == (ypoints - 1)) good = 0;
-          if ((k == 0 || k == 3 || k == 6 || k == 9 || k == 12 || k == 14 || k == 17 || k == 20 || k == 23) && col == 0) good = 0;
-          if ((k == 2 || k == 5 || k == 8 || k == 11 || k == 13 || k == 16 || k == 19 || k == 22 || k == 25) && col == (xpoints - 1)) good = 0;
+          if (k == 0 && plane == 0) good = 0;
+          if (k == 5 && plane == (zpoints - 1)) good = 0;
+          if (k == 1 && row == 0) good = 0;
+          if (k == 4 && row == (ypoints - 1)) good = 0;
+          if (k == 2 && col == 0) good = 0;
+          if (k == 3 && col == (xpoints - 1)) good = 0;
           if (good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = static_cast<size_t>(grain_indicies[neighbor]);
@@ -1302,7 +1265,7 @@ void ReconstructionFunc::merge_twins()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_Grains[i]->twinnewnumber == -1)
+	if (m_Grains[i]->twinnewnumber == -1 && m_Grains[i]->phase > 0)
     {
       twinlist.push_back(i);
       for (size_t m = 0; m < twinlist.size(); m++)
@@ -1315,7 +1278,7 @@ void ReconstructionFunc::merge_twins()
           angcur = 180;
           int twin = 0;
           size_t neigh = nlist->at(l);
-          if (neigh != i && m_Grains[neigh]->twinnewnumber == -1)
+          if (neigh != i && m_Grains[neigh]->twinnewnumber == -1 && m_Grains[neigh]->phase > 0)
           {
             w = 10000.0;
             q1[1] = m_Grains[firstgrain]->avg_quat[1]/m_Grains[firstgrain]->avg_quat[0];
@@ -1328,7 +1291,7 @@ void ReconstructionFunc::merge_twins()
             q2[3] = m_Grains[neigh]->avg_quat[3]/m_Grains[neigh]->avg_quat[0];
             q2[4] = m_Grains[neigh]->avg_quat[4]/m_Grains[neigh]->avg_quat[0];
             phase2 = crystruct[m_Grains[neigh]->phase];
-            if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+            if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float axisdiff111 = acosf(fabs(n1)*0.57735+fabs(n2)*0.57735+fabs(n3)*0.57735);
 			float angdiff60 = fabs(w-60);
@@ -1370,7 +1333,7 @@ void ReconstructionFunc::merge_colonies()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_Grains[i]->colonynewnumber != -1)
+    if (m_Grains[i]->colonynewnumber != -1 && m_Grains[i]->phase > 0)
     {
       colonylist.push_back(i);
       int csize = int(colonylist.size());
@@ -1385,7 +1348,7 @@ void ReconstructionFunc::merge_colonies()
           angcur = 180;
           int colony = 0;
           size_t neigh = nlist->at(l);
-          if (neigh != i && m_Grains[neigh]->colonynewnumber != -1)
+          if (neigh != i && m_Grains[neigh]->colonynewnumber != -1 && m_Grains[neigh]->phase > 0)
           {
 		    w = 10000.0;
             q1[1] = m_Grains[firstgrain]->avg_quat[1]/m_Grains[firstgrain]->avg_quat[0];
@@ -1398,8 +1361,7 @@ void ReconstructionFunc::merge_colonies()
             q2[3] = m_Grains[neigh]->avg_quat[3]/m_Grains[neigh]->avg_quat[0];
             q2[4] = m_Grains[neigh]->avg_quat[4]/m_Grains[neigh]->avg_quat[0];
             phase2 = crystruct[m_Grains[neigh]->phase];
-
-			if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+			if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float vecttol = 0.03;
             if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919) < vecttol) colony = 1;
