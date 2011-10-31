@@ -314,6 +314,7 @@ void EbsdImportWidget::on_m_GoBtn_clicked()
   m_EbsdImport->setZEndIndex(m_ZEndIndex->value());
   m_EbsdImport->setZResolution(m_zSpacing->text().toFloat(&ok));
 
+
   m_EbsdImport->setRefFrameZDir( getRefFrameZDir() );
   m_EbsdImport->setRotateSlice( m_RotateSlice );
   m_EbsdImport->setReorderArray( m_ReorderArray );
