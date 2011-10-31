@@ -144,6 +144,7 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
     bool                        m_WriteBinaryVTKFile;
     bool rotateslice;
     bool reorderarray;
+    bool aligneulers;
 
     QString                     m_OpenDialogLastDirectory;
   //  QString                     m_EbsdManufacturer;

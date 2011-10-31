@@ -188,8 +188,8 @@ void Reconstruction::execute()
   m->initializeQuats();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", loadData)
 
-  updateProgressAndMessage(("Finding Border"), 10);
-  m->find_border();
+  updateProgressAndMessage(("Identifying Bad Points"), 10);
+  m->threshold_points();
   CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_border)
 
   if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
@@ -205,8 +205,8 @@ void Reconstruction::execute()
 
   if (m_AlignmentMethod == DREAM3D::Reconstruction::MutualInformation)
   {
-      updateProgressAndMessage(("Redefining Border"), 20);
-      m->find_border();
+      updateProgressAndMessage(("Aligning Slices"), 20);
+      m->threshold_points();
       CHECK_FOR_CANCELED(ReconstructionFunc, "Reconstruction was canceled", find_border)
   }
 
