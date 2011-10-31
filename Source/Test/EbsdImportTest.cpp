@@ -34,58 +34,9 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EBSDREFERENCEFRAMEWIDGET_H_
-#define EBSDREFERENCEFRAMEWIDGET_H_
-
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QSettings>
-#include <QtGui/QDialog>
-
-class QGraphicsPixmapItem;
-
-#include "ui_EbsdReferenceFrameDialog.h"
-
-#include "EbsdLib/EbsdConstants.h"
 
 
-/*
- *
- */
-class EbsdReferenceFrameDialog : public QDialog, private Ui::EbsdReferenceFrameDialog
+int main(int argc, char **argv)
 {
-  Q_OBJECT;
 
-  public:
-    EbsdReferenceFrameDialog(QString filename, QWidget *parent = 0);
-    virtual ~EbsdReferenceFrameDialog();
-
-    void setEbsdFileName(QString filename);
-
-    void loadEbsdData();
-    void updateGraphicsView();
-    void updateDisplay();
-
-
-    Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
-    bool alignEulers();
-
-  protected slots:
-    void originChanged(bool checked);
-
-
-
-
-  private:
-    QString                     m_EbsdFileName;
-    QButtonGroup*               m_OriginGroup;
-    QImage                      m_EbsdImage;
-    QGraphicsPixmapItem*        m_PixmapGraphicsItem;
-    int                         m_CurrentCorner;
-
-
-    EbsdReferenceFrameDialog(const EbsdReferenceFrameDialog&); // Copy Constructor Not Implemented
-    void operator=(const EbsdReferenceFrameDialog&); // Operator '=' Not Implemented
-};
-
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */
+}
