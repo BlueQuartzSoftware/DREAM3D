@@ -58,20 +58,37 @@ SET(CPACK_PACKAGE_VERSION ${DREAM3D_VERSION})
 
 set(CPACK_PACKAGE_EXECUTABLES
     DREAM3D DREAM3D StatsGenerator StatsGenerator)
+set(UPLOAD_FILE_NAME "")
 
 IF (APPLE)
     set(CPACK_PACKAGE_FILE_NAME "DREAM3D-${DREAM3D_VERSION_SHORT}-OSX")
+    # This ASSUMES we are creating a tar.gz package. If you change that below to
+    # anything else then you need to update this.
+    set (UPLOAD_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}.tar.gz)
 elseif(WIN32)
 	if ( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
 		set(CPACK_PACKAGE_FILE_NAME "DREAM3D-${DREAM3D_VERSION_SHORT}-Win64")
+		set (UPLOAD_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}.zip)
 	elseif( "${CMAKE_SIZEOF_VOID_P}" EQUAL "4" )
 		set(CPACK_PACKAGE_FILE_NAME "DREAM3D-${DREAM3D_VERSION_SHORT}-Win32")
+		set (UPLOAD_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}.zip)
 	else()
 	    set(CPACK_PACKAGE_FILE_NAME "DREAM3D-${DREAM3D_VERSION_SHORT}-Unknown")
+	    set (UPLOAD_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}.zip)
     endif()
 else()
   set(CPACK_PACKAGE_FILE_NAME "DREAM3D-${DREAM3D_VERSION_SHORT}-${CMAKE_SYSTEM_NAME}")
+  set (UPLOAD_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}.tar.gz)
 endif()
+
+
+set (DREAM3D_WEBSITE_SERVER "dream3d.bluequartz.net")
+set (DREAM3D_WEBSITE_SERVER_PATH "/var/www/dream3d.bluequartz.net/binaries/.")
+set (DREAM3D_WEBSITE_SCP_USERNAME "mjackson") 
+#-- Create a bash script file that will upload the latest version to the web server
+configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in 
+            ${PROJECT_BINARY_DIR}/upload.sh)  
+
 # Create an NSIS based installer for Windows Systems
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
