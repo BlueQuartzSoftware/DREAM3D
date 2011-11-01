@@ -45,6 +45,10 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 
 #define M_PI_OVER_4   0.785398163397448
+namespace Detail
+{
+  static const float DegToRads = M_PI/180.0f;
+}
 
 /**
 * @class OIMColoring OIMColoring.hpp Server/IPFFilter/OIMColoring.hpp
@@ -169,9 +173,15 @@ class OIMColoring
     template <typename T, typename K>
     static void GenerateIPFColor(T phi1, T phi, T phi2,
                                  K refDir0, K refDir1, K refDir2,
-                                 unsigned char* rgb, unsigned char* hkl)
+                                 unsigned char* rgb, unsigned char* hkl, bool degToRad = false)
     {
 
+      if (degToRad == true)
+      {
+        phi1 = phi1 * Detail::DegToRads;
+        phi = phi * Detail::DegToRads;
+        phi2 = phi2 * Detail::DegToRads;
+      }
       T q1[3][3]; // Rotation Matrix?
       T cd[3];
       T d[3];
