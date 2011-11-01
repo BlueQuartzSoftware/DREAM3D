@@ -137,12 +137,7 @@ endif()
 # We do NOT want to install any of the headers
 SET (DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 
-
-               
-#-- Create a JavaScript file that can be uploaded to the web server that will automatically
-# update the download links to the latest version
-configure_file(${PROJECT_RESOURCES_DIR}/downloadcreator.js.in 
-                ${PROJECT_BINARY_DIR}/downloadcreator.js)                          
+                      
 # --------------------------------------------------------------------
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
