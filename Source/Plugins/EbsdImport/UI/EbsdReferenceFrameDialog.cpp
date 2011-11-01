@@ -136,7 +136,7 @@ bool EbsdReferenceFrameDialog::alignEulers()
 void EbsdReferenceFrameDialog::loadEbsdData()
 {
   boost::shared_ptr<EbsdReader> ebsdReader(static_cast<EbsdReader*>(NULL));
-
+  bool degToRads = false;
   std::string ext = EbsdFileInfo::extension(m_EbsdFileName.toStdString());
   if (ext.compare(Ebsd::Ang::FileExt) == 0)
   {
@@ -147,6 +147,7 @@ void EbsdReferenceFrameDialog::loadEbsdData()
   {
     CtfReader* reader = new CtfReader;
     ebsdReader.reset(static_cast<EbsdReader*>(reader));
+    degToRads = true;
   }
   if (NULL == ebsdReader.get())
   {
@@ -179,21 +180,11 @@ void EbsdReferenceFrameDialog::loadEbsdData()
   float* e1 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi"));
   float* e2 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi2"));
 
-
-
-
   for (uint32_t i = 0; i < total; ++i) {
     uint8_t* argb = reinterpret_cast<uint8_t*>(rgbArray->GetPointer(i)) + 1;
     OIMColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
-                                  argb, hkl);
-//    uint32_t c = rgbArray->GetValue(i);
-//    QColor color(argb[0], argb[1], argb[2]);
-//    QRgb qrgb = color.rgba();
-//    uint32_t ucolor = static_cast<uint32_t>(qrgb);
-//    uint32_t t = rgbArray->GetValue(i);
-//    qrgb = ucolor ;
-
+                                  argb, hkl, degToRads);
   }
 
   QImage image(width, height, QImage::Format_ARGB32);
