@@ -825,7 +825,7 @@ class StatsGen
     int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 5832;
-      float radtodeg = 180.0 / M_PI;
+      float radtodeg = 180.0f / M_PI;
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       float density;
@@ -889,7 +889,7 @@ class StatsGen
     int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 15552;
-      float radtodeg = 180.0 / M_PI;
+      float radtodeg = 180.0f / M_PI;
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose = 0;

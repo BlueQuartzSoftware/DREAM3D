@@ -46,24 +46,17 @@
 #include "DREAM3DLib/IO/PhReader.h"
 
 #include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
 
-#define REMOVE_TEST_FILES 0
 
-namespace Detail
-{
-  const std::string TestFile("PhIOTest.ph");
-  static const int XSize = 5;
-  static const int YSize = 4;
-  static const int ZSize = 3;
-  static const int Offset = 200;
-}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(PhIOTest::TestFile);
+  MXADir::remove(UnitTest::PhIOTest::TestFile);
 #endif
 }
 
@@ -72,19 +65,19 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestPhWriter()
 {
-  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
   AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
-    grainIds->SetValue(i, i + Detail::Offset);
+    grainIds->SetValue(i, i + UnitTest::PhIOTest::Offset);
   }
-  int nx = Detail::XSize;
-  int ny = Detail::YSize;
-  int nz = Detail::ZSize;
+  int nx = UnitTest::PhIOTest::XSize;
+  int ny = UnitTest::PhIOTest::YSize;
+  int nz = UnitTest::PhIOTest::ZSize;
 
 
   PhWriter::Pointer writer = PhWriter::New();
-  writer->setFileName(Detail::TestFile);
+  writer->setFileName(UnitTest::PhIOTest::TestFile);
   writer->setData(grainIds);
   writer->setDimensions(nx, ny, nz);
   int err = writer->writeFile();
@@ -99,7 +92,7 @@ int TestPhReader()
 {
 
   PhReader::Pointer reader = PhReader::New();
-  reader->setFileName(Detail::TestFile);
+  reader->setFileName(UnitTest::PhIOTest::TestFile);
   int nx = 0;
   int ny = 0;
   int nz = 0;
@@ -108,15 +101,15 @@ int TestPhReader()
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
   reader->getDimensions(nx, ny, nz);
-  DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
+  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::PhIOTest::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::PhIOTest::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::PhIOTest::ZSize);
 
   AIMArray<int>::Pointer data = reader->getData();
-  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
   for (int i = 0; i < size; ++i)
   {
-    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), data->GetValue(i) );
+    DREAM3D_REQUIRE_EQUAL( (i+UnitTest::PhIOTest::Offset), data->GetValue(i) );
   }
 
   return EXIT_SUCCESS;

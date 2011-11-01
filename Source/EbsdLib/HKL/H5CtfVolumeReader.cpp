@@ -127,8 +127,8 @@ int H5CtfVolumeReader::loadData(float* euler1s,
   int ypointsslice;
   int xpointstemp;
   int ypointstemp;
-  int xstop;
-  int ystop;
+//  int xstop;
+//  int ystop;
   int zval;
 
   float* euler1Ptr = NULL;

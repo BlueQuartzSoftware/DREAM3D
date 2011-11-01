@@ -52,7 +52,7 @@ standard C++ library."
 
 
 #include "UnitTestSupport.hpp"
-
+#include "TestFileLocations.h"
 
 
 #define DIM 6
@@ -66,22 +66,7 @@ standard C++ library."
 
 size_t AttrSize = 0;
 
-#define REMOVE_TEST_FILES 1
 
-namespace MXAUnitTest {
-// -----------------------------------------------------------------------------
-//  Define where to put our temporary files for the H5Lite Test
-// -----------------------------------------------------------------------------
-  // -----------------------------------------------------------------------------
-  //  Define where to put our temporary files for the H5Utilities Test
-  // -----------------------------------------------------------------------------
-  namespace H5UtilTest
-  {
-    const std::string TestDir("H5UtilTest");
-    const std::string FileName("/Users/mjackson/Workspace/MXADataModel/Build/Testing/H5Utilities_Test.h5");
-    const std::string GroupTest("/Users/mjackson/Workspace/MXADataModel/Build/Testing/H5Utilities_GroupTest.h5");
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -89,7 +74,7 @@ namespace MXAUnitTest {
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(MXAUnitTest::H5UtilTest::FileName);
+  MXADir::remove(UnitTest::H5UtilTest::FileName);
 #endif
 }
 
@@ -324,7 +309,7 @@ void H5UtilitiesTest()
   // herr_t err = -1;
    hid_t   file_id;
    /* Create a new file using default properties. */
-   file_id = H5Fcreate( MXAUnitTest::H5UtilTest::FileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+   file_id = H5Fcreate( UnitTest::H5UtilTest::FileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
    DREAM3D_REQUIRE(file_id > 0);
 
    // std::cout << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------" << std::endl;
@@ -433,7 +418,7 @@ void StressTestCreateGroups()
   hid_t   grpId;
 
   /* Create a new file using default properties. */
-  file_id = H5Fcreate( MXAUnitTest::H5UtilTest::GroupTest.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+  file_id = H5Fcreate(UnitTest::H5UtilTest::GroupTest.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
   DREAM3D_REQUIRE(file_id > 0);
 
 

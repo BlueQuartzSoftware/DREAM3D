@@ -304,7 +304,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::isDirPath(const std::string &folderPath, bool *e
     if (fileAttrib == INVALID_FILE_ATTRIBUTES)
         return false;
 
-    return (bool)(fileAttrib & FILE_ATTRIBUTE_DIRECTORY);
+    return (fileAttrib & FILE_ATTRIBUTE_DIRECTORY) ? true : false;
 }
 #endif
 

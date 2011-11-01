@@ -320,12 +320,13 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 {
   int err = 0;
   size_t size = headerLines.size();
-  for(size_t i = 0; i < size; ++i) {
+  for (size_t i = 0; i < size; ++i)
+  {
     std::vector<std::string> line = headerLines[i];
-  //  std::cout << "Parsing Header Line: " << line[0] << std::endl;
-    if (line[0].compare(Ebsd::Ctf::NumPhases) == 0)
+    //  std::cout << "Parsing Header Line: " << line[0] << std::endl;
+    if(line[0].compare(Ebsd::Ctf::NumPhases) == 0)
     {
-    //  std::cout << "Parsing Phases" << std::endl;
+      //  std::cout << "Parsing Phases" << std::endl;
       EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
       p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
       int nPhases = getNumPhases();
@@ -341,7 +342,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
         m_PhaseVector.push_back(phase);
       }
     }
-    else if (line[0].compare("Euler angles refer to Sample Coordinate system (CS0)!") == 0)
+    else if(line[0].compare("Euler angles refer to Sample Coordinate system (CS0)!") == 0)
     {
       // We parse out lots of stuff from this one line
       //Mag
@@ -363,24 +364,24 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       EbsdHeaderEntry::Pointer p5 = m_Headermap[line[11]];
       p5->parseValue(const_cast<char*>(line[12].c_str()), 0, line[12].length());
     }
-    else if (line[0].compare("Channel Text File") == 0)
+    else if(line[0].compare("Channel Text File") == 0)
     {
       // We do not really do anything with this entry
       //  EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
     }
-    else  // This is the generic Catch all
+    else // This is the generic Catch all
     {
       EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
-      if (NULL == p.get())
+      if(NULL == p.get())
       {
         std::cout << "---------------------------" << std::endl;
         std::cout << "Could not find header entry for key'" << line[0] << "'" << std::endl;
-        std::string upper(line[0]);
-        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
-        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
-        std::cout << "const std::string " << line[0] << "(ANG_" << upper << ");" << std::endl;
-        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ebsd::Ctf::" << line[0] << std::endl;
-        std::cout << "m_Headermap[Ebsd::Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::" << line[0] << ");" << std::endl;
+//        std::string upper(line[0]);
+//        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+//        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
+//        std::cout << "const std::string " << line[0] << "(ANG_" << upper << ");" << std::endl;
+//        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ebsd::Ctf::" << line[0] << std::endl;
+//        std::cout << "m_Headermap[Ebsd::Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::" << line[0] << ");" << std::endl;
       }
       else
       {
@@ -395,14 +396,24 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 // -----------------------------------------------------------------------------
 //  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::parseDataLine(const std::string &line, int row, int col, size_t i, int xCells, int yCells )
+void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */
   float x, y,  p1, p, p2, mad;
   int phase, bCount, error, bc, bs;
   size_t offset = i;
-  int fields = sscanf(line.c_str(), "%d\t%f\t%f\t%d\t%d\t%f\t%f\t%f\t%f\t%d\t%d",
+
+  // Filter the line to convert European command style decimals to US/UK style points
+  std::vector<char> cLine(line.size()+1);
+  ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
+  for (size_t c = 0; c < cLine.size(); ++c)
+  {
+    if (cLine[c] == ',') { cLine[c] = '.';}
+  }
+
+
+  int fields = sscanf( &(cLine.front()), "%d\t%f\t%f\t%d\t%d\t%f\t%f\t%f\t%f\t%d\t%d",
                        &phase, &x,&y, &bCount, &error, &p1, &p, &p2, &mad, &bc, &bs);
   assert(fields == getNumFields());
 

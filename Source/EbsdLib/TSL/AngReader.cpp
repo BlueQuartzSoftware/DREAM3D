@@ -312,9 +312,9 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   size_t counter = 0;
   // The buf variable already has the first line of data in it
-  for(int row = 0; row < yCells; ++row)
+  for(size_t row = 0; row < yCells; ++row)
   {
-    for(int col = 0; col < nEvexCells; ++col)
+    for(size_t col = 0; col < nEvexCells; ++col)
     {
       this->parseDataLine(buf, nEvexCells, col, yCells, row, counter);
       ++counter;
@@ -454,7 +454,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
 void AngReader::parseDataLine(const std::string &line,
-                         int xCells, int col, int yCells, int row, size_t i)
+                         size_t xCells, size_t col, size_t yCells, size_t row, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:

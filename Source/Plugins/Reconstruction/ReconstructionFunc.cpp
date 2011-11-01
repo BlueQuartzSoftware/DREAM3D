@@ -64,7 +64,6 @@
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
-const static float m_pi = M_PI;
 //const static float m_OnePointThree = 1.33333333333;
 //const static float threesixty_over_pi = 360.0 / m_pi;
 //const static float m_pi_over_180 = M_PI / 180.0;
@@ -1252,12 +1251,12 @@ int ReconstructionFunc::remove_smallgrains(size_t numgrains)
 
 void ReconstructionFunc::merge_twins()
 {
-  float angcur = 180;
+  float angcur = 180.0f;
   vector<int > twinlist;
   float w;
   float n1, n2, n3;
-  float angtol = 2.0;
-  float axistol = 2.0*M_PI/180.0;
+  float angtol = 2.0f;
+  float axistol = 2.0f*M_PI/180.0f;
   float q1[5];
   float q2[5];
   size_t numgrains = m_Grains.size();
@@ -1275,12 +1274,12 @@ void ReconstructionFunc::merge_twins()
         int size = int(nlist->size());
         for (int l = 0; l < size; l++)
         {
-          angcur = 180;
+          angcur = 180.0f;
           int twin = 0;
           size_t neigh = nlist->at(l);
           if (neigh != i && m_Grains[neigh]->twinnewnumber == -1 && m_Grains[neigh]->phase > 0)
           {
-            w = 10000.0;
+            w = 10000.0f;
             q1[1] = m_Grains[firstgrain]->avg_quat[1]/m_Grains[firstgrain]->avg_quat[0];
             q1[2] = m_Grains[firstgrain]->avg_quat[2]/m_Grains[firstgrain]->avg_quat[0];
             q1[3] = m_Grains[firstgrain]->avg_quat[3]/m_Grains[firstgrain]->avg_quat[0];
@@ -1293,8 +1292,8 @@ void ReconstructionFunc::merge_twins()
             phase2 = crystruct[m_Grains[neigh]->phase];
             if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-			float axisdiff111 = acosf(fabs(n1)*0.57735+fabs(n2)*0.57735+fabs(n3)*0.57735);
-			float angdiff60 = fabs(w-60);
+			float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
+			float angdiff60 = fabs(w-60.0f);
             if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
             if (twin == 1)
             {
@@ -1321,7 +1320,7 @@ void ReconstructionFunc::merge_twins()
 
 void ReconstructionFunc::merge_colonies()
 {
-  float angcur = 180;
+  float angcur = 180.0f;
   vector<int > colonylist;
   float w;
   float n1, n2, n3;
@@ -1345,12 +1344,12 @@ void ReconstructionFunc::merge_colonies()
         int size = int(nlist->size());
         for (int l = 0; l < size; l++)
         {
-          angcur = 180;
+          angcur = 180.0f;
           int colony = 0;
           size_t neigh = nlist->at(l);
           if (neigh != i && m_Grains[neigh]->colonynewnumber != -1 && m_Grains[neigh]->phase > 0)
           {
-		    w = 10000.0;
+		    w = 10000.0f;
             q1[1] = m_Grains[firstgrain]->avg_quat[1]/m_Grains[firstgrain]->avg_quat[0];
             q1[2] = m_Grains[firstgrain]->avg_quat[2]/m_Grains[firstgrain]->avg_quat[0];
             q1[3] = m_Grains[firstgrain]->avg_quat[3]/m_Grains[firstgrain]->avg_quat[0];
@@ -1363,16 +1362,16 @@ void ReconstructionFunc::merge_colonies()
             phase2 = crystruct[m_Grains[neigh]->phase];
 			if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-			float vecttol = 0.03;
-            if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.289) < vecttol && fabs(fabs(r2) - 0.5) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.57735) < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.33) < vecttol && fabs(fabs(r2) - 0.473) < vecttol && fabs(fabs(r3) - 0.093) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.577) < vecttol && fabs(fabs(r2) - 0.053) < vecttol && fabs(fabs(r3) - 0.093) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.293) < vecttol && fabs(fabs(r2) - 0.508) < vecttol && fabs(fabs(r3) - 0.188) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.5866) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.188) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.5769) < vecttol && fabs(fabs(r2) - 0.8168) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.9958) < vecttol && fabs(fabs(r2) - 0.0912) < vecttol && fabs(r3) < vecttol) colony = 1;
+			float vecttol = 0.03f;
+            if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919f) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.289f) < vecttol && fabs(fabs(r2) - 0.5f) < vecttol && fabs(r3) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.57735f) < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.33f) < vecttol && fabs(fabs(r2) - 0.473f) < vecttol && fabs(fabs(r3) - 0.093f) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.577f) < vecttol && fabs(fabs(r2) - 0.053f) < vecttol && fabs(fabs(r3) - 0.093f) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.293f) < vecttol && fabs(fabs(r2) - 0.508f) < vecttol && fabs(fabs(r3) - 0.188f) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.5866f) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.188) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.5769f) < vecttol && fabs(fabs(r2) - 0.8168f) < vecttol && fabs(r3) < vecttol) colony = 1;
+            if (fabs(fabs(r1) - 0.9958f) < vecttol && fabs(fabs(r2) - 0.0912f) < vecttol && fabs(r3) < vecttol) colony = 1;
             if (w < angcur)
             {
               angcur = w;

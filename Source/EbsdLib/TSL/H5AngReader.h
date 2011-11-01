@@ -126,6 +126,12 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     int readHeader(hid_t parId);
 
     /**
+    * @brief Reads ONLY the header portion of the TSL .ang file
+    * @return 1 on success
+    */
+    virtual int readHeaderOnly();
+
+    /**
      * @brief Returns a vector of AngPhase objects corresponding to the phases
      * present in the file
      */

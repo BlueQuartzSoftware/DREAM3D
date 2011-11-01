@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>414</width>
-    <height>360</height>
+    <width>577</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Advanced Reference Frame Options</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="6" column="0" colspan="2">
+   <item row="7" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -33,7 +33,7 @@
       <string>Ctrl+S</string>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="autoExclusive">
       <bool>false</bool>
@@ -94,6 +94,68 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
+   <item row="5" column="0">
+    <widget class="QPushButton" name="m_ExplanationBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>?</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="2">
+    <widget class="QScrollArea" name="m_ExplanationScrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>536</width>
+        <height>328</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="m_ExplanationLabel">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;Explanation: Depending on the corner selected any of the following operations may be performed during the &lt;/span&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;Reconstruction &lt;/span&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;or &lt;/span&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;any other analysis&lt;/span&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt; where the physical coordinate system must be in alignment with the coordinate system from the EBSD scan.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;Upper Left: &lt;/span&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt;The data will be manipulated in memory to set the 0 row and 0 column of EBSD data to coincide with the physical origin from the sample reference frame.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt; font-weight:600;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;Upper Right:&lt;/span&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt; The scan(s) are rotated 180 Degrees so that the EBSD origin coincides with the physical origin from the sample reference frame.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt; font-weight:600;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;Lower Right:&lt;/span&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt; The scan(s) are rotated 180 Degrees so that the EBSD origin coincides with the physical origin from the sample reference frame &lt;/span&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;AND&lt;/span&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt; the data will be manipulated in memory to set the 0 row and 0 column of EBSD data to coincide with the physical origin from the sample reference frame.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:13pt; font-weight:600;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:13pt; font-weight:600;&quot;&gt;Lower Left:&lt;/span&gt;&lt;span style=&quot; font-size:13pt;&quot;&gt; No transformations will be performed on the data during any analysis.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
@@ -105,8 +167,8 @@ p, li { white-space: pre-wrap; }
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>254</x>
+     <y>593</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -121,8 +183,8 @@ p, li { white-space: pre-wrap; }
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>322</x>
+     <y>593</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

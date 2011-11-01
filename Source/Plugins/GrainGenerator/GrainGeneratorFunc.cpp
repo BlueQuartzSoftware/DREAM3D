@@ -327,7 +327,7 @@ int GrainGeneratorFunc::readReconStatsData(H5StatsReader::Pointer h5io)
 
   // Now that we have that information - initialize the arrays
   initializeArrays(structures);
-  int size = phases.size();
+  int size = (int)(phases.size());
 
   int phase = -1;
 
