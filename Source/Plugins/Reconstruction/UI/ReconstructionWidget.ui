@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>827</width>
+    <width>854</width>
     <height>638</height>
    </rect>
   </property>
@@ -18,6 +18,9 @@
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout_7">
    <item row="0" column="0">
@@ -32,7 +35,7 @@
       <property name="spacing">
        <number>4</number>
       </property>
-      <item row="0" column="0" colspan="7">
+      <item row="0" column="0" colspan="12">
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="1" column="1">
          <widget class="QLabel" name="label">
@@ -53,7 +56,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="2">
+      <item row="1" column="4">
        <layout class="QFormLayout" name="formLayout">
         <property name="fieldGrowthPolicy">
          <enum>QFormLayout::FieldsStayAtSizeHint</enum>
@@ -68,10 +71,16 @@
          <widget class="QLabel" name="label_7">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Minimum Slice:</string>
@@ -80,8 +89,23 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="m_ZMin">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -89,10 +113,16 @@
          <widget class="QLabel" name="label_54">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Maximum Slice:</string>
@@ -101,8 +131,23 @@
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="m_ZMax">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>100</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -120,10 +165,16 @@
          <widget class="QLabel" name="label_13">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>X Dim:</string>
@@ -135,8 +186,23 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="xDim">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>1000</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -144,10 +210,16 @@
          <widget class="QLabel" name="label_14">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Y Dim:</string>
@@ -159,8 +231,23 @@
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="yDim">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -168,10 +255,16 @@
          <widget class="QLabel" name="label_15">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Z Dim:</string>
@@ -183,14 +276,29 @@
         </item>
         <item row="2" column="1">
          <widget class="QLabel" name="zDim">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="1" column="1">
+      <item row="1" column="2">
        <layout class="QFormLayout" name="formLayout_4">
         <property name="leftMargin">
          <number>5</number>
@@ -202,10 +310,16 @@
          <widget class="QLabel" name="label_16">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>X Res:</string>
@@ -217,8 +331,23 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="m_XRes">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>0.2500</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -226,10 +355,16 @@
          <widget class="QLabel" name="label_17">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Y Res:</string>
@@ -241,8 +376,23 @@
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="m_YRes">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>0</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -250,10 +400,16 @@
          <widget class="QLabel" name="m_ZMax_2">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Z Res:</string>
@@ -262,14 +418,29 @@
         </item>
         <item row="2" column="1">
          <widget class="QLabel" name="m_ZRes">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>0.0</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="1" column="6">
+      <item row="1" column="11">
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -282,7 +453,7 @@
         </property>
        </spacer>
       </item>
-      <item row="1" column="3">
+      <item row="1" column="7">
        <layout class="QFormLayout" name="formLayout_5">
         <property name="fieldGrowthPolicy">
          <enum>QFormLayout::FieldsStayAtSizeHint</enum>
@@ -297,10 +468,16 @@
          <widget class="QLabel" name="label_23">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>EBSD Manufacturer:</string>
@@ -311,11 +488,21 @@
          <widget class="QLabel" name="m_EbsdManufacturer">
           <property name="font">
            <font>
+            <pointsize>-1</pointsize>
             <italic>true</italic>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>XXX</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -323,10 +510,16 @@
          <widget class="QLabel" name="label_3">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Rotate Slice:</string>
@@ -337,11 +530,21 @@
          <widget class="QLabel" name="m_RotateSliceLabel">
           <property name="font">
            <font>
+            <pointsize>-1</pointsize>
             <italic>true</italic>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>false</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -349,10 +552,16 @@
          <widget class="QLabel" name="label_20">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
           </property>
           <property name="text">
            <string>Reorder Array:</string>
@@ -363,17 +572,27 @@
          <widget class="QLabel" name="m_ReorderArrayLabel">
           <property name="font">
            <font>
+            <pointsize>-1</pointsize>
             <italic>true</italic>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>false</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="1" column="4">
+      <item row="1" column="9">
        <layout class="QFormLayout" name="formLayout_2">
         <property name="leftMargin">
          <number>5</number>
@@ -385,13 +604,22 @@
          <widget class="QLabel" name="label_24">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
+          </property>
           <property name="text">
            <string>Stacking Order:</string>
+          </property>
+          <property name="scaledContents">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -399,13 +627,22 @@
          <widget class="QLabel" name="label_22">
           <property name="font">
            <font>
-            <pointsize>11</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
+          </property>
           <property name="text">
            <string>Align Euler Angles:</string>
+          </property>
+          <property name="scaledContents">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -413,11 +650,21 @@
          <widget class="QLabel" name="m_AlignEulersLabel">
           <property name="font">
            <font>
+            <pointsize>-1</pointsize>
             <italic>true</italic>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+          </property>
           <property name="text">
            <string>false</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -425,15 +672,89 @@
          <widget class="QLabel" name="m_StackingOrder">
           <property name="font">
            <font>
+            <pointsize>-1</pointsize>
             <italic>true</italic>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
           </property>
           <property name="text">
            <string>Unknown Stacking Order</string>
           </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="1" column="3">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>8</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="1">
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>8</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="5">
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>8</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="8">
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>8</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -482,7 +803,7 @@
         <number>4</number>
        </property>
        <property name="horizontalSpacing">
-        <number>-1</number>
+        <number>6</number>
        </property>
        <property name="verticalSpacing">
         <number>1</number>
