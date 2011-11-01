@@ -26,7 +26,7 @@
 //-- Boost Test Headers
 #include "UnitTestSupport.hpp"
 
-
+#include "TestFileLocations.h"
 
 
 #define DSET0_NAME "2D int32_t array"
@@ -47,24 +47,12 @@
 #define RANK_2D 2
 #define RANK_3D 3
 
-#define REMOVE_TEST_FILES 1
+
 
 #define H5ATTRIBUTE_INSTANCE(type, Suffix, key)\
   Suffix##H5Attribute::Pointer type##_attr = Suffix##H5Attribute::New();\
   type##_attr->setKey(key);
 
-
-namespace MXAUnitTest {
-// -----------------------------------------------------------------------------
-//  Define where to put our temporary files for the H5Lite Test
-// -----------------------------------------------------------------------------
-  namespace H5LiteTest
-  {
-    const std::string TestDir("H5LiteTest");
-    const std::string FileName("H5Lite_Test.h5");
-    const std::string LargeFile("H5Lite_LargeFile_Test.h5");
-  }
-}
 
 //TODO: Test the Read/Write IMXAArray methods
 
@@ -117,8 +105,8 @@ herr_t testWritePointer1DArrayAttribute(hid_t file_id, const std::string &dsetNa
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(MXAUnitTest::H5LiteTest::FileName);
-  MXADir::remove(MXAUnitTest::H5LiteTest::LargeFile);
+  MXADir::remove(UnitTest::H5LiteTest::FileName);
+  MXADir::remove(UnitTest::H5LiteTest::LargeFile);
 #endif
 }
 
@@ -1015,7 +1003,7 @@ void H5LiteTest()
  // herr_t err = -1;
   hid_t   file_id = 0;
   /* Create a new file using default properties. */
-  file_id = H5Fcreate( MXAUnitTest::H5LiteTest::FileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+  file_id = H5Fcreate( UnitTest::H5LiteTest::FileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
   DREAM3D_REQUIRE(file_id > 0);
   //Create the Extra Groups
   hid_t sintGid = H5Gcreate(file_id, "Signed Int", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
@@ -1138,7 +1126,7 @@ void TestLargeFileSupport()
   // herr_t err = -1;
   hid_t file_id;
   /* Create a new file using default properties. */
-  file_id = H5Fcreate(MXAUnitTest::H5LiteTest::LargeFile.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+  file_id = H5Fcreate(UnitTest::H5LiteTest::LargeFile.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
   DREAM3D_REQUIRE(file_id > 0);
   std::vector<int > buffer(1000000); // Create a 4 MegaByte Buffer
   int32_t rank = 1;

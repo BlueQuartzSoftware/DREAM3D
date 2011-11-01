@@ -59,7 +59,7 @@
 
 
 #define MIKE_G_DEBUG 0
-const static float m_pi = M_PI;
+
 
 // -----------------------------------------------------------------------------
 //
@@ -174,7 +174,7 @@ void Reconstruction::execute()
   ebsdReader->setSliceEnd(m_ZEndIndex);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
   CHECK_FOR_ERROR(ReconstructionFunc, "Error loading data from input file.", err)
-  float radianconversion = m_pi/180.0;
+  float radianconversion = M_PI/180.0;
   if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
 	  for(int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)

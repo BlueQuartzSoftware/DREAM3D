@@ -297,10 +297,10 @@ int Smoothing::execute()
   // mesh moves too much,
   // little
   float bc_dt; // for updating
-  const float small = 1.0e-12;
-  const float large = 1.0e+50;
-  const float one12th = 1.0 / 12.0;
-  const float tolerance = 1.0e-5; // Tolerance for nodes that are
+  const float small = 1.0e-12f;
+  const float large = std::numeric_limits<float>::max();
+  const float one12th = 1.0f / 12.0f;
+  const float tolerance = 1.0e-5f; // Tolerance for nodes that are
   // near the RVE boundary
 
   float A_scale, Q_scale; // Pre-factors for quality and curvature forces

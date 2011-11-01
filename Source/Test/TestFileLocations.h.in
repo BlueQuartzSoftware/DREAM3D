@@ -1,0 +1,50 @@
+#ifndef _TestFileLocation_h_
+#define _TestFileLocation_h_
+#include <string>
+
+#define REMOVE_TEST_FILES 1
+
+namespace UnitTest {
+// -----------------------------------------------------------------------------
+//  Define where to put our temporary files for the H5Lite Test
+// -----------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  //  Define where to put our temporary files for the H5Utilities Test
+  // -----------------------------------------------------------------------------
+  namespace H5UtilTest
+  {
+    const std::string TestDir("H5UtilTest");
+    const std::string FileName("@DREAM3DTest_BINARY_DIR@/H5Utilities_Test.h5");
+    const std::string GroupTest("@DREAM3DTest_BINARY_DIR@/H5Utilities_GroupTest.h5");
+  }
+  // -----------------------------------------------------------------------------
+  //  Define where to put our temporary files for the H5Lite Test
+  // -----------------------------------------------------------------------------
+    namespace H5LiteTest
+    {
+      const std::string TestDir("@DREAM3DTest_BINARY_DIR@/H5LiteTest");
+      const std::string FileName("@DREAM3DTest_BINARY_DIR@/H5Lite_Test.h5");
+      const std::string LargeFile("@DREAM3DTest_BINARY_DIR@/H5Lite_LargeFile_Test.h5");
+    }
+    
+    namespace DxIOTest
+    {
+      static const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DxIOTest.dx");
+      static const int XSize = 3;
+      static const int YSize = 4;
+      static const int ZSize = 5;
+      static const int Offset = 100;
+    }    
+    namespace PhIOTest
+    {
+      const std::string TestFile("@DREAM3DTest_BINARY_DIR@/PhIOTest.ph");
+      static const int XSize = 5;
+      static const int YSize = 4;
+      static const int ZSize = 3;
+      static const int Offset = 200;
+    }
+    
+
+}
+
+#endif

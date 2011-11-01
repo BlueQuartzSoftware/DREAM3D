@@ -573,7 +573,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   std::string path;
 
   int err = 0;
-  int nPhases = 0;
+  size_t nPhases = 0;
   // Delete any existing phases from the GUI (except the first one)
   while (phaseCombo->count() != 1)
   {
@@ -592,7 +592,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   SGWidget* sgwidget = NULL;
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
-  for (int i = 0; i < nPhases; ++i)
+  for (size_t i = 0; i < nPhases; ++i)
   {
     // Create a new Default SGPhase
     sgwidget = createNewSGWidget();

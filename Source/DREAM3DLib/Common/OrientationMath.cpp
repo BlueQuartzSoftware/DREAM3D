@@ -315,11 +315,11 @@ void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], fl
   random = rg.genrand_res53();
   float synh3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
   float hmag = sqrt((synh1 * synh1 + synh2 * synh2 + synh3 * synh3));
-  float angle = powf((8 * hmag * hmag * hmag), (1.0 / 3.0));
-  float synr1 = tanf(angle / 2.0) * (synh1 / hmag);
-  float synr2 = tanf(angle / 2.0) * (synh2 / hmag);
-  float synr3 = tanf(angle / 2.0) * (synh3 / hmag);
-  if (hmag == 0.0) synr1 = 0.0, synr2 = 0.0, synr3 = 0.0;
+  float angle = powf((8.0f * hmag * hmag * hmag), (1.0f / 3.0f));
+  float synr1 = tanf(angle / 2.0f) * (synh1 / hmag);
+  float synr2 = tanf(angle / 2.0f) * (synh2 / hmag);
+  float synr3 = tanf(angle / 2.0f) * (synh3 / hmag);
+  if (hmag == 0.0f) synr1 = 0.0f, synr2 = 0.0f, synr3 = 0.0f;
   float sum = atan(synr3);
   float diff = atan(synr2 / synr1);
   synea1 = sum + diff;
@@ -489,12 +489,12 @@ void OrientationMath::QuattoEuler(float *q, float &ea1, float &ea2, float &ea3)
 void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
 {
   float s, c, s1, c1, s2, c2;
-  s = sinf(0.5 * e2);
-  c = cosf(0.5 * e2);
-  s1 = sinf(0.5 * (e1 - e3));
-  c1 = cosf(0.5 * (e1 - e3));
-  s2 = sinf(0.5 * (e1 + e3));
-  c2 = cosf(0.5 * (e1 + e3));
+  s = sinf(0.5f * e2);
+  c = cosf(0.5f * e2);
+  s1 = sinf(0.5f * (e1 - e3));
+  c1 = cosf(0.5f * (e1 - e3));
+  s2 = sinf(0.5f * (e1 + e3));
+  c2 = cosf(0.5f * (e1 + e3));
   q[1] = s*c1;
   q[2] = s*s1;
   q[3] = c*s2;
@@ -507,12 +507,12 @@ void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
 void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
 {
 	float sum, diff, csum, cdiff, sdiff, t2;
-	sum = (ea1+ea3)/2.0;
-	diff = (ea1-ea3)/2.0;
+	sum = (ea1+ea3)/2.0f;
+	diff = (ea1-ea3)/2.0f;
 	csum = cosf(sum);
 	cdiff = cosf(diff);
 	sdiff = sinf(diff);
-	t2 = tanf(ea2/2.0);
+	t2 = tanf(ea2/2.0f);
 	r1 = t2*cdiff/csum;
 	r2 = t2*sdiff/csum;
 	r3 = tanf(sum);

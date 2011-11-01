@@ -498,16 +498,16 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
 {
   if (obj_id < 0) { return -1; }
   herr_t err = -1;
-  int32_t num_attrs;
+  hsize_t num_attrs;
   hid_t attr_id;
   size_t name_size;
   H5O_info_t object_info;
   err = H5Oget_info(obj_id, &object_info);
   num_attrs = object_info.num_attrs;
 
-  for (int i=0; i<num_attrs; i++) {
-//    attr_id = H5Aopen_idx(obj_id, i);
-    attr_id = H5Aopen_by_idx(obj_id, ".", H5_INDEX_NAME, H5_ITER_INC, (hsize_t)i, H5P_DEFAULT, H5P_DEFAULT);
+  for (hsize_t i=0; i<num_attrs; i++) 
+  {
+    attr_id = H5Aopen_by_idx(obj_id, ".", H5_INDEX_NAME, H5_ITER_INC, i, H5P_DEFAULT, H5P_DEFAULT);
     name_size = 1 + H5Aget_name(attr_id, 0, NULL);
     std::vector<char> attr_name(name_size * sizeof(char), 0);
     H5Aget_name(attr_id, name_size, &(attr_name.front() ) );

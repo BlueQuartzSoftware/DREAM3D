@@ -66,6 +66,39 @@ H5CtfReader::~H5CtfReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5CtfReader::readHeaderOnly()
+{
+  int err = -1;
+  if (m_HDF5Path.empty() == true)
+  {
+    std::cout << "H5CtfReader Error: HDF5 Path is empty." << std::endl;
+    return -1;
+  }
+
+  hid_t fileId = H5Utilities::openFile(getFileName(), true);
+  if (fileId < 0)
+  {
+    std::cout << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'" << std::endl;
+    return -1;
+  }
+
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str(), H5P_DEFAULT);
+  if (gid < 0)
+  {
+    std::cout << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
+    err = H5Utilities::closeFile(fileId);
+    return -1;
+  }
+
+  // Read all the header information
+ // std::cout << "H5CtfReader:: reading Header .. " << std::endl;
+  err = readHeader(gid);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5CtfReader::readFile()
 {
   int err = -1;

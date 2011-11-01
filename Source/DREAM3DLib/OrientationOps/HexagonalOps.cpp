@@ -144,9 +144,9 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  phi[0] = choose % 36;
-  phi[1] = (choose / 36) % 36;
-  phi[2] = choose / (36 * 36);
+  phi[0] = static_cast<float>(choose % 36);
+  phi[1] = static_cast<float>((choose / 36) % 36);
+  phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineEulerAngles(init, step, phi, choose, synea1, synea2, synea3);
 }
@@ -161,9 +161,9 @@ void HexagonalOps::determineHomochoricValues( int choose, float &r1, float &r2, 
   step[0] = HexDim1StepValue/2.0f;
   step[1] = HexDim2StepValue/2.0f;
   step[2] = HexDim3StepValue/2.0f;
-  phi[0] = choose % 36;
-  phi[1] = (choose / 36) % 36;
-  phi[2] = choose / (36 * 36);
+  phi[0] = static_cast<float>(choose % 36);
+  phi[1] = static_cast<float>((choose / 36) % 36);
+  phi[2] = static_cast<float>(choose / (36 * 36));
 
   return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
 }

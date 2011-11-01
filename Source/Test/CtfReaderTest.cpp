@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -37,6 +37,10 @@
 
 #include <string.h>
 
+#include "UnitTestSupport.hpp"
+#include "EbsdTestFileLocation.h"
+
+
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
@@ -44,36 +48,42 @@
 #include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
-int main(int argc, char **argv)
+#include "UnitTestSupport.hpp"
+#include "EbsdTestFileLocation.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TestCtfReader()
 {
-
-  std::string ctfFile("/Users/Shared/Data/HKL_Data/Project4.ctf");
-
   CtfReader reader;
-  reader.setFileName(ctfFile);
+  reader.setFileName(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::EuropeanInputFile1);
 
   int err =  reader.readFile();
-  if (err < 0)
-  {
-    std::cout << "Error reading .ctf file" << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  reader.printHeader(std::cout);
-  std::cout << "Success Reading the .ctf File" << std::endl;
-
-
-  std::cout << "-- Testing the H5CtfImporter..." << std::endl;
-  std::string h5File = "/tmp/out.h5ctf";
-  hid_t fileId = H5Utilities::createFile(h5File);
-
-  // Test out the HDF5 Importer
-  EbsdImporter::Pointer importer = H5CtfImporter::New();
-  importer->importFile(fileId, 0, ctfFile);
+  DREAM3D_REQUIRE(err >= 0);
+  float xstep = reader.getXStep();
+  DREAM3D_REQUIRE(xstep == 0.5f);
+  float ystep = reader.getYStep();
+  DREAM3D_REQUIRE(ystep == 0.5f);
+  DREAM3D_REQUIRE(reader.getNumPhases() == 1);
+  CtfPhase::Pointer phase = reader.getPhaseVector().at(0);
+  std::vector<float> dimensions = phase->getLatticeDimensions();
+  DREAM3D_REQUIRE(dimensions[0] >= 3.230f && dimensions[0] <= 3.232f)
+  DREAM3D_REQUIRE(dimensions[1] >= 3.230f && dimensions[1] <= 3.232f)
 
 
-  H5Utilities::closeFile(fileId);
+  return 1;
+}
 
-  std::cout << "Done Testing Ctf Reader" << std::endl;
-  return EXIT_SUCCESS;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv)
+{
+  int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( TestCtfReader() );
+
+
+  PRINT_TEST_SUMMARY();
+  return err;
 }
