@@ -1,14 +1,14 @@
 #!/bin/bash
 # This script requires a single argument which is the current install path
 
-DEBUG=0
+DEBUG=1
 # -----------------------------------------------------------------------------
 #  Conditional Printing
 # -----------------------------------------------------------------------------
 function printStatus()
 {
 	if [ "x$DEBUG" = "x1" ]; then
-	    echo "${1}"
+	    echo "${1}" 
 	fi	
 }
 
@@ -22,6 +22,8 @@ OSX_App="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/@osx_app_name@.app"
 arch=@CMAKE_OSX_ARCHITECTURES@
 logFile=/tmp/ThinAndShareLibraries.log
 
+echo "Starting Fix up of application @osx_app_name@.app to share the frameworks and thin to a single arch" 
+
 # Create the shared frameworks directory
 mkdir -p ${InstallPrefix}/Frameworks
 cd ${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks
@@ -29,23 +31,35 @@ frameworks=`find . -type d -name "*.framework"`
 for f in ${frameworks}
 do
   cd ${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks
+  # Get the base name of the framework
+  base=`basename -s .framework $f`
+  # Find the actual compiled file that is buried deep in the .framework directory (Versions/4/*)
+  file=`find . -type f -name "$base"`
+  # if the framework directory does NOT exist in the external location then move the entire directory there
   if [ ! -d "${InstallPrefix}/Frameworks/$f" ]; then
     printStatus "Moving $f to external shared frameworks directory"
-    mv $f ${InstallPrefix}/Frameworks/.
-  else
-    rm -rf "${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks/$f"
+    cp -r $f ${InstallPrefix}/Frameworks/$f/
   fi
   
-  printStatus "Creating Symlink to external Shared Frameworks directory for $f"
-  ln -s ${InstallPrefix}/Frameworks/$f .
+  # Remove the actual compiled framework file but leave the directory structure in tact.
+  printStatus "rm -rf ${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks/$file"
+  rm -rf "${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks/$file"
 
-  printStatus "Thinning Framework to arch $arch"
+  printStatus "Creating Symlink to external Shared Frameworks directory for $base"
+  printStatus "file = $file"
+
+  # now create a softlink to the real framework file that was move to the external shared location
+  printStatus "ln -s ../../Frameworks/$file $file"
+  ln -s ../../../../../../Frameworks/$file $file
+
+  printStatus "Thinning Framework $f to arch $arch"
   cd ${InstallPrefix}/Frameworks/$f
-  base=`basename -s .framework $f`
-  file=`find . -type f -name "$base"`
   lipo $file -thin $arch -output $file  > ${logFile} 2> ${logFile}
-
+  
 done
+
+# remove the actual frameworks direction and create a symlink to the external Frameworks directory
+cd "${InstallPrefix}"
 
 
 # Now create the 'lib' shared directory
@@ -63,13 +77,15 @@ do
   fi
 
   printStatus "Creating Symlink to external Shared lib directory for $f"
-  ln -s ${InstallPrefix}/lib/$f .
+  ln -s ../../../lib/$f .
   
   printStatus "Thinning dylib to arch $arch"
   
   lipo ${InstallPrefix}/lib/$f -thin $arch -output ${InstallPrefix}/lib/$f > ${logFile} 2> ${logFile}
-  
-  
 done
 
-rm ${logFile}
+# remove the actual frameworks direction and create a symlink to the external Frameworks directory
+cd "${InstallPrefix}"
+
+
+# rm ${logFile}
