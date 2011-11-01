@@ -152,6 +152,7 @@ int main(int argc, char **argv)
   std::cout << "  " << ebsdFile << std::endl;
 
   boost::shared_ptr<EbsdReader> ebsdReader(static_cast<EbsdReader*>(NULL));
+  bool degToRads = false;
 
   std::string ext = MXAFileInfo::extension(ebsdFile);
   if (ext.compare(Ebsd::Ang::FileExt) == 0)
@@ -163,6 +164,7 @@ int main(int argc, char **argv)
   {
     CtfReader* reader = new CtfReader;
     ebsdReader.reset(static_cast<EbsdReader*>(reader));
+    degToRads = true;
   }
 
   ebsdReader->setFileName(ebsdFile);
@@ -195,7 +197,7 @@ int main(int argc, char **argv)
     uint8_t* rgb = rgbArray->GetPointer(i*3);
     OIMColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
-                                  rgb, hkl);
+                                  rgb, hkl, degToRads);
   }
 
   err = writeColorTiff(imageFile, rgbArray, width, height, "IPF Color Map", orientation);
