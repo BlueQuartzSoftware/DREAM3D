@@ -85,6 +85,8 @@
      <string>Help</string>
     </property>
     <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionLicense_Information"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlugins"/>
@@ -146,6 +148,16 @@
   <action name="actionDREAM_3D_Help">
    <property name="text">
     <string>DREAM.3D Help</string>
+   </property>
+  </action>
+  <action name="actionLicense_Information">
+   <property name="text">
+    <string>License Information</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
