@@ -1,4 +1,38 @@
-
+/* ============================================================================
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VolumeOpsWidget.h"
 
 
@@ -152,7 +186,7 @@ void VolumeOpsWidget::on_m_LoadSettingsBtn_clicked()
   QSettings prefs(file, QSettings::IniFormat, this);
   readSettings(prefs);
   // Do any additional validation necessary
-  
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -307,8 +341,8 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
   }
   SANITY_CHECK_INPUT(m_, OutputDir)
 #endif
-  
-  
+
+
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
@@ -323,7 +357,7 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
   m_VolumeOps->moveToThread(m_WorkerThread);
 
   // Pull the values from the GUI and push them into the m_VolumeOps variable
- 
+
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * VolumeOps object. Since the VolumeOps object has been moved to another
@@ -346,21 +380,21 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelPipeline() ),
           m_VolumeOps, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
-  
+
   // Send Progress from the VolumeOps to this object for display
-  connect(m_VolumeOps, SIGNAL (updateProgress(int)), 
+  connect(m_VolumeOps, SIGNAL (updateProgress(int)),
           this, SLOT(pipelineProgress(int) ) );
 
   // Send progress messages from VolumeOps to this object for display
-  connect(m_VolumeOps, SIGNAL (progressMessage(QString)), 
+  connect(m_VolumeOps, SIGNAL (progressMessage(QString)),
           this, SLOT(addProgressMessage(QString) ));
 
   // Send progress messages from VolumeOps to this object for display
-  connect(m_VolumeOps, SIGNAL (warningMessage(QString)), 
+  connect(m_VolumeOps, SIGNAL (warningMessage(QString)),
           this, SLOT(addWarningMessage(QString) ));
 
   // Send progress messages from VolumeOps to this object for display
-  connect(m_VolumeOps, SIGNAL (errorMessage(QString)), 
+  connect(m_VolumeOps, SIGNAL (errorMessage(QString)),
           this, SLOT(addErrorMessage(QString) ));
 
   m_VolumeOps->setH5InputFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
