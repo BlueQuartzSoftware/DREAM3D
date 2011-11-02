@@ -99,18 +99,18 @@ void VolumeOpsWidget::readSettings(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, m_, H5InputFile, "");
   on_m_H5InputFile_textChanged(QString(""));
 
-  READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
-  READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "VolumeOps_")
+  READ_FILEPATH_SETTING(prefs, m_, H5OutputFile, "");
+ // READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "VolumeOps_")
 
-  READ_SETTING(prefs, m_, xMin, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, yMin, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, zMin, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, xMax, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, yMax, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, zMax, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, XRes_New, ok, i, 0.0, Float)
-  READ_SETTING(prefs, m_, YRes_New, ok, i, 0.0, Float)
-  READ_SETTING(prefs, m_, ZRes_New, ok, i, 0.0, Float)
+  READ_SETTING(prefs, m_, XMin, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, YMin, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, ZMin, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, XMax, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, YMax, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, ZMax, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, XResolution, ok, i, 0.0, Float)
+  READ_SETTING(prefs, m_, YResolution, ok, i, 0.0, Float)
+  READ_SETTING(prefs, m_, ZResolution, ok, i, 0.0, Float)
 
 
   prefs.endGroup();
@@ -124,18 +124,17 @@ void VolumeOpsWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("VolumeOps");
   WRITE_STRING_SETTING(prefs, m_, H5InputFile)
-  WRITE_STRING_SETTING(prefs, m_, OutputDir)
-  WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
+  WRITE_STRING_SETTING(prefs, m_, H5OutputFile)
 
-  WRITE_SETTING(prefs, m_, xMin)
-  WRITE_SETTING(prefs, m_, yMin)
-  WRITE_SETTING(prefs, m_, zMin)
-  WRITE_SETTING(prefs, m_, xMax)
-  WRITE_SETTING(prefs, m_, yMax)
-  WRITE_SETTING(prefs, m_, zMax)
-  WRITE_SETTING(prefs, m_, XRes_New)
-  WRITE_SETTING(prefs, m_, YRes_New)
-  WRITE_SETTING(prefs, m_, ZRes_New)
+  WRITE_SETTING(prefs, m_, XMin)
+  WRITE_SETTING(prefs, m_, YMin)
+  WRITE_SETTING(prefs, m_, ZMin)
+  WRITE_SETTING(prefs, m_, XMax)
+  WRITE_SETTING(prefs, m_, YMax)
+  WRITE_SETTING(prefs, m_, ZMax)
+  WRITE_SETTING(prefs, m_, XResolution)
+  WRITE_SETTING(prefs, m_, YResolution)
+  WRITE_SETTING(prefs, m_, ZResolution)
 
   prefs.endGroup();
 }
@@ -162,16 +161,16 @@ void VolumeOpsWidget::setupGui()
   QObject::connect( com, SIGNAL(activated(const QString &)),
            this, SLOT(on_m_H5InputFile_textChanged(const QString &)));
 
-  QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
-  m_OutputDir->setCompleter(com2);
+  QR3DFileCompleter* com2 = new QR3DFileCompleter(this, false);
+  m_H5OutputFile->setCompleter(com2);
   QObject::connect( com2, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_OutputDir_textChanged(const QString &)));
+           this, SLOT(on_m_H5OutputFile_textChanged(const QString &)));
 
 
-  m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
-  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_xMin;
-  m_WidgetList << m_yMin << m_zMin << m_xMax << m_yMax << m_zMax;
-  m_WidgetList << m_XRes_New << m_YRes_New << m_ZRes_New;
+  m_WidgetList << m_H5InputFile << m_H5OutputFile << m_H5OutputFileBtn;
+  m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_XMin;
+  m_WidgetList << m_YMin << m_ZMin << m_XMax << m_YMax << m_ZMax;
+  m_WidgetList << m_XResolution << m_YResolution << m_ZResolution;
 }
 
 // -----------------------------------------------------------------------------
@@ -237,19 +236,13 @@ void VolumeOpsWidget::on_m_H5Btn_clicked()
 void VolumeOpsWidget::on_m_H5InputFile_textChanged(const QString &text)
 {
 
-  if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
-  {
-    QFileInfo fi(m_H5InputFile->text());
-    QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_VolumeOps";
-    outPath = QDir::toNativeSeparators(outPath);
-    m_OutputDir->setText(outPath);
-  }
+  verifyPathExists(m_H5InputFile->text(), m_H5InputFile);
 
   QFileInfo fi(m_H5InputFile->text());
   if (fi.exists() && fi.isFile())
   {
     // Set the output file Prefix based on the name of the input file
-    m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
+    //m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
 
     H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
     h5Reader->setFileName(m_H5InputFile->text().toStdString());
@@ -259,24 +252,31 @@ void VolumeOpsWidget::on_m_H5InputFile_textChanged(const QString &text)
     int err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
     if (err >= 0)
     {
+      // These are the values from the data file and are displayed to the user
       m_xDim->setText(QString::number(dims[0]));
       m_yDim->setText(QString::number(dims[1]));
       m_zDim->setText(QString::number(dims[2]));
       m_XRes->setText(QString::number(spacing[0]));
       m_YRes->setText(QString::number(spacing[1]));
       m_ZRes->setText(QString::number(spacing[2]));
-      m_xMin->setValue(0);
-      m_xMin->setRange(0,dims[0]-1);
-      m_yMin->setValue(0);
-      m_yMin->setRange(0,dims[1]-1);
-      m_zMin->setValue(0);
-      m_zMin->setRange(0,dims[2]-1);
-      m_xMax->setValue(dims[0]);
-      m_xMax->setRange(0,dims[0]-1);
-      m_yMax->setValue(dims[1]);
-      m_yMax->setRange(0,dims[1]-1);
-      m_zMax->setValue(dims[2]);
-      m_zMax->setRange(0,dims[2]-1);
+
+      // These are the new values that the user wants to use.
+      m_XMin->setValue(0);
+      m_XMin->setRange(0,dims[0]-1);
+      m_YMin->setValue(0);
+      m_YMin->setRange(0,dims[1]-1);
+      m_ZMin->setValue(0);
+      m_ZMin->setRange(0,dims[2]-1);
+      m_XMax->setValue(dims[0]);
+      m_XMax->setRange(0,dims[0]-1);
+      m_YMax->setValue(dims[1]);
+      m_YMax->setRange(0,dims[1]-1);
+      m_ZMax->setValue(dims[2]);
+      m_ZMax->setRange(0,dims[2]-1);
+
+      m_XResolution->setValue(spacing[0]);
+      m_YResolution->setValue(spacing[1]);
+      m_ZResolution->setValue(spacing[2]);
     }
 
   }
@@ -287,36 +287,27 @@ void VolumeOpsWidget::on_m_H5InputFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeOpsWidget::on_m_OutputDirBtn_clicked()
+void VolumeOpsWidget::on_m_H5OutputFileBtn_clicked()
 {
-  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Output Directory"), outputFile);
-  if (!outputFile.isNull())
-  {
-    this->m_OutputDir->setText(outputFile);
-    if (verifyPathExists(outputFile, m_OutputDir) == true )
-    {
-      checkIOFiles();
-    }
-  }
+  QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Voxel File"),
+                                                 m_OpenDialogLastDirectory,
+                                                 tr("HDF5 Voxel Files (*.h5voxel)") );
+  if ( true == file.isEmpty() ){ return;  }
+  QFileInfo fi (file);
+  QString ext = fi.suffix();
+  m_H5OutputFile->setText(fi.absoluteFilePath());
+  m_OpenDialogLastDirectory = fi.path();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeOpsWidget::on_m_OutputDir_textChanged(const QString & text)
+void VolumeOpsWidget::on_m_H5OutputFile_textChanged(const QString & text)
 {
-  verifyPathExists(m_OutputDir->text(), m_OutputDir);
+  verifyPathExists(m_H5OutputFile->text(), m_H5OutputFile);
   checkIOFiles();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeOpsWidget::on_m_OutputFilePrefix_textChanged(const QString &text)
-{
-  checkIOFiles();
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -334,14 +325,6 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
     return;
   }
 
-#if 0
-  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("VolumeOps")) )
-  {
-    return;
-  }
-  SANITY_CHECK_INPUT(m_, OutputDir)
-#endif
-
 
   if (m_WorkerThread != NULL)
   {
@@ -358,6 +341,18 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
 
   // Pull the values from the GUI and push them into the m_VolumeOps variable
 
+  m_VolumeOps->setH5InputFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
+  m_VolumeOps->setH5OutputFile( QDir::toNativeSeparators(m_H5OutputFile->text()).toStdString());
+
+  m_VolumeOps->setXRes(m_XResolution->value());
+  m_VolumeOps->setYRes(m_YResolution->value());
+  m_VolumeOps->setZRes(m_ZResolution->value());
+  m_VolumeOps->setXMin(m_XMin->value());
+  m_VolumeOps->setXMax(m_XMax->value());
+  m_VolumeOps->setYMin(m_YMin->value());
+  m_VolumeOps->setYMax(m_YMax->value());
+  m_VolumeOps->setZMin(m_ZMin->value());
+  m_VolumeOps->setZMax(m_ZMax->value());
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * VolumeOps object. Since the VolumeOps object has been moved to another
@@ -397,19 +392,6 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
   connect(m_VolumeOps, SIGNAL (errorMessage(QString)),
           this, SLOT(addErrorMessage(QString) ));
 
-  m_VolumeOps->setH5InputFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
-  m_VolumeOps->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
-  m_VolumeOps->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-
-  m_VolumeOps->setXRes_New(m_XRes_New->value());
-  m_VolumeOps->setYRes_New(m_YRes_New->value());
-  m_VolumeOps->setZRes_New(m_ZRes_New->value());
-  m_VolumeOps->setxMin(m_xMin->value());
-  m_VolumeOps->setxMax(m_xMax->value());
-  m_VolumeOps->setyMin(m_yMin->value());
-  m_VolumeOps->setyMax(m_yMax->value());
-  m_VolumeOps->setzMin(m_zMin->value());
-  m_VolumeOps->setzMax(m_zMax->value());
 
   setWidgetListEnabled(false);
   emit pipelineStarted();
@@ -427,6 +409,12 @@ void VolumeOpsWidget::pipelineComplete()
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
   emit pipelineEnded();
+  // If the operation was canceled, delete the output file
+  if (m_VolumeOps->getCancel() == true)
+  {
+    QDir fi;
+    fi.remove(m_H5OutputFile->text());
+  }
   checkIOFiles();
   m_VolumeOps->deleteLater();
 }

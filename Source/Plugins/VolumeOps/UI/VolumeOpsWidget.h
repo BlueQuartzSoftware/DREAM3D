@@ -59,7 +59,7 @@ class QListWidgetItem;
  */
 class VolumeOpsWidget : public DREAM3DPluginFrame, private Ui::VolumeOpsWidget
 {
-  Q_OBJECT
+  Q_OBJECT;
 
   public:
     VolumeOpsWidget(QWidget *parent = 0);
@@ -91,25 +91,23 @@ class VolumeOpsWidget : public DREAM3DPluginFrame, private Ui::VolumeOpsWidget
 
   protected slots:
     void on_m_H5Btn_clicked();
-    void on_m_OutputDirBtn_clicked();
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();
     void on_m_LoadSettingsBtn_clicked();
+    void on_m_H5OutputFileBtn_clicked();
 
     void on_m_H5InputFile_textChanged(const QString &text);
+    void on_m_H5OutputFile_textChanged(const QString &text);
 
-    void on_m_OutputDir_textChanged(const QString &text);
-    void on_m_OutputFilePrefix_textChanged(const QString &text);
+  private slots:
+    // slots for our worker thread to communicate
+    virtual void addErrorMessage(QString message);
+    virtual void addWarningMessage(QString message);
+    virtual void addProgressMessage(QString message);
 
-    private slots:
-      // slots for our worker thread to communicate
-      virtual void addErrorMessage(QString message);
-      virtual void addWarningMessage(QString message);
-      virtual void addProgressMessage(QString message);
-
-      /* Surface Mesh Thread communicates throught these methods */
-      virtual void pipelineComplete();
-      virtual void pipelineProgress(int value);
+    /* Surface Mesh Thread communicates throught these methods */
+    virtual void pipelineComplete();
+    virtual void pipelineProgress(int value);
 
   private:
     QList<QWidget*>           m_WidgetList;

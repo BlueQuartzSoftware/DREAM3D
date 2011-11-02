@@ -34,66 +34,39 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef VolumeOps_H_
-#define VolumeOps_H_
+#ifndef CROPVOLUME_H_
+#define CROPVOLUME_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
-#include "DREAM3DLib/Common/Observer.h"
-#include "VolumeOpsFunc.h"
+#include "VolumeOps/VolumeOpsFunc.h"
 
 
 
-/**
-* @class VolumeOps VolumeOps.h AIM/VolumeOps/VolumeOps.h
-* @brief This class serves as the main entry point to execute the VolumeOps
-* pipeline
-* @author
-* @author
-* @date
-* @version 1.0
-*/
-class VolumeOps : public AbstractPipeline, public Observer
+class CropVolume : public AbstractPipeline, public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(VolumeOps);
-    DREAM3D_TYPE_MACRO(VolumeOps);
-    DREAM3D_STATIC_NEW_MACRO(VolumeOps);
+    DREAM3D_SHARED_POINTERS(CropVolume);
+    DREAM3D_TYPE_MACRO(CropVolume);
+    DREAM3D_STATIC_NEW_MACRO(CropVolume);
 
-    virtual ~VolumeOps();
+    virtual ~CropVolume();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5InputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5OutputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
-    DREAM3D_INSTANCE_PROPERTY(int, YMin)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+    DREAM3D_INSTANCE_PROPERTY(VolumeOpsFunc::Pointer, DataPtr)
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMax)
-    DREAM3D_INSTANCE_PROPERTY(int, YMax)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+    void manipulate_volume();
 
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
-
-	/**
-    * @brief Main method to run the operation
-    */
     virtual void execute();
 
   protected:
-    VolumeOps();
+    CropVolume();
 
   private:
-    VolumeOpsFunc::Pointer m;
-
-    VolumeOps(const VolumeOps&);    // Copy Constructor Not Implemented
-    void operator=(const VolumeOps&);  // Operator '=' Not Implemented
+    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
+    void operator=(const CropVolume&); // Operator '=' Not Implemented
 };
 
-
-
-#endif /* VolumeOps_H_ */
+#endif /* CROPVOLUME_H_ */
