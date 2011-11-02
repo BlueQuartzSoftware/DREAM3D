@@ -49,8 +49,14 @@ class QGraphicsPixmapItem;
 #include "EbsdLib/EbsdConstants.h"
 
 
-/*
- *
+/**
+ * @class EbsdReferenceFrameDialog EbsdReferenceFrameDialog.h EbsdImport/UI/EbsdReferenceFrameDialog.h
+ * @brief This Dialog displays an IPF image of one slice of the users data and allows
+ * the user to rotate or mirror the data so that they may rectify the reference frame
+ * of the EBSD scan and the reference frame of the sample.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Oct 2, 2011
+ * @version 1.0
  */
 class EbsdReferenceFrameDialog : public QDialog, private Ui::EbsdReferenceFrameDialog
 {
