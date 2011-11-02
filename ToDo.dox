@@ -7,7 +7,7 @@ so it can be integrated with the other documentation pages.
 
 @section todomisc Misc Bugs
 @li Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
-@li Add over ride of stacking order and Orientation to Reconstruction plugin
+@li <b>DONE</b> Add over ride of stacking order and Orientation to Reconstruction plugin
 @li <b>DONE</b> (MAJ 2011/09/22) - Fix OS X installation to produce smaller size binaries
 @li <b>DONE</b> (MAJ 2011/09/21) - Add Subvolume Cropping Utility (V2 Only)
 @li <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
@@ -31,7 +31,7 @@ so it can be integrated with the other documentation pages.
 
 @section reconstruction Reconstruction:
 @li Fix Reconstruction Command line application with QualityMetric Filters
-@li Indicate with a set of images what is meant for the "Orientation" of the OIM Data
+@li <b>DONE</b> (MAJ 2011/10/25) - Indicate with a set of images what is meant for the "Orientation" of the OIM Data
 @li <b>DONE</b> (MAJ 2011/07/25) - output a ph file in the reconstruction tab.
 @li <b>DONE</b> (MAG 2011/06/08) - Fix 2 Phase bug - Bad output file is written
 @li <b>DONE</b> (MAJ 2011/06/13) - Put pop-up on check of h5grain to let them know they need special Paraview.
