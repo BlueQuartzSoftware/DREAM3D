@@ -116,8 +116,9 @@ if(DREAM3D_BUILD_GUI)
     set(${PLUGIN_NAME}_HELP_FILES
         ${PROJECT_SOURCE_DIR}/UI/Help/index.html
         ${PROJECT_SOURCE_DIR}/UI/Help/image001.png
-        ${PROJECT_SOURCE_DIR}/UI/Help/HKLReferenceFrame.png
-        ${PROJECT_SOURCE_DIR}/UI/Help/TSLReferenceFrame.png
+        ${PROJECT_SOURCE_DIR}/UI/Help/image002.png
+#        ${PROJECT_SOURCE_DIR}/UI/Help/HKLReferenceFrame.png
+#        ${PROJECT_SOURCE_DIR}/UI/Help/TSLReferenceFrame.png
         )
     
     #- This copies all the HTML files into the Build directory so the help
