@@ -1,21 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>License.txt</title>
+</head>
 <body>
 
-<h2>Distribution authorized to DoD components and DoD contractors only</h2>
-<pre>         
-Administrative or Operational Use;                                          
-February 2009.                                                              
-Other requests for this document shall be referred to                       
-U.S. Air Force Research Laboratory                                          
-2230 Tenth St., Ste. 1                                                      
-Wright-Patterson AFB, OH 45433-7817                                         
-                                                                            
-Destroy by contents or reconstruction of the document.                      
-                                                                            
-Portions of the software were written under U.S. Air Force contrct FA8650-07-D-5800     
+<h2>PUBLIC RELEASE INFORMATION</h2>
+
+<pre>
+  ========================================================================
+  Copyright (c) 2009-2011 Michael A. Jackson, All rights reserved.
+  Copyright (c) 2009-2011 U.S. Air Force Research Laboratory
+
+  This software and ancillary information known as AIMRepresentation (and herein
+  called "SOFTWARE") is made available under the terms described below.
+
+  The SOFTWARE has NOT been approved for release with associated Case Number 
+  88ABW-2011-2288, granted by US Air ForcePublic Affairs.
+
+  Unless otherwise indicated, this SOFTWARE has been authored by an
+  employee or employees of the U.S. Air Force Research Laboratory or one of
+  its contractors or subcontractors under Contract No. FA8650-07-D-5800 with
+  the United States Air Force.
+
+  The United States Government has rights to use, reproduce, and
+  distribute this SOFTWARE. The public may copy, distribute, prepare
+  derivative works and publicly display this SOFTWARE without charge,
+  provided that this Notice and any statement of authorship are
+  reproduced on all copies.
+
+  Neither the U. S. Government, Universal Technology Corporation or BlueQuartz
+  Software makes any warranty, either express or implied, nor assumes any 
+  liability or responsibility for the use of this SOFTWARE.
+
+  If SOFTWARE is modified to produce derivative works, such modified
+  SOFTWARE should be clearly marked, so as not to confuse it with the
+  version available from the US Air Force Research Laboratories or 
+  BlueQuartz Software.
 </pre>
 
-<hr/>
+
 <h2>DREAM.3D License Version 1.0</h2>
 
 <pre>
@@ -63,42 +88,6 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre>
 
-<h2>PUBLIC RELEASE INFORMATION</h2>
-Upon public release the following license information will pertain to this work:
-
-<pre>
-  ========================================================================
-  Copyright (c) 2009-2011 Michael A. Jackson, All rights reserved.
-  Copyright (c) 2009-2011 U.S. Air Force Research Laboratory
-
-  This software and ancillary information known as AIMRepresentation (and herein
-  called "SOFTWARE") is made available under the terms described below.
-  
-  The SOFTWARE has NOT been approved for release with associated Case Number 
-  XXXXXXXXX, granted by US Air ForcePublic Affairs.
-
-  Unless otherwise indicated, this SOFTWARE has been authored by an
-  employee or employees of the U.S. Air Force Research Laboratory or one of
-  its contractors or subcontractors under Contract No. FA8650-07-D-5800 with
-  the United States Air Force.
-
-  The United States Government has rights to use, reproduce, and
-  distribute this SOFTWARE.  The public may copy, distribute, prepare
-  derivative works and publicly display this SOFTWARE without charge,
-  provided that this Notice and any statement of authorship are
-  reproduced on all copies.
-
-  Neither the U. S. Government, Universal Technology Corporation or BlueQuartz
-  Software makes any warranty, either express or implied, nor assumes any 
-  liability or responsibility for the use of this SOFTWARE.
-
-  If SOFTWARE is modified to produce derivative works, such modified
-  SOFTWARE should be clearly marked, so as not to confuse it with the
-  version available from Los Alamos National Laboratory.
-</pre>
-
-
-<hr/>
 <h2>Other Licenses</h2>
 <pre>
 Other Licenses apply to third party software frameworks that are used to create
