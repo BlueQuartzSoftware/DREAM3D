@@ -45,6 +45,7 @@
 
 #include <QtGui/QPixmap>
 #include <QtGui/QGraphicsPixmapItem>
+#include <QtGui/QPushButton>
 
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/OIMColoring.hpp"
@@ -83,12 +84,15 @@ m_PixmapGraphicsItem(NULL)
           this, SLOT(originChanged(bool)));
   connect(m_LowerRightBtn, SIGNAL(toggled(bool)),
           this, SLOT(originChanged(bool)));
+  connect(buttonBox, SIGNAL(helpRequested ()),
+          this, SLOT(toggleHelp()));
 
   loadEbsdData();
   updateGraphicsView();
   m_CurrentCorner = 0;
   m_UpperLeftBtn->setChecked(true);
-  m_ExplanationScrollArea->setVisible(m_ExplanationBtn->isChecked());
+  m_ExplanationScrollArea->setVisible(false);
+  buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
 
 }
 
@@ -316,8 +320,14 @@ void EbsdReferenceFrameDialog::updateDisplay()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdReferenceFrameDialog::on_m_ExplanationBtn_toggled(bool b)
+void EbsdReferenceFrameDialog::toggleHelp()
 {
-  m_ExplanationScrollArea->setVisible(m_ExplanationBtn->isChecked());
+  if (m_ExplanationScrollArea->isVisible()) {
+    m_ExplanationScrollArea->setVisible(false);
+  }
+  else
+  {
+    m_ExplanationScrollArea->setVisible(true);
+  }
 }
 

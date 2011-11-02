@@ -131,7 +131,7 @@
             <string>HElp</string>
            </property>
            <property name="text">
-            <string>Advanced Reference Frame Options</string>
+            <string>Set Reference Frame</string>
            </property>
           </widget>
          </item>
@@ -213,7 +213,7 @@
          <item>
           <widget class="QLineEdit" name="m_zSpacing">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
