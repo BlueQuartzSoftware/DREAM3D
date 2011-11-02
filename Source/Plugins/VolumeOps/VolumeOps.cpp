@@ -1,4 +1,38 @@
-
+/* ============================================================================
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "VolumeOps.h"
 
@@ -78,7 +112,7 @@ void VolumeOps::execute()
   m->zstart = m_zMin*spacing[2];
 
   m->initializeAttributes();
-  
+
   updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
   err = h5Reader->readVoxelData(m->m_GrainIndicies_old, m->m_Phases_old, m->m_Euler1s_old, m->m_Euler2s_old, m->m_Euler3s_old, m->crystruct, m->phaseType, m->totalpoints_old);
   CHECK_FOR_ERROR(VolumeOpsFunc, (h5Reader->getErrorMessage()), err);
@@ -88,7 +122,7 @@ void VolumeOps::execute()
   m->manipulate_volume();
   CHECK_FOR_ERROR(VolumeOpsFunc, "Error operating on volume", err);
   CHECK_FOR_CANCELED(VolumeOpsFunc, "VolumeOps was canceled",  manipulate_volume)
-  
+
   /** ********** This section writes the Voxel Data for the Stats Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
   MAKE_OUTPUT_FILE_PATH ( hdf5VolumeFile, DREAM3D::Reconstruction::H5VoxelFile)
