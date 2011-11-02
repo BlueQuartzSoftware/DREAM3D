@@ -118,7 +118,6 @@ zpoints(0)
 
   goodVoxels = NULL;
 
-
   INIT_AIMARRAY(m_GrainIndicies,int);
   INIT_AIMARRAY(m_Phases,int);
   INIT_AIMARRAY(m_Euler1s,float);
@@ -131,7 +130,6 @@ zpoints(0)
   INIT_AIMARRAY(m_AlreadyChecked,bool);
   INIT_AIMARRAY(m_GrainCounts,int);
   INIT_AIMARRAY(m_GoodVoxels,bool);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -459,8 +457,10 @@ void ReconstructionFunc::align_sections()
 						  }
 						  if (w > misorientationtolerance) disorientation++;
 						}
-						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
-						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
+//						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
+//						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
+						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) count = count-1;
+						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) count = count-1;
 					  }
 					  else if(alignmeth == DREAM3D::Reconstruction::OuterBoundary)
 					  {
@@ -911,7 +911,7 @@ void ReconstructionFunc::assign_badpoints()
 				}
 				count++;
 			}
-			if(currentvlist.size() >= minallowedgrainsize)
+			if(currentvlist.size() >= minallowedgrainsize*100)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
@@ -920,7 +920,7 @@ void ReconstructionFunc::assign_badpoints()
 				}
 				m_Grains[0]->phase = 0;
 			}
-			if(currentvlist.size() < minallowedgrainsize)
+			if(currentvlist.size() < minallowedgrainsize*100)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
