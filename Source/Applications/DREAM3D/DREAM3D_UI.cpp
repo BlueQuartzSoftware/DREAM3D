@@ -66,6 +66,9 @@
 #include "EbsdImport/UI/EbsdImportPlugin.h"
 #include "Reconstruction/UI/ReconstructionPlugin.h"
 #include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
+#include "Extrapolation2Dto3D/UI/Extrapolation2Dto3DPlugin.h"
+#include "FileConversion/UI/FileConversionPlugin.h"
+#include "VolumeOps/UI/VolumeOpsPlugin.h"
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
@@ -558,8 +561,11 @@ void DREAM3D_UI::loadPlugins()
   pluginNames << QString::fromStdString(DREAM3D::UIPlugins::EbsdImportFile)
               << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
               << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::Extrapolation2Dto3DFile)
               << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile);
+              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::FileConversionFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::VolumeOpsFile);
 
   // Now try to sort the paths based on their names
   QVector<QString> sortedPaths;
@@ -711,7 +717,7 @@ void DREAM3D_UI::on_actionAbout_triggered()
   QString msg ("DREAM3D Version ");
   msg.append(DREAM3DLib::Version::Complete.c_str());
   msg.append("\n\nThe Primary Developers are:\n");
-  msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@ml.wpafb.af.mil\n");
+  msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
   msg.append("Please send any help, bug or feature requests dream3d@bluequartz.net\n\n");
   msg.append("The latest version can always be downloaded from http://dream3d.bluequartz.net\n");
