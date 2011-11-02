@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>624</width>
-    <height>422</height>
+    <width>621</width>
+    <height>393</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -267,26 +267,12 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QFSDropLineEdit" name="m_OutputDir"/>
+         <widget class="QFSDropLineEdit" name="m_H5OutputFile"/>
         </item>
         <item row="0" column="2">
-         <widget class="QPushButton" name="m_OutputDirBtn">
+         <widget class="QPushButton" name="m_H5OutputFileBtn">
           <property name="text">
-           <string>Select</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Output File Prefix:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="m_OutputFilePrefix">
-          <property name="text">
-           <string>Reconstruction_</string>
+           <string>Set</string>
           </property>
          </widget>
         </item>
@@ -380,30 +366,30 @@
       <item row="0" column="0">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="1">
-         <widget class="QSpinBox" name="m_xMin"/>
+         <widget class="QSpinBox" name="m_XMin"/>
         </item>
         <item row="0" column="3">
-         <widget class="QSpinBox" name="m_xMax">
+         <widget class="QSpinBox" name="m_XMax">
           <property name="maximum">
            <number>10000</number>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="m_yMin"/>
+         <widget class="QSpinBox" name="m_YMin"/>
         </item>
         <item row="1" column="3">
-         <widget class="QSpinBox" name="m_yMax">
+         <widget class="QSpinBox" name="m_YMax">
           <property name="maximum">
            <number>10000</number>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="m_zMin"/>
+         <widget class="QSpinBox" name="m_ZMin"/>
         </item>
         <item row="2" column="3">
-         <widget class="QSpinBox" name="m_zMax">
+         <widget class="QSpinBox" name="m_ZMax">
           <property name="maximum">
            <number>10000</number>
           </property>
@@ -484,7 +470,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QDoubleSpinBox" name="m_XRes_New">
+         <widget class="QDoubleSpinBox" name="m_XResolution">
           <property name="decimals">
            <number>4</number>
           </property>
@@ -511,14 +497,14 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="m_YRes_New">
+         <widget class="QDoubleSpinBox" name="m_YResolution">
           <property name="decimals">
            <number>4</number>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="m_ZRes_New">
+         <widget class="QDoubleSpinBox" name="m_ZResolution">
           <property name="decimals">
            <number>4</number>
           </property>

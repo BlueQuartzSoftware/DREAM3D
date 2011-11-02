@@ -14,11 +14,13 @@ include_directories(${DREAM3DProj_BINARY_DIR}
 SET (VolumeOps_HDRS
   ${PROJECT_SOURCE_DIR}/VolumeOps.h
   ${PROJECT_SOURCE_DIR}/VolumeOpsFunc.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/CropVolume.h
 )
 
 SET (VolumeOps_SRCS
   ${PROJECT_SOURCE_DIR}/VolumeOps.cpp
   ${PROJECT_SOURCE_DIR}/VolumeOpsFunc.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/CropVolume.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "VolumeOps" "${VolumeOps_HDRS}" "${VolumeOps_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
@@ -106,7 +108,9 @@ endif()
 
 
 set(${PLUGIN_NAME}_HELP_FILES
-    ${PROJECT_SOURCE_DIR}/UI/Help/index.html)
+    ${PROJECT_SOURCE_DIR}/UI/Help/index.html
+    ${PROJECT_SOURCE_DIR}/UI/Help/image001.png
+    )
 
 #- This copies all the HTML files into the Build directory so the help
 #- works from the Build Tree
