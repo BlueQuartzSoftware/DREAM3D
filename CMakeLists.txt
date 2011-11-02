@@ -268,6 +268,7 @@ set (DREAM3D_PLUGIN_LIST
     MicrostructureStatistics 
     Extrapolation2Dto3D
     FileConversion
+    VolumeOps
 )
 
  # Build the DREAM3D Application  
