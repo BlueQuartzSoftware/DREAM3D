@@ -74,7 +74,7 @@ class EbsdReferenceFrameDialog : public QDialog, private Ui::EbsdReferenceFrameD
   protected slots:
     void originChanged(bool checked);
 
-    void on_m_ExplanationBtn_toggled(bool b);
+    void toggleHelp();
 
 
 
