@@ -1,85 +1,61 @@
 /**
-@page todo DREAM3D ToDo List
+@page todo DREAM3D ToDo List and RoadMap
 
 This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
+@section todoMain ToDo List for Version 2 Release
 
-@section todomisc Misc Bugs
+
+@subsection todomisc Misc Bugs
 @li Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
-@li <b>DONE</b> Add over ride of stacking order and Orientation to Reconstruction plugin
-@li <b>DONE</b> (MAJ 2011/09/22) - Fix OS X installation to produce smaller size binaries
-@li <b>DONE</b> (MAJ 2011/09/21) - Add Subvolume Cropping Utility (V2 Only)
-@li <b>DONE</b> (MAJ 2011/07/13) - Modularize the code so that code only associated with a plugin is with just that plugin and not in the DREAMLib
-@li <b>DONE</b> (MAJ 2011/07/18) - Allow other developers to include their own plugins that are possibly from a different repository
-@li <b>DONE</b> (MAJ 2011/09/15) - Create a Vtk to H5Voxel convertor program
-@li <b>DONE</b> (MAJ 2011/09/14) - Add Stacking Order and Orientation to EbsdImnport Plugin to be written to the .h5ebsd file
-@li <b>DONE</b> (MAJ 2011/09/14) - Add display of stacking order and Orientation to Reconstruction plugin
-@li <b>DONE</b> (MAJ 9/8/11) - enhance Progress/Warning/Error messages from the pipeline to display in the GUI
-@li <b>DONE</b> (MAJ 9/9/11) - Create a "Temp File" class that creates a temp file and then deletes the file when the variable goes out of scope.
+@li Update all screen shots for all modules using a single Operating System
+@li Update documentation for each Module
+@li Generate and post developer documentation in PDF/HTML form
 
 
-@section todohkl HKL Support
-@li <b>DONE</b> (MAG 2011/08/20) - During reading of the .ctf file or the .h5ebsd file the Euler angles need to be adjusted properly
-@li <b>DONE</b> (MAG 2011/08/20) - During reading of the .ctf file or the .h5ebsd file the orientation needs to be adjusted properly
-@li <b>DONE</b> (MAJ 2011/08/20) - Add new QualityMetric Filter type to Reconstruction Pipeline
-@li <b>DONE</b> (MAJ 2011/08/14) - Fix Preset file reading so that the new Quality Metric Filters now work
 
-
-@section ang_import Ang Import:
-@li <b>DONE</b> (MAJ 2011/06/13) - Better Display of errors when importing to help user fix their data
-
-@section reconstruction Reconstruction:
-@li Fix Reconstruction Command line application with QualityMetric Filters
-@li <b>DONE</b> (MAJ 2011/10/25) - Indicate with a set of images what is meant for the "Orientation" of the OIM Data
-@li <b>DONE</b> (MAJ 2011/07/25) - output a ph file in the reconstruction tab.
-@li <b>DONE</b> (MAG 2011/06/08) - Fix 2 Phase bug - Bad output file is written
-@li <b>DONE</b> (MAJ 2011/06/13) - Put pop-up on check of h5grain to let them know they need special Paraview.
-@li <b>DONE</b> (MAJ 2011/05/27) - Set output prefix based on the name of the input file
-@li <b>DONE</b> (MAJ 2011/06/07) - Write RectilinearGrid for VTK files with Optional Scalars
-@li <b>DONE</b> (MAJ 2011/06/07) - Combine all vtk to 1 per tab (with option pop-up to click all attributes desired).
-@li <b>DONE</b> (MAJ 2011/06/07) - Change all vtk to rectilinear grid.
-
-@section  graingenerator GrainGenerator:
-@li <b>DONE</b> (MAJ 2011/06/07) - Write PhaseType array from Reconstruction and GrainGenerator to VoxelData.h5.
-@li <b>DONE</b> (MAJ 2011/05/30) - Confirm Crashing bug in Destructor of GrainGeneratorFunc is fixed.
-@li <b>DONE</b> (MAG 2011/06/08) - Switch to defining Dimensions and resolution of the volume to be created
-@li <b>DONE</b> (MAG 2011/06/10) - Real time indicate the average grain size, number of grains as user inputs values
-into the user interface
-@li <b>DONE</b> (MAJ 2011/05/27) - Stop reading MicroTexture from the HDF5 Input file
-@li <b>DONE</b> (MAJ 2011/06/07) - Combine all vtk to 1 per tab (with option pop-up to click all attributes desired).
-@li <b>DONE</b> (MAJ 2011/06/07) - Change all vtk to rectilinear grid.
-
-@section surfacemeshing Surface Meshing:
-@li <b>DONE</b> (MAJ 2011/07) - Output STL File per grain
-@li <b>DONE</b> (MAG 2011/05/31) - Fix bug in assign_grains();
-@li Implement Surface Mesh Smoothing
-
-@section twotothree 2D to 3D Module:
-@li <b>DONE</b> (MAG 2011/09/21) - Create new tab for this interface which will generate 3D Stats from a set of 2D statistics or input files
-
-@section microstats Microstructure Statistics Module:
-@li <b>DONE</b> (MAG 2011/06/08) - Move all the stats functions to their own class out of the Reconstruction and GrainGenerator modules
-@li <b>DONE</b> (MAJ 2011/05/28) - Add new tab "Microstructure Statistics" which will use existing grain structure files as the input.
-@li <b>DONE</b> (MAG 2011/06/08) - Stop Calculating MicroTexture
-@li <b>DONE</b> (MAJ 2011/09/22) - Add command line options to the MicroStats utility to replicate the GUI more faithfully
-
-
-@section statsgen StatsGenerator
-@li <b>DONE</b> (MAG 2011/06/10) - Rolled Preset Dialog needs to be redone and made "idiot" proof.
-@li <b>DONE</b> (MAJ 2011/05/28) - When switching between presets the ODF/MDF tables are NOT cleared as they should be.
-
-@section infrastructure Infrastructure Changes:
+@subsection infrastructure Infrastructure Changes:
 @li Move to a more modular pipeline architecture for each of the Modules where we start mimicing a VTK filter pipeline.
-@li <b>DONE</b> (MAJ 2011/05/28) - Move each UI Tab Module to be an actual Plugin library.
-@li <b>DONE</b> (MAJ 2011/05/28) - Redesign Main User Interface to load an individual Tab at a time through a menu instead of having all the tabs.
-@li <b>DONE</b> (MAJ 2011/05/28) - Better Organize Source Code Files
 
-@section pv ParaView Integration:
+@subsection pv ParaView Integration:
 @li Create .h5ebsd plugin for ParaView to allow the direct reading of the imported OIM data
 
-@section phtohdf5 PhToHDF5
-@li <b>DONE</b> (MAJ 2011/06/25) - Allow use of Euler Angles File in addition to grain id file
+
+@subsection ebsd_import Ebsd Import Plugin
+
+@subsection reconstruction Reconstruction Plugin
+@li Fix Reconstruction Command line application with QualityMetric Filters
+
+
+@subsection  graingenerator GrainGenerator Plugin
+@li Integrate 2D Plots into the output that would show grain size, space, neighbors, etc.
+
+
+@subsection surfacemeshing Surface Meshing Plugin
+@li Implement Surface Mesh Smoothing
+
+@subsection twotothree 2D to 3D Plugin
+
+@subsection microstats Microstructure Statistics Plugin
+
+@subsection volumeops VolumeOps Plugin
+
+@subsection volumemeshing Volume Meshing Plugin
+@li Integrate PolyMesh from Cornell as a plugin
+
+
+
+
+@subsection statsgen StatsGenerator
+@li Create colorized IPF plots
+
+
+@section roadmap RoadMap (The way Forward)
+
+@li Organize the code such that each plugin can be broken down into discreet filter
+operations much like VTK/ITK/ParaView
+@li Reorganize the .h5ebsd file to include Images
 
 
 */
