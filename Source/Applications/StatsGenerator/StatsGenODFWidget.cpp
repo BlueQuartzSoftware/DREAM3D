@@ -40,6 +40,7 @@
 
 //-- Qt Includes
 #include <QtGui/QAbstractItemDelegate>
+#include <QtCore/QtConcurrentMap>
 
 #include <qwt.h>
 #include <qwt_plot.h>
@@ -55,6 +56,8 @@
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
 #include "StatsGen.h"
+
+
 
 
 // -----------------------------------------------------------------------------
@@ -83,6 +86,8 @@ StatsGenODFWidget::~StatsGenODFWidget()
   {
     m_ODFTableModel->deleteLater();
   }
+  m_ColorPoleFigure->cancel();
+  m_ColorPoleFigure->waitForFinished();
 }
 
 // -----------------------------------------------------------------------------
@@ -304,6 +309,13 @@ void StatsGenODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
+
+  m_ColorPoleFigure = new QFutureWatcher<QImage>(this);
+  connect(m_ColorPoleFigure, SIGNAL(resultReadyAt(int)),
+          this, SLOT(showColorPoleFigure(int)));
+  connect(m_ColorPoleFigure, SIGNAL(finished()),
+          this, SLOT(colorPoleFigureGenerationComplete()));
+
 }
 
 // -----------------------------------------------------------------------------
@@ -412,6 +424,51 @@ void StatsGenODFWidget::updatePlots()
 {
   on_m_CalculateODFBtn_clicked();
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::showColorPoleFigure(int imageIndex)
+{
+ // labels[num]->setPixmap(QPixmap::fromImage(imageScaling->resultAt(num)));
+  switch(imageIndex)
+  {
+    case 0:
+      m_ColorPoleFigure->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_001.tif");
+      m_001PF->setPixmap(QPixmap::fromImage(m_ColorPoleFigure->resultAt(imageIndex)));
+      break;
+    case 1:
+      m_ColorPoleFigure->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_011.tif");
+      m_011PF->setPixmap(QPixmap::fromImage(m_ColorPoleFigure->resultAt(imageIndex)));
+      break;
+    case 2:
+      m_ColorPoleFigure->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_111.tif");
+      m_111PF->setPixmap(QPixmap::fromImage(m_ColorPoleFigure->resultAt(imageIndex)));
+      break;
+    default:
+      break;
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::colorPoleFigureGenerationComplete()
+{
+//  std::cout << "ODF Pole Figure generation complete" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage generateColorPoleFigure(const PoleFigureData &data)
+{
+  ColorPoleFigure colorPoleFigure;
+  return colorPoleFigure.generateImage(data);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -471,6 +528,17 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     //TODO: Present Error Message
     return;
   }
+
+  // This is multi-threaded on appropriate hardware.
+  qint32 kRad[2] = {5, 5};
+  qint32 pfSize[2] = {250, 250};
+  QVector<PoleFigureData> data;
+  data.push_back(PoleFigureData(x001.data(), y001.data(), x001.size(), QString("<001>"), kRad, pfSize));
+  data.push_back(PoleFigureData(x011.data(), y011.data(), x011.size(), QString("<011>"), kRad, pfSize));
+  data.push_back(PoleFigureData(x111.data(), y111.data(), x111.size(), QString("<111>"), kRad, pfSize));
+  // This kicks off the threads
+  m_ColorPoleFigure->setFuture(QtConcurrent::mapped(data, generateColorPoleFigure));
+
 
   QwtArray<double> x001d(x001.size());
   QwtArray<double> y001d(y001.size());
