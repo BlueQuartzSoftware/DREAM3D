@@ -49,7 +49,7 @@ class QLineEdit;
 
 
 /**
- * @class AIMPluginFrame AIMPluginFrame.h AIM/GUI/AIMPluginFrame.h
+ * @class DREAM3DPluginFrame DREAM3DPluginFrame.h QtSupport/DREAM3DPluginFrame.h
  * @brief This class is a super class for any High Level User Interface element
  * that would get loaded from a plugin type architecture. The class implements
  * some common methods that are needed by all subclasses. Subclasses should implement
