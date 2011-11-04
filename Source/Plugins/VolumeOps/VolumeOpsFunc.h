@@ -89,10 +89,10 @@ public:
 
     virtual ~VolumeOpsFunc();
 
-    typedef boost::shared_array<float>    SharedFloatArray;
-    typedef boost::shared_array<int>      SharedIntArray;
+//    typedef boost::shared_array<float>    SharedFloatArray;
+//    typedef boost::shared_array<int>      SharedIntArray;
 
-	std::vector<Ebsd::CrystalStructure> crystruct;
+    std::vector<Ebsd::CrystalStructure> crystruct;
     std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies_old, m_GrainIndicies_old, int)
@@ -126,22 +126,22 @@ public:
     int zpoints_old;
     int totalpoints;
     int totalpoints_old;
-	float xstart;
-	float ystart;
-	float zstart;
+    float xstart;
+    float ystart;
+    float zstart;
 
-	void initializeAttributes();
-	void manipulate_volume();
-
+    void initialize();
 
 protected:
     VolumeOpsFunc();
 
+
+
 private:
     std::vector<OrientationMath*> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
+    CubicOps::Pointer             m_CubicOps;
+    HexagonalOps::Pointer         m_HexOps;
+    OrthoRhombicOps::Pointer      m_OrthoOps;
 
 	VolumeOpsFunc(const VolumeOpsFunc& );
     void operator =(const VolumeOpsFunc& );
