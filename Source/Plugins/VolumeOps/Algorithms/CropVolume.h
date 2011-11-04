@@ -34,66 +34,39 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EBSDREFERENCEFRAMEWIDGET_H_
-#define EBSDREFERENCEFRAMEWIDGET_H_
+#ifndef CROPVOLUME_H_
+#define CROPVOLUME_H_
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QSettings>
-#include <QtGui/QDialog>
-
-class QGraphicsPixmapItem;
-
-#include "ui_EbsdReferenceFrameDialog.h"
-
-#include "EbsdLib/EbsdConstants.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractPipeline.h"
+#include "VolumeOps/VolumeOpsFunc.h"
 
 
-/**
- * @class EbsdReferenceFrameDialog EbsdReferenceFrameDialog.h EbsdImport/UI/EbsdReferenceFrameDialog.h
- * @brief This Dialog displays an IPF image of one slice of the users data and allows
- * the user to rotate or mirror the data so that they may rectify the reference frame
- * of the EBSD scan and the reference frame of the sample.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Oct 2, 2011
- * @version 1.0
- */
-class EbsdReferenceFrameDialog : public QDialog, private Ui::EbsdReferenceFrameDialog
+
+class CropVolume : public AbstractPipeline, public Observable
 {
-  Q_OBJECT;
-
   public:
-    EbsdReferenceFrameDialog(QString filename, QWidget *parent = 0);
-    virtual ~EbsdReferenceFrameDialog();
+    DREAM3D_SHARED_POINTERS(CropVolume);
+    DREAM3D_TYPE_MACRO(CropVolume);
+    DREAM3D_STATIC_NEW_MACRO(CropVolume);
 
-    void setEbsdFileName(QString filename);
-
-    void loadEbsdData();
-    void updateGraphicsView();
-    void updateDisplay();
+    virtual ~CropVolume();
 
 
-    Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
-    bool alignEulers();
+    DREAM3D_INSTANCE_PROPERTY(VolumeOpsFunc::Pointer, DataPtr)
 
+    void manipulate_volume();
 
-  protected slots:
-    void originChanged(bool checked);
+    virtual void execute();
 
-    void toggleHelp();
-
-
+  protected:
+    CropVolume();
 
   private:
-    QString                     m_EbsdFileName;
-    QButtonGroup*               m_OriginGroup;
-    QImage                      m_EbsdImage;
-    QGraphicsPixmapItem*        m_PixmapGraphicsItem;
-    int                         m_CurrentCorner;
-
-
-    EbsdReferenceFrameDialog(const EbsdReferenceFrameDialog&); // Copy Constructor Not Implemented
-    void operator=(const EbsdReferenceFrameDialog&); // Operator '=' Not Implemented
+    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
+    void operator=(const CropVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */
+#endif /* CROPVOLUME_H_ */
