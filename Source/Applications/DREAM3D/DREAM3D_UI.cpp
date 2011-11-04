@@ -558,8 +558,11 @@ void DREAM3D_UI::loadPlugins()
   pluginNames << QString::fromStdString(DREAM3D::UIPlugins::EbsdImportFile)
               << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
               << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::Extrapolation2Dto3D)
               << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile);
+              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile)
+              << QString::fromStdString(DREAM3D::UIPlugins::FileConversion)
+              << QString::fromStdString(DREAM3D::UIPlugins::VolumeOps);
 
   // Now try to sort the paths based on their names
   QVector<QString> sortedPaths;
