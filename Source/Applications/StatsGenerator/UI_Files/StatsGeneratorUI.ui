@@ -144,6 +144,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionLicense_Information"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -208,6 +209,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionLicense_Information">
+   <property name="text">
+    <string>License Information</string>
    </property>
   </action>
  </widget>
