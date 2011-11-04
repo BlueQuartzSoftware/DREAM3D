@@ -52,7 +52,7 @@
 
 
 /**
- * @breif This is the SuperClass to implement if you want to write scalars to
+ * @brief This is the SuperClass to implement if you want to write scalars to
  * a VTK Legacy File. The only method you need to implement is the writeScalars(FILE* f).
  */
 class VtkScalarWriter
@@ -225,7 +225,7 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
 			  OIMColoring::CalculateHexIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
 			}
 		}
-		else if (phase <= 0) 
+		else if (phase <= 0)
 		{
 			rgba[index] = 0.0;
 			rgba[index+1] = 0.0;

@@ -3,7 +3,7 @@
 @page h5ebsdfile EBSD HDF5 Data File Specification
 
 
-@section h5ebsd0 Of Orientations, Reference Frames and Coordinate Systems
+@section h5ebsd0 Orientations, Reference Frames and Coordinate Systems
   DREAM.3D's origin follows the sample coordinate system so that the physical
 location of the 0 row and 0 column voxel should visually appear in the lower
 left corner of a computer graphics display.

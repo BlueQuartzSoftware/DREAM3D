@@ -69,17 +69,7 @@ set (DOCUMENTATION_SOURCE_FILES
 )
 
 set (LATEX_EPS_FILES 
- ${PROJECT_SOURCE_DIR}/Images/imagequality.png
- ${PROJECT_SOURCE_DIR}/Images/minimagequality.png
- ${PROJECT_SOURCE_DIR}/Images/oimFileImport.png
- ${PROJECT_SOURCE_DIR}/Images/reconstruction_gui.png
- ${PROJECT_SOURCE_DIR}/Images/StatsGenerator_1.png
- ${PROJECT_SOURCE_DIR}/Images/StatsGenerator_10.png
- ${PROJECT_SOURCE_DIR}/Images/StatsGenerator_2.png
- ${PROJECT_SOURCE_DIR}/Images/StatsGenerator_3.png
- ${PROJECT_SOURCE_DIR}/Images/StatsGenerator_4.png
- ${PROJECT_SOURCE_DIR}/Images/StatsGenerator_6.png
- ${PROJECT_SOURCE_DIR}/Images/StatsGenerator_9.png
+
 )
 
 if (DOX_GENERATE_LATEX)
