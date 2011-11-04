@@ -249,6 +249,8 @@ void SGAxisODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
+
+  m_PFScrollArea->hide();
 }
 
 // -----------------------------------------------------------------------------
