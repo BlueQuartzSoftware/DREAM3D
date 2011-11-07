@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>485</width>
-    <height>445</height>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,14 @@
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox_3">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
 {
@@ -29,9 +37,6 @@ font-size: 12px;
      <layout class="QGridLayout" name="gridLayout_5">
       <property name="margin">
        <number>4</number>
-      </property>
-      <property name="spacing">
-       <number>6</number>
       </property>
       <item row="0" column="0" colspan="3">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -55,7 +60,7 @@ font-size: 11px;
          <widget class="QFSDropLineEdit" name="m_InputFile"/>
         </item>
         <item row="0" column="2">
-         <widget class="QPushButton" name="m_H5Btn">
+         <widget class="QPushButton" name="m_InputFileBtn">
           <property name="text">
            <string>Select</string>
           </property>
@@ -371,6 +376,14 @@ font-size: 10px;
    </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
 {
@@ -449,6 +462,14 @@ font-size: 11px;
    </item>
    <item row="2" column="0">
     <widget class="QGroupBox" name="groupBox_4">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
 {
