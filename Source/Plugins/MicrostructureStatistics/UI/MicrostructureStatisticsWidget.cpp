@@ -210,9 +210,13 @@ void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &t
     int err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
     if (err >= 0)
     {
-      xDim->setText(QString::number(dims[0]));
-      yDim->setText(QString::number(dims[1]));
-      zDim->setText(QString::number(dims[2]));
+      // These are the values from the data file and are displayed to the user
+      m_XDim->setText(QString::number(dims[0]));
+      m_YDim->setText(QString::number(dims[1]));
+      m_ZDim->setText(QString::number(dims[2]));
+      m_XRes->setText(QString::number(spacing[0]));
+      m_YRes->setText(QString::number(spacing[1]));
+      m_ZRes->setText(QString::number(spacing[2]));
     }
 
   }
