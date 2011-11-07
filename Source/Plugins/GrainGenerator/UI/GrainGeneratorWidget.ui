@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>866</width>
-    <height>600</height>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,6 +24,14 @@
        <width>0</width>
        <height>0</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
@@ -64,6 +72,14 @@ font-size: 11px;
    </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox_2">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
 {
@@ -277,8 +293,8 @@ font-size: 11px;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>352</width>
-             <height>89</height>
+             <width>265</width>
+             <height>121</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -451,6 +467,14 @@ font-size: 11px;
    </item>
    <item row="3" column="0">
     <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
 {

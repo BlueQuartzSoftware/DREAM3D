@@ -167,7 +167,7 @@ void MicrostructureStatisticsWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void MicrostructureStatisticsWidget::on_m_InputFileBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Structure File"), m_OpenDialogLastDirectory, tr("Any File (*.*)"));
+  QString file = QFileDialog::getOpenFileName(this, tr("Select H5Voxel File"), m_OpenDialogLastDirectory, tr("H5Voxel File (*.h5voxel)"));
   if (true == file.isEmpty())
   {
     return;
@@ -299,7 +299,7 @@ void MicrostructureStatisticsWidget::on_m_SaveSettingsBtn_clicked()
 void MicrostructureStatisticsWidget::on_m_OutputDirBtn_clicked()
 {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Grain Generator Output Directory"), outputFile);
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Microstructure Statistics Output Directory"), outputFile);
   if (!outputFile.isNull())
   {
     this->m_OutputDir->setText(outputFile);

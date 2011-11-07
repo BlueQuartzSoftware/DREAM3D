@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>627</width>
-    <height>308</height>
+    <height>390</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,6 +25,14 @@
    </property>
    <item row="2" column="0">
     <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
 {
@@ -149,6 +157,14 @@ font-size: 11px;
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
@@ -397,6 +413,14 @@ font-size: 11px;
    </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox_3">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox 
 {
