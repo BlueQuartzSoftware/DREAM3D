@@ -48,8 +48,11 @@
 #include <QtGui/QFileDialog>
 
 #include "DREAM3DLib/DREAM3DVersion.h"
+
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
+#include "QtSupport/HelpDialog.h"
+
 #include "DREAM3D/License/StatsGeneratorLicenseFiles.h"
 
 #include "SGApplication.h"
@@ -61,6 +64,7 @@
 StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   QMainWindow(parent),
   m_FileSelected(false),
+  m_HelpDialog(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:")
 #else
@@ -152,6 +156,9 @@ void StatsGeneratorUI::setupGui()
   phaseCombo->addItem(cName);
   phaseCombo->blockSignals(false);
   setWindowModified(true);
+
+  m_HelpDialog = new HelpDialog(this);
+  m_HelpDialog->setWindowModality(Qt::NonModal);
 }
 
 // -----------------------------------------------------------------------------
@@ -682,3 +689,21 @@ QString StatsGeneratorUI::getFilePath()
   return m_FilePath;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl StatsGeneratorUI::htmlHelpIndexFile()
+{
+  QString s = "StatsGenerator/index.html";
+  return QUrl(s);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
+{
+  m_HelpDialog->setContentFile(htmlHelpIndexFile());
+}

@@ -145,6 +145,7 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionLicense_Information"/>
+    <addaction name="actionStatsGenerator_Help"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -214,6 +215,11 @@
   <action name="actionLicense_Information">
    <property name="text">
     <string>License Information</string>
+   </property>
+  </action>
+  <action name="actionStatsGenerator_Help">
+   <property name="text">
+    <string>StatsGenerator Help</string>
    </property>
   </action>
  </widget>

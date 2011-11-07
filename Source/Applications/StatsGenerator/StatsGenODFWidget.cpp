@@ -57,7 +57,7 @@
 #include "StatsGenerator/TextureDialog.h"
 #include "StatsGen.h"
 
-
+#define MAKE_COLOR_POLE_FIGURES 0
 
 
 // -----------------------------------------------------------------------------
@@ -310,11 +310,17 @@ void StatsGenODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
 
+
+#if MAKE_COLOR_POLE_FIGURES
+  // Hide the color Pole Figures in this version
+  m_PFScrollArea->hide();
+#else
   m_ColorPoleFigure = new QFutureWatcher<QImage>(this);
   connect(m_ColorPoleFigure, SIGNAL(resultReadyAt(int)),
           this, SLOT(showColorPoleFigure(int)));
   connect(m_ColorPoleFigure, SIGNAL(finished()),
           this, SLOT(colorPoleFigureGenerationComplete()));
+#endif
 
 }
 
@@ -529,6 +535,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
+#if MAKE_COLOR_POLE_FIGURES
   // This is multi-threaded on appropriate hardware.
   qint32 kRad[2] = {5, 5};
   qint32 pfSize[2] = {250, 250};
@@ -538,7 +545,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   data.push_back(PoleFigureData(x111.data(), y111.data(), x111.size(), QString("<111>"), kRad, pfSize));
   // This kicks off the threads
   m_ColorPoleFigure->setFuture(QtConcurrent::mapped(data, generateColorPoleFigure));
-
+#endif
 
   QwtArray<double> x001d(x001.size());
   QwtArray<double> y001d(y001.size());

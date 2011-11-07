@@ -44,6 +44,7 @@
 
 #include "SGWidget.h"
 
+class HelpDialog;
 
 /**
  * @class StatsGeneratorUI StatsGeneratorUI.h StatsGenerator/StatsGeneratorUI.h
@@ -69,6 +70,8 @@ Q_OBJECT    ;
 
     SGWidget* createNewSGWidget();
 
+    QUrl htmlHelpIndexFile();
+
   signals:
       void windowIsClosing(StatsGeneratorUI*);
 
@@ -83,6 +86,7 @@ Q_OBJECT    ;
     void on_actionSaveAs_triggered();
     void on_actionAbout_triggered();
     void on_actionLicense_Information_triggered();
+    void on_actionStatsGenerator_Help_triggered();
 
     void on_phaseCombo_currentIndexChanged(int index);
     void on_addPhase_clicked();
@@ -153,6 +157,7 @@ Q_OBJECT    ;
     QString              m_FilePath;
     bool                 m_FileSelected;
     QVector<SGWidget*>   m_SGWidgets;
+    HelpDialog*          m_HelpDialog;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented
