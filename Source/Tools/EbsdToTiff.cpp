@@ -45,7 +45,7 @@
 #include "MXA/Common/LogTime.h"
 
 #include "DREAM3DLib/Common/AIMArray.hpp"
-#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdReader.h"
@@ -195,7 +195,7 @@ int main(int argc, char **argv)
 
   for (int i = 0; i < total; ++i) {
     uint8_t* rgb = rgbArray->GetPointer(i*3);
-    OIMColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
+    EbsdColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
                                   rgb, hkl, degToRads);
   }

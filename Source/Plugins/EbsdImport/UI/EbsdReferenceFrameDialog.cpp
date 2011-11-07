@@ -48,7 +48,7 @@
 #include <QtGui/QPushButton>
 
 #include "DREAM3DLib/Common/AIMArray.hpp"
-#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdReader.h"
@@ -186,7 +186,7 @@ void EbsdReferenceFrameDialog::loadEbsdData()
 
   for (uint32_t i = 0; i < total; ++i) {
     uint8_t* argb = reinterpret_cast<uint8_t*>(rgbArray->GetPointer(i)) + 1;
-    OIMColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
+    EbsdColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
                                   argb, hkl, degToRads);
   }
