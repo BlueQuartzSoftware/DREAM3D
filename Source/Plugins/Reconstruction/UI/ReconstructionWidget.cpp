@@ -434,9 +434,9 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     err = h5Reader->getDimsAndResolution(xpoints, ypoints, zpoints, xres, yres, zres);
     if (err >= 0)
     {
-      xDim->setText(QString::number(xpoints));
-      yDim->setText(QString::number(ypoints));
-      zDim->setText(QString::number(zpoints));
+      m_XDim->setText(QString::number(xpoints));
+      m_YDim->setText(QString::number(ypoints));
+      m_ZDim->setText(QString::number(zpoints));
       m_XRes->setText(QString::number(xres));
       m_YRes->setText(QString::number(yres));
       m_ZRes->setText(QString::number(zres));

@@ -63,7 +63,7 @@
 #include "GrainGenerator/GrainGenerator.h"
 #include "GrainGeneratorPlugin.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = (float)M_PI;
 
 // -----------------------------------------------------------------------------
 //
@@ -374,7 +374,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
       return;
     }
 
-    int size = phases.size();
+    int size = static_cast<int>(phases.size());
     std::vector<std::string> shapeTypeStrings;
     DREAM3D::ShapeType::getShapeTypeStrings(shapeTypeStrings);
     std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypeEnums;
