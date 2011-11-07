@@ -56,7 +56,7 @@
 //-- AIM Includes
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
 
 

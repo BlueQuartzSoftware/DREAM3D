@@ -46,7 +46,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
 
@@ -218,11 +218,11 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
 		{
 			if (r->crystruct[phase] == Ebsd::Cubic)
 			{
-			  OIMColoring::GenerateIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
+			  EbsdColoring::GenerateIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
 			}
 			else if (r->crystruct[phase] == Ebsd::Hexagonal)
 			{
-			  OIMColoring::CalculateHexIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
+			  EbsdColoring::CalculateHexIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
 			}
 		}
 		else if (phase <= 0)
