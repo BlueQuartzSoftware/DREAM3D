@@ -175,11 +175,11 @@ void SGWidget::setupGui()
   microstructurePresetCombo->blockSignals(false);
 
 
-  float mu = 1.0;
-  float sigma = 0.1;
-  float minCutOff = 5;
-  float maxCutOff = 5;
-  float binStepSize = 0.5;
+  float mu = 1.0f;
+  float sigma = 0.1f;
+  float minCutOff = 5.0f;
+  float maxCutOff = 5.0f;
+  float binStepSize = 0.5f;
 
   StatsGenPlotWidget* w = m_Omega3Plot;
 

@@ -155,6 +155,7 @@ void StatsGeneratorUI::setupGui()
   phaseCombo->blockSignals(true);
   phaseCombo->addItem(cName);
   phaseCombo->blockSignals(false);
+  setWindowTitle("[*] - Untitled.h5stats");
   setWindowModified(true);
 
   m_HelpDialog = new HelpDialog(this);

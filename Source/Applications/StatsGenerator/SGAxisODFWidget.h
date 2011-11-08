@@ -43,7 +43,16 @@
 
 #include "ui_SGAxisODFWidget.h"
 
-#include <MXA/Common/MXASetGetMacros.h>
+#include <qwt.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
+
+#include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
@@ -54,9 +63,7 @@
 
 class SGODFTableModel;
 class StatsGenMDFWidget;
-class QwtPlot;
-class QwtPlotCurve;
-class QwtPlotMarker;
+
 
 /**
  * @class SGAxisODFWidget SGAxisODFWidget.h StatsGenerator/SGAxisODFWidget.h

@@ -42,15 +42,6 @@
 #include <QtGui/QAbstractItemDelegate>
 #include <QtCore/QtConcurrentMap>
 
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-
 #include "DREAM3DLib/Common/Texture.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
@@ -372,7 +363,7 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
   // Draw the outer Circle
   QwtArray<double> circleX(900); // 900 because our plots are hard set to 450 pixels
   QwtArray<double> circleY(900);
-  float inc = 2.0/449.0;
+  float inc = 2.0f/449.0f;
 
   for(int i = 0; i < 450; ++i)
   {
@@ -550,14 +541,14 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   switch(this->m_CrystalStructure)
   {
     case Ebsd::Cubic:
-      data.push_back(PoleFigureData(x001.data(), y001.data(), x001.size(), QString("<001>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x011.data(), y011.data(), x011.size(), QString("<011>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x111.data(), y111.data(), x111.size(), QString("<111>"), kRad, pfSize));
+      data.push_back(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
+      data.push_back(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
+      data.push_back(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
       break;
     case Ebsd::Hexagonal:
-      data.push_back(PoleFigureData(x001.data(), y001.data(), x001.size(), QString("<0001>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x011.data(), y011.data(), x011.size(), QString("<11-20>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x111.data(), y111.data(), x111.size(), QString("<10-10>"), kRad, pfSize));
+      data.push_back(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
+      data.push_back(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
+      data.push_back(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));
       break;
     default:
       return;
@@ -573,21 +564,59 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double> y011d(y011.size());
   QwtArray<double> x111d(x111.size());
   QwtArray<double> y111d(y111.size());
+  float minX = 1.0f;
+  float maxX = -1.0f;
+  float minY = 1.0f;
+  float maxY = -1.0f;
   for(int i =0; i < x001.size(); ++i)
   {
     x001d[i] = x001[i];
     y001d[i] = y001[i];
+    if (x001[i] < minX) { minX = x001[i];}
+    if (x001[i] > maxX) { maxX = x001[i];}
+    if (y001[i] < minY) { minY = y001[i];}
+    if (y001[i] > maxY) { maxY = y001[i];}
+  }
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
   }
   for(int i =0; i < x011.size(); ++i)
   {
     x011d[i] = x011[i];
     y011d[i] = y011[i];
+    if (x011[i] < minX) { minX = x011[i];}
+    if (x011[i] > maxX) { maxX = x011[i];}
+    if (y011[i] < minY) { minY = y011[i];}
+    if (y011[i] > maxY) { maxY = y011[i];}
   }
+
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
+  }
+
   for(int i =0; i < x111.size(); ++i)
   {
     x111d[i] = x111[i];
     y111d[i] = y111[i];
+    if (x111[i] < minX) { minX = x111[i];}
+    if (x111[i] > maxX) { maxX = x111[i];}
+    if (y111[i] < minY) { minY = y111[i];}
+    if (y111[i] > maxY) { maxY = y111[i];}
   }
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
+  }
+
+
 
 //  QwtSymbol symbol;
 //  symbol.setStyle(QwtSymbol::Ellipse);

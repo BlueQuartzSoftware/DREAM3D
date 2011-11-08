@@ -72,11 +72,11 @@
 // -----------------------------------------------------------------------------
 StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
 QWidget(parent),
-m_Mu(1.0),
-m_Sigma(0.1),
-m_MinCutOff(3),
-m_MaxCutOff(3),
-m_BinStep(1.0),
+m_Mu(1.0f),
+m_Sigma(0.1f),
+m_MinCutOff(3.0f),
+m_MaxCutOff(3.0f),
+m_BinStep(1.0f),
 m_PhaseIndex(-1),
 m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
