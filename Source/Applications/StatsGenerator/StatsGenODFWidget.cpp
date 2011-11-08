@@ -312,14 +312,14 @@ void StatsGenODFWidget::setupGui()
 
 
 #if MAKE_COLOR_POLE_FIGURES
-  // Hide the color Pole Figures in this version
-  m_PFScrollArea->hide();
-#else
   m_ColorPoleFigure = new QFutureWatcher<QImage>(this);
   connect(m_ColorPoleFigure, SIGNAL(resultReadyAt(int)),
           this, SLOT(showColorPoleFigure(int)));
   connect(m_ColorPoleFigure, SIGNAL(finished()),
           this, SLOT(colorPoleFigureGenerationComplete()));
+#else
+  // Hide the color Pole Figures in this version
+  m_PFScrollArea->hide();
 #endif
 
 }
