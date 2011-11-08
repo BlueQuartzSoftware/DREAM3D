@@ -42,14 +42,7 @@
 #include <QtGui/QAbstractItemDelegate>
 #include <QtCore/QtConcurrentMap>
 
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
+
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -476,9 +469,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   qint32 kRad[2] = {5, 5};
   qint32 pfSize[2] = {226, 226};
   QVector<PoleFigureData> data;
-  data.push_back(PoleFigureData(x001.data(), y001.data(), x001.size(), QString("A Axis"), kRad, pfSize));
-  data.push_back(PoleFigureData(x011.data(), y011.data(), x011.size(), QString("B Axis"), kRad, pfSize));
-  data.push_back(PoleFigureData(x111.data(), y111.data(), x111.size(), QString("C Axis"), kRad, pfSize));
+  data.push_back(PoleFigureData(x001, y001, QString("A Axis"), kRad, pfSize));
+  data.push_back(PoleFigureData(x011, y011, QString("B Axis"), kRad, pfSize));
+  data.push_back(PoleFigureData(x111, y111, QString("C Axis"), kRad, pfSize));
   // This kicks off the threads
   m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateAxisODFPoleFigure));
 
@@ -489,20 +482,56 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<double> y011d(y011.size());
   QwtArray<double> x111d(x111.size());
   QwtArray<double> y111d(y111.size());
+  float minX = 1.0f;
+  float maxX = -1.0f;
+  float minY = 1.0f;
+  float maxY = -1.0f;
   for(int i =0; i < x001.size(); ++i)
   {
     x001d[i] = x001[i];
     y001d[i] = y001[i];
+    if (x001[i] < minX) { minX = x001[i];}
+    if (x001[i] > maxX) { maxX = x001[i];}
+    if (y001[i] < minY) { minY = y001[i];}
+    if (y001[i] > maxY) { maxY = y001[i];}
+  }
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
   }
   for(int i =0; i < x011.size(); ++i)
   {
     x011d[i] = x011[i];
     y011d[i] = y011[i];
+    if (x011[i] < minX) { minX = x011[i];}
+    if (x011[i] > maxX) { maxX = x011[i];}
+    if (y011[i] < minY) { minY = y011[i];}
+    if (y011[i] > maxY) { maxY = y011[i];}
   }
+
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
+  }
+
   for(int i =0; i < x111.size(); ++i)
   {
     x111d[i] = x111[i];
     y111d[i] = y111[i];
+    if (x111[i] < minX) { minX = x111[i];}
+    if (x111[i] > maxX) { maxX = x111[i];}
+    if (y111[i] < minY) { minY = y111[i];}
+    if (y111[i] > maxY) { maxY = y111[i];}
+  }
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
   }
 
 //  QwtSymbol symbol;

@@ -156,9 +156,9 @@ QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData &confi
     QVector<qint8> data(imageWidth * imageHeight, 0);
     QVector<qint32> counts(imageWidth * imageHeight, 1);
 
-    float* xPoints = config.xData;
-    float* yPoints = config.yData;
-    int size = config.size;
+    QVector<float> xPoints = config.xData;
+    QVector<float> yPoints = config.yData;
+    int size = yPoints.size();
 
 
     // Loop over all the data and get the x,y coords (scaled) and turn on the data pixel
@@ -233,9 +233,9 @@ QImage PoleFigureMaker::generatePoleFigureImage(const PoleFigureData &config)
   QImage image(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
 
 
-  float* xPoints = config.xData;
-  float* yPoints = config.yData;
-  int size = config.size;
+  QVector<float> xPoints = config.xData;
+  QVector<float> yPoints = config.yData;
+  int size = yPoints.size();
 
   QColor white(255, 255, 255, 255);
   QColor black(0.25*255, 0.2549*255, 0.7961*255, 255);
@@ -271,25 +271,45 @@ QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
   int imageWidth = config.imageSize[0];
   int imageHeight = config.imageSize[1];
 
-  // Get a QPainter object to add some more details to the image
-  QPainter painter;
-  //  painter.setRenderHint(QPainter::Antialiasing, true);
+  int pxHigh = 0;
+  int pxWide = 0;
 
-  int pxOffset = 30;
-  int pyOffset = 30;
+  QFont font("Ariel", 16, QFont::Bold);
+
+  {
+    QPainter painter;
+    QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
+    pImage.fill(0xFFFFFFFF); // All white background
+    painter.begin(&pImage);
+    
+    painter.setFont(font);
+    QFontMetrics metrics = painter.fontMetrics();
+    pxHigh = metrics.height();
+    pxWide = metrics.width(QString("TD"));
+    painter.end();
+  }
+
+
+  int pxOffset = 2 * pxWide;
+  int pyOffset = 2 * pxHigh;
+  // Get a QPainter object to add some more details to the image
+  
 
   int pImageWidth = imageWidth + pxOffset * 2;
   int pImageHeight = imageHeight + pyOffset * 2;
 
   QImage pImage(pImageWidth, pImageHeight, QImage::Format_ARGB32_Premultiplied);
   pImage.fill(0xFFFFFFFF); // All white background
-  painter.begin(&pImage);
 
-  QFont font("Times", 18, QFont::Bold);
+  // Create a Painter backed by a QImage to draw into
+  QPainter painter;
+  painter.begin(&pImage);
+  painter.setRenderHint(QPainter::Antialiasing, true);
+
   painter.setFont(font);
   QFontMetrics metrics = painter.fontMetrics();
-  int pxHigh = metrics.height();
-  int pxWide = metrics.width(QString("TD"));
+  pxHigh = metrics.height();
+  pxWide = metrics.width(QString("TD"));
 
   QPoint point(pxOffset, pyOffset);
   painter.drawImage(point, image); // Draw the image we just generated into the QPainter's canvas
@@ -302,7 +322,7 @@ QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
   circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
   painter.drawPath(circle);
 
-  painter.drawText(pImageWidth - pxWide - 2, pImageHeight / 2 + pxHigh / 2, "TD");
+  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "TD");
 
   pxWide = metrics.width(QString("RD"));
   painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "RD");
@@ -316,8 +336,8 @@ QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
   painter.drawLine(pImageWidth / 2, pImageHeight / 2, pImageWidth / 2, pImageHeight - pyOffset);
 
   painter.end();
-
-  return pImage;
+  // Scale the image down to 225 pixels
+  return pImage;//.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 ///getColorCorrespondingToValue ////////////////////////////////////////////////
@@ -337,10 +357,10 @@ void PoleFigureMaker::getColorCorrespondingTovalue(float val,
   static const int numColorNodes = 4;
   float color[numColorNodes][3] =
   {
-        {0.25, 0.2549, 0.7961},    // blue
-        {0.8274, 0.8039, 0.0941},    // yellow
-        {0.1803, 0.6655, 0.1490},    // Green
-        {1.0, 0.0, 0.0}     // red
+        {0.25f, 0.2549f, 0.7961f},    // blue
+        {0.8274f, 0.8039f, 0.0941f},    // yellow
+        {0.1803f, 0.6655f, 0.1490f},    // Green
+        {1.0f, 0.0f, 0.0f}     // red
   };
   float range = max - min;
   for (int i = 0; i < (numColorNodes - 1); i++)

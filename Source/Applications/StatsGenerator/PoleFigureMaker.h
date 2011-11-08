@@ -36,7 +36,10 @@
 #ifndef COLORPOLEFIGURE_H_
 #define COLORPOLEFIGURE_H_
 
+#include <QtCore/QObject>
+#include <QtCore/QVector>
 #include <QtGui/QImage>
+
 
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h
@@ -45,22 +48,20 @@
  * @date Nov 4, 2011
  * @version 1.0
  */
-class PoleFigureData
+class PoleFigureData : QObject
 {
+  Q_OBJECT;
+
   public:
-    PoleFigureData() :
-      xData(NULL),
-      yData(NULL),
-      size(0)
+    PoleFigureData()
     {
-      imageSize[0] = 0; imageSize[1] = 0;
+      imageSize[0] = 0;         imageSize[1] = 0;
       kernelRadius[0] = 3;      kernelRadius[1] = 3;
     }
 
-    PoleFigureData(float* x, float* y, qint32 n, const QString &s, qint32* kernelRad, qint32* size) :
-    xData(x),
-    yData(y),
-    size(n),
+    PoleFigureData(QVector<float> xData, QVector<float> yData, const QString &s, qint32* kernelRad, qint32* size) :
+    xData(xData),
+    yData(yData),
     label(s)
     {
       imageSize[0] = size[0]; imageSize[1] = size[1];
@@ -72,7 +73,7 @@ class PoleFigureData
     {
       this->xData = rhs.xData;
       this->yData = rhs.yData;
-      this->size = rhs.size;
+
       this->label = rhs.label;
       this->imageSize[0] = rhs.imageSize[0];
       this->imageSize[1] = rhs.imageSize[1];
@@ -82,9 +83,9 @@ class PoleFigureData
 
     virtual ~PoleFigureData(){}
 
-    float* xData;
-    float* yData;
-    qint32 size;
+    QVector<float> xData;
+    QVector<float> yData;
+
     qint32 kernelRadius[2];
     qint32 imageSize[2];
     QString label;
@@ -93,7 +94,6 @@ class PoleFigureData
     {
       this->xData = rhs.xData;
       this->yData = rhs.yData;
-      this->size = rhs.size;
       this->label = rhs.label;
       this->imageSize[0] = rhs.imageSize[0];
       this->imageSize[1] = rhs.imageSize[1];
