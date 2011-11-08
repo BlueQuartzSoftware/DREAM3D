@@ -40,6 +40,8 @@
 #ifndef CTFPHASE_H_
 #define CTFPHASE_H_
 
+#include <string.h>
+
 #include <sstream>
 #include <vector>
 #include <string>
