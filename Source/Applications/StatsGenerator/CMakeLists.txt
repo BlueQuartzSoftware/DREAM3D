@@ -60,7 +60,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
-    ${StatsGenerator_SOURCE_DIR}/ColorPoleFigure.cpp
+    ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.cpp
     )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -76,7 +76,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
-    ${StatsGenerator_SOURCE_DIR}/ColorPoleFigure.h
+    ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

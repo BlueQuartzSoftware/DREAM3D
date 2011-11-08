@@ -37,19 +37,20 @@
 #ifndef _STATSGENODFWIDGET_H_
 #define _STATSGENODFWIDGET_H_
 
-#include <QtGui/QWidget>
+
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QImage>
+#include <QtGui/QWidget>
 
 #include "ui_SGAxisODFWidget.h"
 
-#include <MXA/Common/MXASetGetMacros.h>
+#include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
-#include "ColorPoleFigure.h"
+#include "PoleFigureMaker.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;
@@ -107,8 +108,9 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
       void on_addODFTextureBtn_clicked();
       void on_deleteODFTextureBtn_clicked();
 
-      void showColorPoleFigure(int imageIndex);
-      void colorPoleFigureGenerationComplete();
+      // Slots for the QFutureWatcher to connect to
+      void showPoleFigure(int imageIndex);
+      void poleFigureGenerationComplete();
 
     protected:
 
@@ -123,7 +125,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
       QwtPlotCurve*           m_RotCross0;
       QwtPlotCurve*           m_RotCross1;
 
-      QFutureWatcher<QImage>*   m_ColorPoleFigure;
+      QFutureWatcher<QImage>*   m_PoleFigureFuture;
 
       StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
       void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented
