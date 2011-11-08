@@ -40,6 +40,7 @@
 
 //-- Qt Includes
 #include <QtGui/QAbstractItemDelegate>
+#include <QtCore/QtConcurrentMap>
 
 #include <qwt.h>
 #include <qwt_plot.h>
@@ -59,6 +60,7 @@
 #include "StatsGenerator/TextureDialog.h"
 #include "StatsGen.h"
 
+#define MAKE_COLOR_POLE_FIGURES 1
 
 // -----------------------------------------------------------------------------
 //
@@ -70,7 +72,8 @@ m_Initializing(true),
 m_PhaseIndex(-1),
 m_CrystalStructure(Ebsd::AxisOrthoRhombic),
 m_ODFTableModel(NULL),
-m_MDFWidget(NULL)
+m_MDFWidget(NULL),
+m_PoleFigureFuture(NULL)
 {
   this->setupUi(this);
   this->setupGui();
@@ -242,15 +245,25 @@ void SGAxisODFWidget::setupGui()
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
 
-  initQwtPlot("RD", "TD", m_ODF_001Plot);
-  initQwtPlot("RD", "TD", m_ODF_011Plot);
-  initQwtPlot("RD", "TD", m_ODF_111Plot);
+//  initQwtPlot("RD", "TD", m_ODF_001Plot);
+//  initQwtPlot("RD", "TD", m_ODF_011Plot);
+//  initQwtPlot("RD", "TD", m_ODF_111Plot);
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
 
+#if MAKE_COLOR_POLE_FIGURES
+  m_PoleFigureFuture = new QFutureWatcher<QImage>(this);
+  connect(m_PoleFigureFuture, SIGNAL(resultReadyAt(int)),
+          this, SLOT(showPoleFigure(int)));
+  connect(m_PoleFigureFuture, SIGNAL(finished()),
+          this, SLOT(poleFigureGenerationComplete()));
+#else
+  // Hide the color Pole Figures in this version
   m_PFScrollArea->hide();
+#endif
+
 }
 
 // -----------------------------------------------------------------------------
@@ -363,6 +376,54 @@ void SGAxisODFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SGAxisODFWidget::showPoleFigure(int imageIndex)
+{
+ // labels[num]->setPixmap(QPixmap::fromImage(imageScaling->resultAt(num)));
+  switch(imageIndex)
+  {
+    case 0:
+      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_001.tif");
+      m_001PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
+      break;
+    case 1:
+      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_011.tif");
+      m_011PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
+      break;
+    case 2:
+      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_111.tif");
+      m_111PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
+      break;
+    default:
+      break;
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGAxisODFWidget::poleFigureGenerationComplete()
+{
+//  std::cout << "ODF Pole Figure generation complete" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage generateAxisODFPoleFigure(const PoleFigureData &data)
+{
+  PoleFigureMaker colorPoleFigure;
+#if 1
+  return colorPoleFigure.generatePoleFigureImage(data);
+#else
+  return colorPoleFigure.generateColorPoleFigureImage(data);
+#endif
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
@@ -390,9 +451,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 
   for(int i=0;i<e1s.size();i++)
   {
-	e1s[i] = e1s[i]*M_PI/180.0;
-	e2s[i] = e2s[i]*M_PI/180.0;
-	e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i] * M_PI / 180.0;
+    e2s[i] = e2s[i] * M_PI / 180.0;
+    e3s[i] = e3s[i] * M_PI / 180.0;
   }
 
   StatsGen sg;
@@ -410,6 +471,18 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
+#if MAKE_COLOR_POLE_FIGURES
+  // This is multi-threaded on appropriate hardware.
+  qint32 kRad[2] = {5, 5};
+  qint32 pfSize[2] = {226, 226};
+  QVector<PoleFigureData> data;
+  data.push_back(PoleFigureData(x001.data(), y001.data(), x001.size(), QString("A Axis"), kRad, pfSize));
+  data.push_back(PoleFigureData(x011.data(), y011.data(), x011.size(), QString("B Axis"), kRad, pfSize));
+  data.push_back(PoleFigureData(x111.data(), y111.data(), x111.size(), QString("C Axis"), kRad, pfSize));
+  // This kicks off the threads
+  m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateAxisODFPoleFigure));
+
+#else
   QwtArray<double> x001d(x001.size());
   QwtArray<double> y001d(y001.size());
   QwtArray<double> x011d(x011.size());
@@ -456,6 +529,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
  // curve->setSymbol(symbol);
   curve->attach(m_ODF_111Plot);
   m_ODF_111Plot->replot();
+#endif
 }
 
 // -----------------------------------------------------------------------------

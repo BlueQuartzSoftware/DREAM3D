@@ -37,6 +37,8 @@
 #ifndef _SG_AXIS_ODFWIDGET_H_
 #define _SG_AXIS_ODFWIDGET_H_
 
+#include <QtCore/QFutureWatcher>
+#include <QtGui/QImage>
 #include <QtGui/QWidget>
 
 #include "ui_SGAxisODFWidget.h"
@@ -47,6 +49,8 @@
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
+
+#include "PoleFigureMaker.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;
@@ -97,6 +101,10 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
       void on_addODFTextureBtn_clicked();
       void on_deleteODFTextureBtn_clicked();
 
+      // Slots for the QFutureWatcher to connect to
+      void showPoleFigure(int imageIndex);
+      void poleFigureGenerationComplete();
+
     protected:
       MXA_INSTANCE_PROPERTY(bool, Initializing)
 
@@ -110,6 +118,8 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
       QwtPlotCurve*           m_CircleGrid;
       QwtPlotCurve*           m_RotCross0;
       QwtPlotCurve*           m_RotCross1;
+
+      QFutureWatcher<QImage>*   m_PoleFigureFuture;
 
       SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented
       void operator=(const SGAxisODFWidget&); // Operator '=' Not Implemented

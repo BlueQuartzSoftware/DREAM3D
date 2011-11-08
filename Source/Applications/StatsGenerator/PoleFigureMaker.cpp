@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ColorPoleFigure.h"
+#include "PoleFigureMaker.h"
 
 #include <iostream>
 
@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ColorPoleFigure::ColorPoleFigure() :
+PoleFigureMaker::PoleFigureMaker() :
 m_KernelWeightsInited(false)
 {
 
@@ -54,7 +54,7 @@ m_KernelWeightsInited(false)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ColorPoleFigure::~ColorPoleFigure()
+PoleFigureMaker::~PoleFigureMaker()
 {
 }
 
@@ -62,7 +62,7 @@ ColorPoleFigure::~ColorPoleFigure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ColorPoleFigure::generateKernelWeigths(int kernelWidth, int kernelHeight)
+void PoleFigureMaker::generateKernelWeigths(int kernelWidth, int kernelHeight)
 {
 //  int pX = 0;
 //  int pY = 0;
@@ -88,7 +88,7 @@ void ColorPoleFigure::generateKernelWeigths(int kernelWidth, int kernelHeight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ColorPoleFigure::countPixelNeighbors(int imageWidth, int imageHeight,
+int PoleFigureMaker::countPixelNeighbors(int imageWidth, int imageHeight,
                                            int pX, int pY,
                                            QVector<qint8> &data,
                                            QVector<qint32> &counts,
@@ -138,13 +138,13 @@ int ColorPoleFigure::countPixelNeighbors(int imageWidth, int imageHeight,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage ColorPoleFigure::generateImage(const PoleFigureData &config)
+QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData &config)
 {
 
-int kernelWidth = config.kernelRadius[0];
- int kernelHeight = config.kernelRadius[1];
-int imageWidth = config.imageSize[0];
-int imageHeight = config.imageSize[1];
+  int kernelWidth = config.kernelRadius[0];
+  int kernelHeight = config.kernelRadius[1];
+  int imageWidth = config.imageSize[0];
+  int imageHeight = config.imageSize[1];
 
   //  std::cout << "Size: " << size << std::endl;
 
@@ -219,63 +219,106 @@ int imageHeight = config.imageSize[1];
     // Flip the image so the (-1, -1) is in the lower left
     image = image.mirrored(true, false);
 
-    // Get a QPainter object to add some more details to the image
-    QPainter painter;
-  //  painter.setRenderHint(QPainter::Antialiasing, true);
-
-
-
-
-    int pxOffset = 30;
-    int pyOffset = 30;
-
-    int pImageWidth = imageWidth + pxOffset*2;
-    int pImageHeight = imageHeight + pyOffset*2;
-
-    QImage pImage(pImageWidth, pImageHeight,  QImage::Format_ARGB32_Premultiplied);
-    pImage.fill(0xFFFFFFFF); // All white background
-    painter.begin(&pImage);
-
-    QFont font("Times", 18, QFont::Bold);
-    painter.setFont(font);
-    QFontMetrics metrics = painter.fontMetrics();
-    int pxHigh = metrics.height();
-    int pxWide = metrics.width(QString("TD"));
-
-    QPoint point(pxOffset,pyOffset);
-    painter.drawImage(point, image);
-
-    qint32 penWidth = 2;
-    painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap,
-                        Qt::RoundJoin));
-
-    QPainterPath circle;
-    QPointF center(pImageWidth/2, pImageHeight/2);
-    circle.addEllipse(center, imageWidth/2, imageHeight/2);
-    painter.drawPath(circle);
-
-    painter.drawText(pImageWidth-pxWide-2, pImageHeight/2 + pxHigh/2, "TD");
-
-    pxWide = metrics.width(QString("RD"));
-    painter.drawText(pImageWidth/2-pxWide/2, pImageHeight-pyOffset+pxHigh+2, "RD");
-
-
-    pxWide = metrics.width(config.label);
-    painter.drawText(2, pImageHeight-pyOffset+pxHigh+2, config.label);
-
-    // Draw slightly transparent lines
-    painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap,
-                        Qt::RoundJoin));
-    painter.drawLine(pImageWidth/2, pImageHeight/2, pImageWidth-pxOffset, pImageHeight/2);
-    painter.drawLine(pImageWidth/2, pImageHeight/2, pImageWidth/2, pImageHeight-pyOffset);
-
-
-    painter.end();
-
-    return pImage;
+    return paintImage(config, image);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage PoleFigureMaker::generatePoleFigureImage(const PoleFigureData &config)
+{
+  int imageWidth = config.imageSize[0];
+  int imageHeight = config.imageSize[1];
 
+  QImage image(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+
+
+  float* xPoints = config.xData;
+  float* yPoints = config.yData;
+  int size = config.size;
+
+  QColor white(255, 255, 255, 255);
+  QColor black(0.25*255, 0.2549*255, 0.7961*255, 255);
+  image.fill(white.rgba()); // Fill all white
+  QRgb black_Rgba = black.rgba();
+
+  // Flip the pixels to black that came from the data xy coords
+  for (int i = 0; i < size; ++i)
+  {
+    float xp = xPoints[i];
+    float yp = yPoints[i];
+    int xCoord = (xPoints[i] + 1) * imageWidth/2;
+    int yCoord = (yPoints[i] + 1) * imageHeight/2;
+    if (xCoord > imageWidth || yCoord > imageHeight)
+    {
+      std::cout << "This is bad" << std::endl;
+    }
+    image.setPixel(xCoord, yCoord, black_Rgba);
+  }
+
+  // Flip the image so the (-1, -1) is in the lower left
+  image = image.mirrored(true, false);
+
+  return paintImage(config, image);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
+{
+  int imageWidth = config.imageSize[0];
+  int imageHeight = config.imageSize[1];
+
+  // Get a QPainter object to add some more details to the image
+  QPainter painter;
+  //  painter.setRenderHint(QPainter::Antialiasing, true);
+
+  int pxOffset = 30;
+  int pyOffset = 30;
+
+  int pImageWidth = imageWidth + pxOffset * 2;
+  int pImageHeight = imageHeight + pyOffset * 2;
+
+  QImage pImage(pImageWidth, pImageHeight, QImage::Format_ARGB32_Premultiplied);
+  pImage.fill(0xFFFFFFFF); // All white background
+  painter.begin(&pImage);
+
+  QFont font("Times", 18, QFont::Bold);
+  painter.setFont(font);
+  QFontMetrics metrics = painter.fontMetrics();
+  int pxHigh = metrics.height();
+  int pxWide = metrics.width(QString("TD"));
+
+  QPoint point(pxOffset, pyOffset);
+  painter.drawImage(point, image); // Draw the image we just generated into the QPainter's canvas
+
+  qint32 penWidth = 2;
+  painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+  QPainterPath circle;
+  QPointF center(pImageWidth / 2, pImageHeight / 2);
+  circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
+  painter.drawPath(circle);
+
+  painter.drawText(pImageWidth - pxWide - 2, pImageHeight / 2 + pxHigh / 2, "TD");
+
+  pxWide = metrics.width(QString("RD"));
+  painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "RD");
+
+  pxWide = metrics.width(config.label);
+  painter.drawText(2, pxHigh, config.label);
+
+  // Draw slightly transparent lines
+  painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  painter.drawLine(pImageWidth / 2, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
+  painter.drawLine(pImageWidth / 2, pImageHeight / 2, pImageWidth / 2, pImageHeight - pyOffset);
+
+  painter.end();
+
+  return pImage;
+}
 
 ///getColorCorrespondingToValue ////////////////////////////////////////////////
 //
@@ -287,7 +330,7 @@ int imageHeight = config.imageSize[1];
 // values will be returned in the reference-to-float parameters r, g, and b.
 //
 ////////////////////////////////////////////////////////////////////////////////
-void ColorPoleFigure::getColorCorrespondingTovalue(float val,
+void PoleFigureMaker::getColorCorrespondingTovalue(float val,
                                                      float &r, float &g, float &b,
                                                      float max, float min)
 {

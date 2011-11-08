@@ -114,13 +114,15 @@ class PoleFigureData
  * @date Nov 4, 2011
  * @version 1.0
  */
-class ColorPoleFigure
+class PoleFigureMaker
 {
   public:
-    ColorPoleFigure();
-    virtual ~ColorPoleFigure();
+    PoleFigureMaker();
+    virtual ~PoleFigureMaker();
 
-    QImage generateImage(const PoleFigureData &config);
+    QImage generateColorPoleFigureImage(const PoleFigureData &config);
+
+    QImage generatePoleFigureImage(const PoleFigureData &config);
 
 
     int countPixelNeighbors(int imageWidth, int imageHeight, int pX, int pY,
@@ -132,14 +134,16 @@ class ColorPoleFigure
 
     void generateKernelWeigths(int kernelWidth, int kernelHeight);
 
+    QImage paintImage(const PoleFigureData &config, QImage image);
+
   private:
 
     QVector<qint32> m_KernelWeights;
     bool m_KernelWeightsInited;
 
 
-    ColorPoleFigure(const ColorPoleFigure&); // Copy Constructor Not Implemented
-    void operator=(const ColorPoleFigure&); // Operator '=' Not Implemented
+    PoleFigureMaker(const PoleFigureMaker&); // Copy Constructor Not Implemented
+    void operator=(const PoleFigureMaker&); // Operator '=' Not Implemented
 };
 
 #endif /* COLORPOLEFIGURE_H_ */
