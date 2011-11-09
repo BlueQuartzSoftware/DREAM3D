@@ -324,19 +324,11 @@ void ReconstructionFunc::threshold_points()
 	  }
 	}
   }
-  for (int i=0;i<totalpoints;i++)
-  {
-	grain_indicies[i] = -1;
-	goodVoxels[i] = 1;
-  }
   voxelslist.clear();
 }
 
 void ReconstructionFunc::align_sections()
 {
-  ofstream outFile;
-  string filename = "align.txt";
-  outFile.open(filename.c_str());
   float disorientation = 0;
   float mindisorientation = 100000000;
   float **mutualinfo12;
@@ -533,7 +525,6 @@ void ReconstructionFunc::align_sections()
           }
         }
     }
-	outFile << iter << "	" << newxshift << "	" << newyshift << "	" << shifts[iter - 1][0] + newxshift << "	" << shifts[iter - 1][1] + newyshift << endl;
     shifts[iter][0] = shifts[iter - 1][0] + newxshift;
     shifts[iter][1] = shifts[iter - 1][1] + newyshift;
   }
