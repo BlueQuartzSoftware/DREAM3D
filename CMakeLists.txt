@@ -369,7 +369,7 @@ if(DREAM3D_BUILD_DOCS)
       set (DOXY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/API-Documentation)
       configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D.doxyfile.in 
                      ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-      add_custom_target(apidocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
+      add_custom_target(Docs_API COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
   endif()
   
 endif()

@@ -132,7 +132,7 @@ class GrainChecker
       for (int i = 0; i < numTriangles; ++i)
       {
         gid = cTriangle[i]->ngrainname[0];
-        size = grainMaps.size();
+        size = static_cast<int>(grainMaps.size());
         if (gid >= size)
         {
           grainMaps.resize(gid + 1);
@@ -158,7 +158,7 @@ class GrainChecker
         }
 
         gid = cTriangle[i]->ngrainname[1];
-        size = grainMaps.size();
+        size = static_cast<int>(grainMaps.size());
         if (gid >= size)
         {
           grainMaps.resize(gid + 1);
@@ -193,8 +193,8 @@ class GrainChecker
     void analyzeGrains()
     {
       size_t size = tCounts.size();
-      int vCount = 0;
-      int tCount = 0;
+      size_t vCount = 0;
+      size_t tCount = 0;
       for (size_t i = 1; i < size; ++i)
       {
         MapType& t = tCounts[i];

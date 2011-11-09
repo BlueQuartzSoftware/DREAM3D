@@ -12,6 +12,7 @@
   <file>plus.png</file>
   <file>preferences.png</file>
   <file>reload.png</file>
-  
+  <file>MaxCutOff_Eqn.png</file>
+  <file>MinCutOff_Eqn.png</file>
  </qresource>
  </RCC>

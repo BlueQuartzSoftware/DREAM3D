@@ -96,7 +96,7 @@ class VolumeOpsWidget : public DREAM3DPluginFrame, private Ui::VolumeOpsWidget
     void on_m_LoadSettingsBtn_clicked();
     void on_m_H5OutputFileBtn_clicked();
 
-    void on_m_H5InputFile_textChanged(const QString &text);
+    void on_m_InputFile_textChanged(const QString &text);
     void on_m_H5OutputFile_textChanged(const QString &text);
 
   private slots:

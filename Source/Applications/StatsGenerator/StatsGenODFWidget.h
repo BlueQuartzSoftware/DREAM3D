@@ -37,22 +37,33 @@
 #ifndef _STATSGENODFWIDGET_H_
 #define _STATSGENODFWIDGET_H_
 
+
+#include <QtCore/QFutureWatcher>
+#include <QtGui/QImage>
 #include <QtGui/QWidget>
 
 #include "ui_SGAxisODFWidget.h"
 
-#include <MXA/Common/MXASetGetMacros.h>
+#include <qwt.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
+
+#include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
+#include "PoleFigureMaker.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;
-class QwtPlot;
-class QwtPlotCurve;
-class QwtPlotMarker;
+
 
 /**
  * @class StatsGenODFWidget StatsGenODFWidget.h StatsGenerator/StatsGenODFWidget.h
@@ -95,15 +106,18 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     void drawODFPlotGrid(QwtPlot* plot);
 
+    MXA_INSTANCE_PROPERTY(bool, Initializing)
 
     protected slots:
       void on_m_CalculateODFBtn_clicked();
       void on_addODFTextureBtn_clicked();
       void on_deleteODFTextureBtn_clicked();
 
-    protected:
-      MXA_INSTANCE_PROPERTY(bool, Initializing)
+      // Slots for the QFutureWatcher to connect to
+      void showPoleFigure(int imageIndex);
+      void poleFigureGenerationComplete();
 
+    protected:
 
     private:
       int      m_PhaseIndex;
@@ -115,6 +129,8 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
       QwtPlotCurve*           m_CircleGrid;
       QwtPlotCurve*           m_RotCross0;
       QwtPlotCurve*           m_RotCross1;
+
+      QFutureWatcher<QImage>*   m_PoleFigureFuture;
 
       StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
       void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented

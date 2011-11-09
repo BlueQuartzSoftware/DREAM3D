@@ -106,7 +106,7 @@ class StatsGen
       int err = 0;
       float lognormin, lognormout, max, min;
       float s2 = powf(stdDev, 2);
-      float root2pi = powf((2.0 * 3.1415926535897), 0.5);
+      float root2pi = powf( (float)(M_2PI), 0.5);
       x.resize(size);
       y.resize(size);
       min = exp(avg - (5 * stdDev));
@@ -825,7 +825,7 @@ class StatsGen
     int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 5832;
-      float radtodeg = 180.0f / M_PI;
+      float radtodeg = 180.0f / float(M_PI);
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       float density;
@@ -889,7 +889,7 @@ class StatsGen
     int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
       static const size_t mdfsize = 15552;
-      float radtodeg = 180.0f / M_PI;
+      float radtodeg = 180.0f / float(M_PI);
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose = 0;

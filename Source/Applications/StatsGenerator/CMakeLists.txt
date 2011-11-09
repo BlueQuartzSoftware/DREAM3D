@@ -60,6 +60,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
+    ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.cpp
     )
 set (StatsGenerator_HDRS 
     ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -75,6 +76,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
+    ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -224,3 +226,27 @@ BuildQtAppBundle(
     COMPONENT     Applications
     INSTALL_DEST  "."
 ) 
+
+set(${PROJECT_NAME}_HELP_FILES
+    ${PROJECT_SOURCE_DIR}/Help/index.html
+    ${PROJECT_SOURCE_DIR}/Help/image001.png
+    ${PROJECT_SOURCE_DIR}/Help/image002.png
+    ${PROJECT_SOURCE_DIR}/Help/image003.png
+    ${PROJECT_SOURCE_DIR}/Help/image004.png
+    ${PROJECT_SOURCE_DIR}/Help/image005.png
+    ${PROJECT_SOURCE_DIR}/Help/image006.png
+    ${PROJECT_SOURCE_DIR}/Help/image007.png
+    ${PROJECT_SOURCE_DIR}/Help/image008.png
+)
+
+#- This copies all the HTML files into the Build directory so the help
+#- works from the Build Tree
+file(COPY ${${PROJECT_NAME}_HELP_FILES} 
+    DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/${PROJECT_NAME}/ )
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(FILES ${${PROJECT_NAME}_HELP_FILES}
+        DESTINATION Help/${PROJECT_NAME}
+        COMPONENT Applications )   

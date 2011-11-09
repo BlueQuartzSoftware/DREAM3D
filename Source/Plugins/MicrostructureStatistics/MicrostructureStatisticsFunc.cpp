@@ -57,7 +57,7 @@
 //-- AIM Includes
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/OIMColoring.hpp"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
 #include "Algo.hpp"
 
@@ -1761,7 +1761,7 @@ void MicrostructureStatisticsFunc::find_colors()
       q1[4] = m_Grains[i]->avg_quat[4] / m_Grains[i]->avg_quat[0];
       if (crystruct[m_Grains[i]->phase] == Ebsd::Cubic)
       {
-        OIMColoring::GenerateIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
+        EbsdColoring::GenerateIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
         m_Grains[i]->red = static_cast<float> (rgb[0] / 255.0);
         m_Grains[i]->green = static_cast<float> (rgb[1] / 255.0);
         m_Grains[i]->blue = static_cast<float> (rgb[2] / 255.0);
@@ -1771,7 +1771,7 @@ void MicrostructureStatisticsFunc::find_colors()
       }
       if (crystruct[m_Grains[i]->phase] == Ebsd::Hexagonal)
       {
-        OIMColoring::CalculateHexIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+        EbsdColoring::CalculateHexIPFColor(g1ea1, g1ea2, g1ea3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);
         m_Grains[i]->red = rgb[0] / 255.0;
         m_Grains[i]->green = rgb[1] / 255.0;
         m_Grains[i]->blue = rgb[2] / 255.0;

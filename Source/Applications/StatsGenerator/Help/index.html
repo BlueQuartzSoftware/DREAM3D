@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>StatsGenerator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=macintosh">
+</head>
+<body lang="EN-US">
+
+  <!-- ############################################################# -->
+  <h1>StatsGenerator</h1>
+  <h2>Size Distribution Tab</h2>
+  <img src="image001.png" alt="StatsGenerator Main Window">
+
+<ol>
+  <li><b>Mu</b>
+  This is the average value of the lognormal grain size distribution</li>
+  <li><b>Sigma</b>
+  This is the standard deviation of the lognormal grain size distribution</li>
+  <li><b>Sigma Cut Off Value</b>
+  This allows the user to truncate the distribution to remove very large grains</li>
+  <li><b>Bin Step Size</b>
+  This is the size of bin to use in segregating the grains into size classes for
+  correlating other statistics to grain size. Note that the Bins to be Created
+  is displayed in the bottom left corner.</li>
+
+  <li><b>Preset Statistic Models</b>
+  This allows the user to select a ‘morphological-type’ of microstructure to
+  populate the default data.
+  <ol>
+    <li style="list-style: Upper-roman;">Default – this populates the statistic tabs with generic random
+      data that may not create a ‘buildable’ microstructure. This option should
+      only be used if the user is going to enter the values on all the
+      statistics tabs themselves.</li>
+    <li style="list-style: Upper-roman;">Equiaxed – this populates the statistic tabs with data that is
+      designed to generate a random equiaxed microstructure.</li>
+    <li style="list-style: Upper-roman;">Rolled – this populates the statistic tabs with data that is
+      designed to generate a rolled microstructure with elongated grains with
+      user defined aspect ratios.
+    <ol>
+      <li style="list-style: lower-alpha;">Aspect Ratio 1 – this is the
+        aspect ratio between the dimensions of the grains in the rolling
+        direction and transverse direction, respectively.</li>
+      <li style="list-style: lower-alpha;">Aspect Ratio 2 – this is the
+        aspect ratio between the dimensions of the grains in the rolling
+        direction and normal direction, respectively. This value must be larger
+        than Aspect Ratio 1 or the default values will be wrong.</li>
+    </ol></li>
+  </ol></li>
+
+  <li><b>Phase Properties</b>
+  this is the area where the user can enter information about the phase for
+  which statistics are currently being generated. The Plus Button allows the
+  user to add a phase, the Minus Button allows the user to remove a phase and
+  the Wheel Button allows the user to edit the currently selected phase.
+  
+  <img src="image002.png" alt="Phase Properties">
+ 
+  <ol>
+    <li style="list-style: Upper-roman;">Select Crystal Structure – this allows the user to specify the
+      crystal structure of the phase. Currently, the two options are Cubic and
+      Hexagonal.</li>
+    <li style="list-style: Upper-roman;">Fraction – this is the volume fraction of the phase. The Calculated
+      Phase Fraction is updated as more phases are added, by scaling the current
+      total of all the phases fractions to 1 (in case the user’s total is not
+      equal to 1 when finished).</li>
+    <li style="list-style: Upper-roman;">Select Phase Type – this specifies the type of the phase.
+      Currently, the two types of phases are Primary and Precipitate. Note that
+      there must be at least one Primary phase before any Precipitate phase can
+      be created or the Synthetic Builder will fail.</li>
+    <li style="list-style: Upper-roman;">Fraction of Precipitate on Boundary – if the phase type is set to
+      Precipitate, then the user must specify the number fraction of the
+      precipitates that are located on grain boundaries of the primary phase.
+      This value will be scaled to 1 if the user’s value is larger than 1. The
+      value is keyed to -1 for Primary phases.</li>
+  </ol>
+</li>
+  <li><b>Create Data</b>
+  This locks in the values the user has entered and populates the other tabs
+  with default values. The user can move through the other tabs and change any
+  default values if desired.</li>
+</ol>
+
+  <h2>Omega3 Tab</h2>
+  <img src="image003.png" alt="Omega 3 GUI">
+  <ol>
+  <li>Bin – this column is calculated from the size distribution and
+  cannot be changed.</li>
+  <li>Alpha – this is the alpha parameter of a Beta distribution.
+  Omega 3 is normalized and can only be between 0 and 1, so the Beta
+  distribution is a good fit</li>
+  <li>Beta – this is the beta parameter of the Beta distribution.</li>
+  <li>Color – this allows the user to change colors of the curves for
+  image creation or easier identification during stats generation</li>
+  </ol>
+
+  <h2>Shape Distribution Tab</h2>
+  <img src="image004.png" alt="Shape Distribution Function GUI">
+  <ol>
+<li>Bin – this column is calculated from the size distribution and
+  cannot be changed.</li>
+  <li> Alpha – this is the alpha parameter of a Beta distribution. B/A,
+  C/A and C/B are normalized and can only be between 0 and 1, so the Beta
+  distribution is a good fit</li>
+  <li>Beta – this is the beta parameter of the Beta distribution.</li>
+  <li>Color – this allows the user to change colors of the curves for
+  image creation or easier identification during stats generation</li>
+  </ol>
+
+
+  <h2>Neighbor Distribution Tab</h2>
+  <img src="image005.png" alt="Neighbor Distribution Function GUI">
+  <ol>
+  <li>Bin – this column is calculated from the size distribution and
+  cannot be changed.</li>
+  <li>Alpha – this is the alpha parameter of a Power Law distribution.</li>
+  <li>K – this is the exponent of a Power Law Distribution</li>
+  <li>Beta – this is the beta parameter of a Power Law distribution.</li>
+  <li>Color – this allows the user to change colors of the curves for
+  image creation or easier identification during stats generation</li>
+  </ol>
+
+
+  <h2>ODF Tab</h2>
+  <img src="image006.png" alt="ODF GUI">
+  <ol>
+    <li><b>Weights and Spreads Sub-Tab</b>
+      <ol>
+        <li style="list-style: lower-alpha;">Euler 1-3 – these are the
+          Euler angles that define an orientation that the user would like to
+          increase in weight.</li>
+        <li style="list-style: lower-alpha;">Weight – this is the weight in
+          MRD (multiples of random) to be assigned to the orientation listed</li>
+        <li style="list-style: lower-alpha;">Sigma – this is the spread to
+          use in blurring out the orientation chosen. The value corresponds to
+          the number of bins in Rodrigues (orientation) space it takes for the
+          MRD value entered in the Weight column to reduce to 0.0 (decreasing
+          quadratically from the bin of the entered orientation).</li>
+        <li style="list-style: lower-alpha;">Calculate ODF – this builds
+          the ODF and then creates pole figures (PFs) for the user to inspect.</li>
+      </ol>
+    </li>
+    <li><b>Pole Figure (PF) Sub-Tabs</b>
+      <ol>
+        <li style="list-style: lower-alpha;">There are three PFs formed for
+          each of the crystal structures that can be chosen (though they are of
+          different directions for the different crystal structures).</li>
+      </ol>
+    </li>
+  <li><b>MDF Sub Tab</b>&nbsp;&nbsp;This sub-tab will display the baseline MDF for the generated ODF.  The
+  implemented algorithm proceeds by randomly sampling pairs of orientations from
+  the ODF and calculating the misorientation (axis-angle only).  Only the angle 
+  is plotted in the misorientation distribution plot.  The user can also add 
+  axis-angle pairs to increase in weight.<p></p>
+  <img src="image007.png" alt="MDF GUI"><p></p>
+  
+  <ol>
+  <li style="list-style: lower-alpha;">Angle – this is the angle of the misorientation to 
+  increase in weight.</li>
+  <li style="list-style: lower-alpha;">Axis – this is the axis of the misorientation to 
+  increase in weight.  If the crystal structure being used for the phase is Hexagonal, 
+  then this axis is in the 3-index, orthogonal convention, not the true (hkil) convention.</li>
+  <li style="list-style: lower-alpha;">Weight – this is the weight in units of MRD 
+  (multiples of random) of the entered misorientation.</li>
+    </ol>
+    </li>
+ </ol>
+
+
+  <h2>Axis ODF Tab</h2>
+  <img src="image008.png" alt="Axis ODF GUI">
+  <ol>
+    <li><b>Weights and Spreads Sub-Tab</b>
+      <ol>
+        <li style="list-style: lower-alpha;">Euler 1-3 – these are the
+          Euler angles that define an orientation that the user would like to
+          increase in weight.</li>
+        <li style="list-style: lower-alpha;">Weight – this is the weight in
+          MRD (multiples of random) to be assigned to the orientation listed</li>
+        <li style="list-style: lower-alpha;">Sigma – this is the spread to
+          use in blurring out the orientation chosen. The value corresponds to
+          the number of bins in Rodrigues (orientation) space it takes for the
+          MRD value entered in the Weight column to reduce to 0.0 (decreasing
+          quadratically from the bin of the entered orientation).</li>
+        <li style="list-style: lower-alpha;">Calculate ODF – this builds
+          the ODF and then creates pole figures (PFs) for the user to inspect.</li>
+      </ol>
+    </li>
+    <li><b>Pole Figure (PF) Sub-Tabs</b>
+      <ol>
+        <li style="list-style: lower-alpha;">There are three PFs formed, which correspond to the location of the 3 principal axes of the grains to be generated (i.e a > b > c).</li>
+      </ol>
+    </li>
+    </ol>
+
+</body>
+</html>
