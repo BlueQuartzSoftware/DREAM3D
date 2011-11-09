@@ -324,11 +324,19 @@ void ReconstructionFunc::threshold_points()
 	  }
 	}
   }
+  for (int i=0;i<totalpoints;i++)
+  {
+	grain_indicies[i] = -1;
+	goodVoxels[i] = 1;
+  }
   voxelslist.clear();
 }
 
 void ReconstructionFunc::align_sections()
 {
+  ofstream outFile;
+  string filename = "align.txt";
+  outFile.open(filename.c_str());
   float disorientation = 0;
   float mindisorientation = 100000000;
   float **mutualinfo12;
@@ -339,7 +347,7 @@ void ReconstructionFunc::align_sections()
   int newyshift = 0;
   int oldxshift = 0;
   int oldyshift = 0;
-  int count = 0;
+  float count = 0;
   int slice = 0;
   int xspot, yspot;
   float w;
@@ -457,10 +465,8 @@ void ReconstructionFunc::align_sections()
 						  }
 						  if (w > misorientationtolerance) disorientation++;
 						}
-//						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
-//						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
-						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) count = count-1;
-						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) count = count-1;
+						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
+						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
 					  }
 					  else if(alignmeth == DREAM3D::Reconstruction::OuterBoundary)
 					  {
@@ -515,6 +521,7 @@ void ReconstructionFunc::align_sections()
 				  }
 				  disorientation = 1.0 / disorientation;
 				}
+				if(alignmeth == DREAM3D::Reconstruction::OuterBoundary || alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation/count;
 				misorients[k+oldxshift+int(xpoints/2)][j+oldyshift+int(ypoints/2)] = disorientation;
 				if (disorientation < mindisorientation)
 				{
@@ -526,6 +533,7 @@ void ReconstructionFunc::align_sections()
           }
         }
     }
+	outFile << iter << "	" << newxshift << "	" << newyshift << "	" << shifts[iter - 1][0] + newxshift << "	" << shifts[iter - 1][1] + newyshift << endl;
     shifts[iter][0] = shifts[iter - 1][0] + newxshift;
     shifts[iter][1] = shifts[iter - 1][1] + newyshift;
   }
