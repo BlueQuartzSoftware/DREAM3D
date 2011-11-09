@@ -339,7 +339,7 @@ void ReconstructionFunc::align_sections()
   int newyshift = 0;
   int oldxshift = 0;
   int oldyshift = 0;
-  int count = 0;
+  float count = 0;
   int slice = 0;
   int xspot, yspot;
   float w;
@@ -457,10 +457,8 @@ void ReconstructionFunc::align_sections()
 						  }
 						  if (w > misorientationtolerance) disorientation++;
 						}
-//						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
-//						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
-						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) count = count-1;
-						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) count = count-1;
+						if (goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
+						if (goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
 					  }
 					  else if(alignmeth == DREAM3D::Reconstruction::OuterBoundary)
 					  {
@@ -515,6 +513,7 @@ void ReconstructionFunc::align_sections()
 				  }
 				  disorientation = 1.0 / disorientation;
 				}
+				if(alignmeth == DREAM3D::Reconstruction::OuterBoundary || alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation/count;
 				misorients[k+oldxshift+int(xpoints/2)][j+oldyshift+int(ypoints/2)] = disorientation;
 				if (disorientation < mindisorientation)
 				{
