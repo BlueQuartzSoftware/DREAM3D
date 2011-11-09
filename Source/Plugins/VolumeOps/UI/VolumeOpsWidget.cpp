@@ -96,8 +96,8 @@ void VolumeOpsWidget::readSettings(QSettings &prefs)
   bool ok;
 
   prefs.beginGroup("VolumeOps");
-  READ_FILEPATH_SETTING(prefs, m_, H5InputFile, "");
-  on_m_H5InputFile_textChanged(QString(""));
+  READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
+  on_m_InputFile_textChanged(QString(""));
 
   READ_FILEPATH_SETTING(prefs, m_, H5OutputFile, "");
  // READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "VolumeOps_")
@@ -123,7 +123,7 @@ void VolumeOpsWidget::readSettings(QSettings &prefs)
 void VolumeOpsWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("VolumeOps");
-  WRITE_STRING_SETTING(prefs, m_, H5InputFile)
+  WRITE_STRING_SETTING(prefs, m_, InputFile)
   WRITE_STRING_SETTING(prefs, m_, H5OutputFile)
 
   WRITE_SETTING(prefs, m_, XMin)
@@ -157,9 +157,9 @@ void VolumeOpsWidget::setupGui()
 {
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-  m_H5InputFile->setCompleter(com);
+  m_InputFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_H5InputFile_textChanged(const QString &)));
+           this, SLOT(on_m_InputFile_textChanged(const QString &)));
 
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, false);
   m_H5OutputFile->setCompleter(com2);
@@ -167,7 +167,7 @@ void VolumeOpsWidget::setupGui()
            this, SLOT(on_m_H5OutputFile_textChanged(const QString &)));
 
 
-  m_WidgetList << m_H5InputFile << m_H5OutputFile << m_H5OutputFileBtn;
+  m_WidgetList << m_InputFile << m_H5OutputFile << m_H5OutputFileBtn;
   m_WidgetList << m_LoadSettingsBtn << m_SaveSettingsBtn << m_XMin;
   m_WidgetList << m_YMin << m_ZMin << m_XMax << m_YMax << m_ZMax;
   m_WidgetList << m_XResolution << m_YResolution << m_ZResolution;
@@ -221,11 +221,11 @@ void VolumeOpsWidget::on_m_H5Btn_clicked()
                                                  tr("HDF5 EBSD Files (*.h5voxel)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
-  m_H5InputFile->blockSignals(true);
+  m_InputFile->blockSignals(true);
   QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
-  m_H5InputFile->setText(p);
-  on_m_H5InputFile_textChanged(m_H5InputFile->text() );
-  m_H5InputFile->blockSignals(false);
+  m_InputFile->setText(p);
+  on_m_InputFile_textChanged(m_InputFile->text() );
+  m_InputFile->blockSignals(false);
 
 }
 
@@ -233,19 +233,19 @@ void VolumeOpsWidget::on_m_H5Btn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeOpsWidget::on_m_H5InputFile_textChanged(const QString &text)
+void VolumeOpsWidget::on_m_InputFile_textChanged(const QString &text)
 {
 
-  verifyPathExists(m_H5InputFile->text(), m_H5InputFile);
+  verifyPathExists(m_InputFile->text(), m_InputFile);
 
-  QFileInfo fi(m_H5InputFile->text());
+  QFileInfo fi(m_InputFile->text());
   if (fi.exists() && fi.isFile())
   {
     // Set the output file Prefix based on the name of the input file
     //m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
 
     H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-    h5Reader->setFileName(m_H5InputFile->text().toStdString());
+    h5Reader->setFileName(m_InputFile->text().toStdString());
     int dims[3];
     float spacing[3];
     float origin[3];
@@ -253,9 +253,9 @@ void VolumeOpsWidget::on_m_H5InputFile_textChanged(const QString &text)
     if (err >= 0)
     {
       // These are the values from the data file and are displayed to the user
-      m_xDim->setText(QString::number(dims[0]));
-      m_yDim->setText(QString::number(dims[1]));
-      m_zDim->setText(QString::number(dims[2]));
+      m_XDim->setText(QString::number(dims[0]));
+      m_YDim->setText(QString::number(dims[1]));
+      m_ZDim->setText(QString::number(dims[2]));
       m_XRes->setText(QString::number(spacing[0]));
       m_YRes->setText(QString::number(spacing[1]));
       m_ZRes->setText(QString::number(spacing[2]));
@@ -341,7 +341,7 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
 
   // Pull the values from the GUI and push them into the m_VolumeOps variable
 
-  m_VolumeOps->setH5InputFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
+  m_VolumeOps->setH5InputFile( QDir::toNativeSeparators(m_InputFile->text()).toStdString());
   m_VolumeOps->setH5OutputFile( QDir::toNativeSeparators(m_H5OutputFile->text()).toStdString());
 
   m_VolumeOps->setXRes(m_XResolution->value());

@@ -40,15 +40,9 @@
 
 //-- Qt Includes
 #include <QtGui/QAbstractItemDelegate>
+#include <QtCore/QtConcurrentMap>
 
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
+
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -59,6 +53,7 @@
 #include "StatsGenerator/TextureDialog.h"
 #include "StatsGen.h"
 
+#define MAKE_COLOR_POLE_FIGURES 1
 
 // -----------------------------------------------------------------------------
 //
@@ -70,7 +65,8 @@ m_Initializing(true),
 m_PhaseIndex(-1),
 m_CrystalStructure(Ebsd::AxisOrthoRhombic),
 m_ODFTableModel(NULL),
-m_MDFWidget(NULL)
+m_MDFWidget(NULL),
+m_PoleFigureFuture(NULL)
 {
   this->setupUi(this);
   this->setupGui();
@@ -242,13 +238,25 @@ void SGAxisODFWidget::setupGui()
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
 
-  initQwtPlot("RD", "TD", m_ODF_001Plot);
-  initQwtPlot("RD", "TD", m_ODF_011Plot);
-  initQwtPlot("RD", "TD", m_ODF_111Plot);
+//  initQwtPlot("RD", "TD", m_ODF_001Plot);
+//  initQwtPlot("RD", "TD", m_ODF_011Plot);
+//  initQwtPlot("RD", "TD", m_ODF_111Plot);
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
+
+#if MAKE_COLOR_POLE_FIGURES
+  m_PoleFigureFuture = new QFutureWatcher<QImage>(this);
+  connect(m_PoleFigureFuture, SIGNAL(resultReadyAt(int)),
+          this, SLOT(showPoleFigure(int)));
+  connect(m_PoleFigureFuture, SIGNAL(finished()),
+          this, SLOT(poleFigureGenerationComplete()));
+#else
+  // Hide the color Pole Figures in this version
+  m_PFScrollArea->hide();
+#endif
+
 }
 
 // -----------------------------------------------------------------------------
@@ -361,6 +369,54 @@ void SGAxisODFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SGAxisODFWidget::showPoleFigure(int imageIndex)
+{
+ // labels[num]->setPixmap(QPixmap::fromImage(imageScaling->resultAt(num)));
+  switch(imageIndex)
+  {
+    case 0:
+      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_001.tif");
+      m_001PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
+      break;
+    case 1:
+      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_011.tif");
+      m_011PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
+      break;
+    case 2:
+      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_111.tif");
+      m_111PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
+      break;
+    default:
+      break;
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGAxisODFWidget::poleFigureGenerationComplete()
+{
+//  std::cout << "ODF Pole Figure generation complete" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage generateAxisODFPoleFigure(const PoleFigureData &data)
+{
+  PoleFigureMaker colorPoleFigure;
+#if 1
+  return colorPoleFigure.generatePoleFigureImage(data);
+#else
+  return colorPoleFigure.generateColorPoleFigureImage(data);
+#endif
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
@@ -388,9 +444,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 
   for(int i=0;i<e1s.size();i++)
   {
-	e1s[i] = e1s[i]*M_PI/180.0;
-	e2s[i] = e2s[i]*M_PI/180.0;
-	e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i] * M_PI / 180.0;
+    e2s[i] = e2s[i] * M_PI / 180.0;
+    e3s[i] = e3s[i] * M_PI / 180.0;
   }
 
   StatsGen sg;
@@ -408,26 +464,74 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
+#if MAKE_COLOR_POLE_FIGURES
+  // This is multi-threaded on appropriate hardware.
+  qint32 kRad[2] = {5, 5};
+  qint32 pfSize[2] = {226, 226};
+  QVector<PoleFigureData> data;
+  data.push_back(PoleFigureData(x001, y001, QString("A Axis"), kRad, pfSize));
+  data.push_back(PoleFigureData(x011, y011, QString("B Axis"), kRad, pfSize));
+  data.push_back(PoleFigureData(x111, y111, QString("C Axis"), kRad, pfSize));
+  // This kicks off the threads
+  m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateAxisODFPoleFigure));
+
+#else
   QwtArray<double> x001d(x001.size());
   QwtArray<double> y001d(y001.size());
   QwtArray<double> x011d(x011.size());
   QwtArray<double> y011d(y011.size());
   QwtArray<double> x111d(x111.size());
   QwtArray<double> y111d(y111.size());
+  float minX = 1.0f;
+  float maxX = -1.0f;
+  float minY = 1.0f;
+  float maxY = -1.0f;
   for(int i =0; i < x001.size(); ++i)
   {
     x001d[i] = x001[i];
     y001d[i] = y001[i];
+    if (x001[i] < minX) { minX = x001[i];}
+    if (x001[i] > maxX) { maxX = x001[i];}
+    if (y001[i] < minY) { minY = y001[i];}
+    if (y001[i] > maxY) { maxY = y001[i];}
+  }
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
   }
   for(int i =0; i < x011.size(); ++i)
   {
     x011d[i] = x011[i];
     y011d[i] = y011[i];
+    if (x011[i] < minX) { minX = x011[i];}
+    if (x011[i] > maxX) { maxX = x011[i];}
+    if (y011[i] < minY) { minY = y011[i];}
+    if (y011[i] > maxY) { maxY = y011[i];}
   }
+
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
+  }
+
   for(int i =0; i < x111.size(); ++i)
   {
     x111d[i] = x111[i];
     y111d[i] = y111[i];
+    if (x111[i] < minX) { minX = x111[i];}
+    if (x111[i] > maxX) { maxX = x111[i];}
+    if (y111[i] < minY) { minY = y111[i];}
+    if (y111[i] > maxY) { maxY = y111[i];}
+  }
+  if (minX < -1 || minY < -1) {
+    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
+  }
+  if (maxX > 1.0 || maxY > 1.0f) {
+    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
   }
 
 //  QwtSymbol symbol;
@@ -454,6 +558,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
  // curve->setSymbol(symbol);
   curve->attach(m_ODF_111Plot);
   m_ODF_111Plot->replot();
+#endif
 }
 
 // -----------------------------------------------------------------------------

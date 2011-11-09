@@ -92,7 +92,7 @@ void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QV
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
+    alpha += 0.1f;
     beta += betaStep;
    }
 
@@ -134,7 +134,7 @@ void DefaultStatsPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QV
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
+    alpha += 0.1f;
     beta += betaStep;
    }
 
@@ -176,7 +176,7 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
+    alpha += 0.1f;
     beta += betaStep;
    }
 
@@ -219,7 +219,7 @@ void DefaultStatsPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QV
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-    alpha += 0.1;
+    alpha += 0.1f;
     beta += betaStep;
    }
 

@@ -48,8 +48,11 @@
 #include <QtGui/QFileDialog>
 
 #include "DREAM3DLib/DREAM3DVersion.h"
+
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
+#include "QtSupport/HelpDialog.h"
+
 #include "DREAM3D/License/StatsGeneratorLicenseFiles.h"
 
 #include "SGApplication.h"
@@ -61,6 +64,7 @@
 StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   QMainWindow(parent),
   m_FileSelected(false),
+  m_HelpDialog(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:")
 #else
@@ -151,7 +155,11 @@ void StatsGeneratorUI::setupGui()
   phaseCombo->blockSignals(true);
   phaseCombo->addItem(cName);
   phaseCombo->blockSignals(false);
+  setWindowTitle("[*] - Untitled.h5stats");
   setWindowModified(true);
+
+  m_HelpDialog = new HelpDialog(this);
+  m_HelpDialog->setWindowModality(Qt::NonModal);
 }
 
 // -----------------------------------------------------------------------------
@@ -642,6 +650,21 @@ void StatsGeneratorUI::adjustWindowTitle()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
+  QString msg ("StatsGenerator Version ");
+  msg.append(DREAM3DLib::Version::Complete.c_str());
+  msg.append("\n\nThe Primary Developers are:\n");
+  msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
+  msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
+  msg.append("Please send any help, bug or feature requests dream3d@bluequartz.net\n\n");
+  msg.append("The latest version can always be downloaded from http://dream3d.bluequartz.net\n");
+  QMessageBox::information(this, QString("About DREAM.3D"), msg, QMessageBox::Ok | QMessageBox::Default);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionLicense_Information_triggered()
+{
   ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
@@ -667,3 +690,21 @@ QString StatsGeneratorUI::getFilePath()
   return m_FilePath;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl StatsGeneratorUI::htmlHelpIndexFile()
+{
+  QString s = "StatsGenerator/index.html";
+  return QUrl(s);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
+{
+  m_HelpDialog->setContentFile(htmlHelpIndexFile());
+}

@@ -170,7 +170,7 @@ void SurfaceMeshWidget::setupGui()
   m_ScalarsName->setText(QString::fromStdString(DREAM3D::VTK::GrainIdScalarName));
   messageLabel->setText("Any existing output files will be over written with new versions during the operation.");
   m_WidgetList << m_InputFile << messageLabel;
-  m_WidgetList << m_ScalarsName << xDim << yDim << zDim;
+  m_WidgetList << m_ScalarsName << m_XDim << m_YDim << m_ZDim;
   m_WidgetList << m_InputFileBtn << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_VisualizationVizFile << m_DeleteTempFiles;
 //  m_WidgetList  << m_LockQuadPoints << m_SmoothIterations << m_SmoothMesh << m_WriteOutputFileIncrement;
@@ -238,9 +238,13 @@ void SurfaceMeshWidget::on_m_InputFile_textChanged(const QString & text)
     int err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
     if (err >= 0)
     {
-        xDim->setText(QString::number(dims[0]));
-        yDim->setText(QString::number(dims[1]));
-        zDim->setText(QString::number(dims[2]));
+      // These are the values from the data file and are displayed to the user
+      m_XDim->setText(QString::number(dims[0]));
+      m_YDim->setText(QString::number(dims[1]));
+      m_ZDim->setText(QString::number(dims[2]));
+      m_XRes->setText(QString::number(spacing[0]));
+      m_YRes->setText(QString::number(spacing[1]));
+      m_ZRes->setText(QString::number(spacing[2]));
     }
   }
 }

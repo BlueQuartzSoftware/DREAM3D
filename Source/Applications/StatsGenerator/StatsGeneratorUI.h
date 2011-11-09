@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -44,6 +44,7 @@
 
 #include "SGWidget.h"
 
+class HelpDialog;
 
 /**
  * @class StatsGeneratorUI StatsGeneratorUI.h StatsGenerator/StatsGeneratorUI.h
@@ -69,6 +70,8 @@ Q_OBJECT    ;
 
     SGWidget* createNewSGWidget();
 
+    QUrl htmlHelpIndexFile();
+
   signals:
       void windowIsClosing(StatsGeneratorUI*);
 
@@ -82,6 +85,8 @@ Q_OBJECT    ;
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
     void on_actionAbout_triggered();
+    void on_actionLicense_Information_triggered();
+    void on_actionStatsGenerator_Help_triggered();
 
     void on_phaseCombo_currentIndexChanged(int index);
     void on_addPhase_clicked();
@@ -152,6 +157,7 @@ Q_OBJECT    ;
     QString              m_FilePath;
     bool                 m_FileSelected;
     QVector<SGWidget*>   m_SGWidgets;
+    HelpDialog*          m_HelpDialog;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented

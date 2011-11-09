@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef OIMCOLORING_HPP_
-#define OIMCOLORING_HPP_
+#ifndef _EBSDCOLORING_HPP_
+#define _EBSDCOLORING_HPP_
 
 #include <string>
 
@@ -51,7 +51,7 @@ namespace Detail
 }
 
 /**
-* @class OIMColoring OIMColoring.hpp Server/IPFFilter/OIMColoring.hpp
+* @class EbsdColoring EbsdColoring.hpp DREAM3DLib/Common/EbsdColoring.hpp
 * @brief This class helps generate an RGB color based on a Euler Angle and a
 * Reference Direction.
 * @author Michael A. Jackson for BlueQuartz Software
@@ -59,7 +59,7 @@ namespace Detail
 * @date Feb 24, 2010
 * @version 1.0
 */
-class OIMColoring
+class EbsdColoring
 {
 
   public:
@@ -155,7 +155,7 @@ class OIMColoring
     template<typename T, typename K>
     static void GenerateIPFColor(T* eulers, K* refDir, unsigned char* rgb, unsigned char* hkl)
     {
-      OIMColoring::GenerateIPFColor<T>(eulers[0], eulers[1], eulers[2],
+      EbsdColoring::GenerateIPFColor<T>(eulers[0], eulers[1], eulers[2],
                                        refDir[0], refDir[1], refDir[2],rgb, hkl);
     }
 
@@ -216,7 +216,7 @@ class OIMColoring
       cd[2] = fabs(cd[2]);
 
       // Sort the cd array from smallest to largest
-      OIMColoring::TripletSort<T>(cd[0], cd[1], cd[2], cd);
+      EbsdColoring::TripletSort<T>(cd[0], cd[1], cd[2], cd);
 
       T h = cd[0];
       T k = cd[1];
@@ -278,7 +278,7 @@ class OIMColoring
     template<typename T, typename K>
     static void CalculateHexIPFColor(T* eulers, K* refDir, unsigned char* rgb)
     {
-      OIMColoring::CalculateHexIPFColor<T>(eulers[0], eulers[1], eulers[2],
+      EbsdColoring::CalculateHexIPFColor<T>(eulers[0], eulers[1], eulers[2],
                                        refDir[0], refDir[1], refDir[2],rgb);
     }
 
@@ -387,17 +387,17 @@ class OIMColoring
 
 
   protected:
-    OIMColoring() {};
-    ~OIMColoring() {};
+    EbsdColoring() {};
+    ~EbsdColoring() {};
 
 
   private:
-    OIMColoring(const OIMColoring&);    // Copy Constructor Not Implemented
-    void operator=(const OIMColoring&);  // Operator '=' Not Implemented
+    EbsdColoring(const EbsdColoring&);    // Copy Constructor Not Implemented
+    void operator=(const EbsdColoring&);  // Operator '=' Not Implemented
 
 };
 
 
 
 
-#endif /* OIMCOLORING_HPP_ */
+#endif /* _EBSDCOLORING_HPP_ */
