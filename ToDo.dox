@@ -11,7 +11,7 @@ so it can be integrated with the other documentation pages.
 @li Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
 @li <b>DONE</b>  Update all screen shots for all modules using a single Operating System
 @li Update documentation for each Module
-@li Generate and post developer documentation in PDF/HTML form
+@li <b>DONE</b>  Generate and post developer documentation in PDF/HTML form
 
 
 
@@ -40,6 +40,7 @@ so it can be integrated with the other documentation pages.
 @subsection microstats Microstructure Statistics Plugin
 
 @subsection volumeops VolumeOps Plugin
+@li Add help file
 
 @subsection volumemeshing Volume Meshing Plugin
 @li Integrate PolyMesh from Cornell as a plugin

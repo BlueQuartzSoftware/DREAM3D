@@ -58,11 +58,11 @@
 
 #include <boost/shared_array.hpp>
 
-#include "MXA/MXA.h"
-#include <MXA/Common/MXASetGetMacros.h>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Grain.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -94,8 +94,8 @@
 class GrainGeneratorFunc : public Observable
 {
 public:
-    MXA_SHARED_POINTERS(GrainGeneratorFunc)
-    MXA_STATIC_NEW_MACRO(GrainGeneratorFunc)
+    DREAM3D_SHARED_POINTERS(GrainGeneratorFunc)
+    DREAM3D_STATIC_NEW_MACRO(GrainGeneratorFunc)
 
     virtual ~GrainGeneratorFunc();
 
