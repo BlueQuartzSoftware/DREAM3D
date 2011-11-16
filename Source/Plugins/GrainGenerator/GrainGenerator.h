@@ -37,11 +37,10 @@
 #ifndef GRAINGENERATOR_H_
 #define GRAINGENERATOR_H_
 
-#include <MXA/Common/MXASetGetMacros.h>
-#include "MXA/MXA.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 
@@ -60,42 +59,42 @@
 class GrainGenerator : public AbstractPipeline, public Observer
 {
   public:
-    MXA_SHARED_POINTERS(GrainGenerator);
-    MXA_TYPE_MACRO(GrainGenerator);
+    DREAM3D_SHARED_POINTERS(GrainGenerator);
+    DREAM3D_TYPE_MACRO(GrainGenerator);
 
-    MXA_STATIC_NEW_MACRO(GrainGenerator);
+    DREAM3D_STATIC_NEW_MACRO(GrainGenerator);
 
     virtual ~GrainGenerator();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
-    MXA_INSTANCE_PROPERTY(int, XPoints)
-    MXA_INSTANCE_PROPERTY(int, YPoints)
-    MXA_INSTANCE_PROPERTY(int, ZPoints)
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    DREAM3D_INSTANCE_PROPERTY(int, XPoints)
+    DREAM3D_INSTANCE_PROPERTY(int, YPoints)
+    DREAM3D_INSTANCE_PROPERTY(int, ZPoints)
 
-    MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::SyntheticBuilder::ShapeType>, ShapeTypes)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<DREAM3D::SyntheticBuilder::ShapeType>, ShapeTypes)
 
-    MXA_INSTANCE_PROPERTY(double, XResolution)
-    MXA_INSTANCE_PROPERTY(double, YResolution)
-    MXA_INSTANCE_PROPERTY(double, ZResolution)
-    MXA_INSTANCE_PROPERTY(double, NeighborhoodErrorWeight)
-    MXA_INSTANCE_PROPERTY(double, FractionPrecipitates)
+    DREAM3D_INSTANCE_PROPERTY(double, XResolution)
+    DREAM3D_INSTANCE_PROPERTY(double, YResolution)
+    DREAM3D_INSTANCE_PROPERTY(double, ZResolution)
+    DREAM3D_INSTANCE_PROPERTY(double, NeighborhoodErrorWeight)
+    DREAM3D_INSTANCE_PROPERTY(double, FractionPrecipitates)
 
-    MXA_INSTANCE_PROPERTY(bool, PeriodicBoundary)
-    MXA_INSTANCE_STRING_PROPERTY(StructureFile)
-    MXA_INSTANCE_PROPERTY(bool, AlreadyFormed)
+    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundary)
+    DREAM3D_INSTANCE_STRING_PROPERTY(StructureFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, AlreadyFormed)
 
-    MXA_INSTANCE_PROPERTY(int, Precipitates)
+    DREAM3D_INSTANCE_PROPERTY(int, Precipitates)
 
-    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
-    MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteSurfaceVoxel)
-    MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
-    MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVtkFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceVoxel)
+    DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseId)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteIPFColor)
 
-    MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
 
 
     /**
