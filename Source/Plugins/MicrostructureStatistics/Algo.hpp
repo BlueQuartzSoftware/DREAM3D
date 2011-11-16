@@ -47,6 +47,7 @@
 
 #include "MicrostructureStatisticsFunc.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include <vector>
 
 #if AIM_USE_PARALLEL_ALGORITHMS
 class ParallelRenumberGrains
@@ -150,12 +151,12 @@ class FindEuclideanMap
               i = (z * xpoints*ypoints) + (y*xpoints) + x;
               if (voxel_NearestNeighbor[i] == -1)
               {
+                count++;
                 for (int j = 0; j < 6; j++)
                 {
                   neighpoint = i + neighbors[j];
                   if (mask[j] == 1)
                   {
-                    count++;
                     if (voxel_NearestNeighborDistance[neighpoint] != -1.0)
                     {
                       voxel_NearestNeighbor[i] = voxel_NearestNeighbor[neighpoint];
