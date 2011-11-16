@@ -227,7 +227,7 @@ void MicrostructureStatistics::execute()
 	  CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_grain_and_kernel_misorientations)
   }
 
-/*  updateProgressAndMessage(("Finding Grain Schmid Factors"), 20);
+  updateProgressAndMessage(("Finding Grain Schmid Factors"), 20);
   m->find_schmids();
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  find_schmids)
 
@@ -238,7 +238,7 @@ void MicrostructureStatistics::execute()
   updateProgressAndMessage(("Writing Deformation Statistics"), 80);
   m->deformation_stats(reconDeformStatsFile, reconDeformIPFFile);
   CHECK_FOR_CANCELED(MicrostructureStatisticsFunc, "MicrostructureStatistics was canceled",  volume_stats)
-*/
+
 
   if(m_WriteGrainFile == true)
   {
