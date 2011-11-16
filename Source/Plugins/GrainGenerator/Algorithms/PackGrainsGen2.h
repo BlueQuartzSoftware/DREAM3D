@@ -40,7 +40,7 @@
 #include <vector>
 #include <string>
 
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
@@ -48,15 +48,15 @@
 class PackGrainsGen2 : public Observable
 {
   public:
-    MXA_SHARED_POINTERS(PackGrainsGen2);
-    MXA_STATIC_NEW_MACRO(PackGrainsGen2);
-    MXA_TYPE_MACRO(PackGrainsGen2);
+    DREAM3D_SHARED_POINTERS(PackGrainsGen2);
+    DREAM3D_STATIC_NEW_MACRO(PackGrainsGen2);
+    DREAM3D_TYPE_MACRO(PackGrainsGen2);
 
     virtual ~PackGrainsGen2();
 
 
-    MXA_INSTANCE_PROPERTY(int, ErrorCondition);
-    MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 

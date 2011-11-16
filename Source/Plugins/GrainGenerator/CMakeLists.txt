@@ -47,7 +47,7 @@ if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
 endif()
 
 
-#-- Add in the Structure Readers for the Grain Generator
+#-- Add in the various filter algorithms for the Grain Generator
 SET (Algorithms_HDRS
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.h
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.h
