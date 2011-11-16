@@ -1219,7 +1219,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
 //  FloatArray gam(new float[totalpoints]);
 
   float** avgmiso = new float *[m_Grains.size()];
-  for (size_t i = 0; i < m_Grains.size(); i++)
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
     avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
@@ -1256,7 +1256,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
       for (int plane = 0; plane < zpoints; plane++)
       {
         point = (plane * xpoints * ypoints) + (row * xpoints) + col;
-        if (grain_indicies[point] > 0)
+        if (grain_indicies[point] > 0 && phases[point] > 0)
         {
           totalmisorientation = 0.0;
           numVoxel = 0;
@@ -1312,15 +1312,15 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
           }
           if(numVoxel == 0)
           {
-            kernelmisorientations[neighbor] = 0;
+            kernelmisorientations[point] = 0;
           }
           else if(neighbor < m_KernelMisorientations->GetNumberOfTuples())
           {
-            kernelmisorientations[neighbor] = totalmisorientation / (float)numVoxel;
+            kernelmisorientations[point] = totalmisorientation / (float)numVoxel;
           }
           else
           {
-            kernelmisorientations[neighbor] = 0;
+            kernelmisorientations[point] = 0;
           }
 
           q2[0] = 1;
@@ -1329,12 +1329,12 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
           q2[3] = m_Grains[grain_indicies[point]]->avg_quat[3] / m_Grains[grain_indicies[point]]->avg_quat[0];
           q2[4] = m_Grains[grain_indicies[point]]->avg_quat[4] / m_Grains[grain_indicies[point]]->avg_quat[0];
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          grainmisorientations[neighbor] = w;
+          grainmisorientations[point] = w;
           gam[point] = w;
           avgmiso[grain_indicies[point]][0]++;
           avgmiso[grain_indicies[point]][1] = avgmiso[grain_indicies[point]][1] + w;
         }
-        if (grain_indicies[point] == 0)
+        if (grain_indicies[point] == 0 || phases[point] == 0)
         {
           kernelmisorientations[point] = 0;
           grainmisorientations[point] = 0;
@@ -1359,7 +1359,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
       for (int plane = 0; plane < zpoints; plane++)
       {
         point = (plane * xpoints * ypoints) + (row * xpoints) + col;
-        if (grain_indicies[point] > 0 && unassigned[point] == 0)
+        if (grain_indicies[point] > 0 && phases[point] > 0)
         {
           totalmisorientation = 0.0;
           numchecks = 0;
@@ -1389,7 +1389,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
           }
           misorientationgradients[point] = totalmisorientation / (float)numchecks;
         }
-        if (grain_indicies[point] == 0 || unassigned[point] != 0)
+        if (grain_indicies[point] == 0 || phases[point] == 0)
         {
           misorientationgradients[point] = 0;
         }
@@ -1398,7 +1398,7 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   }
 
   // Clean up all the heap allocated memory
-  for (size_t i = 0; i < m_Grains.size(); i++)
+  for (size_t i = 1; i < m_Grains.size(); i++)
   {
     delete[] avgmiso[i];
   }
@@ -1555,25 +1555,28 @@ void MicrostructureStatisticsFunc::find_grainorientations()
   float qr[5];
   for(int i = 0; i < totalpoints; i++)
   {
-    OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
-    phase = phases[i];
-    xtal = crystruct[phase];
-    m_OrientationOps[xtal]->getFZQuat(qr);
-    quats[i*5 + 0] = 1.0;
-    quats[i*5 + 1] = qr[1];
-    quats[i*5 + 2] = qr[2];
-    quats[i*5 + 3] = qr[3];
-    quats[i*5 + 4] = qr[4];
-    voxquat[0] = quats[i*5 + 0];
-    voxquat[1] = quats[i*5 + 1];
-    voxquat[2] = quats[i*5 + 2];
-    voxquat[3] = quats[i*5 + 3];
-    voxquat[4] = quats[i*5 + 4];
-    m_OrientationOps[xtal]->getNearestQuat(m_Grains[grain_indicies[i]]->avg_quat, voxquat);
-    for (int k = 0; k < 5; k++)
-    {
-	  m_Grains[grain_indicies[i]]->avg_quat[k] = m_Grains[grain_indicies[i]]->avg_quat[k] + quats[i*5 + k];
-    }
+    if(grain_indicies[i] > 0 && phases[i] > 0)
+	{
+		OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
+		phase = phases[i];
+		xtal = crystruct[phase];
+		m_OrientationOps[xtal]->getFZQuat(qr);
+		quats[i*5 + 0] = 1.0;
+		quats[i*5 + 1] = qr[1];
+		quats[i*5 + 2] = qr[2];
+		quats[i*5 + 3] = qr[3];
+		quats[i*5 + 4] = qr[4];
+		voxquat[0] = quats[i*5 + 0];
+		voxquat[1] = quats[i*5 + 1];
+		voxquat[2] = quats[i*5 + 2];
+		voxquat[3] = quats[i*5 + 3];
+		voxquat[4] = quats[i*5 + 4];
+		m_OrientationOps[xtal]->getNearestQuat(m_Grains[grain_indicies[i]]->avg_quat, voxquat);
+		for (int k = 0; k < 5; k++)
+		{
+		  m_Grains[grain_indicies[i]]->avg_quat[k] = m_Grains[grain_indicies[i]]->avg_quat[k] + quats[i*5 + k];
+		}
+	}
   }
   float q[5];
   float ea1, ea2, ea3;
