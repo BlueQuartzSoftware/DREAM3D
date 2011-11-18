@@ -83,12 +83,6 @@ PackGrainsGen2::~PackGrainsGen2()
 
 void PackGrainsGen2::initialize_packinggrid()
 {
-  m->sizex = m->xpoints * m->resx;
-  m->sizey = m->ypoints * m->resy;
-  m->sizez = m->zpoints * m->resz;
-  m->totalvol = m->sizex * m->sizey * m->sizez;
-  m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
-
   m->packingresx = m->resx * 2.0;
   m->packingresy = m->resy * 2.0;
   m->packingresz = m->resz * 2.0;
@@ -194,7 +188,6 @@ void PackGrainsGen2::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  m->totalvol = 0;
   float change1, change2, change;
   int phase;
   size_t randomgrain;
@@ -490,6 +483,8 @@ void PackGrainsGen2::execute()
   }
   outFile.close();
 #endif
+
+  assign_voxels();
 
   // If there is an error set this to something negative and also set a message
   m_ErrorMessage = "PackGrainsGen2 Completed";
@@ -932,4 +927,180 @@ void PackGrainsGen2::insert_grain(size_t gnum)
       }
     }
   }
+}
+
+void PackGrainsGen2::assign_voxels()
+{
+  int index;
+  int neighpoints[6];
+  neighpoints[0] = -(m->xpoints * m->ypoints);
+  neighpoints[1] = -m->xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = m->xpoints;
+  neighpoints[5] = (m->xpoints * m->ypoints);
+  int oldname;
+  int column, row, plane;
+  float inside;
+  float xc, yc, zc;
+  float xp, yp, zp;
+  float dist;
+  float x, y, z;
+  int xmin, xmax, ymin, ymax, zmin, zmax;
+
+  m->gsizes.resize(m->m_Grains.size());
+
+  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  {
+    m->gsizes[i] = 0;
+  }
+  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  {
+    float volcur = m->m_Grains[i]->volume;
+    float bovera = m->m_Grains[i]->radius2;
+    float covera = m->m_Grains[i]->radius3;
+    float omega3 = m->m_Grains[i]->omega3;
+    xc = m->m_Grains[i]->centroidx;
+    yc = m->m_Grains[i]->centroidy;
+    zc = m->m_Grains[i]->centroidz;
+    float radcur1 = 0.0f;
+    //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
+    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[i]->phase];
+
+    // init any values for each of the Shape Ops
+    for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m->m_ShapeOps.begin(); ops != m->m_ShapeOps.end(); ++ops )
+    {
+      (*ops).second->init();
+    }
+    // Create our Argument Map
+    std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
+    shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
+    shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
+    shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
+    shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+
+    radcur1 = m->m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+
+    float radcur2 = (radcur1 * bovera);
+    float radcur3 = (radcur1 * covera);
+    float phi1 = m->m_Grains[i]->axiseuler1;
+    float PHI = m->m_Grains[i]->axiseuler2;
+    float phi2 = m->m_Grains[i]->axiseuler3;
+    float ga[3][3];
+    ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
+    ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
+    ga[0][2] = sinf(phi2) * sinf(PHI);
+    ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
+    ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
+    ga[1][2] = cosf(phi2) * sinf(PHI);
+    ga[2][0] = sinf(phi1) * sinf(PHI);
+    ga[2][1] = -cosf(phi1) * sinf(PHI);
+    ga[2][2] = cosf(PHI);
+    column = (xc - (m->resx / 2)) / m->resx;
+    row = (yc - (m->resy / 2)) / m->resy;
+    plane = (zc - (m->resz / 2)) / m->resz;
+    xmin = int(column - ((radcur1 / m->resx) + 1));
+    xmax = int(column + ((radcur1 / m->resx) + 1));
+    ymin = int(row - ((radcur1 / m->resy) + 1));
+    ymax = int(row + ((radcur1 / m->resy) + 1));
+    zmin = int(plane - ((radcur1 / m->resz) + 1));
+    zmax = int(plane + ((radcur1 / m->resz) + 1));
+    if (m->periodic_boundaries == true)
+    {
+      if (xmin < -m->xpoints) xmin = -m->xpoints;
+      if (xmax > 2 * m->xpoints - 1) xmax = (2 * m->xpoints - 1);
+      if (ymin < -m->ypoints) ymin = -m->ypoints;
+      if (ymax > 2 * m->ypoints - 1) ymax = (2 * m->ypoints - 1);
+      if (zmin < -m->zpoints) zmin = -m->zpoints;
+      if (zmax > 2 * m->zpoints - 1) zmax = (2 * m->zpoints - 1);
+    }
+    if (m->periodic_boundaries == false)
+    {
+      if (xmin < 0) xmin = 0;
+      if (xmax > m->xpoints - 1) xmax = m->xpoints - 1;
+      if (ymin < 0) ymin = 0;
+      if (ymax > m->ypoints - 1) ymax = m->ypoints - 1;
+      if (zmin < 0) zmin = 0;
+      if (zmax > m->zpoints - 1) zmax = m->zpoints - 1;
+    }
+    for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
+    {
+      for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
+      {
+        for (int iter3 = zmin; iter3 < zmax + 1; iter3++)
+        {
+          column = iter1;
+          row = iter2;
+          plane = iter3;
+          if (iter1 < 0) column = iter1 + m->xpoints;
+          if (iter1 > m->xpoints - 1) column = iter1 - m->xpoints;
+          if (iter2 < 0) row = iter2 + m->ypoints;
+          if (iter2 > m->ypoints - 1) row = iter2 - m->ypoints;
+          if (iter3 < 0) plane = iter3 + m->zpoints;
+          if (iter3 > m->zpoints - 1) plane = iter3 - m->zpoints;
+          index = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + column;
+          inside = -1;
+          x = float(column) * m->resx;
+          y = float(row) * m->resy;
+          z = float(plane) * m->resz;
+          if (iter1 < 0) x = x - m->sizex;
+          if (iter1 > m->xpoints - 1) x = x + m->sizex;
+          if (iter2 < 0) y = y - m->sizey;
+          if (iter2 > m->ypoints - 1) y = y + m->sizey;
+          if (iter3 < 0) z = z - m->sizez;
+          if (iter3 > m->zpoints - 1) z = z + m->sizez;
+          dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+          dist = sqrtf(dist);
+          if (dist < radcur1)
+          {
+            x = x - xc;
+            y = y - yc;
+            z = z - zc;
+            xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
+            yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
+            zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+            float axis1comp = xp / radcur1;
+            float axis2comp = yp / radcur2;
+            float axis3comp = zp / radcur3;
+            inside = m->m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+            if (inside >= 0)
+            {
+              int currentpoint = index;
+              if (m->grain_indicies[currentpoint] > 0)
+              {
+                oldname = m->grain_indicies[currentpoint];
+                m->gsizes[oldname] = m->gsizes[oldname] - 1;
+                m->grain_indicies[currentpoint] = -1;
+              }
+              if (m->grain_indicies[currentpoint] == 0)
+              {
+                m->grain_indicies[currentpoint] = i;
+                m->gsizes[i]++;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  m->newnames.resize(m->m_Grains.size());
+  int goodcount = 1;
+  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  {
+    m->newnames[i] = 0;
+    if (m->gsizes[i] > 0)
+    {
+      m->m_Grains[goodcount] = m->m_Grains[i];
+      m->newnames[i] = goodcount;
+      goodcount++;
+    }
+  }
+  for (int i = 0; i < m->totalpoints; i++)
+  {
+    if (m->grain_indicies[i] > 0)
+    {
+	  m->grain_indicies[i] = m->newnames[m->grain_indicies[i]];
+    }
+  }
+  m->m_Grains.resize(goodcount);
 }

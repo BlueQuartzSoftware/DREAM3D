@@ -202,17 +202,8 @@ public:
     float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
 
-	void initializeAttributes();
-	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
-
-    int readReconStatsData(H5StatsReader::Pointer h5io);
-    int readAxisOrientationData(H5StatsReader::Pointer h5io);
-    int readODFData(H5StatsReader::Pointer h5io);
-    int readMisorientationData(H5StatsReader::Pointer h5io);
-
     void insert_precipitate(size_t grainNum);
 
-    void assign_voxels();
     void assign_gaps();
     void cleanup_grains();
     void fillin_precipitates();
