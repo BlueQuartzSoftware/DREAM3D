@@ -76,6 +76,7 @@ class PackGrainsGen2 : public Observable
     float check_neighborhooderror(int gadd, int gremove);
     float check_sizedisterror(int gadd, int gremove);
     float check_fillingerror(int gadd, int gremove);
+    void assign_voxels();
 
 
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);

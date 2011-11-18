@@ -49,6 +49,7 @@
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 #include "GrainGenerator/StructureReaders/VTKStructureReader.h"
 #include "GrainGenerator/StructureReaders/DXStructureReader.h"
+#include "GrainGenerator/Algorithms/LoadStatsData.h"
 #include "GrainGenerator/Algorithms/FindNeighbors.h"
 #include "GrainGenerator/Algorithms/MatchCrystallography.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
@@ -103,14 +104,6 @@ void GrainGenerator::execute()
   // Initialize some benchmark timers
   START_CLOCK()
 
-  // Open the HDF5 Stats file
-  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
-  if (h5reader.get() == NULL)
-  {
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Opening the HDF5 Input file", -1)
-    return;
-  }
-
   if (m_AlreadyFormed == false)
   {
     m->periodic_boundaries = m_PeriodicBoundary;
@@ -123,15 +116,15 @@ void GrainGenerator::execute()
     m->resz = m_ZResolution;
     m->neighborhooderrorweight = m_NeighborhoodErrorWeight;
 
-    updateProgressAndMessage(("Loading Stats Data"), 5);
-    err = m->readReconStatsData(h5reader);
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Reading the Statistics Data", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readReconStatsData Was canceled", readReconStatsData)
-
-    updateProgressAndMessage(("Loading Axis Orientation Data"), 10);
-    err = m->readAxisOrientationData(h5reader);
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Axis Orientation Data", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readAxisOrientationData Was canceled", readAxisOrientationData);
+    updateProgressAndMessage(("Loading Stats"), 10);
+	LoadStatsData::Pointer load_stats = LoadStatsData::New();
+	load_stats->setH5StatsFile(getH5StatsFile());
+    load_stats->addObserver(static_cast<Observer*>(this));
+    load_stats->setGrainGenFunc(m.get());
+    load_stats->execute();
+    err = load_stats->getErrorCondition();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Stats", err)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", load_stats)
 
     updateProgressAndMessage(("Packing Grains"), 25);
 #ifdef PACKGRAINS_GEN2
@@ -146,11 +139,6 @@ void GrainGenerator::execute()
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Packing Grains", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", pack_grains)
 
-    updateProgressAndMessage(("Assigning Voxels"), 30);
-    m->assign_voxels();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Assigning Voxels", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_voxels)
-
     updateProgressAndMessage(("Filling Gaps"), 40);
     m->assign_gaps();
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Filling Gaps", err)
@@ -163,17 +151,7 @@ void GrainGenerator::execute()
   }
   else if (m_AlreadyFormed == true)
   {
-    updateProgressAndMessage(("Loading Stats Data"), 10);
-    err = m->readReconStatsData(h5reader);
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Reading the Statistics Data", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readReconStatsData Was canceled", readReconStatsData)
-
-    updateProgressAndMessage(("Loading Axis Orientation Data"), 25);
-    err = m->readAxisOrientationData(h5reader);
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Axis Orientation Data", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "readAxisOrientationData Was canceled", readAxisOrientationData);
-
-    updateProgressAndMessage(("Reading Structure"), 40);
+	updateProgressAndMessage(("Reading Structure"), 40);
     std::string ext = MXAFileInfo::extension(m_StructureFile);
     if (ext.compare("vtk") == 0)
     {
@@ -204,9 +182,13 @@ void GrainGenerator::execute()
       m->resy = spacing[1];
       m->resz = spacing[2];
 
-      updateProgressAndMessage("Allocating Voxel Memory", 5);
-      //Allocate all of our Voxel Objects
-      m->initializeAttributes();
+	LoadStatsData::Pointer load_stats = LoadStatsData::New();
+    load_stats->addObserver(static_cast<Observer*>(this));
+    load_stats->setGrainGenFunc(m.get());
+    load_stats->execute();
+    err = load_stats->getErrorCondition();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Stats", err)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", load_stats)
 
       updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
       err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalpoints);
@@ -240,16 +222,7 @@ void GrainGenerator::execute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
   }
 
-  updateProgressAndMessage(("Loading ODF Data"), 48);
-  err = m->readODFData(h5reader);
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading ODF Data", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readODFData)
-
-  updateProgressAndMessage(("Loading Misorientation Data"), 50);
-  err = m->readMisorientationData(h5reader);
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Misorientation Data", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readMisorientationData)
-
+    updateProgressAndMessage(("Matching Crystallography"), 65);
 	MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
     match_crystallography->addObserver(static_cast<Observer*>(this));
     match_crystallography->setGrainGenFunc(m.get());
@@ -260,7 +233,7 @@ void GrainGenerator::execute()
 
   MAKE_OUTPUT_FILE_PATH ( GrainDataFile , DREAM3D::SyntheticBuilder::GrainDataFile)
 
-  updateProgressAndMessage(("Writing Grain Data"), 81);
+  updateProgressAndMessage(("Writing Grain Data"), 80);
   m->write_graindata(GrainDataFile);
   CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Grain Data File", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
