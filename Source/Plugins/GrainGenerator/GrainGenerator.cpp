@@ -52,6 +52,7 @@
 #include "GrainGenerator/Algorithms/LoadStatsData.h"
 #include "GrainGenerator/Algorithms/FindNeighbors.h"
 #include "GrainGenerator/Algorithms/MatchCrystallography.h"
+#include "GrainGenerator/Algorithms/PlacePrecipitates.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen3.h"
 
@@ -211,15 +212,14 @@ void GrainGenerator::execute()
 
   if (m_AlreadyFormed == false)
   {
-    updateProgressAndMessage(("Placing Precipitates"), 45);
-    m->place_precipitates();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error placing precipitates", err)
+    updateProgressAndMessage(("Placing Precipitates"), 50);
+	PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
+    place_precipitates->addObserver(static_cast<Observer*>(this));
+    place_precipitates->setGrainGenFunc(m.get());
+    place_precipitates->execute();
+    err = find_neighbors->getErrorCondition();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Placing Preciptates", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", place_precipitates)
-
-    updateProgressAndMessage(("Filling In Precipitates"), 47);
-    m->fillin_precipitates();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error filling precipitates", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", fill_gaps)
   }
 
     updateProgressAndMessage(("Matching Crystallography"), 65);

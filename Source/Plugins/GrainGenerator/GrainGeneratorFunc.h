@@ -202,13 +202,9 @@ public:
     float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
 
-    void insert_precipitate(size_t grainNum);
-
     void assign_gaps();
     void cleanup_grains();
-    void fillin_precipitates();
     void adjust_boundaries();
-    void place_precipitates();
     void write_graindata(const std::string & filename);
 
     float find_xcoord(long long int index);
