@@ -49,6 +49,8 @@
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 #include "GrainGenerator/StructureReaders/VTKStructureReader.h"
 #include "GrainGenerator/StructureReaders/DXStructureReader.h"
+#include "GrainGenerator/Algorithms/FindNeighbors.h"
+#include "GrainGenerator/Algorithms/MatchCrystallography.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen3.h"
 
@@ -217,11 +219,13 @@ void GrainGenerator::execute()
     }
   }
 
-  updateProgressAndMessage(("Finding Neighbors"), 44);
-  m->find_neighbors();
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Finding Neighbors", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_neighbors)
-
+	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+    find_neighbors->addObserver(static_cast<Observer*>(this));
+    find_neighbors->setGrainGenFunc(m.get());
+    find_neighbors->execute();
+    err = find_neighbors->getErrorCondition();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Finding Neighbors", err)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_neighbors)
 
   if (m_AlreadyFormed == false)
   {
@@ -246,22 +250,15 @@ void GrainGenerator::execute()
   CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Misorientation Data", err)
   CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", readMisorientationData)
 
-  updateProgressAndMessage(("Assigning Eulers"), 60);
-  m->assign_eulers();
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error assigning Euler angles", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_eulers)
-
-  updateProgressAndMessage(("Measuring Misorientations"), 65);
-  m->measure_misorientations();
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Measuring misorientations", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", measure_misorientations)
+	MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
+    match_crystallography->addObserver(static_cast<Observer*>(this));
+    match_crystallography->setGrainGenFunc(m.get());
+    match_crystallography->execute();
+    err = match_crystallography->getErrorCondition();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Matching Crystallography", err)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", match_crystallography)
 
   MAKE_OUTPUT_FILE_PATH ( GrainDataFile , DREAM3D::SyntheticBuilder::GrainDataFile)
-
-  updateProgressAndMessage(("Matching Crystallography"), 65);
-  m->matchCrystallography();
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Matching Crystallography", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", matchCrystallography)
 
   updateProgressAndMessage(("Writing Grain Data"), 81);
   m->write_graindata(GrainDataFile);
