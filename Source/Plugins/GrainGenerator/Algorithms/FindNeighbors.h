@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PACKGRAINSGEN2_H_
-#define PACKGRAINSGEN2_H_
+#ifndef FINDNEIGHBORS_H_
+#define FINDNEIGHBORS_H_
 
 #include <vector>
 #include <string>
@@ -45,14 +45,14 @@
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
 
-class PackGrainsGen2 : public Observable
+class FindNeighbors : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(PackGrainsGen2);
-    DREAM3D_STATIC_NEW_MACRO(PackGrainsGen2);
-    DREAM3D_TYPE_MACRO(PackGrainsGen2);
+    DREAM3D_SHARED_POINTERS(FindNeighbors);
+    DREAM3D_STATIC_NEW_MACRO(FindNeighbors);
+    DREAM3D_TYPE_MACRO(FindNeighbors);
 
-    virtual ~PackGrainsGen2();
+    virtual ~FindNeighbors();
 
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
@@ -63,37 +63,18 @@ class PackGrainsGen2 : public Observable
 
     virtual void execute();
 
-    void initialize_packinggrid();
-    void generate_grain(int, int);
-    void pack_grains();
-    void insert_grain(size_t grainNum);
-
-    void add_grain(size_t grainNum);
-    void move_grain(size_t grainNum, float xc, float yc, float zc);
-
-    void remove_grain(size_t grainNum);
-    void determine_neighbors(size_t grainNum, int add);
-    float check_neighborhooderror(int gadd, int gremove);
-    float check_sizedisterror(int gadd, int gremove);
-    float check_fillingerror(int gadd, int gremove);
-    void assign_voxels();
-
-
-    void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
-    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
-
-    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
+    void find_neighbors();
 
 
   protected:
-    PackGrainsGen2();
+    FindNeighbors();
     GrainGeneratorFunc* m;
 
   private:
 
 
-    PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
-    void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented
+    FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
+    void operator=(const FindNeighbors&); // Operator '=' Not Implemented
 };
 
-#endif /* PACKGRAINSGEN2_H_ */
+#endif /* FINDNEIGHBORS_H_ */

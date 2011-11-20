@@ -34,66 +34,58 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PACKGRAINSGEN2_H_
-#define PACKGRAINSGEN2_H_
+#ifndef LOADSTATSDATA_H_
+#define LOADSTATSDATA_H_
 
 #include <vector>
 #include <string>
+
+#include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
 
-class PackGrainsGen2 : public Observable
+class LoadStatsData : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(PackGrainsGen2);
-    DREAM3D_STATIC_NEW_MACRO(PackGrainsGen2);
-    DREAM3D_TYPE_MACRO(PackGrainsGen2);
+    DREAM3D_SHARED_POINTERS(LoadStatsData);
+    DREAM3D_STATIC_NEW_MACRO(LoadStatsData);
+    DREAM3D_TYPE_MACRO(LoadStatsData);
 
-    virtual ~PackGrainsGen2();
+    virtual ~LoadStatsData();
 
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
+    typedef boost::shared_array<float>    SharedFloatArray;
+    typedef boost::shared_array<int>      SharedIntArray;
 
     virtual void execute();
 
-    void initialize_packinggrid();
-    void generate_grain(int, int);
-    void pack_grains();
-    void insert_grain(size_t grainNum);
+	void initializeAttributes();
+	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
 
-    void add_grain(size_t grainNum);
-    void move_grain(size_t grainNum, float xc, float yc, float zc);
-
-    void remove_grain(size_t grainNum);
-    void determine_neighbors(size_t grainNum, int add);
-    float check_neighborhooderror(int gadd, int gremove);
-    float check_sizedisterror(int gadd, int gremove);
-    float check_fillingerror(int gadd, int gremove);
-    void assign_voxels();
-
-
-    void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
-    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
-
-    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
+    int readReconStatsData(H5StatsReader::Pointer h5io);
+    int readAxisOrientationData(H5StatsReader::Pointer h5io);
+    int readODFData(H5StatsReader::Pointer h5io);
+    int readMisorientationData(H5StatsReader::Pointer h5io);
 
 
   protected:
-    PackGrainsGen2();
+    LoadStatsData();
     GrainGeneratorFunc* m;
 
   private:
 
 
-    PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
-    void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented
+    LoadStatsData(const LoadStatsData&); // Copy Constructor Not Implemented
+    void operator=(const LoadStatsData&); // Operator '=' Not Implemented
 };
 
-#endif /* PACKGRAINSGEN2_H_ */
+#endif /* LOADSTATSDATA_H_ */
