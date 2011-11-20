@@ -98,8 +98,8 @@ class MicrostructureStatisticsFunc : public Observable
     DECLARE_WRAPPED_ARRAY(misorientationgradients, m_MisorientationGradients, float);
     DECLARE_WRAPPED_ARRAY(kernelmisorientations, m_KernelMisorientations, float);
 
-    DECLARE_WRAPPED_ARRAY(neighborlists, m_NeighborLists, float);// N x 6 Array
-    DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, float); // N x 3 Array
+    DECLARE_WRAPPED_ARRAY(nearestgrains, m_NearestGrains, int);
+    DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, int); // N x 3 Array
     DECLARE_WRAPPED_ARRAY(nearestneighbordistances, m_NearestNeighborDistances, float); // N x 3 Array
 
     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array

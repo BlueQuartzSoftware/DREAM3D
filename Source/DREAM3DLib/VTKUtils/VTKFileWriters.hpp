@@ -164,8 +164,8 @@ class name : public VtkScalarWriter\
 
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, DREAM3D::VTK::PhaseIdScalarName, int, phases, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGoodVoxelScalarWriter, r, DREAM3D::VTK::GoodVoxelScalarName, int, goodVoxels, "%d ")
-// VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, AIM::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
-//VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, AIM::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
+//VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, DREAM3D::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
+//VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, DREAM3D::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, DREAM3D::VTK::SurfaceVoxelScalarName, char, surfacevoxels, "%d ")
 

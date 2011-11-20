@@ -202,30 +202,9 @@ public:
     float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
 
-	void initializeAttributes();
-	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
-
-    int readReconStatsData(H5StatsReader::Pointer h5io);
-    int readAxisOrientationData(H5StatsReader::Pointer h5io);
-    int readODFData(H5StatsReader::Pointer h5io);
-    int readMisorientationData(H5StatsReader::Pointer h5io);
-
-    void assign_eulers();
-    void insert_precipitate(size_t grainNum);
-
-    void assign_voxels();
     void assign_gaps();
     void cleanup_grains();
-    void fillin_precipitates();
     void adjust_boundaries();
-    void place_precipitates();
-    void find_neighbors();
-    void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
-    void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
-    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
-    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
-    void matchCrystallography();
-    void measure_misorientations();
     void write_graindata(const std::string & filename);
 
     float find_xcoord(long long int index);

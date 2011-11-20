@@ -34,25 +34,38 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PACKGRAINSGEN2_H_
-#define PACKGRAINSGEN2_H_
+#ifndef MATCHCRYSTALLOGRAPHY_H_
+#define MATCHCRYSTALLOGRAPHY_H_
 
+#include <assert.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#include <cstddef>
 #include <vector>
 #include <string>
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <list>
+#include <algorithm>
+#include <numeric>
+#include <map>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
 
-class PackGrainsGen2 : public Observable
+class MatchCrystallography : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(PackGrainsGen2);
-    DREAM3D_STATIC_NEW_MACRO(PackGrainsGen2);
-    DREAM3D_TYPE_MACRO(PackGrainsGen2);
+    DREAM3D_SHARED_POINTERS(MatchCrystallography);
+    DREAM3D_STATIC_NEW_MACRO(MatchCrystallography);
+    DREAM3D_TYPE_MACRO(MatchCrystallography);
 
-    virtual ~PackGrainsGen2();
+    virtual ~MatchCrystallography();
 
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
@@ -63,37 +76,23 @@ class PackGrainsGen2 : public Observable
 
     virtual void execute();
 
-    void initialize_packinggrid();
-    void generate_grain(int, int);
-    void pack_grains();
-    void insert_grain(size_t grainNum);
-
-    void add_grain(size_t grainNum);
-    void move_grain(size_t grainNum, float xc, float yc, float zc);
-
-    void remove_grain(size_t grainNum);
-    void determine_neighbors(size_t grainNum, int add);
-    float check_neighborhooderror(int gadd, int gremove);
-    float check_sizedisterror(int gadd, int gremove);
-    float check_fillingerror(int gadd, int gremove);
-    void assign_voxels();
-
-
-    void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
-    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
-
-    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
-
+    void assign_eulers();
+    void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
+    void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
+    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
+    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
+    void matchCrystallography();
+    void measure_misorientations();
 
   protected:
-    PackGrainsGen2();
+    MatchCrystallography();
     GrainGeneratorFunc* m;
 
   private:
 
 
-    PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
-    void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented
+    MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
+    void operator=(const MatchCrystallography&); // Operator '=' Not Implemented
 };
 
-#endif /* PACKGRAINSGEN2_H_ */
+#endif /* MATCHCRYSTALLOGRAPHY_H_ */

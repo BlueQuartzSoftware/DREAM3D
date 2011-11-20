@@ -49,11 +49,19 @@ endif()
 
 #-- Add in the various filter algorithms for the Grain Generator
 SET (Algorithms_HDRS
+  ${PROJECT_SOURCE_DIR}/Algorithms/LoadStatsData.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/FindNeighbors.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/MatchCrystallography.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/PlacePrecipitates.h
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.h
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.h
 )
 
 SET (Algorithms_SRCS
+  ${PROJECT_SOURCE_DIR}/Algorithms/LoadStatsData.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/FindNeighbors.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/MatchCrystallography.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/PlacePrecipitates.cpp
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.cpp
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen3.cpp
 )

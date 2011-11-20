@@ -109,7 +109,7 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   grainmisorientations = NULL;
   misorientationgradients = NULL;
   kernelmisorientations = NULL;
-  neighborlists = NULL;
+  nearestgrains = NULL;
   nearestneighbors = NULL;
   nearestneighbordistances = NULL;
   graincenters = NULL;
@@ -137,8 +137,8 @@ MicrostructureStatisticsFunc::MicrostructureStatisticsFunc()
   INIT_AIMARRAY(m_MisorientationGradients,float);
   INIT_AIMARRAY(m_KernelMisorientations,float);
 
-  INIT_AIMARRAY(m_NeighborLists,float);
-  INIT_AIMARRAY(m_NearestNeighbors,float);
+  INIT_AIMARRAY(m_NearestGrains,int);
+  INIT_AIMARRAY(m_NearestNeighbors,int);
   INIT_AIMARRAY(m_NearestNeighborDistances,float);
 
   INIT_AIMARRAY(m_GrainCenters,float);
@@ -228,12 +228,14 @@ void MicrostructureStatisticsFunc::initializeAttributes()
   euler2s = m_Euler2s->WritePointer(0, totalpoints);
   euler3s = m_Euler3s->WritePointer(0, totalpoints);
   neighbors = m_Neighbors->WritePointer(0, totalpoints);
+  nearestgrains = m_NearestGrains->WritePointer(0, totalpoints);
   for (int i = 0; i < totalpoints; ++i)
   {
     euler1s[i] = -1.0f;
     euler2s[i] = -1.0f;
     euler3s[i] = -1.0f;
     neighbors[i] = -1;
+	nearestgrains[i] = -1;
   }
 
   surfacevoxels = m_SurfaceVoxels->WritePointer(0, totalpoints);
@@ -244,12 +246,15 @@ void MicrostructureStatisticsFunc::initializeAttributes()
   misorientationgradients = m_MisorientationGradients->WritePointer(0, totalpoints);
   kernelmisorientations = m_KernelMisorientations->WritePointer(0, totalpoints);
 
-  neighborlists = m_NeighborLists->WritePointer(0, totalpoints * 6);
-  m_NeighborLists->SetNumberOfComponents(6);
   nearestneighbors = m_NearestNeighbors->WritePointer(0, totalpoints * 3);
   m_NearestNeighbors->SetNumberOfComponents(3);
   nearestneighbordistances = m_NearestNeighborDistances->WritePointer(0, totalpoints * 3);
   m_NearestNeighborDistances->SetNumberOfComponents(3);
+  for (int i = 0; i < totalpoints*3; i++)
+  {
+	nearestneighbors[i] = -1;	
+	nearestneighbordistances[i] = -1;	
+  }
 }
 
 
@@ -286,6 +291,7 @@ void MicrostructureStatisticsFunc::find_neighbors()
   neighpoints[5] = (xpoints*ypoints);
   float column, row, plane;
   int grain;
+  int nearestgrain = -1;
   size_t nnum;
   int onsurf = 0;
   int good = 0;
@@ -322,6 +328,7 @@ void MicrostructureStatisticsFunc::find_neighbors()
   {
     onsurf = 0;
     grain = grain_indicies[j];
+	nearestgrain = grain;
     if(grain > 0)
     {
       column = j % xpoints;
@@ -349,10 +356,12 @@ void MicrostructureStatisticsFunc::find_neighbors()
           nlist->at(nnum) = grain_indicies[neighbor];
           nnum++;
           m_Grains[grain]->numneighbors = static_cast<int>(nnum);
+		  nearestgrain = grain_indicies[neighbor];
         }
       }
     }
     surfacevoxels[j] = onsurf;
+	nearestgrains[j] = nearestgrain;
   }
   for (size_t i = 1; i < m_Grains.size(); i++)
   {
@@ -770,6 +779,57 @@ void MicrostructureStatisticsFunc::find_centroids2D()
 
 void MicrostructureStatisticsFunc::find_euclidean_map()
 {
+
+      int neighpoint;
+      int nearestneighbor;
+      int neighbors[6];
+	  int column, row, plane;
+	  int add = 1;
+	  int good = 0;
+	  int grain, neighbor;
+	  std::vector<int> coordination;
+
+      neighbors[0] = -xpoints * ypoints;
+      neighbors[1] = -xpoints;
+      neighbors[2] = -1;
+      neighbors[3] = 1;
+      neighbors[4] = xpoints;
+      neighbors[5] = xpoints * ypoints;
+      for (int a = 0; a < (totalpoints); ++a)
+      {
+		grain = grain_indicies[a];
+		if(grain > 0)
+		{
+		  coordination.resize(0);
+		  column = a % xpoints;
+		  row = (a / xpoints) % ypoints;
+		  plane = a / (xpoints * ypoints);
+		  for (int k = 0; k < 6; k++)
+		  {
+			good = 1;
+			neighbor = a + neighbors[k];
+			if(k == 0 && plane == 0) good = 0;
+			if(k == 5 && plane == (zpoints - 1)) good = 0;
+			if(k == 1 && row == 0) good = 0;
+			if(k == 4 && row == (ypoints - 1)) good = 0;
+			if(k == 2 && column == 0) good = 0;
+			if(k == 3 && column == (xpoints - 1)) good = 0;
+			if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
+			{
+				add = 1;
+				for(int i=0;i<coordination.size();i++)
+				{
+					if(grain_indicies[neighbor] == coordination[i]) add = 0;
+				}
+				if(add == 1) coordination.push_back(grain_indicies[neighbor]);
+			}
+		  }
+		}
+		if(coordination.size() > 2) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = 0, nearestneighbordistances[a*3+2] = 0, nearestneighbors[a*3+0] = a, nearestneighbors[a*3+1] = a, nearestneighbors[a*3+2] = a;
+		if(coordination.size() == 2) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = 0, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = a, nearestneighbors[a*3+1] = a, nearestneighbors[a*3+2] = -1;
+		if(coordination.size() == 1) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = -1, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = a, nearestneighbors[a*3+1] = -1, nearestneighbors[a*3+2] = -1;
+		if(coordination.size() == 0) nearestneighbordistances[a*3+0] = -1, nearestneighbordistances[a*3+1] = -1, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = -1, nearestneighbors[a*3+1] = -1, nearestneighbors[a*3+2] = -1;
+      }
 
 #if AIM_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -1213,10 +1273,6 @@ void MicrostructureStatisticsFunc::find_grain_and_kernel_misorientations()
   std::vector<float> gamVec(totalpoints);
   int* unassigned = &(unAssignedVec.front());
   float* gam = &(gamVec.front());
-
-//  IntArray gnames(new int[totalpoints]);
-//  IntArray unassigned(new int[totalpoints]);
-//  FloatArray gam(new float[totalpoints]);
 
   float** avgmiso = new float *[m_Grains.size()];
   for (size_t i = 1; i < m_Grains.size(); i++)
@@ -2251,141 +2307,148 @@ void MicrostructureStatisticsFunc::deformation_stats(const std::string &filename
 
   for (int i = 0; i < totalpoints; i++)
   {
-      km = kernelmisorientations[i];
-      gam = grainmisorientations[i];
-      lmg = misorientationgradients[i];
-      gbdist = nearestneighbordistances[i*3 + 0];
-      tjdist = nearestneighbordistances[i*3 + 1];
-      qpdist = nearestneighbordistances[i*3 + 2];
-      gname = grain_indicies[i];
-      nearestneighbor = nearestneighbors[i*3 + 0];
-      gname2 = neighborlists[nearestneighbor*6 + 0];
-      sf = m_Grains[gname]->schmidfactor;
-      sf2 = m_Grains[gname2]->schmidfactor;
-      sfmm = sf / sf2;
-	  ss1 = m_Grains[gname]->slipsystem;
-	  ss2 = m_Grains[gname2]->slipsystem;
-	  for(int j=0;j<5;j++)
-	  {
-		q1[j] = m_Grains[gname]->avg_quat[j]/m_Grains[gname]->avg_quat[0];
-		q2[j] = m_Grains[gname2]->avg_quat[j]/m_Grains[gname2]->avg_quat[0];
-	  }
-	  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
-      if (crystruct[m_Grains[gname]->phase] == crystruct[m_Grains[gname2]->phase])
-	  {
-        w = m_OrientationOps[crystruct[m_Grains[gname]->phase]]->getMisoQuat(q1, q2, n1, n2, n3);
-      }
-      kmbin = int(km/0.2);
-      gambin = int(gam/0.8);
-      lmgbin = int(lmg/0.1);
-      gbbin = int(gbdist);
-      tjbin = int(tjdist);
-      qpbin = int(qpdist);
-      sfbin = int((sf-0.25) / 0.025);
-      if(sfmm >= 1) sfmmbin = int((sfmm-1.0)/0.2)+5;
-      if(sfmm < 1) sfmmbin = 4-int(((1.0/sfmm)-1.0)/0.2);
-      ssapbin = int((ssap-0.4) / 0.06);
-      disbin = int((w) / 10.0);
-      if (kmbin < 0) kmbin = 0;
-      if (kmbin > 24) kmbin = 24;
-      if (gambin < 0) gambin = 0;
-      if (gambin > 24) gambin = 24;
-      if (lmgbin < 0) lmgbin = 0;
-      if (lmgbin > 24) lmgbin = 24;
-      if (gbbin < 0) gbbin = 0;
-      if (gbbin > 9) gbbin = 9;
-      if (tjbin < 0) tjbin = 0;
-      if (tjbin > 9) tjbin = 9;
-      if (qpbin < 0) qpbin = 0;
-      if (qpbin > 9) qpbin = 9;
-      if (sfbin < 0) sfbin = 0;
-      if (sfbin > 9) sfbin = 9;
-      if (sfmmbin < 0) sfmmbin = 0;
-      if (sfmmbin > 9) sfmmbin = 9;
-      if (ssapbin < 0) ssapbin = 0;
-      if (ssapbin > 9) ssapbin = 9;
-      if (disbin < 0) disbin = 0;
-      if (disbin > 9) disbin = 9;
-      kmdist[kmbin]++;
-      gamdist[gambin]++;
-      lmgdist[lmgbin]++;
-      kmvgb[gbbin][0]++;
-      kmvgb[gbbin][1] = kmvgb[gbbin][1] + km;
-      gamvgb[gbbin][0]++;
-      gamvgb[gbbin][1] = gamvgb[gbbin][1] + gam;
-      lmgvgb[gbbin][0]++;
-      lmgvgb[gbbin][1] = lmgvgb[gbbin][1] + lmg;
-      kmvtj[tjbin][0]++;
-      kmvtj[tjbin][1] = kmvtj[tjbin][1] + km;
-      gamvtj[tjbin][0]++;
-      gamvtj[tjbin][1] = gamvtj[tjbin][1] + gam;
-      lmgvtj[tjbin][0]++;
-      lmgvtj[tjbin][1] = lmgvtj[tjbin][1] + lmg;
-      kmvqp[qpbin][0]++;
-      kmvqp[qpbin][1] = kmvqp[qpbin][1] + km;
-      gamvqp[qpbin][0]++;
-      gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
-      lmgvqp[qpbin][0]++;
-      lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
-	  distance = int(nearestneighbordistances[i*3 + 0]);
-	  if(distance > 9) distance = 9;
-	  if(distance <= 5)
-	  {
-		  kmvsf[sfbin][0]++;
-		  kmvsf[sfbin][1] = kmvsf[sfbin][1] + km;
-		  gamvsf[sfbin][0]++;
-		  gamvsf[sfbin][1] = gamvsf[sfbin][1] + gam;
-		  lmgvsf[sfbin][0]++;
-		  lmgvsf[sfbin][1] = lmgvsf[sfbin][1] + lmg;
-		  kmvsfmm[sfmmbin][0]++;
-		  kmvsfmm[sfmmbin][1] = kmvsfmm[sfmmbin][1] + km;
-		  gamvsfmm[sfmmbin][0]++;
-		  gamvsfmm[sfmmbin][1] = gamvsfmm[sfmmbin][1] + gam;
-		  lmgvsfmm[sfmmbin][0]++;
-		  lmgvsfmm[sfmmbin][1] = lmgvsfmm[sfmmbin][1] + lmg;
-		  kmvssap[ssapbin][0]++;
-		  kmvssap[ssapbin][1] = kmvssap[ssapbin][1] + km;
-		  gamvssap[ssapbin][0]++;
-		  gamvssap[ssapbin][1] = gamvssap[ssapbin][1] + gam;
-		  lmgvssap[ssapbin][0]++;
-		  lmgvssap[ssapbin][1] = lmgvssap[ssapbin][1] + lmg;
-		  kmvdis[disbin][0]++;
-		  kmvdis[disbin][1] = kmvdis[disbin][1] + km;
-		  gamvdis[disbin][0]++;
-		  gamvdis[disbin][1] = gamvdis[disbin][1] + gam;
-		  lmgvdis[disbin][0]++;
-		  lmgvdis[disbin][1] = lmgvdis[disbin][1] + lmg;
-	  }
-	  kmvsfdistthresh[distance][sfbin][0]++;
-      kmvsfdistthresh[distance][sfbin][1] = kmvsfdistthresh[distance][sfbin][1] + km;
-      gamvsfdistthresh[distance][sfbin][0]++;
-      gamvsfdistthresh[distance][sfbin][1] = gamvsfdistthresh[distance][sfbin][1] + gam;
-      lmgvsfdistthresh[distance][sfbin][0]++;
-      lmgvsfdistthresh[distance][sfbin][1] = lmgvsfdistthresh[distance][sfbin][1] + lmg;
-      kmvsfmmdistthresh[distance][sfmmbin][0]++;
-      kmvsfmmdistthresh[distance][sfmmbin][1] = kmvsfmmdistthresh[distance][sfmmbin][1] + km;
-      gamvsfmmdistthresh[distance][sfmmbin][0]++;
-      gamvsfmmdistthresh[distance][sfmmbin][1] = gamvsfmmdistthresh[distance][sfmmbin][1] + gam;
-      lmgvsfmmdistthresh[distance][sfmmbin][0]++;
-      lmgvsfmmdistthresh[distance][sfmmbin][1] = lmgvsfmmdistthresh[distance][sfmmbin][1] + lmg;
-      kmvssapdistthresh[distance][ssapbin][0]++;
-      kmvssapdistthresh[distance][ssapbin][1] = kmvssapdistthresh[distance][ssapbin][1] + km;
-      gamvssapdistthresh[distance][ssapbin][0]++;
-      gamvssapdistthresh[distance][ssapbin][1] = gamvssapdistthresh[distance][ssapbin][1] + gam;
-      lmgvssapdistthresh[distance][ssapbin][0]++;
-      lmgvssapdistthresh[distance][ssapbin][1] = lmgvssapdistthresh[distance][ssapbin][1] + lmg;
-      kmvdisdistthresh[distance][disbin][0]++;
-      kmvdisdistthresh[distance][disbin][1] = kmvdisdistthresh[distance][disbin][1] + km;
-      gamvdisdistthresh[distance][disbin][0]++;
-      gamvdisdistthresh[distance][disbin][1] = gamvdisdistthresh[distance][disbin][1] + gam;
-      lmgvdisdistthresh[distance][disbin][0]++;
-      lmgvdisdistthresh[distance][disbin][1] = lmgvdisdistthresh[distance][disbin][1] + lmg;
-	  kmvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-	  kmvsfmmssapthresh[sfmmbin][ssapbin][1] = kmvsfmmssapthresh[sfmmbin][ssapbin][1] + km;
-	  gamvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-	  gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + gam;
-	  lmgvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-	  lmgvsfmmssapthresh[sfmmbin][ssapbin][1] = lmgvsfmmssapthresh[sfmmbin][ssapbin][1] + lmg;
+    gname = grain_indicies[i];
+	if(gname > 0)
+	{
+		  km = kernelmisorientations[i];
+		  gam = grainmisorientations[i];
+		  lmg = misorientationgradients[i];
+		  gbdist = nearestneighbordistances[i*3 + 0];
+		  tjdist = nearestneighbordistances[i*3 + 1];
+		  qpdist = nearestneighbordistances[i*3 + 2];
+		  nearestneighbor = nearestneighbors[i*3 + 0];
+		  gname2 = nearestgrains[nearestneighbor];
+		  sf = m_Grains[gname]->schmidfactor;
+		  sf2 = m_Grains[gname2]->schmidfactor;
+		  sfmm = sf / sf2;
+		  ss1 = m_Grains[gname]->slipsystem;
+		  ss2 = m_Grains[gname2]->slipsystem;
+		  for(int j=0;j<5;j++)
+		  {
+			q1[j] = m_Grains[gname]->avg_quat[j]/m_Grains[gname]->avg_quat[0];
+			q2[j] = m_Grains[gname2]->avg_quat[j]/m_Grains[gname2]->avg_quat[0];
+		  }
+		  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
+		  if (crystruct[m_Grains[gname]->phase] == crystruct[m_Grains[gname2]->phase] && m_Grains[gname]->phase > 0)
+		  {
+			w = m_OrientationOps[crystruct[m_Grains[gname]->phase]]->getMisoQuat(q1, q2, n1, n2, n3);
+		  }
+		  else
+		  {
+			w = 0;
+		  }
+		  kmbin = int(km/0.2);
+		  gambin = int(gam/0.8);
+		  lmgbin = int(lmg/0.1);
+		  gbbin = int(gbdist);
+		  tjbin = int(tjdist);
+		  qpbin = int(qpdist);
+		  sfbin = int((sf-0.25) / 0.025);
+		  if(sfmm >= 1) sfmmbin = int((sfmm-1.0)/0.2)+5;
+		  if(sfmm < 1) sfmmbin = 4-int(((1.0/sfmm)-1.0)/0.2);
+		  ssapbin = int((ssap-0.4) / 0.06);
+		  disbin = int((w) / 10.0);
+		  if (kmbin < 0) kmbin = 0;
+		  if (kmbin > 24) kmbin = 24;
+		  if (gambin < 0) gambin = 0;
+		  if (gambin > 24) gambin = 24;
+		  if (lmgbin < 0) lmgbin = 0;
+		  if (lmgbin > 24) lmgbin = 24;
+		  if (gbbin < 0) gbbin = 0;
+		  if (gbbin > 9) gbbin = 9;
+		  if (tjbin < 0) tjbin = 0;
+		  if (tjbin > 9) tjbin = 9;
+		  if (qpbin < 0) qpbin = 0;
+		  if (qpbin > 9) qpbin = 9;
+		  if (sfbin < 0) sfbin = 0;
+		  if (sfbin > 9) sfbin = 9;
+		  if (sfmmbin < 0) sfmmbin = 0;
+		  if (sfmmbin > 9) sfmmbin = 9;
+		  if (ssapbin < 0) ssapbin = 0;
+		  if (ssapbin > 9) ssapbin = 9;
+		  if (disbin < 0) disbin = 0;
+		  if (disbin > 9) disbin = 9;
+		  kmdist[kmbin]++;
+		  gamdist[gambin]++;
+		  lmgdist[lmgbin]++;
+		  kmvgb[gbbin][0]++;
+		  kmvgb[gbbin][1] = kmvgb[gbbin][1] + km;
+		  gamvgb[gbbin][0]++;
+		  gamvgb[gbbin][1] = gamvgb[gbbin][1] + gam;
+		  lmgvgb[gbbin][0]++;
+		  lmgvgb[gbbin][1] = lmgvgb[gbbin][1] + lmg;
+		  kmvtj[tjbin][0]++;
+		  kmvtj[tjbin][1] = kmvtj[tjbin][1] + km;
+		  gamvtj[tjbin][0]++;
+		  gamvtj[tjbin][1] = gamvtj[tjbin][1] + gam;
+		  lmgvtj[tjbin][0]++;
+		  lmgvtj[tjbin][1] = lmgvtj[tjbin][1] + lmg;
+		  kmvqp[qpbin][0]++;
+		  kmvqp[qpbin][1] = kmvqp[qpbin][1] + km;
+		  gamvqp[qpbin][0]++;
+		  gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
+		  lmgvqp[qpbin][0]++;
+		  lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
+		  distance = int(nearestneighbordistances[i*3 + 0]);
+		  if(distance > 9) distance = 9;
+		  if(distance <= 5)
+		  {
+			  kmvsf[sfbin][0]++;
+			  kmvsf[sfbin][1] = kmvsf[sfbin][1] + km;
+			  gamvsf[sfbin][0]++;
+			  gamvsf[sfbin][1] = gamvsf[sfbin][1] + gam;
+			  lmgvsf[sfbin][0]++;
+			  lmgvsf[sfbin][1] = lmgvsf[sfbin][1] + lmg;
+			  kmvsfmm[sfmmbin][0]++;
+			  kmvsfmm[sfmmbin][1] = kmvsfmm[sfmmbin][1] + km;
+			  gamvsfmm[sfmmbin][0]++;
+			  gamvsfmm[sfmmbin][1] = gamvsfmm[sfmmbin][1] + gam;
+			  lmgvsfmm[sfmmbin][0]++;
+			  lmgvsfmm[sfmmbin][1] = lmgvsfmm[sfmmbin][1] + lmg;
+			  kmvssap[ssapbin][0]++;
+			  kmvssap[ssapbin][1] = kmvssap[ssapbin][1] + km;
+			  gamvssap[ssapbin][0]++;
+			  gamvssap[ssapbin][1] = gamvssap[ssapbin][1] + gam;
+			  lmgvssap[ssapbin][0]++;
+			  lmgvssap[ssapbin][1] = lmgvssap[ssapbin][1] + lmg;
+			  kmvdis[disbin][0]++;
+			  kmvdis[disbin][1] = kmvdis[disbin][1] + km;
+			  gamvdis[disbin][0]++;
+			  gamvdis[disbin][1] = gamvdis[disbin][1] + gam;
+			  lmgvdis[disbin][0]++;
+			  lmgvdis[disbin][1] = lmgvdis[disbin][1] + lmg;
+		  }
+		  kmvsfdistthresh[distance][sfbin][0]++;
+		  kmvsfdistthresh[distance][sfbin][1] = kmvsfdistthresh[distance][sfbin][1] + km;
+		  gamvsfdistthresh[distance][sfbin][0]++;
+		  gamvsfdistthresh[distance][sfbin][1] = gamvsfdistthresh[distance][sfbin][1] + gam;
+		  lmgvsfdistthresh[distance][sfbin][0]++;
+		  lmgvsfdistthresh[distance][sfbin][1] = lmgvsfdistthresh[distance][sfbin][1] + lmg;
+		  kmvsfmmdistthresh[distance][sfmmbin][0]++;
+		  kmvsfmmdistthresh[distance][sfmmbin][1] = kmvsfmmdistthresh[distance][sfmmbin][1] + km;
+		  gamvsfmmdistthresh[distance][sfmmbin][0]++;
+		  gamvsfmmdistthresh[distance][sfmmbin][1] = gamvsfmmdistthresh[distance][sfmmbin][1] + gam;
+		  lmgvsfmmdistthresh[distance][sfmmbin][0]++;
+		  lmgvsfmmdistthresh[distance][sfmmbin][1] = lmgvsfmmdistthresh[distance][sfmmbin][1] + lmg;
+		  kmvssapdistthresh[distance][ssapbin][0]++;
+		  kmvssapdistthresh[distance][ssapbin][1] = kmvssapdistthresh[distance][ssapbin][1] + km;
+		  gamvssapdistthresh[distance][ssapbin][0]++;
+		  gamvssapdistthresh[distance][ssapbin][1] = gamvssapdistthresh[distance][ssapbin][1] + gam;
+		  lmgvssapdistthresh[distance][ssapbin][0]++;
+		  lmgvssapdistthresh[distance][ssapbin][1] = lmgvssapdistthresh[distance][ssapbin][1] + lmg;
+		  kmvdisdistthresh[distance][disbin][0]++;
+		  kmvdisdistthresh[distance][disbin][1] = kmvdisdistthresh[distance][disbin][1] + km;
+		  gamvdisdistthresh[distance][disbin][0]++;
+		  gamvdisdistthresh[distance][disbin][1] = gamvdisdistthresh[distance][disbin][1] + gam;
+		  lmgvdisdistthresh[distance][disbin][0]++;
+		  lmgvdisdistthresh[distance][disbin][1] = lmgvdisdistthresh[distance][disbin][1] + lmg;
+		  kmvsfmmssapthresh[sfmmbin][ssapbin][0]++;
+		  kmvsfmmssapthresh[sfmmbin][ssapbin][1] = kmvsfmmssapthresh[sfmmbin][ssapbin][1] + km;
+		  gamvsfmmssapthresh[sfmmbin][ssapbin][0]++;
+		  gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + gam;
+		  lmgvsfmmssapthresh[sfmmbin][ssapbin][0]++;
+		  lmgvsfmmssapthresh[sfmmbin][ssapbin][1] = lmgvsfmmssapthresh[sfmmbin][ssapbin][1] + lmg;
+	}
   }
   outFile << "Kernel Misorientation Data" << endl;
   outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << endl;
