@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>849</width>
-    <height>626</height>
+    <width>851</width>
+    <height>632</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -293,7 +293,7 @@ font-size: 11px;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>248</width>
+             <width>250</width>
              <height>121</height>
             </rect>
            </property>
@@ -683,24 +683,6 @@ font-size: 11px;
     </spacer>
    </item>
    <item row="5" column="0">
-    <widget class="QLabel" name="messageLabel">
-     <property name="font">
-      <font>
-       <italic>true</italic>
-      </font>
-     </property>
-     <property name="text">
-      <string>Error Message</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
     <layout class="QHBoxLayout" name="BIG_LAYOUT">
      <item>
       <widget class="QPushButton" name="m_LoadSettingsBtn">

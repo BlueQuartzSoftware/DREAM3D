@@ -212,8 +212,6 @@ void GrainGeneratorWidget::on_m_StructureFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::setupGui()
 {
-  messageLabel->setText("");
-
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_H5InputStatisticsFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
