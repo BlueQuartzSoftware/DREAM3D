@@ -35,34 +35,19 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PackGrainsGen2.h"
-#include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <cstddef>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
 #include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 
-using namespace std;
-
-#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
 const static float m_pi = M_PI;
 
-using namespace std;
 
 
 // -----------------------------------------------------------------------------
@@ -365,8 +350,8 @@ void PackGrainsGen2::execute()
   // determine initial filling and neighbor distribution errors
   m->oldneighborhooderror = check_neighborhooderror(-1000, -1000);
 #if ERROR_TXT_OUT
-  ofstream outFile;
-  string filename = "error.txt";
+  std::ofstream outFile;
+  std::string filename = "error.txt";
   outFile.open(filename.c_str(), std::ios_base::binary);
 #endif
   // begin swaping/moving/adding/removing grains to try to improve packing
@@ -379,7 +364,7 @@ void PackGrainsGen2::execute()
 #if ERROR_TXT_OUT
     if(iteration%25 == 0)
     {
-      outFile << iteration << "	" << m->fillingerror << "	" << m->oldsizedisterror << "	" << m->oldneighborhooderror << "	" << numgrains << "	" << acceptedmoves << endl;
+      outFile << iteration << "	" << m->fillingerror << "	" << m->oldsizedisterror << "	" << m->oldneighborhooderror << "	" << numgrains << "	" << acceptedmoves << std::endl;
     }
 #endif
     // JUMP - this option moves one grain to a random spot in the volume
@@ -454,18 +439,18 @@ void PackGrainsGen2::execute()
 //  ofstream outFile;
   filename = "test.vtk";
   outFile.open(filename.c_str(), std::ios_base::binary);
-  outFile << "# vtk DataFile Version 2.0" << endl;
-  outFile << "data set from FFT2dx_GB" << endl;
-  outFile << "ASCII" << endl;
-  outFile << "DATASET STRUCTURED_POINTS" << endl;
-  outFile << "DIMENSIONS " << m->packingxpoints << " " << m->packingypoints << " " << m->packingzpoints << endl;
-  outFile << "ORIGIN 0.0 0.0 0.0" << endl;
-  outFile << "SPACING " << m->packingresx << " " << m->packingresy << " " << m->packingresz << endl;
-  outFile << "POINT_DATA " << m->packingxpoints*m->packingypoints*m->packingzpoints << endl;
-  outFile << endl;
-  outFile << endl;
-  outFile << "SCALARS GrainID int  1" << endl;
-  outFile << "LOOKUP_TABLE default" << endl;
+  outFile << "# vtk DataFile Version 2.0" << std::endl;
+  outFile << "data set from FFT2dx_GB" << std::endl;
+  outFile << "ASCII" << std::endl;
+  outFile << "DATASET STRUCTURED_POINTS" << std::endl;
+  outFile << "DIMENSIONS " << m->packingxpoints << " " << m->packingypoints << " " << m->packingzpoints << std::endl;
+  outFile << "ORIGIN 0.0 0.0 0.0" << std::endl;
+  outFile << "SPACING " << m->packingresx << " " << m->packingresy << " " << m->packingresz << std::endl;
+  outFile << "POINT_DATA " << m->packingxpoints*m->packingypoints*m->packingzpoints << std::endl;
+  outFile << std::endl;
+  outFile << std::endl;
+  outFile << "SCALARS GrainID int  1" << std::endl;
+  outFile << "LOOKUP_TABLE default" << std::endl;
   for (int i = 0; i < (m->packingzpoints); i++)
   {
     for (int j = 0; j < (m->packingypoints); j++)
@@ -473,7 +458,7 @@ void PackGrainsGen2::execute()
       for (int k = 0; k < (m->packingxpoints); k++)
       {
         int name = m->grainowners[k][j][i];
-        if(i%20 == 0 && i > 0) outFile << endl;
+        if(i%20 == 0 && i > 0) outFile << std::endl;
         outFile << "     ";
         if(name < 100) outFile << " ";
         if(name < 10) outFile << " ";

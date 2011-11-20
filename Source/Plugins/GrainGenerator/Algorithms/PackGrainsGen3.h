@@ -43,7 +43,13 @@
 #include "GrainGenerator/GrainGeneratorFunc.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 
-
+/**
+ * @class PackGrainsGen3 PackGrainsGen3.h GrainGenerator/Algorithms/PackGrainsGen3.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
 class PackGrainsGen3 : public PackGrainsGen2
 {
   public:
