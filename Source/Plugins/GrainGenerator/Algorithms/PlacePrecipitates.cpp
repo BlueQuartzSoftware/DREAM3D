@@ -35,32 +35,19 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PlacePrecipitates.h"
+
 #include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <cstddef>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 
-using namespace std;
-
-#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/ShapeOps/ShapeOps.h"
+
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 
-const static float m_pi = M_PI;
 
-using namespace std;
+
 
 
 // -----------------------------------------------------------------------------

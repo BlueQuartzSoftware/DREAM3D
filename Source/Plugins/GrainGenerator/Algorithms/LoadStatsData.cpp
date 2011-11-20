@@ -35,24 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "LoadStatsData.h"
-#include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <cstddef>
-#include <vector>
-#include <string>
 #include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
-
-using namespace std;
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -62,9 +46,6 @@ using namespace std;
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
-const static float m_pi = M_PI;
-
-using namespace std;
 
 
 // -----------------------------------------------------------------------------
@@ -92,19 +73,50 @@ void LoadStatsData::execute()
   // Open the HDF5 Stats file
   if (h5reader.get() == NULL)
   {
+    setErrorCondition(-1);
+    setErrorMessage("Error Loading H5 Stats File");
     return;
   }
 
   err = readReconStatsData(h5reader);
+  if (err < 0)
+  {
+    setErrorCondition(-1);
+    setErrorMessage("Error Reading the Stats Data from the HDF5 File");
+    notify( getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
+    return;
+  }
   err = readAxisOrientationData(h5reader);
+  if (err < 0)
+  {
+    setErrorCondition(-1);
+    setErrorMessage("Error Reading the Axis Orientation Data from the HDF5 File");
+    notify( getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
+    return;
+  }
   err = readODFData(h5reader);
+  if (err < 0)
+  {
+    setErrorCondition(-1);
+    setErrorMessage("Error Reading the ODF Data from the HDF5 File");
+    notify( getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
+    return;
+  }
   err = readMisorientationData(h5reader);
+  if (err < 0)
+  {
+    setErrorCondition(-1);
+    setErrorMessage("Error Reading the Misorientation Data from the HDF5 File");
+    notify( getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
+    return;
+  }
   initializeAttributes();
 
   // If there is an error set this to something negative and also set a message
   m_ErrorMessage = "PackGrainsGen2 Completed";
   m_ErrorCondition = 0;
 }
+
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
@@ -115,7 +127,7 @@ void LoadStatsData::initializeAttributes()
   m->sizey = m->ypoints * m->resy;
   m->sizez = m->zpoints * m->resz;
   m->totalvol = m->sizex * m->sizey * m->sizez;
-  m->totalpoints = m->xpoints * m->ypoints * m->zpoints;  
+  m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
   const size_t startIndex = 0;
   const size_t endIndex = m->totalpoints;
   m->grain_indicies = m->m_GrainIndicies->WritePointer(startIndex, endIndex);
@@ -137,6 +149,8 @@ void LoadStatsData::initializeAttributes()
 		m->surfacevoxels[i] = 0;
 	}
 }
+
+
 void LoadStatsData::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
 {
   //------------------

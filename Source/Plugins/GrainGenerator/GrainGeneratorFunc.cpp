@@ -37,23 +37,27 @@
 #include "GrainGeneratorFunc.h"
 
 // C Includes
-#include <string.h>
 
 // C++ Includes
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <algorithm>
-#include <functional>
-#include <cmath>
-#include <limits>
 
-
+// EbsdLib Includes
 #include "EbsdLib/EbsdConstants.h"
 
 // DREAM3D Includes
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+
+#include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3DLib/ShapeOps/CylinderOps.h"
+#include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
+#include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 
@@ -77,13 +81,6 @@ const static float CosOfHalf = cosf(0.5f);
 // -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
 #endif
 
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-using namespace std;
 
 // -----------------------------------------------------------------------------
 //
@@ -306,10 +303,10 @@ void GrainGeneratorFunc::cleanup_grains()
 	  neighpoints[3] = 1;
 	  neighpoints[4] = xpoints;
 	  neighpoints[5] = (xpoints * ypoints);
-	  vector<vector<int> > vlists;
+	  std::vector<std::vector<int> > vlists;
 	  vlists.resize(m_Grains.size());
-	  vector<int> currentvlist;
-	  vector<bool> checked;
+	  std::vector<int> currentvlist;
+	  std::vector<bool> checked;
 	  checked.resize(totalpoints,false);
 	  size_t count;
 	  int good;
@@ -614,7 +611,7 @@ void GrainGeneratorFunc::adjust_boundaries()
 //FIXME: This should return an erorr condition
 void GrainGeneratorFunc::write_graindata(const std::string &filename)
 {
-  ofstream outFile;
+  std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   outFile << m_Grains.size()-1 << std::endl;
@@ -627,7 +624,7 @@ void GrainGeneratorFunc::write_graindata(const std::string &filename)
   {
 	  outFile << i << space << m_Grains[i]->phase << space << m_Grains[i]->euler1 << space << m_Grains[i]->euler2 << space << m_Grains[i]->euler3 <<
 		space << m_Grains[i]->equivdiameter << space << m_Grains[i]->radius2 << space << m_Grains[i]->radius3 <<
-		space << m_Grains[i]->omega3 << endl;
+		space << m_Grains[i]->omega3 << std::endl;
   }
   outFile.close();
 }
