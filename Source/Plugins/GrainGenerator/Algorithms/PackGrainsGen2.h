@@ -43,6 +43,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/ShapeOps/ShapeOps.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
 
 /**
  * @class PackGrainsGen2 PackGrainsGen2.h GrainGenerator/Algorithms/PackGrainsGen2.h
@@ -66,8 +68,17 @@ class PackGrainsGen2 : public Observable
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
+    float packingresx;
+    float packingresy;
+    float packingresz;
+    int packingxpoints;
+    int packingypoints;
+    int packingzpoints;
+    int packingtotalpoints;
 
-    virtual void execute();
+    std::vector<std::vector<std::vector<int> > > grainowners;
+
+	virtual void execute();
 
     void initialize_packinggrid();
     void generate_grain(int, int);
@@ -92,6 +103,8 @@ class PackGrainsGen2 : public Observable
 
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
+    std::vector<OrientationMath*> m_OrientatioOps;
 
   protected:
     PackGrainsGen2();
@@ -99,8 +112,17 @@ class PackGrainsGen2 : public Observable
 
   private:
 
+    DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
+    DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
+    DREAM3D::ShapeOps::Pointer m_CylinderOps;
+    DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
+    DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
 
-    PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+	
+	PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
     void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented
 };
 

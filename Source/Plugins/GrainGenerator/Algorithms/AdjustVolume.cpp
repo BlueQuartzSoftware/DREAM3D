@@ -74,7 +74,6 @@ using namespace std;
 AdjustVolume::AdjustVolume() :
     m_ErrorCondition(0)
 {
-
 }
 
 // -----------------------------------------------------------------------------

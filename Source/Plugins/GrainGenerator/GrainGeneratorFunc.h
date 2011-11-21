@@ -57,8 +57,6 @@
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/Grain.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/ShapeOps/ShapeOps.h"
 
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
@@ -89,18 +87,11 @@ class GrainGeneratorFunc : public Observable
     float resx;
     float resy;
     float resz;
-    float packingresx;
-    float packingresy;
-    float packingresz;
 
     int xpoints;
     int ypoints;
     int zpoints;
     int totalpoints;
-    int packingxpoints;
-    int packingypoints;
-    int packingzpoints;
-    int packingtotalpoints;
 
     float misorientationtolerance;
 
@@ -117,9 +108,6 @@ class GrainGeneratorFunc : public Observable
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float)
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
-
-
-    std::vector<std::vector<std::vector<int> > > grainowners;
 
     std::vector<Grain::Pointer> m_Grains;
     std::vector<int> gsizes;
@@ -150,9 +138,6 @@ class GrainGeneratorFunc : public Observable
     std::vector<std::vector<std::vector<float> > > simneighbordist;
     std::vector<std::vector<std::vector<int> > > boundaries;
 
-//    float machineepsilon;
-//    float maxrealnumber;
-//    float minrealnumber;
     int numorients;
     int numeulers;
     int resdiff;
@@ -179,23 +164,9 @@ class GrainGeneratorFunc : public Observable
     float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
 
-
-    std::vector<OrientationMath*> m_OrientatioOps;
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
-
   protected:
     GrainGeneratorFunc();
   private:
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-
-    DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
-    DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
-    DREAM3D::ShapeOps::Pointer m_CylinderOps;
-    DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
-    DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
 
     GrainGeneratorFunc(const GrainGeneratorFunc&);
     void operator =(const GrainGeneratorFunc&);
