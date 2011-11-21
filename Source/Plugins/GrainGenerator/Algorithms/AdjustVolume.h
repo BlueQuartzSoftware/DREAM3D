@@ -46,8 +46,19 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
+<<<<<<< HEAD:Source/Plugins/GrainGenerator/Algorithms/AdjustVolume.h
 
 class AdjustVolume : public Observable
+=======
+/**
+ * @class PackGrainsGen3 PackGrainsGen3.h GrainGenerator/Algorithms/PackGrainsGen3.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
+class PackGrainsGen3 : public PackGrainsGen2
+>>>>>>> 744c89cca38a43daef0d92072b4303a683ac8b1c:Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.h
 {
   public:
     DREAM3D_SHARED_POINTERS(AdjustVolume);

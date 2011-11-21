@@ -42,11 +42,21 @@
 
 #include <boost/shared_array.hpp>
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/HDF5/H5StatsReader.h"
+
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
-
+/**
+ * @class LoadStatsData LoadStatsData.h GrainGenerator/Algorithms/LoadStatsData.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
 class LoadStatsData : public Observable
 {
   public:

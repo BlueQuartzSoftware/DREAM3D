@@ -37,27 +37,21 @@
 #ifndef MATCHCRYSTALLOGRAPHY_H_
 #define MATCHCRYSTALLOGRAPHY_H_
 
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
 
-#include <cstddef>
-#include <vector>
 #include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
-#include <map>
+
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
-
+/**
+ * @class MatchCrystallography MatchCrystallography.h GrainGenerator/Algorithms/MatchCrystallography.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
 class MatchCrystallography : public Observable
 {
   public:

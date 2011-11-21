@@ -44,7 +44,13 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
-
+/**
+ * @class FindNeighbors FindNeighbors.h GrainGenerator/Algorithms/FindNeighbors.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
 class FindNeighbors : public Observable
 {
   public:

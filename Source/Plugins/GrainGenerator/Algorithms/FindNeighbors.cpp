@@ -35,30 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindNeighbors.h"
-#include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <cstddef>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
-
-using namespace std;
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-
-using namespace std;
-
 
 // -----------------------------------------------------------------------------
 //
@@ -97,6 +76,8 @@ void FindNeighbors::find_neighbors()
   {
     m->totalsurfacearea[i] = 0.0f;
   }
+
+  notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);
   int nListSize = 100;
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
@@ -117,6 +98,7 @@ void FindNeighbors::find_neighbors()
     }
   }
 
+  notify("FindNeighbors: Working through all Voxels", 0, Observable::UpdateProgressMessage);
   for (int j = 0; j < m->totalpoints; j++)
   {
     onsurf = 0;
@@ -162,6 +144,7 @@ void FindNeighbors::find_neighbors()
     m->surfacevoxels[j] = onsurf;
   }
 
+  notify("FindNeighbors: Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     int phase = m->m_Grains[i]->phase;
@@ -204,5 +187,5 @@ void FindNeighbors::find_neighbors()
 void FindNeighbors::execute()
 {
 	find_neighbors();
-    m_ErrorCondition = 0;
+  m_ErrorCondition = 0;
 }

@@ -44,7 +44,13 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
-
+/**
+ * @class PackGrainsGen2 PackGrainsGen2.h GrainGenerator/Algorithms/PackGrainsGen2.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
 class PackGrainsGen2 : public Observable
 {
   public:
