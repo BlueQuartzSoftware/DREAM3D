@@ -55,6 +55,7 @@ SET (Algorithms_HDRS
   ${PROJECT_SOURCE_DIR}/Algorithms/PlacePrecipitates.h
   ${PROJECT_SOURCE_DIR}/Algorithms/AdjustVolume.h
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.h
+  ${PROJECT_SOURCE_DIR}/Algorithms/WriteGrainData.h
 )
 
 SET (Algorithms_SRCS
@@ -64,6 +65,7 @@ SET (Algorithms_SRCS
   ${PROJECT_SOURCE_DIR}/Algorithms/AdjustVolume.cpp
   ${PROJECT_SOURCE_DIR}/Algorithms/PlacePrecipitates.cpp
   ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.cpp
+  ${PROJECT_SOURCE_DIR}/Algorithms/WriteGrainData.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/Algorithms" "${Algorithms_HDRS}" "${Algorithms_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
