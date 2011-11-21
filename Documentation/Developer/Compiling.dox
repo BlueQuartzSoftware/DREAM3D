@@ -88,5 +88,24 @@ QT_QMAKE_EXECUTABLE - The location of the QMake executable from the Qt installat
 @endcode
 
 
+@section buildingrelease Building a Release of DREAM.3D
+
+ These instructions are for those wanting to create an official distribution of DREAM.3D for
+the main web site. Here is the list of things to do in the order they need to be
+performed:
+
+@li Open the Top level CMakeLists.txt file and adjust the <tt>CMP_VERSION_MAJOR</tt>
+and <tt>CMP_VERSION_MINOR</tt> to the desired version for this release. Refer to
+the documentation for determining the version number and how/what to set it to.
+@li Save the CMakeLists.txt file
+@li Peform one last "git commit ...." to commit this version number.
+@li Run CMake to generate new headers with the latest version number.
+@li Compile DREAM.3D one last time.
+@li Create the downloadable package by either running the <b>PACKAGE</b> project in
+Visual Studio or running <tt>make package</tt> on Makfile based systems.
+@li Upload the binaries to the website
+@li Update the main web page with the new version and download links.
+@li Update the rss feed file with the new version and download links.
+
 
 */
