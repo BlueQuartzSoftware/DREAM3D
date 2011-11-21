@@ -78,6 +78,15 @@ class PackGrainsGen2 : public Observable
 
     std::vector<std::vector<std::vector<int> > > grainowners;
 
+	std::vector<std::vector<float> > grainsizedist;
+    std::vector<std::vector<float> > simgrainsizedist;
+    std::vector<std::vector<std::vector<float> > > neighbordist;
+    std::vector<std::vector<std::vector<float> > > simneighbordist;
+
+    float fillingerror, oldfillingerror;
+    float currentneighborhooderror, oldneighborhooderror;
+    float currentsizedisterror, oldsizedisterror;
+
 	virtual void execute();
 
     void initialize_packinggrid();

@@ -93,8 +93,6 @@ class GrainGeneratorFunc : public Observable
     int zpoints;
     int totalpoints;
 
-    float misorientationtolerance;
-
     std::vector<Ebsd::CrystalStructure> crystruct;
     std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
     std::vector<float> pptFractions;
@@ -112,7 +110,6 @@ class GrainGeneratorFunc : public Observable
     std::vector<Grain::Pointer> m_Grains;
     std::vector<int> gsizes;
     std::vector<int> newnames;
-    std::vector<float> sizetest;
 
     std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
@@ -125,25 +122,14 @@ class GrainGeneratorFunc : public Observable
     std::vector<int> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
-    std::vector<int> takencheck;
     std::vector<std::vector<std::vector<float> > > bovera;
     std::vector<std::vector<std::vector<float> > > covera;
     std::vector<std::vector<std::vector<float> > > coverb;
     std::vector<std::vector<std::vector<float> > > omega3;
     std::vector<std::vector<std::vector<float> > > neighborparams;
 
-    std::vector<std::vector<float> > grainsizedist;
-    std::vector<std::vector<float> > simgrainsizedist;
-    std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > simneighbordist;
-    std::vector<std::vector<std::vector<int> > > boundaries;
-
-    int numorients;
-    int numeulers;
-    int resdiff;
     std::vector<float> unbiasedvol;
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
-    int numprimarygrains;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;
     std::vector<float> grainsizediststep;
@@ -152,16 +138,10 @@ class GrainGeneratorFunc : public Observable
     std::vector<float> avgdiam;
     std::vector<float> sddiam;
     std::vector<int> numdiameterbins;
-    int worstgrain;
 
     float totalvol;
     float totalprecipvol;
     int numneighbins;
-    float volcheck;
-    int ownercheck;
-    float fillingerror, oldfillingerror;
-    float currentneighborhooderror, oldneighborhooderror;
-    float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
 
   protected:

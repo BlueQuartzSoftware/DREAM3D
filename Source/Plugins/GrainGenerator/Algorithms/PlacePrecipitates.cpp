@@ -286,7 +286,7 @@ void  PlacePrecipitates::fillin_precipitates()
       if(good == 1)
           {
           int grain = m->grain_indicies[neighpoint];
-          if(grain > 0 && grain >= m->numprimarygrains)
+          if(grain > 0 && grain >= numprimarygrains)
           {
             neighs.push_back(grain);
           }
@@ -318,7 +318,7 @@ void  PlacePrecipitates::fillin_precipitates()
     {
       int grainname = m->grain_indicies[j];
       int neighbor = neighbors[j];
-      if(grainname <= 0 && neighbor > 0 && neighbor >= m->numprimarygrains)
+      if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
       {
         m->grain_indicies[j] = neighbor;
 		m->phases[j] = m->m_Grains[neighbor]->phase;
@@ -345,7 +345,7 @@ void  PlacePrecipitates::place_precipitates()
   m->totalprecipvol = 0;
   int precipvoxelcounter = 0;
   size_t currentnumgrains = m->m_Grains.size();
-  m->numprimarygrains = m->m_Grains.size();
+  numprimarygrains = m->m_Grains.size();
  // size_t index;
   int phase;
   float precipboundaryfraction = 0.0;
@@ -390,7 +390,7 @@ void  PlacePrecipitates::place_precipitates()
   if(random <= precipboundaryfraction)
   {
     random2 = int(rg.genrand_res53()*double(m->totalpoints-1));
-    while(m->surfacevoxels[random2] == 0 || m->grain_indicies[random2] > m->numprimarygrains)
+    while(m->surfacevoxels[random2] == 0 || m->grain_indicies[random2] > numprimarygrains)
     {
       random2++;
       if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
@@ -399,7 +399,7 @@ void  PlacePrecipitates::place_precipitates()
   else if(random > precipboundaryfraction)
   {
     random2 = rg.genrand_res53()*(m->totalpoints-1);
-    while(m->surfacevoxels[random2] != 0 || m->grain_indicies[random2] > m->numprimarygrains)
+    while(m->surfacevoxels[random2] != 0 || m->grain_indicies[random2] > numprimarygrains)
     {
       random2++;
       if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
@@ -416,7 +416,7 @@ void  PlacePrecipitates::place_precipitates()
   precipvoxelcounter = 0;
   for(size_t j = 0; j < m->m_Grains[currentnumgrains]->voxellist->size(); j++)
   {
-    if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < m->numprimarygrains)
+    if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
     {
       precipvoxelcounter++;
     }
@@ -426,12 +426,12 @@ void  PlacePrecipitates::place_precipitates()
     precipvoxelcounter = 0;
     for(size_t j = 0; j < m->m_Grains[currentnumgrains]->voxellist->size(); j++)
     {
-      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < 0 || m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] >= m->numprimarygrains)
+      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < 0 || m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] >= numprimarygrains)
       {
         m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = -1;
         m->phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = 0;
       }
-      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < m->numprimarygrains)
+      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
       {
         m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = currentnumgrains;
         m->phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = m->m_Grains[currentnumgrains]->phase;
