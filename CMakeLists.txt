@@ -53,6 +53,25 @@ file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set (CMP_LIB_SEARCH_DIRS "")
 set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 
+
+# --------------------------------------------------------------------
+# In order to increment the version of DREAM3D simply adjust these variables.
+# we are using a 3 part Version scheme commonly found in software development. The
+# example would be Version 2.1.6543 which translates to Version [major].[minor].[patch].
+# The Major and Minor versions are set here in the CMake files. We will use Git 
+# to figure out the "patch" leve of the version by using "git describe" which will
+# calculate how many commits since the last "tag" was applied to the repository.
+# this basically gives us an always incrementing number for the patch level
+# and we can set the Major and Minor versions as we see fit. I am going to follow
+# some of the other open source projects where in development versions are usually
+# tagged with an odd minor version and stable, released versions have an even 
+# minor version. The major version can be incremented when various major things
+# happen to the code such as GUI refactoring or major infrastructure changes to
+# the code.
+
+set(CMP_VERSION_MAJOR "2")
+set(CMP_VERSION_MINOR "2")
+
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
 # directory first
