@@ -37,14 +37,19 @@
 #ifndef PLACEPRECIPITATES_H_
 #define PLACEPRECIPITATES_H_
 
-#include <vector>
 #include <string>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 
-
+/**
+ * @class PlacePrecipitates PlacePrecipitates.h GrainGenerator/Algorithms/PlacePrecipitates.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
 class PlacePrecipitates : public Observable
 {
   public:
@@ -64,7 +69,7 @@ class PlacePrecipitates : public Observable
     virtual void execute();
 
     void insert_precipitate(size_t grainNum);
-	void place_precipitates();
+	  void place_precipitates();
     void fillin_precipitates();
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);

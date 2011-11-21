@@ -40,49 +40,25 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
 
-#include <cstddef>
+
 #include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 #include <map>
+
 
 #include <boost/shared_array.hpp>
 
-
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/Grain.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/Observable.h"
-
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-#include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3DLib/ShapeOps/CylinderOps.h"
-#include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
-
-
 
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
@@ -93,14 +69,14 @@
  */
 class GrainGeneratorFunc : public Observable
 {
-public:
+  public:
     DREAM3D_SHARED_POINTERS(GrainGeneratorFunc)
     DREAM3D_STATIC_NEW_MACRO(GrainGeneratorFunc)
 
     virtual ~GrainGeneratorFunc();
 
-    typedef boost::shared_array<float>    SharedFloatArray;
-    typedef boost::shared_array<int>      SharedIntArray;
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
 
     bool periodic_boundaries;
 
@@ -129,36 +105,37 @@ public:
     float misorientationtolerance;
 
     std::vector<Ebsd::CrystalStructure> crystruct;
-    std::vector<DREAM3D::Reconstruction::PhaseType>        phaseType;
-    std::vector<float>                                 pptFractions;
-    std::vector<DREAM3D::SyntheticBuilder::ShapeType>      shapeTypes;
+    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
+    std::vector<float> pptFractions;
+    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
 
-	// Voxel Attribute Arrays
+    // Voxel Attribute Arrays
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
     DECLARE_WRAPPED_ARRAY(ellipfuncs, m_Ellipfuncs, float)
-    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
-    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
-    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
-    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
-    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char);
+    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int)
+    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float)
+    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float)
+    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
+    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
 
-	std::vector<std::vector<std::vector<int> > > grainowners;
 
-	std::vector<Grain::Pointer> m_Grains;
+    std::vector<std::vector<std::vector<int> > > grainowners;
+
+    std::vector<Grain::Pointer> m_Grains;
     std::vector<int> gsizes;
     std::vector<int> newnames;
-	std::vector<float> sizetest;
+    std::vector<float> sizetest;
 
-	std::vector<SharedFloatArray> actualodf;
+    std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
     std::vector<SharedFloatArray> axisodf;
 
-	std::vector<int> primaryphases;
-	std::vector<float> primaryphasefractions;
-	std::vector<int> precipitatephases;
-	std::vector<float> precipitatephasefractions;
+    std::vector<int> primaryphases;
+    std::vector<float> primaryphasefractions;
+    std::vector<int> precipitatephases;
+    std::vector<float> precipitatephasefractions;
 
     std::vector<int> takencheck;
     std::vector<std::vector<std::vector<float> > > bovera;
@@ -167,7 +144,7 @@ public:
     std::vector<std::vector<std::vector<float> > > omega3;
     std::vector<std::vector<std::vector<float> > > neighborparams;
 
-	std::vector<std::vector<float> > grainsizedist;
+    std::vector<std::vector<float> > grainsizedist;
     std::vector<std::vector<float> > simgrainsizedist;
     std::vector<std::vector<std::vector<float> > > neighbordist;
     std::vector<std::vector<std::vector<float> > > simneighbordist;
@@ -206,27 +183,25 @@ public:
 
 
 
-    std::vector<OrientationMath*>    m_OrientatioOps;
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;
+    std::vector<OrientationMath*> m_OrientatioOps;
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
 
-protected:
+  protected:
     GrainGeneratorFunc();
-private:
+  private:
 
-    OrientationMath::Pointer         m_CubicOps;
-    OrientationMath::Pointer         m_HexOps;
-    OrientationMath::Pointer         m_OrthoOps;
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
 
-    DREAM3D::ShapeOps::Pointer                m_UnknownShapeOps;
-    DREAM3D::ShapeOps::Pointer                m_CubicOctohedronOps;
-    DREAM3D::ShapeOps::Pointer                m_CylinderOps;
-    DREAM3D::ShapeOps::Pointer                m_EllipsoidOps;
-    DREAM3D::ShapeOps::Pointer                m_SuprtEllipsoidOps;
+    DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
+    DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
+    DREAM3D::ShapeOps::Pointer m_CylinderOps;
+    DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
+    DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
 
-
-    GrainGeneratorFunc(const GrainGeneratorFunc& );
-    void operator =(const GrainGeneratorFunc& );
+    GrainGeneratorFunc(const GrainGeneratorFunc&);
+    void operator =(const GrainGeneratorFunc&);
 };
-
 
 #endif
