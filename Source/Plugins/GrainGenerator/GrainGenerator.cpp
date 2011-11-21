@@ -54,11 +54,8 @@
 #include "GrainGenerator/Algorithms/MatchCrystallography.h"
 #include "GrainGenerator/Algorithms/PlacePrecipitates.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
-#include "GrainGenerator/Algorithms/PackGrainsGen3.h"
+#include "GrainGenerator/Algorithms/AdjustVolume.h"
 
-
-#define PACKGRAINS_GEN2
-//#define PACKGRAINS_GEN3
 
 
 // -----------------------------------------------------------------------------
@@ -128,11 +125,7 @@ void GrainGenerator::execute()
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", load_stats)
 
     updateProgressAndMessage(("Packing Grains"), 25);
-#ifdef PACKGRAINS_GEN2
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
-#elif defined PACKGRAINS_GEN3
-    PackGrainsGen3::Pointer pack_grains = PackGrainsGen3::New();
-#endif
     pack_grains->addObserver(static_cast<Observer*>(this));
     pack_grains->setGrainGenFunc(m.get());
     pack_grains->execute();
@@ -140,15 +133,14 @@ void GrainGenerator::execute()
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Packing Grains", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", pack_grains)
 
-    updateProgressAndMessage(("Filling Gaps"), 40);
-    m->assign_gaps();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Filling Gaps", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", assign_gaps)
-
-    updateProgressAndMessage(("Cleaning Grains"), 40);
-    m->cleanup_grains();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Cleaning Grains", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", cleanup_grains)
+    updateProgressAndMessage(("Adjusting Grains"), 25);
+    AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
+    adjust_grains->addObserver(static_cast<Observer*>(this));
+    adjust_grains->setGrainGenFunc(m.get());
+    adjust_grains->execute();
+    err = adjust_grains->getErrorCondition();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Adjusting Grains", err)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", adjust_grains)
   }
   else if (m_AlreadyFormed == true)
   {

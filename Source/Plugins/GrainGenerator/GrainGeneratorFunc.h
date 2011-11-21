@@ -202,14 +202,9 @@ public:
     float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
 
-    void assign_gaps();
-    void cleanup_grains();
-    void adjust_boundaries();
     void write_graindata(const std::string & filename);
 
-    float find_xcoord(long long int index);
-    float find_ycoord(long long int index);
-    float find_zcoord(long long int index);
+
 
     std::vector<OrientationMath*>    m_OrientatioOps;
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>           m_ShapeOps;

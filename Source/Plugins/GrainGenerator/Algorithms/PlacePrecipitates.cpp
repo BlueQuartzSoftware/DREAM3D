@@ -405,9 +405,9 @@ void  PlacePrecipitates::place_precipitates()
       if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
     }
   }
-    xc = m->find_xcoord(random2);
-    yc = m->find_ycoord(random2);
-    zc = m->find_zcoord(random2);
+    xc = find_xcoord(random2);
+    yc = find_ycoord(random2);
+    zc = find_zcoord(random2);
     m->m_Grains[currentnumgrains]->centroidx = xc;
     m->m_Grains[currentnumgrains]->centroidy = yc;
     m->m_Grains[currentnumgrains]->centroidz = zc;
@@ -443,5 +443,18 @@ void  PlacePrecipitates::place_precipitates()
   }
   }
 }
-
-
+float PlacePrecipitates::find_xcoord(long long int index)
+{
+  float x = m->resx*float(index%m->xpoints);
+  return x;
+}
+float PlacePrecipitates::find_ycoord(long long int index)
+{
+  float y = m->resy*float((index/m->xpoints)%m->ypoints);
+  return y;
+}
+float PlacePrecipitates::find_zcoord(long long int index)
+{
+  float z = m->resz*float(index/(m->xpoints*m->ypoints));
+  return z;
+}

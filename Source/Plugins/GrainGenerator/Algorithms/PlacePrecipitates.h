@@ -66,6 +66,9 @@ class PlacePrecipitates : public Observable
     void insert_precipitate(size_t grainNum);
 	void place_precipitates();
     void fillin_precipitates();
+    float find_xcoord(long long int index);
+    float find_ycoord(long long int index);
+    float find_zcoord(long long int index);
 
   protected:
     PlacePrecipitates();
