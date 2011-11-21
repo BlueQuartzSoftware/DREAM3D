@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/ShapeOps/ShapeOps.h"
 
 /**
  * @class PlacePrecipitates PlacePrecipitates.h GrainGenerator/Algorithms/PlacePrecipitates.h
@@ -65,7 +66,6 @@ class PlacePrecipitates : public Observable
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
-
     virtual void execute();
 
     void insert_precipitate(size_t grainNum);
@@ -75,12 +75,19 @@ class PlacePrecipitates : public Observable
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
 
-  protected:
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
+
+protected:
     PlacePrecipitates();
     GrainGeneratorFunc* m;
 
   private:
 
+    DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
+    DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
+    DREAM3D::ShapeOps::Pointer m_CylinderOps;
+    DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
+    DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
 
     PlacePrecipitates(const PlacePrecipitates&); // Copy Constructor Not Implemented
     void operator=(const PlacePrecipitates&); // Operator '=' Not Implemented

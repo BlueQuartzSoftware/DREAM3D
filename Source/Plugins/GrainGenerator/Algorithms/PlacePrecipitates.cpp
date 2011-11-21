@@ -42,7 +42,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/ShapeOps/ShapeOps.h"
+
+#include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3DLib/ShapeOps/CylinderOps.h"
+#include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
+#include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 
@@ -56,7 +60,16 @@
 PlacePrecipitates::PlacePrecipitates() :
     m_ErrorCondition(0)
 {
-
+  m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
+  m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
+  m_CylinderOps = DREAM3D::CylinderOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
+  m_UnknownShapeOps = DREAM3D::ShapeOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
 }
 
 // -----------------------------------------------------------------------------
@@ -100,7 +113,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
 
   // init any values for each of the Shape Ops
-  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m->m_ShapeOps.begin(); ops != m->m_ShapeOps.end(); ++ops )
+  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
     (*ops).second->init();
   }
@@ -111,7 +124,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
   shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
 
-  radcur1 = m->m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+  radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
   float radcur2 = (radcur1*bovera);
   float radcur3 = (radcur1*covera);
@@ -197,7 +210,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
-		    inside = m->m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+		    inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 			if(inside >= 0)
 			{
 				int currentpoint = index;
