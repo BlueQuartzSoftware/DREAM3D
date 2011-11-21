@@ -220,9 +220,9 @@ void PackGrainsGen2::execute()
  // float check;
   float xc, yc, zc;
   float oldxc, oldyc, oldzc;
-  m->oldfillingerror = 0;
-  m->currentneighborhooderror = 0, m->oldneighborhooderror = 0;
-  m->currentsizedisterror = 0, m->oldsizedisterror = 0;
+  oldfillingerror = 0;
+  currentneighborhooderror = 0, oldneighborhooderror = 0;
+  currentsizedisterror = 0, oldsizedisterror = 0;
   int acceptedmoves = 0;
   double totalprimaryfractions = 0.0;
   // find which phases are primary phases
@@ -244,25 +244,25 @@ void PackGrainsGen2::execute()
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
   // initialize the sim and goal size distributions for the primary phases
-  m->grainsizedist.resize(m->primaryphases.size());
-  m->simgrainsizedist.resize(m->primaryphases.size());
+  grainsizedist.resize(m->primaryphases.size());
+  simgrainsizedist.resize(m->primaryphases.size());
   m->grainsizediststep.resize(m->primaryphases.size());
   for (size_t i = 0; i < m->primaryphases.size(); i++)
   {
     phase = m->primaryphases[i];
-    m->grainsizedist[i].resize(40);
-    m->simgrainsizedist[i].resize(40);
-    m->grainsizediststep[i] = ((2 * m->maxdiameter[phase]) - (m->mindiameter[phase] / 2.0)) / m->grainsizedist[i].size();
+    grainsizedist[i].resize(40);
+    simgrainsizedist[i].resize(40);
+    m->grainsizediststep[i] = ((2 * m->maxdiameter[phase]) - (m->mindiameter[phase] / 2.0)) / grainsizedist[i].size();
     float input = 0;
     float previoustotal = 0;
-    for (size_t j = 0; j < m->grainsizedist[i].size(); j++)
+    for (size_t j = 0; j < grainsizedist[i].size(); j++)
     {
       input = (float(j + 1) * m->grainsizediststep[i]) + (m->mindiameter[phase] / 2.0);
-      if(logf(input) <= m->avgdiam[phase]) m->grainsizedist[i][j] = 0.5
+      if(logf(input) <= m->avgdiam[phase]) grainsizedist[i][j] = 0.5
           - 0.5 * (DREAM3DMath::erf((m->avgdiam[phase] - logf(float(input))) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
-      if(logf(input) > m->avgdiam[phase]) m->grainsizedist[i][j] = 0.5
+      if(logf(input) > m->avgdiam[phase]) grainsizedist[i][j] = 0.5
           + 0.5 * (DREAM3DMath::erf((logf(float(input)) - m->avgdiam[phase]) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
-      previoustotal = previoustotal + m->grainsizedist[i][j];
+      previoustotal = previoustotal + grainsizedist[i][j];
     }
   }
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
@@ -286,12 +286,12 @@ void PackGrainsGen2::execute()
       }
     }
     generate_grain(gid, phase);
-	m->currentsizedisterror = check_sizedisterror(gid, -1000);
-    change = (m->currentsizedisterror) - (m->oldsizedisterror);
-	if(change > 0 || m->currentsizedisterror > (1.0-(iter*0.001)))
+	currentsizedisterror = check_sizedisterror(gid, -1000);
+    change = (currentsizedisterror) - (oldsizedisterror);
+	if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
     {
        m->m_Grains[gid]->active = 1;
-       m->oldsizedisterror = m->currentsizedisterror;
+       oldsizedisterror = currentsizedisterror;
        currentvol = currentvol + m->m_Grains[gid]->volume;
        gid++;
        m->m_Grains.resize(gid + 1);
@@ -321,12 +321,12 @@ void PackGrainsGen2::execute()
 		  }
 		}
 		generate_grain(gid, phase);
-		m->currentsizedisterror = check_sizedisterror(gid, -1000);
-		change = (m->currentsizedisterror) - (m->oldsizedisterror);
-		if(change > 0 || m->currentsizedisterror > (1.0-(iter*0.001)))
+		currentsizedisterror = check_sizedisterror(gid, -1000);
+		change = (currentsizedisterror) - (oldsizedisterror);
+		if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
 		{
 		   m->m_Grains[gid]->active = 1;
-		   m->oldsizedisterror = m->currentsizedisterror;
+		   oldsizedisterror = currentsizedisterror;
 		   currentvol = currentvol + m->m_Grains[gid]->volume;
 		   gid++;
 		   m->m_Grains.resize(gid + 1);
@@ -336,25 +336,25 @@ void PackGrainsGen2::execute()
 	  }
   }
   // initialize the sim and goal neighbor distribution for the primary phases
-  m->neighbordist.resize(m->primaryphases.size());
-  m->simneighbordist.resize(m->primaryphases.size());
+  neighbordist.resize(m->primaryphases.size());
+  simneighbordist.resize(m->primaryphases.size());
   for (size_t i = 0; i < m->primaryphases.size(); i++)
   {
     phase = m->primaryphases[i];
-    m->neighbordist[i].resize(m->numdiameterbins[phase]);
-    m->simneighbordist[i].resize(m->numdiameterbins[phase]);
-    for (size_t j = 0; j < m->neighbordist[i].size(); j++)
+    neighbordist[i].resize(m->numdiameterbins[phase]);
+    simneighbordist[i].resize(m->numdiameterbins[phase]);
+    for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
-      m->neighbordist[i][j].resize(3);
-      m->simneighbordist[i][j].resize(3);
-      m->neighbordist[i][j][0] = m->neighborparams[phase][j][0] * powf(0.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
-      m->neighbordist[i][j][1] = m->neighborparams[phase][j][0] * powf(1.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
-      m->neighbordist[i][j][2] = m->neighborparams[phase][j][0] * powf(2.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
+      neighbordist[i][j].resize(3);
+      simneighbordist[i][j].resize(3);
+      neighbordist[i][j][0] = m->neighborparams[phase][j][0] * powf(0.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
+      neighbordist[i][j][1] = m->neighborparams[phase][j][0] * powf(1.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
+      neighbordist[i][j][2] = m->neighborparams[phase][j][0] * powf(2.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
     }
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  m->fillingerror = 1;
+  fillingerror = 1;
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     xc = m->sizex / 2.0;
@@ -364,7 +364,7 @@ void PackGrainsGen2::execute()
     m->m_Grains[i]->centroidy = yc;
     m->m_Grains[i]->centroidz = zc;
     insert_grain(i);
-    m->fillingerror = check_fillingerror(i,-1000);
+    fillingerror = check_fillingerror(i,-1000);
     for (int iter = 0; iter < 10; iter++)
     {
       xc = rg.genrand_res53() * (m->xpoints * m->resx);
@@ -373,21 +373,21 @@ void PackGrainsGen2::execute()
 	  oldxc = m->m_Grains[i]->centroidx;
 	  oldyc = m->m_Grains[i]->centroidy;
 	  oldzc = m->m_Grains[i]->centroidz;
-	  m->oldfillingerror = m->fillingerror;
-	  m->fillingerror = check_fillingerror(-1000,i);
+	  oldfillingerror = fillingerror;
+	  fillingerror = check_fillingerror(-1000,i);
       move_grain(i, xc, yc, zc);
-      m->fillingerror = check_fillingerror(i, -1000);
-	  if(m->fillingerror > m->oldfillingerror)
+      fillingerror = check_fillingerror(i, -1000);
+	  if(fillingerror > oldfillingerror)
 	  {
-		m->fillingerror = check_fillingerror(-1000,i);
+		fillingerror = check_fillingerror(-1000,i);
 		move_grain(i, oldxc, oldyc, oldzc);
-		m->fillingerror = check_fillingerror(i,-1000);
+		fillingerror = check_fillingerror(i,-1000);
 	  }
     }
   }
 
   // determine initial filling and neighbor distribution errors
-  m->oldneighborhooderror = check_neighborhooderror(-1000, -1000);
+  oldneighborhooderror = check_neighborhooderror(-1000, -1000);
 #if ERROR_TXT_OUT
   std::ofstream outFile;
   std::string filename = "error.txt";
@@ -403,7 +403,7 @@ void PackGrainsGen2::execute()
 #if ERROR_TXT_OUT
     if(iteration%25 == 0)
     {
-      outFile << iteration << "	" << m->fillingerror << "	" << m->oldsizedisterror << "	" << m->oldneighborhooderror << "	" << numgrains << "	" << acceptedmoves << std::endl;
+      outFile << iteration << "	" << fillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << numgrains << "	" << acceptedmoves << std::endl;
     }
 #endif
     // JUMP - this option moves one grain to a random spot in the volume
@@ -419,22 +419,22 @@ void PackGrainsGen2::execute()
 	  oldxc = m->m_Grains[randomgrain]->centroidx;
 	  oldyc = m->m_Grains[randomgrain]->centroidy;
 	  oldzc = m->m_Grains[randomgrain]->centroidz;
-	  m->oldfillingerror = m->fillingerror;
-	  m->fillingerror = check_fillingerror(-1000,randomgrain);
+	  oldfillingerror = fillingerror;
+	  fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
-	  m->fillingerror = check_fillingerror(randomgrain,-1000);
-//      m->currentneighborhooderror = check_neighborhooderror(-1000, random);
-//      change2 = (m->currentneighborhooderror * m->currentneighborhooderror) - (m->oldneighborhooderror * m->oldneighborhooderror);
-	  if(m->fillingerror <= m->oldfillingerror)
+	  fillingerror = check_fillingerror(randomgrain,-1000);
+//      currentneighborhooderror = check_neighborhooderror(-1000, random);
+//      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
+	  if(fillingerror <= oldfillingerror)
       {
-//        m->oldneighborhooderror = m->currentneighborhooderror;
+//        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-	  else if(m->fillingerror > m->oldfillingerror)
+	  else if(fillingerror > oldfillingerror)
 	  {
-		m->fillingerror = check_fillingerror(-1000,randomgrain);
+		fillingerror = check_fillingerror(-1000,randomgrain);
 		move_grain(randomgrain, oldxc, oldyc, oldzc);
-		m->fillingerror = check_fillingerror(randomgrain,-1000);
+		fillingerror = check_fillingerror(randomgrain,-1000);
 	  }
     }
     // NUDGE - this option moves one grain to a spot close to its current centroid
@@ -450,22 +450,22 @@ void PackGrainsGen2::execute()
 	  xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresx));
       yc = oldyc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresy));
       zc = oldzc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresz));
-	  m->oldfillingerror = m->fillingerror;
-	  m->fillingerror = check_fillingerror(-1000,randomgrain);
+	  oldfillingerror = fillingerror;
+	  fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
-	  m->fillingerror = check_fillingerror(randomgrain,-1000);
-//      m->currentneighborhooderror = check_neighborhooderror(-1000, random);
-//      change2 = (m->currentneighborhooderror * m->currentneighborhooderror) - (m->oldneighborhooderror * m->oldneighborhooderror);
-	  if(m->fillingerror <= m->oldfillingerror)
+	  fillingerror = check_fillingerror(randomgrain,-1000);
+//      currentneighborhooderror = check_neighborhooderror(-1000, random);
+//      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
+	  if(fillingerror <= oldfillingerror)
       {
-//        m->oldneighborhooderror = m->currentneighborhooderror;
+//        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-	  else if(m->fillingerror > m->oldfillingerror)
+	  else if(fillingerror > oldfillingerror)
 	  {
-		m->fillingerror = check_fillingerror(-1000,randomgrain);
+		fillingerror = check_fillingerror(-1000,randomgrain);
 		move_grain(randomgrain, oldxc, oldyc, oldzc);
-		m->fillingerror = check_fillingerror(randomgrain,-1000);
+		fillingerror = check_fillingerror(randomgrain,-1000);
 	  }
     }
   }
@@ -603,15 +603,15 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
   int index;
   std::vector<int> count;
   int phase;
-  for (size_t iter = 0; iter < m->neighbordist.size(); ++iter)
+  for (size_t iter = 0; iter < neighbordist.size(); ++iter)
   {
     phase = m->primaryphases[iter];
-    count.resize(m->simneighbordist[iter].size(), 0);
-    for (size_t i = 0; i < m->simneighbordist[iter].size(); i++)
+    count.resize(simneighbordist[iter].size(), 0);
+    for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
-      m->simneighbordist[iter][i][0] = 0;
-      m->simneighbordist[iter][i][1] = 0;
-      m->simneighbordist[iter][i][2] = 0;
+      simneighbordist[iter][i][0] = 0;
+      simneighbordist[iter][i][1] = 0;
+      simneighbordist[iter][i][2] = 0;
     }
     if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
     {
@@ -636,7 +636,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
           nnum = m->m_Grains[index]->neighbordistfunc[j];
           if(nnum > 0)
           {
-            m->simneighbordist[iter][dia][j] = m->simneighbordist[iter][dia][j] + nnum;
+            simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
           }
         }
         count[dia]++;
@@ -653,17 +653,17 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
         nnum = m->m_Grains[index]->neighbordistfunc[j];
         if(nnum > 0)
         {
-          m->simneighbordist[iter][dia][j] = m->simneighbordist[iter][dia][j] + nnum;
+          simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
         }
       }
       count[dia]++;
     }
-    for (size_t i = 0; i < m->simneighbordist[iter].size(); i++)
+    for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
       for (size_t j = 0; j < 3; j++)
       {
-        m->simneighbordist[iter][i][j] = m->simneighbordist[iter][i][j] / double(count[i]);
-        if(count[i] == 0) m->simneighbordist[iter][i][j] = 0.0;
+        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
+        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
     if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
@@ -675,7 +675,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
       determine_neighbors(gremove, 1);
     }
   }
-  compare_3Ddistributions(m->simneighbordist, m->neighbordist, bhattdist);
+  compare_3Ddistributions(simneighbordist, neighbordist, bhattdist);
   neighborerror = bhattdist;
   return neighborerror;
 }
@@ -723,13 +723,13 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
   int index;
   int count = 0;
   int phase;
-  for (size_t iter = 0; iter < m->grainsizedist.size(); ++iter)
+  for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
   {
     phase = m->primaryphases[iter];
     count = 0;
-    for (size_t i = 0; i < m->grainsizedist[iter].size(); i++)
+    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
     {
-      m->simgrainsizedist[iter][i] = 0.0;
+      simgrainsizedist[iter][i] = 0.0;
     }
     for (size_t b = 1; b < m->m_Grains.size(); b++)
     {
@@ -739,8 +739,8 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
         dia = m->m_Grains[index]->equivdiameter;
         dia = (dia - (m->mindiameter[phase] / 2.0)) / m->grainsizediststep[iter];
         if(dia < 0) dia = 0;
-        if(dia > m->grainsizedist[iter].size() - 1) dia = m->grainsizedist[iter].size() - 1;
-        m->simgrainsizedist[iter][int(dia)]++;
+        if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+        simgrainsizedist[iter][int(dia)]++;
         count++;
       }
     }
@@ -749,24 +749,24 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
       dia = m->m_Grains[gadd]->equivdiameter;
       dia = (dia - (m->mindiameter[phase] / 2.0)) / m->grainsizediststep[iter];
       if(dia < 0) dia = 0;
-      if(dia > m->grainsizedist[iter].size() - 1) dia = m->grainsizedist[iter].size() - 1;
-      m->simgrainsizedist[iter][int(dia)]++;
+      if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+      simgrainsizedist[iter][int(dia)]++;
       count++;
     }
-    for (size_t i = 0; i < m->grainsizedist[iter].size(); i++)
+    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
     {
-      m->simgrainsizedist[iter][i] = m->simgrainsizedist[iter][i] / float(count);
-      if(count == 0) m->simgrainsizedist[iter][i] = 0.0;
+      simgrainsizedist[iter][i] = simgrainsizedist[iter][i] / float(count);
+      if(count == 0) simgrainsizedist[iter][i] = 0.0;
     }
   }
-  compare_2Ddistributions(m->simgrainsizedist, m->grainsizedist, bhattdist);
+  compare_2Ddistributions(simgrainsizedist, grainsizedist, bhattdist);
   sizedisterror = bhattdist;
   return sizedisterror;
 }
 
 float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
 {
-  float fillingerror = m->fillingerror * float(packingtotalpoints);
+  float fillingerror = fillingerror * float(packingtotalpoints);
   int col, row, plane;
   if(gadd > 0)
   {

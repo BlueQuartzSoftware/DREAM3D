@@ -66,6 +66,8 @@ class PlacePrecipitates : public Observable
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
+    int numprimarygrains;
+
     virtual void execute();
 
     void insert_precipitate(size_t grainNum);
