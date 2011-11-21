@@ -39,6 +39,8 @@
 
 
 #include <string>
+#include <numeric>
+#include <limits>
 
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

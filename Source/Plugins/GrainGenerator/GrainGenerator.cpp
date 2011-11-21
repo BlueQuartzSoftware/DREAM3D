@@ -55,6 +55,7 @@
 #include "GrainGenerator/Algorithms/PlacePrecipitates.h"
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
 #include "GrainGenerator/Algorithms/AdjustVolume.h"
+#include "GrainGenerator/Algorithms/WriteGrainData.h"
 
 
 
@@ -225,10 +226,15 @@ void GrainGenerator::execute()
 
   MAKE_OUTPUT_FILE_PATH ( GrainDataFile , DREAM3D::SyntheticBuilder::GrainDataFile)
 
-  updateProgressAndMessage(("Writing Grain Data"), 80);
-  m->write_graindata(GrainDataFile);
-  CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Grain Data File", err)
-  CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
+    updateProgressAndMessage(("Writing Grain Data"), 90);
+	WriteGrainData::Pointer write_graindata = WriteGrainData::New();
+	write_graindata->setGrainDataFile(GrainDataFile);
+    write_graindata->addObserver(static_cast<Observer*>(this));
+    write_graindata->setGrainGenFunc(m.get());
+    write_graindata->execute();
+    err = write_graindata->getErrorCondition();
+    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Writing Grain Data", err)
+    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", write_graindata)
 
   /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way

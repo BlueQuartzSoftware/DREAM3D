@@ -179,9 +179,6 @@ class GrainGeneratorFunc : public Observable
     float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
 
-    void write_graindata(const std::string & filename);
-
-
 
     std::vector<OrientationMath*> m_OrientatioOps;
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
