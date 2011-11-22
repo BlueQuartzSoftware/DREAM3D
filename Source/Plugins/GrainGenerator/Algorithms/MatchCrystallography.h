@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
 
 /**
  * @class MatchCrystallography MatchCrystallography.h GrainGenerator/Algorithms/MatchCrystallography.h
@@ -80,12 +81,17 @@ class MatchCrystallography : public Observable
     void matchCrystallography();
     void measure_misorientations();
 
-  protected:
+    std::vector<OrientationMath*> m_OrientatioOps;
+
+protected:
     MatchCrystallography();
     GrainGeneratorFunc* m;
 
   private:
 
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
 
     MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
     void operator=(const MatchCrystallography&); // Operator '=' Not Implemented

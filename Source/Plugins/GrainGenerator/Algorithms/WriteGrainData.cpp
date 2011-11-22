@@ -57,7 +57,7 @@ using namespace std;
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "GrainGenerator/Algorithms/WriteGrainData.h"
-
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 const static float m_pi = M_PI;
 
@@ -85,7 +85,7 @@ void WriteGrainData::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  write_graindata(m_GrainDataFile);
+  write_graindata(getGrainDataFile());
 
   // If there is an error set this to something negative and also set a message
   m_ErrorMessage = "PackGrainsGen2 Completed";

@@ -48,7 +48,6 @@
 
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 #include "GrainGenerator/StructureReaders/VTKStructureReader.h"
-#include "GrainGenerator/StructureReaders/DXStructureReader.h"
 #include "GrainGenerator/Algorithms/LoadStatsData.h"
 #include "GrainGenerator/Algorithms/FindNeighbors.h"
 #include "GrainGenerator/Algorithms/MatchCrystallography.h"
