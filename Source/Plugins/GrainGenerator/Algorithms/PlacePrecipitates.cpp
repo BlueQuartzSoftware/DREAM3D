@@ -49,6 +49,7 @@
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
 #include "GrainGenerator/Algorithms/PackGrainsGen2.h"
+#include "GrainGenerator/Algorithms/FindNeighbors.h"
 
 
 
@@ -60,6 +61,8 @@
 PlacePrecipitates::PlacePrecipitates() :
     m_ErrorCondition(0)
 {
+  Seed = MXA::getMilliSeconds();
+
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
   m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
@@ -81,8 +84,13 @@ PlacePrecipitates::~PlacePrecipitates()
 
 void PlacePrecipitates::execute()
 {
-
+  int err = 0;
   DREAM3D_RANDOMNG_NEW()
+
+	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+    find_neighbors->setGrainGenFunc(m);
+    find_neighbors->execute();
+    err = find_neighbors->getErrorCondition();
 
     place_precipitates();
     fillin_precipitates();
@@ -370,9 +378,12 @@ void  PlacePrecipitates::place_precipitates()
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setGrainGenFunc(m);
+  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
+  int err = packGrains->readReconStatsData(h5reader);
+  err = packGrains->readAxisOrientationData(h5reader);
   while(m->totalprecipvol < m->totalvol*totalprecipitatefractions)
   {
-    m->GGseed++;
+    Seed++;
     random = rg.genrand_res53();
     for (size_t j = 0; j < m->precipitatephases.size();++j)
     {
