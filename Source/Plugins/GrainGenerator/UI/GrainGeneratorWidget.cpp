@@ -60,6 +60,8 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "GrainGenerator/GrainGenerator.h"
 #include "GrainGeneratorPlugin.h"
 

@@ -50,17 +50,6 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
-#include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3DLib/ShapeOps/CylinderOps.h"
-#include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-
-#include "GrainGenerator/Algorithms/PackGrainsGen2.h"
-
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
@@ -87,25 +76,6 @@ const static float CosOfHalf = cosf(0.5f);
 // -----------------------------------------------------------------------------
 GrainGeneratorFunc::GrainGeneratorFunc()
 {
-  m_HexOps = HexagonalOps::New();
-  m_OrientatioOps.push_back(m_HexOps.get());
-  m_CubicOps = CubicOps::New();
-  m_OrientatioOps.push_back(m_CubicOps.get());
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientatioOps.push_back(m_OrthoOps.get());
-
-  m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
-  m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
-  m_CylinderOps = DREAM3D::CylinderOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
-  m_UnknownShapeOps = DREAM3D::ShapeOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
-
-//  voxels.reset(NULL);
   GGseed = MXA::getMilliSeconds();
 
 

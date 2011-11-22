@@ -57,6 +57,15 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+
+#include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3DLib/ShapeOps/CylinderOps.h"
+#include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
+#include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
+
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
@@ -70,7 +79,23 @@ using namespace std;
 PackGrainsGen2::PackGrainsGen2() :
     m_ErrorCondition(0)
 {
+  m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
+  m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
+  m_CylinderOps = DREAM3D::CylinderOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
+  m_UnknownShapeOps = DREAM3D::ShapeOps::New();
+  m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
 
+  m_HexOps = HexagonalOps::New();
+  m_OrientatioOps.push_back(m_HexOps.get());
+  m_CubicOps = CubicOps::New();
+  m_OrientatioOps.push_back(m_CubicOps.get());
+  m_OrthoOps = OrthoRhombicOps::New();
+  m_OrientatioOps.push_back(m_OrthoOps.get());
 }
 
 // -----------------------------------------------------------------------------
@@ -82,20 +107,20 @@ PackGrainsGen2::~PackGrainsGen2()
 
 void PackGrainsGen2::initialize_packinggrid()
 {
-  m->packingresx = m->resx * 2.0;
-  m->packingresy = m->resy * 2.0;
-  m->packingresz = m->resz * 2.0;
-  m->packingxpoints = int(m->sizex / m->packingresx);
-  m->packingypoints = int(m->sizey / m->packingresy);
-  m->packingzpoints = int(m->sizez / m->packingresz);
-  m->packingtotalpoints = m->packingxpoints * m->packingypoints * m->packingzpoints;
-  m->grainowners.resize(m->packingxpoints);
-  for (int i = 0; i < m->packingxpoints; i++)
+  packingresx = m->resx * 2.0;
+  packingresy = m->resy * 2.0;
+  packingresz = m->resz * 2.0;
+  packingxpoints = int(m->sizex / packingresx);
+  packingypoints = int(m->sizey / packingresy);
+  packingzpoints = int(m->sizez / packingresz);
+  packingtotalpoints = packingxpoints * packingypoints * packingzpoints;
+  grainowners.resize(packingxpoints);
+  for (int i = 0; i < packingxpoints; i++)
   {
-    m->grainowners[i].resize(m->packingypoints);
-    for (int j = 0; j < m->packingypoints; j++)
+    grainowners[i].resize(packingypoints);
+    for (int j = 0; j < packingypoints; j++)
     {
-      m->grainowners[i][j].resize(m->packingzpoints, 0);
+      grainowners[i][j].resize(packingzpoints, 0);
     }
   }
 }
@@ -158,7 +183,7 @@ void PackGrainsGen2::generate_grain(int gnum, int phase)
       break;
     }
   }
-  m->m_OrientatioOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
+  m_OrientatioOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float mf = m->omega3[phase][diameter][0];
   float s = m->omega3[phase][diameter][1];
   float omega3f = rg.genrand_beta(mf, s);
@@ -195,9 +220,9 @@ void PackGrainsGen2::execute()
  // float check;
   float xc, yc, zc;
   float oldxc, oldyc, oldzc;
-  m->oldfillingerror = 0;
-  m->currentneighborhooderror = 0, m->oldneighborhooderror = 0;
-  m->currentsizedisterror = 0, m->oldsizedisterror = 0;
+  oldfillingerror = 0;
+  currentneighborhooderror = 0, oldneighborhooderror = 0;
+  currentsizedisterror = 0, oldsizedisterror = 0;
   int acceptedmoves = 0;
   double totalprimaryfractions = 0.0;
   // find which phases are primary phases
@@ -219,25 +244,25 @@ void PackGrainsGen2::execute()
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
   // initialize the sim and goal size distributions for the primary phases
-  m->grainsizedist.resize(m->primaryphases.size());
-  m->simgrainsizedist.resize(m->primaryphases.size());
+  grainsizedist.resize(m->primaryphases.size());
+  simgrainsizedist.resize(m->primaryphases.size());
   m->grainsizediststep.resize(m->primaryphases.size());
   for (size_t i = 0; i < m->primaryphases.size(); i++)
   {
     phase = m->primaryphases[i];
-    m->grainsizedist[i].resize(40);
-    m->simgrainsizedist[i].resize(40);
-    m->grainsizediststep[i] = ((2 * m->maxdiameter[phase]) - (m->mindiameter[phase] / 2.0)) / m->grainsizedist[i].size();
+    grainsizedist[i].resize(40);
+    simgrainsizedist[i].resize(40);
+    m->grainsizediststep[i] = ((2 * m->maxdiameter[phase]) - (m->mindiameter[phase] / 2.0)) / grainsizedist[i].size();
     float input = 0;
     float previoustotal = 0;
-    for (size_t j = 0; j < m->grainsizedist[i].size(); j++)
+    for (size_t j = 0; j < grainsizedist[i].size(); j++)
     {
       input = (float(j + 1) * m->grainsizediststep[i]) + (m->mindiameter[phase] / 2.0);
-      if(logf(input) <= m->avgdiam[phase]) m->grainsizedist[i][j] = 0.5
+      if(logf(input) <= m->avgdiam[phase]) grainsizedist[i][j] = 0.5
           - 0.5 * (DREAM3DMath::erf((m->avgdiam[phase] - logf(float(input))) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
-      if(logf(input) > m->avgdiam[phase]) m->grainsizedist[i][j] = 0.5
+      if(logf(input) > m->avgdiam[phase]) grainsizedist[i][j] = 0.5
           + 0.5 * (DREAM3DMath::erf((logf(float(input)) - m->avgdiam[phase]) / (sqrtf(2 * m->sddiam[phase] * m->sddiam[phase])))) - previoustotal;
-      previoustotal = previoustotal + m->grainsizedist[i][j];
+      previoustotal = previoustotal + grainsizedist[i][j];
     }
   }
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
@@ -261,12 +286,12 @@ void PackGrainsGen2::execute()
       }
     }
     generate_grain(gid, phase);
-	m->currentsizedisterror = check_sizedisterror(gid, -1000);
-    change = (m->currentsizedisterror) - (m->oldsizedisterror);
-	if(change > 0 || m->currentsizedisterror > (1.0-(iter*0.001)))
+	currentsizedisterror = check_sizedisterror(gid, -1000);
+    change = (currentsizedisterror) - (oldsizedisterror);
+	if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
     {
        m->m_Grains[gid]->active = 1;
-       m->oldsizedisterror = m->currentsizedisterror;
+       oldsizedisterror = currentsizedisterror;
        currentvol = currentvol + m->m_Grains[gid]->volume;
        gid++;
        m->m_Grains.resize(gid + 1);
@@ -296,12 +321,12 @@ void PackGrainsGen2::execute()
 		  }
 		}
 		generate_grain(gid, phase);
-		m->currentsizedisterror = check_sizedisterror(gid, -1000);
-		change = (m->currentsizedisterror) - (m->oldsizedisterror);
-		if(change > 0 || m->currentsizedisterror > (1.0-(iter*0.001)))
+		currentsizedisterror = check_sizedisterror(gid, -1000);
+		change = (currentsizedisterror) - (oldsizedisterror);
+		if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
 		{
 		   m->m_Grains[gid]->active = 1;
-		   m->oldsizedisterror = m->currentsizedisterror;
+		   oldsizedisterror = currentsizedisterror;
 		   currentvol = currentvol + m->m_Grains[gid]->volume;
 		   gid++;
 		   m->m_Grains.resize(gid + 1);
@@ -311,25 +336,25 @@ void PackGrainsGen2::execute()
 	  }
   }
   // initialize the sim and goal neighbor distribution for the primary phases
-  m->neighbordist.resize(m->primaryphases.size());
-  m->simneighbordist.resize(m->primaryphases.size());
+  neighbordist.resize(m->primaryphases.size());
+  simneighbordist.resize(m->primaryphases.size());
   for (size_t i = 0; i < m->primaryphases.size(); i++)
   {
     phase = m->primaryphases[i];
-    m->neighbordist[i].resize(m->numdiameterbins[phase]);
-    m->simneighbordist[i].resize(m->numdiameterbins[phase]);
-    for (size_t j = 0; j < m->neighbordist[i].size(); j++)
+    neighbordist[i].resize(m->numdiameterbins[phase]);
+    simneighbordist[i].resize(m->numdiameterbins[phase]);
+    for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
-      m->neighbordist[i][j].resize(3);
-      m->simneighbordist[i][j].resize(3);
-      m->neighbordist[i][j][0] = m->neighborparams[phase][j][0] * powf(0.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
-      m->neighbordist[i][j][1] = m->neighborparams[phase][j][0] * powf(1.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
-      m->neighbordist[i][j][2] = m->neighborparams[phase][j][0] * powf(2.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
+      neighbordist[i][j].resize(3);
+      simneighbordist[i][j].resize(3);
+      neighbordist[i][j][0] = m->neighborparams[phase][j][0] * powf(0.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
+      neighbordist[i][j][1] = m->neighborparams[phase][j][0] * powf(1.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
+      neighbordist[i][j][2] = m->neighborparams[phase][j][0] * powf(2.5, m->neighborparams[phase][j][2]) + m->neighborparams[phase][j][1];
     }
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  m->fillingerror = 1;
+  fillingerror = 1;
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     xc = m->sizex / 2.0;
@@ -339,7 +364,7 @@ void PackGrainsGen2::execute()
     m->m_Grains[i]->centroidy = yc;
     m->m_Grains[i]->centroidz = zc;
     insert_grain(i);
-    m->fillingerror = check_fillingerror(i,-1000);
+    fillingerror = check_fillingerror(i,-1000);
     for (int iter = 0; iter < 10; iter++)
     {
       xc = rg.genrand_res53() * (m->xpoints * m->resx);
@@ -348,21 +373,21 @@ void PackGrainsGen2::execute()
 	  oldxc = m->m_Grains[i]->centroidx;
 	  oldyc = m->m_Grains[i]->centroidy;
 	  oldzc = m->m_Grains[i]->centroidz;
-	  m->oldfillingerror = m->fillingerror;
-	  m->fillingerror = check_fillingerror(-1000,i);
+	  oldfillingerror = fillingerror;
+	  fillingerror = check_fillingerror(-1000,i);
       move_grain(i, xc, yc, zc);
-      m->fillingerror = check_fillingerror(i, -1000);
-	  if(m->fillingerror > m->oldfillingerror)
+      fillingerror = check_fillingerror(i, -1000);
+	  if(fillingerror > oldfillingerror)
 	  {
-		m->fillingerror = check_fillingerror(-1000,i);
+		fillingerror = check_fillingerror(-1000,i);
 		move_grain(i, oldxc, oldyc, oldzc);
-		m->fillingerror = check_fillingerror(i,-1000);
+		fillingerror = check_fillingerror(i,-1000);
 	  }
     }
   }
 
   // determine initial filling and neighbor distribution errors
-  m->oldneighborhooderror = check_neighborhooderror(-1000, -1000);
+  oldneighborhooderror = check_neighborhooderror(-1000, -1000);
 #if ERROR_TXT_OUT
   std::ofstream outFile;
   std::string filename = "error.txt";
@@ -378,7 +403,7 @@ void PackGrainsGen2::execute()
 #if ERROR_TXT_OUT
     if(iteration%25 == 0)
     {
-      outFile << iteration << "	" << m->fillingerror << "	" << m->oldsizedisterror << "	" << m->oldneighborhooderror << "	" << numgrains << "	" << acceptedmoves << std::endl;
+      outFile << iteration << "	" << fillingerror << "	" << oldsizedisterror << "	" << oldneighborhooderror << "	" << numgrains << "	" << acceptedmoves << std::endl;
     }
 #endif
     // JUMP - this option moves one grain to a random spot in the volume
@@ -394,22 +419,22 @@ void PackGrainsGen2::execute()
 	  oldxc = m->m_Grains[randomgrain]->centroidx;
 	  oldyc = m->m_Grains[randomgrain]->centroidy;
 	  oldzc = m->m_Grains[randomgrain]->centroidz;
-	  m->oldfillingerror = m->fillingerror;
-	  m->fillingerror = check_fillingerror(-1000,randomgrain);
+	  oldfillingerror = fillingerror;
+	  fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
-	  m->fillingerror = check_fillingerror(randomgrain,-1000);
-//      m->currentneighborhooderror = check_neighborhooderror(-1000, random);
-//      change2 = (m->currentneighborhooderror * m->currentneighborhooderror) - (m->oldneighborhooderror * m->oldneighborhooderror);
-	  if(m->fillingerror <= m->oldfillingerror)
+	  fillingerror = check_fillingerror(randomgrain,-1000);
+//      currentneighborhooderror = check_neighborhooderror(-1000, random);
+//      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
+	  if(fillingerror <= oldfillingerror)
       {
-//        m->oldneighborhooderror = m->currentneighborhooderror;
+//        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-	  else if(m->fillingerror > m->oldfillingerror)
+	  else if(fillingerror > oldfillingerror)
 	  {
-		m->fillingerror = check_fillingerror(-1000,randomgrain);
+		fillingerror = check_fillingerror(-1000,randomgrain);
 		move_grain(randomgrain, oldxc, oldyc, oldzc);
-		m->fillingerror = check_fillingerror(randomgrain,-1000);
+		fillingerror = check_fillingerror(randomgrain,-1000);
 	  }
     }
     // NUDGE - this option moves one grain to a spot close to its current centroid
@@ -422,25 +447,25 @@ void PackGrainsGen2::execute()
 	  oldxc = m->m_Grains[randomgrain]->centroidx;
 	  oldyc = m->m_Grains[randomgrain]->centroidy;
 	  oldzc = m->m_Grains[randomgrain]->centroidz;
-	  xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * m->packingresx));
-      yc = oldyc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * m->packingresy));
-      zc = oldzc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * m->packingresz));
-	  m->oldfillingerror = m->fillingerror;
-	  m->fillingerror = check_fillingerror(-1000,randomgrain);
+	  xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresx));
+      yc = oldyc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresy));
+      zc = oldzc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresz));
+	  oldfillingerror = fillingerror;
+	  fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
-	  m->fillingerror = check_fillingerror(randomgrain,-1000);
-//      m->currentneighborhooderror = check_neighborhooderror(-1000, random);
-//      change2 = (m->currentneighborhooderror * m->currentneighborhooderror) - (m->oldneighborhooderror * m->oldneighborhooderror);
-	  if(m->fillingerror <= m->oldfillingerror)
+	  fillingerror = check_fillingerror(randomgrain,-1000);
+//      currentneighborhooderror = check_neighborhooderror(-1000, random);
+//      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
+	  if(fillingerror <= oldfillingerror)
       {
-//        m->oldneighborhooderror = m->currentneighborhooderror;
+//        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-	  else if(m->fillingerror > m->oldfillingerror)
+	  else if(fillingerror > oldfillingerror)
 	  {
-		m->fillingerror = check_fillingerror(-1000,randomgrain);
+		fillingerror = check_fillingerror(-1000,randomgrain);
 		move_grain(randomgrain, oldxc, oldyc, oldzc);
-		m->fillingerror = check_fillingerror(randomgrain,-1000);
+		fillingerror = check_fillingerror(randomgrain,-1000);
 	  }
     }
   }
@@ -457,21 +482,21 @@ void PackGrainsGen2::execute()
   outFile << "data set from FFT2dx_GB" << std::endl;
   outFile << "ASCII" << std::endl;
   outFile << "DATASET STRUCTURED_POINTS" << std::endl;
-  outFile << "DIMENSIONS " << m->packingxpoints << " " << m->packingypoints << " " << m->packingzpoints << std::endl;
+  outFile << "DIMENSIONS " << packingxpoints << " " << packingypoints << " " << packingzpoints << std::endl;
   outFile << "ORIGIN 0.0 0.0 0.0" << std::endl;
-  outFile << "SPACING " << m->packingresx << " " << m->packingresy << " " << m->packingresz << std::endl;
-  outFile << "POINT_DATA " << m->packingxpoints*m->packingypoints*m->packingzpoints << std::endl;
+  outFile << "SPACING " << packingresx << " " << packingresy << " " << packingresz << std::endl;
+  outFile << "POINT_DATA " << packingxpoints*packingypoints*packingzpoints << std::endl;
   outFile << std::endl;
   outFile << std::endl;
   outFile << "SCALARS GrainID int  1" << std::endl;
   outFile << "LOOKUP_TABLE default" << std::endl;
-  for (int i = 0; i < (m->packingzpoints); i++)
+  for (int i = 0; i < (packingzpoints); i++)
   {
-    for (int j = 0; j < (m->packingypoints); j++)
+    for (int j = 0; j < (packingypoints); j++)
     {
-      for (int k = 0; k < (m->packingxpoints); k++)
+      for (int k = 0; k < (packingxpoints); k++)
       {
-        int name = m->grainowners[k][j][i];
+        int name = grainowners[k][j][i];
         if(i%20 == 0 && i > 0) outFile << std::endl;
         outFile << "     ";
         if(name < 100) outFile << " ";
@@ -500,12 +525,12 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
   float oxc = m->m_Grains[gnum]->centroidx;
   float oyc = m->m_Grains[gnum]->centroidy;
   float ozc = m->m_Grains[gnum]->centroidz;
-  occolumn = (oxc - (m->packingresx / 2)) / m->packingresx;
-  ocrow = (oyc - (m->packingresy / 2)) / m->packingresy;
-  ocplane = (ozc - (m->packingresz / 2)) / m->packingresz;
-  nccolumn = (xc - (m->packingresx / 2)) / m->packingresx;
-  ncrow = (yc - (m->packingresy / 2)) / m->packingresy;
-  ncplane = (zc - (m->packingresz / 2)) / m->packingresz;
+  occolumn = (oxc - (packingresx / 2)) / packingresx;
+  ocrow = (oyc - (packingresy / 2)) / packingresy;
+  ocplane = (ozc - (packingresz / 2)) / packingresz;
+  nccolumn = (xc - (packingresx / 2)) / packingresx;
+  ncrow = (yc - (packingresy / 2)) / packingresy;
+  ncplane = (zc - (packingresz / 2)) / packingresz;
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
@@ -578,15 +603,15 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
   int index;
   std::vector<int> count;
   int phase;
-  for (size_t iter = 0; iter < m->neighbordist.size(); ++iter)
+  for (size_t iter = 0; iter < neighbordist.size(); ++iter)
   {
     phase = m->primaryphases[iter];
-    count.resize(m->simneighbordist[iter].size(), 0);
-    for (size_t i = 0; i < m->simneighbordist[iter].size(); i++)
+    count.resize(simneighbordist[iter].size(), 0);
+    for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
-      m->simneighbordist[iter][i][0] = 0;
-      m->simneighbordist[iter][i][1] = 0;
-      m->simneighbordist[iter][i][2] = 0;
+      simneighbordist[iter][i][0] = 0;
+      simneighbordist[iter][i][1] = 0;
+      simneighbordist[iter][i][2] = 0;
     }
     if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
     {
@@ -611,7 +636,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
           nnum = m->m_Grains[index]->neighbordistfunc[j];
           if(nnum > 0)
           {
-            m->simneighbordist[iter][dia][j] = m->simneighbordist[iter][dia][j] + nnum;
+            simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
           }
         }
         count[dia]++;
@@ -628,17 +653,17 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
         nnum = m->m_Grains[index]->neighbordistfunc[j];
         if(nnum > 0)
         {
-          m->simneighbordist[iter][dia][j] = m->simneighbordist[iter][dia][j] + nnum;
+          simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
         }
       }
       count[dia]++;
     }
-    for (size_t i = 0; i < m->simneighbordist[iter].size(); i++)
+    for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
       for (size_t j = 0; j < 3; j++)
       {
-        m->simneighbordist[iter][i][j] = m->simneighbordist[iter][i][j] / double(count[i]);
-        if(count[i] == 0) m->simneighbordist[iter][i][j] = 0.0;
+        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
+        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
     if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
@@ -650,7 +675,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
       determine_neighbors(gremove, 1);
     }
   }
-  compare_3Ddistributions(m->simneighbordist, m->neighbordist, bhattdist);
+  compare_3Ddistributions(simneighbordist, neighbordist, bhattdist);
   neighborerror = bhattdist;
   return neighborerror;
 }
@@ -698,13 +723,13 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
   int index;
   int count = 0;
   int phase;
-  for (size_t iter = 0; iter < m->grainsizedist.size(); ++iter)
+  for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
   {
     phase = m->primaryphases[iter];
     count = 0;
-    for (size_t i = 0; i < m->grainsizedist[iter].size(); i++)
+    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
     {
-      m->simgrainsizedist[iter][i] = 0.0;
+      simgrainsizedist[iter][i] = 0.0;
     }
     for (size_t b = 1; b < m->m_Grains.size(); b++)
     {
@@ -714,8 +739,8 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
         dia = m->m_Grains[index]->equivdiameter;
         dia = (dia - (m->mindiameter[phase] / 2.0)) / m->grainsizediststep[iter];
         if(dia < 0) dia = 0;
-        if(dia > m->grainsizedist[iter].size() - 1) dia = m->grainsizedist[iter].size() - 1;
-        m->simgrainsizedist[iter][int(dia)]++;
+        if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+        simgrainsizedist[iter][int(dia)]++;
         count++;
       }
     }
@@ -724,24 +749,24 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
       dia = m->m_Grains[gadd]->equivdiameter;
       dia = (dia - (m->mindiameter[phase] / 2.0)) / m->grainsizediststep[iter];
       if(dia < 0) dia = 0;
-      if(dia > m->grainsizedist[iter].size() - 1) dia = m->grainsizedist[iter].size() - 1;
-      m->simgrainsizedist[iter][int(dia)]++;
+      if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+      simgrainsizedist[iter][int(dia)]++;
       count++;
     }
-    for (size_t i = 0; i < m->grainsizedist[iter].size(); i++)
+    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
     {
-      m->simgrainsizedist[iter][i] = m->simgrainsizedist[iter][i] / float(count);
-      if(count == 0) m->simgrainsizedist[iter][i] = 0.0;
+      simgrainsizedist[iter][i] = simgrainsizedist[iter][i] / float(count);
+      if(count == 0) simgrainsizedist[iter][i] = 0.0;
     }
   }
-  compare_2Ddistributions(m->simgrainsizedist, m->grainsizedist, bhattdist);
+  compare_2Ddistributions(simgrainsizedist, grainsizedist, bhattdist);
   sizedisterror = bhattdist;
   return sizedisterror;
 }
 
 float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
 {
-  float fillingerror = m->fillingerror * float(m->packingtotalpoints);
+  float fillingerror = fillingerror * float(packingtotalpoints);
   int col, row, plane;
   if(gadd > 0)
   {
@@ -758,23 +783,23 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
       plane = planelist[i];
       if(m->periodic_boundaries == true)
       {
-        if(col < 0) col = col + m->packingxpoints;
-        if(col > m->packingxpoints - 1) col = col - m->packingxpoints;
-        if(row < 0) row = row + m->packingypoints;
-        if(row > m->packingypoints - 1) row = row - m->packingypoints;
-        if(plane < 0) plane = plane + m->packingzpoints;
-        if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
-        fillingerror = fillingerror + (2 * m->grainowners[col][row][plane] - 1);
-		m->grainowners[col][row][plane]++;
-		packquality = packquality + ((m->grainowners[col][row][plane]-1)*(m->grainowners[col][row][plane]-1));
+        if(col < 0) col = col + packingxpoints;
+        if(col > packingxpoints - 1) col = col - packingxpoints;
+        if(row < 0) row = row + packingypoints;
+        if(row > packingypoints - 1) row = row - packingypoints;
+        if(plane < 0) plane = plane + packingzpoints;
+        if(plane > packingzpoints - 1) plane = plane - packingzpoints;
+        fillingerror = fillingerror + (2 * grainowners[col][row][plane] - 1);
+		grainowners[col][row][plane]++;
+		packquality = packquality + ((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1));
       }
       if(m->periodic_boundaries == false)
       {
-        if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0 && row <= m->packingypoints - 1 && plane >= 0 && plane <= m->packingzpoints - 1)
+        if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
         {
-          fillingerror = fillingerror + (2 * m->grainowners[col][row][plane] - 1);
-		  m->grainowners[col][row][plane]++;
-		  packquality = packquality + ((m->grainowners[col][row][plane]-1)*(m->grainowners[col][row][plane]-1));
+          fillingerror = fillingerror + (2 * grainowners[col][row][plane] - 1);
+		  grainowners[col][row][plane]++;
+		  packquality = packquality + ((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1));
         }
       }
     }
@@ -793,26 +818,26 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
       plane = planelist[i];
       if(m->periodic_boundaries == true)
       {
-        if(col < 0) col = col + m->packingxpoints;
-        if(col > m->packingxpoints - 1) col = col - m->packingxpoints;
-        if(row < 0) row = row + m->packingypoints;
-        if(row > m->packingypoints - 1) row = row - m->packingypoints;
-        if(plane < 0) plane = plane + m->packingzpoints;
-        if(plane > m->packingzpoints - 1) plane = plane - m->packingzpoints;
-        fillingerror = fillingerror + (-2 * m->grainowners[col][row][plane] + 3);
-		m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
+        if(col < 0) col = col + packingxpoints;
+        if(col > packingxpoints - 1) col = col - packingxpoints;
+        if(row < 0) row = row + packingypoints;
+        if(row > packingypoints - 1) row = row - packingypoints;
+        if(plane < 0) plane = plane + packingzpoints;
+        if(plane > packingzpoints - 1) plane = plane - packingzpoints;
+        fillingerror = fillingerror + (-2 * grainowners[col][row][plane] + 3);
+		grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
       }
       if(m->periodic_boundaries == false)
       {
-        if(col >= 0 && col <= m->packingxpoints - 1 && row >= 0 && row <= m->packingypoints - 1 && plane >= 0 && plane <= m->packingzpoints - 1)
+        if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
         {
-          fillingerror = fillingerror + (-2 * m->grainowners[col][row][plane] + 3);
-		  m->grainowners[col][row][plane] = m->grainowners[col][row][plane] - 1;
+          fillingerror = fillingerror + (-2 * grainowners[col][row][plane] + 3);
+		  grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
         }
       }
     }
   }
-  fillingerror = fillingerror / float(m->packingtotalpoints);
+  fillingerror = fillingerror / float(packingtotalpoints);
   return fillingerror;
 }
 
@@ -849,7 +874,7 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
 
   // init any values for each of the Shape Ops
-  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m->m_ShapeOps.begin(); ops != m->m_ShapeOps.end(); ++ops)
+  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
     (*ops).second->init();
   }
@@ -860,7 +885,7 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
   shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
 
-  radcur1 = m->m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+  radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
@@ -880,21 +905,21 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   xc = m->m_Grains[gnum]->centroidx;
   yc = m->m_Grains[gnum]->centroidy;
   zc = m->m_Grains[gnum]->centroidz;
-  centercolumn = (xc - (m->packingresx / 2)) / m->packingresx;
-  centerrow = (yc - (m->packingresy / 2)) / m->packingresy;
-  centerplane = (zc - (m->packingresz / 2)) / m->packingresz;
-  xmin = int(centercolumn - ((radcur1 / m->packingresx) + 1));
-  xmax = int(centercolumn + ((radcur1 / m->packingresx) + 1));
-  ymin = int(centerrow - ((radcur1 / m->packingresy) + 1));
-  ymax = int(centerrow + ((radcur1 / m->packingresy) + 1));
-  zmin = int(centerplane - ((radcur1 / m->packingresz) + 1));
-  zmax = int(centerplane + ((radcur1 / m->packingresz) + 1));
-  if(xmin < -m->packingxpoints) xmin = -m->packingxpoints;
-  if(xmax > 2 * m->packingxpoints - 1) xmax = (2 * m->packingxpoints - 1);
-  if(ymin < -m->packingypoints) ymin = -m->packingypoints;
-  if(ymax > 2 * m->packingypoints - 1) ymax = (2 * m->packingypoints - 1);
-  if(zmin < -m->packingzpoints) zmin = -m->packingzpoints;
-  if(zmax > 2 * m->packingzpoints - 1) zmax = (2 * m->packingzpoints - 1);
+  centercolumn = (xc - (packingresx / 2)) / packingresx;
+  centerrow = (yc - (packingresy / 2)) / packingresy;
+  centerplane = (zc - (packingresz / 2)) / packingresz;
+  xmin = int(centercolumn - ((radcur1 / packingresx) + 1));
+  xmax = int(centercolumn + ((radcur1 / packingresx) + 1));
+  ymin = int(centerrow - ((radcur1 / packingresy) + 1));
+  ymax = int(centerrow + ((radcur1 / packingresy) + 1));
+  zmin = int(centerplane - ((radcur1 / packingresz) + 1));
+  zmax = int(centerplane + ((radcur1 / packingresz) + 1));
+  if(xmin < -packingxpoints) xmin = -packingxpoints;
+  if(xmax > 2 * packingxpoints - 1) xmax = (2 * packingxpoints - 1);
+  if(ymin < -packingypoints) ymin = -packingypoints;
+  if(ymax > 2 * packingypoints - 1) ymax = (2 * packingypoints - 1);
+  if(zmin < -packingzpoints) zmin = -packingzpoints;
+  if(zmax > 2 * packingzpoints - 1) zmax = (2 * packingzpoints - 1);
   for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
   {
     for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
@@ -904,9 +929,9 @@ void PackGrainsGen2::insert_grain(size_t gnum)
         column = iter1;
         row = iter2;
         plane = iter3;
-        x = float(column) * m->packingresx;
-        y = float(row) * m->packingresy;
-        z = float(plane) * m->packingresz;
+        x = float(column) * packingresx;
+        y = float(row) * packingresy;
+        z = float(plane) * packingresz;
         inside = -1;
 		x = x - xc;
 		y = y - yc;
@@ -917,7 +942,7 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 		float axis1comp = xp / radcur1;
 		float axis2comp = yp / radcur2;
 		float axis3comp = zp / radcur3;
-		inside = m->m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+		inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 		if(inside >= 0)
 		{
 			m->m_Grains[gnum]->columnlist->push_back(column);
@@ -968,7 +993,7 @@ void PackGrainsGen2::assign_voxels()
     DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[i]->phase];
 
     // init any values for each of the Shape Ops
-    for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m->m_ShapeOps.begin(); ops != m->m_ShapeOps.end(); ++ops )
+    for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
       (*ops).second->init();
     }
@@ -979,7 +1004,7 @@ void PackGrainsGen2::assign_voxels()
     shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
     shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
 
-    radcur1 = m->m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+    radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
@@ -1062,7 +1087,7 @@ void PackGrainsGen2::assign_voxels()
             float axis1comp = xp / radcur1;
             float axis2comp = yp / radcur2;
             float axis3comp = zp / radcur3;
-            inside = m->m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+            inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
             if (inside >= 0)
             {
               int currentpoint = index;
@@ -1136,7 +1161,7 @@ void PackGrainsGen2::assign_gaps()
 		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[i]->phase];
 
 		// init any values for each of the Shape Ops
-		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m->m_ShapeOps.begin(); ops != m->m_ShapeOps.end(); ++ops )
+		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
 		{
 		  (*ops).second->init();
 		}
@@ -1147,7 +1172,7 @@ void PackGrainsGen2::assign_gaps()
 		shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
 		shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
 
-		radcur1 = m->m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+		radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
 		float radcur2 = (radcur1 * bovera);
 		float radcur3 = (radcur1 * covera);
@@ -1235,7 +1260,7 @@ void PackGrainsGen2::assign_gaps()
 					float axis1comp = xp / radcur1;
 					float axis2comp = yp / radcur2;
 					float axis3comp = zp / radcur3;
-					inside = m->m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+					inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 					if (inside >= 0 && inside > m->ellipfuncs[index])
 					{
 						m->grain_indicies[index] = i;

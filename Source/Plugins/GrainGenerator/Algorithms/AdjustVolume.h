@@ -69,17 +69,14 @@ class AdjustVolume : public Observable
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
-
     virtual void execute();
     void adjust_boundaries();
-
 
   protected:
     AdjustVolume();
     GrainGeneratorFunc* m;
 
   private:
-
 
     AdjustVolume(const AdjustVolume&); // Copy Constructor Not Implemented
     void operator=(const AdjustVolume&); // Operator '=' Not Implemented

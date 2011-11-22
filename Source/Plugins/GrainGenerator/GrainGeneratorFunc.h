@@ -57,8 +57,6 @@
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/Grain.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/ShapeOps/ShapeOps.h"
 
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
@@ -89,20 +87,11 @@ class GrainGeneratorFunc : public Observable
     float resx;
     float resy;
     float resz;
-    float packingresx;
-    float packingresy;
-    float packingresz;
 
     int xpoints;
     int ypoints;
     int zpoints;
     int totalpoints;
-    int packingxpoints;
-    int packingypoints;
-    int packingzpoints;
-    int packingtotalpoints;
-
-    float misorientationtolerance;
 
     std::vector<Ebsd::CrystalStructure> crystruct;
     std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
@@ -118,13 +107,9 @@ class GrainGeneratorFunc : public Observable
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
 
-
-    std::vector<std::vector<std::vector<int> > > grainowners;
-
     std::vector<Grain::Pointer> m_Grains;
     std::vector<int> gsizes;
     std::vector<int> newnames;
-    std::vector<float> sizetest;
 
     // These use the typedefs because the length of each array is determined by
     // the cystal structure of the phase. The lengths for each type of crystal
@@ -140,28 +125,14 @@ class GrainGeneratorFunc : public Observable
     std::vector<int> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
-    std::vector<int> takencheck;
     std::vector<std::vector<std::vector<float> > > bovera;
     std::vector<std::vector<std::vector<float> > > covera;
     std::vector<std::vector<std::vector<float> > > coverb;
     std::vector<std::vector<std::vector<float> > > omega3;
     std::vector<std::vector<std::vector<float> > > neighborparams;
 
-    std::vector<std::vector<float> > grainsizedist;
-    std::vector<std::vector<float> > simgrainsizedist;
-    std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > simneighbordist;
-    std::vector<std::vector<std::vector<int> > > boundaries;
-
-//    float machineepsilon;
-//    float maxrealnumber;
-//    float minrealnumber;
-    int numorients;
-    int numeulers;
-    int resdiff;
     std::vector<float> unbiasedvol;
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
-    int numprimarygrains;
     std::vector<float> phasefraction;
     std::vector<float> binstepsize;
     std::vector<float> grainsizediststep;
@@ -170,35 +141,15 @@ class GrainGeneratorFunc : public Observable
     std::vector<float> avgdiam;
     std::vector<float> sddiam;
     std::vector<int> numdiameterbins;
-    int worstgrain;
 
     float totalvol;
     float totalprecipvol;
     int numneighbins;
-    float volcheck;
-    int ownercheck;
-    float fillingerror, oldfillingerror;
-    float currentneighborhooderror, oldneighborhooderror;
-    float currentsizedisterror, oldsizedisterror;
     float neighborhooderrorweight;
-
-
-    std::vector<OrientationMath*> m_OrientatioOps;
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
 
   protected:
     GrainGeneratorFunc();
   private:
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-
-    DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
-    DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
-    DREAM3D::ShapeOps::Pointer m_CylinderOps;
-    DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
-    DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
 
     GrainGeneratorFunc(const GrainGeneratorFunc&);
     void operator =(const GrainGeneratorFunc&);
