@@ -44,7 +44,7 @@ class  VtkGrainIdReader : public GrainIdReader
 {
   public:
     DREAM3D_SHARED_POINTERS(VtkGrainIdReader);
-    DREAM3D_TYPE_MACRO(VTKRectilinearGridFileReader)
+    DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, GrainIdReader)
     DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader);
     DREAM3D_STATIC_NEW_SUPERCLASS(GrainIdReader, VtkGrainIdReader);
 

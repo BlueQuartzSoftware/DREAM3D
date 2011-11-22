@@ -112,7 +112,25 @@ int TestPhReader()
     DREAM3D_REQUIRE_EQUAL( (i+UnitTest::PhIOTest::Offset), data->GetValue(i) );
   }
 
-  return EXIT_SUCCESS;
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TestCasting()
+{
+  PhReader::Pointer ptr = PhReader::New();
+
+  DREAM3D::FileReader* super = static_cast<DREAM3D::FileReader*>(ptr.get());
+  DREAM3D::FileWriter::Pointer other = DREAM3D::FileWriter::New();
+
+  PhReader* derived = PhReader::polymorphic_downcast<PhReader*, DREAM3D::FileReader>(super);
+  DREAM3D_ASSERT(derived != NULL);
+  derived = dynamic_cast<PhReader*>(other.get());
+  DREAM3D_ASSERT(derived == NULL);
+
+  return 1;
 }
 
 
@@ -124,6 +142,7 @@ int main(int argc, char **argv) {
 
   DREAM3D_REGISTER_TEST( TestPhWriter() );
   DREAM3D_REGISTER_TEST( TestPhReader() );
+  DREAM3D_REGISTER_TEST( TestCasting() );
 
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
   PRINT_TEST_SUMMARY();

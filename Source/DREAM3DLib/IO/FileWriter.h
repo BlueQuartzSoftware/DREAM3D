@@ -24,7 +24,7 @@ namespace DREAM3D
     public:
     DREAM3D_SHARED_POINTERS(FileWriter)
     DREAM3D_STATIC_NEW_MACRO(FileWriter)
-    DREAM3D_TYPE_MACRO(FileWriter)
+    DREAM3D_TYPE_MACRO_SUPER(FileWriter, DREAM3DDataFile)
       virtual ~FileWriter();
 
       virtual int writeHeader();

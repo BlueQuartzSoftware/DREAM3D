@@ -126,6 +126,9 @@ class GrainGeneratorFunc : public Observable
     std::vector<int> newnames;
     std::vector<float> sizetest;
 
+    // These use the typedefs because the length of each array is determined by
+    // the cystal structure of the phase. The lengths for each type of crystal
+    // structure are known and constant
     std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> actualmdf;

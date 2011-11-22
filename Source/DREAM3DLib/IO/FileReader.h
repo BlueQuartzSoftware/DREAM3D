@@ -56,6 +56,7 @@ namespace DREAM3D
     public:
       FileReader();
       virtual ~FileReader();
+      DREAM3D_TYPE_MACRO_SUPER(FileReader, DREAM3DDataFile);
 
       virtual int readHeader(){return -1;}
 
