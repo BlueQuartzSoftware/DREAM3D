@@ -58,7 +58,7 @@ class DREAM3DLib_EXPORT PhReader : public DREAM3D::FileReader
   public:
     DREAM3D_SHARED_POINTERS(PhReader);
     DREAM3D_STATIC_NEW_MACRO(PhReader);
-    DREAM3D_TYPE_MACRO(PhReader);
+    DREAM3D_TYPE_MACRO_SUPER(PhReader, DREAM3D::FileReader);
     //DREAM3D_STATIC_NEW_SUPERCLASS(GrainIdReader, PhReader)
 
 

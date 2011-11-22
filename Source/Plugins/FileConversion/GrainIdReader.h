@@ -53,7 +53,7 @@ class GrainIdReader : public DREAM3DDataFile
 
     DREAM3D_SHARED_POINTERS(GrainIdReader)
     DREAM3D_STATIC_NEW_MACRO(GrainIdReader);
-    DREAM3D_TYPE_MACRO(GrainIdReader);
+    DREAM3D_TYPE_MACRO_SUPER(GrainIdReader, DREAM3DDataFile);
 
     virtual ~GrainIdReader() {};
 
