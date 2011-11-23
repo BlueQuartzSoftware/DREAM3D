@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
@@ -70,12 +70,19 @@ class PackGrainsGen2 : public Observable
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
+    DREAM3D_INSTANCE_PROPERTY(float, neighborhooderrorweight);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
-    GrainGeneratorFunc*getGrainGenFunc() { return m; }
+    void setGrainGenFunc(DataContainer* gg) { m = gg; }
+    DataContainer*getGrainGenFunc() { return m; }
 
     unsigned long long int Seed;
+
+	float sizex;
+    float sizey;
+    float sizez;
+    float totalvol;
 
     float packingresx;
     float packingresy;
@@ -108,7 +115,13 @@ class PackGrainsGen2 : public Observable
     std::vector<float> sddiam;
     std::vector<int> numdiameterbins;
 
-    float fillingerror, oldfillingerror;
+    std::vector<int> newnames;
+    std::vector<int> gsizes;
+
+	std::vector<int> primaryphases;
+    std::vector<float> primaryphasefractions;
+
+	float fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
 
@@ -147,7 +160,7 @@ class PackGrainsGen2 : public Observable
 
   protected:
     PackGrainsGen2();
-    GrainGeneratorFunc* m;
+    DataContainer* m;
 
   private:
 

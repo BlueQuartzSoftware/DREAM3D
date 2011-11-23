@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 // C Includes
 
@@ -50,36 +50,12 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
-
-//const static float m_onepointthree = 1.33333333333f;
-const static float m_pi = M_PI;
-//const static float m_one_over_pi = 1.0/m_pi;
-const static float SinOfHalf = sinf(0.5f);
-const static float CosOfHalf = cosf(0.5f);
-//const static float SinOfZero = sinf(0.0f);
-//const static float CosOfZero = cosf(0.0f);
-
-
-#define DIMS "DIMENSIONS"
-#define LOOKUP "LOOKUP_TABLE"
-
-#if 0
-// -i C:\Users\GroebeMA\Desktop\NewFolder --outputDir C:\Users\GroebeMA\Desktop\NewFolder -f Slice_ --angMaxSlice 400 -s 1 -e 30 -z 0.25 -t -g 10 -c 0.1 -o 5.0 -x 2
-#endif
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGeneratorFunc::GrainGeneratorFunc()
+DataContainer::DataContainer()
 {
-// Just stuff to quiet the compiler
-  float a = SinOfHalf;
-  a = CosOfHalf;
-
   grain_indicies = NULL;
   ellipfuncs = NULL;
   phases = NULL;
@@ -87,7 +63,6 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   euler2s = NULL;
   euler3s = NULL;
   surfacevoxels = NULL;
-  totalsurfacearea = NULL;
 
 
   INIT_AIMARRAY(m_GrainIndicies,int);
@@ -97,14 +72,13 @@ GrainGeneratorFunc::GrainGeneratorFunc()
   INIT_AIMARRAY(m_Euler2s,float);
   INIT_AIMARRAY(m_Euler3s,float);
   INIT_AIMARRAY(m_SurfaceVoxels,char);
-  INIT_AIMARRAY(m_TotalSurfaceArea,float);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGeneratorFunc::~GrainGeneratorFunc()
+DataContainer::~DataContainer()
 {
 
 }

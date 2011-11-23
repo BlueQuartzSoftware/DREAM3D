@@ -65,35 +65,22 @@
  * @date
  * @version 1.0
  */
-class GrainGeneratorFunc : public Observable
+class DataContainer : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainGeneratorFunc)
-    DREAM3D_STATIC_NEW_MACRO(GrainGeneratorFunc)
+    DREAM3D_SHARED_POINTERS(DataContainer)
+    DREAM3D_STATIC_NEW_MACRO(DataContainer)
 
-    virtual ~GrainGeneratorFunc();
+    virtual ~DataContainer();
 
-
-
-    bool periodic_boundaries;
-
-    float sizex;
-    float sizey;
-    float sizez;
-
+    // Volume Dimensional Information
     float resx;
     float resy;
     float resz;
-
     int xpoints;
     int ypoints;
     int zpoints;
     int totalpoints;
-
-    std::vector<Ebsd::CrystalStructure> crystruct;
-    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
-    std::vector<float> pptFractions;
-    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
 
     // Voxel Attribute Arrays
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
@@ -104,31 +91,22 @@ class GrainGeneratorFunc : public Observable
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
 
+    // Grain Pointer Array
     std::vector<Grain::Pointer> m_Grains;
-    std::vector<int> gsizes;
-    std::vector<int> newnames;
 
-    std::vector<int> primaryphases;
-    std::vector<float> primaryphasefractions;
-    std::vector<int> precipitatephases;
-    std::vector<float> precipitatephasefractions;
-
-    std::vector<float> unbiasedvol;
-    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
+    // Phase Information (crystal structures, phase types, and shape types)
+    std::vector<Ebsd::CrystalStructure> crystruct;
+    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
+    std::vector<float> pptFractions;
+    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
     std::vector<float> phasefraction;
 
-
-    float totalvol;
-    float totalprecipvol;
-    int numneighbins;
-    float neighborhooderrorweight;
-
-  protected:
-    GrainGeneratorFunc();
+protected:
+    DataContainer();
   private:
 
-    GrainGeneratorFunc(const GrainGeneratorFunc&);
-    void operator =(const GrainGeneratorFunc&);
+    DataContainer(const DataContainer&);
+    void operator =(const DataContainer&);
 };
 
 #endif

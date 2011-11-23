@@ -37,7 +37,7 @@
 
 #include <fstream>
 
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 #define kBufferSize 1024
 
@@ -58,7 +58,7 @@ VTKStructureReader::~VTKStructureReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
+int VTKStructureReader::readStructure(DataContainer* m)
 {
   int err = 0;
 
@@ -66,10 +66,6 @@ int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
   getDimensions(m->xpoints, m->ypoints, m->zpoints);
   getResolution(m->resx, m->resy, m->resz);
   m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
-  m->totalvol = float(m->totalpoints) * m->resx * m->resy * m->resz;
-  m->sizex = m->xpoints * m->resx;
-  m->sizey = m->ypoints * m->resy;
-  m->sizez = m->zpoints * m->resz;
   m->grain_indicies = m->m_GrainIndicies->WritePointer(0, m->totalpoints);
   m->phases = m->m_Phases->WritePointer(0, m->totalpoints);
   m->euler1s = m->m_Euler1s->WritePointer(0, m->totalpoints);

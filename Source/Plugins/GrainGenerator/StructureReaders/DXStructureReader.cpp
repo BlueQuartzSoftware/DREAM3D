@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -64,7 +64,7 @@ DXStructureReader::~DXStructureReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DXStructureReader::readStructure(GrainGeneratorFunc* m)
+int DXStructureReader::readStructure(DataContainer* m)
 {
   int err = 0;
   if (m_InputFileName.empty() == true)
@@ -160,10 +160,6 @@ int DXStructureReader::readStructure(GrainGeneratorFunc* m)
   m->ypoints = ydim-1;
   m->zpoints = zdim-1;
   m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
-  m->totalvol = float(m->totalpoints)*m->resx*m->resy*m->resz;
-  m->sizex = m->xpoints * m->resx;
-  m->sizey = m->ypoints * m->resy;
-  m->sizez = m->zpoints * m->resz;
   m->grain_indicies = m->m_GrainIndicies->WritePointer(0, m->totalpoints);
   m->phases = m->m_Phases->WritePointer(0, m->totalpoints);
   m->euler1s = m->m_Euler1s->WritePointer(0, m->totalpoints);

@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/Observer.h"
 
 
-#include "GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 /**
 * @class GrainGenerator GrainGenerator.h AIM/GrainGenerator/GrainGenerator.h
@@ -106,7 +106,7 @@ class GrainGenerator : public AbstractPipeline, public Observer
     GrainGenerator();
 
   private:
-    GrainGeneratorFunc::Pointer m;
+    DataContainer::Pointer m;
 
     GrainGenerator(const GrainGenerator&);    // Copy Constructor Not Implemented
     void operator=(const GrainGenerator&);  // Operator '=' Not Implemented

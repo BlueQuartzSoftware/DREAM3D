@@ -119,20 +119,20 @@ void AdjustVolume::adjust_boundaries()
 
   float voxtovol = m->resx*m->resy*m->resz*(3.0/4.0)*(1.0/m_pi);
 
-  m->gsizes.resize(m->m_Grains.size());
+  gsizes.resize(m->m_Grains.size());
 
   std::vector<int> voxellist(vListSize,-1);
   std::vector<int> affectedvoxellist(vListSize,-1);
   for(size_t i=1;i<m->m_Grains.size();i++)
   {
-    m->gsizes[i] = 0;
+    gsizes[i] = 0;
   }
   NEW_SHARED_ARRAY(reassigned, int, m->totalpoints)
 
   for(int i=0;i<m->totalpoints;i++)
   {
     reassigned[i] = 0;
-    m->gsizes[m->grain_indicies[i]]++;
+    gsizes[m->grain_indicies[i]]++;
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setGrainGenFunc(m);
@@ -211,14 +211,14 @@ void AdjustVolume::adjust_boundaries()
       index = affectedvoxellist[i];
       if(reassigned[index] > 0)
       {
-        m->gsizes[m->grain_indicies[index]]++;
-        m->gsizes[reassigned[index]] = m->gsizes[reassigned[index]]-1;
+        gsizes[m->grain_indicies[index]]++;
+        gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
       }
     }
     for(size_t i=1;i<m->m_Grains.size();i++)
     {
       index = i;
-      diam = 2.0*powf((m->gsizes[index]*voxtovol),(1.0/3.0));
+      diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
       m->m_Grains[index]->equivdiameter = diam;
     }
     PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
@@ -230,7 +230,7 @@ void AdjustVolume::adjust_boundaries()
       oldsizedisterror = currentsizedisterror;
       for(size_t i=1;i<m->m_Grains.size();i++)
       {
-        if(m->gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
+        if(gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
       }
     }
     if(currentsizedisterror > oldsizedisterror)
@@ -241,15 +241,15 @@ void AdjustVolume::adjust_boundaries()
         index = affectedvoxellist[i];
         if(reassigned[index] > 0)
         {
-          m->gsizes[m->grain_indicies[index]] = m->gsizes[m->grain_indicies[index]]-1;
+          gsizes[m->grain_indicies[index]] = gsizes[m->grain_indicies[index]]-1;
           m->grain_indicies[index] = reassigned[index];
-          m->gsizes[m->grain_indicies[index]]++;
+          gsizes[m->grain_indicies[index]]++;
         }
       }
       for(size_t i=1;i<m->m_Grains.size();i++)
       {
         index = i;
-        diam = 2.0*powf((m->gsizes[index]*voxtovol),(1.0/3.0));
+        diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
         m->m_Grains[index]->equivdiameter = diam;
       }
     }

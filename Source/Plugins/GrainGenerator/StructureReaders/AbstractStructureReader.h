@@ -37,7 +37,7 @@
 #ifndef _AbstractStructureReader_h_
 #define _AbstractStructureReader_h_
 
-class GrainGeneratorFunc;
+class DataContainer;
 
 /**
  * @class AbstractStructureReader AbstractStructureReader.h AIM/GrainGenerator/AbstractStructureReader.h
@@ -61,7 +61,7 @@ class  AbstractStructureReader
      * @param r The GrainGeneratorFunc pointer
      * @return Error. Negative is Error. Zero or Positive is Success.
      */
-    virtual int readStructure(GrainGeneratorFunc* r) = 0;
+    virtual int readStructure(DataContainer* r) = 0;
 
   protected:
     AbstractStructureReader() { } ;

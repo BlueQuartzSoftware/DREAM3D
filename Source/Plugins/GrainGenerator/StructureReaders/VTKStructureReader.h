@@ -44,7 +44,7 @@
 #include "DREAM3DLib/VTKUtils/VTKFileReader.h"
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 
-class GrainGeneratorFunc;
+class DataContainer;
 
 /**
  * @class VTKStructureReader VTKStructureReader.h AIM/Common/StructureReaders/VTKStructureReader.h
@@ -100,7 +100,7 @@ class VTKStructureReader : public VTKFileReader, public AbstractStructureReader
     MXA_INSTANCE_STRING_PROPERTY(GrainIdScalarName)
     MXA_INSTANCE_STRING_PROPERTY(PhaseIdScalarName)
 
-    int readStructure(GrainGeneratorFunc* m);
+    int readStructure(DataContainer* m);
 
   protected:
     VTKStructureReader();
