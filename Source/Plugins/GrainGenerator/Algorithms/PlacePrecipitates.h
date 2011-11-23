@@ -62,6 +62,7 @@ class PlacePrecipitates : public Observable
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
@@ -73,12 +74,21 @@ class PlacePrecipitates : public Observable
 
     unsigned long long int Seed;
 
+	float sizex;
+    float sizey;
+    float sizez;
+    float totalvol;
+
     void insert_precipitate(size_t grainNum);
 	void place_precipitates();
     void fillin_precipitates();
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
+
+    float totalprecipvol;
+    std::vector<int> precipitatephases;
+    std::vector<float> precipitatephasefractions;
 
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
 
