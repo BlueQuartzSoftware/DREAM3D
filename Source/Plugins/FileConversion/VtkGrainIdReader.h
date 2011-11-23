@@ -34,6 +34,7 @@
 #include <string.h> // needed for the ::memcpy function below
 #include <string>
 
+#include "MXA/Common/MXAEndian.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AIMArray.hpp"

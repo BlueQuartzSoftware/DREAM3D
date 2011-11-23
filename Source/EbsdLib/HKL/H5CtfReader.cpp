@@ -37,7 +37,7 @@
 
 #include "H5CtfReader.h"
 
-#include "MXA/Utilities/StringUtils.h"
+#include "EbsdLib/Utilities/StringUtils.h"
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "EbsdLib/EbsdConstants.h"
@@ -46,6 +46,9 @@
 
 #include "EbsdLib/HKL/CtfConstants.h"
 
+#if defined (H5Support_NAMESPACE)
+using namespace H5Support_NAMESPACE;
+#endif
 
 // -----------------------------------------------------------------------------
 //

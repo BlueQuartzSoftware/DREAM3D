@@ -43,6 +43,10 @@
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/Utilities/StringUtils.h"
 
+#if defined (H5Support_NAMESPACE)
+using namespace H5Support_NAMESPACE;
+#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

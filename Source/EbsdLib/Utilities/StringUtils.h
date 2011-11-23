@@ -42,10 +42,6 @@
 #ifndef STRINGUTILITIES_H_
 #define STRINGUTILITIES_H_
 
-//-- MXA Includes
-#include "MXA/MXADLLExport.h"
-
-
 //-- STL Includes
 #include <string>
 #include <list>

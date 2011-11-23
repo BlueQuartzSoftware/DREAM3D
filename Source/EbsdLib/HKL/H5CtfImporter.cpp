@@ -50,6 +50,9 @@
 #include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/HKL/CtfPhase.h"
 
+#if defined (H5Support_NAMESPACE)
+using namespace H5Support_NAMESPACE;
+#endif
 
 #define AIM_STRING std::string
 

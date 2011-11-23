@@ -35,6 +35,10 @@
 #include <H5Support/DataWrappers/H5SupportArrayTemplate.hpp>
 #endif
 
+#if defined (H5Support_NAMESPACE)
+namespace H5Support_NAMESPACE {
+#endif
+
 /**
  * @brief General Utilities for working with the HDF5 data files and API
  * @author Mike Jackson/Shawn Nicholson
@@ -316,7 +320,9 @@ private:
     void operator=(const H5Utilities&); //Copy Assignment Not Implemented
 };
 
-
+#if defined (H5Support_NAMESPACE)
+}
+#endif
 
 #endif /* _HDF5_UTILITIES_H_ */
 

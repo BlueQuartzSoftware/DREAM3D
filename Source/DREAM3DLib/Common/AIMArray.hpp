@@ -16,14 +16,9 @@
 #include <sstream>
 #include <fstream>
 
-#include <MXA/Common/LogTime.h>
-#include <MXA/Common/MXAEndian.h>
-#include <MXA/Common/MXASetGetMacros.h>
 
-#include <MXA/Utilities/StringUtils.h>
-
-// -- Boost algorithms
-// #include <boost/iostreams/device/file.hpp>
+#include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/Utilities/StringUtils.h"
 
 
 #define mxa_bswap(s,d,t)\
@@ -145,7 +140,7 @@ class AIMArray
 #endif
       if (!this->Array)
       {
-        std::cout << DEBUG_OUT(logTime) << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
         return -1;
       }
       this->Size = newSize;
@@ -519,7 +514,7 @@ class AIMArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << DEBUG_OUT(logTime) << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
           return 0;
         }
 
@@ -532,7 +527,7 @@ class AIMArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << DEBUG_OUT(logTime) << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
           return 0;
         }
       }
