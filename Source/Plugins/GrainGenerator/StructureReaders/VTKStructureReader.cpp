@@ -37,7 +37,7 @@
 
 #include <fstream>
 
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 #define kBufferSize 1024
 
@@ -58,7 +58,7 @@ VTKStructureReader::~VTKStructureReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKStructureReader::readStructure(GrainGeneratorFunc* m)
+int VTKStructureReader::readStructure(DataContainer* m)
 {
   int err = 0;
 

@@ -62,7 +62,7 @@ class PhWriter : public DREAM3D::FileWriter
   public:
     DREAM3D_SHARED_POINTERS(PhWriter);
     DREAM3D_STATIC_NEW_MACRO(PhWriter);
-    DREAM3D_TYPE_MACRO(PhWriter);
+    DREAM3D_TYPE_MACRO_SUPER(PhWriter, DREAM3D::FileWriter);
 
     static DREAM3D::FileWriter::Pointer NewDREAM3DFileWriter()
     {

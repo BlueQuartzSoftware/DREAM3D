@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
@@ -74,8 +74,8 @@ class PackGrainsGen2 : public Observable
     DREAM3D_INSTANCE_PROPERTY(float, neighborhooderrorweight);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
-    GrainGeneratorFunc*getGrainGenFunc() { return m; }
+    void setGrainGenFunc(DataContainer* gg) { m = gg; }
+    DataContainer*getGrainGenFunc() { return m; }
 
     unsigned long long int Seed;
 
@@ -160,7 +160,7 @@ class PackGrainsGen2 : public Observable
 
   protected:
     PackGrainsGen2();
-    GrainGeneratorFunc* m;
+    DataContainer* m;
 
   private:
 

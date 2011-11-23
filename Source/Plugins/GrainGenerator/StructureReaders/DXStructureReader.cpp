@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -64,7 +64,7 @@ DXStructureReader::~DXStructureReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DXStructureReader::readStructure(GrainGeneratorFunc* m)
+int DXStructureReader::readStructure(DataContainer* m)
 {
   int err = 0;
   if (m_InputFileName.empty() == true)
