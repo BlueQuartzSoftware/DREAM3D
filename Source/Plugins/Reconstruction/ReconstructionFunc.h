@@ -133,33 +133,15 @@ class ReconstructionFunc : public Observable
 
     std::vector<Grain::Pointer> m_Grains;
 
-    /* These are TSL Specific terms */
-    float minseedconfidence;
-    float minseedimagequality;
-
-    float downsamplefactor;
     int minallowedgrainsize;
     int mergetwinsoption;
     int mergecoloniesoption;
 
     int alignmeth;
-    int alreadyformed;
-
-    int numseNbins;
-    int numorients;
-    int numeulers;
- //   int numgrains;
-    int cutoutxsize;
-    int cutoutysize;
-    int cmaxx;
-    int cminx;
-    int cmaxy;
-    int cminy;
 
     int tempxpoints;
     int tempypoints;
     int totaltemppoints;
-    int numneighbins;
 
     void initialize(int nX,
                     int nY,
