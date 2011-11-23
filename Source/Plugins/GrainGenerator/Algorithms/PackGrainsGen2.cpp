@@ -97,11 +97,11 @@ PackGrainsGen2::PackGrainsGen2() :
   m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
 
   m_HexOps = HexagonalOps::New();
-  m_OrientatioOps.push_back(m_HexOps.get());
+  m_OrientationOps.push_back(m_HexOps.get());
   m_CubicOps = CubicOps::New();
-  m_OrientatioOps.push_back(m_CubicOps.get());
+  m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientatioOps.push_back(m_OrthoOps.get());
+  m_OrientationOps.push_back(m_OrthoOps.get());
 }
 
 // -----------------------------------------------------------------------------
@@ -189,7 +189,7 @@ void PackGrainsGen2::generate_grain(int gnum, int phase)
       break;
     }
   }
-  m_OrientatioOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
+  m_OrientationOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float mf = omega3[phase][diameter][0];
   float s = omega3[phase][diameter][1];
   float omega3f = rg.genrand_beta(mf, s);

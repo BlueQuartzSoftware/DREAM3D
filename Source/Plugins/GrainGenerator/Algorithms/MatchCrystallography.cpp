@@ -58,11 +58,11 @@ MatchCrystallography::MatchCrystallography() :
 	m_ErrorCondition(0)
 {
   m_HexOps = HexagonalOps::New();
-  m_OrientatioOps.push_back(m_HexOps.get());
+  m_OrientationOps.push_back(m_HexOps.get());
   m_CubicOps = CubicOps::New();
-  m_OrientatioOps.push_back(m_CubicOps.get());
+  m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientatioOps.push_back(m_OrthoOps.get());
+  m_OrientationOps.push_back(m_OrthoOps.get());
 }
 
 // -----------------------------------------------------------------------------
@@ -270,7 +270,7 @@ void MatchCrystallography::assign_eulers()
       totaldensity = totaldensity + density;
       if (random >= totaldensity) choose = j;
     }
-    m_OrientatioOps[m->crystruct[phase]]->determineEulerAngles(choose, synea1, synea2, synea3);
+    m_OrientationOps[m->crystruct[phase]]->determineEulerAngles(choose, synea1, synea2, synea3);
     m->m_Grains[i]->euler1 = synea1;
     m->m_Grains[i]->euler2 = synea2;
     m->m_Grains[i]->euler3 = synea3;
@@ -312,14 +312,14 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
   curmiso2 = misolist->at(3*j+1);
   curmiso3 = misolist->at(3*j+2);
   neighsurfarea = neighborsurfacealist->at(j);
-  curmisobin = m_OrientatioOps[m->crystruct[phase]]->getMisoBin( curmiso1, curmiso2, curmiso3);
+  curmisobin = m_OrientationOps[m->crystruct[phase]]->getMisoBin( curmiso1, curmiso2, curmiso3);
   q2[1] = m->m_Grains[neighbor]->avg_quat[1];
   q2[2] = m->m_Grains[neighbor]->avg_quat[2];
   q2[3] = m->m_Grains[neighbor]->avg_quat[3];
   q2[4] = m->m_Grains[neighbor]->avg_quat[4];
-  w = m_OrientatioOps[m->crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
+  w = m_OrientationOps[m->crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
   OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
-  newmisobin = m_OrientatioOps[m->crystruct[phase]]->getMisoBin(n1, n2, n3);
+  newmisobin = m_OrientationOps[m->crystruct[phase]]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange + (((actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])*(actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])) - ((actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/totalsurfacearea[phase])))));
   mdfchange = mdfchange + (((actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])*(actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])) - ((actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))));
 }
@@ -347,14 +347,14 @@ void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::v
   curmiso2 = misolist->at(3 * j + 1);
   curmiso3 = misolist->at(3 * j + 2);
   neighsurfarea = neighborsurfacealist->at(j);
-  curmisobin = m_OrientatioOps[m->crystruct[phase]]->getMisoBin(curmiso1, curmiso2, curmiso3);
+  curmisobin = m_OrientationOps[m->crystruct[phase]]->getMisoBin(curmiso1, curmiso2, curmiso3);
   q2[1] = m->m_Grains[neighbor]->avg_quat[1];
   q2[2] = m->m_Grains[neighbor]->avg_quat[2];
   q2[3] = m->m_Grains[neighbor]->avg_quat[3];
   q2[4] = m->m_Grains[neighbor]->avg_quat[4];
-  w = m_OrientatioOps[m->crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
+  w = m_OrientationOps[m->crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
   OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
-  newmisobin = m_OrientatioOps[m->crystruct[phase]]->getMisoBin(n1, n2, n3);
+  newmisobin = m_OrientationOps[m->crystruct[phase]]->getMisoBin(n1, n2, n3);
   misolist->at(3 * j) = miso1;
   misolist->at(3 * j + 1) = miso2;
   misolist->at(3 * j + 2) = miso3;
@@ -402,7 +402,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   ea3 = m->m_Grains[selectedgrain1]->euler3;
   OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
   int phase = m->m_Grains[selectedgrain1]->phase;
-  g1odfbin = m_OrientatioOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
+  g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
   random = rg.genrand_res53();
   int choose = 0;
   totaldensity = 0;
@@ -413,7 +413,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
     if (random >= totaldensity) choose = i;
   }
 
-  m_OrientatioOps[m->crystruct[phase]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
+  m_OrientationOps[m->crystruct[phase]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
   float odfchange = ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose])) - ((actualodf[phase][choose] - (simodf[phase][choose]
@@ -514,13 +514,13 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   q1[4] = m->m_Grains[selectedgrain1]->avg_quat[4];
   int phase = m->m_Grains[selectedgrain1]->phase;
   OrientationMath::eulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
-  g1odfbin = m_OrientatioOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
+  g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
   q1[1] = m->m_Grains[selectedgrain2]->avg_quat[1];
   q1[2] = m->m_Grains[selectedgrain2]->avg_quat[2];
   q1[3] = m->m_Grains[selectedgrain2]->avg_quat[3];
   q1[4] = m->m_Grains[selectedgrain2]->avg_quat[4];
   OrientationMath::eulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
-  g2odfbin = m_OrientatioOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
+  g2odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 
   float odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
      -(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx
@@ -730,7 +730,7 @@ void  MatchCrystallography::measure_misorientations ()
       q2[3] = m->m_Grains[nname]->avg_quat[3];
       q2[4] = m->m_Grains[nname]->avg_quat[4];
       phase2 = m->crystruct[m->m_Grains[nname]->phase];
-      if (phase1 == phase2) w = m_OrientatioOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
       OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
       if (phase1 == phase2)
       {
@@ -747,7 +747,7 @@ void  MatchCrystallography::measure_misorientations ()
       if (phase1 == phase2)
       {
         mbin =
-            m_OrientatioOps[phase1]->getMisoBin(m->m_Grains[i]->misorientationlist->at(3 * j),
+            m_OrientationOps[phase1]->getMisoBin(m->m_Grains[i]->misorientationlist->at(3 * j),
                                                 m->m_Grains[i]->misorientationlist->at(3 * j + 1),
                                                 m->m_Grains[i]->misorientationlist->at(3 * j + 2));
       }

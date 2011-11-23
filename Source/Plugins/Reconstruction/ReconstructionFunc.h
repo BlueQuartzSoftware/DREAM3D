@@ -96,95 +96,16 @@ class ReconstructionFunc : public Observable
     typedef boost::shared_array<float>    SharedFloatArray;
     typedef boost::shared_array<int>      SharedIntArray;
 
-    float sizex;
-    float sizey;
-    float sizez;
-
-    float resx;
-    float resy;
-    float resz;
-
-    int xpoints;
-    int ypoints;
-    int zpoints;
-    int totalpoints;
-
-    float misorientationtolerance;
-
-    std::vector<Ebsd::CrystalStructure>               crystruct;
-    std::vector<DREAM3D::Reconstruction::PhaseType>   phaseType;
-    std::vector<float>                                pptFractions;
-
-    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
-    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
-    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
-    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
-    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
-    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char);
-    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
-    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
-
-    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
-
-    // Is the voxel considered Good or Bad, did it pass the Quality Metric Filters
-    DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
 
 
-    std::vector<Grain::Pointer> m_Grains;
-
-    int minallowedgrainsize;
-    int mergetwinsoption;
-    int mergecoloniesoption;
-
-    int alignmeth;
-
-    int tempxpoints;
-    int tempypoints;
-    int totaltemppoints;
-
-    void initialize(int nX,
-                    int nY,
-                    int nZ,
-                    float xRes,
-                    float yRes,
-                    float zRes,
-                    bool mrgTwins,
-                    bool mrgColonies,
-                    int minAllowedGrSize,
-                    float misoTol,
-                    std::vector<Ebsd::CrystalStructure> crystalStructures,
-                    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
-                    std::vector<float> precipFractions,
-                    int alignmentMethod);
 
 
-	  void initializeQuats();
-    void threshold_points();
-    void form_grains();
-    void form_grains_sections();
-    void remove_smallgrains();
-    int renumber_grains1();
-    void assign_badpoints();
-    void find_neighbors();
-    void merge_containedgrains();
-    void reorder_grains();
-    int remove_smallgrains(size_t numgrains);
-    void merge_twins();
-    void merge_colonies();
-    void characterize_twins();
-    void characterize_colonies();
-    void renumber_grains3();
-    void align_sections();
+
 
   protected:
     ReconstructionFunc();
 
   private:
-    std::vector<OrientationMath*>    m_OrientationOps;
-    CubicOps::Pointer                m_CubicOps;
-    HexagonalOps::Pointer            m_HexOps;
-    OrthoRhombicOps::Pointer         m_OrthoOps;
 
     ReconstructionFunc(const ReconstructionFunc&);    // Copy Constructor Not Implemented
     void operator=(const ReconstructionFunc&);  // Operator '=' Not Implemented

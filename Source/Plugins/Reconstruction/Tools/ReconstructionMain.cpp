@@ -186,7 +186,7 @@ int main(int argc, char **argv)
     m_Reconstruction->setZEndIndex(10376);
     m_Reconstruction->setCrystalStructure(Ebsd::Cubic);
     m_Reconstruction->setAlignmentMethod(DREAM3D::Reconstruction::OuterBoundary);
-    m_Reconstruction->setMinAllowedGrainSize(24);
+    m_Reconstruction->setm_minallowedgrainsize(24);
     m_Reconstruction->setMisorientationTolerance(5.0);
     m_Reconstruction->setMinSeedImageQuality(600);
     m_Reconstruction->setMinSeedConfidence(0.1);

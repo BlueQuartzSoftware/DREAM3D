@@ -102,7 +102,7 @@ class MatchCrystallography : public Observable
     void matchCrystallography();
     void measure_misorientations();
 
-    std::vector<OrientationMath*> m_OrientatioOps;
+    std::vector<OrientationMath*> m_OrientationOps;
 
 protected:
     MatchCrystallography();
