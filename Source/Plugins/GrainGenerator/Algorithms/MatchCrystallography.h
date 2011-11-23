@@ -42,11 +42,16 @@
 #include <numeric>
 #include <limits>
 
+#include <boost/shared_array.hpp>
+
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "GrainGenerator/GrainGeneratorFunc.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/HDF5/H5StatsReader.h"
+
 
 /**
  * @class MatchCrystallography MatchCrystallography.h GrainGenerator/Algorithms/MatchCrystallography.h
@@ -64,14 +69,25 @@ class MatchCrystallography : public Observable
 
     virtual ~MatchCrystallography();
 
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
+	std::vector<SharedFloatArray> actualodf;
+    std::vector<SharedFloatArray> simodf;
+    std::vector<SharedFloatArray> actualmdf;
+    std::vector<SharedFloatArray> simmdf;
 
     virtual void execute();
+
+	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
+	int readODFData(H5StatsReader::Pointer h5io);
+    int readMisorientationData(H5StatsReader::Pointer h5io);
 
     void assign_eulers();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);

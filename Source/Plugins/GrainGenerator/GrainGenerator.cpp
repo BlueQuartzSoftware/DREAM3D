@@ -48,7 +48,6 @@
 
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 #include "GrainGenerator/StructureReaders/VTKStructureReader.h"
-#include "GrainGenerator/Algorithms/LoadStatsData.h"
 #include "GrainGenerator/Algorithms/FindNeighbors.h"
 #include "GrainGenerator/Algorithms/MatchCrystallography.h"
 #include "GrainGenerator/Algorithms/PlacePrecipitates.h"
@@ -114,18 +113,9 @@ void GrainGenerator::execute()
     m->resz = m_ZResolution;
     m->neighborhooderrorweight = m_NeighborhoodErrorWeight;
 
-    updateProgressAndMessage(("Loading Stats"), 10);
-	LoadStatsData::Pointer load_stats = LoadStatsData::New();
-	load_stats->setH5StatsFile(getH5StatsFile());
-    load_stats->addObserver(static_cast<Observer*>(this));
-    load_stats->setGrainGenFunc(m.get());
-    load_stats->execute();
-    err = load_stats->getErrorCondition();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Stats", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", load_stats)
-
     updateProgressAndMessage(("Packing Grains"), 25);
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
+	pack_grains->setH5StatsFile(getH5StatsFile());
     pack_grains->addObserver(static_cast<Observer*>(this));
     pack_grains->setGrainGenFunc(m.get());
     pack_grains->execute();
@@ -175,14 +165,6 @@ void GrainGenerator::execute()
       m->resy = spacing[1];
       m->resz = spacing[2];
 
-	LoadStatsData::Pointer load_stats = LoadStatsData::New();
-    load_stats->addObserver(static_cast<Observer*>(this));
-    load_stats->setGrainGenFunc(m.get());
-    load_stats->execute();
-    err = load_stats->getErrorCondition();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Loading Stats", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", load_stats)
-
       updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
       err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalpoints);
       CHECK_FOR_ERROR(GrainGeneratorFunc, "GrainGenerator Error reading voxel data from HDF5 Voxel File", err);
@@ -194,28 +176,22 @@ void GrainGenerator::execute()
     }
   }
 
-	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->addObserver(static_cast<Observer*>(this));
-    find_neighbors->setGrainGenFunc(m.get());
-    find_neighbors->execute();
-    err = find_neighbors->getErrorCondition();
-    CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Finding Neighbors", err)
-    CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", find_neighbors)
-
   if (m_AlreadyFormed == false)
   {
     updateProgressAndMessage(("Placing Precipitates"), 50);
 	PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
+	place_precipitates->setH5StatsFile(getH5StatsFile());
     place_precipitates->addObserver(static_cast<Observer*>(this));
     place_precipitates->setGrainGenFunc(m.get());
     place_precipitates->execute();
-    err = find_neighbors->getErrorCondition();
+    err = place_precipitates->getErrorCondition();
     CHECK_FOR_ERROR(GrainGeneratorFunc, "Error Placing Preciptates", err)
     CHECK_FOR_CANCELED(GrainGeneratorFunc, "GrainGenerator Was canceled", place_precipitates)
   }
 
     updateProgressAndMessage(("Matching Crystallography"), 65);
 	MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
+	match_crystallography->setH5StatsFile(getH5StatsFile());
     match_crystallography->addObserver(static_cast<Observer*>(this));
     match_crystallography->setGrainGenFunc(m.get());
     match_crystallography->execute();

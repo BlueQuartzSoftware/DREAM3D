@@ -73,16 +73,13 @@ class GrainGeneratorFunc : public Observable
 
     virtual ~GrainGeneratorFunc();
 
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
+
 
     bool periodic_boundaries;
 
     float sizex;
     float sizey;
     float sizez;
-
-    unsigned long long int GGseed;
 
     float resx;
     float resy;
@@ -111,36 +108,15 @@ class GrainGeneratorFunc : public Observable
     std::vector<int> gsizes;
     std::vector<int> newnames;
 
-    // These use the typedefs because the length of each array is determined by
-    // the cystal structure of the phase. The lengths for each type of crystal
-    // structure are known and constant
-    std::vector<SharedFloatArray> actualodf;
-    std::vector<SharedFloatArray> simodf;
-    std::vector<SharedFloatArray> actualmdf;
-    std::vector<SharedFloatArray> simmdf;
-    std::vector<SharedFloatArray> axisodf;
-
     std::vector<int> primaryphases;
     std::vector<float> primaryphasefractions;
     std::vector<int> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
-    std::vector<std::vector<std::vector<float> > > bovera;
-    std::vector<std::vector<std::vector<float> > > covera;
-    std::vector<std::vector<std::vector<float> > > coverb;
-    std::vector<std::vector<std::vector<float> > > omega3;
-    std::vector<std::vector<std::vector<float> > > neighborparams;
-
     std::vector<float> unbiasedvol;
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
     std::vector<float> phasefraction;
-    std::vector<float> binstepsize;
-    std::vector<float> grainsizediststep;
-    std::vector<float> maxdiameter;
-    std::vector<float> mindiameter;
-    std::vector<float> avgdiam;
-    std::vector<float> sddiam;
-    std::vector<int> numdiameterbins;
+
 
     float totalvol;
     float totalprecipvol;
