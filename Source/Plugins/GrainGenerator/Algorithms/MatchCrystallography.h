@@ -78,6 +78,8 @@ class MatchCrystallography : public Observable
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
+    std::vector<Ebsd::CrystalStructure> crystruct;
+
 	std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> actualmdf;
@@ -89,7 +91,10 @@ class MatchCrystallography : public Observable
 	int readODFData(H5StatsReader::Pointer h5io);
     int readMisorientationData(H5StatsReader::Pointer h5io);
 
-    void assign_eulers();
+    std::vector<float> unbiasedvol;
+    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
+
+	void assign_eulers();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);

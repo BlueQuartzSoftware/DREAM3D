@@ -66,8 +66,9 @@ class FindNeighbors : public Observable
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
+    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
-    virtual void execute();
+	virtual void execute();
 
     void find_neighbors();
 

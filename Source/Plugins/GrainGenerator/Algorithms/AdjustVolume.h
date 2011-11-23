@@ -69,7 +69,9 @@ class AdjustVolume : public Observable
     void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
     GrainGeneratorFunc*getGrainGenFunc() { return m; }
 
-    virtual void execute();
+    std::vector<int> gsizes;
+
+	virtual void execute();
     void adjust_boundaries();
 
   protected:

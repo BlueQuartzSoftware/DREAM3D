@@ -103,7 +103,6 @@ void GrainGenerator::execute()
 
   if (m_AlreadyFormed == false)
   {
-    m->periodic_boundaries = m_PeriodicBoundary;
     m->xpoints = m_XPoints;
     m->ypoints = m_YPoints;
     m->zpoints = m_ZPoints;
@@ -111,11 +110,12 @@ void GrainGenerator::execute()
     m->resx = m_XResolution;
     m->resy = m_YResolution;
     m->resz = m_ZResolution;
-    m->neighborhooderrorweight = m_NeighborhoodErrorWeight;
 
     updateProgressAndMessage(("Packing Grains"), 25);
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
 	pack_grains->setH5StatsFile(getH5StatsFile());
+	pack_grains->setperiodic_boundaries(m_PeriodicBoundary);
+	pack_grains->setneighborhooderrorweight(m_NeighborhoodErrorWeight);
     pack_grains->addObserver(static_cast<Observer*>(this));
     pack_grains->setGrainGenFunc(m.get());
     pack_grains->execute();
@@ -181,6 +181,7 @@ void GrainGenerator::execute()
     updateProgressAndMessage(("Placing Precipitates"), 50);
 	PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
 	place_precipitates->setH5StatsFile(getH5StatsFile());
+	place_precipitates->setperiodic_boundaries(m_PeriodicBoundary);
     place_precipitates->addObserver(static_cast<Observer*>(this));
     place_precipitates->setGrainGenFunc(m.get());
     place_precipitates->execute();

@@ -92,6 +92,10 @@ void PlacePrecipitates::execute()
     find_neighbors->execute();
     err = find_neighbors->getErrorCondition();
 
+	sizex = m->xpoints * m->resx;
+	sizey = m->ypoints * m->resy;
+	sizez = m->zpoints * m->resz;
+	totalvol = sizex*sizey*sizez;
     place_precipitates();
     fillin_precipitates();
 
@@ -161,7 +165,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   ymax = int(row+((radcur1/m->resy)+1));
   zmin = int(plane-((radcur1/m->resz)+1));
   zmax = int(plane+((radcur1/m->resz)+1));
-  if(m->periodic_boundaries == true)
+  if(m_periodic_boundaries == true)
   {
     if(xmin < -m->xpoints) xmin = -m->xpoints;
     if(xmax > 2*m->xpoints-1) xmax = (2*m->xpoints-1);
@@ -170,7 +174,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
     if(zmin < -m->zpoints) zmin = -m->zpoints;
     if(zmax > 2*m->zpoints-1) zmax = (2*m->zpoints-1);
   }
-  if(m->periodic_boundaries == false)
+  if(m_periodic_boundaries == false)
   {
     if(xmin < 0) xmin = 0;
     if(xmax > m->xpoints-1) xmax = m->xpoints-1;
@@ -199,12 +203,12 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 		  x = float(column)*m->resx;
 		  y = float(row)*m->resy;
 		  z = float(plane)*m->resz;
-		  if(iter1 < 0) x = x-m->sizex;
-		  if(iter1 > m->xpoints-1) x = x+m->sizex;
-		  if(iter2 < 0) y = y-m->sizey;
-		  if(iter2 > m->ypoints-1) y = y+m->sizey;
-		  if(iter3 < 0) z = z-m->sizez;
-		  if(iter3 > m->zpoints-1) z = z+m->sizez;
+		  if(iter1 < 0) x = x-sizex;
+		  if(iter1 > m->xpoints-1) x = x+sizex;
+		  if(iter2 < 0) y = y-sizey;
+		  if(iter2 > m->ypoints-1) y = y+sizey;
+		  if(iter3 < 0) z = z-sizez;
+		  if(iter3 > m->zpoints-1) z = z+sizez;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
 		  dist = sqrt(dist);
 		  if(dist < radcur1)
@@ -350,7 +354,7 @@ void  PlacePrecipitates::place_precipitates()
 {
   DREAM3D_RANDOMNG_NEW()
 
-  m->totalprecipvol = 0;
+  totalprecipvol = 0;
   int precipvoxelcounter = 0;
   size_t currentnumgrains = m->m_Grains.size();
   numprimarygrains = m->m_Grains.size();
@@ -365,15 +369,15 @@ void  PlacePrecipitates::place_precipitates()
   {
     if(m->phaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
-	    m->precipitatephases.push_back(i);
-	    m->precipitatephasefractions.push_back(m->phasefraction[i]);
+	    precipitatephases.push_back(i);
+	    precipitatephasefractions.push_back(m->phasefraction[i]);
 	    totalprecipitatefractions = totalprecipitatefractions + m->phasefraction[i];
     }
   }
-  for (size_t i = 0; i < m->precipitatephases.size(); i++)
+  for (size_t i = 0; i < precipitatephases.size(); i++)
   {
-    m->precipitatephasefractions[i] = m->precipitatephasefractions[i]/totalprecipitatefractions;
-    if(i > 0) m->precipitatephasefractions[i] = m->precipitatephasefractions[i] + m->precipitatephasefractions[i-1];
+    precipitatephasefractions[i] = precipitatephasefractions[i]/totalprecipitatefractions;
+    if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i-1];
     //if(i == 0) precipitatephasefractions[i] = precipitatephasefractions[i];
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
@@ -381,15 +385,15 @@ void  PlacePrecipitates::place_precipitates()
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   int err = packGrains->readReconStatsData(h5reader);
   err = packGrains->readAxisOrientationData(h5reader);
-  while(m->totalprecipvol < m->totalvol*totalprecipitatefractions)
+  while(totalprecipvol < totalvol*totalprecipitatefractions)
   {
     Seed++;
     random = rg.genrand_res53();
-    for (size_t j = 0; j < m->precipitatephases.size();++j)
+    for (size_t j = 0; j < precipitatephases.size();++j)
     {
-      if (random < m->precipitatephasefractions[j])
+      if (random < precipitatephasefractions[j])
       {
-        phase = m->precipitatephases[j];
+        phase = precipitatephases[j];
         break;
       }
     }
@@ -449,7 +453,7 @@ void  PlacePrecipitates::place_precipitates()
         precipvoxelcounter++;
       }
     }
-      m->totalprecipvol = m->totalprecipvol + (precipvoxelcounter*m->resx*m->resy*m->resz);
+      totalprecipvol = totalprecipvol + (precipvoxelcounter*m->resx*m->resy*m->resz);
     currentnumgrains++;
   }
   }

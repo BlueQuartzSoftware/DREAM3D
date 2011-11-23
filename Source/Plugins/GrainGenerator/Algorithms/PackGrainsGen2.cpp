@@ -116,9 +116,9 @@ void PackGrainsGen2::initialize_packinggrid()
   packingresx = m->resx * 2.0;
   packingresy = m->resy * 2.0;
   packingresz = m->resz * 2.0;
-  packingxpoints = int(m->sizex / packingresx);
-  packingypoints = int(m->sizey / packingresy);
-  packingzpoints = int(m->sizez / packingresz);
+  packingxpoints = int(sizex / packingresx);
+  packingypoints = int(sizey / packingresy);
+  packingzpoints = int(sizez / packingresz);
   packingtotalpoints = packingxpoints * packingypoints * packingzpoints;
   grainowners.resize(packingxpoints);
   for (int i = 0; i < packingxpoints; i++)
@@ -264,26 +264,26 @@ void PackGrainsGen2::execute()
   {
     if(m->phaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
     {
-      m->primaryphases.push_back(i);
-      m->primaryphasefractions.push_back(m->phasefraction[i]);
+      primaryphases.push_back(i);
+      primaryphasefractions.push_back(m->phasefraction[i]);
       totalprimaryfractions = totalprimaryfractions + m->phasefraction[i];
     }
   }
   // scale the primary phase fractions to total to 1
-  for (size_t i = 0; i < m->primaryphasefractions.size(); i++)
+  for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
-    m->primaryphasefractions[i] = m->primaryphasefractions[i] / totalprimaryfractions;
-    if(i > 0) m->primaryphasefractions[i] = m->primaryphasefractions[i] + m->primaryphasefractions[i - 1];
+    primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
+    if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
   // initialize the sim and goal size distributions for the primary phases
-  grainsizedist.resize(m->primaryphases.size());
-  simgrainsizedist.resize(m->primaryphases.size());
-  grainsizediststep.resize(m->primaryphases.size());
-  for (size_t i = 0; i < m->primaryphases.size(); i++)
+  grainsizedist.resize(primaryphases.size());
+  simgrainsizedist.resize(primaryphases.size());
+  grainsizediststep.resize(primaryphases.size());
+  for (size_t i = 0; i < primaryphases.size(); i++)
   {
-    phase = m->primaryphases[i];
+    phase = primaryphases[i];
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
     grainsizediststep[i] = ((2 * maxdiameter[phase]) - (mindiameter[phase] / 2.0)) / grainsizedist[i].size();
@@ -306,16 +306,16 @@ void PackGrainsGen2::execute()
   m->m_Grains[1] = Grain::New();
   float factor = 1.0;
   float iter = 0;
-  while (currentvol < (factor * m->totalvol))
+  while (currentvol < (factor * totalvol))
   {
     iter++;
     Seed++;
     random = rg.genrand_res53();
-    for (size_t j = 0; j < m->primaryphases.size(); ++j)
+    for (size_t j = 0; j < primaryphases.size(); ++j)
     {
-      if(random < m->primaryphasefractions[j])
+      if(random < primaryphasefractions[j])
       {
-        phase = m->primaryphases[j];
+        phase = primaryphases[j];
         break;
       }
     }
@@ -333,24 +333,24 @@ void PackGrainsGen2::execute()
 	   iter = 0;
     }
   }
-  if(m->periodic_boundaries == false)
+  if(m_periodic_boundaries == false)
   {
 	  iter = 0;
 	  int xgrains, ygrains, zgrains;
-	  xgrains = powf((m->m_Grains.size()*(m->sizex/m->sizey)*(m->sizex/m->sizez)),(1.0/3.0));
-	  ygrains = xgrains*(m->sizey/m->sizex);
-	  zgrains = xgrains*(m->sizez/m->sizex);
+	  xgrains = powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0/3.0));
+	  ygrains = xgrains*(sizey/sizex);
+	  zgrains = xgrains*(sizez/sizex);
 	  factor = 0.25 * (1.0 - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
-	  while (currentvol < ((1+factor) * m->totalvol))
+	  while (currentvol < ((1+factor) * totalvol))
 	  {
 	    iter++;
 		Seed++;
 		random = rg.genrand_res53();
-		for (size_t j = 0; j < m->primaryphases.size(); ++j)
+		for (size_t j = 0; j < primaryphases.size(); ++j)
 		{
-		  if(random < m->primaryphasefractions[j])
+		  if(random < primaryphasefractions[j])
 		  {
-			phase = m->primaryphases[j];
+			phase = primaryphases[j];
 			break;
 		  }
 		}
@@ -370,11 +370,11 @@ void PackGrainsGen2::execute()
 	  }
   }
   // initialize the sim and goal neighbor distribution for the primary phases
-  neighbordist.resize(m->primaryphases.size());
-  simneighbordist.resize(m->primaryphases.size());
-  for (size_t i = 0; i < m->primaryphases.size(); i++)
+  neighbordist.resize(primaryphases.size());
+  simneighbordist.resize(primaryphases.size());
+  for (size_t i = 0; i < primaryphases.size(); i++)
   {
-    phase = m->primaryphases[i];
+    phase = primaryphases[i];
     neighbordist[i].resize(numdiameterbins[phase]);
     simneighbordist[i].resize(numdiameterbins[phase]);
     for (size_t j = 0; j < neighbordist[i].size(); j++)
@@ -391,9 +391,9 @@ void PackGrainsGen2::execute()
   fillingerror = 1;
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    xc = m->sizex / 2.0;
-    yc = m->sizey / 2.0;
-    zc = m->sizez / 2.0;
+    xc = sizex / 2.0;
+    yc = sizey / 2.0;
+    zc = sizez / 2.0;
     m->m_Grains[i]->centroidx = xc;
     m->m_Grains[i]->centroidy = yc;
     m->m_Grains[i]->centroidz = zc;
@@ -556,10 +556,10 @@ void PackGrainsGen2::execute()
 void PackGrainsGen2::initializeAttributes()
 {
 
-  m->sizex = m->xpoints * m->resx;
-  m->sizey = m->ypoints * m->resy;
-  m->sizez = m->zpoints * m->resz;
-  m->totalvol = m->sizex * m->sizey * m->sizez;
+  sizex = m->xpoints * m->resx;
+  sizey = m->ypoints * m->resy;
+  sizez = m->zpoints * m->resz;
+  totalvol = sizex*sizey*sizez;
   m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
   const size_t startIndex = 0;
   const size_t endIndex = m->totalpoints;
@@ -925,7 +925,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
   int phase;
   for (size_t iter = 0; iter < neighbordist.size(); ++iter)
   {
-    phase = m->primaryphases[iter];
+    phase = primaryphases[iter];
     count.resize(simneighbordist[iter].size(), 0);
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
@@ -1045,7 +1045,7 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
   int phase;
   for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
   {
-    phase = m->primaryphases[iter];
+    phase = primaryphases[iter];
     count = 0;
     for (size_t i = 0; i < grainsizedist[iter].size(); i++)
     {
@@ -1101,7 +1101,7 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
       col = columnlist[i];
       row = rowlist[i];
       plane = planelist[i];
-      if(m->periodic_boundaries == true)
+      if(m_periodic_boundaries == true)
       {
         if(col < 0) col = col + packingxpoints;
         if(col > packingxpoints - 1) col = col - packingxpoints;
@@ -1113,7 +1113,7 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
 		grainowners[col][row][plane]++;
 		packquality = packquality + ((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1));
       }
-      if(m->periodic_boundaries == false)
+      if(m_periodic_boundaries == false)
       {
         if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
         {
@@ -1136,7 +1136,7 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
       col = columnlist[i];
       row = rowlist[i];
       plane = planelist[i];
-      if(m->periodic_boundaries == true)
+      if(m_periodic_boundaries == true)
       {
         if(col < 0) col = col + packingxpoints;
         if(col > packingxpoints - 1) col = col - packingxpoints;
@@ -1147,7 +1147,7 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
         fillingerror = fillingerror + (-2 * grainowners[col][row][plane] + 3);
 		grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
       }
-      if(m->periodic_boundaries == false)
+      if(m_periodic_boundaries == false)
       {
         if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
         {
@@ -1293,11 +1293,11 @@ void PackGrainsGen2::assign_voxels()
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
 
-  m->gsizes.resize(m->m_Grains.size());
+  gsizes.resize(m->m_Grains.size());
 
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    m->gsizes[i] = 0;
+    gsizes[i] = 0;
   }
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
@@ -1350,7 +1350,7 @@ void PackGrainsGen2::assign_voxels()
     ymax = int(row + ((radcur1 / m->resy) + 1));
     zmin = int(plane - ((radcur1 / m->resz) + 1));
     zmax = int(plane + ((radcur1 / m->resz) + 1));
-    if (m->periodic_boundaries == true)
+    if (m_periodic_boundaries == true)
     {
       if (xmin < -m->xpoints) xmin = -m->xpoints;
       if (xmax > 2 * m->xpoints - 1) xmax = (2 * m->xpoints - 1);
@@ -1359,7 +1359,7 @@ void PackGrainsGen2::assign_voxels()
       if (zmin < -m->zpoints) zmin = -m->zpoints;
       if (zmax > 2 * m->zpoints - 1) zmax = (2 * m->zpoints - 1);
     }
-    if (m->periodic_boundaries == false)
+    if (m_periodic_boundaries == false)
     {
       if (xmin < 0) xmin = 0;
       if (xmax > m->xpoints - 1) xmax = m->xpoints - 1;
@@ -1388,12 +1388,12 @@ void PackGrainsGen2::assign_voxels()
           x = float(column) * m->resx;
           y = float(row) * m->resy;
           z = float(plane) * m->resz;
-          if (iter1 < 0) x = x - m->sizex;
-          if (iter1 > m->xpoints - 1) x = x + m->sizex;
-          if (iter2 < 0) y = y - m->sizey;
-          if (iter2 > m->ypoints - 1) y = y + m->sizey;
-          if (iter3 < 0) z = z - m->sizez;
-          if (iter3 > m->zpoints - 1) z = z + m->sizez;
+          if (iter1 < 0) x = x - sizex;
+          if (iter1 > m->xpoints - 1) x = x + sizex;
+          if (iter2 < 0) y = y - sizey;
+          if (iter2 > m->ypoints - 1) y = y + sizey;
+          if (iter3 < 0) z = z - sizez;
+          if (iter3 > m->zpoints - 1) z = z + sizez;
           dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
           dist = sqrtf(dist);
           if (dist < radcur1)
@@ -1414,13 +1414,13 @@ void PackGrainsGen2::assign_voxels()
               if (m->grain_indicies[currentpoint] > 0)
               {
                 oldname = m->grain_indicies[currentpoint];
-                m->gsizes[oldname] = m->gsizes[oldname] - 1;
+                gsizes[oldname] = gsizes[oldname] - 1;
                 m->grain_indicies[currentpoint] = -1;
               }
               if (m->grain_indicies[currentpoint] == 0)
               {
                 m->grain_indicies[currentpoint] = i;
-                m->gsizes[i]++;
+                gsizes[i]++;
               }
             }
           }
@@ -1428,15 +1428,15 @@ void PackGrainsGen2::assign_voxels()
       }
     }
   }
-  m->newnames.resize(m->m_Grains.size());
+  newnames.resize(m->m_Grains.size());
   int goodcount = 1;
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    m->newnames[i] = 0;
-    if (m->gsizes[i] > 0)
+    newnames[i] = 0;
+    if (gsizes[i] > 0)
     {
       m->m_Grains[goodcount] = m->m_Grains[i];
-      m->newnames[i] = goodcount;
+      newnames[i] = goodcount;
       goodcount++;
     }
   }
@@ -1444,7 +1444,7 @@ void PackGrainsGen2::assign_voxels()
   {
     if (m->grain_indicies[i] > 0)
     {
-	  m->grain_indicies[i] = m->newnames[m->grain_indicies[i]];
+	  m->grain_indicies[i] = newnames[m->grain_indicies[i]];
     }
   }
   m->m_Grains.resize(goodcount);
@@ -1521,7 +1521,7 @@ void PackGrainsGen2::assign_gaps()
 		ymax = int(row + ((radcur1 / m->resy) + 1));
 		zmin = int(plane - ((radcur1 / m->resz) + 1));
 		zmax = int(plane + ((radcur1 / m->resz) + 1));
-		if (m->periodic_boundaries == true)
+		if (m_periodic_boundaries == true)
 		{
 		  if (xmin < -m->xpoints) xmin = -m->xpoints;
 		  if (xmax > 2 * m->xpoints - 1) xmax = (2 *m-> xpoints - 1);
@@ -1530,7 +1530,7 @@ void PackGrainsGen2::assign_gaps()
 		  if (zmin < -m->zpoints) zmin = -m->zpoints;
 		  if (zmax > 2 * m->zpoints - 1) zmax = (2 * m->zpoints - 1);
 		}
-		if (m->periodic_boundaries == false)
+		if (m_periodic_boundaries == false)
 		{
 		  if (xmin < 0) xmin = 0;
 		  if (xmax > m->xpoints - 1) xmax = m->xpoints - 1;
@@ -1561,12 +1561,12 @@ void PackGrainsGen2::assign_gaps()
 				  x = float(column) * m->resx;
 				  y = float(row) * m->resy;
 				  z = float(plane) * m->resz;
-				  if (iter1 < 0) x = x - m->sizex;
-				  if (iter1 > m->xpoints - 1) x = x + m->sizex;
-				  if (iter2 < 0) y = y - m->sizey;
-				  if (iter2 > m->ypoints - 1) y = y + m->sizey;
-				  if (iter3 < 0) z = z - m->sizez;
-				  if (iter3 > m->zpoints - 1) z = z + m->sizez;
+				  if (iter1 < 0) x = x - sizex;
+				  if (iter1 > m->xpoints - 1) x = x + sizex;
+				  if (iter2 < 0) y = y - sizey;
+				  if (iter2 > m->ypoints - 1) y = y + sizey;
+				  if (iter3 < 0) z = z - sizez;
+				  if (iter3 > m->zpoints - 1) z = z + sizez;
 				  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
 				  dist = sqrtf(dist);
 				  if (dist < radcur1)
@@ -1622,10 +1622,10 @@ void PackGrainsGen2::cleanup_grains()
 	  int column, row, plane;
 	  int index;
 	  float minsize = 0;
-	  m->gsizes.resize(m->m_Grains.size());
+	  gsizes.resize(m->m_Grains.size());
 	  for (size_t i = 1; i < m->m_Grains.size(); i++)
 	  {
-		m->gsizes[i] = 0;
+		gsizes[i] = 0;
 	  }
 	  for (int i = 0; i < m->totalpoints; i++)
 	  {
@@ -1645,7 +1645,7 @@ void PackGrainsGen2::cleanup_grains()
 				{
 					good = 1;
 					neighbor = index + neighpoints[j];
-					if (m->periodic_boundaries == false)
+					if (m_periodic_boundaries == false)
 					{
 						if (j == 0 && plane == 0) good = 0;
 						if (j == 5 && plane == (m->zpoints - 1)) good = 0;
@@ -1659,7 +1659,7 @@ void PackGrainsGen2::cleanup_grains()
 							checked[neighbor] = true;
 						}
 					}
-					else if (m->periodic_boundaries == true)
+					else if (m_periodic_boundaries == true)
 					{
 						if (j == 0 && plane == 0) neighbor = neighbor + (m->xpoints*m->ypoints*m->zpoints);
 						if (j == 5 && plane == (m->zpoints - 1)) neighbor = neighbor - (m->xpoints*m->ypoints*m->zpoints);
@@ -1716,17 +1716,17 @@ void PackGrainsGen2::cleanup_grains()
 	  }
 	  for (int i = 0; i < m->totalpoints; i++)
 	  {
-		if(m->grain_indicies[i] > 0) m->gsizes[m->grain_indicies[i]]++;
+		if(m->grain_indicies[i] > 0) gsizes[m->grain_indicies[i]]++;
 	  }
-	  m->newnames.resize(m->m_Grains.size());
+	  newnames.resize(m->m_Grains.size());
 	  int goodcount = 1;
 	  for (size_t i = 1; i < m->m_Grains.size(); i++)
     {
-      m->newnames[i] = 0;
-      if(m->gsizes[i] > 0)
+      newnames[i] = 0;
+      if(gsizes[i] > 0)
       {
         m->m_Grains[goodcount] = m->m_Grains[i];
-        m->newnames[i] = goodcount;
+        newnames[i] = goodcount;
         goodcount++;
       }
     }
@@ -1734,7 +1734,7 @@ void PackGrainsGen2::cleanup_grains()
 	  {
 		if (m->grain_indicies[i] > 0)
 		{
-		  m->grain_indicies[i] = m->newnames[m->grain_indicies[i]];
+		  m->grain_indicies[i] = newnames[m->grain_indicies[i]];
 		}
 	  }
 	  m->m_Grains.resize(goodcount);
