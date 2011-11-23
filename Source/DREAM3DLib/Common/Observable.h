@@ -35,6 +35,7 @@
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 class Observer;
@@ -58,6 +59,8 @@ class DREAM3DLib_EXPORT Observable
   public:
     Observable();
     virtual ~Observable();
+
+    DREAM3D_TYPE_MACRO(Observable);
 
     enum ObserverAspect
     {

@@ -65,7 +65,7 @@ class MatchCrystallography : public Observable
   public:
     DREAM3D_SHARED_POINTERS(MatchCrystallography);
     DREAM3D_STATIC_NEW_MACRO(MatchCrystallography);
-    DREAM3D_TYPE_MACRO(MatchCrystallography);
+    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, Observable);
 
     virtual ~MatchCrystallography();
 

@@ -60,7 +60,7 @@ class GrainGenerator : public AbstractPipeline, public Observer
 {
   public:
     DREAM3D_SHARED_POINTERS(GrainGenerator);
-    DREAM3D_TYPE_MACRO(GrainGenerator);
+    DREAM3D_TYPE_MACRO_SUPER(GrainGenerator, Observer);
 
     DREAM3D_STATIC_NEW_MACRO(GrainGenerator);
 

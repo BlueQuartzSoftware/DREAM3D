@@ -56,7 +56,7 @@ class FindNeighbors : public Observable
   public:
     DREAM3D_SHARED_POINTERS(FindNeighbors);
     DREAM3D_STATIC_NEW_MACRO(FindNeighbors);
-    DREAM3D_TYPE_MACRO(FindNeighbors);
+    DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, Observable);
 
     virtual ~FindNeighbors();
 

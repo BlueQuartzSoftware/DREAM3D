@@ -59,7 +59,7 @@ class AdjustVolume : public Observable
   public:
     DREAM3D_SHARED_POINTERS(AdjustVolume);
     DREAM3D_STATIC_NEW_MACRO(AdjustVolume);
-    DREAM3D_TYPE_MACRO(AdjustVolume);
+    DREAM3D_TYPE_MACRO_SUPER(AdjustVolume, Observable);
 
     virtual ~AdjustVolume();
 

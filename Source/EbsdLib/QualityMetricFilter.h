@@ -37,10 +37,10 @@
 #ifndef _QUALITYMETRICFILTER_H_
 #define _QUALITYMETRICFILTER_H_
 
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3DLib/Common/AIMArray.hpp"
 
 namespace Detail {
@@ -64,20 +64,20 @@ namespace Detail {
 class EbsdLib_EXPORT QualityMetricFilter
 {
   public:
-    MXA_SHARED_POINTERS(QualityMetricFilter)
-    MXA_TYPE_MACRO(QualityMetricFilter)
-    MXA_STATIC_NEW_MACRO(QualityMetricFilter)
+    EBSD_SHARED_POINTERS(QualityMetricFilter)
+    EBSD_TYPE_MACRO(QualityMetricFilter)
+    EBSD_STATIC_NEW_MACRO(QualityMetricFilter)
 
     virtual ~QualityMetricFilter();
 
-    MXA_INSTANCE_STRING_PROPERTY(FieldName)
-    MXA_INSTANCE_PROPERTY(float, FieldValue)
-    MXA_INSTANCE_STRING_PROPERTY(FieldOperator)
+    EBSD_INSTANCE_STRING_PROPERTY(FieldName)
+    EBSD_INSTANCE_PROPERTY(float, FieldValue)
+    EBSD_INSTANCE_STRING_PROPERTY(FieldOperator)
 
-    MXA_INSTANCE_PROPERTY(void*, Input)
-    MXA_INSTANCE_PROPERTY(size_t, NumValues)
-    MXA_INSTANCE_PROPERTY(Ebsd::NumType, DataType);
-    MXA_INSTANCE_PROPERTY(AIMArray<bool>::Pointer, Output)
+    EBSD_INSTANCE_PROPERTY(void*, Input)
+    EBSD_INSTANCE_PROPERTY(size_t, NumValues)
+    EBSD_INSTANCE_PROPERTY(Ebsd::NumType, DataType);
+    EBSD_INSTANCE_PROPERTY(AIMArray<bool>::Pointer, Output)
 
     int filter();
 

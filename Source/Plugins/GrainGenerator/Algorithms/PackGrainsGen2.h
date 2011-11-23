@@ -62,7 +62,7 @@ class PackGrainsGen2 : public Observable
   public:
     DREAM3D_SHARED_POINTERS(PackGrainsGen2);
     DREAM3D_STATIC_NEW_MACRO(PackGrainsGen2);
-    DREAM3D_TYPE_MACRO(PackGrainsGen2);
+    DREAM3D_TYPE_MACRO_SUPER(PackGrainsGen2, Observable);
 
     virtual ~PackGrainsGen2();
 
@@ -173,7 +173,7 @@ class PackGrainsGen2 : public Observable
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
-	
+
 	PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
     void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented
 };

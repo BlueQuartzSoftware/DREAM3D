@@ -81,7 +81,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
   public:
     EBSD_SHARED_POINTERS(H5CtfReader)
     EBSD_STATIC_NEW_MACRO(H5CtfReader)
-    EBSD_TYPE_MACRO(H5CtfReader)
+    EBSD_TYPE_MACRO_SUPER(H5CtfReader, CtfReader)
     virtual ~H5CtfReader();
 
     /**

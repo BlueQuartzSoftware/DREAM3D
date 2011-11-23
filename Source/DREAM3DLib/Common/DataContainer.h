@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
   public:
     DREAM3D_SHARED_POINTERS(DataContainer)
     DREAM3D_STATIC_NEW_MACRO(DataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(DataContainer, Observable);
 
     virtual ~DataContainer();
 

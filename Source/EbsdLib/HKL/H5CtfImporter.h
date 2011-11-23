@@ -64,7 +64,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
 
   public:
     EBSD_SHARED_POINTERS(H5CtfImporter)
-    EBSD_TYPE_MACRO(H5CtfImporter)
+    EBSD_TYPE_MACRO_SUPER(H5CtfImporter, EbsdImporter)
     EBSD_STATIC_NEW_SUPERCLASS(EbsdImporter, H5CtfImporter)
 
     virtual ~H5CtfImporter();

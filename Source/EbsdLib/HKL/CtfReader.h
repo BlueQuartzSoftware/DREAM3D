@@ -69,6 +69,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     CtfReader();
     virtual ~CtfReader();
 
+    EBSD_TYPE_MACRO_SUPER(CtfReader, EbsdReader)
+
 
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ebsd::Ctf::ChannelTextFile)
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
