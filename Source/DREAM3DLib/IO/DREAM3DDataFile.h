@@ -43,6 +43,9 @@
 class DREAM3DLib_EXPORT DREAM3DDataFile
 {
   public:
+    DREAM3D_SHARED_POINTERS(DREAM3DDataFile);
+    DREAM3D_TYPE_MACRO(DREAM3DDataFile);
+
     DREAM3DDataFile()
     {
       m_Dimensions[0] = 0;

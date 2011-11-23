@@ -14,12 +14,12 @@ include_directories(${PROJECT_CODE_DIR} )
 #-- Now set source files that do not need Qt.
 SET (GrainGenerator_HDRS
   ${PROJECT_SOURCE_DIR}/GrainGenerator.h
-  ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.h
+#  ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.h
 )
 
 SET (GrainGenerator_SRCS
   ${PROJECT_SOURCE_DIR}/GrainGenerator.cpp
-  ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.cpp
+#  ${PROJECT_SOURCE_DIR}/GrainGeneratorFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/" "${GrainGenerator_HDRS}" "${GrainGenerator_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

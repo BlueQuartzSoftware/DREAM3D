@@ -56,7 +56,8 @@ class DxWriter : public DREAM3D::FileWriter
   public:
     DREAM3D_SHARED_POINTERS(DxWriter)
     DREAM3D_STATIC_NEW_MACRO(DxWriter)
-    DREAM3D_TYPE_MACRO(DxWriter)
+    DREAM3D_TYPE_MACRO_SUPER(DxWriter, DREAM3D::FileWriter)
+
     static DREAM3D::FileWriter::Pointer NewDREAM3DFileWriter()
     {
       DxWriter* ptr = new DxWriter();

@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
@@ -75,8 +75,8 @@ class MatchCrystallography : public Observable
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
-    GrainGeneratorFunc*getGrainGenFunc() { return m; }
+    void setGrainGenFunc(DataContainer* gg) { m = gg; }
+    DataContainer*getGrainGenFunc() { return m; }
 
     std::vector<Ebsd::CrystalStructure> crystruct;
 
@@ -106,7 +106,7 @@ class MatchCrystallography : public Observable
 
 protected:
     MatchCrystallography();
-    GrainGeneratorFunc* m;
+    DataContainer* m;
 
   private:
 

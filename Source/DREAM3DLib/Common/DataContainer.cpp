@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 // C Includes
 
@@ -54,7 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGeneratorFunc::GrainGeneratorFunc()
+DataContainer::DataContainer()
 {
   grain_indicies = NULL;
   ellipfuncs = NULL;
@@ -78,7 +78,7 @@ GrainGeneratorFunc::GrainGeneratorFunc()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainGeneratorFunc::~GrainGeneratorFunc()
+DataContainer::~DataContainer()
 {
 
 }

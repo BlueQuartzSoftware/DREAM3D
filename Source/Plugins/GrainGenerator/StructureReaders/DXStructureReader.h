@@ -41,7 +41,7 @@
 #include "DREAM3DLib/VTKUtils/VTKFileReader.h"
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 
-class GrainGeneratorFunc;
+class DataContainer;
 
 /**
  * @class DXStructureReader DXStructureReader.h AIM/Common/StructureReaders/DXStructureReader.h
@@ -63,7 +63,7 @@ class DXStructureReader : public AbstractStructureReader
 
     MXA_INSTANCE_STRING_PROPERTY(InputFileName)
 
-    int readStructure(GrainGeneratorFunc* m);
+    int readStructure(DataContainer* m);
 
   protected:
     DXStructureReader();

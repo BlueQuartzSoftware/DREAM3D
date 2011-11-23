@@ -57,6 +57,7 @@
 //-- Boost Includes
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include <boost/cast.hpp>
 
 
 #define SHARED_IS_NULL(ptr)\
@@ -145,8 +146,52 @@ static Pointer New args \
 /** Macro used to add standard methods to all classes, mainly type
  * information. */
 #define DREAM3D_TYPE_MACRO(thisClass) \
-    virtual const char* getNameOfClass() const \
-        {return #thisClass;}
+  public: \
+  virtual const char* getNameOfClass() const  {return #thisClass;}\
+  static int IsTypeOf(const char *type) \
+  { \
+    if ( !strcmp(#thisClass,type) ) \
+      { \
+      return 1; \
+      } \
+    return 0; \
+  } \
+  virtual int IsA(const char *type) \
+  { \
+    return this->thisClass::IsTypeOf(type); \
+  } \
+  template <class Target, class Source>\
+  inline Target polymorphic_downcast(Source* x) { \
+      if( dynamic_cast<Target>(x) != x ) { \
+        return NULL;\
+      }\
+      return static_cast<Target>(x);\
+  }
+
+
+#define DREAM3D_TYPE_MACRO_SUPER(thisClass,superclass) \
+  public: \
+  virtual const char* getNameOfClass() const  {return #thisClass;}\
+  static int IsTypeOf(const char *type) \
+  { \
+    if ( !strcmp(#thisClass,type) ) \
+      { \
+      return 1; \
+      } \
+    return superclass::IsTypeOf(type); \
+  } \
+  virtual int IsA(const char *type) \
+  { \
+    return this->thisClass::IsTypeOf(type); \
+  } \
+  template <class Target, class Source>\
+  static Target polymorphic_downcast(Source* x) { \
+      if( dynamic_cast<Target>(x) != x ) { \
+        return NULL;\
+      }\
+      return static_cast<Target>(x);\
+  }
+
 
 //------------------------------------------------------------------------------
 // Macros for Properties

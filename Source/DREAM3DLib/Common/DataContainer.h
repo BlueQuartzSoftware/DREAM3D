@@ -45,14 +45,13 @@
 #include <vector>
 #include <map>
 
-#include <boost/shared_array.hpp>
+
+//#include <boost/shared_array.hpp>
 
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/Grain.h"
 #include "DREAM3DLib/Common/Observable.h"
@@ -64,13 +63,13 @@
  * @date
  * @version 1.0
  */
-class GrainGeneratorFunc : public Observable
+class DREAM3DLib_EXPORT DataContainer : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainGeneratorFunc)
-    DREAM3D_STATIC_NEW_MACRO(GrainGeneratorFunc)
+    DREAM3D_SHARED_POINTERS(DataContainer)
+    DREAM3D_STATIC_NEW_MACRO(DataContainer)
 
-    virtual ~GrainGeneratorFunc();
+    virtual ~DataContainer();
 
     // Volume Dimensional Information
     float resx;
@@ -101,11 +100,11 @@ class GrainGeneratorFunc : public Observable
     std::vector<float> phasefraction;
 
 protected:
-    GrainGeneratorFunc();
+    DataContainer();
   private:
 
-    GrainGeneratorFunc(const GrainGeneratorFunc&);
-    void operator =(const GrainGeneratorFunc&);
+    DataContainer(const DataContainer&);
+    void operator =(const DataContainer&);
 };
 
 #endif

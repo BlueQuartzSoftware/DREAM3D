@@ -133,7 +133,7 @@ int main(int argc, char **argv) {
 #include <iostream>
 
 
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "GrainGenerator/StructureReaders/DXStructureReader.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
