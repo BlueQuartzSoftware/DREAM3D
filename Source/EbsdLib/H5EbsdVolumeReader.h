@@ -61,7 +61,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
 
   public:
     EBSD_SHARED_POINTERS(H5EbsdVolumeReader)
-    EBSD_TYPE_MACRO(H5EbsdVolumeReader)
+    EBSD_TYPE_MACRO_SUPER(H5EbsdVolumeReader, H5EbsdVolumeInfo)
     EBSD_STATIC_NEW_MACRO(H5EbsdVolumeReader)
 
     virtual ~H5EbsdVolumeReader();

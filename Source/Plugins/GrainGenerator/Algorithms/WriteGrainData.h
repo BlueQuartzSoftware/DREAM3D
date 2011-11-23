@@ -59,7 +59,7 @@ class WriteGrainData : public Observable
   public:
     DREAM3D_SHARED_POINTERS(WriteGrainData);
     DREAM3D_STATIC_NEW_MACRO(WriteGrainData);
-    DREAM3D_TYPE_MACRO(WriteGrainData);
+    DREAM3D_TYPE_MACRO_SUPER(WriteGrainData, Observable);
 
     virtual ~WriteGrainData();
 

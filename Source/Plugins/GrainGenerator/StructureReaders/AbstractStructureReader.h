@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -37,6 +37,9 @@
 #ifndef _AbstractStructureReader_h_
 #define _AbstractStructureReader_h_
 
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+
 class DataContainer;
 
 /**
@@ -50,7 +53,8 @@ class DataContainer;
 class  AbstractStructureReader
 {
   public:
-    MXA_SHARED_POINTERS( AbstractStructureReader)
+    DREAM3D_SHARED_POINTERS( AbstractStructureReader)
+    DREAM3D_TYPE_MACRO(AbstractStructureReader)
 
     virtual ~AbstractStructureReader() { } ;
 

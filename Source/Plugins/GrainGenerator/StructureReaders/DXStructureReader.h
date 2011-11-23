@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -36,8 +36,9 @@
 #ifndef DXSTRUCTUREREADER_H_
 #define DXSTRUCTUREREADER_H_
 
-#include <MXA/Common/MXASetGetMacros.h>
+
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileReader.h"
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 
@@ -54,14 +55,14 @@ class DataContainer;
 class DXStructureReader : public AbstractStructureReader
 {
   public:
-    MXA_SHARED_POINTERS(DXStructureReader)
-    MXA_STATIC_NEW_MACRO(DXStructureReader)
-    MXA_TYPE_MACRO(DXStructureReader)
+    DREAM3D_SHARED_POINTERS(DXStructureReader)
+    DREAM3D_STATIC_NEW_MACRO(DXStructureReader)
+    DREAM3D_TYPE_MACRO_SUPER(DXStructureReader, AbstractStructureReader)
 
     virtual ~DXStructureReader();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(InputFileName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFileName)
 
     int readStructure(DataContainer* m);
 

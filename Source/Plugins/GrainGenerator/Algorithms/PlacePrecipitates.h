@@ -56,7 +56,7 @@ class PlacePrecipitates : public Observable
   public:
     DREAM3D_SHARED_POINTERS(PlacePrecipitates);
     DREAM3D_STATIC_NEW_MACRO(PlacePrecipitates);
-    DREAM3D_TYPE_MACRO(PlacePrecipitates);
+    DREAM3D_TYPE_MACRO_SUPER(PlacePrecipitates, Observable);
 
     virtual ~PlacePrecipitates();
 

@@ -33,6 +33,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
  * @class Observer Observer.h DREAM3D/Common/Observer.h
@@ -47,6 +48,8 @@ class DREAM3DLib_EXPORT Observer
 {
   public:
     Observer();
+    DREAM3D_TYPE_MACRO(Observer)
+
     virtual ~Observer();
 
     /**

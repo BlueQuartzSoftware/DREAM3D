@@ -59,7 +59,7 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
   public:
     CtfFields();
     virtual ~CtfFields();
-
+    EBSD_TYPE_MACRO_SUPER(CtfFields, AbstractEbsdFields)
 
     virtual std::vector<std::string> getFieldNames();
 

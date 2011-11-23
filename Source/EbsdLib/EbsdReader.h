@@ -60,6 +60,8 @@ class EbsdLib_EXPORT EbsdReader
 {
   public:
     EbsdReader();
+    EBSD_TYPE_MACRO(EbsdReader)
+
     virtual ~EbsdReader();
 
     /** @brief Allow the user to set the origin of the scan */
