@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
@@ -75,8 +75,10 @@ class MatchCrystallography : public Observable
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
-    GrainGeneratorFunc*getGrainGenFunc() { return m; }
+    void setGrainGenFunc(DataContainer* gg) { m = gg; }
+    DataContainer*getGrainGenFunc() { return m; }
+
+    std::vector<Ebsd::CrystalStructure> crystruct;
 
 	std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;
@@ -89,7 +91,10 @@ class MatchCrystallography : public Observable
 	int readODFData(H5StatsReader::Pointer h5io);
     int readMisorientationData(H5StatsReader::Pointer h5io);
 
-    void assign_eulers();
+    std::vector<float> unbiasedvol;
+    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
+
+	void assign_eulers();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
@@ -101,7 +106,7 @@ class MatchCrystallography : public Observable
 
 protected:
     MatchCrystallography();
-    GrainGeneratorFunc* m;
+    DataContainer* m;
 
   private:
 

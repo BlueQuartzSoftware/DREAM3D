@@ -71,10 +71,10 @@ void FindNeighbors::find_neighbors()
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
-  m->totalsurfacearea = m->m_TotalSurfaceArea->WritePointer(0, xtalCount);
+  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
   for (size_t i = 1; i < xtalCount; ++i)
   {
-    m->totalsurfacearea[i] = 0.0f;
+    totalsurfacearea[i] = 0.0f;
   }
 
   notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);
@@ -172,7 +172,7 @@ void FindNeighbors::find_neighbors()
       float area = number * m->resx * m->resy;
       if (m->m_Grains[i]->surfacegrain == 0 && (neigh > i || m->m_Grains[neigh]->surfacegrain == 1))
       {
-        m->totalsurfacearea[phase] = m->totalsurfacearea[phase] + area;
+        totalsurfacearea[phase] = totalsurfacearea[phase] + area;
       }
 
       // Push the neighbor grain id back onto the list so we stay synced up

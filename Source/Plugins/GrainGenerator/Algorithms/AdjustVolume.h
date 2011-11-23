@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "GrainGenerator/GrainGeneratorFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 
 /**
@@ -66,15 +66,17 @@ class AdjustVolume : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(GrainGeneratorFunc* gg) { m = gg; }
-    GrainGeneratorFunc*getGrainGenFunc() { return m; }
+    void setGrainGenFunc(DataContainer* gg) { m = gg; }
+    DataContainer*getGrainGenFunc() { return m; }
 
-    virtual void execute();
+    std::vector<int> gsizes;
+
+	virtual void execute();
     void adjust_boundaries();
 
   protected:
     AdjustVolume();
-    GrainGeneratorFunc* m;
+    DataContainer* m;
 
   private:
 
