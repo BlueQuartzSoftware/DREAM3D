@@ -46,14 +46,12 @@
 #include <map>
 
 
-#include <boost/shared_array.hpp>
-
+//#include <boost/shared_array.hpp>
+//-- This is getting Dangerously close to a circular dependency between EbsdLib and DREAM3DLib.
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/AIMArray.hpp"
 #include "DREAM3DLib/Common/Grain.h"
 #include "DREAM3DLib/Common/Observable.h"
@@ -65,7 +63,7 @@
  * @date
  * @version 1.0
  */
-class DataContainer : public Observable
+class DREAM3DLib_EXPORT DataContainer : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(DataContainer)
