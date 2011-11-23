@@ -45,7 +45,6 @@
 #include <vector>
 #include <map>
 
-
 #include <boost/shared_array.hpp>
 
 #include "EbsdLib/EbsdConstants.h"
