@@ -45,6 +45,11 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
+#include "GrainGenerator/Algorithms/FindNeighbors.h"
+
+#define NEW_SHARED_ARRAY(var, type, size)\
+  boost::shared_array<type> var##Array(new type[size]);\
+  type* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -69,8 +74,17 @@ MatchCrystallography::~MatchCrystallography()
 
 void MatchCrystallography::execute()
 {
-
+  int err = 0;
   DREAM3D_RANDOMNG_NEW()
+
+  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
+  readODFData(h5reader);
+  readMisorientationData(h5reader);
+
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setGrainGenFunc(m);
+  find_neighbors->execute();
+  err = find_neighbors->getErrorCondition();
 
   assign_eulers();
   measure_misorientations();
@@ -80,6 +94,143 @@ void MatchCrystallography::execute()
   m_ErrorMessage = "PackGrainsGen2 Completed";
   m_ErrorCondition = 0;
 }
+
+#define GG_INIT_DOUBLE_ARRAY(array, value, size)\
+    for(size_t n = 0; n < size; ++n) { array[n] = (value); }
+
+void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
+{
+  //------------------
+  size_t nElements = 0;
+  size_t size = structures.size();
+
+  m->crystruct.resize(size+1);
+  m->pptFractions.resize(size + 1);
+  m->phaseType.resize(size+1);
+  m->phasefraction.resize(size+1);
+
+  // Initialize the first slot in these arrays since they should never be used
+  m->crystruct[0] = Ebsd::UnknownCrystalStructure;
+  m->phasefraction[0] = 0.0;
+  m->phaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
+  m->pptFractions[0] = -1.0;
+
+  actualodf.resize(size+1);
+  simodf.resize(size+1);
+  actualmdf.resize(size+1);
+  simmdf.resize(size+1);
+  for(size_t i= 1; i < size+1; ++i)
+  {
+    if(m->crystruct[i] == Ebsd::Hexagonal) nElements = 36*36*12;
+    if(m->crystruct[i] == Ebsd::Cubic) nElements = 18*18*18;
+
+    float initValue = 1.0/(float)(nElements);
+    actualodf[i] = SharedFloatArray(new float [nElements]);
+    GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
+
+    simodf[i] = SharedFloatArray(new float [nElements]);
+    GG_INIT_DOUBLE_ARRAY(simodf[i], 0.0, nElements);
+    actualmdf[i] = SharedFloatArray(new float [nElements]);
+    GG_INIT_DOUBLE_ARRAY(actualmdf[i], initValue, nElements);
+    simmdf[i] = SharedFloatArray(new float [nElements]);
+    GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
+
+  }
+}
+
+
+
+
+int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
+{
+  std::vector<float> density;
+  int err = 0;
+  // Read the Phase and Crystal Structure information from the Stats File
+  std::vector<int> phases;
+  std::vector<Ebsd::CrystalStructure> structures;
+  err = h5io->getPhaseAndCrystalStructures(phases, structures);
+  if (err < 0)
+  {
+    return err;
+  }
+  // Now that we have that information - initialize the arrays
+  initializeArrays(structures);
+
+  int phase = -1;
+  size_t size = phases.size();
+  for(size_t i = 0; i< size ;i++)
+  {
+      phase = phases[i];
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::ODF, density);
+    if (err < 0)
+    {
+    //FIXME: This should probably return an ERROR because nothing was read
+    return 10;
+    }
+    size_t numbins = 0;
+    if(m->crystruct[phase] == Ebsd::Hexagonal) numbins = 36*36*12;
+    if(m->crystruct[phase] == Ebsd::Cubic) numbins = 18*18*18;
+
+    if (numbins != density.size() )
+    {
+    std::cout << "GrainGeneratorFunc::readODFData Error: Mismatch in number of elements in the 'ODF' "
+       << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
+       << " elements and we need " << numbins << " Elements. "<< std::endl;
+    return -1;
+    }
+    for (size_t j=0;j<numbins;j++)
+    {
+		actualodf[phase][j] = density[j];
+    }
+  }
+  return err;
+}
+
+int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
+{
+  std::vector<float> density;
+  int err = 0;
+  // Read the Phase and Crystal Structure information from the Stats File
+  std::vector<int> phases;
+  std::vector<Ebsd::CrystalStructure> structures;
+  err = h5io->getPhaseAndCrystalStructures(phases, structures);
+  if (err < 0)
+  {
+    return err;
+  }
+  int phase = -1;
+  size_t size = phases.size();
+  for(size_t i = 0; i< size ;i++)
+  {
+      phase = phases[i];
+    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::MisorientationBins, density);
+    if (err < 0)
+    {
+     //FIXME: This should probably return an ERROR because nothing was read
+    return 10;
+    }
+    size_t numbins = 0;
+    if(m->crystruct[phase] == Ebsd::Hexagonal) numbins = 36*36*12;
+    if(m->crystruct[phase] == Ebsd::Cubic) numbins = 18*18*18;
+
+    if (numbins != density.size() )
+    {
+    std::cout << "GrainGeneratorFunc::readMisorientationData Error: Mismatch in number of elements in the 'ODF' "
+       << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
+       << " elements and we need " << numbins << " Elements. "<< std::endl;
+    return -1;
+    }
+
+    for (size_t k = 0; k < numbins; k++)
+    {
+		actualmdf[phase][k] = density[k];
+    }
+  }
+  return err;
+}
+
+
+
 
 void MatchCrystallography::assign_eulers()
 {
@@ -109,7 +260,7 @@ void MatchCrystallography::assign_eulers()
   if(m->crystruct[phase] == Ebsd::Hexagonal) numbins = 15552;
     for (int j = 0; j < numbins; j++)
     {
-      float density = m->actualodf[phase][j];
+      float density = actualodf[phase][j];
       totaldensity = totaldensity + density;
       if (random >= totaldensity) choose = j;
     }
@@ -125,13 +276,13 @@ void MatchCrystallography::assign_eulers()
     m->m_Grains[i]->avg_quat[4] = q[4];
     if (m->m_Grains[i]->surfacegrain == 0)
     {
-      m->simodf[phase][choose] = m->simodf[phase][choose] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
+      simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
       m->unbiasedvol[phase] = m->unbiasedvol[phase] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
     }
   }
   for(int i=0;i<numbins;i++)
   {
-	  m->simodf[phase][i] = m->simodf[phase][i]/m->unbiasedvol[phase];
+	  simodf[phase][i] = simodf[phase][i]/m->unbiasedvol[phase];
   }
 }
 
@@ -163,8 +314,8 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
   w = m_OrientatioOps[m->crystruct[phase]]->getMisoQuat(q1,q2,n1,n2,n3);
   OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
   newmisobin = m_OrientatioOps[m->crystruct[phase]]->getMisoBin(n1, n2, n3);
-  mdfchange = mdfchange + (((m->actualmdf[phase][curmisobin]-m->simmdf[phase][curmisobin])*(m->actualmdf[phase][curmisobin]-m->simmdf[phase][curmisobin])) - ((m->actualmdf[phase][curmisobin]-(m->simmdf[phase][curmisobin]-(neighsurfarea/m->totalsurfacearea[phase])))*(m->actualmdf[phase][curmisobin]-(m->simmdf[phase][curmisobin]-(neighsurfarea/m->totalsurfacearea[phase])))));
-  mdfchange = mdfchange + (((m->actualmdf[phase][newmisobin]-m->simmdf[phase][newmisobin])*(m->actualmdf[phase][newmisobin]-m->simmdf[phase][newmisobin])) - ((m->actualmdf[phase][newmisobin]-(m->simmdf[phase][newmisobin]+(neighsurfarea/m->totalsurfacearea[phase])))*(m->actualmdf[phase][newmisobin]-(m->simmdf[phase][newmisobin]+(neighsurfarea/m->totalsurfacearea[phase])))));
+  mdfchange = mdfchange + (((actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])*(actualmdf[phase][curmisobin]-simmdf[phase][curmisobin])) - ((actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/m->totalsurfacearea[phase])))*(actualmdf[phase][curmisobin]-(simmdf[phase][curmisobin]-(neighsurfarea/m->totalsurfacearea[phase])))));
+  mdfchange = mdfchange + (((actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])*(actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])) - ((actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/m->totalsurfacearea[phase])))*(actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/m->totalsurfacearea[phase])))));
 }
 
 void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float>* misolist,std::vector<float>* neighborsurfacealist)
@@ -201,8 +352,8 @@ void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::v
   misolist->at(3 * j) = miso1;
   misolist->at(3 * j + 1) = miso2;
   misolist->at(3 * j + 2) = miso3;
-  m->simmdf[phase][curmisobin] = m->simmdf[phase][curmisobin] - (neighsurfarea / m->totalsurfacearea[phase]);
-  m->simmdf[phase][newmisobin] = m->simmdf[phase][newmisobin] + (neighsurfarea / m->totalsurfacearea[phase]);
+  simmdf[phase][curmisobin] = simmdf[phase][curmisobin] - (neighsurfarea / m->totalsurfacearea[phase]);
+  simmdf[phase][newmisobin] = simmdf[phase][newmisobin] + (neighsurfarea / m->totalsurfacearea[phase]);
 }
 
 
@@ -251,7 +402,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   totaldensity = 0;
   for (int i = 0; i < numbins; i++)
   {
-    float density = m->actualodf[phase][i];
+    float density = actualodf[phase][i];
     totaldensity = totaldensity + density;
     if (random >= totaldensity) choose = i;
   }
@@ -259,11 +410,11 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   m_OrientatioOps[m->crystruct[phase]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
-  float odfchange = ((m->actualodf[phase][choose] - m->simodf[phase][choose]) * (m->actualodf[phase][choose] - m->simodf[phase][choose])) - ((m->actualodf[phase][choose] - (m->simodf[phase][choose]
-      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]))) * (m->actualodf[phase][choose] - (m->simodf[phase][choose]
+  float odfchange = ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose])) - ((actualodf[phase][choose] - (simodf[phase][choose]
+      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
       + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]))));
-  odfchange = odfchange + (((m->actualodf[phase][g1odfbin] - m->simodf[phase][g1odfbin]) * (m->actualodf[phase][g1odfbin] - m->simodf[phase][g1odfbin])) - ((m->actualodf[phase][g1odfbin] - (m->simodf[phase][g1odfbin]
-      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]))) * (m->actualodf[phase][g1odfbin] - (m->simodf[phase][g1odfbin]
+  odfchange = odfchange + (((actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin] - simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
+      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
       - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])))));
 
   float mdfchange = 0;
@@ -292,8 +443,8 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
     m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
     m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
     m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
-    m->simodf[phase][choose] = m->simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]);
-    m->simodf[phase][g1odfbin] = m->simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]);
+    simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]);
+    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]);
     size_t size = 0;
     if (NULL != nlist)
     {
@@ -365,13 +516,13 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   OrientationMath::eulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
   g2odfbin = m_OrientatioOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 
-  float odfchange = ((m->actualodf[phase][g1odfbin]-m->simodf[phase][g1odfbin]) * (m->actualodf[phase][g1odfbin]-m->simodf[phase][g1odfbin])) - ((m->actualodf[phase][g1odfbin]
-     -(m->simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx
-          * m->resy * m->resz / m->unbiasedvol[phase]))) * (m->actualodf[phase][g1odfbin]-(m->simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
+  float odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
+     -(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx
+          * m->resy * m->resz / m->unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
       + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]))));
-  odfchange = odfchange + (((m->actualodf[phase][g2odfbin]-m->simodf[phase][g2odfbin]) * (m->actualodf[phase][g2odfbin]-m->simodf[phase][g2odfbin])) - ((m->actualodf[phase][g2odfbin]
-     -(m->simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx
-          * m->resy *m-> resz / m->unbiasedvol[phase]))) * (m->actualodf[phase][g2odfbin]-(m->simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
+  odfchange = odfchange + (((actualodf[phase][g2odfbin]-simodf[phase][g2odfbin]) * (actualodf[phase][g2odfbin]-simodf[phase][g2odfbin])) - ((actualodf[phase][g2odfbin]
+     -(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx
+          * m->resy *m-> resz / m->unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
       + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])))));
 
 
@@ -422,9 +573,9 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
     m->m_Grains[selectedgrain2]->euler1 = g1ea1;
     m->m_Grains[selectedgrain2]->euler2 = g1ea2;
     m->m_Grains[selectedgrain2]->euler3 = g1ea3;
-    m->simodf[phase][g1odfbin] = m->simodf[phase][g1odfbin] + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
+    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
         - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]);
-    m->simodf[phase][g2odfbin] = m->simodf[phase][g2odfbin] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
+    simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase])
         - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / m->unbiasedvol[phase]);
 
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
@@ -495,11 +646,11 @@ void MatchCrystallography::matchCrystallography()
     currentmdferror = 0;
     for(int i=0;i<numbins;i++)
     {
-      currentodferror = currentodferror + ((m->actualodf[iter][i]-m->simodf[iter][i])*(m->actualodf[iter][i]-m->simodf[iter][i]));
+      currentodferror = currentodferror + ((actualodf[iter][i]-simodf[iter][i])*(actualodf[iter][i]-simodf[iter][i]));
     }
     for(int i=0;i<(numbins);i++)
     {
-      currentmdferror = currentmdferror + ((m->actualmdf[iter][i]-m->simmdf[iter][i])*(m->actualmdf[iter][i]-m->simmdf[iter][i]));
+      currentmdferror = currentmdferror + ((actualmdf[iter][i]-simmdf[iter][i])*(actualmdf[iter][i]-simmdf[iter][i]));
     }
     iterations++;
     badtrycount++;
@@ -597,7 +748,7 @@ void  MatchCrystallography::measure_misorientations ()
 
       if (m->m_Grains[i]->surfacegrain == 0 && (nname > i || m->m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
       {
-        m->simmdf[m->m_Grains[i]->phase][mbin] = m->simmdf[m->m_Grains[i]->phase][mbin] + (neighsurfarea / m->totalsurfacearea[m->m_Grains[i]->phase]);
+        simmdf[m->m_Grains[i]->phase][mbin] = simmdf[m->m_Grains[i]->phase][mbin] + (neighsurfarea / m->totalsurfacearea[m->m_Grains[i]->phase]);
       }
     }
   }

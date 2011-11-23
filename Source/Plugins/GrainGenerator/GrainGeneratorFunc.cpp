@@ -76,9 +76,6 @@ const static float CosOfHalf = cosf(0.5f);
 // -----------------------------------------------------------------------------
 GrainGeneratorFunc::GrainGeneratorFunc()
 {
-  GGseed = MXA::getMilliSeconds();
-
-
 // Just stuff to quiet the compiler
   float a = SinOfHalf;
   a = CosOfHalf;
