@@ -47,7 +47,7 @@
 
 
 //#include <boost/shared_array.hpp>
-//-- This is getting Dangerously close to a circular dependency between EbsdLib and DREAM3DLib.
+
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
