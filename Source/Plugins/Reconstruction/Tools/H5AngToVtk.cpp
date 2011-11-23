@@ -68,8 +68,8 @@
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
-#include "Reconstruction/ReconstructionFunc.h"
-
+#include "DREAM3DLib/Common/DataContainer.h"
+#include "Reconstruction/Algorithms/LoadSlices.h"
 
 
 #define _CHECK_FOR_ERROR(FuncClass, Message, err)\
@@ -137,7 +137,7 @@ int main(int argc, char **argv)
 //  int m_ZStartIndex = 0;
 //  int m_ZEndIndex = 0;
 
-  ReconstructionFunc::Pointer m = ReconstructionFunc::New();
+  DataContainer::Pointer m = DataContainer::New();
   std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes(1);
   // updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
    std::string manufacturer;
@@ -188,18 +188,18 @@ int main(int argc, char **argv)
 
   DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
 
-  m->initialize(m->xpoints, m->ypoints, m->zpoints,
+  LoadSlices::Pointer load_slices = LoadSlices::New();
+  load_slices->setGrainGenFunc(m.get());
+  load_slices->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz,
-                0, 0, 0,
-                0, crystalStructures,
-                m_PhaseTypes, precipFractions, m_AlignmentMethod);
+                crystalStructures, m_PhaseTypes, precipFractions);
   std::cout << "Loading EBSD Data...." << std::endl;
   std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;
 
   Ebsd::RefFrameZDir stackingOrder = ebsdReader->getStackingOrder();
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, stackingOrder, m_QualityMetricFilters);
   // Initialize the Quats so we can generate the IPF Colors
-  m->initializeQuats();
+  load_slices->initializeQuats();
 
   std::cout << "Writing VTK file" << std::endl;
 
@@ -207,7 +207,7 @@ int main(int argc, char **argv)
 
   WRITE_STRUCTURED_POINTS_HEADER("BINARY", m)
 
-  VoxelIPFColorScalarWriter<ReconstructionFunc> ipfWriter(m.get());
+  VoxelIPFColorScalarWriter<DataContainer> ipfWriter(m.get());
   ipfWriter.m_WriteBinaryFiles = true;
   ipfWriter.writeScalars(f);
 

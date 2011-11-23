@@ -63,7 +63,10 @@ DataContainer::DataContainer()
   euler2s = NULL;
   euler3s = NULL;
   surfacevoxels = NULL;
-
+  quats = NULL;
+  alreadychecked = NULL;
+  neighbors = NULL;
+  goodVoxels = NULL;
 
   INIT_AIMARRAY(m_GrainIndicies,int);
   INIT_AIMARRAY(m_Ellipfuncs,float);
@@ -72,6 +75,10 @@ DataContainer::DataContainer()
   INIT_AIMARRAY(m_Euler2s,float);
   INIT_AIMARRAY(m_Euler3s,float);
   INIT_AIMARRAY(m_SurfaceVoxels,char);
+  INIT_AIMARRAY(m_Neighbors,int);
+  INIT_AIMARRAY(m_GoodVoxels,bool);
+  INIT_AIMARRAY(m_Quats,float);
+  INIT_AIMARRAY(m_AlreadyChecked,bool);
 
 }
 
