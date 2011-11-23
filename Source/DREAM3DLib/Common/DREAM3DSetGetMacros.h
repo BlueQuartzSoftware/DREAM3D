@@ -57,7 +57,7 @@
 //-- Boost Includes
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/cast.hpp>
+
 
 
 #define SHARED_IS_NULL(ptr)\

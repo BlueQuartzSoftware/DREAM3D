@@ -44,6 +44,11 @@
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 
+#if defined (H5Support_NAMESPACE)
+using namespace H5Support_NAMESPACE;
+#endif
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -9,6 +9,9 @@
 /* Define to 1 if H5Support was built as a dynamic library */
 #cmakedefine H5Support_BUILT_AS_DYNAMIC_LIB @H5Support_BUILT_AS_DYNAMIC_LIB@
 
+/* Define the namespace we are going to use for the H5Support Codes */
+#cmakedefine H5Support_NAMESPACE @H5Support_NAMESPACE@
+
 /* Include the Overall Configuration header file */
 #include "@PROJECT_NAME@/@CMP_CONFIGURATION_FILE_NAME@"
 

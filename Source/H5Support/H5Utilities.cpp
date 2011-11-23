@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,10 +41,7 @@
 // C++ Includes
 #include <iostream>
 
-#include <H5Support/H5Lite.h>
-
-#include <MXA/Common/LogTime.h>
-#include <MXA/Utilities/StringUtils.h>
+#include "H5Support/H5Lite.h"
 
 #ifdef H5LITE_USE_MXA_CONSTRUCTS
 #include <MXA/DataWrappers/MXAAsciiStringData.h>
@@ -53,6 +50,9 @@
 #define CheckValidLocId(locId)\
   if (locId < 0 ) {std::cout << "Invalid HDF Location ID: " << locId << std::endl;return -1;}
 
+#if defined (H5Support_NAMESPACE)
+using namespace H5Support_NAMESPACE;
+#endif
 
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ herr_t H5Utilities::closeFile(hid_t &fileId)
 
   err = H5Fclose(fileId);
   if (err < 0) {
-    std::cout << logTime() << "Error Closing HDF5 File." << err << std::endl;
+    std::cout << "Error Closing HDF5 File." << err << std::endl;
   }
   fileId= -1;
   return err;
@@ -398,7 +398,7 @@ int32_t H5Utilities::createGroupsFromPath(const std::string &pathToCheck, hid_t 
       return gid;
     }
     err = H5Gclose(gid);
-    if (err < 0) { std::cout << logTime() << "Error closing group during group creation." << std::endl; return err; }
+    if (err < 0) { std::cout  << "Error closing group during group creation." << std::endl; return err; }
     return err; //Now return here as this was a special case.
   }
 
@@ -505,7 +505,7 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
   err = H5Oget_info(obj_id, &object_info);
   num_attrs = object_info.num_attrs;
 
-  for (hsize_t i=0; i<num_attrs; i++) 
+  for (hsize_t i=0; i<num_attrs; i++)
   {
     attr_id = H5Aopen_by_idx(obj_id, ".", H5_INDEX_NAME, H5_ITER_INC, i, H5P_DEFAULT, H5P_DEFAULT);
     name_size = 1 + H5Aget_name(attr_id, 0, NULL);
@@ -829,7 +829,7 @@ bool H5Utilities::isGroup(hid_t nodeId, const std::string &objName)   {
   err = H5Oget_info_by_name(nodeId, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err < 0)
   {
-    std::cout << DEBUG_OUT(logTime) << "Error in methd H5Gget_objinfo" << std::endl;
+    std::cout  << "Error in methd H5Gget_objinfo" << std::endl;
     return false;
   }
   switch (statbuf.type) {

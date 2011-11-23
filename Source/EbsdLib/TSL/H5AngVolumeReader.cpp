@@ -41,10 +41,14 @@
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
-#include "MXA/Utilities/StringUtils.h"
 
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Utilities/StringUtils.h"
 #include "EbsdLib/TSL/H5AngReader.h"
+
+#if defined (H5Support_NAMESPACE)
+using namespace H5Support_NAMESPACE;
+#endif
 
 // -----------------------------------------------------------------------------
 //

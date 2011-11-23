@@ -11,20 +11,38 @@
 #// This code was partly written under US Air Force Contract FA8650-07-D-5800
 #///////////////////////////////////////////////////////////////////////////////
 
-# set project's name
-PROJECT( EbsdLib )
-cmake_minimum_required(VERSION 2.8)
+if(DEFINED DREAM3DProj_BINARY_DIR)
+    # set project's name
+    PROJECT( EbsdLib )
+    cmake_minimum_required(VERSION 2.8)
+    
+    SET (EbsdLib_BUILT_AS_DYNAMIC_LIB)
+    IF (BUILD_SHARED_LIBS)
+        SET (EbsdLib_BUILT_AS_DYNAMIC_LIB 1)
+        IF (WIN32)
+            ADD_DEFINITIONS("-DEbsdLib_BUILT_AS_DYNAMIC_LIB")
+        ENDIF (WIN32)
+    ENDIF (BUILD_SHARED_LIBS)
+    
+    set (GENERATE_GIT_VERSION 1)
+    
+elseif(DEFINED PVEbsd_BINARY_DIR)
+    message(STATUS "EbsdLib Configuring in PVEbsd Plugin")
+    set (EbsdLib_SOURCE_DIR ${PVEbsd_SOURCE_DIR}/Code/EbsdLib)
+    SET (PROJECT_RESOURCES_DIR ${PVEbsd_SOURCE_DIR}/Resources)
+    set (CMP_SOURCE_DIR ${PVEbsd_SOURCE_DIR}/Support/cmp)
+    SET (EbsdLib_BUILT_AS_DYNAMIC_LIB 0)
+    set (PROJECT_NAME "EbsdLib")
+    SET (PROJECT_CODE_DIR ${PVEbsd_SOURCE_DIR}/Code)
+    set (EbsdLib_BINARY_DIR ${PVEbsd_BINARY_DIR}/EbsdLib)
+    set (PROJECT_INSTALL_HEADERS 0)
+    set (GENERATE_GIT_VERSION 0)
+    set (H5Support_HDF5_NAMESPACE "PVEbsd")
+
+endif()
 
 
-SET (EbsdLib_BUILT_AS_DYNAMIC_LIB)
-IF (BUILD_SHARED_LIBS)
-    SET (EbsdLib_BUILT_AS_DYNAMIC_LIB 1)
-    IF (WIN32)
-        ADD_DEFINITIONS("-DEbsdLib_BUILT_AS_DYNAMIC_LIB")
-    ENDIF (WIN32)
-ENDIF (BUILD_SHARED_LIBS)
 
-SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 if (NOT PROJECT_RESOURCES_DIR)
 SET (PROJECT_RESOURCES_DIR ${EbsdLib_SOURCE_DIR}/Resources)
 endif()
@@ -47,7 +65,7 @@ set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
 set (CMP_PROJECT_NAME "${PROJECT_NAME}")
 set (CMP_ENABLE_PLUGINS "0")
 set (CMP_LIB_SEARCH_DIRS "")
-set (CMP_GENERATE_VERSION_STRING 1)
+set (CMP_GENERATE_VERSION_STRING ${GENERATE_GIT_VERSION})
 
 # Extra Variables that need to be set before all the configured files are generated.
 set (EbsdLib_HDF5_SUPPORT 1)
@@ -60,8 +78,7 @@ configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
                ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})   
 
 # Setup the Include Directories
-include_directories(${EbsdLib_SOURCE_DIR}/..)            
-include_directories(${EbsdLib_SOURCE_DIR})
+include_directories(${PROJECT_CODE_DIR})         
 include_directories(${EbsdLib_BINARY_DIR})
 
 #-- Include all the Source Files
@@ -93,7 +110,7 @@ set(EbsdLib_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/" "${EbsdLib_HDRS}" "${EbsdLib_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-set(PROJECT_SRCS
+set(EbsdLib_PROJECT_SRCS
     ${EbsdLib_SRCS}
     ${EbsdLib_HDRS}
     ${TSL_SRCS} 
@@ -104,27 +121,34 @@ set(PROJECT_SRCS
     ${EbsdLib_Utilities_HDRS}
 )
 
-add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})
-if (EbsdLib_ENABLE_HDF5)
-    target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
-endif()
+#-- We ONLY want to add the actual library for the DREAM3D project. With the
+#-- PVEbsd ParaView Plugin we are directly compiling everything into the plugin
+#-- in order to reduce the deployment issues.
+if(DEFINED DREAM3DProj_BINARY_DIR)
 
-LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
+    add_library(${PROJECT_NAME}  ${LIB_TYPE} ${EbsdLib_PROJECT_SRCS})
+    if (EbsdLib_ENABLE_HDF5)
+        target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
+    endif()
+    
+    LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
+    
+    set(install_dir "tools")
+    set(lib_install_dir "lib")
+    if (WIN32)
+        set (install_dir ".")
+        set(lib_install_dir "")
+    endif()
+    
+    
+    if (BUILD_SHARED_LIBS AND NOT APPLE)
+        INSTALL(TARGETS ${PROJECT_NAME}  
+            COMPONENT Applications
+            RUNTIME DESTINATION ${install_dir}
+            LIBRARY DESTINATION ${lib_install_dir}
+            ARCHIVE DESTINATION ${lib_install_dir}       
+            BUNDLE DESTINATION "."
+        ) 
+    endif() 
 
-set(install_dir "tools")
-set(lib_install_dir "lib")
-if (WIN32)
-    set (install_dir ".")
-    set(lib_install_dir "")
-endif()
-
-
-if (BUILD_SHARED_LIBS AND NOT APPLE)
-    INSTALL(TARGETS ${PROJECT_NAME}  
-        COMPONENT Applications
-        RUNTIME DESTINATION ${install_dir}
-        LIBRARY DESTINATION ${lib_install_dir}
-        ARCHIVE DESTINATION ${lib_install_dir}       
-        BUNDLE DESTINATION "."
-    ) 
-endif() 
+endif(DEFINED DREAM3DProj_BINARY_DIR)

@@ -48,6 +48,9 @@
 #include "EbsdLib/Utilities/MXADir.h"
 #include "EbsdLib/Utilities/StringUtils.h"
 
+#if defined (H5Support_NAMESPACE)
+using namespace H5Support_NAMESPACE;
+#endif
 
 #define AIM_STRING std::string
 

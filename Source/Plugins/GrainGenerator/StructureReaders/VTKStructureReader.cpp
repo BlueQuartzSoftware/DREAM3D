@@ -37,6 +37,8 @@
 
 #include <fstream>
 
+#include "MXA/Common/LogTime.h"
+#include "MXA/Common/MXAEndian.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
 #define kBufferSize 1024
