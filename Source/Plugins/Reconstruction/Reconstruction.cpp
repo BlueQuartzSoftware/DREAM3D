@@ -47,12 +47,12 @@
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
-#include "Reconstruction/Algorithms/LoadSlices.h"
-#include "Reconstruction/Algorithms/AlignSections.h"
-#include "Reconstruction/Algorithms/SegmentGrains.h"
-#include "Reconstruction/Algorithms/CleanupGrains.h"
-#include "Reconstruction/Algorithms/MergeTwins.h"
-#include "Reconstruction/Algorithms/MergeColonies.h"
+#include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
+#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
+#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
+#include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
+#include "DREAM3DLib/ReconstructionFilters/MergeTwins.h"
+#include "DREAM3DLib/ReconstructionFilters/MergeColonies.h"
 
 
 

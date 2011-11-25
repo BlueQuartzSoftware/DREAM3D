@@ -48,12 +48,12 @@
 
 #include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
 #include "GrainGenerator/StructureReaders/VTKStructureReader.h"
-#include "GrainGenerator/Algorithms/FindNeighbors.h"
-#include "GrainGenerator/Algorithms/MatchCrystallography.h"
-#include "GrainGenerator/Algorithms/PlacePrecipitates.h"
-#include "GrainGenerator/Algorithms/PackGrainsGen2.h"
-#include "GrainGenerator/Algorithms/AdjustVolume.h"
-#include "GrainGenerator/Algorithms/WriteGrainData.h"
+#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
+#include "DREAM3DLib/GenericFilters/WriteGrainData.h"
 
 
 
