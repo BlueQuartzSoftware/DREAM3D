@@ -29,30 +29,6 @@ if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
             COMPONENT Headers   )
 endif()
 
-#-- Add in the various filter algorithms for the Reconstruction
-SET (Algorithms_HDRS
-  ${PROJECT_SOURCE_DIR}/Algorithms/LoadSlices.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/AlignSections.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/SegmentGrains.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/CleanupGrains.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/MergeTwins.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/MergeColonies.h
-)
-
-SET (Algorithms_SRCS
-  ${PROJECT_SOURCE_DIR}/Algorithms/LoadSlices.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/AlignSections.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/SegmentGrains.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/CleanupGrains.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/MergeTwins.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/MergeColonies.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "Reconstruction/Algorithms" "${Algorithms_HDRS}" "${Algorithms_SRCS}" "0")
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${Algorithms_HDRS}
-            DESTINATION include/DREAM3D/Algorithms
-            COMPONENT Headers   )
-endif()
                    
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
@@ -115,8 +91,6 @@ set (ReconstructionPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${Reconstruction_HDRS}
     ${Reconstruction_SRCS}
-    ${Algorithms_HDRS}
-    ${Algorithms_SRCS}
 )
 
 
