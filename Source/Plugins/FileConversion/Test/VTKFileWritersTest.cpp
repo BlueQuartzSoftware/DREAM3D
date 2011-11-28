@@ -137,9 +137,9 @@ int TestVtkWriters()
 #if 0
   VtkMiscFileWriter::Pointer vtkWriter = VtkMiscFileWriter::New();
 
-  MicrostructureStatisticsFunc::Pointer m = MicrostructureStatisticsFunc::New();
-  vtkWriter->writeDisorientationFile(m.get(), "out");
-  vtkWriter->writeSchmidFactorVizFile(m.get(), "out");
+  MicrostructureStatisticsFunc::Pointer m_DataContainer = MicrostructureStatisticsFunc::New();
+  vtkWriter->writeDisorientationFile(m_DataContainer.get(), "out");
+  vtkWriter->writeSchmidFactorVizFile(m_DataContainer.get(), "out");
 
   ReconstructionFunc::Pointer r = ReconstructionFunc::New();
   r->xpoints = 5;

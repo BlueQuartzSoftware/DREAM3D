@@ -77,7 +77,6 @@ class DREAM3DLib_EXPORT AdjustVolume : public Observable
 
   protected:
     AdjustVolume();
-    DataContainer* m;
 
   private:
 

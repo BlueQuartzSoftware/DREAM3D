@@ -76,7 +76,7 @@ int VTKStructureReader::readStructure(DataContainer* m)
   m->ellipfuncs = m->m_Ellipfuncs->WritePointer(0, m->totalpoints);
   m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(0, m->totalpoints);
 
- // for(int i=0;i<m->totalpoints;i++)
+ // for(int i=0;i<m_DataContainer->totalpoints;i++)
  // {
  // }
 

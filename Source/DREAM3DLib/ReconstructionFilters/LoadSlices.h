@@ -106,7 +106,6 @@ class DREAM3DLib_EXPORT LoadSlices : public Observable
 
   protected:
     LoadSlices();
-    DataContainer* m;
 
   private:
 

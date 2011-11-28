@@ -71,7 +71,7 @@ class  SMVtkFileIO : public VTKFileReader
 
     /**
      * @brief
-     * @param m
+     * @param m_DataContainer
      * @param file
      * @param slice
      * @return
@@ -83,7 +83,7 @@ class  SMVtkFileIO : public VTKFileReader
 
 /**
  * @brief Writes a VTK POLYDATA legacy ASCII file
- * @param m
+ * @param m_DataContainer
  * @param nNodes
  * @param nTriangles
  * @param VisualizationFile

@@ -95,17 +95,17 @@ void WriteGrainData::write_graindata(const std::string &filename)
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
-  outFile << m->m_Grains.size()-1 << std::endl;
+  outFile << m_DataContainer->m_Grains.size()-1 << std::endl;
   outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
       << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
       << DREAM3D::GrainData::EquivDiam << space
       << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3 << std::endl;
 
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m_DataContainer->m_Grains.size(); i++)
   {
-	  outFile << i << space << m->m_Grains[i]->phase << space << m->m_Grains[i]->euler1 << space << m->m_Grains[i]->euler2 << space << m->m_Grains[i]->euler3 <<
-		space << m->m_Grains[i]->equivdiameter << space << m->m_Grains[i]->radius2 << space << m->m_Grains[i]->radius3 <<
-		space << m->m_Grains[i]->omega3 << std::endl;
+	  outFile << i << space << m_DataContainer->m_Grains[i]->phase << space << m_DataContainer->m_Grains[i]->euler1 << space << m_DataContainer->m_Grains[i]->euler2 << space << m_DataContainer->m_Grains[i]->euler3 <<
+		space << m_DataContainer->m_Grains[i]->equivdiameter << space << m_DataContainer->m_Grains[i]->radius2 << space << m_DataContainer->m_Grains[i]->radius3 <<
+		space << m_DataContainer->m_Grains[i]->omega3 << std::endl;
   }
   outFile.close();
 }

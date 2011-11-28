@@ -121,37 +121,37 @@ void MergeTwins::merge_twins()
   float axistol = 2.0f*M_PI/180.0f;
   float q1[5];
   float q2[5];
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m_DataContainer->m_Grains.size();
   Ebsd::CrystalStructure phase1, phase2;
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	if (m->m_Grains[i]->twinnewnumber == -1 && m->m_Grains[i]->phase > 0)
+	if (m_DataContainer->m_Grains[i]->twinnewnumber == -1 && m_DataContainer->m_Grains[i]->phase > 0)
     {
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
       {
         int firstgrain = twinlist[j];
-        std::vector<int>* nlist = m->m_Grains[firstgrain]->neighborlist;
+        std::vector<int>* nlist = m_DataContainer->m_Grains[firstgrain]->neighborlist;
         int size = int(nlist->size());
         for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
           int twin = 0;
           size_t neigh = nlist->at(l);
-          if (neigh != i && m->m_Grains[neigh]->twinnewnumber == -1 && m->m_Grains[neigh]->phase > 0)
+          if (neigh != i && m_DataContainer->m_Grains[neigh]->twinnewnumber == -1 && m_DataContainer->m_Grains[neigh]->phase > 0)
           {
             w = 10000.0f;
-            q1[1] = m->m_Grains[firstgrain]->avg_quat[1]/m->m_Grains[firstgrain]->avg_quat[0];
-            q1[2] = m->m_Grains[firstgrain]->avg_quat[2]/m->m_Grains[firstgrain]->avg_quat[0];
-            q1[3] = m->m_Grains[firstgrain]->avg_quat[3]/m->m_Grains[firstgrain]->avg_quat[0];
-            q1[4] = m->m_Grains[firstgrain]->avg_quat[4]/m->m_Grains[firstgrain]->avg_quat[0];
-            phase1 = m->crystruct[m->m_Grains[firstgrain]->phase];
-            q2[1] = m->m_Grains[neigh]->avg_quat[1]/m->m_Grains[neigh]->avg_quat[0];
-            q2[2] = m->m_Grains[neigh]->avg_quat[2]/m->m_Grains[neigh]->avg_quat[0];
-            q2[3] = m->m_Grains[neigh]->avg_quat[3]/m->m_Grains[neigh]->avg_quat[0];
-            q2[4] = m->m_Grains[neigh]->avg_quat[4]/m->m_Grains[neigh]->avg_quat[0];
-            phase2 = m->crystruct[m->m_Grains[neigh]->phase];
+            q1[1] = m_DataContainer->m_Grains[firstgrain]->avg_quat[1]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
+            q1[2] = m_DataContainer->m_Grains[firstgrain]->avg_quat[2]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
+            q1[3] = m_DataContainer->m_Grains[firstgrain]->avg_quat[3]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
+            q1[4] = m_DataContainer->m_Grains[firstgrain]->avg_quat[4]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
+            phase1 = m_DataContainer->crystruct[m_DataContainer->m_Grains[firstgrain]->phase];
+            q2[1] = m_DataContainer->m_Grains[neigh]->avg_quat[1]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
+            q2[2] = m_DataContainer->m_Grains[neigh]->avg_quat[2]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
+            q2[3] = m_DataContainer->m_Grains[neigh]->avg_quat[3]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
+            q2[4] = m_DataContainer->m_Grains[neigh]->avg_quat[4]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
+            phase2 = m_DataContainer->crystruct[m_DataContainer->m_Grains[neigh]->phase];
             if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
@@ -159,8 +159,8 @@ void MergeTwins::merge_twins()
             if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
             if (twin == 1)
             {
-              m->m_Grains[neigh]->gottwinmerged = true;
-              m->m_Grains[neigh]->twinnewnumber = i;
+              m_DataContainer->m_Grains[neigh]->gottwinmerged = true;
+              m_DataContainer->m_Grains[neigh]->twinnewnumber = i;
               twinlist.push_back(neigh);
             }
           }
@@ -169,59 +169,59 @@ void MergeTwins::merge_twins()
     }
     twinlist.clear();
   }
-  for (int k = 0; k < (m->xpoints * m->ypoints * m->zpoints); k++)
+  for (int k = 0; k < (m_DataContainer->xpoints * m_DataContainer->ypoints * m_DataContainer->zpoints); k++)
   {
-    int grainname = m->grain_indicies[k];
-    if (m->m_Grains[grainname]->gottwinmerged == true)
+    int grainname = m_DataContainer->grain_indicies[k];
+    if (m_DataContainer->m_Grains[grainname]->gottwinmerged == true)
     {
-      int twinnewnumber = m->m_Grains[grainname]->twinnewnumber;
-      m->grain_indicies[k] = twinnewnumber;
+      int twinnewnumber = m_DataContainer->m_Grains[grainname]->twinnewnumber;
+      m_DataContainer->grain_indicies[k] = twinnewnumber;
     }
   }
 }
 
 void MergeTwins::renumber_grains()
 {
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m_DataContainer->m_Grains.size();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->gottwinmerged != true)
+    if (m_DataContainer->m_Grains[i]->gottwinmerged != true)
     {
       newnames[i] = graincount;
-      float ea1good = m->m_Grains[i]->euler1;
-      float ea2good = m->m_Grains[i]->euler2;
-      float ea3good = m->m_Grains[i]->euler3;
-      int size = m->m_Grains[i]->numvoxels;
-      int numneighbors = m->m_Grains[i]->numneighbors;
-      std::vector<int>* nlist = m->m_Grains[i]->neighborlist;
-      m->m_Grains[graincount]->numvoxels = size;
-      m->m_Grains[graincount]->numneighbors = numneighbors;
-      if (m->m_Grains[graincount]->neighborlist == NULL)
+      float ea1good = m_DataContainer->m_Grains[i]->euler1;
+      float ea2good = m_DataContainer->m_Grains[i]->euler2;
+      float ea3good = m_DataContainer->m_Grains[i]->euler3;
+      int size = m_DataContainer->m_Grains[i]->numvoxels;
+      int numneighbors = m_DataContainer->m_Grains[i]->numneighbors;
+      std::vector<int>* nlist = m_DataContainer->m_Grains[i]->neighborlist;
+      m_DataContainer->m_Grains[graincount]->numvoxels = size;
+      m_DataContainer->m_Grains[graincount]->numneighbors = numneighbors;
+      if (m_DataContainer->m_Grains[graincount]->neighborlist == NULL)
       {
-        m->m_Grains[graincount]->neighborlist = new std::vector<int>(numneighbors);
+        m_DataContainer->m_Grains[graincount]->neighborlist = new std::vector<int>(numneighbors);
       }
       if (NULL != nlist)
       {
-        m->m_Grains[graincount]->neighborlist->swap(*nlist);
+        m_DataContainer->m_Grains[graincount]->neighborlist->swap(*nlist);
       }
-      m->m_Grains[graincount]->euler1 = ea1good;
-      m->m_Grains[graincount]->euler2 = ea2good;
-      m->m_Grains[graincount]->euler3 = ea3good;
+      m_DataContainer->m_Grains[graincount]->euler1 = ea1good;
+      m_DataContainer->m_Grains[graincount]->euler2 = ea2good;
+      m_DataContainer->m_Grains[graincount]->euler3 = ea3good;
       graincount++;
     }
   }
 #if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalpoints ), ParallelRenumberGrains( this) );
 #else
- for (int j = 0; j < m->totalpoints; j++)
+ for (int j = 0; j < m_DataContainer->totalpoints; j++)
   {
-    int grainname = m->grain_indicies[j];
+    int grainname = m_DataContainer->grain_indicies[j];
     if (grainname >= 1)
     {
       int newgrainname = newnames[grainname];
-      m->grain_indicies[j] = newgrainname;
+      m_DataContainer->grain_indicies[j] = newgrainname;
     }
   }
 #endif
@@ -229,7 +229,7 @@ void MergeTwins::renumber_grains()
 
 void MergeTwins::characterize_twins()
 {
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m_DataContainer->m_Grains.size();
   for (size_t i = 0; i < numgrains; i++)
   {
 
