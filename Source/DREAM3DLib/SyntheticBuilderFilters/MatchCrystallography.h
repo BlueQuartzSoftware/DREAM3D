@@ -107,7 +107,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public Observable
 
 protected:
     MatchCrystallography();
-    DataContainer* m;
 
   private:
 

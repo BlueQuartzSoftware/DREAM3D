@@ -83,7 +83,6 @@ class DREAM3DLib_EXPORT SegmentGrains : public Observable
 
   protected:
     SegmentGrains();
-    DataContainer* m;
 
   private:
 

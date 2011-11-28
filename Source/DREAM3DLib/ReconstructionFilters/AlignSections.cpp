@@ -150,8 +150,8 @@ void AlignSections::align_sections()
   int tempposition;
   Ebsd::CrystalStructure phase1, phase2;
 
-  int** shifts = new int *[m->zpoints];
-  for (int a = 0; a < m->zpoints; a++)
+  int** shifts = new int *[m_DataContainer->zpoints];
+  for (int a = 0; a < m_DataContainer->zpoints; a++)
   {
     shifts[a] = new int[2];
     for (int b = 0; b < 2; b++)
@@ -159,19 +159,19 @@ void AlignSections::align_sections()
       shifts[a][b] = 0;
     }
   }
-  int** misorients = new int *[m->xpoints];
-  for (int a = 0; a < m->xpoints; a++)
+  int** misorients = new int *[m_DataContainer->xpoints];
+  for (int a = 0; a < m_DataContainer->xpoints; a++)
   {
-    misorients[a] = new int[m->ypoints];
-    for (int b = 0; b < m->ypoints; b++)
+    misorients[a] = new int[m_DataContainer->ypoints];
+    for (int b = 0; b < m_DataContainer->ypoints; b++)
     {
       misorients[a][b] = 0;
     }
   }
-  for (int iter = 1; iter < m->zpoints; iter++)
+  for (int iter = 1; iter < m_DataContainer->zpoints; iter++)
   {
     mindisorientation = 100000000;
-    slice = (m->zpoints - 1) - iter;
+    slice = (m_DataContainer->zpoints - 1) - iter;
     if (m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
     {
       graincount1 = graincounts[slice];
@@ -194,9 +194,9 @@ void AlignSections::align_sections()
     oldyshift = -1;
     newxshift = 0;
 	newyshift = 0;
-	for (int a = 0; a < m->xpoints; a++)
+	for (int a = 0; a < m_DataContainer->xpoints; a++)
 	{
-		for (int b = 0; b < m->ypoints; b++)
+		for (int b = 0; b < m_DataContainer->ypoints; b++)
 		{
 		  misorients[a][b] = 0;
 		}
@@ -211,19 +211,19 @@ void AlignSections::align_sections()
           {
             disorientation = 0;
             count = 0;
-			if(misorients[k+oldxshift+int(m->xpoints/2)][j+oldyshift+int(m->ypoints/2)] == 0 && abs(k+oldxshift) < (m->xpoints/2) && (j+oldyshift) < (m->ypoints/2))
+			if(misorients[k+oldxshift+int(m_DataContainer->xpoints/2)][j+oldyshift+int(m_DataContainer->ypoints/2)] == 0 && abs(k+oldxshift) < (m_DataContainer->xpoints/2) && (j+oldyshift) < (m_DataContainer->ypoints/2))
 			{
-				for (int l = 0; l < m->ypoints; l=l+4)
+				for (int l = 0; l < m_DataContainer->ypoints; l=l+4)
 				{
-				  for (int n = 0; n < m->xpoints; n=n+4)
+				  for (int n = 0; n < m_DataContainer->xpoints; n=n+4)
 				  {
 					count++;
-					if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < m->ypoints && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < m->xpoints)
+					if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < m_DataContainer->ypoints && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < m_DataContainer->xpoints)
 					{
-					  refposition = ((slice + 1) * m->xpoints * m->ypoints) + (l * m->xpoints) + n;
-					  curposition = (slice * m->xpoints * m->ypoints) + ((l + j + oldyshift) * m->xpoints) + (n + k + oldxshift);
-					  refgnum = m->grain_indicies[refposition];
-					  curgnum = m->grain_indicies[curposition];
+					  refposition = ((slice + 1) * m_DataContainer->xpoints * m_DataContainer->ypoints) + (l * m_DataContainer->xpoints) + n;
+					  curposition = (slice * m_DataContainer->xpoints * m_DataContainer->ypoints) + ((l + j + oldyshift) * m_DataContainer->xpoints) + (n + k + oldxshift);
+					  refgnum = m_DataContainer->grain_indicies[refposition];
+					  curgnum = m_DataContainer->grain_indicies[curposition];
 					  if (m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
 					  {
 						if (curgnum >= 0 && refgnum >= 0)
@@ -235,31 +235,31 @@ void AlignSections::align_sections()
 					  }
 					  else if (m_alignmeth == DREAM3D::Reconstruction::Misorientation)
 					  {
-						if (m->goodVoxels[refposition] == true && m->goodVoxels[curposition] == true)
+						if (m_DataContainer->goodVoxels[refposition] == true && m_DataContainer->goodVoxels[curposition] == true)
 						{
 						  w = 10000.0;
-						  if(m->phases[refposition] > 0 && m->phases[curposition] > 0)
+						  if(m_DataContainer->phases[refposition] > 0 && m_DataContainer->phases[curposition] > 0)
 						  {
-							  q1[1] = m->quats[refposition*5 + 1];
-							  q1[2] = m->quats[refposition*5 + 2];
-							  q1[3] = m->quats[refposition*5 + 3];
-							  q1[4] = m->quats[refposition*5 + 4];
-							  phase1 = m->crystruct[m->phases[refposition]];
-							  q2[1] = m->quats[curposition*5 + 1];
-							  q2[2] = m->quats[curposition*5 + 2];
-							  q2[3] = m->quats[curposition*5 + 3];
-							  q2[4] = m->quats[curposition*5 + 4];
-							  phase2 = m->crystruct[m->phases[curposition]];
+							  q1[1] = m_DataContainer->quats[refposition*5 + 1];
+							  q1[2] = m_DataContainer->quats[refposition*5 + 2];
+							  q1[3] = m_DataContainer->quats[refposition*5 + 3];
+							  q1[4] = m_DataContainer->quats[refposition*5 + 4];
+							  phase1 = m_DataContainer->crystruct[m_DataContainer->phases[refposition]];
+							  q2[1] = m_DataContainer->quats[curposition*5 + 1];
+							  q2[2] = m_DataContainer->quats[curposition*5 + 2];
+							  q2[3] = m_DataContainer->quats[curposition*5 + 3];
+							  q2[4] = m_DataContainer->quats[curposition*5 + 4];
+							  phase2 = m_DataContainer->crystruct[m_DataContainer->phases[curposition]];
 							  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 						  }
 						  if (w > m_misorientationtolerance) disorientation++;
 						}
-						if (m->goodVoxels[refposition] == true && m->goodVoxels[curposition] == false) disorientation++;
-						if (m->goodVoxels[refposition] == false && m->goodVoxels[curposition] == true) disorientation++;
+						if (m_DataContainer->goodVoxels[refposition] == true && m_DataContainer->goodVoxels[curposition] == false) disorientation++;
+						if (m_DataContainer->goodVoxels[refposition] == false && m_DataContainer->goodVoxels[curposition] == true) disorientation++;
 					  }
 					  else if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary)
 					  {
-						if(m->grain_indicies[refposition] != m->grain_indicies[curposition]) disorientation++;
+						if(m_DataContainer->grain_indicies[refposition] != m_DataContainer->grain_indicies[curposition]) disorientation++;
 					  }
 					}
 					else
@@ -311,7 +311,7 @@ void AlignSections::align_sections()
 				  disorientation = 1.0 / disorientation;
 				}
 				if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary || m_alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation/count;
-				misorients[k+oldxshift+int(m->xpoints/2)][j+oldyshift+int(m->ypoints/2)] = disorientation;
+				misorients[k+oldxshift+int(m_DataContainer->xpoints/2)][j+oldyshift+int(m_DataContainer->ypoints/2)] = disorientation;
 				if (disorientation < mindisorientation)
 				{
 				  newxshift = k + oldxshift;
@@ -325,63 +325,63 @@ void AlignSections::align_sections()
     shifts[iter][0] = shifts[iter - 1][0] + newxshift;
     shifts[iter][1] = shifts[iter - 1][1] + newyshift;
   }
-  for (int iter = 1; iter < m->zpoints; iter++)
+  for (int iter = 1; iter < m_DataContainer->zpoints; iter++)
   {
-    slice = (m->zpoints - 1) - iter;
-    for (int l = 0; l < m->ypoints; l++)
+    slice = (m_DataContainer->zpoints - 1) - iter;
+    for (int l = 0; l < m_DataContainer->ypoints; l++)
     {
-      for (int n = 0; n < m->xpoints; n++)
+      for (int n = 0; n < m_DataContainer->xpoints; n++)
       {
         if (shifts[iter][1] >= 0) yspot = l;
         if (shifts[iter][0] >= 0) xspot = n;
-        if (shifts[iter][1] < 0) yspot = m->ypoints - 1 - l;
-        if (shifts[iter][0] < 0) xspot = m->xpoints - 1 - n;
-        position = (slice * m->xpoints * m->ypoints) + (yspot * m->xpoints) + xspot;
-        tempposition = (slice * m->xpoints * m->ypoints) + ((yspot + shifts[iter][1]) * m->xpoints) + (xspot + shifts[iter][0]);
+        if (shifts[iter][1] < 0) yspot = m_DataContainer->ypoints - 1 - l;
+        if (shifts[iter][0] < 0) xspot = m_DataContainer->xpoints - 1 - n;
+        position = (slice * m_DataContainer->xpoints * m_DataContainer->ypoints) + (yspot * m_DataContainer->xpoints) + xspot;
+        tempposition = (slice * m_DataContainer->xpoints * m_DataContainer->ypoints) + ((yspot + shifts[iter][1]) * m_DataContainer->xpoints) + (xspot + shifts[iter][0]);
         if ((yspot + shifts[iter][1]) >= 0
-            && (yspot + shifts[iter][1]) <= m->ypoints - 1
+            && (yspot + shifts[iter][1]) <= m_DataContainer->ypoints - 1
             && (xspot + shifts[iter][0]) >= 0
-            && (xspot + shifts[iter][0]) <= m->xpoints - 1)
+            && (xspot + shifts[iter][0]) <= m_DataContainer->xpoints - 1)
         {
-          m->euler1s[position] = m->euler1s[tempposition];
-          m->euler2s[position] = m->euler2s[tempposition];
-          m->euler3s[position] = m->euler3s[tempposition];
-          m->quats[position*5 + 0] = m->quats[tempposition*5 + 0];
-          m->quats[position*5 + 1] = m->quats[tempposition*5 + 1];
-          m->quats[position*5 + 2] = m->quats[tempposition*5 + 2];
-          m->quats[position*5 + 3] = m->quats[tempposition*5 + 3];
-          m->quats[position*5 + 4] = m->quats[tempposition*5 + 4];
-          m->goodVoxels[position] = m->goodVoxels[tempposition];
-		  m->phases[position] = m->phases[tempposition];
-          m->grain_indicies[position] = m->grain_indicies[tempposition];
+          m_DataContainer->euler1s[position] = m_DataContainer->euler1s[tempposition];
+          m_DataContainer->euler2s[position] = m_DataContainer->euler2s[tempposition];
+          m_DataContainer->euler3s[position] = m_DataContainer->euler3s[tempposition];
+          m_DataContainer->quats[position*5 + 0] = m_DataContainer->quats[tempposition*5 + 0];
+          m_DataContainer->quats[position*5 + 1] = m_DataContainer->quats[tempposition*5 + 1];
+          m_DataContainer->quats[position*5 + 2] = m_DataContainer->quats[tempposition*5 + 2];
+          m_DataContainer->quats[position*5 + 3] = m_DataContainer->quats[tempposition*5 + 3];
+          m_DataContainer->quats[position*5 + 4] = m_DataContainer->quats[tempposition*5 + 4];
+          m_DataContainer->goodVoxels[position] = m_DataContainer->goodVoxels[tempposition];
+		  m_DataContainer->phases[position] = m_DataContainer->phases[tempposition];
+          m_DataContainer->grain_indicies[position] = m_DataContainer->grain_indicies[tempposition];
         }
         if ((yspot + shifts[iter][1]) < 0
-            || (yspot + shifts[iter][1]) > m->ypoints - 1
+            || (yspot + shifts[iter][1]) > m_DataContainer->ypoints - 1
             || (xspot + shifts[iter][0]) < 0
-            || (xspot + shifts[iter][0]) > m->xpoints - 1)
+            || (xspot + shifts[iter][0]) > m_DataContainer->xpoints - 1)
         {
-          m->euler1s[position] = 0.0;
-          m->euler2s[position] = 0.0;
-          m->euler3s[position] = 0.0;
-          m->quats[position*5 + 0] = 0.0;
-          m->quats[position*5 + 1] = 0.0;
-          m->quats[position*5 + 2] = 0.0;
-          m->quats[position*5 + 3] = 0.0;
-          m->quats[position*5 + 4] = 1.0;
-          m->goodVoxels[position] = false;
-		  m->phases[position] = 0;
-          m->grain_indicies[position] = 0;
+          m_DataContainer->euler1s[position] = 0.0;
+          m_DataContainer->euler2s[position] = 0.0;
+          m_DataContainer->euler3s[position] = 0.0;
+          m_DataContainer->quats[position*5 + 0] = 0.0;
+          m_DataContainer->quats[position*5 + 1] = 0.0;
+          m_DataContainer->quats[position*5 + 2] = 0.0;
+          m_DataContainer->quats[position*5 + 3] = 0.0;
+          m_DataContainer->quats[position*5 + 4] = 1.0;
+          m_DataContainer->goodVoxels[position] = false;
+		  m_DataContainer->phases[position] = 0;
+          m_DataContainer->grain_indicies[position] = 0;
         }
       }
     }
   }
 
   // Clean up the memory
-  for (int a = 0; a < m->zpoints; a++)
+  for (int a = 0; a < m_DataContainer->zpoints; a++)
   {
     delete [] shifts[a];
   }
-  for (int a = 0; a < m->xpoints; a++)
+  for (int a = 0; a < m_DataContainer->xpoints; a++)
   {
     delete [] misorients[a];
   }
@@ -414,39 +414,39 @@ void AlignSections::form_grains_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  graincounts = m_GrainCounts->WritePointer(0, m->zpoints);
+  graincounts = m_GrainCounts->WritePointer(0, m_DataContainer->zpoints);
 
   std::vector<int > voxelslist(initialVoxelsListSize, -1);
   int neighpoints[8];
-  neighpoints[0] = -m->xpoints - 1;
-  neighpoints[1] = -m->xpoints;
-  neighpoints[2] = -m->xpoints + 1;
+  neighpoints[0] = -m_DataContainer->xpoints - 1;
+  neighpoints[1] = -m_DataContainer->xpoints;
+  neighpoints[2] = -m_DataContainer->xpoints + 1;
   neighpoints[3] = -1;
   neighpoints[4] = 1;
-  neighpoints[5] = m->xpoints - 1;
-  neighpoints[6] = m->xpoints;
-  neighpoints[7] = m->xpoints + 1;
+  neighpoints[5] = m_DataContainer->xpoints - 1;
+  neighpoints[6] = m_DataContainer->xpoints;
+  neighpoints[7] = m_DataContainer->xpoints + 1;
   Ebsd::CrystalStructure phase1, phase2;
-  for (int slice = 0; slice < m->zpoints; slice++)
+  for (int slice = 0; slice < m_DataContainer->zpoints; slice++)
   {
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)
     {
       seed = -1;
-      randx = int(float(rg.genrand_res53()) * float(m->xpoints));
-      randy = int(float(rg.genrand_res53()) * float(m->ypoints));
-      for (int j = 0; j < m->ypoints; ++j)
+      randx = int(float(rg.genrand_res53()) * float(m_DataContainer->xpoints));
+      randy = int(float(rg.genrand_res53()) * float(m_DataContainer->ypoints));
+      for (int j = 0; j < m_DataContainer->ypoints; ++j)
       {
-        for (int i = 0; i < m->xpoints; ++i)
+        for (int i = 0; i < m_DataContainer->xpoints; ++i)
         {
           x = randx + i;
           y = randy + j;
           z = slice;
-          if (x > m->xpoints - 1) x = x - m->xpoints;
-          if (y > m->ypoints - 1) y = y - m->ypoints;
-          point = (z * m->xpoints * m->ypoints) + (y * m->xpoints) + x;
-          if (m->goodVoxels[point] == true && m->grain_indicies[point] == -1 && m->phases[point] > 0)
+          if (x > m_DataContainer->xpoints - 1) x = x - m_DataContainer->xpoints;
+          if (y > m_DataContainer->ypoints - 1) y = y - m_DataContainer->ypoints;
+          point = (z * m_DataContainer->xpoints * m_DataContainer->ypoints) + (y * m_DataContainer->xpoints) + x;
+          if (m_DataContainer->goodVoxels[point] == true && m_DataContainer->grain_indicies[point] == -1 && m_DataContainer->phases[point] > 0)
           {
             seed = point;
           }
@@ -458,46 +458,46 @@ void AlignSections::form_grains_sections()
       if (seed >= 0)
       {
         size = 0;
-        m->grain_indicies[seed] = graincount;
+        m_DataContainer->grain_indicies[seed] = graincount;
         voxelslist[size] = seed;
         size++;
         qs[0] = 0;
-        qs[1] = m->quats[seed*5 + 1];
-        qs[2] = m->quats[seed*5 + 2];
-        qs[3] = m->quats[seed*5 + 3];
-        qs[4] = m->quats[seed*5 + 4];
+        qs[1] = m_DataContainer->quats[seed*5 + 1];
+        qs[2] = m_DataContainer->quats[seed*5 + 2];
+        qs[3] = m_DataContainer->quats[seed*5 + 3];
+        qs[4] = m_DataContainer->quats[seed*5 + 4];
         for (size_t j = 0; j < size; ++j)
         {
           int currentpoint = voxelslist[j];
-          col = currentpoint % m->xpoints;
-          row = (currentpoint / m->xpoints) % m->ypoints;
+          col = currentpoint % m_DataContainer->xpoints;
+          row = (currentpoint / m_DataContainer->xpoints) % m_DataContainer->ypoints;
           q1[0] = 0;
-          q1[1] = m->quats[currentpoint*5 + 1];
-          q1[2] = m->quats[currentpoint*5 + 2];
-          q1[3] = m->quats[currentpoint*5 + 3];
-          q1[4] = m->quats[currentpoint*5 + 4];
-		  phase1 = m->crystruct[m->phases[currentpoint]];
+          q1[1] = m_DataContainer->quats[currentpoint*5 + 1];
+          q1[2] = m_DataContainer->quats[currentpoint*5 + 2];
+          q1[3] = m_DataContainer->quats[currentpoint*5 + 3];
+          q1[4] = m_DataContainer->quats[currentpoint*5 + 4];
+		  phase1 = m_DataContainer->crystruct[m_DataContainer->phases[currentpoint]];
           for (int i = 0; i < 8; i++)
           {
             good = 1;
             neighbor = currentpoint + neighpoints[i];
             if ((i == 0 || i == 1 || i == 2) && row == 0) good = 0;
-            if ((i == 5 || i == 6 || i == 7) && row == (m->ypoints - 1)) good = 0;
+            if ((i == 5 || i == 6 || i == 7) && row == (m_DataContainer->ypoints - 1)) good = 0;
             if ((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
-            if ((i == 2 || i == 4 || i == 7) && col == (m->xpoints - 1)) good = 0;
-            if (good == 1 && m->grain_indicies[neighbor] <= 0 && m->phases[neighbor] > 0)
+            if ((i == 2 || i == 4 || i == 7) && col == (m_DataContainer->xpoints - 1)) good = 0;
+            if (good == 1 && m_DataContainer->grain_indicies[neighbor] <= 0 && m_DataContainer->phases[neighbor] > 0)
             {
 			  w = 10000.0;
               q2[0] = 0;
-              q2[1] = m->quats[neighbor*5 + 1];
-              q2[2] = m->quats[neighbor*5 + 2];
-              q2[3] = m->quats[neighbor*5 + 3];
-              q2[4] = m->quats[neighbor*5 + 4];
-			  phase2 = m->crystruct[m->phases[neighbor]];
+              q2[1] = m_DataContainer->quats[neighbor*5 + 1];
+              q2[2] = m_DataContainer->quats[neighbor*5 + 2];
+              q2[3] = m_DataContainer->quats[neighbor*5 + 3];
+              q2[4] = m_DataContainer->quats[neighbor*5 + 4];
+			  phase2 = m_DataContainer->crystruct[m_DataContainer->phases[neighbor]];
 			  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
               if (w < m_misorientationtolerance)
               {
-                m->grain_indicies[neighbor] = graincount;
+                m_DataContainer->grain_indicies[neighbor] = graincount;
                 voxelslist[size] = neighbor;
                 size++;
                 if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);

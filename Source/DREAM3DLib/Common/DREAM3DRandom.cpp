@@ -69,8 +69,8 @@
 
 
    Any feedback is very welcome.
-   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
-   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
+   http://www.math.sci.hiroshima-u.ac.jp/~m_DataContainer-mat/MT/emt.html
+   email: m_DataContainer-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
 #include "DREAM3DRandom.h"
