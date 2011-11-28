@@ -223,7 +223,7 @@ void AdjustVolume::adjust_boundaries()
       m->m_Grains[index]->equivdiameter = diam;
     }
     PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-    packGrains->setGrainGenFunc(m);
+    packGrains->setDataContainer(m);
     currentsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
 
     if(currentsizedisterror <= oldsizedisterror)

@@ -382,7 +382,7 @@ void  PlacePrecipitates::place_precipitates()
     //if(i == 0) precipitatephasefractions[i] = precipitatephasefractions[i];
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setGrainGenFunc(m);
+  packGrains->setDataContainer(m);
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   int err = packGrains->readReconStatsData(h5reader);
   err = packGrains->readAxisOrientationData(h5reader);

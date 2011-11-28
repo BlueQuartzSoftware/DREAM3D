@@ -117,7 +117,7 @@ void Reconstruction::execute()
   load_slices->setRefFrameZDir(getRefFrameZDir());
   load_slices->setmisorientationtolerance(m_MisorientationTolerance);
   load_slices->addObserver(static_cast<Observer*>(this));
-  load_slices->setGrainGenFunc(m.get());
+  load_slices->setDataContainer(m.get());
   load_slices->execute();
   err = load_slices->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Loading Slices", err)
@@ -128,7 +128,7 @@ void Reconstruction::execute()
   align_sections->setmisorientationtolerance(m_MisorientationTolerance);
   align_sections->setalignmeth(m_AlignmentMethod);
   align_sections->addObserver(static_cast<Observer*>(this));
-  align_sections->setGrainGenFunc(m.get());
+  align_sections->setDataContainer(m.get());
   align_sections->execute();
   err = align_sections->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Aligning Sections", err)
@@ -138,7 +138,7 @@ void Reconstruction::execute()
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();
   segment_grains->setmisorientationtolerance(m_MisorientationTolerance);
   segment_grains->addObserver(static_cast<Observer*>(this));
-  segment_grains->setGrainGenFunc(m.get());
+  segment_grains->setDataContainer(m.get());
   segment_grains->execute();
   err = segment_grains->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Segmenting Grains", err)
@@ -148,7 +148,7 @@ void Reconstruction::execute()
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setmisorientationtolerance(m_MisorientationTolerance);
   cleanup_grains->addObserver(static_cast<Observer*>(this));
-  cleanup_grains->setGrainGenFunc(m.get());
+  cleanup_grains->setDataContainer(m.get());
   cleanup_grains->execute();
   err = cleanup_grains->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Cleaning Up Grains", err)
@@ -159,7 +159,7 @@ void Reconstruction::execute()
     updateProgressAndMessage(("Merging Twins"), 60);
 	MergeTwins::Pointer merge_twins = MergeTwins::New();
 	merge_twins->addObserver(static_cast<Observer*>(this));
-	merge_twins->setGrainGenFunc(m.get());
+	merge_twins->setDataContainer(m.get());
 	merge_twins->execute();
 	err = merge_twins->getErrorCondition();
 	CHECK_FOR_ERROR(DataContainer, "Error Merging Twins", err)
@@ -172,7 +172,7 @@ void Reconstruction::execute()
     updateProgressAndMessage(("Merging Colonies"), 60);
 	MergeColonies::Pointer merge_colonies = MergeColonies::New();
 	merge_colonies->addObserver(static_cast<Observer*>(this));
-	merge_colonies->setGrainGenFunc(m.get());
+	merge_colonies->setDataContainer(m.get());
 	merge_colonies->execute();
 	err = merge_colonies->getErrorCondition();
 	CHECK_FOR_ERROR(DataContainer, "Error Merging Colonies", err)

@@ -117,7 +117,7 @@ void GrainGenerator::execute()
 	pack_grains->setperiodic_boundaries(m_PeriodicBoundary);
 	pack_grains->setneighborhooderrorweight(m_NeighborhoodErrorWeight);
     pack_grains->addObserver(static_cast<Observer*>(this));
-    pack_grains->setGrainGenFunc(m.get());
+    pack_grains->setDataContainer(m.get());
     pack_grains->execute();
     err = pack_grains->getErrorCondition();
     CHECK_FOR_ERROR(DataContainer, "Error Packing Grains", err)
@@ -126,7 +126,7 @@ void GrainGenerator::execute()
     updateProgressAndMessage(("Adjusting Grains"), 25);
     AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
     adjust_grains->addObserver(static_cast<Observer*>(this));
-    adjust_grains->setGrainGenFunc(m.get());
+    adjust_grains->setDataContainer(m.get());
     adjust_grains->execute();
     err = adjust_grains->getErrorCondition();
     CHECK_FOR_ERROR(DataContainer, "Error Adjusting Grains", err)
@@ -183,7 +183,7 @@ void GrainGenerator::execute()
 	place_precipitates->setH5StatsFile(getH5StatsFile());
 	place_precipitates->setperiodic_boundaries(m_PeriodicBoundary);
     place_precipitates->addObserver(static_cast<Observer*>(this));
-    place_precipitates->setGrainGenFunc(m.get());
+    place_precipitates->setDataContainer(m.get());
     place_precipitates->execute();
     err = place_precipitates->getErrorCondition();
     CHECK_FOR_ERROR(DataContainer, "Error Placing Preciptates", err)
@@ -194,7 +194,7 @@ void GrainGenerator::execute()
 	MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
 	match_crystallography->setH5StatsFile(getH5StatsFile());
     match_crystallography->addObserver(static_cast<Observer*>(this));
-    match_crystallography->setGrainGenFunc(m.get());
+    match_crystallography->setDataContainer(m.get());
     match_crystallography->execute();
     err = match_crystallography->getErrorCondition();
     CHECK_FOR_ERROR(DataContainer, "Error Matching Crystallography", err)
@@ -206,7 +206,7 @@ void GrainGenerator::execute()
 	WriteGrainData::Pointer write_graindata = WriteGrainData::New();
 	write_graindata->setGrainDataFile(GrainDataFile);
     write_graindata->addObserver(static_cast<Observer*>(this));
-    write_graindata->setGrainGenFunc(m.get());
+    write_graindata->setDataContainer(m.get());
     write_graindata->execute();
     err = write_graindata->getErrorCondition();
     CHECK_FOR_ERROR(DataContainer, "Error Writing Grain Data", err)

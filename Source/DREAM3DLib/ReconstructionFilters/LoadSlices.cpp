@@ -181,7 +181,7 @@ void LoadSlices::execute()
   threshold_points();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
+  m_ErrorMessage = "Load Slices Completed";
   m_ErrorCondition = 0;
 }
 void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
