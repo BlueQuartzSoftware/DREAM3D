@@ -94,7 +94,7 @@ void MatchCrystallography::execute()
   err = find_neighbors->getErrorCondition();
   size_t xtalCount = m->crystruct.size();
   totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
-  for(int i=0;i<xtalCount;i++)
+  for(size_t i=0;i<xtalCount;i++)
   {
 	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
   }

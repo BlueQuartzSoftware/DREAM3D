@@ -81,11 +81,11 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     CleanupGrains();
 
   private:
-  unsigned long long int Seed;
+    unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
- std::vector<OrientationMath*> m_OrientationOps;
+    std::vector<OrientationMath*> m_OrientationOps;
 
 	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
     void operator=(const CleanupGrains&); // Operator '=' Not Implemented

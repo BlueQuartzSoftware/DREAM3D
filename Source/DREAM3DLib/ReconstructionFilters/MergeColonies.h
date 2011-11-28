@@ -65,9 +65,6 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     virtual ~MergeColonies();
 
-//    typedef boost::shared_array<float> SharedFloatArray;
-//    typedef boost::shared_array<int> SharedIntArray;
-
     virtual void execute();
     void merge_colonies();
     void characterize_colonies();

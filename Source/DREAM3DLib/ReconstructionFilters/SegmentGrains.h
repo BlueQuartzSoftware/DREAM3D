@@ -65,23 +65,19 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 
     virtual ~SegmentGrains();
 
-//    typedef boost::shared_array<float> SharedFloatArray;
-//    typedef boost::shared_array<int> SharedIntArray;
-
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
 
 
-    unsigned long long int Seed;
-
     virtual void execute();
     void form_grains();
-
-    std::vector<OrientationMath*> m_OrientationOps;
 
   protected:
     SegmentGrains();
 
   private:
+
+    unsigned long long int Seed;
+    std::vector<OrientationMath*> m_OrientationOps;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;

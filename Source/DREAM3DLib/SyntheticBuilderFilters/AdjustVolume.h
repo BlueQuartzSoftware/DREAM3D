@@ -64,8 +64,6 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     virtual ~AdjustVolume();
 
-
-
     virtual void execute();
     void adjust_boundaries();
 
