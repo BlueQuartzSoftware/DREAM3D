@@ -116,11 +116,11 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
 
   for (int i = 0; i < 41; i++)
   {
-    float a = DREAM3DMath::Gamma(1.0 + 1.0 / ShapeClass2Omega3[i][1]);
-    float b = DREAM3DMath::Gamma(5.0 / ShapeClass2Omega3[i][1]);
-    float c = DREAM3DMath::Gamma(3.0 / ShapeClass2Omega3[i][1]);
-    float d = DREAM3DMath::Gamma(1.0 + 3.0 / ShapeClass2Omega3[i][1]);
-    ShapeClass2Omega3[i][0] = powf(20.0 * ((a*a*a) * b) / (c * powf(d, 5.0 / 3.0)), 3) / (2000.0 * M_PI * M_PI / 9.0);
+    float a = DREAM3DMath::Gamma(1.0f + 1.0f / ShapeClass2Omega3[i][1]);
+    float b = DREAM3DMath::Gamma(5.0f / ShapeClass2Omega3[i][1]);
+    float c = DREAM3DMath::Gamma(3.0f / ShapeClass2Omega3[i][1]);
+    float d = DREAM3DMath::Gamma(1.0f + 3.0f / ShapeClass2Omega3[i][1]);
+    ShapeClass2Omega3[i][0] = powf(20.0f * ((a*a*a) * b) / (c * powf(d, 5.0f / 3.0f)), 3) / (2000.0f * M_PI * M_PI / 9.0f);
     Nvaluedist = fabsf(omega3 - ShapeClass2Omega3[i][0]);
     if (Nvaluedist < bestNvaluedist)
     {
@@ -128,28 +128,25 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
       Nvalue = ShapeClass2Omega3[i][1];
     }
   }
-  float beta1 = (DREAM3DMath::Gamma((1.0 / Nvalue))*DREAM3DMath::Gamma((1.0/Nvalue)))/DREAM3DMath::Gamma((2.0/Nvalue));
-  float beta2 = (DREAM3DMath::Gamma((2.0 / Nvalue))*DREAM3DMath::Gamma((1.0/Nvalue)))/DREAM3DMath::Gamma((3.0/Nvalue));
-  radcur1 = (volcur * (3.0 / 2.0) * (1.0 / bovera) * (1.0 / covera) * ((Nvalue * Nvalue) / 4.0) * (1.0 / beta1) * (1.0 / beta2));
-  radcur1 = powf(radcur1, 0.333333333333);
+  float beta1 = (DREAM3DMath::Gamma((1.0f / Nvalue))*DREAM3DMath::Gamma((1.0f/Nvalue)))/DREAM3DMath::Gamma((2.0f/Nvalue));
+  float beta2 = (DREAM3DMath::Gamma((2.0f / Nvalue))*DREAM3DMath::Gamma((1.0f/Nvalue)))/DREAM3DMath::Gamma((3.0f/Nvalue));
+  radcur1 = (volcur * (3.0f / 2.0f) * (1.0f / bovera) * (1.0f / covera) * ((Nvalue * Nvalue) / 4.0f) * (1.0f / beta1) * (1.0f / beta2));
+  radcur1 = powf(radcur1, 0.333333333333f);
   return radcur1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 float SuperEllipsoidOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
-  float inside = 1.0;
+  float inside = 1.0f;
   axis1comp = fabs(axis1comp);
   axis2comp = fabs(axis2comp);
   axis3comp = fabs(axis3comp);
   axis1comp = powf(axis1comp, Nvalue);
   axis2comp = powf(axis2comp, Nvalue);
   axis3comp = powf(axis3comp, Nvalue);
-  inside = 1.0 - axis1comp - axis2comp - axis3comp;
+  inside = 1.0f - axis1comp - axis2comp - axis3comp;
   return inside;
 }
