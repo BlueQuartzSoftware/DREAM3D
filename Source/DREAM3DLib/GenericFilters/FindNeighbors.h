@@ -40,18 +40,19 @@
 #include <vector>
 #include <string>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
 /**
- * @class FindNeighbors FindNeighbors.h GrainGenerator/Algorithms/FindNeighbors.h
+ * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class FindNeighbors : public Observable
+class DREAM3DLib_EXPORT FindNeighbors : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(FindNeighbors);

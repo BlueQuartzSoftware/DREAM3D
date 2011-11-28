@@ -39,19 +39,20 @@
 
 #include <string>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 
 /**
- * @class PlacePrecipitates PlacePrecipitates.h GrainGenerator/Algorithms/PlacePrecipitates.h
+ * @class PlacePrecipitates PlacePrecipitates.h DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class PlacePrecipitates : public Observable
+class DREAM3DLib_EXPORT PlacePrecipitates : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(PlacePrecipitates);

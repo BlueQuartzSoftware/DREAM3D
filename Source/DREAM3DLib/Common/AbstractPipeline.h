@@ -37,10 +37,11 @@
 #ifndef ABSTRACTPIPELINE_H_
 #define ABSTRACTPIPELINE_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
+
 #include "MXA/Common/LogTime.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
  * @class AbstractPipeline AbstractPipeline.h DREAM3D/Common/AbstractPipeline.h
@@ -62,12 +63,12 @@ class DREAM3DLib_EXPORT AbstractPipeline
     AbstractPipeline();
     virtual ~AbstractPipeline();
 
-    MXA_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
 
     /**
      * @brief Cancel the operation
      */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
+    DREAM3D_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * @brief This method is called to start the pipeline for a plugin

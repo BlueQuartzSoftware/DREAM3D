@@ -46,6 +46,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -54,13 +55,13 @@
 
 
 /**
- * @class MatchCrystallography MatchCrystallography.h GrainGenerator/Algorithms/MatchCrystallography.h
+ * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class MatchCrystallography : public Observable
+class DREAM3DLib_EXPORT MatchCrystallography : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(MatchCrystallography);
