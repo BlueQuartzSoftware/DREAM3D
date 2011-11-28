@@ -35,22 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "MergeTwins.h"
-#include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <cstddef>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -67,7 +51,6 @@
 
 const static float m_pi = M_PI;
 
-using namespace std;
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -114,7 +97,7 @@ void MergeTwins::merge_twins()
 {
   DataContainer* m = getDataContainer();
   float angcur = 180.0f;
-  vector<int > twinlist;
+  std::vector<int> twinlist;
   float w;
   float n1, n2, n3;
   float angtol = 2.0f;

@@ -65,9 +65,6 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     virtual ~MergeTwins();
 
-//    typedef boost::shared_array<float> SharedFloatArray;
-//    typedef boost::shared_array<int> SharedIntArray;
-
     virtual void execute();
     void merge_twins();
     void characterize_twins();
@@ -76,9 +73,9 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
   protected:
     MergeTwins();
 
-
   private:
-unsigned long long int Seed;
+
+    unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;

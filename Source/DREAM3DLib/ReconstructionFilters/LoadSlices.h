@@ -70,8 +70,6 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
     virtual ~LoadSlices();
 
-//    typedef boost::shared_array<float> SharedFloatArray;
-//    typedef boost::shared_array<int> SharedIntArray;
 
     MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
     MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
@@ -84,7 +82,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
 
 
-	virtual void execute();
+    virtual void execute();
     void initialize(int nX, int nY, int nZ,
                     float xRes, float yRes, float zRes,
                     std::vector<Ebsd::CrystalStructure> crystalStructures,
@@ -92,7 +90,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
                     std::vector<float> precipFractions);
 
 
-	void initializeQuats();
+    void initializeQuats();
     void threshold_points();
 
     std::vector<OrientationMath*> m_OrientationOps;
@@ -103,7 +101,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
   private:
     unsigned long long int Seed;
 
-	int tempxpoints;
+    int tempxpoints;
     int tempypoints;
     int totaltemppoints;
     OrientationMath::Pointer m_CubicOps;
