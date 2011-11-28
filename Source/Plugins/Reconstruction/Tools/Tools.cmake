@@ -10,7 +10,7 @@ COMPILE_TOOL(
     TARGET Reconstruction
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/ReconstructionMain.cpp 
             ${Reconstruction_HDRS} ${Reconstruction_SRCS}
-            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}
+            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS} ${Algorithms_HDRS} ${Algorithms_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
@@ -27,7 +27,7 @@ COMPILE_TOOL(
     TARGET H5AngToVtk
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/H5AngToVtk.cpp 
             ${Reconstruction_HDRS} ${Reconstruction_SRCS}
-            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}
+            ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}  ${Algorithms_HDRS} ${Algorithms_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
