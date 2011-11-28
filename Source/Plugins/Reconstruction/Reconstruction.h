@@ -56,7 +56,7 @@
 #include "DREAM3DLib/Common/Observer.h"
 
 
-#include "ReconstructionFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 
 /**
@@ -119,50 +119,11 @@ class Reconstruction : public AbstractPipeline, public Observer
 
 
   private:
-    ReconstructionFunc::Pointer m;
+    DataContainer::Pointer m;
 
     Reconstruction(const Reconstruction&);    // Copy Constructor Not Implemented
     void operator=(const Reconstruction&);  // Operator '=' Not Implemented
 
-
-    /**
-     * @brief This method reads the values for the phase type, crystal structure
-     * and precipitate fractions from the EBSD file.
-     * @param reader The EbsdReader instance
-     * @param precipFractions Container to hold the precipitate fractions (out)
-     * @param crystalStructures Container to hold the crystal structures (out)
-     * @return Zero/Positive on Success - Negative on error.
-     */
-    template<typename EbsdReader, typename EbsdPhase>
-    int loadInfo(EbsdReader* reader,
-                 std::vector<float> &precipFractions,
-                 std::vector<Ebsd::CrystalStructure> &crystalStructures)
-    {
-      reader->setFileName(m_H5AngFile);
-      reader->setSliceStart(m_ZStartIndex);
-      reader->setSliceEnd(m_ZEndIndex);
-
-      std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
-      if (phases.size() == 0)
-      {
-        return -1;
-      }
-      precipFractions.resize(phases.size() + 1);
-      crystalStructures.resize(phases.size() + 1);
-
-      // Initialize the zero'th element to unknowns. The other elements will
-      // be filled in based on values from the data file
-      crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-      m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
-      precipFractions[0] = -1.0f;
-      for(size_t i=0;i<phases.size();i++)
-      {
-        int phaseID = phases[i]->getPhaseIndex();
-        crystalStructures[phaseID] = phases[i]->determineCrystalStructure();
-        precipFractions[phaseID] = -1.0f;
-      }
-      return 0;
-    }
 };
 
 #endif /* RECONSTRUCTION_H_ */

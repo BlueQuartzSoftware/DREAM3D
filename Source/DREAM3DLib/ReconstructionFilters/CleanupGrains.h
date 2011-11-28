@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2009, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2009, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,58 +34,68 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef CLEANUPGRAINS_H_
+#define CLEANUPGRAINS_H_
+
+#include <vector>
+#include <string>
+
+#include <boost/shared_array.hpp>
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-
-// C Includes
-
-// C++ Includes
-#include <iostream>
-#include <fstream>
-
-// EbsdLib Includes
-#include "EbsdLib/EbsdConstants.h"
-
-// DREAM3D Includes
-#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::DataContainer()
+/**
+ * @class PackGrainsGen2 PackGrainsGen2.h GrainGenerator/Algorithms/PackGrainsGen2.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
+class CleanupGrains : public Observable
 {
-  grain_indicies = NULL;
-  ellipfuncs = NULL;
-  phases = NULL;
-  euler1s = NULL;
-  euler2s = NULL;
-  euler3s = NULL;
-  surfacevoxels = NULL;
-  quats = NULL;
-  alreadychecked = NULL;
-  neighbors = NULL;
-  goodVoxels = NULL;
+  public:
+    DREAM3D_SHARED_POINTERS(CleanupGrains);
+    DREAM3D_STATIC_NEW_MACRO(CleanupGrains);
+    DREAM3D_TYPE_MACRO_SUPER(CleanupGrains, Observable);
 
-  INIT_AIMARRAY(m_GrainIndicies,int);
-  INIT_AIMARRAY(m_Ellipfuncs,float);
-  INIT_AIMARRAY(m_Phases,int);
-  INIT_AIMARRAY(m_Euler1s,float);
-  INIT_AIMARRAY(m_Euler2s,float);
-  INIT_AIMARRAY(m_Euler3s,float);
-  INIT_AIMARRAY(m_SurfaceVoxels,char);
-  INIT_AIMARRAY(m_Neighbors,int);
-  INIT_AIMARRAY(m_GoodVoxels,bool);
-  INIT_AIMARRAY(m_Quats,float);
-  INIT_AIMARRAY(m_AlreadyChecked,bool);
+    virtual ~CleanupGrains();
 
-}
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::~DataContainer()
-{
+    DREAM3D_INSTANCE_PROPERTY(int, minallowedgrainsize);
+    DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    void setGrainGenFunc(DataContainer* gg) { m = gg; }
+    DataContainer*getGrainGenFunc() { return m; }
 
-}
+    unsigned long long int Seed;
+
+	virtual void execute();
+    void remove_smallgrains();
+    void assign_badpoints();
+    void merge_containedgrains();
+    void reorder_grains();
+
+    std::vector<OrientationMath*> m_OrientationOps;
+
+  protected:
+    CleanupGrains();
+    DataContainer* m;
+
+  private:
+
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+
+	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
+    void operator=(const CleanupGrains&); // Operator '=' Not Implemented
+};
+
+#endif /* CLEANUPGRAINS_H_ */

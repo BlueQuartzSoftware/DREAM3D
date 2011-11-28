@@ -47,31 +47,6 @@ if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
 endif()
 
 
-#-- Add in the various filter algorithms for the Grain Generator
-SET (Algorithms_HDRS
-  ${PROJECT_SOURCE_DIR}/Algorithms/FindNeighbors.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/MatchCrystallography.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/PlacePrecipitates.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/AdjustVolume.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.h
-  ${PROJECT_SOURCE_DIR}/Algorithms/WriteGrainData.h
-)
-
-SET (Algorithms_SRCS
-  ${PROJECT_SOURCE_DIR}/Algorithms/FindNeighbors.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/MatchCrystallography.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/AdjustVolume.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/PlacePrecipitates.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/PackGrainsGen2.cpp
-  ${PROJECT_SOURCE_DIR}/Algorithms/WriteGrainData.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/Algorithms" "${Algorithms_HDRS}" "${Algorithms_SRCS}" "0")
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${Algorithms_HDRS}
-            DESTINATION include/DREAM3D/Algorithms
-            COMPONENT Headers   )
-endif()
-
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
@@ -131,8 +106,6 @@ set (GrainGeneratorPlugin_PROJECT_SRCS
     ${GrainGenerator_SRCS}
     ${StructureReaders_HDRS}
     ${StructureReaders_SRCS}
-    ${Algorithms_HDRS}
-    ${Algorithms_SRCS}
 )
 
 
@@ -190,8 +163,6 @@ COMPILE_TOOL(
     ${GrainGenerator_SRCS}
     ${StructureReaders_HDRS}
     ${StructureReaders_SRCS}
-    ${Algorithms_HDRS}
-    ${Algorithms_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}

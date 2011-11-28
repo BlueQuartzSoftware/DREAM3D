@@ -59,7 +59,6 @@
 #include <boost/weak_ptr.hpp>
 
 
-
 #define SHARED_IS_NULL(ptr)\
   (  (ptr).get() == NULL )
 

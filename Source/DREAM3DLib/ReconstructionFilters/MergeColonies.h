@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2009, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2009, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,58 +34,65 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef MERGECOLONIES_H_
+#define MERGECOLONIES_H_
+
+#include <vector>
+#include <string>
+
+#include <boost/shared_array.hpp>
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-
-// C Includes
-
-// C++ Includes
-#include <iostream>
-#include <fstream>
-
-// EbsdLib Includes
-#include "EbsdLib/EbsdConstants.h"
-
-// DREAM3D Includes
-#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::DataContainer()
+/**
+ * @class MergeColonies MergeColonies.h Reconstruction/Algorithms/MergeColonies.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
+class MergeColonies : public Observable
 {
-  grain_indicies = NULL;
-  ellipfuncs = NULL;
-  phases = NULL;
-  euler1s = NULL;
-  euler2s = NULL;
-  euler3s = NULL;
-  surfacevoxels = NULL;
-  quats = NULL;
-  alreadychecked = NULL;
-  neighbors = NULL;
-  goodVoxels = NULL;
+  public:
+    DREAM3D_SHARED_POINTERS(MergeColonies);
+    DREAM3D_STATIC_NEW_MACRO(MergeColonies);
+    DREAM3D_TYPE_MACRO_SUPER(MergeColonies, Observable);
 
-  INIT_AIMARRAY(m_GrainIndicies,int);
-  INIT_AIMARRAY(m_Ellipfuncs,float);
-  INIT_AIMARRAY(m_Phases,int);
-  INIT_AIMARRAY(m_Euler1s,float);
-  INIT_AIMARRAY(m_Euler2s,float);
-  INIT_AIMARRAY(m_Euler3s,float);
-  INIT_AIMARRAY(m_SurfaceVoxels,char);
-  INIT_AIMARRAY(m_Neighbors,int);
-  INIT_AIMARRAY(m_GoodVoxels,bool);
-  INIT_AIMARRAY(m_Quats,float);
-  INIT_AIMARRAY(m_AlreadyChecked,bool);
+    virtual ~MergeColonies();
 
-}
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::~DataContainer()
-{
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    void setGrainGenFunc(DataContainer* gg) { m = gg; }
+    DataContainer*getGrainGenFunc() { return m; }
 
-}
+    unsigned long long int Seed;
+
+	virtual void execute();
+    void merge_colonies();
+    void characterize_colonies();
+    void renumber_grains();
+
+    std::vector<OrientationMath*> m_OrientationOps;
+
+  protected:
+    MergeColonies();
+    DataContainer* m;
+
+  private:
+
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+
+	MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented
+    void operator=(const MergeColonies&); // Operator '=' Not Implemented
+};
+
+#endif /* MERGECOLONIES_H_ */
