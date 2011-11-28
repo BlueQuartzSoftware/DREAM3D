@@ -80,7 +80,6 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 
   protected:
     SegmentGrains();
-    DataContainer* m;
 
   private:
 

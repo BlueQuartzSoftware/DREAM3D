@@ -73,7 +73,6 @@ class DREAM3DLib_EXPORT WriteGrainData : public AbstractFilter
 
   protected:
     WriteGrainData();
-    DataContainer* m;
 
   private:
 

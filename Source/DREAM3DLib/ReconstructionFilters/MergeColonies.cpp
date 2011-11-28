@@ -112,6 +112,7 @@ void MergeColonies::execute()
 
 void MergeColonies::merge_colonies()
 {
+  DataContainer* m = getDataContainer();
   float angcur = 180.0f;
   vector<int > colonylist;
   float w;
@@ -192,6 +193,7 @@ void MergeColonies::merge_colonies()
 }
 void MergeColonies::renumber_grains()
 {
+  DataContainer* m = getDataContainer();
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
@@ -239,6 +241,7 @@ void MergeColonies::renumber_grains()
 
 void MergeColonies::characterize_colonies()
 {
+  DataContainer* m = getDataContainer();
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 0; i < numgrains; i++)
   {

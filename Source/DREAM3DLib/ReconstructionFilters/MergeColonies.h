@@ -75,7 +75,6 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
   protected:
     MergeColonies();
-    DataContainer* m;
 
   private:
     unsigned long long int Seed;

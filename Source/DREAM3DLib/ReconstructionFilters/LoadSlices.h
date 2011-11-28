@@ -99,7 +99,6 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
   protected:
     LoadSlices();
-    DataContainer* m;
 
   private:
     unsigned long long int Seed;

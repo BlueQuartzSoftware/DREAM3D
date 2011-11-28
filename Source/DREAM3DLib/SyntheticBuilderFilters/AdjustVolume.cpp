@@ -99,7 +99,7 @@ void AdjustVolume::execute()
 void AdjustVolume::adjust_boundaries()
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   int neighpoints[6];
   neighpoints[0] = -m->xpoints*m->ypoints;
   neighpoints[1] = -m->xpoints;
@@ -137,7 +137,7 @@ void AdjustVolume::adjust_boundaries()
     gsizes[m->grain_indicies[i]]++;
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setDataContainer(m);
+  packGrains->setDataContainer(getDataContainer());
   packGrains->setObservers(this->getObservers());
   oldsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
   while(iterations < 1)
@@ -225,7 +225,7 @@ void AdjustVolume::adjust_boundaries()
       m->m_Grains[index]->equivdiameter = diam;
     }
     PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-    packGrains->setDataContainer(m);
+    packGrains->setDataContainer(getDataContainer());
     currentsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
 
     if(currentsizedisterror <= oldsizedisterror)

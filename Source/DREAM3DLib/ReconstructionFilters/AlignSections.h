@@ -68,14 +68,13 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance)
     DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int)
 
-    virtual void execute();
+	  virtual void execute();
 
     void align_sections();
     void form_grains_sections();
 
   protected:
     AlignSections();
-    DataContainer* m;
 
   private:
 

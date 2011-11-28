@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
   protected:
     MergeTwins();
-    DataContainer* m;
+
 
   private:
 unsigned long long int Seed;

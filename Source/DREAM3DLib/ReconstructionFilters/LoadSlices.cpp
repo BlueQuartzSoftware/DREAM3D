@@ -105,7 +105,7 @@ LoadSlices::~LoadSlices()
 
 void LoadSlices::execute()
 {
-
+  DataContainer* m = getDataContainer();
 	int err = 0;
   DREAM3D_RANDOMNG_NEW()
 
@@ -189,7 +189,7 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
                                     std::vector<float> precipFractions)
 {
   notify("Initializing Variables", 0, Observable::UpdateProgressValueAndMessage);
-
+  DataContainer* m = getDataContainer();
   m->crystruct = crystalStructures;
   m->phaseType = m_PhaseTypes;
   m->pptFractions = precipFractions;
@@ -242,6 +242,7 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
 
 void LoadSlices::initializeQuats()
 {
+  DataContainer* m = getDataContainer();
   float qr[5];
   Ebsd::CrystalStructure xtal = Ebsd::UnknownCrystalStructure;
   int phase = -1;
@@ -271,6 +272,7 @@ void LoadSlices::initializeQuats()
 }
 void LoadSlices::threshold_points()
 {
+  DataContainer* m = getDataContainer();
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
   neighpoints[1] = -m->xpoints;

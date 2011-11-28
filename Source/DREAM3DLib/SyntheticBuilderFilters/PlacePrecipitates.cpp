@@ -85,9 +85,9 @@ void PlacePrecipitates::execute()
 {
   int err = 0;
   DREAM3D_RANDOMNG_NEW()
-
+  DataContainer* m = getDataContainer();
 	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setDataContainer(m);
+    find_neighbors->setDataContainer(getDataContainer());
     find_neighbors->setObservers(this->getObservers());
     find_neighbors->execute();
     err = find_neighbors->getErrorCondition();
@@ -106,7 +106,7 @@ void PlacePrecipitates::execute()
 void PlacePrecipitates::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   float dist;
   float inside = -1;
   int index;
@@ -251,6 +251,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 
 void  PlacePrecipitates::fillin_precipitates()
 {
+  DataContainer* m = getDataContainer();
   std::vector<int> neighs;
   std::vector<int> remove;
   std::vector<int> gsizes;
@@ -353,7 +354,7 @@ void  PlacePrecipitates::fillin_precipitates()
 void  PlacePrecipitates::place_precipitates()
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
   size_t currentnumgrains = m->m_Grains.size();
@@ -381,7 +382,7 @@ void  PlacePrecipitates::place_precipitates()
     //if(i == 0) precipitatephasefractions[i] = precipitatephasefractions[i];
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setDataContainer(m);
+  packGrains->setDataContainer(getDataContainer());
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   int err = packGrains->readReconStatsData(h5reader);
   err = packGrains->readAxisOrientationData(h5reader);
@@ -460,16 +461,19 @@ void  PlacePrecipitates::place_precipitates()
 }
 float PlacePrecipitates::find_xcoord(long long int index)
 {
+  DataContainer* m = getDataContainer();
   float x = m->resx*float(index%m->xpoints);
   return x;
 }
 float PlacePrecipitates::find_ycoord(long long int index)
 {
+  DataContainer* m = getDataContainer();
   float y = m->resy*float((index/m->xpoints)%m->ypoints);
   return y;
 }
 float PlacePrecipitates::find_zcoord(long long int index)
 {
+  DataContainer* m = getDataContainer();
   float z = m->resz*float(index/(m->xpoints*m->ypoints));
   return z;
 }
