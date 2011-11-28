@@ -47,6 +47,7 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/QualityMetricFilter.h"
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -54,13 +55,13 @@
 
 
 /**
- * @class LoadSlices LoadSlices.h Reconstruction/Algorithms/LoadSlices.h
+ * @class LoadSlices LoadSlices.h DREAM3DLib/ReconstructionFilters/LoadSlices.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class LoadSlices : public Observable
+class DREAM3DLib_EXPORT LoadSlices : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(LoadSlices);

@@ -42,6 +42,7 @@
 
 #include <boost/shared_array.hpp>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -51,13 +52,13 @@
 
 
 /**
- * @class PackGrainsGen2 PackGrainsGen2.h GrainGenerator/Algorithms/PackGrainsGen2.h
+ * @class PackGrainsGen2 PackGrainsGen2.h DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class PackGrainsGen2 : public Observable
+class DREAM3DLib_EXPORT PackGrainsGen2 : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(PackGrainsGen2);

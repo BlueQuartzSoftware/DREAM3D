@@ -42,19 +42,20 @@
 
 #include <boost/shared_array.hpp>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
 
 /**
- * @class AdjustVolume AdjustVolume.h GrainGenerator/Algorithms/FindNeighbors.h
+ * @class AdjustVolume AdjustVolume.h DREAM3DLib/SyntheticBuilderFilters/FindNeighbors.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class AdjustVolume : public Observable
+class DREAM3DLib_EXPORT AdjustVolume : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(AdjustVolume);
