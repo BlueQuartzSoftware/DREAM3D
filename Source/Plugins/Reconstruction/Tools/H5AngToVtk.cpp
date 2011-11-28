@@ -189,7 +189,7 @@ int main(int argc, char **argv)
   DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
 
   LoadSlices::Pointer load_slices = LoadSlices::New();
-  load_slices->setGrainGenFunc(m.get());
+  load_slices->setDataContainer(m.get());
   load_slices->initialize(m->xpoints, m->ypoints, m->zpoints,
                 m->resx, m->resy, m->resz,
                 crystalStructures, m_PhaseTypes, precipFractions);
