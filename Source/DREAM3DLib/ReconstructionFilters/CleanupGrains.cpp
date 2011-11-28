@@ -97,34 +97,44 @@ CleanupGrains::~CleanupGrains()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CleanupGrains::execute()
 {
 
 	int err = 0;
   DREAM3D_RANDOMNG_NEW()
 
-  notify("Form Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
-
+  notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
   remove_smallgrains();
 
+  notify("Cleanup Grains - Assigning Bad Points", 0, Observable::UpdateProgressMessage);
   assign_badpoints();
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setObservers(this->getObservers());
   find_neighbors->setGrainGenFunc(m);
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
   
+  notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
+
+  notify("Cleanup Grains - Reorder Grains", 0, Observable::UpdateProgressMessage);
   reorder_grains();
 
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
+  m_ErrorMessage = "CleanupGrains Completed";
   m_ErrorCondition = 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CleanupGrains::assign_badpoints()
 {
   vector<int > neighs;

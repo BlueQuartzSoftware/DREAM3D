@@ -93,3 +93,20 @@ void Observable::notify(const char* msg, int progress, ObserverAspect a)
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<Observer*> Observable::getObservers()
+{
+  return this->m_Observers;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::setObservers(std::vector<Observer*> obs)
+{
+  this->m_Observers = obs;
+}
+
