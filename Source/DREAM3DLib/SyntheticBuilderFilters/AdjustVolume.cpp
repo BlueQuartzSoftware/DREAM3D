@@ -135,7 +135,8 @@ void AdjustVolume::adjust_boundaries()
     gsizes[m->grain_indicies[i]]++;
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setGrainGenFunc(m);
+  packGrains->setDataContainer(m);
+  packGrains->setObservers(this->getObservers());
   oldsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
   while(iterations < 1)
   {

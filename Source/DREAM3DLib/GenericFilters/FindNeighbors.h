@@ -64,8 +64,8 @@ class DREAM3DLib_EXPORT FindNeighbors : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(DataContainer* gg) { m = gg; }
-    DataContainer*getGrainGenFunc() { return m; }
+    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
+    
 
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 

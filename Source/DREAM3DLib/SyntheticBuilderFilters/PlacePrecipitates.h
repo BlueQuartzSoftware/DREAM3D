@@ -66,8 +66,8 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public Observable
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(DataContainer* gg) { m = gg; }
-    DataContainer*getGrainGenFunc() { return m; }
+    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
+    
 
     int numprimarygrains;
 

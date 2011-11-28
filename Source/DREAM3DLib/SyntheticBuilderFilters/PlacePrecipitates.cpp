@@ -88,7 +88,8 @@ void PlacePrecipitates::execute()
   DREAM3D_RANDOMNG_NEW()
 
 	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setGrainGenFunc(m);
+    find_neighbors->setDataContainer(m);
+    find_neighbors->setObservers(this->getObservers());
     find_neighbors->execute();
     err = find_neighbors->getErrorCondition();
 

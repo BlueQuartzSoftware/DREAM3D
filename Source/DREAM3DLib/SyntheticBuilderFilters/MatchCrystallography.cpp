@@ -82,7 +82,8 @@ void MatchCrystallography::execute()
   readMisorientationData(h5reader);
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setGrainGenFunc(m);
+  find_neighbors->setDataContainer(m);
+  find_neighbors->setObservers(this->getObservers());
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
   size_t xtalCount = m->crystruct.size();
