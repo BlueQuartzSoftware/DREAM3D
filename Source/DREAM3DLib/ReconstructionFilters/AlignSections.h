@@ -44,10 +44,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-
 
 /**
  * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h
@@ -56,34 +55,23 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AlignSections : public Observable
+class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AlignSections);
-    DREAM3D_STATIC_NEW_MACRO(AlignSections);
-    DREAM3D_TYPE_MACRO_SUPER(AlignSections, Observable);
+    DREAM3D_SHARED_POINTERS(AlignSections)
+    DREAM3D_STATIC_NEW_MACRO(AlignSections)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
 
     virtual ~AlignSections();
 
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
-
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, alignmeth);
-    DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
-
-    unsigned long long int Seed;
-
-    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, alignmeth)
+    DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance)
+    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int)
 
 	  virtual void execute();
+
     void align_sections();
     void form_grains_sections();
-
-    std::vector<OrientationMath*> m_OrientationOps;
 
   protected:
     AlignSections();
@@ -94,7 +82,11 @@ class DREAM3DLib_EXPORT AlignSections : public Observable
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
-	AlignSections(const AlignSections&); // Copy Constructor Not Implemented
+    std::vector<OrientationMath*> m_OrientationOps;
+
+    unsigned long long int Seed;
+
+    AlignSections(const AlignSections&); // Copy Constructor Not Implemented
     void operator=(const AlignSections&); // Operator '=' Not Implemented
 };
 

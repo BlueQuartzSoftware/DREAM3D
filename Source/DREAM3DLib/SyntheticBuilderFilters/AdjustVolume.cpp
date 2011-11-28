@@ -35,24 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "AdjustVolume.h"
-#include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <cstddef>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
-
-using namespace std;
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -65,14 +48,10 @@ using namespace std;
 
 const static float m_pi = M_PI;
 
-using namespace std;
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AdjustVolume::AdjustVolume() :
-    m_ErrorCondition(0)
+AdjustVolume::AdjustVolume()
 {
 }
 
@@ -83,6 +62,9 @@ AdjustVolume::~AdjustVolume()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AdjustVolume::execute()
 {
 
@@ -91,20 +73,20 @@ void AdjustVolume::execute()
   adjust_boundaries();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("AdjustVolume Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 void AdjustVolume::adjust_boundaries()
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   int neighpoints[6];
-  neighpoints[0] = -m_DataContainer->xpoints*m_DataContainer->ypoints;
-  neighpoints[1] = -m_DataContainer->xpoints;
+  neighpoints[0] = -m->xpoints*m->ypoints;
+  neighpoints[1] = -m->xpoints;
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m_DataContainer->xpoints;
-  neighpoints[5] = m_DataContainer->xpoints*m_DataContainer->ypoints;
+  neighpoints[4] = m->xpoints;
+  neighpoints[5] = m->xpoints*m->ypoints;
   int iterations = 0;
   size_t selectedgrain = 0;
   int good = 0;
@@ -117,25 +99,25 @@ void AdjustVolume::adjust_boundaries()
   size_t count, affectedcount;
   int vListSize = 1000;
 
-  float voxtovol = m_DataContainer->resx*m_DataContainer->resy*m_DataContainer->resz*(3.0/4.0)*(1.0/m_pi);
+  float voxtovol = m->resx*m->resy*m->resz*(3.0/4.0)*(1.0/m_pi);
 
-  gsizes.resize(m_DataContainer->m_Grains.size());
+  gsizes.resize(m->m_Grains.size());
 
   std::vector<int> voxellist(vListSize,-1);
   std::vector<int> affectedvoxellist(vListSize,-1);
-  for(size_t i=1;i<m_DataContainer->m_Grains.size();i++)
+  for(size_t i=1;i<m->m_Grains.size();i++)
   {
     gsizes[i] = 0;
   }
-  NEW_SHARED_ARRAY(reassigned, int, m_DataContainer->totalpoints)
+  NEW_SHARED_ARRAY(reassigned, int, m->totalpoints)
 
-  for(int i=0;i<m_DataContainer->totalpoints;i++)
+  for(int i=0;i<m->totalpoints;i++)
   {
     reassigned[i] = 0;
-    gsizes[m_DataContainer->grain_indicies[i]]++;
+    gsizes[m->grain_indicies[i]]++;
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setDataContainer(m_DataContainer);
+  packGrains->setDataContainer(getDataContainer());
   packGrains->setObservers(this->getObservers());
   oldsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
   while(iterations < 1)
@@ -145,10 +127,10 @@ void AdjustVolume::adjust_boundaries()
     while (good == 0)
     {
       good = 1;
-      selectedgrain = int(rg.genrand_res53() * m_DataContainer->m_Grains.size());
-      if (selectedgrain >= m_DataContainer->m_Grains.size()) selectedgrain = m_DataContainer->m_Grains.size()-1;
+      selectedgrain = int(rg.genrand_res53() * m->m_Grains.size());
+      if (selectedgrain >= m->m_Grains.size()) selectedgrain = m->m_Grains.size()-1;
       if (selectedgrain == 0) selectedgrain = 1;
-      if (m_DataContainer->m_Grains[selectedgrain]->surfacegrain > 0) good = 0;
+      if (m->m_Grains[selectedgrain]->surfacegrain > 0) good = 0;
     }
     growth = 1;
     random = rg.genrand_res53();
@@ -156,50 +138,50 @@ void AdjustVolume::adjust_boundaries()
     nucleus = 0;
     count = 0;
     affectedcount = 0;
-    while(m_DataContainer->grain_indicies[nucleus] != selectedgrain)
+    while(m->grain_indicies[nucleus] != selectedgrain)
     {
       nucleus++;
-      if(nucleus >= m_DataContainer->totalpoints) selectedgrain++, nucleus = 0;
+      if(nucleus >= m->totalpoints) selectedgrain++, nucleus = 0;
     }
     voxellist[count] = nucleus;
     count++;
     for(size_t i=0;i<count;++i)
     {
       index = voxellist[i];
-      x = index%m_DataContainer->xpoints;
-      y = (index/m_DataContainer->xpoints)%m_DataContainer->ypoints;
-      z = index/(m_DataContainer->xpoints*m_DataContainer->ypoints);
+      x = index%m->xpoints;
+      y = (index/m->xpoints)%m->ypoints;
+      z = index/(m->xpoints*m->ypoints);
       for(int j=0;j<6;j++)
       {
         good = 1;
         neighpoint = index+neighpoints[j];
         if(j == 0 && z == 0) good = 0;
-        if(j == 5 && z == (m_DataContainer->zpoints-1)) good = 0;
+        if(j == 5 && z == (m->zpoints-1)) good = 0;
         if(j == 1 && y == 0) good = 0;
-        if(j == 4 && y == (m_DataContainer->ypoints-1)) good = 0;
+        if(j == 4 && y == (m->ypoints-1)) good = 0;
         if(j == 2 && x == 0) good = 0;
-        if(j == 3 && x == (m_DataContainer->xpoints-1)) good = 0;
-        if(good == 1 && m_DataContainer->grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
+        if(j == 3 && x == (m->xpoints-1)) good = 0;
+        if(good == 1 && m->grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
         {
 	        voxellist[count] = neighpoint;
 	        reassigned[neighpoint] = -1;
 	        count++;
 	        if(count >= voxellist.size()) voxellist.resize(voxellist.size()+vListSize,-1);
         }
-        if(good == 1 && m_DataContainer->grain_indicies[neighpoint] != selectedgrain && m_DataContainer->grain_indicies[index] == selectedgrain)
+        if(good == 1 && m->grain_indicies[neighpoint] != selectedgrain && m->grain_indicies[index] == selectedgrain)
         {
 	        if(growth == 1 && reassigned[neighpoint] <= 0)
 	        {
-	          reassigned[neighpoint] = m_DataContainer->grain_indicies[neighpoint];
-	          m_DataContainer->grain_indicies[neighpoint] = m_DataContainer->grain_indicies[index];
+	          reassigned[neighpoint] = m->grain_indicies[neighpoint];
+	          m->grain_indicies[neighpoint] = m->grain_indicies[index];
 	          affectedvoxellist[affectedcount] = neighpoint;
 	          affectedcount++;
 	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
 	        }
 	        if(growth == -1 && reassigned[neighpoint] <= 0)
 	        {
-	          reassigned[index] = m_DataContainer->grain_indicies[index];
-	          m_DataContainer->grain_indicies[index] = m_DataContainer->grain_indicies[neighpoint];
+	          reassigned[index] = m->grain_indicies[index];
+	          m->grain_indicies[index] = m->grain_indicies[neighpoint];
 	          affectedvoxellist[affectedcount] = index;
 	          affectedcount++;
 	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
@@ -212,26 +194,26 @@ void AdjustVolume::adjust_boundaries()
       index = affectedvoxellist[i];
       if(reassigned[index] > 0)
       {
-        gsizes[m_DataContainer->grain_indicies[index]]++;
+        gsizes[m->grain_indicies[index]]++;
         gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
       }
     }
-    for(size_t i=1;i<m_DataContainer->m_Grains.size();i++)
+    for(size_t i=1;i<m->m_Grains.size();i++)
     {
       index = i;
       diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
-      m_DataContainer->m_Grains[index]->equivdiameter = diam;
+      m->m_Grains[index]->equivdiameter = diam;
     }
     PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-    packGrains->setDataContainer(m_DataContainer);
+    packGrains->setDataContainer(getDataContainer());
     currentsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
 
     if(currentsizedisterror <= oldsizedisterror)
     {
       oldsizedisterror = currentsizedisterror;
-      for(size_t i=1;i<m_DataContainer->m_Grains.size();i++)
+      for(size_t i=1;i<m->m_Grains.size();i++)
       {
-        if(gsizes[i] == 0) m_DataContainer->m_Grains.erase(m_DataContainer->m_Grains.begin() + i);
+        if(gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
       }
     }
     if(currentsizedisterror > oldsizedisterror)
@@ -242,32 +224,32 @@ void AdjustVolume::adjust_boundaries()
         index = affectedvoxellist[i];
         if(reassigned[index] > 0)
         {
-          gsizes[m_DataContainer->grain_indicies[index]] = gsizes[m_DataContainer->grain_indicies[index]]-1;
-          m_DataContainer->grain_indicies[index] = reassigned[index];
-          gsizes[m_DataContainer->grain_indicies[index]]++;
+          gsizes[m->grain_indicies[index]] = gsizes[m->grain_indicies[index]]-1;
+          m->grain_indicies[index] = reassigned[index];
+          gsizes[m->grain_indicies[index]]++;
         }
       }
-      for(size_t i=1;i<m_DataContainer->m_Grains.size();i++)
+      for(size_t i=1;i<m->m_Grains.size();i++)
       {
         index = i;
         diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
-        m_DataContainer->m_Grains[index]->equivdiameter = diam;
+        m->m_Grains[index]->equivdiameter = diam;
       }
     }
-    for(int i=0;i<m_DataContainer->totalpoints;i++)
+    for(int i=0;i<m->totalpoints;i++)
     {
       reassigned[i] = 0;
     }
   }
-  NEW_SHARED_ARRAY(newnames, int, m_DataContainer->m_Grains.size())
+  NEW_SHARED_ARRAY(newnames, int, m->m_Grains.size())
 
-  for (size_t i=1;i<m_DataContainer->m_Grains.size();i++)
+  for (size_t i=1;i<m->m_Grains.size();i++)
   {
     newnames[i] = i;
   }
-  for(int i=0;i<m_DataContainer->totalpoints;i++)
+  for(int i=0;i<m->totalpoints;i++)
   {
-    m_DataContainer->grain_indicies[i] = newnames[m_DataContainer->grain_indicies[i]];
+    m->grain_indicies[i] = newnames[m->grain_indicies[i]];
   }
 }
 

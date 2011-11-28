@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
 
@@ -55,30 +55,23 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AdjustVolume : public Observable
+class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(AdjustVolume);
     DREAM3D_STATIC_NEW_MACRO(AdjustVolume);
-    DREAM3D_TYPE_MACRO_SUPER(AdjustVolume, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(AdjustVolume, AbstractFilter);
 
     virtual ~AdjustVolume();
 
-
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
-
-    std::vector<int> gsizes;
-
-	virtual void execute();
+    virtual void execute();
     void adjust_boundaries();
 
   protected:
     AdjustVolume();
 
   private:
+    std::vector<int> gsizes;
 
     AdjustVolume(const AdjustVolume&); // Copy Constructor Not Implemented
     void operator=(const AdjustVolume&); // Operator '=' Not Implemented

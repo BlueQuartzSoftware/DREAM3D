@@ -58,8 +58,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PlacePrecipitates::PlacePrecipitates() :
-    m_ErrorCondition(0)
+PlacePrecipitates::PlacePrecipitates()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -86,28 +85,28 @@ void PlacePrecipitates::execute()
 {
   int err = 0;
   DREAM3D_RANDOMNG_NEW()
-
+  DataContainer* m = getDataContainer();
 	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setDataContainer(m_DataContainer);
+    find_neighbors->setDataContainer(getDataContainer());
     find_neighbors->setObservers(this->getObservers());
     find_neighbors->execute();
     err = find_neighbors->getErrorCondition();
 
-	sizex = m_DataContainer->xpoints * m_DataContainer->resx;
-	sizey = m_DataContainer->ypoints * m_DataContainer->resy;
-	sizez = m_DataContainer->zpoints * m_DataContainer->resz;
+	sizex = m->xpoints * m->resx;
+	sizey = m->ypoints * m->resy;
+	sizez = m->zpoints * m->resz;
 	totalvol = sizex*sizey*sizez;
     place_precipitates();
     fillin_precipitates();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+    notify("PlacePrecipitates Completed", 0, Observable::UpdateProgressMessage);
+    setErrorCondition(0);
 }
 void PlacePrecipitates::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   float dist;
   float inside = -1;
   int index;
@@ -118,12 +117,12 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   float x, y, z;
   float insidecount = 0;
   std::vector<int> insidelist(1000,-1);
-  float volcur = m_DataContainer->m_Grains[gnum]->volume;
-  float bovera = m_DataContainer->m_Grains[gnum]->radius2;
-  float covera = m_DataContainer->m_Grains[gnum]->radius3;
-  float omega3 = m_DataContainer->m_Grains[gnum]->omega3;
+  float volcur = m->m_Grains[gnum]->volume;
+  float bovera = m->m_Grains[gnum]->radius2;
+  float covera = m->m_Grains[gnum]->radius3;
+  float omega3 = m->m_Grains[gnum]->omega3;
   float radcur1 = 1;
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_DataContainer->shapeTypes[m_DataContainer->m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
 
   // init any values for each of the Shape Ops
   for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -141,9 +140,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 
   float radcur2 = (radcur1*bovera);
   float radcur3 = (radcur1*covera);
-  float phi1 = m_DataContainer->m_Grains[gnum]->axiseuler1;
-  float PHI = m_DataContainer->m_Grains[gnum]->axiseuler2;
-  float phi2 = m_DataContainer->m_Grains[gnum]->axiseuler3;
+  float phi1 = m->m_Grains[gnum]->axiseuler1;
+  float PHI = m->m_Grains[gnum]->axiseuler2;
+  float phi2 = m->m_Grains[gnum]->axiseuler3;
   float ga[3][3];
   ga[0][0] = cosf(phi1)*cosf(phi2)-sinf(phi1)*sinf(phi2)*cosf(PHI);
   ga[0][1] = sinf(phi1)*cosf(phi2)+cosf(phi1)*sinf(phi2)*cosf(PHI);
@@ -154,35 +153,35 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   ga[2][0] =  sinf(phi1)*sinf(PHI);
   ga[2][1] = -cosf(phi1)*sinf(PHI);
   ga[2][2] =  cosf(PHI);
-  xc = m_DataContainer->m_Grains[gnum]->centroidx;
-  yc = m_DataContainer->m_Grains[gnum]->centroidy;
-  zc = m_DataContainer->m_Grains[gnum]->centroidz;
-  column = (xc-(m_DataContainer->resx/2))/m_DataContainer->resx;
-  row = (yc-(m_DataContainer->resy/2))/m_DataContainer->resy;
-  plane = (zc-(m_DataContainer->resz/2))/m_DataContainer->resz;
-  xmin = int(column-((radcur1/m_DataContainer->resx)+1));
-  xmax = int(column+((radcur1/m_DataContainer->resx)+1));
-  ymin = int(row-((radcur1/m_DataContainer->resy)+1));
-  ymax = int(row+((radcur1/m_DataContainer->resy)+1));
-  zmin = int(plane-((radcur1/m_DataContainer->resz)+1));
-  zmax = int(plane+((radcur1/m_DataContainer->resz)+1));
+  xc = m->m_Grains[gnum]->centroidx;
+  yc = m->m_Grains[gnum]->centroidy;
+  zc = m->m_Grains[gnum]->centroidz;
+  column = (xc-(m->resx/2))/m->resx;
+  row = (yc-(m->resy/2))/m->resy;
+  plane = (zc-(m->resz/2))/m->resz;
+  xmin = int(column-((radcur1/m->resx)+1));
+  xmax = int(column+((radcur1/m->resx)+1));
+  ymin = int(row-((radcur1/m->resy)+1));
+  ymax = int(row+((radcur1/m->resy)+1));
+  zmin = int(plane-((radcur1/m->resz)+1));
+  zmax = int(plane+((radcur1/m->resz)+1));
   if(m_periodic_boundaries == true)
   {
-    if(xmin < -m_DataContainer->xpoints) xmin = -m_DataContainer->xpoints;
-    if(xmax > 2*m_DataContainer->xpoints-1) xmax = (2*m_DataContainer->xpoints-1);
-    if(ymin < -m_DataContainer->ypoints) ymin = -m_DataContainer->ypoints;
-    if(ymax > 2*m_DataContainer->ypoints-1) ymax = (2*m_DataContainer->ypoints-1);
-    if(zmin < -m_DataContainer->zpoints) zmin = -m_DataContainer->zpoints;
-    if(zmax > 2*m_DataContainer->zpoints-1) zmax = (2*m_DataContainer->zpoints-1);
+    if(xmin < -m->xpoints) xmin = -m->xpoints;
+    if(xmax > 2*m->xpoints-1) xmax = (2*m->xpoints-1);
+    if(ymin < -m->ypoints) ymin = -m->ypoints;
+    if(ymax > 2*m->ypoints-1) ymax = (2*m->ypoints-1);
+    if(zmin < -m->zpoints) zmin = -m->zpoints;
+    if(zmax > 2*m->zpoints-1) zmax = (2*m->zpoints-1);
   }
   if(m_periodic_boundaries == false)
   {
     if(xmin < 0) xmin = 0;
-    if(xmax > m_DataContainer->xpoints-1) xmax = m_DataContainer->xpoints-1;
+    if(xmax > m->xpoints-1) xmax = m->xpoints-1;
     if(ymin < 0) ymin = 0;
-    if(ymax > m_DataContainer->ypoints-1) ymax = m_DataContainer->ypoints-1;
+    if(ymax > m->ypoints-1) ymax = m->ypoints-1;
     if(zmin < 0) zmin = 0;
-    if(zmax > m_DataContainer->zpoints-1) zmax = m_DataContainer->zpoints-1;
+    if(zmax > m->zpoints-1) zmax = m->zpoints-1;
   }
   for(int iter1 = xmin; iter1 < xmax+1; iter1++)
   {
@@ -193,23 +192,23 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 		  column = iter1;
 		  row = iter2;
 		  plane = iter3;
-		  if(iter1 < 0) column = iter1+m_DataContainer->xpoints;
-		  if(iter1 > m_DataContainer->xpoints-1) column = iter1-m_DataContainer->xpoints;
-		  if(iter2 < 0) row = iter2+m_DataContainer->ypoints;
-		  if(iter2 > m_DataContainer->ypoints-1) row = iter2-m_DataContainer->ypoints;
-		  if(iter3 < 0) plane = iter3+m_DataContainer->zpoints;
-		  if(iter3 > m_DataContainer->zpoints-1) plane = iter3-m_DataContainer->zpoints;
-		  index = (plane*m_DataContainer->xpoints*m_DataContainer->ypoints)+(row*m_DataContainer->xpoints)+column;
+		  if(iter1 < 0) column = iter1+m->xpoints;
+		  if(iter1 > m->xpoints-1) column = iter1-m->xpoints;
+		  if(iter2 < 0) row = iter2+m->ypoints;
+		  if(iter2 > m->ypoints-1) row = iter2-m->ypoints;
+		  if(iter3 < 0) plane = iter3+m->zpoints;
+		  if(iter3 > m->zpoints-1) plane = iter3-m->zpoints;
+		  index = (plane*m->xpoints*m->ypoints)+(row*m->xpoints)+column;
 		  inside = -1;
-		  x = float(column)*m_DataContainer->resx;
-		  y = float(row)*m_DataContainer->resy;
-		  z = float(plane)*m_DataContainer->resz;
+		  x = float(column)*m->resx;
+		  y = float(row)*m->resy;
+		  z = float(plane)*m->resz;
 		  if(iter1 < 0) x = x-sizex;
-		  if(iter1 > m_DataContainer->xpoints-1) x = x+sizex;
+		  if(iter1 > m->xpoints-1) x = x+sizex;
 		  if(iter2 < 0) y = y-sizey;
-		  if(iter2 > m_DataContainer->ypoints-1) y = y+sizey;
+		  if(iter2 > m->ypoints-1) y = y+sizey;
 		  if(iter3 < 0) z = z-sizez;
-		  if(iter3 > m_DataContainer->zpoints-1) z = z+sizez;
+		  if(iter3 > m->zpoints-1) z = z+sizez;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
 		  dist = sqrt(dist);
 		  if(dist < radcur1)
@@ -240,11 +239,11 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   }
   insidelist.resize(insidecount);
   // Initialize a new Voxel List if necessary
-  if (m_DataContainer->m_Grains[gnum]->voxellist == NULL )
+  if (m->m_Grains[gnum]->voxellist == NULL )
   {
-    m_DataContainer->m_Grains[gnum]->voxellist = new std::vector<int>(0);
+    m->m_Grains[gnum]->voxellist = new std::vector<int>(0);
   }
-  m_DataContainer->m_Grains[gnum]->voxellist->assign(insidelist.begin(), insidelist.end());
+  m->m_Grains[gnum]->voxellist->assign(insidelist.begin(), insidelist.end());
 }
 
 
@@ -252,6 +251,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 
 void  PlacePrecipitates::fillin_precipitates()
 {
+  DataContainer* m = getDataContainer();
   std::vector<int> neighs;
   std::vector<int> remove;
   std::vector<int> gsizes;
@@ -259,46 +259,46 @@ void  PlacePrecipitates::fillin_precipitates()
   int count = 1;
   int good = 1;
   float x, y, z;
-  gsizes.resize(m_DataContainer->m_Grains.size(),0);
-  neighbors.resize(m_DataContainer->totalpoints,0);
+  gsizes.resize(m->m_Grains.size(),0);
+  neighbors.resize(m->totalpoints,0);
   int neighpoint;
   int neighpoints[6];
-  std::vector<int> n(m_DataContainer->m_Grains.size());
-  neighpoints[0] = -m_DataContainer->xpoints*m_DataContainer->ypoints;
-  neighpoints[1] = -m_DataContainer->xpoints;
+  std::vector<int> n(m->m_Grains.size());
+  neighpoints[0] = -m->xpoints*m->ypoints;
+  neighpoints[1] = -m->xpoints;
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m_DataContainer->xpoints;
-  neighpoints[5] = m_DataContainer->xpoints*m_DataContainer->ypoints;
+  neighpoints[4] = m->xpoints;
+  neighpoints[5] = m->xpoints*m->ypoints;
   while(count != 0)
   {
     count = 0;
-    for(int i = 0; i < (m_DataContainer->xpoints*m_DataContainer->ypoints*m_DataContainer->zpoints); i++)
+    for(int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
     {
-      int grainname = m_DataContainer->grain_indicies[i];
+      int grainname = m->grain_indicies[i];
       if(grainname <= 0)
       {
       count++;
-        for(size_t c = 1; c < m_DataContainer->m_Grains.size(); c++)
+        for(size_t c = 1; c < m->m_Grains.size(); c++)
         {
           n[c] = 0;
         }
-      x = i%m_DataContainer->xpoints;
-    y = (i/m_DataContainer->xpoints)%m_DataContainer->ypoints;
-    z = i/(m_DataContainer->xpoints*m_DataContainer->ypoints);
+      x = i%m->xpoints;
+    y = (i/m->xpoints)%m->ypoints;
+    z = i/(m->xpoints*m->ypoints);
       for(int j=0;j<6;j++)
       {
         good = 1;
         neighpoint = i+neighpoints[j];
           if(j == 0 && z == 0) good = 0;
-          if(j == 5 && z == (m_DataContainer->zpoints-1)) good = 0;
+          if(j == 5 && z == (m->zpoints-1)) good = 0;
           if(j == 1 && y == 0) good = 0;
-          if(j == 4 && y == (m_DataContainer->ypoints-1)) good = 0;
+          if(j == 4 && y == (m->ypoints-1)) good = 0;
           if(j == 2 && x == 0) good = 0;
-          if(j == 3 && x == (m_DataContainer->xpoints-1)) good = 0;
+          if(j == 3 && x == (m->xpoints-1)) good = 0;
       if(good == 1)
           {
-          int grain = m_DataContainer->grain_indicies[neighpoint];
+          int grain = m->grain_indicies[neighpoint];
           if(grain > 0 && grain >= numprimarygrains)
           {
             neighs.push_back(grain);
@@ -327,26 +327,26 @@ void  PlacePrecipitates::fillin_precipitates()
         }
       }
     }
-    for(int j = 0; j < (m_DataContainer->xpoints*m_DataContainer->ypoints*m_DataContainer->zpoints); j++)
+    for(int j = 0; j < (m->xpoints*m->ypoints*m->zpoints); j++)
     {
-      int grainname = m_DataContainer->grain_indicies[j];
+      int grainname = m->grain_indicies[j];
       int neighbor = neighbors[j];
       if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
       {
-        m_DataContainer->grain_indicies[j] = neighbor;
-		m_DataContainer->phases[j] = m_DataContainer->m_Grains[neighbor]->phase;
+        m->grain_indicies[j] = neighbor;
+		m->phases[j] = m->m_Grains[neighbor]->phase;
       }
     }
   }
-  gsizes.resize(m_DataContainer->m_Grains.size(),0);
-  for (int i = 0; i < (m_DataContainer->xpoints*m_DataContainer->ypoints*m_DataContainer->zpoints); i++)
+  gsizes.resize(m->m_Grains.size(),0);
+  for (int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
   {
-    int name = m_DataContainer->grain_indicies[i];
+    int name = m->grain_indicies[i];
     gsizes[name]++;
   }
-  for (size_t i = 1; i < m_DataContainer->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    m_DataContainer->m_Grains[i]->numvoxels = gsizes[i];
+    m->m_Grains[i]->numvoxels = gsizes[i];
   }
   gsizes.clear();
 }
@@ -354,11 +354,11 @@ void  PlacePrecipitates::fillin_precipitates()
 void  PlacePrecipitates::place_precipitates()
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
-  size_t currentnumgrains = m_DataContainer->m_Grains.size();
-  numprimarygrains = m_DataContainer->m_Grains.size();
+  size_t currentnumgrains = m->m_Grains.size();
+  numprimarygrains = m->m_Grains.size();
  // size_t index;
   int phase;
   float precipboundaryfraction = 0.0;
@@ -366,13 +366,13 @@ void  PlacePrecipitates::place_precipitates()
   int random2;
   float xc, yc, zc;
   double totalprecipitatefractions = 0.0;
-  for (size_t i = 1; i < m_DataContainer->phaseType.size();++i)
+  for (size_t i = 1; i < m->phaseType.size();++i)
   {
-    if(m_DataContainer->phaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
+    if(m->phaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
 	    precipitatephases.push_back(i);
-	    precipitatephasefractions.push_back(m_DataContainer->phasefraction[i]);
-	    totalprecipitatefractions = totalprecipitatefractions + m_DataContainer->phasefraction[i];
+	    precipitatephasefractions.push_back(m->phasefraction[i]);
+	    totalprecipitatefractions = totalprecipitatefractions + m->phasefraction[i];
     }
   }
   for (size_t i = 0; i < precipitatephases.size(); i++)
@@ -382,7 +382,7 @@ void  PlacePrecipitates::place_precipitates()
     //if(i == 0) precipitatephasefractions[i] = precipitatephasefractions[i];
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setDataContainer(m_DataContainer);
+  packGrains->setDataContainer(getDataContainer());
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   int err = packGrains->readReconStatsData(h5reader);
   err = packGrains->readAxisOrientationData(h5reader);
@@ -398,79 +398,82 @@ void  PlacePrecipitates::place_precipitates()
         break;
       }
     }
-  m_DataContainer->m_Grains.resize(currentnumgrains+1);
-  m_DataContainer->m_Grains[currentnumgrains] = Grain::New();
+  m->m_Grains.resize(currentnumgrains+1);
+  m->m_Grains[currentnumgrains] = Grain::New();
   packGrains->generate_grain(currentnumgrains, phase);
-  precipboundaryfraction = m_DataContainer->pptFractions[phase];
+  precipboundaryfraction = m->pptFractions[phase];
   random = rg.genrand_res53();
   if(random <= precipboundaryfraction)
   {
-    random2 = int(rg.genrand_res53()*double(m_DataContainer->totalpoints-1));
-    while(m_DataContainer->surfacevoxels[random2] == 0 || m_DataContainer->grain_indicies[random2] > numprimarygrains)
+    random2 = int(rg.genrand_res53()*double(m->totalpoints-1));
+    while(m->surfacevoxels[random2] == 0 || m->grain_indicies[random2] > numprimarygrains)
     {
       random2++;
-      if(random2 >= m_DataContainer->totalpoints) random2 = random2-m_DataContainer->totalpoints;
+      if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
     }
   }
   else if(random > precipboundaryfraction)
   {
-    random2 = rg.genrand_res53()*(m_DataContainer->totalpoints-1);
-    while(m_DataContainer->surfacevoxels[random2] != 0 || m_DataContainer->grain_indicies[random2] > numprimarygrains)
+    random2 = rg.genrand_res53()*(m->totalpoints-1);
+    while(m->surfacevoxels[random2] != 0 || m->grain_indicies[random2] > numprimarygrains)
     {
       random2++;
-      if(random2 >= m_DataContainer->totalpoints) random2 = random2-m_DataContainer->totalpoints;
+      if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
     }
   }
     xc = find_xcoord(random2);
     yc = find_ycoord(random2);
     zc = find_zcoord(random2);
-    m_DataContainer->m_Grains[currentnumgrains]->centroidx = xc;
-    m_DataContainer->m_Grains[currentnumgrains]->centroidy = yc;
-    m_DataContainer->m_Grains[currentnumgrains]->centroidz = zc;
+    m->m_Grains[currentnumgrains]->centroidx = xc;
+    m->m_Grains[currentnumgrains]->centroidy = yc;
+    m->m_Grains[currentnumgrains]->centroidz = zc;
     insert_precipitate(currentnumgrains);
-  m_DataContainer->m_Grains[currentnumgrains]->active = 1;
+  m->m_Grains[currentnumgrains]->active = 1;
   precipvoxelcounter = 0;
-  for(size_t j = 0; j < m_DataContainer->m_Grains[currentnumgrains]->voxellist->size(); j++)
+  for(size_t j = 0; j < m->m_Grains[currentnumgrains]->voxellist->size(); j++)
   {
-    if(m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
+    if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
     {
       precipvoxelcounter++;
     }
   }
-  if(double(precipvoxelcounter)/double(m_DataContainer->m_Grains[currentnumgrains]->voxellist->size()) > 0.75)
+  if(double(precipvoxelcounter)/double(m->m_Grains[currentnumgrains]->voxellist->size()) > 0.75)
   {
     precipvoxelcounter = 0;
-    for(size_t j = 0; j < m_DataContainer->m_Grains[currentnumgrains]->voxellist->size(); j++)
+    for(size_t j = 0; j < m->m_Grains[currentnumgrains]->voxellist->size(); j++)
     {
-      if(m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] < 0 || m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] >= numprimarygrains)
+      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < 0 || m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] >= numprimarygrains)
       {
-        m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] = -1;
-        m_DataContainer->phases[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] = 0;
+        m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = -1;
+        m->phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = 0;
       }
-      if(m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
+      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
       {
-        m_DataContainer->grain_indicies[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] = currentnumgrains;
-        m_DataContainer->phases[m_DataContainer->m_Grains[currentnumgrains]->voxellist->at(j)] = m_DataContainer->m_Grains[currentnumgrains]->phase;
+        m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = currentnumgrains;
+        m->phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = m->m_Grains[currentnumgrains]->phase;
         precipvoxelcounter++;
       }
     }
-      totalprecipvol = totalprecipvol + (precipvoxelcounter*m_DataContainer->resx*m_DataContainer->resy*m_DataContainer->resz);
+      totalprecipvol = totalprecipvol + (precipvoxelcounter*m->resx*m->resy*m->resz);
     currentnumgrains++;
   }
   }
 }
 float PlacePrecipitates::find_xcoord(long long int index)
 {
-  float x = m_DataContainer->resx*float(index%m_DataContainer->xpoints);
+  DataContainer* m = getDataContainer();
+  float x = m->resx*float(index%m->xpoints);
   return x;
 }
 float PlacePrecipitates::find_ycoord(long long int index)
 {
-  float y = m_DataContainer->resy*float((index/m_DataContainer->xpoints)%m_DataContainer->ypoints);
+  DataContainer* m = getDataContainer();
+  float y = m->resy*float((index/m->xpoints)%m->ypoints);
   return y;
 }
 float PlacePrecipitates::find_zcoord(long long int index)
 {
-  float z = m_DataContainer->resz*float(index/(m_DataContainer->xpoints*m_DataContainer->ypoints));
+  DataContainer* m = getDataContainer();
+  float z = m->resz*float(index/(m->xpoints*m->ypoints));
   return z;
 }

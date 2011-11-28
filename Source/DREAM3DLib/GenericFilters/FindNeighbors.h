@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
 /**
@@ -52,24 +52,19 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindNeighbors : public Observable
+class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(FindNeighbors);
     DREAM3D_STATIC_NEW_MACRO(FindNeighbors);
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, AbstractFilter);
 
     virtual ~FindNeighbors();
 
 
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
-
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
-	virtual void execute();
+    virtual void execute();
 
     void find_neighbors();
 

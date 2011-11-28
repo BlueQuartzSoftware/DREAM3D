@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 
@@ -52,36 +52,22 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT PlacePrecipitates : public Observable
+class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(PlacePrecipitates);
     DREAM3D_STATIC_NEW_MACRO(PlacePrecipitates);
-    DREAM3D_TYPE_MACRO_SUPER(PlacePrecipitates, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(PlacePrecipitates, AbstractFilter);
 
     virtual ~PlacePrecipitates();
 
-
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
-
-    int numprimarygrains;
 
     virtual void execute();
 
-    unsigned long long int Seed;
-
-	float sizex;
-    float sizey;
-    float sizez;
-    float totalvol;
-
     void insert_precipitate(size_t grainNum);
-	void place_precipitates();
+    void place_precipitates();
     void fillin_precipitates();
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
@@ -93,10 +79,16 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public Observable
 
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
 
-protected:
+  protected:
     PlacePrecipitates();
 
   private:
+    int numprimarygrains;
+    unsigned long long int Seed;
+    float sizex;
+    float sizey;
+    float sizez;
+    float totalvol;
 
     DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
     DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;

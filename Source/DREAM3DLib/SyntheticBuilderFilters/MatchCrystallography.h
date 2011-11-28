@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
@@ -61,12 +61,12 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MatchCrystallography : public Observable
+class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(MatchCrystallography);
     DREAM3D_STATIC_NEW_MACRO(MatchCrystallography);
-    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter);
 
     virtual ~MatchCrystallography();
 
@@ -74,28 +74,16 @@ class DREAM3DLib_EXPORT MatchCrystallography : public Observable
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
+    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
-    std::vector<Ebsd::CrystalStructure> crystruct;
-
-	std::vector<SharedFloatArray> actualodf;
-    std::vector<SharedFloatArray> simodf;
-    std::vector<SharedFloatArray> actualmdf;
-    std::vector<SharedFloatArray> simmdf;
 
     virtual void execute();
 
-	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
-	int readODFData(H5StatsReader::Pointer h5io);
+    void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
+    int readODFData(H5StatsReader::Pointer h5io);
     int readMisorientationData(H5StatsReader::Pointer h5io);
 
-    std::vector<float> unbiasedvol;
-    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
-
-	void assign_eulers();
+    void assign_eulers();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
@@ -103,16 +91,22 @@ class DREAM3DLib_EXPORT MatchCrystallography : public Observable
     void matchCrystallography();
     void measure_misorientations();
 
-    std::vector<OrientationMath*> m_OrientationOps;
-
 protected:
     MatchCrystallography();
 
   private:
+    std::vector<float> unbiasedvol;
+    std::vector<Ebsd::CrystalStructure> crystruct;
+
+    std::vector<SharedFloatArray> actualodf;
+    std::vector<SharedFloatArray> simodf;
+    std::vector<SharedFloatArray> actualmdf;
+    std::vector<SharedFloatArray> simmdf;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath*> m_OrientationOps;
 
     MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
     void operator=(const MatchCrystallography&); // Operator '=' Not Implemented

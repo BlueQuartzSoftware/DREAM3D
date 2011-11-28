@@ -35,22 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "SegmentGrains.h"
-#include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <cstddef>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -67,7 +51,6 @@
 
 const static float m_pi = M_PI;
 
-using namespace std;
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -76,8 +59,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentGrains::SegmentGrains() :
-    m_ErrorCondition(0)
+SegmentGrains::SegmentGrains()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -105,12 +87,13 @@ void SegmentGrains::execute()
   form_grains();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 void SegmentGrains::form_grains()
 {
+  DataContainer* m = getDataContainer();
   DREAM3D_RANDOMNG_NEW()
   int seed = 0;
   int noseeds = 0;
@@ -134,16 +117,16 @@ void SegmentGrains::form_grains()
 //  std::vector<int>* vlist;
   std::vector<int> mergelist(initialMergeListSize, -1);
   int neighpoints[6];
-  neighpoints[0] = -(m_DataContainer->xpoints * m_DataContainer->ypoints);
-  neighpoints[1] = -m_DataContainer->xpoints;
+  neighpoints[0] = -(m->xpoints * m->ypoints);
+  neighpoints[1] = -m->xpoints;
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m_DataContainer->xpoints;
-  neighpoints[5] = (m_DataContainer->xpoints * m_DataContainer->ypoints);
+  neighpoints[4] = m->xpoints;
+  neighpoints[5] = (m->xpoints * m->ypoints);
   Ebsd::CrystalStructure phase1, phase2;
 
   // Precalculate some constants
-  int totalPMinus1 = m_DataContainer->totalpoints - 1;
+  int totalPMinus1 = m->totalpoints - 1;
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
@@ -151,10 +134,10 @@ void SegmentGrains::form_grains()
     seed = -1;
     int counter = 0;
     randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
-    while (seed == -1 && counter < m_DataContainer->totalpoints)
+    while (seed == -1 && counter < m->totalpoints)
     {
-      if (randpoint > totalPMinus1) randpoint = randpoint - m_DataContainer->totalpoints;
-      if (m_DataContainer->grain_indicies[randpoint] == -1 && m_DataContainer->phases[randpoint] > 0) seed = randpoint;
+      if (randpoint > totalPMinus1) randpoint = randpoint - m->totalpoints;
+      if (m->grain_indicies[randpoint] == -1 && m->phases[randpoint] > 0) seed = randpoint;
 
       randpoint++;
       counter++;
@@ -163,44 +146,44 @@ void SegmentGrains::form_grains()
     if (seed >= 0)
     {
       size = 0;
-      m_DataContainer->grain_indicies[seed] = graincount;
+      m->grain_indicies[seed] = graincount;
       voxelslist[size] = seed;
       size++;
       for (size_t j = 0; j < size; ++j)
       {
         int currentpoint = voxelslist[j];
-        col = currentpoint % m_DataContainer->xpoints;
-        row = (currentpoint / m_DataContainer->xpoints) % m_DataContainer->ypoints;
-        plane = currentpoint / (m_DataContainer->xpoints * m_DataContainer->ypoints);
-        phase1 = m_DataContainer->crystruct[m_DataContainer->phases[currentpoint]];
+        col = currentpoint % m->xpoints;
+        row = (currentpoint / m->xpoints) % m->ypoints;
+        plane = currentpoint / (m->xpoints * m->ypoints);
+        phase1 = m->crystruct[m->phases[currentpoint]];
         for (int i = 0; i < 6; i++)
         {
           q1[0] = 1;
-          q1[1] = m_DataContainer->quats[currentpoint * 5 + 1];
-          q1[2] = m_DataContainer->quats[currentpoint * 5 + 2];
-          q1[3] = m_DataContainer->quats[currentpoint * 5 + 3];
-          q1[4] = m_DataContainer->quats[currentpoint * 5 + 4];
+          q1[1] = m->quats[currentpoint * 5 + 1];
+          q1[2] = m->quats[currentpoint * 5 + 2];
+          q1[3] = m->quats[currentpoint * 5 + 3];
+          q1[4] = m->quats[currentpoint * 5 + 4];
           good = 1;
           neighbor = currentpoint + neighpoints[i];
           if (i == 0 && plane == 0) good = 0;
-          if (i == 5 && plane == (m_DataContainer->zpoints - 1)) good = 0;
+          if (i == 5 && plane == (m->zpoints - 1)) good = 0;
           if (i == 1 && row == 0) good = 0;
-          if (i == 4 && row == (m_DataContainer->ypoints - 1)) good = 0;
+          if (i == 4 && row == (m->ypoints - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
-          if (i == 3 && col == (m_DataContainer->xpoints - 1)) good = 0;
-          if (good == 1 && m_DataContainer->grain_indicies[neighbor] == -1 && m_DataContainer->phases[neighbor] > 0)
+          if (i == 3 && col == (m->xpoints - 1)) good = 0;
+          if (good == 1 && m->grain_indicies[neighbor] == -1 && m->phases[neighbor] > 0)
           {
             w = 10000.0;
             q2[0] = 1;
-            q2[1] = m_DataContainer->quats[neighbor*5 + 1];
-            q2[2] = m_DataContainer->quats[neighbor*5 + 2];
-            q2[3] = m_DataContainer->quats[neighbor*5 + 3];
-            q2[4] = m_DataContainer->quats[neighbor*5 + 4];
-            phase2 = m_DataContainer->crystruct[m_DataContainer->phases[neighbor]];
+            q2[1] = m->quats[neighbor*5 + 1];
+            q2[2] = m->quats[neighbor*5 + 2];
+            q2[3] = m->quats[neighbor*5 + 3];
+            q2[4] = m->quats[neighbor*5 + 4];
+            phase2 = m->crystruct[m->phases[neighbor]];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
             if (w < m_misorientationtolerance)
             {
-              m_DataContainer->grain_indicies[neighbor] = graincount;
+              m->grain_indicies[neighbor] = graincount;
               voxelslist[size] = neighbor;
               size++;
               if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
@@ -209,22 +192,22 @@ void SegmentGrains::form_grains()
         }
       }
       voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
-      if (m_DataContainer->m_Grains[graincount]->voxellist != NULL)
+      if (m->m_Grains[graincount]->voxellist != NULL)
       {
-        delete m_DataContainer->m_Grains[graincount]->voxellist;
+        delete m->m_Grains[graincount]->voxellist;
       }
-      m_DataContainer->m_Grains[graincount]->voxellist = new std::vector<int>(voxelslist.size());
-      m_DataContainer->m_Grains[graincount]->voxellist->swap(voxelslist);
-      m_DataContainer->m_Grains[graincount]->active = 1;
-      m_DataContainer->m_Grains[graincount]->phase = m_DataContainer->phases[seed];
+      m->m_Grains[graincount]->voxellist = new std::vector<int>(voxelslist.size());
+      m->m_Grains[graincount]->voxellist->swap(voxelslist);
+      m->m_Grains[graincount]->active = 1;
+      m->m_Grains[graincount]->phase = m->phases[seed];
       graincount++;
-      if (graincount >= m_DataContainer->m_Grains.size())
+      if (graincount >= m->m_Grains.size())
       {
-        size_t oldSize = m_DataContainer->m_Grains.size();
-        m_DataContainer->m_Grains.resize(m_DataContainer->m_Grains.size() + 100);
-        for (size_t g = oldSize; g < m_DataContainer->m_Grains.size(); ++g)
+        size_t oldSize = m->m_Grains.size();
+        m->m_Grains.resize(m->m_Grains.size() + 100);
+        for (size_t g = oldSize; g < m->m_Grains.size(); ++g)
         {
-          m_DataContainer->m_Grains[g] = Grain::New();
+          m->m_Grains[g] = Grain::New();
         }
       }
       voxelslist.clear();
