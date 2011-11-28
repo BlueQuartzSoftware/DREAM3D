@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
@@ -56,26 +56,18 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT CleanupGrains : public Observable
+class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(CleanupGrains);
     DREAM3D_STATIC_NEW_MACRO(CleanupGrains);
-    DREAM3D_TYPE_MACRO_SUPER(CleanupGrains, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(CleanupGrains, AbstractFilter);
 
     virtual ~CleanupGrains();
 
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
-
     DREAM3D_INSTANCE_PROPERTY(int, minallowedgrainsize);
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
 
-    unsigned long long int Seed;
 
 	virtual void execute();
     void remove_smallgrains();
@@ -83,16 +75,17 @@ class DREAM3DLib_EXPORT CleanupGrains : public Observable
     void merge_containedgrains();
     void reorder_grains();
 
-    std::vector<OrientationMath*> m_OrientationOps;
+
 
   protected:
     CleanupGrains();
 
   private:
-
+    unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath*> m_OrientationOps;
 
 	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
     void operator=(const CleanupGrains&); // Operator '=' Not Implemented

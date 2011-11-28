@@ -49,7 +49,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
@@ -61,17 +61,15 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT LoadSlices : public Observable
+class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(LoadSlices);
     DREAM3D_STATIC_NEW_MACRO(LoadSlices);
-    DREAM3D_TYPE_MACRO_SUPER(LoadSlices, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(LoadSlices, AbstractFilter);
 
     virtual ~LoadSlices();
 
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
 
     MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
     MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
@@ -80,18 +78,11 @@ class DREAM3DLib_EXPORT LoadSlices : public Observable
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
 
-    unsigned long long int Seed;
 
-	int tempxpoints;
-    int tempypoints;
-    int totaltemppoints;
 
-	virtual void execute();
+
+    virtual void execute();
     void initialize(int nX, int nY, int nZ,
                     float xRes, float yRes, float zRes,
                     std::vector<Ebsd::CrystalStructure> crystalStructures,
@@ -99,7 +90,7 @@ class DREAM3DLib_EXPORT LoadSlices : public Observable
                     std::vector<float> precipFractions);
 
 
-	void initializeQuats();
+    void initializeQuats();
     void threshold_points();
 
     std::vector<OrientationMath*> m_OrientationOps;
@@ -108,7 +99,11 @@ class DREAM3DLib_EXPORT LoadSlices : public Observable
     LoadSlices();
 
   private:
+    unsigned long long int Seed;
 
+    int tempxpoints;
+    int tempypoints;
+    int totaltemppoints;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;

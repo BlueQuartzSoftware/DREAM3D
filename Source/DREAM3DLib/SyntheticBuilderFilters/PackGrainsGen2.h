@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
@@ -58,12 +58,12 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT PackGrainsGen2 : public Observable
+class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(PackGrainsGen2);
     DREAM3D_STATIC_NEW_MACRO(PackGrainsGen2);
-    DREAM3D_TYPE_MACRO_SUPER(PackGrainsGen2, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(PackGrainsGen2, AbstractFilter);
 
     virtual ~PackGrainsGen2();
 
@@ -73,63 +73,11 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public Observable
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
     DREAM3D_INSTANCE_PROPERTY(float, neighborhooderrorweight);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
 
+    virtual void execute();
 
-    unsigned long long int Seed;
-
-	  float sizex;
-    float sizey;
-    float sizez;
-    float totalvol;
-
-    float packingresx;
-    float packingresy;
-    float packingresz;
-    int packingxpoints;
-    int packingypoints;
-    int packingzpoints;
-    int packingtotalpoints;
-
-    std::vector<std::vector<std::vector<int> > > grainowners;
-
-	std::vector<std::vector<float> > grainsizedist;
-    std::vector<std::vector<float> > simgrainsizedist;
-    std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > simneighbordist;
-
-    std::vector<std::vector<std::vector<float> > > bovera;
-    std::vector<std::vector<std::vector<float> > > covera;
-    std::vector<std::vector<std::vector<float> > > coverb;
-    std::vector<std::vector<std::vector<float> > > omega3;
-    std::vector<std::vector<std::vector<float> > > neighborparams;
-
-	std::vector<SharedFloatArray> axisodf;
-
-	std::vector<float> binstepsize;
-    std::vector<float> grainsizediststep;
-    std::vector<float> maxdiameter;
-    std::vector<float> mindiameter;
-    std::vector<float> avgdiam;
-    std::vector<float> sddiam;
-    std::vector<int> numdiameterbins;
-
-    std::vector<int> newnames;
-    std::vector<int> gsizes;
-
-	std::vector<int> primaryphases;
-    std::vector<float> primaryphasefractions;
-
-	float fillingerror, oldfillingerror;
-    float currentneighborhooderror, oldneighborhooderror;
-    float currentsizedisterror, oldsizedisterror;
-
-	virtual void execute();
-
-	void initializeAttributes();
-	void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
+    void initializeAttributes();
+    void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
     int readReconStatsData(H5StatsReader::Pointer h5io);
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
 
@@ -175,7 +123,56 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public Observable
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
-	PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
+
+    unsigned long long int Seed;
+
+    float sizex;
+    float sizey;
+    float sizez;
+    float totalvol;
+
+    float packingresx;
+    float packingresy;
+    float packingresz;
+    int packingxpoints;
+    int packingypoints;
+    int packingzpoints;
+    int packingtotalpoints;
+
+    std::vector<std::vector<std::vector<int> > > grainowners;
+
+    std::vector<std::vector<float> > grainsizedist;
+    std::vector<std::vector<float> > simgrainsizedist;
+    std::vector<std::vector<std::vector<float> > > neighbordist;
+    std::vector<std::vector<std::vector<float> > > simneighbordist;
+
+    std::vector<std::vector<std::vector<float> > > bovera;
+    std::vector<std::vector<std::vector<float> > > covera;
+    std::vector<std::vector<std::vector<float> > > coverb;
+    std::vector<std::vector<std::vector<float> > > omega3;
+    std::vector<std::vector<std::vector<float> > > neighborparams;
+
+    std::vector<SharedFloatArray> axisodf;
+
+    std::vector<float> binstepsize;
+    std::vector<float> grainsizediststep;
+    std::vector<float> maxdiameter;
+    std::vector<float> mindiameter;
+    std::vector<float> avgdiam;
+    std::vector<float> sddiam;
+    std::vector<int> numdiameterbins;
+
+    std::vector<int> newnames;
+    std::vector<int> gsizes;
+
+    std::vector<int> primaryphases;
+    std::vector<float> primaryphasefractions;
+
+    float fillingerror, oldfillingerror;
+    float currentneighborhooderror, oldneighborhooderror;
+    float currentsizedisterror, oldsizedisterror;
+
+    PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
     void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented
 };
 

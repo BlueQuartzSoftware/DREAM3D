@@ -35,22 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "MergeColonies.h"
-#include <map>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <cstddef>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -67,7 +51,6 @@
 
 const static float m_pi = M_PI;
 
-using namespace std;
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -76,8 +59,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeColonies::MergeColonies() :
-    m_ErrorCondition(0)
+MergeColonies::MergeColonies()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -107,25 +89,26 @@ void MergeColonies::execute()
   renumber_grains();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("MergeColonies Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 void MergeColonies::merge_colonies()
 {
+  DataContainer* m = getDataContainer();
   float angcur = 180.0f;
-  vector<int > colonylist;
+  std::vector<int> colonylist;
   float w;
   float n1, n2, n3;
   float r1, r2, r3;
   float q1[5];
   float q2[5];
-  size_t numgrains = m_DataContainer->m_Grains.size();
+  size_t numgrains = m->m_Grains.size();
   Ebsd::CrystalStructure phase1, phase2;
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_DataContainer->m_Grains[i]->colonynewnumber != -1 && m_DataContainer->m_Grains[i]->phase > 0)
+    if (m->m_Grains[i]->colonynewnumber != -1 && m->m_Grains[i]->phase > 0)
     {
       colonylist.push_back(i);
       int csize = int(colonylist.size());
@@ -133,26 +116,26 @@ void MergeColonies::merge_colonies()
       {
         csize = int(colonylist.size());
         int firstgrain = colonylist[j];
-        std::vector<int>* nlist = m_DataContainer->m_Grains[firstgrain]->neighborlist;
+        std::vector<int>* nlist = m->m_Grains[firstgrain]->neighborlist;
         int size = int(nlist->size());
         for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
           int colony = 0;
           size_t neigh = nlist->at(l);
-          if (neigh != i && m_DataContainer->m_Grains[neigh]->colonynewnumber != -1 && m_DataContainer->m_Grains[neigh]->phase > 0)
+          if (neigh != i && m->m_Grains[neigh]->colonynewnumber != -1 && m->m_Grains[neigh]->phase > 0)
           {
 		    w = 10000.0f;
-            q1[1] = m_DataContainer->m_Grains[firstgrain]->avg_quat[1]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
-            q1[2] = m_DataContainer->m_Grains[firstgrain]->avg_quat[2]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
-            q1[3] = m_DataContainer->m_Grains[firstgrain]->avg_quat[3]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
-            q1[4] = m_DataContainer->m_Grains[firstgrain]->avg_quat[4]/m_DataContainer->m_Grains[firstgrain]->avg_quat[0];
-            phase1 = m_DataContainer->crystruct[m_DataContainer->m_Grains[firstgrain]->phase];
-            q2[1] = m_DataContainer->m_Grains[neigh]->avg_quat[1]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
-            q2[2] = m_DataContainer->m_Grains[neigh]->avg_quat[2]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
-            q2[3] = m_DataContainer->m_Grains[neigh]->avg_quat[3]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
-            q2[4] = m_DataContainer->m_Grains[neigh]->avg_quat[4]/m_DataContainer->m_Grains[neigh]->avg_quat[0];
-            phase2 = m_DataContainer->crystruct[m_DataContainer->m_Grains[neigh]->phase];
+            q1[1] = m->m_Grains[firstgrain]->avg_quat[1]/m->m_Grains[firstgrain]->avg_quat[0];
+            q1[2] = m->m_Grains[firstgrain]->avg_quat[2]/m->m_Grains[firstgrain]->avg_quat[0];
+            q1[3] = m->m_Grains[firstgrain]->avg_quat[3]/m->m_Grains[firstgrain]->avg_quat[0];
+            q1[4] = m->m_Grains[firstgrain]->avg_quat[4]/m->m_Grains[firstgrain]->avg_quat[0];
+            phase1 = m->crystruct[m->m_Grains[firstgrain]->phase];
+            q2[1] = m->m_Grains[neigh]->avg_quat[1]/m->m_Grains[neigh]->avg_quat[0];
+            q2[2] = m->m_Grains[neigh]->avg_quat[2]/m->m_Grains[neigh]->avg_quat[0];
+            q2[3] = m->m_Grains[neigh]->avg_quat[3]/m->m_Grains[neigh]->avg_quat[0];
+            q2[4] = m->m_Grains[neigh]->avg_quat[4]/m->m_Grains[neigh]->avg_quat[0];
+            phase2 = m->crystruct[m->m_Grains[neigh]->phase];
 			if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float vecttol = 0.03f;
@@ -171,8 +154,8 @@ void MergeColonies::merge_colonies()
             }
             if (colony == 1)
             {
-              m_DataContainer->m_Grains[neigh]->gotcolonymerged = true;
-              m_DataContainer->m_Grains[neigh]->colonynewnumber = i;
+              m->m_Grains[neigh]->gotcolonymerged = true;
+              m->m_Grains[neigh]->colonynewnumber = i;
               colonylist.push_back(neigh);
             }
           }
@@ -181,58 +164,59 @@ void MergeColonies::merge_colonies()
     }
     colonylist.clear();
   }
-  for (int k = 0; k < (m_DataContainer->xpoints * m_DataContainer->ypoints * m_DataContainer->zpoints); k++)
+  for (int k = 0; k < (m->xpoints * m->ypoints * m->zpoints); k++)
   {
-    int grainname = m_DataContainer->grain_indicies[k];
-    if (m_DataContainer->m_Grains[grainname]->gotcolonymerged == true)
+    int grainname = m->grain_indicies[k];
+    if (m->m_Grains[grainname]->gotcolonymerged == true)
     {
-      int colonynewnumber = m_DataContainer->m_Grains[grainname]->colonynewnumber;
-      m_DataContainer->grain_indicies[k] = colonynewnumber;
+      int colonynewnumber = m->m_Grains[grainname]->colonynewnumber;
+      m->grain_indicies[k] = colonynewnumber;
     }
   }
 }
 void MergeColonies::renumber_grains()
 {
-  size_t numgrains = m_DataContainer->m_Grains.size();
+  DataContainer* m = getDataContainer();
+  size_t numgrains = m->m_Grains.size();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_DataContainer->m_Grains[i]->gottwinmerged != true)
+    if (m->m_Grains[i]->gottwinmerged != true)
     {
       newnames[i] = graincount;
-      float ea1good = m_DataContainer->m_Grains[i]->euler1;
-      float ea2good = m_DataContainer->m_Grains[i]->euler2;
-      float ea3good = m_DataContainer->m_Grains[i]->euler3;
-      int size = m_DataContainer->m_Grains[i]->numvoxels;
-      int numneighbors = m_DataContainer->m_Grains[i]->numneighbors;
-      std::vector<int>* nlist = m_DataContainer->m_Grains[i]->neighborlist;
-      m_DataContainer->m_Grains[graincount]->numvoxels = size;
-      m_DataContainer->m_Grains[graincount]->numneighbors = numneighbors;
-      if (m_DataContainer->m_Grains[graincount]->neighborlist == NULL)
+      float ea1good = m->m_Grains[i]->euler1;
+      float ea2good = m->m_Grains[i]->euler2;
+      float ea3good = m->m_Grains[i]->euler3;
+      int size = m->m_Grains[i]->numvoxels;
+      int numneighbors = m->m_Grains[i]->numneighbors;
+      std::vector<int>* nlist = m->m_Grains[i]->neighborlist;
+      m->m_Grains[graincount]->numvoxels = size;
+      m->m_Grains[graincount]->numneighbors = numneighbors;
+      if (m->m_Grains[graincount]->neighborlist == NULL)
       {
-        m_DataContainer->m_Grains[graincount]->neighborlist = new std::vector<int>(numneighbors);
+        m->m_Grains[graincount]->neighborlist = new std::vector<int>(numneighbors);
       }
       if (NULL != nlist)
       {
-        m_DataContainer->m_Grains[graincount]->neighborlist->swap(*nlist);
+        m->m_Grains[graincount]->neighborlist->swap(*nlist);
       }
-      m_DataContainer->m_Grains[graincount]->euler1 = ea1good;
-      m_DataContainer->m_Grains[graincount]->euler2 = ea2good;
-      m_DataContainer->m_Grains[graincount]->euler3 = ea3good;
+      m->m_Grains[graincount]->euler1 = ea1good;
+      m->m_Grains[graincount]->euler2 = ea2good;
+      m->m_Grains[graincount]->euler3 = ea3good;
       graincount++;
     }
   }
 #if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalpoints ), ParallelRenumberGrains( this) );
 #else
- for (int j = 0; j < m_DataContainer->totalpoints; j++)
+ for (int j = 0; j < m->totalpoints; j++)
   {
-    int grainname = m_DataContainer->grain_indicies[j];
+    int grainname = m->grain_indicies[j];
     if (grainname >= 1)
     {
       int newgrainname = newnames[grainname];
-      m_DataContainer->grain_indicies[j] = newgrainname;
+      m->grain_indicies[j] = newgrainname;
     }
   }
 #endif
@@ -240,7 +224,8 @@ void MergeColonies::renumber_grains()
 
 void MergeColonies::characterize_colonies()
 {
-  size_t numgrains = m_DataContainer->m_Grains.size();
+  DataContainer* m = getDataContainer();
+  size_t numgrains = m->m_Grains.size();
   for (size_t i = 0; i < numgrains; i++)
   {
 
