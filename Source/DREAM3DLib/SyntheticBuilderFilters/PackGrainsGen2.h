@@ -156,7 +156,7 @@ class PackGrainsGen2 : public Observable
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
-    std::vector<OrientationMath*> m_OrientatioOps;
+    std::vector<OrientationMath*> m_OrientationOps;
 
   protected:
     PackGrainsGen2();

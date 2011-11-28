@@ -48,8 +48,8 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-#include "GrainGenerator/Algorithms/PackGrainsGen2.h"
-#include "GrainGenerator/Algorithms/FindNeighbors.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
+#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
 
 

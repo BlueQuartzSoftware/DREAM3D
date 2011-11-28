@@ -89,6 +89,10 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float)
     DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
     DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
+    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
+    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
+    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
+    DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
 
     // Grain Pointer Array
     std::vector<Grain::Pointer> m_Grains;
