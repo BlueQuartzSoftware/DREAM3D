@@ -161,7 +161,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public Observable
 
   protected:
     PackGrainsGen2();
-    DataContainer* m;
+
 
   private:
 

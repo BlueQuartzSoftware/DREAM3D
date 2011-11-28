@@ -84,7 +84,6 @@ class DREAM3DLib_EXPORT MergeColonies : public Observable
 
   protected:
     MergeColonies();
-    DataContainer* m;
 
   private:
 

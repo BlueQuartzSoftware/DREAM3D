@@ -76,7 +76,6 @@ class DREAM3DLib_EXPORT FindNeighbors : public Observable
 
   protected:
     FindNeighbors();
-    DataContainer* m;
 
   private:
 
