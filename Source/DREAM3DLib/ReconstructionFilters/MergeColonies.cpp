@@ -76,8 +76,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeColonies::MergeColonies() :
-    m_ErrorCondition(0)
+MergeColonies::MergeColonies()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -107,8 +106,8 @@ void MergeColonies::execute()
   renumber_grains();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("MergeColonies Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 void MergeColonies::merge_colonies()

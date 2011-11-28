@@ -54,8 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MatchCrystallography::MatchCrystallography() :
-	m_ErrorCondition(0)
+MatchCrystallography::MatchCrystallography()
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -72,6 +71,9 @@ MatchCrystallography::~MatchCrystallography()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::execute()
 {
   int err = 0;
@@ -98,8 +100,8 @@ void MatchCrystallography::execute()
   matchCrystallography();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("MatchCrystallography Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\

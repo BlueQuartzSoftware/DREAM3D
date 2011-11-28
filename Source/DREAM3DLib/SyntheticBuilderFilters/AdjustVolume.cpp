@@ -71,8 +71,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AdjustVolume::AdjustVolume() :
-    m_ErrorCondition(0)
+AdjustVolume::AdjustVolume()
 {
 }
 
@@ -83,6 +82,9 @@ AdjustVolume::~AdjustVolume()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AdjustVolume::execute()
 {
 
@@ -91,8 +93,8 @@ void AdjustVolume::execute()
   adjust_boundaries();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("AdjustVolume Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 void AdjustVolume::adjust_boundaries()
 {

@@ -76,8 +76,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSections::AlignSections() :
-    m_ErrorCondition(0)
+AlignSections::AlignSections()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -120,8 +119,8 @@ void AlignSections::execute()
 
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("AlignSections Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 void AlignSections::align_sections()

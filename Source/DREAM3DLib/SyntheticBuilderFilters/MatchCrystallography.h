@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
@@ -61,12 +61,12 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MatchCrystallography : public Observable
+class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(MatchCrystallography);
     DREAM3D_STATIC_NEW_MACRO(MatchCrystallography);
-    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter);
 
     virtual ~MatchCrystallography();
 
@@ -74,10 +74,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public Observable
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
+
 
     std::vector<Ebsd::CrystalStructure> crystruct;
 

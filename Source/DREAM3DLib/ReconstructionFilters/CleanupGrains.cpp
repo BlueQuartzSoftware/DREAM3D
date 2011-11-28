@@ -77,8 +77,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CleanupGrains::CleanupGrains() :
-    m_ErrorCondition(0)
+CleanupGrains::CleanupGrains()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -128,8 +127,8 @@ void CleanupGrains::execute()
   err = find_neighbors->getErrorCondition();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "CleanupGrains Completed";
-  m_ErrorCondition = 0;
+  notify("CleanupGrains Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 // -----------------------------------------------------------------------------

@@ -66,8 +66,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteGrainData::WriteGrainData() :
-    m_ErrorCondition(0)
+WriteGrainData::WriteGrainData()
 {
 
 }
@@ -79,6 +78,9 @@ WriteGrainData::~WriteGrainData()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WriteGrainData::execute()
 {
 
@@ -87,9 +89,13 @@ void WriteGrainData::execute()
   write_graindata(getGrainDataFile());
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("WriteGrainData Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WriteGrainData::write_graindata(const std::string &filename)
 {
   std::ofstream outFile;

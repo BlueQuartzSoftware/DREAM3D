@@ -42,8 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighbors::FindNeighbors() :
-	m_ErrorCondition(0)
+FindNeighbors::FindNeighbors()
 {
     totalsurfacearea = NULL;
     INIT_AIMARRAY(m_TotalSurfaceArea, float);
@@ -191,5 +190,6 @@ void FindNeighbors::find_neighbors()
 void FindNeighbors::execute()
 {
 	find_neighbors();
-  m_ErrorCondition = 0;
+  notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
