@@ -63,6 +63,9 @@ MatchCrystallography::MatchCrystallography() :
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
+
+  totalsurfacearea = NULL;
+  INIT_AIMARRAY(m_TotalSurfaceArea, float);
 }
 
 // -----------------------------------------------------------------------------
