@@ -69,7 +69,7 @@
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "Reconstruction/Algorithms/LoadSlices.h"
+#include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 
 
 #define _CHECK_FOR_ERROR(FuncClass, Message, err)\

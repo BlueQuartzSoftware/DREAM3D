@@ -15,12 +15,10 @@ include_directories(${PROJECT_SOURCE_DIR}
 #-- Non Qt Sources
 SET (Reconstruction_HDRS
   ${PROJECT_SOURCE_DIR}/Reconstruction.h
-  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.h
 )
 
 SET (Reconstruction_SRCS
   ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
-  ${PROJECT_SOURCE_DIR}/ReconstructionFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

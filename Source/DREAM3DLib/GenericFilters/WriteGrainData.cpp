@@ -34,7 +34,6 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AdjustVolume.h"
 #include <map>
 #include <assert.h>
 #include <stdio.h>
@@ -56,8 +55,8 @@ using namespace std;
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "GrainGenerator/Algorithms/WriteGrainData.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "WriteGrainData.h"
 
 const static float m_pi = M_PI;
 
