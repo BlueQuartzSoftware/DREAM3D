@@ -159,7 +159,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
   protected:
     PackGrainsGen2();
-    DataContainer* m;
+
 
   private:
 

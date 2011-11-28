@@ -110,6 +110,7 @@ void SegmentGrains::execute()
 
 void SegmentGrains::form_grains()
 {
+  DataContainer* m = getDataContainer();
   DREAM3D_RANDOMNG_NEW()
   int seed = 0;
   int noseeds = 0;

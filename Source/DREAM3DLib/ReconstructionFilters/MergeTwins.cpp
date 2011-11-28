@@ -112,6 +112,7 @@ void MergeTwins::execute()
 
 void MergeTwins::merge_twins()
 {
+  DataContainer* m = getDataContainer();
   float angcur = 180.0f;
   vector<int > twinlist;
   float w;
@@ -181,6 +182,7 @@ void MergeTwins::merge_twins()
 
 void MergeTwins::renumber_grains()
 {
+  DataContainer* m = getDataContainer();
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
@@ -228,6 +230,7 @@ void MergeTwins::renumber_grains()
 
 void MergeTwins::characterize_twins()
 {
+  DataContainer* m = getDataContainer();
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 0; i < numgrains; i++)
   {

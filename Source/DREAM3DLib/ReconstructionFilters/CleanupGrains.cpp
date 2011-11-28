@@ -68,7 +68,7 @@
 
 const static float m_pi = M_PI;
 
-using namespace std;
+
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -104,7 +104,7 @@ void CleanupGrains::execute()
 
 	int err = 0;
   DREAM3D_RANDOMNG_NEW()
-
+	DataContainer* m = getDataContainer();
   notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
   remove_smallgrains();
 
@@ -136,8 +136,9 @@ void CleanupGrains::execute()
 // -----------------------------------------------------------------------------
 void CleanupGrains::assign_badpoints()
 {
-  vector<int > neighs;
-  vector<int > remove;
+  DataContainer* m = getDataContainer();
+  std::vector<int > neighs;
+  std::vector<int > remove;
   int count = 1;
   int good = 1;
   int neighbor;
@@ -153,7 +154,7 @@ void CleanupGrains::assign_badpoints()
   neighpoints[3] = 1;
   neighpoints[4] = m->xpoints;
   neighpoints[5] = m->xpoints * m->ypoints;
-  vector<int> currentvlist;
+  std::vector<int> currentvlist;
 
   notify("Assigning Bad Voxels", 0, Observable::UpdateProgressMessage);
 
@@ -290,6 +291,7 @@ void CleanupGrains::assign_badpoints()
 
 void CleanupGrains::merge_containedgrains()
 {
+  DataContainer* m = getDataContainer();
   for (int i = 0; i < (m->xpoints * m->ypoints * m->zpoints); i++)
   {
     int grainname = m->grain_indicies[i];
@@ -310,6 +312,7 @@ void CleanupGrains::merge_containedgrains()
 
 void CleanupGrains::reorder_grains()
 {
+  DataContainer* m = getDataContainer();
   size_t initialVoxelsListSize = 1000;
   size_t size = 0;
   int neighpoints[6];
@@ -447,6 +450,7 @@ void CleanupGrains::reorder_grains()
 
 void CleanupGrains::remove_smallgrains()
 {
+  DataContainer* m = getDataContainer();
   size_t initialVoxelsListSize = 1000;
   std::vector<int > voxelslist;
   voxelslist.resize(initialVoxelsListSize,-1);

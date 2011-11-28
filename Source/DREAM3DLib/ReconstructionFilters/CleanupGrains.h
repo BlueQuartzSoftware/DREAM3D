@@ -79,7 +79,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 
   protected:
     CleanupGrains();
-    DataContainer* m;
 
   private:
   unsigned long long int Seed;

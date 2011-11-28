@@ -112,6 +112,7 @@ PackGrainsGen2::~PackGrainsGen2()
 
 void PackGrainsGen2::initialize_packinggrid()
 {
+  DataContainer* m = getDataContainer();
   packingresx = m->resx * 2.0;
   packingresy = m->resy * 2.0;
   packingresz = m->resz * 2.0;
@@ -133,7 +134,7 @@ void PackGrainsGen2::initialize_packinggrid()
 void PackGrainsGen2::generate_grain(int gnum, int phase)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
-
+    DataContainer* m = getDataContainer();
 //  int good = 0;
   float r1 = 1;
   float a1 = 0,  a3 = 0;
@@ -214,7 +215,7 @@ void PackGrainsGen2::generate_grain(int gnum, int phase)
 // -----------------------------------------------------------------------------
 void PackGrainsGen2::execute()
 {
-
+  DataContainer* m = getDataContainer();
 	int err = 0;
   DREAM3D_RANDOMNG_NEW()
 
@@ -554,7 +555,7 @@ void PackGrainsGen2::execute()
 
 void PackGrainsGen2::initializeAttributes()
 {
-
+  DataContainer* m = getDataContainer();
   sizex = m->xpoints * m->resx;
   sizey = m->ypoints * m->resy;
   sizez = m->zpoints * m->resz;
@@ -585,6 +586,7 @@ void PackGrainsGen2::initializeAttributes()
 
 void PackGrainsGen2::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
 {
+  DataContainer* m = getDataContainer();
   //------------------
   size_t nElements = 0;
   size_t size = structures.size();
@@ -701,6 +703,7 @@ return err; }
 
 int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 {
+  DataContainer* m = getDataContainer();
   int err = -1;
   std::vector<float> grainDiamInfo;
   std::vector<float> double_data;
@@ -837,6 +840,7 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
 
 void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 {
+  DataContainer* m = getDataContainer();
  // int column, row, plane;
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
@@ -870,6 +874,7 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 }
 void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
 {
+  DataContainer* m = getDataContainer();
   float x, y, z;
   float xn, yn, zn;
   float dia, dia2;
@@ -915,6 +920,7 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
 
 float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
 {
+  DataContainer* m = getDataContainer();
   float neighborerror;
   float bhattdist;
   float dia;
@@ -1036,6 +1042,7 @@ void PackGrainsGen2::compare_3Ddistributions(std::vector<std::vector<std::vector
 
 float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
 {
+  DataContainer* m = getDataContainer();
   float dia;
   float sizedisterror = 0;
   float bhattdist;
@@ -1085,6 +1092,7 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
 
 float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
 {
+  DataContainer* m = getDataContainer();
   fillingerror = fillingerror * float(packingtotalpoints);
   int col, row, plane;
   if(gadd > 0)
@@ -1163,7 +1171,7 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
 void PackGrainsGen2::insert_grain(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
 //  float dist;
   float inside = -1;
   int column, row, plane;
@@ -1275,6 +1283,7 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 
 void PackGrainsGen2::assign_voxels()
 {
+  DataContainer* m = getDataContainer();
   int index;
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
@@ -1451,6 +1460,7 @@ void PackGrainsGen2::assign_voxels()
 
 void PackGrainsGen2::assign_gaps()
 {
+  DataContainer* m = getDataContainer();
   int index;
   int timestep = 100;
   int unassignedcount = 1;
@@ -1603,6 +1613,7 @@ void PackGrainsGen2::assign_gaps()
 }
 void PackGrainsGen2::cleanup_grains()
 {
+  DataContainer* m = getDataContainer();
 	  int neighpoints[6];
 	  neighpoints[0] = -(m->xpoints * m->ypoints);
 	  neighpoints[1] = -m->xpoints;

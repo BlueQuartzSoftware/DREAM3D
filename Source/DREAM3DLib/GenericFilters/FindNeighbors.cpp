@@ -60,6 +60,7 @@ FindNeighbors::~FindNeighbors()
 // -----------------------------------------------------------------------------
 void FindNeighbors::find_neighbors()
 {
+  DataContainer* m = getDataContainer();
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
   neighpoints[1] = -m->xpoints;

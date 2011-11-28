@@ -62,6 +62,10 @@ MatchCrystallography::MatchCrystallography()
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
+
+  totalsurfacearea = NULL;
+  INIT_AIMARRAY(m_TotalSurfaceArea, float);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -78,13 +82,13 @@ void MatchCrystallography::execute()
 {
   int err = 0;
   DREAM3D_RANDOMNG_NEW()
-
+  DataContainer* m = getDataContainer();
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   readODFData(h5reader);
   readMisorientationData(h5reader);
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setDataContainer(m);
+  find_neighbors->setDataContainer(getDataContainer());
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
@@ -109,6 +113,7 @@ void MatchCrystallography::execute()
 
 void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
 {
+  DataContainer* m = getDataContainer();
   //------------------
   size_t nElements = 0;
   size_t size = structures.size();
@@ -152,6 +157,7 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
 
 int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
 {
+  DataContainer* m = getDataContainer();
   std::vector<float> density;
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
@@ -197,6 +203,7 @@ int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
 
 int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
 {
+  DataContainer* m = getDataContainer();
   std::vector<float> density;
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
@@ -244,7 +251,7 @@ int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
 void MatchCrystallography::assign_eulers()
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
  // int gnum = 0;
   int numbins = 0;
   float totaldensity = 0;
@@ -297,6 +304,7 @@ void MatchCrystallography::assign_eulers()
 
 void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float>* misolist,std::vector<float>* neighborsurfacealist, float &mdfchange)
 {
+  DataContainer* m = getDataContainer();
   float w;
   float n1, n2, n3;
   float r1, r2, r3;
@@ -329,6 +337,7 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
 
 void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float>* misolist,std::vector<float>* neighborsurfacealist)
 {
+  DataContainer* m = getDataContainer();
   float w;
   float n1, n2, n3;
   float r1, r2, r3;
@@ -369,7 +378,7 @@ void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::v
 void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   float random;
   int good;
   float deltaerror = 1.0;
@@ -471,7 +480,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
 void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   int good = 0;
   float deltaerror;
   size_t selectedgrain1;
@@ -636,7 +645,7 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
 void MatchCrystallography::matchCrystallography()
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   int numbins = 0;
 
   int iterations = 0;
@@ -685,6 +694,7 @@ void MatchCrystallography::matchCrystallography()
 }
 void  MatchCrystallography::measure_misorientations ()
 {
+  DataContainer* m = getDataContainer();
   float w;
   float n1, n2, n3;
   float r1, r2, r3;

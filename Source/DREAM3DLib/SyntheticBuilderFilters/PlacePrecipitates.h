@@ -93,7 +93,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
 
 protected:
     PlacePrecipitates();
-    DataContainer* m;
 
   private:
 

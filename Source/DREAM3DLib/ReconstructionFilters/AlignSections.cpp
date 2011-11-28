@@ -125,6 +125,7 @@ void AlignSections::execute()
 
 void AlignSections::align_sections()
 {
+  DataContainer* m = getDataContainer();
   float disorientation = 0;
   float mindisorientation = 100000000;
   float **mutualinfo12;
@@ -391,7 +392,7 @@ void AlignSections::align_sections()
 void AlignSections::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
-
+    DataContainer* m = getDataContainer();
   int point = 0;
   int seed = 0;
   int noseeds = 0;

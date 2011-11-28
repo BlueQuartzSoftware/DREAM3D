@@ -104,7 +104,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
 protected:
     MatchCrystallography();
-    DataContainer* m;
 
   private:
 

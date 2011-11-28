@@ -71,7 +71,6 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 
   protected:
     FindNeighbors();
-    DataContainer* m;
 
   private:
 

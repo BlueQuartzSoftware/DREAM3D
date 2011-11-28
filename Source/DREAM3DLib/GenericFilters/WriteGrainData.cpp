@@ -98,6 +98,7 @@ void WriteGrainData::execute()
 // -----------------------------------------------------------------------------
 void WriteGrainData::write_graindata(const std::string &filename)
 {
+  DataContainer* m = getDataContainer();
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
