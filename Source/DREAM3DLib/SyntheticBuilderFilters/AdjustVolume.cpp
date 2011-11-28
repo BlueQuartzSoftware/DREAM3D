@@ -56,7 +56,7 @@ using namespace std;
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "GrainGenerator/Algorithms/PackGrainsGen2.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\
