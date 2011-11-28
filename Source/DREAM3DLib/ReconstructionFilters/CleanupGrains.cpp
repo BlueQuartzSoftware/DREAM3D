@@ -110,10 +110,10 @@ void CleanupGrains::execute()
   assign_badpoints();
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setGrainGenFunc(m);
+  find_neighbors->setDataContainer(m);
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
-  
+
   merge_containedgrains();
   reorder_grains();
 

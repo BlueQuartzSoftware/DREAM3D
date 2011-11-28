@@ -76,8 +76,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public Observable
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(DataContainer* gg) { m = gg; }
-    DataContainer*getGrainGenFunc() { return m; }
+    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
+    
 
     std::vector<Ebsd::CrystalStructure> crystruct;
 

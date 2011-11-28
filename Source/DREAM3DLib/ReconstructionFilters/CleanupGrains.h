@@ -72,8 +72,8 @@ class DREAM3DLib_EXPORT CleanupGrains : public Observable
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    void setGrainGenFunc(DataContainer* gg) { m = gg; }
-    DataContainer*getGrainGenFunc() { return m; }
+    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
+    
 
     unsigned long long int Seed;
 
