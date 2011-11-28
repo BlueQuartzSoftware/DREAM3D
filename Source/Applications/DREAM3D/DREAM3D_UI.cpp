@@ -515,13 +515,18 @@ void DREAM3D_UI::loadPlugins()
     thePath = aPluginDir.absolutePath() + "/Plugins";
     m_PluginDirs << thePath;
     aPluginDir.cdUp();
-    thePath = aPluginDir.absolutePath() + "/Plugins";
-    // m_PluginDirs << thePath;
     aPluginDir.cdUp();
   }
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";
   m_PluginDirs << thePath;
+  
+   // This is here for Xcode compatibility
+#ifdef CMAKE_INTDIR
+   aPluginDir.cdUp();
+   thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
+   m_PluginDirs << thePath;
+#endif   
 #else
   if (aPluginDir.cd("plugins"))
   {
@@ -536,7 +541,7 @@ void DREAM3D_UI::loadPlugins()
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    // std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
+    //std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
