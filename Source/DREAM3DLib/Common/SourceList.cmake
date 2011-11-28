@@ -10,6 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (DREAM3DLib_Common_HDRS
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AIMArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.h
@@ -31,6 +32,7 @@ SET (DREAM3DLib_Common_HDRS
 )
 
 SET (DREAM3DLib_Common_SRCS
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.cpp

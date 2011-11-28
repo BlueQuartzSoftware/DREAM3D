@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +12,9 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,56 +26,48 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _AbstractFilter_H_
+#define _AbstractFilter_H_
 
-#ifndef FINDNEIGHBORS_H_
-#define FINDNEIGHBORS_H_
-
-#include <vector>
-#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
+
 /**
- * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
+ * @class AbstractFilter AbstractFilter.h DREAM3DLib/Common/AbstractFilter.h
  * @brief
- * @author
- * @date Nov 19, 2011
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Nov 28, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
+class DREAM3DLib_EXPORT AbstractFilter : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindNeighbors);
-    DREAM3D_STATIC_NEW_MACRO(FindNeighbors);
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(AbstractFilter)
+    DREAM3D_STATIC_NEW_MACRO(AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(AbstractFilter, Observable)
 
-    virtual ~FindNeighbors();
+    virtual ~AbstractFilter();
 
-
-    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
+    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage)
 
     virtual void execute();
 
-    void find_neighbors();
-
-
   protected:
-    FindNeighbors();
-    DataContainer* m;
+    AbstractFilter();
 
   private:
-
-
-    FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
-    void operator=(const FindNeighbors&); // Operator '=' Not Implemented
+    AbstractFilter(const AbstractFilter&); // Copy Constructor Not Implemented
+    void operator=(const AbstractFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDNEIGHBORS_H_ */
+
+
+
+#endif /* _AbstractFilter_H_  */

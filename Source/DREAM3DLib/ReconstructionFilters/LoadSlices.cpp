@@ -84,8 +84,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LoadSlices::LoadSlices() :
-    m_ErrorCondition(0)
+LoadSlices::LoadSlices()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -181,8 +180,8 @@ void LoadSlices::execute()
   threshold_points();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "Load Slices Completed";
-  m_ErrorCondition = 0;
+  notify("LoadSlices Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
                                     std::vector<Ebsd::CrystalStructure> crystalStructures,

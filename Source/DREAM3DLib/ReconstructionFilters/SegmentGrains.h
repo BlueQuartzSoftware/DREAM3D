@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
@@ -56,27 +56,24 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SegmentGrains : public Observable
+class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(SegmentGrains);
     DREAM3D_STATIC_NEW_MACRO(SegmentGrains);
-    DREAM3D_TYPE_MACRO_SUPER(SegmentGrains, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(SegmentGrains, AbstractFilter);
 
     virtual ~SegmentGrains();
 
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
+//    typedef boost::shared_array<float> SharedFloatArray;
+//    typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
+
 
     unsigned long long int Seed;
 
-	virtual void execute();
+    virtual void execute();
     void form_grains();
 
     std::vector<OrientationMath*> m_OrientationOps;

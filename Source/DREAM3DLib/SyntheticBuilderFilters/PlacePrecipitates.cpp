@@ -58,8 +58,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PlacePrecipitates::PlacePrecipitates() :
-    m_ErrorCondition(0)
+PlacePrecipitates::PlacePrecipitates()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -101,8 +100,8 @@ void PlacePrecipitates::execute()
     fillin_precipitates();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+    notify("PlacePrecipitates Completed", 0, Observable::UpdateProgressMessage);
+    setErrorCondition(0);
 }
 void PlacePrecipitates::insert_precipitate(size_t gnum)
 {

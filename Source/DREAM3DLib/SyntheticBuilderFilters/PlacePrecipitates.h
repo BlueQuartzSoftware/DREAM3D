@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 
@@ -52,22 +52,20 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT PlacePrecipitates : public Observable
+class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(PlacePrecipitates);
     DREAM3D_STATIC_NEW_MACRO(PlacePrecipitates);
-    DREAM3D_TYPE_MACRO_SUPER(PlacePrecipitates, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(PlacePrecipitates, AbstractFilter);
 
     virtual ~PlacePrecipitates();
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
-    
+
+
 
     int numprimarygrains;
 

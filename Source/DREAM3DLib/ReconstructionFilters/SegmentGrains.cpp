@@ -76,8 +76,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentGrains::SegmentGrains() :
-    m_ErrorCondition(0)
+SegmentGrains::SegmentGrains()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -105,8 +104,8 @@ void SegmentGrains::execute()
   form_grains();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 void SegmentGrains::form_grains()

@@ -80,8 +80,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PackGrainsGen2::PackGrainsGen2() :
-    m_ErrorCondition(0)
+PackGrainsGen2::PackGrainsGen2()
 {
   Seed = MXA::getMilliSeconds();
 
@@ -546,8 +545,8 @@ void PackGrainsGen2::execute()
   assign_gaps();
 
   // If there is an error set this to something negative and also set a message
-  m_ErrorMessage = "PackGrainsGen2 Completed";
-  m_ErrorCondition = 0;
+  notify("PackGrainsGen2 Completed", 0, Observable::UpdateProgressMessage);
+  setErrorCondition(0);
 }
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
