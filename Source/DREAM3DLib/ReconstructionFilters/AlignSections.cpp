@@ -90,7 +90,6 @@ AlignSections::AlignSections() :
 
   graincounts = NULL;
   INIT_AIMARRAY(m_GrainCounts,int);
-
 }
 
 // -----------------------------------------------------------------------------
