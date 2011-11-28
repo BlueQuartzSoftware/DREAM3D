@@ -78,7 +78,6 @@ class DREAM3DLib_EXPORT WriteGrainData : public Observable
 
   protected:
     WriteGrainData();
-    DataContainer* m;
 
   private:
 

@@ -84,7 +84,7 @@ class DREAM3DLib_EXPORT MergeTwins : public Observable
 
   protected:
     MergeTwins();
-    DataContainer* m;
+
 
   private:
 

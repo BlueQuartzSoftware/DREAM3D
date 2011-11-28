@@ -245,7 +245,7 @@ void SurfaceMesh::execute()
 
 #if 0
   SMVtkFileIO::Pointer vtkreader = SMVtkFileIO::New();
-  vtkreader->primeFileToScalarDataLocation(m.get(), m_InputFile, m_ScalarName);
+  vtkreader->primeFileToScalarDataLocation(m_DataContainer.get(), m_InputFile, m_ScalarName);
 #endif
 
   H5VoxelReader::Pointer reader = H5VoxelReader::New();

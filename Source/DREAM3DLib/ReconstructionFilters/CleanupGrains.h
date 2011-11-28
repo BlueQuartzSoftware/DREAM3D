@@ -87,7 +87,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public Observable
 
   protected:
     CleanupGrains();
-    DataContainer* m;
 
   private:
 

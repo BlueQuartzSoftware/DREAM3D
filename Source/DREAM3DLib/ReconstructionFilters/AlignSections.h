@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT AlignSections : public Observable
 
     unsigned long long int Seed;
 
-	DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
+    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int);
 
-	virtual void execute();
+	  virtual void execute();
     void align_sections();
     void form_grains_sections();
 
@@ -87,7 +87,6 @@ class DREAM3DLib_EXPORT AlignSections : public Observable
 
   protected:
     AlignSections();
-    DataContainer* m;
 
   private:
 

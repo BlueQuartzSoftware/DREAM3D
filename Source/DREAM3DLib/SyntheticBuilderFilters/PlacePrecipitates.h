@@ -95,7 +95,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public Observable
 
 protected:
     PlacePrecipitates();
-    DataContainer* m;
 
   private:
 
