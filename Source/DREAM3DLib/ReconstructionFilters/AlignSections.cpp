@@ -196,12 +196,12 @@ void AlignSections::align_sections()
 
       for (Float1DIndex a = 0; a < graincount1; a++)
       {
-        mutualinfo1[a] = 0;
+        mutualinfo1[a] = 0.0f;
       //  mutualinfo12[a] = new float[graincount2];
         for (Float1DIndex b = 0; b < graincount2; b++)
         {
-          mutualinfo12[a][b] = 0;
-          mutualinfo2[b] = 0;
+          mutualinfo12[a][b] = 0.0f;
+          mutualinfo2[b] = 0.0f;
         }
       }
     }
