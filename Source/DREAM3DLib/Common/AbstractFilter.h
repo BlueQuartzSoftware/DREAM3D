@@ -39,7 +39,12 @@
 
 /**
  * @class AbstractFilter AbstractFilter.h DREAM3DLib/Common/AbstractFilter.h
- * @brief
+ * @brief This class is the basic class to subclass when creating a new Filter for
+ * DREAM.3D. The subclass must implement at least the  execute method. If an
+ * error occurs during the execution of the filter set the errorCondition to
+ * a non zero value and optionally use the setErrorMessage() method to explain what the
+ * error was. This class also inherits from Observable so that the filter can
+ * provide updates to the user interface during execution.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Nov 28, 2011
  * @version 1.0
@@ -53,10 +58,15 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual ~AbstractFilter();
 
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage)
+    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
 
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
+
+    /**
+     * @brief This method should be fully implemented in subclasses.
+     */
     virtual void execute();
 
   protected:

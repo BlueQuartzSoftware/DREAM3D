@@ -216,6 +216,92 @@ PREDEFINED  = "EBSD_INSTANCE_PROPERTY(type, prpty)= \
                 }"\
               "EBSD_TYPE_MACRO(class)=\
                 virtual const char* getNameOfClass() const \
+                {return "CrossCorrelationData";}"\
+              "EbsdHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)=\
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (type); \
+                 /** Gets the prpty instance variable */ \
+                 type get##prpty (type);" \
+              "EBSD_POINTER_PROPERTY(name, var, type)=\
+                /** Sets the name data pointer */ \
+                 void set##name (type); \
+                 /** Gets the name instance variable */ \
+                 type get##name (type);" \
+              "DREAM3D_INSTANCE_PROPERTY(type, prpty)= \
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (type); \
+                 /** Gets the prpty instance variable */ \
+                 type get##prpty (type);" \
+              "DREAM3D_INSTANCE_PROPERTY(type, prpty, name)= \
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (type); \
+                 /** Gets the prpty instance variable */ \
+                 type get##prpty (type);" \
+              "DREAM3D_INSTANCE_STRING_PROPERTY(prpty)=\
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (std::string); \
+                 /** Gets the prpty instance variable */ \
+                 std::string get##prpty (std::string);" \
+              "DREAM3D_SHARED_POINTERS(class)=\
+                typedef CrossCorrelation             Self;\
+                typedef boost::shared_ptr< Self >       Pointer;\
+                typedef boost::shared_ptr<const Self >  ConstPointer;\
+                static Pointer NullPointer(void)\
+                { \
+                  return Pointer(static_cast<CrossCorrelation*>(0));\
+                }" \
+              "DREAM3D_STATIC_NEW_MACRO(class)=\
+                static Pointer New(void) \
+                { \
+                  Pointer sharedPtr (new CrossCorrelationData); \
+                  return sharedPtr; \
+                }" \
+               "DREAM3D_TYPE_MACRO_SUPER(AbstractFilter, Observable)=\
+               /** Returns the name of this class */ \
+                  virtual const char* getNameOfClass() const  {return "AbstractFilter";}\
+               /** Returns if this class is a subclass of another class. */ \
+                  static int IsTypeOf(const char *type) \
+                  { } \
+                /** Returns if this class is a type of another class */ \
+                  virtual int IsA(const char *type) \
+                  { } \
+                  /** A safe way to downcast from a super class to a sub class. Returns a NULL Pointer on Fail*/ \
+                  template <class Target, class Source>\
+                  static Target polymorphic_downcast(Source* x) { }" \
+              "DREAM3D_TYPE_MACRO(class)=\
+                virtual const char* getNameOfClass() const \
+                {return "CrossCorrelationData";}" \
+               "MXA_INSTANCE_PROPERTY(type, prpty)= \
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (type); \
+                 /** Gets the prpty instance variable */ \
+                 type get##prpty (type);" \
+              "MXA_INSTANCE_PROPERTY(type, prpty, name)= \
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (type); \
+                 /** Gets the prpty instance variable */ \
+                 type get##prpty (type);" \
+              "MXA_INSTANCE_STRING_PROPERTY(prpty)=\
+                /** Sets the prpty instance variable */ \
+                 void set##prpty (std::string); \
+                 /** Gets the prpty instance variable */ \
+                 std::string get##prpty (std::string);" \
+              "MXA_SHARED_POINTERS(class)=\
+                typedef CrossCorrelation             Self;\
+                typedef boost::shared_ptr< Self >       Pointer;\
+                typedef boost::shared_ptr<const Self >  ConstPointer;\
+                static Pointer NullPointer(void)\
+                { \
+                  return Pointer(static_cast<CrossCorrelation*>(0));\
+                }"\
+              "MXA_STATIC_NEW_MACRO(class)=\
+                static Pointer New(void) \
+                { \
+                  Pointer sharedPtr (new CrossCorrelationData); \
+                  return sharedPtr; \
+                }"\
+              "MXA_TYPE_MACRO(class)=\
+                virtual const char* getNameOfClass() const \
                 {return "CrossCorrelationData";}"
 #---------------------------------------------------------------------------
 # Configuration::additions related to external references   
