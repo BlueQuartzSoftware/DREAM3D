@@ -40,13 +40,34 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
+// Defining this for Release builds will disable the range checking feature.
+#ifndef DEBUG
+#define BOOST_DISABLE_ASSERTS
+#endif
+#include <boost/multi_array.hpp>
+
+typedef boost::multi_array<int, 1> Int1DArray;
+typedef boost::multi_array<float, 1> Float1DArray;
+
+typedef boost::multi_array<int, 2> Int2DArray;
+typedef boost::multi_array<float, 2> Float2DArray;
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+
+#define     DREAM3D_DECLARE_ARRAY(ptr, prpty, type)\
+    private:\
+      AIMArray<type>::Pointer m_##prpty;\
+      type* ptr;\
+  public:\
+    public:\
+    DREAM3D_SET_PROPERTY(AIMArray<type>::Pointer, prpty)\
+    DREAM3D_GET_PROPERTY(AIMArray<type>::Pointer, prpty)
+
 
 /**
  * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h
@@ -66,15 +87,18 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, alignmeth)
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance)
-    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, int)
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
 	  virtual void execute();
 
-    void align_sections();
-    void form_grains_sections();
 
   protected:
     AlignSections();
+
+    void align_sections();
+    void form_grains_sections();
 
   private:
 
@@ -85,6 +109,8 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     std::vector<OrientationMath*> m_OrientationOps;
 
     unsigned long long int Seed;
+
+    Int1DArray graincounts;
 
     AlignSections(const AlignSections&); // Copy Constructor Not Implemented
     void operator=(const AlignSections&); // Operator '=' Not Implemented

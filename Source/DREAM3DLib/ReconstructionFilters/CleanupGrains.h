@@ -40,7 +40,6 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -68,20 +67,21 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, minallowedgrainsize);
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
 
-	virtual void execute();
+  protected:
+    CleanupGrains();
+
     void remove_smallgrains();
     void assign_badpoints();
     void merge_containedgrains();
     void reorder_grains();
 
 
-
-  protected:
-    CleanupGrains();
-
   private:
-    unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;

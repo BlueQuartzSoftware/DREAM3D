@@ -186,20 +186,18 @@ int main(int argc, char **argv)
      _CHECK_FOR_ERROR(ReconstructionFunc, "ReconstructionFunc Error: No Manufacturer Set for EBSD data", -1);
    }
 
-  DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
+ // DREAM3D::Reconstruction::AlignmentMethod m_AlignmentMethod = DREAM3D::Reconstruction::UnknownAlignmentMethod;
 
+   std::cout << "Loading EBSD Data...." << std::endl;
   LoadSlices::Pointer load_slices = LoadSlices::New();
   load_slices->setDataContainer(m.get());
-  load_slices->initialize(m->xpoints, m->ypoints, m->zpoints,
-                m->resx, m->resy, m->resz,
-                crystalStructures, m_PhaseTypes, precipFractions);
-  std::cout << "Loading EBSD Data...." << std::endl;
-  std::vector<QualityMetricFilter::Pointer> m_QualityMetricFilters;
-
-  Ebsd::RefFrameZDir stackingOrder = ebsdReader->getStackingOrder();
-  err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, stackingOrder, m_QualityMetricFilters);
-  // Initialize the Quats so we can generate the IPF Colors
-  load_slices->initializeQuats();
+  load_slices->execute();
+  err = load_slices->getErrorCondition();
+  if (err < 0)
+  {
+    std::cout << load_slices->getErrorMessage() << std::endl;
+    return EXIT_FAILURE;
+  }
 
   std::cout << "Writing VTK file" << std::endl;
 

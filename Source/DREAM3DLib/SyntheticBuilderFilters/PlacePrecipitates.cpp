@@ -60,7 +60,7 @@
 // -----------------------------------------------------------------------------
 PlacePrecipitates::PlacePrecipitates()
 {
-  Seed = MXA::getMilliSeconds();
+
 
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -81,9 +81,13 @@ PlacePrecipitates::~PlacePrecipitates()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PlacePrecipitates::execute()
 {
   int err = 0;
+  setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
 	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
@@ -101,8 +105,11 @@ void PlacePrecipitates::execute()
 
   // If there is an error set this to something negative and also set a message
     notify("PlacePrecipitates Completed", 0, Observable::UpdateProgressMessage);
-    setErrorCondition(0);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PlacePrecipitates::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
@@ -351,10 +358,13 @@ void  PlacePrecipitates::fillin_precipitates()
   gsizes.clear();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  PlacePrecipitates::place_precipitates()
 {
   DREAM3D_RANDOMNG_NEW()
-    DataContainer* m = getDataContainer();
+  DataContainer* m = getDataContainer();
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
   size_t currentnumgrains = m->m_Grains.size();
@@ -388,7 +398,7 @@ void  PlacePrecipitates::place_precipitates()
   err = packGrains->readAxisOrientationData(h5reader);
   while(totalprecipvol < totalvol*totalprecipitatefractions)
   {
-    Seed++;
+  //  Seed++;
     random = rg.genrand_res53();
     for (size_t j = 0; j < precipitatephases.size();++j)
     {

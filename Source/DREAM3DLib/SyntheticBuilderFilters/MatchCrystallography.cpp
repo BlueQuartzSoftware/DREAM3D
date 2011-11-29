@@ -51,6 +51,9 @@
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
+#define GG_INIT_DOUBLE_ARRAY(array, value, size)\
+    for(size_t n = 0; n < size; ++n) { array[n] = (value); }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -80,7 +83,8 @@ MatchCrystallography::~MatchCrystallography()
 void MatchCrystallography::execute()
 {
   int err = 0;
-  DREAM3D_RANDOMNG_NEW()
+  setErrorCondition(err);
+
   DataContainer* m = getDataContainer();
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   readODFData(h5reader);
@@ -90,7 +94,11 @@ void MatchCrystallography::execute()
   find_neighbors->setDataContainer(getDataContainer());
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->execute();
-  err = find_neighbors->getErrorCondition();
+  setErrorCondition(find_neighbors->getErrorCondition());
+  if (getErrorCondition() != 0){
+    setErrorMessage(find_neighbors->getErrorMessage());
+    return;
+  }
   size_t xtalCount = m->crystruct.size();
   totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
   for(size_t i=0;i<xtalCount;i++)
@@ -104,11 +112,9 @@ void MatchCrystallography::execute()
 
   // If there is an error set this to something negative and also set a message
   notify("MatchCrystallography Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
 }
 
-#define GG_INIT_DOUBLE_ARRAY(array, value, size)\
-    for(size_t n = 0; n < size; ++n) { array[n] = (value); }
+
 
 void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
 {
@@ -151,9 +157,9 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
   }
 }
 
-
-
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
 {
   DataContainer* m = getDataContainer();
@@ -200,6 +206,9 @@ int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
 {
   DataContainer* m = getDataContainer();
@@ -505,10 +514,10 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   while (good == 0)
   {
     good = 1;
-    selectedgrain1 = int(rg.genrand_res53() * m->m_Grains.size());
+    selectedgrain1 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
     if (selectedgrain1 == 0) selectedgrain1 = 1;
     if (selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
-    selectedgrain2 = int(rg.genrand_res53() * m->m_Grains.size());
+    selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
     if (selectedgrain2 == 0) selectedgrain2 = 1;
     if (selectedgrain2 == m->m_Grains.size()) selectedgrain2 = m->m_Grains.size() - 1;
     if (m->m_Grains[selectedgrain1]->surfacegrain > 0 || m->m_Grains[selectedgrain2]->surfacegrain > 0) good = 0;
@@ -555,7 +564,7 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   }
   for (size_t j = 0; j < size; j++)
   {
-    int neighbor = nlist->at(j);
+    size_t neighbor = nlist->at(j);
     if (neighbor != selectedgrain2)
     {
       MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfacealist, mdfchange);
@@ -573,7 +582,7 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   }
   for (size_t j = 0; j < size; j++)
   {
-    int neighbor = nlist->at(j);
+    size_t neighbor = nlist->at(j);
     if (neighbor != selectedgrain1)
     {
       MC_LoopBody1(phase, neighbor, j, misolist, neighborsurfacealist, mdfchange);

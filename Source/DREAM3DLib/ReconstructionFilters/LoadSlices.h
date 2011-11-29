@@ -40,8 +40,6 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
-
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
@@ -75,14 +73,18 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
     MXA_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
     MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
+    DREAM3D_INSTANCE_PROPERTY(float, MisoTolerance);
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
 
-
-
-
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
+
+  protected:
+    LoadSlices();
+
     void initialize(int nX, int nY, int nZ,
                     float xRes, float yRes, float zRes,
                     std::vector<Ebsd::CrystalStructure> crystalStructures,
@@ -93,22 +95,19 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     void initializeQuats();
     void threshold_points();
 
-    std::vector<OrientationMath*> m_OrientationOps;
-
-  protected:
-    LoadSlices();
-
   private:
     unsigned long long int Seed;
 
     int tempxpoints;
     int tempypoints;
     int totaltemppoints;
+    std::vector<OrientationMath*> m_OrientationOps;
+
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
-	LoadSlices(const LoadSlices&); // Copy Constructor Not Implemented
+    LoadSlices(const LoadSlices&); // Copy Constructor Not Implemented
     void operator=(const LoadSlices&); // Operator '=' Not Implemented
 
     /**

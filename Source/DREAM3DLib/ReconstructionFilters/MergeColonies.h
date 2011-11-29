@@ -40,7 +40,6 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -65,16 +64,20 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     virtual ~MergeColonies();
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
-    void merge_colonies();
-    void characterize_colonies();
-    void renumber_grains();
 
   protected:
     MergeColonies();
 
+    void merge_colonies();
+    void characterize_colonies();
+    void renumber_grains();
+
   private:
-    unsigned long long int Seed;
+
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
