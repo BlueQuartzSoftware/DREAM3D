@@ -310,9 +310,9 @@ void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], fl
   DREAM3D_RANDOMNG_NEW()
   float random = rg.genrand_res53();
   float synh1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
-  random = rg.genrand_res53();
+  random = (float)(rg.genrand_res53());
   float synh2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
-  random = rg.genrand_res53();
+  random = (float)(rg.genrand_res53());
   float synh3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
   float hmag = sqrt((synh1 * synh1 + synh2 * synh2 + synh3 * synh3));
   float angle = powf((8.0f * hmag * hmag * hmag), (1.0f / 3.0f));
