@@ -64,14 +64,12 @@ WriteGrainData::~WriteGrainData()
 // -----------------------------------------------------------------------------
 void WriteGrainData::execute()
 {
-
-  DREAM3D_RANDOMNG_NEW()
-
+  setErrorCondition(0);
   write_graindata(getGrainDataFile());
 
   // If there is an error set this to something negative and also set a message
   notify("WriteGrainData Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
+
 }
 
 // -----------------------------------------------------------------------------

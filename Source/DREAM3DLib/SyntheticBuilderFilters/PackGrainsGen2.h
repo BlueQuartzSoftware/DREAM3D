@@ -74,15 +74,26 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
     DREAM3D_INSTANCE_PROPERTY(float, neighborhooderrorweight);
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
+
+    float check_sizedisterror(int gadd, int gremove);
+    int readReconStatsData(H5StatsReader::Pointer h5io);
+    int readAxisOrientationData(H5StatsReader::Pointer h5io);
+    void generate_grain(int, int);
+
+  protected:
+    PackGrainsGen2();
+
 
     void initializeAttributes();
     void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
-    int readReconStatsData(H5StatsReader::Pointer h5io);
-    int readAxisOrientationData(H5StatsReader::Pointer h5io);
+
 
     void initialize_packinggrid();
-    void generate_grain(int, int);
+
     void pack_grains();
     void insert_grain(size_t grainNum);
 
@@ -92,7 +103,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     void remove_grain(size_t grainNum);
     void determine_neighbors(size_t grainNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
-    float check_sizedisterror(int gadd, int gremove);
+
     float check_fillingerror(int gadd, int gremove);
     void assign_voxels();
     void assign_gaps();
@@ -104,21 +115,17 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
-    std::vector<OrientationMath*> m_OrientationOps;
-
-  protected:
-    PackGrainsGen2();
 
 
   private:
-
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
     DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
     DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
     DREAM3D::ShapeOps::Pointer m_CylinderOps;
     DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
     DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
 
+    std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;

@@ -64,8 +64,6 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 CleanupGrains::CleanupGrains()
 {
-  Seed = MXA::getMilliSeconds();
-
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
   m_CubicOps = CubicOps::New();
@@ -86,9 +84,9 @@ CleanupGrains::~CleanupGrains()
 // -----------------------------------------------------------------------------
 void CleanupGrains::execute()
 {
-
+  setErrorCondition(0);
 	int err = 0;
-  DREAM3D_RANDOMNG_NEW()
+  //DREAM3D_RANDOMNG_NEW()
 	DataContainer* m = getDataContainer();
   notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
   remove_smallgrains();
@@ -113,7 +111,6 @@ void CleanupGrains::execute()
 
   // If there is an error set this to something negative and also set a message
   notify("CleanupGrains Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
 }
 
 // -----------------------------------------------------------------------------

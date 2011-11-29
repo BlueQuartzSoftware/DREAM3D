@@ -40,7 +40,6 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -65,25 +64,26 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 
     virtual ~SegmentGrains();
 
-    DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
+    DREAM3D_INSTANCE_PROPERTY(float, MisoTolerance);
 
-
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
-    void form_grains();
+
 
   protected:
     SegmentGrains();
 
+    void form_grains();
+
   private:
-
-    unsigned long long int Seed;
     std::vector<OrientationMath*> m_OrientationOps;
-
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
-	SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
+    SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
     void operator=(const SegmentGrains&); // Operator '=' Not Implemented
 };
 

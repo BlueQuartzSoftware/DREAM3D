@@ -40,7 +40,6 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -64,11 +63,16 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     virtual ~AdjustVolume();
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
-    void adjust_boundaries();
+
 
   protected:
     AdjustVolume();
+
+    void adjust_boundaries();
 
   private:
     std::vector<int> gsizes;
