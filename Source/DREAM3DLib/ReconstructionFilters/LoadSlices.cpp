@@ -88,11 +88,16 @@ LoadSlices::~LoadSlices()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void LoadSlices::execute()
 {
+
   DataContainer* m = getDataContainer();
 	int err = 0;
-  DREAM3D_RANDOMNG_NEW()
+  setErrorCondition(err);
+ // DREAM3D_RANDOMNG_NEW()
 
  // updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
   std::string manufacturer;
@@ -101,7 +106,7 @@ void LoadSlices::execute()
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
     volumeInfoReader->setFileName(m_H5AngFile);
     err = volumeInfoReader->readVolumeInfo();
-
+    setErrorCondition(err);
     volumeInfoReader->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     // The GUI code has already added 1 to the end index so nothing special needs to be done
@@ -119,6 +124,8 @@ void LoadSlices::execute()
     ebsdReader = H5AngVolumeReader::New();
     if (NULL == ebsdReader)
     {
+      setErrorCondition(-1);
+      setErrorMessage("Could not Create H5AngVolumeReader object.");
       return;
     }
     H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
@@ -129,6 +136,8 @@ void LoadSlices::execute()
     ebsdReader = H5CtfVolumeReader::New();
     if (NULL == ebsdReader)
     {
+      setErrorCondition(-1);
+      setErrorMessage("Could not Create H5CtfVolumeReader object.");
       return;
     }
     H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
@@ -136,6 +145,11 @@ void LoadSlices::execute()
   }
   else
   {
+    setErrorCondition(-1);
+    std::string msg("Could not determine or match a supported manufacturer from the data file.");
+    msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
+    msg = msg.append(" and ").append(Ebsd::Ang::Manufacturer);
+    setErrorMessage(msg);
     return;
   }
 
@@ -149,6 +163,12 @@ void LoadSlices::execute()
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   err = ebsdReader->loadData(m->euler1s, m->euler2s, m->euler3s, m->phases, m->goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
+  setErrorCondition(err);
+  if (err < 0)
+  {
+    setErrorMessage("Error Loading Data from Ebsd Data file.");
+    return;
+  }
   float radianconversion = M_PI/180.0;
   if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
@@ -166,8 +186,11 @@ void LoadSlices::execute()
 
   // If there is an error set this to something negative and also set a message
   notify("LoadSlices Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
                                     std::vector<Ebsd::CrystalStructure> crystalStructures,
 									std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
@@ -279,7 +302,7 @@ void LoadSlices::threshold_points()
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
 
-  for (size_t iter = 0; iter < (m->totalpoints); iter++)
+  for (int iter = 0; iter < (m->totalpoints); iter++)
   {
     m->alreadychecked[iter] = false;
     if(m->goodVoxels[iter] == 0) m->grain_indicies[iter] = 0;
@@ -327,7 +350,7 @@ void LoadSlices::threshold_points()
 		{
 		  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		}
-		if (w < m_misorientationtolerance)
+		if (w < m_MisoTolerance)
 		{
 		  m->grain_indicies[neighbor] = -1;
 		  m->alreadychecked[neighbor] = true;

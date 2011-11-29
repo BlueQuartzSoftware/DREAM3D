@@ -58,6 +58,17 @@ FindNeighbors::~FindNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindNeighbors::execute()
+{
+  setErrorCondition(0);
+
+  find_neighbors();
+  notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindNeighbors::find_neighbors()
 {
   DataContainer* m = getDataContainer();
@@ -188,9 +199,3 @@ void FindNeighbors::find_neighbors()
 }
 
 
-void FindNeighbors::execute()
-{
-	find_neighbors();
-  notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
-}

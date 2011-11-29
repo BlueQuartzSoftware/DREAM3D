@@ -40,7 +40,6 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -65,13 +64,18 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     virtual ~MergeTwins();
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
-    void merge_twins();
-    void characterize_twins();
-    void renumber_grains();
+
 
   protected:
     MergeTwins();
+
+    void merge_twins();
+    void characterize_twins();
+    void renumber_grains();
 
   private:
 

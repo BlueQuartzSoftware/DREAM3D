@@ -61,8 +61,6 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 SegmentGrains::SegmentGrains()
 {
-  Seed = MXA::getMilliSeconds();
-
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
   m_CubicOps = CubicOps::New();
@@ -78,17 +76,16 @@ SegmentGrains::~SegmentGrains()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SegmentGrains::execute()
 {
-
-	int err = 0;
-  DREAM3D_RANDOMNG_NEW()
-
+  setErrorCondition(0);
   form_grains();
 
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
 }
 
 void SegmentGrains::form_grains()
@@ -98,7 +95,7 @@ void SegmentGrains::form_grains()
   int seed = 0;
   int noseeds = 0;
   size_t graincount = 1;
-  size_t goodgraincount = 0;
+//  size_t goodgraincount = 0;
   int neighbor;
   float q1[5];
   float q2[5];
@@ -181,7 +178,7 @@ void SegmentGrains::form_grains()
             q2[4] = m->quats[neighbor*5 + 4];
             phase2 = m->crystruct[m->phases[neighbor]];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-            if (w < m_misorientationtolerance)
+            if (w < m_MisoTolerance)
             {
               m->grain_indicies[neighbor] = graincount;
               voxelslist[size] = neighbor;

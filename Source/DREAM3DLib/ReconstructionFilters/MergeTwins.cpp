@@ -61,7 +61,6 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 MergeTwins::MergeTwins()
 {
-  Seed = MXA::getMilliSeconds();
 
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -80,9 +79,7 @@ MergeTwins::~MergeTwins()
 
 void MergeTwins::execute()
 {
-
-	int err = 0;
-  DREAM3D_RANDOMNG_NEW()
+  setErrorCondition(0);
 
   merge_twins();
   characterize_twins();
@@ -90,7 +87,6 @@ void MergeTwins::execute()
 
   // If there is an error set this to something negative and also set a message
   notify("MergeTwins Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
 }
 
 void MergeTwins::merge_twins()

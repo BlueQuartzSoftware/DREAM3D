@@ -64,7 +64,13 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
+
+  protected:
+    PlacePrecipitates();
 
     void insert_precipitate(size_t grainNum);
     void place_precipitates();
@@ -77,19 +83,14 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     std::vector<int> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
-
-  protected:
-    PlacePrecipitates();
-
   private:
     int numprimarygrains;
-    unsigned long long int Seed;
+ //   unsigned long long int Seed;
     float sizex;
     float sizey;
     float sizez;
     float totalvol;
-
+    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
     DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
     DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
     DREAM3D::ShapeOps::Pointer m_CylinderOps;

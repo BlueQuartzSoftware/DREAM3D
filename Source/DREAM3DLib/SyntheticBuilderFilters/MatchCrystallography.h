@@ -76,8 +76,15 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
-
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
+
+
+  protected:
+    MatchCrystallography();
+
 
     void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
     int readODFData(H5StatsReader::Pointer h5io);
@@ -90,9 +97,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
     void matchCrystallography();
     void measure_misorientations();
-
-protected:
-    MatchCrystallography();
 
   private:
     std::vector<float> unbiasedvol;

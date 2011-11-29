@@ -67,19 +67,20 @@ AdjustVolume::~AdjustVolume()
 // -----------------------------------------------------------------------------
 void AdjustVolume::execute()
 {
-
-  DREAM3D_RANDOMNG_NEW()
-
+  setErrorCondition(0);
   adjust_boundaries();
 
   // If there is an error set this to something negative and also set a message
   notify("AdjustVolume Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AdjustVolume::adjust_boundaries()
 {
   DREAM3D_RANDOMNG_NEW()
-    DataContainer* m = getDataContainer();
+  DataContainer* m = getDataContainer();
   int neighpoints[6];
   neighpoints[0] = -m->xpoints*m->ypoints;
   neighpoints[1] = -m->xpoints;

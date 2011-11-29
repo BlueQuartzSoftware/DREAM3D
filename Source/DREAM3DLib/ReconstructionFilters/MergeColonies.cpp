@@ -61,8 +61,6 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 MergeColonies::MergeColonies()
 {
-  Seed = MXA::getMilliSeconds();
-
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
   m_CubicOps = CubicOps::New();
@@ -78,21 +76,23 @@ MergeColonies::~MergeColonies()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeColonies::execute()
 {
-
-	int err = 0;
-  DREAM3D_RANDOMNG_NEW()
-
+  setErrorCondition(0);
   merge_colonies();
   characterize_colonies();
   renumber_grains();
 
   // If there is an error set this to something negative and also set a message
   notify("MergeColonies Completed", 0, Observable::UpdateProgressMessage);
-  setErrorCondition(0);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeColonies::merge_colonies()
 {
   DataContainer* m = getDataContainer();
