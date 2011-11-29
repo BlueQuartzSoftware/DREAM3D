@@ -61,9 +61,11 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 
     virtual ~FindNeighbors();
 
-
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     void find_neighbors();

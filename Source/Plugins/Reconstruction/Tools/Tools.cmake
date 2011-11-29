@@ -22,10 +22,10 @@ COMPILE_TOOL(
 )
   
 
-# Create a Command line tool for the H5AngToVtk
+# Create a Command line tool for the H5EbsdToVtk
 COMPILE_TOOL(
-    TARGET H5AngToVtk
-    SOURCES ${PROJECT_SOURCE_DIR}/Tools/H5AngToVtk.cpp 
+    TARGET H5EbsdToVtk
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/H5EbsdToVtk.cpp 
             ${Reconstruction_HDRS} ${Reconstruction_SRCS}
             ${EbsdSupport_HDRS} ${EbsdSupport_SRCS}  ${Algorithms_HDRS} ${Algorithms_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}

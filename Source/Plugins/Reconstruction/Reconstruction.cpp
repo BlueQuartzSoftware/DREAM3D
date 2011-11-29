@@ -115,7 +115,7 @@ void Reconstruction::execute()
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
   load_slices->setRefFrameZDir(getRefFrameZDir());
-  load_slices->setmisorientationtolerance(m_MisorientationTolerance);
+  load_slices->setMisoTolerance(m_MisorientationTolerance);
   load_slices->addObserver(static_cast<Observer*>(this));
   load_slices->setDataContainer(m.get());
   load_slices->execute();
@@ -136,7 +136,7 @@ void Reconstruction::execute()
 
   updateProgressAndMessage(("Segmenting Grains"), 30);
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();
-  segment_grains->setmisorientationtolerance(m_MisorientationTolerance);
+  segment_grains->setMisoTolerance(m_MisorientationTolerance);
   segment_grains->addObserver(static_cast<Observer*>(this));
   segment_grains->setDataContainer(m.get());
   segment_grains->execute();

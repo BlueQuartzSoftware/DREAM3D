@@ -40,8 +40,6 @@
 #include <vector>
 #include <string>
 
-#include <boost/shared_array.hpp>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -67,8 +65,10 @@ class DREAM3DLib_EXPORT WriteGrainData : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainDataFile)
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
-    void write_graindata(const std::string & filename);
 
 
   protected:
@@ -76,6 +76,11 @@ class DREAM3DLib_EXPORT WriteGrainData : public AbstractFilter
 
   private:
 
+    /**
+     * @brief Writes the grain data to an output file
+     * @param filename The file to write the grain data into
+     */
+    void write_graindata(const std::string & filename);
 
     WriteGrainData(const WriteGrainData&); // Copy Constructor Not Implemented
     void operator=(const WriteGrainData&); // Operator '=' Not Implemented
