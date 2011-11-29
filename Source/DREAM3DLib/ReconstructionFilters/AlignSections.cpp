@@ -69,9 +69,6 @@ AlignSections::AlignSections()
   m_OrientationOps.push_back(m_OrthoOps.get());
 
 
-  graincounts = NULL;
-  INIT_AIMARRAY(m_GrainCounts,int);
-
 #if 0
   This code is here for reference only. Let M Jackson delete it.
   typedef boost::multi_array<int, 3> array_type;
