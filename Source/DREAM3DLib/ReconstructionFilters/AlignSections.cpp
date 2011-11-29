@@ -68,27 +68,8 @@ AlignSections::AlignSections()
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-#if 0
-  This code is here for reference only. Let M Jackson delete it.
-  typedef boost::multi_array<int, 3> array_type;
-
-  typedef boost::shared_ptr<array_type> array_type_ptr;
-
-  array_type_ptr ptr(new array_type(boost::extents[3][4][2]));
-
-  (*ptr)[1][1][1] = 10;
-
-  array_type A(boost::extents[3][4][2]);
-  boost::array<array_type::index,3> idx = {{0,0,0}};
-  int x = 2, y=3, z=1;
-  idx[0] = x;
-  idx[1] = y;
-  idx[2] = z;
-
-  A(idx) = 3;
-  (*ptr)(idx) = 4;
-  assert(A(idx) == 3);
-#endif
+  graincounts = NULL;
+  INIT_AIMARRAY(m_GrainCounts, int);
 }
 
 // -----------------------------------------------------------------------------
@@ -110,6 +91,10 @@ void AlignSections::execute()
   }
 
   align_sections();
+  if (getErrorCondition() < 0 )
+  {
+    return;
+  }
 
   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
   {
@@ -120,17 +105,24 @@ void AlignSections::execute()
   notify("AlignSections Completed", 0, Observable::UpdateProgressMessage);
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void AlignSections::align_sections()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    setErrorMessage("AlignSections::align_sections() - m pointer was NULL");
+    return;
+  }
   float disorientation = 0;
   float mindisorientation = 100000000;
-//  float **mutualinfo12;
-//  float *mutualinfo1;
-//  float *mutualinfo2;
+  float **mutualinfo12 = NULL;
+  float *mutualinfo1 = NULL;
+  float *mutualinfo2 = NULL;
   int graincount1, graincount2;
   int newxshift = 0;
   int newyshift = 0;
@@ -150,23 +142,20 @@ void AlignSections::align_sections()
   int tempposition;
   Ebsd::CrystalStructure phase1, phase2;
 
-
-  Int2DArray shifts(boost::extents[m->zpoints][2]);
-//  int** shifts = new int *[m->zpoints];
+  int** shifts = AlignSections::Allocate2DArray<int>(m->zpoints, 2);
   for (int a = 0; a < m->zpoints; a++)
   {
- //   shifts[a] = new int[2];
     for (int b = 0; b < 2; b++)
     {
       shifts[a][b] = 0;
     }
   }
 
-  Int2DArray misorients(boost::extents[m->xpoints][m->ypoints]);
-//  int** misorients = new int *[m->xpoints];
+  int** misorients = AlignSections::Allocate2DArray<int>(m->xpoints, m->ypoints);
+ // int** misorients = new int *[m->xpoints];
   for (int a = 0; a < m->xpoints; a++)
   {
-  //  misorients[a] = new int[m->ypoints];
+//    misorients[a] = new int[m->ypoints];
     for (int b = 0; b < m->ypoints; b++)
     {
       misorients[a][b] = 0;
@@ -174,11 +163,6 @@ void AlignSections::align_sections()
   }
   for (int iter = 1; iter < m->zpoints; iter++)
   {
-    Float1DArray mutualinfo1;
-    Float1DArray mutualinfo2;
-    Float2DArray mutualinfo12;
-    typedef Float1DArray::index Float1DIndex;
-    typedef Float2DArray::index Float2DIndex;
 
     mindisorientation = 100000000;
     slice = (m->zpoints - 1) - iter;
@@ -186,19 +170,16 @@ void AlignSections::align_sections()
     {
       graincount1 = graincounts[slice];
       graincount2 = graincounts[slice + 1];
+      mutualinfo12 = AlignSections::Allocate2DArray<float>(graincount1, graincount2);
 //      mutualinfo12 = new float *[graincount1];
-//      mutualinfo1 = new float[graincount1];
-//      mutualinfo2 = new float[graincount2];
+      mutualinfo1 = new float[graincount1];
+      mutualinfo2 = new float[graincount2];
 
-      mutualinfo1 = Float1DArray(boost::extents[graincount1]);
-      mutualinfo2 = Float1DArray(boost::extents[graincount2]);
-      mutualinfo12 = Float2DArray(boost::extents[graincount1][graincount2]);
-
-      for (Float1DIndex a = 0; a < graincount1; a++)
+      for (int a = 0; a < graincount1; a++)
       {
         mutualinfo1[a] = 0.0f;
       //  mutualinfo12[a] = new float[graincount2];
-        for (Float1DIndex b = 0; b < graincount2; b++)
+        for (int b = 0; b < graincount2; b++)
         {
           mutualinfo12[a][b] = 0.0f;
           mutualinfo2[b] = 0.0f;
@@ -341,6 +322,15 @@ void AlignSections::align_sections()
     }
     shifts[iter][0] = shifts[iter - 1][0] + newxshift;
     shifts[iter][1] = shifts[iter - 1][1] + newyshift;
+    if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
+    {
+      AlignSections::Deallocate2DArray<float>(graincount1, graincount2, mutualinfo12);
+      delete [] mutualinfo1;
+      delete [] mutualinfo2;
+      mutualinfo1 = NULL;
+      mutualinfo2 = NULL;
+      mutualinfo12 = NULL;
+    }
   }
   for (int iter = 1; iter < m->zpoints; iter++)
   {
@@ -389,17 +379,24 @@ void AlignSections::align_sections()
     }
   }
 
+
+#if 1
+  Deallocate2DArray(m->zpoints, 2, shifts);
+  Deallocate2DArray(m->xpoints, m->ypoints, misorients);
+
+#else
   // Clean up the memory
-//  for (int a = 0; a < m->zpoints; a++)
-//  {
-//    delete[] shifts[a];
-//  }
-//  for (int a = 0; a < m->xpoints; a++)
-//  {
-//    delete[] misorients[a];
-//  }
-//  delete[] shifts;
-//  delete[] misorients;
+  for (int a = 0; a < m->zpoints; a++)
+  {
+    delete[] shifts[a];
+  }
+  for (int a = 0; a < m->xpoints; a++)
+  {
+    delete[] misorients[a];
+  }
+  delete[] shifts;
+  delete[] misorients;
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -430,7 +427,7 @@ void AlignSections::form_grains_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  graincounts = Int1DArray(boost::extents[m->zpoints]);
+  graincounts = m_GrainCounts->WritePointer(0, m->zpoints);
 
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   int neighpoints[8];
