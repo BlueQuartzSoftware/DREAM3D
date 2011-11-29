@@ -40,26 +40,13 @@
 #include <vector>
 #include <string>
 
-// Defining this for Release builds will disable the range checking feature.
-#ifndef DEBUG
-#define BOOST_DISABLE_ASSERTS
-#endif
-#include <boost/multi_array.hpp>
-
-typedef boost::multi_array<int, 1> Int1DArray;
-typedef boost::multi_array<float, 1> Float1DArray;
-
-typedef boost::multi_array<int, 2> Int2DArray;
-typedef boost::multi_array<float, 2> Float2DArray;
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
-#define     DREAM3D_DECLARE_ARRAY(ptr, prpty, type)\
+#define     DREAM3D_DECLARE_ARRAY(type, ptr, prpty )\
     private:\
       AIMArray<type>::Pointer m_##prpty;\
       type* ptr;\
@@ -87,7 +74,7 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, alignmeth)
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance)
-
+    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
@@ -105,15 +92,35 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
-
     std::vector<OrientationMath*> m_OrientationOps;
 
     unsigned long long int Seed;
 
-    Int1DArray graincounts;
-
     AlignSections(const AlignSections&); // Copy Constructor Not Implemented
     void operator=(const AlignSections&); // Operator '=' Not Implemented
+
+
+    template<typename T>
+    T** Allocate2DArray(size_t rows, size_t cols)
+    {
+      T** var = new T*[rows];
+      for(size_t i = 0; i < rows; ++i)
+      {
+        var[i] = new T[cols];
+      }
+      return var;
+    }
+
+    template<typename T>
+    void Deallocate2DArray(size_t rows, size_t cols, T** array)
+    {
+      for(size_t i = 0; i < rows; ++i)
+      {
+        delete array[i];
+      }
+      delete [] array;
+    }
+
 };
 
 #endif /* ALIGNSECTIONS_H_ */
