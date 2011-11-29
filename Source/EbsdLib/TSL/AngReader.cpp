@@ -567,9 +567,9 @@ void AngReader::transformData()
        offset = (adjustedrow*xCells)+(adjustedcol);
        if(getAlignEulers() == true)
 	   {
-		   if (p1[i] - M_PI_2 < 0.0)
+		   if (p1[i] - M_PI_2 < 0.0f)
 		   {
-			  p1[i] = p1[i] + M_PI_2*3.0;
+			  p1[i] = p1[i] + M_PI_2*3.0f;
 		   }
 		   else
 		   {
