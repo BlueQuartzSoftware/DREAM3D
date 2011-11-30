@@ -68,7 +68,6 @@ MatchCrystallography::MatchCrystallography()
 
   totalsurfacearea = NULL;
   INIT_AIMARRAY(m_TotalSurfaceArea, float);
-
 }
 
 // -----------------------------------------------------------------------------

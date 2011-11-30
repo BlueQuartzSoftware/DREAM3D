@@ -75,8 +75,6 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, ZStar, Ebsd::Ang::ZStar)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<AngPhase::Pointer>, PhaseVector)
-
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, Grid, Ebsd::Ang::Grid)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStep, Ebsd::Ang::XStep)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStep, Ebsd::Ang::YStep)
@@ -87,9 +85,9 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, SampleID, Ebsd::Ang::SampleId)
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, ScanID, Ebsd::Ang::ScanId)
 
-    /** @brief Get a pointer to the Phi1 data. Note that this array WILL be deleted
-    * when this object is deleted. Most programs should copy the data from the array
-    * into their own array storage. */
+    EBSD_INSTANCE_PROPERTY(std::vector<AngPhase::Pointer>, PhaseVector)
+
+
     EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
     EBSD_POINTER_PROPERTY(Phi, Phi, float)
     EBSD_POINTER_PROPERTY(Phi2, Phi2, float)
