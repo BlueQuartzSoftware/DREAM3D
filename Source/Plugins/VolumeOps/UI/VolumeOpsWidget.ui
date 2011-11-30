@@ -513,7 +513,7 @@ font-size: 10px;
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLabel" name="m_XRes">
+         <widget class="QLabel" name="m_File_XRes">
           <property name="font">
            <font>
             <pointsize>-1</pointsize>
@@ -527,7 +527,7 @@ font-size: 10px;
 }</string>
           </property>
           <property name="text">
-           <string>0.2500</string>
+           <string>Unknown</string>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -558,7 +558,7 @@ font-size: 10px;
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="m_YRes">
+         <widget class="QLabel" name="m_File_YRes">
           <property name="font">
            <font>
             <pointsize>-1</pointsize>
@@ -572,7 +572,7 @@ font-size: 10px;
 }</string>
           </property>
           <property name="text">
-           <string>0</string>
+           <string>Unknown</string>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -600,7 +600,7 @@ font-size: 10px;
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="m_ZRes">
+         <widget class="QLabel" name="m_File_ZRes">
           <property name="font">
            <font>
             <pointsize>-1</pointsize>
@@ -614,7 +614,7 @@ font-size: 10px;
 }</string>
           </property>
           <property name="text">
-           <string>0.0</string>
+           <string>Unknown</string>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -658,7 +658,7 @@ font-size: 10px;
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLabel" name="m_XDim">
+         <widget class="QLabel" name="m_File_XDim">
           <property name="font">
            <font>
             <pointsize>-1</pointsize>
@@ -672,7 +672,7 @@ font-size: 10px;
 }</string>
           </property>
           <property name="text">
-           <string>1000</string>
+           <string>Unknown</string>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -703,7 +703,7 @@ font-size: 10px;
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="m_YDim">
+         <widget class="QLabel" name="m_File_YDim">
           <property name="font">
            <font>
             <pointsize>-1</pointsize>
@@ -717,7 +717,7 @@ font-size: 10px;
 }</string>
           </property>
           <property name="text">
-           <string>0</string>
+           <string>Unknown</string>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -748,7 +748,7 @@ font-size: 10px;
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="m_ZDim">
+         <widget class="QLabel" name="m_File_ZDim">
           <property name="font">
            <font>
             <pointsize>-1</pointsize>
@@ -762,7 +762,7 @@ font-size: 10px;
 }</string>
           </property>
           <property name="text">
-           <string>0</string>
+           <string>Unknown</string>
           </property>
           <property name="scaledContents">
            <bool>true</bool>

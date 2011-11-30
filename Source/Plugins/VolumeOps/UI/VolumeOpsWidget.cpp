@@ -253,12 +253,12 @@ void VolumeOpsWidget::on_m_InputFile_textChanged(const QString &text)
     if (err >= 0)
     {
       // These are the values from the data file and are displayed to the user
-      m_XDim->setText(QString::number(dims[0]));
-      m_YDim->setText(QString::number(dims[1]));
-      m_ZDim->setText(QString::number(dims[2]));
-      m_XRes->setText(QString::number(spacing[0]));
-      m_YRes->setText(QString::number(spacing[1]));
-      m_ZRes->setText(QString::number(spacing[2]));
+      m_File_XDim->setText(QString::number(dims[0]));
+      m_File_YDim->setText(QString::number(dims[1]));
+      m_File_ZDim->setText(QString::number(dims[2]));
+      m_File_XRes->setText(QString::number(spacing[0]));
+      m_File_YRes->setText(QString::number(spacing[1]));
+      m_File_ZRes->setText(QString::number(spacing[2]));
 
       // These are the new values that the user wants to use.
       m_XMin->setValue(0);
