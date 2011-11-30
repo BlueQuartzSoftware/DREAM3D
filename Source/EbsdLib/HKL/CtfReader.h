@@ -71,7 +71,6 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 
     EBSD_TYPE_MACRO_SUPER(CtfReader, EbsdReader)
 
-
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ebsd::Ctf::ChannelTextFile)
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
@@ -93,7 +92,6 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, NumPhases, Ebsd::Ctf::NumPhases)
 
     EBSD_INSTANCE_PROPERTY(std::vector<CtfPhase::Pointer>, PhaseVector)
-
 
     EBSD_POINTER_PROPERTY(Phase, Phase, int)
     EBSD_POINTER_PROPERTY(X, X, float)

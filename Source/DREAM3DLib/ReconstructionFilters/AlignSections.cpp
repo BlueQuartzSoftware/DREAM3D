@@ -68,8 +68,10 @@ AlignSections::AlignSections()
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
+
   graincounts = NULL;
   INIT_AIMARRAY(m_GrainCounts, int);
+
 }
 
 // -----------------------------------------------------------------------------
