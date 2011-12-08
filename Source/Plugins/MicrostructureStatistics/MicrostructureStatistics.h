@@ -46,7 +46,6 @@
 #include "MXA/MXA.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "MicrostructureStatisticsFunc.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 

@@ -133,15 +133,6 @@ void MicrostructureStatistics::execute()
 	  err = find_sizes->getErrorCondition();
 	  CHECK_FOR_ERROR(DataContainer, "Error Determining Grain Sizes", err);
 	  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled",  find_sizes)
-
-	  updateProgressAndMessage(("Determining Bounding Box"), 28);
-	  FindBoundingBoxGrains::Pointer find_boundingboxgrains = FindBoundingBoxGrains::New();
-	  find_boundingboxgrains->addObserver(static_cast<Observer*>(this));
-	  find_boundingboxgrains->setDataContainer(m.get());
-	  find_boundingboxgrains->execute();
-	  err = find_boundingboxgrains->getErrorCondition();
-	  CHECK_FOR_ERROR(DataContainer, "Error Determining the Bounding Box", err);
-	  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled",  find_boundingboxgrains)
   }
 
   if(m_ComputeGrainShapes == true)
@@ -154,6 +145,15 @@ void MicrostructureStatistics::execute()
 	  err = find_shapes->getErrorCondition();
 	  CHECK_FOR_ERROR(DataContainer, "Error Finding Grain Shapes", err);
 	  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled",  find_shapes)
+
+	  updateProgressAndMessage(("Determining Bounding Box"), 28);
+	  FindBoundingBoxGrains::Pointer find_boundingboxgrains = FindBoundingBoxGrains::New();
+	  find_boundingboxgrains->addObserver(static_cast<Observer*>(this));
+	  find_boundingboxgrains->setDataContainer(m.get());
+	  find_boundingboxgrains->execute();
+	  err = find_boundingboxgrains->getErrorCondition();
+	  CHECK_FOR_ERROR(DataContainer, "Error Determining the Bounding Box", err);
+	  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled",  find_boundingboxgrains)
   }
 
   if(m_ComputeNumNeighbors == true)

@@ -86,6 +86,8 @@ void LoadVolume::execute()
   m->resz = spacing[2];
   initializeAttributes();
   err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalpoints);
+  m->phasefraction.resize(m->crystruct.size());
+  m->pptFractions.resize(m->crystruct.size());
   initializeGrains();
 
   notify("LoadVolume Completed", 0, Observable::UpdateProgressMessage);
@@ -158,12 +160,17 @@ void LoadVolume::initializeAttributes()
   m->euler1s = m->m_Euler1s->WritePointer(0, m->totalpoints);
   m->euler2s = m->m_Euler2s->WritePointer(0, m->totalpoints);
   m->euler3s = m->m_Euler3s->WritePointer(0, m->totalpoints);
+  m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(0, m->totalpoints);
+  m->neighbors = m->m_Neighbors->WritePointer(0, m->totalpoints);
   for (int i = 0; i < m->totalpoints; ++i)
   {
     m->euler1s[i] = -1.0f;
     m->euler2s[i] = -1.0f;
     m->euler3s[i] = -1.0f;
+	m->neighbors[i] = -1.0f;
   }
+  m->quats = m->m_Quats->WritePointer(0, m->totalpoints*5);
+  m->m_Quats->SetNumberOfComponents(5);
 }
 
 
