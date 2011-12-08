@@ -204,7 +204,7 @@ void SegmentGrains::form_grains()
         m->m_Grains.resize(m->m_Grains.size() + 100);
         for (size_t g = oldSize; g < m->m_Grains.size(); ++g)
         {
-          m->m_Grains[g] = Grain::New();
+          m->m_Grains[g] = Field::New();
         }
       }
       voxelslist.clear();

@@ -298,7 +298,7 @@ void MatchCrystallography::assign_eulers()
     m->m_Grains[i]->avg_quat[2] = q[2];
     m->m_Grains[i]->avg_quat[3] = q[3];
     m->m_Grains[i]->avg_quat[4] = q[4];
-    if (m->m_Grains[i]->surfacegrain == 0)
+    if (m->m_Grains[i]->surfacefield == 0)
     {
       simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
       unbiasedvol[phase] = unbiasedvol[phase] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
@@ -414,7 +414,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
     selectedgrain1 = int(rg.genrand_res53() * m->m_Grains.size());
     if (selectedgrain1 == 0) selectedgrain1 = 1;
     if (selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
-    if (m->m_Grains[selectedgrain1]->surfacegrain > 0) good = 0;
+    if (m->m_Grains[selectedgrain1]->surfacefield > 0) good = 0;
   }
 
   ea1 = m->m_Grains[selectedgrain1]->euler1;
@@ -520,7 +520,7 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
     selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
     if (selectedgrain2 == 0) selectedgrain2 = 1;
     if (selectedgrain2 == m->m_Grains.size()) selectedgrain2 = m->m_Grains.size() - 1;
-    if (m->m_Grains[selectedgrain1]->surfacegrain > 0 || m->m_Grains[selectedgrain2]->surfacegrain > 0) good = 0;
+    if (m->m_Grains[selectedgrain1]->surfacefield > 0 || m->m_Grains[selectedgrain2]->surfacefield > 0) good = 0;
   }
   g1ea1 = m->m_Grains[selectedgrain1]->euler1;
   g1ea2 = m->m_Grains[selectedgrain1]->euler2;
@@ -773,7 +773,7 @@ void  MatchCrystallography::measure_misorientations ()
                                                 m->m_Grains[i]->misorientationlist->at(3 * j + 2));
       }
 
-      if (m->m_Grains[i]->surfacegrain == 0 && (nname > i || m->m_Grains[nname]->surfacegrain == 1) && phase1 == phase2)
+      if (m->m_Grains[i]->surfacefield == 0 && (nname > i || m->m_Grains[nname]->surfacefield == 1) && phase1 == phase2)
       {
         simmdf[m->m_Grains[i]->phase][mbin] = simmdf[m->m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m->m_Grains[i]->phase]);
       }

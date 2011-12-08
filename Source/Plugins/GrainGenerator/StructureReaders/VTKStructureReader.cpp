@@ -178,7 +178,7 @@ int VTKStructureReader::readStructure(DataContainer* m)
       for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter)
       {
         //int gid = (*iter).first;
-        m->m_Grains[g] = Grain::New();
+        m->m_Grains[g] = Field::New();
         m->m_Grains[g]->numvoxels = (*iter).second;
         m->m_Grains[g]->active = 1;
         ++g;

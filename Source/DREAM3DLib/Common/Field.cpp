@@ -34,22 +34,22 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "Grain.h"
+#include "Field.h"
 #include <iostream>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Grain::Grain() :
+Field::Field() :
 nucleus(0),
 active(false),
 numvoxels(0),
 numneighbors(0),
-newgrainname(0),
+newfieldname(0),
 gotcontainedmerged(false),
 gottwinmerged(false),
 gotcolonymerged(false),
-surfacegrain(false),
+surfacefield(false),
 outsideboundbox(false),
 twinnewnumber(-1),
 colonynewnumber(-1),
@@ -129,7 +129,7 @@ packquality(0.0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Grain::~Grain()
+Field::~Field()
 {
 #if CORRUPT_TEST
   CORRUPT_TEST_OUTPUT(test0);
@@ -154,55 +154,55 @@ Grain::~Grain()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Grain::deepCopy(Grain::Pointer grain)
+void Field::deepCopy(Field::Pointer field)
 {
-  if (grain.get() == this) { return; } // The pointers are the same just return
-  nucleus = grain->nucleus;
-  active = grain->active ;
-  numvoxels = grain->numvoxels ;
-  numneighbors = grain->numneighbors ;
-  newgrainname = grain->newgrainname ;
-  gotcontainedmerged = grain->gotcontainedmerged ;
-  gottwinmerged = grain->gottwinmerged ;
-  gotcolonymerged = grain->gotcolonymerged ;
-  surfacegrain = grain->surfacegrain ;
-  twinnewnumber = grain->twinnewnumber;
-  colonynewnumber = grain->colonynewnumber;
-  slipsystem = grain->slipsystem;
+  if (field.get() == this) { return; } // The pointers are the same just return
+  nucleus = field->nucleus;
+  active = field->active ;
+  numvoxels = field->numvoxels ;
+  numneighbors = field->numneighbors ;
+  newfieldname = field->newfieldname ;
+  gotcontainedmerged = field->gotcontainedmerged ;
+  gottwinmerged = field->gottwinmerged ;
+  gotcolonymerged = field->gotcolonymerged ;
+  surfacefield = field->surfacefield ;
+  twinnewnumber = field->twinnewnumber;
+  colonynewnumber = field->colonynewnumber;
+  slipsystem = field->slipsystem;
 
-  centroidx = grain->centroidx ;
-  centroidy = grain->centroidy ;
-  centroidz = grain->centroidz ;
-  Ixx = grain->Ixx ;
-  Iyy = grain->Iyy ;
-  Izz = grain->Izz ;
-  Ixy = grain->Ixy;
-  Iyz = grain->Iyz ;
-  Ixz = grain->Ixz ;
-  omega3 = grain->omega3 ;
-  averageimagequality = grain->averageimagequality;
-  averagemisorientation = grain->averagemisorientation ;
-  kernelmisorientation = grain->kernelmisorientation;
-  red = grain->red ;
-  green = grain->green ;
-  blue = grain->blue ;
+  centroidx = field->centroidx ;
+  centroidy = field->centroidy ;
+  centroidz = field->centroidz ;
+  Ixx = field->Ixx ;
+  Iyy = field->Iyy ;
+  Izz = field->Izz ;
+  Ixy = field->Ixy;
+  Iyz = field->Iyz ;
+  Ixz = field->Ixz ;
+  omega3 = field->omega3 ;
+  averageimagequality = field->averageimagequality;
+  averagemisorientation = field->averagemisorientation ;
+  kernelmisorientation = field->kernelmisorientation;
+  red = field->red ;
+  green = field->green ;
+  blue = field->blue ;
 
-  COPY_ARRAY_3(IPF, grain);
-  schmidfactor = grain->schmidfactor ;
-  euler1 = grain->euler1 ;
-  euler2 = grain->euler2 ;
-  euler3 = grain->euler3 ;
-  axiseuler1 = grain->axiseuler1 ;
-  axiseuler2 = grain->axiseuler2 ;
-  axiseuler3 = grain->axiseuler3 ;
-  volume = grain->volume ;
-  equivdiameter = grain->equivdiameter ;
-  radius1 = grain->radius1 ;
-  radius2 = grain->radius2 ;
-  radius3 = grain->radius3 ;
-  packquality = grain->packquality;
-  COPY_ARRAY_5(avg_quat, grain);
-  COPY_ARRAY_3(neighbordistfunc, grain);
+  COPY_ARRAY_3(IPF, field);
+  schmidfactor = field->schmidfactor ;
+  euler1 = field->euler1 ;
+  euler2 = field->euler2 ;
+  euler3 = field->euler3 ;
+  axiseuler1 = field->axiseuler1 ;
+  axiseuler2 = field->axiseuler2 ;
+  axiseuler3 = field->axiseuler3 ;
+  volume = field->volume ;
+  equivdiameter = field->equivdiameter ;
+  radius1 = field->radius1 ;
+  radius2 = field->radius2 ;
+  radius3 = field->radius3 ;
+  packquality = field->packquality;
+  COPY_ARRAY_5(avg_quat, field);
+  COPY_ARRAY_3(neighbordistfunc, field);
 
 
   // These are Normal pointers
@@ -214,13 +214,13 @@ void Grain::deepCopy(Grain::Pointer grain)
   DELETE_VECTOR_POINTER(neighborlist)
   DELETE_VECTOR_POINTER(neighborsurfacealist)
 
-  COPY_VECTOR_POINTER(grain->voxellist, voxellist, int)
-  COPY_VECTOR_POINTER(grain->columnlist, columnlist, int)
-  COPY_VECTOR_POINTER(grain->rowlist, rowlist, int)
-  COPY_VECTOR_POINTER(grain->planelist, planelist, int)
-  COPY_VECTOR_POINTER(grain->misorientationlist, misorientationlist, float)
-  COPY_VECTOR_POINTER(grain->neighborlist, neighborlist, int)
-  COPY_VECTOR_POINTER(grain->neighborsurfacealist, neighborsurfacealist, float)
+  COPY_VECTOR_POINTER(field->voxellist, voxellist, int)
+  COPY_VECTOR_POINTER(field->columnlist, columnlist, int)
+  COPY_VECTOR_POINTER(field->rowlist, rowlist, int)
+  COPY_VECTOR_POINTER(field->planelist, planelist, int)
+  COPY_VECTOR_POINTER(field->misorientationlist, misorientationlist, float)
+  COPY_VECTOR_POINTER(field->neighborlist, neighborlist, int)
+  COPY_VECTOR_POINTER(field->neighborsurfacealist, neighborsurfacealist, float)
 
 }
 

@@ -48,7 +48,7 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/AIMArray.hpp"
-#include "DREAM3DLib/Common/Grain.h"
+#include "DREAM3DLib/Common/Field.h"
 #include "Reconstruction/Reconstruction.h"
 
 

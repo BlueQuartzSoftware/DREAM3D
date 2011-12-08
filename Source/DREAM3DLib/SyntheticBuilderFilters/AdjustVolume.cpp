@@ -131,7 +131,7 @@ void AdjustVolume::adjust_boundaries()
       selectedgrain = int(rg.genrand_res53() * m->m_Grains.size());
       if (selectedgrain >= m->m_Grains.size()) selectedgrain = m->m_Grains.size()-1;
       if (selectedgrain == 0) selectedgrain = 1;
-      if (m->m_Grains[selectedgrain]->surfacegrain > 0) good = 0;
+      if (m->m_Grains[selectedgrain]->surfacefield > 0) good = 0;
     }
     growth = 1;
     random = rg.genrand_res53();

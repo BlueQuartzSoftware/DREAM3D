@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2009, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2009, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,69 +34,49 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef FINDEUCLIDEANDISTMAP_H_
+#define FINDEUCLIDEANDISTMAP_H_
+
+#include <vector>
+#include <string>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
-// C Includes
-
-// C++ Includes
-#include <iostream>
-#include <fstream>
-
-// EbsdLib Includes
-#include "EbsdLib/EbsdConstants.h"
-
-// DREAM3D Includes
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::DataContainer()
+/**
+ * @class FindEuclideanDistMap FindEuclideanDistMap.h DREAM3DLib/GenericFilters/FindEuclideanDistMap.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 {
-  grain_indicies = NULL;
-  ellipfuncs = NULL;
-  phases = NULL;
-  euler1s = NULL;
-  euler2s = NULL;
-  euler3s = NULL;
-  surfacevoxels = NULL;
-  quats = NULL;
-  alreadychecked = NULL;
-  neighbors = NULL;
-  goodVoxels = NULL;
-  nearestgrains = NULL;
-  nearestneighbors = NULL;
-  nearestneighbordistances = NULL;
-  grainmisorientations = NULL;
-  misorientationgradients = NULL;
-  kernelmisorientations = NULL;
+  public:
+    DREAM3D_SHARED_POINTERS(FindEuclideanDistMap);
+    DREAM3D_STATIC_NEW_MACRO(FindEuclideanDistMap);
+    DREAM3D_TYPE_MACRO_SUPER(FindEuclideanDistMap, AbstractFilter);
 
-  INIT_AIMARRAY(m_GrainIndicies,int);
-  INIT_AIMARRAY(m_Ellipfuncs,float);
-  INIT_AIMARRAY(m_Phases,int);
-  INIT_AIMARRAY(m_Euler1s,float);
-  INIT_AIMARRAY(m_Euler2s,float);
-  INIT_AIMARRAY(m_Euler3s,float);
-  INIT_AIMARRAY(m_SurfaceVoxels,char);
-  INIT_AIMARRAY(m_Neighbors,int);
-  INIT_AIMARRAY(m_GoodVoxels,bool);
-  INIT_AIMARRAY(m_Quats,float);
-  INIT_AIMARRAY(m_AlreadyChecked,bool);
-  INIT_AIMARRAY(m_NearestGrains,int);
-  INIT_AIMARRAY(m_NearestNeighbors,int);
-  INIT_AIMARRAY(m_NearestNeighborDistances,float);
-  INIT_AIMARRAY(m_GrainMisorientations,float);
-  INIT_AIMARRAY(m_MisorientationGradients,float);
-  INIT_AIMARRAY(m_KernelMisorientations,float);
-}
+    virtual ~FindEuclideanDistMap();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::~DataContainer()
-{
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
 
-}
+    void find_euclideandistmap();
+
+
+  protected:
+    FindEuclideanDistMap();
+
+  private:
+
+
+    FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
+    void operator=(const FindEuclideanDistMap&); // Operator '=' Not Implemented
+};
+
+#endif /* FINDEUCLIDEANDISTMAP_H_ */

@@ -189,7 +189,7 @@ void PackGrainsGen2::execute()
   int gid = 1;
   float currentvol = 0.0;
   m->m_Grains.resize(2);
-  m->m_Grains[1] = Grain::New();
+  m->m_Grains[1] = Field::New();
   float factor = 1.0;
   float iter = 0;
   while (currentvol < (factor * totalvol))
@@ -215,7 +215,7 @@ void PackGrainsGen2::execute()
        currentvol = currentvol + m->m_Grains[gid]->volume;
        gid++;
        m->m_Grains.resize(gid + 1);
-       m->m_Grains[gid] = Grain::New();
+       m->m_Grains[gid] = Field::New();
      iter = 0;
     }
   }
@@ -250,7 +250,7 @@ void PackGrainsGen2::execute()
        currentvol = currentvol + m->m_Grains[gid]->volume;
        gid++;
        m->m_Grains.resize(gid + 1);
-       m->m_Grains[gid] = Grain::New();
+       m->m_Grains[gid] = Field::New();
        iter = 0;
     }
     }

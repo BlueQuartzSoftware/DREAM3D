@@ -45,14 +45,14 @@
 #include "tbb/task_group.h"
 #endif
 
-#include "MicrostructureStatisticsFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include <vector>
 
 #if AIM_USE_PARALLEL_ALGORITHMS
 class ParallelRenumberGrains
 {
-    const ReconstructionFunc* d;
+    const DataContainer* d;
 
   public:
     void operator()(const tbb::blocked_range<size_t>& r) const
@@ -69,7 +69,7 @@ class ParallelRenumberGrains
 
       }
     }
-    ParallelRenumberGrains(ReconstructionFunc* recon) :
+    ParallelRenumberGrains(DataContainer* recon) :
       d(recon)
     {
     }
@@ -81,7 +81,7 @@ class FindEuclideanMap
 	//FIX ME - why are const causing problems
 //    const MicrostructureStatisticsFunc* d;
 //    const int loop;
-    MicrostructureStatisticsFunc* d;
+    DataContainer* d;
     int loop;
 
   public:
@@ -89,8 +89,8 @@ class FindEuclideanMap
      *
      * @param recon
      */
-    FindEuclideanMap(MicrostructureStatisticsFunc* microstats, int l) :
-      d(microstats),
+    FindEuclideanMap(DataContainer* datacontainer, int l) :
+      d(datacontainer),
       loop (l)
     {}
 

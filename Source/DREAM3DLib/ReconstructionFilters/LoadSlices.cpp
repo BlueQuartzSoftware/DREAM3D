@@ -216,7 +216,7 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
   m->m_Grains.resize(numgrains + 1);
   for(size_t g = oldSize; g < m->m_Grains.size(); ++g)
   {
-    m->m_Grains[g] = Grain::New();
+    m->m_Grains[g] = Field::New();
   }
 
   m->grain_indicies = m->m_GrainIndicies->WritePointer(0, m->totalpoints);

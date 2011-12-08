@@ -409,7 +409,7 @@ void  PlacePrecipitates::place_precipitates()
       }
     }
   m->m_Grains.resize(currentnumgrains+1);
-  m->m_Grains[currentnumgrains] = Grain::New();
+  m->m_Grains[currentnumgrains] = Field::New();
   packGrains->generate_grain(currentnumgrains, phase);
   precipboundaryfraction = m->pptFractions[phase];
   random = rg.genrand_res53();

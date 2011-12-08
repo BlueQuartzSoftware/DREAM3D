@@ -53,7 +53,7 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
-#include "DREAM3DLib/GenericFilters/WriteGrainData.h"
+#include "DREAM3DLib/GenericFilters/WriteFieldData.h"
 
 
 
@@ -200,17 +200,17 @@ void GrainGenerator::execute()
     CHECK_FOR_ERROR(DataContainer, "Error Matching Crystallography", err)
     CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", match_crystallography)
 
-  MAKE_OUTPUT_FILE_PATH ( GrainDataFile , DREAM3D::SyntheticBuilder::GrainDataFile)
+  MAKE_OUTPUT_FILE_PATH ( FieldDataFile , DREAM3D::SyntheticBuilder::GrainDataFile)
 
-    updateProgressAndMessage(("Writing Grain Data"), 90);
-	WriteGrainData::Pointer write_graindata = WriteGrainData::New();
-	write_graindata->setGrainDataFile(GrainDataFile);
-    write_graindata->addObserver(static_cast<Observer*>(this));
-    write_graindata->setDataContainer(m.get());
-    write_graindata->execute();
-    err = write_graindata->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Writing Grain Data", err)
-    CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", write_graindata)
+    updateProgressAndMessage(("Writing Field Data"), 90);
+	WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
+	write_fielddata->setFieldDataFile(FieldDataFile);
+    write_fielddata->addObserver(static_cast<Observer*>(this));
+    write_fielddata->setDataContainer(m.get());
+    write_fielddata->execute();
+    err = write_fielddata->getErrorCondition();
+    CHECK_FOR_ERROR(DataContainer, "Error Writing Field Data", err)
+    CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", write_fielddata)
 
   /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way

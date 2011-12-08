@@ -50,6 +50,8 @@
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 
+#include "DREAM3DLib/Common/DataContainer.h"
+
 /**
 * @class MicrostructureStatistics MicrostructureStatistics AIM/MicrostructureStatistics.h/MicrostructureStatistics.h
 * @brief This class serves as the main entry point to execute the Microstructure Statistics codes
@@ -117,7 +119,7 @@ class MicrostructureStatistics  : public AbstractPipeline, public Observer
 
 
   private:
-    MicrostructureStatisticsFunc::Pointer m;
+    DataContainer::Pointer m;
     std::map<std::string, bool> m_CalcStats;
 
 
