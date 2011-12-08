@@ -34,71 +34,99 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "WriteGrainData.h"
+#include "FindSizes.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "WriteGrainData.h"
 
 const static float m_pi = M_PI;
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteGrainData::WriteGrainData()
+FindSizes::FindSizes()
 {
-
+  graincounts = NULL;
+  INIT_AIMARRAY(m_GrainCounts,float);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteGrainData::~WriteGrainData()
+FindSizes::~FindSizes()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteGrainData::execute()
-{
-  setErrorCondition(0);
-  write_graindata(getGrainDataFile());
-
-  // If there is an error set this to something negative and also set a message
-  notify("WriteGrainData Completed", 0, Observable::UpdateProgressMessage);
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void WriteGrainData::write_graindata(const std::string &filename)
+void FindSizes::execute()
 {
   DataContainer* m = getDataContainer();
-  std::ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
-  char space = DREAM3D::GrainData::Delimiter;
-  outFile << m->m_Grains.size()-1 << std::endl;
-  outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
-      << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
-      << DREAM3D::GrainData::EquivDiam << space
-      << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3 << std::endl;
+  setErrorCondition(0);
 
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
-  {
-	  outFile << i << space << m->m_Grains[i]->phase << space << m->m_Grains[i]->euler1 << space << m->m_Grains[i]->euler2 << space << m->m_Grains[i]->euler3 <<
-		space << m->m_Grains[i]->equivdiameter << space << m->m_Grains[i]->radius2 << space << m->m_Grains[i]->radius3 <<
-		space << m->m_Grains[i]->omega3 << std::endl;
-  }
-  outFile.close();
+  if(m->zpoints > 1) find_sizes();
+  if(m->zpoints == 1) find_sizes2D();
+  notify("FindSizes Completed", 0, Observable::UpdateProgressMessage);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindSizes::find_sizes()
+{
+  DataContainer* m = getDataContainer();
+  float radcubed;
+  float diameter;
+  size_t numgrains = m->m_Grains.size();
+  graincounts = m_GrainCounts->WritePointer(0, numgrains);
 
+  // Initialize every element to 0.0
+  for (size_t i = 0; i < numgrains * 1; i++)
+  {
+    graincounts[i] = 0.0f;
+  }
+  for (int j = 0; j < m->totalpoints; j++)
+  {
+    int gnum = m->grain_indicies[j];
+    graincounts[gnum]++;
+  }
+  float res_scalar = m->resx * m->resy * m->resz;
+  float vol_term = (4.0/3.0)*m_pi;
+  for (size_t i = 1; i < numgrains; i++)
+  {
+    m->m_Grains[i]->numvoxels = graincounts[i];
+    m->m_Grains[i]->volume = (graincounts[i] * res_scalar);
+    radcubed = m->m_Grains[i]->volume/vol_term;
+    diameter = 2.0*powf(radcubed, 0.3333333333);
+    m->m_Grains[i]->equivdiameter = diameter;
+  }
+}
+void FindSizes::find_sizes2D()
+{
+  DataContainer* m = getDataContainer();
 
+  float radsquared;
+  float diameter;
+  size_t numgrains = m->m_Grains.size();
+  graincounts = m_GrainCounts->WritePointer(0, numgrains);
 
-
-
+  for (size_t i = 0; i < numgrains; i++)
+  {
+      graincounts[i] = 0.0f;
+  }
+  for (int j = 0; j < m->totalpoints; j++)
+  {
+    int gnum = m->grain_indicies[j];
+    graincounts[gnum]++;
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+    m->m_Grains[i]->numvoxels = graincounts[i];
+    m->m_Grains[i]->volume = (graincounts[i] * m->resx * m->resy);
+    radsquared = m->m_Grains[i]->volume / m_pi;
+    diameter = (2 * sqrt(radsquared));
+    m->m_Grains[i]->equivdiameter = diameter;
+  }
+}
 

@@ -125,11 +125,11 @@ void FindNeighbors::find_neighbors()
       plane = j / (m->xpoints * m->ypoints);
       if ((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1) || plane == 0 || plane == (m->zpoints - 1)) && m->zpoints != 1)
       {
-        m->m_Grains[grain]->surfacegrain = true;
+        m->m_Grains[grain]->surfacefield = true;
       }
       if ((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1)) && m->zpoints == 1)
       {
-        m->m_Grains[grain]->surfacegrain = true;
+        m->m_Grains[grain]->surfacefield = true;
       }
       for (int k = 0; k < 6; k++)
       {
@@ -185,7 +185,7 @@ void FindNeighbors::find_neighbors()
       int neigh = iter->first; // get the neighbor grain
       int number = iter->second; // get the number of voxels
       float area = number * m->resx * m->resy;
-      if (m->m_Grains[i]->surfacegrain == 0 && (neigh > i || m->m_Grains[neigh]->surfacegrain == 1))
+      if (m->m_Grains[i]->surfacefield == 0 && (neigh > i || m->m_Grains[neigh]->surfacefield == 1))
       {
         totalsurfacearea[phase] = totalsurfacearea[phase] + area;
       }

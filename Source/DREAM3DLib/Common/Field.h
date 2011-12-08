@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GRAINS_H_
-#define _GRAINS_H_
+#ifndef _FIELDS_H_
+#define _FIELDS_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -57,21 +57,21 @@
  * @date Nov 4, 2009
  * @version 1.0
  */
-class DREAM3DLib_EXPORT Grain
+class DREAM3DLib_EXPORT Field
 {
 
   public:
-    MXA_SHARED_POINTERS(Grain);
-    MXA_STATIC_NEW_MACRO(Grain);
-    MXA_TYPE_MACRO(Grain);
-    virtual ~Grain();
+    MXA_SHARED_POINTERS(Field);
+    MXA_STATIC_NEW_MACRO(Field);
+    MXA_TYPE_MACRO(Field);
+    virtual ~Field();
 
     /**
-     * @brief Performs a Depp copy of the Grain object by making copies of the contained
+     * @brief Performs a Depp copy of the Field object by making copies of the contained
      * data and not just copying the pointers to the data
-     * @param grain Another Grain object to copy from.
+     * @param grain Another Field object to copy from.
      */
-    void deepCopy(Grain::Pointer grain);
+    void deepCopy(Field::Pointer field);
 
     std::vector<int>* neighborlist;
 #if CORRUPT_TEST
@@ -106,11 +106,11 @@ class DREAM3DLib_EXPORT Grain
     bool active;
     int numvoxels;
     int numneighbors;
-    int newgrainname;
+    int newfieldname;
     bool gotcontainedmerged;
     bool gottwinmerged;
     bool gotcolonymerged;
-    uint8_t surfacegrain;
+    uint8_t surfacefield;
     bool outsideboundbox;
     int twinnewnumber;
     int colonynewnumber;
@@ -158,14 +158,14 @@ class DREAM3DLib_EXPORT Grain
 #endif
 
   protected:
-    Grain();
+    Field();
 
- //   Grain(const Grain&);
- //   Grain(Grain& grain);
+ //   Field(const Field&);
+ //   Field(Field& field);
 
   private:
-    Grain(const Grain&); // Copy Constructor Not Implemented
-    void operator=(const Grain&); // Operator '=' Not Implemented
+    Field(const Field&); // Copy Constructor Not Implemented
+    void operator=(const Field&); // Operator '=' Not Implemented
 };
 
-#endif /* GRAINS_H_ */
+#endif /* FIELDS_H_ */

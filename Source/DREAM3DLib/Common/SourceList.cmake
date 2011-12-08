@@ -20,7 +20,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/Grain.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Field.h
   ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
@@ -37,7 +37,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/Grain.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/Field.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp

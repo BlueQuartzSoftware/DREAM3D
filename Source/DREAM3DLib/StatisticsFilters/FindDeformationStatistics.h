@@ -33,12 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VolumeOpsFunc_H
-#define _VolumeOpsFunc_H
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#endif
+#ifndef FINDDEFORMATIONSTATISTICS_H_
+#define FINDDEFORMATIONSTATISTICS_H_
 
 #include <assert.h>
 #include <stdio.h>
@@ -55,97 +52,52 @@
 #include <algorithm>
 #include <numeric>
 
-#include <boost/shared_array.hpp>
-
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/Field.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
-
+#include "DREAM3DLib/Common/DataContainer.h"
 
 /**
- * @class VolumeOpsFunc VolumeOpsFunc.h AIM/Common/VolumeOpsFunc.h
- * @brief This class holds data associated with the pipeline for the VolumeOps
- * plugin.
+ * @class FindDeformationStatistics FindDeformationStatistics.h DREAM3DLib/GenericFilters/FindDeformationStatistics.h
+ * @brief
  * @author
- * @date
+ * @date Nov 19, 2011
  * @version 1.0
  */
-class VolumeOpsFunc
+class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 {
-public:
-    DREAM3D_SHARED_POINTERS(VolumeOpsFunc)
-    DREAM3D_TYPE_MACRO(VolumeOpsFunc)
-    DREAM3D_STATIC_NEW_MACRO(VolumeOpsFunc);
+  public:
+    DREAM3D_SHARED_POINTERS(FindDeformationStatistics);
+    DREAM3D_STATIC_NEW_MACRO(FindDeformationStatistics);
+    DREAM3D_TYPE_MACRO_SUPER(FindDeformationStatistics, AbstractFilter);
 
-    virtual ~VolumeOpsFunc();
+    virtual ~FindDeformationStatistics();
 
-//    typedef boost::shared_array<float>    SharedFloatArray;
-//    typedef boost::shared_array<int>      SharedIntArray;
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile1)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile2)
 
-    std::vector<Ebsd::CrystalStructure> crystruct;
-    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
+	/**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
 
-    DECLARE_WRAPPED_ARRAY(grain_indicies_old, m_GrainIndicies_old, int)
-    DECLARE_WRAPPED_ARRAY(phases_old, m_Phases_old, int);
-    DECLARE_WRAPPED_ARRAY(euler1s_old, m_Euler1s_old, float);
-    DECLARE_WRAPPED_ARRAY(euler2s_old, m_Euler2s_old, float);
-    DECLARE_WRAPPED_ARRAY(euler3s_old, m_Euler3s_old, float);
-    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
-    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
-    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
-    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
+	void find_deformationstatistics(const std::string &filename, const std::string &filename2);
 
-    float resx;
-    float resy;
-    float resz;
-    float resx_old;
-    float resy_old;
-    float resz_old;
-    float sizex;
-    float sizey;
-    float sizez;
-    float sizex_old;
-    float sizey_old;
-    float sizez_old;
-    int xpoints;
-    int ypoints;
-    int zpoints;
-    int xpoints_old;
-    int ypoints_old;
-    int zpoints_old;
-    int totalpoints;
-    int totalpoints_old;
-    float xstart;
-    float ystart;
-    float zstart;
+  protected:
+    FindDeformationStatistics();
 
-    void initialize();
-
-protected:
-    VolumeOpsFunc();
-
-
-
-private:
+  private:
     std::vector<OrientationMath*> m_OrientationOps;
-    CubicOps::Pointer             m_CubicOps;
-    HexagonalOps::Pointer         m_HexOps;
-    OrthoRhombicOps::Pointer      m_OrthoOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
 
-	VolumeOpsFunc(const VolumeOpsFunc& );
-    void operator =(const VolumeOpsFunc& );
+    FindDeformationStatistics(const FindDeformationStatistics&); // Copy Constructor Not Implemented
+    void operator=(const FindDeformationStatistics&); // Operator '=' Not Implemented
 };
 
-
-#endif
+#endif /* FINDDEFORMATIONSTATISTICS_H_ */

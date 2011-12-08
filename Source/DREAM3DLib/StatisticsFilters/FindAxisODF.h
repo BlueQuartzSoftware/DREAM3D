@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef WRITEGRAINDATA_H_
-#define WRITEGRAINDATA_H_
+#ifndef FINDAXISODF_H_
+#define FINDAXISODF_H_
 
 #include <vector>
 #include <string>
@@ -43,47 +43,50 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/HDF5/H5StatsWriter.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
-
 /**
- * @class AdjustVolume AdjustVolume.h DREAM3DLib/GenericFilters/FindNeighbors.h
+ * @class FindAxisODF FindAxisODF.h DREAM3DLib/GenericFilters/FindAxisODF.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT WriteGrainData : public AbstractFilter
+class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(WriteGrainData);
-    DREAM3D_STATIC_NEW_MACRO(WriteGrainData);
-    DREAM3D_TYPE_MACRO_SUPER(WriteGrainData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindAxisODF);
+    DREAM3D_STATIC_NEW_MACRO(FindAxisODF);
+    DREAM3D_TYPE_MACRO_SUPER(FindAxisODF, AbstractFilter);
 
-    virtual ~WriteGrainData();
+    virtual ~FindAxisODF();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainDataFile)
-
-    /**
+	 /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
 
+    void find_axisodf(H5StatsWriter::Pointer h5io);
+    void find_axisodf2D(H5StatsWriter::Pointer h5io);
 
   protected:
-    WriteGrainData();
+    FindAxisODF();
 
   private:
+    std::vector<OrientationMath*> m_OrientationOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
 
-    /**
-     * @brief Writes the grain data to an output file
-     * @param filename The file to write the grain data into
-     */
-    void write_graindata(const std::string & filename);
-
-    WriteGrainData(const WriteGrainData&); // Copy Constructor Not Implemented
-    void operator=(const WriteGrainData&); // Operator '=' Not Implemented
+    FindAxisODF(const FindAxisODF&); // Copy Constructor Not Implemented
+    void operator=(const FindAxisODF&); // Operator '=' Not Implemented
 };
 
-#endif /* WRITEAGRAINDATA_H_ */
+#endif /* FINDAXISODF_H_ */

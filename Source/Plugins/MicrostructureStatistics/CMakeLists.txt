@@ -13,13 +13,10 @@ include_directories(${PROJECT_CODE_DIR} )
 #-- Non Qt based Source files
 SET (MicrostructureStatistics_HDRS
   ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.h
-  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.h
-  ${PROJECT_SOURCE_DIR}/Algo.hpp
 )
 
 SET (MicrostructureStatistics_SRCS
   ${PROJECT_SOURCE_DIR}/MicrostructureStatistics.cpp
-  ${PROJECT_SOURCE_DIR}/MicrostructureStatisticsFunc.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "MicrostructureStatistics" "${MicrostructureStatistics_HDRS}" "${MicrostructureStatistics_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
