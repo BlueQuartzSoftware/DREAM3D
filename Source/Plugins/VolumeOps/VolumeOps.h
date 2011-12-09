@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "VolumeOpsFunc.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 
 
@@ -88,7 +88,7 @@ class VolumeOps : public AbstractPipeline, public Observer
     VolumeOps();
 
   private:
-    VolumeOpsFunc::Pointer m;
+    DataContainer::Pointer m;
 
     VolumeOps(const VolumeOps&);    // Copy Constructor Not Implemented
     void operator=(const VolumeOps&);  // Operator '=' Not Implemented
