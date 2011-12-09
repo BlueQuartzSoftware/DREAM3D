@@ -84,20 +84,17 @@ void VolumeOps::execute()
   CHECK_FOR_ERROR(DataContainer, "Error Loading Volume", err);
   CHECK_FOR_CANCELED(DataContainer, "VolumeOps was canceled",  load_volume)
 
-  float sizex = (m_XMax-m_XMin)*m->resx;
-  float sizey = (m_YMax-m_YMin)*m->resy;
-  float sizez = (m_ZMax-m_ZMin)*m->resz;
-  int xp = int(sizex / m_XRes);
-  int yp = int(sizey / m_YRes);
-  int zp = int(sizez / m_ZRes);
-  int totpoints = xp * yp * zp;
-  float xstart = m_XMin*m->resx;
-  float ystart = m_YMin*m->resy;
-  float zstart = m_ZMin*m->resz;
+
 
   // updateProgressAndMessage(("Operating on Volume"), 50);
-  if(m->xpoints != xp || m->ypoints != yp || m->zpoints != zp)
+  if(m->xpoints != (m_XMax-m_XMin) || m->ypoints != (m_YMax-m_YMin) || m->zpoints != (m_ZMax-m_ZMin))
   {
+	  float xp = (m_XMax-m_XMin);
+	  float yp = (m_YMax-m_YMin);
+	  float zp = (m_ZMax-m_ZMin);
+	  float xstart = m_XMin*m->resx;
+	  float ystart = m_YMin*m->resy;
+	  float zstart = m_ZMin*m->resz;	  
 	  updateProgressAndMessage(("Cropping Volume"), 50);
 	  CropVolume::Pointer crop_volume = CropVolume::New();
 	  crop_volume->setXStart(xstart);
@@ -116,6 +113,12 @@ void VolumeOps::execute()
 
   if(m->resx != m_XRes || m->resy != m_YRes || m->resz != m_ZRes)
   {
+	  float sizex = (m_XMax-m_XMin)*m->resx;
+	  float sizey = (m_YMax-m_YMin)*m->resy;
+	  float sizez = (m_ZMax-m_ZMin)*m->resz;
+	  int xp = int(sizex / m_XRes);
+	  int yp = int(sizey / m_YRes);
+	  int zp = int(sizez / m_ZRes);
 	  updateProgressAndMessage(("Changing Resolution"), 50);
 	  ChangeResolution::Pointer change_resolution = ChangeResolution::New();
 	  change_resolution->setXRes(m_XRes);
