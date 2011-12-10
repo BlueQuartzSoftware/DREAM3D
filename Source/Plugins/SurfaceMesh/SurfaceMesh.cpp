@@ -78,7 +78,7 @@
 
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "Smoothing/Smoothing.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/SMVtkFileIO.h"
+#include "SurfaceMesh/Meshing/SMVtkFileIO.h"
 
 #define USE_WINDING 0
 
