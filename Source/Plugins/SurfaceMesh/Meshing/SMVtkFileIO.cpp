@@ -42,7 +42,7 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 
-#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFunc.h"
+#include "SurfaceMesh/SurfaceMeshFunc.h"
 #include "Node.h"
 #include "Face.h"
 #include "Neighbor.h"
