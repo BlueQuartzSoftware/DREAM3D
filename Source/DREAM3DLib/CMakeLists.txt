@@ -62,6 +62,7 @@ D3DCompileDir(VTKUtils)
 D3DCompileDir(GenericFilters)
 D3DCompileDir(ManipulationFilters)
 D3DCompileDir(StatisticsFilters)
+D3DCompileDir(SurfaceMeshingFilters)
 D3DCompileDir(ReconstructionFilters)
 D3DCompileDir(SyntheticBuilderFilters)
 

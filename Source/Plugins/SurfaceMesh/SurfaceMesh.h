@@ -80,8 +80,8 @@
 #include "DREAM3DLib/Common/Observer.h"
 
 
-#include "SurfaceMeshFunc.h"
-#include "Meshing/STLWriter.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFunc.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/STLWriter.h"
 
 namespace meshing {
 

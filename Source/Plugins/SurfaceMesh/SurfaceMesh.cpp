@@ -78,7 +78,7 @@
 
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "Smoothing/Smoothing.h"
-#include "Meshing/SMVtkFileIO.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/SMVtkFileIO.h"
 
 #define USE_WINDING 0
 
@@ -126,6 +126,7 @@ class SMTempFile
 
 
 using namespace meshing;
+
 
 // -----------------------------------------------------------------------------
 //

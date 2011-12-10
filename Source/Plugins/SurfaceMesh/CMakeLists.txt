@@ -13,37 +13,15 @@ include_directories(${PROJECT_CODE_DIR} )
 #-- Non Qt based source files
 SET (SurfaceMesh_HDRS
   ${PROJECT_SOURCE_DIR}/SurfaceMesh.h
-  ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.h
 
   )
 
 SET (SurfaceMesh_SRCS
   ${PROJECT_SOURCE_DIR}/SurfaceMesh.cpp
-  ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.cpp
 
 )
 cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" "0")
 
-
-SET (MESHING_SRCS
-  ${PROJECT_SOURCE_DIR}/Meshing/Face.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Neighbor.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Node.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Patch.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Segment.h
-  ${PROJECT_SOURCE_DIR}/Meshing/STLWriter.h
-  ${PROJECT_SOURCE_DIR}/Meshing/SMVtkFileIO.h
-)
-SET (MESHING_HDRS
-  ${PROJECT_SOURCE_DIR}/Meshing/Face.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Neighbor.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Node.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Patch.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Segment.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/STLWriter.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/SMVtkFileIO.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh/Meshing" "${MESHING_HDRS}" "${MESHING_SRCS}" "0")
 
 SET (SMOOTHING_SRCS
     ${PROJECT_SOURCE_DIR}/Smoothing/Smoothing.cpp
@@ -124,8 +102,7 @@ set (SurfaceMeshPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${SurfaceMesh_HDRS}
     ${SurfaceMesh_SRCS}
-    ${MESHING_SRCS}
-    ${MESHING_HDRS}
+
     ${SMOOTHING_SRCS}
     ${SMOOTHING_HDRS}
 )
@@ -181,8 +158,7 @@ COMPILE_TOOL(
     TARGET SurfaceMesh
     SOURCES ${PROJECT_SOURCE_DIR}/Tools/SurfaceMeshMain.cpp     ${SurfaceMesh_HDRS}
                                                                 ${SurfaceMesh_SRCS}
-                                                                ${MESHING_SRCS}
-                                                                ${MESHING_HDRS}
+
                                                                 ${SMOOTHING_SRCS}
                                                                 ${SMOOTHING_HDRS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
