@@ -124,7 +124,7 @@ using namespace meshing;
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
-      setErrorCondition(-1);\
+      setErrorCondition(-1000);\
       setErrorMessage(Message);\
       notify(getErrorMessage(), 0, UpdateWarningMessage);\
       return;}\
@@ -394,7 +394,7 @@ void SurfaceMeshFilter::execute()
   float origin[3];
   err = reader->getSizeResolutionOrigin(dims, scaling, origin);
   CHECK_FOR_ERROR(SurfaceMeshFilter, "Error reading the size and dimensions data from the input file", err);
-  //  CHECK_FOR_CANCELED(SurfaceMeshFilter, "Surface Mesh was canceled", getSizeResolutionOrigin);
+  CHECK_FOR_CANCELED(SurfaceMeshFilter, "Surface Mesh was canceled", getSizeResolutionOrigin);
 
   // Initialize our SurfaceMeshFilter Variable
   // Add a layer of padding around the volume which are going to be our boundary voxels
@@ -449,7 +449,7 @@ void SurfaceMeshFilter::execute()
 #endif
     err = reader->readHyperSlab(xFileDim, yFileDim, i, fileVoxelLayer);
     CHECK_FOR_ERROR(SurfaceMeshFilter, "Error Loading Slice Data as a Hyperslab from HDF5 file", err)
-    //  CHECK_FOR_CANCELED(SurfaceMeshFilter, "Surface Mesh was canceled", readHyperSlab);
+    CHECK_FOR_CANCELED(SurfaceMeshFilter, "Surface Mesh was canceled", readHyperSlab);
 
     // Copy the Voxels from layer 2 to Layer 1;
     ::memcpy(&(voxels[1]), &(voxels[1 + NSP]), NSP * sizeof(int));

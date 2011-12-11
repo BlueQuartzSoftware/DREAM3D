@@ -172,7 +172,7 @@ Smoothing::~Smoothing()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int Smoothing::execute()
+void Smoothing::execute()
 {
   int err = 0;
 
@@ -195,13 +195,15 @@ int Smoothing::execute()
   if (nodesFile == NULL)
   {
     std::cout << "Error opening nodes file '" << m_NodesFile << "'" << std::endl;
-    return -1;
+    setErrorCondition(-1);
+    return;
   }
   FILE* triangleFile = fopen(m_TrianglesFile.c_str(), "rb+");
   if (triangleFile == NULL)
   {
     std::cout << "Error opening Triangles file '" << m_TrianglesFile << "'" << std::endl;
-    return -1;
+    setErrorCondition(-1);
+    return;;
   }
 
   // read in nodes/triangles
@@ -452,7 +454,8 @@ int Smoothing::execute()
       if (!inpFileOStream)
       {
         std::cout << "Failed to open: " << IterationFile << std::endl;
-        return -1;
+        setErrorCondition(-1);
+        return;
       }
 
       inpFileOStream << nnod << " " << ntri << " 0 2 0" << std::endl;
@@ -500,7 +503,8 @@ int Smoothing::execute()
       if (!inpFileOStream)
       {
         std::cout << "Failed to open: " << nodes_smoothed_txt << std::endl;
-        return 1;
+        setErrorCondition(-1);
+        return;
       }
       inpFileOStream << nnod << std::endl;
       for (int ia = 0; ia < nnod; ia++) {
@@ -522,7 +526,8 @@ int Smoothing::execute()
   f = fopen(m_NodesFile.c_str(), "wb");
   if (NULL == f)
   {
-    return -1;
+    setErrorCondition(-1);
+    return;
   }
 
   // Write each node to the file
@@ -539,12 +544,12 @@ int Smoothing::execute()
     {
       std::cout << "Not enough data written to the Nodes file." << std::endl;
       fclose(f); // Close the Nodes file.
-      return -1;
+      setErrorCondition(-1);
+      return;
     }
 
   }
   fclose(f); // Close the Nodes file.
 
-
-  return err;
+  setErrorCondition(0);
 }

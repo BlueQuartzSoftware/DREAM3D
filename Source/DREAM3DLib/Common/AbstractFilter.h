@@ -60,8 +60,14 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
 
+
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+
+    /**
+     * @brief Cancel the operation
+     */
+    DREAM3D_INSTANCE_PROPERTY(bool, Cancel);
 
     /**
      * @brief This method should be fully implemented in subclasses.

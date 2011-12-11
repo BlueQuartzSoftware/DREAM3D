@@ -40,6 +40,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
 namespace DREAM3D {
   namespace SurfaceSmoothing
@@ -51,11 +52,12 @@ namespace DREAM3D {
 
 namespace smooth {
 
-class DREAM3DLib_EXPORT Smoothing
+class DREAM3DLib_EXPORT Smoothing : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(Smoothing);
     DREAM3D_STATIC_NEW_MACRO(Smoothing);
+    DREAM3D_TYPE_MACRO_SUPER(Smoothing, AbstractFilter);
 
     virtual ~Smoothing();
 
@@ -67,9 +69,7 @@ class DREAM3DLib_EXPORT Smoothing
     DREAM3D_INSTANCE_PROPERTY(size_t, Iterations);
     DREAM3D_INSTANCE_PROPERTY(bool, LockQuads);
 
-    int execute();
-
-
+    void execute();
 
   protected:
     Smoothing();

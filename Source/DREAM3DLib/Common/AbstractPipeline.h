@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
 /**
  * @class AbstractPipeline AbstractPipeline.h DREAM3D/Common/AbstractPipeline.h
@@ -65,10 +66,13 @@ class DREAM3DLib_EXPORT AbstractPipeline
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
 
+    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter);
+
     /**
      * @brief Cancel the operation
      */
-    DREAM3D_INSTANCE_PROPERTY(bool, Cancel);
+    virtual void setCancel(bool value);
+    virtual bool getCancel();
 
     /**
      * @brief This method is called to start the pipeline for a plugin
@@ -88,6 +92,8 @@ class DREAM3DLib_EXPORT AbstractPipeline
     virtual void pipelineFinished();
 
   private:
+    bool m_Cancel;
+
     AbstractPipeline(const AbstractPipeline&); // Copy Constructor Not Implemented
     void operator=(const AbstractPipeline&); // Operator '=' Not Implemented
 };
