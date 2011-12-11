@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -36,20 +36,22 @@
 #ifndef _VTKFileUtils_h_
 #define _VTKFileUtils_h_
 
+
 #include <string>
 #include <map>
 #include <fstream>
 
-#include <boost/shared_ptr.hpp>
 
-#include <MXA/Common/MXASetGetMacros.h>
+
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/VTKUtils/VTKFileReader.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+
 
 
 #define kBufferSize 1024
 
-class SurfaceMeshFunc;
+
 
 namespace meshing {
 /**
@@ -60,15 +62,22 @@ namespace meshing {
  * @date Aug 13, 2010
  * @version 1.0
  */
-class  SMVtkFileIO : public VTKFileReader
+class DREAM3DLib_EXPORT SMVtkPolyDataWriter : public AbstractFilter
 {
   public:
-    MXA_SHARED_POINTERS(SMVtkFileIO)
-    MXA_TYPE_MACRO(SMVtkFileIO)
-    MXA_STATIC_NEW_MACRO(SMVtkFileIO)
+    MXA_SHARED_POINTERS(SMVtkPolyDataWriter)
+    MXA_TYPE_MACRO(SMVtkPolyDataWriter)
+    MXA_STATIC_NEW_MACRO(SMVtkPolyDataWriter)
 
-    virtual ~SMVtkFileIO();
+    virtual ~SMVtkPolyDataWriter();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(VisualizationFile);
+    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
+    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile);
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
+
+#if 0
     /**
      * @brief
      * @param m
@@ -76,10 +85,14 @@ class  SMVtkFileIO : public VTKFileReader
      * @param slice
      * @return
      */
-    int primeFileToScalarDataLocation(SurfaceMeshFunc* m, const std::string &file, const std::string &scalarName);
+    int primeFileToScalarDataLocation(DataContainer* m, const std::string &file, const std::string &scalarName);
 
 
     int readZSlice(int xDim, int yDim, int zDim, int* voxels);
+#endif
+
+
+    virtual void execute();
 
 /**
  * @brief Writes a VTK POLYDATA legacy ASCII file
@@ -92,16 +105,17 @@ class  SMVtkFileIO : public VTKFileReader
  * @param binaryFile
  * @return
  */
+#if 0
     int writeVTKFile(const std::string &VisualizationFile,
                      const std::string &NodesFile,
                      const std::string &TrianglesFile,
                      bool binaryFile,
                      bool conformalMesh);
-
+#endif
 
 
   protected:
-    SMVtkFileIO();
+    SMVtkPolyDataWriter();
 
 
     int writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
@@ -109,16 +123,10 @@ class  SMVtkFileIO : public VTKFileReader
 
     int writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
     int writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
+
   private:
-
-    std::ifstream m_InputFile;
-    bool          m_fileIsBinary;
-    bool          m_HeaderComplete;
-    size_t        m_IntByteSize;
-    std::string   m_ScalarName;
-
-    SMVtkFileIO(const SMVtkFileIO&); // Copy Constructor Not Implemented
-    void operator=(const SMVtkFileIO&); // Operator '=' Not Implemented
+    SMVtkPolyDataWriter(const SMVtkPolyDataWriter&); // Copy Constructor Not Implemented
+    void operator=(const SMVtkPolyDataWriter&); // Operator '=' Not Implemented
 
 };
 }

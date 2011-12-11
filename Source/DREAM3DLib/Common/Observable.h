@@ -91,6 +91,14 @@ class DREAM3DLib_EXPORT Observable
      */
     void notify(const char* msg, int progress, ObserverAspect a);
 
+    /**
+     * @brief Sends the notification to all observers. Conveneince function.
+     * @param msg A message for a user to read
+     * @param progress A progress to indicate how much pipeline has been accomplished
+     * @param a The type of notification to send.
+     */
+    void notify(const std::string msg, int progress, ObserverAspect a);
+
     std::vector<Observer*> getObservers();
 
     void setObservers(std::vector<Observer*> obs);

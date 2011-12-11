@@ -90,7 +90,7 @@ void ChangeResolution::change_resolution()
   setErrorCondition(0);
   notify("Starting Resolution Change", 0, Observable::UpdateProgressValueAndMessage);
   int err = 1;
-  int counter = 0;
+ // int counter = 0;
   float x, y, z;
   int col, row, plane;
   int index;
@@ -125,7 +125,7 @@ void ChangeResolution::change_resolution()
   m->xpoints = m_XP;
   m->ypoints = m_YP;
   m->zpoints = m_ZP;
-  m->totalpoints = m_XP*m_YP*m_ZP; 
+  m->totalpoints = m_XP*m_YP*m_ZP;
   err = m->m_GrainIndicies->Resize(m->totalpoints);
   err = m->m_Phases->Resize(m->totalpoints);
   err = m->m_Euler1s->Resize(m->totalpoints);

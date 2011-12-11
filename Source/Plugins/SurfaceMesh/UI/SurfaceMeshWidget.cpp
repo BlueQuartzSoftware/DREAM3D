@@ -57,7 +57,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
-#include "SurfaceMesh/Meshing/SMVtkFileIO.h"
+//#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/SMVtkFileIO.h"
 
 #include "SurfaceMeshPlugin.h"
 

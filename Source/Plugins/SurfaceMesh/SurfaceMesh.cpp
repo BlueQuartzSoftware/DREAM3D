@@ -77,8 +77,8 @@
 
 
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-#include "Smoothing/Smoothing.h"
-#include "SurfaceMesh/Meshing/SMVtkFileIO.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Smoothing/Smoothing.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/SMVtkPolyDataWriter.h"
 
 #define USE_WINDING 0
 
@@ -245,7 +245,7 @@ void SurfaceMesh::execute()
   { 0, 3, 2, 1, 1, 0, 3, 2 } };
 
 #if 0
-  SMVtkFileIO::Pointer vtkreader = SMVtkFileIO::New();
+  SMVtkPolyDataWriter::Pointer vtkreader = SMVtkPolyDataWriter::New();
   vtkreader->primeFileToScalarDataLocation(m_DataContainer.get(), m_InputFile, m_ScalarName);
 #endif
 
@@ -288,7 +288,7 @@ void SurfaceMesh::execute()
     m->voxels[i] = -3;
   }
 
-  std::map<int, STLWriter::Pointer> gidToSTLWriter;
+  std::map<int, SMStlWriter::Pointer> gidToSTLWriter;
 
   // Save the actual volume dimensions from the input file
   int xFileDim = m->xDim - 2;
@@ -425,7 +425,7 @@ void SurfaceMesh::execute()
   {
     m_GrainChecker->addData(nTriangle, cTriID, m->cTriangle, m->cVertex);
     err |= writeSTLFiles(nTriangle, gidToSTLWriter);
-    for (std::map<int, STLWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
+    for (std::map<int, SMStlWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
     {
       err |= (*iter).second->writeNumTrianglesToFile();
     }
@@ -473,10 +473,15 @@ void SurfaceMesh::execute()
   std::string msg("Writing VTK Polydata Surface Mesh File: ");
   msg.append(DREAM3D::SurfaceMesh::VisualizationVizFile);
   updateProgressAndMessage(msg.c_str(), 95);
-  meshing::SMVtkFileIO::Pointer writer = SMVtkFileIO::New();
-  writer->setInputFileName(VisualizationFile);
-  err = writer->writeVTKFile(VisualizationFile, NodesFile, TrianglesFile, m_WriteBinaryVTKFiles, m_WriteConformalMesh);
-
+  meshing::SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
+  writer->setVisualizationFile(VisualizationFile);
+  writer->setNodesFile(NodesFile);
+  writer->setTrianglesFile(TrianglesFile);
+  writer->setWriteBinaryFile(m_WriteBinaryVTKFiles);
+  writer->setWriteConformalMesh(m_WriteConformalMesh);
+  writer->addObserver(this);
+  writer->execute();
+  err = writer->getErrorCondition();
   CHECK_FOR_ERROR(SurfaceMeshFunc, "Error vtk output file", err)
 
   updateProgressAndMessage(("Surface Meshing Complete"), 100);
@@ -485,7 +490,7 @@ void SurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter)
+int SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::Pointer> &gidToSTLWriter)
 {
 // First loop through All the triangles adding up how many triangles are
 // in each grain and create STL Files for each Grain if needed
@@ -501,14 +506,14 @@ int SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> 
       std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
       stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
-      gidToSTLWriter[g0] = STLWriter::CreateNewSTLWriter(g0, stlFile);
+      gidToSTLWriter[g0] = SMStlWriter::CreateNewSTLWriter(g0, stlFile);
     }
     if (gidToSTLWriter[g1].get() == NULL)
     {
       std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
       stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g1)).append(".stl");
-      gidToSTLWriter[g1] = STLWriter::CreateNewSTLWriter(g1, stlFile);
+      gidToSTLWriter[g1] = SMStlWriter::CreateNewSTLWriter(g1, stlFile);
     }
     grainIdMap[m->cTriangle[i]->ngrainname[0]]++;
     grainIdMap[m->cTriangle[i]->ngrainname[1]]++;
@@ -549,7 +554,7 @@ int SurfaceMesh::writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> 
     Patch::ContainerType& cTriangle = (*iter).second;
     int nTriangle = grainIdMap[gid];
 
-    STLWriter::Pointer writer = gidToSTLWriter[gid];
+    SMStlWriter::Pointer writer = gidToSTLWriter[gid];
     if (NULL != writer.get())
     {
       err |= writer->writeTriangleBlock(nTriangle, cTriangle, m->cVertex);

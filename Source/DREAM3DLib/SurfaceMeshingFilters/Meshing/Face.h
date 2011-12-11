@@ -29,7 +29,7 @@
 
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -63,83 +63,45 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H_m3c_CONSTRUCTION_EDGE
-#define H_m3c_CONSTRUCTION_EDGE
+#ifndef _Face_H_
+#define _Face_H_
 
-#include <set>
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXA.h"
-#include "DREAM3DLib/DREAM3DLib.h"
-
-namespace meshing
-{
-
-  /**
-   * @class SharedEdge SharedEdge.h SurfaceMesh/SharedEdge.h
-   * @brief This class represents an Edge as defined by 2 vertices from a triangle.
-   * The Edge can be shared by multiple triangles from different grains but never for
-   * than 2 triangles for any single grain.
-   * @author Michael A. Jackson for BlueQuartz Software
-   * @date Jul 11, 2011
-   * @version 1.0
-   */
-  class  SharedEdge
-  {
-    public:
-      /**
-       *
-       */
-      int u, v;
-      std::set<int> triangles;
-
-      MXA_SHARED_POINTERS(SharedEdge)
-
-      /**
-       *
-       */
-      static Pointer New(int u_, int v_)
-      {
-        Pointer sharedPtr(new SharedEdge(u_, v_));
-        return sharedPtr;
-      }
-
-      /**
-       * @brief Return a 64 unsigned integer as the unique ID of this Shared Edge
-       * which is a concatenation of the 32 bit integer values for each of the nodes
-       */
-      uint64_t getId()
-      {
-        uint64_t edgeId;
-        int32_t* e0 = (int32_t*)(&edgeId);
-        int32_t* e1 = e0 + 1;
-        if (u < v)
-        {
-          *e0 = u;
-          *e1 = v;
-        }
-        else
-        {
-          *e0 = v;
-          *e1 = u;
-        }
-        return edgeId;
-      }
-
-    protected:
-      SharedEdge(int u_, int v_) :
-          u(u_),
-          v(v_)
-      {
-      }
-
-    private:
-      SharedEdge(const SharedEdge&); // Copy Constructor Not Implemented
-      void operator=(const SharedEdge&); // Operator '=' Not Implemented
-  };
-
-//  bool operator<(const SharedEdge& lhs, const SharedEdge& rhs);
-
-}
-
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
+
+
+#include <vector>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+namespace meshing {
+
+/**
+* @class Face Face.h AIM/Common/Face.h
+* @brief Support class for the MicroGen3D class
+* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
+* @date Nov 4, 2009
+* @version 1.0
+*/
+class DREAM3DLib_EXPORT Face
+{
+public:
+    Face();
+    virtual ~Face();
+
+    int site_id[4]; // stores 4 sites at the corners of each square...
+    int edge_id[4]; // stores edge id turned on...others will have dummy -1...
+    int nEdge; // number of edges on the square...
+    int turnFC; // if 1, face center is on..., else it's 0
+    int FCnode; // face center node...if not, it's -1...
+    int effect; // 0 if the square is useless; 1 is good...
+
+  private:
+
+    Face(const Face&);    // Copy Constructor Not Implemented
+      void operator=(const Face&);  // Operator '=' Not Implemented
+};
+}
+#endif /* Face_H_ */

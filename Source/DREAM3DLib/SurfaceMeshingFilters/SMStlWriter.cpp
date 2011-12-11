@@ -33,20 +33,19 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "STLWriter.h"
+#include "SMStlWriter.h"
 
 #include <string.h>
 
-#include "SurfaceMesh/SurfaceMeshFunc.h"
-#include "Patch.h"
-#include "Node.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 using namespace meshing;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-STLWriter::STLWriter() :
+SMStlWriter::SMStlWriter() :
 m_TriangleCount(0),
 m_File(NULL)
 {
@@ -55,7 +54,7 @@ m_File(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-STLWriter::~STLWriter()
+SMStlWriter::~SMStlWriter()
 {
   // Close the file if it is non null. Note that we assume that if the m_File
   // variable is NON NULL then the file is still open. We could conceivably have
@@ -70,7 +69,7 @@ STLWriter::~STLWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int STLWriter::openFile(const char* mode)
+int SMStlWriter::openFile(const char* mode)
 {
   if (m_FileName.empty() == true)
   {
@@ -87,7 +86,7 @@ int STLWriter::openFile(const char* mode)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void STLWriter::closeFile()
+void SMStlWriter::closeFile()
 {
   if (m_File != NULL)
   {
@@ -100,7 +99,7 @@ void STLWriter::closeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int STLWriter::writeHeader(const std::string &header)
+int SMStlWriter::writeHeader(const std::string &header)
 {
   if (NULL == m_File)
   {
@@ -121,7 +120,7 @@ int STLWriter::writeHeader(const std::string &header)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void STLWriter::resetTriangleCount()
+void SMStlWriter::resetTriangleCount()
 {
   m_TriangleCount = 0;
 }
@@ -129,7 +128,7 @@ void STLWriter::resetTriangleCount()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int STLWriter::writeTriangleBlock(int numTriangles, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex)
+int SMStlWriter::writeTriangleBlock(int numTriangles, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex)
 {
 
  // std::cout << "Writing " << numTriangles << " Triangles to STL file" << std::endl;
@@ -154,7 +153,7 @@ int STLWriter::writeTriangleBlock(int numTriangles, const std::vector<Patch::Poi
   err = openFile("ab");
   if (err < 0)
   {
-    std::cout << "STLWriter: Could not open file: '" << m_FileName << "' to write the data into." << std::endl;
+    std::cout << "SMStlWriter: Could not open file: '" << m_FileName << "' to write the data into." << std::endl;
     return -1;
   }
   //size_t curPos = 0;
@@ -211,7 +210,7 @@ int STLWriter::writeTriangleBlock(int numTriangles, const std::vector<Patch::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int STLWriter::writeNumTrianglesToFile()
+int SMStlWriter::writeNumTrianglesToFile()
 {
 
   // We need to update the number of triangles in the file which means we need

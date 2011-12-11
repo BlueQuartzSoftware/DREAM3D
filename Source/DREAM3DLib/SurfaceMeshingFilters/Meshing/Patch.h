@@ -63,43 +63,88 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _Neighbor_H_
-#define _Neighbor_H_
+#ifndef _Patch_H_
+#define _Patch_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
-#define num_neigh 26
-
 
 #include <vector>
 
+
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "SharedEdge.h"
 
 namespace meshing {
 /**
-* @class Neighbor Neighbor.h AIM/Common/Neighbor.h
-* @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software
-* @author Dr. Michael Groeber for USAFRL
-* @date Nov 4, 2009
-* @version 1.0
-*/
-class  Neighbor
+ * @class Patch Patch.h AIM/Common/Patch.h
+ * @brief Support class for the MicroGen3D class
+ * @author Michael A. Jackson for BlueQuartz Software,
+ * @author Dr. Michael Groeber for USAFRL
+ * @date Nov 4, 2009
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT Patch
 {
-public:
-    Neighbor();
-    virtual ~Neighbor();
+  public:
+    DREAM3D_SHARED_POINTERS(Patch);
+    DREAM3D_STATIC_NEW_MACRO(Patch);
+    virtual ~Patch();
 
-    int csiteid;
+    typedef std::vector<Pointer> ContainerType;
 
-    int neigh_id[num_neigh + 1];
+    int node_id[3]; // stores three new node id for vertices of the triangles...
+    int ngrainname[2]; // neighboring two grainnames...
+    int edgePlace[3]; // if it's 0, face edges; if 1, inner edges...
+    float normal[3];
+    float area;
+    int tIndex;
+    SharedEdge::Pointer edges[3];
+    bool doFlip;
+
+    /**
+     * @brief
+     */
+    void flipWinding();
+
+    /**
+     * @brief
+     * @param label
+     */
+    int getintIndex(int label);
+
+    /**
+     * @brief
+     * @param label
+     * @return
+     */
+    std::vector<int> getNodeIndices(int label);
+
+    /**
+     * @brief
+     * @param ids
+     * @param label
+     */
+    void getWindingIndices(int ids[4], int label);
+
+    /**
+     * @brief
+     * @param tri
+     * @param label
+     */
+    void verifyWinding(Patch* tri, int label);
+
+  protected:
+    Patch();
 
   private:
-
-    Neighbor(const Neighbor&);    // Copy Constructor Not Implemented
-    void operator=(const Neighbor&);  // Operator '=' Not Implemented
+     Patch(const Patch&);    // Copy Constructor Not Implemented
+     void operator=(const Patch&);  // Operator '=' Not Implemented
 };
 
-}
-#endif /* Neighbor_H_ */
+} // End namespace
+
+#endif /* Patch_H_ */

@@ -82,11 +82,11 @@ void FindEuclideanDistMap::find_euclideandistmap()
   m->m_NearestNeighborDistances->SetNumberOfComponents(3);
   for (int i = 0; i < m->totalpoints*3; i++)
   {
-	m->nearestneighbors[i] = -1;	
-	m->nearestneighbordistances[i] = -1;	
+	m->nearestneighbors[i] = -1;
+	m->nearestneighbordistances[i] = -1;
   }
-  int neighpoint;
-  int nearestneighbor;
+//  int neighpoint;
+//  int nearestneighbor;
   int neighbors[6];
   int column, row, plane;
   int add = 1;

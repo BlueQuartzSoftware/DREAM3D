@@ -90,7 +90,7 @@ void CropVolume::crop_volume()
   setErrorCondition(0);
   notify("Starting Crop Volume", 0, Observable::UpdateProgressValueAndMessage);
   int err = 1;
-  int counter = 0;
+ // int counter = 0;
   float x, y, z;
   int col, row, plane;
   int index;

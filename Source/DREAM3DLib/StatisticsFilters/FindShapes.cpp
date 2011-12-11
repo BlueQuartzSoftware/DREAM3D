@@ -90,7 +90,7 @@ void FindShapes::find_centroids()
   int col, row, plane;
   float radcubed;
   float diameter;
-  float allvol = 0.0;
+//  float allvol = 0.0;
   size_t numgrains = m->m_Grains.size();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
