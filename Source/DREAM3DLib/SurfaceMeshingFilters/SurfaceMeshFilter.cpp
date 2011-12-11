@@ -603,7 +603,8 @@ int SurfaceMeshFilter::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::P
     g1 = cTriangle[i]->ngrainname[1];
     if (gidToSTLWriter[g0].get() == NULL)
     {
-      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
+      std::string stlFile;
+      stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
       stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
       gidToSTLWriter[g0] = SMStlWriter::CreateNewSTLWriter(g0, stlFile);
