@@ -118,6 +118,7 @@ void Reconstruction::execute()
   load_slices->setMisoTolerance(m_MisorientationTolerance);
   load_slices->addObserver(static_cast<Observer*>(this));
   load_slices->setDataContainer(m.get());
+  setCurrentFilter(load_slices);
   load_slices->execute();
   err = load_slices->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Loading Slices", err)
@@ -129,6 +130,7 @@ void Reconstruction::execute()
   align_sections->setalignmeth(m_AlignmentMethod);
   align_sections->addObserver(static_cast<Observer*>(this));
   align_sections->setDataContainer(m.get());
+  setCurrentFilter(align_sections);
   align_sections->execute();
   err = align_sections->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Aligning Sections", err)
@@ -139,6 +141,7 @@ void Reconstruction::execute()
   segment_grains->setMisoTolerance(m_MisorientationTolerance);
   segment_grains->addObserver(static_cast<Observer*>(this));
   segment_grains->setDataContainer(m.get());
+  setCurrentFilter(segment_grains);
   segment_grains->execute();
   err = segment_grains->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Segmenting Grains", err)
@@ -149,6 +152,7 @@ void Reconstruction::execute()
   cleanup_grains->setmisorientationtolerance(m_MisorientationTolerance);
   cleanup_grains->addObserver(static_cast<Observer*>(this));
   cleanup_grains->setDataContainer(m.get());
+  setCurrentFilter(cleanup_grains);
   cleanup_grains->execute();
   err = cleanup_grains->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Cleaning Up Grains", err)
@@ -160,6 +164,7 @@ void Reconstruction::execute()
 	MergeTwins::Pointer merge_twins = MergeTwins::New();
 	merge_twins->addObserver(static_cast<Observer*>(this));
 	merge_twins->setDataContainer(m.get());
+	setCurrentFilter(merge_twins);
 	merge_twins->execute();
 	err = merge_twins->getErrorCondition();
 	CHECK_FOR_ERROR(DataContainer, "Error Merging Twins", err)
@@ -173,6 +178,7 @@ void Reconstruction::execute()
 	MergeColonies::Pointer merge_colonies = MergeColonies::New();
 	merge_colonies->addObserver(static_cast<Observer*>(this));
 	merge_colonies->setDataContainer(m.get());
+	setCurrentFilter(merge_colonies);
 	merge_colonies->execute();
 	err = merge_colonies->getErrorCondition();
 	CHECK_FOR_ERROR(DataContainer, "Error Merging Colonies", err)
@@ -207,10 +213,10 @@ void Reconstruction::execute()
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
 
-	  w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m.get()));
+      w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
-}
+    }
 
     if (m_WritePhaseId == true){
       VtkScalarWriter* w0 =
@@ -239,9 +245,8 @@ void Reconstruction::execute()
 
     CHECK_FOR_ERROR(DataContainer, "The VTK file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
+  /* ******* End VTK Visualization File Writing Section ****** */
 
-
-  /** ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", vtk_viz_files)
 
@@ -260,8 +265,6 @@ void Reconstruction::execute()
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared
   // pointer object.
   m = DataContainer::NullPointer();  // Clean up the memory
-  //std::cout << "Reconstruction::compute Complete" << std::endl;
-
 }
 
 
