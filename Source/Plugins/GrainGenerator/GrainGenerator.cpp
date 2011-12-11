@@ -55,29 +55,11 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
 #include "DREAM3DLib/GenericFilters/WriteFieldData.h"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 GrainGenerator::GrainGenerator() :
-m_H5StatsFile(""),
-m_OutputDirectory("."),
-m_OutputFilePrefix("GrainGenerator_"),
-m_XPoints(0),
-m_YPoints(0),
-m_ZPoints(0),
-m_XResolution(0.0),
-m_YResolution(0.0),
-m_ZResolution(0.0),
-m_NeighborhoodErrorWeight(0.0),
-m_PeriodicBoundary(true),
-m_AlreadyFormed(false),
-m_Precipitates(0),
-m_WriteBinaryVTKFiles(true),
-m_WriteVtkFile(false),
-m_WriteIPFColor(false),
-m_WriteHDF5GrainFile(false)
+    m_H5StatsFile(""), m_OutputDirectory("."), m_OutputFilePrefix("GrainGenerator_"), m_XPoints(0), m_YPoints(0), m_ZPoints(0), m_XResolution(0.0), m_YResolution(0.0), m_ZResolution(0.0), m_NeighborhoodErrorWeight(0.0), m_PeriodicBoundary(true), m_AlreadyFormed(false), m_Precipitates(0), m_WriteBinaryVTKFiles(true), m_WriteVtkFile(false), m_WriteIPFColor(false), m_WriteHDF5GrainFile(false)
 {
 //  std::cout << "GrainGenerator Constructor" << std::endl;
 }
@@ -101,7 +83,7 @@ void GrainGenerator::execute()
   // Initialize some benchmark timers
   START_CLOCK()
 
-  if (m_AlreadyFormed == false)
+  if(m_AlreadyFormed == false)
   {
     m->xpoints = m_XPoints;
     m->ypoints = m_YPoints;
@@ -113,30 +95,30 @@ void GrainGenerator::execute()
 
     updateProgressAndMessage(("Packing Grains"), 25);
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
-	pack_grains->setH5StatsFile(getH5StatsFile());
-	pack_grains->setperiodic_boundaries(m_PeriodicBoundary);
-	pack_grains->setneighborhooderrorweight(m_NeighborhoodErrorWeight);
+    pack_grains->setH5StatsFile(getH5StatsFile());
+    pack_grains->setperiodic_boundaries(m_PeriodicBoundary);
+    pack_grains->setneighborhooderrorweight(m_NeighborhoodErrorWeight);
     pack_grains->addObserver(static_cast<Observer*>(this));
     pack_grains->setDataContainer(m.get());
+    setCurrentFilter(pack_grains);
     pack_grains->execute();
     err = pack_grains->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Packing Grains", err)
-    CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", pack_grains)
+    CHECK_FOR_ERROR(DataContainer, "Error Packing Grains", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", pack_grains)
 
     updateProgressAndMessage(("Adjusting Grains"), 25);
     AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
     adjust_grains->addObserver(static_cast<Observer*>(this));
     adjust_grains->setDataContainer(m.get());
+    setCurrentFilter(adjust_grains);
     adjust_grains->execute();
     err = adjust_grains->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Adjusting Grains", err)
-    CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", adjust_grains)
+    CHECK_FOR_ERROR(DataContainer, "Error Adjusting Grains", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", adjust_grains)
   }
-  else if (m_AlreadyFormed == true)
+  else if(m_AlreadyFormed == true)
   {
-	updateProgressAndMessage(("Reading Structure"), 40);
+    updateProgressAndMessage(("Reading Structure"), 40);
     std::string ext = MXAFileInfo::extension(m_StructureFile);
-    if (ext.compare("vtk") == 0)
+    if(ext.compare("vtk") == 0)
     {
       VTKStructureReader::Pointer reader = VTKStructureReader::New();
       reader->setInputFileName(m_StructureFile);
@@ -145,7 +127,7 @@ void GrainGenerator::execute()
       err = reader->readStructure(m.get());
       CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error getting size and resolution from VTK Voxel File", err);
     }
-    else if (ext.compare("h5") == 0 || ext.compare("h5voxel") == 0)
+    else if(ext.compare("h5") == 0 || ext.compare("h5voxel") == 0)
     {
       // Load up the voxel data
       H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
@@ -176,50 +158,50 @@ void GrainGenerator::execute()
     }
   }
 
-  if (m_AlreadyFormed == false)
+  if(m_AlreadyFormed == false)
   {
     updateProgressAndMessage(("Placing Precipitates"), 50);
-	PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
-	place_precipitates->setH5StatsFile(getH5StatsFile());
-	place_precipitates->setperiodic_boundaries(m_PeriodicBoundary);
+    PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
+    place_precipitates->setH5StatsFile(getH5StatsFile());
+    place_precipitates->setperiodic_boundaries(m_PeriodicBoundary);
     place_precipitates->addObserver(static_cast<Observer*>(this));
     place_precipitates->setDataContainer(m.get());
+    setCurrentFilter(place_precipitates);
     place_precipitates->execute();
     err = place_precipitates->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Placing Preciptates", err)
-    CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", place_precipitates)
+    CHECK_FOR_ERROR(DataContainer, "Error Placing Preciptates", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", place_precipitates)
   }
 
-    updateProgressAndMessage(("Matching Crystallography"), 65);
-	MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
-	match_crystallography->setH5StatsFile(getH5StatsFile());
-    match_crystallography->addObserver(static_cast<Observer*>(this));
-    match_crystallography->setDataContainer(m.get());
-    match_crystallography->execute();
-    err = match_crystallography->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Matching Crystallography", err)
-    CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", match_crystallography)
+  updateProgressAndMessage(("Matching Crystallography"), 65);
+  MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
+  match_crystallography->setH5StatsFile(getH5StatsFile());
+  match_crystallography->addObserver(static_cast<Observer*>(this));
+  match_crystallography->setDataContainer(m.get());
+  setCurrentFilter(match_crystallography);
+  match_crystallography->execute();
+  err = match_crystallography->getErrorCondition();
+  CHECK_FOR_ERROR(DataContainer, "Error Matching Crystallography", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", match_crystallography)
 
-  MAKE_OUTPUT_FILE_PATH ( FieldDataFile , DREAM3D::SyntheticBuilder::GrainDataFile)
+  MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
 
-    updateProgressAndMessage(("Writing Field Data"), 90);
-	WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
-	write_fielddata->setFieldDataFile(FieldDataFile);
-    write_fielddata->addObserver(static_cast<Observer*>(this));
-    write_fielddata->setDataContainer(m.get());
-    write_fielddata->execute();
-    err = write_fielddata->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Writing Field Data", err)
-    CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", write_fielddata)
+  updateProgressAndMessage(("Writing Field Data"), 90);
+  WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
+  write_fielddata->setFieldDataFile(FieldDataFile);
+  write_fielddata->addObserver(static_cast<Observer*>(this));
+  write_fielddata->setDataContainer(m.get());
+  setCurrentFilter(write_fielddata);
+  write_fielddata->execute();
+  err = write_fielddata->getErrorCondition();
+  CHECK_FOR_ERROR(DataContainer, "Error Writing Field Data", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", write_fielddata)
 
   /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
-  MAKE_OUTPUT_FILE_PATH ( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile)
+  MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile)
   H5VoxelWriter::Pointer h5VoxelWriter = H5VoxelWriter::New();
-  if (h5VoxelWriter.get() == NULL)
+  if(h5VoxelWriter.get() == NULL)
   {
     CHECK_FOR_ERROR(DataContainer, "The HDF5 Voxel file could not be created. Does the path exist and do you have write access to the output directory.", -1);
-    m = DataContainer::NullPointer();  // Clean up the memory
+    m = DataContainer::NullPointer(); // Clean up the memory
     return;
   }
   h5VoxelWriter->setFileName(h5VoxelFile);
@@ -228,36 +210,36 @@ void GrainGenerator::execute()
   CHECK_FOR_ERROR(DataContainer, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
 
   /* ********** This section writes the VTK files for visualization *** */
-  if (m_WriteVtkFile) {
+  if(m_WriteVtkFile)
+  {
     updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-    MAKE_OUTPUT_FILE_PATH ( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile);
+    MAKE_OUTPUT_FILE_PATH( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile);
 
     // Setup all the classes that will help us write the Scalars to the VTK File
     std::vector<VtkScalarWriter*> scalarsToWrite;
     {
-      VtkScalarWriter* w0 =
-          static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m.get()));
+      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
 
-    if (m_WriteSurfaceVoxel == true) {
-      VtkScalarWriter* w0 =
-        static_cast<VtkScalarWriter*>(new VoxelSurfaceVoxelScalarWriter<DataContainer>(m.get()));
+    if(m_WriteSurfaceVoxel == true)
+    {
+      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelSurfaceVoxelScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
 
-    if (m_WritePhaseId == true){
-      VtkScalarWriter* w0 =
-        static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m.get()));
+    if(m_WritePhaseId == true)
+    {
+      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
 
-    if (m_WriteIPFColor == true) {
-      VtkScalarWriter* w0 =
-        static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<DataContainer>(m.get()));
+    if(m_WriteIPFColor == true)
+    {
+      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
@@ -268,11 +250,10 @@ void GrainGenerator::execute()
     err = vtkWriter.write<DataContainer>(vtkVizFile, m.get(), scalarsToWrite);
 
     // Now Delete all the Scalar Helpers that we just created and used.
-    for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter )
+    for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter)
     {
       delete (*iter);
-    }
-    CHECK_FOR_ERROR(DataContainer, "The Grain Generator threw an Error writing the VTK file format.", err);
+    }CHECK_FOR_ERROR(DataContainer, "The Grain Generator threw an Error writing the VTK file format.", err);
 
   }
 
@@ -280,22 +261,21 @@ void GrainGenerator::execute()
   /* ******* End VTK Visualization File Writing Section ****** */
 
   /* ********** HDF5 Grains File  ********** */
-  if (m_WriteHDF5GrainFile)
+  if(m_WriteHDF5GrainFile)
   {
     updateProgressAndMessage(("Writing Out HDF5 Grain File. This may take a few minutes to complete."), 96);
-    MAKE_OUTPUT_FILE_PATH ( hdf5GrainFile, DREAM3D::Reconstruction::HDF5GrainFile);
+    MAKE_OUTPUT_FILE_PATH( hdf5GrainFile, DREAM3D::Reconstruction::HDF5GrainFile);
     H5GrainWriter::Pointer h5GrainWriter = H5GrainWriter::New();
     err = h5GrainWriter->writeHDF5GrainsFile<DataContainer>(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(DataContainer, "The Grain Generator threw an Error writing the HDF5 Grain file format.", err);
   }
+
   CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", writeHDF5GrainsFile)
 
   // Clean up all the memory
   updateProgressAndMessage(("Cleaning up Memory."), 98);
-
   m = DataContainer::NullPointer();
 
   updateProgressAndMessage(("Generation Completed"), 100);
 }
-
 
