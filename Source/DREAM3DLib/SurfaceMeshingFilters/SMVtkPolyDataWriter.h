@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VTKFileUtils_h_
-#define _VTKFileUtils_h_
+#ifndef _SM_VTK_FILEWRITER_h_
+#define _SM_VTK_FILEWRITER_h_
 
 
 #include <string>
@@ -65,9 +65,9 @@ namespace meshing {
 class DREAM3DLib_EXPORT SMVtkPolyDataWriter : public AbstractFilter
 {
   public:
-    MXA_SHARED_POINTERS(SMVtkPolyDataWriter)
-    MXA_TYPE_MACRO(SMVtkPolyDataWriter)
-    MXA_STATIC_NEW_MACRO(SMVtkPolyDataWriter)
+    DREAM3D_SHARED_POINTERS(SMVtkPolyDataWriter)
+    DREAM3D_TYPE_MACRO(SMVtkPolyDataWriter)
+    DREAM3D_STATIC_NEW_MACRO(SMVtkPolyDataWriter)
 
     virtual ~SMVtkPolyDataWriter();
 
