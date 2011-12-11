@@ -71,16 +71,12 @@
 #endif
 
 
-
-#include <MXA/Common/MXASetGetMacros.h>
-#include "MXA/MXA.h"
-
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 
-
-#include "SurfaceMesh/SurfaceMeshFunc.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SMStlWriter.h"
 
 namespace meshing {
@@ -88,8 +84,8 @@ namespace meshing {
 class GrainChecker
 {
   public:
-    MXA_SHARED_POINTERS(GrainChecker);
-    MXA_STATIC_NEW_MACRO(GrainChecker);
+    DREAM3D_SHARED_POINTERS(GrainChecker);
+    DREAM3D_STATIC_NEW_MACRO(GrainChecker);
     virtual ~GrainChecker(){}
     typedef std::map<int, int>  MapType;
 
@@ -235,35 +231,35 @@ class GrainChecker
 class SurfaceMesh : public AbstractPipeline, public Observer
 {
   public:
-    MXA_SHARED_POINTERS(SurfaceMesh);
-    MXA_TYPE_MACRO(SurfaceMesh);
-    MXA_STATIC_NEW_MACRO(SurfaceMesh);
+    DREAM3D_SHARED_POINTERS(SurfaceMesh);
+    DREAM3D_TYPE_MACRO(SurfaceMesh);
+    DREAM3D_STATIC_NEW_MACRO(SurfaceMesh);
 
     virtual ~SurfaceMesh();
 
-    MXA_INSTANCE_STRING_PROPERTY(InputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(InputFile)
-    MXA_INSTANCE_STRING_PROPERTY(ScalarName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ScalarName)
 
-    MXA_INSTANCE_PROPERTY(int, XDim)
-    MXA_INSTANCE_PROPERTY(int, YDim)
-    MXA_INSTANCE_PROPERTY(int, ZDim)
-    MXA_INSTANCE_PROPERTY(double, XRes)
-    MXA_INSTANCE_PROPERTY(double, YRes)
-    MXA_INSTANCE_PROPERTY(double, ZRes)
+    DREAM3D_INSTANCE_PROPERTY(int, XDim)
+    DREAM3D_INSTANCE_PROPERTY(int, YDim)
+    DREAM3D_INSTANCE_PROPERTY(int, ZDim)
+    DREAM3D_INSTANCE_PROPERTY(double, XRes)
+    DREAM3D_INSTANCE_PROPERTY(double, YRes)
+    DREAM3D_INSTANCE_PROPERTY(double, ZRes)
 
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
-    MXA_INSTANCE_PROPERTY(bool, WriteConformalMesh)
-    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
-    MXA_INSTANCE_PROPERTY(bool, WriteSTLFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteSTLFile)
 
-    MXA_INSTANCE_PROPERTY(bool, DeleteTempFiles)
+    DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)
 
-    MXA_INSTANCE_PROPERTY(bool, SmoothMesh)
-    MXA_INSTANCE_PROPERTY(int, SmoothIterations)
-    MXA_INSTANCE_PROPERTY(int, SmoothFileOutputIncrement)
-    MXA_INSTANCE_PROPERTY(bool, SmoothLockQuadPoints)
+    DREAM3D_INSTANCE_PROPERTY(bool, SmoothMesh)
+    DREAM3D_INSTANCE_PROPERTY(int, SmoothIterations)
+    DREAM3D_INSTANCE_PROPERTY(int, SmoothFileOutputIncrement)
+    DREAM3D_INSTANCE_PROPERTY(bool, SmoothLockQuadPoints)
 
 
     /**
@@ -278,7 +274,7 @@ class SurfaceMesh : public AbstractPipeline, public Observer
     SurfaceMesh();
 
   private:
-	  SurfaceMeshFunc::Pointer m;
+	  SurfaceMeshFilter::Pointer m;
 	  GrainChecker::Pointer        m_GrainChecker;
 
     SurfaceMesh(const SurfaceMesh&);    // Copy Constructor Not Implemented

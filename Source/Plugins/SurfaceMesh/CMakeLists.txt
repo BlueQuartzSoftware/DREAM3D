@@ -13,14 +13,10 @@ include_directories(${PROJECT_CODE_DIR} )
 #-- Non Qt based source files
 SET (SurfaceMesh_HDRS
   ${PROJECT_SOURCE_DIR}/SurfaceMesh.h
-  ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.h
-
-  )
+)
 
 SET (SurfaceMesh_SRCS
   ${PROJECT_SOURCE_DIR}/SurfaceMesh.cpp
-  ${PROJECT_SOURCE_DIR}/SurfaceMeshFunc.cpp
-
 )
 cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" "0")
 
