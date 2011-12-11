@@ -108,6 +108,7 @@ void SurfaceMesh::execute()
   smFilter->setDeleteTempFiles(false);
   smFilter->setOutputDirectory(m_OutputDirectory);
   smFilter->setOutputFilePrefix(m_OutputFilePrefix);
+  setCurrentFilter(smFilter);
   smFilter->execute();
   err = smFilter->getErrorCondition();
   if (err < 0)
@@ -135,7 +136,9 @@ void SurfaceMesh::execute()
     smoothing->setIterations(m_SmoothIterations);
     smoothing->setOutputInterval(m_SmoothFileOutputIncrement);
     smoothing->setLockQuads(m_SmoothLockQuadPoints);
-    err = smoothing->execute();
+    setCurrentFilter(smoothing);
+    smoothing->execute();
+    err = smoothing->getErrorCondition();
     if (err < 0)
     {
       setErrorCondition(-1);
@@ -143,6 +146,11 @@ void SurfaceMesh::execute()
     }
   }
 
+  if (m_DeleteTempFiles == true)
+  {
+    nodesFile->setAutoDelete(true);
+    trianglesFile->setAutoDelete(true);
+  }
 
   std::string msg("Writing VTK Polydata Surface Mesh File: ");
   msg.append(DREAM3D::SurfaceMesh::VisualizationVizFile);
@@ -151,23 +159,16 @@ void SurfaceMesh::execute()
   MAKE_OUTPUT_FILE_PATH(VisualizationFile, DREAM3D::SurfaceMesh::VisualizationVizFile)
 
   meshing::SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
-
   writer->setVisualizationFile(VisualizationFile);
   writer->setNodesFile(nodesFile->getFilePath());
   writer->setTrianglesFile(trianglesFile->getFilePath());
   writer->setWriteBinaryFile(m_WriteBinaryVTKFiles);
   writer->setWriteConformalMesh(m_WriteConformalMesh);
   writer->addObserver(this);
+  setCurrentFilter(writer);
   writer->execute();
   err = writer->getErrorCondition();
-  CHECK_FOR_ERROR(SurfaceMeshFilter, "Error vtk output file", err)
-
-
-  if (m_DeleteTempFiles == true)
-  {
-    nodesFile->setAutoDelete(true);
-    trianglesFile->setAutoDelete(true);
-  }
+  CHECK_FOR_ERROR(SurfaceMeshFilter, "Error Writing vtk output file", err)
 
 
   updateProgressAndMessage("Surface Meshing Complete", 100);
