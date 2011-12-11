@@ -67,6 +67,16 @@ void Observable::removeObserver(Observer* observer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void Observable::notify(const std::string msg, int progress, ObserverAspect a)
+{
+  notify(msg.c_str(), progress, a);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Observable::notify(const char* msg, int progress, ObserverAspect a)
 {
   for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )

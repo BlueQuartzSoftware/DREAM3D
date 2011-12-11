@@ -9,7 +9,8 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (DREAM3DLib_StatisticsFilters_HDRS ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.h
+SET (DREAM3DLib_StatisticsFilters_HDRS 
+${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.h
 ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.h
 ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindBoundingBoxGrains.h
 ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindEuclideanDistMap.h
@@ -51,3 +52,5 @@ if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
             DESTINATION include/DREAM3D/StatisticsFilters
             COMPONENT Headers   )
 endif()
+
+

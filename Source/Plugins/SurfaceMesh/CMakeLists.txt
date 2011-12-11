@@ -25,44 +25,6 @@ SET (SurfaceMesh_SRCS
 cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh" "${SurfaceMesh_HDRS}" "${SurfaceMesh_SRCS}" "0")
 
 
-SET (MESHING_SRCS
-  ${PROJECT_SOURCE_DIR}/Meshing/Face.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Neighbor.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Node.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Patch.h
-  ${PROJECT_SOURCE_DIR}/Meshing/Segment.h
-  ${PROJECT_SOURCE_DIR}/Meshing/STLWriter.h
-  ${PROJECT_SOURCE_DIR}/Meshing/SMVtkFileIO.h
-)
-SET (MESHING_HDRS
-  ${PROJECT_SOURCE_DIR}/Meshing/Face.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Neighbor.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Node.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Patch.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/Segment.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/STLWriter.cpp
-  ${PROJECT_SOURCE_DIR}/Meshing/SMVtkFileIO.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh/Meshing" "${MESHING_HDRS}" "${MESHING_SRCS}" "0")
-
-SET (SMOOTHING_SRCS
-    ${PROJECT_SOURCE_DIR}/Smoothing/Smoothing.cpp
-)
-SET (SMOOTHING_HDRS
-    ${PROJECT_SOURCE_DIR}/Smoothing/Smoothing.h
-    ${PROJECT_SOURCE_DIR}/Smoothing/LinearAlgebra.h
-    ${PROJECT_SOURCE_DIR}/Smoothing/Triangle.hpp
-    ${PROJECT_SOURCE_DIR}/Smoothing/Node.hpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "SurfaceMesh/Smoothing" "${SMOOTHING_HDRS}" "${SMOOTHING_SRCS}" "0")
-
-
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${SurfaceMesh_HDRS} ${MESHING_HDRS} ${SMOOTHING_HDRS}
-            DESTINATION include/DREAM3D/SurfaceMesh
-            COMPONENT Headers   )
-endif()
-
 
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
@@ -124,10 +86,6 @@ set (SurfaceMeshPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${SurfaceMesh_HDRS}
     ${SurfaceMesh_SRCS}
-    ${MESHING_SRCS}
-    ${MESHING_HDRS}
-    ${SMOOTHING_SRCS}
-    ${SMOOTHING_HDRS}
 )
 
 # ---------- Setup output Directories -------------------------
@@ -179,12 +137,7 @@ endif()
 IF ( DREAM3D_BUILD_CLI_TOOLS )
 COMPILE_TOOL(
     TARGET SurfaceMesh
-    SOURCES ${PROJECT_SOURCE_DIR}/Tools/SurfaceMeshMain.cpp     ${SurfaceMesh_HDRS}
-                                                                ${SurfaceMesh_SRCS}
-                                                                ${MESHING_SRCS}
-                                                                ${MESHING_HDRS}
-                                                                ${SMOOTHING_SRCS}
-                                                                ${SMOOTHING_HDRS}
+    SOURCES ${PROJECT_SOURCE_DIR}/Tools/SurfaceMeshMain.cpp  ${SurfaceMesh_HDRS} ${SurfaceMesh_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}

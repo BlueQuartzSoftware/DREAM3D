@@ -93,12 +93,12 @@
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/Observable.h"
 
-#include "Meshing/Patch.h"
-#include "Meshing/Face.h"
-#include "Meshing/Neighbor.h"
-#include "Meshing/Node.h"
-#include "Meshing/Segment.h"
-#include "Meshing/SharedEdge.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Patch.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Face.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Neighbor.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Node.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Segment.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/SharedEdge.h"
 
 using namespace meshing;
 

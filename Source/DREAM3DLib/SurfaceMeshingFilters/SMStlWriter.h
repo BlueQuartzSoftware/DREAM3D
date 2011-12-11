@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,53 +34,70 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSIZES_H_
-#define FINDSIZES_H_
+#ifndef STLWRITER_H_
+#define STLWRITER_H_
 
-#include <vector>
-#include <string>
+#include <stdio.h>
+
+#include "MXA/Utilities/StringUtils.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Patch.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Node.h"
 
-/**
- * @class FindSizes FindSizes.h DREAM3DLib/GenericFilters/FindSizes.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
- */
-class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
+class SurfaceMeshFunc;
+
+
+namespace meshing {
+
+class DREAM3DLib_EXPORT SMStlWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSizes);
-    DREAM3D_STATIC_NEW_MACRO(FindSizes);
-    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(SMStlWriter)
+    DREAM3D_STATIC_NEW_MACRO(SMStlWriter)
+    DREAM3D_TYPE_MACRO(SMStlWriter)
 
-    virtual ~FindSizes();
+    static Pointer CreateNewSTLWriter(int gid, const std::string &filename)
+    {
+      Pointer stlWriter = SMStlWriter::New();
+      stlWriter->setFileName(filename);
+      stlWriter->setGrainID(gid);
+      int err = stlWriter->openFile("wb");
+      if (err < 0)
+      {
+        return NullPointer();
+      }
+      std::string stlHeader("DREAM.3D Surface Mesh for Grain ID ");
+      stlHeader.append(StringUtils::numToString(gid));
+      stlWriter->writeHeader(stlHeader);
+      stlWriter->closeFile();
+      return stlWriter;
+    }
+    virtual ~SMStlWriter();
 
-    DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, float); // N x 5 Array
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
+    DREAM3D_INSTANCE_PROPERTY(int, TriangleCount)
+    DREAM3D_INSTANCE_PROPERTY(int, GrainID)
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    int openFile(const char* mode);
+    void closeFile();
+    void resetTriangleCount();
 
-    virtual void execute();
+    int writeHeader(const std::string &header);
 
-    void find_sizes();
-    void find_sizes2D();
+    int writeTriangleBlock(int numTriangles, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex);
 
+    int writeNumTrianglesToFile();
 
   protected:
-    FindSizes();
+    SMStlWriter();
 
   private:
+    FILE* m_File;
 
-
-    FindSizes(const FindSizes&); // Copy Constructor Not Implemented
-    void operator=(const FindSizes&); // Operator '=' Not Implemented
+    SMStlWriter(const SMStlWriter&); // Copy Constructor Not Implemented
+    void operator=(const SMStlWriter&); // Operator '=' Not Implemented
 };
-
-#endif /* FINDSIZES_H_ */
+ }
+#endif /* STLWRITER_H_ */

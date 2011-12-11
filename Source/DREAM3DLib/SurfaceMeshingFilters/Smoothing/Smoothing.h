@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,72 +33,52 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef SMOOTHGRAIN3D_H_
+#define SMOOTHGRAIN3D_H_
 
-#ifndef STLWRITER_H_
-#define STLWRITER_H_
+#include <string>
 
-#include <stdio.h>
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/Utilities/StringUtils.h"
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "Patch.h"
-#include "Node.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-class SurfaceMeshFunc;
+namespace DREAM3D {
+  namespace SurfaceSmoothing
+  {
+    const std::string Smooth3DIterationFile("Smooth3DIterationFile");
+    const std::string NodesSmoothedFile("NodesSmoothedFile.txt");
+  }
+}
 
+namespace smooth {
 
-namespace meshing {
-
-
-
-class   STLWriter
+class DREAM3DLib_EXPORT Smoothing
 {
   public:
-    MXA_SHARED_POINTERS(STLWriter)
-    MXA_STATIC_NEW_MACRO(STLWriter)
-    MXA_TYPE_MACRO(STLWriter)
+    DREAM3D_SHARED_POINTERS(Smoothing);
+    DREAM3D_STATIC_NEW_MACRO(Smoothing);
 
-    static Pointer CreateNewSTLWriter(int gid, const std::string &filename)
-    {
-      Pointer stlWriter = STLWriter::New();
-      stlWriter->setFileName(filename);
-      stlWriter->setGrainID(gid);
-      int err = stlWriter->openFile("wb");
-      if (err < 0)
-      {
-        return NullPointer();
-      }
-      std::string stlHeader("DREAM.3D Surface Mesh for Grain ID ");
-      stlHeader.append(StringUtils::numToString(gid));
-      stlWriter->writeHeader(stlHeader);
-      stlWriter->closeFile();
-      return stlWriter;
-    }
-    virtual ~STLWriter();
+    virtual ~Smoothing();
 
-    MXA_INSTANCE_STRING_PROPERTY(FileName)
-    MXA_INSTANCE_PROPERTY(int, TriangleCount)
-    MXA_INSTANCE_PROPERTY(int, GrainID)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
+    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    DREAM3D_INSTANCE_PROPERTY(size_t, OutputInterval);
+    DREAM3D_INSTANCE_PROPERTY(size_t, Iterations);
+    DREAM3D_INSTANCE_PROPERTY(bool, LockQuads);
 
-    int openFile(const char* mode);
-    void closeFile();
-    void resetTriangleCount();
+    int execute();
 
-    int writeHeader(const std::string &header);
 
-    int writeTriangleBlock(int numTriangles, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex);
-
-    int writeNumTrianglesToFile();
 
   protected:
-    STLWriter();
+    Smoothing();
 
   private:
-    FILE* m_File;
-
-    STLWriter(const STLWriter&); // Copy Constructor Not Implemented
-    void operator=(const STLWriter&); // Operator '=' Not Implemented
+    Smoothing(const Smoothing&); // Copy Constructor Not Implemented
+    void operator=(const Smoothing&); // Operator '=' Not Implemented
 };
- }
-#endif /* STLWRITER_H_ */
+
+}
+
+#endif /* SMOOTHGRAIN3D_H_ */

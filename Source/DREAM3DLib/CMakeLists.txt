@@ -64,6 +64,7 @@ D3DCompileDir(ManipulationFilters)
 D3DCompileDir(StatisticsFilters)
 D3DCompileDir(ReconstructionFilters)
 D3DCompileDir(SyntheticBuilderFilters)
+D3DCompileDir(SurfaceMeshingFilters)
 
 #message(STATUS "------------------------------------")
 #foreach(file ${Project_SRCS})

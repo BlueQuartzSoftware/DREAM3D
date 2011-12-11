@@ -81,7 +81,7 @@
 
 
 #include "SurfaceMesh/SurfaceMeshFunc.h"
-#include "SurfaceMesh/Meshing/STLWriter.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/SMStlWriter.h"
 
 namespace meshing {
 
@@ -271,7 +271,7 @@ class SurfaceMesh : public AbstractPipeline, public Observer
      */
     void execute();
 
-    int writeSTLFiles(int nTriangle, std::map<int, STLWriter::Pointer> &gidToSTLWriter );
+    int writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::Pointer> &gidToSTLWriter );
 
   protected:
 

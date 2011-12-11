@@ -29,7 +29,7 @@
 
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -63,39 +63,82 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _Node_H_
-#define _Node_H_
+#ifndef H_m3c_CONSTRUCTION_EDGE
+#define H_m3c_CONSTRUCTION_EDGE
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#endif
-
-
-#include <vector>
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-namespace meshing {
-/**
-* @class Node Node.h AIM/Common/Node.h
-* @brief Class that holds the X,Y,Z Position of a vertex in the Surface Meshing. This
-* class was originally a struct in the original surface meshing code developed at
-* Carnegie-Mellon University by Sukbin Lee.
-* @date Nov 4, 2009
-* @version 1.0
-*/
-class  Node
+namespace meshing
 {
-public:
-    Node();
-    virtual ~Node();
 
-    int nodeKind; // 2 for binary, 3 for triple, and so on...
-    float xc;
-    float yc;
-    float zc;
-    int point;
-    int NodeID; // newID for used nodes; if not used, it's -1...
-};
+  /**
+   * @class SharedEdge SharedEdge.h SurfaceMesh/SharedEdge.h
+   * @brief This class represents an Edge as defined by 2 vertices from a triangle.
+   * The Edge can be shared by multiple triangles from different grains but never for
+   * than 2 triangles for any single grain.
+   * @author Michael A. Jackson for BlueQuartz Software
+   * @date Jul 11, 2011
+   * @version 1.0
+   */
+  class DREAM3DLib_EXPORT SharedEdge
+  {
+    public:
+      /**
+       *
+       */
+      int u, v;
+      std::set<int> triangles;
+
+      DREAM3D_SHARED_POINTERS(SharedEdge)
+
+      /**
+       *
+       */
+      static Pointer New(int u_, int v_)
+      {
+        Pointer sharedPtr(new SharedEdge(u_, v_));
+        return sharedPtr;
+      }
+
+      /**
+       * @brief Return a 64 unsigned integer as the unique ID of this Shared Edge
+       * which is a concatenation of the 32 bit integer values for each of the nodes
+       */
+      uint64_t getId()
+      {
+        uint64_t edgeId;
+        int32_t* e0 = (int32_t*)(&edgeId);
+        int32_t* e1 = e0 + 1;
+        if (u < v)
+        {
+          *e0 = u;
+          *e1 = v;
+        }
+        else
+        {
+          *e0 = v;
+          *e1 = u;
+        }
+        return edgeId;
+      }
+
+    protected:
+      SharedEdge(int u_, int v_) :
+          u(u_),
+          v(v_)
+      {
+      }
+
+    private:
+      SharedEdge(const SharedEdge&); // Copy Constructor Not Implemented
+      void operator=(const SharedEdge&); // Operator '=' Not Implemented
+  };
+
+//  bool operator<(const SharedEdge& lhs, const SharedEdge& rhs);
+
 }
-#endif /* Node_H_ */
+
+#endif

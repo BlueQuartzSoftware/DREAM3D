@@ -285,7 +285,7 @@ set (DREAM3D_PLUGIN_LIST
     GrainGenerator 
     SurfaceMesh 
     MicrostructureStatistics 
-    Extrapolation2Dto3D
+#    Extrapolation2Dto3D
     FileConversion
     VolumeOps
 )
