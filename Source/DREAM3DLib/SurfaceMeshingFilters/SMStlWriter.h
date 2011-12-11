@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT SMStlWriter
     static Pointer CreateNewSTLWriter(int gid, const std::string &filename)
     {
       Pointer stlWriter = SMStlWriter::New();
-      stlWriter->setFileName(filename);
       stlWriter->setGrainID(gid);
+      stlWriter->setFileName(filename);
       int err = stlWriter->openFile("wb");
       if (err < 0)
       {

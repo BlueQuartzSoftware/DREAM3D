@@ -72,7 +72,6 @@ class SurfaceMesh : public AbstractPipeline, public Observer
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(VisualizationFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
 

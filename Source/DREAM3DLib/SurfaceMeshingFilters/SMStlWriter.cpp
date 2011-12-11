@@ -46,6 +46,7 @@ using namespace meshing;
 //
 // -----------------------------------------------------------------------------
 SMStlWriter::SMStlWriter() :
+m_FileName(""),
 m_TriangleCount(0),
 m_File(NULL)
 {

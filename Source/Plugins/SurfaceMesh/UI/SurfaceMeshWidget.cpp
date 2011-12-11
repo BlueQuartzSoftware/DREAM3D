@@ -105,11 +105,10 @@ void SurfaceMeshWidget::readSettings(QSettings &prefs)
   QString val;
   bool ok;
   qint32 i;
-  //double d;
 
   prefs.beginGroup("SurfaceMesh");
   READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
-  verifyPathExists(m_InputFile->text(), m_InputFile);
+  on_m_InputFile_textChanged(QString(""));
 
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "SurfaceMesh_")
