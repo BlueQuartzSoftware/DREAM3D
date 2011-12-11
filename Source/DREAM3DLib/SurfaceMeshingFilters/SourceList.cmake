@@ -47,6 +47,7 @@ set (DREAM3DLib_SurfaceMeshingFilters_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SurfaceMeshFilter.h
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMStlWriter.h
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMVtkPolyDataWriter.h
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMTempFile.hpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshFilters" "${DREAM3DLib_SurfaceMeshingFilters_HDRS}" "${DREAM3DLib_SurfaceMeshingFilters_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
