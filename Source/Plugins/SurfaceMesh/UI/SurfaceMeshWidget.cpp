@@ -320,7 +320,7 @@ void SurfaceMeshWidget::on_m_GoBtn_clicked()
   m_SurfaceMesh->setSmoothIterations(m_SmoothIterations->value());
   m_SurfaceMesh->setSmoothFileOutputIncrement(m_WriteOutputFileIncrement->value());
   m_SurfaceMesh->setSmoothLockQuadPoints(m_LockQuadPoints->isChecked());
-  m_SurfaceMesh->setScalarName(m_ScalarsName->text().toStdString());
+//  m_SurfaceMesh->setScalarName(m_ScalarsName->text().toStdString());
 
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
