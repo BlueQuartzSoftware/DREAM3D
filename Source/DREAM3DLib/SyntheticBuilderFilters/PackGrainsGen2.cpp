@@ -205,7 +205,7 @@ void PackGrainsGen2::execute()
         break;
       }
     }
-    generate_grain(gid, phase);
+    generate_grain(gid, phase, Seed);
   currentsizedisterror = check_sizedisterror(gid, -1000);
     change = (currentsizedisterror) - (oldsizedisterror);
   if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
@@ -223,36 +223,36 @@ void PackGrainsGen2::execute()
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-    xgrains = powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0/3.0));
-    ygrains = xgrains*(sizey/sizex);
-    zgrains = xgrains*(sizez/sizex);
+    xgrains = int(powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0/3.0))+1);
+    ygrains = int(xgrains*(sizey/sizex)+1);
+    zgrains = int(xgrains*(sizez/sizex)+1);
     factor = 0.25 * (1.0 - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
     while (currentvol < ((1+factor) * totalvol))
     {
       iter++;
-    Seed++;
-    random = rg.genrand_res53();
-    for (size_t j = 0; j < primaryphases.size(); ++j)
-    {
-      if(random < primaryphasefractions[j])
+	  Seed++;
+      random = rg.genrand_res53();
+      for (size_t j = 0; j < primaryphases.size(); ++j)
       {
-      phase = primaryphases[j];
-      break;
+		if(random < primaryphasefractions[j])
+		{
+			phase = primaryphases[j];
+			break;
+		}
       }
-    }
-    generate_grain(gid, phase);
-    currentsizedisterror = check_sizedisterror(gid, -1000);
-    change = (currentsizedisterror) - (oldsizedisterror);
-    if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
-    {
-       m->m_Grains[gid]->active = 1;
-       oldsizedisterror = currentsizedisterror;
-       currentvol = currentvol + m->m_Grains[gid]->volume;
-       gid++;
-       m->m_Grains.resize(gid + 1);
-       m->m_Grains[gid] = Field::New();
-       iter = 0;
-    }
+      generate_grain(gid, phase, Seed);
+      currentsizedisterror = check_sizedisterror(gid, -1000);
+      change = (currentsizedisterror) - (oldsizedisterror);
+      if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
+      {
+		m->m_Grains[gid]->active = 1;
+		oldsizedisterror = currentsizedisterror;
+		currentvol = currentvol + m->m_Grains[gid]->volume;
+		gid++;
+		m->m_Grains.resize(gid + 1);
+		m->m_Grains[gid] = Field::New();
+		iter = 0;
+	  }
     }
   }
   // initialize the sim and goal neighbor distribution for the primary phases
@@ -456,7 +456,7 @@ void PackGrainsGen2::initialize_packinggrid()
   }
 }
 
-void PackGrainsGen2::generate_grain(int gnum, int phase)
+void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
     DataContainer* m = getDataContainer();
@@ -1248,9 +1248,9 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 		x = x - xc;
 		y = y - yc;
 		z = z - zc;
-		xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
-		yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
-		zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+		xp = (x*ga[0][0])+(y*ga[0][1])+(z*ga[0][2]);
+		yp = (x*ga[1][0])+(y*ga[1][1])+(z*ga[1][2]);
+		zp = (x*ga[2][0])+(y*ga[2][1])+(z*ga[2][2]);
 		float axis1comp = xp / radcur1;
 		float axis2comp = yp / radcur2;
 		float axis3comp = zp / radcur3;
@@ -1460,7 +1460,7 @@ void PackGrainsGen2::assign_gaps()
   while (unassignedcount != 0)
   {
 	  unassignedcount = 0;
-	  timestep = timestep + 5;
+	  timestep = timestep + 25;
 	  for (size_t i = 1; i < m->m_Grains.size(); i++)
 	  {
 		float volcur = m->m_Grains[i]->volume;
