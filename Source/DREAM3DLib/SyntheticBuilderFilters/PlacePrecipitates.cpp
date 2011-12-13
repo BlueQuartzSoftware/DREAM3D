@@ -223,9 +223,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 			x = x-xc;
 			y = y-yc;
 			z = z-zc;
-			xp = (x*ga[0][0])+(y*ga[1][0])+(z*ga[2][0]);
-			yp = (x*ga[0][1])+(y*ga[1][1])+(z*ga[2][1]);
-			zp = (x*ga[0][2])+(y*ga[1][2])+(z*ga[2][2]);
+			xp = (x*ga[0][0])+(y*ga[0][1])+(z*ga[0][2]);
+			yp = (x*ga[1][0])+(y*ga[1][1])+(z*ga[1][2]);
+			zp = (x*ga[2][0])+(y*ga[2][1])+(z*ga[2][2]);
 			float axis1comp = xp/radcur1;
 			float axis2comp = yp/radcur2;
 			float axis3comp = zp/radcur3;
@@ -398,7 +398,7 @@ void  PlacePrecipitates::place_precipitates()
   err = packGrains->readAxisOrientationData(h5reader);
   while(totalprecipvol < totalvol*totalprecipitatefractions)
   {
-  //  Seed++;
+    Seed++;
     random = rg.genrand_res53();
     for (size_t j = 0; j < precipitatephases.size();++j)
     {
@@ -410,7 +410,7 @@ void  PlacePrecipitates::place_precipitates()
     }
   m->m_Grains.resize(currentnumgrains+1);
   m->m_Grains[currentnumgrains] = Field::New();
-  packGrains->generate_grain(currentnumgrains, phase);
+  packGrains->generate_grain(currentnumgrains, phase, Seed);
   precipboundaryfraction = m->pptFractions[phase];
   random = rg.genrand_res53();
   if(random <= precipboundaryfraction)

@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
 
   private:
     int numprimarygrains;
- //   unsigned long long int Seed;
+    unsigned long long int Seed;
     float sizex;
     float sizey;
     float sizez;

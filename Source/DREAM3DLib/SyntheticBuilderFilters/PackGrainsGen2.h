@@ -77,12 +77,13 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+
+	virtual void execute();
 
     float check_sizedisterror(int gadd, int gremove);
     int readReconStatsData(H5StatsReader::Pointer h5io);
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
-    void generate_grain(int, int);
+    void generate_grain(int, int, int);
 
   protected:
     PackGrainsGen2();
@@ -129,7 +130,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
-
 
     unsigned long long int Seed;
 
