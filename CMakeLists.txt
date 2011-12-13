@@ -191,24 +191,28 @@ endif()
 # Figure out here if we are going to build the command line tools
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
+include_directories (${PROJECT_BINARY_DIR})
+
+# -----------------------------------------------------------------------
+# -- Add in the Necessary HDF5 Support Sources into a library
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DataContainerTest ${PROJECT_BINARY_DIR}/DataContainerTest)
+
 # -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
-include_directories (${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary MXA Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/MXA ${PROJECT_BINARY_DIR}/MXA)
-include_directories (${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary EBSD Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
-include_directories (${PROJECT_BINARY_DIR})
+
 
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a static library
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
 
