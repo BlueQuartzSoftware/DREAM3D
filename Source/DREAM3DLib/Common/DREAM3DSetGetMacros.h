@@ -159,8 +159,8 @@ static Pointer New args \
   { \
     return this->thisClass::IsTypeOf(type); \
   } \
-  template <class Target, class Source>\
-  inline Target polymorphic_downcast(Source* x) { \
+  template <class Source, class Target>\
+  inline Target SafeDownCast(Source x) { \
       if( dynamic_cast<Target>(x) != x ) { \
         return NULL;\
       }\
@@ -183,8 +183,8 @@ static Pointer New args \
   { \
     return this->thisClass::IsTypeOf(type); \
   } \
-  template <class Target, class Source>\
-  static Target polymorphic_downcast(Source* x) { \
+  template <class Source, class Target>\
+  static Target SafeDownCast(Source x) { \
       if( dynamic_cast<Target>(x) != x ) { \
         return NULL;\
       }\
