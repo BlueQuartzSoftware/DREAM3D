@@ -39,6 +39,18 @@ class IDataArray
     DREAM3D_SHARED_POINTERS(IDataArray);
     DREAM3D_TYPE_MACRO(IDataArray);
 
+    /**
+     * This templated method is used to get at the low level pointer that points
+     * to the actual data by testing the conversion with dynamic_cast<> first to
+     * see if it can be done, the finally returns the low level pointer.
+     * @code
+     *    typedef DataArray<int32_t>  Int32ArrayType;
+     *    int32_t* iPtr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(ptr.get());
+    *     assert(NULL != iPtr);
+     * @endcode
+     * @param x The Pointer to IDataArray
+     * @return
+     */
     template <class Source, class Target, typename Raw>
     static Raw SafeReinterpretCast(Source x) {
         if( dynamic_cast<Target>(x) != x ) {

@@ -56,6 +56,28 @@
 #include "DREAM3DLib/Common/Field.h"
 #include "DREAM3DLib/Common/Observable.h"
 
+namespace DREAM3D
+{
+  namespace ArrayNames
+  {
+    const std::string GrainIds("GrainIds");
+    const std::string Phases("Phases");
+    const std::string Euler1("Euler1");
+    const std::string Euler2("Euler2");
+    const std::string Euler3("Euler3");
+    const std::string SurfaceVoxels("SurfaceVoxels");
+    const std::string Neighbors("Neighbors");
+    const std::string Quats("Quats");
+    const std::string AlreadyChecked("AlreadyChecked");
+    const std::string GoodVoxels("GoodVoxels");
+    const std::string NearestNeighbors("NearestNeighbors");
+    const std::string NearestNeighborDistances("NearestNeighborDistances");
+    const std::string GrainMisorientations("GrainMisorientations");
+    const std::string MisorientationGradients("MisorientationGradients");
+    const std::string KernelMisorientations("KernelMisorientations");
+  }
+}
+
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
  * @brief
@@ -72,6 +94,23 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     virtual ~DataContainer();
 
+
+    /* *********** These methods will eventually replace those below *************/
+
+  /**
+   * @brief Adds/overwrites the data for a named array
+   * @param name The name that the array will be known by
+   * @param data The IDataArray::Pointer that will hold the data
+   */
+    void addVoxelData(const std::string &name, IDataArray::Pointer data);
+
+    /**
+     * @brief Returns the array for a given named array or the equivelant to a
+     * null pointer if the name does not exist.
+     * @param name The name of the data array
+     */
+    IDataArray::Pointer getVoxelData(const std::string &name);
+
     // Volume Dimensional Information
     float resx;
     float resy;
@@ -80,23 +119,6 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int ypoints;
     int zpoints;
     int totalpoints;
-
-    void addVoxelData(const std::string &name, IDataArray::Pointer data)
-    {
-      m_VoxelData[name] = data;
-    }
-
-    IDataArray::Pointer getVoxelData(const std::string &name)
-    {
-      std::map<std::string, IDataArray::Pointer>::iterator it;
-      it =  m_VoxelData.find(name);
-      if ( it == m_VoxelData.end() )
-      {
-        return IDataArray::NullPointer();
-      }
-      return (*it).second;
-    }
-
 
     // Cell Data
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
@@ -118,6 +140,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     // Field Data Pointer Array
     std::vector<Field::Pointer> m_Grains;
 
+    // Ensemble Data??
     // Phase Information (crystal structures, phase types, and shape types)
     std::vector<Ebsd::CrystalStructure> crystruct;
     std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
