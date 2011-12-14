@@ -71,7 +71,6 @@ void FindEuclideanDistMap::execute()
 void FindEuclideanDistMap::find_euclideandistmap()
 {
   DataContainer* m = getDataContainer();
-  m->nearestgrains = m->m_NearestGrains->WritePointer(0, m->totalpoints);
   for (int i = 0; i < m->totalpoints; ++i)
   {
 	m->nearestgrains[i] = -1;

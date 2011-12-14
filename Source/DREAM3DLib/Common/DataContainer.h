@@ -109,7 +109,6 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
     DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
     DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
-    DECLARE_WRAPPED_ARRAY(nearestgrains, m_NearestGrains, int);
     DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, int); // N x 3 Array
     DECLARE_WRAPPED_ARRAY(nearestneighbordistances, m_NearestNeighborDistances, float); // N x 3 Array
     DECLARE_WRAPPED_ARRAY(grainmisorientations, m_GrainMisorientations, float);
