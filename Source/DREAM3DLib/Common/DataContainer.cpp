@@ -66,7 +66,6 @@ DataContainer::DataContainer()
   alreadychecked = NULL;
   neighbors = NULL;
   goodVoxels = NULL;
-  nearestgrains = NULL;
   nearestneighbors = NULL;
   nearestneighbordistances = NULL;
   grainmisorientations = NULL;
@@ -84,7 +83,6 @@ DataContainer::DataContainer()
   INIT_DataArray(m_GoodVoxels,bool);
   INIT_DataArray(m_Quats,float);
   INIT_DataArray(m_AlreadyChecked,bool);
-  INIT_DataArray(m_NearestGrains,int);
   INIT_DataArray(m_NearestNeighbors,int);
   INIT_DataArray(m_NearestNeighborDistances,float);
   INIT_DataArray(m_GrainMisorientations,float);
