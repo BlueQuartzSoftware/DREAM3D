@@ -8,55 +8,18 @@
 
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 #define helper(a, b)\
   a##b
 
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-class DataContainer
-{
-  public:
-    DataContainer() {}
-    virtual ~DataContainer() {}
-
-
-    void addVoxelData(const std::string &name, IDataArray::Pointer data)
-    {
-      m_VoxelData[name] = data;
-    }
-
-    IDataArray::Pointer getVoxelData(const std::string &name)
-    {
-      std::map<std::string, IDataArray::Pointer>::iterator it;
-      it =  m_VoxelData.find(name);
-      if ( it == m_VoxelData.end() )
-      {
-        return IDataArray::NullPointer();
-      }
-      return (*it).second;
-    }
-
-
-  protected:
-
-  private:
-    std::map<std::string, IDataArray::Pointer> m_VoxelData;
-
-
-
-    DataContainer(const DataContainer&); // Copy Constructor Not Implemented
-    void operator=(const DataContainer&); // Operator '=' Not Implemented
-};
-
 
 #define MAKE_ARRAY(type, name)\
 IDataArray::Pointer type##Ptr = DataArray<type>::CreateArray(5);\
 type##Ptr->SetName( name );\
-dataContainer.addVoxelData(name, type##Ptr);
+dataContainer->addVoxelData(name, type##Ptr);
 
 
 typedef DataArray<int8_t>  Int8ArrayType;
@@ -72,7 +35,7 @@ typedef DataArray<double>  DoubleArrayType;
 int main(int argc, char **argv)
 {
 
-  DataContainer dataContainer;
+  DataContainer::Pointer dataContainer = DataContainer::New();
 
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );
@@ -87,11 +50,9 @@ int main(int argc, char **argv)
     MAKE_ARRAY(double, "double_Array" );
   }
 
-
-
   {
     // We can get a smaart pointer to the IDataArray Class
-    IDataArray::Pointer ptr = dataContainer.getVoxelData("int32_t_Array");
+    IDataArray::Pointer ptr = dataContainer->getVoxelData("int32_t_Array");
 
 
     double* dPtr = IDataArray::SafeReinterpretCast<IDataArray*, DoubleArrayType*, double*>(ptr.get());
@@ -101,7 +62,7 @@ int main(int argc, char **argv)
     assert(NULL != iPtr);
 
     // Or we can downcast to the type we know it is (in line)
-    Int32ArrayType* intPtr = Int32ArrayType::SafeObjectDownCast<IDataArray*, Int32ArrayType* >(dataContainer.getVoxelData("int32_t_Array").get());
+    Int32ArrayType* intPtr = Int32ArrayType::SafeObjectDownCast<IDataArray*, Int32ArrayType* >(dataContainer->getVoxelData("int32_t_Array").get());
     if (NULL != intPtr)
     {
       std::cout << "Downcast to intPtr pointer was successful" << std::endl;

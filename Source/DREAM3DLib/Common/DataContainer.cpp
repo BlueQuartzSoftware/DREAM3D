@@ -97,3 +97,26 @@ DataContainer::~DataContainer()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer DataContainer::getVoxelData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_VoxelData.find(name);
+  if ( it == m_VoxelData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::addVoxelData(const std::string &name, IDataArray::Pointer data)
+{
+  m_VoxelData[name] = data;
+}
+
