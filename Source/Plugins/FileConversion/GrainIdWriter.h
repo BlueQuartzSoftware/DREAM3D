@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IO/DREAM3DDataFile.h"
 #include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/IO/DxWriter.hpp"
@@ -60,7 +60,7 @@ class GrainIdWriter : public DREAM3DDataFile
     DREAM3D_TYPE_MACRO(GrainIdWriter);
     virtual ~GrainIdWriter() { }
 
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, GrainIds);
+    DREAM3D_INSTANCE_PROPERTY(DataArray<int>::Pointer, GrainIds);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
     virtual int writeGrainIds() { return -1; }

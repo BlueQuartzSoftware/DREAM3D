@@ -179,7 +179,7 @@ int DxReader::readFile()
   finished_data = false;
   size_t index = 0;
   setDimensions(nx, ny, nz);
-  m_Data = AIMArray<int>::CreateArray(nx * ny * nz);
+  m_Data = DataArray<int>::CreateArray(nx * ny * nz);
   while (getline(inFile, line, '\n') != NULL)
   {
 
@@ -196,7 +196,7 @@ int DxReader::readFile()
       finished_data = true;
     }
 
-    // Allocate the AIMArray at this point:
+    // Allocate the DataArray at this point:
 
 
 

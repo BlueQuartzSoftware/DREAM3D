@@ -2,4 +2,4 @@
 
 project(ArrayTest)
 
-add_executable(DataArrayTest DataArrayTest.cpp)
+add_executable(DataArrayTest DataArrayTest.cpp )

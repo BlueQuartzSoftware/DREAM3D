@@ -41,7 +41,7 @@
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 namespace Detail {
   namespace QualityMetricFilter
@@ -77,7 +77,7 @@ class EbsdLib_EXPORT QualityMetricFilter
     EBSD_INSTANCE_PROPERTY(void*, Input)
     EBSD_INSTANCE_PROPERTY(size_t, NumValues)
     EBSD_INSTANCE_PROPERTY(Ebsd::NumType, DataType);
-    EBSD_INSTANCE_PROPERTY(AIMArray<bool>::Pointer, Output)
+    EBSD_INSTANCE_PROPERTY(DataArray<bool>::Pointer, Output)
 
     int filter();
 

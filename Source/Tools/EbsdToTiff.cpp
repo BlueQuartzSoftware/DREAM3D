@@ -44,7 +44,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Common/LogTime.h"
 
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 
 #include "EbsdLib/EbsdLib.h"
@@ -59,7 +59,7 @@
 #define _TIFF_DATA_TYPEDEFS_ 1
 #include <tiffio.h>
 
-int writeColorTiff(const std::string filename, AIMArray<uint8_t>::Pointer image, int width, int height,
+int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image, int width, int height,
                    const std::string imageDescription, int orientation)
 {
 
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
   int width = ebsdReader->getXDimension();
   int height = ebsdReader->getYDimension();
   int total = width *height;
-  AIMArray<uint8_t>::Pointer rgbArray = AIMArray<uint8_t>::CreateArray(total * 3);
+  DataArray<uint8_t>::Pointer rgbArray = DataArray<uint8_t>::CreateArray(total * 3);
   rgbArray->SetNumberOfComponents(3);
   rgbArray->WritePointer(0, total*3);
   // Splat 0xFF across all the data

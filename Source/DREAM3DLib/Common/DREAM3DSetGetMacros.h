@@ -160,7 +160,7 @@ static Pointer New args \
     return this->thisClass::IsTypeOf(type); \
   } \
   template <class Source, class Target>\
-  inline Target SafeDownCast(Source x) { \
+  inline Target SafeObjectDownCast(Source x) { \
       if( dynamic_cast<Target>(x) != x ) { \
         return NULL;\
       }\
@@ -184,7 +184,7 @@ static Pointer New args \
     return this->thisClass::IsTypeOf(type); \
   } \
   template <class Source, class Target>\
-  static Target SafeDownCast(Source x) { \
+  static Target SafeObjectDownCast(Source x) { \
       if( dynamic_cast<Target>(x) != x ) { \
         return NULL;\
       }\

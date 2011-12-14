@@ -84,14 +84,14 @@ namespace Detail {
         setOrigin(origin);
 
         size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
-        // Create an AIMArray to hold the data
-        AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(totalpoints);
+        // Create an DataArray to hold the data
+        DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints);
 
         err = reader->readScalarData<int>(DREAM3D::VTK::GrainIdScalarName, grainIds->GetPointer(0));
         if (err < 0)
         {
           setErrorMessage("Error Reading the GrainIDs from the .h5voxel file.");
-          grainIds = AIMArray<int>::NullPointer();
+          grainIds = DataArray<int>::NullPointer();
         }
         setGrainIds(grainIds);
         return err;
@@ -257,7 +257,7 @@ void FileConversion::execute()
   reader->getResolution(resolution);
   float origin[3];
   reader->getOrigin(origin);
-  AIMArray<int>::Pointer grainIds = reader->getGrainIds();
+  DataArray<int>::Pointer grainIds = reader->getGrainIds();
   if (grainIds.get() == NULL)
   {
     err = -1;

@@ -47,7 +47,7 @@
 #include <QtGui/QGraphicsPixmapItem>
 #include <QtGui/QPushButton>
 
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 
 #include "EbsdLib/EbsdLib.h"
@@ -174,7 +174,7 @@ void EbsdReferenceFrameDialog::loadEbsdData()
   uint32_t width = ebsdReader->getXDimension();
   uint32_t height = ebsdReader->getYDimension();
   uint32_t total = width *height;
-  AIMArray<uint32_t>::Pointer rgbArray = AIMArray<uint32_t>::CreateArray(total);
+  DataArray<uint32_t>::Pointer rgbArray = DataArray<uint32_t>::CreateArray(total);
   rgbArray->SetNumberOfComponents(1);
   rgbArray->WritePointer(0, total);
   // Splat 0xFF across all the data
