@@ -1457,15 +1457,13 @@ void PackGrainsGen2::assign_gaps()
   float dist;
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
-  int *tempgrain_indicies;
-  tempgrain_indicies = new int [m->totalpoints];
+  int *tempgrain_indicies = new int [m->totalpoints];
   int *newowners;
   newowners = new int [m->totalpoints];
   float *ellipfuncs;
   ellipfuncs = new float [m->totalpoints];
   for(int i = 0; i < m->totalpoints; i++)
   {
-	  tempgrain_indicies[i] = m->grain_indicies[i];
 	  newowners[i] = -1;
 	  ellipfuncs[i] = -1.0;
   }
@@ -1609,11 +1607,10 @@ void PackGrainsGen2::assign_gaps()
   }
   for (int i = 0; i < m->totalpoints; i++)
   {
-	  m->grain_indicies[i] = tempgrain_indicies[i];
 	  if(tempgrain_indicies[i] > 0) m->phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
   }
-  delete [] tempgrain_indicies;
   delete [] ellipfuncs;
+  delete [] newowners;
 }
 void PackGrainsGen2::cleanup_grains()
 {
