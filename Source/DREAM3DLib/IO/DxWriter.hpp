@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IO/FileWriter.h"
 
 
@@ -68,7 +68,7 @@ class DxWriter : public DREAM3D::FileWriter
     virtual ~DxWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, Data);
+    DREAM3D_INSTANCE_PROPERTY(DataArray<int>::Pointer, Data);
 
 
     virtual int writeFile()

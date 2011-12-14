@@ -49,8 +49,8 @@ FindShapes::FindShapes()
   graincenters = NULL;
   grainmoments = NULL;
 
-  INIT_AIMARRAY(m_GrainCenters,float);
-  INIT_AIMARRAY(m_GrainMoments,float);
+  INIT_DataArray(m_GrainCenters,float);
+  INIT_DataArray(m_GrainMoments,float);
 }
 
 // -----------------------------------------------------------------------------

@@ -161,11 +161,11 @@ int H5VoxelReader::readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelL
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelReader::readVoxelData(AIMArray<int>::Pointer grain_indicies,
-                  AIMArray<int>::Pointer phases,
-                  AIMArray<float>::Pointer euler1s,
-                  AIMArray<float>::Pointer euler2s,
-                  AIMArray<float>::Pointer euler3s,
+int H5VoxelReader::readVoxelData(DataArray<int>::Pointer grain_indicies,
+                  DataArray<int>::Pointer phases,
+                  DataArray<float>::Pointer euler1s,
+                  DataArray<float>::Pointer euler2s,
+                  DataArray<float>::Pointer euler3s,
                   std::vector<Ebsd::CrystalStructure> &crystruct,
                   std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
                   int totalpoints)
@@ -189,7 +189,7 @@ int H5VoxelReader::readVoxelData(AIMArray<int>::Pointer grain_indicies,
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
 
   // Allocate an Array for the Euler Data with is nRows X 3 Columns
-  AIMArray<float>::Pointer fData = AIMArray<float>::CreateArray(0);
+  DataArray<float>::Pointer fData = DataArray<float>::CreateArray(0);
   fData->WritePointer(0, totalpoints*3);
   fData->SetNumberOfComponents(3);
   err = readScalarData(DREAM3D::VTK::EulerAnglesName, fData->GetPointer(0));

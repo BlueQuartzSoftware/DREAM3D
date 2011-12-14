@@ -74,7 +74,7 @@ void RemoveTestFiles()
 int TestVtkGrainIdWriter()
 {
   int size = Detail::XSize * Detail::YSize * Detail::ZSize;
-  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
     grainIds->SetValue(i, i + Detail::Offset);
@@ -117,7 +117,7 @@ int TestVtkGrainIdReader()
   DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
 
-  AIMArray<int>::Pointer grainIds = reader->getGrainIds();
+  DataArray<int>::Pointer grainIds = reader->getGrainIds();
   DREAM3D_REQUIRE(NULL != grainIds.get());
 
   int size = Detail::XSize * Detail::YSize * Detail::ZSize;

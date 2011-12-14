@@ -219,6 +219,34 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
     m->m_Grains[g] = Field::New();
   }
 
+  /* ********** This is the proposed way to add arrays to the DataContainer */
+
+  // First check to see if the array already exists in the Data Container. If
+  // it does NOT exist then we would get a NULL pointer back.
+  IDataArray::Pointer smart_pointer = m->getVoxelData("Grain Indices");
+  if (smart_pointer.get() == NULL) {
+    IDataArray::Pointer grainIndices = Int32ArrayType::CreateArray(m->totalpoints);
+    m->addVoxelData("Grain Indices", grainIndices);
+  }
+
+  // Now later on we can get at that array by casting the IDataArray to the proper type
+  Int32ArrayType* grainIndices =
+      Int32ArrayType::SafeObjectDownCast<IDataArray*, Int32ArrayType* >(m->getVoxelData("Grain Indices").get());
+  // If the casting fails, because we got the wrong type then the resulting pointer will be null
+  if (NULL == grainIndices)
+  {
+    std::cout << "Something went wrong pulling the Grain Indices array from the Data Container. Was it created?" << std::endl;
+  }
+
+  // We can even get the raw pointer to the data if we wanted to;
+  int32_t* grain_indices = grainIndices->GetPointer(0);
+  for(int i =0; i < m->totalpoints; ++i)
+  {
+    grain_indices[i] = i; //Note that there is NO bounds checking. This is the raw pointer
+    // but will point back to the array that is store in the DataContainer
+  }
+  /* ************************** End of Example *****************************/
+
   m->grain_indicies = m->m_GrainIndicies->WritePointer(0, m->totalpoints);
   m->phases = m->m_Phases->WritePointer(0, m->totalpoints);
   m->euler1s = m->m_Euler1s->WritePointer(0, m->totalpoints);

@@ -39,6 +39,15 @@ class DREAM3DLib_EXPORT IDataArray
     DREAM3D_SHARED_POINTERS(IDataArray);
     DREAM3D_TYPE_MACRO(IDataArray);
 
+    template <class Source, class Target, typename Raw>
+    static Raw SafeReinterpretCast(Source x) {
+        if( dynamic_cast<Target>(x) != x ) {
+          return 0;
+        }
+        return reinterpret_cast<Raw>(x->GetVoidPointer(0));
+    }
+
+
     IDataArray() {}
     virtual ~IDataArray() {}
 
@@ -66,7 +75,15 @@ class DREAM3DLib_EXPORT IDataArray
      */
     virtual void* GetVoidPointer ( size_t i) = 0;
 
-    /**
+
+    /* This method, while possibly useful, would probably lead to more errors than
+     * anything else. There is NO checking if the pointers are valid or compatible
+     * with each other and there really is no way of figuring out that information
+     */
+//    template<typename T>
+//    T* GetCastPointer(size_t i) { return reinterpret_cast<T*>(GetVoidPointer(i)); }
+
+     /**
      * @brief Returns the number of elements in the internal array.
      */
     virtual size_t GetNumberOfTuples () = 0;

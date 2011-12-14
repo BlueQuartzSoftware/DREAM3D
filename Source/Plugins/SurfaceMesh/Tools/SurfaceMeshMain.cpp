@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 #include <SurfaceMesh/SurfaceMesh.h>
 

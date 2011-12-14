@@ -47,7 +47,7 @@ const static float m_pi = M_PI;
 FindNeighborhoods::FindNeighborhoods()
 {
   graincenters = NULL;
-  INIT_AIMARRAY(m_GrainCenters,float);
+  INIT_DataArray(m_GrainCenters,float);
 }
 
 // -----------------------------------------------------------------------------

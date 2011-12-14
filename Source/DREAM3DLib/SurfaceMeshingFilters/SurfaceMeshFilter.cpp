@@ -433,7 +433,7 @@ void SurfaceMeshFilter::execute()
   int zFileDim = zDim - 2;
   size_t totalBytes = xFileDim * yFileDim * sizeof(int);
 
-  AIMArray<int>::Pointer m_FileVoxelLayer = AIMArray<int>::CreateArray(0);
+  DataArray<int>::Pointer m_FileVoxelLayer = DataArray<int>::CreateArray(0);
   int* fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
   size_t offset = 0;
 

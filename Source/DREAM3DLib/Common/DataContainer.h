@@ -52,7 +52,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Field.h"
 #include "DREAM3DLib/Common/Observable.h"
 
@@ -80,6 +80,23 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int ypoints;
     int zpoints;
     int totalpoints;
+
+    void addVoxelData(const std::string &name, IDataArray::Pointer data)
+    {
+      m_VoxelData[name] = data;
+    }
+
+    IDataArray::Pointer getVoxelData(const std::string &name)
+    {
+      std::map<std::string, IDataArray::Pointer>::iterator it;
+      it =  m_VoxelData.find(name);
+      if ( it == m_VoxelData.end() )
+      {
+        return IDataArray::NullPointer();
+      }
+      return (*it).second;
+    }
+
 
     // Cell Data
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
@@ -110,9 +127,11 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
     std::vector<float> phasefraction;
 
-protected:
+  protected:
     DataContainer();
+
   private:
+    std::map<std::string, IDataArray::Pointer> m_VoxelData;
 
     DataContainer(const DataContainer&);
     void operator =(const DataContainer&);

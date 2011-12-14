@@ -12,7 +12,8 @@
 SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/AIMArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/DataArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.h

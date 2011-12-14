@@ -70,7 +70,7 @@ AlignSections::AlignSections()
 
 
   graincounts = NULL;
-  INIT_AIMARRAY(m_GrainCounts, int);
+  INIT_DataArray(m_GrainCounts, int);
 
 }
 

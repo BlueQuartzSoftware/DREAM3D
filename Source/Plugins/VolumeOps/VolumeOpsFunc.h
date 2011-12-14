@@ -60,7 +60,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Field.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"

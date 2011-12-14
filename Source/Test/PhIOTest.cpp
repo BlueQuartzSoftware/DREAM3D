@@ -41,7 +41,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IO/PhWriter.hpp"
 #include "DREAM3DLib/IO/PhReader.h"
 
@@ -66,7 +66,7 @@ void RemoveTestFiles()
 int TestPhWriter()
 {
   int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
-  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
     grainIds->SetValue(i, i + UnitTest::PhIOTest::Offset);
@@ -105,7 +105,7 @@ int TestPhReader()
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::PhIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::PhIOTest::ZSize);
 
-  AIMArray<int>::Pointer data = reader->getData();
+  DataArray<int>::Pointer data = reader->getData();
   int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
   for (int i = 0; i < size; ++i)
   {
@@ -125,7 +125,7 @@ int TestCasting()
   DREAM3D::FileReader* super = static_cast<DREAM3D::FileReader*>(ptr.get());
   DREAM3D::FileWriter::Pointer other = DREAM3D::FileWriter::New();
 
-  PhReader* derived = PhReader::SafeDownCast<DREAM3D::FileReader*, PhReader*>(super);
+  PhReader* derived = PhReader::SafeObjectDownCast<DREAM3D::FileReader*, PhReader*>(super);
   DREAM3D_ASSERT(derived != NULL);
   derived = dynamic_cast<PhReader*>(other.get());
   DREAM3D_ASSERT(derived == NULL);
