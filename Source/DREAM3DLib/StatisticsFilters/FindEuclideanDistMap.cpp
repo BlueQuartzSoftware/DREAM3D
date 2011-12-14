@@ -130,9 +130,9 @@ void FindEuclideanDistMap::find_euclideandistmap()
 		}
 	  }
 	}
-	if(coordination.size() > 2) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = 0, m->nearestneighbordistances[a*3+2] = 0, m->nearestneighbors[a*3+0] = a, m->nearestneighbors[a*3+1] = a, m->nearestneighbors[a*3+2] = a;
-	if(coordination.size() == 2) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = 0, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = a, m->nearestneighbors[a*3+1] = a, m->nearestneighbors[a*3+2] = -1;
-	if(coordination.size() == 1) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = -1, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = a, m->nearestneighbors[a*3+1] = -1, m->nearestneighbors[a*3+2] = -1;
+	if(coordination.size() > 2) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = 0, m->nearestneighbordistances[a*3+2] = 0, m->nearestneighbors[a*3+0] = coordination[0], m->nearestneighbors[a*3+1] = coordination[0], m->nearestneighbors[a*3+2] = coordination[0];
+	if(coordination.size() == 2) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = 0, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = coordination[0], m->nearestneighbors[a*3+1] = coordination[0], m->nearestneighbors[a*3+2] = -1;
+	if(coordination.size() == 1) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = -1, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = coordination[0], m->nearestneighbors[a*3+1] = -1, m->nearestneighbors[a*3+2] = -1;
 	if(coordination.size() == 0) m->nearestneighbordistances[a*3+0] = -1, m->nearestneighbordistances[a*3+1] = -1, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = -1, m->nearestneighbors[a*3+1] = -1, m->nearestneighbors[a*3+2] = -1;
  }
 #if AIM_USE_PARALLEL_ALGORITHMS

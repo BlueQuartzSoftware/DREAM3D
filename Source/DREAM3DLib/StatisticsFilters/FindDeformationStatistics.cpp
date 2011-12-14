@@ -203,7 +203,7 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
 		  tjdist = m->nearestneighbordistances[i*3 + 1];
 		  qpdist = m->nearestneighbordistances[i*3 + 2];
 		  nearestneighbor = m->nearestneighbors[i*3 + 0];
-		  gname2 = m->nearestgrains[nearestneighbor];
+		  gname2 = m->grain_indicies[nearestneighbor];
 		  sf = m->m_Grains[gname]->schmidfactor;
 		  sf2 = m->m_Grains[gname2]->schmidfactor;
 		  sfmm = sf / sf2;
