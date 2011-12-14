@@ -73,22 +73,23 @@ DataContainer::DataContainer()
   misorientationgradients = NULL;
   kernelmisorientations = NULL;
 
-  INIT_AIMARRAY(m_GrainIndicies,int);
-  INIT_AIMARRAY(m_Phases,int);
-  INIT_AIMARRAY(m_Euler1s,float);
-  INIT_AIMARRAY(m_Euler2s,float);
-  INIT_AIMARRAY(m_Euler3s,float);
-  INIT_AIMARRAY(m_SurfaceVoxels,char);
-  INIT_AIMARRAY(m_Neighbors,int);
-  INIT_AIMARRAY(m_GoodVoxels,bool);
-  INIT_AIMARRAY(m_Quats,float);
-  INIT_AIMARRAY(m_AlreadyChecked,bool);
-  INIT_AIMARRAY(m_NearestGrains,int);
-  INIT_AIMARRAY(m_NearestNeighbors,int);
-  INIT_AIMARRAY(m_NearestNeighborDistances,float);
-  INIT_AIMARRAY(m_GrainMisorientations,float);
-  INIT_AIMARRAY(m_MisorientationGradients,float);
-  INIT_AIMARRAY(m_KernelMisorientations,float);
+
+  INIT_DataArray(m_GrainIndicies,int);
+  INIT_DataArray(m_Phases,int);
+  INIT_DataArray(m_Euler1s,float);
+  INIT_DataArray(m_Euler2s,float);
+  INIT_DataArray(m_Euler3s,float);
+  INIT_DataArray(m_SurfaceVoxels,char);
+  INIT_DataArray(m_Neighbors,int);
+  INIT_DataArray(m_GoodVoxels,bool);
+  INIT_DataArray(m_Quats,float);
+  INIT_DataArray(m_AlreadyChecked,bool);
+  INIT_DataArray(m_NearestGrains,int);
+  INIT_DataArray(m_NearestNeighbors,int);
+  INIT_DataArray(m_NearestNeighborDistances,float);
+  INIT_DataArray(m_GrainMisorientations,float);
+  INIT_DataArray(m_MisorientationGradients,float);
+  INIT_DataArray(m_KernelMisorientations,float);
 }
 
 // -----------------------------------------------------------------------------

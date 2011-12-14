@@ -48,12 +48,12 @@
 
 #define     DREAM3D_DECLARE_ARRAY(type, ptr, prpty )\
     private:\
-      AIMArray<type>::Pointer m_##prpty;\
+      DataArray<type>::Pointer m_##prpty;\
       type* ptr;\
   public:\
     public:\
-    DREAM3D_SET_PROPERTY(AIMArray<type>::Pointer, prpty)\
-    DREAM3D_GET_PROPERTY(AIMArray<type>::Pointer, prpty)
+    DREAM3D_SET_PROPERTY(DataArray<type>::Pointer, prpty)\
+    DREAM3D_GET_PROPERTY(DataArray<type>::Pointer, prpty)
 
 
 /**

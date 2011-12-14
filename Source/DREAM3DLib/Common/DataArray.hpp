@@ -8,8 +8,8 @@
 //                           FA8650-04-C-5229
 //
 
-#ifndef _AIMArray_h_
-#define _AIMArray_h_
+#ifndef _DataArray_h_
+#define _DataArray_h_
 
 // STL Includes
 #include <vector>
@@ -17,56 +17,62 @@
 #include <fstream>
 
 
-#include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Utilities/StringUtils.h"
 
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #define mxa_bswap(s,d,t)\
   t[0] = ptr[s];\
   ptr[s] = ptr[d];\
   ptr[d] = t[0];
 
-/** @brief Resizes the AIMArray Shared Array and assigns its internal data pointer
+/** @brief Resizes the DataArray Shared Array and assigns its internal data pointer
  *
  */
 #define RESIZE_ARRAY(sharedArray, pointer, size)\
   pointer = sharedArray->WritePointer(0, size);
 
 #define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, type)\
-  AIMArray<type>::Pointer priVar;\
+  DataArray<type>::Pointer priVar;\
   type* pubVar;
 
-#define INIT_AIMARRAY(var, type)\
-  var = AIMArray<type>::CreateArray(0);\
+#define INIT_DataArray(var, type)\
+  var = DataArray<type>::CreateArray(0);\
   var->SetName(#var);
 
 /**
- * @class AIMArray AIMArray.hpp PathToHeader/AIMArray.hpp
+ * @class DataArray DataArray.hpp DREAM3DLib/Common/DataArray.hpp
  * @brief Template class for wrapping raw arrays of data.
  * @author mjackson
  * @date July 3, 2008
  * @version $Revision: 1.2 $
  */
 template<typename T>
-class AIMArray
+class DataArray : public IDataArray
 {
   public:
 
-    MXA_SHARED_POINTERS(AIMArray<T> )
+    DREAM3D_SHARED_POINTERS(DataArray<T> )
+    DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
+
+
     typedef std::vector<Pointer>   ContainterType;
 
     /**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
-     * @return Boost::Shared_Ptr wrapping an instance of AIMArrayTemplate<T>
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numElements = 0)
     {
-      AIMArray<T>* d = new AIMArray<T> (numElements, true);
+      DataArray<T>* d = new DataArray<T> (numElements, true);
       if (d->Allocate() < 0)
       { // Could not allocate enough memory, reset the pointer to null and return
         delete d;
-        return AIMArray<T>::NullPointer();
+        return DataArray<T>::NullPointer();
       }
       Pointer ptr((d));
       return ptr;
@@ -75,9 +81,9 @@ class AIMArray
     /**
      * @brief Destructor
      */
-    virtual ~AIMArray()
+    virtual ~DataArray()
     {
-      //std::cout << "~AIMArrayTemplate '" << m_Name << "'" << std::endl;
+      //std::cout << "~DataArrayTemplate '" << m_Name << "'" << std::endl;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -235,6 +241,7 @@ class AIMArray
       return (void*)(&(Array[i]));
     }
 
+
     /**
      * @brief Returns the value for a given index
      * @param i The index to return the value at
@@ -374,7 +381,7 @@ class AIMArray
     virtual void printSelf(std::ostream &os, int32_t indent)
     {
       std::string ind = StringUtils::indent(indent);
-      os << ind << "AIMArray<T>" << std::endl;
+      os << ind << "DataArray<T>" << std::endl;
       ind = StringUtils::indent(indent + 1);
       os << ind << "Number of Elements: " << this->GetNumberOfTuples() << std::endl;
  //     os << ind << "Number of Dimensions: " << this->getNumberOfDimensions() << std::endl;
@@ -458,7 +465,7 @@ class AIMArray
      * @param numElements The number of elements in the internal array.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
-    AIMArray(size_t numElements, bool ownsData = true) :
+    DataArray(size_t numElements, bool ownsData = true) :
       Array(NULL), Size(numElements), _ownsData(ownsData)
     {
       NumberOfComponents = 1;
@@ -552,10 +559,19 @@ class AIMArray
 
     std::string m_Name;
 
-    AIMArray(const AIMArray&); //Not Implemented
-    void operator=(const AIMArray&); //Not Implemented
+    DataArray(const DataArray&); //Not Implemented
+    void operator=(const DataArray&); //Not Implemented
 
 };
 
-#endif //_AIMArray_h_
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
+typedef DataArray<bool> BoolArrayType;
+typedef DataArray<int32_t> Int32ArrayType;
+typedef DataArray<float> FloatArrayType;
+
+#endif //_DataArray_h_
 

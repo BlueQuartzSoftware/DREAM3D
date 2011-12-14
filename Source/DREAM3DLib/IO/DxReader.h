@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IO/FileReader.h"
 
 /**
@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT DxReader : public DREAM3D::FileReader
 
     virtual ~DxReader();
 
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, Data);
+    DREAM3D_INSTANCE_PROPERTY(DataArray<int>::Pointer, Data);
 
 
 

@@ -41,7 +41,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IO/DxWriter.hpp"
 #include "DREAM3DLib/IO/DxReader.h"
 
@@ -64,7 +64,7 @@ void RemoveTestFiles()
 int TestDxWriter()
 {
   int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
-  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(size);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
     grainIds->SetValue(i, i + UnitTest::DxIOTest::Offset);
@@ -97,7 +97,7 @@ int TestDxReader()
 
   int err = reader->readFile( );
   reader->getDimensions(nx, ny, nz);
-  AIMArray<int>::Pointer data = reader->getData();
+  DataArray<int>::Pointer data = reader->getData();
   DREAM3D_REQUIRE_EQUAL(err, 0);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DxIOTest::YSize);

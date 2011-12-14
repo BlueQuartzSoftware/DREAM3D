@@ -50,7 +50,7 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
@@ -112,11 +112,11 @@ int main(int argc, char **argv)
   DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
   DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
 
-  m_GrainIndicies = AIMArray<int>::CreateArray(0);
-  m_Phases = AIMArray<int>::CreateArray(0);
-  m_Euler1s = AIMArray<float>::CreateArray(0);
-  m_Euler2s = AIMArray<float>::CreateArray(0);
-  m_Euler3s = AIMArray<float>::CreateArray(0);
+  m_GrainIndicies = DataArray<int>::CreateArray(0);
+  m_Phases = DataArray<int>::CreateArray(0);
+  m_Euler1s = DataArray<float>::CreateArray(0);
+  m_Euler2s = DataArray<float>::CreateArray(0);
+  m_Euler3s = DataArray<float>::CreateArray(0);
 
 
   int totalpoints = dims[0] * dims[1] * dims[2];

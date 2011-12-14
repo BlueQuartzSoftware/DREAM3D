@@ -56,7 +56,7 @@ FindMDF::FindMDF()
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
 
   totalsurfacearea = NULL;
-  INIT_AIMARRAY(m_TotalSurfaceArea, float);
+  INIT_DataArray(m_TotalSurfaceArea, float);
 }
 
 // -----------------------------------------------------------------------------

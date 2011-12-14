@@ -53,7 +53,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5Macros.h"
 
@@ -86,11 +86,11 @@ class DREAM3DLib_EXPORT H5VoxelReader
 /**
  *
  */
-	int readVoxelData(AIMArray<int>::Pointer grain_indicies,
-	                  AIMArray<int>::Pointer phases,
-	                  AIMArray<float>::Pointer euler1s,
-	                  AIMArray<float>::Pointer euler2s,
-	                  AIMArray<float>::Pointer euler3s,
+	int readVoxelData(DataArray<int>::Pointer grain_indicies,
+	                  DataArray<int>::Pointer phases,
+	                  DataArray<float>::Pointer euler1s,
+	                  DataArray<float>::Pointer euler2s,
+	                  DataArray<float>::Pointer euler3s,
 	                  std::vector<Ebsd::CrystalStructure> &crystruct,
 	                  std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
 	                  int totalpoints);
