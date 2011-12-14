@@ -57,7 +57,6 @@
 DataContainer::DataContainer()
 {
   grain_indicies = NULL;
-  ellipfuncs = NULL;
   phases = NULL;
   euler1s = NULL;
   euler2s = NULL;
@@ -75,7 +74,6 @@ DataContainer::DataContainer()
   kernelmisorientations = NULL;
 
   INIT_AIMARRAY(m_GrainIndicies,int);
-  INIT_AIMARRAY(m_Ellipfuncs,float);
   INIT_AIMARRAY(m_Phases,int);
   INIT_AIMARRAY(m_Euler1s,float);
   INIT_AIMARRAY(m_Euler2s,float);

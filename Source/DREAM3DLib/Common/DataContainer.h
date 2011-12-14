@@ -83,7 +83,6 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     // Cell Data
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-    DECLARE_WRAPPED_ARRAY(ellipfuncs, m_Ellipfuncs, float)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int)
     DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float)
     DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float)

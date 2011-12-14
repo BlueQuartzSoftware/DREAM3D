@@ -100,6 +100,11 @@ PackGrainsGen2::~PackGrainsGen2()
 void PackGrainsGen2::execute()
 {
   DataContainer* m = getDataContainer();
+#if ERROR_TXT_OUT
+  std::ofstream outFile;
+  std::string filename = "error.txt";
+  outFile.open(filename.c_str(), std::ios_base::binary);
+#endif
   int err = 0;
   setErrorCondition(err);
   unsigned long long int Seed = MXA::getMilliSeconds();
@@ -122,6 +127,7 @@ void PackGrainsGen2::execute()
     notify( getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
     return;
   }
+
   err = readAxisOrientationData(h5reader);
   if (err < 0)
   {
@@ -130,6 +136,7 @@ void PackGrainsGen2::execute()
     notify( getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
     return;
   }
+
   initializeAttributes();
 
   float change1, change2, change;
@@ -206,9 +213,9 @@ void PackGrainsGen2::execute()
       }
     }
     generate_grain(gid, phase, Seed);
-  currentsizedisterror = check_sizedisterror(gid, -1000);
+    currentsizedisterror = check_sizedisterror(gid, -1000);
     change = (currentsizedisterror) - (oldsizedisterror);
-  if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
+    if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
     {
        m->m_Grains[gid]->active = 1;
        oldsizedisterror = currentsizedisterror;
@@ -216,7 +223,7 @@ void PackGrainsGen2::execute()
        gid++;
        m->m_Grains.resize(gid + 1);
        m->m_Grains[gid] = Field::New();
-     iter = 0;
+       iter = 0;
     }
   }
   if(m_periodic_boundaries == false)
@@ -290,29 +297,24 @@ void PackGrainsGen2::execute()
       xc = rg.genrand_res53() * (m->xpoints * m->resx);
       yc = rg.genrand_res53() * (m->ypoints * m->resy);
       zc = rg.genrand_res53() * (m->zpoints * m->resz);
-    oldxc = m->m_Grains[i]->centroidx;
-    oldyc = m->m_Grains[i]->centroidy;
-    oldzc = m->m_Grains[i]->centroidz;
-    oldfillingerror = fillingerror;
-    fillingerror = check_fillingerror(-1000,i);
+      oldxc = m->m_Grains[i]->centroidx;
+      oldyc = m->m_Grains[i]->centroidy;
+      oldzc = m->m_Grains[i]->centroidz;
+      oldfillingerror = fillingerror;
+      fillingerror = check_fillingerror(-1000,i);
       move_grain(i, xc, yc, zc);
       fillingerror = check_fillingerror(i, -1000);
-    if(fillingerror > oldfillingerror)
-    {
-    fillingerror = check_fillingerror(-1000,i);
-    move_grain(i, oldxc, oldyc, oldzc);
-    fillingerror = check_fillingerror(i,-1000);
-    }
+      if(fillingerror > oldfillingerror)
+      {
+		fillingerror = check_fillingerror(-1000,i);
+		move_grain(i, oldxc, oldyc, oldzc);
+		fillingerror = check_fillingerror(i,-1000);
+      }
     }
   }
 
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
-#if ERROR_TXT_OUT
-  std::ofstream outFile;
-  std::string filename = "error.txt";
-  outFile.open(filename.c_str(), std::ios_base::binary);
-#endif
   // begin swaping/moving/adding/removing grains to try to improve packing
   int numgrains = m->m_Grains.size();
   for (int iteration = 0; iteration < (100*numgrains); iteration++)
@@ -336,26 +338,26 @@ void PackGrainsGen2::execute()
       xc = rg.genrand_res53() * (m->xpoints * m->resx);
       yc = rg.genrand_res53() * (m->ypoints * m->resy);
       zc = rg.genrand_res53() * (m->zpoints * m->resz);
-    oldxc = m->m_Grains[randomgrain]->centroidx;
-    oldyc = m->m_Grains[randomgrain]->centroidy;
-    oldzc = m->m_Grains[randomgrain]->centroidz;
-    oldfillingerror = fillingerror;
-    fillingerror = check_fillingerror(-1000,randomgrain);
+      oldxc = m->m_Grains[randomgrain]->centroidx;
+      oldyc = m->m_Grains[randomgrain]->centroidy;
+      oldzc = m->m_Grains[randomgrain]->centroidz;
+      oldfillingerror = fillingerror;
+      fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
-    fillingerror = check_fillingerror(randomgrain,-1000);
+      fillingerror = check_fillingerror(randomgrain,-1000);
 //      currentneighborhooderror = check_neighborhooderror(-1000, random);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-    if(fillingerror <= oldfillingerror)
+      if(fillingerror <= oldfillingerror)
       {
 //        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-    else if(fillingerror > oldfillingerror)
-    {
-    fillingerror = check_fillingerror(-1000,randomgrain);
-    move_grain(randomgrain, oldxc, oldyc, oldzc);
-    fillingerror = check_fillingerror(randomgrain,-1000);
-    }
+      else if(fillingerror > oldfillingerror)
+      {
+		fillingerror = check_fillingerror(-1000,randomgrain);
+		move_grain(randomgrain, oldxc, oldyc, oldzc);
+		fillingerror = check_fillingerror(randomgrain,-1000);
+      }
     }
     // NUDGE - this option moves one grain to a spot close to its current centroid
     if(option == 1)
@@ -364,29 +366,29 @@ void PackGrainsGen2::execute()
       if(randomgrain == 0) randomgrain = 1;
       if(randomgrain == numgrains) randomgrain = numgrains - 1;
       Seed++;
-    oldxc = m->m_Grains[randomgrain]->centroidx;
-    oldyc = m->m_Grains[randomgrain]->centroidy;
-    oldzc = m->m_Grains[randomgrain]->centroidz;
-    xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresx));
+      oldxc = m->m_Grains[randomgrain]->centroidx;
+      oldyc = m->m_Grains[randomgrain]->centroidy;
+      oldzc = m->m_Grains[randomgrain]->centroidz;
+      xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresx));
       yc = oldyc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresy));
       zc = oldzc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresz));
-    oldfillingerror = fillingerror;
-    fillingerror = check_fillingerror(-1000,randomgrain);
+      oldfillingerror = fillingerror;
+      fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
-    fillingerror = check_fillingerror(randomgrain,-1000);
+      fillingerror = check_fillingerror(randomgrain,-1000);
 //      currentneighborhooderror = check_neighborhooderror(-1000, random);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-    if(fillingerror <= oldfillingerror)
+      if(fillingerror <= oldfillingerror)
       {
 //        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-    else if(fillingerror > oldfillingerror)
-    {
-    fillingerror = check_fillingerror(-1000,randomgrain);
-    move_grain(randomgrain, oldxc, oldyc, oldzc);
-    fillingerror = check_fillingerror(randomgrain,-1000);
-    }
+      else if(fillingerror > oldfillingerror)
+      {
+		fillingerror = check_fillingerror(-1000,randomgrain);
+		move_grain(randomgrain, oldxc, oldyc, oldzc);
+		fillingerror = check_fillingerror(randomgrain,-1000);
+      }
     }
   }
 #if ERROR_TXT_OUT
@@ -430,6 +432,7 @@ void PackGrainsGen2::execute()
 
   assign_voxels();
   assign_gaps();
+//  cleanup_grains();
 
   // If there is an error set this to something negative and also set a message
   notify("PackGrainsGen2 Completed", 0, Observable::UpdateProgressMessage);
@@ -549,7 +552,6 @@ void PackGrainsGen2::initializeAttributes()
   const size_t startIndex = 0;
   const size_t endIndex = m->totalpoints;
   m->grain_indicies = m->m_GrainIndicies->WritePointer(startIndex, endIndex);
-  m->ellipfuncs = m->m_Ellipfuncs->WritePointer(startIndex, endIndex);
   m->phases = m->m_Phases->WritePointer(startIndex, endIndex);
   m->euler1s = m->m_Euler1s->WritePointer(startIndex, endIndex);
   m->euler2s = m->m_Euler2s->WritePointer(startIndex, endIndex);
@@ -559,7 +561,6 @@ void PackGrainsGen2::initializeAttributes()
 	for(int i=0;i<m->totalpoints;i++)
 	{
 		m->grain_indicies[i] = 0;
-		m->ellipfuncs[i] = -1;
 		m->phases[i] = 0;
 		m->euler1s[i] = -1;
 		m->euler2s[i] = -1;
@@ -1394,9 +1395,9 @@ void PackGrainsGen2::assign_voxels()
             x = x - xc;
             y = y - yc;
             z = z - zc;
-            xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
-            yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
-            zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+            xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
+            yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
+            zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
             float axis1comp = xp / radcur1;
             float axis2comp = yp / radcur2;
             float axis3comp = zp / radcur3;
@@ -1456,11 +1457,23 @@ void PackGrainsGen2::assign_gaps()
   float dist;
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
+  int *tempgrain_indicies;
+  tempgrain_indicies = new int [m->totalpoints];
+  int *newowners;
+  newowners = new int [m->totalpoints];
+  float *ellipfuncs;
+  ellipfuncs = new float [m->totalpoints];
+  for(int i = 0; i < m->totalpoints; i++)
+  {
+	  tempgrain_indicies[i] = m->grain_indicies[i];
+	  newowners[i] = -1;
+	  ellipfuncs[i] = -1.0;
+  }
 
   while (unassignedcount != 0)
   {
 	  unassignedcount = 0;
-	  timestep = timestep + 25;
+	  timestep = timestep + 50;
 	  for (size_t i = 1; i < m->m_Grains.size(); i++)
 	  {
 		float volcur = m->m_Grains[i]->volume;
@@ -1549,7 +1562,7 @@ void PackGrainsGen2::assign_gaps()
 			  if (iter3 < 0) plane = iter3 + m->zpoints;
 			  if (iter3 > m->zpoints - 1) plane = iter3 - m->zpoints;
 			  index = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + column;
-			  if(m->grain_indicies[index] <= 0)
+			  if(tempgrain_indicies[index] <= 0)
 			  {
 				  inside = -1;
 				  x = float(column) * m->resx;
@@ -1568,17 +1581,17 @@ void PackGrainsGen2::assign_gaps()
 					x = x - xc;
 					y = y - yc;
 					z = z - zc;
-					xp = (x * ga[0][0]) + (y * ga[1][0]) + (z * ga[2][0]);
-					yp = (x * ga[0][1]) + (y * ga[1][1]) + (z * ga[2][1]);
-					zp = (x * ga[0][2]) + (y * ga[1][2]) + (z * ga[2][2]);
+					xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
+				    yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
+			        zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
 					float axis1comp = xp / radcur1;
 					float axis2comp = yp / radcur2;
 					float axis3comp = zp / radcur3;
 					inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-					if (inside >= 0 && inside > m->ellipfuncs[index])
+					if (inside >= 0 && inside > ellipfuncs[index])
 					{
-						m->grain_indicies[index] = i;
-						m->ellipfuncs[index] = inside;
+						newowners[index] = i;
+						ellipfuncs[index] = inside;
 					}
 				  }
 			  }
@@ -1588,150 +1601,168 @@ void PackGrainsGen2::assign_gaps()
 	  }
 	  for (int i = 0; i < m->totalpoints; i++)
 	  {
-		if (m->grain_indicies[i] <= 0) unassignedcount++;
+	    if (ellipfuncs[i] >= 0) tempgrain_indicies[i] = newowners[i];
+		if (tempgrain_indicies[i] <= 0) unassignedcount++;
+		newowners[i] = -1;
+		ellipfuncs[i] = -1.0;
 	  }
   }
   for (int i = 0; i < m->totalpoints; i++)
   {
-	  if(m->grain_indicies[i] > 0) m->phases[i] = m->m_Grains[m->grain_indicies[i]]->phase;
+	  m->grain_indicies[i] = tempgrain_indicies[i];
+	  if(tempgrain_indicies[i] > 0) m->phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
   }
+  delete [] tempgrain_indicies;
+  delete [] ellipfuncs;
 }
 void PackGrainsGen2::cleanup_grains()
 {
   DataContainer* m = getDataContainer();
-	  int neighpoints[6];
-	  neighpoints[0] = -(m->xpoints * m->ypoints);
-	  neighpoints[1] = -m->xpoints;
-	  neighpoints[2] = -1;
-	  neighpoints[3] = 1;
-	  neighpoints[4] = m->xpoints;
-	  neighpoints[5] = (m->xpoints * m->ypoints);
-	  std::vector<std::vector<int> > vlists;
-	  vlists.resize(m->m_Grains.size());
-	  std::vector<int> currentvlist;
-	  std::vector<bool> checked;
-	  checked.resize(m->totalpoints,false);
-	  size_t count;
-	  int good;
-	  int neighbor;
-	  int column, row, plane;
-	  int index;
-	  float minsize = 0;
-	  gsizes.resize(m->m_Grains.size());
-	  for (size_t i = 1; i < m->m_Grains.size(); i++)
-	  {
-		gsizes[i] = 0;
-	  }
-	  for (int i = 0; i < m->totalpoints; i++)
-	  {
-		if(checked[i] == false && m->grain_indicies[i] > 0)
+  int neighpoints[6];
+  neighpoints[0] = -(m->xpoints * m->ypoints);
+  neighpoints[1] = -m->xpoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = m->xpoints;
+  neighpoints[5] = (m->xpoints * m->ypoints);
+  std::vector<std::vector<int> > vlists;
+  vlists.resize(m->m_Grains.size());
+  std::vector<int> currentvlist;
+  std::vector<bool> checked;
+  checked.resize(m->totalpoints,false);
+  size_t count;
+  int good;
+  int neighbor;
+  int column, row, plane;
+  int index;
+  float minsize = 0;
+  gsizes.resize(m->m_Grains.size());
+  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  {
+	gsizes[i] = 0;
+  }
+  int *tempgrain_indicies;
+  tempgrain_indicies = new int [m->totalpoints];
+  for(int i = 0; i < m->totalpoints; i++)
+  {
+	  tempgrain_indicies[i] = m->grain_indicies[i];
+  }
+  for (int i = 0; i < m->totalpoints; i++)
+  {
+	if(checked[i] == false && tempgrain_indicies[i] > 0)
+	{
+		minsize = mindiameter[m->phases[i]]*mindiameter[m->phases[i]]*mindiameter[m->phases[i]]*M_PI/6.0;
+		minsize = int(minsize/(m->resx*m->resy*m->resz));
+		currentvlist.push_back(i);
+		count = 0;
+		while(count < currentvlist.size())
 		{
-			minsize = mindiameter[m->phases[i]]*mindiameter[m->phases[i]]*mindiameter[m->phases[i]]*M_PI/6.0;
-			minsize = int(minsize/(m->resx*m->resy*m->resz));
-			currentvlist.push_back(i);
-			count = 0;
-			while(count < currentvlist.size())
+			index = currentvlist[count];
+			column = index % m->xpoints;
+			row = (index / m->xpoints) % m->ypoints;
+			plane = index / (m->xpoints * m->ypoints);
+			for (int j = 0; j < 6; j++)
 			{
-				index = currentvlist[count];
-				column = index % m->xpoints;
-				row = (index / m->xpoints) % m->ypoints;
-				plane = index / (m->xpoints * m->ypoints);
-				for (int j = 0; j < 6; j++)
+				good = 1;
+				neighbor = index + neighpoints[j];
+				if (m_periodic_boundaries == false)
 				{
-					good = 1;
-					neighbor = index + neighpoints[j];
-					if (m_periodic_boundaries == false)
+					if (j == 0 && plane == 0) good = 0;
+					if (j == 5 && plane == (m->zpoints - 1)) good = 0;
+					if (j == 1 && row == 0) good = 0;
+					if (j == 4 && row == (m->ypoints - 1)) good = 0;
+					if (j == 2 && column == 0) good = 0;
+					if (j == 3 && column == (m->xpoints - 1)) good = 0;
+					if (good == 1 && tempgrain_indicies[neighbor] == tempgrain_indicies[index] && checked[neighbor] == false)
 					{
-						if (j == 0 && plane == 0) good = 0;
-						if (j == 5 && plane == (m->zpoints - 1)) good = 0;
-						if (j == 1 && row == 0) good = 0;
-						if (j == 4 && row == (m->ypoints - 1)) good = 0;
-						if (j == 2 && column == 0) good = 0;
-						if (j == 3 && column == (m->xpoints - 1)) good = 0;
-						if (good == 1 && m->grain_indicies[neighbor] == m->grain_indicies[index] && checked[neighbor] == false)
-						{
-							currentvlist.push_back(neighbor);
-							checked[neighbor] = true;
-						}
-					}
-					else if (m_periodic_boundaries == true)
-					{
-						if (j == 0 && plane == 0) neighbor = neighbor + (m->xpoints*m->ypoints*m->zpoints);
-						if (j == 5 && plane == (m->zpoints - 1)) neighbor = neighbor - (m->xpoints*m->ypoints*m->zpoints);
-						if (j == 1 && row == 0) neighbor = neighbor + (m->xpoints*m->ypoints);
-						if (j == 4 && row == (m->ypoints - 1)) neighbor = neighbor - (m->xpoints*m->ypoints);
-						if (j == 2 && column == 0) neighbor = neighbor + (m->xpoints);
-						if (j == 3 && column == (m->xpoints - 1)) neighbor = neighbor - (m->xpoints);
-						if (m->grain_indicies[neighbor] == m->grain_indicies[index] && checked[neighbor] == false)
-						{
-							currentvlist.push_back(neighbor);
-							checked[neighbor] = true;
-						}
+						currentvlist.push_back(neighbor);
+						checked[neighbor] = true;
 					}
 				}
-				count++;
-			}
-			size_t size = vlists[m->grain_indicies[i]].size();
-			if(size > 0)
-			{
-				if(size < currentvlist.size())
+				else if (m_periodic_boundaries == true)
 				{
-					for (size_t k = 0; k < vlists[m->grain_indicies[i]].size(); k++)
+					if (j == 0 && plane == 0) neighbor = neighbor + (m->xpoints*m->ypoints*m->zpoints);
+					if (j == 5 && plane == (m->zpoints - 1)) neighbor = neighbor - (m->xpoints*m->ypoints*m->zpoints);
+					if (j == 1 && row == 0) neighbor = neighbor + (m->xpoints*m->ypoints);
+					if (j == 4 && row == (m->ypoints - 1)) neighbor = neighbor - (m->xpoints*m->ypoints);
+					if (j == 2 && column == 0) neighbor = neighbor + (m->xpoints);
+					if (j == 3 && column == (m->xpoints - 1)) neighbor = neighbor - (m->xpoints);
+					if (tempgrain_indicies[neighbor] == tempgrain_indicies[index] && checked[neighbor] == false)
 					{
-						m->grain_indicies[vlists[m->grain_indicies[i]][k]] = -1;
-					}
-					vlists[m->grain_indicies[i]].resize(currentvlist.size());
-					vlists[m->grain_indicies[i]].swap(currentvlist);
-				}
-				else if(size >= currentvlist.size())
-				{
-					for (size_t k = 0; k < currentvlist.size(); k++)
-					{
-						m->grain_indicies[currentvlist[k]] = -1;
+						currentvlist.push_back(neighbor);
+						checked[neighbor] = true;
 					}
 				}
 			}
-			else if(size == 0)
-			{
-				if(currentvlist.size() >= minsize)
-				{
-					vlists[m->grain_indicies[i]].resize(currentvlist.size());
-					vlists[m->grain_indicies[i]].swap(currentvlist);
-				}
-				if(currentvlist.size() < minsize)
-				{
-					for (size_t k = 0; k < currentvlist.size(); k++)
-					{
-						m->grain_indicies[currentvlist[k]] = -1;
-					}
-				}
-			}
-			currentvlist.clear();
+			count++;
 		}
-	  }
-	  for (int i = 0; i < m->totalpoints; i++)
-	  {
-		if(m->grain_indicies[i] > 0) gsizes[m->grain_indicies[i]]++;
-	  }
-	  newnames.resize(m->m_Grains.size());
-	  int goodcount = 1;
-	  for (size_t i = 1; i < m->m_Grains.size(); i++)
-    {
-      newnames[i] = 0;
-      if(gsizes[i] > 0)
-      {
+		size_t size = vlists[m->grain_indicies[i]].size();
+		if(size > 0)
+		{
+			if(size < currentvlist.size())
+			{
+				for (size_t k = 0; k < vlists[tempgrain_indicies[i]].size(); k++)
+				{
+					tempgrain_indicies[vlists[tempgrain_indicies[i]][k]] = -1;
+				}
+				vlists[tempgrain_indicies[i]].resize(currentvlist.size());
+				vlists[tempgrain_indicies[i]].swap(currentvlist);
+			}
+			else if(size >= currentvlist.size())
+			{
+				for (size_t k = 0; k < currentvlist.size(); k++)
+				{
+					tempgrain_indicies[currentvlist[k]] = -1;
+				}
+			}
+		}
+		else if(size == 0)
+		{
+			if(currentvlist.size() >= minsize)
+			{
+				vlists[tempgrain_indicies[i]].resize(currentvlist.size());
+				vlists[tempgrain_indicies[i]].swap(currentvlist);
+			}
+			if(currentvlist.size() < minsize)
+			{
+				for (size_t k = 0; k < currentvlist.size(); k++)
+				{
+					tempgrain_indicies[currentvlist[k]] = -1;
+				}
+			}
+		}
+		currentvlist.clear();
+	}
+  }
+  for (int i = 0; i < m->totalpoints; i++)
+  {
+	if(tempgrain_indicies[i] > 0) gsizes[tempgrain_indicies[i]]++;
+  }
+  newnames.resize(m->m_Grains.size());
+  int goodcount = 1;
+  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  {
+     newnames[i] = 0;
+     if(gsizes[i] > 0)
+     {
         m->m_Grains[goodcount] = m->m_Grains[i];
         newnames[i] = goodcount;
         goodcount++;
-      }
-    }
-	  for (int i = 0; i < m->totalpoints; i++)
-	  {
-		if (m->grain_indicies[i] > 0)
-		{
-		  m->grain_indicies[i] = newnames[m->grain_indicies[i]];
-		}
-	  }
-	  m->m_Grains.resize(goodcount);
-	  assign_gaps();
+     }
+  }
+  for (int i = 0; i < m->totalpoints; i++)
+  {
+	if (tempgrain_indicies[i] > 0)
+	{
+	  tempgrain_indicies[i] = newnames[tempgrain_indicies[i]];
+	}
+  }
+  for (int i = 0; i < m->totalpoints; i++)
+  {
+	  m->grain_indicies[i] = tempgrain_indicies[i];
+	  if(tempgrain_indicies[i] > 0) m->phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
+  }
+  delete [] tempgrain_indicies;
+  m->m_Grains.resize(goodcount);
+  assign_gaps();
 }
