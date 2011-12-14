@@ -165,7 +165,6 @@ int DXStructureReader::readStructure(DataContainer* m)
   m->euler1s = m->m_Euler1s->WritePointer(0, m->totalpoints);
   m->euler2s = m->m_Euler2s->WritePointer(0, m->totalpoints);
   m->euler3s = m->m_Euler3s->WritePointer(0, m->totalpoints);
-  m->ellipfuncs = m->m_Ellipfuncs->WritePointer(0, m->totalpoints);
   m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(0, m->totalpoints);
 
  // for(int i=0;i<m_DataContainer->totalpoints;i++)

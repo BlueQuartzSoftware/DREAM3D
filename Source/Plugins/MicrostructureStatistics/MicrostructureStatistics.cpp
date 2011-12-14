@@ -282,7 +282,7 @@ void MicrostructureStatistics::execute()
   find_deformationstatistics->addObserver(static_cast<Observer*>(this));
   find_deformationstatistics->setDataContainer(m.get());
   setCurrentFilter(find_deformationstatistics);
-//  find_deformationstatistics->execute();
+  find_deformationstatistics->execute();
   err = find_deformationstatistics->getErrorCondition();
   CHECK_FOR_ERROR(DataContainer, "Error Finding Deformation Statistics", err);
   CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_deformationstatistics)
