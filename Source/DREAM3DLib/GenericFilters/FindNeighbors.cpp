@@ -45,7 +45,7 @@
 FindNeighbors::FindNeighbors()
 {
     totalsurfacearea = NULL;
-    INIT_AIMARRAY(m_TotalSurfaceArea, float);
+    INIT_DataArray(m_TotalSurfaceArea, float);
 }
 
 // -----------------------------------------------------------------------------

@@ -51,7 +51,7 @@
 
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/AIMArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "FileConversion/VtkGrainIdReader.h"
@@ -116,7 +116,7 @@ int closeHDF5File()
  */
 template<typename T>
 int writeScalarData(const std::string &hdfPath,
-                    typename AIMArray<T>::Pointer scalar_data,
+                    typename DataArray<T>::Pointer scalar_data,
                     const char *label,
                     int numComp, int32_t rank, hsize_t* dims)
 {
@@ -207,7 +207,7 @@ class GrainIdVoxels
  * @param nz
  * @return
  */
-int writeVtkDataToHDF5File(const std::string &h5File, AIMArray<int>::Pointer data, int &nx, int &ny, int &nz)
+int writeVtkDataToHDF5File(const std::string &h5File, DataArray<int>::Pointer data, int &nx, int &ny, int &nz)
 {
   int err = 0;
   err = openHDF5File(h5File, true);
@@ -232,7 +232,7 @@ int writeVtkDataToHDF5File(const std::string &h5File, AIMArray<int>::Pointer dat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int writeEulerDataToHDF5File(const std::string &h5File, AIMArray<float>::Pointer data, int numComp, int32_t rank, hsize_t* dims)
+int writeEulerDataToHDF5File(const std::string &h5File, DataArray<float>::Pointer data, int numComp, int32_t rank, hsize_t* dims)
 {
   int err = 0;
   err = openHDF5File(h5File, true);
@@ -281,7 +281,7 @@ int ReadEulerFile(const std::string &filename, std::map<int, EulerSet> &gidToEul
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void renumberGrains(AIMArray<int>::Pointer grains)
+void renumberGrains(DataArray<int>::Pointer grains)
 {
   int index = 0;
 
@@ -349,7 +349,7 @@ int main(int argc, char **argv)
   //  std::string eulerFile = angleFileArg.getValue();
 
 
-    AIMArray<int>::Pointer voxels;
+    DataArray<int>::Pointer voxels;
     int nx = 0;
     int ny = 0;
     int nz = 0;
@@ -397,9 +397,9 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
-    AIMArray<float>::Pointer e1 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
-    AIMArray<float>::Pointer e2 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
-    AIMArray<float>::Pointer e3 = AIMArray<float>::CreateArray(voxels->GetNumberOfTuples());
+    DataArray<float>::Pointer e1 = DataArray<float>::CreateArray(voxels->GetNumberOfTuples());
+    DataArray<float>::Pointer e2 = DataArray<float>::CreateArray(voxels->GetNumberOfTuples());
+    DataArray<float>::Pointer e3 = DataArray<float>::CreateArray(voxels->GetNumberOfTuples());
 
  //   float f_nan = std::numeric_limits<float>::quiet_NaN();
     size_t totalVoxels = voxels->GetNumberOfTuples();

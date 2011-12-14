@@ -80,12 +80,12 @@ int H5EbsdVolumeReader::loadData(float* euler1s, float* euler2s, float* euler3s,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AIMArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<QualityMetricFilter::Pointer> filters,
+DataArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<QualityMetricFilter::Pointer> filters,
                                                                std::vector<void*> dataPointers,
                                                                size_t nPoints,
                                                                std::vector<Ebsd::NumType> dTypes)
 {
-  if (filters.size() == 0) { return AIMArray<bool>::NullPointer(); }
+  if (filters.size() == 0) { return DataArray<bool>::NullPointer(); }
 
   size_t nFilters = filters.size();
   for (size_t i = 0; i < nFilters; ++i)
@@ -97,11 +97,11 @@ AIMArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<Qual
   }
 
   // Get the first bool array to use as a reference
-  AIMArray<bool>::Pointer baseArray = filters[0]->getOutput();
+  DataArray<bool>::Pointer baseArray = filters[0]->getOutput();
 
   for (size_t i = 1; i < nFilters; ++i)
   {
-    AIMArray<bool>::Pointer currentArray = filters[i]->getOutput();
+    DataArray<bool>::Pointer currentArray = filters[i]->getOutput();
     bool* baseArrayPtr = baseArray->GetPointer(0);
     bool* currentArrayPtr = currentArray->GetPointer(0);
     for (size_t p = 0; p < nPoints; ++p)

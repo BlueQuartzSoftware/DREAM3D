@@ -410,7 +410,7 @@ int VtkGrainIdReader::readGrainIds()
   setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
   getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
-  AIMArray<int>::Pointer grainIds = AIMArray<int>::CreateArray(totalVoxels);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels);
   grainIds->SetName("GrainIds");
   readLine(instream, buf, kBufferSize);
 

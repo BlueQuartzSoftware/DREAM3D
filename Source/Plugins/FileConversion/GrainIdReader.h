@@ -57,7 +57,7 @@ class GrainIdReader : public DREAM3DDataFile
 
     virtual ~GrainIdReader() {};
 
-    DREAM3D_INSTANCE_PROPERTY(AIMArray<int>::Pointer, GrainIds);
+    DREAM3D_INSTANCE_PROPERTY(DataArray<int>::Pointer, GrainIds);
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
     virtual int readGrainIds() { return -1; }

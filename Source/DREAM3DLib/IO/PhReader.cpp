@@ -103,7 +103,7 @@ int  PhReader::readFile()
   //long vector and then read that vector to assign values to the grid
   size_t index = 0;
   setDimensions(nx, ny, nz);
-  m_Data = AIMArray<int>::CreateArray(nx * ny * nz);
+  m_Data = DataArray<int>::CreateArray(nx * ny * nz);
 
   while (getline(inFile, line, '\n') != NULL)
   {

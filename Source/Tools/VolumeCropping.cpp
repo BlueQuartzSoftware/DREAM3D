@@ -75,8 +75,8 @@ int sanityCheckInputs(int* min, int* max, int* volDims)
 // -----------------------------------------------------------------------------
 template<typename T>
 void processArray(int* min, int* max, int* dims,
-                 typename AIMArray<T>::Pointer in,
-                 typename AIMArray<T>::Pointer out)
+                 typename DataArray<T>::Pointer in,
+                 typename DataArray<T>::Pointer out)
 {
 
   T* src = NULL;
@@ -124,11 +124,11 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* m
   DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
   DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
 
-  m_GrainIndicies = AIMArray<int>::CreateArray(0);
-  m_Phases = AIMArray<int>::CreateArray(0);
-  m_Euler1s = AIMArray<float>::CreateArray(0);
-  m_Euler2s = AIMArray<float>::CreateArray(0);
-  m_Euler3s = AIMArray<float>::CreateArray(0);
+  m_GrainIndicies = DataArray<int>::CreateArray(0);
+  m_Phases = DataArray<int>::CreateArray(0);
+  m_Euler1s = DataArray<float>::CreateArray(0);
+  m_Euler2s = DataArray<float>::CreateArray(0);
+  m_Euler3s = DataArray<float>::CreateArray(0);
 
 
   int totalpoints = dims[0] * dims[1] * dims[2];
@@ -148,19 +148,19 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* m
 
   // Now process the data to crop out the needed volume
   // Allocate the output array
-  AIMArray<int>::Pointer outGrainIdices = AIMArray<int>::CreateArray(0);
+  DataArray<int>::Pointer outGrainIdices = DataArray<int>::CreateArray(0);
   processArray<int>(min, max, dims, m_GrainIndicies, outGrainIdices);
 
-  AIMArray<int>::Pointer outPhases = AIMArray<int>::CreateArray(0);
+  DataArray<int>::Pointer outPhases = DataArray<int>::CreateArray(0);
   processArray<int>(min, max, dims, m_Phases, outPhases);
 
-  AIMArray<float>::Pointer outEuler1 = AIMArray<float>::CreateArray(0);
+  DataArray<float>::Pointer outEuler1 = DataArray<float>::CreateArray(0);
   processArray<float>(min, max, dims, m_Euler1s, outEuler1);
 
-  AIMArray<float>::Pointer outEuler2 = AIMArray<float>::CreateArray(0);
+  DataArray<float>::Pointer outEuler2 = DataArray<float>::CreateArray(0);
   processArray<float>(min, max, dims, m_Euler2s, outEuler2);
 
-  AIMArray<float>::Pointer outEuler3 = AIMArray<float>::CreateArray(0);
+  DataArray<float>::Pointer outEuler3 = DataArray<float>::CreateArray(0);
   processArray<float>(min, max, dims, m_Euler3s, outEuler3);
 
 

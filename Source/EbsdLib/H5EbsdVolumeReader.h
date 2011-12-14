@@ -110,7 +110,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * @param dTypes
      * @return
      */
-    virtual AIMArray<bool>::Pointer determineGoodVoxels( std::vector<QualityMetricFilter::Pointer> filters,
+    virtual DataArray<bool>::Pointer determineGoodVoxels( std::vector<QualityMetricFilter::Pointer> filters,
                                     std::vector<void*> dataPointers,
                                     size_t nPoints,
                                     std::vector<Ebsd::NumType> dTypes);
