@@ -71,10 +71,6 @@ void FindEuclideanDistMap::execute()
 void FindEuclideanDistMap::find_euclideandistmap()
 {
   DataContainer* m = getDataContainer();
-  for (int i = 0; i < m->totalpoints; ++i)
-  {
-	m->nearestgrains[i] = -1;
-  }
   m->nearestneighbors = m->m_NearestNeighbors->WritePointer(0, m->totalpoints * 3);
   m->m_NearestNeighbors->SetNumberOfComponents(3);
   m->nearestneighbordistances = m->m_NearestNeighborDistances->WritePointer(0, m->totalpoints * 3);

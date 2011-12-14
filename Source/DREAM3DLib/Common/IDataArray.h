@@ -33,7 +33,7 @@
 * @date Jan 3, 2008
 * @version $Revision: 1.2 $
 */
-class DREAM3DLib_EXPORT IDataArray
+class IDataArray
 {
   public:
     DREAM3D_SHARED_POINTERS(IDataArray);
