@@ -222,7 +222,7 @@ void MicrostructureStatistics::execute()
     }
     CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", write_fielddata)
 
-    if(AIM_RECONSTRUCTION_BENCHMARKS)
+    if(DREAM3D_BENCHMARKS)
     {
       std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
       millis = MXA::getMilliSeconds();

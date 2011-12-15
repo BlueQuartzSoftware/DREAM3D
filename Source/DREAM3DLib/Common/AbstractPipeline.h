@@ -106,9 +106,9 @@ class DREAM3DLib_EXPORT AbstractPipeline
     std::string f = m_InputDirectory + MXADir::Separator + n;\
     f = MXADir::toNativeSeparators(f);
 
-#define AIM_RECONSTRUCTION_BENCHMARKS 0
+#define DREAM3D_BENCHMARKS 0
 
-#if AIM_RECONSTRUCTION_BENCHMARKS
+#if DREAM3D_BENCHMARKS
 #define START_CLOCK()\
   unsigned long long int millis;\
   millis = MXA::getMilliSeconds();

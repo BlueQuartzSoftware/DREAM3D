@@ -111,9 +111,9 @@ using namespace meshing;
       notify(getErrorMessage(), 0, UpdateErrorMessage);\
       return;   }
 
-#define AIM_RECONSTRUCTION_BENCHMARKS 0
+#define DREAM3D_BENCHMARKS 0
 
-#if AIM_RECONSTRUCTION_BENCHMARKS
+#if DREAM3D_BENCHMARKS
 #define START_CLOCK()\
   unsigned long long int millis;\
   millis = MXA::getMilliSeconds();
@@ -128,7 +128,7 @@ using namespace meshing;
       setErrorMessage(Message);\
       notify(getErrorMessage(), 0, UpdateWarningMessage);\
       return;}\
-      if(AIM_RECONSTRUCTION_BENCHMARKS) {\
+      if(DREAM3D_BENCHMARKS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
     millis = MXA::getMilliSeconds(); }
 
