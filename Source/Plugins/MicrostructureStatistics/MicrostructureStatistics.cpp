@@ -36,6 +36,8 @@
 
 #include "MicrostructureStatistics.h"
 
+#include <vector>
+
 #include "MXA/MXA.h"
 #include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
@@ -69,9 +71,12 @@
 //
 // -----------------------------------------------------------------------------
 MicrostructureStatistics::MicrostructureStatistics() :
-    m_OutputDirectory("."), m_OutputFilePrefix("MicrostructureStatistics_"), m_ComputeGrainSize(false), m_ComputeGrainShapes(false), m_ComputeNumNeighbors(false)
+m_OutputDirectory("."),
+m_OutputFilePrefix("MicrostructureStatistics_"),
+m_ComputeGrainSize(false),
+m_ComputeGrainShapes(false),
+m_ComputeNumNeighbors(false)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -79,7 +84,6 @@ MicrostructureStatistics::MicrostructureStatistics() :
 // -----------------------------------------------------------------------------
 MicrostructureStatistics::~MicrostructureStatistics()
 {
-  // std::cout << "~MicrostructureStatistics()" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -88,9 +92,6 @@ MicrostructureStatistics::~MicrostructureStatistics()
 void MicrostructureStatistics::execute()
 {
   int err = -1;
-  //std::cout << "MicrostructureStatistics::compute Start" << std::endl;
-  // Start the Benchmark Clock
-  START_CLOCK()
 
   m = DataContainer::New();
 
@@ -99,208 +100,138 @@ void MicrostructureStatistics::execute()
   MAKE_OUTPUT_FILE_PATH( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH( hdf5ResultsFile, DREAM3D::MicroStats::H5StatisticsFile)
 
-  updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
+  // Create a Vector to hold all the filters. Later on we will execute all the filters
+  std::vector<AbstractFilter::Pointer> pipeline;
+
   LoadVolume::Pointer load_volume = LoadVolume::New();
   load_volume->setInputFile(m_InputFile);
-  load_volume->addObserver(static_cast<Observer*>(this));
-  load_volume->setDataContainer(m.get());
-  setCurrentFilter(load_volume);
-  load_volume->execute();
-  err = load_volume->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Loading Volume", err);
-  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", load_volume)
+  pipeline.push_back(load_volume);
 
-  updateProgressAndMessage(("Finding Surface Grains"), 20);
   FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
-  find_surfacegrains->addObserver(static_cast<Observer*>(this));
-  find_surfacegrains->setDataContainer(m.get());
-  setCurrentFilter(find_surfacegrains);
-  find_surfacegrains->execute();
-  err = find_surfacegrains->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Finding Surface Grains", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", find_surfacegrains)
+  pipeline.push_back(find_surfacegrains);
 
   // Start Computing the statistics
   if(m_ComputeGrainSize == true)
   {
-    updateProgressAndMessage(("Determining Grain Sizes"), 25);
     FindSizes::Pointer find_sizes = FindSizes::New();
-    find_sizes->addObserver(static_cast<Observer*>(this));
-    find_sizes->setDataContainer(m.get());
-    setCurrentFilter(find_sizes);
-    find_sizes->execute();
-    err = find_sizes->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Determining Grain Sizes", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_sizes)
+    pipeline.push_back(find_sizes);
   }
 
   if(m_ComputeGrainShapes == true)
   {
-    updateProgressAndMessage(("Finding Grain Shapes"), 30);
     FindShapes::Pointer find_shapes = FindShapes::New();
-    find_shapes->addObserver(static_cast<Observer*>(this));
-    find_shapes->setDataContainer(m.get());
-    setCurrentFilter(find_shapes);
-    find_shapes->execute();
-    err = find_shapes->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Finding Grain Shapes", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_shapes)
+    pipeline.push_back(find_shapes);
 
     updateProgressAndMessage(("Determining Bounding Box"), 28);
     FindBoundingBoxGrains::Pointer find_boundingboxgrains = FindBoundingBoxGrains::New();
-    find_boundingboxgrains->addObserver(static_cast<Observer*>(this));
-    find_boundingboxgrains->setDataContainer(m.get());
-    setCurrentFilter(find_boundingboxgrains);
-    find_boundingboxgrains->execute();
-    err = find_boundingboxgrains->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Determining the Bounding Box", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_boundingboxgrains)
+    pipeline.push_back(find_boundingboxgrains);
   }
 
   if(m_ComputeNumNeighbors == true)
   {
-    updateProgressAndMessage(("Finding Neighbors"), 45);
     FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->addObserver(static_cast<Observer*>(this));
-    find_neighbors->setDataContainer(m.get());
-    setCurrentFilter(find_neighbors);
-    find_neighbors->execute();
-    setErrorCondition(find_neighbors->getErrorCondition());
-    CHECK_FOR_ERROR(DataContainer, "Error finding neighbors", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_neighbors)
+    pipeline.push_back(find_neighbors);
 
-    updateProgressAndMessage(("Finding Neighborhoods"), 55);
     FindNeighborhoods::Pointer find_neighborhoods = FindNeighborhoods::New();
-    find_neighborhoods->addObserver(static_cast<Observer*>(this));
-    find_neighborhoods->setDataContainer(m.get());
-    setCurrentFilter(find_neighborhoods);
-    find_neighborhoods->execute();
-    setErrorCondition(find_neighborhoods->getErrorCondition());
-    CHECK_FOR_ERROR(DataContainer, "Error Finding Neighborhoods", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_neighborhoods)
+    pipeline.push_back(find_neighborhoods);
   }
 
   if(m_WriteAverageOrientations == true || m_WriteH5StatsFile == true || m_WriteKernelMisorientations == true)
   {
-    updateProgressAndMessage(("Finding Average Orientations For Grains"), 60);
     FindAvgOrientations::Pointer find_avgorientations = FindAvgOrientations::New();
-    find_avgorientations->addObserver(static_cast<Observer*>(this));
-    find_avgorientations->setDataContainer(m.get());
-    setCurrentFilter(find_avgorientations);
-    find_avgorientations->execute();
-    setErrorCondition(find_avgorientations->getErrorCondition());
-    CHECK_FOR_ERROR(DataContainer, "Error Finding Average Orientations For Grains", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_avgorientations)
+    pipeline.push_back(find_avgorientations);
   }
 
   if(m_WriteH5StatsFile == true)
   {
     // Create a new Writer for the Stats Data.
-
-    updateProgressAndMessage(("Finding Grain Axis ODF"), 60);
     FindAxisODF::Pointer find_axisodf = FindAxisODF::New();
     find_axisodf->setH5StatsFile(hdf5ResultsFile);
-    find_axisodf->addObserver(static_cast<Observer*>(this));
-    find_axisodf->setDataContainer(m.get());
-    setCurrentFilter(find_axisodf);
-    find_axisodf->execute();
-    err = find_axisodf->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Finding Grain Axis ODF", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_axisodf)
+    pipeline.push_back(find_axisodf);
 
-    updateProgressAndMessage(("Finding Euler ODF"), 70);
     FindODF::Pointer find_odf = FindODF::New();
     find_odf->setH5StatsFile(hdf5ResultsFile);
     find_odf->addObserver(static_cast<Observer*>(this));
     find_odf->setDataContainer(m.get());
-    setCurrentFilter(find_odf);
-    find_odf->execute();
-    err = find_odf->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Finding Euler ODF", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_odf)
+    pipeline.push_back(find_odf);
 
-    updateProgressAndMessage(("Finding MDF"), 75);
     FindMDF::Pointer find_mdf = FindMDF::New();
     find_mdf->setH5StatsFile(hdf5ResultsFile);
-    find_mdf->addObserver(static_cast<Observer*>(this));
-    find_mdf->setDataContainer(m.get());
-    setCurrentFilter(find_mdf);
-    find_mdf->execute();
-    err = find_mdf->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Finding MDF", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_mdf)
+    pipeline.push_back(find_mdf);
 
-    updateProgressAndMessage(("Writing Statistics"), 85);
     WriteH5StatsFile::Pointer write_h5statsfile = WriteH5StatsFile::New();
     write_h5statsfile->setBinStepSize(m_BinStepSize);
     write_h5statsfile->setH5StatsFile(hdf5ResultsFile);
-    write_h5statsfile->addObserver(static_cast<Observer*>(this));
-    write_h5statsfile->setDataContainer(m.get());
-    setCurrentFilter(write_h5statsfile);
-    write_h5statsfile->execute();
-    err = write_h5statsfile->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Writing Statistics", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", write_h5statsfile)
+    pipeline.push_back(write_h5statsfile);
   }
 
   if(m_WriteKernelMisorientations == true)
   {
-    updateProgressAndMessage(("Finding Local Misorientation Gradients"), 90);
     FindLocalMisorientationGradients::Pointer find_localmisorientationgradients = FindLocalMisorientationGradients::New();
-    find_localmisorientationgradients->addObserver(static_cast<Observer*>(this));
-    find_localmisorientationgradients->setDataContainer(m.get());
-    setCurrentFilter(find_localmisorientationgradients);
-    find_localmisorientationgradients->execute();
-    err = find_localmisorientationgradients->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Finding Local Misorientation Gradients", err);
-    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_localmisorientationgradients)
+    pipeline.push_back(find_localmisorientationgradients);
   }
 
-  updateProgressAndMessage(("Finding Grain Schmid Factors"), 80);
+
   FindSchmids::Pointer find_schmids = FindSchmids::New();
-  find_schmids->addObserver(static_cast<Observer*>(this));
-  find_schmids->setDataContainer(m.get());
-  setCurrentFilter(find_schmids);
-  find_schmids->execute();
-  err = find_schmids->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Finding Grain Schmid Factors", err);
-  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_schmids)
+  pipeline.push_back(find_schmids);
 
-  updateProgressAndMessage(("Finding Euclidean Distance Maps"), 90);
   FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
-  find_euclideandistmap->addObserver(static_cast<Observer*>(this));
-  find_euclideandistmap->setDataContainer(m.get());
-  setCurrentFilter(find_euclideandistmap);
-  find_euclideandistmap->execute();
-  err = find_euclideandistmap->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Finding Euclidean Distance Map", err);
-  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_euclideanmap)
+  pipeline.push_back(find_euclideandistmap);
 
-  updateProgressAndMessage(("Finding Deformation Statistics"), 80);
   FindDeformationStatistics::Pointer find_deformationstatistics = FindDeformationStatistics::New();
   find_deformationstatistics->setOutputFile1(reconDeformStatsFile);
   find_deformationstatistics->setOutputFile2(reconDeformIPFFile);
-  find_deformationstatistics->addObserver(static_cast<Observer*>(this));
-  find_deformationstatistics->setDataContainer(m.get());
-  setCurrentFilter(find_deformationstatistics);
-  find_deformationstatistics->execute();
-  err = find_deformationstatistics->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Finding Deformation Statistics", err);
-  CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", find_deformationstatistics)
+  pipeline.push_back(find_deformationstatistics);
 
-  MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::MicroStats::GrainDataFile);
+
 
   if(m_WriteGrainFile == true)
   {
-    updateProgressAndMessage(("Writing Field Data"), 90);
+    MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::MicroStats::GrainDataFile);
     WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
     write_fielddata->setFieldDataFile(FieldDataFile);
-    write_fielddata->addObserver(static_cast<Observer*>(this));
-    write_fielddata->setDataContainer(m.get());
-    setCurrentFilter(write_fielddata);
-    write_fielddata->execute();
-    err = write_fielddata->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Writing Field Data", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", write_fielddata)
+    pipeline.push_back(find_deformationstatistics);
   }
+
+
+  // Start a Benchmark Clock so we can keep track of each filter's execution time
+  START_CLOCK()
+  // Start looping through the Pipeline
+  float progress = 0.0f;
+  std::stringstream ss;
+  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter )
+  {
+    progress = progress + 1.0f;
+    pipelineProgress( progress/(pipeline.size() + 1) * 100.0f);
+    ss.str("");
+    ss << "Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass() ;
+    pipelineProgressMessage(ss.str());
+    (*filter)->addObserver(static_cast<Observer*>(this));
+    (*filter)->setDataContainer(m.get());
+    setCurrentFilter(*filter);
+    (*filter)->execute();
+    (*filter)->removeObserver(static_cast<Observer*>(this));
+    err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      setErrorCondition(err);
+      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
+      pipelineProgress(100);
+      pipelineFinished();
+      return;
+    }
+    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", write_fielddata)
+
+    if(AIM_RECONSTRUCTION_BENCHMARKS)
+    {
+      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+      millis = MXA::getMilliSeconds();
+    }
+  }
+
+
+
+
 
   /* ********** This section writes the VTK files for visualization *** */
   if(m_WriteVtkFile)

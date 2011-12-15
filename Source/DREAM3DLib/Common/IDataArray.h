@@ -117,6 +117,9 @@ class IDataArray
      */
  //   virtual int32_t getDataType () = 0;
 
+    virtual void SetNumberOfComponents(int nc)  = 0;
+    virtual int GetNumberOfComponents()  = 0;
+
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char
