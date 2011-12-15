@@ -140,6 +140,7 @@ class IDataArray
      */
     virtual void initializeWithZeros() = 0;
 
+#if 0
     /**
      * @brief Prints information about the class to ostream.
      * @param os
@@ -162,7 +163,7 @@ class IDataArray
      * @return The generated string
      */
     virtual std::string valueToString(const std::string &delimiter=" ") = 0;
-
+#endif
 
 
   protected:

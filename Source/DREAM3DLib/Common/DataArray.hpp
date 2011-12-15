@@ -373,6 +373,7 @@ class DataArray : public IDataArray
       return (T*)(&(Array[i]));
     }
 
+#if 0
     /**
      * @brief Prints information about the class to ostream
      * @param os
@@ -455,7 +456,7 @@ class DataArray : public IDataArray
       }
       return sstream.str();
     }
-
+#endif
   protected:
 
     int NumberOfComponents; // the number of components per tuple

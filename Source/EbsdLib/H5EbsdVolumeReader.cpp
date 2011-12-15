@@ -52,7 +52,10 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5EbsdVolumeReader::H5EbsdVolumeReader()
+H5EbsdVolumeReader::H5EbsdVolumeReader() :
+    m_Cancel(false),
+    m_SliceStart(0),
+    m_SliceEnd(0)
 {
 
 }
@@ -97,13 +100,35 @@ DataArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<Qua
   }
 
   // Get the first bool array to use as a reference
+  QualityMetricFilter::Pointer qmFilter = filters[0];
+  if (qmFilter.get() == NULL)
+  {
+    std::cout << "QualityMetricFilter[0] is NULL" << std::endl;
+    return DataArray<bool>::NullPointer();
+  }
   DataArray<bool>::Pointer baseArray = filters[0]->getOutput();
+  bool* baseArrayPtr = baseArray->GetPointer(0);
+  if (NULL == baseArrayPtr)
+  {
+    std::cout << "baseArrayPtr returned NULL" << std::endl;
+    return DataArray<bool>::NullPointer();
+  }
 
   for (size_t i = 1; i < nFilters; ++i)
   {
     DataArray<bool>::Pointer currentArray = filters[i]->getOutput();
-    bool* baseArrayPtr = baseArray->GetPointer(0);
+    if (currentArray.get() == NULL)
+    {
+      std::cout << "currentArray is NULL" << std::endl;
+      return DataArray<bool>::NullPointer();
+    }
+
     bool* currentArrayPtr = currentArray->GetPointer(0);
+    if (NULL == currentArrayPtr)
+    {
+      std::cout << "currentArrayPtr returned NULL" << std::endl;
+      return DataArray<bool>::NullPointer();
+    }
     for (size_t p = 0; p < nPoints; ++p)
     {
       if (baseArrayPtr[p] == true && currentArrayPtr[p] == true)
