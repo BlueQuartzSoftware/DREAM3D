@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT Observer
       * @param message
       */
      virtual void pipelineProgressMessage(const char* message);
-
+     virtual void pipelineProgressMessage(const std::string &msg);
      /**
       * @brief This message reports some human readable message suitable for display
       * on a GUI or printed to a console or possibly saved to a log file
