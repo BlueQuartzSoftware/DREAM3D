@@ -94,6 +94,7 @@ void MicrostructureStatistics::execute()
   int err = -1;
 
   m = DataContainer::New();
+  m->addObserver(static_cast<Observer*>(this));
 
   MAKE_OUTPUT_FILE_PATH( reconDeformStatsFile, DREAM3D::MicroStats::DeformationStatsFile);
   MAKE_OUTPUT_FILE_PATH( reconDeformIPFFile, DREAM3D::MicroStats::IPFDeformVTKFile);
@@ -228,9 +229,6 @@ void MicrostructureStatistics::execute()
       millis = MXA::getMilliSeconds();
     }
   }
-
-
-
 
 
   /* ********** This section writes the VTK files for visualization *** */
