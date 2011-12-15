@@ -66,8 +66,8 @@ DataContainer::DataContainer()
   alreadychecked = NULL;
   neighbors = NULL;
   goodVoxels = NULL;
-  nearestneighbors = NULL;
-  nearestneighbordistances = NULL;
+//  nearestneighbors = NULL;
+//  nearestneighbordistances = NULL;
   grainmisorientations = NULL;
   misorientationgradients = NULL;
   kernelmisorientations = NULL;
@@ -83,8 +83,8 @@ DataContainer::DataContainer()
   INIT_DataArray(m_GoodVoxels,bool);
   INIT_DataArray(m_Quats,float);
   INIT_DataArray(m_AlreadyChecked,bool);
-  INIT_DataArray(m_NearestNeighbors,int);
-  INIT_DataArray(m_NearestNeighborDistances,float);
+//  INIT_DataArray(m_NearestNeighbors,int);
+//  INIT_DataArray(m_NearestNeighborDistances,float);
   INIT_DataArray(m_GrainMisorientations,float);
   INIT_DataArray(m_MisorientationGradients,float);
   INIT_DataArray(m_KernelMisorientations,float);
@@ -118,5 +118,26 @@ IDataArray::Pointer DataContainer::getVoxelData(const std::string &name)
 void DataContainer::addVoxelData(const std::string &name, IDataArray::Pointer data)
 {
   m_VoxelData[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> DataContainer::getVoxelArrayNameList()
+{
+  std::list<std::string> keys(m_VoxelData.size());
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VoxelData.begin(); iter != m_VoxelData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainer::getNumVoxelArrays()
+{
+  return m_VoxelData.size();
 }
 

@@ -39,12 +39,15 @@
 #if AIM_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
-#include "tbb/atomic.h"
-#include "tbb/tick_count.h"
-#include "tbb/task_scheduler_init.h"
-#include "tbb/task_group.h"
+#include <tbb/atomic.h>
+#include <tbb/tick_count.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
 #endif
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include <vector>
@@ -52,7 +55,7 @@
 #if AIM_USE_PARALLEL_ALGORITHMS
 class ParallelRenumberGrains
 {
-    const DataContainer* d;
+    const DataContainer* m;
 
   public:
     void operator()(const tbb::blocked_range<size_t>& r) const
@@ -60,28 +63,25 @@ class ParallelRenumberGrains
       //std::cout << "Threaded RenumberGrains." << std::endl;
       for (size_t j = r.begin(); j != r.end(); ++j)
       {
-        int grainname = d->voxels[j].grain_index;
+        int grainname = m->voxels[j].grain_index;
         if (grainname >= 1)
         {
-          int newgrainname = d->m_Grains[grainname]->newgrainname;
-          d->voxels[j].grain_index = newgrainname;
+          int newgrainname = m->m_Grains[grainname]->newgrainname;
+          m->voxels[j].grain_index = newgrainname;
         }
 
       }
     }
     ParallelRenumberGrains(DataContainer* recon) :
-      d(recon)
+      m(recon)
     {
     }
 };
 #endif
 
-class FindEuclideanMap
+class FindEuclideanMap : public AbstractFilter
 {
-	//FIX ME - why are const causing problems
-//    const MicrostructureStatisticsFunc* d;
-//    const int loop;
-    DataContainer* d;
+    DataContainer* m;
     int loop;
 
   public:
@@ -90,20 +90,18 @@ class FindEuclideanMap
      * @param recon
      */
     FindEuclideanMap(DataContainer* datacontainer, int l) :
-      d(datacontainer),
+      m(datacontainer),
       loop (l)
     {}
 
-
     virtual ~FindEuclideanMap() {}
-    virtual FindEuclideanMap* execute()
-    {
-      return NULL;
-    }
 
     void operator()() const
     {
       std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances);
+
       int nearestneighbordistance = 0;
       int count = 1;
 //      int good = 1;
@@ -111,26 +109,26 @@ class FindEuclideanMap
       int neighpoint;
       int nearestneighbor;
       int neighbors[6];
-      int xpoints = d->xpoints;
-      int ypoints = d->ypoints;
-      int zpoints = d->zpoints;
-      double resx = d->resx;
-      double resy = d->resy;
-      double resz = d->resz;
+      int xpoints = m->xpoints;
+      int ypoints = m->ypoints;
+      int zpoints = m->zpoints;
+      double resx = m->resx;
+      double resy = m->resy;
+      double resz = m->resz;
 
-      neighbors[0] = -d->xpoints * d->ypoints;
-      neighbors[1] = -d->xpoints;
+      neighbors[0] = -m->xpoints * m->ypoints;
+      neighbors[1] = -m->xpoints;
       neighbors[2] = -1;
       neighbors[3] = 1;
-      neighbors[4] = d->xpoints;
-      neighbors[5] = d->xpoints * d->ypoints;
-      int* voxel_NearestNeighbor = new int[d->totalpoints];
-      double* voxel_NearestNeighborDistance = new double[d->totalpoints];
+      neighbors[4] = m->xpoints;
+      neighbors[5] = m->xpoints * m->ypoints;
+      int* voxel_NearestNeighbor = new int[m->totalpoints];
+      double* voxel_NearestNeighborDistance = new double[m->totalpoints];
       nearestneighbordistance = 0;
-      for (int a = 0; a < (d->totalpoints); ++a)
+      for (int a = 0; a < (m->totalpoints); ++a)
       {
-        voxel_NearestNeighbor[a] = d->nearestneighbors[a*3 + loop];
-        voxel_NearestNeighborDistance[a] = d->nearestneighbordistances[a*3 + loop];
+        voxel_NearestNeighbor[a] = nearestneighbors[a*3 + loop];
+        voxel_NearestNeighborDistance[a] = nearestneighbordistances[a*3 + loop];
       }
       count = 1;
       int i;
@@ -177,7 +175,7 @@ class FindEuclideanMap
             }
           }
         }
-        for (int j = 0; j < (d->totalpoints); ++j)
+        for (int j = 0; j < (m->totalpoints); ++j)
         {
           if (voxel_NearestNeighbor[j] != -1 && voxel_NearestNeighborDistance[j] == -1)
           {
@@ -187,7 +185,7 @@ class FindEuclideanMap
       }
       double x1, x2, y1, y2, z1, z2;
       double dist;
-      for (int j = 0; j < (d->totalpoints); j++)
+      for (int j = 0; j < (m->totalpoints); j++)
       {
         nearestneighbor = voxel_NearestNeighbor[j];
         x1 = resx * double(j % xpoints); // find_xcoord(j);
@@ -200,10 +198,10 @@ class FindEuclideanMap
         dist = sqrt(dist);
         voxel_NearestNeighborDistance[j] = dist + (0.5 * resx);
       }
-      for (int a = 0; a < (d->totalpoints); ++a)
+      for (int a = 0; a < (m->totalpoints); ++a)
       {
-        d->nearestneighbors[a*3 + loop] = voxel_NearestNeighbor[a];
-        d->nearestneighbordistances[a*3 + loop] = voxel_NearestNeighborDistance[a];
+        nearestneighbors[a*3 + loop] = voxel_NearestNeighbor[a];
+        nearestneighbordistances[a*3 + loop] = voxel_NearestNeighborDistance[a];
       }
       delete[] voxel_NearestNeighbor;
       delete[] voxel_NearestNeighborDistance;
@@ -216,7 +214,7 @@ class FindEuclideanMap
 #if 0
 class ParallelFindKernels
 {
-    const ReconstructionFunc* d;
+    const ReconstructionFunc* m;
     const int* gnames;
     const int* unassigned;
 
@@ -241,41 +239,41 @@ class ParallelFindKernels
         {
           totalmisorientation = 0.0;
           numVoxel = 0;
-          q1[1] = d->voxels[i].quat[1];
-          q1[2] = d->voxels[i].quat[2];
-          q1[3] = d->voxels[i].quat[3];
-          q1[4] = d->voxels[i].quat[4];
-          col = i % d->xpoints;
-          row = (i / d->xpoints) % d->ypoints;
-          plane = i / (d->xpoints * d->ypoints);
+          q1[1] = m->voxels[i].quat[1];
+          q1[2] = m->voxels[i].quat[2];
+          q1[3] = m->voxels[i].quat[3];
+          q1[4] = m->voxels[i].quat[4];
+          col = i % m->xpoints;
+          row = (i / m->xpoints) % m->ypoints;
+          plane = i / (m->xpoints * m->ypoints);
           for (int j = -steps; j < steps + 1; j++)
           {
-            jStride = j * d->xpoints * d->ypoints;
+            jStride = j * m->xpoints * m->ypoints;
             for (int k = -steps; k < steps + 1; k++)
             {
-              kStride = k * d->xpoints;
+              kStride = k * m->xpoints;
               for (int l = -steps; l < steps + 1; l++)
               {
                 good = 1;
                 neighbor = i + (jStride) + (kStride) + (l);
                 if (plane + j < 0) good = 0;
-                if (plane + j > d->zpoints - 1) good = 0;
+                if (plane + j > m->zpoints - 1) good = 0;
                 if (row + k < 0) good = 0;
-                if (row + k > d->ypoints - 1) good = 0;
+                if (row + k > m->ypoints - 1) good = 0;
                 if (col + l < 0) good = 0;
-                if (col + l > d->xpoints - 1) good = 0;
+                if (col + l > m->xpoints - 1) good = 0;
                 if (good == 1 && gnames[i] == gnames[neighbor] && unassigned[neighbor] != 1)
                 {
                   numVoxel++;
-                  q2[1] = d->voxels[neighbor].quat[1];
-                  q2[2] = d->voxels[neighbor].quat[2];
-                  q2[3] = d->voxels[neighbor].quat[3];
-                  q2[4] = d->voxels[neighbor].quat[4];
-                  if (d->crystruct == Ebsd::Hexagonal)
+                  q2[1] = m->voxels[neighbor].quat[1];
+                  q2[2] = m->voxels[neighbor].quat[2];
+                  q2[3] = m->voxels[neighbor].quat[3];
+                  q2[4] = m->voxels[neighbor].quat[4];
+                  if (m->crystruct == Ebsd::Hexagonal)
                   {
                     w = MisorientationCalculations::getMisoQuatHexagonal(q1, q2, n1, n2, n3);
                   }
-                  if (d->crystruct == Ebsd::Cubic)
+                  if (m->crystruct == Ebsd::Cubic)
                   {
                     w = MisorientationCalculations::getMisoQuatCubic(q1, q2, n1, n2, n3);
                   }
@@ -284,18 +282,18 @@ class ParallelFindKernels
               }
             }
           }
-          d->voxels[i].kernelmisorientation = totalmisorientation / (float)numVoxel;
+          m->voxels[i].kernelmisorientation = totalmisorientation / (float)numVoxel;
         }
         if (gnames[i] == 0 || unassigned[i] == 1)
         {
-          d->voxels[i].kernelmisorientation = 0;
+          m->voxels[i].kernelmisorientation = 0;
         }
       }
     }
 
 
     ParallelFindKernels(ReconstructionFunc* recon, int* gnames, int* unassigned) :
-      d(recon), gnames(gnames), unassigned(unassigned)
+      m(recon), gnames(gnames), unassigned(unassigned)
     {
     }
 

@@ -73,7 +73,6 @@ void FindDeformationStatistics::execute()
   setErrorCondition(0);
 
   find_deformationstatistics(m_OutputFile1, m_OutputFile2);
-
   notify("FindDeformationStatistics Completed", 0, Observable::UpdateProgressMessage);
 }
 
@@ -83,6 +82,10 @@ void FindDeformationStatistics::execute()
 void FindDeformationStatistics::find_deformationstatistics(const std::string &filename, const std::string &filename2)
 {
   DataContainer* m = getDataContainer();
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances);
+
   ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
@@ -199,10 +202,10 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
 		  km = m->kernelmisorientations[i];
 		  gam = m->grainmisorientations[i];
 		  lmg = m->misorientationgradients[i];
-		  gbdist = m->nearestneighbordistances[i*3 + 0];
-		  tjdist = m->nearestneighbordistances[i*3 + 1];
-		  qpdist = m->nearestneighbordistances[i*3 + 2];
-		  nearestneighbor = m->nearestneighbors[i*3 + 0];
+		  gbdist = nearestneighbordistances[i*3 + 0];
+		  tjdist = nearestneighbordistances[i*3 + 1];
+		  qpdist = nearestneighbordistances[i*3 + 2];
+		  nearestneighbor = nearestneighbors[i*3 + 0];
 		  gname2 = m->grain_indicies[nearestneighbor];
 		  sf = m->m_Grains[gname]->schmidfactor;
 		  sf2 = m->m_Grains[gname2]->schmidfactor;
@@ -275,7 +278,7 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
 		  gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
 		  lmgvqp[qpbin][0]++;
 		  lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
-		  distance = int(m->nearestneighbordistances[i*3 + 0]);
+		  distance = int(nearestneighbordistances[i*3 + 0]);
 		  if(distance > 9) distance = 9;
 		  if(distance <= 5)
 		  {
