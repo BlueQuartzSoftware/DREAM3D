@@ -41,24 +41,92 @@
 #endif
 
 
-
+//-- C++ includes
 #include <vector>
 #include <map>
+#include <sstream>
+#include <list>
 
-
-//#include <boost/shared_array.hpp>
-
+//-- EBSD Lib Includes
 #include "EbsdLib/EbsdConstants.h"
 
+//-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Field.h"
 #include "DREAM3DLib/Common/Observable.h"
 
+
+#define INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, typeClass, type, size, valuePtr, numComp) \
+type* valuePtr = NULL;\
+{\
+  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  if (iDataArray.get() == NULL) { \
+    iDataArray = typeClass::CreateArray(size);\
+    dataContainer->addVoxelData(name, iDataArray);\
+  } \
+  iDataArray->SetNumberOfComponents(numComp);\
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  if (NULL == valuePtr) {\
+    std::stringstream s;\
+    s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    setErrorCondition(-12);\
+    setErrorMessage(s.str());\
+    return;\
+  }\
+}
+
+#define GET_NAMED_ARRAY_SIZE_CHK(dataContainer, name, typeClass, type, size, valuePtr) \
+type* valuePtr = NULL;\
+{\
+  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  if (iDataArray.get() == NULL) { \
+    std::stringstream s;\
+    s << "Array " << name << " from the DataContainer class was not in the DataContainer";\
+    setErrorCondition(-10);\
+    setErrorMessage(s.str());\
+    return;\
+  } \
+  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+    std::stringstream s;\
+    s << "Array " << name << " from the DataContainer class did not have the correct number of elements.";\
+    setErrorCondition(-11);\
+    setErrorMessage(s.str());\
+    return;\
+  }\
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  if (NULL == valuePtr) {\
+    std::stringstream s;\
+    s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    setErrorCondition(-13);\
+    setErrorMessage(s.str());\
+    return;\
+  }\
+}
+
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, name, typeClass, type, size, valuePtr) \
+type* valuePtr = NULL;\
+{\
+  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  if (iDataArray.get() == NULL) { \
+    return;\
+  } \
+  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+    return;\
+  }\
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  if (NULL == valuePtr) {\
+    return;\
+  }\
+}
+
 namespace DREAM3D
 {
-  namespace ArrayNames
+  namespace VoxelData
   {
     const std::string GrainIds("GrainIds");
     const std::string Phases("Phases");
@@ -95,7 +163,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual ~DataContainer();
 
 
-    /* *********** These methods will eventually replace those below *************/
+    /* *********** These methods will eventually replace those below **********/
 
   /**
    * @brief Adds/overwrites the data for a named array
@@ -110,6 +178,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param name The name of the data array
      */
     IDataArray::Pointer getVoxelData(const std::string &name);
+
+    std::list<std::string> getVoxelArrayNameList();
+
+    int getNumVoxelArrays();
+
+    /* ****************** END Map Based Methods *******************************/
 
     // Volume Dimensional Information
     float resx;
@@ -131,8 +205,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
     DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
     DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
-    DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, int); // N x 3 Array
-    DECLARE_WRAPPED_ARRAY(nearestneighbordistances, m_NearestNeighborDistances, float); // N x 3 Array
+ //   DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, int); // N x 3 Array
+ //   DECLARE_WRAPPED_ARRAY(nearestneighbordistances, m_NearestNeighborDistances, float); // N x 3 Array
     DECLARE_WRAPPED_ARRAY(grainmisorientations, m_GrainMisorientations, float);
     DECLARE_WRAPPED_ARRAY(misorientationgradients, m_MisorientationGradients, float);
     DECLARE_WRAPPED_ARRAY(kernelmisorientations, m_KernelMisorientations, float);

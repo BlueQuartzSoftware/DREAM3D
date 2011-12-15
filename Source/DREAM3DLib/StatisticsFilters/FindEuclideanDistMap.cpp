@@ -71,14 +71,15 @@ void FindEuclideanDistMap::execute()
 void FindEuclideanDistMap::find_euclideandistmap()
 {
   DataContainer* m = getDataContainer();
-  m->nearestneighbors = m->m_NearestNeighbors->WritePointer(0, m->totalpoints * 3);
-  m->m_NearestNeighbors->SetNumberOfComponents(3);
-  m->nearestneighbordistances = m->m_NearestNeighborDistances->WritePointer(0, m->totalpoints * 3);
-  m->m_NearestNeighborDistances->SetNumberOfComponents(3);
+
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors, 3);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances, 3);
+
+
   for (int i = 0; i < m->totalpoints*3; i++)
   {
-	m->nearestneighbors[i] = -1;
-	m->nearestneighbordistances[i] = -1;
+    nearestneighbors[i] = -1;
+    nearestneighbordistances[i] = -1;
   }
 //  int neighpoint;
 //  int nearestneighbor;
@@ -117,7 +118,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 		if(good == 1 && m->grain_indicies[neighbor] != grain && m->grain_indicies[neighbor] > 0)
 		{
 			add = 1;
-			for(int i=0;i<coordination.size();i++)
+			for(size_t i=0;i<coordination.size();i++)
 			{
 				if(m->grain_indicies[neighbor] == coordination[i]) add = 0;
 			}
@@ -125,10 +126,10 @@ void FindEuclideanDistMap::find_euclideandistmap()
 		}
 	  }
 	}
-	if(coordination.size() > 2) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = 0, m->nearestneighbordistances[a*3+2] = 0, m->nearestneighbors[a*3+0] = coordination[0], m->nearestneighbors[a*3+1] = coordination[0], m->nearestneighbors[a*3+2] = coordination[0];
-	if(coordination.size() == 2) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = 0, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = coordination[0], m->nearestneighbors[a*3+1] = coordination[0], m->nearestneighbors[a*3+2] = -1;
-	if(coordination.size() == 1) m->nearestneighbordistances[a*3+0] = 0, m->nearestneighbordistances[a*3+1] = -1, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = coordination[0], m->nearestneighbors[a*3+1] = -1, m->nearestneighbors[a*3+2] = -1;
-	if(coordination.size() == 0) m->nearestneighbordistances[a*3+0] = -1, m->nearestneighbordistances[a*3+1] = -1, m->nearestneighbordistances[a*3+2] = -1, m->nearestneighbors[a*3+0] = -1, m->nearestneighbors[a*3+1] = -1, m->nearestneighbors[a*3+2] = -1;
+	if(coordination.size() > 2) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = 0, nearestneighbordistances[a*3+2] = 0, nearestneighbors[a*3+0] = coordination[0], nearestneighbors[a*3+1] = coordination[0], nearestneighbors[a*3+2] = coordination[0];
+	if(coordination.size() == 2) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = 0, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = coordination[0], nearestneighbors[a*3+1] = coordination[0], nearestneighbors[a*3+2] = -1;
+	if(coordination.size() == 1) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = -1, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = coordination[0], nearestneighbors[a*3+1] = -1, nearestneighbors[a*3+2] = -1;
+	if(coordination.size() == 0) nearestneighbordistances[a*3+0] = -1, nearestneighbordistances[a*3+1] = -1, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = -1, nearestneighbors[a*3+1] = -1, nearestneighbors[a*3+2] = -1;
  }
 #if AIM_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
