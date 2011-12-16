@@ -139,7 +139,7 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* m
   euler3s = m_Euler3s->WritePointer(0, totalpoints);
 
   std::cout << "Reading Voxel Data" << std::endl;
-  err = reader->readVoxelData(m_GrainIndicies, m_Phases, m_Euler1s, m_Euler2s, m_Euler3s, crystruct, phaseType, totalpoints);
+  err = reader->readVoxelData(grain_indicies, phases, euler1s, euler2s, euler3s, crystruct, phaseType, totalpoints);
   if (err < 0)
   {
     std::cout << "Error reading h5voxel file." << std::endl;

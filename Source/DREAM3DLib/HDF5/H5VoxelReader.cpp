@@ -161,11 +161,11 @@ int H5VoxelReader::readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelL
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelReader::readVoxelData(DataArray<int>::Pointer grain_indicies,
-                  DataArray<int>::Pointer phases,
-                  DataArray<float>::Pointer euler1s,
-                  DataArray<float>::Pointer euler2s,
-                  DataArray<float>::Pointer euler3s,
+int H5VoxelReader::readVoxelData(int* grain_indicies,
+                  int* phases,
+                  float* euler1s,
+                  float* euler2s,
+                  float* euler3s,
                   std::vector<Ebsd::CrystalStructure> &crystruct,
                   std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
                   int totalpoints)
@@ -178,10 +178,10 @@ int H5VoxelReader::readVoxelData(DataArray<int>::Pointer grain_indicies,
   }
 
 
-  err = readScalarData(DREAM3D::VTK::GrainIdScalarName, grain_indicies->GetPointer(0));
+  err = readScalarData(DREAM3D::VTK::GrainIdScalarName, grain_indicies);
   if (err < 0) { return err; }
 
-  err = readScalarData(DREAM3D::VTK::PhaseIdScalarName, phases->GetPointer(0));
+  err = readScalarData(DREAM3D::VTK::PhaseIdScalarName, phases);
   if (err < 0) { return err; }
 
 
@@ -204,9 +204,9 @@ int H5VoxelReader::readVoxelData(DataArray<int>::Pointer grain_indicies,
   float* e = fData->GetPointer(0);
   for (int i = 0; i < totalpoints; ++i)
   {
-    euler1s->SetValue(i, e[i * 3]);
-    euler2s->SetValue(i, e[i * 3 + 1]);
-    euler3s->SetValue(i, e[i * 3 + 2]);
+    euler1s[i] =  e[i * 3];
+    euler2s[i] =  e[i * 3 + 1];
+    euler3s[i] =  e[i * 3 + 2];
   }
 
 // Close the group as we are done with it.

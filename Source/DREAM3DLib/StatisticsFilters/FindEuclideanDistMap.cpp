@@ -71,9 +71,21 @@ void FindEuclideanDistMap::execute()
 void FindEuclideanDistMap::find_euclideandistmap()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
 
   INITIALIZE_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors, 3);
   INITIALIZE_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances, 3);
+
 
 
   for (int i = 0; i < m->totalpoints*3; i++)
@@ -98,7 +110,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   neighbors[5] = m->xpoints * m->ypoints;
   for (int a = 0; a < (m->totalpoints); ++a)
   {
-	grain = m->grain_indicies[a];
+	grain = grain_indicies[a];
 	if(grain > 0)
 	{
 	  coordination.resize(0);
@@ -115,14 +127,14 @@ void FindEuclideanDistMap::find_euclideandistmap()
 		if(k == 4 && row == (m->ypoints - 1)) good = 0;
 		if(k == 2 && column == 0) good = 0;
 		if(k == 3 && column == (m->xpoints - 1)) good = 0;
-		if(good == 1 && m->grain_indicies[neighbor] != grain && m->grain_indicies[neighbor] > 0)
+		if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
 		{
 			add = 1;
 			for(size_t i=0;i<coordination.size();i++)
 			{
-				if(m->grain_indicies[neighbor] == coordination[i]) add = 0;
+				if(grain_indicies[neighbor] == coordination[i]) add = 0;
 			}
-			if(add == 1) coordination.push_back(m->grain_indicies[neighbor]);
+			if(add == 1) coordination.push_back(grain_indicies[neighbor]);
 		}
 	  }
 	}

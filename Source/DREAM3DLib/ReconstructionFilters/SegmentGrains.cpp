@@ -91,6 +91,11 @@ void SegmentGrains::execute()
 void SegmentGrains::form_grains()
 {
   DataContainer* m = getDataContainer();
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+
+
   DREAM3D_RANDOMNG_NEW()
   int seed = 0;
   int noseeds = 0;
@@ -134,7 +139,7 @@ void SegmentGrains::form_grains()
     while (seed == -1 && counter < m->totalpoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - m->totalpoints;
-      if (m->grain_indicies[randpoint] == -1 && m->phases[randpoint] > 0) seed = randpoint;
+      if (grain_indicies[randpoint] == -1 && phases[randpoint] > 0) seed = randpoint;
 
       randpoint++;
       counter++;
@@ -143,7 +148,7 @@ void SegmentGrains::form_grains()
     if (seed >= 0)
     {
       size = 0;
-      m->grain_indicies[seed] = graincount;
+      grain_indicies[seed] = graincount;
       voxelslist[size] = seed;
       size++;
       for (size_t j = 0; j < size; ++j)
@@ -152,14 +157,14 @@ void SegmentGrains::form_grains()
         col = currentpoint % m->xpoints;
         row = (currentpoint / m->xpoints) % m->ypoints;
         plane = currentpoint / (m->xpoints * m->ypoints);
-        phase1 = m->crystruct[m->phases[currentpoint]];
+        phase1 = m->crystruct[phases[currentpoint]];
         for (int i = 0; i < 6; i++)
         {
           q1[0] = 1;
-          q1[1] = m->quats[currentpoint * 5 + 1];
-          q1[2] = m->quats[currentpoint * 5 + 2];
-          q1[3] = m->quats[currentpoint * 5 + 3];
-          q1[4] = m->quats[currentpoint * 5 + 4];
+          q1[1] = quats[currentpoint * 5 + 1];
+          q1[2] = quats[currentpoint * 5 + 2];
+          q1[3] = quats[currentpoint * 5 + 3];
+          q1[4] = quats[currentpoint * 5 + 4];
           good = 1;
           neighbor = currentpoint + neighpoints[i];
           if (i == 0 && plane == 0) good = 0;
@@ -168,19 +173,19 @@ void SegmentGrains::form_grains()
           if (i == 4 && row == (m->ypoints - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
           if (i == 3 && col == (m->xpoints - 1)) good = 0;
-          if (good == 1 && m->grain_indicies[neighbor] == -1 && m->phases[neighbor] > 0)
+          if (good == 1 && grain_indicies[neighbor] == -1 && phases[neighbor] > 0)
           {
             w = 10000.0;
             q2[0] = 1;
-            q2[1] = m->quats[neighbor*5 + 1];
-            q2[2] = m->quats[neighbor*5 + 2];
-            q2[3] = m->quats[neighbor*5 + 3];
-            q2[4] = m->quats[neighbor*5 + 4];
-            phase2 = m->crystruct[m->phases[neighbor]];
+            q2[1] = quats[neighbor*5 + 1];
+            q2[2] = quats[neighbor*5 + 2];
+            q2[3] = quats[neighbor*5 + 3];
+            q2[4] = quats[neighbor*5 + 4];
+            phase2 = m->crystruct[phases[neighbor]];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
             if (w < m_MisoTolerance)
             {
-              m->grain_indicies[neighbor] = graincount;
+              grain_indicies[neighbor] = graincount;
               voxelslist[size] = neighbor;
               size++;
               if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
@@ -196,7 +201,7 @@ void SegmentGrains::form_grains()
       m->m_Grains[graincount]->voxellist = new std::vector<int>(voxelslist.size());
       m->m_Grains[graincount]->voxellist->swap(voxelslist);
       m->m_Grains[graincount]->active = 1;
-      m->m_Grains[graincount]->phase = m->phases[seed];
+      m->m_Grains[graincount]->phase = phases[seed];
       graincount++;
       if (graincount >= m->m_Grains.size())
       {

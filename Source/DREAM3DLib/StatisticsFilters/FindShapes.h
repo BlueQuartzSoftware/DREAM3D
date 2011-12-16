@@ -84,7 +84,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     FindShapes();
 
   private:
-
+    int32_t* grain_indicies;
 
     FindShapes(const FindShapes&); // Copy Constructor Not Implemented
     void operator=(const FindShapes&); // Operator '=' Not Implemented

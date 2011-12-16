@@ -165,34 +165,39 @@ class DxGrainIdWriter : public GrainIdWriter
  * class write data. It is here to implement the bare minimum of public variables
  * in order to use the templated classes above.
  */
+#if 0
 namespace VtkFileWriter
 {
   class VtkGrainIdHelper
   {
     public:
-      DREAM3D_SHARED_POINTERS(VtkGrainIdHelper);
-      DREAM3D_STATIC_NEW_MACRO(VtkGrainIdHelper);
-      virtual ~VtkGrainIdHelper() {};
+    DREAM3D_SHARED_POINTERS(VtkGrainIdHelper);
+    DREAM3D_STATIC_NEW_MACRO(VtkGrainIdHelper);
+    virtual ~VtkGrainIdHelper()
+    {};
 
-      float resx;
-      float resy;
-      float resz;
+    float resx;
+    float resy;
+    float resz;
 
-      int xpoints;
-      int ypoints;
-      int zpoints;
-      int totalpoints;
-      int* grain_indicies;
+    int xpoints;
+    int ypoints;
+    int zpoints;
+    int totalpoints;
+    int* grain_indicies;
 
     protected:
-      VtkGrainIdHelper() {
-        grain_indicies = NULL;
-      }
+    VtkGrainIdHelper()
+    {
+      grain_indicies = NULL;
+    }
     private:
-      VtkGrainIdHelper(const VtkGrainIdHelper&); // Copy Constructor Not Implemented
-      void operator=(const VtkGrainIdHelper&); // Operator '=' Not Implemented
+    VtkGrainIdHelper(const VtkGrainIdHelper&); // Copy Constructor Not Implemented
+    void operator=(const VtkGrainIdHelper&);// Operator '=' Not Implemented
   };
 }
+#endif
+
 
 
 
@@ -218,18 +223,19 @@ class VtkGrainIdWriter : public GrainIdWriter
     {
 
       // Copy all the variables into the helper class from above
-      VtkFileWriter::VtkGrainIdHelper::Pointer r = VtkFileWriter::VtkGrainIdHelper::New();
+      DataContainer::Pointer r = DataContainer::New();
       getDimensions(r->xpoints, r->ypoints, r->zpoints);
       getResolution(r->resx, r->resy, r->resz);
-      r->grain_indicies = getGrainIds()->GetPointer(0);
+      r->addVoxelData(DREAM3D::VoxelData::GrainIds, getGrainIds());
+//      r->grain_indicies = getGrainIds()->GetPointer(0);
 
-      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<VtkFileWriter::VtkGrainIdHelper>(r.get()));
+      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(r.get()));
       std::vector<VtkScalarWriter*> scalarsToWrite;
       w0->m_WriteBinaryFiles = m_WriteBinaryFiles;
       scalarsToWrite.push_back(w0);
       VTKRectilinearGridFileWriter writer;
       writer.setWriteBinaryFiles(m_WriteBinaryFiles);
-      int err = writer.write<VtkFileWriter::VtkGrainIdHelper>(getFileName(), r.get(), scalarsToWrite);
+      int err = writer.write<DataContainer>(getFileName(), r.get(), scalarsToWrite);
       if (err < 0)
       {
         setErrorMessage("Error Writing vtk File");

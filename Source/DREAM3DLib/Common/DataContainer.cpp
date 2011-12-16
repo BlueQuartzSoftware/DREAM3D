@@ -56,38 +56,38 @@
 // -----------------------------------------------------------------------------
 DataContainer::DataContainer()
 {
-  grain_indicies = NULL;
-  phases = NULL;
-  euler1s = NULL;
-  euler2s = NULL;
-  euler3s = NULL;
-  surfacevoxels = NULL;
-  quats = NULL;
-  alreadychecked = NULL;
-  neighbors = NULL;
-  goodVoxels = NULL;
+//  grain_indicies = NULL;
+//  phases = NULL;
+//  euler1s = NULL;
+//  euler2s = NULL;
+//  euler3s = NULL;
+//  surfacevoxels = NULL;
+//  quats = NULL;
+//  alreadychecked = NULL;
+//  neighbors = NULL;
+//  goodVoxels = NULL;
 //  nearestneighbors = NULL;
 //  nearestneighbordistances = NULL;
-  grainmisorientations = NULL;
-  misorientationgradients = NULL;
-  kernelmisorientations = NULL;
+//  grainmisorientations = NULL;
+//  misorientationgradients = NULL;
+//  kernelmisorientations = NULL;
 
 
-  INIT_DataArray(m_GrainIndicies,int);
-  INIT_DataArray(m_Phases,int);
-  INIT_DataArray(m_Euler1s,float);
-  INIT_DataArray(m_Euler2s,float);
-  INIT_DataArray(m_Euler3s,float);
-  INIT_DataArray(m_SurfaceVoxels,char);
-  INIT_DataArray(m_Neighbors,int);
-  INIT_DataArray(m_GoodVoxels,bool);
-  INIT_DataArray(m_Quats,float);
-  INIT_DataArray(m_AlreadyChecked,bool);
+//  INIT_DataArray(m_GrainIndicies,int);
+//  INIT_DataArray(m_Phases,int);
+//  INIT_DataArray(m_Euler1s,float);
+//  INIT_DataArray(m_Euler2s,float);
+//  INIT_DataArray(m_Euler3s,float);
+//  INIT_DataArray(m_SurfaceVoxels,char);
+//  INIT_DataArray(m_Neighbors,int);
+//  INIT_DataArray(m_GoodVoxels,bool);
+//  INIT_DataArray(m_Quats,float);
+//  INIT_DataArray(m_AlreadyChecked,bool);
 //  INIT_DataArray(m_NearestNeighbors,int);
 //  INIT_DataArray(m_NearestNeighborDistances,float);
-  INIT_DataArray(m_GrainMisorientations,float);
-  INIT_DataArray(m_MisorientationGradients,float);
-  INIT_DataArray(m_KernelMisorientations,float);
+//  INIT_DataArray(m_GrainMisorientations,float);
+//  INIT_DataArray(m_MisorientationGradients,float);
+//  INIT_DataArray(m_KernelMisorientations,float);
 }
 
 // -----------------------------------------------------------------------------

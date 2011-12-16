@@ -72,6 +72,20 @@ void FindNeighbors::execute()
 void FindNeighbors::find_neighbors()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (m->totalpoints), surfacevoxels);
+
+
+
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
   neighpoints[1] = -m->xpoints;
@@ -117,7 +131,7 @@ void FindNeighbors::find_neighbors()
   for (int j = 0; j < m->totalpoints; j++)
   {
     onsurf = 0;
-    grain = m->grain_indicies[j];
+    grain = grain_indicies[j];
     if (grain > 0)
     {
       column = j % m->xpoints;
@@ -141,7 +155,7 @@ void FindNeighbors::find_neighbors()
         if (k == 4 && row == (m->ypoints - 1)) good = 0;
         if (k == 2 && column == 0) good = 0;
         if (k == 3 && column == (m->xpoints - 1)) good = 0;
-        if (good == 1 && m->grain_indicies[neighbor] != grain && m->grain_indicies[neighbor] > 0)
+        if (good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
         {
           onsurf++;
           nnum = m->m_Grains[grain]->numneighbors;
@@ -150,13 +164,13 @@ void FindNeighbors::find_neighbors()
           {
             nlist->resize(nnum + nListSize);
           }
-          nlist->at(nnum) = m->grain_indicies[neighbor];
+          nlist->at(nnum) = grain_indicies[neighbor];
           nnum++;
           m->m_Grains[grain]->numneighbors = nnum;
         }
       }
     }
-    m->surfacevoxels[j] = onsurf;
+    surfacevoxels[j] = onsurf;
   }
 
   notify("FindNeighbors: Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);

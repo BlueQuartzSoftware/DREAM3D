@@ -44,15 +44,15 @@
 #include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
 
 #define H5GW_IPF_COLOR()\
-if (r->crystruct[phase] == Ebsd::Cubic) {\
-  EbsdColoring::GenerateIPFColor(r->m_Grains[r->grain_indicies[i]]->euler1, r->m_Grains[r->grain_indicies[i]]->euler2, r->m_Grains[r->grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);\
-} else if (r->crystruct[phase] == Ebsd::Hexagonal)\
+if (m->crystruct[phase] == Ebsd::Cubic) {\
+  EbsdColoring::GenerateIPFColor(m->m_Grains[grain_indicies[i]]->euler1, m->m_Grains[grain_indicies[i]]->euler2, m->m_Grains[grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);\
+} else if (m->crystruct[phase] == Ebsd::Hexagonal)\
 {\
-  q1[1] = r->m_Grains[r->grain_indicies[i]]->avg_quat[1];\
-  q1[2] = r->m_Grains[r->grain_indicies[i]]->avg_quat[2];\
-  q1[3] = r->m_Grains[r->grain_indicies[i]]->avg_quat[3];\
-  q1[4] = r->m_Grains[r->grain_indicies[i]]->avg_quat[4];\
-  EbsdColoring::CalculateHexIPFColor(r->m_Grains[r->grain_indicies[i]]->euler1, r->m_Grains[r->grain_indicies[i]]->euler2, r->m_Grains[r->grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
+  q1[1] = m->m_Grains[grain_indicies[i]]->avg_quat[1];\
+  q1[2] = m->m_Grains[grain_indicies[i]]->avg_quat[2];\
+  q1[3] = m->m_Grains[grain_indicies[i]]->avg_quat[3];\
+  q1[4] = m->m_Grains[grain_indicies[i]]->avg_quat[4];\
+  EbsdColoring::CalculateHexIPFColor(m->m_Grains[grain_indicies[i]]->euler1, m->m_Grains[grain_indicies[i]]->euler2, m->m_Grains[grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
 }\
 ipfColor[j * 3] = rgb[0];\
 ipfColor[j * 3 + 1] = rgb[1];\
@@ -67,7 +67,7 @@ ipfColor[j * 3 + 2] = rgb[2];\
   std::stringstream ss;\
   std::string hdfPath;\
   std::vector<std::string > hdfPaths;\
-  int numgrains = r->m_Grains.size();\
+  int numgrains = m->m_Grains.size();\
   int phase;\
   int pcount = 0;\
   float q1[5];\
@@ -80,7 +80,7 @@ ipfColor[j * 3 + 2] = rgb[2];\
 
 
 #define H5GW_GRAIN_LOOP_1() \
-    std::vector<int >* vlist = r->m_Grains[i]->voxellist;\
+    std::vector<int >* vlist = m->m_Grains[i]->voxellist;\
     if (NULL == vlist || vlist->size() == 0) { continue; }\
     int vid = vlist->at(0);\
     ss.str("");\
@@ -100,9 +100,9 @@ ipfColor[j * 3 + 2] = rgb[2];\
 
 #define H5GW_VLIST_LOOP_1()\
 vid = vlist->at(j);\
-ocol = vid % r->xpoints;\
-orow = (vid / r->xpoints) % r->ypoints;\
-oplane = vid / (r->xpoints * r->ypoints);\
+ocol = vid % m->xpoints;\
+orow = (vid / m->xpoints) % m->ypoints;\
+oplane = vid / (m->xpoints * m->ypoints);\
 cells[cIdx] = 8;\
 ++cIdx;\
 for (int k = 0; k < 8; k++) {\
@@ -114,13 +114,13 @@ for (int k = 0; k < 8; k++) {\
   if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;\
   if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;\
   if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;\
-  pid = (plane * (r->xpoints + 1) * (r->ypoints + 1)) + (row * (r->xpoints + 1)) + col;\
+  pid = (plane * (m->xpoints + 1) * (m->ypoints + 1)) + (row * (m->xpoints + 1)) + col;\
   if (pointMap.find(pid) == pointMap.end())  {\
     pointMap[pid] = pcount;\
     pcount++;\
-    points.push_back((col * r->resx));\
-    points.push_back((row * r->resy));\
-    points.push_back((plane * r->resz));\
+    points.push_back((col * m->resx));\
+    points.push_back((row * m->resy));\
+    points.push_back((plane * m->resz));\
   }\
   cells[cIdx] = pointMap[pid];\
   ++cIdx;\
@@ -130,9 +130,9 @@ for (int k = 0; k < 8; k++) {\
 #define H5GW_GRAIN_LOOP_2() \
 err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);\
 err = h5writer->writeFieldData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
-size_t size = r->m_Grains[i]->neighborlist->size();\
+size_t size = m->m_Grains[i]->neighborlist->size();\
 if (size > 0) {\
-err = h5writer->writeFieldData<int> (hdfPath, *(r->m_Grains[i]->neighborlist), DREAM3D::HDF5::Neighbor_Grain_ID_List.c_str(), 1);\
+err = h5writer->writeFieldData<int> (hdfPath, *(m->m_Grains[i]->neighborlist), DREAM3D::HDF5::Neighbor_Grain_ID_List.c_str(), 1);\
 }\
 err = h5writer->writeCellData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
 err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, DREAM3D::HDF5::IPFColor.c_str(), 3);\
@@ -165,7 +165,7 @@ class  H5GrainWriter
      * @return
      */
     template<typename ReconstructionFunc>
-    int writeHDF5ReconGrainsFile(ReconstructionFunc* r, const std::string &hdfFile)
+    int writeHDF5ReconGrainsFile(ReconstructionFunc* m, const std::string &hdfFile)
     {
 
       H5GW_DECLS()
@@ -183,21 +183,21 @@ class  H5GrainWriter
         {
           H5GW_VLIST_LOOP_1()
 
-          phase = r->phases[vid];
+          phase = m->phases[vid];
           phaseValues[j] = phase;
-          if (r->crystruct[phase] == Ebsd::Cubic)
+          if (m->crystruct[phase] == Ebsd::Cubic)
           {
-            EbsdColoring::GenerateIPFColor(r->euler1s[vid],
-                                          r->euler2s[vid],
-                                          r->euler3s[vid],
+            EbsdColoring::GenerateIPFColor(m->euler1s[vid],
+                                          m->euler2s[vid],
+                                          m->euler3s[vid],
                                           RefDirection[0], RefDirection[1], RefDirection[2],
                                           rgb, hkl);
           }
-          else if (r->crystruct[phase] == Ebsd::Hexagonal)
+          else if (m->crystruct[phase] == Ebsd::Hexagonal)
           {
-            EbsdColoring::CalculateHexIPFColor(r->euler1s[vid],
-                                              r->euler2s[vid],
-                                              r->euler3s[vid],
+            EbsdColoring::CalculateHexIPFColor(m->euler1s[vid],
+                                              m->euler2s[vid],
+                                              m->euler3s[vid],
                                               RefDirection[0], RefDirection[1], RefDirection[2], rgb);
           }
           ipfColor[j * 3] = rgb[0];
@@ -205,8 +205,8 @@ class  H5GrainWriter
           ipfColor[j * 3 + 2] = rgb[2];
 
           // Reconstruction Specific Assignments
-          imageQuality[j] = r->imagequalities[vid];
-          grainName[j] = r->grain_indicies[vid];
+          imageQuality[j] = m->imagequalities[vid];
+          grainName[j] = m->grain_indicies[vid];
         }
         H5GW_GRAIN_LOOP_2()
 
@@ -223,9 +223,12 @@ class  H5GrainWriter
      * @param hdfFile
      * @return
      */
-    template<typename GrainGeneratorFunc>
-    int writeHDF5GrainsFile(GrainGeneratorFunc* r, const std::string &hdfFile)
+    template<typename T>
+    int writeHDF5GrainsFile(T* m, const std::string &hdfFile)
     {
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+
       H5GW_DECLS()
       err = 0;
       for (int i = 1; i < numgrains; i++)
@@ -235,7 +238,7 @@ class  H5GrainWriter
         {
           H5GW_VLIST_LOOP_1()
 
-          phase = r->phases[vid];
+          phase = phases[vid];
           phaseValues[j] = phase;
           H5GW_IPF_COLOR()
 

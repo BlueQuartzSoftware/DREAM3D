@@ -78,6 +78,22 @@ void FindAvgOrientations::execute()
 void FindAvgOrientations::find_avgorientations()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+
   size_t numgrains = m->m_Grains.size();
   int phase;
   float voxquat[5];
@@ -93,26 +109,26 @@ void FindAvgOrientations::find_avgorientations()
   float qr[5];
   for(int i = 0; i < m->totalpoints; i++)
   {
-    if(m->grain_indicies[i] > 0 && m->phases[i] > 0)
+    if(grain_indicies[i] > 0 && phases[i] > 0)
 	{
-		OrientationMath::eulertoQuat(qr, m->euler1s[i], m->euler2s[i], m->euler3s[i]);
-		phase = m->phases[i];
+		OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
+		phase = phases[i];
 		xtal = m->crystruct[phase];
 		m_OrientationOps[xtal]->getFZQuat(qr);
-		m->quats[i*5 + 0] = 1.0;
-		m->quats[i*5 + 1] = qr[1];
-		m->quats[i*5 + 2] = qr[2];
-		m->quats[i*5 + 3] = qr[3];
-		m->quats[i*5 + 4] = qr[4];
-		voxquat[0] = m->quats[i*5 + 0];
-		voxquat[1] = m->quats[i*5 + 1];
-		voxquat[2] = m->quats[i*5 + 2];
-		voxquat[3] = m->quats[i*5 + 3];
-		voxquat[4] = m->quats[i*5 + 4];
-		m_OrientationOps[xtal]->getNearestQuat(m->m_Grains[m->grain_indicies[i]]->avg_quat, voxquat);
+		quats[i*5 + 0] = 1.0;
+		quats[i*5 + 1] = qr[1];
+		quats[i*5 + 2] = qr[2];
+		quats[i*5 + 3] = qr[3];
+		quats[i*5 + 4] = qr[4];
+		voxquat[0] = quats[i*5 + 0];
+		voxquat[1] = quats[i*5 + 1];
+		voxquat[2] = quats[i*5 + 2];
+		voxquat[3] = quats[i*5 + 3];
+		voxquat[4] = quats[i*5 + 4];
+		m_OrientationOps[xtal]->getNearestQuat(m->m_Grains[grain_indicies[i]]->avg_quat, voxquat);
 		for (int k = 0; k < 5; k++)
 		{
-		  m->m_Grains[m->grain_indicies[i]]->avg_quat[k] = m->m_Grains[m->grain_indicies[i]]->avg_quat[k] + m->quats[i*5 + k];
+		  m->m_Grains[grain_indicies[i]]->avg_quat[k] = m->m_Grains[grain_indicies[i]]->avg_quat[k] + quats[i*5 + k];
 		}
 	}
   }

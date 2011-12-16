@@ -67,7 +67,7 @@
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
-    fprintf(f, "%d ", ptr->grain_indicies[i]);\
+    fprintf(f, "%d ", grain_indicies[i]);\
   }\
   fprintf(f, "\n");\
 
@@ -79,7 +79,7 @@
   int* gn = new int[total];\
   int t;\
   for (size_t i = 0; i < total; i++) {\
-    t = ptr->grain_indicies[i];\
+    t = grain_indicies[i];\
     MXA::Endian::FromSystemToBig::convert<int>(t); \
     gn[i] = t; \
   }\
@@ -98,7 +98,7 @@
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, FORMAT, ptr->var[i]);\
+    fprintf(f, FORMAT, var[i]);\
   }fprintf(f,"\n"); \
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, type, var)\
@@ -108,7 +108,7 @@
   type* gn = new type[total];\
   type t;\
   for (size_t i = 0; i < total; i++) {\
-    t = ptr->var[i];\
+    t = var[i];\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\
@@ -128,7 +128,7 @@
   { \
   type* gn = new type[total];\
   for (size_t i = 0; i < total; i++) {\
-    gn[i] = ptr->var[i];\
+    gn[i] = var[i];\
   }\
   size_t totalWritten = fwrite(gn, sizeof(type), total, f);\
   delete[] gn;\
@@ -145,7 +145,7 @@
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (size_t i = 0; i < total; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, FORMAT, ptr->m_Grains[ptr->grain_indicies[i]]->var);\
+    fprintf(f, FORMAT, ptr->m_Grains[grain_indicies[i]]->var);\
   } fprintf(f,"\n");
 
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(ptr, name, type, var)\
@@ -155,7 +155,7 @@
   type* gn = new type[total];\
   type t;\
   for (size_t i = 0; i < total; i++) {\
-    t = ptr->m_Grains[ptr->grain_indicies[i]]->var;\
+    t = ptr->m_Grains[grain_indicies[i]]->var;\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\

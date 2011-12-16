@@ -44,7 +44,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindShapes::FindShapes()
+FindShapes::FindShapes() :
+grain_indicies(NULL)
 {
   graincenters = NULL;
   grainmoments = NULL;
@@ -66,6 +67,17 @@ FindShapes::~FindShapes()
 void FindShapes::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
+  grain_indicies = gi;
   setErrorCondition(0);
 
   if(m->zpoints > 1) find_centroids();
@@ -102,7 +114,7 @@ void FindShapes::find_centroids()
   }
   for (int j = 0; j < m->totalpoints; j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;
     col = j % m->xpoints;
     row = (j / m->xpoints) % m->ypoints;
@@ -148,7 +160,7 @@ void FindShapes::find_centroids2D()
   }
   for (int j = 0; j < m->totalpoints; j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;
     col = j % m->xpoints;
     row = (j / m->xpoints) % m->ypoints;
@@ -195,7 +207,7 @@ void FindShapes::find_moments()
     u110 = 0;
     u011 = 0;
     u101 = 0;
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float z = find_zcoord(j);
@@ -300,7 +312,7 @@ void FindShapes::find_moments2D()
     u200 = 0;
     u020 = 0;
     u110 = 0;
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float x1 = x + (m->resx / 2);

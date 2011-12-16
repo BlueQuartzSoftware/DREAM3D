@@ -46,6 +46,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
@@ -91,6 +92,8 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
     int err = 0;
     std::string file;
     size_t total = r->xpoints * r->ypoints * r->zpoints;
+    GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (r->totalpoints), grain_indicies);
+
     if (m_WriteBinaryFiles == true) {
       WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::VTK::GrainIdScalarName);
     }
@@ -112,6 +115,9 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * to the VTK file. This class is specifically setup for writing voxel based
  * properties to the VTK file
  */
+
+#if 0
+
 #define VtkSCALARWRITER_CLASS_DEF(name, r, const_name, type, scalar, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
@@ -160,12 +166,43 @@ class name : public VtkScalarWriter\
     void operator=(const name&);\
 };
 
+#else
+#define VtkSCALARWRITER_CLASS_DEF(name, r, const_name, type, scalar, format)\
+template<typename T>\
+class name : public VtkScalarWriter\
+{\
+  public:\
+    name(T* r) : r(r) {}\
+    virtual ~name(){}\
+  int writeScalars(FILE* f)  {\
+    return -1;\
+  }\
+  private:\
+    T* r;\
+    name(const name&); \
+    void operator=(const name&);\
+};
 
+#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, const_name, type, scalar, format)\
+template<typename T>\
+class name : public VtkScalarWriter\
+{\
+  public:\
+    name(T* r) : r(r) {}\
+    virtual ~name(){}\
+  int writeScalars(FILE* f)  {\
+   return -1;\
+  }\
+  private:\
+    T* r;\
+    name(const name&); \
+    void operator=(const name&);\
+};
+
+#endif
 
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, DREAM3D::VTK::PhaseIdScalarName, int, phases, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGoodVoxelScalarWriter, r, DREAM3D::VTK::GoodVoxelScalarName, int, goodVoxels, "%d ")
-//VtkSCALARWRITER_CLASS_DEF(VoxelEuclideanScalarWriter, r, DREAM3D::VTK::EuclideanScalarName, float, nearestneighbordistances[0], "%f ")
-//VtkSCALARWRITER_CLASS_DEF(VoxelImageQualityScalarWriter, r, DREAM3D::VTK::ImageQualityScalarName, float, imagequalities, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, DREAM3D::VTK::SurfaceVoxelScalarName, char, surfacevoxels, "%d ")
 
@@ -202,11 +239,17 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
       }
 
+
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (r->totalpoints), phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (r->totalpoints), euler1s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (r->totalpoints), euler2s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (r->totalpoints), euler3s);
+
       // Write the IPF Coloring Cell Data
       for (size_t i = 0; i < total; i++)
       {
-        phase = r->phases[i];
-        if (true == m_WriteBinaryFiles)
+        phase = phases[i];
+        if(true == m_WriteBinaryFiles)
         {
           index = i * 4;
         }
@@ -214,31 +257,32 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         {
           index = 0;
         }
-		if (phase > 0)
-		{
-			if (r->crystruct[phase] == Ebsd::Cubic)
-			{
-			  EbsdColoring::GenerateIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
-			}
-			else if (r->crystruct[phase] == Ebsd::Hexagonal)
-			{
-			  EbsdColoring::CalculateHexIPFColor(r->euler1s[i], r->euler2s[i], r->euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
-			}
-		}
-		else if (phase <= 0)
-		{
-			rgba[index] = 0.0;
-			rgba[index+1] = 0.0;
-			rgba[index+2] = 0.0;
-		}
-        if (true == m_WriteBinaryFiles)
+        if(phase > 0)
+        {
+          if(r->crystruct[phase] == Ebsd::Cubic)
+          {
+            EbsdColoring::GenerateIPFColor(euler1s[i], euler2s[i], euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
+          }
+          else if(r->crystruct[phase] == Ebsd::Hexagonal)
+          {
+            EbsdColoring::CalculateHexIPFColor(euler1s[i], euler2s[i], euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
+          }
+        }
+        else if(phase <= 0)
+        {
+          rgba[index] = 0.0;
+          rgba[index + 1] = 0.0;
+          rgba[index + 2] = 0.0;
+        }
+        if(true == m_WriteBinaryFiles)
         {
           rgba[index + 3] = 255;
         }
         else
         {
-          red = static_cast<float>(float(rgba[index]) / 255.0);green = static_cast<float> (float(rgba[index + 1]) / 255.0);
-          blue = static_cast<float> (float(rgba[index + 2]) / 255.0);
+          red = static_cast<float>(float(rgba[index]) / 255.0);
+          green = static_cast<float>(float(rgba[index + 1]) / 255.0);
+          blue = static_cast<float>(float(rgba[index + 2]) / 255.0);
           fprintf(f, "%f %f %f\n", red, green, blue);
         }
       }
@@ -480,7 +524,7 @@ class VtkMiscFileWriter
      * @return 0 on Success
      */
     template <typename T>
-    int writeDisorientationFile(T* r, const std::string &file)
+    int writeDisorientationFile(T* m, const std::string &file)
     {
 
       FILE* f = NULL;
@@ -492,26 +536,31 @@ class VtkMiscFileWriter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_STRUCTURED_POINTS_HEADER("BINARY", r)
+        WRITE_STRUCTURED_POINTS_HEADER("BINARY", m)
       }
       else
       {
-        WRITE_STRUCTURED_POINTS_HEADER("ASCII", r)
+        WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
       }
-      size_t total = r->xpoints * r->ypoints * r->zpoints;
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientation);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientation);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradient);
+
+      size_t total = m->xpoints * m->ypoints * m->zpoints;
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::VTK::GrainIdScalarName);
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, DREAM3D::VTK::GAMScalarName, float, grainmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, DREAM3D::VTK::LMGScalarName, float, misorientationgradient)
+        WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::VTK::GrainIdScalarName);
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::VTK::KAMScalarName, float, kernelmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::VTK::GAMScalarName, float, grainmisorientation)
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::VTK::LMGScalarName, float, misorientationgradient)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::VTK::GrainIdScalarName)
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, DREAM3D::VTK::GAMScalarName, float, grainmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, DREAM3D::VTK::LMGScalarName, float, misorientationgradient, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::VTK::GrainIdScalarName)
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::VTK::KAMScalarName, float, kernelmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::VTK::GAMScalarName, float, grainmisorientation, "%f ")
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::VTK::LMGScalarName, float, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;
@@ -524,7 +573,7 @@ class VtkMiscFileWriter
      * @return 0 on Success
      */
     template <typename T>
-    int writeSchmidFactorVizFile(T* r, const std::string &file)
+    int writeSchmidFactorVizFile(T* m, const std::string &file)
     {
       FILE* f = NULL;
       f = fopen(file.c_str(), "wb");
@@ -535,22 +584,24 @@ class VtkMiscFileWriter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_STRUCTURED_POINTS_HEADER("BINARY", r)
+        WRITE_STRUCTURED_POINTS_HEADER("BINARY", m)
       }
       else
       {
-        WRITE_STRUCTURED_POINTS_HEADER("ASCII", r)
+        WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
       }
-      size_t total = r->xpoints * r->ypoints * r->zpoints;
+      size_t total = m->xpoints * m->ypoints * m->zpoints;
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
       if (true == m_WriteBinaryFiles)
       {
-        WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::VTK::GrainIdScalarName);
-        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(r, DREAM3D::VTK::SchmidFactorScalarName, float, schmidfactor)
+        WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::VTK::GrainIdScalarName);
+        WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(m, DREAM3D::VTK::SchmidFactorScalarName, float, schmidfactor)
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::VTK::GrainIdScalarName)
-          WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(r, DREAM3D::VTK::SchmidFactorScalarName, float, schmidfactor, "%f ")
+        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::VTK::GrainIdScalarName)
+          WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(m, DREAM3D::VTK::SchmidFactorScalarName, float, schmidfactor, "%f ")
       }
       fclose(f);
       return 0;

@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
 	/**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	
+
 	virtual void execute();
 
 	void initializeAttributes();
@@ -76,7 +76,14 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
     LoadVolume();
 
   private:
-
+    int32_t* grain_indicies;
+    int32_t* phases;
+    float* euler1s;
+    float* euler2s;
+    float* euler3s;
+    int8_t* surfacevoxels;
+    int32_t* neighbors;
+    float* quats;
 
     LoadVolume(const LoadVolume&); // Copy Constructor Not Implemented
     void operator=(const LoadVolume&); // Operator '=' Not Implemented

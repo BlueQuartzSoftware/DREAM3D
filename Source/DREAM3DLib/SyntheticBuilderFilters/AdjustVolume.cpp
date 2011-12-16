@@ -69,7 +69,10 @@ void AdjustVolume::execute()
 {
   setErrorCondition(0);
   adjust_boundaries();
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
   // If there is an error set this to something negative and also set a message
   notify("AdjustVolume Completed", 0, Observable::UpdateProgressMessage);
 }
@@ -81,6 +84,17 @@ void AdjustVolume::adjust_boundaries()
 {
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
+
   int neighpoints[6];
   neighpoints[0] = -m->xpoints*m->ypoints;
   neighpoints[1] = -m->xpoints;
@@ -115,7 +129,7 @@ void AdjustVolume::adjust_boundaries()
   for(int i=0;i<m->totalpoints;i++)
   {
     reassigned[i] = 0;
-    gsizes[m->grain_indicies[i]]++;
+    gsizes[grain_indicies[i]]++;
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
@@ -139,7 +153,7 @@ void AdjustVolume::adjust_boundaries()
     nucleus = 0;
     count = 0;
     affectedcount = 0;
-    while(m->grain_indicies[nucleus] != selectedgrain)
+    while(grain_indicies[nucleus] != selectedgrain)
     {
       nucleus++;
       if(nucleus >= m->totalpoints) selectedgrain++, nucleus = 0;
@@ -162,27 +176,27 @@ void AdjustVolume::adjust_boundaries()
         if(j == 4 && y == (m->ypoints-1)) good = 0;
         if(j == 2 && x == 0) good = 0;
         if(j == 3 && x == (m->xpoints-1)) good = 0;
-        if(good == 1 && m->grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
+        if(good == 1 && grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
         {
 	        voxellist[count] = neighpoint;
 	        reassigned[neighpoint] = -1;
 	        count++;
 	        if(count >= voxellist.size()) voxellist.resize(voxellist.size()+vListSize,-1);
         }
-        if(good == 1 && m->grain_indicies[neighpoint] != selectedgrain && m->grain_indicies[index] == selectedgrain)
+        if(good == 1 && grain_indicies[neighpoint] != selectedgrain && grain_indicies[index] == selectedgrain)
         {
 	        if(growth == 1 && reassigned[neighpoint] <= 0)
 	        {
-	          reassigned[neighpoint] = m->grain_indicies[neighpoint];
-	          m->grain_indicies[neighpoint] = m->grain_indicies[index];
+	          reassigned[neighpoint] = grain_indicies[neighpoint];
+	          grain_indicies[neighpoint] = grain_indicies[index];
 	          affectedvoxellist[affectedcount] = neighpoint;
 	          affectedcount++;
 	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
 	        }
 	        if(growth == -1 && reassigned[neighpoint] <= 0)
 	        {
-	          reassigned[index] = m->grain_indicies[index];
-	          m->grain_indicies[index] = m->grain_indicies[neighpoint];
+	          reassigned[index] = grain_indicies[index];
+	          grain_indicies[index] = grain_indicies[neighpoint];
 	          affectedvoxellist[affectedcount] = index;
 	          affectedcount++;
 	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
@@ -195,7 +209,7 @@ void AdjustVolume::adjust_boundaries()
       index = affectedvoxellist[i];
       if(reassigned[index] > 0)
       {
-        gsizes[m->grain_indicies[index]]++;
+        gsizes[grain_indicies[index]]++;
         gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
       }
     }
@@ -225,9 +239,9 @@ void AdjustVolume::adjust_boundaries()
         index = affectedvoxellist[i];
         if(reassigned[index] > 0)
         {
-          gsizes[m->grain_indicies[index]] = gsizes[m->grain_indicies[index]]-1;
-          m->grain_indicies[index] = reassigned[index];
-          gsizes[m->grain_indicies[index]]++;
+          gsizes[grain_indicies[index]] = gsizes[grain_indicies[index]]-1;
+          grain_indicies[index] = reassigned[index];
+          gsizes[grain_indicies[index]]++;
         }
       }
       for(size_t i=1;i<m->m_Grains.size();i++)
@@ -250,7 +264,7 @@ void AdjustVolume::adjust_boundaries()
   }
   for(int i=0;i<m->totalpoints;i++)
   {
-    m->grain_indicies[i] = newnames[m->grain_indicies[i]];
+    grain_indicies[i] = newnames[grain_indicies[i]];
   }
 }
 

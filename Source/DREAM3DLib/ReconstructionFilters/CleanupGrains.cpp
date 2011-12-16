@@ -62,7 +62,12 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CleanupGrains::CleanupGrains()
+CleanupGrains::CleanupGrains() :
+grain_indicies(NULL),
+phases(NULL),
+alreadychecked(NULL),
+quats(NULL),
+neighbors(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -88,6 +93,31 @@ void CleanupGrains::execute()
 	int err = 0;
   //DREAM3D_RANDOMNG_NEW()
 	DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+	// Make sure we have all the arrays available and allocated
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), ph);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (m->totalpoints), ac);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), qt);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (m->totalpoints), nn);
+
+  // Set the local variables created in the above macros to our class variables so
+  // we do not have to keep rerunning the above code.
+  grain_indicies = gi;
+  phases = ph;
+  alreadychecked = ac;
+  quats = qt;
+  neighbors = nn;
+
+
   notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
   remove_smallgrains();
 
@@ -99,6 +129,9 @@ void CleanupGrains::execute()
   find_neighbors->setDataContainer(m);
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
+  if (err < 0){
+    return;
+  }
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
@@ -108,6 +141,9 @@ void CleanupGrains::execute()
 
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
+  if (err < 0){
+    return;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("CleanupGrains Completed", 0, Observable::UpdateProgressMessage);
@@ -121,7 +157,7 @@ void CleanupGrains::assign_badpoints()
   DataContainer* m = getDataContainer();
   std::vector<int > neighs;
   std::vector<int > remove;
-  int count = 1;
+  size_t count = 1;
   int good = 1;
   int neighbor;
   int index = 0;
@@ -142,12 +178,12 @@ void CleanupGrains::assign_badpoints()
 
   for (int iter = 0; iter < (m->totalpoints); iter++)
   {
-    m->alreadychecked[iter] = false;
-	if (m->grain_indicies[iter] > 0) m->alreadychecked[iter] = true;
+    alreadychecked[iter] = false;
+	if (grain_indicies[iter] > 0) alreadychecked[iter] = true;
   }
   for (int i = 0; i < m->totalpoints; i++)
   {
-		if(m->alreadychecked[i] == false && m->grain_indicies[i] == 0)
+		if(alreadychecked[i] == false && grain_indicies[i] == 0)
 		{
 			currentvlist.push_back(i);
 			count = 0;
@@ -167,29 +203,29 @@ void CleanupGrains::assign_badpoints()
 					if (j == 4 && row == (m->ypoints - 1)) good = 0;
 					if (j == 2 && column == 0) good = 0;
 					if (j == 3 && column == (m->xpoints - 1)) good = 0;
-					if (good == 1 && m->grain_indicies[neighbor] <= 0 && m->alreadychecked[neighbor] == false)
+					if (good == 1 && grain_indicies[neighbor] <= 0 && alreadychecked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
-						m->alreadychecked[neighbor] = true;
+						alreadychecked[neighbor] = true;
 					}
 				}
 				count++;
 			}
-			if(currentvlist.size() >= m_minallowedgrainsize*100)
+			if((int)currentvlist.size() >= m_minallowedgrainsize*100)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
-					m->grain_indicies[currentvlist[k]] = 0;
-					m->phases[currentvlist[k]] = 0;
+					grain_indicies[currentvlist[k]] = 0;
+					phases[currentvlist[k]] = 0;
 				}
 				m->m_Grains[0]->phase = 0;
 			}
-			if(currentvlist.size() < m_minallowedgrainsize*100)
+			if((int)currentvlist.size() < m_minallowedgrainsize*100)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
-					m->grain_indicies[currentvlist[k]] = -1;
-					m->phases[currentvlist[k]] = 0;
+					grain_indicies[currentvlist[k]] = -1;
+					phases[currentvlist[k]] = 0;
 				}
 			}
 			currentvlist.clear();
@@ -202,7 +238,7 @@ void CleanupGrains::assign_badpoints()
     count = 0;
     for (int i = 0; i < m->totalpoints; i++)
     {
-      int grainname = m->grain_indicies[i];
+      int grainname = grain_indicies[i];
       if (grainname < 0)
       {
         count++;
@@ -225,7 +261,7 @@ void CleanupGrains::assign_badpoints()
           if (j == 3 && x == (m->xpoints - 1)) good = 0;
           if (good == 1)
           {
-            int grain = m->grain_indicies[neighpoint];
+            int grain = grain_indicies[neighpoint];
 			if (grain >= 0)
             {
               neighs.push_back(grain);
@@ -249,19 +285,19 @@ void CleanupGrains::assign_badpoints()
         }
         if (size > 0)
         {
-          m->neighbors[i] = curgrain;
+          neighbors[i] = curgrain;
           neighs.clear();
         }
       }
     }
     for (int j = 0; j < m->totalpoints; j++)
     {
-      int grainname = m->grain_indicies[j];
-      int neighbor = m->neighbors[j];
+      int grainname = grain_indicies[j];
+      int neighbor = neighbors[j];
       if (grainname < 0 && neighbor > 0)
       {
-        m->grain_indicies[j] = neighbor;
-		m->phases[j] = m->m_Grains[neighbor]->phase;
+        grain_indicies[j] = neighbor;
+		phases[j] = m->m_Grains[neighbor]->phase;
       }
     }
 //    std::stringstream ss;
@@ -276,17 +312,17 @@ void CleanupGrains::merge_containedgrains()
   DataContainer* m = getDataContainer();
   for (int i = 0; i < (m->xpoints * m->ypoints * m->zpoints); i++)
   {
-    int grainname = m->grain_indicies[i];
+    int grainname = grain_indicies[i];
 	if (m->m_Grains[grainname]->numneighbors == 1 && m->m_Grains[grainname]->phase > 0)
     {
       m->m_Grains[grainname]->gotcontainedmerged = true;
-      m->grain_indicies[i] = m->m_Grains[grainname]->neighborlist->at(0);
+      grain_indicies[i] = m->m_Grains[grainname]->neighborlist->at(0);
       m->m_Grains[m->m_Grains[grainname]->neighborlist->at(0)]->numvoxels++;
     }
 	if (m->m_Grains[grainname]->numneighbors == 0 && m->m_Grains[grainname]->phase > 0)
 	{
       m->m_Grains[grainname]->gotcontainedmerged = true;
-      m->grain_indicies[i] = 0;
+      grain_indicies[i] = 0;
 	}
   }
 
@@ -328,8 +364,8 @@ void CleanupGrains::reorder_grains()
   // Reset the "already checked" to 0 for all voxels
   for (int i = 0; i < m->totalpoints; i++)
   {
-    m->alreadychecked[i] = false;
-    gnum = m->grain_indicies[i];
+    alreadychecked[i] = false;
+    gnum = grain_indicies[i];
     m->m_Grains[gnum]->nucleus = i;
   }
   for (size_t i = 1; i < numgrains; i++)
@@ -338,16 +374,16 @@ void CleanupGrains::reorder_grains()
     {
       size = 0;
       int nucleus = m->m_Grains[i]->nucleus;
-	  if(m->phases[nucleus] > 0) phase = m->crystruct[m->phases[nucleus]];
-	  if(m->phases[nucleus] <= 0) phase = Ebsd::UnknownCrystalStructure;
+	  if(phases[nucleus] > 0) phase = m->crystruct[phases[nucleus]];
+	  if(phases[nucleus] <= 0) phase = Ebsd::UnknownCrystalStructure;
       if(m->m_Grains[currentgrain]->voxellist != NULL)
       {
           delete m->m_Grains[currentgrain]->voxellist;
       }
       m->m_Grains[currentgrain]->voxellist = new std::vector<int>(initialVoxelsListSize,-1);
       m->m_Grains[currentgrain]->voxellist->at(size) = nucleus;
-      m->alreadychecked[nucleus] = true;
-      m->grain_indicies[nucleus] = currentgrain;
+      alreadychecked[nucleus] = true;
+      grain_indicies[nucleus] = currentgrain;
       if (currentgrain > maxGrain) maxGrain = currentgrain;
       size++;
       for (size_t k = 0; k < 5; k++)
@@ -362,15 +398,15 @@ void CleanupGrains::reorder_grains()
         plane = currentpoint / (m->xpoints * m->ypoints);
         for (int k = 0; k < 5; k++)
         {
-            q1[k] = m->quats[nucleus*5 + k];
-            q2[k] = m->quats[currentpoint*5 + k];
+            q1[k] = quats[nucleus*5 + k];
+            q2[k] = quats[currentpoint*5 + k];
         }
-        if(m->phases[nucleus] > 0) m_OrientationOps[phase]->getNearestQuat(q1,q2);
-		if(m->phases[nucleus] <= 0) q2[0] = 1.0, q2[1] = 0.0, q2[2] = 0.0, q2[3] = 0.0, q2[4] = 0.0;
+        if(phases[nucleus] > 0) m_OrientationOps[phase]->getNearestQuat(q1,q2);
+		if(phases[nucleus] <= 0) q2[0] = 1.0, q2[1] = 0.0, q2[2] = 0.0, q2[3] = 0.0, q2[4] = 0.0;
         for (int k = 0; k < 5; k++)
         {
-            m->quats[currentpoint*5 + k] = q2[k];
-            m->m_Grains[currentgrain]->avg_quat[k] = m->m_Grains[currentgrain]->avg_quat[k] + m->quats[currentpoint*5 + k];
+            quats[currentpoint*5 + k] = q2[k];
+            m->m_Grains[currentgrain]->avg_quat[k] = m->m_Grains[currentgrain]->avg_quat[k] + quats[currentpoint*5 + k];
         }
         for (int k = 0; k < 6; k++)
         {
@@ -382,14 +418,14 @@ void CleanupGrains::reorder_grains()
           if (k == 4 && row == (m->ypoints - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
           if (k == 3 && col == (m->xpoints - 1)) good = 0;
-          if (good == 1 && m->alreadychecked[neighbor] == false)
+          if (good == 1 && alreadychecked[neighbor] == false)
           {
-            size_t grainname = m->grain_indicies[neighbor];
+            size_t grainname = grain_indicies[neighbor];
             if (grainname == i)
             {
               m->m_Grains[currentgrain]->voxellist->at(size) = neighbor;
-              m->alreadychecked[neighbor] = true;
-              m->grain_indicies[neighbor] = currentgrain;
+              alreadychecked[neighbor] = true;
+              grain_indicies[neighbor] = currentgrain;
               if (currentgrain > maxGrain) maxGrain = currentgrain;
               size++;
               if (size >= m->m_Grains[currentgrain]->voxellist->size())
@@ -403,7 +439,7 @@ void CleanupGrains::reorder_grains()
       m->m_Grains[currentgrain]->voxellist->erase(std::remove(m->m_Grains[currentgrain]->voxellist->begin(), m->m_Grains[currentgrain]->voxellist->end(), -1), m->m_Grains[currentgrain]->voxellist->end());
       m->m_Grains[currentgrain]->active = 1;
       m->m_Grains[currentgrain]->nucleus = nucleus;
-	  m->m_Grains[currentgrain]->phase = m->phases[nucleus];
+	  m->m_Grains[currentgrain]->phase = phases[nucleus];
       q[1] = m->m_Grains[currentgrain]->avg_quat[1]/m->m_Grains[currentgrain]->avg_quat[0];
       q[2] = m->m_Grains[currentgrain]->avg_quat[2]/m->m_Grains[currentgrain]->avg_quat[0];
       q[3] = m->m_Grains[currentgrain]->avg_quat[3]/m->m_Grains[currentgrain]->avg_quat[0];
@@ -418,9 +454,9 @@ void CleanupGrains::reorder_grains()
 
   for (int i = 0; i < m->totalpoints; i++)
   {
-	if(m->grain_indicies[i] >= (int)(currentgrain) )
+	if(grain_indicies[i] >= (int)(currentgrain) )
     {
-      m->grain_indicies[i] = -2;
+      grain_indicies[i] = -2;
     }
   }
   assign_badpoints();
@@ -452,17 +488,17 @@ void CleanupGrains::remove_smallgrains()
   int numgrains = m->m_Grains.size();
   for (int i = 0; i < (m->xpoints * m->ypoints * m->zpoints); i++)
   {
-    m->alreadychecked[i] = false;
-	gnum = m->grain_indicies[i];
+    alreadychecked[i] = false;
+	gnum = grain_indicies[i];
 	if(gnum >= 0) m->m_Grains[gnum]->nucleus = i;
   }
-  for (size_t i = 1; i < numgrains; i++)
+  for (int i = 1; i < numgrains; i++)
   {
       size = 0;
       int nucleus = m->m_Grains[i]->nucleus;
       voxelslist[size] = nucleus;
-      m->alreadychecked[nucleus] = true;
-      m->grain_indicies[nucleus] = currentgrain;
+      alreadychecked[nucleus] = true;
+      grain_indicies[nucleus] = currentgrain;
       size++;
       for (size_t j = 0; j < size; j++)
       {
@@ -480,14 +516,14 @@ void CleanupGrains::remove_smallgrains()
           if (k == 4 && row == (m->ypoints - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
           if (k == 3 && col == (m->xpoints - 1)) good = 0;
-          if (good == 1 && m->alreadychecked[neighbor] == false)
+          if (good == 1 && alreadychecked[neighbor] == false)
           {
-            size_t grainname = static_cast<size_t>(m->grain_indicies[neighbor]);
+            size_t grainname = static_cast<size_t>(grain_indicies[neighbor]);
             if (grainname == i)
             {
               voxelslist[size] = neighbor;
-              m->alreadychecked[neighbor] = true;
-              m->grain_indicies[neighbor] = currentgrain;
+              alreadychecked[neighbor] = true;
+              grain_indicies[neighbor] = currentgrain;
               size++;
               if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
             }
@@ -507,7 +543,7 @@ void CleanupGrains::remove_smallgrains()
         for (size_t b = 0; b < voxelslist.size(); b++)
         {
           int index = voxelslist[b];
-          m->grain_indicies[index] = 0;
+          grain_indicies[index] = 0;
         }
         voxelslist.resize(initialVoxelsListSize, -1);
     }

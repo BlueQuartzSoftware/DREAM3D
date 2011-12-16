@@ -84,7 +84,7 @@ void Reconstruction::execute()
 {
   int err = -1;
 
-  // Create the ReconstructionFunc object
+  // Create the DataContainer object
   m = DataContainer::New();
   m->addObserver(static_cast<Observer*>(this));
 
@@ -155,7 +155,8 @@ void Reconstruction::execute()
       pipelineProgress(100);
       pipelineFinished();
       return;
-    }CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", write_fielddata)
+    }
+    CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", write_fielddata)
 
     if(DREAM3D_BENCHMARKS)
     {

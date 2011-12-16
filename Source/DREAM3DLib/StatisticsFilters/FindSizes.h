@@ -69,15 +69,14 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 
     virtual void execute();
 
+  protected:
+    FindSizes();
     void find_sizes();
     void find_sizes2D();
 
 
-  protected:
-    FindSizes();
-
   private:
-
+    int32_t* grain_indicies;
 
     FindSizes(const FindSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSizes&); // Operator '=' Not Implemented

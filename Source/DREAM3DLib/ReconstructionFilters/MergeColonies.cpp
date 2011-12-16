@@ -96,6 +96,17 @@ void MergeColonies::execute()
 void MergeColonies::merge_colonies()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
   float angcur = 180.0f;
   std::vector<int> colonylist;
   float w;
@@ -166,17 +177,32 @@ void MergeColonies::merge_colonies()
   }
   for (int k = 0; k < (m->xpoints * m->ypoints * m->zpoints); k++)
   {
-    int grainname = m->grain_indicies[k];
+    int grainname = grain_indicies[k];
     if (m->m_Grains[grainname]->gotcolonymerged == true)
     {
       int colonynewnumber = m->m_Grains[grainname]->colonynewnumber;
-      m->grain_indicies[k] = colonynewnumber;
+      grain_indicies[k] = colonynewnumber;
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeColonies::renumber_grains()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
@@ -212,11 +238,11 @@ void MergeColonies::renumber_grains()
 #else
  for (int j = 0; j < m->totalpoints; j++)
   {
-    int grainname = m->grain_indicies[j];
+    int grainname = grain_indicies[j];
     if (grainname >= 1)
     {
       int newgrainname = newnames[grainname];
-      m->grain_indicies[j] = newgrainname;
+      grain_indicies[j] = newgrainname;
     }
   }
 #endif
