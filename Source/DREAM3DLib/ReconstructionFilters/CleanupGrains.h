@@ -70,7 +70,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	std::vector<std::vector<int> > voxellists;
 
     virtual void execute();
 
@@ -88,6 +87,8 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
+
+	std::vector<std::vector<int> > voxellists;
 
 	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
     void operator=(const CleanupGrains&); // Operator '=' Not Implemented

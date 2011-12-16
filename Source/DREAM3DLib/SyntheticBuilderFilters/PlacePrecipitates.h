@@ -68,7 +68,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	std::vector<int> currentprecipvoxellist;
 
     virtual void execute();
 
@@ -87,7 +86,9 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     std::vector<float> precipitatephasefractions;
 
   private:
-    int numprimarygrains;
+	std::vector<int> currentprecipvoxellist;
+
+	int numprimarygrains;
     unsigned long long int Seed;
     float sizex;
     float sizey;
