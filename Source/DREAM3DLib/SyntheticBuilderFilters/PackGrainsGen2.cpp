@@ -432,7 +432,7 @@ void PackGrainsGen2::execute()
 
   assign_voxels();
   assign_gaps();
-//  cleanup_grains();
+  cleanup_grains();
 
   // If there is an error set this to something negative and also set a message
   notify("PackGrainsGen2 Completed", 0, Observable::UpdateProgressMessage);
@@ -1286,6 +1286,8 @@ void PackGrainsGen2::assign_voxels()
   float dist;
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
+  int totpoints = m->totalpoints;
+  int *tempgrain_indicies = m->grain_indicies;
 
   gsizes.resize(m->m_Grains.size());
 
@@ -1405,15 +1407,15 @@ void PackGrainsGen2::assign_voxels()
             if (inside >= 0)
             {
               int currentpoint = index;
-              if (m->grain_indicies[currentpoint] > 0)
+              if (tempgrain_indicies[currentpoint] > 0)
               {
-                oldname = m->grain_indicies[currentpoint];
+                oldname = tempgrain_indicies[currentpoint];
                 gsizes[oldname] = gsizes[oldname] - 1;
-                m->grain_indicies[currentpoint] = -1;
+                tempgrain_indicies[currentpoint] = -1;
               }
-              if (m->grain_indicies[currentpoint] == 0)
+              if (tempgrain_indicies[currentpoint] == 0)
               {
-                m->grain_indicies[currentpoint] = i;
+                tempgrain_indicies[currentpoint] = i;
                 gsizes[i]++;
               }
             }
@@ -1434,11 +1436,11 @@ void PackGrainsGen2::assign_voxels()
       goodcount++;
     }
   }
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totpoints; i++)
   {
-    if (m->grain_indicies[i] > 0)
+    if (tempgrain_indicies[i] > 0)
     {
-	  m->grain_indicies[i] = newnames[m->grain_indicies[i]];
+	  tempgrain_indicies[i] = newnames[tempgrain_indicies[i]];
     }
   }
   m->m_Grains.resize(goodcount);
@@ -1447,6 +1449,7 @@ void PackGrainsGen2::assign_voxels()
 void PackGrainsGen2::assign_gaps()
 {
   DataContainer* m = getDataContainer();
+  int totpoints = m->totalpoints;
   int index;
   int timestep = 100;
   int unassignedcount = 1;
@@ -1457,15 +1460,15 @@ void PackGrainsGen2::assign_gaps()
   float dist;
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
-  int *tempgrain_indicies = new int [m->totalpoints];
+  int *tempgrain_indicies = m->grain_indicies;
   int *newowners;
-  newowners = new int [m->totalpoints];
+  newowners = new int [totpoints];
   float *ellipfuncs;
-  ellipfuncs = new float [m->totalpoints];
-  for(int i = 0; i < m->totalpoints; i++)
+  ellipfuncs = new float [totpoints];
+  for(int i = 0; i < totpoints; i++)
   {
 	  newowners[i] = -1;
-	  ellipfuncs[i] = -1.0;
+	  ellipfuncs[i] = -1.0; 
   }
 
   while (unassignedcount != 0)
@@ -1597,7 +1600,7 @@ void PackGrainsGen2::assign_gaps()
 		  }
 		}
 	  }
-	  for (int i = 0; i < m->totalpoints; i++)
+	  for (int i = 0; i < totpoints; i++)
 	  {
 	    if (ellipfuncs[i] >= 0) tempgrain_indicies[i] = newowners[i];
 		if (tempgrain_indicies[i] <= 0) unassignedcount++;
@@ -1605,7 +1608,7 @@ void PackGrainsGen2::assign_gaps()
 		ellipfuncs[i] = -1.0;
 	  }
   }
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totpoints; i++)
   {
 	  if(tempgrain_indicies[i] > 0) m->phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
   }
@@ -1615,6 +1618,7 @@ void PackGrainsGen2::assign_gaps()
 void PackGrainsGen2::cleanup_grains()
 {
   DataContainer* m = getDataContainer();
+  int totpoints = m->totalpoints;
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
   neighpoints[1] = -m->xpoints;
@@ -1626,7 +1630,7 @@ void PackGrainsGen2::cleanup_grains()
   vlists.resize(m->m_Grains.size());
   std::vector<int> currentvlist;
   std::vector<bool> checked;
-  checked.resize(m->totalpoints,false);
+  checked.resize(totpoints,false);
   size_t count;
   int good;
   int neighbor;
@@ -1638,13 +1642,8 @@ void PackGrainsGen2::cleanup_grains()
   {
 	gsizes[i] = 0;
   }
-  int *tempgrain_indicies;
-  tempgrain_indicies = new int [m->totalpoints];
-  for(int i = 0; i < m->totalpoints; i++)
-  {
-	  tempgrain_indicies[i] = m->grain_indicies[i];
-  }
-  for (int i = 0; i < m->totalpoints; i++)
+  int *tempgrain_indicies = m->grain_indicies;
+  for (int i = 0; i < totpoints; i++)
   {
 	if(checked[i] == false && tempgrain_indicies[i] > 0)
 	{
@@ -1731,7 +1730,7 @@ void PackGrainsGen2::cleanup_grains()
 		currentvlist.clear();
 	}
   }
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totpoints; i++)
   {
 	if(tempgrain_indicies[i] > 0) gsizes[tempgrain_indicies[i]]++;
   }
@@ -1747,19 +1746,17 @@ void PackGrainsGen2::cleanup_grains()
         goodcount++;
      }
   }
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totpoints; i++)
   {
 	if (tempgrain_indicies[i] > 0)
 	{
 	  tempgrain_indicies[i] = newnames[tempgrain_indicies[i]];
 	}
   }
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totpoints; i++)
   {
-	  m->grain_indicies[i] = tempgrain_indicies[i];
 	  if(tempgrain_indicies[i] > 0) m->phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
   }
-  delete [] tempgrain_indicies;
   m->m_Grains.resize(goodcount);
   assign_gaps();
 }

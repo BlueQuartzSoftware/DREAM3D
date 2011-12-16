@@ -188,13 +188,6 @@ void SegmentGrains::form_grains()
           }
         }
       }
-      voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
-      if (m->m_Grains[graincount]->voxellist != NULL)
-      {
-        delete m->m_Grains[graincount]->voxellist;
-      }
-      m->m_Grains[graincount]->voxellist = new std::vector<int>(voxelslist.size());
-      m->m_Grains[graincount]->voxellist->swap(voxelslist);
       m->m_Grains[graincount]->active = 1;
       m->m_Grains[graincount]->phase = m->phases[seed];
       graincount++;

@@ -109,7 +109,8 @@ void LoadVolume::initializeGrains()
   size_t curGrainSize = 1;
   size_t grainIndex = 0;
   Field::Pointer grain;
-  for (int i = 0; i < m->totalpoints; ++i)
+  int totpoints = m->totalpoints;
+  for (int i = 0; i < totpoints; ++i)
   {
     grainIndex = m->grain_indicies[i];
     curGrainSize = m->m_Grains.size();
@@ -126,12 +127,9 @@ void LoadVolume::initializeGrains()
     {
       m->m_Grains[grainIndex] = Field::New();
       grain = m->m_Grains[grainIndex];
-      // Assign a new voxel list pointer to it
-      grain->voxellist = new std::vector<int>(0);
       grain->phase = m->phases[i];
     }
-    grain->voxellist->push_back(i);
-    grain->numvoxels = static_cast<size_t>(grain->voxellist->size());
+    grain->numvoxels++;
 	grain->active = true;
   }
 
@@ -144,8 +142,6 @@ void LoadVolume::initializeGrains()
     {
       m->m_Grains[g] = Field::New();
       grain = m->m_Grains[g];
-      // Assign a new voxel list pointer to it
-      grain->voxellist = new std::vector<int>(0);
 	  grain->phase = 0;
     }
   }

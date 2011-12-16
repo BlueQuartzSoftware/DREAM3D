@@ -81,10 +81,6 @@ class DREAM3DLib_EXPORT Field
 #if CORRUPT_TEST
     unsigned long long int* test1;
 #endif
-    std::vector<int>* voxellist;
-#if CORRUPT_TEST
-    unsigned long long int* test2;
-#endif
     std::vector<int>* columnlist;
 #if CORRUPT_TEST
     unsigned long long int* test3;
