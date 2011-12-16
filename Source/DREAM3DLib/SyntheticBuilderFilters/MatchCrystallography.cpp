@@ -86,9 +86,25 @@ void MatchCrystallography::execute()
   setErrorCondition(err);
 
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
   readODFData(h5reader);
+  if (getErrorCondition() < 0) {
+    return;
+  }
   readMisorientationData(h5reader);
+  readODFData(h5reader);
+  if (getErrorCondition() < 0) {
+    return;
+  }
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setDataContainer(getDataContainer());
@@ -107,8 +123,20 @@ void MatchCrystallography::execute()
   }
 
   assign_eulers();
+  readODFData(h5reader);
+  if (getErrorCondition() < 0) {
+    return;
+  }
   measure_misorientations();
+  readODFData(h5reader);
+  if (getErrorCondition() < 0) {
+    return;
+  }
   matchCrystallography();
+  readODFData(h5reader);
+  if (getErrorCondition() < 0) {
+    return;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("MatchCrystallography Completed", 0, Observable::UpdateProgressMessage);
@@ -652,8 +680,15 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
 
 void MatchCrystallography::matchCrystallography()
 {
+
+  DataContainer* m = getDataContainer();
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+
   DREAM3D_RANDOMNG_NEW()
-    DataContainer* m = getDataContainer();
   int numbins = 0;
 
   int iterations = 0;
@@ -695,11 +730,15 @@ void MatchCrystallography::matchCrystallography()
  // float q[5];
   for(int i = 0; i < m->totalpoints; i++)
   {
-    m->euler1s[i] = m->m_Grains[m->grain_indicies[i]]->euler1;
-    m->euler2s[i] = m->m_Grains[m->grain_indicies[i]]->euler2;
-    m->euler3s[i] = m->m_Grains[m->grain_indicies[i]]->euler3;
+    euler1s[i] = m->m_Grains[grain_indicies[i]]->euler1;
+    euler2s[i] = m->m_Grains[grain_indicies[i]]->euler2;
+    euler3s[i] = m->m_Grains[grain_indicies[i]]->euler3;
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  MatchCrystallography::measure_misorientations ()
 {
   DataContainer* m = getDataContainer();

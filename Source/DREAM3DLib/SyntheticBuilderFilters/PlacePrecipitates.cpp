@@ -58,7 +58,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PlacePrecipitates::PlacePrecipitates()
+PlacePrecipitates::PlacePrecipitates() :
+grain_indicies(NULL),
+phases(NULL),
+surfacevoxels(NULL)
 {
 
 
@@ -90,21 +93,39 @@ void PlacePrecipitates::execute()
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
-	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setDataContainer(getDataContainer());
-    find_neighbors->setObservers(this->getObservers());
-    find_neighbors->execute();
-    err = find_neighbors->getErrorCondition();
+  if(NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
 
-	sizex = m->xpoints * m->resx;
-	sizey = m->ypoints * m->resy;
-	sizez = m->zpoints * m->resz;
-	totalvol = sizex*sizey*sizez;
-    place_precipitates();
-    fillin_precipitates();
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), ph);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (m->totalpoints), surf);
+
+
+  grain_indicies = gi;
+  phases = ph;
+  surfacevoxels = surf;
+
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setDataContainer(getDataContainer());
+  find_neighbors->setObservers(this->getObservers());
+  find_neighbors->execute();
+  err = find_neighbors->getErrorCondition();
+
+  sizex = m->xpoints * m->resx;
+  sizey = m->ypoints * m->resy;
+  sizez = m->zpoints * m->resz;
+  totalvol = sizex * sizey * sizez;
+  place_precipitates();
+  fillin_precipitates();
 
   // If there is an error set this to something negative and also set a message
-    notify("PlacePrecipitates Completed", 0, Observable::UpdateProgressMessage);
+  notify("PlacePrecipitates Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -282,7 +303,7 @@ void  PlacePrecipitates::fillin_precipitates()
     count = 0;
     for(int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
     {
-      int grainname = m->grain_indicies[i];
+      int grainname = grain_indicies[i];
       if(grainname <= 0)
       {
       count++;
@@ -305,7 +326,7 @@ void  PlacePrecipitates::fillin_precipitates()
           if(j == 3 && x == (m->xpoints-1)) good = 0;
       if(good == 1)
           {
-          int grain = m->grain_indicies[neighpoint];
+          int grain = grain_indicies[neighpoint];
           if(grain > 0 && grain >= numprimarygrains)
           {
             neighs.push_back(grain);
@@ -336,19 +357,19 @@ void  PlacePrecipitates::fillin_precipitates()
     }
     for(int j = 0; j < (m->xpoints*m->ypoints*m->zpoints); j++)
     {
-      int grainname = m->grain_indicies[j];
+      int grainname = grain_indicies[j];
       int neighbor = neighbors[j];
       if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
       {
-        m->grain_indicies[j] = neighbor;
-		m->phases[j] = m->m_Grains[neighbor]->phase;
+        grain_indicies[j] = neighbor;
+		phases[j] = m->m_Grains[neighbor]->phase;
       }
     }
   }
   gsizes.resize(m->m_Grains.size(),0);
   for (int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
   {
-    int name = m->grain_indicies[i];
+    int name = grain_indicies[i];
     gsizes[name]++;
   }
   for (size_t i = 1; i < m->m_Grains.size(); i++)
@@ -416,7 +437,7 @@ void  PlacePrecipitates::place_precipitates()
   if(random <= precipboundaryfraction)
   {
     random2 = int(rg.genrand_res53()*double(m->totalpoints-1));
-    while(m->surfacevoxels[random2] == 0 || m->grain_indicies[random2] > numprimarygrains)
+    while(surfacevoxels[random2] == 0 || grain_indicies[random2] > numprimarygrains)
     {
       random2++;
       if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
@@ -425,7 +446,7 @@ void  PlacePrecipitates::place_precipitates()
   else if(random > precipboundaryfraction)
   {
     random2 = rg.genrand_res53()*(m->totalpoints-1);
-    while(m->surfacevoxels[random2] != 0 || m->grain_indicies[random2] > numprimarygrains)
+    while(surfacevoxels[random2] != 0 || grain_indicies[random2] > numprimarygrains)
     {
       random2++;
       if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
@@ -442,7 +463,7 @@ void  PlacePrecipitates::place_precipitates()
   precipvoxelcounter = 0;
   for(size_t j = 0; j < m->m_Grains[currentnumgrains]->voxellist->size(); j++)
   {
-    if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
+    if(grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
     {
       precipvoxelcounter++;
     }
@@ -452,15 +473,15 @@ void  PlacePrecipitates::place_precipitates()
     precipvoxelcounter = 0;
     for(size_t j = 0; j < m->m_Grains[currentnumgrains]->voxellist->size(); j++)
     {
-      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < 0 || m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] >= numprimarygrains)
+      if(grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < 0 || grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] >= numprimarygrains)
       {
-        m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = -1;
-        m->phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = 0;
+        grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = -1;
+        phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = 0;
       }
-      if(m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
+      if(grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] > 0 && grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] < numprimarygrains)
       {
-        m->grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = currentnumgrains;
-        m->phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = m->m_Grains[currentnumgrains]->phase;
+        grain_indicies[m->m_Grains[currentnumgrains]->voxellist->at(j)] = currentnumgrains;
+        phases[m->m_Grains[currentnumgrains]->voxellist->at(j)] = m->m_Grains[currentnumgrains]->phase;
         precipvoxelcounter++;
       }
     }

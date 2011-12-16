@@ -86,11 +86,11 @@ class DREAM3DLib_EXPORT H5VoxelReader
 /**
  *
  */
-	int readVoxelData(DataArray<int>::Pointer grain_indicies,
-	                  DataArray<int>::Pointer phases,
-	                  DataArray<float>::Pointer euler1s,
-	                  DataArray<float>::Pointer euler2s,
-	                  DataArray<float>::Pointer euler3s,
+	int readVoxelData(int* grain_indicies,
+	                  int* phases,
+	                  float* euler1s,
+	                  float* euler2s,
+	                  float* euler3s,
 	                  std::vector<Ebsd::CrystalStructure> &crystruct,
 	                  std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
 	                  int totalpoints);

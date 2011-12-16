@@ -63,6 +63,18 @@ FindSizes::~FindSizes()
 void FindSizes::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
+  grain_indicies = gi;
+
   setErrorCondition(0);
 
   if(m->zpoints > 1) find_sizes();
@@ -88,7 +100,7 @@ void FindSizes::find_sizes()
   }
   for (int j = 0; j < m->totalpoints; j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     graincounts[gnum]++;
   }
   float res_scalar = m->resx * m->resy * m->resz;
@@ -117,7 +129,7 @@ void FindSizes::find_sizes2D()
   }
   for (int j = 0; j < m->totalpoints; j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     graincounts[gnum]++;
   }
   for (size_t i = 1; i < numgrains; i++)

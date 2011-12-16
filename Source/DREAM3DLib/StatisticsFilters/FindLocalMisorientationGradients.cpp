@@ -81,9 +81,30 @@ void FindLocalMisorientationGradients::execute()
 void FindLocalMisorientationGradients::find_localmisorientationgradients()
 {
   DataContainer* m = getDataContainer();
-  m->grainmisorientations = m->m_GrainMisorientations->WritePointer(0, m->totalpoints);
-  m->misorientationgradients = m->m_MisorientationGradients->WritePointer(0, m->totalpoints);
-  m->kernelmisorientations = m->m_KernelMisorientations->WritePointer(0, m->totalpoints);
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+
+//  m->grainmisorientations = m->m_GrainMisorientations->WritePointer(0, m->totalpoints);
+//  m->misorientationgradients = m->m_MisorientationGradients->WritePointer(0, m->totalpoints);
+//  m->kernelmisorientations = m->m_KernelMisorientations->WritePointer(0, m->totalpoints);
+
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientations, 1);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientations, 1);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradients, 1);
+
+  FloatArrayType* m_KernelMisorientations = FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType* >(m->getVoxelData(DREAM3D::VoxelData::KernelMisorientations).get());
+
+
+
   std::vector<float> gamVec(m->totalpoints);
   float* gam = &(gamVec.front());
 
@@ -124,15 +145,15 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
       for (int plane = 0; plane < m->zpoints; plane++)
       {
         point = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + col;
-        if (m->grain_indicies[point] > 0 && m->phases[point] > 0)
+        if (grain_indicies[point] > 0 && phases[point] > 0)
         {
           totalmisorientation = 0.0;
           numVoxel = 0;
-          q1[1] = m->quats[point*5 + 1];
-          q1[2] = m->quats[point*5 + 2];
-          q1[3] = m->quats[point*5 + 3];
-          q1[4] = m->quats[point*5 + 4];
-          phase1 = m->crystruct[m->phases[point]];
+          q1[1] = quats[point*5 + 1];
+          q1[2] = quats[point*5 + 2];
+          q1[3] = quats[point*5 + 3];
+          q1[4] = quats[point*5 + 4];
+          phase1 = m->crystruct[phases[point]];
           for (int j = -steps; j < steps + 1; j++)
           {
             jStride = j * m->xpoints * m->ypoints;
@@ -152,11 +173,11 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
                 if (good == 1)
                 {
                   w = 10000.0;
-                  q2[1] = m->quats[neighbor*5 + 1];
-                  q2[2] = m->quats[neighbor*5 + 2];
-                  q2[3] = m->quats[neighbor*5 + 3];
-                  q2[4] = m->quats[neighbor*5 + 4];
-                  phase2 = m->crystruct[m->phases[neighbor]];
+                  q2[1] = quats[neighbor*5 + 1];
+                  q2[2] = quats[neighbor*5 + 2];
+                  q2[3] = quats[neighbor*5 + 3];
+                  q2[4] = quats[neighbor*5 + 4];
+                  phase2 = m->crystruct[phases[neighbor]];
                   if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                   if (w < 5.0)
                   {
@@ -169,32 +190,32 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
           }
           if(numVoxel == 0)
           {
-            m->kernelmisorientations[point] = 0;
+            kernelmisorientations[point] = 0;
           }
-          else if(neighbor < m->m_KernelMisorientations->GetNumberOfTuples())
+          else if(neighbor < m_KernelMisorientations->GetNumberOfTuples())
           {
-            m->kernelmisorientations[point] = totalmisorientation / (float)numVoxel;
+            kernelmisorientations[point] = totalmisorientation / (float)numVoxel;
           }
           else
           {
-            m->kernelmisorientations[point] = 0;
+            kernelmisorientations[point] = 0;
           }
 
           q2[0] = 1;
-          q2[1] = m->m_Grains[m->grain_indicies[point]]->avg_quat[1] / m->m_Grains[m->grain_indicies[point]]->avg_quat[0];
-          q2[2] = m->m_Grains[m->grain_indicies[point]]->avg_quat[2] / m->m_Grains[m->grain_indicies[point]]->avg_quat[0];
-          q2[3] = m->m_Grains[m->grain_indicies[point]]->avg_quat[3] / m->m_Grains[m->grain_indicies[point]]->avg_quat[0];
-          q2[4] = m->m_Grains[m->grain_indicies[point]]->avg_quat[4] / m->m_Grains[m->grain_indicies[point]]->avg_quat[0];
+          q2[1] = m->m_Grains[grain_indicies[point]]->avg_quat[1] / m->m_Grains[grain_indicies[point]]->avg_quat[0];
+          q2[2] = m->m_Grains[grain_indicies[point]]->avg_quat[2] / m->m_Grains[grain_indicies[point]]->avg_quat[0];
+          q2[3] = m->m_Grains[grain_indicies[point]]->avg_quat[3] / m->m_Grains[grain_indicies[point]]->avg_quat[0];
+          q2[4] = m->m_Grains[grain_indicies[point]]->avg_quat[4] / m->m_Grains[grain_indicies[point]]->avg_quat[0];
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          m->grainmisorientations[point] = w;
+          grainmisorientations[point] = w;
           gam[point] = w;
-          avgmiso[m->grain_indicies[point]][0]++;
-          avgmiso[m->grain_indicies[point]][1] = avgmiso[m->grain_indicies[point]][1] + w;
+          avgmiso[grain_indicies[point]][0]++;
+          avgmiso[grain_indicies[point]][1] = avgmiso[grain_indicies[point]][1] + w;
         }
-        if (m->grain_indicies[point] == 0 || m->phases[point] == 0)
+        if (grain_indicies[point] == 0 || phases[point] == 0)
         {
-          m->kernelmisorientations[point] = 0;
-          m->grainmisorientations[point] = 0;
+          kernelmisorientations[point] = 0;
+          grainmisorientations[point] = 0;
           gam[point] = 0;
         }
       }
@@ -216,7 +237,7 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
       for (int plane = 0; plane < m->zpoints; plane++)
       {
         point = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + col;
-        if (m->grain_indicies[point] > 0 && m->phases[point] > 0)
+        if (grain_indicies[point] > 0 && phases[point] > 0)
         {
           totalmisorientation = 0.0;
           numchecks = 0;
@@ -236,7 +257,7 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
                 if (row + k > m->ypoints - 1) good = 0;
                 if (col + l < 0) good = 0;
                 if (col + l > m->xpoints - 1) good = 0;
-                if (good == 1 && m->grain_indicies[point] == m->grain_indicies[neighbor])
+                if (good == 1 && grain_indicies[point] == grain_indicies[neighbor])
                 {
                   numchecks++;
                   totalmisorientation = totalmisorientation + fabs(gam[point] - gam[neighbor]);
@@ -244,11 +265,11 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
               }
             }
           }
-          m->misorientationgradients[point] = totalmisorientation / (float)numchecks;
+          misorientationgradients[point] = totalmisorientation / (float)numchecks;
         }
-        if (m->grain_indicies[point] == 0 || m->phases[point] == 0)
+        if (grain_indicies[point] == 0 || phases[point] == 0)
         {
-          m->misorientationgradients[point] = 0;
+          misorientationgradients[point] = 0;
         }
       }
     }

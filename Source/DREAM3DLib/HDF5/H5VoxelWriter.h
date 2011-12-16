@@ -51,6 +51,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
 
 #define H5_WRITE_SCALAR(type, group, scalar_name, voxel_attr)\
@@ -134,6 +135,12 @@ class DREAM3DLib_EXPORT H5VoxelWriter
     int writeData(T* m)
     {
       int err = -1;
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+
 
       err = writeCrystalStructures(m->crystruct, false);
       if (err < 0) { return err; }
@@ -142,13 +149,13 @@ class DREAM3DLib_EXPORT H5VoxelWriter
       if (err < 0) { return err; }
 
 
-      err = writeEulerData(m->euler1s, m->euler2s, m->euler3s, m->totalpoints, true);
+      err = writeEulerData(euler1s, euler2s, euler3s, m->totalpoints, true);
       if (err < 0) { return err; }
 
-      err = writeGrainIds(m->grain_indicies, m->totalpoints, true);
+      err = writeGrainIds(grain_indicies, m->totalpoints, true);
       if (err < 0) { return err; }
 
-      err = writePhaseIds(m->phases, m->totalpoints, true);
+      err = writePhaseIds(phases, m->totalpoints, true);
       if (err < 0) { return err; }
 
       int volDims[3] =

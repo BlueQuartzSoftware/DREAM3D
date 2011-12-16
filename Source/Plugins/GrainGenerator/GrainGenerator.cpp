@@ -46,8 +46,6 @@
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
-#include "GrainGenerator/StructureReaders/AbstractStructureReader.h"
-#include "GrainGenerator/StructureReaders/VTKStructureReader.h"
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
@@ -78,10 +76,13 @@ GrainGenerator::~GrainGenerator()
 void GrainGenerator::execute()
 {
   int err = 0;
-  // Instantiate our GrainGeneratorFunc object
+  // Instantiate our DataContainer object
   m = DataContainer::New();
-  // Initialize some benchmark timers
-  START_CLOCK()
+  m->addObserver(static_cast<Observer*>(this));
+
+  // Create a Vector to hold all the filters. Later on we will execute all the filters
+  std::vector<AbstractFilter::Pointer> pipeline;
+
 
   if(m_AlreadyFormed == false)
   {
@@ -93,29 +94,21 @@ void GrainGenerator::execute()
     m->resy = m_YResolution;
     m->resz = m_ZResolution;
 
-    updateProgressAndMessage(("Packing Grains"), 25);
+
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsFile(getH5StatsFile());
     pack_grains->setperiodic_boundaries(m_PeriodicBoundary);
     pack_grains->setneighborhooderrorweight(m_NeighborhoodErrorWeight);
-    pack_grains->addObserver(static_cast<Observer*>(this));
-    pack_grains->setDataContainer(m.get());
-    setCurrentFilter(pack_grains);
-    pack_grains->execute();
-    err = pack_grains->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Packing Grains", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", pack_grains)
+    pipeline.push_back(pack_grains);
 
-    updateProgressAndMessage(("Adjusting Grains"), 25);
+
     AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
-    adjust_grains->addObserver(static_cast<Observer*>(this));
-    adjust_grains->setDataContainer(m.get());
-    setCurrentFilter(adjust_grains);
-    adjust_grains->execute();
-    err = adjust_grains->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Adjusting Grains", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", adjust_grains)
+    pipeline.push_back(adjust_grains);
   }
   else if(m_AlreadyFormed == true)
   {
+    assert(false);
+#if 0
     updateProgressAndMessage(("Reading Structure"), 40);
     std::string ext = MXAFileInfo::extension(m_StructureFile);
     if(ext.compare("vtk") == 0)
@@ -156,43 +149,67 @@ void GrainGenerator::execute()
       err = -1;
       CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error No suitable Voxel Structure Reader found", err);
     }
+#endif
   }
 
   if(m_AlreadyFormed == false)
   {
-    updateProgressAndMessage(("Placing Precipitates"), 50);
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
     place_precipitates->setH5StatsFile(getH5StatsFile());
     place_precipitates->setperiodic_boundaries(m_PeriodicBoundary);
-    place_precipitates->addObserver(static_cast<Observer*>(this));
-    place_precipitates->setDataContainer(m.get());
-    setCurrentFilter(place_precipitates);
-    place_precipitates->execute();
-    err = place_precipitates->getErrorCondition();
-    CHECK_FOR_ERROR(DataContainer, "Error Placing Preciptates", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", place_precipitates)
-  }
+    pipeline.push_back(place_precipitates);
+ }
 
-  updateProgressAndMessage(("Matching Crystallography"), 65);
+
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
   match_crystallography->setH5StatsFile(getH5StatsFile());
-  match_crystallography->addObserver(static_cast<Observer*>(this));
-  match_crystallography->setDataContainer(m.get());
-  setCurrentFilter(match_crystallography);
-  match_crystallography->execute();
-  err = match_crystallography->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Matching Crystallography", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", match_crystallography)
+  pipeline.push_back(match_crystallography);
+
 
   MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
-
-  updateProgressAndMessage(("Writing Field Data"), 90);
   WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
   write_fielddata->setFieldDataFile(FieldDataFile);
-  write_fielddata->addObserver(static_cast<Observer*>(this));
-  write_fielddata->setDataContainer(m.get());
-  setCurrentFilter(write_fielddata);
-  write_fielddata->execute();
-  err = write_fielddata->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Writing Field Data", err)CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", write_fielddata)
+  pipeline.push_back(write_fielddata);
+
+
+
+  // Start a Benchmark Clock so we can keep track of each filter's execution time
+  START_CLOCK()
+  // Start looping through the Pipeline
+  float progress = 0.0f;
+  std::stringstream ss;
+  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
+  {
+    progress = progress + 1.0f;
+    pipelineProgress(progress / (pipeline.size() + 1) * 100.0f);
+    ss.str("");
+    ss << "Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass();
+    pipelineProgressMessage(ss.str());
+    (*filter)->addObserver(static_cast<Observer*>(this));
+    (*filter)->setDataContainer(m.get());
+    setCurrentFilter(*filter);
+    (*filter)->execute();
+    (*filter)->removeObserver(static_cast<Observer*>(this));
+    err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      setErrorCondition(err);
+      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
+      pipelineProgress(100);
+      pipelineFinished();
+      return;
+    }
+    CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", write_fielddata)
+
+    if(DREAM3D_BENCHMARKS)
+    {
+      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+      millis = MXA::getMilliSeconds();
+    }
+  }
+
+
+
 
   /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way

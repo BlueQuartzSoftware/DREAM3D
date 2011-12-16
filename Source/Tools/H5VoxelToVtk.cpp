@@ -127,26 +127,27 @@ int main(int argc, char **argv)
   euler3s = m_Euler3s->WritePointer(0, totalpoints);
 
   std::cout << "Reading Voxel Data" << std::endl;
-  err = h5Reader->readVoxelData(m_GrainIndicies, m_Phases, m_Euler1s, m_Euler2s, m_Euler3s, crystruct, phaseType, totalpoints);
+  err = h5Reader->readVoxelData(grain_indicies, phases, euler1s, euler2s, euler3s, crystruct, phaseType, totalpoints);
   if (err < 0)
   {
     std::cout << "Error reading h5voxel file." << std::endl;
     return EXIT_FAILURE;
   }
 
-  Test* ptr = (Test*)(malloc(sizeof(Test)));
-  ptr->xpoints = dims[0];
-  ptr->ypoints = dims[1];
-  ptr->zpoints = dims[2];
-  ptr->resx = spacing[0];
-  ptr->resy = spacing[1];
-  ptr->resz = spacing[2];
-  ptr->grain_indicies = grain_indicies;
-  ptr->phases = phases;
-  ptr->euler1s = euler1s;
-  ptr->euler2s = euler2s;
-  ptr->euler3s = euler3s;
-  ptr->crystruct = &(crystruct.front());
+  DataContainer::Pointer m = DataContainer::New();
+  m->xpoints = dims[0];
+  m->ypoints = dims[1];
+  m->zpoints = dims[2];
+  m->resx = spacing[0];
+  m->resy = spacing[1];
+  m->resz = spacing[2];
+  m->addVoxelData(DREAM3D::VoxelData::GrainIds, m_GrainIndicies);
+  m->addVoxelData(DREAM3D::VoxelData::Phases, m_Phases);
+  m->addVoxelData(DREAM3D::VoxelData::Euler1, m_Euler1s);
+  m->addVoxelData(DREAM3D::VoxelData::Euler2, m_Euler2s);
+  m->addVoxelData(DREAM3D::VoxelData::Euler3, m_Euler3s);
+
+  m->crystruct = crystruct;
 
   size_t total = totalpoints;
 
@@ -154,16 +155,16 @@ int main(int argc, char **argv)
 
   FILE* f = fopen(argv[2], "wb");
 
-  WRITE_STRUCTURED_POINTS_HEADER("ASCII", ptr)
+  WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
 
-  VoxelIPFColorScalarWriter<Test> ipfWriter(ptr);
+  VoxelIPFColorScalarWriter<DataContainer> ipfWriter(m.get());
   ipfWriter.m_WriteBinaryFiles = false;
   ipfWriter.writeScalars(f);
 
-  WRITE_VTK_GRAIN_IDS_ASCII(ptr, DREAM3D::VTK::GrainIdScalarName)
+  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::VTK::GrainIdScalarName)
 
   fclose(f);
-  free(ptr);
+
 
   std::cout << "Done Converting" << std::endl;
   return EXIT_SUCCESS;

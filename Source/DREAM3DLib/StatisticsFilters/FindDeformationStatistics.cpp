@@ -82,9 +82,21 @@ void FindDeformationStatistics::execute()
 void FindDeformationStatistics::find_deformationstatistics(const std::string &filename, const std::string &filename2)
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
 
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
   GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors);
   GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientations);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientations);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradients);
 
   ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
@@ -196,17 +208,17 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
 
   for (int i = 0; i < m->totalpoints; i++)
   {
-    gname = m->grain_indicies[i];
+    gname = grain_indicies[i];
 	if(gname > 0)
 	{
-		  km = m->kernelmisorientations[i];
-		  gam = m->grainmisorientations[i];
-		  lmg = m->misorientationgradients[i];
+		  km = kernelmisorientations[i];
+		  gam = grainmisorientations[i];
+		  lmg = misorientationgradients[i];
 		  gbdist = nearestneighbordistances[i*3 + 0];
 		  tjdist = nearestneighbordistances[i*3 + 1];
 		  qpdist = nearestneighbordistances[i*3 + 2];
 		  nearestneighbor = nearestneighbors[i*3 + 0];
-		  gname2 = m->grain_indicies[nearestneighbor];
+		  gname2 = grain_indicies[nearestneighbor];
 		  sf = m->m_Grains[gname]->schmidfactor;
 		  sf2 = m->m_Grains[gname2]->schmidfactor;
 		  sfmm = sf / sf2;

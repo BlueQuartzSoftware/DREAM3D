@@ -140,6 +140,13 @@ class IDataArray
      */
     virtual void initializeWithZeros() = 0;
 
+    /**
+     * @brief Resizes the array to the new number of elements
+     * @param size
+     * @return
+     */
+    virtual int32_t Resize(size_t size) = 0;
+
 #if 0
     /**
      * @brief Prints information about the class to ostream.

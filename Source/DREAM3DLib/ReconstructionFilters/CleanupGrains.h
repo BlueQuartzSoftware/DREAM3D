@@ -87,6 +87,12 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
 
+    int32_t* grain_indicies;
+    int32_t* phases;
+    bool* alreadychecked;
+    float* quats;
+    int32_t* neighbors;
+
 	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
     void operator=(const CleanupGrains&); // Operator '=' Not Implemented
 };

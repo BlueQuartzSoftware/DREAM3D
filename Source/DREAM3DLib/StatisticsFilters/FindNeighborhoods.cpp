@@ -77,6 +77,17 @@ void FindNeighborhoods::execute()
 void FindNeighborhoods::find_centroids()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
   float x, y, z;
   int col, row, plane;
   float radcubed;
@@ -93,7 +104,7 @@ void FindNeighborhoods::find_centroids()
   }
   for (int j = 0; j < m->totalpoints; j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;
     col = j % m->xpoints;
     row = (j / m->xpoints) % m->ypoints;
@@ -125,6 +136,17 @@ void FindNeighborhoods::find_centroids()
 void FindNeighborhoods::find_centroids2D()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
   float x, y;
   int col, row;
   float radsquared;
@@ -139,7 +161,7 @@ void FindNeighborhoods::find_centroids2D()
   }
   for (int j = 0; j < m->totalpoints; j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;
     col = j % m->xpoints;
     row = (j / m->xpoints) % m->ypoints;

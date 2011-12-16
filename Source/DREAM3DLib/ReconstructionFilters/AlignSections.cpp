@@ -117,9 +117,20 @@ void AlignSections::align_sections()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    setErrorMessage("AlignSections::align_sections() - m pointer was NULL");
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
     return;
   }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (m->totalpoints), goodVoxels);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+
   float disorientation = 0;
   float mindisorientation = 100000000;
   float **mutualinfo12 = NULL;
@@ -221,8 +232,8 @@ void AlignSections::align_sections()
                 {
                   refposition = ((slice + 1) * m->xpoints * m->ypoints) + (l * m->xpoints) + n;
                   curposition = (slice * m->xpoints * m->ypoints) + ((l + j + oldyshift) * m->xpoints) + (n + k + oldxshift);
-                  refgnum = m->grain_indicies[refposition];
-                  curgnum = m->grain_indicies[curposition];
+                  refgnum = grain_indicies[refposition];
+                  curgnum = grain_indicies[curposition];
                   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
                   {
                     if(curgnum >= 0 && refgnum >= 0)
@@ -234,31 +245,31 @@ void AlignSections::align_sections()
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::Misorientation)
                   {
-                    if(m->goodVoxels[refposition] == true && m->goodVoxels[curposition] == true)
+                    if(goodVoxels[refposition] == true && goodVoxels[curposition] == true)
                     {
                       w = 10000.0;
-                      if(m->phases[refposition] > 0 && m->phases[curposition] > 0)
+                      if(phases[refposition] > 0 && phases[curposition] > 0)
                       {
-                        q1[1] = m->quats[refposition * 5 + 1];
-                        q1[2] = m->quats[refposition * 5 + 2];
-                        q1[3] = m->quats[refposition * 5 + 3];
-                        q1[4] = m->quats[refposition * 5 + 4];
-                        phase1 = m->crystruct[m->phases[refposition]];
-                        q2[1] = m->quats[curposition * 5 + 1];
-                        q2[2] = m->quats[curposition * 5 + 2];
-                        q2[3] = m->quats[curposition * 5 + 3];
-                        q2[4] = m->quats[curposition * 5 + 4];
-                        phase2 = m->crystruct[m->phases[curposition]];
+                        q1[1] = quats[refposition * 5 + 1];
+                        q1[2] = quats[refposition * 5 + 2];
+                        q1[3] = quats[refposition * 5 + 3];
+                        q1[4] = quats[refposition * 5 + 4];
+                        phase1 = m->crystruct[phases[refposition]];
+                        q2[1] = quats[curposition * 5 + 1];
+                        q2[2] = quats[curposition * 5 + 2];
+                        q2[3] = quats[curposition * 5 + 3];
+                        q2[4] = quats[curposition * 5 + 4];
+                        phase2 = m->crystruct[phases[curposition]];
                         if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                       if(w > m_misorientationtolerance) disorientation++;
                     }
-                    if(m->goodVoxels[refposition] == true && m->goodVoxels[curposition] == false) disorientation++;
-                    if(m->goodVoxels[refposition] == false && m->goodVoxels[curposition] == true) disorientation++;
+                    if(goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
+                    if(goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary)
                   {
-                    if(m->grain_indicies[refposition] != m->grain_indicies[curposition]) disorientation++;
+                    if(grain_indicies[refposition] != grain_indicies[curposition]) disorientation++;
                   }
                 }
                 else
@@ -350,32 +361,32 @@ void AlignSections::align_sections()
         if((yspot + shifts[iter][1]) >= 0 && (yspot + shifts[iter][1]) <= m->ypoints - 1 && (xspot + shifts[iter][0]) >= 0
             && (xspot + shifts[iter][0]) <= m->xpoints - 1)
         {
-          m->euler1s[position] = m->euler1s[tempposition];
-          m->euler2s[position] = m->euler2s[tempposition];
-          m->euler3s[position] = m->euler3s[tempposition];
-          m->quats[position * 5 + 0] = m->quats[tempposition * 5 + 0];
-          m->quats[position * 5 + 1] = m->quats[tempposition * 5 + 1];
-          m->quats[position * 5 + 2] = m->quats[tempposition * 5 + 2];
-          m->quats[position * 5 + 3] = m->quats[tempposition * 5 + 3];
-          m->quats[position * 5 + 4] = m->quats[tempposition * 5 + 4];
-          m->goodVoxels[position] = m->goodVoxels[tempposition];
-          m->phases[position] = m->phases[tempposition];
-          m->grain_indicies[position] = m->grain_indicies[tempposition];
+          euler1s[position] = euler1s[tempposition];
+          euler2s[position] = euler2s[tempposition];
+          euler3s[position] = euler3s[tempposition];
+          quats[position * 5 + 0] = quats[tempposition * 5 + 0];
+          quats[position * 5 + 1] = quats[tempposition * 5 + 1];
+          quats[position * 5 + 2] = quats[tempposition * 5 + 2];
+          quats[position * 5 + 3] = quats[tempposition * 5 + 3];
+          quats[position * 5 + 4] = quats[tempposition * 5 + 4];
+          goodVoxels[position] = goodVoxels[tempposition];
+          phases[position] = phases[tempposition];
+          grain_indicies[position] = grain_indicies[tempposition];
         }
         if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > m->ypoints - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > m->xpoints - 1)
         {
-          m->euler1s[position] = 0.0;
-          m->euler2s[position] = 0.0;
-          m->euler3s[position] = 0.0;
-          m->quats[position * 5 + 0] = 0.0;
-          m->quats[position * 5 + 1] = 0.0;
-          m->quats[position * 5 + 2] = 0.0;
-          m->quats[position * 5 + 3] = 0.0;
-          m->quats[position * 5 + 4] = 1.0;
-          m->goodVoxels[position] = false;
-          m->phases[position] = 0;
-          m->grain_indicies[position] = 0;
+          euler1s[position] = 0.0;
+          euler2s[position] = 0.0;
+          euler3s[position] = 0.0;
+          quats[position * 5 + 0] = 0.0;
+          quats[position * 5 + 1] = 0.0;
+          quats[position * 5 + 2] = 0.0;
+          quats[position * 5 + 3] = 0.0;
+          quats[position * 5 + 4] = 1.0;
+          goodVoxels[position] = false;
+          phases[position] = 0;
+          grain_indicies[position] = 0;
         }
       }
     }
@@ -408,6 +419,12 @@ void AlignSections::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (m->totalpoints), goodVoxels);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+
+
   int point = 0;
   int seed = 0;
   int noseeds = 0;
@@ -461,7 +478,7 @@ void AlignSections::form_grains_sections()
           if(x > m->xpoints - 1) x = x - m->xpoints;
           if(y > m->ypoints - 1) y = y - m->ypoints;
           point = (z * m->xpoints * m->ypoints) + (y * m->xpoints) + x;
-          if(m->goodVoxels[point] == true && m->grain_indicies[point] == -1 && m->phases[point] > 0)
+          if(goodVoxels[point] == true && grain_indicies[point] == -1 && phases[point] > 0)
           {
             seed = point;
           }
@@ -473,25 +490,25 @@ void AlignSections::form_grains_sections()
       if(seed >= 0)
       {
         size = 0;
-        m->grain_indicies[seed] = graincount;
+        grain_indicies[seed] = graincount;
         voxelslist[size] = seed;
         size++;
         qs[0] = 0;
-        qs[1] = m->quats[seed * 5 + 1];
-        qs[2] = m->quats[seed * 5 + 2];
-        qs[3] = m->quats[seed * 5 + 3];
-        qs[4] = m->quats[seed * 5 + 4];
+        qs[1] = quats[seed * 5 + 1];
+        qs[2] = quats[seed * 5 + 2];
+        qs[3] = quats[seed * 5 + 3];
+        qs[4] = quats[seed * 5 + 4];
         for (size_t j = 0; j < size; ++j)
         {
           int currentpoint = voxelslist[j];
           col = currentpoint % m->xpoints;
           row = (currentpoint / m->xpoints) % m->ypoints;
           q1[0] = 0;
-          q1[1] = m->quats[currentpoint * 5 + 1];
-          q1[2] = m->quats[currentpoint * 5 + 2];
-          q1[3] = m->quats[currentpoint * 5 + 3];
-          q1[4] = m->quats[currentpoint * 5 + 4];
-          phase1 = m->crystruct[m->phases[currentpoint]];
+          q1[1] = quats[currentpoint * 5 + 1];
+          q1[2] = quats[currentpoint * 5 + 2];
+          q1[3] = quats[currentpoint * 5 + 3];
+          q1[4] = quats[currentpoint * 5 + 4];
+          phase1 = m->crystruct[phases[currentpoint]];
           for (int i = 0; i < 8; i++)
           {
             good = 1;
@@ -500,19 +517,19 @@ void AlignSections::form_grains_sections()
             if((i == 5 || i == 6 || i == 7) && row == (m->ypoints - 1)) good = 0;
             if((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
             if((i == 2 || i == 4 || i == 7) && col == (m->xpoints - 1)) good = 0;
-            if(good == 1 && m->grain_indicies[neighbor] <= 0 && m->phases[neighbor] > 0)
+            if(good == 1 && grain_indicies[neighbor] <= 0 && phases[neighbor] > 0)
             {
               w = 10000.0;
               q2[0] = 0;
-              q2[1] = m->quats[neighbor * 5 + 1];
-              q2[2] = m->quats[neighbor * 5 + 2];
-              q2[3] = m->quats[neighbor * 5 + 3];
-              q2[4] = m->quats[neighbor * 5 + 4];
-              phase2 = m->crystruct[m->phases[neighbor]];
+              q2[1] = quats[neighbor * 5 + 1];
+              q2[2] = quats[neighbor * 5 + 2];
+              q2[3] = quats[neighbor * 5 + 3];
+              q2[4] = quats[neighbor * 5 + 4];
+              phase2 = m->crystruct[phases[neighbor]];
               if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               if(w < m_misorientationtolerance)
               {
-                m->grain_indicies[neighbor] = graincount;
+                grain_indicies[neighbor] = graincount;
                 voxelslist[size] = neighbor;
                 size++;
                 if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);

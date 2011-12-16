@@ -78,6 +78,22 @@ type* valuePtr = NULL;\
   }\
 }
 
+#define INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, FloatArrayType, float, size, valuePtr, numComp)
+
+#define INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, Int32ArrayType, int32_t, size, valuePtr, numComp)
+
+#define INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, Int8ArrayType, int8_t, size, valuePtr, numComp)
+
+#define INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, BoolArrayType, bool, size, valuePtr, numComp)
+
+
+
+
+
 #define GET_NAMED_ARRAY_SIZE_CHK(dataContainer, name, typeClass, type, size, valuePtr) \
 type* valuePtr = NULL;\
 {\
@@ -123,6 +139,27 @@ type* valuePtr = NULL;\
     return;\
   }\
 }
+
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, name, typeClass, type, size, valuePtr) \
+type* valuePtr = NULL;\
+{\
+  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  if (iDataArray.get() == NULL) { \
+    return -1;\
+  } \
+  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+    return -1;\
+  }\
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  if (NULL == valuePtr) {\
+    return -1;\
+  }\
+}
+
+
+
+
 
 namespace DREAM3D
 {
@@ -183,7 +220,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumVoxelArrays();
 
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Dimensions);
+    int totalPoints() { return m_Dimensions[0] * m_Dimensions[1] * m_Dimensions[2]; }
     /* ****************** END Map Based Methods *******************************/
+
+
 
     // Volume Dimensional Information
     float resx;
@@ -195,21 +237,21 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int totalpoints;
 
     // Cell Data
-    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int)
-    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float)
-    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float)
-    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
-    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
-    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
-    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
-    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
-    DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
+//    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
+//    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int)
+//    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float)
+//    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float)
+//    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
+//    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
+//    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
+//    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
+//    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
+//    DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
  //   DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, int); // N x 3 Array
  //   DECLARE_WRAPPED_ARRAY(nearestneighbordistances, m_NearestNeighborDistances, float); // N x 3 Array
-    DECLARE_WRAPPED_ARRAY(grainmisorientations, m_GrainMisorientations, float);
-    DECLARE_WRAPPED_ARRAY(misorientationgradients, m_MisorientationGradients, float);
-    DECLARE_WRAPPED_ARRAY(kernelmisorientations, m_KernelMisorientations, float);
+//    DECLARE_WRAPPED_ARRAY(grainmisorientations, m_GrainMisorientations, float);
+//    DECLARE_WRAPPED_ARRAY(misorientationgradients, m_MisorientationGradients, float);
+//    DECLARE_WRAPPED_ARRAY(kernelmisorientations, m_KernelMisorientations, float);
 
     // Field Data Pointer Array
     std::vector<Field::Pointer> m_Grains;

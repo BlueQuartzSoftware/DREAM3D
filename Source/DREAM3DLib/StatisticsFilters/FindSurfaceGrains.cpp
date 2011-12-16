@@ -59,10 +59,25 @@ FindSurfaceGrains::~FindSurfaceGrains()
 void FindSurfaceGrains::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
   setErrorCondition(0);
 
   if(m->zpoints > 1) find_surfacegrains();
+
+  if (getErrorCondition() < 0)
+  {return;}
+
   if(m->zpoints == 1) find_surfacegrains2D();
+
+  if (getErrorCondition() < 0)
+  {return;}
 
   notify("FindSurfaceGrains Completed", 0, Observable::UpdateProgressMessage);
 }
@@ -73,10 +88,12 @@ void FindSurfaceGrains::execute()
 void FindSurfaceGrains::find_surfacegrains()
 {
   DataContainer* m = getDataContainer();
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
   int col, row, plane;
   for (int j = 0; j < (m->xpoints * m->ypoints * m->zpoints); j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
 	if(m->m_Grains[gnum]->surfacefield == false)
 	{
 		col = j % m->xpoints;
@@ -90,12 +107,12 @@ void FindSurfaceGrains::find_surfacegrains()
 		if (plane >= m->zpoints - 1) m->m_Grains[gnum]->surfacefield = true;
 		if(m->m_Grains[gnum]->surfacefield == false)
 		{
-			if(m->grain_indicies[j-1] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j+1] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j-m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j+m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j-(m->xpoints*m->ypoints)] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j+(m->xpoints*m->ypoints)] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j-1] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j+1] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j-m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j+m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j-(m->xpoints*m->ypoints)] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j+(m->xpoints*m->ypoints)] == 0) m->m_Grains[gnum]->surfacefield = true;
 		}
 	}
   }
@@ -103,10 +120,12 @@ void FindSurfaceGrains::find_surfacegrains()
 void FindSurfaceGrains::find_surfacegrains2D()
 {
   DataContainer* m = getDataContainer();
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+
   int col, row;
   for (int j = 0; j < (m->xpoints * m->ypoints); j++)
   {
-    int gnum = m->grain_indicies[j];
+    int gnum = grain_indicies[j];
 	if(m->m_Grains[gnum]->surfacefield == false)
 	{
 		col = j % m->xpoints;
@@ -117,10 +136,10 @@ void FindSurfaceGrains::find_surfacegrains2D()
 		if (row >= m->ypoints - 1) m->m_Grains[gnum]->surfacefield = true;
 		if(m->m_Grains[gnum]->surfacefield == false)
 		{
-			if(m->grain_indicies[j-1] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j+1] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j-m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
-			if(m->grain_indicies[j+m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j-1] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j+1] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j-m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
+			if(grain_indicies[j+m->xpoints] == 0) m->m_Grains[gnum]->surfacefield = true;
 		}
 	}
   }

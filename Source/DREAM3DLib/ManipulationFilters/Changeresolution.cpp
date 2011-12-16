@@ -76,8 +76,6 @@ void ChangeResolution::execute()
 
   change_resolution();
 
-  // If there is an error set this to something negative and also set a message
-    notify("ChangeResolution Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -86,7 +84,23 @@ void ChangeResolution::execute()
 void ChangeResolution::change_resolution()
 {
   DataContainer* m = getDataContainer();
-  DREAM3D_RANDOMNG_NEW()
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+
+
+//  DREAM3D_RANDOMNG_NEW()
   setErrorCondition(0);
   notify("Starting Resolution Change", 0, Observable::UpdateProgressValueAndMessage);
   int err = 1;
@@ -110,11 +124,11 @@ void ChangeResolution::change_resolution()
         plane = int(z / m->resz);
         index_old = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
-        m->grain_indicies[index] = m->grain_indicies[index_old];
-        m->phases[index] = m->phases[index_old];
-        m->euler1s[index] = m->euler1s[index_old];
-        m->euler2s[index] = m->euler2s[index_old];
-        m->euler3s[index] = m->euler3s[index_old];
+        grain_indicies[index] = grain_indicies[index_old];
+        phases[index] = phases[index_old];
+        euler1s[index] = euler1s[index_old];
+        euler2s[index] = euler2s[index_old];
+        euler3s[index] = euler3s[index_old];
       }
     }
   }
@@ -126,15 +140,17 @@ void ChangeResolution::change_resolution()
   m->ypoints = m_YP;
   m->zpoints = m_ZP;
   m->totalpoints = m_XP*m_YP*m_ZP;
-  err = m->m_GrainIndicies->Resize(m->totalpoints);
-  err = m->m_Phases->Resize(m->totalpoints);
-  err = m->m_Euler1s->Resize(m->totalpoints);
-  err = m->m_Euler2s->Resize(m->totalpoints);
-  err = m->m_Euler3s->Resize(m->totalpoints);
-  m->grain_indicies = m->m_GrainIndicies->GetPointer(0);
-  m->phases = m->m_Phases->GetPointer(0);
-  m->euler1s = m->m_Euler1s->GetPointer(0);
-  m->euler2s = m->m_Euler2s->GetPointer(0);
-  m->euler3s = m->m_Euler3s->GetPointer(0);
+  err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(m->totalpoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(m->totalpoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Euler1)->Resize(m->totalpoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Euler2)->Resize(m->totalpoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Euler3)->Resize(m->totalpoints);
+
+//  m->grain_indicies = m->m_GrainIndicies->GetPointer(0);
+//  m->phases = m->m_Phases->GetPointer(0);
+//  m->euler1s = m->m_Euler1s->GetPointer(0);
+//  m->euler2s = m->m_Euler2s->GetPointer(0);
+//  m->euler3s = m->m_Euler3s->GetPointer(0);
+  setErrorCondition(0);
   notify("Resolution Change Complete", 100, Observable::UpdateProgressValueAndMessage);
 }

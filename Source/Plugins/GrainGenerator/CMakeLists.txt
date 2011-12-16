@@ -28,24 +28,6 @@ if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
             COMPONENT Headers   )
 endif()
 
-#-- Add in the Structure Readers for the Grain Generator
-SET (StructureReaders_HDRS
-  ${PROJECT_SOURCE_DIR}/StructureReaders/AbstractStructureReader.h
-  ${PROJECT_SOURCE_DIR}/StructureReaders/DXStructureReader.h
-  ${PROJECT_SOURCE_DIR}/StructureReaders/VTKStructureReader.h
-)
-
-SET (StructureReaders_SRCS
-  ${PROJECT_SOURCE_DIR}/StructureReaders/DXStructureReader.cpp
-  ${PROJECT_SOURCE_DIR}/StructureReaders/VTKStructureReader.cpp
-)
-cmp_IDE_SOURCE_PROPERTIES( "GrainGenerator/StructureReaders" "${StructureReaders_HDRS}" "${StructureReaders_SRCS}" "0")
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${StructureReaders_HDRS}
-            DESTINATION include/DREAM3D/StructureReaders
-            COMPONENT Headers   )
-endif()
-
 
 # ------------------------------------------------------------------------------
 #  Qt 4 Section

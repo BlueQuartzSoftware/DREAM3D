@@ -80,6 +80,16 @@ void FindODF::execute()
 void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
   size_t bin;
   size_t numgrains = m->m_Grains.size();
   int phase;
@@ -114,9 +124,9 @@ void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
   }
   float ea1, ea2, ea3;
   float r1, r2, r3;
-  for (size_t i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < m->totalpoints; i++)
   {
-	  totalvol[m->phases[i]]++;
+	  totalvol[phases[i]]++;
   }
   for (size_t i = 1; i < m->crystruct.size(); i++)
   {

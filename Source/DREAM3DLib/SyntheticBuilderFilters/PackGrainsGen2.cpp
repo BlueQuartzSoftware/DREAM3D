@@ -549,23 +549,38 @@ void PackGrainsGen2::initializeAttributes()
   sizez = m->zpoints * m->resz;
   totalvol = sizex*sizey*sizez;
   m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
-  const size_t startIndex = 0;
-  const size_t endIndex = m->totalpoints;
-  m->grain_indicies = m->m_GrainIndicies->WritePointer(startIndex, endIndex);
-  m->phases = m->m_Phases->WritePointer(startIndex, endIndex);
-  m->euler1s = m->m_Euler1s->WritePointer(startIndex, endIndex);
-  m->euler2s = m->m_Euler2s->WritePointer(startIndex, endIndex);
-  m->euler3s = m->m_Euler3s->WritePointer(startIndex, endIndex);
-  m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(startIndex, endIndex);
+//  const size_t startIndex = 0;
+//  const size_t endIndex = m->totalpoints;
+//  m->grain_indicies = m->m_GrainIndicies->WritePointer(startIndex, endIndex);
+//  m->phases = m->m_Phases->WritePointer(startIndex, endIndex);
+//  m->euler1s = m->m_Euler1s->WritePointer(startIndex, endIndex);
+//  m->euler2s = m->m_Euler2s->WritePointer(startIndex, endIndex);
+//  m->euler3s = m->m_Euler3s->WritePointer(startIndex, endIndex);
+//  m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(startIndex, endIndex);
+
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::GrainIds, (m->totalpoints), gi, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Phases, (m->totalpoints), ph, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler1, (m->totalpoints), e1, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler2, (m->totalpoints), e2, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler3, (m->totalpoints), e3, 1);
+  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::SurfaceVoxels, (m->totalpoints), surf, 1);
+
+  this->grain_indicies = gi;
+  this->phases=ph;
+  this->euler1s = e1;
+  this->euler2s = e2;
+  this->euler3s = e3;
+  this->surfacevoxels = surf;
+
 
 	for(int i=0;i<m->totalpoints;i++)
 	{
-		m->grain_indicies[i] = 0;
-		m->phases[i] = 0;
-		m->euler1s[i] = -1;
-		m->euler2s[i] = -1;
-		m->euler3s[i] = -1;
-		m->surfacevoxels[i] = 0;
+		grain_indicies[i] = 0;
+		phases[i] = 0;
+		euler1s[i] = -1.0f;
+		euler2s[i] = -1.0f;
+		euler3s[i] = -1.0f;
+		surfacevoxels[i] = 0;
 	}
 }
 
@@ -1405,15 +1420,15 @@ void PackGrainsGen2::assign_voxels()
             if (inside >= 0)
             {
               int currentpoint = index;
-              if (m->grain_indicies[currentpoint] > 0)
+              if (grain_indicies[currentpoint] > 0)
               {
-                oldname = m->grain_indicies[currentpoint];
+                oldname = grain_indicies[currentpoint];
                 gsizes[oldname] = gsizes[oldname] - 1;
-                m->grain_indicies[currentpoint] = -1;
+                grain_indicies[currentpoint] = -1;
               }
-              if (m->grain_indicies[currentpoint] == 0)
+              if (grain_indicies[currentpoint] == 0)
               {
-                m->grain_indicies[currentpoint] = i;
+                grain_indicies[currentpoint] = i;
                 gsizes[i]++;
               }
             }
@@ -1436,9 +1451,9 @@ void PackGrainsGen2::assign_voxels()
   }
   for (int i = 0; i < m->totalpoints; i++)
   {
-    if (m->grain_indicies[i] > 0)
+    if (grain_indicies[i] > 0)
     {
-	  m->grain_indicies[i] = newnames[m->grain_indicies[i]];
+	  grain_indicies[i] = newnames[grain_indicies[i]];
     }
   }
   m->m_Grains.resize(goodcount);
@@ -1607,7 +1622,7 @@ void PackGrainsGen2::assign_gaps()
   }
   for (int i = 0; i < m->totalpoints; i++)
   {
-	  if(tempgrain_indicies[i] > 0) m->phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
+	  if(tempgrain_indicies[i] > 0) phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
   }
   delete [] ellipfuncs;
   delete [] newowners;
@@ -1642,13 +1657,13 @@ void PackGrainsGen2::cleanup_grains()
   tempgrain_indicies = new int [m->totalpoints];
   for(int i = 0; i < m->totalpoints; i++)
   {
-	  tempgrain_indicies[i] = m->grain_indicies[i];
+	  tempgrain_indicies[i] = grain_indicies[i];
   }
   for (int i = 0; i < m->totalpoints; i++)
   {
 	if(checked[i] == false && tempgrain_indicies[i] > 0)
 	{
-		minsize = mindiameter[m->phases[i]]*mindiameter[m->phases[i]]*mindiameter[m->phases[i]]*M_PI/6.0;
+		minsize = mindiameter[phases[i]]*mindiameter[phases[i]]*mindiameter[phases[i]]*M_PI/6.0;
 		minsize = int(minsize/(m->resx*m->resy*m->resz));
 		currentvlist.push_back(i);
 		count = 0;
@@ -1693,7 +1708,7 @@ void PackGrainsGen2::cleanup_grains()
 			}
 			count++;
 		}
-		size_t size = vlists[m->grain_indicies[i]].size();
+		size_t size = vlists[grain_indicies[i]].size();
 		if(size > 0)
 		{
 			if(size < currentvlist.size())
@@ -1756,8 +1771,8 @@ void PackGrainsGen2::cleanup_grains()
   }
   for (int i = 0; i < m->totalpoints; i++)
   {
-	  m->grain_indicies[i] = tempgrain_indicies[i];
-	  if(tempgrain_indicies[i] > 0) m->phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
+	  grain_indicies[i] = tempgrain_indicies[i];
+	  if(tempgrain_indicies[i] > 0) phases[i] = m->m_Grains[tempgrain_indicies[i]]->phase;
   }
   delete [] tempgrain_indicies;
   m->m_Grains.resize(goodcount);
