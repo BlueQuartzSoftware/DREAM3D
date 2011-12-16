@@ -87,7 +87,6 @@ radius2(0.0),
 radius3(0.0),
 packquality(0.0)
 {
-  misorientationlist = NULL; //new std::vector<float>;
   neighborlist = NULL;
   neighborsurfacealist = NULL;
 #if CORRUPT_TEST
@@ -133,7 +132,6 @@ Field::~Field()
 
   DELETE_VECTOR_POINTER(neighborlist)
   DELETE_VECTOR_POINTER(neighborsurfacealist)
-  DELETE_VECTOR_POINTER(misorientationlist)
 
 }
 
@@ -192,11 +190,9 @@ void Field::deepCopy(Field::Pointer field)
 
 
   // These are Normal pointers
-  DELETE_VECTOR_POINTER(misorientationlist)
   DELETE_VECTOR_POINTER(neighborlist)
   DELETE_VECTOR_POINTER(neighborsurfacealist)
 
-  COPY_VECTOR_POINTER(field->misorientationlist, misorientationlist, float)
   COPY_VECTOR_POINTER(field->neighborlist, neighborlist, int)
   COPY_VECTOR_POINTER(field->neighborsurfacealist, neighborsurfacealist, float)
 

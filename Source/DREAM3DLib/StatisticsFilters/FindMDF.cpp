@@ -134,7 +134,7 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
   }
   size_t nname;
   float nsa;
-
+  misorientationlists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
 	  if(m->m_Grains[i]->active == true)
@@ -145,7 +145,7 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
 		q1[3] = m->m_Grains[i]->avg_quat[3] / m->m_Grains[i]->avg_quat[0];
 		q1[4] = m->m_Grains[i]->avg_quat[4] / m->m_Grains[i]->avg_quat[0];
 		phase1 = m->crystruct[m->m_Grains[i]->phase];
-		m->m_Grains[i]->misorientationlist = new std::vector<float>(m->m_Grains[i]->neighborlist->size() * 3, -1.0);
+		misorientationlists[i].resize(m->m_Grains[i]->neighborlist->size() * 3, -1.0);
 		for (size_t j = 0; j < m->m_Grains[i]->neighborlist->size(); j++)
 		{
 		  w = 10000.0;
@@ -160,20 +160,20 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
 		  if (phase1 == phase2)
 		  {
 			OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
-			m->m_Grains[i]->misorientationlist->at(3 * j) = r1;
-			m->m_Grains[i]->misorientationlist->at(3 * j + 1) = r2;
-			m->m_Grains[i]->misorientationlist->at(3 * j + 2) = r3;
+			misorientationlists[i][3 * j] = r1;
+			misorientationlists[i][3 * j + 1] = r2;
+			misorientationlists[i][3 * j + 2] = r3;
 		  }
 		  if (phase1 != phase2)
 		  {
-			m->m_Grains[i]->misorientationlist->at(3 * j) = -100;
-			m->m_Grains[i]->misorientationlist->at(3 * j + 1) = -100;
-			m->m_Grains[i]->misorientationlist->at(3 * j + 2) = -100;
+			misorientationlists[i][3 * j] = -100;
+			misorientationlists[i][3 * j + 1] = -100;
+			misorientationlists[i][3 * j + 2] = -100;
 		  }
 		  if (phase1 == phase2) mbin = m_OrientationOps[phase1]->getMisoBin(
-																   m->m_Grains[i]->misorientationlist->at(3*j),
-																   m->m_Grains[i]->misorientationlist->at(3 * j + 1),
-																   m->m_Grains[i]->misorientationlist->at(3 * j + 2));
+																   misorientationlists[i][3*j],
+																   misorientationlists[i][3 * j + 1],
+																   misorientationlists[i][3 * j + 2]);
 		  if ((nname > i || m->m_Grains[nname]->surfacefield == 1) && phase1 == phase2)
 		  {
 			nsa = m->m_Grains[i]->neighborsurfacealist->at(j);

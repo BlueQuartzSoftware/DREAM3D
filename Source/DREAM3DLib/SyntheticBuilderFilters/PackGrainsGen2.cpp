@@ -281,6 +281,9 @@ void PackGrainsGen2::execute()
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
+  columnlist.resize(m->m_Grains.size());
+  rowlist.resize(m->m_Grains.size());
+  planelist.resize(m->m_Grains.size());
   fillingerror = 1;
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
@@ -846,16 +849,13 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
   m->m_Grains[gnum]->centroidx = xc;
   m->m_Grains[gnum]->centroidy = yc;
   m->m_Grains[gnum]->centroidz = zc;
-  size_t size = m->m_Grains[gnum]->columnlist->size();
-  std::vector<int>& columnlist = *(m->m_Grains[gnum]->columnlist);
-  std::vector<int>& rowlist = *(m->m_Grains[gnum]->rowlist);
-  std::vector<int>& planelist = *(m->m_Grains[gnum]->planelist);
+  size_t size = columnlist[gnum].size();
 
   for (size_t i = 0; i < size; i++)
   {
-    columnlist[i] = columnlist[i] + shiftcolumn;
-    rowlist[i] = rowlist[i] + shiftrow;
-    planelist[i] = planelist[i] + shiftplane;
+    columnlist[gnum][i] = columnlist[gnum][i] + shiftcolumn;
+    rowlist[gnum][i] = rowlist[gnum][i] + shiftrow;
+    planelist[gnum][i] = planelist[gnum][i] + shiftplane;
   }
 }
 void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
@@ -1083,17 +1083,14 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
   int col, row, plane;
   if(gadd > 0)
   {
-    size_t size = m->m_Grains[gadd]->columnlist->size();
-    std::vector<int>& columnlist = *(m->m_Grains[gadd]->columnlist);
-    std::vector<int>& rowlist = *(m->m_Grains[gadd]->rowlist);
-    std::vector<int>& planelist = *(m->m_Grains[gadd]->planelist);
+    size_t size = columnlist[gadd].size();
 
 	float packquality = 0;
     for (size_t i = 0; i < size; i++)
     {
-      col = columnlist[i];
-      row = rowlist[i];
-      plane = planelist[i];
+      col = columnlist[gadd][i];
+      row = rowlist[gadd][i];
+      plane = planelist[gadd][i];
       if(m_periodic_boundaries == true)
       {
         if(col < 0) col = col + packingxpoints;
@@ -1120,15 +1117,12 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
   }
   if(gremove > 0)
   {
-    size_t size = m->m_Grains[gremove]->columnlist->size();
-    std::vector<int>& columnlist = *(m->m_Grains[gremove]->columnlist);
-    std::vector<int>& rowlist = *(m->m_Grains[gremove]->rowlist);
-    std::vector<int>& planelist = *(m->m_Grains[gremove]->planelist);
+    size_t size = columnlist[gremove].size();
     for (size_t i = 0; i < size; i++)
     {
-      col = columnlist[i];
-      row = rowlist[i];
-      plane = planelist[i];
+      col = columnlist[gremove][i];
+      row = rowlist[gremove][i];
+      plane = planelist[gremove][i];
       if(m_periodic_boundaries == true)
       {
         if(col < 0) col = col + packingxpoints;
@@ -1171,19 +1165,6 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   float covera = m->m_Grains[gnum]->radius3;
   float omega3 = m->m_Grains[gnum]->omega3;
   float radcur1 = 1;
-  if(NULL == m->m_Grains[gnum]->columnlist)
-  {
-    m->m_Grains[gnum]->columnlist = new std::vector<int>(0);
-  }
-  if(NULL == m->m_Grains[gnum]->rowlist)
-  {
-    m->m_Grains[gnum]->rowlist = new std::vector<int>(0);
-  }
-  if(NULL == m->m_Grains[gnum]->planelist)
-  {
-    m->m_Grains[gnum]->planelist = new std::vector<int>(0);
-  }
-
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
 
   // init any values for each of the Shape Ops
@@ -1258,9 +1239,9 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 		inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 		if(inside >= 0)
 		{
-			m->m_Grains[gnum]->columnlist->push_back(column);
-			m->m_Grains[gnum]->rowlist->push_back(row);
-			m->m_Grains[gnum]->planelist->push_back(plane);
+			columnlist[gnum].push_back(column);
+			rowlist[gnum].push_back(row);
+			planelist[gnum].push_back(plane);
 		}
       }
     }
