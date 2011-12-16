@@ -93,8 +93,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void assign_eulers();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
-    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
-    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float>* misolist, std::vector<float>* neighborsurfarealist);
+    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
+    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float>* neighborsurfarealist);
     void matchCrystallography();
     void measure_misorientations();
 
@@ -106,6 +106,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<SharedFloatArray> simodf;
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
+
+	std::vector<std::vector<float> > misorientationlists;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;

@@ -139,12 +139,6 @@ void CleanupGrains::execute()
   notify("Cleanup Grains - Reorder Grains", 0, Observable::UpdateProgressMessage);
   reorder_grains();
 
-  find_neighbors->execute();
-  err = find_neighbors->getErrorCondition();
-  if (err < 0){
-    return;
-  }
-
   // If there is an error set this to something negative and also set a message
   notify("CleanupGrains Completed", 0, Observable::UpdateProgressMessage);
 }
@@ -331,7 +325,7 @@ void CleanupGrains::merge_containedgrains()
 void CleanupGrains::reorder_grains()
 {
   DataContainer* m = getDataContainer();
-  size_t initialVoxelsListSize = 1000;
+  size_t initialVoxellistsSize = 1000;
   size_t size = 0;
   int neighpoints[6];
   int good = 0;
@@ -370,20 +364,19 @@ void CleanupGrains::reorder_grains()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
+    voxellists[i].clear();
+    voxellists[i].resize(initialVoxellistsSize);
     if(m->m_Grains[i]->nucleus != -1)
     {
       size = 0;
       int nucleus = m->m_Grains[i]->nucleus;
+
 	  if(phases[nucleus] > 0) phase = m->crystruct[phases[nucleus]];
 	  if(phases[nucleus] <= 0) phase = Ebsd::UnknownCrystalStructure;
-      if(m->m_Grains[currentgrain]->voxellist != NULL)
-      {
-          delete m->m_Grains[currentgrain]->voxellist;
-      }
-      m->m_Grains[currentgrain]->voxellist = new std::vector<int>(initialVoxelsListSize,-1);
-      m->m_Grains[currentgrain]->voxellist->at(size) = nucleus;
+      voxellists[currentgrain][size] = nucleus;
       alreadychecked[nucleus] = true;
       grain_indicies[nucleus] = currentgrain;
+
       if (currentgrain > maxGrain) maxGrain = currentgrain;
       size++;
       for (size_t k = 0; k < 5; k++)
@@ -392,7 +385,7 @@ void CleanupGrains::reorder_grains()
       }
       for (size_t j = 0; j < size; j++)
       {
-        int currentpoint = m->m_Grains[currentgrain]->voxellist->at(j);
+        int currentpoint = voxellists[currentgrain][j];
         col = currentpoint % m->xpoints;
         row = (currentpoint / m->xpoints) % m->ypoints;
         plane = currentpoint / (m->xpoints * m->ypoints);
@@ -423,20 +416,22 @@ void CleanupGrains::reorder_grains()
             size_t grainname = grain_indicies[neighbor];
             if (grainname == i)
             {
-              m->m_Grains[currentgrain]->voxellist->at(size) = neighbor;
+
+              voxellists[currentgrain][size] = neighbor;
               alreadychecked[neighbor] = true;
               grain_indicies[neighbor] = currentgrain;
+
               if (currentgrain > maxGrain) maxGrain = currentgrain;
               size++;
-              if (size >= m->m_Grains[currentgrain]->voxellist->size())
+              if (size >= voxellists[currentgrain].size())
               {
-                m->m_Grains[currentgrain]->voxellist->resize(size + initialVoxelsListSize, -1);
+                voxellists[currentgrain].resize(size + initialVoxellistsSize, -1);
               }
             }
           }
         }
       }
-      m->m_Grains[currentgrain]->voxellist->erase(std::remove(m->m_Grains[currentgrain]->voxellist->begin(), m->m_Grains[currentgrain]->voxellist->end(), -1), m->m_Grains[currentgrain]->voxellist->end());
+      voxellists[currentgrain].erase(std::remove(voxellists[currentgrain].begin(), voxellists[currentgrain].end(), -1), voxellists[currentgrain].end());
       m->m_Grains[currentgrain]->active = 1;
       m->m_Grains[currentgrain]->nucleus = nucleus;
 	  m->m_Grains[currentgrain]->phase = phases[nucleus];
@@ -469,9 +464,7 @@ void CleanupGrains::reorder_grains()
 void CleanupGrains::remove_smallgrains()
 {
   DataContainer* m = getDataContainer();
-  size_t initialVoxelsListSize = 1000;
-  std::vector<int > voxelslist;
-  voxelslist.resize(initialVoxelsListSize,-1);
+  size_t initialVoxellistsSize = 1000;
   size_t size = 0;
   int neighpoints[6];
   int good = 0;
@@ -496,13 +489,15 @@ void CleanupGrains::remove_smallgrains()
   {
       size = 0;
       int nucleus = m->m_Grains[i]->nucleus;
-      voxelslist[size] = nucleus;
+
+	  voxellists[i].resize(initialVoxellistsSize);
+      voxellists[i][size] = nucleus;
       alreadychecked[nucleus] = true;
       grain_indicies[nucleus] = currentgrain;
       size++;
       for (size_t j = 0; j < size; j++)
       {
-        int currentpoint = voxelslist[j];
+        int currentpoint = voxellists[i][j];
         col = currentpoint % m->xpoints;
         row = (currentpoint / m->xpoints) % m->ypoints;
         plane = currentpoint / (m->xpoints * m->ypoints);
@@ -521,31 +516,29 @@ void CleanupGrains::remove_smallgrains()
             size_t grainname = static_cast<size_t>(grain_indicies[neighbor]);
             if (grainname == i)
             {
-              voxelslist[size] = neighbor;
+              voxellists[i][size] = neighbor;
               alreadychecked[neighbor] = true;
               grain_indicies[neighbor] = currentgrain;
+
               size++;
-              if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
+              if (size >= voxellists[i].size()) voxellists[i].resize(size + initialVoxellistsSize, -1);
             }
           }
         }
       }
-      voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
-    if(voxelslist.size() >= static_cast<size_t>(m_minallowedgrainsize) )
+      voxellists[i].erase(std::remove(voxellists[i].begin(), voxellists[i].end(), -1), voxellists[i].end());
+    if(voxellists[i].size() >= static_cast<size_t>(m_minallowedgrainsize) )
     {
       m->m_Grains[currentgrain]->active = true;
       currentgrain++;
-      voxelslist.clear();
-      voxelslist.resize(initialVoxelsListSize,-1);
     }
-    if(voxelslist.size() < static_cast<size_t>(m_minallowedgrainsize) )
+    if(voxellists[i].size() < static_cast<size_t>(m_minallowedgrainsize) )
     {
-        for (size_t b = 0; b < voxelslist.size(); b++)
+        for (size_t b = 0; b < voxellists[i].size(); b++)
         {
-          int index = voxelslist[b];
+          int index = voxellists[i][b];
           grain_indicies[index] = 0;
         }
-        voxelslist.resize(initialVoxelsListSize, -1);
     }
   }
   m->m_Grains.resize(currentgrain);

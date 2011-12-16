@@ -180,6 +180,7 @@ namespace DREAM3D
     const std::string GrainMisorientations("GrainMisorientations");
     const std::string MisorientationGradients("MisorientationGradients");
     const std::string KernelMisorientations("KernelMisorientations");
+    const std::string ImageQuality("ImageQuality");
   }
 }
 

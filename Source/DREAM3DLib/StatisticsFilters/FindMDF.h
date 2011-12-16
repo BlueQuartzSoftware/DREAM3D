@@ -85,7 +85,9 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    FindMDF(const FindMDF&); // Copy Constructor Not Implemented
+	std::vector<std::vector<float> > misorientationlists;
+
+	FindMDF(const FindMDF&); // Copy Constructor Not Implemented
     void operator=(const FindMDF&); // Operator '=' Not Implemented
 };
 

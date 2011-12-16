@@ -38,6 +38,7 @@
 #define PLACEPRECIPITATES_H_
 
 #include <string>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -67,6 +68,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+
     virtual void execute();
 
   protected:
@@ -84,7 +86,9 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     std::vector<float> precipitatephasefractions;
 
   private:
-    int numprimarygrains;
+	std::vector<int> currentprecipvoxellist;
+
+	int numprimarygrains;
     unsigned long long int Seed;
     float sizex;
     float sizey;
