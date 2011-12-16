@@ -87,19 +87,11 @@ radius2(0.0),
 radius3(0.0),
 packquality(0.0)
 {
-  voxellist = NULL; //new std::vector<int>;
-  columnlist = NULL; //new std::vector<int>;
-  rowlist = NULL; //new std::vector<int>;
-  planelist = NULL; //new std::vector<int>;
-  misorientationlist = NULL; //new std::vector<float>;
   neighborlist = NULL;
   neighborsurfacealist = NULL;
 #if CORRUPT_TEST
   test0 = NULL;
   test1 = NULL;
-  test2 = NULL;
-  test3 = NULL;
-  test4 = NULL;
   test5 = NULL;
   test6 = NULL;
 #endif
@@ -134,20 +126,12 @@ Field::~Field()
 #if CORRUPT_TEST
   CORRUPT_TEST_OUTPUT(test0);
   CORRUPT_TEST_OUTPUT(test1);
-  CORRUPT_TEST_OUTPUT(test2);
-  CORRUPT_TEST_OUTPUT(test3);
-  CORRUPT_TEST_OUTPUT(test4);
   CORRUPT_TEST_OUTPUT(test5);
   CORRUPT_TEST_OUTPUT(test6);
 #endif
 
   DELETE_VECTOR_POINTER(neighborlist)
   DELETE_VECTOR_POINTER(neighborsurfacealist)
-  DELETE_VECTOR_POINTER(voxellist)
-  DELETE_VECTOR_POINTER(columnlist)
-  DELETE_VECTOR_POINTER(rowlist)
-  DELETE_VECTOR_POINTER(planelist)
-  DELETE_VECTOR_POINTER(misorientationlist)
 
 }
 
@@ -206,19 +190,9 @@ void Field::deepCopy(Field::Pointer field)
 
 
   // These are Normal pointers
-  DELETE_VECTOR_POINTER(voxellist)
-  DELETE_VECTOR_POINTER(columnlist)
-  DELETE_VECTOR_POINTER(rowlist)
-  DELETE_VECTOR_POINTER(planelist)
-  DELETE_VECTOR_POINTER(misorientationlist)
   DELETE_VECTOR_POINTER(neighborlist)
   DELETE_VECTOR_POINTER(neighborsurfacealist)
 
-  COPY_VECTOR_POINTER(field->voxellist, voxellist, int)
-  COPY_VECTOR_POINTER(field->columnlist, columnlist, int)
-  COPY_VECTOR_POINTER(field->rowlist, rowlist, int)
-  COPY_VECTOR_POINTER(field->planelist, planelist, int)
-  COPY_VECTOR_POINTER(field->misorientationlist, misorientationlist, float)
   COPY_VECTOR_POINTER(field->neighborlist, neighborlist, int)
   COPY_VECTOR_POINTER(field->neighborsurfacealist, neighborsurfacealist, float)
 

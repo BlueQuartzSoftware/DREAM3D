@@ -131,6 +131,10 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
+	std::vector<std::vector<int> > columnlist;
+	std::vector<std::vector<int> > rowlist;
+	std::vector<std::vector<int> > planelist;
+
     unsigned long long int Seed;
 
     float sizex;

@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+
     virtual void execute();
 
   protected:
@@ -92,6 +93,8 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     bool* alreadychecked;
     float* quats;
     int32_t* neighbors;
+	std::vector<std::vector<int> > voxellists;
+
 
 	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
     void operator=(const CleanupGrains&); // Operator '=' Not Implemented

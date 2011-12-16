@@ -68,9 +68,9 @@ ipfColor[j * 3 + 2] = rgb[2];\
   std::string hdfPath;\
   std::vector<std::string > hdfPaths;\
   int numgrains = m->m_Grains.size();\
+  int totpoints = m->totalpoints;\
   int phase;\
   int pcount = 0;\
-  float q1[5];\
   unsigned char rgb[3] =  { 0, 0, 0 };\
   unsigned char hkl[3] = { 0, 0, 0 };\
   VTK_IPF_COLOR_REFDIRECTION(RefDirection);\
@@ -164,83 +164,50 @@ class  H5GrainWriter
      * @param hdfFile
      * @return
      */
-    template<typename ReconstructionFunc>
-    int writeHDF5ReconGrainsFile(ReconstructionFunc* m, const std::string &hdfFile)
+    template<typename DataContainer>
+    int writeHDF5GrainsFile(DataContainer* m, const std::string &hdfFile)
     {
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::ImageQuality, FloatArrayType, float, (m->totalpoints), imagequalities);
+
 
       H5GW_DECLS()
 
       err = 0;
-
+      std::vector<std::vector<int> > vlists;
+      vlists.resize(numgrains);
+      for (int i = 0; i < totpoints; i++)
+      {
+        vlists[grain_indicies[i]].push_back(i);
+      }
       for (int i = 1; i < numgrains; i++)
       {
         H5GW_GRAIN_LOOP_1()
-
-        // These are Reconstruction specific arrays that we want to write
-        std::vector<float > imageQuality(vlist->size());
-
-        for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
+        for (std::vector<int>::size_type j = 0; j < vlist->size(); j++)
         {
           H5GW_VLIST_LOOP_1()
 
-          phase = m->phases[vid];
+          phase = phases[vid];
           phaseValues[j] = phase;
-          if (m->crystruct[phase] == Ebsd::Cubic)
+          if(m->crystruct[phase] == Ebsd::Cubic)
           {
-            EbsdColoring::GenerateIPFColor(m->euler1s[vid],
-                                          m->euler2s[vid],
-                                          m->euler3s[vid],
-                                          RefDirection[0], RefDirection[1], RefDirection[2],
-                                          rgb, hkl);
+            EbsdColoring::GenerateIPFColor(euler1s[vid], euler2s[vid], euler3s[vid], RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);
           }
-          else if (m->crystruct[phase] == Ebsd::Hexagonal)
+          else if(m->crystruct[phase] == Ebsd::Hexagonal)
           {
-            EbsdColoring::CalculateHexIPFColor(m->euler1s[vid],
-                                              m->euler2s[vid],
-                                              m->euler3s[vid],
-                                              RefDirection[0], RefDirection[1], RefDirection[2], rgb);
+            EbsdColoring::CalculateHexIPFColor(euler1s[vid], euler2s[vid], euler3s[vid], RefDirection[0], RefDirection[1], RefDirection[2], rgb);
           }
           ipfColor[j * 3] = rgb[0];
           ipfColor[j * 3 + 1] = rgb[1];
           ipfColor[j * 3 + 2] = rgb[2];
 
           // Reconstruction Specific Assignments
-          imageQuality[j] = m->imagequalities[vid];
-          grainName[j] = m->grain_indicies[vid];
-        }
-        H5GW_GRAIN_LOOP_2()
-
-        err = h5writer->writeCellData<float> (hdfPath, imageQuality, DREAM3D::HDF5::ImageQuality.c_str(), 1);
-      }
-
-      err = h5writer->writeObjectIndex(hdfPaths);
-      err = h5writer->closeFile();
-      return err;
-    }
-
-    /**
-     * @brief
-     * @param hdfFile
-     * @return
-     */
-    template<typename T>
-    int writeHDF5GrainsFile(T* m, const std::string &hdfFile)
-    {
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-
-      H5GW_DECLS()
-      err = 0;
-      for (int i = 1; i < numgrains; i++)
-      {
-        H5GW_GRAIN_LOOP_1()
-        for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
-        {
-          H5GW_VLIST_LOOP_1()
-
-          phase = phases[vid];
-          phaseValues[j] = phase;
-          H5GW_IPF_COLOR()
+  //        imageQuality[j] = m->imagequalities[vid];
+          grainName[j] = grain_indicies[vid];
 
         }
         H5GW_GRAIN_LOOP_2()
