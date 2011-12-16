@@ -68,6 +68,7 @@ ipfColor[j * 3 + 2] = rgb[2];\
   std::string hdfPath;\
   std::vector<std::string > hdfPaths;\
   int numgrains = r->m_Grains.size();\
+  int totpoints = r->totalpoints;
   int phase;\
   int pcount = 0;\
   float q1[5];\
@@ -80,26 +81,26 @@ ipfColor[j * 3 + 2] = rgb[2];\
 
 
 #define H5GW_GRAIN_LOOP_1() \
-    std::vector<int >* vlist = r->m_Grains[i]->voxellist;\
-    if (NULL == vlist || vlist->size() == 0) { continue; }\
-    int vid = vlist->at(0);\
+    std::vector<int > vlist = vlists[i];\
+    if (vlist.size() == 0) { continue; }\
+    int vid = vlist[0];\
     ss.str("");\
     ss << "/" << i;\
     hdfPath = ss.str();\
     hdfPaths.push_back(hdfPath);\
     std::vector<float > points;\
-    std::vector<int32_t > cells(vlist->size() * 9);\
-    std::vector<int32_t > cell_types(vlist->size(), VTK_CELLTYPE_VOXEL);\
-    std::vector<int32_t > grainName(vlist->size());\
-    std::vector<unsigned char > ipfColor(vlist->size() * 3);\
-    std::vector<int32_t>  phaseValues(vlist->size());\
+    std::vector<int32_t > cells(vlist.size() * 9);\
+    std::vector<int32_t > cell_types(vlist.size(), VTK_CELLTYPE_VOXEL);\
+    std::vector<int32_t > grainName(vlist.size());\
+    std::vector<unsigned char > ipfColor(vlist.size() * 3);\
+    std::vector<int32_t>  phaseValues(vlist.size());\
     std::map<int, int> pointMap;\
     err = 0;\
     pcount = 0;\
     size_t cIdx = 0;
 
 #define H5GW_VLIST_LOOP_1()\
-vid = vlist->at(j);\
+vid = vlist[j];\
 ocol = vid % r->xpoints;\
 orow = (vid / r->xpoints) % r->ypoints;\
 oplane = vid / (r->xpoints * r->ypoints);\
@@ -164,22 +165,23 @@ class  H5GrainWriter
      * @param hdfFile
      * @return
      */
-    template<typename ReconstructionFunc>
-    int writeHDF5ReconGrainsFile(ReconstructionFunc* r, const std::string &hdfFile)
+    template<typename DataContainer>
+    int writeHDF5GrainsFile(DataContainer* r, const std::string &hdfFile)
     {
 
       H5GW_DECLS()
 
       err = 0;
-
+	  std::vector<std::vector<int> > vlists;
+	  vlists.resize(numgrains);
+	  for (int i = 0; i < totpoints; i++)
+	  {
+		vlists[r->grain_indicies[i]].push_back(i);
+	  }
       for (int i = 1; i < numgrains; i++)
       {
         H5GW_GRAIN_LOOP_1()
-
-        // These are Reconstruction specific arrays that we want to write
-        std::vector<float > imageQuality(vlist->size());
-
-        for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
+        for (std::vector<int >::size_type j = 0; j < vlist.size(); j++)
         {
           H5GW_VLIST_LOOP_1()
 
@@ -205,12 +207,9 @@ class  H5GrainWriter
           ipfColor[j * 3 + 2] = rgb[2];
 
           // Reconstruction Specific Assignments
-          imageQuality[j] = r->imagequalities[vid];
           grainName[j] = r->grain_indicies[vid];
         }
         H5GW_GRAIN_LOOP_2()
-
-        err = h5writer->writeCellData<float> (hdfPath, imageQuality, DREAM3D::HDF5::ImageQuality.c_str(), 1);
       }
 
       err = h5writer->writeObjectIndex(hdfPaths);
@@ -218,35 +217,6 @@ class  H5GrainWriter
       return err;
     }
 
-    /**
-     * @brief
-     * @param hdfFile
-     * @return
-     */
-    template<typename GrainGeneratorFunc>
-    int writeHDF5GrainsFile(GrainGeneratorFunc* r, const std::string &hdfFile)
-    {
-      H5GW_DECLS()
-      err = 0;
-      for (int i = 1; i < numgrains; i++)
-      {
-        H5GW_GRAIN_LOOP_1()
-        for (std::vector<int >::size_type j = 0; j < vlist->size(); j++)
-        {
-          H5GW_VLIST_LOOP_1()
-
-          phase = r->phases[vid];
-          phaseValues[j] = phase;
-          H5GW_IPF_COLOR()
-
-        }
-        H5GW_GRAIN_LOOP_2()
-      }
-
-      err = h5writer->writeObjectIndex(hdfPaths);
-      err = h5writer->closeFile();
-      return err;
-    }
 
   protected:
     H5GrainWriter(){};

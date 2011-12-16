@@ -38,6 +38,7 @@
 #define PLACEPRECIPITATES_H_
 
 #include <string>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -67,6 +68,8 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+	std::vector<int> currentprecipvoxellist;
+
     virtual void execute();
 
   protected:
