@@ -90,7 +90,7 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
   boundbox[6] = m->zpoints*m->resz;
   for (size_t i = 1; i < size; i++)
   {
-	  if(m->m_Grains[i]->surfacefield == true)
+	  if(m->m_Grains[i]->surfacefield > 0)
 	  {
 		  move = 1;
 		  mindist = 10000000000.0;
@@ -147,7 +147,7 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
   boundbox[4] = m->ypoints*m->resy;
   for (size_t i = 1; i < size; i++)
   {
-	  if(m->m_Grains[i]->surfacefield == true)
+	  if(m->m_Grains[i]->surfacefield > 0)
 	  {
 		  move = 1;
 		  mindist = 10000000000.0;
