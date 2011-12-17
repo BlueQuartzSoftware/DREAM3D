@@ -45,26 +45,17 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "FileConversion/GrainIdWriter.h"
 #include "FileConversion/VtkGrainIdReader.h"
+#include "Test/TestFileLocations.h"
 
 #include "Test/UnitTestSupport.hpp"
 
-#define REMOVE_TEST_FILES 1
-
-namespace Detail
-{
-  static const std::string TestFile("VtkIOTest.vtk");
-  static const int XSize = 2;
-  static const int YSize = 10;
-  static const int ZSize = 5;
-  static const int Offset = 66;
-}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(Detail::TestFile);
+  MXADir::remove(UnitTest::VTKFileWritersTest::TestFile);
 #endif
 }
 
@@ -73,20 +64,20 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestVtkGrainIdWriter()
 {
-  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
+  int size = UnitTest::VTKFileWritersTest::XSize * UnitTest::VTKFileWritersTest::YSize * UnitTest::VTKFileWritersTest::ZSize;
+  Int32ArrayType::Pointer grainIds = Int32ArrayType::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
-    grainIds->SetValue(i, i + Detail::Offset);
+    grainIds->SetValue(i, i + UnitTest::VTKFileWritersTest::Offset);
   }
-  int nx = Detail::XSize;
-  int ny = Detail::YSize;
-  int nz = Detail::ZSize;
+  int nx = UnitTest::VTKFileWritersTest::XSize;
+  int ny = UnitTest::VTKFileWritersTest::YSize;
+  int nz = UnitTest::VTKFileWritersTest::ZSize;
 
 
   VtkGrainIdWriter::Pointer writer = VtkGrainIdWriter::New();
   writer->setWriteBinaryFiles(true);
-  writer->setFileName(Detail::TestFile);
+  writer->setFileName(UnitTest::VTKFileWritersTest::TestFile);
   writer->setDimensions(nx, ny, nz);
   writer->setResolution(1.0f, 1.0f, 1.0f);
   writer->setGrainIds(grainIds);
@@ -107,24 +98,24 @@ int TestVtkGrainIdReader()
   int ny = 0;
   int nz = 0;
 
-  reader->setFileName(Detail::TestFile);
+  reader->setFileName(UnitTest::VTKFileWritersTest::TestFile);
   int err = reader->readGrainIds();
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
   reader->getDimensions(nx, ny, nz);
-  DREAM3D_REQUIRE_EQUAL(nx, Detail::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, Detail::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, Detail::ZSize);
+  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::VTKFileWritersTest::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::VTKFileWritersTest::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::VTKFileWritersTest::ZSize);
 
   DataArray<int>::Pointer grainIds = reader->getGrainIds();
   DREAM3D_REQUIRE(NULL != grainIds.get());
 
-  int size = Detail::XSize * Detail::YSize * Detail::ZSize;
+  int size = UnitTest::VTKFileWritersTest::XSize * UnitTest::VTKFileWritersTest::YSize * UnitTest::VTKFileWritersTest::ZSize;
 
   for (int i = 0; i < size; ++i)
   {
-    DREAM3D_REQUIRE_EQUAL( (i+Detail::Offset), grainIds->GetValue(i) );
+    DREAM3D_REQUIRE_EQUAL( (i+UnitTest::VTKFileWritersTest::Offset), grainIds->GetValue(i) );
   }
 
 

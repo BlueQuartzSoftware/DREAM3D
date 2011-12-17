@@ -226,8 +226,8 @@ class VtkGrainIdWriter : public GrainIdWriter
       DataContainer::Pointer r = DataContainer::New();
       getDimensions(r->xpoints, r->ypoints, r->zpoints);
       getResolution(r->resx, r->resy, r->resz);
+      r->totalpoints = r->xpoints * r->ypoints * r->zpoints;
       r->addVoxelData(DREAM3D::VoxelData::GrainIds, getGrainIds());
-//      r->grain_indicies = getGrainIds()->GetPointer(0);
 
       VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(r.get()));
       std::vector<VtkScalarWriter*> scalarsToWrite;

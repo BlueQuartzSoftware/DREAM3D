@@ -145,15 +145,15 @@ type* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
   if (iDataArray.get() == NULL) { \
-    return -1;\
+    return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
-    return -1;\
+    return -20;\
   }\
   valuePtr =\
   IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
   if (NULL == valuePtr) {\
-    return -1;\
+    return -30;\
   }\
 }
 
