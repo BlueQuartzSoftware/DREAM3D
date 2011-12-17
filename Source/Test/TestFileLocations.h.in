@@ -45,6 +45,14 @@ namespace UnitTest {
     }
     
 
+    namespace VTKFileWritersTest
+    {
+      static const std::string TestFile("@DREAM3DTest_BINARY_DIR@/VtkIOTest.vtk");
+      static const int XSize = 2;
+      static const int YSize = 10;
+      static const int ZSize = 5;
+      static const int Offset = 66;
+    }
 }
 
 #endif
