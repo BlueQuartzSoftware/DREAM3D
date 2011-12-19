@@ -121,6 +121,12 @@ void MatchCrystallography::execute()
   {
 	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
   }
+  int numgrains = m->m_Grains.size();
+  neighborsurfacearealist.resize(numgrains);
+  for(size_t i=0;i<numgrains;i++)
+  {
+	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
+  }
 
   assign_eulers();
   readODFData(h5reader);
@@ -185,9 +191,6 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
 {
   DataContainer* m = getDataContainer();
@@ -234,9 +237,6 @@ int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
 {
   DataContainer* m = getDataContainer();
@@ -338,16 +338,16 @@ void MatchCrystallography::assign_eulers()
   }
 }
 
-void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float>* neighborsurfacealist, float &mdfchange)
+void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist, float &mdfchange)
 {
   DataContainer* m = getDataContainer();
   float w;
   float n1, n2, n3;
   float r1, r2, r3;
 
-  int curmiso1 = std::numeric_limits<int >::max();
-  int curmiso2 = std::numeric_limits<int >::max();
-  int curmiso3 = std::numeric_limits<int >::max();
+  int curmiso1 = std::numeric_limits<float >::max();
+  int curmiso2 = std::numeric_limits<float >::max();
+  int curmiso3 = std::numeric_limits<float >::max();
 
   int neighsurfarea = std::numeric_limits<int >::max();
   int curmisobin = std::numeric_limits<int >::max();
@@ -358,7 +358,7 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
   curmiso1 = misolist[3*j];
   curmiso2 = misolist[3*j+1];
   curmiso3 = misolist[3*j+2];
-  neighsurfarea = neighborsurfacealist->at(j);
+  neighsurfarea = neighsurfarealist[j];
   curmisobin = m_OrientationOps[m->crystruct[phase]]->getMisoBin( curmiso1, curmiso2, curmiso3);
   q2[1] = m->m_Grains[neighbor]->avg_quat[1];
   q2[2] = m->m_Grains[neighbor]->avg_quat[2];
@@ -371,16 +371,16 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
   mdfchange = mdfchange + (((actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])*(actualmdf[phase][newmisobin]-simmdf[phase][newmisobin])) - ((actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))*(actualmdf[phase][newmisobin]-(simmdf[phase][newmisobin]+(neighsurfarea/totalsurfacearea[phase])))));
 }
 
-void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float>* neighborsurfacealist)
+void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist)
 {
   DataContainer* m = getDataContainer();
   float w;
   float n1, n2, n3;
   float r1, r2, r3;
 
-  int curmiso1 = std::numeric_limits<int >::max();
-  int curmiso2 = std::numeric_limits<int >::max();
-  int curmiso3 = std::numeric_limits<int >::max();
+  int curmiso1 = std::numeric_limits<float >::max();
+  int curmiso2 = std::numeric_limits<float >::max();
+  int curmiso3 = std::numeric_limits<float >::max();
 
   int neighsurfarea = std::numeric_limits<int >::max();
   int curmisobin = std::numeric_limits<int >::max();
@@ -394,7 +394,7 @@ void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::v
   curmiso1 = misolist[3 * j];
   curmiso2 = misolist[3 * j + 1];
   curmiso3 = misolist[3 * j + 2];
-  neighsurfarea = neighborsurfacealist->at(j);
+  neighsurfarea = neighsurfarealist[j];
   curmisobin = m_OrientationOps[m->crystruct[phase]]->getMisoBin(curmiso1, curmiso2, curmiso3);
   q2[1] = m->m_Grains[neighbor]->avg_quat[1];
   q2[2] = m->m_Grains[neighbor]->avg_quat[2];
@@ -430,7 +430,6 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   float g1ea3 = std::numeric_limits<float >::max();
 
   std::vector<int>* nlist;
-  std::vector<float>* neighborsurfacealist;
 
   float totaldensity = 0;
 
@@ -472,7 +471,6 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
 
   float mdfchange = 0;
   nlist = m->m_Grains[selectedgrain1]->neighborlist;
-  neighborsurfacealist = m->m_Grains[selectedgrain1]->neighborsurfacealist;
   size_t size = 0;
   if (NULL != nlist)
   {
@@ -481,7 +479,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   for (size_t j = 0; j < size; j++)
   {
     int neighbor = nlist->at(j);
-    MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacealist, mdfchange);
+    MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1], mdfchange);
   }
 
   deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
@@ -505,7 +503,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
 	for (size_t j = 0; j < size; j++)
     {
       int neighbor = nlist->at(j);
-      MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacealist);
+      MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1]);
     }
   }
 
@@ -533,7 +531,6 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   float g2ea3 = std::numeric_limits<float >::max();
 
   std::vector<int>* nlist;
-  std::vector<float>* neighborsurfacealist;
 
   good = 0;
   while (good == 0)
@@ -580,7 +577,6 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   float mdfchange = 0;
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
   nlist = m->m_Grains[selectedgrain1]->neighborlist;
-  neighborsurfacealist = m->m_Grains[selectedgrain1]->neighborsurfacealist;
   size_t size = 0;
   if (NULL != nlist)
   {
@@ -591,13 +587,12 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
     size_t neighbor = nlist->at(j);
     if (neighbor != selectedgrain2)
     {
-      MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacealist, mdfchange);
+      MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1], mdfchange);
     }
   }
 
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
   nlist = m->m_Grains[selectedgrain2]->neighborlist;
-  neighborsurfacealist = m->m_Grains[selectedgrain2]->neighborsurfacealist;
   size = 0;
   if (NULL != nlist)
   {
@@ -608,7 +603,7 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
     size_t neighbor = nlist->at(j);
     if (neighbor != selectedgrain1)
     {
-      MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain2], neighborsurfacealist, mdfchange);
+      MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain2], neighborsurfacearealist[selectedgrain2], mdfchange);
     }
   }
 
@@ -629,7 +624,6 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
 
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
   nlist = m->m_Grains[selectedgrain1]->neighborlist;
-    neighborsurfacealist = m->m_Grains[selectedgrain1]->neighborsurfacealist;
     m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
     m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
     m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
@@ -644,13 +638,12 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
       size_t neighbor = nlist->at(j);
       if (neighbor != selectedgrain2)
       {
-        MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacealist);
+        MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1]);
       }
     }
 
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
     nlist = m->m_Grains[selectedgrain2]->neighborlist;
-    neighborsurfacealist = m->m_Grains[selectedgrain2]->neighborsurfacealist;
     m->m_Grains[selectedgrain2]->avg_quat[1] = q1[1];
     m->m_Grains[selectedgrain2]->avg_quat[2] = q1[2];
     m->m_Grains[selectedgrain2]->avg_quat[3] = q1[3];
@@ -665,7 +658,7 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
       size_t neighbor = nlist->at(j);
       if (neighbor != selectedgrain1)
       {
-        MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain2], neighborsurfacealist);
+        MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain2], neighborsurfacearealist[selectedgrain2]);
       }
     }
   }
@@ -729,9 +722,6 @@ void MatchCrystallography::matchCrystallography()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  MatchCrystallography::measure_misorientations ()
 {
   DataContainer* m = getDataContainer();
@@ -745,12 +735,10 @@ void  MatchCrystallography::measure_misorientations ()
 
 
   std::vector<int>* nlist;
-  std::vector<float>* neighsurfarealist;
 
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     nlist = m->m_Grains[i]->neighborlist;
-    neighsurfarealist = m->m_Grains[i]->neighborsurfacealist;
 	if (misorientationlists[i].size() != 0)
     {
 		misorientationlists[i].clear();
@@ -766,7 +754,7 @@ void  MatchCrystallography::measure_misorientations ()
     q1[4] = m->m_Grains[i]->avg_quat[4];
     phase1 = m->crystruct[m->m_Grains[i]->phase];
     size_t size = 0;
-    if (NULL != nlist && neighsurfarealist != NULL && neighsurfarealist->size() == nlist->size() )
+    if (NULL != nlist && neighborsurfacearealist[i].size() != 0 && neighborsurfacearealist[i].size() == nlist->size() )
     {
       size = nlist->size();
     }
@@ -776,7 +764,7 @@ void  MatchCrystallography::measure_misorientations ()
     {
       w = 10000.0;
       int nname = nlist->at(j);
-      float neighsurfarea = neighsurfarealist->at(j);
+      float neighsurfarea = neighborsurfacearealist[i][j];
       q2[1] = m->m_Grains[nname]->avg_quat[1];
       q2[2] = m->m_Grains[nname]->avg_quat[2];
       q2[3] = m->m_Grains[nname]->avg_quat[3];

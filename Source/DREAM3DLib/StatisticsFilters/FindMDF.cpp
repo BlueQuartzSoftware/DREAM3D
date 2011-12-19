@@ -91,6 +91,12 @@ void FindMDF::execute()
   {
 	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
   }
+  int numgrains = m->m_Grains.size();
+  neighborsurfacearealist.resize(numgrains);
+  for(size_t i=0;i<numgrains;i++)
+  {
+	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
+  }
 
   find_mdf(h5io);
   notify("FindMDF Completed", 0, Observable::UpdateProgressMessage);
@@ -176,7 +182,7 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
 																   misorientationlists[i][3 * j + 2]);
 		  if ((nname > i || m->m_Grains[nname]->surfacefield == 1) && phase1 == phase2)
 		  {
-			nsa = m->m_Grains[i]->neighborsurfacealist->at(j);
+			nsa = neighborsurfacearealist[i][j];
 			misobin[m->m_Grains[i]->phase][mbin] = misobin[m->m_Grains[i]->phase][mbin] + (nsa / totalsurfacearea[m->m_Grains[i]->phase]);
 		  }
 		}

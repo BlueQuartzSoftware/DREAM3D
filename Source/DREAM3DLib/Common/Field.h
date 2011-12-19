@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT Field
 #if CORRUPT_TEST
     unsigned long long int* test0;
 #endif
-    std::vector<float>* neighborsurfacealist;
+//    std::vector<float>* neighborsurfacealist;
 #if CORRUPT_TEST
     unsigned long long int* test1;
 #endif

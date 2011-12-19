@@ -79,8 +79,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+	std::vector<std::vector<float> > neighborsurfacearealist;
 
+	virtual void execute();
 
   protected:
     MatchCrystallography();
@@ -93,8 +94,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void assign_eulers();
     void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
     void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
-    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float>* neighborsurfarealist, float &mdfchange);
-    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float>* neighborsurfarealist);
+    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float> neighborsurfarealist, float &mdfchange);
+    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float> neighborsurfarealist);
     void matchCrystallography();
     void measure_misorientations();
 
