@@ -1457,7 +1457,7 @@ void PackGrainsGen2::assign_gaps()
   float dist;
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
-  int *grain_indicies = grain_indicies;
+
   int *newowners;
   newowners = new int [totpoints];
   float *ellipfuncs;
@@ -1640,7 +1640,7 @@ void PackGrainsGen2::cleanup_grains()
 	gsizes[i] = 0;
   }
 
-  int *grain_indicies = grain_indicies;
+
   for (int i = 0; i < totpoints; i++)
   {
 	if(checked[i] == false && grain_indicies[i] > 0)

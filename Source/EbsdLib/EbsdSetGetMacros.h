@@ -40,6 +40,8 @@
 #ifndef _EbsdSetGetMacros_h_
 #define _EbsdSetGetMacros_h_
 
+#include <string.h>
+
 #include <string>
 #include <iostream>
 #include <sstream>
