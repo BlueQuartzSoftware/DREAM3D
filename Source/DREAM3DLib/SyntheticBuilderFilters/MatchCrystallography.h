@@ -79,6 +79,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+	std::vector<std::vector<float> > neighborlist;
 	std::vector<std::vector<float> > neighborsurfacearealist;
 
 	virtual void execute();

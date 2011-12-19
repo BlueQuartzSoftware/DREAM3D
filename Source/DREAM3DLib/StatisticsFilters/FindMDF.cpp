@@ -92,9 +92,11 @@ void FindMDF::execute()
 	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
   }
   int numgrains = m->m_Grains.size();
+  neighborlist.resize(numgrains);
   neighborsurfacearealist.resize(numgrains);
   for(size_t i=0;i<numgrains;i++)
   {
+	  neighborlist[i] = find_neighbors->neighborlist[i];
 	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
   }
 
@@ -151,11 +153,11 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
 		q1[3] = m->m_Grains[i]->avg_quat[3] / m->m_Grains[i]->avg_quat[0];
 		q1[4] = m->m_Grains[i]->avg_quat[4] / m->m_Grains[i]->avg_quat[0];
 		phase1 = m->crystruct[m->m_Grains[i]->phase];
-		misorientationlists[i].resize(m->m_Grains[i]->neighborlist->size() * 3, -1.0);
-		for (size_t j = 0; j < m->m_Grains[i]->neighborlist->size(); j++)
+		misorientationlists[i].resize(neighborlist[i].size() * 3, -1.0);
+		for (size_t j = 0; j < neighborlist[i].size(); j++)
 		{
 		  w = 10000.0;
-		  nname = m->m_Grains[i]->neighborlist->at(j);
+		  nname = neighborlist[i][j];
 		  q2[0] = m->m_Grains[nname]->avg_quat[0] / m->m_Grains[nname]->avg_quat[0];
 		  q2[1] = m->m_Grains[nname]->avg_quat[1] / m->m_Grains[nname]->avg_quat[0];
 		  q2[2] = m->m_Grains[nname]->avg_quat[2] / m->m_Grains[nname]->avg_quat[0];
