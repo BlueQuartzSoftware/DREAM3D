@@ -66,6 +66,8 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+	std::vector<std::vector<float> > neighborsurfacearealist;
+
     virtual void execute();
 
     void find_neighbors();

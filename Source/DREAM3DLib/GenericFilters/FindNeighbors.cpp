@@ -108,6 +108,7 @@ void FindNeighbors::find_neighbors()
 
   notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);
   int nListSize = 100;
+  neighborsurfacearealist.resize(m->m_Grains.size());
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     m->m_Grains[i]->numneighbors = 0;
@@ -116,11 +117,7 @@ void FindNeighbors::find_neighbors()
       m->m_Grains[i]->neighborlist = new std::vector<int>(0);
     }
     m->m_Grains[i]->neighborlist->resize(nListSize, -1);
-    if (m->m_Grains[i]->neighborsurfacealist == NULL)
-    {
-     m-> m_Grains[i]->neighborsurfacealist = new std::vector<float>(0);
-    }
-    m->m_Grains[i]->neighborsurfacealist->resize(nListSize, -1.0);
+    neighborsurfacearealist[i].resize(nListSize, -1.0);
     for (int j = 0; j < 3; j++)
     {
       m->m_Grains[i]->neighbordistfunc[j] = 0;
@@ -192,7 +189,7 @@ void FindNeighbors::find_neighbors()
     neighToCount.erase(-1);
     //Resize the grains neighbor list to zero
     m->m_Grains[i]->neighborlist->resize(0);
-    m->m_Grains[i]->neighborsurfacealist->resize(0);
+    neighborsurfacearealist[i].resize(0);
 
     for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter )
     {
@@ -206,7 +203,7 @@ void FindNeighbors::find_neighbors()
 
       // Push the neighbor grain id back onto the list so we stay synced up
       m->m_Grains[i]->neighborlist->push_back(neigh);
-      m->m_Grains[i]->neighborsurfacealist->push_back(area);
+      neighborsurfacearealist[i].push_back(area);
     }
     m->m_Grains[i]->numneighbors = numneighs;
   }

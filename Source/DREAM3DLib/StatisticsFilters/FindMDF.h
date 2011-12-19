@@ -72,7 +72,9 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 	 /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+	std::vector<std::vector<float> > neighborsurfacearealist;
+
+	virtual void execute();
 
     void find_mdf(H5StatsWriter::Pointer h5io);
 
