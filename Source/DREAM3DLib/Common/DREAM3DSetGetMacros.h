@@ -37,6 +37,8 @@
 #ifndef DREAM3DSETGETMACROS_H_
 #define DREAM3DSETGETMACROS_H_
 
+#include <string.h>
+
 #include <string>
 #include <iostream>
 #include <sstream>
