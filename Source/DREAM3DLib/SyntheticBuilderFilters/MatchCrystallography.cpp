@@ -122,9 +122,11 @@ void MatchCrystallography::execute()
 	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
   }
   int numgrains = m->m_Grains.size();
+  neighborlist.resize(numgrains);
   neighborsurfacearealist.resize(numgrains);
   for(size_t i=0;i<numgrains;i++)
   {
+	  neighborlist[i] = find_neighbors->neighborlist[i];
 	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
   }
 
@@ -429,8 +431,6 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   float g1ea2 = std::numeric_limits<float >::max();
   float g1ea3 = std::numeric_limits<float >::max();
 
-  std::vector<int>* nlist;
-
   float totaldensity = 0;
 
   good = 0;
@@ -470,15 +470,14 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
       - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])))));
 
   float mdfchange = 0;
-  nlist = m->m_Grains[selectedgrain1]->neighborlist;
   size_t size = 0;
-  if (NULL != nlist)
+  if (neighborlist[selectedgrain1].size() != 0)
   {
-    size = nlist->size();
+    size = neighborlist[selectedgrain1].size();
   }
   for (size_t j = 0; j < size; j++)
   {
-    int neighbor = nlist->at(j);
+    int neighbor = neighborlist[selectedgrain1][j];
     MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1], mdfchange);
   }
 
@@ -496,13 +495,13 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
     simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
     simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
     size_t size = 0;
-    if (NULL != nlist)
+    if (neighborlist[selectedgrain1].size() != 0)
     {
-      size = nlist->size();
+      size = neighborlist[selectedgrain1].size();
     }
 	for (size_t j = 0; j < size; j++)
     {
-      int neighbor = nlist->at(j);
+      int neighbor = neighborlist[selectedgrain1][j];
       MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1]);
     }
   }
@@ -529,8 +528,6 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   float g2ea1 = std::numeric_limits<float >::max();
   float g2ea2 = std::numeric_limits<float >::max();
   float g2ea3 = std::numeric_limits<float >::max();
-
-  std::vector<int>* nlist;
 
   good = 0;
   while (good == 0)
@@ -576,15 +573,14 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
 
   float mdfchange = 0;
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
-  nlist = m->m_Grains[selectedgrain1]->neighborlist;
   size_t size = 0;
-  if (NULL != nlist)
+  if (neighborlist[selectedgrain1].size() != 0)
   {
-    size = nlist->size();
+    size = neighborlist[selectedgrain1].size();
   }
   for (size_t j = 0; j < size; j++)
   {
-    size_t neighbor = nlist->at(j);
+    size_t neighbor = neighborlist[selectedgrain1][j];
     if (neighbor != selectedgrain2)
     {
       MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1], mdfchange);
@@ -592,15 +588,14 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   }
 
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
-  nlist = m->m_Grains[selectedgrain2]->neighborlist;
   size = 0;
-  if (NULL != nlist)
+  if (neighborlist[selectedgrain2].size() != 0)
   {
-    size = nlist->size();
+    size = neighborlist[selectedgrain2].size();
   }
   for (size_t j = 0; j < size; j++)
   {
-    size_t neighbor = nlist->at(j);
+    size_t neighbor = neighborlist[selectedgrain2][j];
     if (neighbor != selectedgrain1)
     {
       MC_LoopBody1(phase, neighbor, j, misorientationlists[selectedgrain2], neighborsurfacearealist[selectedgrain2], mdfchange);
@@ -623,19 +618,18 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
         - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
 
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
-  nlist = m->m_Grains[selectedgrain1]->neighborlist;
     m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
     m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
     m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
     m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
     size = 0;
-    if (NULL != nlist)
+    if (neighborlist[selectedgrain1].size() != 0)
     {
-      size = nlist->size();
+      size = neighborlist[selectedgrain1].size();
     }
 	for (size_t j = 0; j < size; j++)
     {
-      size_t neighbor = nlist->at(j);
+      size_t neighbor = neighborlist[selectedgrain1][j];
       if (neighbor != selectedgrain2)
       {
         MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain1], neighborsurfacearealist[selectedgrain1]);
@@ -643,19 +637,18 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
     }
 
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
-    nlist = m->m_Grains[selectedgrain2]->neighborlist;
     m->m_Grains[selectedgrain2]->avg_quat[1] = q1[1];
     m->m_Grains[selectedgrain2]->avg_quat[2] = q1[2];
     m->m_Grains[selectedgrain2]->avg_quat[3] = q1[3];
     m->m_Grains[selectedgrain2]->avg_quat[4] = q1[4];
     size = 0;
-    if (NULL != nlist)
+    if (neighborlist[selectedgrain2].size() != 0)
     {
-      size = nlist->size();
+      size = neighborlist[selectedgrain2].size();
     }
 	for (size_t j = 0; j < size; j++)
     {
-      size_t neighbor = nlist->at(j);
+      size_t neighbor = neighborlist[selectedgrain2][j];
       if (neighbor != selectedgrain1)
       {
         MC_LoopBody2(phase, neighbor, j, misorientationlists[selectedgrain2], neighborsurfacearealist[selectedgrain2]);
@@ -733,19 +726,15 @@ void  MatchCrystallography::measure_misorientations ()
   Ebsd::CrystalStructure phase1, phase2;
   int mbin;
 
-
-  std::vector<int>* nlist;
-
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    nlist = m->m_Grains[i]->neighborlist;
 	if (misorientationlists[i].size() != 0)
     {
 		misorientationlists[i].clear();
     }
-    if (NULL != nlist)
+	if (neighborlist[i].size() != 0)
     {
-		misorientationlists[i].resize(nlist->size() * 3, 0.0);
+		misorientationlists[i].resize(neighborlist[i].size() * 3, 0.0);
     }
 
     q1[1] = m->m_Grains[i]->avg_quat[1];
@@ -754,16 +743,16 @@ void  MatchCrystallography::measure_misorientations ()
     q1[4] = m->m_Grains[i]->avg_quat[4];
     phase1 = m->crystruct[m->m_Grains[i]->phase];
     size_t size = 0;
-    if (NULL != nlist && neighborsurfacearealist[i].size() != 0 && neighborsurfacearealist[i].size() == nlist->size() )
+    if (neighborlist[i].size() != 0 && neighborsurfacearealist[i].size() != 0 && neighborsurfacearealist[i].size() == neighborlist[i].size() )
     {
-      size = nlist->size();
+      size = neighborlist[i].size();
     }
 
 
     for (size_t j = 0; j < size; j++)
     {
       w = 10000.0;
-      int nname = nlist->at(j);
+      int nname = neighborlist[i][j];
       float neighsurfarea = neighborsurfacearealist[i][j];
       q2[1] = m->m_Grains[nname]->avg_quat[1];
       q2[2] = m->m_Grains[nname]->avg_quat[2];
