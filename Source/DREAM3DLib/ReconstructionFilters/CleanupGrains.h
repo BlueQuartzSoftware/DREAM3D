@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+	std::vector<std::vector<float> > neighborlist;
 
     virtual void execute();
 

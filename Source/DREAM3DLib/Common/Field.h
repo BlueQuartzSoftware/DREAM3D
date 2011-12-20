@@ -73,10 +73,6 @@ class DREAM3DLib_EXPORT Field
      */
     void deepCopy(Field::Pointer field);
 
-    std::vector<int>* neighborlist;
-#if CORRUPT_TEST
-    unsigned long long int* test0;
-#endif
 
 
     /*

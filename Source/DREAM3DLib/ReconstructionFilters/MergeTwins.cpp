@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -79,7 +80,32 @@ MergeTwins::~MergeTwins()
 
 void MergeTwins::execute()
 {
+  DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
   setErrorCondition(0);
+
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setDataContainer(getDataContainer());
+  find_neighbors->setObservers(this->getObservers());
+  find_neighbors->execute();
+  setErrorCondition(find_neighbors->getErrorCondition());
+  if (getErrorCondition() != 0){
+    setErrorMessage(find_neighbors->getErrorMessage());
+    return;
+  }
+  int numgrains = m->m_Grains.size();
+  neighborlist.resize(numgrains);
+  for(size_t i=0;i<numgrains;i++)
+  {
+	  neighborlist[i] = find_neighbors->neighborlist[i];
+  }
 
   merge_twins();
   characterize_twins();
@@ -125,13 +151,12 @@ void MergeTwins::merge_twins()
       for (size_t j = 0; j < twinlist.size(); j++)
       {
         int firstgrain = twinlist[j];
-        std::vector<int>* nlist = m->m_Grains[firstgrain]->neighborlist;
-        int size = int(nlist->size());
+        int size = int(neighborlist[firstgrain].size());
         for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
           int twin = 0;
-          size_t neigh = nlist->at(l);
+          size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && m->m_Grains[neigh]->twinnewnumber == -1 && m->m_Grains[neigh]->phase > 0)
           {
             w = 10000.0f;
@@ -200,17 +225,8 @@ void MergeTwins::renumber_grains()
       float ea3good = m->m_Grains[i]->euler3;
       int size = m->m_Grains[i]->numvoxels;
       int numneighbors = m->m_Grains[i]->numneighbors;
-      std::vector<int>* nlist = m->m_Grains[i]->neighborlist;
       m->m_Grains[graincount]->numvoxels = size;
       m->m_Grains[graincount]->numneighbors = numneighbors;
-      if (m->m_Grains[graincount]->neighborlist == NULL)
-      {
-        m->m_Grains[graincount]->neighborlist = new std::vector<int>(numneighbors);
-      }
-      if (NULL != nlist)
-      {
-        m->m_Grains[graincount]->neighborlist->swap(*nlist);
-      }
       m->m_Grains[graincount]->euler1 = ea1good;
       m->m_Grains[graincount]->euler2 = ea2good;
       m->m_Grains[graincount]->euler3 = ea3good;
