@@ -749,7 +749,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
 
   float currentvol = 0.0;
   float vol, random;
-  float u, diam;
+  float diam;
   int volgood = 0;
   while (currentvol < totalvol)
   {
@@ -766,7 +766,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     while (volgood == 0)
     {
       volgood = 1;
-      u = rg.genrand_res53();
+     // u = rg.genrand_res53();
       diam = rg.genrand_norm(avgdiam[phase], sddiam[phase]);
       diam = exp(diam);
       if(diam >= maxdiameter[phase]) volgood = 0;

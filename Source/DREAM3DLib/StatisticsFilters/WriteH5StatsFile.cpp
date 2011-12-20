@@ -253,7 +253,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float sizebinstepsize)
 {
   DataContainer* m = getDataContainer();
-  int retErr = 0;
+
   float actualgrains = 0;
   float avglogdiam = 0;
   size_t numgrains = m->m_Grains.size();
@@ -386,9 +386,12 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
     sdlogdiam = sdlogdiam / actualgrains;
     sdlogdiam = sqrt(sdlogdiam);
 
-    retErr
-        = h5io->writeVolumeStats2D(iter, m->crystruct[iter], m->phaseType[iter], m->phasefraction[iter], m->pptFractions[iter],
+    int err = h5io->writeVolumeStats2D(iter, m->crystruct[iter], m->phaseType[iter], m->phasefraction[iter], m->pptFractions[iter],
                                    maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
+    if (err < 0)
+    {
+    	std::cout << "Error Writing the Volume Stats for 2D Case." << std::endl;
+    }
   }
 }
 

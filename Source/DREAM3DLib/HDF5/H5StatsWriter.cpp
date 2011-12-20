@@ -408,7 +408,6 @@ int H5StatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
 {
   int err = 0;
   int retErr = 0;
-
  // std::vector<float> binNum; // = generateBins((float)maxdiameter, (float)mindiameter, diamStepSize);
   size_t nBins = 0; // Used as a variable that will get written to in the writeSizeDistribution() method
 
@@ -509,7 +508,7 @@ int H5StatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
       retErr = err;
     }
   }
-  return err;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -572,7 +571,7 @@ int H5StatsWriter::writeVolumeStats2D(int phase,
     }
   }
 
-  return err;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -581,7 +580,7 @@ int H5StatsWriter::writeVolumeStats2D(int phase,
 int H5StatsWriter::writeMisorientationBinsData(int phase, unsigned long long int* nElements, float* misobins)
 {
   herr_t err = 0;
-  herr_t retErr = 0;
+
   if ( *nElements == 0)
   {
     H5RSW_ERROR_CHECK(DREAM3D::HDF5::MisorientationBins)
@@ -596,7 +595,6 @@ int H5StatsWriter::writeMisorientationBinsData(int phase, unsigned long long int
   if (err < 0)
   {
     H5RSW_ERROR_CHECK(DREAM3D::HDF5::MisorientationBins)
-    retErr = err;
   }
   err = H5Gclose(pid);
   err = H5Gclose(gid);
@@ -607,8 +605,7 @@ int H5StatsWriter::writeMisorientationBinsData(int phase, unsigned long long int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsWriter::writeMDFWeights(int phase, uint64_t* dims,
-                                        float* angles, float* axes, float* weights)
+int H5StatsWriter::writeMDFWeights(int phase, unsigned long long int* dims, float* angles, float* axes, float* weights)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -623,21 +620,22 @@ int H5StatsWriter::writeMDFWeights(int phase, uint64_t* dims,
   int32_t rank = 1; // Single Dimension
 
   hid_t wid = H5Utilities::createGroup(pid, DREAM3D::HDF5::MDFWeights);
-
-  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Angle, rank, dims, angles);
+  hsize_t adim[2];
+  adim[0] = static_cast<hsize_t>(dims[0]);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Angle, rank, adim, angles);
   if (err < 0)
   {
     H5RSW_ERROR_CHECK(DREAM3D::HDF5::Angle);
     retErr = err;
   }
-  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Weight, rank, dims, weights);
+  err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Weight, rank, adim, weights);
   if (err < 0)
   {
     H5RSW_ERROR_CHECK(DREAM3D::HDF5::Weight);
     retErr = err;
   }
   rank = 2;
-  hsize_t adim[2];
+
   adim[0] = *dims;
   adim[1] = 3;
   err = H5Lite::writePointerDataset<float>(wid, DREAM3D::HDF5::Axis, rank, adim, axes);
@@ -654,7 +652,7 @@ int H5StatsWriter::writeMDFWeights(int phase, uint64_t* dims,
   err = H5Gclose(gid);
   if (err < 0) { retErr = err;}
   err = H5Utilities::closeFile(fileId);
-  return err;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -738,7 +736,7 @@ int H5StatsWriter::writeAxisOrientationData(int phase, float* axisodf, float tot
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsWriter::writeAxisODFWeights(int phase, unsigned long long int *dims,
+int H5StatsWriter::writeAxisODFWeights(int phase, unsigned long long int* dims,
                         float* e1, float* e2, float* e3, float* weights, float* sigmas)
 {
   herr_t err = 0;
