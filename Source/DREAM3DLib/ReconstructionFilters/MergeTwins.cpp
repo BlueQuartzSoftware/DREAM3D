@@ -177,7 +177,6 @@ void MergeTwins::merge_twins()
             if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
             if (twin == 1)
             {
-              m->m_Grains[neigh]->gottwinmerged = true;
               m->m_Grains[neigh]->twinnewnumber = i;
               twinlist.push_back(neigh);
             }
@@ -190,11 +189,7 @@ void MergeTwins::merge_twins()
   for (int k = 0; k < (m->xpoints * m->ypoints * m->zpoints); k++)
   {
     int grainname = grain_indicies[k];
-    if (m->m_Grains[grainname]->gottwinmerged == true)
-    {
-      int twinnewnumber = m->m_Grains[grainname]->twinnewnumber;
-      grain_indicies[k] = twinnewnumber;
-    }
+	if (m->m_Grains[grainname]->twinnewnumber != -1) grain_indicies[k] = m->m_Grains[grainname]->twinnewnumber;
   }
 }
 
@@ -217,7 +212,7 @@ void MergeTwins::renumber_grains()
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->gottwinmerged != true)
+    if (m->m_Grains[i]->twinnewnumber == -1)
     {
       newnames[i] = graincount;
       float ea1good = m->m_Grains[i]->euler1;

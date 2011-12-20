@@ -275,9 +275,9 @@ void FindShapes::find_moments()
     u200 = (grainmoments[i*6 + 1] + grainmoments[i*6 + 2] - grainmoments[i*6 + 0]) / 2;
     u020 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 2] - grainmoments[i*6 + 1]) / 2;
     u002 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 1] - grainmoments[i*6 + 2]) / 2;
-    u110 = grainmoments[i*6 + 3];
-    u011 = grainmoments[i*6 + 4];
-    u101 = grainmoments[i*6 + 5];
+    u110 = -grainmoments[i*6 + 3];
+    u011 = -grainmoments[i*6 + 4];
+    u101 = -grainmoments[i*6 + 5];
     float o3 = (u200 * u020 * u002) + (2.0 * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     float vol5 = m->m_Grains[i]->volume;
     vol5 = powf(vol5, 5);
@@ -285,12 +285,6 @@ void FindShapes::find_moments()
     omega3 = omega3 / sphere;
     if (omega3 > 1) omega3 = 1;
 	if(vol5 == 0) omega3 = 0;
-    m->m_Grains[i]->Ixx = grainmoments[i*6 + 0];
-    m->m_Grains[i]->Iyy = grainmoments[i*6 + 1];
-    m->m_Grains[i]->Izz = grainmoments[i*6 + 2];
-    m->m_Grains[i]->Ixy = -grainmoments[i*6 + 3];
-    m->m_Grains[i]->Iyz = -grainmoments[i*6 + 4];
-    m->m_Grains[i]->Ixz = -grainmoments[i*6 + 5];
     m->m_Grains[i]->omega3 = omega3;
   }
 }
@@ -338,10 +332,7 @@ void FindShapes::find_moments2D()
   {
     grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * (m->resx / 2.0) * (m->resy / 2.0);
     grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * (m->resx / 2.0) * (m->resy / 2.0);
-    grainmoments[i*6 + 2] = grainmoments[i*6 + 2] * (m->resx / 2.0) * (m->resy / 2.0);
-    m->m_Grains[i]->Ixx = grainmoments[i*6 + 0];
-    m->m_Grains[i]->Iyy = grainmoments[i*6 + 1];
-    m->m_Grains[i]->Ixy = -grainmoments[i*6 + 2];
+    grainmoments[i*6 + 2] = -grainmoments[i*6 + 2] * (m->resx / 2.0) * (m->resy / 2.0);
   }
 }
 void FindShapes::find_axes()
@@ -358,12 +349,12 @@ void FindShapes::find_axes()
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    Ixx = m->m_Grains[i]->Ixx;
-    Iyy = m->m_Grains[i]->Iyy;
-    Izz = m->m_Grains[i]->Izz;
-    Ixy = m->m_Grains[i]->Ixy;
-    Iyz = m->m_Grains[i]->Iyz;
-    Ixz = m->m_Grains[i]->Ixz;
+    Ixx = grainmoments[i*6+0];
+    Iyy = grainmoments[i*6+1];
+    Izz = grainmoments[i*6+2];
+    Ixy = grainmoments[i*6+3];
+    Iyz = grainmoments[i*6+4];
+    Ixz = grainmoments[i*6+5];
     a = 1;
     b = -Ixx - Iyy - Izz;
     c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
@@ -413,12 +404,13 @@ void FindShapes::find_axes()
 void FindShapes::find_axes2D()
 {
   DataContainer* m = getDataContainer();
+  float Ixx, Iyy, Ixy;
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    float Ixx = m->m_Grains[i]->Ixx;
-    float Iyy = m->m_Grains[i]->Iyy;
-    float Ixy = m->m_Grains[i]->Ixy;
+    Ixx = grainmoments[i*6+0];
+    Iyy = grainmoments[i*6+1];
+    Ixy = grainmoments[i*6+2];
     float r1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     float r2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     float preterm = 4 / 3.1415926535897;

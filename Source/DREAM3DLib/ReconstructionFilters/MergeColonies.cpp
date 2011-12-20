@@ -191,7 +191,6 @@ void MergeColonies::merge_colonies()
             }
             if (colony == 1)
             {
-              m->m_Grains[neigh]->gotcolonymerged = true;
               m->m_Grains[neigh]->colonynewnumber = i;
               colonylist.push_back(neigh);
             }
@@ -204,11 +203,7 @@ void MergeColonies::merge_colonies()
   for (int k = 0; k < (m->xpoints * m->ypoints * m->zpoints); k++)
   {
     int grainname = grain_indicies[k];
-    if (m->m_Grains[grainname]->gotcolonymerged == true)
-    {
-      int colonynewnumber = m->m_Grains[grainname]->colonynewnumber;
-      grain_indicies[k] = colonynewnumber;
-    }
+	if (m->m_Grains[grainname]->colonynewnumber != -1) grain_indicies[k] = m->m_Grains[grainname]->colonynewnumber;
   }
 }
 
@@ -234,7 +229,7 @@ void MergeColonies::renumber_grains()
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->gottwinmerged != true)
+	if (m->m_Grains[i]->colonynewnumber == -1)
     {
       newnames[i] = graincount;
       float ea1good = m->m_Grains[i]->euler1;

@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 
 const static float m_pi = M_PI;
 
@@ -54,7 +55,9 @@ FindAxisODF::FindAxisODF()
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
-}
+
+  grainmoments = NULL;
+  INIT_DataArray(m_GrainMoments,float);}
 
 // -----------------------------------------------------------------------------
 //
@@ -73,6 +76,26 @@ void FindAxisODF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
 
+  FindShapes::Pointer find_shapes = FindShapes::New();
+  find_shapes->setDataContainer(getDataContainer());
+  find_shapes->setObservers(this->getObservers());
+  find_shapes->execute();
+  setErrorCondition(find_shapes->getErrorCondition());
+  if (getErrorCondition() != 0){
+    setErrorMessage(find_shapes->getErrorMessage());
+    return;
+  }
+  int numgrains = m->m_Grains.size();
+  grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+  for(int i =0; i < numgrains; i++)
+  {
+	  grainmoments[i*6+0] = find_shapes->grainmoments[i*6+0];
+	  grainmoments[i*6+1] = find_shapes->grainmoments[i*6+1];
+	  grainmoments[i*6+2] = find_shapes->grainmoments[i*6+2];
+	  grainmoments[i*6+3] = find_shapes->grainmoments[i*6+3];
+	  grainmoments[i*6+4] = find_shapes->grainmoments[i*6+4];
+	  grainmoments[i*6+5] = find_shapes->grainmoments[i*6+5];
+  }
   if(m->zpoints > 1) find_axisodf(h5io);
   if(m->zpoints == 1) find_axisodf2D(h5io);
   notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
@@ -101,12 +124,12 @@ void FindAxisODF::find_axisodf(H5StatsWriter::Pointer h5io)
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    float Ixx = m->m_Grains[i]->Ixx;
-    float Iyy = m->m_Grains[i]->Iyy;
-    float Izz = m->m_Grains[i]->Izz;
-    float Ixy = m->m_Grains[i]->Ixy;
-    float Iyz = m->m_Grains[i]->Iyz;
-    float Ixz = m->m_Grains[i]->Ixz;
+    float Ixx = grainmoments[i*6+0];
+    float Iyy = grainmoments[i*6+1];
+    float Izz = grainmoments[i*6+2];
+    float Ixy = grainmoments[i*6+3];
+    float Iyz = grainmoments[i*6+4];
+    float Ixz = grainmoments[i*6+5];
     float radius1 = m->m_Grains[i]->radius1;
     float radius2 = m->m_Grains[i]->radius2;
     float radius3 = m->m_Grains[i]->radius3;
@@ -334,9 +357,9 @@ void FindAxisODF::find_axisodf2D(H5StatsWriter::Pointer h5io)
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    float Ixx = m->m_Grains[i]->Ixx;
-    float Iyy = m->m_Grains[i]->Iyy;
-    float Ixy = m->m_Grains[i]->Ixy;
+    float Ixx = grainmoments[i*6+0];
+    float Iyy = grainmoments[i*6+1];
+    float Ixy = grainmoments[i*6+2];
     float I1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     float I2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     float n1x = (Ixx - I1) / Ixy;
