@@ -173,7 +173,7 @@ int StatsGenODFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
     err = -1;
     if (odfPtr != NULL)
     {
-      uint64_t dims = odf.size();
+      unsigned long long int dims = odf.size();
       err = writer->writeODFData(m_PhaseIndex, &dims, odfPtr);
       if (err < 0)
       {

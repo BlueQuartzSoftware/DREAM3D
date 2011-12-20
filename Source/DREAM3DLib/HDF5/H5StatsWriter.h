@@ -83,13 +83,13 @@ class DREAM3DLib_EXPORT H5StatsWriter
 
     int writeMisorientationBinsData(int phase, unsigned long long int* nElements, float* misobins);
 
-    int writeMDFWeights(int phase, uint64_t* nElements, float* angles, float* axes, float* weights);
+    int writeMDFWeights(int phase, unsigned long long int* dims, float* angles, float* axes, float* weights);
 
     int writeODFData(int phase,
-                     unsigned long long* dims,
+                     unsigned long long int* dims,
                      float* eulerodf);
 
-    int writeODFWeights(int phase, unsigned long long int *dims,
+    int writeODFWeights(int phase, unsigned long long int* dims,
                                   float* e1, float* e2, float* e3, float* weights, float* sigmas);
 
     std::vector<float> generateBins(int phase, float maxDiameter, float minDiameter, float diameterStep);
