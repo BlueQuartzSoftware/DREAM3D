@@ -79,6 +79,10 @@ include_directories(${QtSupport_BINARY_DIR})
 include_directories(${QtSupport_BINARY_DIR}/..)
 add_definitions(-DQT_CORE_LIB)
 
+if (UNIX AND NOT APPLE)
+set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC) 
+endif()
+
 add_library(QtSupport STATIC ${Project_SRCS})
 target_link_libraries(QtSupport 
                     ${QT_QTCORE_LIBRARY} 

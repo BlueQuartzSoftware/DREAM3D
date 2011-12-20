@@ -580,7 +580,7 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   std::string path;
 
-  int err = 0;
+ // int err = 0;
   size_t nPhases = 0;
   // Delete any existing phases from the GUI (except the first one)
   while (phaseCombo->count() != 1)
@@ -594,7 +594,12 @@ void StatsGeneratorUI::openFile(QString h5file)
   // Get the list of Phases from the HDF5 file
   std::vector<int> phases;
   std::vector<Ebsd::CrystalStructure> xtals;
-  err = reader->getPhaseAndCrystalStructures(phases, xtals);
+  int err = reader->getPhaseAndCrystalStructures(phases, xtals);
+  if (err < 0)
+  {
+	  this->statusBar()->showMessage("Error Getting the Phase and Crystal Structure from File");
+  	  return;
+  }
   nPhases = phases.size();
 
   SGWidget* sgwidget = NULL;
