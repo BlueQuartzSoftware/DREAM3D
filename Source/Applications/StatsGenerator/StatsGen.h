@@ -75,15 +75,15 @@ class StatsGen
     {
       int err = 0;
 	  float total = 0;
-      float value, gammapq, gammap, gammaq, betain, betaout;
+      float value, betain, betaout;
       x.resize(size);
       y.resize(size);
-      value = alpha;
-      gammap = DREAM3DMath::Gamma(value);
-      value = beta;
-      gammaq = DREAM3DMath::Gamma(value);
-      value = alpha + beta;
-      gammapq = DREAM3DMath::Gamma(value);
+   //   value = alpha;
+   //   gammap = DREAM3DMath::Gamma(value);
+   //   value = beta;
+  //    gammaq = DREAM3DMath::Gamma(value);
+  //    value = alpha + beta;
+    //  gammapq = DREAM3DMath::Gamma(value);
       for (int i = 0; i < size; i++)
       {
         betain = (i * (1.0 / float(size))) + ((1.0 / float(size)) / 2.0);

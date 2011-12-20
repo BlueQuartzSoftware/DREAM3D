@@ -163,7 +163,7 @@ int SGAxisODFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
     err = -1;
     if (aodfPtr != NULL)
     {
-      uint64_t dims = 36 * 36 * 36;
+      unsigned long long int dims = 36 * 36 * 36;
       err = writer->writeAxisOrientationData(m_PhaseIndex, aodfPtr, 1.0);
       if (err < 0)
       {
