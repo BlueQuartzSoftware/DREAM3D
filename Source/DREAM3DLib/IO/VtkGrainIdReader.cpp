@@ -43,6 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
+DREAM3D::FileReader(),
 m_GrainIdScalarName(DREAM3D::VTK::GrainIdScalarName)
 {
 
@@ -56,49 +57,6 @@ VtkGrainIdReader::~VtkGrainIdReader()
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VtkGrainIdReader::parseFloat3V(const char* input, float* output, float defaultValue)
-{
-  char text[256];
-  int n = sscanf(input, "%s %f %f %f", text, &(output[0]), &(output[1]), &(output[2]) );
-  if (n != 4)
-  {
-    output[0] = output[1] = output[2] = defaultValue;
-    return -1;
-  }
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VtkGrainIdReader::parseInt3V(const char* input, int* output, int defaultValue)
-{
-  char text[256];
-  int n = sscanf(input, "%s %d %d %d", text, &(output[0]), &(output[1]), &(output[2]) );
-  if (n != 4)
-  {
-    output[0] = output[1] = output[2] = defaultValue;
-    return -1;
-  }
-  return 0;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VtkGrainIdReader::nonPrintables(char* buf, size_t bufSize)
-{
-  int n = 0;
-  for (size_t i = 0; i < bufSize; ++i)
-  {
-    if (buf[i] < 33 && buf[i] > 0) { n++; }
-  }
-  return n;
-}
 
 
 // -----------------------------------------------------------------------------
@@ -173,8 +131,18 @@ int VtkGrainIdReader::readHeader()
   if (getFileName().empty() == true)
   {
     std::stringstream ss;
-    ss << "Input filename was empty";
+    ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
     setErrorMessage(ss.str());
+    setErrorCondition(-1);
+    return -1;
+  }
+
+  if (NULL == getDataContainer())
+  {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
     return -1;
   }
 
@@ -231,7 +199,7 @@ int VtkGrainIdReader::readHeader()
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   int dims[3];
   err = parseInt3V(buf, dims, 0);
-  setDimensions(dims);
+  getDataContainer()->setDimensions(dims);
 
 #if 0
   ::memset(buf, 0, kBufferSize);
@@ -248,8 +216,6 @@ int VtkGrainIdReader::readHeader()
 
   ::memset(buf, 0, kBufferSize);
 #endif
-
-
 
   instream.close();
   return err;
@@ -276,46 +242,12 @@ int VtkGrainIdReader::parseCoordinateLine(const char* input, int &value)
   return 0;
 }
 
-
 // -----------------------------------------------------------------------------
-//
+// Called from the 'execute' method in the superclass
 // -----------------------------------------------------------------------------
-int VtkGrainIdReader::readLine(std::istream &in, char* buf, int bufSize)
-{
-
-  bool readAnotherLine = true;
-  size_t gcount = in.gcount();
-  while ( readAnotherLine == true && in.gcount() != 0) {
-    // Zero out the buffer
-    ::memset(buf, 0, bufSize);
-    // Read a line up to a '\n' which will catch windows and unix line endings but
-    // will leave a trailing '\r' at the end of the string
-    in.getline(buf, kBufferSize);
-    gcount = in.gcount();
-    if (gcount > 1 && buf[in.gcount()-2] == '\r')
-    {
-      buf[in.gcount()-2] = 0;
-    }
-    int len = strlen(buf);
-    int np = nonPrintables(buf, bufSize);
-    if (len != np)
-    {
-      readAnotherLine = false;
-    }
-
-  }
-  return static_cast<int>(in.gcount());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VtkGrainIdReader::readGrainIds()
+int VtkGrainIdReader::readFile()
 {
   int err = 0;
-  
-  err = readHeader();
-  if (err < 0) { return err; }
 
   std::string filename = getFileName();
   std::ifstream instream;
@@ -334,8 +266,9 @@ int VtkGrainIdReader::readGrainIds()
     instream.getline(buf, kBufferSize);
   }
 
+  // These should have been set from reading the header
   int dims[3];
-  getDimensions(dims);
+  getDataContainer()->getDimensions(dims);
 
 
   int dim = 0;
@@ -366,7 +299,7 @@ int VtkGrainIdReader::readGrainIds()
   }
   float yscale = 1.0f;
   err = skipVolume<float>(instream, 4, 1, dim, 1, yscale);
- 
+
   // Now parse the Z coordinates.
 //  ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
@@ -389,7 +322,7 @@ int VtkGrainIdReader::readGrainIds()
   // This makes a very bad assumption that the Rectilinear grid has even spacing
   // along each axis which it does NOT have to have. Since this class is specific
   // to the DREAM.3D package this is a safe assumption.
-  setResolution(xscale, yscale, zscale);
+  getDataContainer()->setResolution(xscale, yscale, zscale);
 
 
   // Now we need to search for the 'GrainID' and
@@ -407,8 +340,8 @@ int VtkGrainIdReader::readGrainIds()
 
   //size_t index = 0;
   //Cell Data is one less in each direction
-  setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
-  getDimensions(dims);
+  getDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
+  getDataContainer()->getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels);
   grainIds->SetName("GrainIds");
@@ -478,7 +411,10 @@ int VtkGrainIdReader::readGrainIds()
     }
 
   }
-  setGrainIds(grainIds);
+
+  // push our grain id data into the DataContainer map
+  getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+
   instream.close();
   return err;
 }

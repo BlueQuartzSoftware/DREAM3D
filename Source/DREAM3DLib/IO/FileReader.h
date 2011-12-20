@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IO/DREAM3DDataFile.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
 
 namespace DREAM3D
@@ -51,16 +51,22 @@ namespace DREAM3D
   /*
    *
    */
-  class DREAM3DLib_EXPORT FileReader : public DREAM3DDataFile
+  class DREAM3DLib_EXPORT FileReader : public AbstractFilter
   {
     public:
-      FileReader();
+      DREAM3D_SHARED_POINTERS(FileReader);
+      DREAM3D_STATIC_NEW_MACRO(FileReader);
+      DREAM3D_TYPE_MACRO_SUPER(FileReader, AbstractFilter);
+
       virtual ~FileReader();
-      DREAM3D_TYPE_MACRO_SUPER(FileReader, DREAM3DDataFile);
 
-      virtual int readHeader(){return -1;}
+      DREAM3D_INSTANCE_STRING_PROPERTY(FileName);
 
-      virtual int readFile(){return -1;}
+      /* This will internally call readHeader() and readFile() with appropriate
+       * error checkes after each one. Subclasses should just implement the readHeader
+       * and readFile methods unless special setups are needed.
+       */
+      virtual void execute();
 
       /**
       * @brief This function parses 3 floating point values from a comma delimited string
@@ -107,6 +113,12 @@ namespace DREAM3D
       */
      void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ");
 
+    protected:
+     FileReader();
+
+     virtual int readHeader(){return -1;}
+
+     virtual int readFile(){return -1;}
 
     private:
       FileReader(const FileReader&); // Copy Constructor Not Implemented

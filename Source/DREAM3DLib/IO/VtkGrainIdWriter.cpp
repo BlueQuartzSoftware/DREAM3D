@@ -33,17 +33,16 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "FileWriter.h"
+#include "VtkGrainIdWriter.h"
 
-
-using namespace DREAM3D;
-
+#include "DREAM3DLib/VtkUtils/VTKFileWriters.hpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileWriter::FileWriter() :
-AbstractFilter()
+VtkGrainIdWriter::VtkGrainIdWriter() :
+DREAM3D::FileWriter(),
+m_WriteBinaryFiles(true)
 {
 
 }
@@ -51,62 +50,60 @@ AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileWriter::~FileWriter()
+VtkGrainIdWriter::~VtkGrainIdWriter()
 {
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FileWriter::writeHeader()
-{
-  setErrorCondition(-1);
-  setErrorMessage("FileWriter should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
-  return -1;
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FileWriter::writeFile()
+int VtkGrainIdWriter::writeHeader()
 {
-  setErrorCondition(-1);
-  setErrorMessage("FileWriter should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
-  return -1;
+  return 0;
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FileWriter::execute()
+int VtkGrainIdWriter::writeFile()
 {
-  if (getDataContainer() == NULL)
+
+  // Copy all the variables into the helper class from above
+  if (NULL == getDataContainer())
   {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    setErrorMessage(ss.str());
     setErrorCondition(-1);
-    setErrorMessage("The DataContainer Object was NOT set correctly.");
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
-    return;
+    return -1;
   }
-  setErrorCondition(0);
-  int err = writeHeader();
+  DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+    return -1;
+  }
+
+  VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m));
+  std::vector<VtkScalarWriter*> scalarsToWrite;
+  w0->m_WriteBinaryFiles = m_WriteBinaryFiles;
+  scalarsToWrite.push_back(w0);
+  VTKRectilinearGridFileWriter writer;
+  writer.setWriteBinaryFiles(m_WriteBinaryFiles);
+  int err = writer.write<DataContainer>(getFileName(), m, scalarsToWrite);
   if (err < 0)
   {
-    setErrorMessage("Error Writing the Header portion of the file");
     setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
-    return;
+    setErrorMessage("Error Writing GrainId Vtk RectilinearGrid File");
   }
-  err = writeFile();
-  if (err < 0)
-  {
-    setErrorMessage("Error Writing the file");
-    setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
-    return;
-  }
+  return err;
 }
+
 
 

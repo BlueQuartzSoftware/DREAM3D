@@ -134,7 +134,7 @@ void CleanupGrains::execute()
   }
   int numgrains = m->m_Grains.size();
   neighborlist.resize(numgrains);
-  for(size_t i=0;i<numgrains;i++)
+  for(int i=0;i<numgrains;i++)
   {
 	  neighborlist[i] = find_neighbors->neighborlist[i];
   }

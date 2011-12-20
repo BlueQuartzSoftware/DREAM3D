@@ -33,17 +33,27 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "FileWriter.h"
 
+#include "PhWriter.h"
 
-using namespace DREAM3D;
-
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <map>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileWriter::FileWriter() :
-AbstractFilter()
+PhWriter::PhWriter() :
+DREAM3D::FileWriter()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PhWriter::~PhWriter()
 {
 
 }
@@ -51,62 +61,100 @@ AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileWriter::~FileWriter()
+int PhWriter::writeHeader()
 {
-
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FileWriter::writeHeader()
+int PhWriter::writeFile()
 {
-  setErrorCondition(-1);
-  setErrorMessage("FileWriter should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
-  return -1;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FileWriter::writeFile()
-{
-  setErrorCondition(-1);
-  setErrorMessage("FileWriter should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
-  return -1;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FileWriter::execute()
-{
-  if (getDataContainer() == NULL)
+//   std::string OutputName;
+  DataContainer* m = getDataContainer();
+  if (NULL == m)
   {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    setErrorMessage(ss.str());
     setErrorCondition(-1);
-    setErrorMessage("The DataContainer Object was NOT set correctly.");
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
-    return;
+    return -1;
   }
-  setErrorCondition(0);
-  int err = writeHeader();
-  if (err < 0)
-  {
-    setErrorMessage("Error Writing the Header portion of the file");
-    setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
-    return;
-  }
-  err = writeFile();
-  if (err < 0)
-  {
-    setErrorMessage("Error Writing the file");
-    setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
-    return;
-  }
-}
 
+//  GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int32_t* grain_indicies = 0;
+  {
+    IDataArray::Pointer iDataArray = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+    if (iDataArray.get() == 0) {
+      return -10;
+    }
+    if (static_cast<size_t>((m->totalpoints)) != iDataArray->GetNumberOfTuples()) {
+      return -20;
+    }
+    grain_indicies =
+    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getVoxelData(DREAM3D::VoxelData::GrainIds).get());
+    if (0 == grain_indicies) {
+      return -30;
+    }
+  }
+
+  int dims[3];
+  dims[0] = m->xpoints;
+  dims[1] = m->ypoints;
+  dims[2] = m->zpoints;
+  int totalpoints = dims[0] * dims[1] * dims[2];
+  // Change the name of the input filename for outout
+  // std::vector<std::string> tokens;
+  // std::string delimeters = "."; // Only a period
+  //  std::tokenize(filename, tokens, delimeters);
+
+  //OutputName = tokens[0] + ".ph";
+  std::ofstream outfile;
+  outfile.open(getFileName().c_str(), std::ios_base::binary);
+  if(!outfile)
+  {
+    std::cout << "Failed to open: " << getFileName() << std::endl;
+    return -1;
+  }
+
+
+  // Find the unique number of grains
+  std::map<int, bool> used;
+  for (int i = 0; i < totalpoints; ++i)
+  {
+    used[grain_indicies[i]] = true;
+  }
+
+  int grains = 0;
+  typedef std::map<int, bool>::iterator iterator;
+  for (iterator i = used.begin(); i != used.end(); i++)
+  {
+    if((*i).second == true)
+    {
+      grains++;
+    }
+  }
+  //std::cout<<grains<< " " << used.size() << std::endl;
+
+  outfile << "     " << dims[0] << "     " << dims[1] << "     " << dims[2] << "\n";
+  outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";
+  outfile << " 0.000 0.000 0.000          0        \n"; // << grains << endl;
+
+  int count = 0;
+  for (int k = 0; k < totalpoints; k++)
+  {
+    outfile << std::setw(6) << grain_indicies[k];
+    count++;
+    if(count == 20)
+    {
+      outfile << "\n";
+      count = 0;
+    }
+    //                    outfile << grid[i][j][k] << endl;
+  }
+  outfile << "\n";
+  outfile.close();
+  return 0;
+}
 

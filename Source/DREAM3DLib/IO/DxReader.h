@@ -58,18 +58,13 @@ class DREAM3DLib_EXPORT DxReader : public DREAM3D::FileReader
     DREAM3D_SHARED_POINTERS(DxReader);
     DREAM3D_STATIC_NEW_MACRO(DxReader);
     DREAM3D_TYPE_MACRO_SUPER(DxReader, DREAM3D::FileReader);
-  //  DREAM3D_STATIC_NEW_SUPERCLASS(DREAM3DFileReader, DxReader);
 
     virtual ~DxReader();
 
-    DREAM3D_INSTANCE_PROPERTY(DataArray<int>::Pointer, Data);
-
-
-
-    virtual int readFile();
-
   protected:
     DxReader();
+
+    virtual int readFile();
 
   private:
     DxReader(const DxReader&); // Copy Constructor Not Implemented

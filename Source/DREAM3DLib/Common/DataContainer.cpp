@@ -56,6 +56,16 @@
 // -----------------------------------------------------------------------------
 DataContainer::DataContainer()
 {
+  xpoints = 0;
+  ypoints = 0;
+  zpoints = 0;
+  totalpoints = 0;
+
+  resx = 1.0f;
+  resy = 1.0f;
+  resz = 1.0f;
+
+  origin[0] = 0.0f; origin[1] = 0.0f; origin[2] = 0.0f;
 //  grain_indicies = NULL;
 //  phases = NULL;
 //  euler1s = NULL;

@@ -44,7 +44,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "FileConversionFunc.h"
 
 
 
@@ -78,7 +77,6 @@ class FileConversion : public AbstractPipeline, public Observer
     FileConversion();
 
   private:
-    FileConversionFunc::Pointer m;
 
     FileConversion(const FileConversion&);    // Copy Constructor Not Implemented
     void operator=(const FileConversion&);  // Operator '=' Not Implemented

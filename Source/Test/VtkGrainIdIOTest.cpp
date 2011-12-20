@@ -42,13 +42,11 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/PhWriter.h"
-#include "DREAM3DLib/IO/PhReader.h"
+#include "DREAM3DLib/IO/VtkGrainIdWriter.h"
+#include "DREAM3DLib/IO/VtkGrainIdReader.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -56,34 +54,33 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::PhIOTest::TestFile);
+  MXADir::remove(UnitTest::DxIOTest::TestFile);
 #endif
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TestPhWriter()
+int TestVtkGrainIdWriter()
 {
-  int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
+  int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
-    grainIds->SetValue(i, i + UnitTest::PhIOTest::Offset);
+    grainIds->SetValue(i, i + UnitTest::DxIOTest::Offset);
   }
-  int nx = UnitTest::PhIOTest::XSize;
-  int ny = UnitTest::PhIOTest::YSize;
-  int nz = UnitTest::PhIOTest::ZSize;
+  int nx = UnitTest::DxIOTest::XSize;
+  int ny = UnitTest::DxIOTest::YSize;
+  int nz = UnitTest::DxIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
-  m->setDimensions(nx, ny, nz);
 
-  PhWriter::Pointer writer = PhWriter::New();
+
+  VtkGrainIdWriter::Pointer writer = VtkGrainIdWriter::New();
   writer->setDataContainer(m.get());
-  writer->setFileName(UnitTest::PhIOTest::TestFile);
-
-
+  writer->setFileName(UnitTest::DxIOTest::TestFile);
+  m->setDimensions(nx, ny, nz);
   writer->execute();
   int err = writer->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -93,56 +90,39 @@ int TestPhWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TestPhReader()
+int TestVtkGrainIdReader()
 {
-  DataContainer::Pointer m = DataContainer::New();
-  PhReader::Pointer reader = PhReader::New();
-  reader->setFileName(UnitTest::PhIOTest::TestFile);
-  reader->setDataContainer(m.get());
+
+  VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
+  reader->setFileName(UnitTest::DxIOTest::TestFile);
   int nx = 0;
   int ny = 0;
   int nz = 0;
 
+  DataContainer::Pointer m = DataContainer::New();
+  reader->setDataContainer(m.get());
   reader->execute( );
   int err = reader->getErrorCondition();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-
   m->getDimensions(nx, ny, nz);
-  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::PhIOTest::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::PhIOTest::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::PhIOTest::ZSize);
 
   IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
 
-  int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DxIOTest::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DxIOTest::ZSize);
+  int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
 
   for (int i = 0; i < size; ++i)
   {
     int32_t file_value = data[i];
-    int32_t memory_value = i+UnitTest::PhIOTest::Offset;
+    int32_t memory_value = i+UnitTest::DxIOTest::Offset;
     DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
   }
 
-  return 1;
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestCasting()
-{
-  PhReader::Pointer ptr = PhReader::New();
-
-  DREAM3D::FileReader* super = static_cast<DREAM3D::FileReader*>(ptr.get());
-  DREAM3D::FileWriter::Pointer other = DREAM3D::FileWriter::New();
-
-  PhReader* derived = PhReader::SafeObjectDownCast<DREAM3D::FileReader*, PhReader*>(super);
-  DREAM3D_ASSERT(derived != NULL);
-  derived = dynamic_cast<PhReader*>(other.get());
-  DREAM3D_ASSERT(derived == NULL);
-
-  return 1;
+  return EXIT_SUCCESS;
 }
 
 
@@ -152,16 +132,11 @@ int TestCasting()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
-  DREAM3D_REGISTER_TEST( TestPhWriter() );
-  DREAM3D_REGISTER_TEST( TestPhReader() );
-  DREAM3D_REGISTER_TEST( TestCasting() );
+  DREAM3D_REGISTER_TEST( TestVtkGrainIdWriter() );
+  DREAM3D_REGISTER_TEST( TestVtkGrainIdReader() );
 
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
   PRINT_TEST_SUMMARY();
   return err;
 }
-
-
-
-
 
