@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VtkGrainIdWriter.h"
 
-#include "DREAM3DLib/VtkUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
 // -----------------------------------------------------------------------------
 //
