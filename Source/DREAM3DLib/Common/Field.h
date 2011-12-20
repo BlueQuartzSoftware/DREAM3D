@@ -84,9 +84,6 @@ class DREAM3DLib_EXPORT Field
     int numvoxels;
     int numneighbors;
     int newfieldname;
-    bool gotcontainedmerged;
-    bool gottwinmerged;
-    bool gotcolonymerged;
     uint8_t surfacefield;
     bool outsideboundbox;
     int twinnewnumber;
@@ -98,14 +95,7 @@ class DREAM3DLib_EXPORT Field
     float centroidz;
     float aspectratio1;
     float aspectratio2;
-    float Ixx;
-    float Iyy;
-    float Izz;
-    float Ixy;
-    float Iyz;
-    float Ixz;
     float omega3;
-  	float averageimagequality;
     float averagemisorientation;
     float kernelmisorientation;
     float red;

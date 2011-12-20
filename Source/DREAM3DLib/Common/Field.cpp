@@ -46,9 +46,6 @@ active(false),
 numvoxels(0),
 numneighbors(0),
 newfieldname(0),
-gotcontainedmerged(false),
-gottwinmerged(false),
-gotcolonymerged(false),
 surfacefield(false),
 outsideboundbox(false),
 twinnewnumber(-1),
@@ -60,14 +57,7 @@ centroidy(0.0),
 centroidz(0.0),
 aspectratio1(0.0),
 aspectratio2(0.0),
-Ixx(0.0),
-Iyy(0.0),
-Izz(0.0),
-Ixy(0.0),
-Iyz(0.0),
-Ixz(0.0),
 omega3(0.0),
-averageimagequality(0.0),
 averagemisorientation(0.0),
 kernelmisorientation(10000.0),
 red(0.0),
@@ -136,9 +126,6 @@ void Field::deepCopy(Field::Pointer field)
   numvoxels = field->numvoxels ;
   numneighbors = field->numneighbors ;
   newfieldname = field->newfieldname ;
-  gotcontainedmerged = field->gotcontainedmerged ;
-  gottwinmerged = field->gottwinmerged ;
-  gotcolonymerged = field->gotcolonymerged ;
   surfacefield = field->surfacefield ;
   twinnewnumber = field->twinnewnumber;
   colonynewnumber = field->colonynewnumber;
@@ -147,14 +134,7 @@ void Field::deepCopy(Field::Pointer field)
   centroidx = field->centroidx ;
   centroidy = field->centroidy ;
   centroidz = field->centroidz ;
-  Ixx = field->Ixx ;
-  Iyy = field->Iyy ;
-  Izz = field->Izz ;
-  Ixy = field->Ixy;
-  Iyz = field->Iyz ;
-  Ixz = field->Ixz ;
   omega3 = field->omega3 ;
-  averageimagequality = field->averageimagequality;
   averagemisorientation = field->averagemisorientation ;
   kernelmisorientation = field->kernelmisorientation;
   red = field->red ;

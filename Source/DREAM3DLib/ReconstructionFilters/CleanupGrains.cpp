@@ -315,13 +315,11 @@ void CleanupGrains::merge_containedgrains()
     int grainname = grain_indicies[i];
 	if (m->m_Grains[grainname]->numneighbors == 1 && m->m_Grains[grainname]->phase > 0)
     {
-      m->m_Grains[grainname]->gotcontainedmerged = true;
       grain_indicies[i] = neighborlist[grainname][0];
       m->m_Grains[grain_indicies[i]]->numvoxels++;
     }
 	if (m->m_Grains[grainname]->numneighbors == 0 && m->m_Grains[grainname]->phase > 0)
 	{
-      m->m_Grains[grainname]->gotcontainedmerged = true;
       grain_indicies[i] = 0;
 	}
   }
@@ -358,7 +356,6 @@ void CleanupGrains::reorder_grains()
   for (size_t i = 1; i < numgrains; i++)
   {
     m->m_Grains[i]->nucleus = -1;
-	m->m_Grains[i]->gotcontainedmerged = false;
   }
 
   // Reset the "already checked" to 0 for all voxels
