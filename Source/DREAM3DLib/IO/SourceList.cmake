@@ -10,20 +10,26 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (DREAM3DLib_IO_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/IO/DREAM3DDataFile.h
-  ${DREAM3DLib_SOURCE_DIR}/IO/DxWriter.hpp
+#  ${DREAM3DLib_SOURCE_DIR}/IO/DREAM3DDataFile.h
+  ${DREAM3DLib_SOURCE_DIR}/IO/DxWriter.h
   ${DREAM3DLib_SOURCE_DIR}/IO/DxReader.h
-  ${DREAM3DLib_SOURCE_DIR}/IO/PhWriter.hpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/PhWriter.h
   ${DREAM3DLib_SOURCE_DIR}/IO/PhReader.h
   ${DREAM3DLib_SOURCE_DIR}/IO/FileReader.h
   ${DREAM3DLib_SOURCE_DIR}/IO/FileWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/IO/VtkGrainIdReader.h
+  ${DREAM3DLib_SOURCE_DIR}/IO/VtkGrainIdWriter.h
 )
 
 SET (DREAM3DLib_IO_SRCS
+  ${DREAM3DLib_SOURCE_DIR}/IO/DxWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/IO/DxReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/PhWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/IO/FileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/IO/FileWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/IO/PhReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/VtkGrainIdReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/IO/VtkGrainIdWriter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/IO" "${DREAM3DLib_IO_HDRS}" "${DREAM3DLib_IO_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

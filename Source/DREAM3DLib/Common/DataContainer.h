@@ -221,12 +221,61 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumVoxelArrays();
 
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Dimensions);
-    int totalPoints() { return m_Dimensions[0] * m_Dimensions[1] * m_Dimensions[2]; }
+    int totalPoints() { return xpoints * ypoints * zpoints; }
     /* ****************** END Map Based Methods *******************************/
 
+    void setDimensions(int dims[3]) {
+       xpoints = dims[0];
+       ypoints = dims[1];
+       zpoints = dims[2];
+       totalpoints = xpoints * ypoints * zpoints;
+    }
+    void setDimensions(int d0, int d1, int d2)
+    {
+      xpoints = d0;
+      ypoints = d1;
+      zpoints = d2;
+      totalpoints = xpoints * ypoints * zpoints;
+    }
+    void getDimensions(int &d0, int &d1, int &d2)
+    {
+      d0 = xpoints;
+      d1 = ypoints;
+      d2 = zpoints;
+    }
+    void getDimensions(int dims[3])
+    {
+      dims[0] = xpoints;
+      dims[1] = ypoints;
+      dims[2] = zpoints;
+    }
 
+// -----------------------------------------------------------------------------
+//  Resolution Methods
+// -----------------------------------------------------------------------------
+    void setResolution(float x, float y, float z)
+    {
+      resx = x; resy = y; resz = z;
+    }
+    void setResolution(float resolution[3])
+    {
+      resx = resolution[0];
+      resy = resolution[1];
+      resz = resolution[2];
+    }
+    void getResolution(float res[3])
+    {
+      res[0] = resx;
+      res[1] = resy;
+      res[2] = resz;
+    }
+
+    void setOrigin(float orig[3])
+    {
+       origin[0] = orig[0];
+       origin[1] = orig[1];
+       origin[2] = orig[2];
+    }
 
     // Volume Dimensional Information
     float resx;
@@ -236,6 +285,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int ypoints;
     int zpoints;
     int totalpoints;
+
+    float origin[3];
 
     // Cell Data
 //    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)

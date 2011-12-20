@@ -20,17 +20,17 @@ include_directories(${DREAM3DProj_BINARY_DIR}
 #-- Non Qt based source files
 SET (FileConversion_HDRS
   ${PROJECT_SOURCE_DIR}/FileConversion.h
-  ${PROJECT_SOURCE_DIR}/FileConversionFunc.h
-  ${PROJECT_SOURCE_DIR}/GrainIdReader.h
-  ${PROJECT_SOURCE_DIR}/GrainIdWriter.h
-  ${PROJECT_SOURCE_DIR}/VtkGrainIdReader.h
+#  ${PROJECT_SOURCE_DIR}/FileConversionFunc.h
+#  ${PROJECT_SOURCE_DIR}/GrainIdReader.h
+#  ${PROJECT_SOURCE_DIR}/GrainIdWriter.h
+#  ${PROJECT_SOURCE_DIR}/VtkGrainIdReader.h
 
 )
 
 SET (FileConversion_SRCS
   ${PROJECT_SOURCE_DIR}/FileConversion.cpp
-  ${PROJECT_SOURCE_DIR}/FileConversionFunc.cpp
-    ${PROJECT_SOURCE_DIR}/VtkGrainIdReader.cpp
+#  ${PROJECT_SOURCE_DIR}/FileConversionFunc.cpp
+#  ${PROJECT_SOURCE_DIR}/VtkGrainIdReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FileConversion" "${FileConversion_HDRS}" "${FileConversion_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
@@ -146,12 +146,12 @@ endif()
 
 
 IF ( DREAM3D_BUILD_CLI_TOOLS )
-#-- Include the CMake commands to build the Comand line tools
-include(${PROJECT_SOURCE_DIR}/Tools/Tools.cmake)
+  #-- Include the CMake commands to build the Comand line tools
+  # include(${PROJECT_SOURCE_DIR}/Tools/Tools.cmake)
 endif()
 
 IF (DREAM3D_BUILD_TESTING)
-    add_subdirectory(Test ${FileConversionPlugin_BINARY_DIR}/Test)
+  #  add_subdirectory(Test ${FileConversionPlugin_BINARY_DIR}/Test)
 endif()
 
 

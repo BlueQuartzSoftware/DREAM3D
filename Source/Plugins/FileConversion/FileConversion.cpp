@@ -42,12 +42,16 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
-#include "GrainIdReader.h"
-#include "GrainIdWriter.h"
-#include "VtkGrainIdReader.h"
 
+#include "DREAM3DLib/IO/FileReader.h"
+#include "DREAM3DLib/IO/PhReader.h"
+#include "DREAM3DLib/IO/DxReader.h"
+#include "DREAM3DLib/IO/PhWriter.h"
+#include "DREAM3DLib/IO/DxWriter.h"
+#include "DREAM3DLib/IO/VtkGrainIdReader.h"
+#include "DREAM3DLib/IO/VtkGrainIdWriter.h"
 
-
+#if 0
 
 namespace Detail {
 
@@ -159,6 +163,9 @@ namespace Detail {
   };
 }
 
+#endif
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -181,98 +188,152 @@ void FileConversion::execute()
 {
   int err = 0;
 
-  GrainIdReader::Pointer reader = GrainIdReader::NullPointer();
+  std::vector<AbstractFilter::Pointer> pipeline;
+
 
   if (MXAFileInfo::exists(m_InputFilePath) && MXAFileInfo::isFile(m_InputFilePath))
   {
     std::string inputExtension = MXAFileInfo::extension(m_InputFilePath);
     if (inputExtension.compare("vtk") == 0)
     {
-      reader = VtkGrainIdReader::NewGrainIdReader();
+      AbstractFilter::Pointer filter = VtkGrainIdReader::New();
+      DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+      reader->setFileName(m_InputFilePath);
+      pipeline.push_back(filter);
     }
     else if (inputExtension.compare("ph") == 0)
     {
-      reader = PhGrainIdReader::NewGrainIdReader();
+      AbstractFilter::Pointer filter = PhReader::New();
+      DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+      reader->setFileName(m_InputFilePath);
+      pipeline.push_back(filter);
     }
     else if (inputExtension.compare("h5voxel") == 0)
     {
-      reader = Detail::H5VoxelGrainIdReader::NewGrainIdReader();
+    //  reader = Detail::H5VoxelGrainIdReader::NewGrainIdReader();
+      setErrorCondition(-1);
+      updateProgressAndMessage("No suitable File Reader Class could be found", 0);
+      return;
     }
     else if (inputExtension.compare("dx") == 0)
     {
-      reader = DxGrainIdReader::NewGrainIdReader();
+      AbstractFilter::Pointer filter = DxReader::New();
+      DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+      reader->setFileName(m_InputFilePath);
+      pipeline.push_back(filter);
     }
     else
     {
       setErrorCondition(-1);
+      updateProgressAndMessage("No suitable File Reader Class could be found", 0);
+      return;
     }
   }
 
-  GrainIdWriter::Pointer writer = GrainIdWriter::NullPointer();
+
 
   std::string outputExtension = MXAFileInfo::extension(m_OutputFilePath);
   if (outputExtension.compare("vtk") == 0)
   {
-    writer = VtkGrainIdWriter::NewGrainIdWriter();
+    AbstractFilter::Pointer filter = VtkGrainIdWriter::New();
+    DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+    reader->setFileName(m_OutputFilePath);
+    pipeline.push_back(filter);
   }
   else if (outputExtension.compare("ph") == 0)
   {
-    writer = PhGrainIdWriter::NewGrainIdWriter();
+    AbstractFilter::Pointer filter = PhWriter::New();
+    DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+    reader->setFileName(m_OutputFilePath);
+    pipeline.push_back(filter);
   }
   else if (outputExtension.compare("h5voxel") == 0)
   {
     //writer = Detail::H5VoxelGrainIdWriter::NewGrainIdWriter();
+    setErrorCondition(-1);
+    updateProgressAndMessage("No suitable File Writer Class could be found", 0);
+    return;
   }
   else if (outputExtension.compare("dx") == 0)
   {
-    writer = DxGrainIdWriter::NewGrainIdWriter();
+    AbstractFilter::Pointer filter = DxWriter::New();
+    DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+    reader->setFileName(m_OutputFilePath);
+    pipeline.push_back(filter);
   }
   else
   {
     setErrorCondition(-1);
+    updateProgressAndMessage("No suitable File Writer Class could be found", 0);
+    return;
   }
 
+  DataContainer::Pointer m = DataContainer::New();
 
-  if (NULL == writer.get() )
+  // Start a Benchmark Clock so we can keep track of each filter's execution time
+  START_CLOCK()
+  // Start looping through the Pipeline
+  float progress = 0.0f;
+  std::stringstream ss;
+  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
   {
-    err = -1;
-    CHECK_FOR_ERROR(FileConversionFunc, "No suitable File Writer Class could be found", err);
+    progress = progress + 1.0f;
+    pipelineProgress(progress / (pipeline.size() + 1) * 100.0f);
+    ss.str("");
+    ss << "Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass();
+    pipelineProgressMessage(ss.str());
+    (*filter)->addObserver(static_cast<Observer*>(this));
+    (*filter)->setDataContainer(m.get());
+    setCurrentFilter(*filter);
+    (*filter)->execute();
+    (*filter)->removeObserver(static_cast<Observer*>(this));
+    err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      setErrorCondition(err);
+      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
+      pipelineProgress(100);
+      pipelineFinished();
+      return;
+    }
+    CHECK_FOR_CANCELED(DataContainer, "FileConversion was canceled", write_fielddata)
+
+    if(DREAM3D_BENCHMARKS)
+    {
+      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+      millis = MXA::getMilliSeconds();
+    }
   }
-  if ( NULL == reader.get())
-  {
-    err = -1;
-    CHECK_FOR_ERROR(FileConversionFunc, "No Suitable File Reader Class could be found", err);
-  }
 
 
-  int nx = 0;
-  int ny = 0;
-  int nz = 0;
-
-  reader->setFileName(m_InputFilePath);
-  err = reader->readGrainIds();
-  CHECK_FOR_ERROR(FileConversionFunc, (reader->getErrorMessage()), err);
-  reader->getDimensions(nx, ny, nz);
-  float resolution[3];
-  reader->getResolution(resolution);
-  float origin[3];
-  reader->getOrigin(origin);
-  DataArray<int>::Pointer grainIds = reader->getGrainIds();
-  if (grainIds.get() == NULL)
-  {
-    err = -1;
-    CHECK_FOR_ERROR(FileConversionFunc, "Array pointer was NULL", err);
-  }
-
-  writer->setFileName(m_OutputFilePath);
-  writer->setGrainIds(grainIds);
-  writer->setDimensions(nx, ny, nz);
-  writer->setResolution(resolution);
-  writer->setOrigin(origin);
-
-  err = writer->writeGrainIds();
-
-  CHECK_FOR_ERROR(FileConversionFunc, (writer->getErrorMessage()), err);
+//  int nx = 0;
+//  int ny = 0;
+//  int nz = 0;
+//
+//  reader->setFileName(m_InputFilePath);
+//  err = reader->readGrainIds();
+//  CHECK_FOR_ERROR(FileConversionFunc, (reader->getErrorMessage()), err);
+//  reader->getDimensions(nx, ny, nz);
+//  float resolution[3];
+//  reader->getResolution(resolution);
+//  float origin[3];
+//  reader->getOrigin(origin);
+//  DataArray<int>::Pointer grainIds = reader->getGrainIds();
+//  if (grainIds.get() == NULL)
+//  {
+//    err = -1;
+//    CHECK_FOR_ERROR(FileConversionFunc, "Array pointer was NULL", err);
+//  }
+//
+//  writer->setFileName(m_OutputFilePath);
+//  writer->setGrainIds(grainIds);
+//  writer->setDimensions(nx, ny, nz);
+//  writer->setResolution(resolution);
+//  writer->setOrigin(origin);
+//
+//  err = writer->writeGrainIds();
+//
+//  CHECK_FOR_ERROR(FileConversionFunc, (writer->getErrorMessage()), err);
 
   updateProgressAndMessage(("File Conversion Completed"), 100);
 }

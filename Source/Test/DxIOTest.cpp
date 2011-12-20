@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/DxWriter.hpp"
+#include "DREAM3DLib/IO/DxWriter.h"
 #include "DREAM3DLib/IO/DxReader.h"
 
 #include "UnitTestSupport.hpp"
@@ -73,12 +73,16 @@ int TestDxWriter()
   int ny = UnitTest::DxIOTest::YSize;
   int nz = UnitTest::DxIOTest::ZSize;
 
+  DataContainer::Pointer m = DataContainer::New();
+  m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  m->setDimensions(nx, ny, nz);
 
   DxWriter::Pointer writer = DxWriter::New();
+  writer->setDataContainer(m.get());
   writer->setFileName(UnitTest::DxIOTest::TestFile);
-  writer->setData(grainIds);
-  writer->setDimensions(nx, ny, nz);
-  int err = writer->writeFile();
+
+  writer->execute();
+  int err = writer->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
   return EXIT_SUCCESS;
 }
@@ -95,18 +99,26 @@ int TestDxReader()
   int ny = 0;
   int nz = 0;
 
-  int err = reader->readFile( );
-  reader->getDimensions(nx, ny, nz);
-  DataArray<int>::Pointer data = reader->getData();
+  DataContainer::Pointer m = DataContainer::New();
+  reader->setDataContainer(m.get());
+  reader->execute( );
+  int err = reader->getErrorCondition();
+  m->getDimensions(nx, ny, nz);
+
+  IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
+
   DREAM3D_REQUIRE_EQUAL(err, 0);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DxIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DxIOTest::ZSize);
   int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
+  int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
 
   for (int i = 0; i < size; ++i)
   {
-    DREAM3D_REQUIRE_EQUAL( (i+UnitTest::DxIOTest::Offset), data->GetValue(i) );
+    int32_t file_value = data[i];
+    int32_t memory_value = i+UnitTest::DxIOTest::Offset;
+    DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
   }
 
 
@@ -127,50 +139,4 @@ int main(int argc, char **argv) {
   PRINT_TEST_SUMMARY();
   return err;
 }
-
-
-#if 0
-#include <iostream>
-
-
-#include "DREAM3DLib/Common/DataContainer.h"
-#include "GrainGenerator/StructureReaders/DXStructureReader.h"
-#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-
-
-
-int main(int argc, char **argv)
-{
-
-  GrainGeneratorFunc::Pointer r = GrainGeneratorFunc::New();
-
-  DXStructureReader::Pointer reader = DXStructureReader::New();
-  reader->setInputFileName(argv[1]);
-
-  std::cout << "Reading DX File...." << std::endl;
-
-  int err = reader->readStructure(r.get());
-  if (err < 0)
-  {
-    std::cout << "Error Reading Structure." << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  std::cout << "Writing VTK File..." << std::endl;
-
-
-  VtkScalarWriter* w0 =
-      static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<GrainGeneratorFunc>(r.get()));
-  std::vector<VtkScalarWriter*> scalarsToWrite;
-  scalarsToWrite.push_back(w0);
-
-
-  VTKRectilinearGridFileWriter writer;
-  writer.write<GrainGeneratorFunc>("/tmp/vtkfilewriterstest.vtk", r.get(), scalarsToWrite);
-
-  std::cout << "Done." << std::endl;
-  return EXIT_SUCCESS;
-}
-
-#endif
 

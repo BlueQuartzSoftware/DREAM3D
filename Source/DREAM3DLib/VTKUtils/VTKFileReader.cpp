@@ -134,16 +134,25 @@ int VTKFileReader::readHeader()
 {
 
   int err = 0;
-  if (m_InputFileName.empty() == true)
+  if (getFileName().empty() == true)
   {
+    setErrorCondition(-1);
+    setErrorMessage("FileName was not set and must be valid");
+    return -1;
+  }
+
+  if (NULL == getDataContainer())
+  {
+    setErrorCondition(-1);
+    setErrorMessage("DataContainer Pointer was NULL and must be valid");
     return -1;
   }
 
   std::ifstream instream;
-  instream.open(m_InputFileName.c_str(), std::ios_base::binary);
+  instream.open(getFileName().c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
-    std::cout << logTime() << " vtk file could not be opened: " << m_InputFileName << std::endl;
+    std::cout << logTime() << " vtk file could not be opened: " << getFileName() << std::endl;
     return -1;
   }
   char buf[kBufferSize];
@@ -188,22 +197,22 @@ int VTKFileReader::readHeader()
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   int dims[3];
   err = parseInt3V(buf, dims, 0);
-  setDimensions(dims);
+  getDataContainer()->setDimensions(dims);
+
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
   err = parseFloat3V(buf, origin, 0.0f);
-  setOrigin(origin);
+  getDataContainer()->setOrigin(origin);
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
   float resolution[3];
   err = parseFloat3V(buf, resolution, 1.0f);
-  setResolution(resolution);
+  getDataContainer()->setResolution(resolution);
 
   ::memset(buf, 0, kBufferSize);
-
 
   instream.close();
   return err;

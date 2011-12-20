@@ -67,6 +67,10 @@ add_executable(DxIOTest ${DREAM3DTest_SOURCE_DIR}/DxIOTest.cpp)
 target_link_libraries(DxIOTest DREAM3DLib)
 add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)
 
+add_executable(VtkGrainIdIOTest ${DREAM3DTest_SOURCE_DIR}/VtkGrainIdIOTest.cpp)
+target_link_libraries(VtkGrainIdIOTest DREAM3DLib)
+add_test(VtkGrainIdIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/VtkGrainIdIOTest)
+
 # --------------------------------------------------------------------------
 # Ebsd Data File Testing
 # --------------------------------------------------------------------------

@@ -199,7 +199,7 @@ void GrainGenerator::execute()
       pipelineFinished();
       return;
     }
-    CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", write_fielddata)
+    CHECK_FOR_CANCELED(DataContainer, "Grain Generator was canceled", write_fielddata)
 
     if(DREAM3D_BENCHMARKS)
     {

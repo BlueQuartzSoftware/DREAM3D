@@ -44,7 +44,8 @@ using namespace DREAM3D;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileReader::FileReader()
+FileReader::FileReader() :
+    AbstractFilter()
 {
 }
 
@@ -57,6 +58,27 @@ FileReader::~FileReader()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FileReader::execute()
+{
+  if (getDataContainer() == NULL)
+  {
+    setErrorCondition(-1);
+    setErrorMessage("The DataContainer Object was NOT set correctly.");
+    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    return;
+  }
+  setErrorCondition(0);
+  readHeader();
+  if (getErrorCondition() < 0)
+  {
+    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    return;
+  }
+  readFile();
+}
 
 // -----------------------------------------------------------------------------
 //

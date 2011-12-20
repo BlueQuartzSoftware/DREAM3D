@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,47 +34,39 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#error THIS IS NOT USED ANY MORE
-#ifndef DREAM3DDATAFILE_H_
-#define DREAM3DDATAFILE_H_
+#ifndef DXGRAINIDWRITER_H_
+#define DXGRAINIDWRITER_H_
+
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/IO/FileWriter.h"
 
-class DREAM3DLib_EXPORT DREAM3DDataFile : public AbstractFilter
+
+class DxWriter : public DREAM3D::FileWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DREAM3DDataFile);
-    DREAM3D_TYPE_MACRO_SUPER(DREAM3DDataFile, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(DxWriter)
+    DREAM3D_STATIC_NEW_MACRO(DxWriter)
+    DREAM3D_TYPE_MACRO_SUPER(DxWriter, DREAM3D::FileWriter)
 
-    DREAM3DDataFile() :
-      AbstractFilter()
-    {
-//      m_Dimensions[0] = 0;
-//      m_Dimensions[1] = 0;
-//      m_Dimensions[2] = 0;
-//      m_Resolution[0] = 1.0f;
-//      m_Resolution[1] = 1.0f;
-//      m_Resolution[2] = 1.0f;
-//      m_Origin[0] = 0.0f;
-//      m_Origin[1] = 0.0f;
-//      m_Origin[2] = 0.0f;
-    }
-    virtual ~DREAM3DDataFile() {}
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileName);
-//    DREAM3D_INSTANCE_VEC3_PROPERTY(int, Dimensions);
-//    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
-//    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
+    virtual ~DxWriter();
 
-    virtual void execute() { } // Must be implemented by subclass
+    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
+
+
+  protected:
+    DxWriter();
+
+    virtual int writeHeader();
+    virtual int writeFile();
 
   private:
-    DREAM3DDataFile(const DREAM3DDataFile&); // Copy Constructor Not Implemented
-    void operator=(const DREAM3DDataFile&); // Operator '=' Not Implemented
-
+    DxWriter(const DxWriter&); // Copy Constructor Not Implemented
+    void operator=(const DxWriter&); // Operator '=' Not Implemented
 };
 
-
-#endif /* DREAM3DDATAFILE_H_ */
+#endif /* DXGRAINIDWRITER_H_ */

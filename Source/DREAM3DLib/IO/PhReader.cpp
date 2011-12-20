@@ -39,11 +39,15 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
+
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PhReader::PhReader()
+PhReader::PhReader() :
+DREAM3D::FileReader()
 {
 
 }
@@ -59,12 +63,29 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int PhReader::readHeader()
+{
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int  PhReader::readFile()
 {
+
+  if (NULL == getDataContainer())
+  {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+    return -1;
+  }
+
   std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
   std::vector<std::string> tokens; /* vector to store the split data */
-  //std::vector<int> data; /* vector to store the data */
 
   int error, spin; /* dummy variables */
   int nx = 0;
@@ -74,13 +95,16 @@ int  PhReader::readFile()
   std::ifstream inFile;
   inFile.open(getFileName().c_str(), std::ios_base::binary);
   if(!inFile)
-    {
-    std::cout << "Failed to open: " << getFileName() << std::endl;
-      return -1;
-    }
+  {
+    std::stringstream ss;
+    ss << "Failed to open: " << getFileName();
+    setErrorCondition(-1);
+    setErrorMessage(ss.str());
+    return -1;
+  }
 
   getline(inFile, line, '\n');
-  tokenize(line,tokens,delimeters);
+  tokenize(line, tokens, delimeters);
 
   // Process the header information from the PH file.
   error = 0;
@@ -102,8 +126,7 @@ int  PhReader::readFile()
   //The most simple thing todo is to read the entire dataset into one
   //long vector and then read that vector to assign values to the grid
   size_t index = 0;
-  setDimensions(nx, ny, nz);
-  m_Data = DataArray<int>::CreateArray(nx * ny * nz);
+  Int32ArrayType::Pointer m_Data = Int32ArrayType::CreateArray(nx * ny * nz);
 
   while (getline(inFile, line, '\n') != NULL)
   {
@@ -129,14 +152,34 @@ int  PhReader::readFile()
 
   if(index != static_cast<size_t>(nz * ny * nx))
   {
-    std::cout << "ERROR: data size does not match header dimensions" << std::endl;
-    std::cout << "\t" << index << "\t" << nz * nx * ny << std::endl;
+    std::stringstream ss;
+    ss << "ERROR: data size does not match header dimensions. ";
+    ss << "\t" << index << "\t" << nz * nx * ny;
+    setErrorCondition(-1);
+    setErrorMessage(ss.str());
     return -1;
     inFile.close();
   }
 
+  // Read the data and stick it in the data Container
+  getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, m_Data);
+  getDataContainer()->xpoints = nx;
+  getDataContainer()->ypoints = ny;
+  getDataContainer()->zpoints = nz;
+
+  getDataContainer()->resx = 1.0f;
+  getDataContainer()->resx = 1.0f;
+  getDataContainer()->resx = 1.0f;
+
+  getDataContainer()->origin[0] = 0.0f;
+  getDataContainer()->origin[1] = 0.0f;
+  getDataContainer()->origin[2] = 0.0f;
+
 
   tokens.clear();
   inFile.close();
+
+  setErrorMessage("PhReader Complete");
+  notify(getErrorMessage(), 0, UpdateProgressMessage);
   return 0;
 }

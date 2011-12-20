@@ -41,7 +41,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DxReader::DxReader()
+DxReader::DxReader() :
+DREAM3D::FileReader()
 {
 
 }
@@ -58,6 +59,15 @@ DxReader::~DxReader()
 // -----------------------------------------------------------------------------
 int DxReader::readFile()
 {
+  if (NULL == getDataContainer())
+  {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+    return -1;
+  }
+
   std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
   std::vector<std::string> tokens; /* vector to store the split data */
@@ -178,8 +188,8 @@ int DxReader::readFile()
   //  finished_header = false;
   finished_data = false;
   size_t index = 0;
-  setDimensions(nx, ny, nz);
-  m_Data = DataArray<int>::CreateArray(nx * ny * nz);
+
+  Int32ArrayType::Pointer m_Data = Int32ArrayType::CreateArray(nx * ny * nz);
   while (getline(inFile, line, '\n') != NULL)
   {
 
@@ -218,6 +228,16 @@ int DxReader::readFile()
     return -1;
     inFile.close();
   }
+
+  getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, m_Data);
+  getDataContainer()->setDimensions(nx, ny, nz);
+
+  getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);
+
+  getDataContainer()->origin[0] = 0.0f;
+  getDataContainer()->origin[1] = 0.0f;
+  getDataContainer()->origin[2] = 0.0f;
+
 
   tokens.clear();
   inFile.close();

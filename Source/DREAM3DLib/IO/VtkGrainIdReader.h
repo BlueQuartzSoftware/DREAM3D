@@ -37,17 +37,18 @@
 #include "MXA/Common/MXAEndian.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IO/FileReader.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "GrainIdReader.h"
 
 
-class  VtkGrainIdReader : public GrainIdReader
+
+class  VtkGrainIdReader : public DREAM3D::FileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(VtkGrainIdReader);
-    DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, GrainIdReader)
-    DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader);
-    DREAM3D_STATIC_NEW_SUPERCLASS(GrainIdReader, VtkGrainIdReader);
+  DREAM3D_SHARED_POINTERS(VtkGrainIdReader);
+  DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader);
+  DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, DREAM3D::FileReader);
+
 
     virtual ~VtkGrainIdReader();
 
@@ -57,6 +58,11 @@ class  VtkGrainIdReader : public GrainIdReader
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName);
 
 
+
+
+  protected:
+    VtkGrainIdReader();
+
     /**
      * @brief Reads the VTK header and sets the values that are described in the header
      * @return Error Condition. Negative is Error.
@@ -64,60 +70,18 @@ class  VtkGrainIdReader : public GrainIdReader
     int readHeader();
 
     /**
-     *
+     * @brief
+     * @return Error Condition. Negative is Error.
      */
-    virtual int readGrainIds();
-
-  protected:
-    VtkGrainIdReader();
-
-    int parseCoordinateLine(const char* input, int &value);
+    virtual int readFile();
 
     /**
-    * @brief This function parses 3 floating point values from a comma delimited string
-    * @param input
-    * @param output
-    * @param defaultValue The value to set if the parsing fails
-    * @return Zero on Success, Negative on Error
-    */
-   int parseFloat3V(const char* input, float* output, float defaultValue);
-
-   /**
-    * @brief This function parses 3 integer values from a comma delimited string
-    * @param input
-    * @param output
-    * @param defaultValue The value to set if the parsing fails
-    * @return Zero on Success, Negative on Error
-    */
-   int parseInt3V(const char* input, int* output, int defaultValue);
-
-   /**
-    * @brief Reads a single line from a buffer
-    * @param in The input stream
-    * @param buf The buffer
-    * @param bufSize The size of the buffer
-    * @return
-    */
-   int readLine(std::istream &in, char* buf, int bufSize);
-
-
-
-   /**
-    * @brief
-    * @param buf
-    * @param bufSize
-    * @return
-    */
-   int nonPrintables(char* buf, size_t bufSize);
-
-   /**
-    * @brief
-    * @param str
-    * @param tokens
-    * @param delimiters
-    */
-   void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ");
-
+     *
+     * @param input
+     * @param value
+     * @return Error Condition. Negative is Error.
+     */
+    int parseCoordinateLine(const char* input, int &value);
 
     /**
       * @brief Parses the byte size from a data set declaration line
