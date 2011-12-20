@@ -131,9 +131,8 @@ for (int k = 0; k < 8; k++) {\
 #define H5GW_GRAIN_LOOP_2() \
 err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);\
 err = h5writer->writeFieldData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
-size_t size = r->m_Grains[i]->neighborlist->size();\
+size_t size = r->m_Grains[i]->numneighbors;\
 if (size > 0) {\
-err = h5writer->writeFieldData<int> (hdfPath, *(r->m_Grains[i]->neighborlist), DREAM3D::HDF5::Neighbor_Grain_ID_List.c_str(), 1);\
 }\
 err = h5writer->writeCellData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
 err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, DREAM3D::HDF5::IPFColor.c_str(), 3);\

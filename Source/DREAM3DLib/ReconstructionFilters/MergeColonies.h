@@ -67,7 +67,9 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+	std::vector<std::vector<float> > neighborlist;
+	
+	virtual void execute();
 
   protected:
     MergeColonies();

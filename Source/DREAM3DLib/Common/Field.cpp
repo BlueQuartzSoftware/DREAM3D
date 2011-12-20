@@ -87,9 +87,7 @@ radius2(0.0),
 radius3(0.0),
 packquality(0.0)
 {
-  neighborlist = NULL;
 #if CORRUPT_TEST
-  test0 = NULL;
   test5 = NULL;
   test6 = NULL;
 #endif
@@ -122,13 +120,9 @@ packquality(0.0)
 Field::~Field()
 {
 #if CORRUPT_TEST
-  CORRUPT_TEST_OUTPUT(test0);
   CORRUPT_TEST_OUTPUT(test5);
   CORRUPT_TEST_OUTPUT(test6);
 #endif
-
-  DELETE_VECTOR_POINTER(neighborlist)
-
 }
 
 // -----------------------------------------------------------------------------
@@ -183,14 +177,6 @@ void Field::deepCopy(Field::Pointer field)
   packquality = field->packquality;
   COPY_ARRAY_5(avg_quat, field);
   COPY_ARRAY_3(neighbordistfunc, field);
-
-
-  // These are Normal pointers
-  DELETE_VECTOR_POINTER(neighborlist)
-
-  COPY_VECTOR_POINTER(field->neighborlist, neighborlist, int)
-
-
 }
 
 

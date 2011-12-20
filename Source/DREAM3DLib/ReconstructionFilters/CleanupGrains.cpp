@@ -132,6 +132,12 @@ void CleanupGrains::execute()
   if (err < 0){
     return;
   }
+  int numgrains = m->m_Grains.size();
+  neighborlist.resize(numgrains);
+  for(size_t i=0;i<numgrains;i++)
+  {
+	  neighborlist[i] = find_neighbors->neighborlist[i];
+  }
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
@@ -310,8 +316,8 @@ void CleanupGrains::merge_containedgrains()
 	if (m->m_Grains[grainname]->numneighbors == 1 && m->m_Grains[grainname]->phase > 0)
     {
       m->m_Grains[grainname]->gotcontainedmerged = true;
-      grain_indicies[i] = m->m_Grains[grainname]->neighborlist->at(0);
-      m->m_Grains[m->m_Grains[grainname]->neighborlist->at(0)]->numvoxels++;
+      grain_indicies[i] = neighborlist[grainname][0];
+      m->m_Grains[grain_indicies[i]]->numvoxels++;
     }
 	if (m->m_Grains[grainname]->numneighbors == 0 && m->m_Grains[grainname]->phase > 0)
 	{
@@ -362,6 +368,7 @@ void CleanupGrains::reorder_grains()
     gnum = grain_indicies[i];
     m->m_Grains[gnum]->nucleus = i;
   }
+  voxellists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
     voxellists[i].clear();
@@ -464,7 +471,6 @@ void CleanupGrains::reorder_grains()
 void CleanupGrains::remove_smallgrains()
 {
   DataContainer* m = getDataContainer();
-  size_t initialVoxellistsSize = 1000;
   size_t size = 0;
   int neighpoints[6];
   int good = 0;
@@ -485,13 +491,12 @@ void CleanupGrains::remove_smallgrains()
 	gnum = grain_indicies[i];
 	if(gnum >= 0) m->m_Grains[gnum]->nucleus = i;
   }
+  voxellists.resize(numgrains);
   for (int i = 1; i < numgrains; i++)
   {
       size = 0;
       int nucleus = m->m_Grains[i]->nucleus;
-
-	  voxellists[i].resize(initialVoxellistsSize);
-      voxellists[i][size] = nucleus;
+      voxellists[i].push_back(nucleus);
       alreadychecked[nucleus] = true;
       grain_indicies[nucleus] = currentgrain;
       size++;
@@ -516,30 +521,27 @@ void CleanupGrains::remove_smallgrains()
             size_t grainname = static_cast<size_t>(grain_indicies[neighbor]);
             if (grainname == i)
             {
-              voxellists[i][size] = neighbor;
+              voxellists[i].push_back(neighbor);
               alreadychecked[neighbor] = true;
               grain_indicies[neighbor] = currentgrain;
-
               size++;
-              if (size >= voxellists[i].size()) voxellists[i].resize(size + initialVoxellistsSize, -1);
             }
           }
         }
       }
-      voxellists[i].erase(std::remove(voxellists[i].begin(), voxellists[i].end(), -1), voxellists[i].end());
-    if(voxellists[i].size() >= static_cast<size_t>(m_minallowedgrainsize) )
-    {
-      m->m_Grains[currentgrain]->active = true;
-      currentgrain++;
-    }
-    if(voxellists[i].size() < static_cast<size_t>(m_minallowedgrainsize) )
-    {
+      if(voxellists[i].size() >= static_cast<size_t>(m_minallowedgrainsize) )
+      {
+		m->m_Grains[currentgrain]->active = true;
+		currentgrain++;
+      }
+      if(voxellists[i].size() < static_cast<size_t>(m_minallowedgrainsize) )
+      {
         for (size_t b = 0; b < voxellists[i].size(); b++)
         {
           int index = voxellists[i][b];
           grain_indicies[index] = 0;
         }
-    }
+      }
   }
   m->m_Grains.resize(currentgrain);
 }
