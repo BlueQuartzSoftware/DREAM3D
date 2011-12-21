@@ -561,12 +561,12 @@ void PackGrainsGen2::initializeAttributes()
 //  m->euler3s = m->m_Euler3s->WritePointer(startIndex, endIndex);
 //  m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(startIndex, endIndex);
 
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::GrainIds, (m->totalpoints), gi, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Phases, (m->totalpoints), ph, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler1, (m->totalpoints), e1, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler2, (m->totalpoints), e2, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler3, (m->totalpoints), e3, 1);
-  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::SurfaceVoxels, (m->totalpoints), surf, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (m->totalpoints), gi, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (m->totalpoints), ph, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (m->totalpoints), e1, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (m->totalpoints), e2, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (m->totalpoints), e3, 1);
+  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (m->totalpoints), surf, 1);
 
   this->grain_indicies = gi;
   this->phases=ph;

@@ -91,12 +91,12 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientations);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientations);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradients);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientations);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientations);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradients);
 
   ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);

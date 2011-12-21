@@ -40,13 +40,11 @@
 #include <vector>
 #include <string>
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-
 
 /**
  * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
@@ -58,18 +56,17 @@
 class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MergeColonies);
-    DREAM3D_STATIC_NEW_MACRO(MergeColonies);
-    DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MergeColonies)
+   DREAM3D_STATIC_NEW_MACRO(MergeColonies)
+    DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
+
 
     virtual ~MergeColonies();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	std::vector<std::vector<float> > neighborlist;
-	
-	virtual void execute();
+    virtual void execute();
 
   protected:
     MergeColonies();

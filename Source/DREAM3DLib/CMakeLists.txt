@@ -59,21 +59,12 @@ D3DCompileDir(IO)
 D3DCompileDir(OrientationOps)
 D3DCompileDir(ShapeOps)
 D3DCompileDir(VTKUtils)
-D3DCompileDir(ReconstructionFilters)
-if (1)
 D3DCompileDir(GenericFilters)
+D3DCompileDir(ReconstructionFilters)
 D3DCompileDir(ManipulationFilters)
 D3DCompileDir(StatisticsFilters)
-
 D3DCompileDir(SyntheticBuilderFilters)
 D3DCompileDir(SurfaceMeshingFilters)
-endif()
-#message(STATUS "------------------------------------")
-#foreach(file ${Project_SRCS})
-#  message(STATUS "${file}")
-#endforeach(file ${Project_SRCS})
-#message(STATUS "------------------------------------")
-
 
 
 #--------------------------

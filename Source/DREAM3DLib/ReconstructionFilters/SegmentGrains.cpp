@@ -91,9 +91,9 @@ void SegmentGrains::execute()
 void SegmentGrains::form_grains()
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
 
 
   DREAM3D_RANDOMNG_NEW()

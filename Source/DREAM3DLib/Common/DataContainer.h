@@ -58,17 +58,17 @@
 #include "DREAM3DLib/Common/Observable.h"
 
 
-#define INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, typeClass, type, size, valuePtr, numComp) \
+#define INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, field, name, typeClass, type, size, valuePtr, numComp) \
 type* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     iDataArray = typeClass::CreateArray(size);\
-    dataContainer->addVoxelData(name, iDataArray);\
+    dataContainer->add##field##Data(name, iDataArray);\
   } \
   iDataArray->SetNumberOfComponents(numComp);\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
     s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
@@ -78,26 +78,26 @@ type* valuePtr = NULL;\
   }\
 }
 
-#define INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, FloatArrayType, float, size, valuePtr, numComp)
+#define INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, FloatArrayType, float, size, valuePtr, numComp)
 
-#define INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, Int32ArrayType, int32_t, size, valuePtr, numComp)
+#define INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, Int32ArrayType, int32_t, size, valuePtr, numComp)
 
-#define INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, Int8ArrayType, int8_t, size, valuePtr, numComp)
+#define INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, Int8ArrayType, int8_t, size, valuePtr, numComp)
 
-#define INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(dataContainer, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, name, BoolArrayType, bool, size, valuePtr, numComp)
-
-
+#define INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
+INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, BoolArrayType, bool, size, valuePtr, numComp)
 
 
 
-#define GET_NAMED_ARRAY_SIZE_CHK(dataContainer, name, typeClass, type, size, valuePtr) \
+
+
+#define GET_NAMED_ARRAY_SIZE_CHK(dataContainer, field, name, typeClass, type, size, valuePtr) \
 type* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     std::stringstream s;\
     s << "Array " << name << " from the DataContainer class was not in the DataContainer";\
@@ -113,7 +113,7 @@ type* valuePtr = NULL;\
     return;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
     s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
@@ -123,10 +123,10 @@ type* valuePtr = NULL;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, name, typeClass, type, size, valuePtr) \
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, type, size, valuePtr) \
 type* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     return;\
   } \
@@ -134,16 +134,16 @@ type* valuePtr = NULL;\
     return;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     return;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, name, typeClass, type, size, valuePtr) \
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, type, size, valuePtr) \
 type* valuePtr = NULL;\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->getVoxelData(name);\
+  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     return -10;\
   } \
@@ -151,7 +151,7 @@ type* valuePtr = NULL;\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->getVoxelData(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     return -30;\
   }\
@@ -181,6 +181,12 @@ namespace DREAM3D
     const std::string MisorientationGradients("MisorientationGradients");
     const std::string KernelMisorientations("KernelMisorientations");
     const std::string ImageQuality("ImageQuality");
+  }
+  namespace FieldData
+  {
+    const std::string NeighborList("NeighborList");
+    const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
+    const std::string TotalSurfaceArea("TotalSurfaceArea");
   }
 }
 
@@ -221,7 +227,26 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumVoxelArrays();
 
-    int totalPoints() { return xpoints * ypoints * zpoints; }
+
+    /**
+     * @brief Adds/overwrites the data for a named array
+     * @param name The name that the array will be known by
+     * @param data The IDataArray::Pointer that will hold the data
+     */
+      void addFieldData(const std::string &name, IDataArray::Pointer data);
+
+      /**
+       * @brief Returns the array for a given named array or the equivelant to a
+       * null pointer if the name does not exist.
+       * @param name The name of the data array
+       */
+      IDataArray::Pointer getFieldData(const std::string &name);
+
+      std::list<std::string> getFieldArrayNameList();
+
+      int getNumFieldArrays();
+
+
     /* ****************** END Map Based Methods *******************************/
 
     void setDimensions(int dims[3]) {
@@ -250,6 +275,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       dims[2] = zpoints;
     }
 
+    int totalPoints() { return xpoints * ypoints * zpoints; }
 // -----------------------------------------------------------------------------
 //  Resolution Methods
 // -----------------------------------------------------------------------------
@@ -321,6 +347,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
   private:
     std::map<std::string, IDataArray::Pointer> m_VoxelData;
+    std::map<std::string, IDataArray::Pointer> m_FieldData;
 
     DataContainer(const DataContainer&);
     void operator =(const DataContainer&);

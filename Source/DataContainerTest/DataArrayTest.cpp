@@ -9,8 +9,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/DataContainer.h"
-
-#include "NeighborList.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 
 
@@ -45,9 +44,9 @@ typedef DataArray<double>  DoubleArrayType;
 int main(int argc, char **argv)
 {
 
-  IDataArray::Pointer iDataArray = NeighborList::New();
+  IDataArray::Pointer iDataArray = NeighborList<int>::New();
 
-  NeighborList* neighborList = NeighborList::SafeObjectDownCast<IDataArray*, NeighborList* >(iDataArray.get());
+  NeighborList<int>* neighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(iDataArray.get());
   assert (neighborList != NULL);
 
 
@@ -66,8 +65,8 @@ int main(int argc, char **argv)
   value = neighborList->getValue(12, 4, ok);
   assert(!ok);
 
-  std::cout << "Number of Lists: " << neighborList->getListCount() << std::endl;
-  std::cout << "Number of Entries for Grain Id[5]: " << neighborList->getEntryCount(5) << std::endl;
+  std::cout << "Number of Lists: " << neighborList->getNumberOfLists() << std::endl;
+  std::cout << "Number of Entries for Grain Id[5]: " << neighborList->getListSize(5) << std::endl;
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
   DataContainer::Pointer dataContainer = DataContainer::New();

@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
@@ -54,9 +55,6 @@ FindMDF::FindMDF()
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
-
-  totalsurfacearea = NULL;
-  INIT_DataArray(m_TotalSurfaceArea, float);
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +70,16 @@ FindMDF::~FindMDF()
 void FindMDF::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
   setErrorCondition(0);
+
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
 
@@ -85,20 +92,20 @@ void FindMDF::execute()
     setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
-  size_t xtalCount = m->crystruct.size();
-  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
-  for(size_t i=0;i<xtalCount;i++)
-  {
-	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
-  }
-  int numgrains = m->m_Grains.size();
-  neighborlist.resize(numgrains);
-  neighborsurfacearealist.resize(numgrains);
-  for(size_t i=0;i<numgrains;i++)
-  {
-	  neighborlist[i] = find_neighbors->neighborlist[i];
-	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
-  }
+//  size_t xtalCount = m->crystruct.size();
+//  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
+//  for(size_t i=0;i<xtalCount;i++)
+//  {
+//	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
+//  }
+//  int numgrains = m->m_Grains.size();
+//  neighborlist.resize(numgrains);
+//  neighborsurfacearealist.resize(numgrains);
+//  for(size_t i=0;i<numgrains;i++)
+//  {
+//	  neighborlist[i] = find_neighbors->neighborlist[i];
+//	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
+//  }
 
   find_mdf(h5io);
   notify("FindMDF Completed", 0, Observable::UpdateProgressMessage);
@@ -109,7 +116,24 @@ void FindMDF::execute()
 // -----------------------------------------------------------------------------
 void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
 {
+  // Since this method is called from the 'execute' and the DataContainer validity
+  // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  // But since a pointer is difficult to use operators with we will now create a
+  // reference variable to the pointer with the correct variable name that allows
+  // us to use the same syntax as the "vector of vectors"
+  NeighborList<int>& neighborlist = *neighListPtr;
+  // And we do the same for the SharedSurfaceArea list
+  NeighborList<float>* surfListPtr =
+      NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  NeighborList<float>& neighborsurfacearealist = *surfListPtr;
+
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, Field, DREAM3D::FieldData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
+
+
   float n1, n2, n3;
   float r1, r2, r3;
   int mbin;
