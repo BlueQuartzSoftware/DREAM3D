@@ -96,6 +96,7 @@ class Reconstruction : public AbstractPipeline, public Observer
 
     MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
     MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
+    MXA_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
 

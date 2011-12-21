@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
   protected:
     PlacePrecipitates();
 
-    void insert_precipitate(size_t grainNum);
+    void insert_precipitate(size_t grainNum, float coatingthickness);
     void place_precipitates();
     void fillin_precipitates();
     float find_xcoord(long long int index);

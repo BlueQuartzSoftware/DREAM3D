@@ -139,7 +139,7 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
     QualityMetricTableModel*    m_QualityMetricTableModel;
     bool                        m_phaseTypeEdited;
     bool                        m_WritePhaseIdScalars;
- //   bool                        m_WriteImageQualityScalars;
+    bool                        m_WriteGoodVoxelsScalars;
     bool                        m_WriteIPFColorScalars;
     bool                        m_WriteBinaryVTKFile;
     bool rotateslice;
