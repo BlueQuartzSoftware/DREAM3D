@@ -5,9 +5,7 @@
 #define REMOVE_TEST_FILES 1
 
 namespace UnitTest {
-// -----------------------------------------------------------------------------
-//  Define where to put our temporary files for the H5Lite Test
-// -----------------------------------------------------------------------------
+
   // -----------------------------------------------------------------------------
   //  Define where to put our temporary files for the H5Utilities Test
   // -----------------------------------------------------------------------------
@@ -52,6 +50,11 @@ namespace UnitTest {
       static const int YSize = 10;
       static const int ZSize = 5;
       static const int Offset = 66;
+    }
+    
+    namespace NeighborListTest
+    {
+      const std::string TestDir("@DREAM3DTest_BINARY_DIR@/NeighborListTest");
     }
 }
 
