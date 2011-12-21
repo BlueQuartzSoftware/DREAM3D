@@ -213,6 +213,10 @@ void DREAM3D_UI::readWindowSettings(QSettings &prefs)
   {
     QByteArray geo_data = prefs.value(QString("Geometry")).toByteArray();
     ok = restoreGeometry(geo_data);
+    if (!ok)
+    {
+    	std::cout << "Error Restoring the Window Geometry" << std::endl;
+    }
   }
 
   if (prefs.contains(QString("Layout")))
@@ -520,13 +524,13 @@ void DREAM3D_UI::loadPlugins()
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";
   m_PluginDirs << thePath;
-  
+
    // This is here for Xcode compatibility
 #ifdef CMAKE_INTDIR
    aPluginDir.cdUp();
    thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
    m_PluginDirs << thePath;
-#endif   
+#endif
 #else
   if (aPluginDir.cd("plugins"))
   {
