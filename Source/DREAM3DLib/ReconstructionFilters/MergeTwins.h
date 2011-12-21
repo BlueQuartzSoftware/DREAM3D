@@ -67,9 +67,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	std::vector<std::vector<float> > neighborlist;
-	
-    virtual void execute();
+	   virtual void execute();
 
 
   protected:

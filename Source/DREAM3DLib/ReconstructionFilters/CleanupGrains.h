@@ -67,11 +67,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, minallowedgrainsize);
     DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-	std::vector<std::vector<float> > neighborlist;
-
     virtual void execute();
 
   protected:

@@ -41,6 +41,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -103,11 +104,11 @@ void CleanupGrains::execute()
   }
 
 	// Make sure we have all the arrays available and allocated
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), ph);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (m->totalpoints), ac);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), qt);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (m->totalpoints), nn);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), ph);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (m->totalpoints), ac);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), qt);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (m->totalpoints), nn);
 
   // Set the local variables created in the above macros to our class variables so
   // we do not have to keep rerunning the above code.
@@ -124,6 +125,10 @@ void CleanupGrains::execute()
   notify("Cleanup Grains - Assigning Bad Points", 0, Observable::UpdateProgressMessage);
   assign_badpoints();
 
+  // Start a Benchmark Clock
+  uint64_t millis = MXA::getMilliSeconds();
+
+
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
@@ -132,12 +137,13 @@ void CleanupGrains::execute()
   if (err < 0){
     return;
   }
-  int numgrains = m->m_Grains.size();
-  neighborlist.resize(numgrains);
-  for(int i=0;i<numgrains;i++)
-  {
-	  neighborlist[i] = find_neighbors->neighborlist[i];
-  }
+//  int numgrains = m->m_Grains.size();
+// // neighborlist.resize(numgrains);
+//  for(int i=0;i<numgrains;i++)
+//  {
+//	//  neighborlist[i] = find_neighbors->neighborlist[i];
+//  }
+  std::cout << "FindNeighbors Execute Time: " << (MXA::getMilliSeconds()-millis) << std::endl;
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
@@ -309,7 +315,17 @@ void CleanupGrains::assign_badpoints()
 
 void CleanupGrains::merge_containedgrains()
 {
+  // Since this method is called from the 'execute' and the DataContainer validity
+  // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  // But since a pointer is difficult to use operators with we will now create a
+  // reference variable to the pointer with the correct variable name that allows
+  // us to use the same syntax as the "vector of vectors"
+  NeighborList<int>& neighborlist = *neighListPtr;
+
+
   for (int i = 0; i < (m->xpoints * m->ypoints * m->zpoints); i++)
   {
     int grainname = grain_indicies[i];
@@ -489,7 +505,7 @@ void CleanupGrains::remove_smallgrains()
 	if(gnum >= 0) m->m_Grains[gnum]->nucleus = i;
   }
   voxellists.resize(numgrains);
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
       size = 0;
       int nucleus = m->m_Grains[i]->nucleus;
