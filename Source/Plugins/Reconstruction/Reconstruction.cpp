@@ -218,14 +218,12 @@ void Reconstruction::execute()
     VTKRectilinearGridFileWriter vtkWriter;
     vtkWriter.setWriteBinaryFiles(m_WriteBinaryVTKFiles);
     err = vtkWriter.write<DataContainer>(reconVisFile, m.get(), scalarsToWrite);
-
     // Now Delete all the Scalar Helpers that we just created and used.
     for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter)
     {
       delete (*iter);
     }
-
-    CHECK_FOR_ERROR(DataContainer, "The VTK file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+    CHECK_FOR_ERROR(DataContainer, vtkWriter.getErrorMessage(), err);
   }
   /* ******* End VTK Visualization File Writing Section ****** */
 

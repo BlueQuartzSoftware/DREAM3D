@@ -271,7 +271,7 @@ void GrainGenerator::execute()
     {
       delete (*iter);
     }
-    CHECK_FOR_ERROR(DataContainer, "The Grain Generator threw an Error writing the VTK file format.", err);
+    CHECK_FOR_ERROR(DataContainer, vtkWriter.getErrorMessage(), err);
 
   }
 
