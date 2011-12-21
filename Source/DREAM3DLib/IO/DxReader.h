@@ -64,6 +64,7 @@ class DREAM3DLib_EXPORT DxReader : public DREAM3D::FileReader
   protected:
     DxReader();
 
+    virtual int readHeader();
     virtual int readFile();
 
   private:
