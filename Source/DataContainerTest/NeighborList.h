@@ -40,7 +40,7 @@ class NeighborList : public IDataArray
 
     void* GetVoidPointer(size_t i)
     {
-
+		return NULL;
     }
 
     size_t GetNumberOfTuples()
@@ -60,6 +60,7 @@ class NeighborList : public IDataArray
 
     int32_t Resize(size_t size)
     {
+		return 0;
       //TODO: Implement the resizing feature
     }
 

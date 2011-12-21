@@ -45,7 +45,7 @@
 /*
  *
  */
-class VtkGrainIdWriter : public DREAM3D::FileWriter
+class DREAM3DLib_EXPORT VtkGrainIdWriter : public DREAM3D::FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(VtkGrainIdWriter);
