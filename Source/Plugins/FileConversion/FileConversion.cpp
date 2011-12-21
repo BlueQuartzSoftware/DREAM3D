@@ -50,90 +50,33 @@
 #include "DREAM3DLib/IO/DxWriter.h"
 #include "DREAM3DLib/IO/VtkGrainIdReader.h"
 #include "DREAM3DLib/IO/VtkGrainIdWriter.h"
+#include "DREAM3DLib/HDF5/H5VoxelGrainIdReader.h"
 
-#if 0
 
+#if 1
 namespace Detail {
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  class H5VoxelGrainIdReader : public GrainIdReader
-  {
-    public:
-      DREAM3D_SHARED_POINTERS(H5VoxelGrainIdReader);
-      DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdReader);
-      DREAM3D_TYPE_MACRO(H5VoxelGrainIdReader);
-      DREAM3D_STATIC_NEW_SUPERCLASS(GrainIdReader, H5VoxelGrainIdReader);
-
-
-      virtual ~H5VoxelGrainIdReader() {}
-
-      int readGrainIds()
-      {
-        int err = 0;
-        H5VoxelReader::Pointer reader = H5VoxelReader::New();
-        reader->setFileName(getFileName());
-        int volDims[3];
-        float spacing[3];
-        float origin[3];
-        err = reader->getSizeResolutionOrigin(volDims, spacing, origin);
-        if (err < 0)
-        {
-          setErrorMessage("Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File");
-          return err;
-        }
-        setDimensions(volDims);
-        setResolution(spacing);
-        setOrigin(origin);
-
-        size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
-        // Create an DataArray to hold the data
-        DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints);
-
-        err = reader->readScalarData<int>(DREAM3D::VTK::GrainIdScalarName, grainIds->GetPointer(0));
-        if (err < 0)
-        {
-          setErrorMessage("Error Reading the GrainIDs from the .h5voxel file.");
-          grainIds = DataArray<int>::NullPointer();
-        }
-        setGrainIds(grainIds);
-        return err;
-
-      }
-
-    protected:
-      H5VoxelGrainIdReader() {}
-
-    private:
-      H5VoxelGrainIdReader(const H5VoxelGrainIdReader&); // Copy Constructor Not Implemented
-      void operator=(const H5VoxelGrainIdReader&); // Operator '=' Not Implemented
-
-  };
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-  class H5VoxelGrainIdWriter : public GrainIdWriter
+  class H5VoxelGrainIdWriter : public DREAM3D::FileWriter
   {
     public:
        DREAM3D_SHARED_POINTERS(H5VoxelGrainIdWriter)
        DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdWriter)
-       DREAM3D_TYPE_MACRO(H5VoxelGrainIdWriter)
-       static GrainIdWriter::Pointer NewDREAM3DFileWriter()
-       {
-         H5VoxelGrainIdWriter* ptr = new H5VoxelGrainIdWriter();
-         GrainIdWriter::Pointer shared_ptr(dynamic_cast<GrainIdWriter*>(ptr));
-         return shared_ptr;
-       }
-       H5VoxelGrainIdWriter() {}
+       DREAM3D_TYPE_MACRO_SUPER(H5VoxelGrainIdWriter, DREAM3D::FileWriter)
+
        virtual ~H5VoxelGrainIdWriter() {}
 
-       int writeGrainIds()
-       {
 
+    protected:
+       H5VoxelGrainIdWriter() {}
+
+       int writeHeader()
+       {
+         return 0;
+       }
+       int writeFile()
+       {
          int err = -1;
          setErrorMessage(".h5voxel output files are NOT currently supported");
          /*
@@ -154,9 +97,10 @@ namespace Detail {
 
          err = writer->writeGrainIds(grain_index, totalpoints, true);
         */
-
+         setErrorCondition(err);
          return err;
        }
+
     private:
        H5VoxelGrainIdWriter(const H5VoxelGrainIdWriter&); // Copy Constructor Not Implemented
        void operator=(const H5VoxelGrainIdWriter&); // Operator '=' Not Implemented
@@ -210,7 +154,7 @@ void FileConversion::execute()
     }
     else if (inputExtension.compare("h5voxel") == 0)
     {
-    //  reader = Detail::H5VoxelGrainIdReader::NewGrainIdReader();
+     // reader = Detail::H5VoxelGrainIdReader::NewGrainIdReader();
       setErrorCondition(-1);
       updateProgressAndMessage("No suitable File Reader Class could be found", 0);
       return;

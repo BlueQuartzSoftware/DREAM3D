@@ -92,20 +92,7 @@ void FindMDF::execute()
     setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
-//  size_t xtalCount = m->crystruct.size();
-//  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
-//  for(size_t i=0;i<xtalCount;i++)
-//  {
-//	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
-//  }
-//  int numgrains = m->m_Grains.size();
-//  neighborlist.resize(numgrains);
-//  neighborsurfacearealist.resize(numgrains);
-//  for(size_t i=0;i<numgrains;i++)
-//  {
-//	  neighborlist[i] = find_neighbors->neighborlist[i];
-//	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
-//  }
+
 
   find_mdf(h5io);
   notify("FindMDF Completed", 0, Observable::UpdateProgressMessage);

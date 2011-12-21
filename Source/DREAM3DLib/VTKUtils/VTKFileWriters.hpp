@@ -116,25 +116,26 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * properties to the VTK file
  */
 
-#if 0
+#if 1
 
-#define VtkSCALARWRITER_CLASS_DEF(name, r, const_name, type, scalar, format)\
+#define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, type, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
 {\
   public:\
     name(T* r) : r(r) {}\
     virtual ~name(){}\
-  int writeScalars(FILE* f)  {\
-    int err = 0;\
-    std::string file;\
-    size_t total = r->xpoints * r->ypoints * r->zpoints;\
-    if (m_WriteBinaryFiles == true) {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, const_name, type, scalar)\
-    }    else    {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, const_name, type, scalar, format)\
-    }\
-    return err;\
+    int writeScalars(FILE* f)  {\
+      int err = 0;\
+      std::string file;\
+      size_t total = r->totalPoints();\
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, field, arrayName, arrayType, type, (r->totalPoints()), var);\
+      if (m_WriteBinaryFiles == true) {\
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, type, var)\
+      }    else    {\
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, type, var, format)\
+      }\
+      return err;\
   }\
   private:\
     T* r;\
@@ -142,21 +143,22 @@ class name : public VtkScalarWriter\
     void operator=(const name&);\
 };
 
-#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, const_name, type, scalar, format)\
+#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, type, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
 {\
   public:\
     name(T* r) : r(r) {}\
     virtual ~name(){}\
-  int writeScalars(FILE* f)  {\
+    int writeScalars(FILE* f)  {\
     int err = 0;\
     std::string file;\
-    size_t total = r->xpoints * r->ypoints * r->zpoints;\
+    size_t total = r->totalPoints();\
+    GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, field, arrayName, arrayType, type, (r->totalPoints()), var);\
     if (m_WriteBinaryFiles == true) {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, const_name, type, scalar)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, type, var)\
     }    else    {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, const_name, type, scalar, format)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, type, var, format)\
     }\
     return err;\
   }\
@@ -201,10 +203,10 @@ class name : public VtkScalarWriter\
 
 #endif
 
-VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, DREAM3D::VTK::PhaseIdScalarName, int, phases, "%d ")
-VtkSCALARWRITER_CLASS_DEF(VoxelGoodVoxelScalarWriter, r, DREAM3D::VTK::GoodVoxelScalarName, int, goodVoxels, "%d ")
-VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, DREAM3D::VTK::KAMScalarName, float, kernelmisorientations, "%f ")
-VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, DREAM3D::VTK::SurfaceVoxelScalarName, char, surfacevoxels, "%d ")
+VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, Voxel, DREAM3D::VoxelData::Phases, DREAM3D::VTK::PhaseIdScalarName, Int32ArrayType, int, "%d ")
+VtkSCALARWRITER_CLASS_DEF(VoxelGoodVoxelScalarWriter, r, Voxel, DREAM3D::VoxelData::GoodVoxels, DREAM3D::VTK::GoodVoxelScalarName, Int32ArrayType, int, "%d ")
+VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, DREAM3D::VTK::KAMScalarName, FloatArrayType, float, "%f ")
+VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, Voxel, DREAM3D::VoxelData::SurfaceVoxels, DREAM3D::VTK::SurfaceVoxelScalarName, Int8ArrayType, char, "%d ")
 
 
 /**
@@ -401,7 +403,7 @@ class VTKRectilinearGridFileWriter
       f = fopen(file.c_str(), "wb");
       if (NULL == f)
       {
-        return 1;
+        return -1;
       }
       // Write the correct header
       if (m_WriteBinaryFiles == true)
@@ -543,7 +545,7 @@ class VtkMiscFileWriter
         WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
       }
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientation);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientation);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientation);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradient);
 
@@ -618,3 +620,6 @@ class VtkMiscFileWriter
 
 
 #endif /* _VTKFILEWRITERS_HPP_ */
+
+
+
