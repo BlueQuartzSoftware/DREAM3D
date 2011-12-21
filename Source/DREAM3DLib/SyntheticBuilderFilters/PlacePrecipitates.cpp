@@ -274,16 +274,6 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 
 
 
-void PlacePrecipitates::add_coating()
-{
-    DataContainer* m = getDataContainer();
-	float thickness = 0.5;
-	int numgrains = m->m_Grains.size();
-	for(int i = numprimarygrains; i < numgrains; i++)
-	{
-		
-	}
-}
 void  PlacePrecipitates::fillin_precipitates()
 {
   DataContainer* m = getDataContainer();
@@ -392,6 +382,7 @@ void  PlacePrecipitates::place_precipitates()
   DataContainer* m = getDataContainer();
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
+  float thickness = 0.5;
   size_t currentnumgrains = m->m_Grains.size();
   numprimarygrains = m->m_Grains.size();
  // size_t index;
@@ -462,7 +453,7 @@ void  PlacePrecipitates::place_precipitates()
     m->m_Grains[currentnumgrains]->centroidx = xc;
     m->m_Grains[currentnumgrains]->centroidy = yc;
     m->m_Grains[currentnumgrains]->centroidz = zc;
-    insert_precipitate(currentnumgrains);
+    insert_precipitate(currentnumgrains, thickness);
 
     m->m_Grains[currentnumgrains]->active = 1;
     precipvoxelcounter = 0;

@@ -86,7 +86,7 @@ m_Reconstruction(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),
 m_WritePhaseIdScalars(true),
-//m_WriteImageQualityScalars(true),
+m_WriteGoodVoxelsScalars(true),
 m_WriteIPFColorScalars(true),
 m_WriteBinaryVTKFile(true),
 rotateslice(false),
@@ -140,6 +140,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, MinAllowedGrainSize, ok, i, 8 , Int);
 
   READ_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
+  READ_BOOL_SETTING(prefs, m_, WriteGoodVoxelsScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
   READ_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
@@ -213,6 +214,7 @@ void ReconstructionWidget::writeSettings(QSettings &prefs)
 
   WRITE_CHECKBOX_SETTING(prefs, m_, VisualizationVizFile)
   WRITE_BOOL_SETTING(prefs, m_, WritePhaseIdScalars, true);
+  WRITE_BOOL_SETTING(prefs, m_, WriteGoodVoxelsScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteIPFColorScalars, true);
   WRITE_BOOL_SETTING(prefs, m_, WriteBinaryVTKFile, true);
 
@@ -722,7 +724,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   m_Reconstruction->setWriteVtkFile(m_VisualizationVizFile->isChecked());
   m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
-//  m_Reconstruction->setWriteImageQuality(m_WriteImageQualityScalars);
+  m_Reconstruction->setWriteGoodVoxels(m_WriteGoodVoxelsScalars);
   m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
   m_Reconstruction->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
 
@@ -836,14 +838,14 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
 {
   QVector<QString> options;
   options.push_back("Write Phase Ids Scalars");
-//  options.push_back("Write Image Quality Scalars");
+  options.push_back("Write Good Voxels Scalars");
   options.push_back("Write IPF Color Scalars");
   options.push_back("Write Binary VTK File");
   QCheckboxDialog d(options, this);
   d.setWindowTitle(QString("VTK Output Options"));
 
   d.setValue("Write Phase Ids Scalars", m_WritePhaseIdScalars);
-//  d.setValue("Write Image Quality Scalars", m_WriteImageQualityScalars);
+  d.setValue("Write Good Voxels Scalars", m_WriteGoodVoxelsScalars);
   d.setValue("Write IPF Color Scalars", m_WriteIPFColorScalars);
   d.setValue("Write Binary VTK File", m_WriteBinaryVTKFile);
 
@@ -851,7 +853,7 @@ void ReconstructionWidget::on_m_VtkOptionsBtn_clicked()
   if (ret == QDialog::Accepted)
   {
     m_WritePhaseIdScalars = d.getValue("Write Phase Ids Scalars");
-//    m_WriteImageQualityScalars = d.getValue("Write Image Quality Scalars");
+    m_WriteGoodVoxelsScalars = d.getValue("Write Good Voxels Scalars");
     m_WriteIPFColorScalars = d.getValue("Write IPF Color Scalars");
     m_WriteBinaryVTKFile = d.getValue("Write Binary VTK File");
   }
