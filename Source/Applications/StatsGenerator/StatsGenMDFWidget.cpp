@@ -155,6 +155,10 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
     Texture::calculateMDFData<QwtArray<float>, CubicOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenCubicMDFPlotData(mdf, x, y, size);
+    if (err < 0)
+    {
+    	return;
+    }
   }
   else if (m_CrystalStructure == Ebsd::Hexagonal)
   {
@@ -164,6 +168,10 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
     Texture::calculateMDFData<QwtArray<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenHexMDFPlotData(mdf, x, y, size);
+    if (err < 0)
+    {
+    	return;
+    }
   }
 
   QwtArray<double> xD(x.size());
@@ -341,7 +349,7 @@ int StatsGenMDFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
     }
   }
 
-  return err;
+  return retErr;
 }
 
 

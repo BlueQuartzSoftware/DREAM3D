@@ -245,8 +245,8 @@ QImage PoleFigureMaker::generatePoleFigureImage(const PoleFigureData &config)
   // Flip the pixels to black that came from the data xy coords
   for (int i = 0; i < size; ++i)
   {
-    float xp = xPoints[i];
-    float yp = yPoints[i];
+//    float xp = xPoints[i];
+//    float yp = yPoints[i];
     int xCoord = (xPoints[i] + 1) * imageWidth/2;
     int yCoord = (yPoints[i] + 1) * imageHeight/2;
     if (xCoord > imageWidth || yCoord > imageHeight)
@@ -281,7 +281,7 @@ QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
     pImage.fill(0xFFFFFFFF); // All white background
     painter.begin(&pImage);
-    
+
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     pxHigh = metrics.height();
@@ -293,7 +293,7 @@ QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
   int pxOffset = 2 * pxWide;
   int pyOffset = 2 * pxHigh;
   // Get a QPainter object to add some more details to the image
-  
+
 
   int pImageWidth = imageWidth + pxOffset * 2;
   int pImageHeight = imageHeight + pyOffset * 2;

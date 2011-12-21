@@ -247,6 +247,10 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 	  sdlogdiam = sqrt(sdlogdiam);
 	  retErr = h5io->writeVolumeStats(iter, m->crystruct[iter], m->phaseType[iter], m->phasefraction[iter], m->pptFractions[iter],
 	                                  maxdiameter[iter], mindiameter[iter], sizebinstepsize, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
+	  if (retErr < 0)
+	  {
+		  //FIXME: What are we doing in case of Error?s
+	  }
   }
 }
 
