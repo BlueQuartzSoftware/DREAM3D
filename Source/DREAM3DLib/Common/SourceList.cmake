@@ -23,6 +23,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Field.h
   ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/NeighborList.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
@@ -39,13 +40,15 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Field.cpp
+#  ${DREAM3DLib_SOURCE_DIR}/Common/NeighborList.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
+
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

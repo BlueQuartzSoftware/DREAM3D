@@ -74,15 +74,11 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	std::vector<std::vector<float> > neighborlist;
-	std::vector<std::vector<float> > neighborsurfacearealist;
-
-	virtual void execute();
+    virtual void execute();
 
   protected:
     MatchCrystallography();

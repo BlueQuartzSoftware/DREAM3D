@@ -40,6 +40,8 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
+
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -100,12 +102,12 @@ void MergeTwins::execute()
     setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
-  int numgrains = m->m_Grains.size();
-  neighborlist.resize(numgrains);
-  for(size_t i=0;i<numgrains;i++)
-  {
-	  neighborlist[i] = find_neighbors->neighborlist[i];
-  }
+//  int numgrains = m->m_Grains.size();
+//  neighborlist.resize(numgrains);
+//  for(size_t i=0;i<numgrains;i++)
+//  {
+//	  neighborlist[i] = find_neighbors->neighborlist[i];
+//  }
 
   merge_twins();
   characterize_twins();
@@ -120,17 +122,17 @@ void MergeTwins::execute()
 // -----------------------------------------------------------------------------
 void MergeTwins::merge_twins()
 {
+  // Since this method is called from the 'execute' and the DataContainer validity
+  // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
-    return;
-  }
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  // But since a pointer is difficult to use operators with we will now create a
+  // reference variable to the pointer with the correct variable name that allows
+  // us to use the same syntax as the "vector of vectors"
+  NeighborList<int>& neighborlist = *neighListPtr;
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
 
   float angcur = 180.0f;
   std::vector<int> twinlist;
@@ -205,7 +207,7 @@ void MergeTwins::renumber_grains()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
 
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;

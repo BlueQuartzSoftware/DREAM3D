@@ -161,11 +161,11 @@ void LoadSlices::execute()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (m->totalpoints), goodVoxels);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (m->totalpoints), goodVoxels);
 
 
   // During the loading of the EBSD data the Quality Metric Filters will be run
@@ -259,16 +259,16 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
   /* ************************** End of Example *****************************/
 #endif
 
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::GrainIds, (m->totalpoints), grain_indicies, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Phases, (m->totalpoints), phases, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler1, (m->totalpoints), euler1s, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler2, (m->totalpoints), euler2s, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Euler3, (m->totalpoints), euler3s, 1);
-  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::SurfaceVoxels, (m->totalpoints), surfacevoxels, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Neighbors, (m->totalpoints), neighbors, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::Quats, (m->totalpoints * 5), quats, 5);
-  INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::AlreadyChecked, (m->totalpoints), alreadychecked, 1);
-  INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, DREAM3D::VoxelData::GoodVoxels, (m->totalpoints), goodVoxels, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (m->totalpoints), grain_indicies, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (m->totalpoints), phases, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (m->totalpoints), euler1s, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (m->totalpoints), euler2s, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (m->totalpoints), euler3s, 1);
+  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (m->totalpoints), surfacevoxels, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Neighbors, (m->totalpoints), neighbors, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Quats, (m->totalpoints * 5), quats, 5);
+  INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, (m->totalpoints), alreadychecked, 1);
+  INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GoodVoxels, (m->totalpoints), goodVoxels, 1);
 
 
 //  m->grain_indicies = m->m_GrainIndicies->WritePointer(0, m->totalpoints);
@@ -304,12 +304,12 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
 void LoadSlices::initializeQuats()
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
 
   float qr[5];
   Ebsd::CrystalStructure xtal = Ebsd::UnknownCrystalStructure;
@@ -341,12 +341,12 @@ void LoadSlices::initializeQuats()
 void LoadSlices::threshold_points()
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (m->totalpoints), goodVoxels);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (m->totalpoints), alreadychecked);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (m->totalpoints), neighbors);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (m->totalpoints), goodVoxels);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (m->totalpoints), alreadychecked);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (m->totalpoints), neighbors);
 
 
   int neighpoints[6];

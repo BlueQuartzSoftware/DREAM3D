@@ -83,6 +83,12 @@ add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp
 target_link_libraries(EbsdImportTest DREAM3DLib MXA EbsdLib H5Support)
 add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
 
+# --------------------------------------------------------------------------
+# FindNeighbors Testing
+# --------------------------------------------------------------------------
+add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
+target_link_libraries(FindNeighborsTest DREAM3DLib)
+add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
 
 # --------
