@@ -41,7 +41,6 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 
 
-
 class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
 {
   public:
