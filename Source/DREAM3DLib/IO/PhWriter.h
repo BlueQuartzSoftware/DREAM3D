@@ -52,7 +52,7 @@
  * @date Jun 7, 2011
  * @version 1.0
  */
-class PhWriter : public DREAM3D::FileWriter
+class DREAM3DLib_EXPORT PhWriter : public DREAM3D::FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(PhWriter);
