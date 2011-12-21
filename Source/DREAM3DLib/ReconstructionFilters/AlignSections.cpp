@@ -433,7 +433,7 @@ void AlignSections::form_grains_sections()
   // int currentpoint;
   float q1[5];
   float q2[5];
-  float qs[5];
+//  float qs[5];
   float w;
   float n1;
   float n2;
@@ -493,11 +493,11 @@ void AlignSections::form_grains_sections()
         grain_indicies[seed] = graincount;
         voxelslist[size] = seed;
         size++;
-        qs[0] = 0;
-        qs[1] = quats[seed * 5 + 1];
-        qs[2] = quats[seed * 5 + 2];
-        qs[3] = quats[seed * 5 + 3];
-        qs[4] = quats[seed * 5 + 4];
+//        qs[0] = 0;
+//        qs[1] = quats[seed * 5 + 1];
+//        qs[2] = quats[seed * 5 + 2];
+//        qs[3] = quats[seed * 5 + 3];
+//        qs[4] = quats[seed * 5 + 4];
         for (size_t j = 0; j < size; ++j)
         {
           int currentpoint = voxelslist[j];

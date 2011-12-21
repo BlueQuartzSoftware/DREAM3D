@@ -115,14 +115,14 @@ void LoadVolume::initializeGrains()
   // Put at least 1 Grain in the Vector
   DataContainer* m = getDataContainer();
   m->m_Grains.resize(1);
-  size_t curGrainSize = 1;
+//  size_t curGrainSize = 1;
   size_t grainIndex = 0;
   Field::Pointer grain;
   int totpoints = m->totalpoints;
   for (int i = 0; i < totpoints; ++i)
   {
     grainIndex = grain_indicies[i];
-    curGrainSize = m->m_Grains.size();
+  //  curGrainSize = m->m_Grains.size();
     if (grainIndex > m->m_Grains.size() - 1)
     {
       // Resize the Grain Vector to be as large as this index. The other Grain
@@ -130,7 +130,7 @@ void LoadVolume::initializeGrains()
       // efficient at all.
       m->m_Grains.resize(grainIndex + 1);
     }
-    curGrainSize = m->m_Grains.size();
+  //  curGrainSize = m->m_Grains.size();
     grain = m->m_Grains[grainIndex];
     if (NULL == grain.get())
     {

@@ -116,20 +116,6 @@ void MatchCrystallography::execute()
     setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
-//  size_t xtalCount = m->crystruct.size();
-//  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
-//  for(size_t i=0;i<xtalCount;i++)
-//  {
-//	  totalsurfacearea[i] = find_neighbors->totalsurfacearea[i];
-//  }
-//  int numgrains = m->m_Grains.size();
-//  neighborlist.resize(numgrains);
-//  neighborsurfacearealist.resize(numgrains);
-//  for(size_t i=0;i<numgrains;i++)
-//  {
-//	  neighborlist[i] = find_neighbors->neighborlist[i];
-//	  neighborsurfacearealist[i] = find_neighbors->neighborsurfacearealist[i];
-//  }
 
   assign_eulers();
   readODFData(h5reader);
@@ -344,7 +330,7 @@ void MatchCrystallography::assign_eulers()
 void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist, float &mdfchange)
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Field, DREAM3D::FieldData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
 
   float w;
   float n1, n2, n3;
@@ -379,7 +365,7 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
 void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist)
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Field, DREAM3D::FieldData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
 
   float w;
   float n1, n2, n3;
@@ -436,7 +422,7 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Field, DREAM3D::FieldData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
 
 
   float random;
@@ -548,7 +534,7 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Field, DREAM3D::FieldData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
 
 
   int good = 0;
@@ -771,7 +757,7 @@ void  MatchCrystallography::measure_misorientations ()
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Field, DREAM3D::FieldData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, Int32ArrayType, int32_t, (m->crystruct.size()), totalsurfacearea);
 
   float w;
   float n1, n2, n3;

@@ -370,12 +370,20 @@ void SMVtkPolyDataWriter::execute()
   for (int i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
+    if (nread != 1)
+    {
+    	break;
+    }
     if (m_WriteBinaryFile == true) {
       vec3f[0] = vec3d[0]; vec3f[1] = vec3d[1]; vec3f[2] = vec3d[2];
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[0]);
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[1]);
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[2]);
       totalWritten = fwrite(vec3f, sizeof(float), 3, vtkFile);
+      if (totalWritten != sizeof(float) * 3)
+      {
+
+      }
     }
     else {
       fprintf(vtkFile, "%f %f %f\n", vec3d[0], vec3d[1], vec3d[2]); // Write the positions to the output file
@@ -506,6 +514,10 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
   for (int i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    if (nread != 1)
+    {
+    	break;
+    }
     swapped = *nodeKind;
     MXA::Endian::FromSystemToBig::convert<int>( swapped );
     data[i] = swapped;
@@ -540,6 +552,9 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
   for (int i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    if (nread != 1){
+    	break;
+    }
     fprintf(vtkFile, "%d\n", *nodeKind); // Write the Node Kind to the output file
   }
 
@@ -578,6 +593,9 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   for (int i = 0; i < nTriangles; i++)
   {
     nread = fread(tData, sizeof(int), 6, triFile);
+    if (nread != 6) {
+    		return -1;
+    }
     MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
     tri_ids[i*offset] = tData[0];
     MXA::Endian::FromSystemToBig::convert<int>(tData[4]);
@@ -635,6 +653,10 @@ int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FI
   for (int i = 0; i < nTriangles; i++)
   {
     nread = fread(tData, sizeof(int), 6, triFile);
+    if (nread != 6)
+    {
+    	break;
+    }
     fprintf(vtkFile, "%d\n", tData[4]);
     if (false == conformalMesh)
     {

@@ -174,7 +174,7 @@ Smoothing::~Smoothing()
 // -----------------------------------------------------------------------------
 void Smoothing::execute()
 {
-  int err = 0;
+ // int err = 0;
 
   // Data variables
   int nnod, ntri;
@@ -233,6 +233,10 @@ void Smoothing::execute()
   for (int i = 0; i < nnod; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
+    if (nread != 1)
+    {
+    	return;
+    }
     node& node = nodes[*nodeId];
     node.setValues(*nodeId, *nodeKind, vec3f);
     node.nId = *nodeId;

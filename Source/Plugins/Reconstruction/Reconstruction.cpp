@@ -191,13 +191,16 @@ void Reconstruction::execute()
       VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
+    }
 
-      w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m.get()));
+    if(m_WritePhaseId == true)
+    {
+      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
       scalarsToWrite.push_back(w0);
     }
 
-    if(m_WritePhaseId == true)
+    if (m_WriteGoodVoxels == true)
     {
       VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<DataContainer>(m.get()));
       w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;

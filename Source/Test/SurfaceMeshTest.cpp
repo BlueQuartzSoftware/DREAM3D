@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -76,6 +76,7 @@ int main(void){
   size_t nread = 0;
   printf("\nEnter the name of node input file:\n");
   nread = scanf("%s", name1);
+  if (nread != 1) {return 0;}
   printf("\nEnter the name of triangle input file:\n");
   nread = scanf("%s", name2);
   printf("\nEnter the name of output inp file (xxx.inp):\n");
@@ -140,6 +141,10 @@ void read_nodes (struct node *v, int nN, char *fn){
   for(i=0; i<nN; i++){
 
     nread = fscanf(f, "%d %d %lf %lf %lf", &dummy, &nk, &x, &y, &z);
+    if (nread != 5)
+    {
+    	break;
+    }
     v[i].coord[0] = x;
     v[i].coord[1] = y;
     v[i].coord[2] = z;
@@ -169,12 +174,15 @@ void read_triangles (struct patch *t, int nT, char *fn){
   }
 
   nread = fscanf(f, "%d", &dummy);
-
+  if (nread != 1)
+  {
+	  return;
+  }
   for(i=0; i<nT; i++){
 
     nread = fscanf(f, "%d %d %d %d %d %d %d %d %d",
      &dummy, &n1, &n2, &n3, &e1, &e2, &e3, &s1, &s2);
-
+    if (nread != 9) { break; }
     t[i].v_id[0] = n1;
     t[i].v_id[1] = n2;
     t[i].v_id[2] = n3;
