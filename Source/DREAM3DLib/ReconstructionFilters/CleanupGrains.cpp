@@ -313,15 +313,15 @@ void CleanupGrains::merge_containedgrains()
   for (int i = 0; i < (m->xpoints * m->ypoints * m->zpoints); i++)
   {
     int grainname = grain_indicies[i];
-	if (m->m_Grains[grainname]->numneighbors == 1 && m->m_Grains[grainname]->phase > 0)
+    if(m->m_Grains[grainname]->numneighbors == 1 && m->m_Grains[grainname]->phase > 0)
     {
       grain_indicies[i] = neighborlist[grainname][0];
       m->m_Grains[grain_indicies[i]]->numvoxels++;
     }
-	if (m->m_Grains[grainname]->numneighbors == 0 && m->m_Grains[grainname]->phase > 0)
-	{
+    if(m->m_Grains[grainname]->numneighbors == 0 && m->m_Grains[grainname]->phase > 0)
+    {
       grain_indicies[i] = 0;
-	}
+    }
   }
 
 }

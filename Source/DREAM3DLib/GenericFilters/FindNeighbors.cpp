@@ -44,8 +44,8 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors()
 {
-    totalsurfacearea = NULL;
-    INIT_DataArray(m_TotalSurfaceArea, float);
+  totalsurfacearea = NULL;
+  INIT_DataArray(m_TotalSurfaceArea, float);
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ void FindNeighbors::execute()
 void FindNeighbors::find_neighbors()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
@@ -83,8 +83,6 @@ void FindNeighbors::find_neighbors()
 
   GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
   GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (m->totalpoints), surfacevoxels);
-
-
 
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
@@ -126,16 +124,16 @@ void FindNeighbors::find_neighbors()
   {
     onsurf = 0;
     grain = grain_indicies[j];
-    if (grain > 0)
+    if(grain > 0)
     {
       column = j % m->xpoints;
       row = (j / m->xpoints) % m->ypoints;
       plane = j / (m->xpoints * m->ypoints);
-      if ((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1) || plane == 0 || plane == (m->zpoints - 1)) && m->zpoints != 1)
+      if((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1) || plane == 0 || plane == (m->zpoints - 1)) && m->zpoints != 1)
       {
         m->m_Grains[grain]->surfacefield = true;
       }
-      if ((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1)) && m->zpoints == 1)
+      if((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1)) && m->zpoints == 1)
       {
         m->m_Grains[grain]->surfacefield = true;
       }
@@ -143,17 +141,17 @@ void FindNeighbors::find_neighbors()
       {
         good = 1;
         neighbor = j + neighpoints[k];
-        if (k == 0 && plane == 0) good = 0;
-        if (k == 5 && plane == (m->zpoints - 1)) good = 0;
-        if (k == 1 && row == 0) good = 0;
-        if (k == 4 && row == (m->ypoints - 1)) good = 0;
-        if (k == 2 && column == 0) good = 0;
-        if (k == 3 && column == (m->xpoints - 1)) good = 0;
-        if (good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
+        if(k == 0 && plane == 0) good = 0;
+        if(k == 5 && plane == (m->zpoints - 1)) good = 0;
+        if(k == 1 && row == 0) good = 0;
+        if(k == 4 && row == (m->ypoints - 1)) good = 0;
+        if(k == 2 && column == 0) good = 0;
+        if(k == 3 && column == (m->xpoints - 1)) good = 0;
+        if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
         {
           onsurf++;
           nnum = m->m_Grains[grain]->numneighbors;
-		  neighborlist[grain].push_back(grain_indicies[neighbor]);
+          neighborlist[grain].push_back(grain_indicies[neighbor]);
           nnum++;
           m->m_Grains[grain]->numneighbors = nnum;
         }
@@ -182,12 +180,12 @@ void FindNeighbors::find_neighbors()
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);
 
-    for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter )
+    for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
     {
       int neigh = iter->first; // get the neighbor grain
       int number = iter->second; // get the number of voxels
       float area = number * m->resx * m->resy;
-      if (m->m_Grains[i]->surfacefield == 0 && (neigh > i || m->m_Grains[neigh]->surfacefield == 1))
+      if(m->m_Grains[i]->surfacefield == 0 && (neigh > i || m->m_Grains[neigh]->surfacefield == 1))
       {
         totalsurfacearea[phase] = totalsurfacearea[phase] + area;
       }
@@ -196,8 +194,7 @@ void FindNeighbors::find_neighbors()
       neighborlist[i].push_back(neigh);
       neighborsurfacearealist[i].push_back(area);
     }
-	m->m_Grains[i]->numneighbors = neighborlist[i].size();
+    m->m_Grains[i]->numneighbors = neighborlist[i].size();
   }
 }
-
 
