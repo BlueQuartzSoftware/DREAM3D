@@ -134,7 +134,7 @@ void MergeTwins::merge_twins()
 
   GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
 
-  float angcur = 180.0f;
+ // float angcur = 180.0f;
   std::vector<int> twinlist;
   float w;
   float n1, n2, n3;
@@ -156,7 +156,7 @@ void MergeTwins::merge_twins()
         int size = int(neighborlist[firstgrain].size());
         for (int l = 0; l < size; l++)
         {
-          angcur = 180.0f;
+       //   angcur = 180.0f;
           int twin = 0;
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && m->m_Grains[neigh]->twinnewnumber == -1 && m->m_Grains[neigh]->phase > 0)

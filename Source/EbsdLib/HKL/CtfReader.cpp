@@ -582,10 +582,6 @@ void CtfReader::transformData()
 		  p1[i] = p1[i];
 	   }
        shuffleTable[(row*xCells)+col] = offset;
-	   if(offset < 0 || offset >= (xCells*yCells))
-	   {
-			int stop = 0;
-	   }
        ++i;
      }
    }

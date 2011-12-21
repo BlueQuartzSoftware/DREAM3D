@@ -75,7 +75,7 @@ class StatsGen
     {
       int err = 0;
 	  float total = 0;
-      float value, betain, betaout;
+      float betain, betaout;
       x.resize(size);
       y.resize(size);
    //   value = alpha;

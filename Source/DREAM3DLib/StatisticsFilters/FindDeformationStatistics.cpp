@@ -103,7 +103,7 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
   float w, n1, n2, n3;
   int distance;
   float km, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
-  int nearestneighbor, gname, gname2, ss1, ss2;
+  int nearestneighbor, gname, gname2, ss1;
   float q1[5], q2[5];
   int kmdist[25];
   int gamdist[25];
@@ -223,7 +223,7 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
 		  sf2 = m->m_Grains[gname2]->schmidfactor;
 		  sfmm = sf / sf2;
 		  ss1 = m->m_Grains[gname]->slipsystem;
-		  ss2 = m->m_Grains[gname2]->slipsystem;
+	//	  ss2 = m->m_Grains[gname2]->slipsystem;
 		  for(int j=0;j<5;j++)
 		  {
 			q1[j] = m->m_Grains[gname]->avg_quat[j]/m->m_Grains[gname]->avg_quat[0];
