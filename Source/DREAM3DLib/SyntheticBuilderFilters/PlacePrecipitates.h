@@ -87,6 +87,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
 
   private:
 	std::vector<int> currentprecipvoxellist;
+	std::vector<int> currentcoatingvoxellist;
 
 	int numprimarygrains;
     unsigned long long int Seed;
