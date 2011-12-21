@@ -124,6 +124,10 @@ void CleanupGrains::execute()
   notify("Cleanup Grains - Assigning Bad Points", 0, Observable::UpdateProgressMessage);
   assign_badpoints();
 
+  // Start a Benchmark Clock
+  uint64_t millis = MXA::getMilliSeconds();
+
+
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
@@ -138,6 +142,7 @@ void CleanupGrains::execute()
   {
 	  neighborlist[i] = find_neighbors->neighborlist[i];
   }
+  std::cout << "FindNeighbors Execute Time: " << (MXA::getMilliSeconds()-millis) << std::endl;
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
