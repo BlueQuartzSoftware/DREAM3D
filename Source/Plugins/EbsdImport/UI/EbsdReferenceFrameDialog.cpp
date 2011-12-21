@@ -193,7 +193,7 @@ void EbsdReferenceFrameDialog::loadEbsdData()
 
   QImage image(width, height, QImage::Format_ARGB32);
   size_t index = 0;
-  uint32_t pixel = NULL;
+  uint32_t pixel = 0;
 
   for(size_t h = 0; h < height; ++h)
   {

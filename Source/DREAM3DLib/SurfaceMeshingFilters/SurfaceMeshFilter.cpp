@@ -868,7 +868,7 @@ void SurfaceMeshFilter::initialize_squares(int zID)
 int SurfaceMeshFilter::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
 {
   int j, k, m, ii;
-  int csite, cgrainname, tsite;
+  int tsite;
   int cubeOrigin; // stores the site id of 0th corner of each cube...
   int sqOrder; // stores the 0th, 1st and 2nd square...
   int tNSite[4];
@@ -897,8 +897,8 @@ int SurfaceMeshFilter::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zI
     {
       cubeOrigin = k / 3 + 1;
       sqOrder = k % 3;
-      csite = cSquare[k].site_id[0];
-      cgrainname = voxels[csite];
+   //   csite = cSquare[k].site_id[0];
+  //    cgrainname = voxels[csite];
       tNSite[0] = cSquare[k].site_id[0];
       tNSite[1] = cSquare[k].site_id[1];
       tNSite[2] = cSquare[k].site_id[2];
@@ -1535,7 +1535,8 @@ void SurfaceMeshFilter::get_case0_triangles(int site, int *ae, int nedge, int ti
   int ce, ne;
   int cgrainname1, cgrainname2, cnode1, cnode2;
   int ngrainname1, ngrainname2, nnode1, nnode2;
-  int nucleus, chaser;
+  //int nucleus;
+  int chaser;
   int grainnameFlag, nodeFlag, flip;
   int bflag, nbflag;
   int *burnt;
@@ -1547,7 +1548,7 @@ void SurfaceMeshFilter::get_case0_triangles(int site, int *ae, int nedge, int ti
   int ctid;
   int front, back;
   int te0, te1, te2, tv0, tcVertex, tv2;
-  int numT, cnumT, new_node0, new_node1;
+  int numT, cnumT, new_node0;
   burnt = new int[nedge];
   burnt_list = new int[nedge];
   // initialize burn flags for face edges...
@@ -1565,7 +1566,7 @@ void SurfaceMeshFilter::get_case0_triangles(int site, int *ae, int nedge, int ti
     bflag = burnt[i];
     if (bflag == 0)
     {
-      nucleus = ce;
+    //  nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
       coin = 1;
@@ -1692,7 +1693,7 @@ void SurfaceMeshFilter::get_case0_triangles(int site, int *ae, int nedge, int ti
       ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0]->neigh_grainname[0], cEdge[te0]->neigh_grainname[1] )
 
       new_node0 = tv2;
-      new_node1 = tcVertex;
+    //  new_node1 = tcVertex;
       cnumT++;
       ctid++;
       while (cnumT < numT)
@@ -1742,15 +1743,17 @@ void SurfaceMeshFilter::get_case2_triangles(int site, int *ae, int nedge, int *a
   int cgrainname1, cgrainname2, cnode1, cnode2;
   int ngrainname1, ngrainname2, nnode1, nnode2;
   int tgrainname, tnode;
-  int nucleus, chaser;
-  int start, end;
+  int nucleus;
+  int chaser;
+  int start;
+  int end;
   int from, to;
   int grainnameFlag, nodeFlag, flip;
   int bflag, nbflag;
   int *burnt;
   int *burnt_list;
   int *count;
-  int numN, numTri;
+  int numN;
   int *burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
@@ -1759,7 +1762,7 @@ void SurfaceMeshFilter::get_case2_triangles(int site, int *ae, int nedge, int *a
   int ctid;
   int front, back;
   int te0, te1, te2, tv0, tcVertex, tv2;
-  int numT, cnumT, new_node0, new_node1;
+  int numT, cnumT, new_node0;
   burnt = new int[nedge];
   burnt_list = new int[nedge];
   // initialize burn flags for face edges...
@@ -1867,7 +1870,7 @@ void SurfaceMeshFilter::get_case2_triangles(int site, int *ae, int nedge, int *a
     }
   }
   // Let's make complete loops...
-  numTri = 0;
+//  numTri = 0;
   start = afc[0];
   end = afc[1];
   to = 0;
@@ -1965,7 +1968,7 @@ void SurfaceMeshFilter::get_case2_triangles(int site, int *ae, int nedge, int *a
         ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0]->neigh_grainname[0], cEdge[te0]->neigh_grainname[1] )
 
         new_node0 = tv2;
-        new_node1 = tcVertex;
+    //    new_node1 = tcVertex;
         cnumT++;
         ctid++;
         while (cnumT < numT)
@@ -2058,7 +2061,7 @@ void SurfaceMeshFilter::get_case2_triangles(int site, int *ae, int nedge, int *a
         ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0]->neigh_grainname[0], cEdge[te0]->neigh_grainname[1] )
 
         new_node0 = tv2;
-        new_node1 = tcVertex;
+      //  new_node1 = tcVertex;
         cnumT++;
         ctid++;
         while (cnumT < numT)
@@ -2432,7 +2435,7 @@ void SurfaceMeshFilter::arrange_grainnames(int numT, int zID)
   int cnode;
   int csite, kind;
   int tsite1[3], tsite2[3];
-  int ngrainname1, ngrainname2;
+//  int ngrainname1, ngrainname2;
   int tgrainname1[3], tgrainname2[3];
   float cx, cy, cz;
   float xSum, ySum, zSum;
@@ -2448,8 +2451,8 @@ void SurfaceMeshFilter::arrange_grainnames(int numT, int zID)
     xSum = 0.0;
     ySum = 0.0;
     zSum = 0.0;
-    ngrainname1 = cTriangle[i]->ngrainname[0];
-    ngrainname2 = cTriangle[i]->ngrainname[1];
+  //  ngrainname1 = cTriangle[i]->ngrainname[0];
+  //  ngrainname2 = cTriangle[i]->ngrainname[1];
     cTriangle[i]->ngrainname[0] = -1;
     cTriangle[i]->ngrainname[1] = -1;
     for (j = 0; j < 3; j++)
@@ -2578,13 +2581,13 @@ int SurfaceMeshFilter::assign_nodeID(int nN)
   int nid;
   int nkind;
   int cnid;
-  int plane;
+ // int plane;
   nid = nN;
   for (i = 0; i < (7 * 2 * NSP); i++)
   {
     nkind = cVertex[i].nodeKind;
     cnid = cVertex[i].NodeID;
-    plane = i % 7;
+  //  plane = i % 7;
     if (nkind != 0 && cnid == -1)
     {
       cVertex[i].NodeID = nid;
@@ -2600,8 +2603,8 @@ int SurfaceMeshFilter::assign_nodeID(int nN)
 int SurfaceMeshFilter::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
 {
   static const size_t BYTE_COUNT = 20;
-  int count;
-  count = 0;
+//  int count;
+//  count = 0;
 
   unsigned char data[BYTE_COUNT];
   int* tId = (int*)(&data[0]);
@@ -2656,12 +2659,12 @@ int SurfaceMeshFilter::writeNodesFile(int zID, int cNodeID, const std::string &n
 int SurfaceMeshFilter::writeTrianglesFile(int zID, int ctid, const std::string &trianglesFile, int nt)
 {
   static const size_t DATA_COUNT = 6;
-  int tag;
+ // int tag;
   int end;
   int n1, n2, n3;
   int data[DATA_COUNT];
 
-  tag = zID;
+  //tag = zID;
   end = nt;
   data[0] = ctid;
   FILE* f = NULL;

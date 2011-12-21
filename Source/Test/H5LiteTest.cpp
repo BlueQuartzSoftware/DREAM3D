@@ -177,7 +177,7 @@ herr_t testReadPointer1DArrayAttribute(hid_t file_id, const std::string &dsetNam
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE (data == referenceData);
 
-  return err;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -252,7 +252,7 @@ herr_t testReadPointer2DArrayAttribute(hid_t file_id, const std::string &dsetNam
   DREAM3D_REQUIRE(err >= 0);
 
   DREAM3D_REQUIRE (::memcmp( &(data.front() ), referenceData, sizeof(T)*numElements) == 0);
-  return err;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------
@@ -327,7 +327,7 @@ herr_t testReadPointer3DArrayAttribute(hid_t file_id, const std::string &dsetNam
   DREAM3D_REQUIRE(err >= 0);
 
   DREAM3D_REQUIRE (::memcmp( &(data.front() ), referenceData, sizeof(T)*numElements) == 0);
-  return err;
+  return retErr;
 }
 
 // -----------------------------------------------------------------------------

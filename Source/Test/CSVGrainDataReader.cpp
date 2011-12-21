@@ -177,7 +177,7 @@ int CSVGrainDataReader::readFile()
 
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
-    if (sscanf(buf, "%d", &m_NumberOfElements) != 1)
+    if (sscanf(buf, "%lu", &m_NumberOfElements) != 1)
     {
       std::cout << "First Line of file not parsed." << std::endl;
     }

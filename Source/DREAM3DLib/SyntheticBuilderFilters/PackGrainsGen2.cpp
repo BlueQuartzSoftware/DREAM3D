@@ -139,7 +139,8 @@ void PackGrainsGen2::execute()
 
   initializeAttributes();
 
-  float change1, change2, change;
+ // float change1, change2;
+  float change;
   int phase;
   size_t randomgrain;
   float random;
@@ -322,8 +323,8 @@ void PackGrainsGen2::execute()
   int numgrains = m->m_Grains.size();
   for (int iteration = 0; iteration < (100*numgrains); iteration++)
   {
-    change1 = 0;
-    change2 = 0;
+//    change1 = 0;
+//    change2 = 0;
     int option = iteration % 2;
 #if ERROR_TXT_OUT
     if(iteration%25 == 0)
@@ -881,8 +882,8 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
   float dia, dia2;
   int DoverR;
   float xdist, ydist, zdist, totdist;
-  int nnum = 0;
-  nnum = 0;
+//  int nnum = 0;
+//  nnum = 0;
   x = m->m_Grains[gnum]->centroidx;
   y = m->m_Grains[gnum]->centroidy;
   z = m->m_Grains[gnum]->centroidz;
