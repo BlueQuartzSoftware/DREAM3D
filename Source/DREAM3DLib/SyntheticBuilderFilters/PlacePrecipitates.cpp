@@ -135,7 +135,7 @@ void PlacePrecipitates::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PlacePrecipitates::insert_precipitate(size_t gnum)
+void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 {
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
@@ -148,14 +148,14 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   float xp, yp, zp;
   float x, y, z;
   float insidecount = 0;
-  std::vector<int> insidelist(1000,-1);
   float volcur = m->m_Grains[gnum]->volume;
   float bovera = m->m_Grains[gnum]->radius2;
   float covera = m->m_Grains[gnum]->radius3;
   float omega3 = m->m_Grains[gnum]->omega3;
   float radcur1 = 1;
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
+  currentprecipvoxellist.resize(1000);
 
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
   // init any values for each of the Shape Ops
   for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
@@ -258,24 +258,32 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 			if(inside >= 0)
 			{
 				int currentpoint = index;
-				insidelist[insidecount] = currentpoint;
+				currentprecipvoxellist[insidecount] = currentpoint;
 				insidecount++;
-				if (insidecount >= (insidelist.size()))
+				if (insidecount >= (currentprecipvoxellist.size()))
 				{
-				  insidelist.resize(insidecount + 1000,-1);
+				  currentprecipvoxellist.resize(insidecount + 1000,-1);
 				}
 			}
 		  }
 		}
     }
   }
-  insidelist.resize(insidecount);
-  currentprecipvoxellist.assign(insidelist.begin(), insidelist.end());
 }
 
 
 
 
+void PlacePrecipitates::add_coating()
+{
+    DataContainer* m = getDataContainer();
+	float thickness = 0.5;
+	int numgrains = m->m_Grains.size();
+	for(int i = numprimarygrains; i < numgrains; i++)
+	{
+		
+	}
+}
 void  PlacePrecipitates::fillin_precipitates()
 {
   DataContainer* m = getDataContainer();
@@ -378,9 +386,6 @@ void  PlacePrecipitates::fillin_precipitates()
   gsizes.clear();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void  PlacePrecipitates::place_precipitates()
 {
   DREAM3D_RANDOMNG_NEW()
@@ -469,7 +474,7 @@ void  PlacePrecipitates::place_precipitates()
 		  precipvoxelcounter++;
 		}
 	}
-    if(double(precipvoxelcounter)/double(currentprecipvoxellist.size()) > 0.75)
+    if(precipvoxelcounter == currentprecipvoxellist.size())
     {
 		precipvoxelcounter = 0;
 		for(size_t j = 0; j < currentprecipvoxellist.size(); j++)
