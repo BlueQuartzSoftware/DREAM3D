@@ -53,11 +53,17 @@
 #include "DREAM3DLib/HDF5/H5VoxelGrainIdReader.h"
 
 
-#if 1
 namespace Detail {
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
+
+  /**
+   * @class H5VoxelGrainIdWriter H5VoxelGrainIdWriter.h DREAM3D/Plugins/FileConversion/H5VoxelGrainIdWriter.h
+   * @brief This class is needed for the file conversion of grain ids. Note that
+   * we do NOT actually write them to the .h5voxel file as the file would be
+   * incomplete without all the other data.
+   * @author Michael A. Jackson for BlueQuartz Software
+   * @date Dec 21, 2011
+   * @version 1.0
+   */
   class H5VoxelGrainIdWriter : public DREAM3D::FileWriter
   {
     public:
@@ -106,8 +112,6 @@ namespace Detail {
        void operator=(const H5VoxelGrainIdWriter&); // Operator '=' Not Implemented
   };
 }
-
-#endif
 
 
 // -----------------------------------------------------------------------------

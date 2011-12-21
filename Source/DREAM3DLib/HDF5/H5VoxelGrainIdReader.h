@@ -48,8 +48,13 @@
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 
-/*
- *
+/**
+ * @class H5VoxelGrainIdReader H5VoxelGrainIdReader.h DREAM3DLib/HDF5/H5VoxelGrainIdReader.h
+ * @brief This class is meant to read the grain ids out of an h5voxel file and nothing
+ * else.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Dec 21, 2011
+ * @version 1.0
  */
  class H5VoxelGrainIdReader : public DREAM3D::FileReader
   {
