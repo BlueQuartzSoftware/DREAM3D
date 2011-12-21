@@ -48,10 +48,10 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
-typedef boost::shared_ptr<std::vector<int> >    IntVectorType;
-typedef boost::shared_ptr<std::vector<float> > FloatVectorType;
-typedef boost::shared_ptr<std::vector<double> > DoubleVectorType;
-typedef boost::shared_ptr<std::vector<size_t> > SizeTVectorType;
+//typedef boost::shared_ptr<std::vector<int> >    IntVectorType;
+//typedef boost::shared_ptr<std::vector<float> > FloatVectorType;
+//typedef boost::shared_ptr<std::vector<double> > DoubleVectorType;
+//typedef boost::shared_ptr<std::vector<size_t> > SizeTVectorType;
 
 #define COPY_ARRAY_3(var, obj)\
   var[0] = obj->var[0];var[1] = obj->var[1];var[2] = obj->var[2];

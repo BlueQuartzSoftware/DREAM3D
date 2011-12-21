@@ -10,6 +10,10 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/DataContainer.h"
 
+#include "NeighborList.h"
+
+
+
 #define helper(a, b)\
   a##b
 
@@ -29,14 +33,45 @@ typedef DataArray<uint32_t>  UInt32ArrayType;
 
 typedef DataArray<float>  FloatArrayType;
 typedef DataArray<double>  DoubleArrayType;
+
+
+
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 
-  DataContainer::Pointer dataContainer = DataContainer::New();
+  IDataArray::Pointer iDataArray = NeighborList::New();
 
+  NeighborList* neighborList = NeighborList::SafeObjectDownCast<IDataArray*, NeighborList* >(iDataArray.get());
+  assert (neighborList != NULL);
+
+
+  for (int grainId = 0; grainId < 10; ++grainId)
+  {
+    for (int neighborId = 0; neighborId < grainId+5; ++neighborId)
+    {
+      neighborList->addEntry(grainId, neighborId*23);
+    }
+  }
+  bool ok = true;
+
+  int value = neighborList->getValue(5, 4, ok);
+  assert(ok);
+
+  value = neighborList->getValue(12, 4, ok);
+  assert(!ok);
+
+  std::cout << "Number of Lists: " << neighborList->getListCount() << std::endl;
+  std::cout << "Number of Entries for Grain Id[5]: " << neighborList->getEntryCount(5) << std::endl;
+  std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
+
+  DataContainer::Pointer dataContainer = DataContainer::New();
+  dataContainer->addVoxelData("NeighborList", iDataArray);
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );
     MAKE_ARRAY(int16_t, "int16_t_Array" );

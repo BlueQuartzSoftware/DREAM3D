@@ -133,7 +133,7 @@ class IDataArray
      * @brief Byte swaps the Elements in the array. Needed if you want to convert
      * the endianess of the data.
      */
-    virtual void byteSwapElements() = 0;
+  //  virtual void byteSwapElements() = 0;
 
     /**
      * @brief Sets all the values to zero.
