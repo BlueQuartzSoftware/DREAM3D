@@ -45,7 +45,7 @@
 #include "DREAM3DLib/IO/FileWriter.h"
 
 
-class DxWriter : public DREAM3D::FileWriter
+class DREAM3DLib_EXPORT DxWriter : public DREAM3D::FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(DxWriter)
