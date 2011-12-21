@@ -182,10 +182,15 @@ namespace DREAM3D
     const std::string KernelMisorientations("KernelMisorientations");
     const std::string ImageQuality("ImageQuality");
   }
+
   namespace FieldData
   {
     const std::string NeighborList("NeighborList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
+  }
+
+  namespace EnsembleData
+  {
     const std::string TotalSurfaceArea("TotalSurfaceArea");
   }
 }
@@ -229,23 +234,40 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
 
     /**
-     * @brief Adds/overwrites the data for a named array
-     * @param name The name that the array will be known by
-     * @param data The IDataArray::Pointer that will hold the data
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    void addFieldData(const std::string &name, IDataArray::Pointer data);
+
+    /**
+    * @brief Returns the array for a given named array or the equivelant to a
+    * null pointer if the name does not exist.
+    * @param name The name of the data array
+    */
+    IDataArray::Pointer getFieldData(const std::string &name);
+
+    std::list<std::string> getFieldArrayNameList();
+
+    int getNumFieldArrays();
+
+    /**
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    */
+    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+
+    /**
+     * @brief Returns the array for a given named array or the equivelant to a
+     * null pointer if the name does not exist.
+     * @param name The name of the data array
      */
-      void addFieldData(const std::string &name, IDataArray::Pointer data);
+    IDataArray::Pointer getEnsembleData(const std::string &name);
 
-      /**
-       * @brief Returns the array for a given named array or the equivelant to a
-       * null pointer if the name does not exist.
-       * @param name The name of the data array
-       */
-      IDataArray::Pointer getFieldData(const std::string &name);
+    std::list<std::string> getEnsembleArrayNameList();
 
-      std::list<std::string> getFieldArrayNameList();
-
-      int getNumFieldArrays();
-
+    int getNumEnsembleArrays();
 
     /* ****************** END Map Based Methods *******************************/
 
@@ -348,6 +370,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
   private:
     std::map<std::string, IDataArray::Pointer> m_VoxelData;
     std::map<std::string, IDataArray::Pointer> m_FieldData;
+    std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
     DataContainer(const DataContainer&);
     void operator =(const DataContainer&);
