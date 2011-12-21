@@ -143,7 +143,7 @@ err = h5writer->writeCellData<int32_t> (hdfPath, phaseValues, DREAM3D::HDF5::Pha
 
 
 /**
- * @class H5GrainWriter H5GrainWriter.h AIM/Common/HDF5/H5GrainWriter.h
+ * @class H5GrainWriter H5GrainWriter.h DREAM3DLib/HDF5/H5GrainWriter.h
  * @brief This class will write a .h5grain file from data provided by the
  * ReconstructionFunc class
  * @author Michael A. Jackson for BlueQuartz Software
