@@ -98,7 +98,7 @@ void FindNeighbors::find_neighbors()
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
 
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Field, DREAM3D::FieldData::TotalSurfaceArea, xtalCount, totalsurfacearea, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, totalsurfacearea, 1);
   for (size_t i = 1; i < xtalCount; ++i)
   {
     totalsurfacearea[i] = 0.0f;

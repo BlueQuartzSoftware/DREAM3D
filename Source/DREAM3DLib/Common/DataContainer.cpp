@@ -166,3 +166,47 @@ int DataContainer::getNumFieldArrays()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer DataContainer::getEnsembleData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EnsembleData.find(name);
+  if ( it == m_EnsembleData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+{
+  m_EnsembleData[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> DataContainer::getEnsembleArrayNameList()
+{
+  std::list<std::string> keys(m_EnsembleData.size());
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainer::getNumEnsembleArrays()
+{
+  return m_EnsembleData.size();
+}
+
+
