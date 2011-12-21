@@ -66,38 +66,7 @@ DataContainer::DataContainer()
   resz = 1.0f;
 
   origin[0] = 0.0f; origin[1] = 0.0f; origin[2] = 0.0f;
-//  grain_indicies = NULL;
-//  phases = NULL;
-//  euler1s = NULL;
-//  euler2s = NULL;
-//  euler3s = NULL;
-//  surfacevoxels = NULL;
-//  quats = NULL;
-//  alreadychecked = NULL;
-//  neighbors = NULL;
-//  goodVoxels = NULL;
-//  nearestneighbors = NULL;
-//  nearestneighbordistances = NULL;
-//  grainmisorientations = NULL;
-//  misorientationgradients = NULL;
-//  kernelmisorientations = NULL;
 
-
-//  INIT_DataArray(m_GrainIndicies,int);
-//  INIT_DataArray(m_Phases,int);
-//  INIT_DataArray(m_Euler1s,float);
-//  INIT_DataArray(m_Euler2s,float);
-//  INIT_DataArray(m_Euler3s,float);
-//  INIT_DataArray(m_SurfaceVoxels,char);
-//  INIT_DataArray(m_Neighbors,int);
-//  INIT_DataArray(m_GoodVoxels,bool);
-//  INIT_DataArray(m_Quats,float);
-//  INIT_DataArray(m_AlreadyChecked,bool);
-//  INIT_DataArray(m_NearestNeighbors,int);
-//  INIT_DataArray(m_NearestNeighborDistances,float);
-//  INIT_DataArray(m_GrainMisorientations,float);
-//  INIT_DataArray(m_MisorientationGradients,float);
-//  INIT_DataArray(m_KernelMisorientations,float);
 }
 
 // -----------------------------------------------------------------------------
@@ -150,4 +119,50 @@ int DataContainer::getNumVoxelArrays()
 {
   return m_VoxelData.size();
 }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer DataContainer::getFieldData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(name);
+  if ( it == m_FieldData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+{
+  m_FieldData[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> DataContainer::getFieldArrayNameList()
+{
+  std::list<std::string> keys(m_FieldData.size());
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainer::getNumFieldArrays()
+{
+  return m_FieldData.size();
+}
+
 

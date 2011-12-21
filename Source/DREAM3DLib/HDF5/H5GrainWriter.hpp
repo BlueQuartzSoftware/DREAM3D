@@ -168,11 +168,11 @@ class  H5GrainWriter
     int writeHDF5GrainsFile(DataContainer* r, const std::string &hdfFile)
     {
 
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (r->totalpoints), grain_indicies);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (r->totalpoints), phases);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (r->totalpoints), euler1s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (r->totalpoints), euler2s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (r->totalpoints), euler3s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (r->totalpoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (r->totalpoints), phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (r->totalpoints), euler1s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (r->totalpoints), euler2s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (r->totalpoints), euler3s);
 
 
 

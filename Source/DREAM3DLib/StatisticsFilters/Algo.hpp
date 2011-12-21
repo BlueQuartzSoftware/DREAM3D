@@ -99,8 +99,8 @@ class FindEuclideanMap : public AbstractFilter
     void operator()() const
     {
       std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances);
 
       int nearestneighbordistance = 0;
       int count = 1;

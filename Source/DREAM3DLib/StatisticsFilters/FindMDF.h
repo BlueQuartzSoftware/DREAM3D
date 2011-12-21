@@ -67,20 +67,16 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     virtual ~FindMDF();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
 	 /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	std::vector<std::vector<float> > neighborlist;
-	std::vector<std::vector<float> > neighborsurfacearealist;
-
-	virtual void execute();
-
-    void find_mdf(H5StatsWriter::Pointer h5io);
+    virtual void execute();
 
   protected:
     FindMDF();
+
+    void find_mdf(H5StatsWriter::Pointer h5io);
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;

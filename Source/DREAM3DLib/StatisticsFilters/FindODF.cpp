@@ -89,7 +89,7 @@ void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
   size_t bin;
   size_t numgrains = m->m_Grains.size();
   int phase;

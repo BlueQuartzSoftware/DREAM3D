@@ -92,7 +92,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
     int err = 0;
     std::string file;
     size_t total = r->xpoints * r->ypoints * r->zpoints;
-    GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (r->totalpoints), grain_indicies);
+    GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (r->totalpoints), grain_indicies);
 
     if (m_WriteBinaryFiles == true) {
       WRITE_VTK_GRAIN_IDS_BINARY(r, DREAM3D::VTK::GrainIdScalarName);
@@ -240,10 +240,10 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
       }
 
 
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (r->totalpoints), phases);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (r->totalpoints), euler1s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (r->totalpoints), euler2s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (r->totalpoints), euler3s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (r->totalpoints), phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (r->totalpoints), euler1s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (r->totalpoints), euler2s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (r->totalpoints), euler3s);
 
       // Write the IPF Coloring Cell Data
       for (size_t i = 0; i < total; i++)
@@ -542,10 +542,10 @@ class VtkMiscFileWriter
       {
         WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
       }
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientation);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientation);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradient);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientation);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientation);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradient);
 
       size_t total = m->xpoints * m->ypoints * m->zpoints;
       if (true == m_WriteBinaryFiles)
@@ -591,7 +591,7 @@ class VtkMiscFileWriter
         WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
       }
       size_t total = m->xpoints * m->ypoints * m->zpoints;
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
 
       if (true == m_WriteBinaryFiles)
       {

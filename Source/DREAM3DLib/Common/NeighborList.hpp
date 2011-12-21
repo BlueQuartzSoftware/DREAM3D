@@ -37,7 +37,8 @@
 #ifndef NEIGHBORLIST_H_
 #define NEIGHBORLIST_H_
 
-
+#include <string>
+#include <map>
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
@@ -46,127 +47,164 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
-typedef std::vector<int>  IntVectorType;
-typedef boost::shared_ptr< IntVectorType >  SharedVectorType;
-
-
+template<typename T>
 class NeighborList : public IDataArray
 {
   public:
-    DREAM3D_SHARED_POINTERS(NeighborList);
-    DREAM3D_STATIC_NEW_MACRO(NeighborList);
-    DREAM3D_TYPE_MACRO_SUPER(NeighborList, IDataArray);
+    DREAM3D_SHARED_POINTERS(NeighborList<T> );
+    DREAM3D_STATIC_NEW_MACRO(NeighborList<T> );
+    DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray);
 
+
+    typedef std::vector<T> VectorType;
+    typedef boost::shared_ptr<VectorType> SharedVectorType;
 
     virtual ~NeighborList() {}
 
-    /* ******* IDataArray Interface. These Must be implemented ***** */
+    void SetName(const std::string &name) { m_Name = name; }
 
-    virtual void SetName(const std::string &name) { m_Name = name;}
-    virtual std::string GetName() { return m_Name;}
 
-    /* These methods are empty as there is no real way to get at the data */
-    void takeOwnership() {}
-    void releaseOwnership() {}
+    std::string GetName() { return m_Name; }
 
-    void* GetVoidPointer(size_t i)
-    {
-      return NULL;
-    }
 
-    size_t GetNumberOfTuples()
-    {
-      return _data.size();
-    }
+    void takeOwnership() {    }
 
-    virtual void SetNumberOfComponents(int nc) {}
-    virtual int GetNumberOfComponents(){return 1;}
 
-    virtual size_t getTypeSize() { return sizeof(SharedVectorType);}
+    void releaseOwnership()  { }
 
-    virtual void initializeWithZeros()
-    {
-      _data.clear();
-    }
 
-    int32_t Resize(size_t size)
-    {
-      return 0;
-    }
+    void* GetVoidPointer(size_t i) { return NULL; }
 
+
+    size_t GetNumberOfTuples() {   return _data.size(); }
+
+
+    void SetNumberOfComponents(int nc) { }
+
+
+    int GetNumberOfComponents() { return 1; }
+
+
+    size_t getTypeSize()  { return sizeof(SharedVectorType); }
+
+
+    void initializeWithZeros() { _data.clear(); }
+
+
+    int32_t Resize(size_t size)  { return 0; }
+
+/**
+ *
+ */
     void addEntry(int grainId, int value)
     {
-      if (_data.find(grainId) == _data.end())
+      if(_data.find(grainId) == _data.end())
       {
-        _data[grainId] = SharedVectorType(new IntVectorType);
+        _data[grainId] = SharedVectorType(new VectorType);
       }
       SharedVectorType sharedVector = _data[grainId];
       _data[grainId]->push_back(value);
     }
 
+    /**
+     *
+     */
+    void removeList(int grainId)
+    {
+      _data.erase(grainId);
+    }
+
+    /**
+     *
+     */
+    void setList(int grainId, SharedVectorType neighborList)
+    {
+      _data[grainId] = neighborList;
+    }
+
+    /**
+     *
+     */
     int getValue(int grainId, int index, bool &ok)
     {
-      if (_data.find(grainId) == _data.end())
+      if(_data.find(grainId) == _data.end())
       {
         ok = false;
         return -1;
       }
       SharedVectorType vec = _data[grainId];
-      if (index < 0 || static_cast<size_t>(index) >= vec->size())
+      if(index < 0 || static_cast<size_t>(index) >= vec->size())
       {
         ok = false;
         return -1;
       }
-      return  (*vec)[index];
+      return (*vec)[index];
     }
 
-    int getListCount() { return _data.size(); }
-
-    int getEntryCount(int grainId)
+    /**
+     *
+     */
+    int getNumberOfLists()
     {
-      if (_data.find(grainId) == _data.end())
+      return _data.size();
+    }
+
+    /**
+     *
+     */
+    int getListSize(int grainId)
+    {
+      if(_data.find(grainId) == _data.end())
       {
         return 0;
       }
       return _data[grainId]->size();
     }
 
+    /**
+     *
+     */
     SharedVectorType pointerToList(int grainId)
     {
-      if (_data.find(grainId) == _data.end())
-       {
-         SharedVectorType copy;
-         return copy;
-       }
+      if(_data.find(grainId) == _data.end())
+      {
+        SharedVectorType copy;
+        return copy;
+      }
       return _data[grainId];
     }
 
-    IntVectorType copyOfList(int grainId)
+    /**
+     *
+     */
+    VectorType copyOfList(int grainId)
     {
 
-      if (_data.find(grainId) == _data.end())
+      if(_data.find(grainId) == _data.end())
       {
-        IntVectorType copy;
+        VectorType copy;
         return copy;
       }
-      IntVectorType copy(*(_data[grainId]));
+      VectorType copy(*(_data[grainId]));
       return copy;
     }
 
-  protected:
-    NeighborList() {}
+    VectorType& operator[](int grainId)
+    {
+      return *(_data[grainId]);
+    }
 
+  protected:
+    NeighborList() :
+        m_Name("NeighborList")  {    }
 
   private:
     std::string m_Name;
 
-    std::map<int, SharedVectorType>  _data;
-
+    std::map<int, SharedVectorType> _data;
 
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented
     void operator=(const NeighborList&); // Operator '=' Not Implemented
 };
-
-
 
 #endif /* NEIGHBORLIST_H_ */

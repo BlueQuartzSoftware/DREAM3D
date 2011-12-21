@@ -38,14 +38,13 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors()
 {
-  totalsurfacearea = NULL;
-  INIT_DataArray(m_TotalSurfaceArea, float);
 }
 
 // -----------------------------------------------------------------------------
@@ -81,8 +80,8 @@ void FindNeighbors::find_neighbors()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (m->totalpoints), surfacevoxels);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (m->totalpoints), surfacevoxels);
 
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
@@ -98,11 +97,15 @@ void FindNeighbors::find_neighbors()
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
-  totalsurfacearea = m_TotalSurfaceArea->WritePointer(0, xtalCount);
+
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Field, DREAM3D::FieldData::TotalSurfaceArea, xtalCount, totalsurfacearea, 1);
   for (size_t i = 1; i < xtalCount; ++i)
   {
     totalsurfacearea[i] = 0.0f;
   }
+
+    std::vector<std::vector<float> > neighborlist;
+    std::vector<std::vector<float> > neighborsurfacearealist;
 
   notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);
   int nListSize = 100;
@@ -111,7 +114,7 @@ void FindNeighbors::find_neighbors()
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     m->m_Grains[i]->numneighbors = 0;
-    neighborlist[i].resize(nListSize, -1);
+    neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
     for (int j = 0; j < 3; j++)
     {
@@ -160,6 +163,11 @@ void FindNeighbors::find_neighbors()
     surfacevoxels[j] = onsurf;
   }
 
+  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+  m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+  NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
+  m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
+
   notify("FindNeighbors: Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
@@ -195,6 +203,16 @@ void FindNeighbors::find_neighbors()
       neighborsurfacearealist[i].push_back(area);
     }
     m->m_Grains[i]->numneighbors = neighborlist[i].size();
+
+    // Set the vector for each list into the NeighborList Object
+    NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
+    sharedNeiLst->assign(neighborlist[i].begin(), neighborlist[i].end());
+    neighborlistPtr->setList(i, sharedNeiLst);
+
+    NeighborList<float>::SharedVectorType sharedSAL(new std::vector<float>);
+    sharedSAL->assign(neighborsurfacearealist[i].begin(), neighborsurfacearealist[i].end());
+    sharedSurfaceAreaListPtr->setList(i, sharedSAL);
   }
+
 }
 
