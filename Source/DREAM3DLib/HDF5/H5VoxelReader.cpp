@@ -139,7 +139,13 @@ int H5VoxelReader::readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelL
   count[0] = xdim * ydim;
 
   status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, count, NULL);
+  if (status < 0) {
+	  //FIXME: Implement the error trapping
+  }
   status = H5Dread(dataset, H5T_NATIVE_INT, memspace, filespace, H5P_DEFAULT, fileVoxelLayer);
+  if (status < 0) {
+	  //FIXME: Implement the error trapping
+  }
 
   H5Sclose(memspace);
   H5Dclose(dataset);

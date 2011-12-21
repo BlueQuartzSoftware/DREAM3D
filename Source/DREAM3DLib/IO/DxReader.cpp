@@ -200,16 +200,13 @@ int DxReader::readFile()
 
     //    if(tokens.size()==20)
     //      finished_header = true;
-
-    if( static_cast<int>(index) == nz * ny * nx || finished_header && tokens.size() != 0 && tokens[0] == "attribute" )
+    size_t total = nz * ny * nx;
+    if( index == total || ( finished_header && tokens.size() != 0 && tokens[0] == "attribute") )
     {
       finished_data = true;
     }
 
     // Allocate the DataArray at this point:
-
-
-
     if(finished_header && !finished_data)
     {
       for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
