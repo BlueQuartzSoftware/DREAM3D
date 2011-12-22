@@ -99,7 +99,6 @@ class Reconstruction : public AbstractPipeline, public Observer
     MXA_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
     MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
     MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
-    MXA_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
 
     MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
 
