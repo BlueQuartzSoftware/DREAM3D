@@ -145,11 +145,23 @@ int TestCasting()
   return 1;
 }
 
+template<typename T>
+void test(T x, T y, T z, const std::string &type)
+{
+  T totalPoints = x * y * z;
+  std::cout << "sizeof(" << type << "): " << sizeof(T) << " totalPoints: " << totalPoints << std::endl;
+}
 
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
+
+  test<int>(4000, 4000, 4000, "int");
+  test<size_t>(4000, 4000, 4000, "size_t");
+  test<int64_t>(4000, 4000, 4000, "int64_t");
+
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestPhWriter() );
