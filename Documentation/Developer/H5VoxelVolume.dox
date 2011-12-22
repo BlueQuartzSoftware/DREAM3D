@@ -31,7 +31,7 @@ in the MicrostructureStatistics Module.
 
 <table border>
 <tr><td><b>Attribute Name</b></td><td><b>Attribute Value</b></td></tr>
-<tr><td>NUM_POINTS</td><td>32 Bit Int: Total Number of points (nPoints)</td></tr>
+<tr><td>NUM_POINTS</td><td>64 Bit Int: Total Number of points (nPoints)</td></tr>
 <tr><td>VTK_DATA_OBJECT</td><td>String with Value "VTK_STRUCTURED_POINTS"</td></tr>
 </table>
 
@@ -45,7 +45,7 @@ in the MicrostructureStatistics Module.
 
    <tr>
       <td> DIMENSIONS </td>
-      <td> HDF Dataset 32 Bit Int x 3 Values: X, Y, Z Voxel Dims </td>
+      <td> HDF Dataset 64 Bit Int x 3 Values: X, Y, Z Voxel Dims </td>
    </tr>
       <tr>
       <td> ORIGIN </td>
