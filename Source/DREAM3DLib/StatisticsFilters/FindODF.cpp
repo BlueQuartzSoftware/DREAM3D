@@ -89,7 +89,8 @@ void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
   size_t bin;
   size_t numgrains = m->m_Grains.size();
   int phase;
@@ -124,13 +125,13 @@ void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
   }
   float ea1, ea2, ea3;
   float r1, r2, r3;
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totalPoints; i++)
   {
 	  totalvol[phases[i]]++;
   }
   for (size_t i = 1; i < m->crystruct.size(); i++)
   {
-	  totalvol[i] = totalvol[i]/float(m->totalpoints);
+	  totalvol[i] = totalvol[i]/float(totalPoints);
   }
   for (size_t i = 1; i < numgrains; i++)
   {

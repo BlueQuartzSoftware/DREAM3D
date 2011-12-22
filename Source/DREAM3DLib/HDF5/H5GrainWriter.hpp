@@ -68,10 +68,9 @@ ipfColor[j * 3 + 2] = rgb[2];\
   std::string hdfPath;\
   std::vector<std::string > hdfPaths;\
   int numgrains = r->m_Grains.size();\
-  int totpoints = r->totalpoints;
+  int totpoints = r->totalPoints();\
   int phase;\
   int pcount = 0;\
-  float q1[5];\
   unsigned char rgb[3] =  { 0, 0, 0 };\
   unsigned char hkl[3] = { 0, 0, 0 };\
   VTK_IPF_COLOR_REFDIRECTION(RefDirection);\
@@ -167,12 +166,12 @@ class  H5GrainWriter
     template<typename DataContainer>
     int writeHDF5GrainsFile(DataContainer* r, const std::string &hdfFile)
     {
-
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (r->totalpoints), grain_indicies);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (r->totalpoints), phases);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (r->totalpoints), euler1s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (r->totalpoints), euler2s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (r->totalpoints), euler3s);
+      int64_t totalPoints = r->totalPoints();
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
 
 
 

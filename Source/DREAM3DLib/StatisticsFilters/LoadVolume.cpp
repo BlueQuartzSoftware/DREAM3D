@@ -63,12 +63,22 @@ LoadVolume::~LoadVolume()
 void LoadVolume::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+  int64_t totalPoints = m->totalPoints();
+
   setErrorCondition(0);
   int err = 0;
 
   H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
   h5Reader->setFileName(getInputFile());
-  int dims[3];
+  int64_t dims[3];
   float spacing[3];
   float origin[3];
   err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
@@ -77,13 +87,10 @@ void LoadVolume::execute()
     return;
   }
 
-  m->xpoints = dims[0];
-  m->ypoints = dims[1];
-  m->zpoints = dims[2];
-  m->totalpoints = dims[0] * dims[1] * dims[2];
-  m->resx = spacing[0];
-  m->resy = spacing[1];
-  m->resz = spacing[2];
+  m->setDimensions(dims);
+  m->setResolution(spacing);
+  totalPoints = m->totalPoints();
+
   initializeAttributes();
   if (getErrorCondition() < 0)
   {
@@ -91,7 +98,7 @@ void LoadVolume::execute()
   }
 
 
-  err = h5Reader->readVoxelData(grain_indicies, phases, euler1s, euler2s, euler3s, m->crystruct, m->phaseType, m->totalpoints);
+  err = h5Reader->readVoxelData(grain_indicies, phases, euler1s, euler2s, euler3s, m->crystruct, m->phaseType, totalPoints);
   m->phasefraction.resize(m->crystruct.size());
   m->pptFractions.resize(m->crystruct.size());
   initializeGrains();
@@ -118,8 +125,8 @@ void LoadVolume::initializeGrains()
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;
   Field::Pointer grain;
-  int totpoints = m->totalpoints;
-  for (int i = 0; i < totpoints; ++i)
+  int64_t totalPoints = m->totalPoints();
+  for (int i = 0; i < totalPoints; ++i)
   {
     grainIndex = grain_indicies[i];
   //  curGrainSize = m->m_Grains.size();
@@ -160,15 +167,16 @@ void LoadVolume::initializeGrains()
 void LoadVolume::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
 
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (m->totalpoints), gi, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (m->totalpoints), ph, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (m->totalpoints), e1, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (m->totalpoints), e2, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (m->totalpoints), e3, 1);
-  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (m->totalpoints), surf, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Neighbors, (m->totalpoints), nn, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Quats, (m->totalpoints * 5), qt, 5);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (totalPoints), gi, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (totalPoints), ph, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (totalPoints), e1, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (totalPoints), e2, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (totalPoints), e3, 1);
+  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (totalPoints), surf, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Neighbors, (totalPoints), nn, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Quats, (totalPoints * 5), qt, 5);
 
   this->grain_indicies = gi;
   this->phases=ph;
@@ -179,7 +187,7 @@ void LoadVolume::initializeAttributes()
   this->neighbors = nn;
   this->quats = qt;
 
-  for (int i = 0; i < m->totalpoints; ++i)
+  for (int i = 0; i < totalPoints; ++i)
   {
     euler1s[i] = -1.0f;
     euler2s[i] = -1.0f;

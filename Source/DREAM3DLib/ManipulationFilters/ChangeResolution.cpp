@@ -93,11 +93,12 @@ void ChangeResolution::change_resolution()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
 
 
 //  DREAM3D_RANDOMNG_NEW()
@@ -133,18 +134,20 @@ void ChangeResolution::change_resolution()
     }
   }
 
-  m->resx = m_XRes;
-  m->resy = m_YRes;
-  m->resz = m_ZRes;
-  m->xpoints = m_XP;
-  m->ypoints = m_YP;
-  m->zpoints = m_ZP;
-  m->totalpoints = m_XP*m_YP*m_ZP;
-  err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(m->totalpoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(m->totalpoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler1)->Resize(m->totalpoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler2)->Resize(m->totalpoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler3)->Resize(m->totalpoints);
+//  m->resx = m_XRes;
+//  m->resy = m_YRes;
+//  m->resz = m_ZRes;
+  m->setResolution(m_XRes, m_YRes, m_ZRes);
+//  m->xpoints = m_XP;
+//  m->ypoints = m_YP;
+//  m->zpoints = m_ZP;
+  m->setDimensions(m_XP, m_YP, m_ZP);
+   totalPoints = m_XP*m_YP*m_ZP;
+  err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Euler1)->Resize(totalPoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Euler2)->Resize(totalPoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::Euler3)->Resize(totalPoints);
 
 //  m->grain_indicies = m->m_GrainIndicies->GetPointer(0);
 //  m->phases = m->m_Phases->GetPointer(0);

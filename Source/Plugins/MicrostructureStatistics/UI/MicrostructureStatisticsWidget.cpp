@@ -204,7 +204,7 @@ void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &t
     // Load up the voxel data
     H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
     h5Reader->setFileName(m_InputFile->text().toStdString());
-    int dims[3];
+    int64_t dims[3];
     float spacing[3];
     float origin[3];
     int err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);

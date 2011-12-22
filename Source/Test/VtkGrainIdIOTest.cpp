@@ -95,19 +95,20 @@ int TestVtkGrainIdReader()
 
   VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
   reader->setFileName(UnitTest::DxIOTest::TestFile);
-  int nx = 0;
-  int ny = 0;
-  int nz = 0;
+  int64_t nx = 0;
+  int64_t ny = 0;
+  int64_t nz = 0;
 
   DataContainer::Pointer m = DataContainer::New();
   reader->setDataContainer(m.get());
   reader->execute( );
   int err = reader->getErrorCondition();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
   m->getDimensions(nx, ny, nz);
 
   IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
 
-  DREAM3D_REQUIRE_EQUAL(err, 0);
+
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DxIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DxIOTest::ZSize);

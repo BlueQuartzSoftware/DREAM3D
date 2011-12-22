@@ -37,6 +37,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include <limits>
+
 
 #include "MXA/Utilities/MXADir.h"
 
@@ -71,9 +73,9 @@ int TestPhWriter()
   {
     grainIds->SetValue(i, i + UnitTest::PhIOTest::Offset);
   }
-  int nx = UnitTest::PhIOTest::XSize;
-  int ny = UnitTest::PhIOTest::YSize;
-  int nz = UnitTest::PhIOTest::ZSize;
+  int64_t nx = UnitTest::PhIOTest::XSize;
+  int64_t ny = UnitTest::PhIOTest::YSize;
+  int64_t nz = UnitTest::PhIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
@@ -99,9 +101,9 @@ int TestPhReader()
   PhReader::Pointer reader = PhReader::New();
   reader->setFileName(UnitTest::PhIOTest::TestFile);
   reader->setDataContainer(m.get());
-  int nx = 0;
-  int ny = 0;
-  int nz = 0;
+  int64_t nx = 0;
+  int64_t ny = 0;
+  int64_t nz = 0;
 
   reader->execute( );
   int err = reader->getErrorCondition();
@@ -150,6 +152,15 @@ void test(T x, T y, T z, const std::string &type)
 {
   T totalPoints = x * y * z;
   std::cout << "sizeof(" << type << "): " << sizeof(T) << " totalPoints: " << totalPoints << std::endl;
+
+  if (totalPoints > std::numeric_limits<int32_t>::max() )
+  {
+    std::cout << "  " << type << " would over flow 32 bit signed int" << std::endl;
+  }
+  if (totalPoints > std::numeric_limits<uint32_t>::max() )
+  {
+    std::cout << "  " << type << " would over flow 32 bit unsigned int" << std::endl;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -158,9 +169,9 @@ void test(T x, T y, T z, const std::string &type)
 int main(int argc, char **argv)
 {
 
-  test<int>(4000, 4000, 4000, "int");
-  test<size_t>(4000, 4000, 4000, "size_t");
-  test<int64_t>(4000, 4000, 4000, "int64_t");
+//  test<int>(4000, 4000, 4000, "int");
+//  test<size_t>(4000, 4000, 4000, "size_t");
+//  test<int64_t>(4000, 4000, 4000, "int64_t");
 
   int err = EXIT_SUCCESS;
 

@@ -57,7 +57,7 @@ H5VoxelWriter::~H5VoxelWriter()
 int H5VoxelWriter::writeEulerData(float* e1,
                                   float* e2,
                                   float* e3,
-                                  size_t totalPoints,
+                                  int64_t totalPoints,
                                   bool appendFile)
 {
   int err = -1;
@@ -95,7 +95,7 @@ int H5VoxelWriter::writeEulerData(float* e1,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelWriter::writeGrainIds(int* grain_indicies, size_t totalPoints, bool appendFile)
+int H5VoxelWriter::writeGrainIds(int* grain_indicies, int64_t totalPoints, bool appendFile)
 {
   int err = -1;
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
@@ -125,7 +125,7 @@ int H5VoxelWriter::writeGrainIds(int* grain_indicies, size_t totalPoints, bool a
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelWriter::writePhaseIds(int* phases, size_t totalPoints, bool appendFile)
+int H5VoxelWriter::writePhaseIds(int* phases, int64_t totalPoints, bool appendFile)
 {
   int err = -1;
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
@@ -156,7 +156,7 @@ int H5VoxelWriter::writePhaseIds(int* phases, size_t totalPoints, bool appendFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelWriter::writeStructuredPoints(int volDims[3], float spacing[3], float origin[3], bool appendFile)
+int H5VoxelWriter::writeStructuredPoints(int64_t volDims[3], float spacing[3], float origin[3], bool appendFile)
 {
   int err = -1;
   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();

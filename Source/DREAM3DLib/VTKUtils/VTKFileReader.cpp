@@ -195,8 +195,8 @@ int VTKFileReader::readHeader()
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
-  int dims[3];
-  err = parseInt3V(buf, dims, 0);
+  int64_t dims[3];
+  err = parseInt643V(buf, dims, 0);
   getDataContainer()->setDimensions(dims);
 
 
