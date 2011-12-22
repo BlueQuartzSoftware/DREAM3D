@@ -116,9 +116,9 @@ namespace DREAM3D
     protected:
      FileReader();
 
-     virtual int readHeader(){return -1;}
+     virtual int readHeader();
 
-     virtual int readFile(){return -1;}
+     virtual int readFile();
 
     private:
       FileReader(const FileReader&); // Copy Constructor Not Implemented

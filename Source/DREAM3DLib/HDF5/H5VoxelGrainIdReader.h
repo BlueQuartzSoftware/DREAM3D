@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DXREADER_H_
-#define _DXREADER_H_
+#ifndef H5VOXELGRAINIDREADER_H_
+#define H5VOXELGRAINIDREADER_H_
 
 #include <string>
 #include <vector>
@@ -45,31 +45,41 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IO/FileReader.h"
 
+#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+
+
 /**
- * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @class H5VoxelGrainIdReader H5VoxelGrainIdReader.h DREAM3DLib/HDF5/H5VoxelGrainIdReader.h
+ * @brief This class is meant to read the grain ids out of an h5voxel file and nothing
+ * else.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Dec 21, 2011
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT DxReader : public DREAM3D::FileReader
-{
-  public:
-    DREAM3D_SHARED_POINTERS(DxReader);
-    DREAM3D_STATIC_NEW_MACRO(DxReader);
-    DREAM3D_TYPE_MACRO_SUPER(DxReader, DREAM3D::FileReader);
+ class H5VoxelGrainIdReader : public DREAM3D::FileReader
+  {
+    public:
+      DREAM3D_SHARED_POINTERS(H5VoxelGrainIdReader);
+      DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdReader);
+      DREAM3D_TYPE_MACRO_SUPER(H5VoxelGrainIdReader, DREAM3D::FileReader);
 
-    virtual ~DxReader();
 
-  protected:
-    DxReader();
+      virtual ~H5VoxelGrainIdReader();
 
-    virtual int readHeader();
-    virtual int readFile();
 
-  private:
-    DxReader(const DxReader&); // Copy Constructor Not Implemented
-    void operator=(const DxReader&); // Operator '=' Not Implemented
-};
+    protected:
+      H5VoxelGrainIdReader();
 
-#endif /* DXREADER_H_ */
+      int readHeader();
+
+      int readFile();
+
+
+    private:
+      H5VoxelGrainIdReader(const H5VoxelGrainIdReader&); // Copy Constructor Not Implemented
+      void operator=(const H5VoxelGrainIdReader&); // Operator '=' Not Implemented
+
+  };
+
+
+#endif /* H5VOXELGRAINIDREADER_H_ */

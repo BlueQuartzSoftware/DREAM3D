@@ -123,6 +123,35 @@ type* valuePtr = NULL;\
   }\
 }
 
+#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, type, size, valuePtr) \
+type* valuePtr = NULL;\
+{\
+  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
+  if (iDataArray.get() == NULL) { \
+    std::stringstream s;\
+    s << "Array " << name << " from the DataContainer class was not in the DataContainer";\
+    setErrorCondition(-10);\
+    setErrorMessage(s.str());\
+    return -10;\
+  } \
+  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+    std::stringstream s;\
+    s << "Array " << name << " from the DataContainer class did not have the correct number of elements.";\
+    setErrorCondition(-20);\
+    setErrorMessage(s.str());\
+    return -20;\
+  }\
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
+  if (NULL == valuePtr) {\
+    std::stringstream s;\
+    s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    setErrorCondition(-30);\
+    setErrorMessage(s.str());\
+    return -30;\
+  }\
+}
+
 #define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, type, size, valuePtr) \
 type* valuePtr = NULL;\
 {\
@@ -179,7 +208,7 @@ namespace DREAM3D
     const std::string NearestNeighborDistances("NearestNeighborDistances");
     const std::string GrainMisorientations("GrainMisorientations");
     const std::string MisorientationGradients("MisorientationGradients");
-    const std::string KernelMisorientations("KernelMisorientations");
+    const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQuality("ImageQuality");
   }
 
