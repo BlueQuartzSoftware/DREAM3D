@@ -128,7 +128,7 @@ void pipelineProgressMessage(const std::string &msg)
 
 void pipelineErrorMessage(const char* message)
 {
-  std::cout << "Error: " << message << std::endl;
+  std::cout << "Error Message: " << message << std::endl;
 }
 
 void setErrorCondition(int err) {
