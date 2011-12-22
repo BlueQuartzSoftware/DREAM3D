@@ -87,6 +87,15 @@ namespace DREAM3D
      int parseInt3V(const char* input, int* output, int defaultValue);
 
      /**
+      * @brief This function parses 3  64 bit integer values from a comma delimited string
+      * @param input
+      * @param output
+      * @param defaultValue The value to set if the parsing fails
+      * @return Zero on Success, Negative on Error
+      */
+     int parseInt643V(const char* input, int64_t* output, int64_t defaultValue);
+
+     /**
       * @brief Reads a single line from a buffer
       * @param in The input stream
       * @param buf The buffer

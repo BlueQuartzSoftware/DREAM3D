@@ -102,13 +102,14 @@ void CleanupGrains::execute()
     setErrorMessage(ss.str());
     return;
   }
+  int64_t totalPoints = m->totalPoints();
 
 	// Make sure we have all the arrays available and allocated
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), ph);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (m->totalpoints), ac);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), qt);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (m->totalpoints), nn);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), ph);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (totalPoints), ac);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (totalPoints*5), qt);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (totalPoints), nn);
 
   // Set the local variables created in the above macros to our class variables so
   // we do not have to keep rerunning the above code.
@@ -150,6 +151,7 @@ void CleanupGrains::execute()
 void CleanupGrains::assign_badpoints()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
   std::vector<int > neighs;
   std::vector<int > remove;
   size_t count = 1;
@@ -171,12 +173,12 @@ void CleanupGrains::assign_badpoints()
 
   notify("Assigning Bad Voxels", 0, Observable::UpdateProgressMessage);
 
-  for (int iter = 0; iter < (m->totalpoints); iter++)
+  for (int iter = 0; iter < totalPoints; iter++)
   {
     alreadychecked[iter] = false;
 	if (grain_indicies[iter] > 0) alreadychecked[iter] = true;
   }
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totalPoints; i++)
   {
 		if(alreadychecked[i] == false && grain_indicies[i] == 0)
 		{
@@ -231,7 +233,7 @@ void CleanupGrains::assign_badpoints()
   while (count != 0)
   {
     count = 0;
-    for (int i = 0; i < m->totalpoints; i++)
+    for (int i = 0; i < totalPoints; i++)
     {
       int grainname = grain_indicies[i];
       if (grainname < 0)
@@ -285,7 +287,7 @@ void CleanupGrains::assign_badpoints()
         }
       }
     }
-    for (int j = 0; j < m->totalpoints; j++)
+    for (int j = 0; j < totalPoints; j++)
     {
       int grainname = grain_indicies[j];
       int neighbor = neighbors[j];
@@ -334,6 +336,7 @@ void CleanupGrains::merge_containedgrains()
 void CleanupGrains::reorder_grains()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
   size_t initialVoxellistsSize = 1000;
   size_t size = 0;
   int neighpoints[6];
@@ -364,7 +367,7 @@ void CleanupGrains::reorder_grains()
   }
 
   // Reset the "already checked" to 0 for all voxels
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totalPoints; i++)
   {
     alreadychecked[i] = false;
     gnum = grain_indicies[i];
@@ -456,7 +459,7 @@ void CleanupGrains::reorder_grains()
     }
   }
 
-  for (int i = 0; i < m->totalpoints; i++)
+  for (int i = 0; i < totalPoints; i++)
   {
 	if(grain_indicies[i] >= (int)(currentgrain) )
     {

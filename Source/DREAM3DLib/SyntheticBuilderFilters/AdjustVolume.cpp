@@ -92,7 +92,9 @@ void AdjustVolume::adjust_boundaries()
     setErrorMessage(ss.str());
     return;
   }
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
 
   int neighpoints[6];
@@ -124,9 +126,9 @@ void AdjustVolume::adjust_boundaries()
   {
     gsizes[i] = 0;
   }
-  NEW_SHARED_ARRAY(reassigned, int, m->totalpoints)
+  NEW_SHARED_ARRAY(reassigned, int, totalPoints)
 
-  for(int i=0;i<m->totalpoints;i++)
+  for(int i=0;i<totalPoints;i++)
   {
     reassigned[i] = 0;
     gsizes[grain_indicies[i]]++;
@@ -156,7 +158,7 @@ void AdjustVolume::adjust_boundaries()
     while(grain_indicies[nucleus] != selectedgrain)
     {
       nucleus++;
-      if(nucleus >= m->totalpoints) selectedgrain++, nucleus = 0;
+      if(nucleus >= totalPoints) selectedgrain++, nucleus = 0;
     }
     voxellist[count] = nucleus;
     count++;
@@ -251,7 +253,7 @@ void AdjustVolume::adjust_boundaries()
         m->m_Grains[index]->equivdiameter = diam;
       }
     }
-    for(int i=0;i<m->totalpoints;i++)
+    for(int i=0;i<totalPoints;i++)
     {
       reassigned[i] = 0;
     }
@@ -262,7 +264,7 @@ void AdjustVolume::adjust_boundaries()
   {
     newnames[i] = i;
   }
-  for(int i=0;i<m->totalpoints;i++)
+  for(int i=0;i<totalPoints;i++)
   {
     grain_indicies[i] = newnames[grain_indicies[i]];
   }

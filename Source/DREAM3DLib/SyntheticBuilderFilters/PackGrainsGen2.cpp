@@ -548,26 +548,20 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
 void PackGrainsGen2::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
+
   sizex = m->xpoints * m->resx;
   sizey = m->ypoints * m->resy;
   sizez = m->zpoints * m->resz;
   totalvol = sizex*sizey*sizez;
-  m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
-//  const size_t startIndex = 0;
-//  const size_t endIndex = m->totalpoints;
-//  m->grain_indicies = m->m_GrainIndicies->WritePointer(startIndex, endIndex);
-//  m->phases = m->m_Phases->WritePointer(startIndex, endIndex);
-//  m->euler1s = m->m_Euler1s->WritePointer(startIndex, endIndex);
-//  m->euler2s = m->m_Euler2s->WritePointer(startIndex, endIndex);
-//  m->euler3s = m->m_Euler3s->WritePointer(startIndex, endIndex);
-//  m->surfacevoxels = m->m_SurfaceVoxels->WritePointer(startIndex, endIndex);
 
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (m->totalpoints), gi, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (m->totalpoints), ph, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (m->totalpoints), e1, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (m->totalpoints), e2, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (m->totalpoints), e3, 1);
-  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (m->totalpoints), surf, 1);
+
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (totalPoints), gi, 1);
+  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (totalPoints), ph, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (totalPoints), e1, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (totalPoints), e2, 1);
+  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (totalPoints), e3, 1);
+  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (totalPoints), surf, 1);
 
   this->grain_indicies = gi;
   this->phases=ph;
@@ -577,7 +571,7 @@ void PackGrainsGen2::initializeAttributes()
   this->surfacevoxels = surf;
 
 
-	for(int i=0;i<m->totalpoints;i++)
+	for(int i=0;i<totalPoints;i++)
 	{
 		grain_indicies[i] = 0;
 		phases[i] = 0;
@@ -1283,7 +1277,7 @@ void PackGrainsGen2::assign_voxels()
   float dist;
   float x, y, z;
   int xmin, xmax, ymin, ymax, zmin, zmax;
-  int totpoints = m->totalpoints;
+  int totpoints = m->totalPoints();
 
 
   gsizes.resize(m->m_Grains.size());
@@ -1447,7 +1441,7 @@ void PackGrainsGen2::assign_voxels()
 void PackGrainsGen2::assign_gaps()
 {
   DataContainer* m = getDataContainer();
-  int totpoints = m->totalpoints;
+  int totpoints = m->totalPoints();
   int index;
   int timestep = 100;
   int unassignedcount = 1;
@@ -1616,7 +1610,7 @@ void PackGrainsGen2::assign_gaps()
 void PackGrainsGen2::cleanup_grains()
 {
   DataContainer* m = getDataContainer();
-  int totpoints = m->totalpoints;
+  int totpoints = m->totalPoints();
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
   neighpoints[1] = -m->xpoints;

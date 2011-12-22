@@ -86,7 +86,8 @@ void FindNeighborhoods::find_centroids()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
   float x, y, z;
   int col, row, plane;
@@ -102,7 +103,7 @@ void FindNeighborhoods::find_centroids()
   {
     graincenters[i] = 0.0f;
   }
-  for (int j = 0; j < m->totalpoints; j++)
+  for (int j = 0; j < totalPoints; j++)
   {
     int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;
@@ -145,7 +146,8 @@ void FindNeighborhoods::find_centroids2D()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
   float x, y;
   int col, row;
@@ -159,7 +161,7 @@ void FindNeighborhoods::find_centroids2D()
   {
       graincenters[i] = 0.0f;
   }
-  for (int j = 0; j < m->totalpoints; j++)
+  for (int j = 0; j < totalPoints; j++)
   {
     int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;

@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT H5VoxelReader
     MXA_INSTANCE_STRING_PROPERTY(FileName);
     MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
-    int getSizeResolutionOrigin(int volDims[3], float spacing[3], float origin[3]);
+    int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 
-    int readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelLayer);
+    int readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int* fileVoxelLayer);
 
 
 
@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	  {
 	    if(m_FileName.empty() == true)
 	      {
-	        m_ErrorMessage = "H5ReconVolumeReader Error; Filename was empty";
+	        m_ErrorMessage = "H5VoxelReader Error; Filename was empty";
 	        return -1;
 	      }
 	    OPEN_HDF5_FILE(fileId, m_FileName);

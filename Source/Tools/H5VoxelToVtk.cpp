@@ -92,7 +92,7 @@ int main(int argc, char **argv)
   H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
   h5Reader->setFileName(iFile);
 
-  int dims[3];
+  int64_t dims[3];
   float spacing[3];
   float origin[3];
   std::cout << "Getting Size and Resolution" << std::endl;
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
   m_Euler3s = DataArray<float>::CreateArray(0);
 
 
-  int totalpoints = dims[0] * dims[1] * dims[2];
+  int64_t totalpoints = dims[0] * dims[1] * dims[2];
   grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
   phases = m_Phases->WritePointer(0, totalpoints);
   euler1s = m_Euler1s->WritePointer(0, totalpoints);
@@ -147,9 +147,9 @@ int main(int argc, char **argv)
   m->addVoxelData(DREAM3D::VoxelData::Euler2, m_Euler2s);
   m->addVoxelData(DREAM3D::VoxelData::Euler3, m_Euler3s);
 
-  m->crystruct = crystruct;
+  int64_t totalPoints = m->totalPoints();
 
-  size_t total = totalpoints;
+  m->crystruct = crystruct;
 
   std::cout << "Writing VTK file" << std::endl;
 

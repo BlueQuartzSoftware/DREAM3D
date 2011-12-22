@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
 
-	std::vector<std::vector<float> > misorientationlists;
+	  std::vector<std::vector<float> > misorientationlists;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;

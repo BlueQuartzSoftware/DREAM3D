@@ -91,9 +91,18 @@ void SegmentGrains::execute()
 void SegmentGrains::form_grains()
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (totalPoints*5), quats);
 
 
   DREAM3D_RANDOMNG_NEW()
@@ -128,7 +137,7 @@ void SegmentGrains::form_grains()
   Ebsd::CrystalStructure phase1, phase2;
 
   // Precalculate some constants
-  int totalPMinus1 = m->totalpoints - 1;
+  int64_t totalPMinus1 = totalPoints - 1;
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
@@ -136,9 +145,9 @@ void SegmentGrains::form_grains()
     seed = -1;
     int counter = 0;
     randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
-    while (seed == -1 && counter < m->totalpoints)
+    while (seed == -1 && counter < totalPoints)
     {
-      if (randpoint > totalPMinus1) randpoint = randpoint - m->totalpoints;
+      if (randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
       if (grain_indicies[randpoint] == -1 && phases[randpoint] > 0) seed = randpoint;
 
       randpoint++;

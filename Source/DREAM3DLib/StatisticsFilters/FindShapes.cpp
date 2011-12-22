@@ -76,7 +76,8 @@ void FindShapes::execute()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
   grain_indicies = gi;
   setErrorCondition(0);
 
@@ -98,6 +99,7 @@ void FindShapes::execute()
 void FindShapes::find_centroids()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
   float x, y, z;
   int col, row, plane;
   float radcubed;
@@ -112,7 +114,7 @@ void FindShapes::find_centroids()
   {
     graincenters[i] = 0.0f;
   }
-  for (int j = 0; j < m->totalpoints; j++)
+  for (int j = 0; j < totalPoints; j++)
   {
     int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;
@@ -146,6 +148,8 @@ void FindShapes::find_centroids()
 void FindShapes::find_centroids2D()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
+
   float x, y;
   int col, row;
   float radsquared;
@@ -158,7 +162,7 @@ void FindShapes::find_centroids2D()
   {
       graincenters[i] = 0.0f;
   }
-  for (int j = 0; j < m->totalpoints; j++)
+  for (int j = 0; j < totalPoints; j++)
   {
     int gnum = grain_indicies[j];
     graincenters[gnum*5 + 0]++;
@@ -186,6 +190,8 @@ void FindShapes::find_centroids2D()
 void FindShapes::find_moments()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
+
   float u200 = 0;
   float u020 = 0;
   float u002 = 0;
@@ -199,7 +205,7 @@ void FindShapes::find_moments()
   {
       grainmoments[i] = 0.0f;
   }
-  for (size_t j = 0; j < m->totalpoints; j++)
+  for (size_t j = 0; j < totalPoints; j++)
   {
     u200 = 0;
     u020 = 0;
@@ -291,6 +297,7 @@ void FindShapes::find_moments()
 void FindShapes::find_moments2D()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
   float u200 = 0;
   float u020 = 0;
   float u110 = 0;
@@ -301,7 +308,7 @@ void FindShapes::find_moments2D()
   {
       grainmoments[i] = 0.0f;
   }
-  for (int j = 0; j < m->totalpoints; j++)
+  for (int j = 0; j < totalPoints; j++)
   {
     u200 = 0;
     u020 = 0;
