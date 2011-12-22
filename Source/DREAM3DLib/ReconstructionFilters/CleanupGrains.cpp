@@ -104,6 +104,9 @@ void CleanupGrains::execute()
   }
   int64_t totalPoints = m->totalPoints();
 
+  float* ptr = getVoxelDataSizeCheck<float, FloatArrayType>(DREAM3D::VoxelData::Quats, totalPoints);
+  if (NULL == ptr) { return; }
+
 	// Make sure we have all the arrays available and allocated
   GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
   GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), ph);
