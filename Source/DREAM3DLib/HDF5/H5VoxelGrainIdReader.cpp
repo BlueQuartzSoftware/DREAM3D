@@ -34,42 +34,64 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DXREADER_H_
-#define _DXREADER_H_
+#include "H5VoxelGrainIdReader.h"
 
-#include <string>
-#include <vector>
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileReader.h"
-
-/**
- * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
- */
-class DREAM3DLib_EXPORT DxReader : public DREAM3D::FileReader
+H5VoxelGrainIdReader::H5VoxelGrainIdReader() :
+DREAM3D::FileReader()
 {
-  public:
-    DREAM3D_SHARED_POINTERS(DxReader);
-    DREAM3D_STATIC_NEW_MACRO(DxReader);
-    DREAM3D_TYPE_MACRO_SUPER(DxReader, DREAM3D::FileReader);
+  // TODO Auto-generated constructor stub
 
-    virtual ~DxReader();
+}
 
-  protected:
-    DxReader();
+H5VoxelGrainIdReader::~H5VoxelGrainIdReader()
+{
+  // TODO Auto-generated destructor stub
+}
 
-    virtual int readHeader();
-    virtual int readFile();
+int H5VoxelGrainIdReader::readHeader()
+{
+  return 0;
+}
 
-  private:
-    DxReader(const DxReader&); // Copy Constructor Not Implemented
-    void operator=(const DxReader&); // Operator '=' Not Implemented
-};
+int H5VoxelGrainIdReader::readFile()
+{
+  if(NULL == getDataContainer())
+  {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+    return -1;
+  }
 
-#endif /* DXREADER_H_ */
+  int err = 0;
+  H5VoxelReader::Pointer reader = H5VoxelReader::New();
+  reader->setFileName(getFileName());
+  int volDims[3];
+  float spacing[3];
+  float origin[3];
+  err = reader->getSizeResolutionOrigin(volDims, spacing, origin);
+  if(err < 0)
+  {
+    setErrorMessage("Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File");
+    return err;
+  }
+  getDataContainer()->setDimensions(volDims);
+  getDataContainer()->setResolution(spacing);
+  getDataContainer()->setOrigin(origin);
+
+  size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
+  // Create an DataArray to hold the data
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints);
+
+  err = reader->readScalarData<int>(DREAM3D::VTK::GrainIdScalarName, grainIds->GetPointer(0));
+  if(err < 0)
+  {
+    setErrorCondition(err);
+    setErrorMessage("Error Reading the GrainIDs from the .h5voxel file.");
+    grainIds = DataArray<int>::NullPointer();
+  }
+
+  getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  return err;
+}

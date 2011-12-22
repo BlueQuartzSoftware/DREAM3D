@@ -282,8 +282,7 @@ void MicrostructureStatistics::execute()
     {
       delete (*iter);
     }
-
-    CHECK_FOR_ERROR(DataContainer, "The MicrostructureStatisticsFunc threw an Error writing the VTK file format.", err);
+    CHECK_FOR_ERROR(DataContainer, vtkWriter.getErrorMessage(), err);
   }
 
   // Clean up all the memory by forcibly setting a NULL pointer to the Shared

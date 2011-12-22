@@ -61,6 +61,29 @@ FileReader::~FileReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int FileReader::readHeader()
+{
+  setErrorCondition(-1);
+  setErrorMessage("FileReader should be subclassed and functionality implemented there");
+  notify(getErrorMessage(), 0, UpdateErrorMessage);
+  return -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int FileReader::readFile()
+{
+  setErrorCondition(-1);
+  setErrorMessage("FileReader should be subclassed and functionality implemented there");
+  notify(getErrorMessage(), 0, UpdateErrorMessage);
+  return -1;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FileReader::execute()
 {
   if (getDataContainer() == NULL)
@@ -71,13 +94,23 @@ void FileReader::execute()
     return;
   }
   setErrorCondition(0);
-  readHeader();
-  if (getErrorCondition() < 0)
+  int err = readHeader();
+  if (err < 0)
   {
+    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    setErrorCondition(err);
     notify(getErrorMessage(), 0, UpdateErrorMessage);
     return;
   }
-  readFile();
+  err = readFile();
+  if (err < 0)
+  {
+    setErrorMessage("Error Reading the file");
+    setErrorCondition(err);
+    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    return;
+  }
+
 }
 
 // -----------------------------------------------------------------------------

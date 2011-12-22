@@ -97,11 +97,11 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
 //  m->misorientationgradients = m->m_MisorientationGradients->WritePointer(0, m->totalpoints);
 //  m->kernelmisorientations = m->m_KernelMisorientations->WritePointer(0, m->totalpoints);
 
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::KernelMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientations, 1);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientations, 1);
   INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientations, 1);
   INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradients, 1);
 
-  FloatArrayType* m_KernelMisorientations = FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType* >(m->getVoxelData(DREAM3D::VoxelData::KernelMisorientations).get());
+  FloatArrayType* m_KernelMisorientations = FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType* >(m->getVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations).get());
 
 
 

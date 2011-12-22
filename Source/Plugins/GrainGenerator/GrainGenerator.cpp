@@ -270,7 +270,8 @@ void GrainGenerator::execute()
     for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter)
     {
       delete (*iter);
-    }CHECK_FOR_ERROR(DataContainer, "The Grain Generator threw an Error writing the VTK file format.", err);
+    }
+    CHECK_FOR_ERROR(DataContainer, vtkWriter.getErrorMessage(), err);
 
   }
 
