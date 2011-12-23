@@ -1618,18 +1618,22 @@ void PackGrainsGen2::cleanup_grains()
   DataContainer* m = getDataContainer();
   int totpoints = m->totalpoints;
   int neighpoints[6];
-  neighpoints[0] = -(m->xpoints * m->ypoints);
-  neighpoints[1] = -m->xpoints;
+  int xp = m->xpoints;
+  int yp = m->ypoints;
+  int zp = m->zpoints;
+  neighpoints[0] = -(xp * yp);
+  neighpoints[1] = -xp;
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = (m->xpoints * m->ypoints);
+  neighpoints[4] = xp;
+  neighpoints[5] = (xp * yp);
   std::vector<std::vector<int> > vlists;
   vlists.resize(m->m_Grains.size());
   std::vector<int> currentvlist;
   std::vector<bool> checked;
   checked.resize(totpoints,false);
   size_t count;
+  int touchessurface = 0;
   int good;
   int neighbor;
   int column, row, plane;
@@ -1644,6 +1648,7 @@ void PackGrainsGen2::cleanup_grains()
 
   for (int i = 0; i < totpoints; i++)
   {
+    touchessurface = 0;
 	if(checked[i] == false && grain_indicies[i] > 0)
 	{
 		minsize = mindiameter[phases[i]]*mindiameter[phases[i]]*mindiameter[phases[i]]*M_PI/6.0;
@@ -1653,9 +1658,10 @@ void PackGrainsGen2::cleanup_grains()
 		while(count < currentvlist.size())
 		{
 			index = currentvlist[count];
-			column = index % m->xpoints;
-			row = (index / m->xpoints) % m->ypoints;
-			plane = index / (m->xpoints * m->ypoints);
+			column = index % xp;
+			row = (index / xp) % yp;
+			plane = index / (xp * yp);
+			if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) touchessurface = 1;
 			for (int j = 0; j < 6; j++)
 			{
 				good = 1;
@@ -1663,11 +1669,11 @@ void PackGrainsGen2::cleanup_grains()
 				if (m_periodic_boundaries == false)
 				{
 					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (m->zpoints - 1)) good = 0;
+					if (j == 5 && plane == (zp - 1)) good = 0;
 					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (m->ypoints - 1)) good = 0;
+					if (j == 4 && row == (yp - 1)) good = 0;
 					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (m->xpoints - 1)) good = 0;
+					if (j == 3 && column == (xp - 1)) good = 0;
 					if (good == 1 && grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
@@ -1676,12 +1682,12 @@ void PackGrainsGen2::cleanup_grains()
 				}
 				else if (m_periodic_boundaries == true)
 				{
-					if (j == 0 && plane == 0) neighbor = neighbor + (m->xpoints*m->ypoints*m->zpoints);
-					if (j == 5 && plane == (m->zpoints - 1)) neighbor = neighbor - (m->xpoints*m->ypoints*m->zpoints);
-					if (j == 1 && row == 0) neighbor = neighbor + (m->xpoints*m->ypoints);
-					if (j == 4 && row == (m->ypoints - 1)) neighbor = neighbor - (m->xpoints*m->ypoints);
-					if (j == 2 && column == 0) neighbor = neighbor + (m->xpoints);
-					if (j == 3 && column == (m->xpoints - 1)) neighbor = neighbor - (m->xpoints);
+					if (j == 0 && plane == 0) neighbor = neighbor + (xp*yp*zp);
+					if (j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp*yp*zp);
+					if (j == 1 && row == 0) neighbor = neighbor + (xp*yp);
+					if (j == 4 && row == (yp - 1)) neighbor = neighbor - (xp*yp);
+					if (j == 2 && column == 0) neighbor = neighbor + (xp);
+					if (j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
 					if (grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
@@ -1713,12 +1719,12 @@ void PackGrainsGen2::cleanup_grains()
 		}
 		else if(size == 0)
 		{
-			if(currentvlist.size() >= minsize)
+			if(currentvlist.size() >= minsize || touchessurface == 1)
 			{
 				vlists[grain_indicies[i]].resize(currentvlist.size());
 				vlists[grain_indicies[i]].swap(currentvlist);
 			}
-			if(currentvlist.size() < minsize)
+			if(currentvlist.size() < minsize && touchessurface == 0)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{

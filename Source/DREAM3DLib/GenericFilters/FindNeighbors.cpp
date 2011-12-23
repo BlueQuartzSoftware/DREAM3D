@@ -213,6 +213,5 @@ void FindNeighbors::find_neighbors()
     sharedSAL->assign(neighborsurfacearealist[i].begin(), neighborsurfacearealist[i].end());
     sharedSurfaceAreaListPtr->setList(i, sharedSAL);
   }
-
 }
 

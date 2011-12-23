@@ -163,7 +163,7 @@ void GrainGenerator::execute()
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
   match_crystallography->setH5StatsFile(getH5StatsFile());
-  pipeline.push_back(match_crystallography);
+//  pipeline.push_back(match_crystallography);
 
 
   MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)

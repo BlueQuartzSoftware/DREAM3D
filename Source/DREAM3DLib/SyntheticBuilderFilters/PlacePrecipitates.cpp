@@ -148,16 +148,14 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-  float insidecount = 0;
-  float coatinginsidecount = 0;
   float volcur = m->m_Grains[gnum]->volume;
   float bovera = m->m_Grains[gnum]->radius2;
   float covera = m->m_Grains[gnum]->radius3;
   float omega3 = m->m_Grains[gnum]->omega3;
   float radcur1, radcur2, radcur3;
   float coatingradcur1, coatingradcur2, coatingradcur3;
-  currentprecipvoxellist.resize(1000);
-  currentcoatingvoxellist.resize(1000);
+  currentprecipvoxellist.resize(0);
+  currentcoatingvoxellist.resize(0);
 
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
   // init any values for each of the Shape Ops
@@ -270,22 +268,12 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 			if(inside >= 0)
 			{
 				int currentpoint = index;
-				currentprecipvoxellist[insidecount] = currentpoint;
-				insidecount++;
-				if (insidecount >= (currentprecipvoxellist.size()))
-				{
-				  currentprecipvoxellist.resize(insidecount + 1000,-1);
-				}
+				currentprecipvoxellist.push_back(currentpoint);
 			}
 			if(inside < 0 && coatinginside >= 0)
 			{
 				int currentpoint = index;
-				currentcoatingvoxellist[coatinginsidecount] = currentpoint;
-				coatinginsidecount++;
-				if (coatinginsidecount >= (currentcoatingvoxellist.size()))
-				{
-				  currentcoatingvoxellist.resize(coatinginsidecount + 1000,-1);
-				}
+				currentcoatingvoxellist.push_back(currentpoint);
 			}
 		  }
 		}
@@ -404,7 +392,7 @@ void  PlacePrecipitates::place_precipitates()
   DataContainer* m = getDataContainer();
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
-  float thickness = 0.5;
+  float thickness = 0.25;
   size_t currentnumgrains = m->m_Grains.size();
   numprimarygrains = m->m_Grains.size();
  // size_t index;
@@ -500,7 +488,7 @@ void  PlacePrecipitates::place_precipitates()
 		{
 			if(grain_indicies[currentcoatingvoxellist[j]] < numprimarygrains)
 			{
-			    phases[currentprecipvoxellist[j]] = 3;
+			    phases[currentcoatingvoxellist[j]] = 3;
 			}
 		}
 		totalprecipvol = totalprecipvol + (precipvoxelcounter*m->resx*m->resy*m->resz);
