@@ -126,7 +126,7 @@ void FindNeighbors::find_neighbors()
   notify("FindNeighbors: Working through all Voxels", 0, Observable::UpdateProgressMessage);
   totalPoints = m->totalPoints();
 
-  for (int j = 0; j < totalPoints; j++)
+  for (int64_t j = 0; j < totalPoints; j++)
   {
     onsurf = 0;
     grain = grain_indicies[j];

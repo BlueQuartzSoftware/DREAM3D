@@ -96,7 +96,7 @@ int DxReader::readFile()
 
   // Process the header information and look for the std::string "counts"
   // Then read the data size after that
-  int pos1 = 0;
+  size_t pos1 = 0;
   while (pos1 == 0)
   { // continue until we find the keyword
     for (size_t i = 0; i < tokens.size(); i++)

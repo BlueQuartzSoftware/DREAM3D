@@ -336,9 +336,9 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
   float n1, n2, n3;
   float r1, r2, r3;
 
-  int curmiso1 = std::numeric_limits<float >::max();
-  int curmiso2 = std::numeric_limits<float >::max();
-  int curmiso3 = std::numeric_limits<float >::max();
+  int curmiso1 = std::numeric_limits<int >::max();
+  int curmiso2 = std::numeric_limits<int >::max();
+  int curmiso3 = std::numeric_limits<int >::max();
 
   int neighsurfarea = std::numeric_limits<int >::max();
   int curmisobin = std::numeric_limits<int >::max();
