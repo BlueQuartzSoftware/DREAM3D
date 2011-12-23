@@ -36,6 +36,39 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
+#define METHOD_DEFINITION_TEMPLATE_GETARRAYDATA(GetMethod)\
+template<typename PtrType, typename DataArrayType>\
+PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size)\
+{\
+PtrType* gi = NULL;\
+IDataArray::Pointer iDataArray = m_DataContainer->GetMethod(arrayName);\
+if (iDataArray.get() == 0) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";\
+  setErrorCondition(-10);\
+  setErrorMessage(s.str());\
+  return gi;\
+}\
+if (size != iDataArray->GetNumberOfTuples()) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
+  s << "Required: " << size << " Contains: " << iDataArray->GetNumberOfTuples();\
+  setErrorCondition(-11);\
+  setErrorMessage(s.str());\
+  return gi;\
+}\
+gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+if (NULL == gi) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
+  setErrorCondition(-13);\
+  setErrorMessage(s.str());\
+  return gi;\
+}\
+return gi;\
+}
+
+
 
 /**
  * @class AbstractFilter AbstractFilter.h DREAM3DLib/Common/AbstractFilter.h
@@ -72,6 +105,12 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      * @brief This method should be fully implemented in subclasses.
      */
     virtual void execute();
+
+    /**
+     *
+     */
+    METHOD_DEFINITION_TEMPLATE_GETARRAYDATA(getVoxelData);
+    METHOD_DEFINITION_TEMPLATE_GETARRAYDATA(getFieldData);
 
   protected:
     AbstractFilter();

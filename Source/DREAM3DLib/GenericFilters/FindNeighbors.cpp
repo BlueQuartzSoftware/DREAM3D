@@ -80,8 +80,9 @@ void FindNeighbors::find_neighbors()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (m->totalpoints), surfacevoxels);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, totalPoints, surfacevoxels);
 
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
@@ -123,7 +124,9 @@ void FindNeighbors::find_neighbors()
   }
 
   notify("FindNeighbors: Working through all Voxels", 0, Observable::UpdateProgressMessage);
-  for (int j = 0; j < m->totalpoints; j++)
+  totalPoints = m->totalPoints();
+
+  for (int j = 0; j < totalPoints; j++)
   {
     onsurf = 0;
     grain = grain_indicies[j];

@@ -71,7 +71,7 @@ type* valuePtr = NULL;\
   IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
     setErrorCondition(-12);\
     setErrorMessage(s.str());\
     return;\
@@ -100,14 +100,14 @@ type* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     std::stringstream s;\
-    s << "Array " << name << " from the DataContainer class was not in the DataContainer";\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
     setErrorCondition(-10);\
     setErrorMessage(s.str());\
     return;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
     std::stringstream s;\
-    s << "Array " << name << " from the DataContainer class did not have the correct number of elements.";\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
     setErrorCondition(-11);\
     setErrorMessage(s.str());\
     return;\
@@ -116,7 +116,7 @@ type* valuePtr = NULL;\
   IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
     setErrorCondition(-13);\
     setErrorMessage(s.str());\
     return;\
@@ -129,14 +129,14 @@ type* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     std::stringstream s;\
-    s << "Array " << name << " from the DataContainer class was not in the DataContainer";\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
     setErrorCondition(-10);\
     setErrorMessage(s.str());\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
     std::stringstream s;\
-    s << "Array " << name << " from the DataContainer class did not have the correct number of elements.";\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
     setErrorCondition(-20);\
     setErrorMessage(s.str());\
     return -20;\
@@ -145,7 +145,7 @@ type* valuePtr = NULL;\
   IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << "Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
     setErrorCondition(-30);\
     setErrorMessage(s.str());\
     return -30;\
@@ -300,33 +300,33 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     /* ****************** END Map Based Methods *******************************/
 
-    void setDimensions(int dims[3]) {
+    void setDimensions(int64_t dims[3]) {
        xpoints = dims[0];
        ypoints = dims[1];
        zpoints = dims[2];
        totalpoints = xpoints * ypoints * zpoints;
     }
-    void setDimensions(int d0, int d1, int d2)
+    void setDimensions(int64_t d0, int64_t d1, int64_t d2)
     {
       xpoints = d0;
       ypoints = d1;
       zpoints = d2;
       totalpoints = xpoints * ypoints * zpoints;
     }
-    void getDimensions(int &d0, int &d1, int &d2)
+    void getDimensions(int64_t &d0, int64_t &d1, int64_t &d2)
     {
       d0 = xpoints;
       d1 = ypoints;
       d2 = zpoints;
     }
-    void getDimensions(int dims[3])
+    void getDimensions(int64_t dims[3])
     {
       dims[0] = xpoints;
       dims[1] = ypoints;
       dims[2] = zpoints;
     }
 
-    int totalPoints() { return xpoints * ypoints * zpoints; }
+    int64_t totalPoints() { return xpoints * ypoints * zpoints; }
 // -----------------------------------------------------------------------------
 //  Resolution Methods
 // -----------------------------------------------------------------------------
@@ -358,10 +358,10 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     float resx;
     float resy;
     float resz;
-    int xpoints;
-    int ypoints;
-    int zpoints;
-    int totalpoints;
+    int64_t xpoints;
+    int64_t ypoints;
+    int64_t zpoints;
+
 
     float origin[3];
 
@@ -397,6 +397,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DataContainer();
 
   private:
+    int64_t totalpoints;
+
     std::map<std::string, IDataArray::Pointer> m_VoxelData;
     std::map<std::string, IDataArray::Pointer> m_FieldData;
     std::map<std::string, IDataArray::Pointer> m_EnsembleData;

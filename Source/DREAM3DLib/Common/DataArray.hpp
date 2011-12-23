@@ -162,7 +162,7 @@ class DataArray : public IDataArray
     * @code
     *  int* ptr = array->WritePointer(0, 1000);
     * @endcode
-    * @param id The Address of the data index
+    * @param id The offset of the data index
     * @param number The number of elements to ensure memory allocation
     * @return
     */

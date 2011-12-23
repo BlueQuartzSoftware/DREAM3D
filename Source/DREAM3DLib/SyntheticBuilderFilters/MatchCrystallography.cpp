@@ -686,11 +686,13 @@ void MatchCrystallography::matchCrystallography()
 {
 
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (m->totalpoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (m->totalpoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (m->totalpoints), euler3s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
 
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
@@ -732,7 +734,7 @@ void MatchCrystallography::matchCrystallography()
     }
   }
  // float q[5];
-  for(int i = 0; i < m->totalpoints; i++)
+  for(int i = 0; i < totalPoints; i++)
   {
     euler1s[i] = m->m_Grains[grain_indicies[i]]->euler1;
     euler2s[i] = m->m_Grains[grain_indicies[i]]->euler2;
@@ -770,13 +772,13 @@ void  MatchCrystallography::measure_misorientations ()
   misorientationlists.resize(m->m_Grains.size());
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-	if (misorientationlists[i].size() != 0)
+    if(misorientationlists[i].size() != 0)
     {
-		misorientationlists[i].clear();
+      misorientationlists[i].clear();
     }
-	if (neighborlist[i].size() != 0)
+    if(neighborlist[i].size() != 0)
     {
-		misorientationlists[i].resize(neighborlist[i].size() * 3, 0.0);
+      misorientationlists[i].resize(neighborlist[i].size() * 3, 0.0);
     }
 
     q1[1] = m->m_Grains[i]->avg_quat[1];
@@ -785,11 +787,10 @@ void  MatchCrystallography::measure_misorientations ()
     q1[4] = m->m_Grains[i]->avg_quat[4];
     phase1 = m->crystruct[m->m_Grains[i]->phase];
     size_t size = 0;
-    if (neighborlist[i].size() != 0 && neighborsurfacearealist[i].size() != 0 && neighborsurfacearealist[i].size() == neighborlist[i].size() )
+    if(neighborlist[i].size() != 0 && neighborsurfacearealist[i].size() != 0 && neighborsurfacearealist[i].size() == neighborlist[i].size())
     {
       size = neighborlist[i].size();
     }
-
 
     for (size_t j = 0; j < size; j++)
     {
@@ -801,29 +802,26 @@ void  MatchCrystallography::measure_misorientations ()
       q2[3] = m->m_Grains[nname]->avg_quat[3];
       q2[4] = m->m_Grains[nname]->avg_quat[4];
       phase2 = m->crystruct[m->m_Grains[nname]->phase];
-      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+      if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
       OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
-      if (phase1 == phase2)
+      if(phase1 == phase2)
       {
         misorientationlists[i][3 * j] = r1;
         misorientationlists[i][3 * j + 1] = r2;
         misorientationlists[i][3 * j + 2] = r3;
       }
-      if (phase1 != phase2)
+      if(phase1 != phase2)
       {
         misorientationlists[i][3 * j] = -100;
         misorientationlists[i][3 * j + 1] = -100;
         misorientationlists[i][3 * j + 2] = -100;
       }
-      if (phase1 == phase2)
+      if(phase1 == phase2)
       {
-        mbin =
-            m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3 * j],
-                                                misorientationlists[i][3 * j + 1],
-                                                misorientationlists[i][3 * j + 2]);
+        mbin = m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3 * j], misorientationlists[i][3 * j + 1], misorientationlists[i][3 * j + 2]);
       }
 
-      if (m->m_Grains[i]->surfacefield == 0 && (nname > i || m->m_Grains[nname]->surfacefield == 1) && phase1 == phase2)
+      if(m->m_Grains[i]->surfacefield == 0 && (nname > i || m->m_Grains[nname]->surfacefield == 1) && phase1 == phase2)
       {
         simmdf[m->m_Grains[i]->phase][mbin] = simmdf[m->m_Grains[i]->phase][mbin] + (neighsurfarea / totalsurfacearea[m->m_Grains[i]->phase]);
       }

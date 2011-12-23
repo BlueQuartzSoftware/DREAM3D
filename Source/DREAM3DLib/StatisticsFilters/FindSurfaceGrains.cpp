@@ -88,7 +88,9 @@ void FindSurfaceGrains::execute()
 void FindSurfaceGrains::find_surfacegrains()
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
   int col, row, plane;
   for (int j = 0; j < (m->xpoints * m->ypoints * m->zpoints); j++)
@@ -120,7 +122,9 @@ void FindSurfaceGrains::find_surfacegrains()
 void FindSurfaceGrains::find_surfacegrains2D()
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
   int col, row;
   for (int j = 0; j < (m->xpoints * m->ypoints); j++)

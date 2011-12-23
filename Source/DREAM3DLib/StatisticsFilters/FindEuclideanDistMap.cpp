@@ -80,15 +80,16 @@ void FindEuclideanDistMap::find_euclideandistmap()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
 
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (m->totalpoints*3), nearestneighbors, 3);
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (m->totalpoints*3), nearestneighbordistances, 3);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), nearestneighbors, 3);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), nearestneighbordistances, 3);
 
 
 
-  for (int i = 0; i < m->totalpoints*3; i++)
+  for (int i = 0; i < totalPoints*3; i++)
   {
     nearestneighbors[i] = -1;
     nearestneighbordistances[i] = -1;
@@ -108,7 +109,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   neighbors[3] = 1;
   neighbors[4] = m->xpoints;
   neighbors[5] = m->xpoints * m->ypoints;
-  for (int a = 0; a < (m->totalpoints); ++a)
+  for (int a = 0; a < (totalPoints); ++a)
   {
 	grain = grain_indicies[a];
 	if(grain > 0)

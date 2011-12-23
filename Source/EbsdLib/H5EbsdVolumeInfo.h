@@ -88,7 +88,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      * @param zRes The resolution along the Z Axis
      * @return Error condition
      */
-    virtual int getDimsAndResolution(int &xDim, int &yDim, int &zDim,
+    virtual int getDimsAndResolution(int64_t &xDim, int64_t &yDim, int64_t &zDim,
                                      float &xRes, float &yRes, float &zRes);
 
     /**
@@ -101,7 +101,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      * @param zDim The number of points along the Z Axis
      * @return Error condition
      */
-    virtual int getDims(int &xDim, int &yDim, int &zDim);
+    virtual int getDims(int64_t &xDim, int64_t &yDim, int64_t &zDim);
 
     /**
      * @brief This method gathers the resolution in each of the axis directions where each of the

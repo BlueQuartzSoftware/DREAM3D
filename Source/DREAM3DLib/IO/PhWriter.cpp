@@ -82,14 +82,13 @@ int PhWriter::writeFile()
     return -1;
   }
 
-//  GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
   int32_t* grain_indicies = 0;
   {
     IDataArray::Pointer iDataArray = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
     if (iDataArray.get() == 0) {
       return -10;
     }
-    if (static_cast<size_t>((m->totalpoints)) != iDataArray->GetNumberOfTuples()) {
+    if (static_cast<size_t>(m->totalPoints()) != iDataArray->GetNumberOfTuples()) {
       return -20;
     }
     grain_indicies =

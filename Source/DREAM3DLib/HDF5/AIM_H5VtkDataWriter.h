@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
      */
     int closeFile();
 
-    int writeStructuredPoints(const std::string &hdfPath, int dims[3],
+    int writeStructuredPoints(const std::string &hdfPath, int64_t dims[3],
                               float resolution[3], float origin[3]);
 
   /**

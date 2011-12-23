@@ -46,7 +46,7 @@
      * @param inputs The EMMPM_Data structure to store the results
      * @return
      */
-int parseInitCoords(const std::string &str, int* values)
+int parseInitCoords(const std::string &str, int64_t* values)
 {
   int n = sscanf(str.c_str(), "%d,%d,%d", values, values+1, values+2 );
   if (n != 3)
@@ -60,7 +60,7 @@ int parseInitCoords(const std::string &str, int* values)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int sanityCheckInputs(int* min, int* max, int* volDims)
+int sanityCheckInputs(int64_t* min, int64_t* max, int64_t* volDims)
 {
 
   for(size_t i = 0; i < 3; ++i) {
@@ -74,7 +74,7 @@ int sanityCheckInputs(int* min, int* max, int* volDims)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void processArray(int* min, int* max, int* dims,
+void processArray(int64_t* min, int64_t* max, int64_t* dims,
                  typename DataArray<T>::Pointer in,
                  typename DataArray<T>::Pointer out)
 {
@@ -104,12 +104,12 @@ void processArray(int* min, int* max, int* dims,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* min, int* max)
+int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int64_t* min, int64_t* max)
 {
 
   int err = 0;
 
-  int dims[3];
+  int64_t dims[3];
   float volRes[3];
   float origin[3];
   err = reader->getSizeResolutionOrigin(dims, volRes, origin);
@@ -131,7 +131,7 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* m
   m_Euler3s = DataArray<float>::CreateArray(0);
 
 
-  int totalpoints = dims[0] * dims[1] * dims[2];
+  int64_t totalpoints = dims[0] * dims[1] * dims[2];
   grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
   phases = m_Phases->WritePointer(0, totalpoints);
   euler1s = m_Euler1s->WritePointer(0, totalpoints);
@@ -173,7 +173,7 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int* m
   err = writer->writePhaseTypes(phaseType, true);
   if (err < 0) { return err; }
 
-  int volDims[3] = { (max[0]-min[0]+1), (max[1]-min[1]+1), (max[2]-min[2]+1) };
+  int64_t volDims[3] = { (max[0]-min[0]+1), (max[1]-min[1]+1), (max[2]-min[2]+1) };
   totalpoints = volDims[0] * volDims[1] * volDims[2];
   err = writer->writeEulerData(outEuler1->GetPointer(0), outEuler2->GetPointer(0), outEuler3->GetPointer(0), totalpoints, true);
   if (err < 0) { return err; }
@@ -236,7 +236,7 @@ int main(int argc, char **argv)
 
      H5VoxelReader::Pointer reader = H5VoxelReader::New();
      reader->setFileName(inputFile.getValue());
-     int dims[3];
+     int64_t dims[3];
      float volRes[3];
      float origin[3];
      err = reader->getSizeResolutionOrigin(dims, volRes, origin);
@@ -254,8 +254,8 @@ int main(int argc, char **argv)
      }
 
 
-     int min[3];
-     int max[3];
+     int64_t min[3];
+     int64_t max[3];
 
      parseInitCoords(minCoords.getValue(), min);
      parseInitCoords(maxCoords.getValue(), max);

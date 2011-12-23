@@ -80,15 +80,12 @@ int DxWriter::writeFile()
     setErrorCondition(-1);
     return -1;
   }
-
-  GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
 
   int err = 0;
-  int dims[3];
-  dims[0] = m->xpoints;
-  dims[1] = m->ypoints;
-  dims[2] = m->zpoints;
-  int totalPoints = dims[0] * dims[1] * dims[2];
+  int64_t dims[3];
+  m->getDimensions(dims);
   // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
 
   std::ofstream out(getFileName().c_str(), std::ios_base::binary);
