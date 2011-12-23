@@ -65,7 +65,7 @@
 #define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName)\
   fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
     fprintf(f, "%d ", grain_indicies[i]);\
   }\
@@ -78,12 +78,12 @@
   { \
   int* gn = new int[totalPoints];\
   int t;\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     t = grain_indicies[i];\
     MXA::Endian::FromSystemToBig::convert<int>(t); \
     gn[i] = t; \
   }\
-  size_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
@@ -96,7 +96,7 @@
 #define WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(ptr, name, type, var, FORMAT)\
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, var[i]);\
   }fprintf(f,"\n"); \
@@ -107,12 +107,12 @@
   { \
   type* gn = new type[totalPoints];\
   type t;\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[i];\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\
-  size_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
@@ -127,10 +127,10 @@
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   type* gn = new type[totalPoints];\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     gn[i] = var[i];\
   }\
-  size_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
@@ -143,7 +143,7 @@
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(ptr, name, type, var, FORMAT)\
   fprintf(f, "SCALARS %s float 1\n", name.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, ptr->m_Grains[grain_indicies[i]]->var);\
   } fprintf(f,"\n");
@@ -154,12 +154,12 @@
   { \
   type* gn = new type[totalPoints];\
   type t;\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     t = ptr->m_Grains[grain_indicies[i]]->var;\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\
-  size_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\

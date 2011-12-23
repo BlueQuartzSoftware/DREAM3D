@@ -371,7 +371,7 @@ void Smoothing::execute()
           int h = rtri.getNode(n1).nId;
           for (int k = 0; k < 3; k++) {
             for (int j = 0; j < 3; j++) {
-              K[3 * h + k][3 * i + j] += one12th * (1.0 + delta(i, h)) * n[j] * n[k] * A;}}
+              K[3 * h + k][3 * i + j] += one12th * (1.0f + delta(i, h)) * n[j] * n[k] * A;}}
         }
       }
     }

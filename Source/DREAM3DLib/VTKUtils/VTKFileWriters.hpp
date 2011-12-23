@@ -324,7 +324,7 @@ class VTKRectilinearGridFileWriter
      * @param step The step value between each point on the axis.
      */
     template<typename T>
-    int writeCoords(FILE* f, const char* axis, const char* type, int npoints, T min, T max, T step)
+    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step)
     {
       int err = 0;
       fprintf(f, "%s %d %s\n", axis, npoints, type);

@@ -92,13 +92,13 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
      /**
       *
       */
-     int ignoreData(std::ifstream &in, int byteSize, char* type, int xDim, int yDim, int zDim);
+     int ignoreData(std::ifstream &in, int byteSize, char* type, int64_t xDim, int64_t yDim, int64_t zDim);
 
      /**
       *
       */
      template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim, T &diff)
+     int skipVolume(std::ifstream &inStream, int byteSize, int64_t xDim, int64_t yDim, int64_t zDim, T &diff)
      {
        int err = 0;
        size_t totalSize = xDim * yDim * zDim;

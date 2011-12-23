@@ -72,7 +72,7 @@ int H5VoxelWriter::writeEulerData(float* e1,
   int32_t rank = 2;
   hsize_t dims[2] = { totalPoints, numComp };
   std::vector<float> dataf( totalPoints * 3);
-  for (size_t i = 0; i <  totalPoints; ++i)
+  for (int64_t i = 0; i <  totalPoints; ++i)
   {
     dataf[i * 3] = e1[i];
     dataf[i * 3 + 1] = e2[i];
