@@ -73,7 +73,8 @@ void FindSizes::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
+    int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == gi) { return; }
   grain_indicies = gi;
 
   setErrorCondition(0);

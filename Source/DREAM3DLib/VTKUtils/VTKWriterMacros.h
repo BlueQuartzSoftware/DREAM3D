@@ -65,7 +65,7 @@
 #define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName)\
   fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
     fprintf(f, "%d ", grain_indicies[i]);\
   }\
@@ -78,12 +78,12 @@
   { \
   int* gn = new int[totalPoints];\
   int t;\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     t = grain_indicies[i];\
     MXA::Endian::FromSystemToBig::convert<int>(t); \
     gn[i] = t; \
   }\
-  size_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
