@@ -779,8 +779,6 @@ void  MatchCrystallography::measure_misorientations ()
   int mbin;
 
   misorientationlists.resize(m->m_Grains.size());
-
-
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     if(misorientationlists[i].size() != 0)

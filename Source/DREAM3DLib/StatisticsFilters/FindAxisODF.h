@@ -67,14 +67,12 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     virtual ~FindAxisODF();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float); // N x 6 Array
 	 /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
 
     void find_axisodf(H5StatsWriter::Pointer h5io);
-    void find_axisodf2D(H5StatsWriter::Pointer h5io);
 
   protected:
     FindAxisODF();
