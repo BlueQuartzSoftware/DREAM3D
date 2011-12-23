@@ -148,7 +148,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
      }
 
      template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim)
+     int skipVolume(std::ifstream &inStream, int byteSize, int64_t xDim, int64_t yDim, int64_t zDim)
      {
        int err = 0;
        if(getFileIsBinary() == true)

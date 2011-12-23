@@ -182,7 +182,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 		  neighborhoodfit[temp3][0] = neighborhood[temp3][0];
 		  neighborhoodfit[temp3][1] = neighborhood[temp3][3] - neighborhood[temp3][1];
 		  neighborhoodfit[temp3][2] = neighborhood[temp3][1];
-		  neighborhoodfit[temp3][3] = log((neighborhood[temp3][5] - neighborhoodfit[temp3][2]) / neighborhoodfit[temp3][1]) / log(2.0);
+		  neighborhoodfit[temp3][3] = log((neighborhood[temp3][5] - neighborhoodfit[temp3][2]) / neighborhoodfit[temp3][1]) / log(2.0f);
 		}
 	  }
 	  avglogdiam = avglogdiam / actualgrains;
