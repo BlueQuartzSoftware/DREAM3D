@@ -186,7 +186,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5EbsdVolumeInfo::getDimsAndResolution(int &xDim, int &yDim, int &zDim,
+int H5EbsdVolumeInfo::getDimsAndResolution(int64_t &xDim, int64_t &yDim, int64_t &zDim,
                                              float &xRes, float &yRes, float &zRes)
 {
   int err = -1;
@@ -211,7 +211,7 @@ int H5EbsdVolumeInfo::getDimsAndResolution(int &xDim, int &yDim, int &zDim,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5EbsdVolumeInfo::getDims(int &xDim, int &yDim, int &zDim)
+int H5EbsdVolumeInfo::getDims(int64_t &xDim, int64_t &yDim, int64_t &zDim)
 {
   int err = -1;
   if (m_ValuesAreCached == false)

@@ -131,17 +131,18 @@ void GrainGenerator::execute()
       err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
 
       CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error getting size and resolution from HDF5 Voxel File", err);
-
-      m->xpoints = dims[0];
-      m->ypoints = dims[1];
-      m->zpoints = dims[2];
-      m->totalpoints = dims[0] * dims[1] * dims[2];
+      m->setDimensions(dims);
+//      m->xpoints = dims[0];
+//      m->ypoints = dims[1];
+//      m->zpoints = dims[2];
+//      m->totalpoints = dims[0] * dims[1] * dims[2];
+      m->setResolution(spacing);
       m->resx = spacing[0];
       m->resy = spacing[1];
       m->resz = spacing[2];
 
       updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
-      err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalpoints);
+      err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalPoints());
       CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error reading voxel data from HDF5 Voxel File", err);
     }
     else

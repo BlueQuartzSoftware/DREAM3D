@@ -59,7 +59,7 @@ H5VoxelReader::~H5VoxelReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelReader::getSizeResolutionOrigin(int volDims[3], float spacing[3], float origin[3])
+int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
 
@@ -107,7 +107,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int volDims[3], float spacing[3], flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelReader::readHyperSlab(int xdim, int ydim, int zIndex, int* fileVoxelLayer)
+int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int* fileVoxelLayer)
 {
   int err = 0;
 

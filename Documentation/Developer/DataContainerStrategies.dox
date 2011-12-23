@@ -1,0 +1,107 @@
+/**
+
+@page DataContainerStrategies DataContainer Use in Filters
+
+@section Introduction
+  The DataContainer class within the DREAM3D development framework is designed
+to hold in memory all the data associated with a reconstructed microstructure. As
+such it is built in a way to hold generic high level C++ classes. For this the
+DataContainer is broken into a few categories:
+@li Voxel Data
+@li Field Data
+@li Ensemble Data
+ <i>Note; Need explanations here</i>
+
+The programmer can store multiple Arrays for each of the categories that describe
+the data being processed. For example there is a standard array of integers that
+describe the "Grain ID" for each voxel and stored in an array called "GrainIds".
+
+@section filterdesign Filter Design
+  All filters must inherit from the <tt>AbstractFilter</tt> class and implement
+the <tt>virtual void execute()</tt> method. Each AbstractFilter has a method to
+retrieve the DataContainer object assigned to that particular filter. It is recommended
+that the first bit of code within the <tt>execute()</tt> method be the following:
+@code
+  DataContainer* m = getDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+  int err = 0;
+  setErrorCondition(err);
+@endcode
+  This will ensure that a valid DataPointer object is available for use during the
+filter. It is at this point that the programmer needs to decide in what manner they
+will store references to any data arrays from the DataContainer. If all of the filter
+code will be within the <tt>execute</tt> method then using local variables is the
+way to go. An example of this is the following:
+
+@code
+int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds,
+                                    Int32ArrayType, int32_t, (totalPoints), gi);
+@endcode
+
+  Here we are using a preprocessor Macro that is defined in DataContainer.h that
+creates a lot of boilerplate code. Fully expanded this is what is generated:
+
+@code
+int32_t* gi = 0;
+{
+  IDataArray::Pointer iDataArray = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if (iDataArray.get() == 0)
+  {
+    std::stringstream s;
+    s << getNameOfClass() << ": Array " << DREAM3D::VoxelData::GrainIds
+               << " from the DataContainer class was not in the DataContainer";
+    setErrorCondition(-10);
+    setErrorMessage(s.str());
+    return;
+  }
+  if (static_cast<size_t>((totalPoints)) != iDataArray->GetNumberOfTuples())
+  {
+    std::stringstream s;
+    s << getNameOfClass() << ": Array " << DREAM3D::VoxelData::GrainIds
+         << " from the DataContainer class did not have the correct number of elements.";
+    setErrorCondition(-11);
+    setErrorMessage(s.str());
+    return;
+  }
+  gi = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>
+                          (m->getVoxelData(DREAM3D::VoxelData::GrainIds).get());
+  if (0 == gi)
+  {
+    std::stringstream s;
+    s << getNameOfClass() << ": Array " << DREAM3D::VoxelData::GrainIds
+        << " from the DataContainer class could not be cast to type " << "int32_t";
+    setErrorCondition(-13);
+    setErrorMessage(s.str());
+    return;
+  }
+}
+@endcode
+  This code first checks to make sure the data array is available, and if so checks
+the size of the array to make sure it matches what the programmer thinks it should
+be. Then lastly we get a pointer to the internal data array, <b>gi</b> in this example.
+
+  If your filter is long and is broken up into several more methods and these variables
+are needed in those methods then another strategy is to assign the pointer to a
+<b>private</b> instance variable. In this case we may have a declaration in the
+header file of our filter for <tt>int32_t* grain_indicies;</tt> and then after the
+preprocessor macro is called we would have the following simple assignment:
+@code
+this->grain_indicies = gi;
+@endcode
+  An example of assignment to instance variables can be seen in the
+<i><b>DREAM3DLib/ReconstructionFilters/CleanupGrains</b></i> class.
+
+
+
+
+
+ *
+ */

@@ -103,9 +103,11 @@ void PlacePrecipitates::execute()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), ph);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (m->totalpoints), surf);
+  int64_t totalPoints = m->totalPoints();
+
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), ph);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (totalPoints), surf);
 
 
   grain_indicies = gi;
@@ -295,7 +297,7 @@ void  PlacePrecipitates::fillin_precipitates()
   int good = 1;
   float x, y, z;
   gsizes.resize(m->m_Grains.size(),0);
-  neighbors.resize(m->totalpoints,0);
+  neighbors.resize(m->totalPoints(),0);
   int neighpoint;
   int neighpoints[6];
   std::vector<int> n(m->m_Grains.size());
@@ -390,6 +392,7 @@ void  PlacePrecipitates::place_precipitates()
 {
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
   float thickness = 0.25;
@@ -441,20 +444,20 @@ void  PlacePrecipitates::place_precipitates()
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)
     {
-		random2 = int(rg.genrand_res53()*double(m->totalpoints-1));
+		random2 = int(rg.genrand_res53()*double(totalPoints-1));
 		while(surfacevoxels[random2] == 0 || grain_indicies[random2] > numprimarygrains)
 		{
 		  random2++;
-		  if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
+		  if(random2 >= totalPoints) random2 = random2-totalPoints;
 		}
 	}
     else if(random > precipboundaryfraction)
     {
-		random2 = rg.genrand_res53()*(m->totalpoints-1);
+		random2 = rg.genrand_res53()*(totalPoints-1);
 		while(surfacevoxels[random2] != 0 || grain_indicies[random2] > numprimarygrains)
 		{
 		  random2++;
-		  if(random2 >= m->totalpoints) random2 = random2-m->totalpoints;
+		  if(random2 >= totalPoints) random2 = random2-totalPoints;
 		}
     }
     xc = find_xcoord(random2);

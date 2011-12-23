@@ -95,9 +95,9 @@ int TestDxReader()
 
   DxReader::Pointer reader = DxReader::New();
   reader->setFileName(UnitTest::DxIOTest::TestFile);
-  int nx = 0;
-  int ny = 0;
-  int nz = 0;
+  int64_t nx = 0;
+  int64_t ny = 0;
+  int64_t nz = 0;
 
   DataContainer::Pointer m = DataContainer::New();
   reader->setDataContainer(m.get());

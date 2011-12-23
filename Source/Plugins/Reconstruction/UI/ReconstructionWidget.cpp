@@ -416,9 +416,9 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     }
 
     int err = 0;
-    int xpoints = 0;
-    int ypoints = 0;
-    int zpoints = 1;
+    int64_t xpoints = 0;
+    int64_t ypoints = 0;
+    int64_t zpoints = 1;
     float xres = 0.0f;
     float yres = 0.0f;
     float zres = 0.0f;

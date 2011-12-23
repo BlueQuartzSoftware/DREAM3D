@@ -72,7 +72,8 @@ void FindSizes::execute()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), gi);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
   grain_indicies = gi;
 
   setErrorCondition(0);
@@ -88,6 +89,8 @@ void FindSizes::execute()
 void FindSizes::find_sizes()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
+
   float radcubed;
   float diameter;
   size_t numgrains = m->m_Grains.size();
@@ -98,7 +101,7 @@ void FindSizes::find_sizes()
   {
     graincounts[i] = 0.0f;
   }
-  for (int j = 0; j < m->totalpoints; j++)
+  for (int j = 0; j < totalPoints; j++)
   {
     int gnum = grain_indicies[j];
     graincounts[gnum]++;
@@ -117,6 +120,7 @@ void FindSizes::find_sizes()
 void FindSizes::find_sizes2D()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
 
   float radsquared;
   float diameter;
@@ -127,7 +131,7 @@ void FindSizes::find_sizes2D()
   {
       graincounts[i] = 0.0f;
   }
-  for (int j = 0; j < m->totalpoints; j++)
+  for (int j = 0; j < totalPoints; j++)
   {
     int gnum = grain_indicies[j];
     graincounts[gnum]++;

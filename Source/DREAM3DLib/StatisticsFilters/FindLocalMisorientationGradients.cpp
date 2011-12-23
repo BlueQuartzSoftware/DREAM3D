@@ -89,23 +89,25 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
     setErrorMessage(ss.str());
     return;
   }
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (m->totalpoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (m->totalpoints*5), quats);
 
-//  m->grainmisorientations = m->m_GrainMisorientations->WritePointer(0, m->totalpoints);
-//  m->misorientationgradients = m->m_MisorientationGradients->WritePointer(0, m->totalpoints);
-//  m->kernelmisorientations = m->m_KernelMisorientations->WritePointer(0, m->totalpoints);
+  int64_t totalPoints = m->totalPoints();
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (totalPoints*5), quats);
 
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, FloatArrayType, float, (m->totalpoints), kernelmisorientations, 1);
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (m->totalpoints), grainmisorientations, 1);
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (m->totalpoints), misorientationgradients, 1);
+//  m->grainmisorientations = m->m_GrainMisorientations->WritePointer(0, totalPoints);
+//  m->misorientationgradients = m->m_MisorientationGradients->WritePointer(0, totalPoints);
+//  m->kernelmisorientations = m->m_KernelMisorientations->WritePointer(0, totalPoints);
+
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, FloatArrayType, float, (totalPoints), kernelmisorientations, 1);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (totalPoints), grainmisorientations, 1);
+  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradients, 1);
 
   FloatArrayType* m_KernelMisorientations = FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType* >(m->getVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations).get());
 
 
 
-  std::vector<float> gamVec(m->totalpoints);
+  std::vector<float> gamVec(totalPoints);
   float* gam = &(gamVec.front());
 
   float** avgmiso = new float *[m->m_Grains.size()];
@@ -117,7 +119,7 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
       avgmiso[i][j] = 0.0;
     }
   }
-  for (int i = 0; i < m->totalpoints; ++i)
+  for (int i = 0; i < totalPoints; ++i)
   {
     gam[i] = 0.0;
   }

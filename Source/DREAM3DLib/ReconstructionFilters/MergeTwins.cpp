@@ -132,7 +132,7 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *neighListPtr;
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalPoints()), grain_indicies);
 
  // float angcur = 180.0f;
   std::vector<int> twinlist;
@@ -207,7 +207,7 @@ void MergeTwins::renumber_grains()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalpoints), grain_indicies);
+  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalPoints()), grain_indicies);
 
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;
@@ -233,7 +233,8 @@ void MergeTwins::renumber_grains()
 #if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalpoints ), ParallelRenumberGrains( this) );
 #else
- for (int j = 0; j < m->totalpoints; j++)
+  int64_t totalPoints = m->totalPoints();
+ for (int j = 0; j < totalPoints; j++)
   {
     int grainname = grain_indicies[j];
     if (grainname >= 1)

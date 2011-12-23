@@ -115,7 +115,7 @@ int AIM_H5VtkDataWriter::closeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AIM_H5VtkDataWriter::writeStructuredPoints(const std::string &hdfPath, int volDims[3],
+int AIM_H5VtkDataWriter::writeStructuredPoints(const std::string &hdfPath, int64_t volDims[3],
                           float spacing[3], float origin[3])
 {
   herr_t err = 0;
@@ -142,7 +142,7 @@ int AIM_H5VtkDataWriter::writeStructuredPoints(const std::string &hdfPath, int v
   {
      std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
   }
-  int nPoints = volDims[0] * volDims[1] * volDims[2];
+  int64_t nPoints = volDims[0] * volDims[1] * volDims[2];
   err = H5Lite::writeScalarAttribute(m_FileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
   if (err < 0)
   {

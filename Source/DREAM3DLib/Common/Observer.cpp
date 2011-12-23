@@ -83,7 +83,7 @@ void Observer::pipelineProgressMessage(const char* message)
 // -----------------------------------------------------------------------------
 void Observer::pipelineWarningMessage(const char* message)
 {
-  std::cout << "Warning: " << message << std::endl;
+  std::cout << "Warning Message: " << message << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -91,5 +91,5 @@ void Observer::pipelineWarningMessage(const char* message)
 // -----------------------------------------------------------------------------
 void Observer::pipelineErrorMessage(const char* message)
 {
-  std::cout << "Error: " << message << std::endl;
+  std::cout << "Error Message: " << message << std::endl;
 }

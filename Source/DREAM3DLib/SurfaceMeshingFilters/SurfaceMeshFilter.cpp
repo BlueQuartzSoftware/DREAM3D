@@ -389,7 +389,7 @@ void SurfaceMeshFilter::execute()
 
   GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
 
-  int dims[3];
+  int64_t dims[3];
   float scaling[3];
   float origin[3];
   err = reader->getSizeResolutionOrigin(dims, scaling, origin);

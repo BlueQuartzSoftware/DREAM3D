@@ -66,6 +66,7 @@ set (DOCUMENTATION_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/Developer/StructureReaders.dox
     ${PROJECT_SOURCE_DIR}/Developer/SurfaceMeshing.dox
     ${PROJECT_SOURCE_DIR}/Developer/WritingPlugin.dox
+    ${PROJECT_SOURCE_DIR}/Developer/DataContainerStrategies.dox
 )
 
 set (LATEX_EPS_FILES 
