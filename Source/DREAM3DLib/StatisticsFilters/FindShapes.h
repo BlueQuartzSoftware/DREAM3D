@@ -75,6 +75,8 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     void find_moments2D();
     void find_axes();
     void find_axes2D();
+    void find_axiseulers();
+    void find_axiseulers2D();
     float find_xcoord(size_t index);
     float find_ycoord(size_t index);
     float find_zcoord(size_t index);
