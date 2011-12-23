@@ -133,12 +133,12 @@ int TestVtkWriters()
   vtkWriter->writeSchmidFactorVizFile(m_DataContainer.get(), "out");
 
   ReconstructionFunc::Pointer r = ReconstructionFunc::New();
-  r->xpoints = 5;
-  r->ypoints = 4;
-  r->zpoints = 3;
-  r->resx = 0.35;
-  r->resy = 0.50;
-  r->resz = 0.75;
+  r->getXPoints() = 5;
+  r->getYPoints() = 4;
+  r->getZPoints() = 3;
+  r->getXRes() = 0.35;
+  r->getYRes() = 0.50;
+  r->getZRes() = 0.75;
 
   vtkWriter->setWriteBinaryFiles(true);
   vtkWriter->writeVisualizationFile(r.get(), "out");
@@ -148,12 +148,12 @@ int TestVtkWriters()
 
 
   ReconstructionFunc::Pointer r = ReconstructionFunc::New();
-  r->xpoints = 5;
-  r->ypoints = 4;
-  r->zpoints = 3;
-  r->resx = 0.35;
-  r->resy = 0.50;
-  r->resz = 0.75;
+  r->getXPoints() = 5;
+  r->getYPoints() = 4;
+  r->getZPoints() = 3;
+  r->getXRes() = 0.35;
+  r->getYRes() = 0.50;
+  r->getZRes() = 0.75;
 
   std::vector<Ebsd::CrystalStructure> crystalStructures(2);
   std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2);

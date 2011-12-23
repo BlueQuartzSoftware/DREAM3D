@@ -298,9 +298,9 @@ void PackGrainsGen2::execute()
     fillingerror = check_fillingerror(i,-1000);
     for (int iter = 0; iter < 10; iter++)
     {
-      xc = rg.genrand_res53() * (m->xpoints * m->resx);
-      yc = rg.genrand_res53() * (m->ypoints * m->resy);
-      zc = rg.genrand_res53() * (m->zpoints * m->resz);
+      xc = rg.genrand_res53() * (m->getXPoints() * m->getXRes());
+      yc = rg.genrand_res53() * (m->getYPoints() * m->getYRes());
+      zc = rg.genrand_res53() * (m->getZPoints() * m->getZRes());
       oldxc = m->m_Grains[i]->centroidx;
       oldyc = m->m_Grains[i]->centroidy;
       oldzc = m->m_Grains[i]->centroidz;
@@ -339,9 +339,9 @@ void PackGrainsGen2::execute()
       if(randomgrain == 0) randomgrain = 1;
       if(randomgrain == numgrains) randomgrain = numgrains - 1;
       Seed++;
-      xc = rg.genrand_res53() * (m->xpoints * m->resx);
-      yc = rg.genrand_res53() * (m->ypoints * m->resy);
-      zc = rg.genrand_res53() * (m->zpoints * m->resz);
+      xc = rg.genrand_res53() * (m->getXPoints() * m->getXRes());
+      yc = rg.genrand_res53() * (m->getYPoints() * m->getYRes());
+      zc = rg.genrand_res53() * (m->getZPoints() * m->getZRes());
       oldxc = m->m_Grains[randomgrain]->centroidx;
       oldyc = m->m_Grains[randomgrain]->centroidy;
       oldzc = m->m_Grains[randomgrain]->centroidz;
@@ -445,9 +445,9 @@ void PackGrainsGen2::execute()
 void PackGrainsGen2::initialize_packinggrid()
 {
   DataContainer* m = getDataContainer();
-  packingresx = m->resx * 2.0;
-  packingresy = m->resy * 2.0;
-  packingresz = m->resz * 2.0;
+  packingresx = m->getXRes() * 2.0;
+  packingresy = m->getYRes() * 2.0;
+  packingresz = m->getZRes() * 2.0;
   packingxpoints = int(sizex / packingresx);
   packingypoints = int(sizey / packingresy);
   packingzpoints = int(sizez / packingresz);
@@ -550,9 +550,9 @@ void PackGrainsGen2::initializeAttributes()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  sizex = m->xpoints * m->resx;
-  sizey = m->ypoints * m->resy;
-  sizez = m->zpoints * m->resz;
+  sizex = m->getXPoints() * m->getXRes();
+  sizey = m->getYPoints() * m->getYRes();
+  sizez = m->getZPoints() * m->getZRes();
   totalvol = sizex*sizey*sizez;
 
 
@@ -1261,12 +1261,12 @@ void PackGrainsGen2::assign_voxels()
   DataContainer* m = getDataContainer();
   int index;
   int neighpoints[6];
-  neighpoints[0] = -(m->xpoints * m->ypoints);
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = (m->xpoints * m->ypoints);
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = (m->getXPoints() * m->getYPoints());
   int oldname;
   int column, row, plane;
   float inside;
@@ -1274,8 +1274,8 @@ void PackGrainsGen2::assign_voxels()
   float xp, yp, zp;
   float dist;
   float x, y, z;
-  int xmin, xmax, ymin, ymax, zmin, zmax;
-  int totpoints = m->totalPoints();
+  size_t xmin, xmax, ymin, ymax, zmin, zmax;
+  int64_t totpoints = m->totalPoints();
 
 
   gsizes.resize(m->m_Grains.size());
@@ -1326,32 +1326,32 @@ void PackGrainsGen2::assign_voxels()
     ga[2][0] = sinf(phi1) * sinf(PHI);
     ga[2][1] = -cosf(phi1) * sinf(PHI);
     ga[2][2] = cosf(PHI);
-    column = (xc - (m->resx / 2)) / m->resx;
-    row = (yc - (m->resy / 2)) / m->resy;
-    plane = (zc - (m->resz / 2)) / m->resz;
-    xmin = int(column - ((radcur1 / m->resx) + 1));
-    xmax = int(column + ((radcur1 / m->resx) + 1));
-    ymin = int(row - ((radcur1 / m->resy) + 1));
-    ymax = int(row + ((radcur1 / m->resy) + 1));
-    zmin = int(plane - ((radcur1 / m->resz) + 1));
-    zmax = int(plane + ((radcur1 / m->resz) + 1));
+    column = (xc - (m->getXRes() / 2)) / m->getXRes();
+    row = (yc - (m->getYRes() / 2)) / m->getYRes();
+    plane = (zc - (m->getZRes() / 2)) / m->getZRes();
+    xmin = int(column - ((radcur1 / m->getXRes()) + 1));
+    xmax = int(column + ((radcur1 / m->getXRes()) + 1));
+    ymin = int(row - ((radcur1 / m->getYRes()) + 1));
+    ymax = int(row + ((radcur1 / m->getYRes()) + 1));
+    zmin = int(plane - ((radcur1 / m->getZRes()) + 1));
+    zmax = int(plane + ((radcur1 / m->getZRes()) + 1));
     if (m_periodic_boundaries == true)
     {
-      if (xmin < -m->xpoints) xmin = -m->xpoints;
-      if (xmax > 2 * m->xpoints - 1) xmax = (2 * m->xpoints - 1);
-      if (ymin < -m->ypoints) ymin = -m->ypoints;
-      if (ymax > 2 * m->ypoints - 1) ymax = (2 * m->ypoints - 1);
-      if (zmin < -m->zpoints) zmin = -m->zpoints;
-      if (zmax > 2 * m->zpoints - 1) zmax = (2 * m->zpoints - 1);
+      if (xmin < -m->getXPoints()) xmin = -m->getXPoints();
+      if (xmax > 2 * m->getXPoints() - 1) xmax = (2 * m->getXPoints() - 1);
+      if (ymin < -m->getYPoints()) ymin = -m->getYPoints();
+      if (ymax > 2 * m->getYPoints() - 1) ymax = (2 * m->getYPoints() - 1);
+      if (zmin < -m->getZPoints()) zmin = -m->getZPoints();
+      if (zmax > 2 * m->getZPoints() - 1) zmax = (2 * m->getZPoints() - 1);
     }
     if (m_periodic_boundaries == false)
     {
       if (xmin < 0) xmin = 0;
-      if (xmax > m->xpoints - 1) xmax = m->xpoints - 1;
+      if (xmax > m->getXPoints() - 1) xmax = m->getXPoints() - 1;
       if (ymin < 0) ymin = 0;
-      if (ymax > m->ypoints - 1) ymax = m->ypoints - 1;
+      if (ymax > m->getYPoints() - 1) ymax = m->getYPoints() - 1;
       if (zmin < 0) zmin = 0;
-      if (zmax > m->zpoints - 1) zmax = m->zpoints - 1;
+      if (zmax > m->getZPoints() - 1) zmax = m->getZPoints() - 1;
     }
     for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
     {
@@ -1362,23 +1362,23 @@ void PackGrainsGen2::assign_voxels()
           column = iter1;
           row = iter2;
           plane = iter3;
-          if (iter1 < 0) column = iter1 + m->xpoints;
-          if (iter1 > m->xpoints - 1) column = iter1 - m->xpoints;
-          if (iter2 < 0) row = iter2 + m->ypoints;
-          if (iter2 > m->ypoints - 1) row = iter2 - m->ypoints;
-          if (iter3 < 0) plane = iter3 + m->zpoints;
-          if (iter3 > m->zpoints - 1) plane = iter3 - m->zpoints;
-          index = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + column;
+          if (iter1 < 0) column = iter1 + m->getXPoints();
+          if (iter1 > m->getXPoints() - 1) column = iter1 - m->getXPoints();
+          if (iter2 < 0) row = iter2 + m->getYPoints();
+          if (iter2 > m->getYPoints() - 1) row = iter2 - m->getYPoints();
+          if (iter3 < 0) plane = iter3 + m->getZPoints();
+          if (iter3 > m->getZPoints() - 1) plane = iter3 - m->getZPoints();
+          index = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + column;
           inside = -1;
-          x = float(column) * m->resx;
-          y = float(row) * m->resy;
-          z = float(plane) * m->resz;
+          x = float(column) * m->getXRes();
+          y = float(row) * m->getYRes();
+          z = float(plane) * m->getZRes();
           if (iter1 < 0) x = x - sizex;
-          if (iter1 > m->xpoints - 1) x = x + sizex;
+          if (iter1 > m->getXPoints() - 1) x = x + sizex;
           if (iter2 < 0) y = y - sizey;
-          if (iter2 > m->ypoints - 1) y = y + sizey;
+          if (iter2 > m->getYPoints() - 1) y = y + sizey;
           if (iter3 < 0) z = z - sizez;
-          if (iter3 > m->zpoints - 1) z = z + sizez;
+          if (iter3 > m->getZPoints() - 1) z = z + sizez;
           dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
           dist = sqrtf(dist);
           if (dist < radcur1)
@@ -1449,7 +1449,7 @@ void PackGrainsGen2::assign_gaps()
   float xp, yp, zp;
   float dist;
   float x, y, z;
-  int xmin, xmax, ymin, ymax, zmin, zmax;
+  size_t xmin, xmax, ymin, ymax, zmin, zmax;
 
   int *newowners;
   newowners = new int [totpoints];
@@ -1510,61 +1510,61 @@ void PackGrainsGen2::assign_gaps()
 		ga[2][0] = sinf(phi1) * sinf(PHI);
 		ga[2][1] = -cosf(phi1) * sinf(PHI);
 		ga[2][2] = cosf(PHI);
-		column = (xc - (m->resx / 2)) / m->resx;
-		row = (yc - (m->resy / 2)) / m->resy;
-		plane = (zc - (m->resz / 2)) / m->resz;
-		xmin = int(column - ((radcur1 / m->resx) + 1));
-		xmax = int(column + ((radcur1 / m->resx) + 1));
-		ymin = int(row - ((radcur1 / m->resy) + 1));
-		ymax = int(row + ((radcur1 / m->resy) + 1));
-		zmin = int(plane - ((radcur1 / m->resz) + 1));
-		zmax = int(plane + ((radcur1 / m->resz) + 1));
+		column = (xc - (m->getXRes() / 2)) / m->getXRes();
+		row = (yc - (m->getYRes() / 2)) / m->getYRes();
+		plane = (zc - (m->getZRes() / 2)) / m->getZRes();
+		xmin = int(column - ((radcur1 / m->getXRes()) + 1));
+		xmax = int(column + ((radcur1 / m->getXRes()) + 1));
+		ymin = int(row - ((radcur1 / m->getYRes()) + 1));
+		ymax = int(row + ((radcur1 / m->getYRes()) + 1));
+		zmin = int(plane - ((radcur1 / m->getZRes()) + 1));
+		zmax = int(plane + ((radcur1 / m->getZRes()) + 1));
 		if (m_periodic_boundaries == true)
 		{
-		  if (xmin < -m->xpoints) xmin = -m->xpoints;
-		  if (xmax > 2 * m->xpoints - 1) xmax = (2 *m-> xpoints - 1);
-		  if (ymin < -m->ypoints) ymin = -m->ypoints;
-		  if (ymax > 2 * m->ypoints - 1) ymax = (2 * m->ypoints - 1);
-		  if (zmin < -m->zpoints) zmin = -m->zpoints;
-		  if (zmax > 2 * m->zpoints - 1) zmax = (2 * m->zpoints - 1);
+		  if (xmin < -m->getXPoints()) xmin = -m->getXPoints();
+		  if (xmax > 2 * m->getXPoints() - 1) xmax = (2 *m->getXPoints() - 1);
+		  if (ymin < -m->getYPoints()) ymin = -m->getYPoints();
+		  if (ymax > 2 * m->getYPoints() - 1) ymax = (2 * m->getYPoints() - 1);
+		  if (zmin < -m->getZPoints()) zmin = -m->getZPoints();
+		  if (zmax > 2 * m->getZPoints() - 1) zmax = (2 * m->getZPoints() - 1);
 		}
 		if (m_periodic_boundaries == false)
 		{
 		  if (xmin < 0) xmin = 0;
-		  if (xmax > m->xpoints - 1) xmax = m->xpoints - 1;
+		  if (xmax > m->getXPoints() - 1) xmax = m->getXPoints() - 1;
 		  if (ymin < 0) ymin = 0;
-		  if (ymax > m->ypoints - 1) ymax = m->ypoints - 1;
+		  if (ymax > m->getYPoints() - 1) ymax = m->getYPoints() - 1;
 		  if (zmin < 0) zmin = 0;
-		  if (zmax > m->zpoints - 1) zmax = m->zpoints - 1;
+		  if (zmax > m->getZPoints() - 1) zmax = m->getZPoints() - 1;
 		}
-		for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
+		for (size_t iter1 = xmin; iter1 < xmax + 1; iter1++)
 		{
-		  for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
+		  for (size_t iter2 = ymin; iter2 < ymax + 1; iter2++)
 		  {
-			for (int iter3 = zmin; iter3 < zmax + 1; iter3++)
+			for (size_t iter3 = zmin; iter3 < zmax + 1; iter3++)
 			{
 			  column = iter1;
 			  row = iter2;
 			  plane = iter3;
-			  if (iter1 < 0) column = iter1 + m->xpoints;
-			  if (iter1 > m->xpoints - 1) column = iter1 - m->xpoints;
-			  if (iter2 < 0) row = iter2 + m->ypoints;
-			  if (iter2 > m->ypoints - 1) row = iter2 - m->ypoints;
-			  if (iter3 < 0) plane = iter3 + m->zpoints;
-			  if (iter3 > m->zpoints - 1) plane = iter3 - m->zpoints;
-			  index = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + column;
+			  if (iter1 < 0) column = iter1 + m->getXPoints();
+			  if (iter1 > m->getXPoints() - 1) column = iter1 - m->getXPoints();
+			  if (iter2 < 0) row = iter2 + m->getYPoints();
+			  if (iter2 > m->getYPoints() - 1) row = iter2 - m->getYPoints();
+			  if (iter3 < 0) plane = iter3 + m->getZPoints();
+			  if (iter3 > m->getZPoints() - 1) plane = iter3 - m->getZPoints();
+			  index = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + column;
 			  if(grain_indicies[index] <= 0)
 			  {
 				  inside = -1;
-				  x = float(column) * m->resx;
-				  y = float(row) * m->resy;
-				  z = float(plane) * m->resz;
+				  x = float(column) * m->getXRes();
+				  y = float(row) * m->getYRes();
+				  z = float(plane) * m->getZRes();
 				  if (iter1 < 0) x = x - sizex;
-				  if (iter1 > m->xpoints - 1) x = x + sizex;
+				  if (iter1 > m->getXPoints() - 1) x = x + sizex;
 				  if (iter2 < 0) y = y - sizey;
-				  if (iter2 > m->ypoints - 1) y = y + sizey;
+				  if (iter2 > m->getYPoints() - 1) y = y + sizey;
 				  if (iter3 < 0) z = z - sizez;
-				  if (iter3 > m->zpoints - 1) z = z + sizez;
+				  if (iter3 > m->getZPoints() - 1) z = z + sizez;
 				  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
 				  dist = sqrtf(dist);
 				  if (dist < radcur1)
@@ -1610,9 +1610,9 @@ void PackGrainsGen2::cleanup_grains()
   DataContainer* m = getDataContainer();
   int totpoints = m->totalPoints();
   int neighpoints[6];
-  int xp = m->xpoints;
-  int yp = m->ypoints;
-  int zp = m->zpoints;
+  int xp = m->getXPoints();
+  int yp = m->getYPoints();
+  int zp = m->getZPoints();
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
   neighpoints[2] = -1;
@@ -1644,7 +1644,7 @@ void PackGrainsGen2::cleanup_grains()
 	if(checked[i] == false && grain_indicies[i] > 0)
 	{
 		minsize = mindiameter[phases[i]]*mindiameter[phases[i]]*mindiameter[phases[i]]*M_PI/6.0;
-		minsize = int(minsize/(m->resx*m->resy*m->resz));
+		minsize = int(minsize/(m->getXRes()*m->getYRes()*m->getZRes()));
 		currentvlist.push_back(i);
 		count = 0;
 		while(count < currentvlist.size())

@@ -95,9 +95,9 @@ int TestVtkGrainIdReader()
 
   VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
   reader->setFileName(UnitTest::DxIOTest::TestFile);
-  int64_t nx = 0;
-  int64_t ny = 0;
-  int64_t nz = 0;
+  size_t nx = 0;
+  size_t ny = 0;
+  size_t nz = 0;
 
   DataContainer::Pointer m = DataContainer::New();
   reader->setDataContainer(m.get());

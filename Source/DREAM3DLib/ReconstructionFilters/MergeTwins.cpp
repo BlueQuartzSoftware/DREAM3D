@@ -189,7 +189,7 @@ void MergeTwins::merge_twins()
     }
     twinlist.clear();
   }
-  for (int k = 0; k < (m->xpoints * m->ypoints * m->zpoints); k++)
+  for (int k = 0; k < (m->getXPoints() * m->getYPoints() * m->getZPoints()); k++)
   {
     int grainname = grain_indicies[k];
 	if (m->m_Grains[grainname]->twinnewnumber != -1) grain_indicies[k] = m->m_Grains[grainname]->twinnewnumber;

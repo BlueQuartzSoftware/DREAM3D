@@ -181,12 +181,12 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   m_InputFile >> dimension_label >>  xpoints >>  ypoints >>  zpoints; // Read Line 5
 
   // Add a layer of padding around the volume which are going to be our boundary voxels
-  m->xpoints = xpoints + 2;
-  m->ypoints = ypoints + 2;
-  m->zpoints = zpoints + 2;
+  m->getXPoints() = xpoints + 2;
+  m->getYPoints() = ypoints + 2;
+  m->getZPoints() = zpoints + 2;
 
-  m->NS = m->xpoints * m->ypoints * m->zpoints;
-  m->NSP = m->xpoints * m->ypoints;
+  m->NS = m->getXPoints() * m->getYPoints() * m->getZPoints();
+  m->NSP = m->getXPoints() * m->getYPoints();
 
   m->neigh = new Neighbor[2 * m->NSP + 1];
   m->voxels = new int[2 * m->NSP + 1];
@@ -206,9 +206,9 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   m_InputFile.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
   float scaling[3];
   err = parseFloat3V(buf, scaling, 1.0f);
-  m->resx = scaling[0];
-  m->resy = scaling[1];
-  m->resz = scaling[2];
+  m->getXRes() = scaling[0];
+  m->getYRes() = scaling[1];
+  m->getZRes() = scaling[2];
   ::memset(buf, 0, kBufferSize);
 
   m_InputFile.getline(buf, kBufferSize); // Read Line 8
@@ -262,7 +262,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   m_HeaderComplete = true;
   err = 1;
 
-  return m->zpoints;
+  return m->getZPoints();
 }
 #endif
 

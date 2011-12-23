@@ -146,13 +146,13 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
   int jStride;
   int kStride;
 
-  for (int col = 0; col < m->xpoints; col++)
+  for (int col = 0; col < m->getXPoints(); col++)
   {
-    for (int row = 0; row < m->ypoints; row++)
+    for (int row = 0; row < m->getYPoints(); row++)
     {
-      for (int plane = 0; plane < m->zpoints; plane++)
+      for (int plane = 0; plane < m->getZPoints(); plane++)
       {
-        point = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + col;
+        point = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         if (grain_indicies[point] > 0 && phases[point] > 0)
         {
           totalmisorientation = 0.0;
@@ -164,20 +164,20 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
           phase1 = m->crystruct[phases[point]];
           for (int j = -steps; j < steps + 1; j++)
           {
-            jStride = j * m->xpoints * m->ypoints;
+            jStride = j * m->getXPoints() * m->getYPoints();
             for (int k = -steps; k < steps + 1; k++)
             {
-              kStride = k * m->xpoints;
+              kStride = k * m->getXPoints();
               for (int l = -steps; l < steps + 1; l++)
               {
                 good = 1;
                 neighbor = point + (jStride) + (kStride) + (l);
                 if (plane + j < 0) good = 0;
-                else if (plane + j > m->zpoints - 1) good = 0;
+                else if (plane + j > m->getZPoints() - 1) good = 0;
                 else if (row + k < 0) good = 0;
-                else if (row + k > m->ypoints - 1) good = 0;
+                else if (row + k > m->getYPoints() - 1) good = 0;
                 else if (col + l < 0) good = 0;
-                else if (col + l > m->xpoints - 1) good = 0;
+                else if (col + l > m->getXPoints() - 1) good = 0;
                 if (good == 1)
                 {
                   w = 10000.0;
@@ -238,33 +238,33 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
   }
 
   steps = 1;
-  for (int col = 0; col < m->xpoints; col++)
+  for (int col = 0; col < m->getXPoints(); col++)
   {
-    for (int row = 0; row < m->ypoints; row++)
+    for (int row = 0; row < m->getYPoints(); row++)
     {
-      for (int plane = 0; plane < m->zpoints; plane++)
+      for (int plane = 0; plane < m->getZPoints(); plane++)
       {
-        point = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + col;
+        point = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         if (grain_indicies[point] > 0 && phases[point] > 0)
         {
           totalmisorientation = 0.0;
           numchecks = 0;
           for (int j = -steps; j < steps + 1; j++)
           {
-            jStride = j * m->xpoints * m->ypoints;
+            jStride = j * m->getXPoints() * m->getYPoints();
             for (int k = -steps; k < steps + 1; k++)
             {
-              kStride = k * m->xpoints;
+              kStride = k * m->getXPoints();
               for (int l = -steps; l < steps + 1; l++)
               {
                 good = 1;
                 neighbor = point + (jStride) + (kStride) + (l);
                 if (plane + j < 0) good = 0;
-                if (plane + j > m->zpoints - 1) good = 0;
+                if (plane + j > m->getZPoints() - 1) good = 0;
                 if (row + k < 0) good = 0;
-                if (row + k > m->ypoints - 1) good = 0;
+                if (row + k > m->getYPoints() - 1) good = 0;
                 if (col + l < 0) good = 0;
-                if (col + l > m->xpoints - 1) good = 0;
+                if (col + l > m->getXPoints() - 1) good = 0;
                 if (good == 1 && grain_indicies[point] == grain_indicies[neighbor])
                 {
                   numchecks++;

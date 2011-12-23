@@ -93,12 +93,12 @@ void FindNeighbors::find_neighbors()
   }
 
   int neighpoints[6];
-  neighpoints[0] = -(m->xpoints * m->ypoints);
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = (m->xpoints * m->ypoints);
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = (m->getXPoints() * m->getYPoints());
   float column, row, plane;
   int grain;
   size_t nnum;
@@ -142,14 +142,14 @@ void FindNeighbors::find_neighbors()
     grain = grain_indicies[j];
     if(grain > 0)
     {
-      column = j % m->xpoints;
-      row = (j / m->xpoints) % m->ypoints;
-      plane = j / (m->xpoints * m->ypoints);
-      if((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1) || plane == 0 || plane == (m->zpoints - 1)) && m->zpoints != 1)
+      column = j % m->getXPoints();
+      row = (j / m->getXPoints()) % m->getYPoints();
+      plane = j / (m->getXPoints() * m->getYPoints());
+      if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1) || plane == 0 || plane == (m->getZPoints() - 1)) && m->getZPoints() != 1)
       {
         m->m_Grains[grain]->surfacefield = true;
       }
-      if((column == 0 || column == (m->xpoints - 1) || row == 0 || row == (m->ypoints - 1)) && m->zpoints == 1)
+      if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1)) && m->getZPoints() == 1)
       {
         m->m_Grains[grain]->surfacefield = true;
       }
@@ -158,11 +158,11 @@ void FindNeighbors::find_neighbors()
         good = 1;
         neighbor = j + neighpoints[k];
         if(k == 0 && plane == 0) good = 0;
-        if(k == 5 && plane == (m->zpoints - 1)) good = 0;
+        if(k == 5 && plane == (m->getZPoints() - 1)) good = 0;
         if(k == 1 && row == 0) good = 0;
-        if(k == 4 && row == (m->ypoints - 1)) good = 0;
+        if(k == 4 && row == (m->getYPoints() - 1)) good = 0;
         if(k == 2 && column == 0) good = 0;
-        if(k == 3 && column == (m->xpoints - 1)) good = 0;
+        if(k == 3 && column == (m->getXPoints() - 1)) good = 0;
         if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
         {
           onsurf++;
@@ -205,7 +205,7 @@ void FindNeighbors::find_neighbors()
     {
       int neigh = iter->first; // get the neighbor grain
       int number = iter->second; // get the number of voxels
-      float area = number * m->resx * m->resy;
+      float area = number * m->getXRes() * m->getYRes();
       if(m->m_Grains[i]->surfacefield == 0 && (neigh > i || m->m_Grains[neigh]->surfacefield == 1))
       {
         totalsurfacearea[phase] = totalsurfacearea[phase] + area;

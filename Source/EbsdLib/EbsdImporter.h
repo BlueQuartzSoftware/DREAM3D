@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -92,14 +92,14 @@ class EbsdLib_EXPORT EbsdImporter
      * @param index The integer index value of this EBSD data file
      * @param ebsdFile The raw data file from the manufacturere (.ang, .ctf)
      */
-    virtual int importFile(hid_t fileId, int index, const std::string &ebsd) = 0;
+    virtual int importFile(hid_t fileId, int64_t index, const std::string &ebsd) = 0;
 
     /**
      * @brief Returns the dimensions for the EBSD Data set
      * @param x Number of X Voxels (out)
      * @param y Number of Y Voxels (out)
      */
-    virtual void getDims(int &x, int &y) = 0;
+    virtual void getDims(int64_t &x, int64_t &y) = 0;
 
     /**
      * @brief Returns the x and y resolution of the voxels

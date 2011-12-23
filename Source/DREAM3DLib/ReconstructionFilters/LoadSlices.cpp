@@ -118,14 +118,42 @@ void LoadSlices::execute()
     int64_t dims[3];
     float res[3];
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
-    m->setDimensions(dims);
+    /* Sanity check what we are trying to load to make sure it can fit in our address space.
+     * Note that this does not guarantee the user has enough left, just that the
+     * size of the volume can fit in the address space of the program
+     */
+    int64_t max = static_cast<int64_t>(std::numeric_limits<size_t>::max());
+    if (dims[0] * dims[1] * dims[2] > max )
+    {
+      err = -1;
+      std::stringstream s;
+      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                  << "' is greater than this program can hold. Try the 64 bit version.";
+      setErrorCondition(err);
+      setErrorMessage(s.str());
+      return;
+    }
+
+    if (dims[0] > max || dims[1] > max || dims[2] > max)
+    {
+      err = -1;
+      std::stringstream s;
+      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+      s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+      setErrorCondition(err);
+      setErrorMessage(s.str());
+      return;
+    }
+    /* ************ End Sanity Check *************************** */
+    size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+    m->setDimensions(dcDims);
     m->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     // The GUI code has already added 1 to the end index so nothing special needs to be done
     // for this calculation
-    dims[2] = m_ZEndIndex - m_ZStartIndex + 1;
-    m->setDimensions(dims);
-    //m->zpoints = m_ZEndIndex - m_ZStartIndex + 1;
+    dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
+    m->setDimensions(dcDims);
+    //m->getZPoints() = m_ZEndIndex - m_ZStartIndex + 1;
     manufacturer = volumeInfoReader->getManufacturer();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
@@ -166,8 +194,8 @@ void LoadSlices::execute()
     return;
   }
 
-  initialize(m->xpoints, m->ypoints, m->zpoints,
-                m->resx, m->resy, m->resz,
+  initialize(m->getXPoints(), m->getYPoints(), m->getZPoints(),
+                m->getXRes(), m->getYRes(), m->getZRes(),
                 crystalStructures, m_PhaseTypes, precipFractions);
   if (getErrorCondition() < 0)
   {
@@ -190,7 +218,7 @@ void LoadSlices::execute()
   // and fill in the ReconstrucionFunc->goodVoxels array.
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(euler1s, euler2s, euler3s, phases, goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
+  err = ebsdReader->loadData(euler1s, euler2s, euler3s, phases, goodVoxels, m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir, m_QualityMetricFilters);
   setErrorCondition(err);
   if (err < 0)
   {
@@ -200,7 +228,7 @@ void LoadSlices::execute()
   float radianconversion = M_PI/180.0;
   if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
-	  for(int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
+	  for(size_t i = 0; i < (m->getXPoints()*m->getYPoints()*m->getZPoints()); i++)
 	  {
 		  euler1s[i] = euler1s[i] * radianconversion;
 		  euler2s[i] = euler2s[i] * radianconversion;
@@ -219,7 +247,7 @@ void LoadSlices::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
+void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float yRes, float zRes,
                                     std::vector<Ebsd::CrystalStructure> crystalStructures,
 									std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions)
@@ -231,15 +259,15 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
   m->pptFractions = precipFractions;
 
   m->setDimensions(nX, nY, nZ);
-//  m->xpoints = nX;
-//  m->ypoints = nY;
-//  m->zpoints = nZ;
+//  m->getXPoints() = nX;
+//  m->getYPoints() = nY;
+//  m->getZPoints() = nZ;
   m->setResolution(xRes, yRes, zRes);
-//  m->resx = xRes;
-//  m->resy = yRes;
-//  m->resz = zRes;
+//  m->getXRes() = xRes;
+//  m->getYRes() = yRes;
+//  m->getZRes() = zRes;
 
- // m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
+ // m->totalpoints = m->getXPoints() * m->getYPoints() * m->getZPoints();
   int64_t totalPoints = m->totalPoints();
   int numgrains = 100;
   size_t oldSize = 0;
@@ -379,12 +407,12 @@ void LoadSlices::threshold_points()
 
 
   int neighpoints[6];
-  neighpoints[0] = -(m->xpoints * m->ypoints);
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = (m->xpoints * m->ypoints);
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = (m->getXPoints() * m->getYPoints());
   float w, n1, n2, n3;
   float q1[5];
   float q2[5];
@@ -415,9 +443,9 @@ void LoadSlices::threshold_points()
   for (size_t j = 0; j < count; j++)
   {
 	currentpoint = voxelslist[j];
-	col = currentpoint % m->xpoints;
-	row = (currentpoint / m->xpoints) % m->ypoints;
-	plane = currentpoint / (m->xpoints * m->ypoints);
+	col = currentpoint % m->getXPoints();
+	row = (currentpoint / m->getXPoints()) % m->getYPoints();
+	plane = currentpoint / (m->getXPoints() * m->getYPoints());
 	q1[0] = 0;
 	q1[1] = quats[currentpoint*5 + 1];
 	q1[2] = quats[currentpoint*5 + 2];
@@ -429,11 +457,11 @@ void LoadSlices::threshold_points()
 	  good = 1;
 	  neighbor = currentpoint + neighbors[i];
 	  if (i == 0 && plane == 0) good = 0;
-	  if (i == 5 && plane == (m->zpoints - 1)) good = 0;
+	  if (i == 5 && plane == (m->getZPoints() - 1)) good = 0;
 	  if (i == 1 && row == 0) good = 0;
-	  if (i == 4 && row == (m->ypoints - 1)) good = 0;
+	  if (i == 4 && row == (m->getYPoints() - 1)) good = 0;
 	  if (i == 2 && col == 0) good = 0;
-	  if (i == 3 && col == (m->xpoints - 1)) good = 0;
+	  if (i == 3 && col == (m->getXPoints() - 1)) good = 0;
 	  if (good == 1 && grain_indicies[neighbor] == 0 && phases[neighbor] > 0)
 	  {
 		w = 10000.0;

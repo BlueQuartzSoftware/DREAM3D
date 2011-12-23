@@ -87,7 +87,36 @@ void LoadVolume::execute()
     return;
   }
 
-  m->setDimensions(dims);
+  /* Sanity check what we are trying to load to make sure it can fit in our address space.
+   * Note that this does not guarantee the user has enough left, just that the
+   * size of the volume can fit in the address space of the program
+   */
+  size_t max = std::numeric_limits<size_t>::max();
+  if (dims[0] * dims[1] * dims[2] > max )
+  {
+    err = -1;
+    std::stringstream s;
+    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                << "' is greater than this program can hold. Try the 64 bit version.";
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return;
+  }
+
+  if (dims[0] > max || dims[1] > max || dims[2] > max)
+  {
+    err = -1;
+    std::stringstream s;
+    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return;
+  }
+  /* ************ End Sanity Check *************************** */
+  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+
+  m->setDimensions(dcDims);
   m->setResolution(spacing);
   totalPoints = m->totalPoints();
 

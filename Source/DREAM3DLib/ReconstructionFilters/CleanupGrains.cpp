@@ -170,12 +170,12 @@ void CleanupGrains::assign_badpoints()
   int neighpoint;
   int neighpoints[6];
   size_t numgrains = m->m_Grains.size();
-  neighpoints[0] = -m->xpoints * m->ypoints;
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -m->getXPoints() * m->getYPoints();
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = m->xpoints * m->ypoints;
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = m->getXPoints() * m->getYPoints();
   std::vector<int> currentvlist;
 
   notify("Assigning Bad Voxels", 0, Observable::UpdateProgressMessage);
@@ -194,19 +194,19 @@ void CleanupGrains::assign_badpoints()
 			while(count < currentvlist.size())
 			{
 				index = currentvlist[count];
-				column = index % m->xpoints;
-				row = (index / m->xpoints) % m->ypoints;
-				plane = index / (m->xpoints * m->ypoints);
+				column = index % m->getXPoints();
+				row = (index / m->getXPoints()) % m->getYPoints();
+				plane = index / (m->getXPoints() * m->getYPoints());
 				for (int j = 0; j < 6; j++)
 				{
 					good = 1;
 					neighbor = index + neighpoints[j];
 					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (m->zpoints - 1)) good = 0;
+					if (j == 5 && plane == (m->getZPoints() - 1)) good = 0;
 					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (m->ypoints - 1)) good = 0;
+					if (j == 4 && row == (m->getYPoints() - 1)) good = 0;
 					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (m->xpoints - 1)) good = 0;
+					if (j == 3 && column == (m->getXPoints() - 1)) good = 0;
 					if (good == 1 && grain_indicies[neighbor] <= 0 && alreadychecked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
@@ -250,19 +250,19 @@ void CleanupGrains::assign_badpoints()
         {
           n[c] = 0;
         }
-        x = i % m->xpoints;
-        y = (i / m->xpoints) % m->ypoints;
-        z = i / (m->xpoints * m->ypoints);
+        x = i % m->getXPoints();
+        y = (i / m->getXPoints()) % m->getYPoints();
+        z = i / (m->getXPoints() * m->getYPoints());
         for (int j = 0; j < 6; j++)
         {
           good = 1;
           neighpoint = i + neighpoints[j];
           if (j == 0 && z == 0) good = 0;
-          if (j == 5 && z == (m->zpoints - 1)) good = 0;
+          if (j == 5 && z == (m->getZPoints() - 1)) good = 0;
           if (j == 1 && y == 0) good = 0;
-          if (j == 4 && y == (m->ypoints - 1)) good = 0;
+          if (j == 4 && y == (m->getYPoints() - 1)) good = 0;
           if (j == 2 && x == 0) good = 0;
-          if (j == 3 && x == (m->xpoints - 1)) good = 0;
+          if (j == 3 && x == (m->getXPoints() - 1)) good = 0;
           if (good == 1)
           {
             int grain = grain_indicies[neighpoint];
@@ -324,7 +324,7 @@ void CleanupGrains::merge_containedgrains()
   NeighborList<int>& neighborlist = *neighListPtr;
 
 
-  for (int i = 0; i < (m->xpoints * m->ypoints * m->zpoints); i++)
+  for (int i = 0; i < (m->getXPoints() * m->getYPoints() * m->getZPoints()); i++)
   {
     int grainname = grain_indicies[i];
     if(m->m_Grains[grainname]->numneighbors == 1 && m->m_Grains[grainname]->phase > 0)
@@ -358,12 +358,12 @@ void CleanupGrains::reorder_grains()
   size_t currentgrain = 1;
   Ebsd::CrystalStructure phase;
 
-  neighpoints[0] = -m->xpoints * m->ypoints;
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -m->getXPoints() * m->getYPoints();
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = m->xpoints * m->ypoints;
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = m->getXPoints() * m->getYPoints();
   size_t numgrains = m->m_Grains.size();
 
   size_t maxGrain = 0;
@@ -405,9 +405,9 @@ void CleanupGrains::reorder_grains()
       for (size_t j = 0; j < size; j++)
       {
         int currentpoint = voxellists[currentgrain][j];
-        col = currentpoint % m->xpoints;
-        row = (currentpoint / m->xpoints) % m->ypoints;
-        plane = currentpoint / (m->xpoints * m->ypoints);
+        col = currentpoint % m->getXPoints();
+        row = (currentpoint / m->getXPoints()) % m->getYPoints();
+        plane = currentpoint / (m->getXPoints() * m->getYPoints());
         for (int k = 0; k < 5; k++)
         {
             q1[k] = quats[nucleus*5 + k];
@@ -425,11 +425,11 @@ void CleanupGrains::reorder_grains()
           good = 1;
           neighbor = currentpoint + neighpoints[k];
           if (k == 0 && plane == 0) good = 0;
-          if (k == 5 && plane == (m->zpoints - 1)) good = 0;
+          if (k == 5 && plane == (m->getZPoints() - 1)) good = 0;
           if (k == 1 && row == 0) good = 0;
-          if (k == 4 && row == (m->ypoints - 1)) good = 0;
+          if (k == 4 && row == (m->getYPoints() - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
-          if (k == 3 && col == (m->xpoints - 1)) good = 0;
+          if (k == 3 && col == (m->getXPoints() - 1)) good = 0;
           if (good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = grain_indicies[neighbor];
@@ -490,14 +490,14 @@ void CleanupGrains::remove_smallgrains()
   int col, row, plane;
   int gnum;
   int currentgrain = 1;
-  neighpoints[0] = -m->xpoints * m->ypoints;
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -m->getXPoints() * m->getYPoints();
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = m->xpoints * m->ypoints;
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = m->getXPoints() * m->getYPoints();
   int numgrains = m->m_Grains.size();
-  for (int i = 0; i < (m->xpoints * m->ypoints * m->zpoints); i++)
+  for (int i = 0; i < (m->getXPoints() * m->getYPoints() * m->getZPoints()); i++)
   {
     alreadychecked[i] = false;
 	gnum = grain_indicies[i];
@@ -515,19 +515,19 @@ void CleanupGrains::remove_smallgrains()
       for (size_t j = 0; j < size; j++)
       {
         int currentpoint = voxellists[i][j];
-        col = currentpoint % m->xpoints;
-        row = (currentpoint / m->xpoints) % m->ypoints;
-        plane = currentpoint / (m->xpoints * m->ypoints);
+        col = currentpoint % m->getXPoints();
+        row = (currentpoint / m->getXPoints()) % m->getYPoints();
+        plane = currentpoint / (m->getXPoints() * m->getYPoints());
         for (size_t k = 0; k < 6; k++)
         {
           good = 1;
           neighbor = currentpoint + neighpoints[k];
           if (k == 0 && plane == 0) good = 0;
-          if (k == 5 && plane == (m->zpoints - 1)) good = 0;
+          if (k == 5 && plane == (m->getZPoints() - 1)) good = 0;
           if (k == 1 && row == 0) good = 0;
-          if (k == 4 && row == (m->ypoints - 1)) good = 0;
+          if (k == 4 && row == (m->getYPoints() - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
-          if (k == 3 && col == (m->xpoints - 1)) good = 0;
+          if (k == 3 && col == (m->getXPoints() - 1)) good = 0;
           if (good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = static_cast<size_t>(grain_indicies[neighbor]);

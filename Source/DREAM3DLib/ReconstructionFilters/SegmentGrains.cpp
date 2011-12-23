@@ -131,12 +131,12 @@ void SegmentGrains::form_grains()
 //  std::vector<int>* vlist;
   std::vector<int> mergelist(initialMergeListSize, -1);
   int neighpoints[6];
-  neighpoints[0] = -(m->xpoints * m->ypoints);
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = (m->xpoints * m->ypoints);
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = (m->getXPoints() * m->getYPoints());
   Ebsd::CrystalStructure phase1, phase2;
 
   // Precalculate some constants
@@ -166,9 +166,9 @@ void SegmentGrains::form_grains()
       for (size_t j = 0; j < size; ++j)
       {
         int currentpoint = voxelslist[j];
-        col = currentpoint % m->xpoints;
-        row = (currentpoint / m->xpoints) % m->ypoints;
-        plane = currentpoint / (m->xpoints * m->ypoints);
+        col = currentpoint % m->getXPoints();
+        row = (currentpoint / m->getXPoints()) % m->getYPoints();
+        plane = currentpoint / (m->getXPoints() * m->getYPoints());
         phase1 = m->crystruct[phases[currentpoint]];
         for (int i = 0; i < 6; i++)
         {
@@ -180,11 +180,11 @@ void SegmentGrains::form_grains()
           good = 1;
           neighbor = currentpoint + neighpoints[i];
           if (i == 0 && plane == 0) good = 0;
-          if (i == 5 && plane == (m->zpoints - 1)) good = 0;
+          if (i == 5 && plane == (m->getZPoints() - 1)) good = 0;
           if (i == 1 && row == 0) good = 0;
-          if (i == 4 && row == (m->ypoints - 1)) good = 0;
+          if (i == 4 && row == (m->getYPoints() - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
-          if (i == 3 && col == (m->xpoints - 1)) good = 0;
+          if (i == 3 && col == (m->getXPoints() - 1)) good = 0;
           if (good == 1 && grain_indicies[neighbor] == -1 && phases[neighbor] > 0)
           {
             w = 10000.0;

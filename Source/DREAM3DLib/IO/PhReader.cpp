@@ -163,18 +163,9 @@ int  PhReader::readFile()
 
   // Read the data and stick it in the data Container
   getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, m_Data);
-  getDataContainer()->xpoints = nx;
-  getDataContainer()->ypoints = ny;
-  getDataContainer()->zpoints = nz;
-
-  getDataContainer()->resx = 1.0f;
-  getDataContainer()->resx = 1.0f;
-  getDataContainer()->resx = 1.0f;
-
-  getDataContainer()->origin[0] = 0.0f;
-  getDataContainer()->origin[1] = 0.0f;
-  getDataContainer()->origin[2] = 0.0f;
-
+  getDataContainer()->setDimensions(nx, ny, nz);
+  getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);
+  getDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
 
   tokens.clear();
   inFile.close();

@@ -105,31 +105,31 @@ void FindEuclideanDistMap::find_euclideandistmap()
   int grain, neighbor;
   std::vector<int> coordination;
 
-  neighbors[0] = -m->xpoints * m->ypoints;
-  neighbors[1] = -m->xpoints;
+  neighbors[0] = -m->getXPoints() * m->getYPoints();
+  neighbors[1] = -m->getXPoints();
   neighbors[2] = -1;
   neighbors[3] = 1;
-  neighbors[4] = m->xpoints;
-  neighbors[5] = m->xpoints * m->ypoints;
+  neighbors[4] = m->getXPoints();
+  neighbors[5] = m->getXPoints() * m->getYPoints();
   for (int a = 0; a < (totalPoints); ++a)
   {
 	grain = grain_indicies[a];
 	if(grain > 0)
 	{
 	  coordination.resize(0);
-	  column = a % m->xpoints;
-	  row = (a / m->xpoints) % m->ypoints;
-	  plane = a / (m->xpoints * m->ypoints);
+	  column = a % m->getXPoints();
+	  row = (a / m->getXPoints()) % m->getYPoints();
+	  plane = a / (m->getXPoints() * m->getYPoints());
 	  for (int k = 0; k < 6; k++)
 	  {
 		good = 1;
 		neighbor = a + neighbors[k];
 		if(k == 0 && plane == 0) good = 0;
-		if(k == 5 && plane == (m->zpoints - 1)) good = 0;
+		if(k == 5 && plane == (m->getZPoints() - 1)) good = 0;
 		if(k == 1 && row == 0) good = 0;
-		if(k == 4 && row == (m->ypoints - 1)) good = 0;
+		if(k == 4 && row == (m->getYPoints() - 1)) good = 0;
 		if(k == 2 && column == 0) good = 0;
-		if(k == 3 && column == (m->xpoints - 1)) good = 0;
+		if(k == 3 && column == (m->getXPoints() - 1)) good = 0;
 		if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
 		{
 			add = 1;

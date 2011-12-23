@@ -101,9 +101,9 @@ int TestPhReader()
   PhReader::Pointer reader = PhReader::New();
   reader->setFileName(UnitTest::PhIOTest::TestFile);
   reader->setDataContainer(m.get());
-  int64_t nx = 0;
-  int64_t ny = 0;
-  int64_t nz = 0;
+  size_t nx = 0;
+  size_t ny = 0;
+  size_t nz = 0;
 
   reader->execute( );
   int err = reader->getErrorCondition();
@@ -169,9 +169,9 @@ void test(T x, T y, T z, const std::string &type)
 int main(int argc, char **argv)
 {
 
-//  test<int>(4000, 4000, 4000, "int");
-//  test<size_t>(4000, 4000, 4000, "size_t");
-//  test<int64_t>(4000, 4000, 4000, "int64_t");
+  test<int>(4000, 4000, 4000, "int");
+  test<size_t>(4000, 4000, 4000, "size_t");
+  test<int64_t>(4000, 4000, 4000, "int64_t");
 
   int err = EXIT_SUCCESS;
 

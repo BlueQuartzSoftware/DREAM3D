@@ -76,7 +76,8 @@ int H5VoxelGrainIdReader::readFile()
     setErrorMessage("Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File");
     return err;
   }
-  getDataContainer()->setDimensions(volDims);
+  size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
+  getDataContainer()->setDimensions(dcDims);
   getDataContainer()->setResolution(spacing);
   getDataContainer()->setOrigin(origin);
 
