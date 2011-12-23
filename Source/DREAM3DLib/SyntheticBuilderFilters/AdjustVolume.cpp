@@ -99,12 +99,12 @@ void AdjustVolume::adjust_boundaries()
 
 
   int neighpoints[6];
-  neighpoints[0] = -m->xpoints*m->ypoints;
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -m->getXPoints()*m->getYPoints();
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = m->xpoints*m->ypoints;
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = m->getXPoints()*m->getYPoints();
   int iterations = 0;
   size_t selectedgrain = 0;
   int good = 0;
@@ -117,7 +117,7 @@ void AdjustVolume::adjust_boundaries()
   size_t count, affectedcount;
   int vListSize = 1000;
 
-  float voxtovol = m->resx*m->resy*m->resz*(3.0/4.0)*(1.0/m_pi);
+  float voxtovol = m->getXRes()*m->getYRes()*m->getZRes()*(3.0/4.0)*(1.0/m_pi);
 
   gsizes.resize(m->m_Grains.size());
 
@@ -166,19 +166,19 @@ void AdjustVolume::adjust_boundaries()
     for(size_t i=0;i<count;++i)
     {
       index = voxellist[i];
-      x = index%m->xpoints;
-      y = (index/m->xpoints)%m->ypoints;
-      z = index/(m->xpoints*m->ypoints);
+      x = index%m->getXPoints();
+      y = (index/m->getXPoints())%m->getYPoints();
+      z = index/(m->getXPoints()*m->getYPoints());
       for(int j=0;j<6;j++)
       {
         good = 1;
         neighpoint = index+neighpoints[j];
         if(j == 0 && z == 0) good = 0;
-        if(j == 5 && z == (m->zpoints-1)) good = 0;
+        if(j == 5 && z == (m->getZPoints()-1)) good = 0;
         if(j == 1 && y == 0) good = 0;
-        if(j == 4 && y == (m->ypoints-1)) good = 0;
+        if(j == 4 && y == (m->getYPoints()-1)) good = 0;
         if(j == 2 && x == 0) good = 0;
-        if(j == 3 && x == (m->xpoints-1)) good = 0;
+        if(j == 3 && x == (m->getXPoints()-1)) good = 0;
         if(good == 1 && grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
         {
 	        voxellist[count] = neighpoint;

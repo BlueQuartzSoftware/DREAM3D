@@ -100,9 +100,9 @@ ipfColor[j * 3 + 2] = rgb[2];\
 
 #define H5GW_VLIST_LOOP_1()\
 vid = vlist[j];\
-ocol = vid % r->xpoints;\
-orow = (vid / r->xpoints) % r->ypoints;\
-oplane = vid / (r->xpoints * r->ypoints);\
+ocol = vid % r->getXPoints();\
+orow = (vid / r->getXPoints()) % r->getYPoints();\
+oplane = vid / (r->getXPoints() * r->getYPoints());\
 cells[cIdx] = 8;\
 ++cIdx;\
 for (int k = 0; k < 8; k++) {\
@@ -114,13 +114,13 @@ for (int k = 0; k < 8; k++) {\
   if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;\
   if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;\
   if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;\
-  pid = (plane * (r->xpoints + 1) * (r->ypoints + 1)) + (row * (r->xpoints + 1)) + col;\
+  pid = (plane * (r->getXPoints() + 1) * (r->getYPoints() + 1)) + (row * (r->getXPoints() + 1)) + col;\
   if (pointMap.find(pid) == pointMap.end())  {\
     pointMap[pid] = pcount;\
     pcount++;\
-    points.push_back((col * r->resx));\
-    points.push_back((row * r->resy));\
-    points.push_back((plane * r->resz));\
+    points.push_back((col * r->getXRes()));\
+    points.push_back((row * r->getYRes()));\
+    points.push_back((plane * r->getZRes()));\
   }\
   cells[cIdx] = pointMap[pid];\
   ++cIdx;\

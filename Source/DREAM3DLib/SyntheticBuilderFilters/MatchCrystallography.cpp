@@ -317,8 +317,8 @@ void MatchCrystallography::assign_eulers()
     m->m_Grains[i]->avg_quat[4] = q[4];
     if (m->m_Grains[i]->surfacefield == 0)
     {
-      simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
-      unbiasedvol[phase] = unbiasedvol[phase] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
+      simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[i]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes());
+      unbiasedvol[phase] = unbiasedvol[phase] + (float(m->m_Grains[i]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes());
     }
   }
   for(int i=0;i<numbins;i++)
@@ -474,11 +474,11 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
   float odfchange = ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose])) - ((actualodf[phase][choose] - (simodf[phase][choose]
-      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
-      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))));
+      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
+      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
   odfchange = odfchange + (((actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin] - simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])))));
+      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
+      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
 
   float mdfchange = 0;
   size_t size = 0;
@@ -503,8 +503,8 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
     m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
     m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
     m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
-    simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
-    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
+    simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
+    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
     size_t size = 0;
     if (neighborlist[selectedgrain1].size() != 0)
     {
@@ -591,13 +591,13 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   g2odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 
   float odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
-     -(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx
-          * m->resy * m->resz / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-      + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))));
+     -(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes()
+          * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+      + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
   odfchange = odfchange + (((actualodf[phase][g2odfbin]-simodf[phase][g2odfbin]) * (actualodf[phase][g2odfbin]-simodf[phase][g2odfbin])) - ((actualodf[phase][g2odfbin]
-     -(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx
-          * m->resy *m-> resz / unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])))));
+     -(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes()
+          * m->getYRes() *m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
 
 
   float mdfchange = 0;
@@ -641,10 +641,10 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
     m->m_Grains[selectedgrain2]->euler1 = g1ea1;
     m->m_Grains[selectedgrain2]->euler2 = g1ea2;
     m->m_Grains[selectedgrain2]->euler3 = g1ea3;
-    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-        - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
-    simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-        - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
+    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+        - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
+    simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+        - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
 
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
     m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];

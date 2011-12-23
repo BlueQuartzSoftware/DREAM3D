@@ -117,7 +117,7 @@ void ChangeResolution::change_resolution()
   int index_old;
   for (int i = 0; i < m_ZP; i++)
   {
-    notify("Changing Percent", ((float)i/m->zpoints)*100, Observable::UpdateProgressValue);
+    notify("Changing Percent", ((float)i/m->getZPoints())*100, Observable::UpdateProgressValue);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -125,10 +125,10 @@ void ChangeResolution::change_resolution()
         x = (k * m_XRes);
         y = (j * m_YRes);
         z = (i * m_ZRes);
-        col = int(x / m->resx);
-        row = int(y / m->resy);
-        plane = int(z / m->resz);
-        index_old = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + col;
+        col = int(x / m->getXRes());
+        row = int(y / m->getYRes());
+        plane = int(z / m->getZRes());
+        index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         grain_indicies[index] = grain_indicies[index_old];
         phases[index] = phases[index_old];
@@ -139,13 +139,13 @@ void ChangeResolution::change_resolution()
     }
   }
 
-//  m->resx = m_XRes;
-//  m->resy = m_YRes;
-//  m->resz = m_ZRes;
+//  m->getXRes() = m_XRes;
+//  m->getYRes() = m_YRes;
+//  m->getZRes() = m_ZRes;
   m->setResolution(m_XRes, m_YRes, m_ZRes);
-//  m->xpoints = m_XP;
-//  m->ypoints = m_YP;
-//  m->zpoints = m_ZP;
+//  m->getXPoints() = m_XP;
+//  m->getYPoints() = m_YP;
+//  m->getZPoints() = m_ZP;
   m->setDimensions(m_XP, m_YP, m_ZP);
    totalPoints = m_XP*m_YP*m_ZP;
   err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);

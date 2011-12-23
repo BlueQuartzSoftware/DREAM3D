@@ -196,8 +196,32 @@ int VTKFileReader::readHeader()
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   int64_t dims[3];
-  err = parseInt643V(buf, dims, 0);
-  getDataContainer()->setDimensions(dims);
+  err = parse64_3V(buf, dims, 0);
+  size_t max = std::numeric_limits<size_t>::max();
+  if (dims[0] * dims[1] * dims[2] > max )
+  {
+    err = -1;
+    std::stringstream s;
+    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                << "' is greater than this program can hold. Try the 64 bit version.";
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return err;
+  }
+
+  if (dims[0] > max || dims[1] > max || dims[2] > max)
+  {
+    err = -1;
+    std::stringstream s;
+    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return err;
+  }
+
+  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+  getDataContainer()->setDimensions(dcDims);
 
 
   ::memset(buf, 0, kBufferSize);

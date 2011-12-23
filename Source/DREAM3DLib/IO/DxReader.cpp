@@ -238,9 +238,8 @@ int DxReader::readFile()
 
   getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);
 
-  getDataContainer()->origin[0] = 0.0f;
-  getDataContainer()->origin[1] = 0.0f;
-  getDataContainer()->origin[2] = 0.0f;
+  getDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
+
 
 
   tokens.clear();

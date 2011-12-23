@@ -73,8 +73,8 @@ void WriteH5StatsFile::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
 
-  if(m->zpoints > 1) write_h5statsfile(h5io, getBinStepSize());
-  if(m->zpoints == 1) write_h5statsfile2D(h5io, getBinStepSize());
+  if(m->getZPoints() > 1) write_h5statsfile(h5io, getBinStepSize());
+  if(m->getZPoints() == 1) write_h5statsfile2D(h5io, getBinStepSize());
   notify("WriteH5StatsFile Completed", 0, Observable::UpdateProgressMessage);
 }
 

@@ -123,7 +123,7 @@ H5AngImporter::~H5AngImporter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5AngImporter::getDims(int &x, int &y)
+void H5AngImporter::getDims(int64_t &x, int64_t &y)
 {
   x = xDim;
   y = yDim;
@@ -143,7 +143,7 @@ void H5AngImporter::getResolution(float &x, float &y)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngImporter::importFile(hid_t fileId, int z, const std::string &angFile)
+int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFile)
 {
   herr_t err = -1;
   setCancel(false);

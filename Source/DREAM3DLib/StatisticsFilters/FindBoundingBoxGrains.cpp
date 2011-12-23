@@ -63,8 +63,8 @@ void FindBoundingBoxGrains::execute()
   DataContainer* m = getDataContainer();
   setErrorCondition(0);
 
-  if(m->zpoints > 1) find_boundingboxgrains();
-  if(m->zpoints == 1) find_boundingboxgrains2D();
+  if(m->getZPoints() > 1) find_boundingboxgrains();
+  if(m->getZPoints() == 1) find_boundingboxgrains2D();
 
   notify("FindBoundingBoxGrains Completed", 0, Observable::UpdateProgressMessage);
 }
@@ -83,11 +83,11 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
   float mindist;
   int sidetomove, move;
   boundbox[1] = 0;
-  boundbox[2] = m->xpoints*m->resx;
+  boundbox[2] = m->getXPoints()*m->getXRes();
   boundbox[3] = 0;
-  boundbox[4] = m->ypoints*m->resy;
+  boundbox[4] = m->getYPoints()*m->getYRes();
   boundbox[5] = 0;
-  boundbox[6] = m->zpoints*m->resz;
+  boundbox[6] = m->getZPoints()*m->getZRes();
   for (size_t i = 1; i < size; i++)
   {
 	  if(m->m_Grains[i]->surfacefield > 0)
@@ -142,9 +142,9 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
   float mindist;
   int sidetomove, move;
   boundbox[1] = 0;
-  boundbox[2] = m->xpoints*m->resx;
+  boundbox[2] = m->getXPoints()*m->getXRes();
   boundbox[3] = 0;
-  boundbox[4] = m->ypoints*m->resy;
+  boundbox[4] = m->getYPoints()*m->getYRes();
   for (size_t i = 1; i < size; i++)
   {
 	  if(m->m_Grains[i]->surfacefield > 0)
