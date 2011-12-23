@@ -91,13 +91,36 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
     return;
   }
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), nearestneighbors);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), nearestneighbordistances);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, FloatArrayType, float, (totalPoints), kernelmisorientations);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (totalPoints), grainmisorientations);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradients);
-
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == grain_indicies)
+  {
+    return;
+  }
+  int32_t* nearestneighbors = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighbors, (totalPoints * 3), this);
+  if(NULL == nearestneighbors)
+  {
+    return;
+  }
+  float* nearestneighbordistances = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighborDistances, (totalPoints * 3), this);
+  if(NULL == nearestneighbordistances)
+  {
+    return;
+  }
+  float* kernelmisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::KernelAverageMisorientations, totalPoints, this);
+  if(NULL == kernelmisorientations)
+  {
+    return;
+  }
+  float* grainmisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainMisorientations, totalPoints, this);
+  if(NULL == grainmisorientations)
+  {
+    return;
+  }
+  float* misorientationgradients = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::MisorientationGradients, totalPoints, this);
+  if(NULL == misorientationgradients)
+  {
+    return;
+  }
   ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;

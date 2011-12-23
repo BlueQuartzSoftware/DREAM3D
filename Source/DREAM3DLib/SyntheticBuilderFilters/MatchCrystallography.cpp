@@ -330,7 +330,8 @@ void MatchCrystallography::assign_eulers()
 void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist, float &mdfchange)
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   float w;
   float n1, n2, n3;
@@ -365,7 +366,8 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
 void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist)
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   float w;
   float n1, n2, n3;
@@ -422,7 +424,8 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
 
   float random;
@@ -534,7 +537,8 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
 
   int good = 0;
@@ -688,11 +692,15 @@ void MatchCrystallography::matchCrystallography()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == grain_indicies) { return; }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
+    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
+  if (NULL == euler1s) { return; }
+  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
+  if (NULL == euler2s) { return; }
+  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
+  if (NULL == euler3s) { return; }
 
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
@@ -759,7 +767,8 @@ void  MatchCrystallography::measure_misorientations ()
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   float w;
   float n1, n2, n3;

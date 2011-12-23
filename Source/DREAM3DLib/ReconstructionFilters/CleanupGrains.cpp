@@ -104,15 +104,19 @@ void CleanupGrains::execute()
   }
   int64_t totalPoints = m->totalPoints();
 
-  float* ptr = getVoxelDataSizeCheck<float, FloatArrayType>(DREAM3D::VoxelData::Quats, totalPoints * 5);
-  if (NULL == ptr) { return; }
+
 
 	// Make sure we have all the arrays available and allocated
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), ph);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (totalPoints), ac);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (totalPoints*5), qt);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (totalPoints), nn);
+    int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == gi) { return; }
+    int32_t* ph = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if (NULL == ph) { return; }
+  bool* ac = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::AlreadyChecked, totalPoints, this);
+  if (NULL == ac) { return; }
+    float* qt = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, totalPoints * 5, this);
+  if (NULL == qt) { return; }
+   int32_t* nn = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, this);
+  if (NULL == nn) { return; }
 
   // Set the local variables created in the above macros to our class variables so
   // we do not have to keep rerunning the above code.

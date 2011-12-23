@@ -58,26 +58,71 @@
 #include "DREAM3DLib/Common/Observable.h"
 
 
-#define INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, field, name, typeClass, type, size, valuePtr, numComp) \
-type* valuePtr = NULL;\
+#define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
+template<typename PtrType, typename DataArrayType, typename Observable>\
+PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, Observable* obv)\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    iDataArray = typeClass::CreateArray(size);\
-    dataContainer->add##field##Data(name, iDataArray);\
-  } \
-  iDataArray->SetNumberOfComponents(numComp);\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
-    setErrorCondition(-12);\
-    setErrorMessage(s.str());\
-    return;\
-  }\
+PtrType* gi = NULL;\
+IDataArray::Pointer iDataArray = GetMethod(arrayName);\
+if (iDataArray.get() == 0) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";\
+  obv->setErrorCondition(-10);\
+  obv->setErrorMessage(s.str());\
+  return gi;\
+}\
+if (size != iDataArray->GetNumberOfTuples()) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
+  s << "Required: " << size << " Contains: " << iDataArray->GetNumberOfTuples();\
+  obv->setErrorCondition(-11);\
+  obv->setErrorMessage(s.str());\
+  return gi;\
+}\
+gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+if (NULL == gi) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
+  obv->setErrorCondition(-13);\
+  obv->setErrorMessage(s.str());\
+  return gi;\
+}\
+return gi;\
 }
 
+
+
+#define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
+template<typename PtrType, typename DataArrayType, typename Observable>\
+PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numComp, Observable* obv)\
+{\
+  PtrType* valuePtr = NULL;\
+  IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
+  if (iDataArray.get() == NULL) { \
+    iDataArray = DataArrayType::CreateArray(size);\
+    if (NULL == iDataArray.get()) { \
+      std::stringstream s;\
+      s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
+      obv->setErrorCondition(-25);\
+      obv->setErrorMessage(s.str());\
+      return valuePtr;\
+    }\
+    add##Field##Data(arrayName, iDataArray);\
+    iDataArray->SetNumberOfComponents(numComp);\
+  } \
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+  if (NULL == valuePtr) {\
+    std::stringstream s;\
+    s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;";\
+    obv->setErrorCondition(-12);\
+    obv->setErrorMessage(s.str());\
+    return valuePtr;\
+  }\
+  return valuePtr;\
+}
+
+#if 0
 #define INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
 INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, FloatArrayType, float, size, valuePtr, numComp)
 
@@ -89,39 +134,8 @@ INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, Int8ArrayType, int8_t, size, value
 
 #define INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
 INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, BoolArrayType, bool, size, valuePtr, numComp)
+#endif
 
-
-
-
-
-#define GET_NAMED_ARRAY_SIZE_CHK(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
-    setErrorCondition(-10);\
-    setErrorMessage(s.str());\
-    return;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
-    setErrorCondition(-11);\
-    setErrorMessage(s.str());\
-    return;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
-    setErrorCondition(-13);\
-    setErrorMessage(s.str());\
-    return;\
-  }\
-}
 
 #define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, type, size, valuePtr) \
 type* valuePtr = NULL;\
@@ -190,6 +204,7 @@ type* valuePtr = NULL;\
 
 
 
+
 namespace DREAM3D
 {
   namespace VoxelData
@@ -240,6 +255,15 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     virtual ~DataContainer();
 
+
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Voxel)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Ensemble)
+
+
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getVoxelData);
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
 
     /* *********** These methods will eventually replace those below **********/
 
