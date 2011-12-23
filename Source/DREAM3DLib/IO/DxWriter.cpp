@@ -138,7 +138,7 @@ int DxWriter::writeFile()
   }
 
   int index = 0;
-  for (int z = 0; z < dims[2]; ++z)
+  for (size_t z = 0; z < dims[2]; ++z)
   {
     // Add a leading surface Row for this plane if needed
     if(m_AddSurfaceLayer)
@@ -149,7 +149,7 @@ int DxWriter::writeFile()
       }
       out << std::endl;
     }
-    for (int y = 0; y < dims[1]; ++y)
+    for (size_t y = 0; y < dims[1]; ++y)
     {
       // write leading surface voxel for this row
       if(m_AddSurfaceLayer)
@@ -157,7 +157,7 @@ int DxWriter::writeFile()
         out << "-5 ";
       }
       // Write the actual voxel data
-      for (int x = 0; x < dims[0]; ++x)
+      for (size_t x = 0; x < dims[0]; ++x)
       {
         if(grain_indicies[index] == 0)
         {

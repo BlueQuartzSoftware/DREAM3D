@@ -94,17 +94,19 @@ void AdjustVolume::adjust_boundaries()
   }
   int64_t totalPoints = m->totalPoints();
 
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
 
+  size_t dims[3] = {0,0,0};
+  m->getDimensions(dims);
 
   int neighpoints[6];
-  neighpoints[0] = -m->getXPoints()*m->getYPoints();
-  neighpoints[1] = -m->getXPoints();
+  neighpoints[0] = -dims[0]*dims[1];
+  neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->getXPoints();
-  neighpoints[5] = m->getXPoints()*m->getYPoints();
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0]*dims[1];
   int iterations = 0;
   size_t selectedgrain = 0;
   int good = 0;
@@ -112,7 +114,7 @@ void AdjustVolume::adjust_boundaries()
   int nucleus;
   int bad = 0;
   float random, oldsizedisterror, currentsizedisterror, diam;
-  int x, y, z;
+  size_t x, y, z;
   int neighpoint, index;
   size_t count, affectedcount;
   int vListSize = 1000;
@@ -166,19 +168,19 @@ void AdjustVolume::adjust_boundaries()
     for(size_t i=0;i<count;++i)
     {
       index = voxellist[i];
-      x = index%m->getXPoints();
-      y = (index/m->getXPoints())%m->getYPoints();
-      z = index/(m->getXPoints()*m->getYPoints());
-      for(int j=0;j<6;j++)
+      x = index%dims[0];
+      y = (index/dims[0])%dims[1];
+      z = index/(dims[0]*dims[1]);
+      for(size_t j=0;j<6;j++)
       {
         good = 1;
         neighpoint = index+neighpoints[j];
         if(j == 0 && z == 0) good = 0;
-        if(j == 5 && z == (m->getZPoints()-1)) good = 0;
+        if(j == 5 && z == (dims[2]-1)) good = 0;
         if(j == 1 && y == 0) good = 0;
-        if(j == 4 && y == (m->getYPoints()-1)) good = 0;
+        if(j == 4 && y == (dims[1]-1)) good = 0;
         if(j == 2 && x == 0) good = 0;
-        if(j == 3 && x == (m->getXPoints()-1)) good = 0;
+        if(j == 3 && x == (dims[0]-1)) good = 0;
         if(good == 1 && grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
         {
 	        voxellist[count] = neighpoint;

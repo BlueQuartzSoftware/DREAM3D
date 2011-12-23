@@ -204,10 +204,11 @@ void MergeColonies::merge_colonies()
     }
     colonylist.clear();
   }
-  for (int k = 0; k < (m->getXPoints() * m->getYPoints() * m->getZPoints()); k++)
+  size_t totalPoints = static_cast<size_t>(m->totalPoints());
+  for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = grain_indicies[k];
-	if (m->m_Grains[grainname]->colonynewnumber != -1) grain_indicies[k] = m->m_Grains[grainname]->colonynewnumber;
+	if (m->m_Grains[grainname]->colonynewnumber != -1) { grain_indicies[k] = m->m_Grains[grainname]->colonynewnumber;}
   }
 }
 
