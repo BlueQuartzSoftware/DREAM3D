@@ -327,7 +327,7 @@ class VTKRectilinearGridFileWriter
     int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step)
     {
       int err = 0;
-      fprintf(f, "%s %d %s\n", axis, npoints, type);
+      fprintf(f, "%s %lld %s\n", axis, npoints, type);
       if (m_WriteBinaryFiles == true)
       {
         T* data = new T[npoints];
