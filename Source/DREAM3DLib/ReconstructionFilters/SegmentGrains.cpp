@@ -88,6 +88,9 @@ void SegmentGrains::execute()
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SegmentGrains::form_grains()
 {
   DataContainer* m = getDataContainer();
@@ -107,6 +110,8 @@ void SegmentGrains::form_grains()
   float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
   if (NULL == quats) { return; }
 
+  size_t dims[3] = {0,0,0};
+  m->getDimensions(dims);
 
   DREAM3D_RANDOMNG_NEW()
   int seed = 0;
@@ -122,7 +127,7 @@ void SegmentGrains::form_grains()
   float n1, n2, n3;
   int randpoint = 0;
   int good = 0;
-  int col, row, plane;
+  size_t col, row, plane;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
   size_t initialMergeListSize = 10;
@@ -131,12 +136,12 @@ void SegmentGrains::form_grains()
 //  std::vector<int>* vlist;
   std::vector<int> mergelist(initialMergeListSize, -1);
   int neighpoints[6];
-  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
-  neighpoints[1] = -m->getXPoints();
+  neighpoints[0] = -(dims[0] * dims[1]);
+  neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->getXPoints();
-  neighpoints[5] = (m->getXPoints() * m->getYPoints());
+  neighpoints[4] = dims[0];
+  neighpoints[5] = (dims[0] * dims[1]);
   Ebsd::CrystalStructure phase1, phase2;
 
   // Precalculate some constants
@@ -166,9 +171,9 @@ void SegmentGrains::form_grains()
       for (size_t j = 0; j < size; ++j)
       {
         int currentpoint = voxelslist[j];
-        col = currentpoint % m->getXPoints();
-        row = (currentpoint / m->getXPoints()) % m->getYPoints();
-        plane = currentpoint / (m->getXPoints() * m->getYPoints());
+        col = currentpoint % dims[0];
+        row = (currentpoint / dims[0]) % dims[1];
+        plane = currentpoint / (dims[0] * dims[1]);
         phase1 = m->crystruct[phases[currentpoint]];
         for (int i = 0; i < 6; i++)
         {
@@ -180,11 +185,11 @@ void SegmentGrains::form_grains()
           good = 1;
           neighbor = currentpoint + neighpoints[i];
           if (i == 0 && plane == 0) good = 0;
-          if (i == 5 && plane == (m->getZPoints() - 1)) good = 0;
+          if (i == 5 && plane == (dims[2] - 1)) good = 0;
           if (i == 1 && row == 0) good = 0;
-          if (i == 4 && row == (m->getYPoints() - 1)) good = 0;
+          if (i == 4 && row == (dims[1] - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
-          if (i == 3 && col == (m->getXPoints() - 1)) good = 0;
+          if (i == 3 && col == (dims[0] - 1)) good = 0;
           if (good == 1 && grain_indicies[neighbor] == -1 && phases[neighbor] > 0)
           {
             w = 10000.0;

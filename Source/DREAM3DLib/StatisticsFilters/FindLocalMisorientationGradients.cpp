@@ -146,11 +146,11 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
   int jStride;
   int kStride;
 
-  for (int col = 0; col < m->getXPoints(); col++)
+  for (size_t col = 0; col < m->getXPoints(); col++)
   {
-    for (int row = 0; row < m->getYPoints(); row++)
+    for (size_t row = 0; row < m->getYPoints(); row++)
     {
-      for (int plane = 0; plane < m->getZPoints(); plane++)
+      for (size_t plane = 0; plane < m->getZPoints(); plane++)
       {
         point = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         if (grain_indicies[point] > 0 && phases[point] > 0)
@@ -238,11 +238,11 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
   }
 
   steps = 1;
-  for (int col = 0; col < m->getXPoints(); col++)
+  for (size_t col = 0; col < m->getXPoints(); col++)
   {
-    for (int row = 0; row < m->getYPoints(); row++)
+    for (size_t row = 0; row < m->getYPoints(); row++)
     {
-      for (int plane = 0; plane < m->getZPoints(); plane++)
+      for (size_t plane = 0; plane < m->getZPoints(); plane++)
       {
         point = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         if (grain_indicies[point] > 0 && phases[point] > 0)

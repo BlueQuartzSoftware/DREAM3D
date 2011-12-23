@@ -197,7 +197,11 @@ int VTKFileReader::readHeader()
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   int64_t dims[3];
   err = parse64_3V(buf, dims, 0);
-  size_t max = std::numeric_limits<size_t>::max();
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;

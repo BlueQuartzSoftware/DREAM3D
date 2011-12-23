@@ -108,7 +108,11 @@ int main(int argc, char **argv)
    * Note that this does not guarantee the user has enough left, just that the
    * size of the volume can fit in the address space of the program
    */
-  int64_t max = static_cast<int64_t>(std::numeric_limits<size_t>::max());
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;

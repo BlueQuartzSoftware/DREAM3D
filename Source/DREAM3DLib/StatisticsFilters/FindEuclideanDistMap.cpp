@@ -99,7 +99,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 //  int neighpoint;
 //  int nearestneighbor;
   int neighbors[6];
-  int column, row, plane;
+  size_t column, row, plane;
   int add = 1;
   int good = 0;
   int grain, neighbor;
@@ -111,7 +111,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   neighbors[3] = 1;
   neighbors[4] = m->getXPoints();
   neighbors[5] = m->getXPoints() * m->getYPoints();
-  for (int a = 0; a < (totalPoints); ++a)
+  for (int64_t a = 0; a < (totalPoints); ++a)
   {
 	grain = grain_indicies[a];
 	if(grain > 0)
@@ -120,7 +120,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 	  column = a % m->getXPoints();
 	  row = (a / m->getXPoints()) % m->getYPoints();
 	  plane = a / (m->getXPoints() * m->getYPoints());
-	  for (int k = 0; k < 6; k++)
+	  for (size_t k = 0; k < 6; k++)
 	  {
 		good = 1;
 		neighbor = a + neighbors[k];

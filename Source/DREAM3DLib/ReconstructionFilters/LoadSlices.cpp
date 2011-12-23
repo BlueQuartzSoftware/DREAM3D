@@ -122,7 +122,11 @@ void LoadSlices::execute()
      * Note that this does not guarantee the user has enough left, just that the
      * size of the volume can fit in the address space of the program
      */
-    int64_t max = static_cast<int64_t>(std::numeric_limits<size_t>::max());
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
     if (dims[0] * dims[1] * dims[2] > max )
     {
       err = -1;
@@ -421,7 +425,9 @@ void LoadSlices::threshold_points()
   size_t count = 0;
   int currentpoint = 0;
   int neighbor = 0;
-  int col, row, plane;
+  size_t col, row, plane;
+  size_t dims[3] = {0,0,0};
+  m->getDimensions(dims);
 //  int noborder = 0;
   Ebsd::CrystalStructure phase1, phase2;
   int initialVoxelsListSize = 10000;
@@ -452,16 +458,16 @@ void LoadSlices::threshold_points()
 	q1[3] = quats[currentpoint*5 + 3];
 	q1[4] = quats[currentpoint*5 + 4];
 	phase1 = m->crystruct[phases[currentpoint]];
-	for (int i = 0; i < 6; i++)
+	for (size_t i = 0; i < 6; i++)
 	{
 	  good = 1;
 	  neighbor = currentpoint + neighbors[i];
 	  if (i == 0 && plane == 0) good = 0;
-	  if (i == 5 && plane == (m->getZPoints() - 1)) good = 0;
+	  if (i == 5 && plane == (dims[2] - 1)) good = 0;
 	  if (i == 1 && row == 0) good = 0;
-	  if (i == 4 && row == (m->getYPoints() - 1)) good = 0;
+	  if (i == 4 && row == (dims[1] - 1)) good = 0;
 	  if (i == 2 && col == 0) good = 0;
-	  if (i == 3 && col == (m->getXPoints() - 1)) good = 0;
+	  if (i == 3 && col == (dims[0] - 1)) good = 0;
 	  if (good == 1 && grain_indicies[neighbor] == 0 && phases[neighbor] > 0)
 	  {
 		w = 10000.0;
