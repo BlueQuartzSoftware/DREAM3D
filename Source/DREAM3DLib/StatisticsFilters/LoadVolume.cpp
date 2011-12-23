@@ -163,29 +163,30 @@ void LoadVolume::initializeGrains()
   }
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void LoadVolume::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (totalPoints), gi, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (totalPoints), ph, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (totalPoints), e1, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (totalPoints), e2, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (totalPoints), e3, 1);
-  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (totalPoints), surf, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Neighbors, (totalPoints), nn, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Quats, (totalPoints * 5), qt, 5);
-
-  this->grain_indicies = gi;
-  this->phases=ph;
-  this->euler1s = e1;
-  this->euler2s = e2;
-  this->euler3s = e3;
-  this->surfacevoxels = surf;
-  this->neighbors = nn;
-  this->quats = qt;
+  grain_indicies = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
+  if (grain_indicies == NULL) { return; }
+  phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
+  if (phases == NULL) { return; }
+  euler1s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, 1, this);
+  if (NULL == euler1s) {return;}
+  euler2s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, 1, this);
+  if (NULL == euler2s) {return;}
+  euler3s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, 1, this);
+  if (NULL == euler3s) {return;}
+  surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
+  if (NULL == surfacevoxels) {return;}
+  neighbors = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, 1, this);
+  if (neighbors == NULL) { return; }
+  quats = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, totalPoints*5, 1, this);
+  if (NULL == quats) {return;}
 
   for (int i = 0; i < totalPoints; ++i)
   {
@@ -194,7 +195,6 @@ void LoadVolume::initializeAttributes()
     euler3s[i] = -1.0f;
     neighbors[i] = -1.0f;
   }
-
 
 }
 

@@ -91,20 +91,26 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
   }
 
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (totalPoints*5), quats);
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == grain_indicies) { return; }
+    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if (NULL == phases) { return; }
+  float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
+  if (NULL == quats) { return; }
 
-//  m->grainmisorientations = m->m_GrainMisorientations->WritePointer(0, totalPoints);
-//  m->misorientationgradients = m->m_MisorientationGradients->WritePointer(0, totalPoints);
-//  m->kernelmisorientations = m->m_KernelMisorientations->WritePointer(0, totalPoints);
 
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, FloatArrayType, float, (totalPoints), kernelmisorientations, 1);
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (totalPoints), grainmisorientations, 1);
-  INITIALIZE_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradients, 1);
+  float* kernelmisorientations = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::KernelAverageMisorientations, totalPoints, 1, this);
+  if (NULL == kernelmisorientations) {return;}
 
+  float* grainmisorientations = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainMisorientations, totalPoints, 1, this);
+  if (NULL == grainmisorientations) {return;}
+
+  float* misorientationgradients = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::MisorientationGradients, totalPoints, 1, this);
+  if (NULL == misorientationgradients) {return;}
+
+
+  // We need to keep a reference to the wrapper DataArray class in addition to the raw pointer
   FloatArrayType* m_KernelMisorientations = FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType* >(m->getVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations).get());
-
 
 
   std::vector<float> gamVec(totalPoints);

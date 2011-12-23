@@ -81,8 +81,16 @@ void FindNeighbors::find_neighbors()
   }
 
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, totalPoints, surfacevoxels);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == grain_indicies)
+  {
+    return;
+  }
+  int8_t* surfacevoxels = m->getVoxelDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
+  if(NULL == surfacevoxels)
+  {
+    return;
+  }
 
   int neighpoints[6];
   neighpoints[0] = -(m->xpoints * m->ypoints);
@@ -99,7 +107,9 @@ void FindNeighbors::find_neighbors()
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
 
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, totalsurfacearea, 1);
+
+  float* totalsurfacearea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
+  if (NULL == totalsurfacearea) {return;}
   for (size_t i = 1; i < xtalCount; ++i)
   {
     totalsurfacearea[i] = 0.0f;

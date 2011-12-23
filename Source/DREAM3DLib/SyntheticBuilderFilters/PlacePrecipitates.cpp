@@ -105,9 +105,21 @@ void PlacePrecipitates::execute()
 
   int64_t totalPoints = m->totalPoints();
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), ph);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (totalPoints), surf);
+  int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == gi)
+  {
+    return;
+  }
+  int32_t* ph = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if(NULL == ph)
+  {
+    return;
+  }
+  int8_t* surf = m->getEnsembleDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
+  if(NULL == surf)
+  {
+    return;
+  }
 
 
   grain_indicies = gi;

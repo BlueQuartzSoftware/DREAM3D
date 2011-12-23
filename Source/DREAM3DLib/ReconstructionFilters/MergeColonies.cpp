@@ -135,7 +135,8 @@ void MergeColonies::merge_colonies()
   NeighborList<int>& neighborlist = *neighListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalPoints()), grain_indicies);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
+  if (NULL == grain_indicies) { return; }
 
   float angcur = 180.0f;
   std::vector<int> colonylist;
@@ -225,7 +226,8 @@ void MergeColonies::renumber_grains()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalPoints()), grain_indicies);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
+  if (NULL == grain_indicies) { return; }
 
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;
