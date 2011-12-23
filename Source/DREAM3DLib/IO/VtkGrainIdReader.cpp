@@ -92,7 +92,7 @@ size_t VtkGrainIdReader::parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, int xDim, int yDim, int zDim)
+int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, int64_t xDim, int64_t yDim, int64_t zDim)
 {
   char cunsigned_char [64] = "unsigned_char";
   char cchar [64] = "char";
