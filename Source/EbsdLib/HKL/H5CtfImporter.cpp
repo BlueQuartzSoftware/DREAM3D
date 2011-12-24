@@ -124,7 +124,7 @@ H5CtfImporter::~H5CtfImporter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5CtfImporter::getDims(int &x, int &y)
+void H5CtfImporter::getDims(int64_t &x, int64_t &y)
 {
   x = xDim;
   y = yDim;
@@ -143,7 +143,7 @@ void H5CtfImporter::getResolution(float &x, float &y)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfImporter::importFile(hid_t fileId, int z, const std::string &ctfFile)
+int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFile)
 {
   herr_t err = -1;
   setCancel(false);

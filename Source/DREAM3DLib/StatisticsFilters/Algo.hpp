@@ -110,19 +110,19 @@ class FindEuclideanMap : public AbstractFilter
       int neighpoint;
       int nearestneighbor;
       int neighbors[6];
-      int xpoints = m->xpoints;
-      int ypoints = m->ypoints;
-      int zpoints = m->zpoints;
-      double resx = m->resx;
-      double resy = m->resy;
-      double resz = m->resz;
+      int xpoints = m->getXPoints();
+      int ypoints = m->getYPoints();
+      int zpoints = m->getZPoints();
+      double resx = m->getXRes();
+      double resy = m->getYRes();
+      double resz = m->getZRes();
 
-      neighbors[0] = -m->xpoints * m->ypoints;
-      neighbors[1] = -m->xpoints;
+      neighbors[0] = -m->getXPoints() * m->getYPoints();
+      neighbors[1] = -m->getXPoints();
       neighbors[2] = -1;
       neighbors[3] = 1;
-      neighbors[4] = m->xpoints;
-      neighbors[5] = m->xpoints * m->ypoints;
+      neighbors[4] = m->getXPoints();
+      neighbors[5] = m->getXPoints() * m->getYPoints();
       int* voxel_NearestNeighbor = new int[totalPoints];
       double* voxel_NearestNeighborDistance = new double[totalPoints];
       nearestneighbordistance = 0;
@@ -244,25 +244,25 @@ class ParallelFindKernels
           q1[2] = m->voxels[i].quat[2];
           q1[3] = m->voxels[i].quat[3];
           q1[4] = m->voxels[i].quat[4];
-          col = i % m->xpoints;
-          row = (i / m->xpoints) % m->ypoints;
-          plane = i / (m->xpoints * m->ypoints);
+          col = i % m->getXPoints();
+          row = (i / m->getXPoints()) % m->getYPoints();
+          plane = i / (m->getXPoints() * m->getYPoints());
           for (int j = -steps; j < steps + 1; j++)
           {
-            jStride = j * m->xpoints * m->ypoints;
+            jStride = j * m->getXPoints() * m->getYPoints();
             for (int k = -steps; k < steps + 1; k++)
             {
-              kStride = k * m->xpoints;
+              kStride = k * m->getXPoints();
               for (int l = -steps; l < steps + 1; l++)
               {
                 good = 1;
                 neighbor = i + (jStride) + (kStride) + (l);
                 if (plane + j < 0) good = 0;
-                if (plane + j > m->zpoints - 1) good = 0;
+                if (plane + j > m->getZPoints() - 1) good = 0;
                 if (row + k < 0) good = 0;
-                if (row + k > m->ypoints - 1) good = 0;
+                if (row + k > m->getYPoints() - 1) good = 0;
                 if (col + l < 0) good = 0;
-                if (col + l > m->xpoints - 1) good = 0;
+                if (col + l > m->getXPoints() - 1) good = 0;
                 if (good == 1 && gnames[i] == gnames[neighbor] && unassigned[neighbor] != 1)
                 {
                   numVoxel++;

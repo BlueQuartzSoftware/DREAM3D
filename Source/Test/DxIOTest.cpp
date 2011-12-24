@@ -69,9 +69,9 @@ int TestDxWriter()
   {
     grainIds->SetValue(i, i + UnitTest::DxIOTest::Offset);
   }
-  int nx = UnitTest::DxIOTest::XSize;
-  int ny = UnitTest::DxIOTest::YSize;
-  int nz = UnitTest::DxIOTest::ZSize;
+  size_t nx = UnitTest::DxIOTest::XSize;
+  size_t ny = UnitTest::DxIOTest::YSize;
+  size_t nz = UnitTest::DxIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
@@ -95,9 +95,9 @@ int TestDxReader()
 
   DxReader::Pointer reader = DxReader::New();
   reader->setFileName(UnitTest::DxIOTest::TestFile);
-  int64_t nx = 0;
-  int64_t ny = 0;
-  int64_t nz = 0;
+  size_t nx = 0;
+  size_t ny = 0;
+  size_t nz = 0;
 
   DataContainer::Pointer m = DataContainer::New();
   reader->setDataContainer(m.get());

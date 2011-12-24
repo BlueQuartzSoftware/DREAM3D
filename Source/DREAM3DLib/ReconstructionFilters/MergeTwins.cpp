@@ -132,7 +132,8 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *neighListPtr;
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalPoints()), grain_indicies);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
+  if (NULL == grain_indicies) { return; }
 
  // float angcur = 180.0f;
   std::vector<int> twinlist;
@@ -188,10 +189,11 @@ void MergeTwins::merge_twins()
     }
     twinlist.clear();
   }
-  for (int k = 0; k < (m->xpoints * m->ypoints * m->zpoints); k++)
+  size_t totalPoints = static_cast<size_t>(m->totalPoints());
+  for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = grain_indicies[k];
-	if (m->m_Grains[grainname]->twinnewnumber != -1) grain_indicies[k] = m->m_Grains[grainname]->twinnewnumber;
+	if (m->m_Grains[grainname]->twinnewnumber != -1) { grain_indicies[k] = m->m_Grains[grainname]->twinnewnumber;}
   }
 }
 
@@ -207,7 +209,8 @@ void MergeTwins::renumber_grains()
     return;
   }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (m->totalPoints()), grain_indicies);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
+  if (NULL == grain_indicies) { return; }
 
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;

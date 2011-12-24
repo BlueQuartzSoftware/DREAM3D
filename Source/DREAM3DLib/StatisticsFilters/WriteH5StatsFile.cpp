@@ -73,8 +73,8 @@ void WriteH5StatsFile::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
 
-  if(m->zpoints > 1) write_h5statsfile(h5io, getBinStepSize());
-  if(m->zpoints == 1) write_h5statsfile2D(h5io, getBinStepSize());
+  if(m->getZPoints() > 1) write_h5statsfile(h5io, getBinStepSize());
+  if(m->getZPoints() == 1) write_h5statsfile2D(h5io, getBinStepSize());
   notify("WriteH5StatsFile Completed", 0, Observable::UpdateProgressMessage);
 }
 
@@ -182,7 +182,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 		  neighborhoodfit[temp3][0] = neighborhood[temp3][0];
 		  neighborhoodfit[temp3][1] = neighborhood[temp3][3] - neighborhood[temp3][1];
 		  neighborhoodfit[temp3][2] = neighborhood[temp3][1];
-		  neighborhoodfit[temp3][3] = log((neighborhood[temp3][5] - neighborhoodfit[temp3][2]) / neighborhoodfit[temp3][1]) / log(2.0);
+		  neighborhoodfit[temp3][3] = log((neighborhood[temp3][5] - neighborhoodfit[temp3][2]) / neighborhoodfit[temp3][1]) / log(2.0f);
 		}
 	  }
 	  avglogdiam = avglogdiam / actualgrains;

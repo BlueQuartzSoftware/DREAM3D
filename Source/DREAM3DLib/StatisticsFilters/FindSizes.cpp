@@ -73,13 +73,14 @@ void FindSizes::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
+    int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == gi) { return; }
   grain_indicies = gi;
 
   setErrorCondition(0);
 
-  if(m->zpoints > 1) find_sizes();
-  if(m->zpoints == 1) find_sizes2D();
+  if(m->getZPoints() > 1) find_sizes();
+  if(m->getZPoints() == 1) find_sizes2D();
   notify("FindSizes Completed", 0, Observable::UpdateProgressMessage);
 }
 
@@ -106,7 +107,7 @@ void FindSizes::find_sizes()
     int gnum = grain_indicies[j];
     graincounts[gnum]++;
   }
-  float res_scalar = m->resx * m->resy * m->resz;
+  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
   float vol_term = (4.0/3.0)*m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -139,7 +140,7 @@ void FindSizes::find_sizes2D()
   for (size_t i = 1; i < numgrains; i++)
   {
     m->m_Grains[i]->numvoxels = graincounts[i];
-    m->m_Grains[i]->volume = (graincounts[i] * m->resx * m->resy);
+    m->m_Grains[i]->volume = (graincounts[i] * m->getXRes() * m->getYRes());
     radsquared = m->m_Grains[i]->volume / m_pi;
     diameter = (2 * sqrt(radsquared));
     m->m_Grains[i]->equivdiameter = diameter;

@@ -48,7 +48,7 @@
      */
 int parseInitCoords(const std::string &str, int64_t* values)
 {
-  int n = sscanf(str.c_str(), "%d,%d,%d", values, values+1, values+2 );
+  int n = sscanf(str.c_str(), "%lld,%lld,%lld", values, values+1, values+2 );
   if (n != 3)
   {
     ::memset(values, 0, 12);

@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
      * @param value
      * @return Error Condition. Negative is Error.
      */
-    int parseCoordinateLine(const char* input, int &value);
+    int parseCoordinateLine(const char* input, size_t &value);
 
     /**
       * @brief Parses the byte size from a data set declaration line
@@ -92,16 +92,16 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
      /**
       *
       */
-     int ignoreData(std::ifstream &in, int byteSize, char* type, int xDim, int yDim, int zDim);
+     int ignoreData(std::ifstream &in, int byteSize, char* type, size_t xDim, size_t yDim, size_t zDim);
 
      /**
       *
       */
      template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim, T &diff)
+     int skipVolume(std::ifstream &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim, T &diff)
      {
        int err = 0;
-       size_t totalSize = xDim * yDim * zDim;
+       int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
        if (getFileIsBinary() == true)
        {
          T* buffer = new T[totalSize];
@@ -148,12 +148,12 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
      }
 
      template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, int xDim, int yDim, int zDim)
+     int skipVolume(std::ifstream &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim)
      {
        int err = 0;
        if(getFileIsBinary() == true)
        {
-         size_t totalSize = xDim * yDim * zDim;
+         int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
          T* buffer = new T[totalSize];
          // Read all the xpoints in one shot into a buffer
          inStream.read(reinterpret_cast<char*>(buffer), (totalSize * sizeof(T)));

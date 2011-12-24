@@ -87,7 +87,40 @@ void LoadVolume::execute()
     return;
   }
 
-  m->setDimensions(dims);
+  /* Sanity check what we are trying to load to make sure it can fit in our address space.
+   * Note that this does not guarantee the user has enough left, just that the
+   * size of the volume can fit in the address space of the program
+   */
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
+  if (dims[0] * dims[1] * dims[2] > max )
+  {
+    err = -1;
+    std::stringstream s;
+    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                << "' is greater than this program can hold. Try the 64 bit version.";
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return;
+  }
+
+  if (dims[0] > max || dims[1] > max || dims[2] > max)
+  {
+    err = -1;
+    std::stringstream s;
+    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return;
+  }
+  /* ************ End Sanity Check *************************** */
+  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+
+  m->setDimensions(dcDims);
   m->setResolution(spacing);
   totalPoints = m->totalPoints();
 
@@ -163,29 +196,30 @@ void LoadVolume::initializeGrains()
   }
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void LoadVolume::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (totalPoints), gi, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (totalPoints), ph, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (totalPoints), e1, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (totalPoints), e2, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (totalPoints), e3, 1);
-  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (totalPoints), surf, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Neighbors, (totalPoints), nn, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Quats, (totalPoints * 5), qt, 5);
-
-  this->grain_indicies = gi;
-  this->phases=ph;
-  this->euler1s = e1;
-  this->euler2s = e2;
-  this->euler3s = e3;
-  this->surfacevoxels = surf;
-  this->neighbors = nn;
-  this->quats = qt;
+  grain_indicies = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
+  if (grain_indicies == NULL) { return; }
+  phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
+  if (phases == NULL) { return; }
+  euler1s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, 1, this);
+  if (NULL == euler1s) {return;}
+  euler2s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, 1, this);
+  if (NULL == euler2s) {return;}
+  euler3s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, 1, this);
+  if (NULL == euler3s) {return;}
+  surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
+  if (NULL == surfacevoxels) {return;}
+  neighbors = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, 1, this);
+  if (neighbors == NULL) { return; }
+  quats = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, totalPoints*5, 1, this);
+  if (NULL == quats) {return;}
 
   for (int i = 0; i < totalPoints; ++i)
   {
@@ -194,7 +228,6 @@ void LoadVolume::initializeAttributes()
     euler3s[i] = -1.0f;
     neighbors[i] = -1.0f;
   }
-
 
 }
 

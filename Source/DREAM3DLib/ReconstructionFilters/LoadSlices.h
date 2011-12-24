@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
   protected:
     LoadSlices();
 
-    void initialize(int nX, int nY, int nZ,
+    void initialize(size_t nX, size_t nY, size_t nZ,
                     float xRes, float yRes, float zRes,
                     std::vector<Ebsd::CrystalStructure> crystalStructures,
                     std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,

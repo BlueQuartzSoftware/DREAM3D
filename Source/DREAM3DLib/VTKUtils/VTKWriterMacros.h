@@ -40,6 +40,27 @@
  * @brief This file contains various macros to write out consistent VTK legacy
  * style files.
  */
+# if defined(__LP64__) && __LP64__
+
+#define WRITE_RECTILINEAR_GRID_HEADER(FILE_TYPE, ptr, xpoints, ypoints, zpoints)\
+  fprintf(f, "# vtk DataFile Version 2.0\n");\
+  fprintf(f, "data set from DREAM3D\n");\
+  fprintf(f, FILE_TYPE); fprintf(f, "\n");\
+  fprintf(f, "DATASET RECTILINEAR_GRID\n");\
+  fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);\
+
+#define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
+  fprintf(f, "# vtk DataFile Version 2.0\n");\
+  fprintf(f, "data set from DREAM3D\n");\
+  fprintf(f, FILE_TYPE); fprintf(f, "\n");\
+  fprintf(f, "DATASET STRUCTURED_POINTS\n");\
+  fprintf(f, "DIMENSIONS %ld %ld %ld\n", ptr->getXPoints(), ptr->getYPoints(), ptr->getZPoints());\
+  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
+  fprintf(f, "SPACING %f %f %f\n", ptr->getXRes(), ptr->getYRes(), ptr->getZRes());\
+  fprintf(f, "POINT_DATA %ld\n\n", ptr->getXPoints() * ptr->getYPoints() * ptr->getZPoints() );\
+
+
+#else
 
 #define WRITE_RECTILINEAR_GRID_HEADER(FILE_TYPE, ptr, xpoints, ypoints, zpoints)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
@@ -48,24 +69,25 @@
   fprintf(f, "DATASET RECTILINEAR_GRID\n");\
   fprintf(f, "DIMENSIONS %lld %lld %lld\n", xpoints, ypoints, zpoints);\
 
-
-
-
 #define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from DREAM3D\n");\
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET STRUCTURED_POINTS\n");\
-  fprintf(f, "DIMENSIONS %lld %lld %lld\n", ptr->xpoints, ptr->ypoints, ptr->zpoints);\
+  fprintf(f, "DIMENSIONS %lld %lld %lld\n", ptr->getXPoints(), ptr->getYPoints(), ptr->getZPoints());\
   fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
-  fprintf(f, "SPACING %f %f %f\n", ptr->resx, ptr->resy, ptr->resz);\
-  fprintf(f, "POINT_DATA %lld\n\n", ptr->xpoints * ptr->ypoints * ptr->zpoints );\
+  fprintf(f, "SPACING %f %f %f\n", ptr->getXRes(), ptr->getYRes(), ptr->getZRes());\
+  fprintf(f, "POINT_DATA %lld\n\n", ptr->getXPoints() * ptr->getYPoints() * ptr->getZPoints() );\
+
+
+#endif
+
 
 
 #define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName)\
   fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
     fprintf(f, "%d ", grain_indicies[i]);\
   }\
@@ -78,12 +100,12 @@
   { \
   int* gn = new int[totalPoints];\
   int t;\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     t = grain_indicies[i];\
     MXA::Endian::FromSystemToBig::convert<int>(t); \
     gn[i] = t; \
   }\
-  size_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
@@ -96,7 +118,7 @@
 #define WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(ptr, name, type, var, FORMAT)\
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #type);\
   fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, var[i]);\
   }fprintf(f,"\n"); \
@@ -107,12 +129,12 @@
   { \
   type* gn = new type[totalPoints];\
   type t;\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[i];\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\
-  size_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
@@ -127,10 +149,10 @@
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   type* gn = new type[totalPoints];\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     gn[i] = var[i];\
   }\
-  size_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
@@ -143,7 +165,7 @@
 #define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(ptr, name, type, var, FORMAT)\
   fprintf(f, "SCALARS %s float 1\n", name.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, ptr->m_Grains[grain_indicies[i]]->var);\
   } fprintf(f,"\n");
@@ -154,12 +176,12 @@
   { \
   type* gn = new type[totalPoints];\
   type t;\
-  for (size_t i = 0; i < totalPoints; i++) {\
+  for (int64_t i = 0; i < totalPoints; i++) {\
     t = ptr->m_Grains[grain_indicies[i]]->var;\
     MXA::Endian::FromSystemToBig::convert<type>(t); \
     gn[i] = t; \
   }\
-  size_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
+  int64_t totalWritten = fwrite(gn, sizeof(type), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
     std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\

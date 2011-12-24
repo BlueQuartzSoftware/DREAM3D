@@ -84,7 +84,7 @@ int DxWriter::writeFile()
   GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
 
   int err = 0;
-  int64_t dims[3];
+  size_t dims[3];
   m->getDimensions(dims);
   // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
 
@@ -138,7 +138,7 @@ int DxWriter::writeFile()
   }
 
   int index = 0;
-  for (int z = 0; z < dims[2]; ++z)
+  for (size_t z = 0; z < dims[2]; ++z)
   {
     // Add a leading surface Row for this plane if needed
     if(m_AddSurfaceLayer)
@@ -149,7 +149,7 @@ int DxWriter::writeFile()
       }
       out << std::endl;
     }
-    for (int y = 0; y < dims[1]; ++y)
+    for (size_t y = 0; y < dims[1]; ++y)
     {
       // write leading surface voxel for this row
       if(m_AddSurfaceLayer)
@@ -157,7 +157,7 @@ int DxWriter::writeFile()
         out << "-5 ";
       }
       // Write the actual voxel data
-      for (int x = 0; x < dims[0]; ++x)
+      for (size_t x = 0; x < dims[0]; ++x)
       {
         if(grain_indicies[index] == 0)
         {

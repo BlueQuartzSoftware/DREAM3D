@@ -317,8 +317,8 @@ void MatchCrystallography::assign_eulers()
     m->m_Grains[i]->avg_quat[4] = q[4];
     if (m->m_Grains[i]->surfacefield == 0)
     {
-      simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
-      unbiasedvol[phase] = unbiasedvol[phase] + (float(m->m_Grains[i]->numvoxels) * m->resx * m->resy * m->resz);
+      simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[i]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes());
+      unbiasedvol[phase] = unbiasedvol[phase] + (float(m->m_Grains[i]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes());
     }
   }
   for(int i=0;i<numbins;i++)
@@ -330,15 +330,16 @@ void MatchCrystallography::assign_eulers()
 void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist, float &mdfchange)
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   float w;
   float n1, n2, n3;
   float r1, r2, r3;
 
-  int curmiso1 = std::numeric_limits<float >::max();
-  int curmiso2 = std::numeric_limits<float >::max();
-  int curmiso3 = std::numeric_limits<float >::max();
+  int curmiso1 = std::numeric_limits<int >::max();
+  int curmiso2 = std::numeric_limits<int >::max();
+  int curmiso3 = std::numeric_limits<int >::max();
 
   int neighsurfarea = std::numeric_limits<int >::max();
   int curmisobin = std::numeric_limits<int >::max();
@@ -365,7 +366,8 @@ void MatchCrystallography::MC_LoopBody1(int phase, size_t neighbor, int j,std::v
 void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::vector<float> misolist,std::vector<float> neighsurfarealist)
 {
   DataContainer* m = getDataContainer();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   float w;
   float n1, n2, n3;
@@ -422,7 +424,8 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
 
   float random;
@@ -471,11 +474,11 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
   OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
   float odfchange = ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose])) - ((actualodf[phase][choose] - (simodf[phase][choose]
-      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
-      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))));
+      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
+      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
   odfchange = odfchange + (((actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin] - simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])))));
+      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
+      - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
 
   float mdfchange = 0;
   size_t size = 0;
@@ -500,8 +503,8 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
     m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
     m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
     m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
-    simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
-    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
+    simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
+    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
     size_t size = 0;
     if (neighborlist[selectedgrain1].size() != 0)
     {
@@ -534,7 +537,8 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
 
   int good = 0;
@@ -587,13 +591,13 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
   g2odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 
   float odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
-     -(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx
-          * m->resy * m->resz / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-      + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]))));
+     -(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes()
+          * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+      + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
   odfchange = odfchange + (((actualodf[phase][g2odfbin]-simodf[phase][g2odfbin]) * (actualodf[phase][g2odfbin]-simodf[phase][g2odfbin])) - ((actualodf[phase][g2odfbin]
-     -(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx
-          * m->resy *m-> resz / unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])))));
+     -(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes()
+          * m->getYRes() *m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+      + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
 
 
   float mdfchange = 0;
@@ -637,10 +641,10 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
     m->m_Grains[selectedgrain2]->euler1 = g1ea1;
     m->m_Grains[selectedgrain2]->euler2 = g1ea2;
     m->m_Grains[selectedgrain2]->euler3 = g1ea3;
-    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-        - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
-    simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase])
-        - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->resx * m->resy * m->resz / unbiasedvol[phase]);
+    simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+        - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
+    simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
+        - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
 
   OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
     m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
@@ -688,11 +692,15 @@ void MatchCrystallography::matchCrystallography()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == grain_indicies) { return; }
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
+    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
+  if (NULL == euler1s) { return; }
+  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
+  if (NULL == euler2s) { return; }
+  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
+  if (NULL == euler3s) { return; }
 
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
@@ -759,7 +767,8 @@ void  MatchCrystallography::measure_misorientations ()
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   float w;
   float n1, n2, n3;

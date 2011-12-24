@@ -93,7 +93,8 @@ namespace DREAM3D
       * @param defaultValue The value to set if the parsing fails
       * @return Zero on Success, Negative on Error
       */
-     int parseInt643V(const char* input, int64_t* output, int64_t defaultValue);
+     int parseSizeT_3V(const char* input, size_t* output, size_t defaultValue);
+     int parse64_3V(const char* input, int64_t* output, int64_t defaultValue);
 
      /**
       * @brief Reads a single line from a buffer

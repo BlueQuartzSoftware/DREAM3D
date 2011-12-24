@@ -70,15 +70,15 @@ class GrainGenerator : public AbstractPipeline, public Observer
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
-    DREAM3D_INSTANCE_PROPERTY(int, XPoints)
-    DREAM3D_INSTANCE_PROPERTY(int, YPoints)
-    DREAM3D_INSTANCE_PROPERTY(int, ZPoints)
+    DREAM3D_INSTANCE_PROPERTY(size_t, XPoints)
+    DREAM3D_INSTANCE_PROPERTY(size_t, YPoints)
+    DREAM3D_INSTANCE_PROPERTY(size_t, ZPoints)
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<DREAM3D::SyntheticBuilder::ShapeType>, ShapeTypes)
 
-    DREAM3D_INSTANCE_PROPERTY(double, XResolution)
-    DREAM3D_INSTANCE_PROPERTY(double, YResolution)
-    DREAM3D_INSTANCE_PROPERTY(double, ZResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, XResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, YResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
     DREAM3D_INSTANCE_PROPERTY(double, NeighborhoodErrorWeight)
     DREAM3D_INSTANCE_PROPERTY(double, FractionPrecipitates)
 

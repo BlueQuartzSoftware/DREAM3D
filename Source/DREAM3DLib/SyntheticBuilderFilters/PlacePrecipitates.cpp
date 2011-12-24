@@ -105,9 +105,21 @@ void PlacePrecipitates::execute()
 
   int64_t totalPoints = m->totalPoints();
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), gi);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), ph);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, Int8ArrayType, int8_t, (totalPoints), surf);
+  int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == gi)
+  {
+    return;
+  }
+  int32_t* ph = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if(NULL == ph)
+  {
+    return;
+  }
+  int8_t* surf = m->getEnsembleDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
+  if(NULL == surf)
+  {
+    return;
+  }
 
 
   grain_indicies = gi;
@@ -121,9 +133,9 @@ void PlacePrecipitates::execute()
   find_neighbors->execute();
   err = find_neighbors->getErrorCondition();
 
-  sizex = m->xpoints * m->resx;
-  sizey = m->ypoints * m->resy;
-  sizez = m->zpoints * m->resz;
+  sizex = m->getXPoints() * m->getXRes();
+  sizey = m->getYPoints() * m->getYRes();
+  sizez = m->getZPoints() * m->getZRes();
 
   totalvol = sizex * sizey * sizez;
 
@@ -141,12 +153,14 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 {
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
+  size_t dims[3] = {0,0,0};
+  m->getDimensions(dims);
   float dist;
   float inside = -1;
   float coatinginside = -1;
   int index;
-  int column, row, plane;
-  int xmin, xmax, ymin, ymax, zmin, zmax;
+  size_t column, row, plane;
+  size_t xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
@@ -195,60 +209,60 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   xc = m->m_Grains[gnum]->centroidx;
   yc = m->m_Grains[gnum]->centroidy;
   zc = m->m_Grains[gnum]->centroidz;
-  column = (xc-(m->resx/2))/m->resx;
-  row = (yc-(m->resy/2))/m->resy;
-  plane = (zc-(m->resz/2))/m->resz;
-  xmin = int(column-((radcur1/m->resx)+1));
-  xmax = int(column+((radcur1/m->resx)+1));
-  ymin = int(row-((radcur1/m->resy)+1));
-  ymax = int(row+((radcur1/m->resy)+1));
-  zmin = int(plane-((radcur1/m->resz)+1));
-  zmax = int(plane+((radcur1/m->resz)+1));
+  column = (xc-(m->getXRes()/2))/m->getXRes();
+  row = (yc-(m->getYRes()/2))/m->getYRes();
+  plane = (zc-(m->getZRes()/2))/m->getZRes();
+  xmin = int(column-((radcur1/m->getXRes())+1));
+  xmax = int(column+((radcur1/m->getXRes())+1));
+  ymin = int(row-((radcur1/m->getYRes())+1));
+  ymax = int(row+((radcur1/m->getYRes())+1));
+  zmin = int(plane-((radcur1/m->getZRes())+1));
+  zmax = int(plane+((radcur1/m->getZRes())+1));
   if(m_periodic_boundaries == true)
   {
-    if(xmin < -m->xpoints) xmin = -m->xpoints;
-    if(xmax > 2*m->xpoints-1) xmax = (2*m->xpoints-1);
-    if(ymin < -m->ypoints) ymin = -m->ypoints;
-    if(ymax > 2*m->ypoints-1) ymax = (2*m->ypoints-1);
-    if(zmin < -m->zpoints) zmin = -m->zpoints;
-    if(zmax > 2*m->zpoints-1) zmax = (2*m->zpoints-1);
+    if(xmin < -dims[0]) xmin = -dims[0];
+    if(xmax > 2*dims[0]-1) xmax = (2*dims[0]-1);
+    if(ymin < -dims[1]) ymin = -dims[1];
+    if(ymax > 2*dims[1]-1) ymax = (2*dims[1]-1);
+    if(zmin < -dims[2]) zmin = -dims[2];
+    if(zmax > 2*dims[2]-1) zmax = (2*dims[2]-1);
   }
   if(m_periodic_boundaries == false)
   {
     if(xmin < 0) xmin = 0;
-    if(xmax > m->xpoints-1) xmax = m->xpoints-1;
+    if(xmax > dims[0]-1) xmax = dims[0]-1;
     if(ymin < 0) ymin = 0;
-    if(ymax > m->ypoints-1) ymax = m->ypoints-1;
+    if(ymax > dims[1]-1) ymax = dims[1]-1;
     if(zmin < 0) zmin = 0;
-    if(zmax > m->zpoints-1) zmax = m->zpoints-1;
+    if(zmax > dims[2]-1) zmax = dims[2]-1;
   }
-  for(int iter1 = xmin; iter1 < xmax+1; iter1++)
+  for(size_t iter1 = xmin; iter1 < xmax+1; iter1++)
   {
-    for(int iter2 = ymin; iter2 < ymax+1; iter2++)
+    for(size_t iter2 = ymin; iter2 < ymax+1; iter2++)
     {
-		for(int iter3 = zmin; iter3 < zmax+1; iter3++)
+		for(size_t iter3 = zmin; iter3 < zmax+1; iter3++)
 		{
 		  column = iter1;
 		  row = iter2;
 		  plane = iter3;
-		  if(iter1 < 0) column = iter1+m->xpoints;
-		  if(iter1 > m->xpoints-1) column = iter1-m->xpoints;
-		  if(iter2 < 0) row = iter2+m->ypoints;
-		  if(iter2 > m->ypoints-1) row = iter2-m->ypoints;
-		  if(iter3 < 0) plane = iter3+m->zpoints;
-		  if(iter3 > m->zpoints-1) plane = iter3-m->zpoints;
-		  index = (plane*m->xpoints*m->ypoints)+(row*m->xpoints)+column;
+		  if(iter1 < 0) column = iter1+dims[0];
+		  if(iter1 > dims[0]-1) column = iter1-dims[0];
+		  if(iter2 < 0) row = iter2+dims[1];
+		  if(iter2 > dims[1]-1) row = iter2-dims[1];
+		  if(iter3 < 0) plane = iter3+dims[2];
+		  if(iter3 > dims[2]-1) plane = iter3-dims[2];
+		  index = (plane*dims[0]*dims[1])+(row*dims[0])+column;
 		  inside = -1;
 		  coatinginside = -1;
-		  x = float(column)*m->resx;
-		  y = float(row)*m->resy;
-		  z = float(plane)*m->resz;
+		  x = float(column)*m->getXRes();
+		  y = float(row)*m->getYRes();
+		  z = float(plane)*m->getZRes();
 		  if(iter1 < 0) x = x-sizex;
-		  if(iter1 > m->xpoints-1) x = x+sizex;
+		  if(iter1 > dims[0]-1) x = x+sizex;
 		  if(iter2 < 0) y = y-sizey;
-		  if(iter2 > m->ypoints-1) y = y+sizey;
+		  if(iter2 > dims[1]-1) y = y+sizey;
 		  if(iter3 < 0) z = z-sizez;
-		  if(iter3 > m->zpoints-1) z = z+sizez;
+		  if(iter3 > dims[2]-1) z = z+sizez;
 		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
 		  dist = sqrt(dist);
 		  if(dist < coatingradcur1)
@@ -289,6 +303,12 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 void  PlacePrecipitates::fillin_precipitates()
 {
   DataContainer* m = getDataContainer();
+  int64_t totalPoints = m->totalPoints();
+
+  size_t dims[3] =
+  { 0, 0, 0 };
+  m->getDimensions(dims);
+
   std::vector<int> neighs;
   std::vector<int> remove;
   std::vector<int> gsizes;
@@ -296,57 +316,57 @@ void  PlacePrecipitates::fillin_precipitates()
   int count = 1;
   int good = 1;
   float x, y, z;
-  gsizes.resize(m->m_Grains.size(),0);
-  neighbors.resize(m->totalPoints(),0);
+  gsizes.resize(m->m_Grains.size(), 0);
+  neighbors.resize(m->totalPoints(), 0);
   int neighpoint;
   int neighpoints[6];
   std::vector<int> n(m->m_Grains.size());
-  neighpoints[0] = -m->xpoints*m->ypoints;
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -dims[0] * dims[1];
+  neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = m->xpoints*m->ypoints;
-  while(count != 0)
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0] * dims[1];
+  while (count != 0)
   {
     count = 0;
-    for(int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
+    for (int64_t i = 0; i < totalPoints; i++)
     {
       int grainname = grain_indicies[i];
       if(grainname <= 0)
       {
-      count++;
-        for(size_t c = 1; c < m->m_Grains.size(); c++)
+        count++;
+        for (size_t c = 1; c < m->m_Grains.size(); c++)
         {
           n[c] = 0;
         }
-      x = i%m->xpoints;
-    y = (i/m->xpoints)%m->ypoints;
-    z = i/(m->xpoints*m->ypoints);
-      for(int j=0;j<6;j++)
-      {
-        good = 1;
-        neighpoint = i+neighpoints[j];
+        x = i % dims[0];
+        y = (i / dims[0]) % dims[1];
+        z = i / (dims[0] * dims[1]);
+        for (int j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighpoint = i + neighpoints[j];
           if(j == 0 && z == 0) good = 0;
-          if(j == 5 && z == (m->zpoints-1)) good = 0;
+          if(j == 5 && z == (dims[2] - 1)) good = 0;
           if(j == 1 && y == 0) good = 0;
-          if(j == 4 && y == (m->ypoints-1)) good = 0;
+          if(j == 4 && y == (dims[1] - 1)) good = 0;
           if(j == 2 && x == 0) good = 0;
-          if(j == 3 && x == (m->xpoints-1)) good = 0;
-      if(good == 1)
+          if(j == 3 && x == (dims[0] - 1)) good = 0;
+          if(good == 1)
           {
-          int grain = grain_indicies[neighpoint];
-          if(grain > 0 && grain >= numprimarygrains)
-          {
-            neighs.push_back(grain);
+            int grain = grain_indicies[neighpoint];
+            if(grain > 0 && grain >= numprimarygrains)
+            {
+              neighs.push_back(grain);
+            }
           }
-        }
         }
         int current = 0;
         int most = 0;
         int curgrain = 0;
         int size = int(neighs.size());
-        for(int k=0;k<size;k++)
+        for (int k = 0; k < size; k++)
         {
           int neighbor = neighs[k];
           n[neighbor]++;
@@ -364,19 +384,20 @@ void  PlacePrecipitates::fillin_precipitates()
         }
       }
     }
-    for(int j = 0; j < (m->xpoints*m->ypoints*m->zpoints); j++)
+    for (int64_t j = 0; j < totalPoints; j++)
     {
       int grainname = grain_indicies[j];
       int neighbor = neighbors[j];
       if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
       {
         grain_indicies[j] = neighbor;
-		phases[j] = m->m_Grains[neighbor]->phase;
+        phases[j] = m->m_Grains[neighbor]->phase;
       }
     }
   }
-  gsizes.resize(m->m_Grains.size(),0);
-  for (int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
+  gsizes.resize(m->m_Grains.size(), 0);
+
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     int name = grain_indicies[i];
     gsizes[name]++;
@@ -494,7 +515,7 @@ void  PlacePrecipitates::place_precipitates()
 			    phases[currentcoatingvoxellist[j]] = 3;
 			}
 		}
-		totalprecipvol = totalprecipvol + (precipvoxelcounter*m->resx*m->resy*m->resz);
+		totalprecipvol = totalprecipvol + (precipvoxelcounter*m->getXRes()*m->getYRes()*m->getZRes());
 		currentnumgrains++;
 	}
   }
@@ -502,18 +523,18 @@ void  PlacePrecipitates::place_precipitates()
 float PlacePrecipitates::find_xcoord(long long int index)
 {
   DataContainer* m = getDataContainer();
-  float x = m->resx*float(index%m->xpoints);
+  float x = m->getXRes()*float(index%m->getXPoints());
   return x;
 }
 float PlacePrecipitates::find_ycoord(long long int index)
 {
   DataContainer* m = getDataContainer();
-  float y = m->resy*float((index/m->xpoints)%m->ypoints);
+  float y = m->getYRes()*float((index/m->getXPoints())%m->getYPoints());
   return y;
 }
 float PlacePrecipitates::find_zcoord(long long int index)
 {
   DataContainer* m = getDataContainer();
-  float z = m->resz*float(index/(m->xpoints*m->ypoints));
+  float z = m->getZRes()*float(index/(m->getXPoints()*m->getYPoints()));
   return z;
 }

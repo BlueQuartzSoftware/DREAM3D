@@ -96,11 +96,16 @@ void CropVolume::crop_volume()
   }
 
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == grain_indicies) { return; }
+    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if (NULL == phases) { return; }
+    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
+  if (NULL == euler1s) { return; }
+  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
+  if (NULL == euler2s) { return; }
+  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
+  if (NULL == euler3s) { return; }
 
  // DREAM3D_RANDOMNG_NEW()
   setErrorCondition(0);
@@ -113,18 +118,18 @@ void CropVolume::crop_volume()
   int index_old;
   for (int i = 0; i < m_ZP; i++)
   {
-    notify("Cropping Percent", ((float)i/m->zpoints)*100, Observable::UpdateProgressValue);
+    notify("Cropping Percent", ((float)i/m->getZPoints())*100, Observable::UpdateProgressValue);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
       {
-        x = (k * m->resx) + m_XStart;
-        y = (j * m->resy) + m_YStart;
-        z = (i * m->resz) + m_ZStart;
-        col = int(x / m->resx);
-        row = int(y / m->resy);
-        plane = int(z / m->resz);
-		index_old = (plane * m->xpoints * m->ypoints) + (row * m->xpoints) + col;
+        x = (k * m->getXRes()) + m_XStart;
+        y = (j * m->getYRes()) + m_YStart;
+        z = (i * m->getZRes()) + m_ZStart;
+        col = int(x / m->getXRes());
+        row = int(y / m->getYRes());
+        plane = int(z / m->getZRes());
+		index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         grain_indicies[index] = grain_indicies[index_old];
         phases[index] = phases[index_old];
@@ -135,9 +140,9 @@ void CropVolume::crop_volume()
     }
   }
   m->setDimensions(m_XP, m_YP, m_ZP);
-  //  m->xpoints = m_XP;
-  //  m->ypoints = m_YP;
-  //  m->zpoints = m_ZP;
+  //  m->getXPoints() = m_XP;
+  //  m->getYPoints() = m_YP;
+  //  m->getZPoints() = m_ZP;
   totalPoints = m_XP*m_YP*m_ZP;
   err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);

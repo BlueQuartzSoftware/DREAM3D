@@ -195,7 +195,7 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
   int writeScalars(FILE* f)
   {
       int err = 0;
-      size_t total = r->xpoints * r->ypoints * r->zpoints;
+      size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
       unsigned char hkl[3] =
       { 0, 0, 0 };
       VTK_IPF_COLOR_REFDIRECTION(RefDirection)
@@ -324,10 +324,10 @@ class VTKRectilinearGridFileWriter
      * @param step The step value between each point on the axis.
      */
     template<typename T>
-    int writeCoords(FILE* f, const char* axis, const char* type, int npoints, T min, T max, T step)
+    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step)
     {
       int err = 0;
-      fprintf(f, "%s %d %s\n", axis, npoints, type);
+      fprintf(f, "%s %lld %s\n", axis, npoints, type);
       if (m_WriteBinaryFiles == true)
       {
         T* data = new T[npoints];
@@ -383,19 +383,19 @@ class VTKRectilinearGridFileWriter
       // Write the correct header
       if (m_WriteBinaryFiles == true)
       {
-        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
+        WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
       }
       else
       {
-        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->xpoints + 1, r->ypoints+1, r->zpoints+1)
+        WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints()+1, r->getZPoints()+1)
       }
 
       // Write the XCoords
-      writeCoords(f, "X_COORDINATES", "float", r->xpoints + 1, 0.0f - r->resx * 0.5f, (float)(r->xpoints + 1 * r->resx), r->resx);
-      writeCoords(f, "Y_COORDINATES", "float", r->ypoints + 1, 0.0f - r->resy * 0.5f, (float)(r->ypoints + 1 * r->resy), r->resy);
-      writeCoords(f, "Z_COORDINATES", "float", r->zpoints + 1, 0.0f - r->resz * 0.5f, (float)(r->zpoints + 1 * r->resz), r->resz);
+      writeCoords(f, "X_COORDINATES", "float", r->getXPoints() + 1, 0.0f - r->getXRes() * 0.5f, (float)(r->getXPoints() + 1 * r->getXRes()), r->getXRes());
+      writeCoords(f, "Y_COORDINATES", "float", r->getYPoints() + 1, 0.0f - r->getYRes() * 0.5f, (float)(r->getYPoints() + 1 * r->getYRes()), r->getYRes());
+      writeCoords(f, "Z_COORDINATES", "float", r->getZPoints() + 1, 0.0f - r->getZRes() * 0.5f, (float)(r->getZPoints() + 1 * r->getZRes()), r->getZRes());
 
-      size_t total = r->xpoints * r->ypoints * r->zpoints;
+      size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
       fprintf(f, "CELL_DATA %d\n", (int)total);
 
       // Now loop on all of our Scalars and write those arrays as CELL_DATA
@@ -455,7 +455,7 @@ class VTKStructuredPointsFileWriter
         WRITE_STRUCTURED_POINTS_HEADER("ASCII", r)
       }
 
-      size_t total = r->xpoints * r->ypoints * r->zpoints;
+      size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
       // Now loop on all of our Scalars and write those arrays as CELL_DATA
       for (typename std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
       {
@@ -529,7 +529,7 @@ class VtkMiscFileWriter
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::VoxelData::GrainMisorientations, FloatArrayType, float, (totalPoints), grainmisorientation);
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::VoxelData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradient);
 
-      size_t total = m->xpoints * m->ypoints * m->zpoints;
+      size_t total = m->getXPoints() * m->getYPoints() * m->getZPoints();
       if (true == m_WriteBinaryFiles)
       {
         WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::VTK::GrainIdScalarName);
