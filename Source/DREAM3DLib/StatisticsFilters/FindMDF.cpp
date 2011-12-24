@@ -82,7 +82,7 @@ void FindMDF::execute()
   setErrorCondition(0);
 
 
-  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
+  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setDataContainer(getDataContainer());

@@ -81,11 +81,18 @@ H5StatsWriter::~H5StatsWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsWriter::Pointer H5StatsWriter::New(const std::string &filename)
+H5StatsWriter::Pointer H5StatsWriter::New(const std::string &filename, bool createNewFile)
 {
   Pointer sharedPtr(new H5StatsWriter);
   sharedPtr->setFileName(filename);
-  hid_t fileId = H5Utilities::createFile(filename);
+  hid_t fileId = -1;
+  if (createNewFile) {
+    fileId = H5Utilities::createFile(filename);
+  }
+  else
+  {
+    fileId = H5Utilities::openFile(filename, false);
+  }
   if (fileId < 0)
   {
     sharedPtr = NullPointer();

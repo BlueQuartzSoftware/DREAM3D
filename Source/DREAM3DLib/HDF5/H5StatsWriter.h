@@ -68,7 +68,7 @@ class DREAM3DLib_EXPORT H5StatsWriter
     MXA_SHARED_POINTERS(H5StatsWriter);
     MXA_STATIC_NEW_MACRO(H5StatsWriter);
 
-    static Pointer New(const std::string &filename);
+    static Pointer New(const std::string &filename, bool createNewFile);
 
     virtual ~H5StatsWriter();
 

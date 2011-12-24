@@ -80,7 +80,7 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
-  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
+  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
   FindShapes::Pointer find_shapes = FindShapes::New();
   find_shapes->setDataContainer(getDataContainer());

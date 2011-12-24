@@ -72,7 +72,7 @@ void WriteH5StatsFile::execute()
   DataContainer* m = getDataContainer();
   setErrorCondition(0);
 
-  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
+  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
   if(m->getZPoints() > 1) write_h5statsfile(h5io, getBinStepSize());
   if(m->getZPoints() == 1) write_h5statsfile2D(h5io, getBinStepSize());
