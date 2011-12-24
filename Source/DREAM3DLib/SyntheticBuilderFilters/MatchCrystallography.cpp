@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -58,7 +58,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MatchCrystallography::MatchCrystallography()
+MatchCrystallography::MatchCrystallography() :
+totalsurfacearea(NULL),
+m(NULL),
+neighListPtr(NULL),
+surfListPtr(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -86,7 +90,10 @@ void MatchCrystallography::execute()
   int err = 0;
   setErrorCondition(err);
 
-  DataContainer* m = getDataContainer();
+  // Since this method is called from the 'execute' and the DataContainer validity
+  // was checked there we are just going to get the Shared Pointer to the DataContainer
+  m = getDataContainer();
+
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -116,6 +123,17 @@ void MatchCrystallography::execute()
     setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
+
+   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+   neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+
+   // And we do the same for the SharedSurfaceArea list
+   surfListPtr = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+
+
+
+   float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+   if (NULL == totalsurfacearea) { return; }
 
   assign_eulers();
   readODFData(h5reader);
@@ -182,7 +200,6 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
 
 int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
 {
-  DataContainer* m = getDataContainer();
   std::vector<float> density;
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
@@ -228,7 +245,6 @@ int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
 
 int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
 {
-  DataContainer* m = getDataContainer();
   std::vector<float> density;
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
@@ -409,24 +425,11 @@ void MatchCrystallography::MC_LoopBody2(int phase, size_t neighbor, int j,std::v
 void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
   DREAM3D_RANDOMNG_NEW()
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
-  DataContainer* m = getDataContainer();
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *neighListPtr;
-  // And we do the same for the SharedSurfaceArea list
-  NeighborList<float>* surfListPtr =
-      NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
-
-
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
-
 
   float random;
   int good;
@@ -522,20 +525,11 @@ void MatchCrystallography::swapOutOrientation( int &badtrycount, int &numbins, f
 void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, float currentodferror, float currentmdferror)
 {
   DREAM3D_RANDOMNG_NEW();
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
-  DataContainer* m = getDataContainer();
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *neighListPtr;
-  // And we do the same for the SharedSurfaceArea list
-  NeighborList<float>* surfListPtr =
-      NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
-
 
   float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
   if (NULL == totalsurfacearea) { return; }
@@ -689,18 +683,17 @@ void MatchCrystallography::switchOrientations( int &badtrycount, int &numbins, f
 void MatchCrystallography::matchCrystallography()
 {
 
-  DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
-
-    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
+  float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
   if (NULL == euler1s) { return; }
   float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
   if (NULL == euler2s) { return; }
   float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
   if (NULL == euler3s) { return; }
+
 
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
@@ -713,32 +706,32 @@ void MatchCrystallography::matchCrystallography()
   size_t xtalSize = m->crystruct.size();
   for(size_t iter=1;iter<xtalSize;++iter)
   {
-    if(m->crystruct[iter] == Ebsd::Cubic) numbins = 18*18*18;
-    if(m->crystruct[iter] == Ebsd::Hexagonal) numbins = 36*36*12;
-    while(badtrycount < 10000 && iterations < 1000000)
+    if(m->crystruct[iter] == Ebsd::Cubic) numbins = 18 * 18 * 18;
+    if(m->crystruct[iter] == Ebsd::Hexagonal) numbins = 36 * 36 * 12;
+    while (badtrycount < 10000 && iterations < 1000000)
     {
-    currentodferror = 0;
-    currentmdferror = 0;
-    for(int i=0;i<numbins;i++)
-    {
-      currentodferror = currentodferror + ((actualodf[iter][i]-simodf[iter][i])*(actualodf[iter][i]-simodf[iter][i]));
-    }
-    for(int i=0;i<(numbins);i++)
-    {
-      currentmdferror = currentmdferror + ((actualmdf[iter][i]-simmdf[iter][i])*(actualmdf[iter][i]-simmdf[iter][i]));
-    }
-    iterations++;
-    badtrycount++;
-    random = rg.genrand_res53();
+      currentodferror = 0;
+      currentmdferror = 0;
+      for (int i = 0; i < numbins; i++)
+      {
+        currentodferror = currentodferror + ((actualodf[iter][i] - simodf[iter][i]) * (actualodf[iter][i] - simodf[iter][i]));
+      }
+      for (int i = 0; i < (numbins); i++)
+      {
+        currentmdferror = currentmdferror + ((actualmdf[iter][i] - simmdf[iter][i]) * (actualmdf[iter][i] - simmdf[iter][i]));
+      }
+      iterations++;
+      badtrycount++;
+      random = rg.genrand_res53();
 
-    if(random < 0.5)  // SwapOutOrientation
-    {
-      swapOutOrientation(badtrycount, numbins, currentodferror, currentmdferror);
-    }
-    else if(random > 0.5) // SwitchOrientation
-    {
-      switchOrientations(badtrycount, numbins, currentodferror, currentmdferror);
-    }
+      if(random < 0.5) // SwapOutOrientation
+      {
+        swapOutOrientation(badtrycount, numbins, currentodferror, currentmdferror);
+      }
+      else if(random > 0.5) // SwitchOrientation
+      {
+        switchOrientations(badtrycount, numbins, currentodferror, currentmdferror);
+      }
     }
   }
  // float q[5];
@@ -752,23 +745,12 @@ void MatchCrystallography::matchCrystallography()
 
 void  MatchCrystallography::measure_misorientations ()
 {
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
-  DataContainer* m = getDataContainer();
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *neighListPtr;
-  // And we do the same for the SharedSurfaceArea list
-  NeighborList<float>* surfListPtr =
-      NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
-
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
 
   float w;
   float n1, n2, n3;
