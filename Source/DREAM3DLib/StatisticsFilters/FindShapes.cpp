@@ -454,20 +454,6 @@ float FindShapes::find_zcoord(size_t index)
 void FindShapes::find_axiseulers()
 {
   DataContainer* m = getDataContainer();
-  float **axisodf;
-  int *totalaxes;
-  axisodf = new float *[m->crystruct.size()];
-  totalaxes = new int [m->crystruct.size()];
-  axisodf[0] = NULL;
-  for(size_t i=1;i<m->crystruct.size();i++)
-  {
-	  totalaxes[i] = 0.0;
-	  axisodf[i] = new float[36*36*36];
-	  for(int j=0;j<(36*36*36);j++)
-	  {
-		axisodf[i][j] = 0.0;
-	  }
-  }
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -594,20 +580,6 @@ void FindShapes::find_axiseulers()
 void FindShapes::find_axiseulers2D()
 {
   DataContainer* m = getDataContainer();
-  float **axisodf;
-  int *totalaxes;
-  axisodf = new float *[m->crystruct.size()];
-  totalaxes = new int [m->crystruct.size()];
-  axisodf[0] = NULL;
-  for(size_t i=1;i<m->crystruct.size();i++)
-  {
-	  totalaxes[i] = 0.0;
-	  axisodf[i] = new float[18 * 18 * 18];
-	  for(int j=0;j<(18*18*18);j++)
-	  {
-		axisodf[i][j] = 0.0;
-	  }
-  }
   size_t numgrains = m->m_Grains.size();
 
   for (size_t i = 1; i < numgrains; i++)

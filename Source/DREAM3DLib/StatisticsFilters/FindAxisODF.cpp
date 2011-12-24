@@ -103,8 +103,8 @@ void FindAxisODF::find_axisodf(H5StatsWriter::Pointer h5io)
   for(size_t i=1;i<m->crystruct.size();i++)
   {
 	  totalaxes[i] = 0.0;
-	  axisodf[i] = new float[18*18*18];
-	  for(int j=0;j<(18*18*18);j++)
+	  axisodf[i] = new float[36*36*36];
+	  for(int j=0;j<(36*36*36);j++)
 	  {
 		axisodf[i][j] = 0.0;
 	  }
