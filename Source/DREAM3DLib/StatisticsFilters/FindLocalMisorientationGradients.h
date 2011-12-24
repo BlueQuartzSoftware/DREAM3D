@@ -70,10 +70,10 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
      */
     virtual void execute();
 
-	void find_localmisorientationgradients();
-
   protected:
     FindLocalMisorientationGradients();
+
+    void find_localmisorientationgradients();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;

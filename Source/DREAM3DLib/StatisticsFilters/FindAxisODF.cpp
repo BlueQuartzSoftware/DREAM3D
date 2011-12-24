@@ -45,7 +45,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAxisODF::FindAxisODF()
+FindAxisODF::FindAxisODF() :
+m_CreateNewStatsFile(true)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
