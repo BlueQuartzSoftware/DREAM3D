@@ -51,6 +51,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
 
@@ -111,6 +112,14 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
+
+    float* totalsurfacearea;
+    DataContainer* m;
+    NeighborList<int>* neighListPtr;
+    NeighborList<float>* surfListPtr;
+
+
+
 
     MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
     void operator=(const MatchCrystallography&); // Operator '=' Not Implemented
