@@ -148,21 +148,25 @@ void MicrostructureStatistics::execute()
     // Create a new Writer for the Stats Data.
     FindAxisODF::Pointer find_axisodf = FindAxisODF::New();
     find_axisodf->setH5StatsFile(hdf5ResultsFile);
+    find_axisodf->setCreateNewStatsFile(true);
     pipeline.push_back(find_axisodf);
 
     FindODF::Pointer find_odf = FindODF::New();
     find_odf->setH5StatsFile(hdf5ResultsFile);
     find_odf->addObserver(static_cast<Observer*>(this));
     find_odf->setDataContainer(m.get());
+    find_odf->setCreateNewStatsFile(false);
     pipeline.push_back(find_odf);
 
     FindMDF::Pointer find_mdf = FindMDF::New();
     find_mdf->setH5StatsFile(hdf5ResultsFile);
+    find_mdf->setCreateNewStatsFile(false);
     pipeline.push_back(find_mdf);
 
     WriteH5StatsFile::Pointer write_h5statsfile = WriteH5StatsFile::New();
     write_h5statsfile->setBinStepSize(m_BinStepSize);
     write_h5statsfile->setH5StatsFile(hdf5ResultsFile);
+    write_h5statsfile->setCreateNewStatsFile(false);
     pipeline.push_back(write_h5statsfile);
   }
 
@@ -191,7 +195,7 @@ void MicrostructureStatistics::execute()
     MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::MicroStats::GrainDataFile);
     WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
     write_fielddata->setFieldDataFile(FieldDataFile);
-    pipeline.push_back(find_deformationstatistics);
+    pipeline.push_back(write_fielddata);
   }
 
 
