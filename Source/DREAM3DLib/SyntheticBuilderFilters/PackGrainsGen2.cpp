@@ -60,6 +60,86 @@ const static float m_pi = M_PI;
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
+#define GG_INIT_DOUBLE_ARRAY(array, value, size)\
+    for(size_t n = 0; n < size; ++n) { array[n] = (value); }
+#define CHECK_STATS_READ_ERROR(err, group, dataset)\
+if (err < 0) {\
+  std::cout << "GrainGeneratorFunc::readReconStatsData Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
+  std::cout << "  File: " << __FILE__ << std::endl;\
+  std::cout << "  Line: " << __LINE__ << std::endl;\
+return err; }
+
+#define READ_2_COLUMN_STATS_DATA(err, index, phase, group, var, distribution, Col0Hdr, Col1Hdr, ColCount)\
+{\
+  disType = h5io->getDistributionType(phase, group, dt);\
+  var[index].resize(numdiameterbins[index]);\
+  std::vector<float> col0;\
+  std::vector<float> col1;\
+  switch(dt)\
+  {\
+    case distribution:\
+      path = group + ("/") + Col0Hdr;\
+      err = h5io->readStatsDataset(phase, path, col0);\
+      CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
+      path = group + ("/") + Col1Hdr;\
+      err = h5io->readStatsDataset(phase, path, col1);\
+      CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
+      for (size_t temp7 = 0; temp7 < nBins; temp7++)\
+      {\
+        var[index][temp7].resize(ColCount);\
+        var[index][temp7][0] = col0[temp7];\
+        var[index][temp7][1] = col1[temp7];\
+      }\
+      break;\
+    default:\
+      std::cout << "Error Reading " << group <<\
+                " the distribution must be of type '" << distribution << "' but is of type '"\
+                << disType << "'" << std::endl;\
+      return -1;\
+      break;\
+  }\
+}
+
+#define READ_3_COLUMN_STATS_DATA(err, index, phase, group, var, distribution, Col0Hdr, Col1Hdr, Col2Hdr, ColCount)\
+{\
+  disType = h5io->getDistributionType(phase, group, dt);\
+  var[index].resize(numdiameterbins[index]);\
+  std::vector<float> col0;\
+  std::vector<float> col1;\
+  std::vector<float> col2;\
+  switch(dt)\
+  {\
+    case distribution:\
+      path = group + ("/") + Col0Hdr;\
+      err = h5io->readStatsDataset(phase, path, col0);\
+      CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
+      path = group + ("/") + Col1Hdr;\
+      err = h5io->readStatsDataset(phase, path, col1);\
+      CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
+      path = group + ("/") + Col2Hdr;\
+      err = h5io->readStatsDataset(phase, path, col2);\
+      CHECK_STATS_READ_ERROR(err, group, Col2Hdr)\
+      for (size_t temp7 = 0; temp7 < nBins; temp7++)\
+      {\
+        var[index][temp7].resize(ColCount);\
+        var[index][temp7][0] = col0[temp7];\
+        var[index][temp7][1] = col1[temp7];\
+        var[index][temp7][2] = col2[temp7];\
+      }\
+      break;\
+  default:\
+    std::cout << "Error Reading " << group <<\
+              " the distribution must be of type '" << distribution << "' but is of type '"\
+              << disType << "'" << std::endl;\
+    return -1;\
+    break;\
+  }\
+}
+#define GGF_CHECK_READ_ERROR(func, name)\
+    std::cout << "GrainGeneratorFunc::" << #func << " Error: There was an error trying to read the data set '"\
+      << name << "' from the HDF5 file." << std::endl;\
+      std::cout << "  File: " << __FILE__ << std::endl;\
+      std::cout << "  Line: " << __LINE__ << std::endl;\
 
 // -----------------------------------------------------------------------------
 //
@@ -513,13 +593,9 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
   r3 = rg.genrand_beta(a3, b3) * r2;
   float random = rg.genrand_res53();
   int bin = 0;
-  for (int i = 0; i < (36 * 36 * 36); i++)
+  while (random > axisodf[phase][bin])
   {
-    if(random > axisodf[phase][i]) bin = i;
-    if(random < axisodf[phase][i])
-    {
-      break;
-    }
+	bin++;
   }
   m_OrientationOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float mf = omega3[phase][diameter][0];
@@ -542,8 +618,6 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
   m->m_Grains[gnum]->neighbordistfunc[2] = 0;
 }
 
-#define GG_INIT_DOUBLE_ARRAY(array, value, size)\
-    for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
 void PackGrainsGen2::initializeAttributes()
 {
@@ -624,79 +698,6 @@ void PackGrainsGen2::initializeArrays(std::vector<Ebsd::CrystalStructure> struct
 
 
 
-#define CHECK_STATS_READ_ERROR(err, group, dataset)\
-if (err < 0) {\
-  std::cout << "GrainGeneratorFunc::readReconStatsData Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
-  std::cout << "  File: " << __FILE__ << std::endl;\
-  std::cout << "  Line: " << __LINE__ << std::endl;\
-return err; }
-
-#define READ_2_COLUMN_STATS_DATA(err, index, phase, group, var, distribution, Col0Hdr, Col1Hdr, ColCount)\
-{\
-  disType = h5io->getDistributionType(phase, group, dt);\
-  var[index].resize(numdiameterbins[index]);\
-  std::vector<float> col0;\
-  std::vector<float> col1;\
-  switch(dt)\
-  {\
-    case distribution:\
-      path = group + ("/") + Col0Hdr;\
-      err = h5io->readStatsDataset(phase, path, col0);\
-      CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
-      path = group + ("/") + Col1Hdr;\
-      err = h5io->readStatsDataset(phase, path, col1);\
-      CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
-      for (size_t temp7 = 0; temp7 < nBins; temp7++)\
-      {\
-        var[index][temp7].resize(ColCount);\
-        var[index][temp7][0] = col0[temp7];\
-        var[index][temp7][1] = col1[temp7];\
-      }\
-      break;\
-    default:\
-      std::cout << "Error Reading " << group <<\
-                " the distribution must be of type '" << distribution << "' but is of type '"\
-                << disType << "'" << std::endl;\
-      return -1;\
-      break;\
-  }\
-}
-
-#define READ_3_COLUMN_STATS_DATA(err, index, phase, group, var, distribution, Col0Hdr, Col1Hdr, Col2Hdr, ColCount)\
-{\
-  disType = h5io->getDistributionType(phase, group, dt);\
-  var[index].resize(numdiameterbins[index]);\
-  std::vector<float> col0;\
-  std::vector<float> col1;\
-  std::vector<float> col2;\
-  switch(dt)\
-  {\
-    case distribution:\
-      path = group + ("/") + Col0Hdr;\
-      err = h5io->readStatsDataset(phase, path, col0);\
-      CHECK_STATS_READ_ERROR(err, group, Col0Hdr)\
-      path = group + ("/") + Col1Hdr;\
-      err = h5io->readStatsDataset(phase, path, col1);\
-      CHECK_STATS_READ_ERROR(err, group, Col1Hdr)\
-      path = group + ("/") + Col2Hdr;\
-      err = h5io->readStatsDataset(phase, path, col2);\
-      CHECK_STATS_READ_ERROR(err, group, Col2Hdr)\
-      for (size_t temp7 = 0; temp7 < nBins; temp7++)\
-      {\
-        var[index][temp7].resize(ColCount);\
-        var[index][temp7][0] = col0[temp7];\
-        var[index][temp7][1] = col1[temp7];\
-        var[index][temp7][2] = col2[temp7];\
-      }\
-      break;\
-  default:\
-    std::cout << "Error Reading " << group <<\
-              " the distribution must be of type '" << distribution << "' but is of type '"\
-              << disType << "'" << std::endl;\
-    return -1;\
-    break;\
-  }\
-}
 
 int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 {
@@ -784,12 +785,6 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
   }
   return err;
 }
-
-#define GGF_CHECK_READ_ERROR(func, name)\
-    std::cout << "GrainGeneratorFunc::" << #func << " Error: There was an error trying to read the data set '"\
-      << name << "' from the HDF5 file." << std::endl;\
-      std::cout << "  File: " << __FILE__ << std::endl;\
-      std::cout << "  Line: " << __LINE__ << std::endl;\
 
 int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
 {
