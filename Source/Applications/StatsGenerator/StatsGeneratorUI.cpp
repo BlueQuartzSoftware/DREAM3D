@@ -485,7 +485,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
   // Instantiate a new HDF5 writer object
-  H5StatsWriter::Pointer writer = H5StatsWriter::New(m_FilePath.toStdString());
+  H5StatsWriter::Pointer writer = H5StatsWriter::New(m_FilePath.toStdString(), true);
   // Loop on all the phases
   int nPhases = m_SGWidgets.size();
   for(int i = 0; i < nPhases; ++i)

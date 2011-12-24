@@ -69,7 +69,7 @@ void FindODF::execute()
 {
   setErrorCondition(0);
 
-  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());
+  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
   find_eulerodf(h5io);
   notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
