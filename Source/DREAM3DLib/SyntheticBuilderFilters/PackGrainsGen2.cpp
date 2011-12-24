@@ -618,7 +618,6 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
   m->m_Grains[gnum]->neighbordistfunc[2] = 0;
 }
 
-
 void PackGrainsGen2::initializeAttributes()
 {
   DataContainer* m = getDataContainer();

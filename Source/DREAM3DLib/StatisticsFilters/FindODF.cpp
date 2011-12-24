@@ -133,7 +133,7 @@ void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
   }
   for (size_t i = 1; i < m->crystruct.size(); i++)
   {
-	  totalvol[i] = totalvol[i]/float(totalPoints);
+	  totalvol[i] = totalvol[i]*float(m->getXRes()*m->getYRes()*m->getZRes());
   }
   for (size_t i = 1; i < numgrains; i++)
   {
