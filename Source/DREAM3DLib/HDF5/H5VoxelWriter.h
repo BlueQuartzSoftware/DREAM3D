@@ -160,9 +160,9 @@ class DREAM3DLib_EXPORT H5VoxelWriter
       if (err < 0) { return err; }
 
       int64_t volDims[3] =
-      { m->xpoints, m->ypoints, m->zpoints };
+      { m->getXPoints(), m->getYPoints(), m->getZPoints() };
       float spacing[3] =
-      { m->resx, m->resy, m->resz };
+      { m->getXRes(), m->getYRes(), m->getZRes() };
       float origin[3] =
       { 0.0f, 0.0f, 0.0f };
       err = writeStructuredPoints(volDims, spacing, origin, true);

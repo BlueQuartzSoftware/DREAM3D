@@ -99,9 +99,9 @@ int PhWriter::writeFile()
   }
 
   int dims[3];
-  dims[0] = m->xpoints;
-  dims[1] = m->ypoints;
-  dims[2] = m->zpoints;
+  dims[0] = m->getXPoints();
+  dims[1] = m->getYPoints();
+  dims[2] = m->getZPoints();
   int totalpoints = dims[0] * dims[1] * dims[2];
   // Change the name of the input filename for outout
   // std::vector<std::string> tokens;

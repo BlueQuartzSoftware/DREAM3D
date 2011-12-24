@@ -92,7 +92,7 @@ size_t VtkGrainIdReader::parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, int xDim, int yDim, int zDim)
+int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, size_t xDim, size_t yDim, size_t zDim)
 {
   char cunsigned_char [64] = "unsigned_char";
   char cchar [64] = "char";
@@ -197,8 +197,8 @@ int VtkGrainIdReader::readHeader()
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
-  int64_t dims[3];
-  err = parseInt643V(buf, dims, 0);
+  size_t dims[3];
+  err = parseSizeT_3V(buf, dims, 0);
   getDataContainer()->setDimensions(dims);
 
 #if 0
@@ -227,7 +227,7 @@ int VtkGrainIdReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkGrainIdReader::parseCoordinateLine(const char* input, int &value)
+int VtkGrainIdReader::parseCoordinateLine(const char* input, size_t &value)
 {
   char text[256];
   char text1[256];
@@ -267,11 +267,11 @@ int VtkGrainIdReader::readFile()
   }
 
   // These should have been set from reading the header
-  int64_t dims[3];
+  size_t dims[3];
   getDataContainer()->getDimensions(dims);
 
 
-  int dim = 0;
+  size_t dim = 0;
   // Now parse the X, coordinates.
  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);

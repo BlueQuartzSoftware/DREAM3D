@@ -147,8 +147,42 @@ int main(int argc, char **argv)
      volumeInfoReader->setFileName(m_H5AngFile);
      err = volumeInfoReader->readVolumeInfo();
      _CHECK_FOR_ERROR(ReconstructionFunc, "Error reading Volume Information from File.", err);
+     int64_t dims[3];
+     float res[3];
+     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
+     /* Sanity check what we are trying to load to make sure it can fit in our address space.
+      * Note that this does not guarantee the user has enough left, just that the
+      * size of the volume can fit in the address space of the program
+      */
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
+     if (dims[0] * dims[1] * dims[2] > max )
+     {
+       err = -1;
+       std::stringstream s;
+       s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                   << "' is greater than this program can hold. Try the 64 bit version.";
+       std::cout << s.str() << std::endl;
+       return EXIT_FAILURE;
+     }
 
-     volumeInfoReader->getDimsAndResolution(m->xpoints, m->ypoints, m->zpoints, m->resx, m->resy, m->resz);
+     if (dims[0] > max || dims[1] > max || dims[2] > max)
+     {
+       err = -1;
+       std::stringstream s;
+       s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+       s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+       std::cout << s.str() << std::endl;
+       return EXIT_FAILURE;
+     }
+     /* ************ End Sanity Check *************************** */
+     size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+     m->setDimensions(dcDims);
+     m->setResolution(res);
+
      manufacturer = volumeInfoReader->getManufacturer();
      volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
    }
@@ -165,7 +199,7 @@ int main(int argc, char **argv)
      H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
      angReader->setFileName(m_H5AngFile);
      angReader->setSliceStart(0);
-     angReader->setSliceEnd(m->zpoints-1);
+     angReader->setSliceEnd(m->getZPoints()-1);
      err = loadInfo<H5AngVolumeReader, AngPhase>(angReader, precipFractions, crystalStructures, m_PhaseTypes );
    }
    else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
@@ -178,7 +212,7 @@ int main(int argc, char **argv)
      H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
      ctfReader->setFileName(m_H5AngFile);
      ctfReader->setSliceStart(0);
-     ctfReader->setSliceEnd(m->zpoints-1);
+     ctfReader->setSliceEnd(m->getZPoints()-1);
      err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader, precipFractions, crystalStructures, m_PhaseTypes );
    }
    else

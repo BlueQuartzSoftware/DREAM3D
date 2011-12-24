@@ -118,14 +118,46 @@ void LoadSlices::execute()
     int64_t dims[3];
     float res[3];
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
-    m->setDimensions(dims);
+    /* Sanity check what we are trying to load to make sure it can fit in our address space.
+     * Note that this does not guarantee the user has enough left, just that the
+     * size of the volume can fit in the address space of the program
+     */
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
+    if (dims[0] * dims[1] * dims[2] > max )
+    {
+      err = -1;
+      std::stringstream s;
+      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                  << "' is greater than this program can hold. Try the 64 bit version.";
+      setErrorCondition(err);
+      setErrorMessage(s.str());
+      return;
+    }
+
+    if (dims[0] > max || dims[1] > max || dims[2] > max)
+    {
+      err = -1;
+      std::stringstream s;
+      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+      s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+      setErrorCondition(err);
+      setErrorMessage(s.str());
+      return;
+    }
+    /* ************ End Sanity Check *************************** */
+    size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+    m->setDimensions(dcDims);
     m->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     // The GUI code has already added 1 to the end index so nothing special needs to be done
     // for this calculation
-    dims[2] = m_ZEndIndex - m_ZStartIndex + 1;
-    m->setDimensions(dims);
-    //m->zpoints = m_ZEndIndex - m_ZStartIndex + 1;
+    dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
+    m->setDimensions(dcDims);
+    //m->getZPoints() = m_ZEndIndex - m_ZStartIndex + 1;
     manufacturer = volumeInfoReader->getManufacturer();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
@@ -166,26 +198,31 @@ void LoadSlices::execute()
     return;
   }
 
-  initialize(m->xpoints, m->ypoints, m->zpoints,
-                m->resx, m->resy, m->resz,
+  initialize(m->getXPoints(), m->getYPoints(), m->getZPoints(),
+                m->getXRes(), m->getYRes(), m->getZRes(),
                 crystalStructures, m_PhaseTypes, precipFractions);
   if (getErrorCondition() < 0)
   {
     return;
   }
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (totalPoints), goodVoxels);
+    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if (NULL == phases) { return; }
+    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
+  if (NULL == euler1s) { return; }
+  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
+  if (NULL == euler2s) { return; }
+  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
+  if (NULL == euler3s) { return; }
+  bool* goodVoxels = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::GoodVoxels, totalPoints, this);
+  if (NULL == goodVoxels) { return; }
 
 
   // During the loading of the EBSD data the Quality Metric Filters will be run
   // and fill in the ReconstrucionFunc->goodVoxels array.
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(euler1s, euler2s, euler3s, phases, goodVoxels, m->xpoints, m->ypoints, m->zpoints, m_RefFrameZDir, m_QualityMetricFilters);
+  err = ebsdReader->loadData(euler1s, euler2s, euler3s, phases, goodVoxels, m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir, m_QualityMetricFilters);
   setErrorCondition(err);
   if (err < 0)
   {
@@ -195,7 +232,7 @@ void LoadSlices::execute()
   float radianconversion = M_PI/180.0;
   if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
-	  for(int i = 0; i < (m->xpoints*m->ypoints*m->zpoints); i++)
+	  for(size_t i = 0; i < (m->getXPoints()*m->getYPoints()*m->getZPoints()); i++)
 	  {
 		  euler1s[i] = euler1s[i] * radianconversion;
 		  euler2s[i] = euler2s[i] * radianconversion;
@@ -214,7 +251,7 @@ void LoadSlices::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, float zRes,
+void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float yRes, float zRes,
                                     std::vector<Ebsd::CrystalStructure> crystalStructures,
 									std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
                                     std::vector<float> precipFractions)
@@ -226,15 +263,15 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
   m->pptFractions = precipFractions;
 
   m->setDimensions(nX, nY, nZ);
-//  m->xpoints = nX;
-//  m->ypoints = nY;
-//  m->zpoints = nZ;
+//  m->getXPoints() = nX;
+//  m->getYPoints() = nY;
+//  m->getZPoints() = nZ;
   m->setResolution(xRes, yRes, zRes);
-//  m->resx = xRes;
-//  m->resy = yRes;
-//  m->resz = zRes;
+//  m->getXRes() = xRes;
+//  m->getYRes() = yRes;
+//  m->getZRes() = zRes;
 
- // m->totalpoints = m->xpoints * m->ypoints * m->zpoints;
+ // m->totalpoints = m->getXPoints() * m->getYPoints() * m->getZPoints();
   int64_t totalPoints = m->totalPoints();
   int numgrains = 100;
   size_t oldSize = 0;
@@ -274,16 +311,26 @@ void LoadSlices::initialize(int nX, int nY, int nZ, float xRes, float yRes, floa
   /* ************************** End of Example *****************************/
 #endif
 
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GrainIds, (totalPoints), grain_indicies, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Phases, (totalPoints), phases, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler1, (totalPoints), euler1s, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler2, (totalPoints), euler2s, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Euler3, (totalPoints), euler3s, 1);
-  INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::SurfaceVoxels, (totalPoints), surfacevoxels, 1);
-  INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Neighbors, (totalPoints), neighbors, 1);
-  INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::Quats, (totalPoints * 5), quats, 5);
-  INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, (totalPoints), alreadychecked, 1);
-  INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, Voxel, DREAM3D::VoxelData::GoodVoxels, (totalPoints), goodVoxels, 1);
+  int32_t* grain_indicies = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
+  if (grain_indicies == NULL) { return; }
+  int32_t* phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
+  if (phases == NULL) { return; }
+  float* euler1s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, 1, this);
+  if (NULL == euler1s) {return;}
+  float* euler2s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, 1, this);
+  if (NULL == euler2s) {return;}
+  float* euler3s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, 1, this);
+  if (NULL == euler3s) {return;}
+  int8_t* surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
+  if (NULL == surfacevoxels) {return;}
+  int32_t* neighbors = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, 1, this);
+  if (neighbors == NULL) { return; }
+  float* quats = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, totalPoints*5, 1, this);
+  if (NULL == quats) {return;}
+  bool* alreadychecked = m->createVoxelData<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::AlreadyChecked, totalPoints, 1, this);
+  if (NULL == alreadychecked) {return;}
+  bool* goodVoxels = m->createVoxelData<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::GoodVoxels, totalPoints, 1, this);
+  if (NULL == goodVoxels) {return;}
 
   for(int i = 0;i < totalPoints;i++)
   {
@@ -305,12 +352,18 @@ void LoadSlices::initializeQuats()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (totalPoints*5), quats);
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == grain_indicies) { return; }
+    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if (NULL == phases) { return; }
+    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
+  if (NULL == euler1s) { return; }
+  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
+  if (NULL == euler2s) { return; }
+  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
+  if (NULL == euler3s) { return; }
+  float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
+  if (NULL == quats) { return; }
 
   float qr[5];
   Ebsd::CrystalStructure xtal = Ebsd::UnknownCrystalStructure;
@@ -343,21 +396,27 @@ void LoadSlices::threshold_points()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GoodVoxels, BoolArrayType, bool, (totalPoints), goodVoxels);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::AlreadyChecked, BoolArrayType, bool, (totalPoints), alreadychecked);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Quats, FloatArrayType, float, (totalPoints*5), quats);
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::Neighbors, Int32ArrayType, int32_t, (totalPoints), neighbors);
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == grain_indicies) { return; }
+    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if (NULL == phases) { return; }
+  bool* goodVoxels = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::GoodVoxels, totalPoints, this);
+  if (NULL == goodVoxels) { return; }
+    bool* alreadychecked = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::AlreadyChecked, totalPoints, this);
+  if (NULL == alreadychecked) { return; }
+  float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
+  if (NULL == quats) { return; }
+  int32_t* neighbors = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, this);
+  if (NULL == neighbors) { return; }
 
 
   int neighpoints[6];
-  neighpoints[0] = -(m->xpoints * m->ypoints);
-  neighpoints[1] = -m->xpoints;
+  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
+  neighpoints[1] = -m->getXPoints();
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->xpoints;
-  neighpoints[5] = (m->xpoints * m->ypoints);
+  neighpoints[4] = m->getXPoints();
+  neighpoints[5] = (m->getXPoints() * m->getYPoints());
   float w, n1, n2, n3;
   float q1[5];
   float q2[5];
@@ -366,7 +425,9 @@ void LoadSlices::threshold_points()
   size_t count = 0;
   int currentpoint = 0;
   int neighbor = 0;
-  int col, row, plane;
+  size_t col, row, plane;
+  size_t dims[3] = {0,0,0};
+  m->getDimensions(dims);
 //  int noborder = 0;
   Ebsd::CrystalStructure phase1, phase2;
   int initialVoxelsListSize = 10000;
@@ -388,25 +449,25 @@ void LoadSlices::threshold_points()
   for (size_t j = 0; j < count; j++)
   {
 	currentpoint = voxelslist[j];
-	col = currentpoint % m->xpoints;
-	row = (currentpoint / m->xpoints) % m->ypoints;
-	plane = currentpoint / (m->xpoints * m->ypoints);
+	col = currentpoint % m->getXPoints();
+	row = (currentpoint / m->getXPoints()) % m->getYPoints();
+	plane = currentpoint / (m->getXPoints() * m->getYPoints());
 	q1[0] = 0;
 	q1[1] = quats[currentpoint*5 + 1];
 	q1[2] = quats[currentpoint*5 + 2];
 	q1[3] = quats[currentpoint*5 + 3];
 	q1[4] = quats[currentpoint*5 + 4];
 	phase1 = m->crystruct[phases[currentpoint]];
-	for (int i = 0; i < 6; i++)
+	for (size_t i = 0; i < 6; i++)
 	{
 	  good = 1;
 	  neighbor = currentpoint + neighbors[i];
 	  if (i == 0 && plane == 0) good = 0;
-	  if (i == 5 && plane == (m->zpoints - 1)) good = 0;
+	  if (i == 5 && plane == (dims[2] - 1)) good = 0;
 	  if (i == 1 && row == 0) good = 0;
-	  if (i == 4 && row == (m->ypoints - 1)) good = 0;
+	  if (i == 4 && row == (dims[1] - 1)) good = 0;
 	  if (i == 2 && col == 0) good = 0;
-	  if (i == 3 && col == (m->xpoints - 1)) good = 0;
+	  if (i == 3 && col == (dims[0] - 1)) good = 0;
 	  if (good == 1 && grain_indicies[neighbor] == 0 && phases[neighbor] > 0)
 	  {
 		w = 10000.0;

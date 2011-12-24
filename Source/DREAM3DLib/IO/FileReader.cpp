@@ -146,10 +146,25 @@ int FileReader::parseInt3V(const char* input, int* output, int defaultValue)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FileReader::parseInt643V(const char* input, int64_t* output, int64_t defaultValue)
+int FileReader::parseSizeT_3V(const char* input, size_t* output, size_t defaultValue)
 {
   char text[256];
-  int n = sscanf(input, "%s %d %d %d", text, &(output[0]), &(output[1]), &(output[2]) );
+  int n = sscanf(input, "%s %ld %ld %ld", text, &(output[0]), &(output[1]), &(output[2]) );
+  if (n != 4)
+  {
+    output[0] = output[1] = output[2] = defaultValue;
+    return -1;
+  }
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int FileReader::parse64_3V(const char* input, int64_t* output, int64_t defaultValue)
+{
+  char text[256];
+  int n = sscanf(input, "%s %lld %lld %lld", text, &(output[0]), &(output[1]), &(output[2]) );
   if (n != 4)
   {
     output[0] = output[1] = output[2] = defaultValue;

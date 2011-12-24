@@ -89,6 +89,8 @@ int main(int argc, char **argv)
 
   int err = 0;
 
+  DataContainer::Pointer m = DataContainer::New();
+
   H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
   h5Reader->setFileName(iFile);
 
@@ -102,6 +104,39 @@ int main(int argc, char **argv)
     std::cout << "Error Reading the Dimensions and Resolution from the File." << std::endl;
     return EXIT_FAILURE;
   }
+  /* Sanity check what we are trying to load to make sure it can fit in our address space.
+   * Note that this does not guarantee the user has enough left, just that the
+   * size of the volume can fit in the address space of the program
+   */
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
+  if (dims[0] * dims[1] * dims[2] > max )
+  {
+    err = -1;
+    std::stringstream s;
+    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                << "' is greater than this program can hold. Try the 64 bit version.";
+    std::cout << s.str() << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  if (dims[0] > max || dims[1] > max || dims[2] > max)
+  {
+    err = -1;
+    std::stringstream s;
+    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    std::cout << s.str() << std::endl;
+    return EXIT_FAILURE;
+  }
+  /* ************ End Sanity Check *************************** */
+  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+  m->setDimensions(dcDims);
+  m->setResolution(spacing);
+  m->setOrigin(origin);
 
   std::vector<Ebsd::CrystalStructure> crystruct;
   std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
@@ -134,13 +169,6 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  DataContainer::Pointer m = DataContainer::New();
-  m->xpoints = dims[0];
-  m->ypoints = dims[1];
-  m->zpoints = dims[2];
-  m->resx = spacing[0];
-  m->resy = spacing[1];
-  m->resz = spacing[2];
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, m_GrainIndicies);
   m->addVoxelData(DREAM3D::VoxelData::Phases, m_Phases);
   m->addVoxelData(DREAM3D::VoxelData::Euler1, m_Euler1s);

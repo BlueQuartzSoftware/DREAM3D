@@ -69,6 +69,14 @@ FindAxisODF::~FindAxisODF()
 void FindAxisODF::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
   setErrorCondition(0);
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile());

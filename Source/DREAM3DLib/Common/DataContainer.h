@@ -58,26 +58,71 @@
 #include "DREAM3DLib/Common/Observable.h"
 
 
-#define INITIALIZE_NAMED_ARRAY_TO_PTR(dataContainer, field, name, typeClass, type, size, valuePtr, numComp) \
-type* valuePtr = NULL;\
+#define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
+template<typename PtrType, typename DataArrayType, typename Observable>\
+PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, Observable* obv)\
 {\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    iDataArray = typeClass::CreateArray(size);\
-    dataContainer->add##field##Data(name, iDataArray);\
-  } \
-  iDataArray->SetNumberOfComponents(numComp);\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
-    setErrorCondition(-12);\
-    setErrorMessage(s.str());\
-    return;\
-  }\
+PtrType* gi = NULL;\
+IDataArray::Pointer iDataArray = GetMethod(arrayName);\
+if (iDataArray.get() == 0) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";\
+  obv->setErrorCondition(-10);\
+  obv->setErrorMessage(s.str());\
+  return gi;\
+}\
+if (size != iDataArray->GetNumberOfTuples()) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
+  s << "Required: " << size << " Contains: " << iDataArray->GetNumberOfTuples();\
+  obv->setErrorCondition(-11);\
+  obv->setErrorMessage(s.str());\
+  return gi;\
+}\
+gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+if (NULL == gi) {\
+  std::stringstream s;\
+  s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
+  obv->setErrorCondition(-13);\
+  obv->setErrorMessage(s.str());\
+  return gi;\
+}\
+return gi;\
 }
 
+
+
+#define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
+template<typename PtrType, typename DataArrayType, typename Observable>\
+PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numComp, Observable* obv)\
+{\
+  PtrType* valuePtr = NULL;\
+  IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
+  if (iDataArray.get() == NULL) { \
+    iDataArray = DataArrayType::CreateArray(size);\
+    if (NULL == iDataArray.get()) { \
+      std::stringstream s;\
+      s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
+      obv->setErrorCondition(-25);\
+      obv->setErrorMessage(s.str());\
+      return valuePtr;\
+    }\
+    add##Field##Data(arrayName, iDataArray);\
+    iDataArray->SetNumberOfComponents(numComp);\
+  } \
+  valuePtr =\
+  IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+  if (NULL == valuePtr) {\
+    std::stringstream s;\
+    s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;";\
+    obv->setErrorCondition(-12);\
+    obv->setErrorMessage(s.str());\
+    return valuePtr;\
+  }\
+  return valuePtr;\
+}
+
+#if OLD_WAY
 #define INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
 INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, FloatArrayType, float, size, valuePtr, numComp)
 
@@ -89,39 +134,8 @@ INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, Int8ArrayType, int8_t, size, value
 
 #define INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
 INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, BoolArrayType, bool, size, valuePtr, numComp)
+#endif
 
-
-
-
-
-#define GET_NAMED_ARRAY_SIZE_CHK(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
-    setErrorCondition(-10);\
-    setErrorMessage(s.str());\
-    return;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
-    setErrorCondition(-11);\
-    setErrorMessage(s.str());\
-    return;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
-    setErrorCondition(-13);\
-    setErrorMessage(s.str());\
-    return;\
-  }\
-}
 
 #define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, type, size, valuePtr) \
 type* valuePtr = NULL;\
@@ -188,6 +202,7 @@ type* valuePtr = NULL;\
 
 
 
+#define OLD_WAY 0
 
 
 namespace DREAM3D
@@ -240,6 +255,15 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     virtual ~DataContainer();
 
+
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Voxel)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Ensemble)
+
+
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getVoxelData);
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
 
     /* *********** These methods will eventually replace those below **********/
 
@@ -299,37 +323,52 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int getNumEnsembleArrays();
 
     /* ****************** END Map Based Methods *******************************/
-
-    void setDimensions(int64_t dims[3]) {
+#if OLD_WAY
+    void setDimensions(size_t dims[3]) {
        xpoints = dims[0];
        ypoints = dims[1];
        zpoints = dims[2];
-       totalpoints = xpoints * ypoints * zpoints;
+       totalpoints = (int64_t)xpoints * (int64_t)ypoints * (int64_t)zpoints;
     }
-    void setDimensions(int64_t d0, int64_t d1, int64_t d2)
+    void setDimensions(size_t d0, size_t d1, size_t d2)
     {
       xpoints = d0;
       ypoints = d1;
       zpoints = d2;
       totalpoints = xpoints * ypoints * zpoints;
     }
-    void getDimensions(int64_t &d0, int64_t &d1, int64_t &d2)
+    void getDimensions(size_t &d0, size_t &d1, size_t &d2)
     {
       d0 = xpoints;
       d1 = ypoints;
       d2 = zpoints;
     }
-    void getDimensions(int64_t dims[3])
+    void getDimensions(size_t dims[3])
     {
       dims[0] = xpoints;
       dims[1] = ypoints;
       dims[2] = zpoints;
     }
+#else
+    DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions);
 
-    int64_t totalPoints() { return xpoints * ypoints * zpoints; }
+    size_t getXPoints() { return m_Dimensions[0];}
+    size_t getYPoints() { return m_Dimensions[1];}
+    size_t getZPoints() { return m_Dimensions[2];}
+#endif
+
+#if OLD_WAY
+    int64_t totalPoints() { return (int64_t)xpoints * (int64_t)ypoints * (int64_t)zpoints; }
+#else
+    int64_t totalPoints() { return (int64_t)m_Dimensions[0] * (int64_t)m_Dimensions[1] * (int64_t)m_Dimensions[2]; }
+
+#endif
+
 // -----------------------------------------------------------------------------
 //  Resolution Methods
 // -----------------------------------------------------------------------------
+
+#if OLD_WAY
     void setResolution(float x, float y, float z)
     {
       resx = x; resy = y; resz = z;
@@ -346,14 +385,26 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       res[1] = resy;
       res[2] = resz;
     }
+#else
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
+    float getXRes() { return m_Resolution[0];}
+    float getYRes() { return m_Resolution[1];}
+    float getZRes() { return m_Resolution[2];}
+#endif
 
+
+#if OLD_WAY
     void setOrigin(float orig[3])
     {
        origin[0] = orig[0];
        origin[1] = orig[1];
        origin[2] = orig[2];
     }
+#else
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
+#endif
 
+#if OLD_WAY
     // Volume Dimensional Information
     float resx;
     float resy;
@@ -362,25 +413,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int64_t ypoints;
     int64_t zpoints;
 
-
     float origin[3];
-
-    // Cell Data
-//    DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-//    DECLARE_WRAPPED_ARRAY(phases, m_Phases, int)
-//    DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float)
-//    DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float)
-//    DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float)
-//    DECLARE_WRAPPED_ARRAY(surfacevoxels, m_SurfaceVoxels, char)
-//    DECLARE_WRAPPED_ARRAY(neighbors, m_Neighbors, int);
-//    DECLARE_WRAPPED_ARRAY(quats, m_Quats, float); // n x 5 array
-//    DECLARE_WRAPPED_ARRAY(alreadychecked, m_AlreadyChecked, bool);
-//    DECLARE_WRAPPED_ARRAY(goodVoxels, m_GoodVoxels, bool);
- //   DECLARE_WRAPPED_ARRAY(nearestneighbors, m_NearestNeighbors, int); // N x 3 Array
- //   DECLARE_WRAPPED_ARRAY(nearestneighbordistances, m_NearestNeighborDistances, float); // N x 3 Array
-//    DECLARE_WRAPPED_ARRAY(grainmisorientations, m_GrainMisorientations, float);
-//    DECLARE_WRAPPED_ARRAY(misorientationgradients, m_MisorientationGradients, float);
-//    DECLARE_WRAPPED_ARRAY(kernelmisorientations, m_KernelMisorientations, float);
+#endif
 
     // Field Data Pointer Array
     std::vector<Field::Pointer> m_Grains;

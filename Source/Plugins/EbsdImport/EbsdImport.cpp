@@ -188,8 +188,8 @@ void EbsdImport::execute()
   // Loop on Each EBSD File
   float total = m_ZEndIndex - m_ZStartIndex;
   int progress = 0;
-  int z = m_ZStartIndex;
-  int xDim, yDim;
+  int64_t z = m_ZStartIndex;
+  int64_t xDim, yDim;
   float xRes, yRes;
   /* There is a frailness about the z index and the file list. The programmer
    * using this code MUST ensure that the list of files that is sent into this
@@ -214,8 +214,8 @@ void EbsdImport::execute()
    * which is going to cause problems because the data is going to be placed
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
-  int biggestxDim = 0;
-  int biggestyDim = 0;
+  int64_t biggestxDim = 0;
+  int64_t biggestyDim = 0;
   for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath )
   {
     std::string ebsdFName = *filepath;

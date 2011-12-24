@@ -118,8 +118,8 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
 
 
-  GET_NAMED_ARRAY_SIZE_CHK(m, Ensemble, DREAM3D::EnsembleData::TotalSurfaceArea, FloatArrayType, float, (m->crystruct.size()), totalsurfacearea);
-
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   float n1, n2, n3;
   float r1, r2, r3;

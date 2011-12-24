@@ -75,7 +75,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param index The slice index for the file
      * @param angFile The absolute path to the input .ang file
      */
-    int importFile(hid_t fileId, int index, const std::string &angFile);
+    int importFile(hid_t fileId, int64_t index, const std::string &angFile);
 
     /**
      * @brief Writes the phase data into the HDF5 file
@@ -90,7 +90,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param x Number of X Voxels (out)
      * @param y Number of Y Voxels (out)
      */
-    virtual void getDims(int &x, int &y);
+    virtual void getDims(int64_t &x, int64_t &y);
 
     /**
      * @brief Returns the x and y resolution of the voxels
@@ -105,8 +105,8 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
 
 
   private:
-    int xDim;
-    int yDim;
+    int64_t xDim;
+    int64_t yDim;
     float xRes;
     float yRes;
 
