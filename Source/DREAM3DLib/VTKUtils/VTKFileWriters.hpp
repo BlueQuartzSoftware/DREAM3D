@@ -132,7 +132,7 @@ class name : public VtkScalarWriter\
     int writeScalars(FILE* f)  {\
       int err = 0;\
       std::string file;\
-      size_t totalPoints = r->totalPoints();\
+      int64_t totalPoints = r->totalPoints();\
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, (r->totalPoints()), var);\
       if (m_WriteBinaryFiles == true) {\
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, type, var)\
@@ -158,7 +158,7 @@ class name : public VtkScalarWriter\
     int writeScalars(FILE* f)  {\
     int err = 0;\
     std::string file;\
-    size_t totalPoints = r->totalPoints();\
+    int64_t totalPoints = r->totalPoints();\
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, (r->totalPoints()), var);\
     if (m_WriteBinaryFiles == true) {\
       WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, type, var)\
