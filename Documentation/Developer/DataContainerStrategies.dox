@@ -41,49 +41,20 @@ code will be within the <tt>execute</tt> method then using local variables is th
 way to go. An example of this is the following:
 
 @code
-int64_t totalPoints = m->totalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK(m, Voxel, DREAM3D::VoxelData::GrainIds,
-                                    Int32ArrayType, int32_t, (totalPoints), gi);
+  int64_t totalPoints = m->totalPoints();
+  int32_t* grain_indicies =
+     m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == grain_indicies)
+  {
+    return;
+  }
 @endcode
+  Here we are using a template function from the DataContainer class that will ensure
+the array is properly extracted from the DataContainer class and returns a pointer
+to the internal memory location that holds the actual data. The template function
+is parameterized on the pointer type, DataArray Type and the a class that implemented
+at least the setErrorCondition() and setErrorMessage() methods.
 
-  Here we are using a preprocessor Macro that is defined in DataContainer.h that
-creates a lot of boilerplate code. Fully expanded this is what is generated:
-
-@code
-int32_t* gi = 0;
-{
-  IDataArray::Pointer iDataArray = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if (iDataArray.get() == 0)
-  {
-    std::stringstream s;
-    s << getNameOfClass() << ": Array " << DREAM3D::VoxelData::GrainIds
-               << " from the DataContainer class was not in the DataContainer";
-    setErrorCondition(-10);
-    setErrorMessage(s.str());
-    return;
-  }
-  if (static_cast<size_t>((totalPoints)) != iDataArray->GetNumberOfTuples())
-  {
-    std::stringstream s;
-    s << getNameOfClass() << ": Array " << DREAM3D::VoxelData::GrainIds
-         << " from the DataContainer class did not have the correct number of elements.";
-    setErrorCondition(-11);
-    setErrorMessage(s.str());
-    return;
-  }
-  gi = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>
-                          (m->getVoxelData(DREAM3D::VoxelData::GrainIds).get());
-  if (0 == gi)
-  {
-    std::stringstream s;
-    s << getNameOfClass() << ": Array " << DREAM3D::VoxelData::GrainIds
-        << " from the DataContainer class could not be cast to type " << "int32_t";
-    setErrorCondition(-13);
-    setErrorMessage(s.str());
-    return;
-  }
-}
-@endcode
   This code first checks to make sure the data array is available, and if so checks
 the size of the array to make sure it matches what the programmer thinks it should
 be. Then lastly we get a pointer to the internal data array, <b>gi</b> in this example.
