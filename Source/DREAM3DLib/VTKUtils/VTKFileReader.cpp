@@ -38,6 +38,7 @@
 
 #include <string.h>
 
+#include <limits>
 #include <sstream>
 
 #include <boost/shared_ptr.hpp>
