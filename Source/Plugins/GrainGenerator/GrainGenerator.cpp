@@ -53,13 +53,31 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
 #include "DREAM3DLib/GenericFilters/WriteFieldData.h"
 
+#define PACK_GRAINS_ERROR_TXT_OUT 1
+#define PACK_GRAINS_VTK_FILE_OUT 1
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 GrainGenerator::GrainGenerator() :
-    m_H5StatsFile(""), m_OutputDirectory("."), m_OutputFilePrefix("GrainGenerator_"), m_XPoints(0), m_YPoints(0), m_ZPoints(0), m_XResolution(0.0), m_YResolution(0.0), m_ZResolution(0.0), m_NeighborhoodErrorWeight(0.0), m_PeriodicBoundary(true), m_AlreadyFormed(false), m_Precipitates(0), m_WriteBinaryVTKFiles(true), m_WriteVtkFile(false), m_WriteIPFColor(false), m_WriteHDF5GrainFile(false)
+    m_H5StatsFile(""),
+    m_OutputDirectory("."),
+    m_OutputFilePrefix("GrainGenerator_"),
+    m_XPoints(0),
+    m_YPoints(0),
+    m_ZPoints(0),
+    m_XResolution(0.0),
+    m_YResolution(0.0),
+    m_ZResolution(0.0),
+    m_NeighborhoodErrorWeight(0.0),
+    m_PeriodicBoundary(true),
+    m_AlreadyFormed(false),
+    m_Precipitates(0),
+    m_WriteBinaryVTKFiles(true),
+    m_WriteVtkFile(false),
+    m_WriteIPFColor(false),
+    m_WriteHDF5GrainFile(false)
 {
-//  std::cout << "GrainGenerator Constructor" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -67,7 +85,6 @@ GrainGenerator::GrainGenerator() :
 // -----------------------------------------------------------------------------
 GrainGenerator::~GrainGenerator()
 {
-//  std::cout << "GrainGenerator::~GrainGenerator()" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -83,6 +100,8 @@ void GrainGenerator::execute()
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   std::vector<AbstractFilter::Pointer> pipeline;
 
+  MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile)
+  MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile)
 
   if(m_AlreadyFormed == false)
   {
@@ -96,6 +115,12 @@ void GrainGenerator::execute()
     pack_grains->setH5StatsFile(getH5StatsFile());
     pack_grains->setperiodic_boundaries(m_PeriodicBoundary);
     pack_grains->setneighborhooderrorweight(m_NeighborhoodErrorWeight);
+#if PACK_GRAINS_ERROR_TXT_OUT
+    pack_grains->setErrorFile(errorFile);
+#endif
+#if PACK_GRAINS_VTK_FILE_OUT
+    pack_grains->setVtkFile(vtkFile);
+#endif
     pipeline.push_back(pack_grains);
 
 
