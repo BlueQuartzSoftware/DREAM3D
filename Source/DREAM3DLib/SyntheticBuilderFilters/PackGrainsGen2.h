@@ -71,8 +71,11 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VtkFile)
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
     DREAM3D_INSTANCE_PROPERTY(float, neighborhooderrorweight);
+
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -116,7 +119,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
-
+    int writeVtkFile();
 
   private:
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;

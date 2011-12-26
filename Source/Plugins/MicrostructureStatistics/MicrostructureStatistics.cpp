@@ -101,6 +101,7 @@ void MicrostructureStatistics::execute()
   MAKE_OUTPUT_FILE_PATH( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
   MAKE_OUTPUT_FILE_PATH( hdf5ResultsFile, DREAM3D::MicroStats::H5StatisticsFile)
 
+
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   std::vector<AbstractFilter::Pointer> pipeline;
 
