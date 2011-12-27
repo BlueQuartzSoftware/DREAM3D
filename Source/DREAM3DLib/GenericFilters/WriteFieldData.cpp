@@ -91,7 +91,7 @@ void WriteFieldData::write_fielddata(const std::string &filename)
   {
 	  outFile << i << space << m->m_Grains[i]->phase << space << m->m_Grains[i]->euler1 << space << m->m_Grains[i]->euler2 << space << m->m_Grains[i]->euler3 <<
 		space << m->m_Grains[i]->equivdiameter << space << m->m_Grains[i]->radius2 << space << m->m_Grains[i]->radius3 <<
-		space << m->m_Grains[i]->omega3 << space << m->m_Grains[i]->surfacefield << space << m->m_Grains[i]->outsideboundbox << std::endl;
+		space << m->m_Grains[i]->omega3 << space << int(m->m_Grains[i]->surfacefield) << space << int(m->m_Grains[i]->outsideboundbox) << std::endl;
   }
   outFile.close();
 }
