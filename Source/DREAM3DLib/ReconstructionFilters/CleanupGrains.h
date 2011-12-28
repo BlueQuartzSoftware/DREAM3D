@@ -90,6 +90,7 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     float* quats;
     int32_t* neighbors;
 	std::vector<std::vector<int> > voxellists;
+	std::vector<int> nuclei;
 
 
 	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
