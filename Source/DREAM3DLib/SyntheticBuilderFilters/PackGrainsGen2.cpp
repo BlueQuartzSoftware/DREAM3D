@@ -51,8 +51,7 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
+
 
 const static float m_pi = M_PI;
 
@@ -180,11 +179,14 @@ PackGrainsGen2::~PackGrainsGen2()
 void PackGrainsGen2::execute()
 {
   DataContainer* m = getDataContainer();
-#if ERROR_TXT_OUT
+  bool writeErrorFile = false;
   std::ofstream outFile;
-  std::string filename = "error.txt";
-  outFile.open(filename.c_str(), std::ios_base::binary);
-#endif
+  if(m_ErrorFile.empty() == false)
+  {
+    outFile.open(m_ErrorFile.c_str(), std::ios_base::binary);
+    writeErrorFile = true;
+  }
+
   int err = 0;
   setErrorCondition(err);
   unsigned long long int Seed = MXA::getMilliSeconds();
@@ -407,12 +409,12 @@ void PackGrainsGen2::execute()
 //    change1 = 0;
 //    change2 = 0;
     int option = iteration % 2;
-#if ERROR_TXT_OUT
-    if(iteration%25 == 0)
+
+    if(writeErrorFile == true && iteration%25 == 0)
     {
       outFile << iteration << " " << fillingerror << "  " << oldsizedisterror << "  " << oldneighborhooderror << "  " << numgrains << " " << acceptedmoves << std::endl;
     }
-#endif
+
     // JUMP - this option moves one grain to a random spot in the volume
     if(option == 0)
     {
@@ -470,21 +472,45 @@ void PackGrainsGen2::execute()
       }
       else if(fillingerror > oldfillingerror)
       {
-		fillingerror = check_fillingerror(-1000,randomgrain);
-		move_grain(randomgrain, oldxc, oldyc, oldzc);
-		fillingerror = check_fillingerror(randomgrain,-1000);
+        fillingerror = check_fillingerror(-1000,randomgrain);
+        move_grain(randomgrain, oldxc, oldyc, oldzc);
+        fillingerror = check_fillingerror(randomgrain,-1000);
       }
     }
   }
-#if ERROR_TXT_OUT
-  outFile.close();
-#endif
 
-#if ERROR_TXT_OUT1
 
-//  ofstream outFile;
-  filename = "test.vtk";
-  outFile.open(filename.c_str(), std::ios_base::binary);
+  if (m_VtkFile.empty() == false)
+  {
+    err = writeVtkFile();
+    if ( err < 0 )
+    {
+      return;
+    }
+  }
+
+  assign_voxels();
+  assign_gaps();
+  cleanup_grains();
+
+  // If there is an error set this to something negative and also set a message
+  notify("PackGrainsGen2 Completed", 0, Observable::UpdateProgressMessage);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PackGrainsGen2::writeVtkFile()
+{
+  //  ofstream outFile;
+  std::ofstream outFile;
+  outFile.open(m_VtkFile.c_str(), std::ios_base::binary);
+  if(outFile.is_open() == false)
+  {
+    setErrorMessage("Could not open Vtk File for writing from PackGrains");
+    setErrorCondition(-55);
+    return -1;
+  }
   outFile << "# vtk DataFile Version 2.0" << std::endl;
   outFile << "data set from FFT2dx_GB" << std::endl;
   outFile << "ASCII" << std::endl;
@@ -492,7 +518,7 @@ void PackGrainsGen2::execute()
   outFile << "DIMENSIONS " << packingxpoints << " " << packingypoints << " " << packingzpoints << std::endl;
   outFile << "ORIGIN 0.0 0.0 0.0" << std::endl;
   outFile << "SPACING " << packingresx << " " << packingresy << " " << packingresz << std::endl;
-  outFile << "POINT_DATA " << packingxpoints*packingypoints*packingzpoints << std::endl;
+  outFile << "POINT_DATA " << packingxpoints * packingypoints * packingzpoints << std::endl;
   outFile << std::endl;
   outFile << std::endl;
   outFile << "SCALARS GrainID int  1" << std::endl;
@@ -504,7 +530,7 @@ void PackGrainsGen2::execute()
       for (int k = 0; k < (packingxpoints); k++)
       {
         int name = grainowners[k][j][i];
-        if(i%20 == 0 && i > 0) outFile << std::endl;
+        if(i % 20 == 0 && i > 0) outFile << std::endl;
         outFile << "     ";
         if(name < 100) outFile << " ";
         if(name < 10) outFile << " ";
@@ -513,16 +539,12 @@ void PackGrainsGen2::execute()
     }
   }
   outFile.close();
-#endif
-
-  assign_voxels();
-  assign_gaps();
-  cleanup_grains();
-
-  // If there is an error set this to something negative and also set a message
-  notify("PackGrainsGen2 Completed", 0, Observable::UpdateProgressMessage);
+  return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackGrainsGen2::initialize_packinggrid()
 {
   DataContainer* m = getDataContainer();
