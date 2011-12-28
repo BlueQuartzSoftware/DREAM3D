@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     void renumber_grains();
 
   private:
+	std::vector<int> colonynewnumbers;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
