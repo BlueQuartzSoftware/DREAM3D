@@ -50,7 +50,7 @@
 
 #define CORRUPT_TEST 0
 
-/**
+/*
  * @class Grain Grain.h AIM/Common/Grain.h
  * @brief Support class for the MicroGen3D class
  * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT Field
     MXA_TYPE_MACRO(Field);
     virtual ~Field();
 
-    /**
+    /*
      * @brief Performs a Depp copy of the Field object by making copies of the contained
      * data and not just copying the pointers to the data
      * @param grain Another Field object to copy from.
@@ -79,15 +79,16 @@ class DREAM3DLib_EXPORT Field
      * IF YOU ADD NEW VARIABLES MAKE SURE TO UPDATE THE "DeepCopy()" METHOD WITH
      * THE NEW VARIABLES OTHERWISE BAD THINGS CAN HAPPEN.
      */
+
     int nucleus;
     bool active;
     int numvoxels;
     int numneighbors;
-    int newfieldname;
+//    int newfieldname;
     uint8_t surfacefield;
     bool outsideboundbox;
-    int twinnewnumber;
-    int colonynewnumber;
+//    int twinnewnumber;
+//    int colonynewnumber;
     int slipsystem;
     int phase;
     float centroidx;
@@ -114,7 +115,7 @@ class DREAM3DLib_EXPORT Field
     float radius1;
     float radius2;
     float radius3;
-    float packquality;
+//    float packquality;
     float avg_quat[5];
 #if CORRUPT_TEST
     unsigned long long int* test5;
