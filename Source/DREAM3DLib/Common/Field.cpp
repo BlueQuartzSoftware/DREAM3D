@@ -41,7 +41,6 @@
 //
 // -----------------------------------------------------------------------------
 Field::Field() :
-nucleus(0),
 active(false),
 numvoxels(0),
 numneighbors(0),
@@ -117,7 +116,6 @@ Field::~Field()
 void Field::deepCopy(Field::Pointer field)
 {
   if (field.get() == this) { return; } // The pointers are the same just return
-  nucleus = field->nucleus;
   active = field->active ;
   numvoxels = field->numvoxels ;
   numneighbors = field->numneighbors ;
