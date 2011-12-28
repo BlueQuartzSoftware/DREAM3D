@@ -263,6 +263,9 @@ namespace DREAM3D
     const std::string VisualizationVizFile("Visualization.vtk");
     const std::string HDF5GrainFile("Grains.h5grain");
 
+    const std::string ErrorFile("Error.txt");
+    const std::string VtkFile("Test.vtk");
+
     enum Overlap {
         Rigid = 0,             //!<
         Progressive = 1,        //!<
@@ -291,7 +294,6 @@ namespace DREAM3D
     const std::string GrainDataFile("GrainData.csv");//14
     const std::string DeformationStatsFile("Deformation_Stats.txt");
     const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
-
     const std::string VoxelDataName("VoxelData");
   }
 
@@ -314,12 +316,9 @@ namespace DREAM3D
   /*   Surface Meshing Related   */
   namespace SurfaceMesh
   {
-
-
     const std::string NodesFileBin("nodes.bin");
     const std::string TrianglesFileBin("triangles.bin");
     const std::string VisualizationVizFile("Visualization.vtk");
-
     const std::string VTKExt("vtk");
 
 #if 0

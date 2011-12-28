@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -80,22 +80,27 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
       QLineEdit* editor;
-      editor = new QLineEdit(parent);
-      editor->setFrame(false);
-
       QDoubleValidator* weightValidator;
-      weightValidator = new QDoubleValidator(editor);
-      weightValidator->setDecimals(4);
 
       qint32 col = index.column();
       switch(col)
       {
         case SGMDFTableModel::Angle:
+          editor = new QLineEdit(parent);
+          editor->setFrame(false);
+          weightValidator = new QDoubleValidator(editor);
+          weightValidator->setDecimals(4);
           editor->setValidator(weightValidator);
           return editor;
         case SGMDFTableModel::Axis:
+          editor = new QLineEdit(parent);
+          editor->setFrame(false);
           return editor;
         case SGMDFTableModel::Weight:
+          editor = new QLineEdit(parent);
+          editor->setFrame(false);
+          weightValidator = new QDoubleValidator(editor);
+          weightValidator->setDecimals(4);
           editor->setValidator(weightValidator);
           return editor;
 
