@@ -362,11 +362,13 @@ void PackGrainsGen2::execute()
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  columnlist.resize(m->m_Grains.size());
-  rowlist.resize(m->m_Grains.size());
-  planelist.resize(m->m_Grains.size());
+  int numgrains = m->m_Grains.size();
+  columnlist.resize(numgrains);
+  rowlist.resize(numgrains);
+  planelist.resize(numgrains);
+  packqualities.resize(numgrains);
   fillingerror = 1;
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     xc = sizex / 2.0;
     yc = sizey / 2.0;
@@ -400,7 +402,6 @@ void PackGrainsGen2::execute()
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int numgrains = m->m_Grains.size();
   for (int iteration = 0; iteration < (100*numgrains); iteration++)
   {
 //    change1 = 0;
@@ -1115,7 +1116,7 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
         }
       }
     }
-	m->m_Grains[gadd]->packquality = packquality/float(size);
+	packqualities[gadd] = packquality/float(size);
   }
   if(gremove > 0)
   {

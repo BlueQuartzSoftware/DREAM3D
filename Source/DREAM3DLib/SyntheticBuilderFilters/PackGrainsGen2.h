@@ -174,6 +174,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     std::vector<int> numdiameterbins;
 
     std::vector<int> newnames;
+    std::vector<int> packqualities;
     std::vector<int> gsizes;
 
     std::vector<int> primaryphases;
