@@ -45,11 +45,8 @@ nucleus(0),
 active(false),
 numvoxels(0),
 numneighbors(0),
-newfieldname(0),
 surfacefield(false),
 outsideboundbox(false),
-twinnewnumber(-1),
-colonynewnumber(-1),
 slipsystem(0),
 phase(0),
 centroidx(0.0),
@@ -74,8 +71,7 @@ volume(0.0),
 equivdiameter(0.0),
 radius1(0.0),
 radius2(0.0),
-radius3(0.0),
-packquality(0.0)
+radius3(0.0)
 {
 #if CORRUPT_TEST
   test5 = NULL;
@@ -125,10 +121,7 @@ void Field::deepCopy(Field::Pointer field)
   active = field->active ;
   numvoxels = field->numvoxels ;
   numneighbors = field->numneighbors ;
-  newfieldname = field->newfieldname ;
   surfacefield = field->surfacefield ;
-  twinnewnumber = field->twinnewnumber;
-  colonynewnumber = field->colonynewnumber;
   slipsystem = field->slipsystem;
 
   centroidx = field->centroidx ;
@@ -154,7 +147,6 @@ void Field::deepCopy(Field::Pointer field)
   radius1 = field->radius1 ;
   radius2 = field->radius2 ;
   radius3 = field->radius3 ;
-  packquality = field->packquality;
   COPY_ARRAY_5(avg_quat, field);
   COPY_ARRAY_3(neighbordistfunc, field);
 }

@@ -78,6 +78,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     void renumber_grains();
 
   private:
+	std::vector<int> twinnewnumbers;
 
     unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;

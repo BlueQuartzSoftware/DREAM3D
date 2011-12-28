@@ -147,10 +147,11 @@ void MergeColonies::merge_colonies()
   float q2[5];
   size_t numgrains = m->m_Grains.size();
   Ebsd::CrystalStructure phase1, phase2;
+  colonynewnumbers.resize(numgrains, -1);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->colonynewnumber != -1 && m->m_Grains[i]->phase > 0)
+    if (colonynewnumbers[i] == -1 && m->m_Grains[i]->phase > 0)
     {
       colonylist.push_back(i);
       int csize = int(colonylist.size());
@@ -164,7 +165,7 @@ void MergeColonies::merge_colonies()
           angcur = 180.0f;
           int colony = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && m->m_Grains[neigh]->colonynewnumber != -1 && m->m_Grains[neigh]->phase > 0)
+          if (neigh != i && colonynewnumbers[neigh] != -1 && m->m_Grains[neigh]->phase > 0)
           {
 		    w = 10000.0f;
             q1[1] = m->m_Grains[firstgrain]->avg_quat[1]/m->m_Grains[firstgrain]->avg_quat[0];
@@ -195,7 +196,7 @@ void MergeColonies::merge_colonies()
             }
             if (colony == 1)
             {
-              m->m_Grains[neigh]->colonynewnumber = i;
+              colonynewnumbers[neigh] = i;
               colonylist.push_back(neigh);
             }
           }
@@ -208,7 +209,7 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = grain_indicies[k];
-	if (m->m_Grains[grainname]->colonynewnumber != -1) { grain_indicies[k] = m->m_Grains[grainname]->colonynewnumber;}
+	if (colonynewnumbers[grainname] != -1) { grain_indicies[k] = colonynewnumbers[grainname];}
   }
 }
 
@@ -235,7 +236,7 @@ void MergeColonies::renumber_grains()
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-	if (m->m_Grains[i]->colonynewnumber == -1)
+	if (colonynewnumbers[i] == -1)
     {
       newnames[i] = graincount;
       float ea1good = m->m_Grains[i]->euler1;

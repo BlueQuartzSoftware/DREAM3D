@@ -145,10 +145,11 @@ void MergeTwins::merge_twins()
   float q2[5];
   size_t numgrains = m->m_Grains.size();
   Ebsd::CrystalStructure phase1, phase2;
+  twinnewnumbers.resize(numgrains, -1);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	if (m->m_Grains[i]->twinnewnumber == -1 && m->m_Grains[i]->phase > 0)
+	if (twinnewnumbers[i] == -1 && m->m_Grains[i]->phase > 0)
     {
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
@@ -160,7 +161,7 @@ void MergeTwins::merge_twins()
        //   angcur = 180.0f;
           int twin = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && m->m_Grains[neigh]->twinnewnumber == -1 && m->m_Grains[neigh]->phase > 0)
+          if (neigh != i && twinnewnumbers[neigh] == -1 && m->m_Grains[neigh]->phase > 0)
           {
             w = 10000.0f;
             q1[1] = m->m_Grains[firstgrain]->avg_quat[1]/m->m_Grains[firstgrain]->avg_quat[0];
@@ -180,7 +181,7 @@ void MergeTwins::merge_twins()
             if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
             if (twin == 1)
             {
-              m->m_Grains[neigh]->twinnewnumber = i;
+              twinnewnumbers[neigh] = i;
               twinlist.push_back(neigh);
             }
           }
@@ -193,7 +194,7 @@ void MergeTwins::merge_twins()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = grain_indicies[k];
-	if (m->m_Grains[grainname]->twinnewnumber != -1) { grain_indicies[k] = m->m_Grains[grainname]->twinnewnumber;}
+	if (twinnewnumbers[grainname] != -1) { grain_indicies[k] = twinnewnumbers[grainname];}
   }
 }
 
@@ -217,7 +218,7 @@ void MergeTwins::renumber_grains()
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->twinnewnumber == -1)
+    if (twinnewnumbers[i] == -1)
     {
       newnames[i] = graincount;
       float ea1good = m->m_Grains[i]->euler1;
