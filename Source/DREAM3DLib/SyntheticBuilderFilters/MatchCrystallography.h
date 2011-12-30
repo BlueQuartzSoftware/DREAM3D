@@ -90,14 +90,15 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     int readMisorientationData(H5StatsReader::Pointer h5io);
 
     void assign_eulers();
-    void swapOutOrientation(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
-    void switchOrientations(int & badtrycount, int & numbins, float currentodferror, float currentmdferror);
-    void MC_LoopBody1(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float> neighborsurfarealist, float &mdfchange);
-    void MC_LoopBody2(int phase, size_t neighbor, int j, std::vector<float> misolist, std::vector<float> neighborsurfarealist);
+    void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, Ebsd::CrystalStructure sym, float q1[5], float q2[5]);
+    void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, Ebsd::CrystalStructure sym, float q1[5], float q2[5]);
     void matchCrystallography();
     void measure_misorientations();
 
   private:
+	float mdfchange;
+	float odfchange;
+
     std::vector<float> unbiasedvol;
     std::vector<Ebsd::CrystalStructure> crystruct;
 
@@ -106,7 +107,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
 
-	  std::vector<std::vector<float> > misorientationlists;
+	std::vector<std::vector<float> > misorientationlists;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
@@ -114,7 +115,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<OrientationMath*> m_OrientationOps;
 
     float* totalsurfacearea;
-    DataContainer* m;
     NeighborList<int>* neighListPtr;
     NeighborList<float>* surfListPtr;
 

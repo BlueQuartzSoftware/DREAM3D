@@ -107,9 +107,6 @@ void LoadSlices::execute()
   }
 	int err = 0;
   setErrorCondition(err);
- // DREAM3D_RANDOMNG_NEW()
-
- // updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
   std::string manufacturer;
   // Get the Size and Resolution of the Volume
   {
@@ -159,7 +156,6 @@ void LoadSlices::execute()
     // for this calculation
     dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
     m->setDimensions(dcDims);
-    //m->getZPoints() = m_ZEndIndex - m_ZStartIndex + 1;
     manufacturer = volumeInfoReader->getManufacturer();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
@@ -265,15 +261,8 @@ void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float y
   m->pptFractions = precipFractions;
 
   m->setDimensions(nX, nY, nZ);
-//  m->getXPoints() = nX;
-//  m->getYPoints() = nY;
-//  m->getZPoints() = nZ;
   m->setResolution(xRes, yRes, zRes);
-//  m->getXRes() = xRes;
-//  m->getYRes() = yRes;
-//  m->getZRes() = zRes;
 
- // m->totalpoints = m->getXPoints() * m->getYPoints() * m->getZPoints();
   int64_t totalPoints = m->totalPoints();
   int numgrains = 100;
   size_t oldSize = 0;
