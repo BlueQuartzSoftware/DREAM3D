@@ -44,7 +44,8 @@ using namespace std;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteH5StatsFile::WriteH5StatsFile() :
+WriteH5StatsFile::WriteH5StatsFile()  :
+            AbstractFilter(),
     m_CreateNewStatsFile(true)
 {
   m_HexOps = HexagonalOps::New();

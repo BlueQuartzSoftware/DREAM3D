@@ -47,7 +47,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteFieldData::WriteFieldData()
+WriteFieldData::WriteFieldData() :
+            AbstractFilter()
 {
 
 }

@@ -42,7 +42,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundingBoxGrains::FindBoundingBoxGrains()
+FindBoundingBoxGrains::FindBoundingBoxGrains() :
+AbstractFilter()
 {
     totalsurfacearea = NULL;
     INIT_DataArray(m_TotalSurfaceArea, float);

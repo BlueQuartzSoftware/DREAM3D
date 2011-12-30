@@ -42,7 +42,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAvgOrientations::FindAvgOrientations()
+FindAvgOrientations::FindAvgOrientations() :
+AbstractFilter()
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));

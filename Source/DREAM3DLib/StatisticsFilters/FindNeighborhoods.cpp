@@ -44,7 +44,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighborhoods::FindNeighborhoods()
+FindNeighborhoods::FindNeighborhoods() :
+            AbstractFilter()
 {
   graincenters = NULL;
   INIT_DataArray(m_GrainCenters,float);

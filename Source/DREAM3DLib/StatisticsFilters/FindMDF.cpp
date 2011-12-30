@@ -45,7 +45,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindMDF::FindMDF() :
+FindMDF::FindMDF()  :
+AbstractFilter(),
 m_CreateNewStatsFile(true)
 {
   m_HexOps = HexagonalOps::New();

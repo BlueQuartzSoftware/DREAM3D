@@ -45,6 +45,11 @@ target_link_libraries(AngDirectoryPattern MXA)
 endif()
 
 
+# --------
+# FilterManager Test
+add_executable(FilterManagerTest ${DREAM3DTest_SOURCE_DIR}/FilterManagerTest.cpp)
+target_link_libraries(FilterManagerTest ${QT_LIBRARIES} DREAM3DLib FilterWidgets)
+
 # --------------------------------------------------------------------------
 # H5Support Library Testing
 # --------------------------------------------------------------------------

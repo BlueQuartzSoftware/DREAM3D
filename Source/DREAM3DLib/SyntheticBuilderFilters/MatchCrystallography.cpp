@@ -58,7 +58,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MatchCrystallography::MatchCrystallography() :
+MatchCrystallography::MatchCrystallography()  :
+AbstractFilter(),
 totalsurfacearea(NULL),
 m(NULL),
 neighListPtr(NULL),

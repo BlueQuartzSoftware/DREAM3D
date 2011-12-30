@@ -58,7 +58,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PlacePrecipitates::PlacePrecipitates() :
+PlacePrecipitates::PlacePrecipitates()  :
+AbstractFilter(),
 grain_indicies(NULL),
 phases(NULL),
 surfacevoxels(NULL)

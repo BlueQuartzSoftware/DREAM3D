@@ -44,7 +44,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindLocalMisorientationGradients::FindLocalMisorientationGradients()
+FindLocalMisorientationGradients::FindLocalMisorientationGradients() :
+            AbstractFilter()
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));

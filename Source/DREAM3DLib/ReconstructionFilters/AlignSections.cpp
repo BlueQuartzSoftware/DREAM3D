@@ -57,7 +57,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSections::AlignSections()
+AlignSections::AlignSections() :
+        AbstractFilter()
 {
   Seed = MXA::getMilliSeconds();
 

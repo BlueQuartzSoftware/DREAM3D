@@ -44,7 +44,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindShapes::FindShapes() :
+FindShapes::FindShapes()  :
+            AbstractFilter(),
 grain_indicies(NULL)
 {
   graincenters = NULL;

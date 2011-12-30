@@ -51,7 +51,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AdjustVolume::AdjustVolume()
+AdjustVolume::AdjustVolume() :
+            AbstractFilter()
 {
 }
 

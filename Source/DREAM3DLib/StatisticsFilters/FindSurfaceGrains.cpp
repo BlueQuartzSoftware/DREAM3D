@@ -42,7 +42,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSurfaceGrains::FindSurfaceGrains()
+FindSurfaceGrains::FindSurfaceGrains() :
+AbstractFilter()
 {
 }
 

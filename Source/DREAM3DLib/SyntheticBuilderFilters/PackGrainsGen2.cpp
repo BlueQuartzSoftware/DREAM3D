@@ -143,7 +143,8 @@ return err; }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PackGrainsGen2::PackGrainsGen2()
+PackGrainsGen2::PackGrainsGen2() :
+            AbstractFilter()
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
