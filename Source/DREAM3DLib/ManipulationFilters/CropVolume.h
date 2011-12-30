@@ -72,8 +72,6 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
      */
     virtual void execute();
 
-	void crop_volume();
-
   protected:
     CropVolume();
 

@@ -72,8 +72,6 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
      */
     virtual void execute();
 
-	void change_resolution();
-
   protected:
     ChangeResolution();
 
