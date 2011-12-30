@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT Field
      * THE NEW VARIABLES OTHERWISE BAD THINGS CAN HAPPEN.
      */
 
-    int nucleus;
+
     bool active;
     int numvoxels;
     int numneighbors;

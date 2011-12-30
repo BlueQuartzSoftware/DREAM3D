@@ -83,17 +83,6 @@ SegmentGrains::~SegmentGrains()
 void SegmentGrains::execute()
 {
   setErrorCondition(0);
-  form_grains();
-
-  // If there is an error set this to something negative and also set a message
-  notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SegmentGrains::form_grains()
-{
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -118,12 +107,9 @@ void SegmentGrains::form_grains()
   int seed = 0;
   int noseeds = 0;
   size_t graincount = 1;
-//  size_t goodgraincount = 0;
   int neighbor;
   float q1[5];
   float q2[5];
-//  float qa[5];
-//  float qb[5];
   float w;
   float n1, n2, n3;
   int randpoint = 0;
@@ -132,9 +118,7 @@ void SegmentGrains::form_grains()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
   size_t initialMergeListSize = 10;
- // int vid;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
-//  std::vector<int>* vlist;
   std::vector<int> mergelist(initialMergeListSize, -1);
   int neighpoints[6];
   neighpoints[0] = -(dims[0] * dims[1]);
@@ -227,5 +211,7 @@ void SegmentGrains::form_grains()
       voxelslist.resize(initialVoxelsListSize, -1);
     }
   }
-}
 
+  // If there is an error set this to something negative and also set a message
+  notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+}

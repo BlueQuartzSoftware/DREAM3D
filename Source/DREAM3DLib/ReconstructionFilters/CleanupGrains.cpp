@@ -388,12 +388,13 @@ void CleanupGrains::reorder_grains()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0] * dims[1];
   size_t numgrains = m->m_Grains.size();
+  nuclei.resize(numgrains, -1);
 
   size_t maxGrain = 0;
   // Reset all the Grain nucleus values to -1;
   for (size_t i = 1; i < numgrains; i++)
   {
-    m->m_Grains[i]->nucleus = -1;
+    nuclei[i] = -1;
   }
 
   // Reset the "already checked" to 0 for all voxels
@@ -401,18 +402,17 @@ void CleanupGrains::reorder_grains()
   {
     alreadychecked[i] = false;
     gnum = grain_indicies[i];
-    m->m_Grains[gnum]->nucleus = i;
+    nuclei[gnum] = i;
   }
   voxellists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
     voxellists[i].clear();
     voxellists[i].resize(initialVoxellistsSize);
-    if(m->m_Grains[i]->nucleus != -1)
+    if(nuclei[i] != -1)
     {
       size = 0;
-      int nucleus = m->m_Grains[i]->nucleus;
-
+      int nucleus = nuclei[i];
 	  if(phases[nucleus] > 0) phase = m->crystruct[phases[nucleus]];
 	  if(phases[nucleus] <= 0) phase = Ebsd::UnknownCrystalStructure;
       voxellists[currentgrain][size] = nucleus;
@@ -475,7 +475,6 @@ void CleanupGrains::reorder_grains()
       }
       voxellists[currentgrain].erase(std::remove(voxellists[currentgrain].begin(), voxellists[currentgrain].end(), -1), voxellists[currentgrain].end());
       m->m_Grains[currentgrain]->active = 1;
-      m->m_Grains[currentgrain]->nucleus = nucleus;
 	  m->m_Grains[currentgrain]->phase = phases[nucleus];
       q[1] = m->m_Grains[currentgrain]->avg_quat[1]/m->m_Grains[currentgrain]->avg_quat[0];
       q[2] = m->m_Grains[currentgrain]->avg_quat[2]/m->m_Grains[currentgrain]->avg_quat[0];
@@ -521,17 +520,24 @@ void CleanupGrains::remove_smallgrains()
   neighpoints[4] = m->getXPoints();
   neighpoints[5] = m->getXPoints() * m->getYPoints();
   int numgrains = m->m_Grains.size();
-  for (int64_t i = 0; i < totalPoints; i++)
+  nuclei.resize(numgrains, -1);
+
+  size_t maxGrain = 0;
+  // Reset all the Grain nucleus values to -1;
+  for (size_t i = 1; i < numgrains; i++)
+  {
+    nuclei[i] = -1;
+  }  for (int64_t i = 0; i < totalPoints; i++)
   {
     alreadychecked[i] = false;
     gnum = grain_indicies[i];
-    if(gnum >= 0) m->m_Grains[gnum]->nucleus = i;
+    if(gnum >= 0) nuclei[gnum] = i;
   }
   voxellists.resize(numgrains);
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
       size = 0;
-      int nucleus = m->m_Grains[i]->nucleus;
+      int nucleus = nuclei[i];
       voxellists[i].push_back(nucleus);
       alreadychecked[nucleus] = true;
       grain_indicies[nucleus] = currentgrain;
