@@ -102,12 +102,6 @@ void MergeTwins::execute()
     setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
-//  int numgrains = m->m_Grains.size();
-//  neighborlist.resize(numgrains);
-//  for(size_t i=0;i<numgrains;i++)
-//  {
-//	  neighborlist[i] = find_neighbors->neighborlist[i];
-//  }
 
   merge_twins();
   characterize_twins();

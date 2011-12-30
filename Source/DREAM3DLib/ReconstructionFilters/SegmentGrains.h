@@ -75,8 +75,6 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
   protected:
     SegmentGrains();
 
-    void form_grains();
-
   private:
     std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;

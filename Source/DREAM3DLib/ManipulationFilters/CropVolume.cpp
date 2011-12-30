@@ -73,18 +73,6 @@ void CropVolume::execute()
 {
   int err = 0;
   setErrorCondition(err);
-
-  crop_volume();
-
-  // If there is an error set this to something negative and also set a message
-    notify("CropVolume Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CropVolume::crop_volume()
-{
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -107,11 +95,8 @@ void CropVolume::crop_volume()
   float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
   if (NULL == euler3s) { return; }
 
- // DREAM3D_RANDOMNG_NEW()
   setErrorCondition(0);
   notify("Starting Crop Volume", 0, Observable::UpdateProgressValueAndMessage);
-  int err = 1;
- // int counter = 0;
   float x, y, z;
   int col, row, plane;
   int index;
@@ -140,20 +125,11 @@ void CropVolume::crop_volume()
     }
   }
   m->setDimensions(m_XP, m_YP, m_ZP);
-  //  m->getXPoints() = m_XP;
-  //  m->getYPoints() = m_YP;
-  //  m->getZPoints() = m_ZP;
   totalPoints = m_XP*m_YP*m_ZP;
   err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Euler1)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Euler2)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Euler3)->Resize(totalPoints);
-//  m->grain_indicies = m->m_GrainIndicies->GetPointer(0);
-//  m->phases = m->m_Phases->GetPointer(0);
-//  m->euler1s = m->m_Euler1s->GetPointer(0);
-//  m->euler2s = m->m_Euler2s->GetPointer(0);
-//  m->euler3s = m->m_Euler3s->GetPointer(0);
-
   notify("Crop Volume Complete", 100, Observable::UpdateProgressValueAndMessage);
 }
