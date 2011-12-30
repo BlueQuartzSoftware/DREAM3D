@@ -62,7 +62,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeTwins::MergeTwins()
+MergeTwins::MergeTwins() :
+            AbstractFilter()
 {
 
   m_HexOps = HexagonalOps::New();

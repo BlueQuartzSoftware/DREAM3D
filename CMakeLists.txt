@@ -246,6 +246,10 @@ if (DREAM3D_BUILD_QT_APPS)
    # Build the static QtSupport library - which MUST be a static library or the linking
    # will not work due to signals/slots mechanism.
    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
+   
+   
+   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+   
 endif()
 
 # Forcibly set some options to OFF if we are NOT building the GUI apps using the Qt frameworks

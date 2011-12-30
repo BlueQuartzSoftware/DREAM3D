@@ -35,7 +35,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-
+#include "DREAM3DLib/Common/FilterOption.h"
 
 
 /**
@@ -68,6 +68,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      * @brief Cancel the operation
      */
     DREAM3D_INSTANCE_PROPERTY(bool, Cancel);
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<FilterOption::Pointer>, FilterOptions);
+
 
     /**
      * @brief This method should be fully implemented in subclasses.

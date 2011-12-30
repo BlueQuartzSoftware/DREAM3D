@@ -64,6 +64,7 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 CleanupGrains::CleanupGrains() :
+    AbstractFilter(),
 grain_indicies(NULL),
 phases(NULL),
 alreadychecked(NULL),
@@ -76,6 +77,22 @@ neighbors(NULL)
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
+
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setLabel("Minimum Grain Size");
+    option->setWidgetType(FilterOption::IntWidget);
+    options.push_back(option);
+  }
+  {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setLabel("Minimum No. Neighbors");
+     option->setWidgetType(FilterOption::IntWidget);
+     options.push_back(option);
+   }
+
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------

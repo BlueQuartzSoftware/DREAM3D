@@ -38,17 +38,22 @@ SET (SMOOTHING_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshFilters/Smoothing" "${SMOOTHING_HDRS}" "${SMOOTHING_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
+
+SET (SurfaceMeshingFilters_FILTERS_HDRS
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SurfaceMeshFilter.h
+)
+set (DREAM3DLib_SurfaceMeshingFilters_HDRS
+    ${SurfaceMeshingFilters_FILTERS_HDRS}    
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMStlWriter.h
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMVtkPolyDataWriter.h
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMTempFile.hpp
+)
 set (DREAM3DLib_SurfaceMeshingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SurfaceMeshFilter.cpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMStlWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMVtkPolyDataWriter.cpp
 )
-set (DREAM3DLib_SurfaceMeshingFilters_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SurfaceMeshFilter.h
-    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMStlWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMVtkPolyDataWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMTempFile.hpp
-)
+
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshFilters" "${DREAM3DLib_SurfaceMeshingFilters_HDRS}" "${DREAM3DLib_SurfaceMeshingFilters_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
 

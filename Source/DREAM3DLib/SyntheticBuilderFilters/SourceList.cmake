@@ -9,19 +9,21 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (DREAM3DLib_SyntheticBuilderFilters_HDRS
-${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.h
+SET (SyntheticBuilderFilters_FILTERS_HDRS
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.h    
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackGrainsGen2.h
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.h
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PlacePrecipitates.h
+)
 
-${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackGrainsGen2.h
-${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.h
-${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PlacePrecipitates.h
+SET (DREAM3DLib_SyntheticBuilderFilters_HDRS
+    ${SyntheticBuilderFilters_FILTERS_HDRS}
 )
 SET (DREAM3DLib_SyntheticBuilderFilters_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.cpp
-
-${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackGrainsGen2.cpp
-${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.cpp
-${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PlacePrecipitates.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackGrainsGen2.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PlacePrecipitates.cpp
 
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SyntheticBuilderFilters" "${DREAM3DLib_SyntheticBuilderFilters_HDRS}" "${DREAM3DLib_SyntheticBuilderFilters_SRCS}" "0")

@@ -277,6 +277,7 @@ class GrainChecker
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshFilter::SurfaceMeshFilter() :
+            AbstractFilter(),
     neigh(NULL), voxels(NULL), cSquare(NULL)
 {
 

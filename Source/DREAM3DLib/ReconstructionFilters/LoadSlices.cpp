@@ -70,7 +70,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LoadSlices::LoadSlices()
+LoadSlices::LoadSlices() :
+            AbstractFilter()
 {
   Seed = MXA::getMilliSeconds();
 

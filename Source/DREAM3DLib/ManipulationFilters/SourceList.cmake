@@ -9,14 +9,18 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
+SET (ManipulationFilters_FILTERS_HDRS
+    ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/ChangeResolution.h
+    ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/CropVolume.h
+)
+#-- Add in any addition NON Filter classes here
 SET (DREAM3DLib_ManipulationFilters_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/ChangeResolution.h
-${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/CropVolume.h
+    ${ManipulationFilters_FILTERS_HDRS}
 )
 
 SET (DREAM3DLib_ManipulationFilters_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/ChangeResolution.cpp
-${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/CropVolume.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/ChangeResolution.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/CropVolume.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ManipulationFilters" "${DREAM3DLib_ManipulationFilters_HDRS}" "${DREAM3DLib_ManipulationFilters_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

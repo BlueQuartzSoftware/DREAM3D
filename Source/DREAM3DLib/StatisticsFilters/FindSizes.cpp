@@ -44,7 +44,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSizes::FindSizes()
+FindSizes::FindSizes() :
+            AbstractFilter()
 {
   graincounts = NULL;
   INIT_DataArray(m_GrainCounts,float);

@@ -115,10 +115,6 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
 
     void on_removeQualityMetric_clicked();
 
-
-    /**
-     *
-     */
     void m_SetSliceInfo();
 
     private slots:
@@ -130,6 +126,8 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
       /* Reconstruction Thread communicates throught these methods */
       virtual void pipelineComplete();
       virtual void pipelineProgress(int value);
+
+
       void phaseTypeEdited(int i);
 
   private:

@@ -62,7 +62,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeColonies::MergeColonies()
+MergeColonies::MergeColonies() :
+            AbstractFilter()
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());

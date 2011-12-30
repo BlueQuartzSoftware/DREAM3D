@@ -731,9 +731,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 
   setupQualityMetricFilters(m_Reconstruction);
-
-
-
   // m_Reconstruction->printSettings(std::cout);
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the

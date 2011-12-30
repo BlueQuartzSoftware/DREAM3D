@@ -275,7 +275,6 @@ QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
   int pxWide = 0;
 
   QFont font("Ariel", 16, QFont::Bold);
-
   {
     QPainter painter;
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);

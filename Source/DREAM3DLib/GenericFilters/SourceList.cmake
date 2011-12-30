@@ -9,14 +9,21 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
+SET (GenericFilters_FILTERS_HDRS
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/WriteFieldData.h
+)
+
 SET (DREAM3DLib_GenericFilters_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.h
-${DREAM3DLib_SOURCE_DIR}/GenericFilters/WriteFieldData.h
+    ${GenericFilters_FILTERS_HDRS}
 )
 SET (DREAM3DLib_GenericFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.cpp
-${DREAM3DLib_SOURCE_DIR}/GenericFilters/WriteFieldData.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/WriteFieldData.cpp
 )
+
+
+
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/GenericFilters" "${DREAM3DLib_GenericFilters_HDRS}" "${DREAM3DLib_GenericFilters_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_GenericFilters_HDRS}
