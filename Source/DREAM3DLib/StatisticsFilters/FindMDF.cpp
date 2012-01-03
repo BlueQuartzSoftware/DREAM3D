@@ -84,29 +84,9 @@ void FindMDF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setDataContainer(getDataContainer());
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->execute();
-  setErrorCondition(find_neighbors->getErrorCondition());
-  if (getErrorCondition() != 0){
-    setErrorMessage(find_neighbors->getErrorMessage());
-    return;
-  }
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
-
-  find_mdf(h5io);
-  notify("FindMDF Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
-{
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
-  DataContainer* m = getDataContainer();
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
@@ -114,13 +94,8 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *neighListPtr;
   // And we do the same for the SharedSurfaceArea list
-  NeighborList<float>* surfListPtr =
-      NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  NeighborList<float>* surfListPtr = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   NeighborList<float>& neighborsurfacearealist = *surfListPtr;
-
-
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
 
   float n1, n2, n3;
   float r1, r2, r3;
@@ -209,5 +184,6 @@ void FindMDF::find_mdf(H5StatsWriter::Pointer h5io)
 	  delete[] misobin[i];
   }
   delete[] misobin;
-}
 
+  notify("FindMDF Completed", 0, Observable::UpdateProgressMessage);
+}

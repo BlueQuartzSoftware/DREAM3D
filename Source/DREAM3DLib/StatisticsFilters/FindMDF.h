@@ -77,8 +77,6 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
   protected:
     FindMDF();
 
-    void find_mdf(H5StatsWriter::Pointer h5io);
-
   private:
     std::vector<OrientationMath*> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;

@@ -93,15 +93,8 @@ void MergeTwins::execute()
   }
   setErrorCondition(0);
 
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setDataContainer(getDataContainer());
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->execute();
-  setErrorCondition(find_neighbors->getErrorCondition());
-  if (getErrorCondition() != 0){
-    setErrorMessage(find_neighbors->getErrorMessage());
-    return;
-  }
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   merge_twins();
   characterize_twins();

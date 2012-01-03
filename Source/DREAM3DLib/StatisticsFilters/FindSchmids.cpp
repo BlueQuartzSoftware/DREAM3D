@@ -61,15 +61,6 @@ void FindSchmids::execute()
 {
   setErrorCondition(0);
 
-  find_schmids();
-  notify("FindSchmids Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindSchmids::find_schmids()
-{
   DataContainer* m = getDataContainer();
   int ss = 0;
   float q1[5];
@@ -141,5 +132,6 @@ void FindSchmids::find_schmids()
 	  m->m_Grains[i]->slipsystem = ss;
     }
   }
-}
 
+  notify("FindSchmids Completed", 0, Observable::UpdateProgressMessage);
+}

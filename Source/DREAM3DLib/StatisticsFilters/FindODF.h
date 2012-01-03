@@ -74,8 +74,6 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
      */
     virtual void execute();
 
-    void find_eulerodf(H5StatsWriter::Pointer h5io);
-
   protected:
     FindODF();
 
