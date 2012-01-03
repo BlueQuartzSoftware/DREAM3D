@@ -72,15 +72,6 @@ void FindODF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  find_eulerodf(h5io);
-  notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
-{
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -157,6 +148,6 @@ void FindODF::find_eulerodf(H5StatsWriter::Pointer h5io)
 	  delete[] eulerodf[i];
   }
   delete[] eulerodf;
+
+  notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
 }
-
-

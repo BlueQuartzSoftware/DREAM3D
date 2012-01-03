@@ -66,9 +66,6 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
      */
     virtual void execute();
 
-    void find_schmids();
-
-
   protected:
     FindSchmids();
 

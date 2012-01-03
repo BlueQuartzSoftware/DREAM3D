@@ -83,26 +83,6 @@ void FindAxisODF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  FindShapes::Pointer find_shapes = FindShapes::New();
-  find_shapes->setDataContainer(getDataContainer());
-  find_shapes->setObservers(this->getObservers());
-  find_shapes->execute();
-  setErrorCondition(find_shapes->getErrorCondition());
-  if (getErrorCondition() != 0){
-    setErrorMessage(find_shapes->getErrorMessage());
-    return;
-  }
-
-  find_axisodf(h5io);
-  notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindAxisODF::find_axisodf(H5StatsWriter::Pointer h5io)
-{
-  DataContainer* m = getDataContainer();
   float r1, r2, r3;
   int bin;
   float **axisodf;
@@ -142,4 +122,6 @@ void FindAxisODF::find_axisodf(H5StatsWriter::Pointer h5io)
   }
   delete[] axisodf;
   delete[] totalaxes;
+
+  notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
 }
