@@ -81,16 +81,18 @@ neighbors(NULL)
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
-    option->setLabel("Minimum Grain Size");
+    option->setHumanLabel("Minimum Grain Size");
+    option->setPropertyName("minallowedgrainsize");
     option->setWidgetType(FilterOption::IntWidget);
     options.push_back(option);
   }
   {
-     FilterOption::Pointer option = FilterOption::New();
-     option->setLabel("Minimum No. Neighbors");
-     option->setWidgetType(FilterOption::IntWidget);
-     options.push_back(option);
-   }
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Minimum No. Neighbors");
+    option->setPropertyName("misorientationtolerance");
+    option->setWidgetType(FilterOption::IntWidget);
+    options.push_back(option);
+  }
 
   setFilterOptions(options);
 }
