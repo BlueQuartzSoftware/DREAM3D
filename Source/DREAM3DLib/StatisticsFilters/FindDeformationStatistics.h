@@ -85,8 +85,6 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
      */
     virtual void execute();
 
-	void find_deformationstatistics(const std::string &filename, const std::string &filename2);
-
   protected:
     FindDeformationStatistics();
 

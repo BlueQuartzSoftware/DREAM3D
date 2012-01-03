@@ -75,8 +75,6 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
      */
     virtual void execute();
 
-    void find_axisodf(H5StatsWriter::Pointer h5io);
-
   protected:
     FindAxisODF();
 

@@ -69,20 +69,7 @@ AdjustVolume::~AdjustVolume()
 void AdjustVolume::execute()
 {
   setErrorCondition(0);
-  adjust_boundaries();
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-  // If there is an error set this to something negative and also set a message
-  notify("AdjustVolume Completed", 0, Observable::UpdateProgressMessage);
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AdjustVolume::adjust_boundaries()
-{
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
   if (NULL == m)
@@ -272,5 +259,7 @@ void AdjustVolume::adjust_boundaries()
   {
     grain_indicies[i] = newnames[grain_indicies[i]];
   }
-}
 
+  // If there is an error set this to something negative and also set a message
+  notify("AdjustVolume Completed", 0, Observable::UpdateProgressMessage);
+}

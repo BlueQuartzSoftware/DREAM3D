@@ -70,9 +70,6 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
      */
     virtual void execute();
 
-    void find_avgorientations();
-
-
   protected:
     FindAvgOrientations();
 
