@@ -229,7 +229,29 @@ namespace DREAM3D
 
   namespace FieldData
   {
-    const std::string NeighborList("NeighborList");
+	const std::string Active("Active");
+	const std::string Phases("Phases");
+    const std::string EulerAngles("EulerAngles");
+    const std::string AxisEulerAngles("AxisEulerAngles");
+    const std::string SurfaceFields("SurfaceFields");
+    const std::string UnbiasedFields("UnbiasedFields");
+    const std::string NumNeighbors("NumNeighbors");
+    const std::string RGBs("RGBs");
+    const std::string Centroids("Centroids");
+    const std::string NumCells("Numcells");
+    const std::string Volumes("Volumes");
+    const std::string EquivalentDiameters("EquivalentDiameters");
+    const std::string Schmids("Schmids");
+    const std::string SlipSystems("SlipSystems");
+    const std::string AspectRatios("AspectRatios");
+	const std::string AxisLengths("AxisLengths");
+    const std::string Omega3s("Omega3s");
+    const std::string AvgQuats("AvgQuats");
+    const std::string Poles("Poles");
+    const std::string Neighborhoods("Neighborhoods");
+    const std::string GrainAvgMisorientations("GrainAvgMisorientations");
+    const std::string KernelAvgMisorientations("KernelAvgMisorientations");
+	const std::string NeighborList("NeighborList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
   }
 
