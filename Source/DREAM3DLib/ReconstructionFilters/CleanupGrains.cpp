@@ -49,12 +49,7 @@
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
 const static float m_pi = M_PI;
-
-
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -91,9 +86,8 @@ CleanupGrains::~CleanupGrains()
 void CleanupGrains::execute()
 {
   setErrorCondition(0);
-	int err = 0;
-  //DREAM3D_RANDOMNG_NEW()
-	DataContainer* m = getDataContainer();
+  int err = 0;
+  DataContainer* m = getDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -103,8 +97,6 @@ void CleanupGrains::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
-
-
 
 	// Make sure we have all the arrays available and allocated
     int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
@@ -133,14 +125,8 @@ void CleanupGrains::execute()
   notify("Cleanup Grains - Assigning Bad Points", 0, Observable::UpdateProgressMessage);
   assign_badpoints();
 
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->setDataContainer(m);
-  find_neighbors->execute();
-  err = find_neighbors->getErrorCondition();
-  if (err < 0){
-    return;
-  }
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();

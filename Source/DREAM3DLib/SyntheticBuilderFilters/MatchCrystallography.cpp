@@ -110,19 +110,6 @@ void MatchCrystallography::execute()
     return;
   }
 
-   totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-   if (NULL == totalsurfacearea)
-   {
-	  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-	  find_neighbors->setDataContainer(getDataContainer());
-	  find_neighbors->setObservers(this->getObservers());
-	  find_neighbors->execute();
-	  setErrorCondition(find_neighbors->getErrorCondition());
-	  if (getErrorCondition() != 0){
-	  setErrorMessage(find_neighbors->getErrorMessage());
-	  return;}
-   }
-
    // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
    neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
 
@@ -139,8 +126,6 @@ void MatchCrystallography::execute()
   // If there is an error set this to something negative and also set a message
   notify("MatchCrystallography Completed", 0, Observable::UpdateProgressMessage);
 }
-
-
 
 void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
 {

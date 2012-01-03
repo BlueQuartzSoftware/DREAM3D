@@ -65,18 +65,7 @@ WriteFieldData::~WriteFieldData()
 void WriteFieldData::execute()
 {
   setErrorCondition(0);
-  write_fielddata(getFieldDataFile());
-
-  // If there is an error set this to something negative and also set a message
-  notify("WriteFieldData Completed", 0, Observable::UpdateProgressMessage);
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void WriteFieldData::write_fielddata(const std::string &filename)
-{
+  std::string filename = getFieldDataFile();
   DataContainer* m = getDataContainer();
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
@@ -94,6 +83,10 @@ void WriteFieldData::write_fielddata(const std::string &filename)
 		space << m->m_Grains[i]->omega3 << space << int(m->m_Grains[i]->surfacefield) << space << int(m->m_Grains[i]->outsideboundbox) << std::endl;
   }
   outFile.close();
+
+  // If there is an error set this to something negative and also set a message
+  notify("WriteFieldData Completed", 0, Observable::UpdateProgressMessage);
+
 }
 
 

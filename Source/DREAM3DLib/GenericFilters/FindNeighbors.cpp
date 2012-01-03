@@ -61,15 +61,6 @@ void FindNeighbors::execute()
 {
   setErrorCondition(0);
 
-  find_neighbors();
-  notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindNeighbors::find_neighbors()
-{
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
@@ -226,5 +217,6 @@ void FindNeighbors::find_neighbors()
     sharedSAL->assign(neighborsurfacearealist[i].begin(), neighborsurfacearealist[i].end());
     sharedSurfaceAreaListPtr->setList(i, sharedSAL);
   }
-}
 
+  notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
+}

@@ -76,12 +76,6 @@ class DREAM3DLib_EXPORT WriteFieldData : public AbstractFilter
 
   private:
 
-    /**
-     * @brief Writes the grain data to an output file
-     * @param filename The file to write the grain data into
-     */
-    void write_fielddata(const std::string & filename);
-
     WriteFieldData(const WriteFieldData&); // Copy Constructor Not Implemented
     void operator=(const WriteFieldData&); // Operator '=' Not Implemented
 };

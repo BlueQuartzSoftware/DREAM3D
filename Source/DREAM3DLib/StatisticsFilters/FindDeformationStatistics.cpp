@@ -72,15 +72,6 @@ void FindDeformationStatistics::execute()
 {
   setErrorCondition(0);
 
-  find_deformationstatistics(m_OutputFile1, m_OutputFile2);
-  notify("FindDeformationStatistics Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindDeformationStatistics::find_deformationstatistics(const std::string &filename, const std::string &filename2)
-{
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -121,6 +112,7 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
   {
     return;
   }
+  std::string filename = m_OutputFile1;
   ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
@@ -609,6 +601,8 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
 	    outFile << float(i)*0.2+0.1 << "	" << kmdist[i] << "	" << float(i)*0.8+0.4 << "	" << gamdist[i] << "	" << float(i)*0.1+0.05 << "	" << lmgdist[i] << endl;
   }
   outFile.close();
+
+  std::string filename2 = m_OutputFile2;
   FILE* vtkFile = NULL;
   vtkFile = fopen(filename2.c_str(), "wb");
   if (NULL == vtkFile)
@@ -659,7 +653,6 @@ void FindDeformationStatistics::find_deformationstatistics(const std::string &fi
 	  fprintf(vtkFile, "%f\n", miso);
   }
   fclose(vtkFile);
+
+  notify("FindDeformationStatistics Completed", 0, Observable::UpdateProgressMessage);
 }
-
-
-

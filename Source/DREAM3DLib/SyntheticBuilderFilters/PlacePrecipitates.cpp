@@ -126,12 +126,8 @@ void PlacePrecipitates::execute()
   phases = ph;
   surfacevoxels = surf;
 
-
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setDataContainer(getDataContainer());
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->execute();
-  err = find_neighbors->getErrorCondition();
+  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == totalsurfacearea) { return; }
 
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();

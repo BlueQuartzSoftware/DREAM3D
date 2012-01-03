@@ -68,15 +68,6 @@ void FindAvgOrientations::execute()
 {
   setErrorCondition(0);
 
-  find_avgorientations();
-  notify("FindAvgOrientations Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindAvgOrientations::find_avgorientations()
-{
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -152,5 +143,8 @@ void FindAvgOrientations::find_avgorientations()
       m->m_Grains[i]->euler2 = ea2;
       m->m_Grains[i]->euler3 = ea3;
   }
+
+  notify("FindAvgOrientations Completed", 0, Observable::UpdateProgressMessage);
 }
+
 

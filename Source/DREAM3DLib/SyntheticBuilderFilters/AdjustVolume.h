@@ -72,8 +72,6 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
   protected:
     AdjustVolume();
 
-    void adjust_boundaries();
-
   private:
     std::vector<int> gsizes;
 

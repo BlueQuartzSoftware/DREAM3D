@@ -70,16 +70,6 @@ void FindLocalMisorientationGradients::execute()
 {
   setErrorCondition(0);
 
-  find_localmisorientationgradients();
-
-  notify("FindLocalMisorientationGradients Completed", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindLocalMisorientationGradients::find_localmisorientationgradients()
-{
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -289,5 +279,6 @@ void FindLocalMisorientationGradients::find_localmisorientationgradients()
     delete[] avgmiso[i];
   }
   delete avgmiso;
-}
 
+  notify("FindLocalMisorientationGradients Completed", 0, Observable::UpdateProgressMessage);
+}
