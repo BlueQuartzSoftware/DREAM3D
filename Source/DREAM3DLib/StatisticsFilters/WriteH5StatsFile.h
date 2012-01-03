@@ -70,6 +70,9 @@ class DREAM3DLib_EXPORT WriteH5StatsFile : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, BinStepSize);
     DREAM3D_INSTANCE_PROPERTY(bool, CreateNewStatsFile)
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Write Statistics (HDF5)"; }
+
 
 	 /**
      * @brief Reimplemented from @see AbstractFilter class

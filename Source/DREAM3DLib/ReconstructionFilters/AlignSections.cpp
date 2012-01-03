@@ -73,6 +73,23 @@ AlignSections::AlignSections() :
   graincounts = NULL;
   INIT_DataArray(m_GrainCounts, int);
 
+  std::vector<FilterOption::Pointer> options;
+  {
+    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    option->setHumanLabel("Alignment Method");
+    option->setPropertyName("alignmeth");
+    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setValueType("DREAM3D::Reconstruction::AlignmentMethod");
+    option->setCastableValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Outer Boundary");
+    choices.push_back("Misorientation");
+    choices.push_back("Mutual Information");
+    option->setChoices(choices);
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+
 }
 
 // -----------------------------------------------------------------------------

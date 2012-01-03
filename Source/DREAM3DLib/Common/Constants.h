@@ -87,6 +87,17 @@ if (NULL != obj->sharedPtr.get())\
 namespace DREAM3D
 {
 
+  namespace FilterGroups
+  {
+    const std::string GenericFilters("Generic");
+    const std::string ReconstructionFilters("Reconstrucion");
+    const std::string ManipulationFilters("Manipulation");
+    const std::string StatisticsFilters("Statistics");
+    const std::string SyntheticBuilderFilters("Synthetic Builder");
+    const std::string SurfaceMeshingFilters("Surface Meshing");
+  }
+
+
   namespace HDF5
   {
     const std::string Grain_ID("Grain_ID");

@@ -64,6 +64,10 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
     DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float); // N x 6 Array
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Shapes"; }
+
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

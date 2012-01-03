@@ -57,11 +57,14 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(MergeColonies)
-   DREAM3D_STATIC_NEW_MACRO(MergeColonies)
+    DREAM3D_STATIC_NEW_MACRO(MergeColonies)
     DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
 
 
     virtual ~MergeColonies();
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Merge Colonies"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

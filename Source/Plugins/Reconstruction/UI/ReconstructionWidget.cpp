@@ -700,7 +700,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   // Move the Reconstruction object into the thread that we just created.
   m_Reconstruction->moveToThread(m_WorkerThread);
 
-  m_Reconstruction->setH5AngFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
+  m_Reconstruction->setH5EbsdFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
 
   m_Reconstruction->setZStartIndex(m_ZStartIndex->value());
   m_Reconstruction->setZEndIndex(m_ZEndIndex->value());

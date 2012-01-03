@@ -148,7 +148,7 @@ static Pointer New args \
  * information. */
 #define DREAM3D_TYPE_MACRO(thisClass) \
   public: \
-  virtual const char* getNameOfClass() const  {return #thisClass;}\
+  virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
@@ -172,7 +172,8 @@ static Pointer New args \
 
 #define DREAM3D_TYPE_MACRO_SUPER(thisClass,superclass) \
   public: \
-  virtual const char* getNameOfClass() const  {return #thisClass;}\
+  virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
+  static std::string ClassName() {return std::string(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \

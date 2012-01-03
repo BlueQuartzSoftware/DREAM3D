@@ -65,7 +65,10 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     virtual ~CleanupGrains();
 
     DREAM3D_INSTANCE_PROPERTY(int, minallowedgrainsize);
-    DREAM3D_INSTANCE_PROPERTY(float, misorientationtolerance);
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
 
     virtual void execute();
 

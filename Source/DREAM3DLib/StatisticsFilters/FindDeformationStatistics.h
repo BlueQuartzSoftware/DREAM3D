@@ -80,6 +80,10 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile1)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile2)
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Deformation Statistics"; }
+
+
 	/**
      * @brief Reimplemented from @see AbstractFilter class
      */

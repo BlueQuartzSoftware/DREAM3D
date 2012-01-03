@@ -121,6 +121,8 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, NodesFile);
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile);
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const std::string getHumanLabel() { return "Surface Mesh"; }
 
     void execute();
 

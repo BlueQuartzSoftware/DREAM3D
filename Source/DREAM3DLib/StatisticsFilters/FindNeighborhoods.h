@@ -63,6 +63,10 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Neighborhoods"; }
+
+
 	/**
      * @brief Reimplemented from @see AbstractFilter class
      */

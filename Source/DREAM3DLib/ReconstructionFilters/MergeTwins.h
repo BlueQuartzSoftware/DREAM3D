@@ -64,6 +64,9 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     virtual ~MergeTwins();
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Merge Twins"; }
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

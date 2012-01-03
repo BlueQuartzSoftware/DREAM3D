@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 #endif
     Reconstruction::Pointer m_Reconstruction = Reconstruction::New();
 
-    m_Reconstruction->setH5AngFile(h5InputFile.getValue());
+    m_Reconstruction->setH5EbsdFile(h5InputFile.getValue());
 
     m_Reconstruction->setZStartIndex(zStartIndex.getValue());
     m_Reconstruction->setZEndIndex(zEndIndex.getValue() + 1);

@@ -65,6 +65,9 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
 
     virtual ~FindAvgOrientations();
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Average Orientations"; }
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

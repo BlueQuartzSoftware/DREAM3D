@@ -60,7 +60,7 @@
 //
 // -----------------------------------------------------------------------------
 Reconstruction::Reconstruction() :
-    m_H5AngFile(""), m_OutputDirectory("."), m_OutputFilePrefix("Reconstruction_"), m_MergeTwins(false), m_MergeColonies(false), m_MinAllowedGrainSize(0), m_MisorientationTolerance(0.0), m_WriteBinaryVTKFiles(true), m_WriteVtkFile(true), m_WritePhaseId(true),
+    m_H5EbsdFile(""), m_OutputDirectory("."), m_OutputFilePrefix("Reconstruction_"), m_MergeTwins(false), m_MergeColonies(false), m_MinAllowedGrainSize(0), m_MisorientationTolerance(0.0), m_WriteBinaryVTKFiles(true), m_WriteVtkFile(true), m_WritePhaseId(true),
 //m_WriteImageQuality(true),
     m_WriteIPFColor(true), m_WriteHDF5GrainFile(false)
 {
@@ -95,13 +95,13 @@ void Reconstruction::execute()
 
   updateProgressAndMessage(("Loading Slices"), 10);
   LoadSlices::Pointer load_slices = LoadSlices::New();
-  load_slices->setH5AngFile(getH5AngFile());
+  load_slices->setH5EbsdFile(getH5EbsdFile());
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
   load_slices->setRefFrameZDir(getRefFrameZDir());
-  load_slices->setMisoTolerance(m_MisorientationTolerance);
+  load_slices->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(load_slices);
 
   AlignSections::Pointer align_sections = AlignSections::New();
@@ -110,12 +110,12 @@ void Reconstruction::execute()
   pipeline.push_back(align_sections);
 
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();
-  segment_grains->setMisoTolerance(m_MisorientationTolerance);
+  segment_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(segment_grains);
 
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setminallowedgrainsize(m_MinAllowedGrainSize);
-  cleanup_grains->setmisorientationtolerance(m_MisorientationTolerance);
+  cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(cleanup_grains);
 
 
@@ -255,7 +255,15 @@ void Reconstruction::execute()
 void Reconstruction::printSettings(std::ostream &ostream)
 {
   ostream << "Reconstruction Settings Being Used" << std::endl;
-  PRINT_PROPERTY(ostream, H5AngFile)PRINT_PROPERTY(ostream, ZStartIndex)PRINT_PROPERTY(ostream, ZEndIndex)PRINT_PROPERTY(ostream, OutputDirectory)PRINT_PROPERTY(ostream, MergeTwins)PRINT_PROPERTY(ostream, MergeColonies)PRINT_PROPERTY(ostream, MinAllowedGrainSize)PRINT_PROPERTY(ostream, MisorientationTolerance)PRINT_PROPERTY(ostream, AlignmentMethod)
+  PRINT_PROPERTY(ostream, H5EbsdFile)
+  PRINT_PROPERTY(ostream, ZStartIndex)
+  PRINT_PROPERTY(ostream, ZEndIndex)
+  PRINT_PROPERTY(ostream, OutputDirectory)
+  PRINT_PROPERTY(ostream, MergeTwins)
+  PRINT_PROPERTY(ostream, MergeColonies)
+  PRINT_PROPERTY(ostream, MinAllowedGrainSize)
+  PRINT_PROPERTY(ostream, MisorientationTolerance)
+  PRINT_PROPERTY(ostream, AlignmentMethod)
 
   PRINT_PROPERTY(ostream, WriteVtkFile)PRINT_PROPERTY(ostream, WritePhaseId)PRINT_PROPERTY(ostream, WriteIPFColor)
   PRINT_PROPERTY(ostream, WriteHDF5GrainFile)

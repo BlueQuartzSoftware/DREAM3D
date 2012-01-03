@@ -63,17 +63,20 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-	/**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Load Volume"; }
 
-	virtual void execute();
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+    virtual void execute();
 
-	void initializeAttributes();
-    void initializeGrains();
 
   protected:
     LoadVolume();
+
+    void initializeAttributes();
+    void initializeGrains();
 
   private:
     int32_t* grain_indicies;

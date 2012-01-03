@@ -76,6 +76,10 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
+    virtual const std::string getHumanLabel() { return "Match Crystallography"; }
+
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

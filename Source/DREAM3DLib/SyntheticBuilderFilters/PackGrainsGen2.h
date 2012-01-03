@@ -76,12 +76,14 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
     DREAM3D_INSTANCE_PROPERTY(float, neighborhooderrorweight);
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
+    virtual const std::string getHumanLabel() { return "Pack Grains"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
 
-	virtual void execute();
+    virtual void execute();
 
     float check_sizedisterror(int gadd, int gremove);
     int readReconStatsData(H5StatsReader::Pointer h5io);
