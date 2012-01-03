@@ -78,7 +78,7 @@ class Reconstruction : public AbstractPipeline, public Observer
     virtual ~Reconstruction();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
+    MXA_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     MXA_INSTANCE_PROPERTY(int, ZStartIndex)
     MXA_INSTANCE_PROPERTY(int, ZEndIndex)
     MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)

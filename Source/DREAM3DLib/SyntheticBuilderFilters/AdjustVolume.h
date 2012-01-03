@@ -63,6 +63,10 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     virtual ~AdjustVolume();
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
+    virtual const std::string getHumanLabel() { return "Adjust Volume"; }
+
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

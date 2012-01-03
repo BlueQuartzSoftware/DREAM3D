@@ -69,13 +69,16 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     virtual ~LoadSlices();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(H5AngFile)
+    MXA_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
     MXA_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
     MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(float, MisoTolerance);
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Load Slices"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -123,7 +126,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
                  std::vector<float> &precipFractions,
                  std::vector<Ebsd::CrystalStructure> &crystalStructures)
     {
-      reader->setFileName(m_H5AngFile);
+      reader->setFileName(m_H5EbsdFile);
       reader->setSliceStart(m_ZStartIndex);
       reader->setSliceEnd(m_ZEndIndex);
 

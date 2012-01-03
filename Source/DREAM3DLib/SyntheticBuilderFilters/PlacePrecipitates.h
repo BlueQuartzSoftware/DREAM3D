@@ -65,6 +65,10 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
+    virtual const std::string getHumanLabel() { return "Place Precipitates"; }
+
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

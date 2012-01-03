@@ -229,8 +229,8 @@ namespace DREAM3D
 
   namespace FieldData
   {
-	const std::string Active("Active");
-	const std::string Phases("Phases");
+    const std::string Active("Active");
+    const std::string Phases("Phases");
     const std::string EulerAngles("EulerAngles");
     const std::string AxisEulerAngles("AxisEulerAngles");
     const std::string SurfaceFields("SurfaceFields");
@@ -244,14 +244,14 @@ namespace DREAM3D
     const std::string Schmids("Schmids");
     const std::string SlipSystems("SlipSystems");
     const std::string AspectRatios("AspectRatios");
-	const std::string AxisLengths("AxisLengths");
+    const std::string AxisLengths("AxisLengths");
     const std::string Omega3s("Omega3s");
     const std::string AvgQuats("AvgQuats");
     const std::string Poles("Poles");
     const std::string Neighborhoods("Neighborhoods");
     const std::string GrainAvgMisorientations("GrainAvgMisorientations");
     const std::string KernelAvgMisorientations("KernelAvgMisorientations");
-	const std::string NeighborList("NeighborList");
+    const std::string NeighborList("NeighborList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
   }
 
@@ -259,6 +259,7 @@ namespace DREAM3D
   {
     const std::string TotalSurfaceArea("TotalSurfaceArea");
   }
+
 }
 
 /**

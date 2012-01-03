@@ -160,13 +160,13 @@ int main(int argc, char **argv)
 
  // updateProgressAndMessage(("Loading Slices"), 10);
   LoadSlices::Pointer load_slices = LoadSlices::New();
-  load_slices->setH5AngFile(getH5AngFile());
+  load_slices->setH5EbsdFile(getH5AngFile());
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
   load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
-  load_slices->setMisoTolerance(m_MisorientationTolerance);
+  load_slices->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(load_slices);
 
   AlignSections::Pointer align_sections = AlignSections::New();
@@ -175,12 +175,12 @@ int main(int argc, char **argv)
   pipeline.push_back(align_sections);
 
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();
-  segment_grains->setMisoTolerance(m_MisorientationTolerance);
+  segment_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(segment_grains);
 
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setminallowedgrainsize(m_MinAllowedGrainSize);
-  cleanup_grains->setmisorientationtolerance(m_MisorientationTolerance);
+  cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(cleanup_grains);
 
   Observer observer;

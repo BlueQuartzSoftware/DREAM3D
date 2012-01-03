@@ -1,33 +1,5 @@
-#ifndef _Q@name@Widget_H_
-#define _Q@name@Widget_H_
 
-#include "QtGui/QWidget"
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/@group@/@name@.h"
-
-#include "FilterWidgets/QFilterWidget.h"
-
-
-class Q@name@Widget : public QFilterWidget
-{
-  Q_OBJECT;
-  public:
-    Q@name@Widget(QWidget* parent = NULL):
-      QFilterWidget(parent)
-    {
-      m_Filter = @name@::New();
-      setupGui();
-    }
-    virtual ~Q@name@Widget(){}
-
-    virtual AbstractFilter::Pointer getFilter()
-    {
-      return m_Filter;
-    }
-
-  private:
-    @name@::Pointer m_Filter;
-};
-
-#endif /* _Q@name@Widget_H_  */
+#if 0
+This file should be over written with another file. We just need to have this
+file in place for CMake to pass it's tests.
+#endif

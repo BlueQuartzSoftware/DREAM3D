@@ -68,6 +68,20 @@ SegmentGrains::SegmentGrains() :
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
+
+  m_MisorientationTolerance = 0.0f;
+
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setPropertyName("MisorientationTolerance");
+    option->setHumanLabel("Misorientation Tolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -185,7 +199,7 @@ void SegmentGrains::execute()
             q2[4] = quats[neighbor*5 + 4];
             phase2 = m->crystruct[phases[neighbor]];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-            if (w < m_MisoTolerance)
+            if (w < m_MisorientationTolerance)
             {
               grain_indicies[neighbor] = graincount;
               voxelslist[size] = neighbor;

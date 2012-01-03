@@ -77,6 +77,10 @@ class DREAM3DLib_EXPORT SMVtkPolyDataWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const std::string getHumanLabel() { return "Write VTK PolyData File"; }
+
+
 #if 0
     /**
      * @brief

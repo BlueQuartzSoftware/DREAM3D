@@ -69,6 +69,10 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
     DREAM3D_INSTANCE_PROPERTY(bool, CreateNewStatsFile)
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find MDF"; }
+
+
 	 /**
      * @brief Reimplemented from @see AbstractFilter class
      */

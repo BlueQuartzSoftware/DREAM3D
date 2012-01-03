@@ -61,16 +61,22 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 
     virtual ~FindEuclideanDistMap();
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Euclidean Distance Map"; }
+
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
 
-    void find_euclideandistmap();
+
 
 
   protected:
     FindEuclideanDistMap();
+
+    void find_euclideandistmap();
 
   private:
 

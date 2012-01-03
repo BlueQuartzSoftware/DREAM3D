@@ -7,22 +7,11 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "FilterWidgets/QFilterWidget.h"
-#include "FilterWidgets/AllFilterWidgets.h"
-
-
-class FilterFactory
-{
-  public:
-    static AbstractFilter::Pointer CreateFilter(const std::string &name)
-    {
-      return AbstractFilter::NullPointer();
-    }
-    FilterFactory() {}
-    virtual ~FilterFactory(){}
-};
+#include "FilterWidgets/DREAM3DFilters.h"
 
 
 
@@ -36,10 +25,21 @@ class @FILTERMANAGER_CLASS_NAME@
 
     virtual ~@FILTERMANAGER_CLASS_NAME@() {};
 
-
+    typedef std::map<std::string, std::set<std::string> >  FilterMapType;
+    typedef std::set<std::string>  StringSetType;
+    
+    const FilterMapType& getFilterMap()
+    {
+      return m_FilterMap;
+    }
+    
+    
     QFilterWidget* getFilterWidget(const std::string &group, const std::string &filter)
     {
+
+     
       @QFILTERWIDGET_FACTORY_SOURCE@
+
       return NULL;
     }
 

@@ -81,6 +81,57 @@ LoadSlices::LoadSlices() :
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
+
+
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("H5EbsdFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+
+  {
+    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    option->setHumanLabel("Reference Frame");
+    option->setPropertyName("RefFrameZDir");
+    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setValueType("Ebsd::RefFrameZDir");
+    option->setCastableValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Low To High");
+    choices.push_back("High To Low");
+    option->setChoices(choices);
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setPropertyName("MisorientationTolerance");
+    option->setHumanLabel("Misorientation Tolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Z Start Index");
+    option->setPropertyName("ZStartIndex");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Z End Index");
+    option->setPropertyName("ZEndIndex");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -111,7 +162,7 @@ void LoadSlices::execute()
   // Get the Size and Resolution of the Volume
   {
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
-    volumeInfoReader->setFileName(m_H5AngFile);
+    volumeInfoReader->setFileName(m_H5EbsdFile);
     err = volumeInfoReader->readVolumeInfo();
     setErrorCondition(err);
     int64_t dims[3];
@@ -472,7 +523,7 @@ void LoadSlices::threshold_points()
 		{
 		  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		}
-		if (w < m_MisoTolerance)
+		if (w < m_MisorientationTolerance)
 		{
 		  grain_indicies[neighbor] = -1;
 		  alreadychecked[neighbor] = true;

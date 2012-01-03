@@ -63,6 +63,9 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 
     DECLARE_WRAPPED_ARRAY(graincounts, m_GrainCounts, float); // N x 5 Array
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Sizes"; }
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

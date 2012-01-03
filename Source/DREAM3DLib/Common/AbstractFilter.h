@@ -38,6 +38,7 @@
 #include "DREAM3DLib/Common/FilterOption.h"
 
 
+
 /**
  * @class AbstractFilter AbstractFilter.h DREAM3DLib/Common/AbstractFilter.h
  * @brief This class is the basic class to subclass when creating a new Filter for
@@ -59,6 +60,10 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual ~AbstractFilter();
 
+    // These should be implemented by the subclass
+    virtual const std::string getGroupName() { assert(false); }
+    virtual const std::string getHumanLabel() { assert(false); }
+
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
@@ -70,6 +75,10 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     DREAM3D_INSTANCE_PROPERTY(bool, Cancel);
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<FilterOption::Pointer>, FilterOptions);
+
+    virtual void printValues(std::ostream &out){}
+
+
 
 
     /**
