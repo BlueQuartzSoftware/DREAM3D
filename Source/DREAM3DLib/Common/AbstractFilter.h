@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual ~AbstractFilter();
 
     // These should be implemented by the subclass
-    virtual const std::string getGroupName() { assert(false); }
-    virtual const std::string getHumanLabel() { assert(false); }
+    virtual const std::string getGroupName() { assert(false); return "";}
+    virtual const std::string getHumanLabel() { assert(false); return "";}
 
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
 
