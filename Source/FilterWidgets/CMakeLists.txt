@@ -109,17 +109,13 @@ configure_file( ${FilterWidgets_SOURCE_DIR}/CodeGen.cpp.in
                 ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.cpp)
 add_executable(FilterWidgetCodeGen ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.cpp)
 target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
-set(EXE_EXTENSION "")
-if (WIN32)
-  set (EXE_EXTENSION ".exe")
-endif()
+
 # Now run the code to generate the header files which will over write the place
 # holder files that were generated from above              
 add_custom_command(TARGET FilterWidgetCodeGen POST_BUILD 
-            COMMAND FilterWidgetCodeGen${EXE_EXTENSION} 
-            WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+                    COMMAND $<TARGET_FILE:FilterWidgetCodeGen> )
 
-    
+
 QT4_WRAP_UI( FilterWidgets_Generated_UI_HDRS 
             ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui )
 
