@@ -85,6 +85,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      * @brief This method should be fully implemented in subclasses.
      */
     virtual void execute();
+    virtual void preflight();
 
   protected:
     AbstractFilter();
