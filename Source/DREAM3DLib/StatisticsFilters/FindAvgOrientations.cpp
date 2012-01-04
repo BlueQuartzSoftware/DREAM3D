@@ -125,7 +125,7 @@ void FindAvgOrientations::execute()
 		m_OrientationOps[xtal]->getNearestQuat(m->m_Grains[grain_indicies[i]]->avg_quat, voxquat);
 		for (int k = 0; k < 5; k++)
 		{
-		  m->m_Grains[grain_indicies[i]]->avg_quat[k] = m->m_Grains[grain_indicies[i]]->avg_quat[k] + quats[i*5 + k];
+		  m->m_Grains[grain_indicies[i]]->avg_quat[k] = m->m_Grains[grain_indicies[i]]->avg_quat[k] + voxquat[k];
 		}
 	}
   }

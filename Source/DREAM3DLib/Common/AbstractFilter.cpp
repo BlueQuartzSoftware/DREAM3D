@@ -59,3 +59,9 @@ void AbstractFilter::execute()
   setErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.");
   notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
 }
+
+void AbstractFilter::preflight()
+{
+	std::cout << "AbstractFilter::Preflight needs to be added in some class";
+	assert(false);
+}

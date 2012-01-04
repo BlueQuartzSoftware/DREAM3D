@@ -101,9 +101,9 @@ void FindAxisODF::execute()
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    float ea1 = m->m_Grains[i]->euler1;
-    float ea2 = m->m_Grains[i]->euler2;
-	float ea3 = m->m_Grains[i]->euler3;
+    float ea1 = m->m_Grains[i]->axiseuler1;
+    float ea2 = m->m_Grains[i]->axiseuler2;
+	float ea3 = m->m_Grains[i]->axiseuler3;
     if (m->m_Grains[i]->surfacefield == 0)
     {
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
