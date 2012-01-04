@@ -92,7 +92,16 @@ LoadSlices::LoadSlices() :
     option->setValueType("string");
     options.push_back(option);
   }
-
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setPropertyName("MisorientationTolerance");
+    option->setHumanLabel("Misorientation Tolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+#if 0
+   This should be read from the file so we are NOT going to expose it to the user
   {
     ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
     option->setHumanLabel("Reference Frame");
@@ -106,30 +115,32 @@ LoadSlices::LoadSlices() :
     option->setChoices(choices);
     options.push_back(option);
   }
+#endif
   {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setPropertyName("MisorientationTolerance");
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    options.push_back(option);
-  }
-  {
-    FilterOption::Pointer option = FilterOption::New();
+    ConstrainedFilterOption<int>::Pointer option = ConstrainedFilterOption<int>::New();
     option->setHumanLabel("Z Start Index");
     option->setPropertyName("ZStartIndex");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterOption::IntConstrainedWidget);
     option->setValueType("int");
+    option->setMinimum(0);
+    option->setMaximum(0);
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    ConstrainedFilterOption<int>::Pointer option = ConstrainedFilterOption<int>::New();
     option->setHumanLabel("Z End Index");
     option->setPropertyName("ZEndIndex");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterOption::IntConstrainedWidget);
     option->setValueType("int");
+    option->setMinimum(0);
+    option->setMaximum(0);
     options.push_back(option);
   }
+
+  // Some how need to get the custom GUIs for the Phase Types and QualityMetric Filters
+  // into a Filter Option also.
+
+
 
   setFilterOptions(options);
 }
@@ -300,10 +311,11 @@ void LoadSlices::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float yRes, float zRes,
-                                    std::vector<Ebsd::CrystalStructure> crystalStructures,
-									std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
-                                    std::vector<float> precipFractions)
+void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ,
+                            float xRes, float yRes, float zRes,
+                            std::vector<Ebsd::CrystalStructure> crystalStructures,
+									          std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
+                            std::vector<float> precipFractions)
 {
   notify("Initializing Variables", 0, Observable::UpdateProgressValueAndMessage);
   DataContainer* m = getDataContainer();
@@ -434,6 +446,8 @@ void LoadSlices::initializeQuats()
     quats[i*5 + 4] = qr[4];
   }
 }
+
+
 void LoadSlices::threshold_points()
 {
   DataContainer* m = getDataContainer();

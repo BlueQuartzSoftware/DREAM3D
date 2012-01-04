@@ -19,7 +19,8 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
 include_directories(${DREAM3DTest_BINARY_DIR})
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Applications)
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins)
-
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
 # --------------------------------------------------------------------------
 #
 # --------------------------------------------------------------------------
@@ -32,17 +33,6 @@ macro(MXA_ADD_TEST testname Exename)
         endforeach()
     endif()
 endmacro()
-
-
-if (0)
-set (srcs
-    ${DREAM3DTest_SOURCE_DIR}/AngDirectoryPatternTest.cpp
-    ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3D/ANG/AngDirectoryPatterns.cpp
-    ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3D/Common/Grain.cpp
-    )
-add_executable(AngDirectoryPattern ${srcs})
-target_link_libraries(AngDirectoryPattern MXA)
-endif()
 
 
 # --------

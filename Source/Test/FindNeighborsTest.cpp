@@ -79,7 +79,7 @@ void updateProgressAndMessage(const std::string &msg, int prog)
   std::cout << prog << "% - " << msg << std::endl;
 }
 
-std::string getH5AngFile()
+std::string getH5EbsdFile()
 {
   return EBSDFile;
 }
@@ -160,12 +160,13 @@ int main(int argc, char **argv)
 
  // updateProgressAndMessage(("Loading Slices"), 10);
   LoadSlices::Pointer load_slices = LoadSlices::New();
-  load_slices->setH5EbsdFile(getH5AngFile());
+  load_slices->setH5EbsdFile(getH5EbsdFile());
+  load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
-  load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
+
   load_slices->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(load_slices);
 
