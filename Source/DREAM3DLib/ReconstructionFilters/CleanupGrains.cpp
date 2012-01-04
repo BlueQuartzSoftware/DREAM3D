@@ -340,7 +340,6 @@ void CleanupGrains::merge_containedgrains()
     if(m->m_Grains[grainname]->numneighbors == 1 && m->m_Grains[grainname]->phase > 0)
     {
       grain_indicies[i] = neighborlist[grainname][0];
-      m->m_Grains[grain_indicies[i]]->numvoxels++;
     }
     if(m->m_Grains[grainname]->numneighbors == 0 && m->m_Grains[grainname]->phase > 0)
     {
