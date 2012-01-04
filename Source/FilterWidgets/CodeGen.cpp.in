@@ -46,7 +46,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterOption.h"
-#include "FilterWidgets/DREAM3DFilters.h"
+#include "FilterWidgets/DREAM3DFilterHeaders.h"
 
 static std::string OUTPUT_DIR("@FilterWidgets_BINARY_DIR@");
 static std::string FILTER_WIDGETS_DIR("@FilterWidgets_SOURCE_DIR@");
@@ -119,18 +119,14 @@ void createFile( const std::string &group, const std::string &filter)
   }
  
   fprintf(f, "  private:\n");
-  fprintf(f, "    %s::Pointer m_Filter;\n", filter.c_str());
+  fprintf(f, "    %s::Pointer m_Filter;\n\n", filter.c_str());
+  fprintf(f, "    Q%sWidget(const Q%sWidget&);", filter.c_str(), filter.c_str());
+  fprintf(f, "    void operator=(const Q%sWidget&);", filter.c_str());
   fprintf(f, "};\n");
   fprintf(f, "#endif /* Q%s_H_ */\n", filter.c_str());
-
-  
-  
-  
   
   fclose(f);
 }
-
-
 
 
 void setFilters() {

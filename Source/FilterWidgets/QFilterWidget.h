@@ -37,9 +37,12 @@ class QFilterWidget : public QGroupBox
    public slots:
 
      virtual void updateFilterValues();
-     void updateQLineEditDoubleValue();
-     void updateQLineEditIntValue();
-
+     virtual void updateQLineEditDoubleValue();
+     virtual void updateQLineEditIntValue();
+     virtual void selectInputFile();
+     virtual void updateComboBoxValue(int v);
+     virtual void updateQSpinBoxValue(int v);
+     virtual void updateQDoubleSpinBoxValue(double v);
   protected:
 
   private:

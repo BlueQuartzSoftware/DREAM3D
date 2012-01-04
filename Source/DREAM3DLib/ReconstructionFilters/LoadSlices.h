@@ -69,13 +69,13 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     virtual ~LoadSlices();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(H5EbsdFile)
-    MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
-    MXA_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
-    MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
+    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Load Slices"; }

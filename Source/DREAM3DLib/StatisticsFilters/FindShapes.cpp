@@ -78,7 +78,7 @@ void FindShapes::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == gi) { return; }
   grain_indicies = gi;
   setErrorCondition(0);
