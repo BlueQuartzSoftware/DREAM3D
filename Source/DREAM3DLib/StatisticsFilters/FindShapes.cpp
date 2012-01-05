@@ -385,9 +385,14 @@ void FindShapes::find_axes()
 	  if(value < -1) value = -1;
       theta = acos(value);
     }
-    r1 = 2 * powf(r, 0.33333333333) * cosf(theta / 3) - (b / (3 * a));
-    r2 = -powf(r, 0.33333333333) * (cosf(theta / 3) - (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
-    r3 = -powf(r, 0.33333333333) * (cosf(theta / 3) + (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
+    float const1 = powf(r, 0.33333333333f);
+    float const2 = cosf(theta / 3.0f);
+    float const3 = b / (3.0f * a);
+    float const4 = 1.7320508f * sinf(theta / 3.0f);
+
+    r1 = 2 * const1 * const2 - (const3);
+    r2 = -const1 * (const2 - (const4)) - const3;
+    r3 = -const1 * (const2 + (const4)) - const3;
     m->m_Grains[i]->radius1 = r1;
     m->m_Grains[i]->radius2 = r2;
     m->m_Grains[i]->radius3 = r3;
@@ -595,24 +600,24 @@ void FindShapes::find_axiseulers2D()
     float Ixx = grainmoments[i*6+0];
     float Iyy = grainmoments[i*6+1];
     float Ixy = grainmoments[i*6+2];
-    float I1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    float I2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float I1 = (Ixx + Iyy) / 2.0f + sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float I2 = (Ixx + Iyy) / 2.0f - sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     float n1x = (Ixx - I1) / Ixy;
     float n1y = 1;
     float n2x = (Ixx - I2) / Ixy;
     float n2y = 1;
-    float norm1 = sqrt((n1x * n1x + n1y * n1y));
-    float norm2 = sqrt((n2x * n2x + n2y * n2y));
+    float norm1 = sqrtf((n1x * n1x + n1y * n1y));
+    float norm2 = sqrtf((n2x * n2x + n2y * n2y));
     n1x = n1x / norm1;
     n1y = n1y / norm1;
     n2x = n2x / norm2;
     n2y = n2y / norm2;
     float cosine1 = n1x;
-    float ea1 = acos(cosine1);
+    float ea1 = acosf(cosine1);
     if (ea1 > m_pi) ea1 = ea1 - m_pi;
     m->m_Grains[i]->axiseuler1 = ea1;
-    m->m_Grains[i]->axiseuler2 = 0.0;
-    m->m_Grains[i]->axiseuler3 = 0.0;
+    m->m_Grains[i]->axiseuler2 = 0.0f;
+    m->m_Grains[i]->axiseuler3 = 0.0f;
   }
 }
 

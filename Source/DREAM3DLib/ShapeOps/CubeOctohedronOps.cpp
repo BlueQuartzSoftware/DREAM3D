@@ -125,7 +125,7 @@ float CubeOctohedronOps::radcur1(std::map<ArgName, float> args)
   {
     radcur1 = (volcur * 6.0) / (3 + (9 * Gvalue) - (9 * Gvalue * Gvalue) + (2 * Gvalue * Gvalue * Gvalue));
   }
-  radcur1 = powf(radcur1, 0.333333333333);
+  radcur1 = powf(radcur1, 0.333333333333f);
   radcur1 = radcur1 * 0.5f;
   return radcur1;
 }
@@ -142,22 +142,22 @@ float CubeOctohedronOps::inside(float axis1comp, float axis2comp, float axis3com
   axis1comp = axis1comp + 1.0;
   axis2comp = axis2comp + 1.0;
   axis3comp = axis3comp + 1.0;
-  float plane1comp = ((-axis1comp) + (-axis2comp) + (axis3comp) - ((-0.5 * Gvalue) + (-0.5 * Gvalue) + 2));
-  plane1comp = plane1comp / ((-1) + (-1) + (1) - ((-0.5 * Gvalue) + (-0.5 * Gvalue) + 2));
-  float plane2comp = ((axis1comp) + (-axis2comp) + (axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue) + 2));
-  plane2comp = plane2comp / ((1) + (-1) + (1) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue) + 2));
+  float plane1comp = ((-axis1comp) + (-axis2comp) + (axis3comp) - ((-0.5f * Gvalue) + (-0.5f * Gvalue) + 2));
+  plane1comp = plane1comp / ((-1) + (-1) + (1) - ((-0.5f * Gvalue) + (-0.5f * Gvalue) + 2));
+  float plane2comp = ((axis1comp) + (-axis2comp) + (axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5f * Gvalue) + 2));
+  plane2comp = plane2comp / ((1) + (-1) + (1) - ((2 - (0.5 * Gvalue)) + (-0.5f * Gvalue) + 2));
   float plane3comp = ((axis1comp) + (axis2comp) + (axis3comp) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue)) + 2));
   plane3comp = plane3comp / ((1) + (1) + (1) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue)) + 2)); 
-  float plane4comp = ((-axis1comp) + (axis2comp) + (axis3comp) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue)) + 2));
-  plane4comp = plane4comp / ((-1) + (1) + (1) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue)) + 2));
-  float plane5comp = ((-axis1comp) + (-axis2comp) + (-axis3comp) - ((-0.5 * Gvalue) + (-0.5 * Gvalue)));
-  plane5comp = plane5comp / ((-1) + (-1) + (-1) - ((-0.5 * Gvalue) + (-0.5 * Gvalue)));
-  float plane6comp = ((axis1comp) + (-axis2comp) + (-axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue)));
-  plane6comp = plane6comp / ((1) + (-1) + (-1) - ((2 - (0.5 * Gvalue)) + (-0.5 * Gvalue)));
+  float plane4comp = ((-axis1comp) + (axis2comp) + (axis3comp) - ((-0.5f * Gvalue) + (2 - (0.5 * Gvalue)) + 2));
+  plane4comp = plane4comp / ((-1) + (1) + (1) - ((-0.5f * Gvalue) + (2 - (0.5 * Gvalue)) + 2));
+  float plane5comp = ((-axis1comp) + (-axis2comp) + (-axis3comp) - ((-0.5f * Gvalue) + (-0.5f * Gvalue)));
+  plane5comp = plane5comp / ((-1) + (-1) + (-1) - ((-0.5f * Gvalue) + (-0.5f * Gvalue)));
+  float plane6comp = ((axis1comp) + (-axis2comp) + (-axis3comp) - ((2 - (0.5 * Gvalue)) + (-0.5f * Gvalue)));
+  plane6comp = plane6comp / ((1) + (-1) + (-1) - ((2 - (0.5 * Gvalue)) + (-0.5f * Gvalue)));
   float plane7comp = ((axis1comp) + (axis2comp) + (-axis3comp) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue))));
   plane7comp = plane7comp / ((1) + (1) + (-1) - ((2 - (0.5 * Gvalue)) + (2 - (0.5 * Gvalue))));
-  float plane8comp = ((-axis1comp) + (axis2comp) + (-axis3comp) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue))));
-  plane8comp = plane8comp / ((-1) + (1) + (-1) - ((-0.5 * Gvalue) + (2 - (0.5 * Gvalue))));
+  float plane8comp = ((-axis1comp) + (axis2comp) + (-axis3comp) - ((-0.5f * Gvalue) + (2 - (0.5 * Gvalue))));
+  plane8comp = plane8comp / ((-1) + (1) + (-1) - ((-0.5f * Gvalue) + (2 - (0.5 * Gvalue))));
   if(plane1comp < inside) inside = plane1comp; 
   if(plane2comp < inside) inside = plane2comp; 
   if(plane3comp < inside) inside = plane3comp; 

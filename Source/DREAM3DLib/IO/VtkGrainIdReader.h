@@ -131,7 +131,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
        {
          T tmp;
          T t2;
-         for (size_t x = 0; x < totalSize; ++x)
+         for (int64_t x = 0; x < totalSize; ++x)
          {
            if(x == 1)
            {

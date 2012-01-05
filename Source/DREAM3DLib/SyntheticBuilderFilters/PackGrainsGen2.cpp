@@ -326,10 +326,10 @@ void PackGrainsGen2::execute()
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-    xgrains = int(powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0/3.0))+1);
+    xgrains = int(powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
     ygrains = int(xgrains*(sizey/sizex)+1);
     zgrains = int(xgrains*(sizez/sizex)+1);
-    factor = 0.25 * (1.0 - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
+    factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
     while (currentvol < ((1+factor) * totalvol))
     {
       iter++;
@@ -346,7 +346,7 @@ void PackGrainsGen2::execute()
       generate_grain(gid, phase, Seed);
       currentsizedisterror = check_sizedisterror(gid, -1000);
       change = (currentsizedisterror) - (oldsizedisterror);
-      if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
+      if(change > 0 || currentsizedisterror > (1.0-(iter*0.001f)))
       {
 		m->m_Grains[gid]->active = 1;
 		oldsizedisterror = currentsizedisterror;
@@ -370,9 +370,9 @@ void PackGrainsGen2::execute()
     {
       neighbordist[i][j].resize(3);
       simneighbordist[i][j].resize(3);
-      neighbordist[i][j][0] = neighborparams[phase][j][0] * powf(0.5, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
-      neighbordist[i][j][1] = neighborparams[phase][j][0] * powf(1.5, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
-      neighbordist[i][j][2] = neighborparams[phase][j][0] * powf(2.5, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
+      neighbordist[i][j][0] = neighborparams[phase][j][0] * powf(0.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
+      neighbordist[i][j][1] = neighborparams[phase][j][0] * powf(1.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
+      neighbordist[i][j][2] = neighborparams[phase][j][0] * powf(2.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
     }
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
@@ -385,9 +385,9 @@ void PackGrainsGen2::execute()
   fillingerror = 1;
   for (size_t i = 1; i < numgrains; i++)
   {
-    xc = sizex / 2.0;
-    yc = sizey / 2.0;
-    zc = sizez / 2.0;
+    xc = sizex / 2.0f;
+    yc = sizey / 2.0f;
+    zc = sizez / 2.0f;
     m->m_Grains[i]->centroidx = xc;
     m->m_Grains[i]->centroidy = yc;
     m->m_Grains[i]->centroidz = zc;

@@ -47,7 +47,7 @@
 #define M_PI_OVER_4   0.785398163397448
 namespace Detail
 {
-  static const float DegToRads = M_PI/180.0f;
+  static const float DegToRads = static_cast<float>(M_PI/180.0f);
 }
 
 /**

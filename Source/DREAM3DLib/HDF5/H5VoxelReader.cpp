@@ -36,6 +36,9 @@
 
 #include "H5VoxelReader.h"
 
+#include <limits>
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -128,7 +131,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
   hsize_t count[2];
   hsize_t offset[2];
   herr_t status;
-  hsize_t rankc = 1;
+  int rankc = 1;
 
   dataset = H5Dopen(scalarGid, DREAM3D::VTK::GrainIdScalarName.c_str(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset); /* Get filespace handle first. */
@@ -192,7 +195,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   // Check to make sure we can read the amount of data requested. On a 32 bit
   // system size_t is a 32 bit unsigned value. On a 64 bit system it will be
   // a 64 bit unsigend number
-  if (totalpoints * 3 > std::numeric_limits<size_t>::max)
+  if (totalpoints * 3 > static_cast<int64_t>(std::numeric_limits<size_t>::max()) )
   {
     setErrorMessage("Trying to read more data than this architecture can handle.");
     return -400;
