@@ -158,11 +158,6 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -174,7 +169,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
                   float* euler3s,
                   std::vector<Ebsd::CrystalStructure> &crystruct,
                   std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
-                  int totalpoints)
+                  int64_t totalpoints)
 {
   int err = 0;
   if(m_FileName.empty() == true)
@@ -193,6 +188,15 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
 
   OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
+
+  // Check to make sure we can read the amount of data requested. On a 32 bit
+  // system size_t is a 32 bit unsigned value. On a 64 bit system it will be
+  // a 64 bit unsigend number
+  if (totalpoints * 3 > std::numeric_limits<size_t>::max)
+  {
+    setErrorMessage("Trying to read more data than this architecture can handle.");
+    return -400;
+  }
 
   // Allocate an Array for the Euler Data with is nRows X 3 Columns
   DataArray<float>::Pointer fData = DataArray<float>::CreateArray(0);
