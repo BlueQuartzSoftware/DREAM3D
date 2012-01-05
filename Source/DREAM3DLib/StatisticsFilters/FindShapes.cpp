@@ -385,9 +385,14 @@ void FindShapes::find_axes()
 	  if(value < -1) value = -1;
       theta = acos(value);
     }
-    r1 = 2 * powf(r, 0.33333333333) * cosf(theta / 3) - (b / (3 * a));
-    r2 = -powf(r, 0.33333333333) * (cosf(theta / 3) - (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
-    r3 = -powf(r, 0.33333333333) * (cosf(theta / 3) + (1.7320508 * sinf(theta / 3))) - (b / (3 * a));
+    float const1 = powf(r, 0.33333333333f);
+    float const2 = cosf(theta / 3.0f);
+    float const3 = b / (3.0f * a);
+    float const4 = 1.7320508f * sinf(theta / 3.0f);
+
+    r1 = 2 * const1 * const2 - (const3);
+    r2 = -const1 * (const2 - (const4)) - const3;
+    r3 = -const1 * (const2 + (const4)) - const3;
     m->m_Grains[i]->radius1 = r1;
     m->m_Grains[i]->radius2 = r2;
     m->m_Grains[i]->radius3 = r3;
@@ -419,14 +424,14 @@ void FindShapes::find_axes2D()
     Ixx = grainmoments[i*6+0];
     Iyy = grainmoments[i*6+1];
     Ixy = grainmoments[i*6+2];
-    float r1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    float r2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    float preterm = 4 / 3.1415926535897;
-    preterm = powf(preterm, 0.25);
+    float r1 = (Ixx + Iyy) / 2.0f + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
+    float r2 = (Ixx + Iyy) / 2.0f - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
+    float preterm = 4 / M_PI;
+    preterm = powf(preterm, 0.25f);
     float postterm1 = r1 * r1 * r1 / r2;
     float postterm2 = r2 * r2 * r2 / r1;
-    postterm1 = powf(postterm1, 0.125);
-    postterm2 = powf(postterm2, 0.125);
+    postterm1 = powf(postterm1, 0.125f);
+    postterm2 = powf(postterm2, 0.125f);
     r1 = preterm * postterm1;
     r2 = preterm * postterm2;
     m->m_Grains[i]->radius1 = r1;
@@ -474,9 +479,9 @@ void FindShapes::find_axiseulers()
     e[0][0] = radius1;
     e[1][0] = radius2;
     e[2][0] = radius3;
-    bmat[0][0] = 0.0000001;
-    bmat[1][0] = 0.0000001;
-    bmat[2][0] = 0.0000001;
+    bmat[0][0] = 0.0000001f;
+    bmat[1][0] = 0.0000001f;
+    bmat[2][0] = 0.0000001f;
     for (int j = 0; j < 3; j++)
     {
       uber[0][0] = Ixx - e[j][0];
@@ -541,6 +546,13 @@ void FindShapes::find_axiseulers()
         q = uberbelim[p][0];
         vect[j][p] = q;
       }
+      for (int d = 0; d < 3; d++)
+      {
+        delete uberelim[d];
+        delete uberbelim[d];
+      }
+      delete uberelim;
+      delete uberbelim;
     }
     float n1x = vect[0][0];
     float n1y = vect[0][1];
@@ -588,24 +600,24 @@ void FindShapes::find_axiseulers2D()
     float Ixx = grainmoments[i*6+0];
     float Iyy = grainmoments[i*6+1];
     float Ixy = grainmoments[i*6+2];
-    float I1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    float I2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float I1 = (Ixx + Iyy) / 2.0f + sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float I2 = (Ixx + Iyy) / 2.0f - sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     float n1x = (Ixx - I1) / Ixy;
     float n1y = 1;
     float n2x = (Ixx - I2) / Ixy;
     float n2y = 1;
-    float norm1 = sqrt((n1x * n1x + n1y * n1y));
-    float norm2 = sqrt((n2x * n2x + n2y * n2y));
+    float norm1 = sqrtf((n1x * n1x + n1y * n1y));
+    float norm2 = sqrtf((n2x * n2x + n2y * n2y));
     n1x = n1x / norm1;
     n1y = n1y / norm1;
     n2x = n2x / norm2;
     n2y = n2y / norm2;
     float cosine1 = n1x;
-    float ea1 = acos(cosine1);
+    float ea1 = acosf(cosine1);
     if (ea1 > m_pi) ea1 = ea1 - m_pi;
     m->m_Grains[i]->axiseuler1 = ea1;
-    m->m_Grains[i]->axiseuler2 = 0.0;
-    m->m_Grains[i]->axiseuler3 = 0.0;
+    m->m_Grains[i]->axiseuler2 = 0.0f;
+    m->m_Grains[i]->axiseuler3 = 0.0f;
   }
 }
 

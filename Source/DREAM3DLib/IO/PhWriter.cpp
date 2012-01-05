@@ -98,11 +98,19 @@ int PhWriter::writeFile()
     }
   }
 
-  int dims[3];
-  dims[0] = m->getXPoints();
-  dims[1] = m->getYPoints();
-  dims[2] = m->getZPoints();
-  int totalpoints = dims[0] * dims[1] * dims[2];
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+  };
+  int64_t totalpoints = dims[0] * dims[1] * dims[2];
   // Change the name of the input filename for outout
   // std::vector<std::string> tokens;
   // std::string delimeters = "."; // Only a period

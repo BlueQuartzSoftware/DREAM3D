@@ -105,24 +105,37 @@ class FindEuclideanMap : public AbstractFilter
 
       int nearestneighbordistance = 0;
       int count = 1;
-//      int good = 1;
-//      double x, y, z;
+
+      size_t udims[3] = {0,0,0};
+      m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+      typedef int32_t DimType;
+#else
+      typedef int64_t DimType;
+#endif
+      DimType dims[3] = {
+        static_cast<DimType>(udims[0]),
+        static_cast<DimType>(udims[0]),
+        static_cast<DimType>(udims[0]),
+      };
+
       int neighpoint;
       int nearestneighbor;
-      int neighbors[6];
-      int xpoints = m->getXPoints();
-      int ypoints = m->getYPoints();
-      int zpoints = m->getZPoints();
+ //     int dims[0] = m->getXPoints();
+ //     int dims[1] = m->getYPoints();
+ //     int dims[2] = m->getZPoints();
       double resx = m->getXRes();
       double resy = m->getYRes();
       double resz = m->getZRes();
 
-      neighbors[0] = -m->getXPoints() * m->getYPoints();
-      neighbors[1] = -m->getXPoints();
+      int neighbors[6];
+      neighbors[0] = -dims[0]*dims[1];
+      neighbors[1] = -dims[0];
       neighbors[2] = -1;
       neighbors[3] = 1;
-      neighbors[4] = m->getXPoints();
-      neighbors[5] = m->getXPoints() * m->getYPoints();
+      neighbors[4] = dims[0];
+      neighbors[5] = dims[0]*dims[1];
+
       int* voxel_NearestNeighbor = new int[totalPoints];
       double* voxel_NearestNeighborDistance = new double[totalPoints];
       nearestneighbordistance = 0;
@@ -139,25 +152,25 @@ class FindEuclideanMap : public AbstractFilter
         count = 0;
         nearestneighbordistance++;
 
-        for (int z = 0; z < zpoints; ++z)
+        for (int z = 0; z < dims[2]; ++z)
         {
           mask[0] = mask[5] = 1;
           if (z == 0 ) { mask[0] = 0; }
-          if (z == zpoints - 1) { mask[5] = 0; }
+          if (z == dims[2] - 1) { mask[5] = 0; }
 
-          for (int y = 0; y < ypoints; ++y)
+          for (int y = 0; y < dims[1]; ++y)
           {
             mask[1] = mask[4] = 1;
             if (y == 0 ) { mask[1] = 0; }
-            if (y == ypoints - 1) { mask[4] = 0; }
+            if (y == dims[1] - 1) { mask[4] = 0; }
 
-            for (int x = 0; x < xpoints; ++x)
+            for (int x = 0; x < dims[0]; ++x)
             {
               mask[2] = mask[3] = 1;
               if (x == 0 ) { mask[2] = 0; }
-              if (x == xpoints - 1) { mask[3] = 0; }
+              if (x == dims[0] - 1) { mask[3] = 0; }
 
-              i = (z * xpoints*ypoints) + (y*xpoints) + x;
+              i = (z * dims[0]*dims[1]) + (y*dims[0]) + x;
               if (voxel_NearestNeighbor[i] == -1)
               {
                 count++;
@@ -189,12 +202,12 @@ class FindEuclideanMap : public AbstractFilter
       for (int j = 0; j < (totalPoints); j++)
       {
         nearestneighbor = voxel_NearestNeighbor[j];
-        x1 = resx * double(j % xpoints); // find_xcoord(j);
-        y1 = resy * double((j / xpoints) % ypoints);// find_ycoord(j);
-        z1 = resz * double(j / (xpoints * ypoints)); // find_zcoord(j);
-        x2 = resx * double(nearestneighbor % xpoints); // find_xcoord(nearestneighbor);
-        y2 = resy * double((nearestneighbor / xpoints) % ypoints); // find_ycoord(nearestneighbor);
-        z2 = resz * double(nearestneighbor / (xpoints * ypoints)); // find_zcoord(nearestneighbor);
+        x1 = resx * double(j % dims[0]); // find_xcoord(j);
+        y1 = resy * double((j / dims[0]) % dims[1]);// find_ycoord(j);
+        z1 = resz * double(j / (dims[0] * dims[1])); // find_zcoord(j);
+        x2 = resx * double(nearestneighbor % dims[0]); // find_xcoord(nearestneighbor);
+        y2 = resy * double((nearestneighbor / dims[0]) % dims[1]); // find_ycoord(nearestneighbor);
+        z2 = resz * double(nearestneighbor / (dims[0] * dims[1])); // find_zcoord(nearestneighbor);
         dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
         dist = sqrt(dist);
         voxel_NearestNeighborDistance[j] = dist + (0.5 * resx);

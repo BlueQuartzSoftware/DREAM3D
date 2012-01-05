@@ -40,7 +40,7 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
 
-	const static float m_pi = M_PI;
+	const static float m_pi = static_cast<float>(M_PI);
 	const static float two_pi = 2.0f * m_pi;
 	const static float recip_pi = 1.0f/m_pi;
 	const static float pi_over_180 = m_pi/180.0f;
@@ -49,35 +49,35 @@
 
 	const float threesixty_over_pi = 360.0f/m_pi;
 	const float oneeighty_over_pi = 180.0f/m_pi;
-	const float sqrt_two = powf(2.0, 0.5);
+	const float sqrt_two = powf(2.0f, 0.5f);
 
-	const float acos_neg_one = acosf(-1.0);
-	const float acos_pos_one = acosf(1.0);
+	const float acos_neg_one = acosf(-1.0f);
+	const float acos_pos_one = acosf(1.0f);
 	const float sin_wmin_neg_1_over_2 = sinf(acos_neg_one/2.0);
 	const float sin_wmin_pos_1_over_2 = sinf(acos_pos_one/2.0);
   const float sin_of_acos_neg_1 = sinf(acos_neg_one);
   const float sin_of_acos_pos_1 = sinf(acos_pos_one);
 
-  const float recip_sin_of_acos_neg_1 = 1.0/sin_of_acos_neg_1;
-  const float recip_sin_of_acos_pos_1 = 1.0/sin_of_acos_pos_1;
+  const float recip_sin_of_acos_neg_1 = 1.0f/sin_of_acos_neg_1;
+  const float recip_sin_of_acos_pos_1 = 1.0f/sin_of_acos_pos_1;
 
-	const static float SinOfHalf = sinf(0.5);
-	const static float CosOfHalf = cosf(0.5);
-	const static float SinOfZero = sinf(0.0);
-	const static float CosOfZero = cosf(0.0);
+	const static float SinOfHalf = sinf(0.5f);
+	const static float CosOfHalf = cosf(0.5f);
+	const static float SinOfZero = sinf(0.0f);
+	const static float CosOfZero = cosf(0.0f);
 
-  static const float CubicSlipSystems[12][6] = {{1,1,1,0,1,-1},
-												{1,1,1,1,0,-1},
-												{1,1,1,1,-1,0},
-												{1,1,-1,1,-1,0},
-												{1,1,-1,1,0,1},
-												{1,1,-1,0,1,1},
-												{1,-1,1,1,1,0},
-												{1,-1,1,0,1,1},
-												{1,-1,1,1,0,-1},
-												{-1,1,1,1,1,0},
-												{-1,1,1,1,0,1},
-												{-1,1,1,0,1,-1}};
+  static const float CubicSlipSystems[12][6] = {{1.0f,1.0f,1.0f,0.0f,1.0f,-1.0f},
+												{1.0f,1.0f,1.0f,1.0f,0.0f,-1.0f},
+												{1.0f,1.0f,1.0f,1.0f,-1.0f,0.0f},
+												{1.0f,1.0f,-1.0f,1.0f,-1.0f,0.0f},
+												{1.0f,1.0f,-1.0f,1.0f,0.0f,1.0f},
+												{1.0f,1.0f,-1.0f,0.0f,1.0f,1.0f},
+												{1.0f,-1.0f,1.0f,1.0f,1.0f,0.0f},
+												{1.0f,-1.0f,1.0f,0.0f,1.0f,1.0f},
+												{1.0f,-1.0f,1.0f,1.0f,0.0f,-1.0f},
+												{-1.0f,1.0f,1.0f,1.0f,1.0f,0.0f},
+												{-1.0f,1.0f,1.0f,1.0f,0.0f,1.0f},
+												{-1.0f,1.0f,1.0f,0.0f,1.0f,-1.0f}};
 
 
 // -----------------------------------------------------------------------------
@@ -156,7 +156,7 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
   n2 = n2/denom;
   n3 = n3/denom;
   float newangle = 0;
-  float angle = 180*atan(n2/n1) * recip_pi;
+  float angle = 180*atanf(n2/n1) * recip_pi;
   if(angle > 30.0)
   {
   if(int(angle/30)%2 == 0)
@@ -359,7 +359,7 @@ int OrientationMath::_calcODFBin(float dim[3], float bins[3], float r1, float r2
 
 void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
-  float degtorad = m_pi / 180.0;
+  float degtorad = m_pi / 180.0f;
   float denom;
 
   w = w * degtorad;
@@ -377,7 +377,7 @@ void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n
 
 void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
-  float degtorad = m_pi / 180.0;
+  float degtorad = static_cast<float>(m_pi) / 180.0f;
   float denom;
 
   w = w * degtorad;
@@ -386,10 +386,11 @@ void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, floa
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  if(denom == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  r1 = n1 * tanf(w/2.0);
-  r2 = n2 * tanf(w/2.0);
-  r3 = n3 * tanf(w/2.0);
+  if(denom == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+  float const1 = tanf(w/2.0f);
+  r1 = n1 * const1;
+  r2 = n2 * const1;
+  r3 = n3 * const1;
 }
 
 
@@ -402,11 +403,12 @@ void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
   r1 = r1 / rmag;
   r2 = r2 / rmag;
   r3 = r3 / rmag;
-  if(rmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
+  if(rmag == 0.0) r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   w = 2.0*atan(rmag);
-  r1 = r1 * powf(((3.0 / 4.0) * (w - sinf(w))), (1.0 / 3.0));
-  r2 = r2 * powf(((3.0 / 4.0) * (w - sinf(w))), (1.0 / 3.0));
-  r3 = r3 * powf(((3.0 / 4.0) * (w - sinf(w))), (1.0 / 3.0));
+  float const1 = powf(((3.0f / 4.0f) * (w - sinf(w))), (1.0f / 3.0f));
+  r1 = r1 * const1;
+  r2 = r2 * const1;
+  r3 = r3 * const1;
 }
 
 
@@ -421,9 +423,10 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   r3 = r3 / hmag;
   if(hmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
   w = powf((8*hmag*hmag*hmag),(1.0/3.0));
-  r1 = r1 * tanf(w/2.0);
-  r2 = r2 * tanf(w/2.0);
-  r3 = r3 * tanf(w/2.0);
+  float const1 = tanf(w/2.0f);
+  r1 = r1 * const1;
+  r2 = r2 * const1;
+  r3 = r3 * const1;
 }
 
 
@@ -437,7 +440,7 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
   n1 = r1 / rmag;
   n2 = r2 / rmag;
   n3 = r3 / rmag;
-  if(rmag == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  if(rmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
 }
 
 void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
@@ -449,11 +452,12 @@ void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
   r1 = r1 / rmag;
   r2 = r2 / rmag;
   r3 = r3 / rmag;
-  if(rmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
-  w = 2.0*atan(rmag);
-  q[1] = r1 * sinf(w/2.0);
-  q[2] = r2 * sinf(w/2.0);
-  q[3] = r3 * sinf(w/2.0);
+  if(rmag == 0.0) r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
+  w = 2.0f*atan(rmag);
+  float const1 = sinf(w/2.0f);
+  q[1] = r1 * const1;
+  q[2] = r2 * const1;
+  q[3] = r3 * const1;
   q[4] = cosf(w/2.0);
 }
 
@@ -467,11 +471,12 @@ void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
   n1 = q[1] / qmag;
   n2 = q[2] / qmag;
   n3 = q[3] / qmag;
-  if(qmag == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  if(qmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   w = 2.0*acos(q[4]);
-  r1 = n1 * tanf(w * 0.5f);
-  r2 = n2 * tanf(w * 0.5f);
-  r3 = n3 * tanf(w * 0.5f);
+  float const1 = tanf(w * 0.5f);
+  r1 = n1 * const1;
+  r2 = n2 * const1;
+  r3 = n3 * const1;
 }
 
 void OrientationMath::QuattoEuler(float *q, float &ea1, float &ea2, float &ea3)
@@ -483,7 +488,7 @@ void OrientationMath::QuattoEuler(float *q, float &ea1, float &ea2, float &ea3)
     ea3=(sum-diff);
     tmp=(q[3]*q[3])+(q[4]*q[4]);
     tmp = sqrt(tmp);
-    if(tmp > 1.0) tmp=1.0;
+    if(tmp > 1.0f) tmp=1.0f;
     ea2=2*acos(tmp);
 }
 void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
@@ -532,7 +537,7 @@ void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], flo
 {
   float g1[3][3];
   float g2[3][3];
-  float maxssap = 0;
+  float maxssap = 0.0f;
   float h1, k1, l1, u1, v1, w1;
   float h2, k2, l2, u2, v2, w2;
   float denomhkl1, denomhkl2, denomuvw1, denomuvw2;
@@ -562,8 +567,8 @@ void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], flo
   u1 = CubicSlipSystems[ss1][3]*g1[0][0]+CubicSlipSystems[ss1][4]*g1[1][0]+CubicSlipSystems[ss1][5]*g1[2][0];
   v1 = CubicSlipSystems[ss1][3]*g1[0][1]+CubicSlipSystems[ss1][4]*g1[1][1]+CubicSlipSystems[ss1][5]*g1[2][1];
   w1 = CubicSlipSystems[ss1][3]*g1[0][2]+CubicSlipSystems[ss1][4]*g1[1][2]+CubicSlipSystems[ss1][5]*g1[2][2];
-  denomhkl1 = sqrt((h1*h1+k1*k1+l1*l1));
-  denomuvw1 = sqrt((u1*u1+v1*v1+w1*w1));
+  denomhkl1 = sqrtf((h1*h1+k1*k1+l1*l1));
+  denomuvw1 = sqrtf((u1*u1+v1*v1+w1*w1));
   for(int i=0;i<12;i++)
   {
     h2 = CubicSlipSystems[i][0]*g2[0][0]+CubicSlipSystems[i][1]*g2[1][0]+CubicSlipSystems[i][2]*g2[2][0];
@@ -572,8 +577,8 @@ void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], flo
     u2 = CubicSlipSystems[i][3]*g2[0][0]+CubicSlipSystems[i][4]*g2[1][0]+CubicSlipSystems[i][5]*g2[2][0];
     v2 = CubicSlipSystems[i][3]*g2[0][1]+CubicSlipSystems[i][4]*g2[1][1]+CubicSlipSystems[i][5]*g2[2][1];
     w2 = CubicSlipSystems[i][3]*g2[0][2]+CubicSlipSystems[i][4]*g2[1][2]+CubicSlipSystems[i][5]*g2[2][2];
-    denomhkl2 = sqrt((h2*h2+k2*k2+l2*l2));
-    denomuvw2 = sqrt((u2*u2+v2*v2+w2*w2));
+    denomhkl2 = sqrtf((h2*h2+k2*k2+l2*l2));
+    denomuvw2 = sqrtf((u2*u2+v2*v2+w2*w2));
     planemisalignment = fabs((h1*h2+k1*k2+l1*l2)/(denomhkl1*denomhkl2));
     directionmisalignment = fabs((u1*u2+v1*v2+w1*w2)/(denomuvw1*denomuvw2));
     ssap = planemisalignment*directionmisalignment;
