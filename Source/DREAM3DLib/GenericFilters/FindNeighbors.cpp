@@ -93,13 +93,27 @@ void FindNeighbors::execute()
     return;
   }
 
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+  };
+
   int neighpoints[6];
-  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
-  neighpoints[1] = -m->getXPoints();
+  neighpoints[0] = -dims[0]*dims[1];
+  neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->getXPoints();
-  neighpoints[5] = (m->getXPoints() * m->getYPoints());
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0]*dims[1];
+
   float column, row, plane;
   int grain;
   size_t nnum;

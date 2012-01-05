@@ -149,8 +149,20 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 {
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
-  size_t dims[3] = {0,0,0};
-  m->getDimensions(dims);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+
+  DimType dims[3] = {
+      static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[0]),
+  };
+
   float dist;
   float inside = -1;
   float coatinginside = -1;
@@ -301,9 +313,18 @@ void  PlacePrecipitates::fillin_precipitates()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  size_t dims[3] =
-  { 0, 0, 0 };
-  m->getDimensions(dims);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+  };
 
   std::vector<int> neighs;
   std::vector<int> remove;
