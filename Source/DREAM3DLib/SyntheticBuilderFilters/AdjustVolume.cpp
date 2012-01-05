@@ -84,10 +84,20 @@ void AdjustVolume::execute()
   int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
 
-  size_t dims[3] = {0,0,0};
-  m->getDimensions(dims);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+  };
 
-  int neighpoints[6];
+  DimType neighpoints[6];
   neighpoints[0] = -dims[0]*dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -207,7 +217,7 @@ void AdjustVolume::execute()
     for(size_t i=1;i<m->m_Grains.size();i++)
     {
       index = i;
-      diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
+      diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
       m->m_Grains[index]->equivdiameter = diam;
     }
     PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
@@ -238,7 +248,7 @@ void AdjustVolume::execute()
       for(size_t i=1;i<m->m_Grains.size();i++)
       {
         index = i;
-        diam = 2.0*powf((gsizes[index]*voxtovol),(1.0/3.0));
+        diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
         m->m_Grains[index]->equivdiameter = diam;
       }
     }
