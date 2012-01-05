@@ -80,6 +80,152 @@ class ParallelRenumberGrains
 #endif
 
 
+class FindEuclideanMap : public AbstractFilter
+{
+    DataContainer* m;
+    int loop;
+
+  public:
+    /**
+     *
+     * @param recon
+     */
+    FindEuclideanMap(DataContainer* datacontainer, int l) :
+      m(datacontainer),
+      loop (l)
+    {}
+
+    virtual ~FindEuclideanMap() {}
+
+    void operator()() const
+    {
+      std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
+      int64_t totalPoints = m->totalPoints();
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), nearestneighbors);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), nearestneighbordistances);
+
+      int nearestneighbordistance = 0;
+      int count = 1;
+
+      size_t udims[3] = {0,0,0};
+      m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+      typedef int32_t DimType;
+#else
+      typedef int64_t DimType;
+#endif
+      DimType dims[3] = {
+        static_cast<DimType>(udims[0]),
+        static_cast<DimType>(udims[0]),
+        static_cast<DimType>(udims[0]),
+      };
+
+      int neighpoint;
+      int nearestneighbor;
+ //     int dims[0] = m->getXPoints();
+ //     int dims[1] = m->getYPoints();
+ //     int dims[2] = m->getZPoints();
+      double resx = m->getXRes();
+      double resy = m->getYRes();
+      double resz = m->getZRes();
+
+      int neighbors[6];
+      neighbors[0] = -dims[0]*dims[1];
+      neighbors[1] = -dims[0];
+      neighbors[2] = -1;
+      neighbors[3] = 1;
+      neighbors[4] = dims[0];
+      neighbors[5] = dims[0]*dims[1];
+
+      int* voxel_NearestNeighbor = new int[totalPoints];
+      double* voxel_NearestNeighborDistance = new double[totalPoints];
+      nearestneighbordistance = 0;
+      for (int a = 0; a < (totalPoints); ++a)
+      {
+        voxel_NearestNeighbor[a] = nearestneighbors[a*3 + loop];
+        voxel_NearestNeighborDistance[a] = nearestneighbordistances[a*3 + loop];
+      }
+      count = 1;
+      int i;
+      char mask[6] = {0,0,0,0,0,0};
+      while (count != 0)
+      {
+        count = 0;
+        nearestneighbordistance++;
+
+        for (int z = 0; z < dims[2]; ++z)
+        {
+          mask[0] = mask[5] = 1;
+          if (z == 0 ) { mask[0] = 0; }
+          if (z == dims[2] - 1) { mask[5] = 0; }
+
+          for (int y = 0; y < dims[1]; ++y)
+          {
+            mask[1] = mask[4] = 1;
+            if (y == 0 ) { mask[1] = 0; }
+            if (y == dims[1] - 1) { mask[4] = 0; }
+
+            for (int x = 0; x < dims[0]; ++x)
+            {
+              mask[2] = mask[3] = 1;
+              if (x == 0 ) { mask[2] = 0; }
+              if (x == dims[0] - 1) { mask[3] = 0; }
+
+              i = (z * dims[0]*dims[1]) + (y*dims[0]) + x;
+              if (voxel_NearestNeighbor[i] == -1)
+              {
+                count++;
+                for (int j = 0; j < 6; j++)
+                {
+                  neighpoint = i + neighbors[j];
+                  if (mask[j] == 1)
+                  {
+                    if (voxel_NearestNeighborDistance[neighpoint] != -1.0)
+                    {
+                      voxel_NearestNeighbor[i] = voxel_NearestNeighbor[neighpoint];
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        for (int j = 0; j < (totalPoints); ++j)
+        {
+          if (voxel_NearestNeighbor[j] != -1 && voxel_NearestNeighborDistance[j] == -1)
+          {
+            voxel_NearestNeighborDistance[j] = nearestneighbordistance;
+          }
+        }
+      }
+      double x1, x2, y1, y2, z1, z2;
+      double dist;
+      for (int j = 0; j < (totalPoints); j++)
+      {
+        nearestneighbor = voxel_NearestNeighbor[j];
+        x1 = resx * double(j % dims[0]); // find_xcoord(j);
+        y1 = resy * double((j / dims[0]) % dims[1]);// find_ycoord(j);
+        z1 = resz * double(j / (dims[0] * dims[1])); // find_zcoord(j);
+        x2 = resx * double(nearestneighbor % dims[0]); // find_xcoord(nearestneighbor);
+        y2 = resy * double((nearestneighbor / dims[0]) % dims[1]); // find_ycoord(nearestneighbor);
+        z2 = resz * double(nearestneighbor / (dims[0] * dims[1])); // find_zcoord(nearestneighbor);
+        dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
+        dist = sqrt(dist);
+        voxel_NearestNeighborDistance[j] = dist + (0.5 * resx);
+      }
+      for (int a = 0; a < (totalPoints); ++a)
+      {
+        nearestneighbors[a*3 + loop] = voxel_NearestNeighbor[a];
+        nearestneighbordistances[a*3 + loop] = voxel_NearestNeighborDistance[a];
+      }
+      delete[] voxel_NearestNeighbor;
+      delete[] voxel_NearestNeighborDistance;
+    }
+
+
+};
+
+
 #if 0
 class ParallelFindKernels
 {

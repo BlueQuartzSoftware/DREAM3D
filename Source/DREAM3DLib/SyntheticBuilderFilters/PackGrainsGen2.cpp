@@ -222,6 +222,19 @@ void PackGrainsGen2::execute()
 
   initializeAttributes();
 
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
  // float change1, change2;
   float change;
   int phase;
@@ -314,10 +327,10 @@ void PackGrainsGen2::execute()
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-    xgrains = int(powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0/3.0))+1);
+    xgrains = int(powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
     ygrains = int(xgrains*(sizey/sizex)+1);
     zgrains = int(xgrains*(sizez/sizex)+1);
-    factor = 0.25 * (1.0 - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
+    factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
     while (currentvol < ((1+factor) * totalvol))
     {
       iter++;
@@ -334,7 +347,7 @@ void PackGrainsGen2::execute()
       generate_grain(gid, phase, Seed);
       currentsizedisterror = check_sizedisterror(gid, -1000);
       change = (currentsizedisterror) - (oldsizedisterror);
-      if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
+      if(change > 0 || currentsizedisterror > (1.0-(iter*0.001f)))
       {
 		m->m_Grains[gid]->active = 1;
 		oldsizedisterror = currentsizedisterror;
@@ -358,9 +371,9 @@ void PackGrainsGen2::execute()
     {
       neighbordist[i][j].resize(3);
       simneighbordist[i][j].resize(3);
-      neighbordist[i][j][0] = neighborparams[phase][j][0] * powf(0.5, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
-      neighbordist[i][j][1] = neighborparams[phase][j][0] * powf(1.5, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
-      neighbordist[i][j][2] = neighborparams[phase][j][0] * powf(2.5, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
+      neighbordist[i][j][0] = neighborparams[phase][j][0] * powf(0.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
+      neighbordist[i][j][1] = neighborparams[phase][j][0] * powf(1.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
+      neighbordist[i][j][2] = neighborparams[phase][j][0] * powf(2.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
     }
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
@@ -373,9 +386,9 @@ void PackGrainsGen2::execute()
   fillingerror = 1;
   for (size_t i = 1; i < numgrains; i++)
   {
-    xc = sizex / 2.0;
-    yc = sizey / 2.0;
-    zc = sizez / 2.0;
+    xc = sizex / 2.0f;
+    yc = sizey / 2.0f;
+    zc = sizez / 2.0f;
     m->m_Grains[i]->centroidx = xc;
     m->m_Grains[i]->centroidy = yc;
     m->m_Grains[i]->centroidz = zc;
@@ -383,9 +396,9 @@ void PackGrainsGen2::execute()
     fillingerror = check_fillingerror(i,-1000);
     for (int iter = 0; iter < 10; iter++)
     {
-      xc = rg.genrand_res53() * (m->getXPoints() * m->getXRes());
-      yc = rg.genrand_res53() * (m->getYPoints() * m->getYRes());
-      zc = rg.genrand_res53() * (m->getZPoints() * m->getZRes());
+      xc = rg.genrand_res53() * (dims[0] * m->getXRes());
+      yc = rg.genrand_res53() * (dims[1] * m->getYRes());
+      zc = rg.genrand_res53() * (dims[2] * m->getZRes());
       oldxc = m->m_Grains[i]->centroidx;
       oldyc = m->m_Grains[i]->centroidy;
       oldzc = m->m_Grains[i]->centroidz;
@@ -423,9 +436,9 @@ void PackGrainsGen2::execute()
       if(randomgrain == 0) randomgrain = 1;
       if(randomgrain == numgrains) randomgrain = numgrains - 1;
       Seed++;
-      xc = rg.genrand_res53() * (m->getXPoints() * m->getXRes());
-      yc = rg.genrand_res53() * (m->getYPoints() * m->getYRes());
-      zc = rg.genrand_res53() * (m->getZPoints() * m->getZRes());
+      xc = rg.genrand_res53() * (dims[0] * m->getXRes());
+      yc = rg.genrand_res53() * (dims[1] * m->getYRes());
+      zc = rg.genrand_res53() * (dims[2] * m->getZRes());
       oldxc = m->m_Grains[randomgrain]->centroidx;
       oldyc = m->m_Grains[randomgrain]->centroidy;
       oldzc = m->m_Grains[randomgrain]->centroidz;
@@ -647,9 +660,22 @@ void PackGrainsGen2::initializeAttributes()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  sizex = m->getXPoints() * m->getXRes();
-  sizey = m->getYPoints() * m->getYRes();
-  sizez = m->getZPoints() * m->getZRes();
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0])
+  };
+
+  sizex = dims[0] * m->getXRes();
+  sizey = dims[1] * m->getYRes();
+  sizez = dims[2] * m->getZRes();
   totalvol = sizex*sizey*sizez;
 
 
@@ -1278,13 +1304,27 @@ void PackGrainsGen2::assign_voxels()
 {
   DataContainer* m = getDataContainer();
   int index;
-  int neighpoints[6];
-  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
-  neighpoints[1] = -m->getXPoints();
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+  DimType neighpoints[6];
+  neighpoints[0] = -dims[0]*dims[1];
+  neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->getXPoints();
-  neighpoints[5] = (m->getXPoints() * m->getYPoints());
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0]*dims[1];
+
   int oldname;
   size_t column, row, plane;
   float inside;
@@ -1294,10 +1334,6 @@ void PackGrainsGen2::assign_voxels()
   float x, y, z;
   size_t xmin, xmax, ymin, ymax, zmin, zmax;
   int64_t totpoints = m->totalPoints();
-  size_t dims[3] = {0,0,0};
-  m->getDimensions(dims);
-
-
   gsizes.resize(m->m_Grains.size());
 
   for (size_t i = 1; i < m->m_Grains.size(); i++)
@@ -1459,7 +1495,7 @@ void PackGrainsGen2::assign_voxels()
 void PackGrainsGen2::assign_gaps()
 {
   DataContainer* m = getDataContainer();
-  int totpoints = m->totalPoints();
+  int64_t totpoints = m->totalPoints();
   int index;
   int timestep = 100;
   int unassignedcount = 1;
@@ -1470,6 +1506,18 @@ void PackGrainsGen2::assign_gaps()
   float dist;
   float x, y, z;
   size_t xmin, xmax, ymin, ymax, zmin, zmax;
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
 
   int *newowners;
   newowners = new int [totpoints];
@@ -1541,21 +1589,21 @@ void PackGrainsGen2::assign_gaps()
 		zmax = int(plane + ((radcur1 / m->getZRes()) + 1));
 		if (m_periodic_boundaries == true)
 		{
-		  if (xmin < -m->getXPoints()) xmin = -m->getXPoints();
-		  if (xmax > 2 * m->getXPoints() - 1) xmax = (2 *m->getXPoints() - 1);
-		  if (ymin < -m->getYPoints()) ymin = -m->getYPoints();
-		  if (ymax > 2 * m->getYPoints() - 1) ymax = (2 * m->getYPoints() - 1);
-		  if (zmin < -m->getZPoints()) zmin = -m->getZPoints();
-		  if (zmax > 2 * m->getZPoints() - 1) zmax = (2 * m->getZPoints() - 1);
+		  if (xmin < -dims[0]) xmin = -dims[0];
+		  if (xmax > 2 * dims[0] - 1) xmax = (2 *dims[0] - 1);
+		  if (ymin < -dims[1]) ymin = -dims[1];
+		  if (ymax > 2 * dims[1] - 1) ymax = (2 * dims[1] - 1);
+		  if (zmin < -dims[2]) zmin = -dims[2];
+		  if (zmax > 2 * dims[2] - 1) zmax = (2 * dims[2] - 1);
 		}
 		if (m_periodic_boundaries == false)
 		{
 		  if (xmin < 0) xmin = 0;
-		  if (xmax > m->getXPoints() - 1) xmax = m->getXPoints() - 1;
+		  if (xmax > dims[0] - 1) xmax = dims[0] - 1;
 		  if (ymin < 0) ymin = 0;
-		  if (ymax > m->getYPoints() - 1) ymax = m->getYPoints() - 1;
+		  if (ymax > dims[1] - 1) ymax = dims[1] - 1;
 		  if (zmin < 0) zmin = 0;
-		  if (zmax > m->getZPoints() - 1) zmax = m->getZPoints() - 1;
+		  if (zmax > dims[2] - 1) zmax = dims[2] - 1;
 		}
 		for (size_t iter1 = xmin; iter1 < xmax + 1; iter1++)
 		{
@@ -1566,13 +1614,13 @@ void PackGrainsGen2::assign_gaps()
 			  column = iter1;
 			  row = iter2;
 			  plane = iter3;
-			  if (iter1 < 0) column = iter1 + m->getXPoints();
-			  if (iter1 > m->getXPoints() - 1) column = iter1 - m->getXPoints();
-			  if (iter2 < 0) row = iter2 + m->getYPoints();
-			  if (iter2 > m->getYPoints() - 1) row = iter2 - m->getYPoints();
-			  if (iter3 < 0) plane = iter3 + m->getZPoints();
-			  if (iter3 > m->getZPoints() - 1) plane = iter3 - m->getZPoints();
-			  index = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + column;
+			  if (iter1 < 0) column = iter1 + dims[0];
+			  if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+			  if (iter2 < 0) row = iter2 + dims[1];
+			  if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+			  if (iter3 < 0) plane = iter3 + dims[2];
+			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
 			  if(grain_indicies[index] <= 0)
 			  {
 				  inside = -1;
@@ -1580,11 +1628,11 @@ void PackGrainsGen2::assign_gaps()
 				  y = float(row) * m->getYRes();
 				  z = float(plane) * m->getZRes();
 				  if (iter1 < 0) x = x - sizex;
-				  if (iter1 > m->getXPoints() - 1) x = x + sizex;
+				  if (iter1 > dims[0] - 1) x = x + sizex;
 				  if (iter2 < 0) y = y - sizey;
-				  if (iter2 > m->getYPoints() - 1) y = y + sizey;
+				  if (iter2 > dims[1] - 1) y = y + sizey;
 				  if (iter3 < 0) z = z - sizez;
-				  if (iter3 > m->getZPoints() - 1) z = z + sizez;
+				  if (iter3 > dims[2] - 1) z = z + sizez;
 				  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
 				  dist = sqrtf(dist);
 				  if (dist < radcur1)
@@ -1628,11 +1676,24 @@ void PackGrainsGen2::assign_gaps()
 void PackGrainsGen2::cleanup_grains()
 {
   DataContainer* m = getDataContainer();
-  int totpoints = m->totalPoints();
+  int64_t totpoints = m->totalPoints();
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
   int neighpoints[6];
-  int xp = m->getXPoints();
-  int yp = m->getYPoints();
-  int zp = m->getZPoints();
+  DimType xp = dims[0];
+  DimType yp = dims[1];
+  DimType zp = dims[2];
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
   neighpoints[2] = -1;

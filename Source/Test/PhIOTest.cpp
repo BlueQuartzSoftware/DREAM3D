@@ -105,7 +105,7 @@ int TestPhReader()
   size_t ny = 0;
   size_t nz = 0;
 
-  reader->execute( );
+  reader->execute();
   int err = reader->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
@@ -169,9 +169,9 @@ void test(T x, T y, T z, const std::string &type)
 int main(int argc, char **argv)
 {
 
-  test<int>(4000, 4000, 4000, "int");
-  test<size_t>(4000, 4000, 4000, "size_t");
-  test<int64_t>(4000, 4000, 4000, "int64_t");
+//  test<int>(4000, 4000, 4000, "int");
+//  test<size_t>(4000, 4000, 4000, "size_t");
+//  test<int64_t>(4000, 4000, 4000, "int64_t");
 
   int err = EXIT_SUCCESS;
 

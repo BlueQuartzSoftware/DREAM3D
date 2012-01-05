@@ -206,7 +206,7 @@ int FileReader::readLine(std::istream &in, char* buf, int bufSize)
     {
       buf[in.gcount()-2] = 0;
     }
-    int len = strlen(buf);
+    size_t len = strlen(buf);
     int np = nonPrintables(buf, bufSize);
     if (len != np)
     {

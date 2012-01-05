@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	                  float* euler3s,
 	                  std::vector<Ebsd::CrystalStructure> &crystruct,
 	                  std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
-	                  int totalpoints);
+	                  int64_t totalpoints);
 
 
 	/**
