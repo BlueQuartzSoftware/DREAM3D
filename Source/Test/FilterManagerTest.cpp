@@ -37,7 +37,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QPushButton>
-
+#include <QtGui/QScrollArea>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -62,7 +62,9 @@ void addFilter(QDream3DFilterManager::Pointer fm,
   }
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 
@@ -71,21 +73,43 @@ int main(int argc, char **argv)
   QDream3DFilterManager::Pointer fm = QDream3DFilterManager::New();
 
 
-  QWidget* top = new QWidget;
-  delete top->layout();
-  QVBoxLayout* vertLayout = new QVBoxLayout(top);
+  QWidget* top = new QWidget();
+  top->setObjectName(QString::fromUtf8("topWidget"));
 
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, LoadSlices::ClassName(), vertLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, AlignSections::ClassName(), vertLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, SegmentGrains::ClassName(), vertLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, CleanupGrains::ClassName(), vertLayout);
+  QVBoxLayout* verticalLayout_3 = new QVBoxLayout(top);
+  verticalLayout_3->setContentsMargins(0, 0, 0, 0);
+  verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+
+  QScrollArea* scrollArea = new QScrollArea(top);
+  scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
+  scrollArea->setWidgetResizable(true);
+  scrollArea->setFrameShape(QFrame::NoFrame);
+//  scrollArea->setFrameShadow(QFrame::Plain);
+  QWidget* scrollAreaWidgetContents = new QWidget();
+  scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
+  //scrollAreaWidgetContents->setGeometry(QRect(0, 0, 753, 584));
+  QVBoxLayout* verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
+  verticalLayout->setContentsMargins(0, 0, 0, 0);
+  verticalLayout->setSpacing(20);
+  verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+
+  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, LoadSlices::ClassName(), verticalLayout);
+  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, AlignSections::ClassName(), verticalLayout);
+  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, SegmentGrains::ClassName(), verticalLayout);
+  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, CleanupGrains::ClassName(), verticalLayout);
 
 
-
-  QPushButton* button = new QPushButton("Start");
   QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-  vertLayout->addSpacerItem(verticalSpacer);
-  vertLayout->addWidget(button);
+  verticalLayout->addSpacerItem(verticalSpacer);
+
+
+  scrollArea->setWidget(scrollAreaWidgetContents);
+  QPushButton* button = new QPushButton("Start");
+
+  verticalLayout_3->addWidget(button);
+  verticalLayout_3->addWidget(scrollArea);
+
+
 
  // QGraphicsScene scene;
  // QGraphicsProxyWidget *proxy = scene.addWidget(top);

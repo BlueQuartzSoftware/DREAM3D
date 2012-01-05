@@ -101,6 +101,8 @@ bool QLoadSlicesWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdi
 void QLoadSlicesWidget::setupGui()
 {
 
+  changeStyle(false);
+
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_H5EbsdFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),

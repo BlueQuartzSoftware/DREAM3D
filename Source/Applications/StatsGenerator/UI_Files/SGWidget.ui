@@ -23,7 +23,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="sizeDistributionTab">
       <attribute name="title">
@@ -467,8 +467,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>58</height>
+            <width>753</width>
+            <height>584</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">

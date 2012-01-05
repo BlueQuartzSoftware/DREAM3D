@@ -21,7 +21,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
-
+#include <QtGui/QMouseEvent>
 
 
 // -----------------------------------------------------------------------------
@@ -38,28 +38,55 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 QFilterWidget::~QFilterWidget(){}
 
+#if 1
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::changeStyle(bool selected)
+{
+  QString style("QGroupBox\n");
+  if (selected) {
+    style.append("{\n");
+    style.append("font: 75 italic 12pt \"Arial\";");
+    style.append("font-weight: bold;");
+  //  style.append("font-size: 11px;");
+    style.append("border-radius: 10px;");
+    style.append("border: 3px solid purple;\n");
+    style.append("padding: 6px;\n");
+    style.append("}\n");
+
+  }
+  else
+  {
+    style.append("{\n");
+    style.append("font: 75 italic 12pt \"Arial\";");
+    style.append("font-weight: bold;");
+   // style.append("font-size: 11px;");
+    style.append("border-radius: 10px;");
+    style.append("border: 1px solid gray;");
+    style.append("padding: 8px;");
+    style.append("}\n");
+  }
+  setStyleSheet(style);
+}
+
+#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QFilterWidget::setupGui()
 {
+
+
   delete layout();
-
-  QString style("QGroupBox {\n");
-  style.append("margin: 10px;\n");
-  style.append("border: 2px solid green;\n");
-  style.append("padding: 6px;\n");
-
-  style.append("background-color: gray;\n");
-  style.append("background-origin: content;\n");
-  style.append("background-repeat: none;\n");
-  style.append("}\n");
- // setStyleSheet(style);
 
   //setTitle(getFilter()->getNameOfClass());
 
   QFormLayout* frmLayout = new QFormLayout(this);
   frmLayout->setObjectName("QFilterWidget QFormLayout Layout");
+
+  changeStyle(false);
 
   std::vector<FilterOption::Pointer> options = getFilter()->getFilterOptions();
   int optIndex = 0;
@@ -305,4 +332,17 @@ void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 {
 
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  QFilterWidget::mouseReleaseEvent ( QMouseEvent* event )
+{
+
+  std::cout << title().toStdString() << " mouse released" << std::endl;
+  event->setAccepted(true);
+  changeStyle(true);
+}
+
 
