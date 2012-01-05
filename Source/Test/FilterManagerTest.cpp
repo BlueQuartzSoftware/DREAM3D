@@ -77,7 +77,7 @@ int main(int argc, char **argv)
   top->setObjectName(QString::fromUtf8("topWidget"));
 
   QVBoxLayout* verticalLayout_3 = new QVBoxLayout(top);
-  verticalLayout_3->setContentsMargins(0, 0, 0, 0);
+  verticalLayout_3->setContentsMargins(0, 0, 0, 20);
   verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
 
   QScrollArea* scrollArea = new QScrollArea(top);
@@ -93,11 +93,33 @@ int main(int argc, char **argv)
   verticalLayout->setSpacing(20);
   verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
 
+
+  QDream3DFilterManager::FilterMapType filterMap = fm->getFilterMap();
+  for (QDream3DFilterManager::FilterMapType::iterator filterGroups = filterMap.begin(); filterGroups != filterMap.end(); ++filterGroups )
+  {
+    std::string groupName = (*filterGroups).first;
+
+    QDream3DFilterManager::StringSetType& filterNames = (*filterGroups).second;
+
+    for (QDream3DFilterManager::StringSetType::iterator name = filterNames.begin(); name != filterNames.end(); ++name )
+    {
+      addFilter(fm, groupName, *name, verticalLayout);
+
+    }
+
+
+  }
+
+#if 0
+
+  // Reconstruction Filters
   addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, LoadSlices::ClassName(), verticalLayout);
   addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, AlignSections::ClassName(), verticalLayout);
   addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, SegmentGrains::ClassName(), verticalLayout);
   addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, CleanupGrains::ClassName(), verticalLayout);
-
+  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, MergeTwins::ClassName(), verticalLayout);
+  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, MergeColonies::ClassName(), verticalLayout);
+#endif
 
   QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
   verticalLayout->addSpacerItem(verticalSpacer);
