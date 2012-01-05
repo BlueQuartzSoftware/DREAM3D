@@ -69,17 +69,22 @@ int TestPreFlightArray()
   int totalPoints = 100;
   {
     int32_t* grain_indicies = m->createVoxelData<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, NULL);
+    // This macro is used ONLY during unit testing
     DREAM3D_REQUIRE_NE(grain_indicies, NULL);
   }
 
   {
     int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, NULL);
+    // This macro is used ONLY during unit testing
     DREAM3D_REQUIRE_NE(grain_indicies, NULL);
   }
 
   IDataArray::Pointer array = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
 
+
+  // This macro is used ONLY during unit testing
   DREAM3D_REQUIRE_NE(array.get(), NULL);
+  // This macro is used ONLY during unit testing
   DREAM3D_REQUIRE_EQUAL(100, array->GetNumberOfTuples() );
 
   return EXIT_SUCCESS;
