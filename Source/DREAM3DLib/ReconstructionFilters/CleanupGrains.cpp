@@ -166,8 +166,18 @@ void CleanupGrains::assign_badpoints()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
-  size_t dims[3] = {0,0,0};
-  m->getDimensions(dims);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
 
   std::vector<int > neighs;
   std::vector<int > remove;
@@ -178,8 +188,9 @@ void CleanupGrains::assign_badpoints()
   float x, y, z;
   size_t column, row, plane;
   int neighpoint;
-  int neighpoints[6];
   size_t numgrains = m->m_Grains.size();
+
+  int neighpoints[6];
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -190,7 +201,7 @@ void CleanupGrains::assign_badpoints()
 
   notify("Assigning Bad Voxels", 0, Observable::UpdateProgressMessage);
 
-  for (int iter = 0; iter < totalPoints; iter++)
+  for (int64_t iter = 0; iter < totalPoints; iter++)
   {
     alreadychecked[iter] = false;
 	if (grain_indicies[iter] > 0) alreadychecked[iter] = true;
@@ -353,8 +364,18 @@ void CleanupGrains::reorder_grains()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
-  size_t dims[3] = {0,0,0};
-  m->getDimensions(dims);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
 
   size_t initialVoxellistsSize = 1000;
   size_t size = 0;
@@ -496,18 +517,35 @@ void CleanupGrains::remove_smallgrains()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
   size_t size = 0;
-  int neighpoints[6];
+  
   int good = 0;
   int neighbor = 0;
   size_t col, row, plane;
   int gnum;
   int currentgrain = 1;
-  neighpoints[0] = -m->getXPoints() * m->getYPoints();
-  neighpoints[1] = -m->getXPoints();
+
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+
+  int neighpoints[6];
+  neighpoints[0] = -dims[0]*dims[1];
+  neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->getXPoints();
-  neighpoints[5] = m->getXPoints() * m->getYPoints();
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0]*dims[1];
+
   int numgrains = m->m_Grains.size();
   nuclei.resize(numgrains, -1);
 
@@ -534,19 +572,19 @@ void CleanupGrains::remove_smallgrains()
       for (size_t j = 0; j < size; j++)
       {
         int currentpoint = voxellists[i][j];
-        col = currentpoint % m->getXPoints();
-        row = (currentpoint / m->getXPoints()) % m->getYPoints();
-        plane = currentpoint / (m->getXPoints() * m->getYPoints());
+        col = currentpoint % dims[0];
+        row = (currentpoint / dims[0]) % dims[1];
+        plane = currentpoint / (dims[0] * dims[1]);
         for (size_t k = 0; k < 6; k++)
         {
           good = 1;
           neighbor = currentpoint + neighpoints[k];
           if (k == 0 && plane == 0) good = 0;
-          if (k == 5 && plane == (m->getZPoints() - 1)) good = 0;
+          if (k == 5 && plane == (dims[2] - 1)) good = 0;
           if (k == 1 && row == 0) good = 0;
-          if (k == 4 && row == (m->getYPoints() - 1)) good = 0;
+          if (k == 4 && row == (dims[1] - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
-          if (k == 3 && col == (m->getXPoints() - 1)) good = 0;
+          if (k == 3 && col == (dims[0] - 1)) good = 0;
           if (good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = static_cast<size_t>(grain_indicies[neighbor]);

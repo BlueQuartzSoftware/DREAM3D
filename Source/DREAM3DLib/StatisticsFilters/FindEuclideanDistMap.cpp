@@ -241,21 +241,35 @@ void FindEuclideanDistMap::find_euclideandistmap()
     nearestneighbors[i] = -1;
     nearestneighbordistances[i] = -1;
   }
-//  int neighpoint;
-//  int nearestneighbor;
-  int neighbors[6];
+
   size_t column, row, plane;
   int add = 1;
   int good = 0;
   int grain, neighbor;
   std::vector<int> coordination;
 
-  neighbors[0] = -m->getXPoints() * m->getYPoints();
-  neighbors[1] = -m->getXPoints();
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+  int neighbors[6];
+  neighbors[0] = -dims[0]*dims[1];
+  neighbors[1] = -dims[0];
   neighbors[2] = -1;
   neighbors[3] = 1;
-  neighbors[4] = m->getXPoints();
-  neighbors[5] = m->getXPoints() * m->getYPoints();
+  neighbors[4] = dims[0];
+  neighbors[5] = dims[0]*dims[1];
+
+
   for (int64_t a = 0; a < (totalPoints); ++a)
   {
 	grain = grain_indicies[a];

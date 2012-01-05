@@ -8,8 +8,8 @@
 //                           FA8650-04-C-5229
 //
 
-#ifndef _DataArray_h_
-#define _DataArray_h_
+#ifndef _PreFlightArray_h_
+#define _PreFlightArray_h_
 
 // STL Includes
 #include <vector>
@@ -29,34 +29,29 @@
   ptr[s] = ptr[d];\
   ptr[d] = t[0];
 
-/** @brief Resizes the DataArray Shared Array and assigns its internal data pointer
+/** @brief Resizes the PreFlightArray Shared Array and assigns its internal data pointer
  *
  */
-#define RESIZE_ARRAY(sharedArray, pointer, size)\
-  pointer = sharedArray->WritePointer(0, size);
 
-#define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, type)\
-  DataArray<type>::Pointer priVar;\
-  type* pubVar;
 
-#define INIT_DataArray(var, type)\
-  var = DataArray<type>::CreateArray(0);\
+#define INIT_PreFlightArray(var, type)\
+  var = PreFlightArray<type>::CreateArray(0);\
   var->SetName(#var);
 
 /**
- * @class DataArray DataArray.hpp DREAM3DLib/Common/DataArray.hpp
- * @brief Template class for wrapping raw arrays of data.
+ * @class PreFlightArray PreFlightArray.hpp DREAM3DLib/Common/PreFlightArray.hpp
+ * @brief .
  * @author mjackson
  * @date July 3, 2008
- * @version $Revision: 1.2 $
+ * @version 1.0
  */
 template<typename T>
-class DataArray : public IDataArray
+class PreFlightArray : public IDataArray
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(DataArray<T> )
-    DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
+    DREAM3D_SHARED_POINTERS(PreFlightArray<T> )
+    DREAM3D_TYPE_MACRO_SUPER(PreFlightArray<T>, IDataArray)
 
 
     typedef std::vector<Pointer>   ContainterType;
@@ -64,15 +59,15 @@ class DataArray : public IDataArray
     /**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Boost::Shared_Ptr wrapping an instance of PreFlightArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numElements = 0)
     {
-      DataArray<T>* d = new DataArray<T> (numElements, true);
+      PreFlightArray<T>* d = new PreFlightArray<T> (numElements, true);
       if (d->Allocate() < 0)
       { // Could not allocate enough memory, reset the pointer to null and return
         delete d;
-        return DataArray<T>::NullPointer();
+        return PreFlightArray<T>::NullPointer();
       }
       Pointer ptr((d));
       return ptr;
@@ -81,9 +76,9 @@ class DataArray : public IDataArray
     /**
      * @brief Destructor
      */
-    virtual ~DataArray()
+    virtual ~PreFlightArray()
     {
-      //std::cout << "~DataArrayTemplate '" << m_Name << "'" << std::endl;
+      //std::cout << "~PreFlightArrayTemplate '" << m_Name << "'" << std::endl;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -142,7 +137,7 @@ class DataArray : public IDataArray
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       Array = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
 #else
-      this->Array = (T*)malloc(newSize * sizeof(T));
+      this->Array = (T*)malloc(1 * sizeof(T));
 #endif
       if (!this->Array)
       {
@@ -168,20 +163,8 @@ class DataArray : public IDataArray
     */
     T* WritePointer(size_t id, size_t number)
     {
-        size_t newSize=id+number;
-      if ( newSize > this->Size )
-        {
-        if (this->ResizeAndExtend(newSize)==0)
-          {
-          return 0;
-          }
-        }
-      if ( (--newSize) > this->MaxId )
-        {
-        this->MaxId = newSize;
-        }
 
-      return this->Array + id;
+      return this->Array;
     }
 
     /**
@@ -189,14 +172,6 @@ class DataArray : public IDataArray
      */
     virtual void initialize()
     {
-      if (NULL != this->Array && true == this->_ownsData)
-      {
-        _deallocate();
-      }
-      this->Array = 0;
-      this->Size = 0;
-      this->_ownsData = true;
-   //   this->_dims[0] = _nElements;
     }
 
     /**
@@ -204,8 +179,6 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
-      size_t typeSize = sizeof(T);
-      ::memset(this->Array, 0, this->Size * typeSize);
     }
 
     /**
@@ -215,14 +188,8 @@ class DataArray : public IDataArray
      */
     virtual int32_t Resize(size_t size)
     {
-      if (this->ResizeAndExtend(size) || size <= 0)
-      {
-        return 1;
-      }
-      else
-      {
-        return 0;
-      }
+      Size = size;
+      return 0;
     }
 
     /**
@@ -238,7 +205,7 @@ class DataArray : public IDataArray
       {
         return 0x0;
       }
-      return (void*)(&(Array[i]));
+      return (void*)(&(Array[0]));
     }
 
 
@@ -249,7 +216,7 @@ class DataArray : public IDataArray
      */
     virtual T GetValue(size_t i)
     {
-      return this->Array[i];
+      return this->Array[0];
     }
 
     /**
@@ -273,20 +240,20 @@ class DataArray : public IDataArray
      */
     void SetValue(size_t i, T value)
     {
-      this->Array[i] = value;
+      this->Array[0] = value;
     }
 
     //----------------------------------------------------------------------------
     // These can be overridden for more efficiency
     T GetComponent(size_t i, int j)
     {
-      return Array[i*this->NumberOfComponents + j];
+      return Array[0*this->NumberOfComponents + j];
     }
 
     //----------------------------------------------------------------------------
     void SetComponent(size_t i, int j, T c)
     {
-      Array[i*this->NumberOfComponents + j] = c;
+      Array[0*this->NumberOfComponents + j] = c;
     }
 
     /**
@@ -309,7 +276,7 @@ class DataArray : public IDataArray
       char* ptr = (char*)(Array);
       char t[8];
       size_t size = getTypeSize();
-      for (uint64_t var = 0; var < Size; ++var)
+      for (uint64_t var = 0; var < 1; ++var)
       {
         if (sizeof(T) == 2)
         {
@@ -340,7 +307,7 @@ class DataArray : public IDataArray
      */
     virtual T* GetPointer(size_t i)
     {
-      return (T*)(&(Array[i]));
+      return (T*)(&(Array[0]));
     }
 
   protected:
@@ -352,7 +319,7 @@ class DataArray : public IDataArray
      * @param numElements The number of elements in the internal array.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
-    DataArray(size_t numElements, bool ownsData = true) :
+    PreFlightArray(size_t numElements, bool ownsData = true) :
       Array(NULL), Size(numElements), _ownsData(ownsData)
     {
       NumberOfComponents = 1;
@@ -377,61 +344,7 @@ class DataArray : public IDataArray
      */
     virtual T* ResizeAndExtend(size_t size)
     {
-      T* newArray;
-      size_t newSize;
-
-      if (size > this->Size)
-      {
-        newSize = size;
-      }
-      else if (size == this->Size) // Requested size is equal to current size.  Do nothing.
-      {
-        return this->Array;
-      }
-      else // Requested size is smaller than current size.  Squeeze the memory.
-      {
-        newSize = size;
-      }
-
-      // Wipe out the array completely if new size is zero.
-      if (newSize <= 0)
-      {
-        this->initialize();
-        return 0;
-      }
-
-      // Allocate a new array if we DO NOT own the current array
-      if ((NULL != this->Array) && (false == this->_ownsData))
-      {
-        // The old array is owned by the user so we cannot try to
-        // reallocate it.  Just allocate new memory that we will own.
-        newArray = (T*)malloc(newSize * sizeof(T));
-        if (!newArray)
-        {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
-          return 0;
-        }
-
-        // Copy the data from the old array.
-        memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
-      }
-      else
-      {
-        // Try to reallocate with minimal memory usage and possibly avoid copying.
-        newArray = (T*)realloc(this->Array, newSize * sizeof(T));
-        if (!newArray)
-        {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
-          return 0;
-        }
-      }
-
-      // Allocation was successful.  Save it.
-      this->Size = newSize;
-      this->Array = newArray;
-      // This object has now allocated its memory and owns it.
-      this->_ownsData = true;
-
+      Size = size;
       return this->Array;
     }
 
@@ -444,8 +357,8 @@ class DataArray : public IDataArray
 
     std::string m_Name;
 
-    DataArray(const DataArray&); //Not Implemented
-    void operator=(const DataArray&); //Not Implemented
+    PreFlightArray(const PreFlightArray&); //Not Implemented
+    void operator=(const PreFlightArray&); //Not Implemented
 
 };
 
@@ -454,11 +367,11 @@ class DataArray : public IDataArray
 //
 // -----------------------------------------------------------------------------
 
-typedef DataArray<bool> BoolArrayType;
-typedef DataArray<int32_t> Int32ArrayType;
-typedef DataArray<int8_t> Int8ArrayType;
-typedef DataArray<float> FloatArrayType;
-typedef DataArray<double> DoubleArrayType;
+typedef PreFlightArray<bool> PFBoolArrayType;
+typedef PreFlightArray<int32_t> PFInt32ArrayType;
+typedef PreFlightArray<int8_t> PFInt8ArrayType;
+typedef PreFlightArray<float> PFFloatArrayType;
+typedef PreFlightArray<double> PFDoubleArrayType;
 
-#endif //_DataArray_h_
+#endif //_PreFlightArray_h_
 

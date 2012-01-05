@@ -113,9 +113,19 @@ void SegmentGrains::execute()
   if (NULL == phases) { return; }
   float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
   if (NULL == quats) { return; }
-
-  size_t dims[3] = {0,0,0};
-  m->getDimensions(dims);
+ 
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
 
   DREAM3D_RANDOMNG_NEW()
   int seed = 0;

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,49 +34,76 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDNEIGHBORS_H_
-#define FINDNEIGHBORS_H_
+#include <stdlib.h>
 
-#include <vector>
-#include <string>
+#include <iostream>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/PreFlightArray.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
-/**
- * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
- */
-class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
+
+
+#include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
 {
-  public:
-    DREAM3D_SHARED_POINTERS(FindNeighbors);
-    DREAM3D_STATIC_NEW_MACRO(FindNeighbors);
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, AbstractFilter);
+#if REMOVE_TEST_FILES
 
-    virtual ~FindNeighbors();
+#endif
+}
 
-    virtual void execute();
-    virtual void preflight();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TestPreFlightArray()
+{
+  DataContainer::Pointer m = DataContainer::New();
+  int totalPoints = 100;
+  {
+    int32_t* grain_indicies = m->createVoxelData<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, NULL);
+    // This macro is used ONLY during unit testing
+    DREAM3D_REQUIRE_NE(grain_indicies, NULL);
+  }
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getHumanLabel() { return "Find Neighbors"; }
+  {
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, NULL);
+    // This macro is used ONLY during unit testing
+    DREAM3D_REQUIRE_NE(grain_indicies, NULL);
+  }
+
+  IDataArray::Pointer array = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
 
 
-  protected:
-    FindNeighbors();
+  // This macro is used ONLY during unit testing
+  DREAM3D_REQUIRE_NE(array.get(), NULL);
+  // This macro is used ONLY during unit testing
+  DREAM3D_REQUIRE_EQUAL(100, array->GetNumberOfTuples() );
 
-  private:
+  return EXIT_SUCCESS;
+}
 
 
-    FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
-    void operator=(const FindNeighbors&); // Operator '=' Not Implemented
-};
 
-#endif /* FINDNEIGHBORS_H_ */
+
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv) {
+  int err = EXIT_SUCCESS;
+
+  DREAM3D_REGISTER_TEST( TestPreFlightArray() );
+
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  PRINT_TEST_SUMMARY();
+  return err;
+}
+
+

@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
 
-  const static float m_pi = M_PI;
+  const static float m_pi = static_cast<float>(M_PI);
 
   const float threesixty_over_pi = 360.0f/m_pi;
   const float oneeighty_over_pi = 180.0f/m_pi;
@@ -313,9 +313,9 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    }
    if(type == 3)
    {
-	   n1 = (fabs(qco[1] + qco[2] - qco[3] - qco[4]) / (2.0)) / sin_wmin_over_2;
-	   n2 = (fabs(-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0)) / sin_wmin_over_2;
-	   n3 = (fabs(qco[1] - qco[2] + qco[3] - qco[4]) / (2.0)) / sin_wmin_over_2;
+	   n1 = (fabs(qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n2 = (fabs(-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n3 = (fabs(qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
    }
    float denom = sqrt((n1*n1+n2*n2+n3*n3));
    n1 = n1/denom;

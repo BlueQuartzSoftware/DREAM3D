@@ -54,7 +54,17 @@ AbstractFilter()
 FindNeighbors::~FindNeighbors()
 {
 }
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNeighbors::preflight()
+{
+  int err = 0;
+  DataContainer::Pointer m = DataContainer::New();
+  int64_t totalPoints = m->totalPoints();
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, NULL);
+  if(grain_indicies == NULL) err = 1;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -84,13 +94,27 @@ void FindNeighbors::execute()
     return;
   }
 
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
   int neighpoints[6];
-  neighpoints[0] = -(m->getXPoints() * m->getYPoints());
-  neighpoints[1] = -m->getXPoints();
+  neighpoints[0] = -dims[0]*dims[1];
+  neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = m->getXPoints();
-  neighpoints[5] = (m->getXPoints() * m->getYPoints());
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0]*dims[1];
+
   float column, row, plane;
   int grain;
   size_t nnum;

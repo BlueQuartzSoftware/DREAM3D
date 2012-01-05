@@ -155,7 +155,7 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
     if(m->crystruct[i] == Ebsd::Hexagonal) nElements = 36*36*12;
     if(m->crystruct[i] == Ebsd::Cubic) nElements = 18*18*18;
 
-    float initValue = 1.0/(float)(nElements);
+    float initValue = 1.0f/(float)(nElements);
     actualodf[i] = SharedFloatArray(new float [nElements]);
     GG_INIT_DOUBLE_ARRAY(actualodf[i], initValue, nElements);
 
@@ -341,7 +341,7 @@ void MatchCrystallography::MC_LoopBody2(int grain, int phase, int j, float neigh
   float r1, r2, r3;
   float curmiso1, curmiso2, curmiso3;
   size_t curmisobin, newmisobin;
-  float miso1, miso2, miso3;
+  float miso1 = 0.0f, miso2 = 0.0f, miso3 = 0.0f;
 
   curmiso1 = misorientationlists[grain][3 * j];
   curmiso2 = misorientationlists[grain][3 * j + 1];
@@ -452,13 +452,13 @@ void MatchCrystallography::matchCrystallography()
 		  if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
 		  for (size_t j = 0; j < size; j++)
 		  {
-			size_t neighbor = neighborlist[selectedgrain1][j];
+			  int neighbor = neighborlist[selectedgrain1][j];
 		    ea1 = m->m_Grains[neighbor]->euler1;
 		    ea2 = m->m_Grains[neighbor]->euler2;
 		    ea3 = m->m_Grains[neighbor]->euler3;
 		    OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
-			MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
+			  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
+			  MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
 		  }
 
 		  deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
@@ -478,7 +478,7 @@ void MatchCrystallography::matchCrystallography()
 			if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
 			for (size_t j = 0; j < size; j++)
 			{
-			  size_t neighbor = neighborlist[selectedgrain1][j];
+			  int neighbor = neighborlist[selectedgrain1][j];
 		      ea1 = m->m_Grains[neighbor]->euler1;
 		      ea2 = m->m_Grains[neighbor]->euler2;
 		      ea3 = m->m_Grains[neighbor]->euler3;
@@ -538,7 +538,7 @@ void MatchCrystallography::matchCrystallography()
 		  if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
 		  for (size_t j = 0; j < size; j++)
 		  {
-			size_t neighbor = neighborlist[selectedgrain1][j];
+			int neighbor = neighborlist[selectedgrain1][j];
 		    ea1 = m->m_Grains[neighbor]->euler1;
 		    ea2 = m->m_Grains[neighbor]->euler2;
 		    ea3 = m->m_Grains[neighbor]->euler3;
