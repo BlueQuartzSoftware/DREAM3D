@@ -42,7 +42,15 @@ namespace UnitTest {
       static const int Offset = 200;
     }
     
-
+    namespace VtkGrainIdIOTest
+    {
+      const std::string TestFile("@DREAM3DTest_BINARY_DIR@/VtkGrainIdIOTest.vtk");
+      static const int XSize = 5;
+      static const int YSize = 4;
+      static const int ZSize = 3;
+      static const int Offset = 300;
+    }
+    
     namespace VTKFileWritersTest
     {
       static const std::string TestFile("@DREAM3DTest_BINARY_DIR@/VtkIOTest.vtk");
