@@ -36,6 +36,8 @@
 
 #include "FindNeighbors.h"
 
+#include <sstream>
+
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
@@ -59,10 +61,18 @@ FindNeighbors::~FindNeighbors()
 void FindNeighbors::preflight()
 {
   int err = 0;
+  std::stringstream ss;
   DataContainer::Pointer m = DataContainer::New();
-  int64_t totalPoints = m->totalPoints();
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, NULL);
-  if(grain_indicies == NULL) err = 1;
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "Graid Ids Array Not Initialized At Beginning of FindNeighbors Filter" << endl;
+	  err = -300;
+  }
+  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::SurfaceVoxels, p);
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
 }
 // -----------------------------------------------------------------------------
 //
