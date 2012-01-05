@@ -107,8 +107,8 @@ int PhWriter::writeFile()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
   int64_t totalpoints = dims[0] * dims[1] * dims[2];
   // Change the name of the input filename for outout

@@ -154,8 +154,8 @@ void CleanupGrains::assign_badpoints()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   std::vector<int > neighs;
@@ -352,8 +352,8 @@ void CleanupGrains::reorder_grains()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   size_t initialVoxellistsSize = 1000;
@@ -512,8 +512,8 @@ void CleanupGrains::remove_smallgrains()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
 
