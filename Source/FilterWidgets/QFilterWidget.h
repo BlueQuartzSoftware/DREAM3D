@@ -21,6 +21,7 @@ type get##name() { return filter_var->get##name(); }\
 
 
 
+class QMouseEvent;
 
 
 class QFilterWidget : public QGroupBox
@@ -34,6 +35,8 @@ class QFilterWidget : public QGroupBox
 
     virtual AbstractFilter::Pointer getFilter();
 
+
+
    public slots:
 
      virtual void updateFilterValues();
@@ -43,7 +46,11 @@ class QFilterWidget : public QGroupBox
      virtual void updateComboBoxValue(int v);
      virtual void updateQSpinBoxValue(int v);
      virtual void updateQDoubleSpinBoxValue(double v);
+
+     void changeStyle(bool selected);
+
   protected:
+     virtual void  mouseReleaseEvent ( QMouseEvent* event );
 
   private:
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
