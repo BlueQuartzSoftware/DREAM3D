@@ -84,8 +84,18 @@ int DxWriter::writeFile()
   GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
 
   int err = 0;
-  size_t dims[3];
-  m->getDimensions(dims);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[0]),
+  };
   // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
 
   std::ofstream out(getFileName().c_str(), std::ios_base::binary);
@@ -94,13 +104,13 @@ int DxWriter::writeFile()
     return -1;
   }
 
-  int fileXDim = dims[0];
-  int fileYDim = dims[1];
-  int fileZDim = dims[2];
+  DimType fileXDim = dims[0];
+  DimType fileYDim = dims[1];
+  DimType fileZDim = dims[2];
 
-  int posXDim = fileXDim + 1;
-  int posYDim = fileYDim + 1;
-  int posZDim = fileZDim + 1;
+  DimType posXDim = fileXDim + 1;
+  DimType posYDim = fileYDim + 1;
+  DimType posZDim = fileZDim + 1;
 
   if(m_AddSurfaceLayer)
   {

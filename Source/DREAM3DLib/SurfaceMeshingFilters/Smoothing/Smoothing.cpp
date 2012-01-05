@@ -319,11 +319,11 @@ void Smoothing::execute()
 
   std::vector<float> Q_max_hist(hist_count);
 
-  Q_ave = 2.9;
-  Q_max_ave = 10;
+  Q_ave = 2.9f;
+  Q_max_ave = 10.0f;
 
-  A_scale = 4000.0;
-  Q_scale = 500.0;
+  A_scale = 4000.0f;
+  Q_scale = 500.0f;
 
   // update loop
   size_t count = 1;

@@ -40,7 +40,7 @@
 
 using namespace DREAM3D;
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 const static float m_one_over_pi = 1.0f/m_pi;
 
 // -----------------------------------------------------------------------------
@@ -70,8 +70,8 @@ float EllipsoidOps::radcur1(std::map<ArgName, float> args)
   float bovera = args[B_OverA];
   float covera = args[C_OverA];
 
-  radcur1 = (volcur * 0.75f * (m_one_over_pi) * (1.0 / bovera) * (1.0 / covera));
-  radcur1 = powf(radcur1, 0.333333333333);
+  radcur1 = (volcur * 0.75f * (m_one_over_pi) * (1.0f / bovera) * (1.0f / covera));
+  radcur1 = powf(radcur1, 0.333333333333f);
   return radcur1;
 }
 
@@ -87,6 +87,6 @@ float EllipsoidOps::inside(float axis1comp, float axis2comp, float axis3comp)
   axis1comp = axis1comp*axis1comp;
   axis2comp = axis2comp*axis2comp;
   axis3comp = axis3comp*axis3comp;
-  inside = 1.0 - axis1comp - axis2comp - axis3comp;
+  inside = 1.0f - axis1comp - axis2comp - axis3comp;
   return inside;
 }
