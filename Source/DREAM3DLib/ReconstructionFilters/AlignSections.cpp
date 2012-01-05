@@ -172,8 +172,8 @@ void AlignSections::align_sections()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   int** shifts = AlignSections::Allocate2DArray<int>(dims[2], 2);
@@ -450,8 +450,8 @@ void AlignSections::form_grains_sections()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   int64_t totalPoints = m->totalPoints();
