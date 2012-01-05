@@ -53,7 +53,17 @@ FindNeighbors::FindNeighbors()
 FindNeighbors::~FindNeighbors()
 {
 }
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNeighbors::preflight()
+{
+  int err = 0;
+  DataContainer::Pointer m = DataContainer::New();
+  int64_t totalPoints = m->totalPoints();
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, NULL);
+  if(grain_indicies == NULL) err = 1;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

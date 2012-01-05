@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/PreFlightArray.hpp"
 
 /**
  * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
@@ -62,6 +63,7 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     virtual ~FindNeighbors();
 
     virtual void execute();
+    virtual void preflight();
 
 
   protected:
