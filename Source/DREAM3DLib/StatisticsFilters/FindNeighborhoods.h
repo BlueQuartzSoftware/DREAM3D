@@ -61,10 +61,10 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual ~FindNeighborhoods();
 
-    DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
-
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Neighborhoods"; }
+
+    virtual void setupFilterOptions();
 
 
 	/**
@@ -72,16 +72,16 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
      */
     virtual void execute();
 
-    void find_centroids();
-    void find_centroids2D();
-    void find_neighborhoods();
-
 
   protected:
     FindNeighborhoods();
 
-  private:
+    void find_centroids();
+    void find_centroids2D();
+    void find_neighborhoods();
 
+  private:
+    DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

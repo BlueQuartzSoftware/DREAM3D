@@ -60,6 +60,7 @@
 // -----------------------------------------------------------------------------
 MatchCrystallography::MatchCrystallography()  :
 AbstractFilter(),
+m_H5StatsInputFile(""),
 totalsurfacearea(NULL),
 neighListPtr(NULL),
 surfListPtr(NULL)
@@ -70,7 +71,7 @@ surfListPtr(NULL)
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,6 +79,31 @@ surfListPtr(NULL)
 // -----------------------------------------------------------------------------
 MatchCrystallography::~MatchCrystallography()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input Statistics File");
+    option->setPropertyName("H5StatsInputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Max Iterations");
+    option->setPropertyName("MaxIterations");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -101,7 +127,7 @@ void MatchCrystallography::execute()
     return;
   }
 
-  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
+  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   readODFData(h5reader);
   if (getErrorCondition() < 0) {
     return;
@@ -128,6 +154,9 @@ void MatchCrystallography::execute()
   notify("MatchCrystallography Completed", 0, Observable::UpdateProgressMessage);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
 {
   DataContainer* m = getDataContainer();

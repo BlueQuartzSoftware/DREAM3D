@@ -112,6 +112,13 @@ void createFile( const std::string &group, const std::string &filter)
       fprintf(f, "    void set%s(%s v) { m_Filter->set%s(static_cast<%s>(v) ); }\n", prop.c_str(), cType.c_str(), prop.c_str(), typ.c_str());
       fprintf(f, "    %s  get%s() { return static_cast<%s>(m_Filter->get%s()); }\n", cType.c_str(), prop.c_str(), typ.c_str(), prop.c_str());
     }
+    else if (opt->getValueType().compare("string") == 0)
+    {
+      std::string cType = "QString";
+      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    void set%s(%s v) { m_Filter->set%s(v.toStdString() ); }\n", prop.c_str(), cType.c_str(), prop.c_str());
+      fprintf(f, "    %s  get%s() { return QString::fromStdString(m_Filter->get%s()); }\n", cType.c_str(), prop.c_str(), prop.c_str());
+    }
     else 
     {
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());

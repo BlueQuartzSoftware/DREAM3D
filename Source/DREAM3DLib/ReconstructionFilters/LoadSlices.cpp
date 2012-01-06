@@ -81,12 +81,27 @@ LoadSlices::LoadSlices() :
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
+  setupFilterOptions();
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+LoadSlices::~LoadSlices()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LoadSlices::setupFilterOptions()
+{
 
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Input File");
+    option->setHumanLabel("EBSD Input File (HDF5)");
     option->setPropertyName("H5EbsdFile");
     option->setWidgetType(FilterOption::InputFileWidget);
     option->setValueType("string");
@@ -145,12 +160,7 @@ LoadSlices::LoadSlices() :
   setFilterOptions(options);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-LoadSlices::~LoadSlices()
-{
-}
+
 
 // -----------------------------------------------------------------------------
 //

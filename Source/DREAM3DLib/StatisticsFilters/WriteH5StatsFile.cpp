@@ -56,6 +56,8 @@ WriteH5StatsFile::WriteH5StatsFile()  :
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+  setupFilterOptions();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -64,6 +66,26 @@ WriteH5StatsFile::WriteH5StatsFile()  :
 WriteH5StatsFile::~WriteH5StatsFile()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteH5StatsFile::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output Statistics File");
+    option->setPropertyName("H5StatsFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+  // We are NOT going to expose the "Bin Step Size" and "Create New File"
+
+}
+
 
 // -----------------------------------------------------------------------------
 //

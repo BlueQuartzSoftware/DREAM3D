@@ -54,6 +54,8 @@ m_CreateNewStatsFile(true)
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+  setupFilterOptions();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -61,6 +63,22 @@ m_CreateNewStatsFile(true)
 // -----------------------------------------------------------------------------
 FindODF::~FindODF()
 {
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindODF::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output Statistics File");
+    option->setPropertyName("H5StatsFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------

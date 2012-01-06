@@ -64,6 +64,12 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Schmid Factors"; }
 
+    DREAM3D_INSTANCE_PROPERTY(float, XLoading);
+    DREAM3D_INSTANCE_PROPERTY(float, YLoading);
+    DREAM3D_INSTANCE_PROPERTY(float, ZLoading);
+
+
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

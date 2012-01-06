@@ -43,6 +43,7 @@ class QFilterWidget : public QGroupBox
      virtual void updateQLineEditDoubleValue();
      virtual void updateQLineEditIntValue();
      virtual void selectInputFile();
+     virtual void selectOutputFile();
      virtual void updateComboBoxValue(int v);
      virtual void updateQSpinBoxValue(int v);
      virtual void updateQDoubleSpinBoxValue(double v);

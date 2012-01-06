@@ -72,7 +72,22 @@ AlignSections::AlignSections() :
 
   graincounts = NULL;
   INIT_DataArray(m_GrainCounts, int);
+  setupFilterOptions();
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AlignSections::~AlignSections()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::setupFilterOptions()
+{
   std::vector<FilterOption::Pointer> options;
   {
     ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
@@ -89,15 +104,8 @@ AlignSections::AlignSections() :
     options.push_back(option);
   }
   setFilterOptions(options);
-
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AlignSections::~AlignSections()
-{
-}
 
 // -----------------------------------------------------------------------------
 //

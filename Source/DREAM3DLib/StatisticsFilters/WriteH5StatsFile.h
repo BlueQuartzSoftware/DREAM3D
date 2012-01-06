@@ -73,6 +73,8 @@ class DREAM3DLib_EXPORT WriteH5StatsFile : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Write Statistics (HDF5)"; }
 
+    virtual void setupFilterOptions();
+
 
 	 /**
      * @brief Reimplemented from @see AbstractFilter class

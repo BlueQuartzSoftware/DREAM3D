@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -49,7 +49,7 @@ const static float m_pi = M_PI;
 LoadVolume::LoadVolume() :
             AbstractFilter()
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -57,6 +57,23 @@ LoadVolume::LoadVolume() :
 // -----------------------------------------------------------------------------
 LoadVolume::~LoadVolume()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LoadVolume::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------

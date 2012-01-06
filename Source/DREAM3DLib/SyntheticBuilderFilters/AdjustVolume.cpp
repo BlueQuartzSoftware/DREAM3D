@@ -46,14 +46,16 @@
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AdjustVolume::AdjustVolume() :
-            AbstractFilter()
+            AbstractFilter(),
+            m_MaxIterations(1)
 {
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -61,6 +63,23 @@ AdjustVolume::AdjustVolume() :
 // -----------------------------------------------------------------------------
 AdjustVolume::~AdjustVolume()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AdjustVolume::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Max Iterations");
+    option->setPropertyName("MaxIterations");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -138,7 +157,7 @@ void AdjustVolume::execute()
   packGrains->setDataContainer(getDataContainer());
   packGrains->setObservers(this->getObservers());
   oldsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
-  while(iterations < 1)
+  while(iterations < m_MaxIterations)
   {
     iterations++;
     good = 0;

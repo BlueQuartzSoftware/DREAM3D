@@ -73,6 +73,21 @@ neighbors(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+CleanupGrains::~CleanupGrains()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CleanupGrains::setupFilterOptions()
+{
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
@@ -92,13 +107,6 @@ neighbors(NULL)
   }
 
   setFilterOptions(options);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-CleanupGrains::~CleanupGrains()
-{
 }
 
 // -----------------------------------------------------------------------------
@@ -517,7 +525,7 @@ void CleanupGrains::remove_smallgrains()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
   size_t size = 0;
-  
+
   int good = 0;
   int neighbor = 0;
   size_t col, row, plane;

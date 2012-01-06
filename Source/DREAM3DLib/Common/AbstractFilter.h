@@ -74,12 +74,13 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      */
     DREAM3D_INSTANCE_PROPERTY(bool, Cancel);
 
+
     DREAM3D_INSTANCE_PROPERTY(std::vector<FilterOption::Pointer>, FilterOptions);
 
     virtual void printValues(std::ostream &out){}
 
 
-
+    virtual void setupFilterOptions();
 
     /**
      * @brief This method should be fully implemented in subclasses.
@@ -89,6 +90,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
   protected:
     AbstractFilter();
+
+
 
   private:
     AbstractFilter(const AbstractFilter&); // Copy Constructor Not Implemented

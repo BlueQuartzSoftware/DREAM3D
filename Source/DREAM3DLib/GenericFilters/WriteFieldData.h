@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT WriteFieldData : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const std::string getHumanLabel() { return "Write Field Data"; }
 
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

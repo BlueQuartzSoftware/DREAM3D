@@ -69,15 +69,12 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Segment Grains"; }
 
+    virtual void setupFilterOptions();
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
-
-    virtual void printValues(std::ostream &out)
-    {
-      out << "m_MisoTolerance: " << m_MisorientationTolerance << std::endl;
-    }
 
   protected:
     SegmentGrains();

@@ -72,6 +72,9 @@ MergeTwins::MergeTwins() :
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
+  setupFilterOptions();
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -81,6 +84,35 @@ MergeTwins::~MergeTwins()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MergeTwins::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Axis Tolerance");
+    option->setPropertyName("AxisTolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Angle Tolerance");
+    option->setPropertyName("AngleTolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+
+  setFilterOptions(options);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeTwins::execute()
 {
   DataContainer* m = getDataContainer();
