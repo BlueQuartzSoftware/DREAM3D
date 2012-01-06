@@ -35,10 +35,11 @@ macro(MXA_ADD_TEST testname Exename)
 endmacro()
 
 
-# --------
+# --------------------------------------------------------------------------
 # FilterManager Test
+# --------------------------------------------------------------------------
 add_executable(FilterManagerTest ${DREAM3DTest_SOURCE_DIR}/FilterManagerTest.cpp)
-target_link_libraries(FilterManagerTest ${QT_LIBRARIES} DREAM3DLib FilterWidgets)
+target_link_libraries(FilterManagerTest FilterWidgets)
 
 # --------------------------------------------------------------------------
 # H5Support Library Testing

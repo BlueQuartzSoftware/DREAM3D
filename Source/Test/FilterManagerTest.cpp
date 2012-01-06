@@ -41,26 +41,10 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "FilterWidgets/QDream3DFilterManager.h"
+#include "DREAM3DLib/DREAM3DFilters.h"
 
-
-#include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void addFilter(QDream3DFilterManager::Pointer fm,
-               const std::string &groupName,
-               const std::string &filterName,
-               QVBoxLayout* vertLayout)
-{
-  QFilterWidget* filterWidget = fm->getFilterWidget(groupName, filterName);
-  if (filterWidget != NULL)
-  {
-    vertLayout->addWidget(filterWidget);
-  }
-}
+#include "FilterWidgets/QFilterWidgetManager.h"
+#include "FilterWidgets/RegisterKnownFilterWidgets.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -69,9 +53,6 @@ int main(int argc, char **argv)
 {
 
   QApplication app(argc, argv);
-
-  QDream3DFilterManager::Pointer fm = QDream3DFilterManager::New();
-
 
   QWidget* top = new QWidget();
   top->setObjectName(QString::fromUtf8("topWidget"));
@@ -93,51 +74,34 @@ int main(int argc, char **argv)
   verticalLayout->setSpacing(20);
   verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
 
+  // Get the QFilterWidget Mangager Instance
+  DREAM3D::QFilterFactory::RegisterAllQFilterWidgets();
+  QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
 
-  QDream3DFilterManager::FilterMapType filterMap = fm->getFilterMap();
-  for (QDream3DFilterManager::FilterMapType::iterator filterGroups = filterMap.begin(); filterGroups != filterMap.end(); ++filterGroups )
+  // Get all the Widget Factories and loop over each one we know about and instantiate a new one
+  QFilterWidgetManager::Collection factories = fm->getFactories();
+  for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory )
   {
-    std::string groupName = (*filterGroups).first;
+    IFilterWidgetFactory::Pointer f = (*factory).second;
 
-    QDream3DFilterManager::StringSetType& filterNames = (*filterGroups).second;
-
-    for (QDream3DFilterManager::StringSetType::iterator name = filterNames.begin(); name != filterNames.end(); ++name )
+    QFilterWidget* filterWidget = f->createWidget();
+    if (filterWidget != NULL)
     {
-      addFilter(fm, groupName, *name, verticalLayout);
-
+      verticalLayout->addWidget(filterWidget);
     }
-
-
   }
 
-#if 0
-
-  // Reconstruction Filters
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, LoadSlices::ClassName(), verticalLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, AlignSections::ClassName(), verticalLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, SegmentGrains::ClassName(), verticalLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, CleanupGrains::ClassName(), verticalLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, MergeTwins::ClassName(), verticalLayout);
-  addFilter(fm, DREAM3D::FilterGroups::ReconstructionFilters, MergeColonies::ClassName(), verticalLayout);
-#endif
-
+  // Add some flexible space
   QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
   verticalLayout->addSpacerItem(verticalSpacer);
 
-
+  // Set the contents of the scroll area
   scrollArea->setWidget(scrollAreaWidgetContents);
   QPushButton* button = new QPushButton("Start");
 
   verticalLayout_3->addWidget(button);
   verticalLayout_3->addWidget(scrollArea);
 
-
-
- // QGraphicsScene scene;
- // QGraphicsProxyWidget *proxy = scene.addWidget(top);
-
- // QGraphicsView view(&scene);
- // view.show();
   top->show();
   return app.exec();
 

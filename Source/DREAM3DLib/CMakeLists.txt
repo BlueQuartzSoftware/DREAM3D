@@ -52,19 +52,41 @@ Macro(D3DCompileDir DirName)
     set (Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
 endMacro()
 
-
+# Add in our NON-Filter classes
 D3DCompileDir(Common )
 D3DCompileDir(HDF5)
 D3DCompileDir(IO )
 D3DCompileDir(OrientationOps )
 D3DCompileDir(ShapeOps )
 D3DCompileDir(VTKUtils )
-D3DCompileDir(GenericFilters )
-D3DCompileDir(ReconstructionFilters )
-D3DCompileDir(ManipulationFilters )
-D3DCompileDir(StatisticsFilters )
-D3DCompileDir(SyntheticBuilderFilters )
-D3DCompileDir(SurfaceMeshingFilters)
+
+
+#--------
+# Create a header file that contains all the filters
+Macro(D3DCompileFilters DirName HeaderFile)
+    set(group ${DirName})
+    file(APPEND ${HeaderFile} "\n/* ------ ${group} --------- */\n")
+    
+    include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
+    set (Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
+    foreach(file ${${DirName}_FILTERS_HDRS})
+        get_filename_component(name ${file} NAME_WE)
+        file(APPEND ${HeaderFile} "#include \"DREAM3DLib/${DirName}/${name}.h\"\n")
+    endforeach()
+endMacro()
+
+set (AllFiltersHeaderFile ${DREAM3DLib_BINARY_DIR}/DREAM3DFilters.h)
+file(WRITE ${AllFiltersHeaderFile} "#ifndef _DREAM3D_FILTERS_H_\n#define _DREAM3D_FILTERS_H_\n\n")
+
+# Add in our Filter classes
+D3DCompileFilters(GenericFilters ${AllFiltersHeaderFile})
+D3DCompileFilters(ReconstructionFilters ${AllFiltersHeaderFile})
+D3DCompileFilters(ManipulationFilters ${AllFiltersHeaderFile})
+D3DCompileFilters(StatisticsFilters ${AllFiltersHeaderFile})
+D3DCompileFilters(SyntheticBuilderFilters ${AllFiltersHeaderFile})
+D3DCompileFilters(SurfaceMeshingFilters ${AllFiltersHeaderFile})
+
+file(APPEND ${AllFiltersHeaderFile} "\n#endif\n")
 
 #--------------------------
 include_directories( ${HDF5_INCLUDE_DIR} )

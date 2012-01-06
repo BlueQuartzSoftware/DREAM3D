@@ -46,7 +46,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterOption.h"
-#include "FilterWidgets/DREAM3DFilterHeaders.h"
+#include "DREAM3DLib/DREAM3DFilters.h"
 
 static std::string OUTPUT_DIR("@FilterWidgets_BINARY_DIR@");
 static std::string FILTER_WIDGETS_DIR("@FilterWidgets_SOURCE_DIR@");

@@ -33,72 +33,63 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QFILTERWIDGET_H_
-#define QFILTERWIDGET_H_
+#include "QFilterWidgetManager.h"
 
-#include <QtGui/QFrame>
-#include <QtGui/QGroupBox>
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
-
-
-#define FILTER_PROPERTY_WRAPPER(type, name, filter_var)\
-void set##name(type v) { filter_var->set##name(v); }\
-type get##name() { return filter_var->get##name(); }\
-
-
-// This needs to be defined
-class QMouseEvent;
-
-/**
- * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
- * @brief  This class is a subclass of the QGroupBox class and is used to display
- * Filter Options that the user can set. This class is capable of constructing a
- * default GUI widget set for each type of Filter Option that is available. If
- * the programmer needs more specialized widgets then they can simply subclass
- * this class and over ride or implement their custom code.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 6, 2012
- * @version 1.0
- */
-class QFilterWidget : public QGroupBox
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QFilterWidgetManager::QFilterWidgetManager()
 {
-    Q_OBJECT;
-  public:
-    QFilterWidget(QWidget* parent = NULL);
-    virtual ~QFilterWidget();
 
-    virtual void setupGui();
+}
 
-    virtual AbstractFilter::Pointer getFilter();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QFilterWidgetManager::~QFilterWidgetManager()
+{
+}
 
-   public slots:
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QFilterWidgetManager::Pointer QFilterWidgetManager::Instance()
+{
+  static QFilterWidgetManager::Pointer singleton;
 
-     virtual void updateFilterValues();
-     virtual void updateQLineEditDoubleValue();
-     virtual void updateQLineEditIntValue();
-     virtual void selectInputFile();
-     virtual void selectOutputFile();
-     virtual void updateComboBoxValue(int v);
-     virtual void updateQSpinBoxValue(int v);
-     virtual void updateQDoubleSpinBoxValue(double v);
+  if (singleton.get() == NULL)
+  {
+    singleton.reset (new QFilterWidgetManager() );
+  }
+  return singleton;
+}
 
-     /**
-      * @brief Sets the style of the Widget to indicate a selected or non-selected
-      * state
-      * @param selected Is the widget selected or not.
-      */
-     void changeStyle(bool selected);
+// -----------------------------------------------------------------------------
+//  Static Method
+// -----------------------------------------------------------------------------
+void QFilterWidgetManager::RegisterFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory)
+{
+  if (NULL != factory.get() )
+  {
+    // Instantiate the Instance Manager for IFilterWidgetFactory
+    QFilterWidgetManager::Pointer idManager = QFilterWidgetManager::Instance();
+    idManager->addFilterWidgetFactory( name, factory );
+  }
+}
 
-  protected:
-     virtual void  mouseReleaseEvent ( QMouseEvent* event );
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QFilterWidgetManager::Collection QFilterWidgetManager::getFactories()
+{
+  return m_Factories;
+}
 
-  private:
-    QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterWidget&); // Operator '=' Not Implemented
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidgetManager::addFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory)
+{
+  m_Factories[name] = factory;
+}
 
-};
-
-
-#endif /* QFILTERWIDGET_H_ */

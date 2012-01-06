@@ -33,72 +33,71 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QFILTERWIDGET_H_
-#define QFILTERWIDGET_H_
-
-#include <QtGui/QFrame>
-#include <QtGui/QGroupBox>
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#ifndef QFILTERWIDGETMANAGER_H_
+#define QFILTERWIDGETMANAGER_H_
 
 
+#include <string>
+#include <map>
 
-#define FILTER_PROPERTY_WRAPPER(type, name, filter_var)\
-void set##name(type v) { filter_var->set##name(v); }\
-type get##name() { return filter_var->get##name(); }\
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-
-// This needs to be defined
-class QMouseEvent;
+#include "IFilterWidgetFactory.h"
 
 /**
- * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
- * @brief  This class is a subclass of the QGroupBox class and is used to display
- * Filter Options that the user can set. This class is capable of constructing a
- * default GUI widget set for each type of Filter Option that is available. If
- * the programmer needs more specialized widgets then they can simply subclass
- * this class and over ride or implement their custom code.
+ * @class QFilterWidgetManager QFilterWidgetManager.h FilterWidgets/QFilterWidgetManager.h
+ * @brief This class is a singleton based manager for creating Qt based widgets
+ * that expose the various options for each filter.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 6, 2012
  * @version 1.0
  */
-class QFilterWidget : public QGroupBox
+class QFilterWidgetManager
 {
-    Q_OBJECT;
   public:
-    QFilterWidget(QWidget* parent = NULL);
-    virtual ~QFilterWidget();
+    DREAM3D_SHARED_POINTERS(QFilterWidgetManager);
+    DREAM3D_TYPE_MACRO(QFilterWidgetManager)
 
-    virtual void setupGui();
+    virtual ~QFilterWidgetManager();
 
-    virtual AbstractFilter::Pointer getFilter();
+    typedef std::map<std::string, IFilterWidgetFactory::Pointer> Collection;
 
-   public slots:
+    /**
+     * @brief Static instance to retrieve the global instance of this class
+     * @return
+     */
+    static Pointer Instance();
 
-     virtual void updateFilterValues();
-     virtual void updateQLineEditDoubleValue();
-     virtual void updateQLineEditIntValue();
-     virtual void selectInputFile();
-     virtual void selectOutputFile();
-     virtual void updateComboBoxValue(int v);
-     virtual void updateQSpinBoxValue(int v);
-     virtual void updateQDoubleSpinBoxValue(double v);
+    /**
+     * @brief Registers a QFilterWidgetFactory instance for a give name
+     * @param name The name of the filter
+     * @param factory An instance of the factory
+     */
+    static void RegisterFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory);
 
-     /**
-      * @brief Sets the style of the Widget to indicate a selected or non-selected
-      * state
-      * @param selected Is the widget selected or not.
-      */
-     void changeStyle(bool selected);
+    /**
+     * @brief Returns the mapping of names to Factory instances for all the factories that are registered.
+     * @return
+     */
+    Collection getFactories();
+
+    /**
+     * @brief Adds a Factory that creates QFilterWidgets
+     * @param name
+     * @param factory
+     */
+    void addFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory);
 
   protected:
-     virtual void  mouseReleaseEvent ( QMouseEvent* event );
+    QFilterWidgetManager();
 
   private:
-    QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterWidget&); // Operator '=' Not Implemented
 
+    Collection m_Factories;
+
+
+    QFilterWidgetManager(const QFilterWidgetManager&); // Copy Constructor Not Implemented
+    void operator=(const QFilterWidgetManager&); // Operator '=' Not Implemented
 };
 
-
-#endif /* QFILTERWIDGET_H_ */
+#endif /* QFILTERWIDGETMANAGER_H_ */
