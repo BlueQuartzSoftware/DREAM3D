@@ -108,16 +108,11 @@ void ChangeResolution::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
-    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == phases) { return; }
-    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
+  int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  if (NULL == eulerangles) { return; }
 
 
   setErrorCondition(0);
@@ -143,9 +138,9 @@ void ChangeResolution::execute()
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         grain_indicies[index] = grain_indicies[index_old];
         phases[index] = phases[index_old];
-        euler1s[index] = euler1s[index_old];
-        euler2s[index] = euler2s[index_old];
-        euler3s[index] = euler3s[index_old];
+        eulerangles[3*index] = eulerangles[3*index_old];
+        eulerangles[3*index + 1] = eulerangles[3*index_old + 1];
+        eulerangles[3*index + 2] = eulerangles[3*index_old + 2];
       }
     }
   }
@@ -155,9 +150,7 @@ void ChangeResolution::execute()
   totalPoints = m_XP*m_YP*m_ZP;
   err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler1)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler2)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler3)->Resize(totalPoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::EulerAngles)->Resize(3*totalPoints);
 
   setErrorCondition(0);
   notify("Resolution Change Complete", 100, Observable::UpdateProgressValueAndMessage);

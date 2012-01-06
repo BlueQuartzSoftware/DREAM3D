@@ -192,9 +192,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
     int32_t* grain_indicies;
     int32_t* phases;
-    float* euler1s;
-    float* euler2s;
-    float* euler3s;
+    float* eulerangles;
     int8_t* surfacevoxels;
 //    int32_t* neighbors;
 //    float* quats;

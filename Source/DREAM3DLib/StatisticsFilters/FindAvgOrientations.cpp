@@ -113,16 +113,12 @@ void FindAvgOrientations::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
-    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
   if (NULL == phases) { return; }
-    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  if (NULL == eulerangles) { return; }
   float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
   if (NULL == quats) { return; }
 
@@ -143,7 +139,7 @@ void FindAvgOrientations::execute()
   {
     if(grain_indicies[i] > 0 && phases[i] > 0)
 	{
-		OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
+		OrientationMath::eulertoQuat(qr, eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2]);
 		phase = phases[i];
 		xtal = m->crystruct[phase];
 		m_OrientationOps[xtal]->getFZQuat(qr);
