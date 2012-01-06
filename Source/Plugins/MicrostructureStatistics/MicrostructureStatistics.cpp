@@ -185,8 +185,8 @@ void MicrostructureStatistics::execute()
   pipeline.push_back(find_euclideandistmap);
 
   FindDeformationStatistics::Pointer find_deformationstatistics = FindDeformationStatistics::New();
-  find_deformationstatistics->setOutputFile1(reconDeformStatsFile);
-  find_deformationstatistics->setOutputFile2(reconDeformIPFFile);
+  find_deformationstatistics->setDeformationStatisticsFile(reconDeformStatsFile);
+  find_deformationstatistics->setVtkOutputFile(reconDeformIPFFile);
   pipeline.push_back(find_deformationstatistics);
 
 

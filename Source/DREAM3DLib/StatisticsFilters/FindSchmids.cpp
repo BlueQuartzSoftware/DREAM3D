@@ -43,9 +43,12 @@
 //
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids() :
-AbstractFilter()
+AbstractFilter(),
+m_XLoading(1.0f),
+m_YLoading(1.0f),
+m_ZLoading(1.0f)
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -53,6 +56,39 @@ AbstractFilter()
 // -----------------------------------------------------------------------------
 FindSchmids::~FindSchmids()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindSchmids::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Loading X:");
+    option->setPropertyName("XLoading");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Loading Y:");
+    option->setPropertyName("YLoading");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Loading Z:");
+    option->setPropertyName("ZLoading");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -73,13 +109,16 @@ void FindSchmids::execute()
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->active == true)
+    if(m->m_Grains[i]->active == true)
     {
-      q1[1] = m->m_Grains[i]->avg_quat[1]/m->m_Grains[i]->avg_quat[0];
-      q1[2] = m->m_Grains[i]->avg_quat[2]/m->m_Grains[i]->avg_quat[0];
-      q1[3] = m->m_Grains[i]->avg_quat[3]/m->m_Grains[i]->avg_quat[0];
-      q1[4] = m->m_Grains[i]->avg_quat[4]/m->m_Grains[i]->avg_quat[0];
-	  if(m->m_Grains[i]->avg_quat[0] == 0) q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
+      q1[1] = m->m_Grains[i]->avg_quat[1] / m->m_Grains[i]->avg_quat[0];
+      q1[2] = m->m_Grains[i]->avg_quat[2] / m->m_Grains[i]->avg_quat[0];
+      q1[3] = m->m_Grains[i]->avg_quat[3] / m->m_Grains[i]->avg_quat[0];
+      q1[4] = m->m_Grains[i]->avg_quat[4] / m->m_Grains[i]->avg_quat[0];
+      if(m->m_Grains[i]->avg_quat[0] == 0)
+      {
+        q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
+      }
       loadx = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
       loady = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
       loadz = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
@@ -118,19 +157,19 @@ void FindSchmids::execute()
       schmid11 = theta4 * lambda2;
       schmid12 = theta4 * lambda6;
       schmid = schmid1, ss = 0;
-      if (schmid2 > schmid) schmid = schmid2, ss = 1;
-      if (schmid3 > schmid) schmid = schmid3, ss = 2;
-      if (schmid4 > schmid) schmid = schmid4, ss = 3;
-      if (schmid5 > schmid) schmid = schmid5, ss = 4;
-      if (schmid6 > schmid) schmid = schmid6, ss = 5;
-      if (schmid7 > schmid) schmid = schmid7, ss = 6;
-      if (schmid8 > schmid) schmid = schmid8, ss = 7;
-      if (schmid9 > schmid) schmid = schmid9, ss = 8;
-      if (schmid10 > schmid) schmid = schmid10, ss = 9;
-      if (schmid11 > schmid) schmid = schmid11, ss = 10;
-      if (schmid12 > schmid) schmid = schmid12, ss = 11;
+      if(schmid2 > schmid) schmid = schmid2, ss = 1;
+      if(schmid3 > schmid) schmid = schmid3, ss = 2;
+      if(schmid4 > schmid) schmid = schmid4, ss = 3;
+      if(schmid5 > schmid) schmid = schmid5, ss = 4;
+      if(schmid6 > schmid) schmid = schmid6, ss = 5;
+      if(schmid7 > schmid) schmid = schmid7, ss = 6;
+      if(schmid8 > schmid) schmid = schmid8, ss = 7;
+      if(schmid9 > schmid) schmid = schmid9, ss = 8;
+      if(schmid10 > schmid) schmid = schmid10, ss = 9;
+      if(schmid11 > schmid) schmid = schmid11, ss = 10;
+      if(schmid12 > schmid) schmid = schmid12, ss = 11;
       m->m_Grains[i]->schmidfactor = schmid;
-	  m->m_Grains[i]->slipsystem = ss;
+      m->m_Grains[i]->slipsystem = ss;
     }
   }
 

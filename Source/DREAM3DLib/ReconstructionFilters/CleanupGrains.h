@@ -70,6 +70,9 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
 
+    virtual void setupFilterOptions();
+
+
     virtual void execute();
 
   protected:

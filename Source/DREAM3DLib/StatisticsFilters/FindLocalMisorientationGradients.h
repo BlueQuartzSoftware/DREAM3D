@@ -68,6 +68,10 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Local Misorientation Gradients"; }
 
+    DREAM3D_INSTANCE_PROPERTY(int, KernelSize);
+
+
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -75,6 +79,7 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
     virtual void execute();
 
   protected:
+
     FindLocalMisorientationGradients();
 
   private:

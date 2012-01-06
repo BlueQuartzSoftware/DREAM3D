@@ -71,6 +71,21 @@ SegmentGrains::SegmentGrains() :
 
   m_MisorientationTolerance = 0.0f;
 
+  setupFilterOptions();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SegmentGrains::~SegmentGrains()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SegmentGrains::setupFilterOptions()
+{
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
@@ -81,15 +96,8 @@ SegmentGrains::SegmentGrains() :
     options.push_back(option);
   }
   setFilterOptions(options);
-
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-SegmentGrains::~SegmentGrains()
-{
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -113,7 +121,7 @@ void SegmentGrains::execute()
   if (NULL == phases) { return; }
   float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
   if (NULL == quats) { return; }
- 
+
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)

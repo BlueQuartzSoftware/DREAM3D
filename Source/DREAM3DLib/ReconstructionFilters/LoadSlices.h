@@ -80,6 +80,9 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Load Slices"; }
 
+    virtual void setupFilterOptions();
+
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */

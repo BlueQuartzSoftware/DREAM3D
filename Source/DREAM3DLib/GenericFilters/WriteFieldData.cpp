@@ -39,9 +39,9 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "WriteFieldData.h"
 
-const static float m_pi = M_PI;
+
+const static float m_pi = static_cast<float>(M_PI);
 
 
 // -----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ const static float m_pi = M_PI;
 WriteFieldData::WriteFieldData() :
             AbstractFilter()
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -59,7 +59,22 @@ WriteFieldData::WriteFieldData() :
 WriteFieldData::~WriteFieldData()
 {
 }
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteFieldData::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output File");
+    option->setPropertyName("FieldDataFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

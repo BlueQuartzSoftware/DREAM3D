@@ -73,6 +73,9 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Find MDF"; }
 
 
+    virtual void setupFilterOptions();
+
+
 	 /**
      * @brief Reimplemented from @see AbstractFilter class
      */

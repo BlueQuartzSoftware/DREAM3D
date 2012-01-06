@@ -37,7 +37,6 @@
 #ifndef MATCHCRYSTALLOGRAPHY_H_
 #define MATCHCRYSTALLOGRAPHY_H_
 
-
 #include <string>
 #include <numeric>
 #include <limits>
@@ -54,7 +53,6 @@
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
-
 /**
  * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h
  * @brief
@@ -65,20 +63,29 @@
 class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MatchCrystallography);
-    DREAM3D_STATIC_NEW_MACRO(MatchCrystallography);
-    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MatchCrystallography)
+    DREAM3D_STATIC_NEW_MACRO(MatchCrystallography)
+    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter)
+
 
     virtual ~MatchCrystallography();
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
+    virtual const std::string getGroupName()
+    {
+      return DREAM3D::FilterGroups::SyntheticBuilderFilters;
+    }
+    virtual const std::string getHumanLabel()
+    {
+      return "Match Crystallography";
+    }
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
-    virtual const std::string getHumanLabel() { return "Match Crystallography"; }
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile);
+    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -87,7 +94,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
   protected:
     MatchCrystallography();
-
 
     void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
     int readODFData(H5StatsReader::Pointer h5io);
@@ -100,8 +106,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void measure_misorientations();
 
   private:
-	float mdfchange;
-	float odfchange;
+    float mdfchange;
+    float odfchange;
 
     std::vector<float> unbiasedvol;
     std::vector<Ebsd::CrystalStructure> crystruct;
@@ -111,7 +117,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
 
-	std::vector<std::vector<float> > misorientationlists;
+    std::vector<std::vector<float> > misorientationlists;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
@@ -121,9 +127,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     float* totalsurfacearea;
     NeighborList<int>* neighListPtr;
     NeighborList<float>* surfListPtr;
-
-
-
 
     MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
     void operator=(const MatchCrystallography&); // Operator '=' Not Implemented

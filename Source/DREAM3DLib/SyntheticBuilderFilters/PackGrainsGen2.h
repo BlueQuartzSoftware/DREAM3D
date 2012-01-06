@@ -70,14 +70,17 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VtkFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, periodic_boundaries);
-    DREAM3D_INSTANCE_PROPERTY(float, neighborhooderrorweight);
-
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Pack Grains"; }
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
+    DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight);
+    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

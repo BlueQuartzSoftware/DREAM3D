@@ -49,6 +49,8 @@ FindNeighborhoods::FindNeighborhoods() :
 {
   graincenters = NULL;
   INIT_DataArray(m_GrainCenters,float);
+  setupFilterOptions();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -56,6 +58,24 @@ FindNeighborhoods::FindNeighborhoods() :
 // -----------------------------------------------------------------------------
 FindNeighborhoods::~FindNeighborhoods()
 {
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setupFilterOptions()
+{
+#if 0
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output Statistics File");
+    option->setPropertyName("H5StatsFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+#endif
 }
 
 // -----------------------------------------------------------------------------

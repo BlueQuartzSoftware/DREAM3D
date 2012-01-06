@@ -112,14 +112,14 @@ void GrainGenerator::execute()
 
 
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
-    pack_grains->setH5StatsFile(getH5StatsFile());
-    pack_grains->setperiodic_boundaries(m_PeriodicBoundary);
-    pack_grains->setneighborhooderrorweight(m_NeighborhoodErrorWeight);
+    pack_grains->setH5StatsInputFile(getH5StatsFile());
+    pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
+    pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
 #if PACK_GRAINS_ERROR_TXT_OUT
-    pack_grains->setErrorFile(errorFile);
+    pack_grains->setErrorOutputFile(errorFile);
 #endif
 #if PACK_GRAINS_VTK_FILE_OUT
-    pack_grains->setVtkFile(vtkFile);
+    pack_grains->setVtkOutputFile(vtkFile);
 #endif
     pipeline.push_back(pack_grains);
 
@@ -185,7 +185,7 @@ void GrainGenerator::execute()
 
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
-  match_crystallography->setH5StatsFile(getH5StatsFile());
+  match_crystallography->setH5StatsInputFile(getH5StatsFile());
 //  pipeline.push_back(match_crystallography);
 
 

@@ -65,6 +65,30 @@ FindDeformationStatistics::FindDeformationStatistics() :
 FindDeformationStatistics::~FindDeformationStatistics()
 {
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindDeformationStatistics::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Deformation Statistics File");
+    option->setPropertyName("DeformationStatisticsFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("VTK Output File");
+    option->setPropertyName("VtkOutputFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -113,9 +137,9 @@ void FindDeformationStatistics::execute()
   {
     return;
   }
-  std::string filename = m_OutputFile1;
-  ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
+//  std::string filename = m_OutputFile1;
+  std::ofstream outFile;
+  outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
   float km, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, lmg, ssap;
@@ -603,12 +627,12 @@ void FindDeformationStatistics::execute()
   }
   outFile.close();
 
-  std::string filename2 = m_OutputFile2;
+ // std::string filename2 = m_OutputFile2;
   FILE* vtkFile = NULL;
-  vtkFile = fopen(filename2.c_str(), "wb");
+  vtkFile = fopen(m_VtkOutputFile.c_str(), "wb");
   if (NULL == vtkFile)
   {
-	std::cout << "Error Creating VTK Visualization File '" << filename << "'" << std::endl;
+	std::cout << "Error Creating VTK Visualization File '" << m_VtkOutputFile << "'" << std::endl;
 	return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");

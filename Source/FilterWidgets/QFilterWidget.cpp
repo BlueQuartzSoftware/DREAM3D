@@ -143,7 +143,7 @@ void QFilterWidget::setupGui()
       QGridLayout* frameLayout = new QGridLayout(frame);
       frameLayout->setContentsMargins(0,0,0,0);
 
-      QPushButton* btn = new QPushButton("Select", frame);
+      QPushButton* btn = new QPushButton("Select...", frame);
       btn->setObjectName(QString::fromStdString(option->getPropertyName()));
       frameLayout->addWidget(btn, 0, 0, 1, 1);
       QSpacerItem* spacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -160,7 +160,27 @@ void QFilterWidget::setupGui()
     }
     else if (wType == FilterOption::OutputFileWidget)
     {
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
 
+      QFrame* frame = new QFrame(this);
+      frame->setContentsMargins(0,0,0,0);
+      QGridLayout* frameLayout = new QGridLayout(frame);
+      frameLayout->setContentsMargins(0,0,0,0);
+
+      QPushButton* btn = new QPushButton("Save As...", frame);
+      btn->setObjectName(QString::fromStdString(option->getPropertyName()));
+      frameLayout->addWidget(btn, 0, 0, 1, 1);
+      QSpacerItem* spacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
+      frameLayout->addItem(spacer, 0, 1, 1, 1);
+      QLabel* fp = new QLabel("Not Set", this);
+      fp->setObjectName(QString::fromStdString(option->getHumanLabel()));
+      fp->setWordWrap(true);
+      fp->setStyleSheet("QLabel {\nfont-weight: bold;\nfont-size: 10px;\n}");
+      frameLayout->addWidget(fp, 1, 0, 1, 2);
+//      hLayout->addWidget(btn);
+//      frmLayout->addLayout(hLayout);
+      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, frame);
+      connect(btn, SIGNAL(clicked()), this, SLOT(selectOutputFile()));
     }
     else if (wType == FilterOption::BooleanWidget)
     {
@@ -304,7 +324,53 @@ void QFilterWidget::selectInputFile()
   {
     std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
+  // Now we need to find the specific filter that we are trying to set the value into
+   AbstractFilter::Pointer f = getFilter();
+   std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
+   for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter )
+   {
+     if ( (*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
+     {
+       QLabel* lb = qFindChild<QLabel*>(this, QString::fromStdString((*iter)->getHumanLabel()));
+       if (lb)
+       {
+         lb->setText(file);
+       }
+     }
+   }
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::selectOutputFile()
+{
+  QObject* whoSent = sender();
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"),
+                                              "",
+                                              tr("ALL Files (*.*)") );
+  if (true == file.isEmpty()) { return;}
+  bool ok = false;
+  ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
+  if (false == ok)
+  {
+    std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+  }
+
+  // Now we need to find the specific filter that we are trying to set the value into
+  AbstractFilter::Pointer f = getFilter();
+  std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
+  for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter )
+  {
+    if ( (*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
+    {
+      QLabel* lb = qFindChild<QLabel*>(this, QString::fromStdString((*iter)->getHumanLabel()));
+      if (lb)
+      {
+        lb->setText(file);
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
