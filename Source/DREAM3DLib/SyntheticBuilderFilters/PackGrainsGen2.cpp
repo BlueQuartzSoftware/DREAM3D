@@ -206,6 +206,23 @@ void PackGrainsGen2::setupFilterOptions()
     option->setValueType("int");
     options.push_back(option);
   }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Neighborhood Error Weight");
+    option->setPropertyName("NeighborhoodErrorWeight");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Periodic Boundary");
+    option->setPropertyName("PeriodicBoundaries");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+
   setFilterOptions(options);
 }
 
@@ -891,35 +908,35 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
   std::vector<int> phases;
   std::vector<Ebsd::CrystalStructure> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
-  if (err < 0)
+  if(err < 0)
   {
     return err;
   }
   int phase = -1;
   size_t count = phases.size();
-  for(size_t i = 0; i< count ;i++)
+  for (size_t i = 0; i < count; i++)
   {
     totaldensity = 0.0;
-      phase = phases[i];
+    phase = phases[i];
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
-    if (err < 0)
+    if(err < 0)
     {
-    GGF_CHECK_READ_ERROR(readAxisOrientationData, DREAM3D::HDF5::AxisOrientation)
-    //FIXME: This should probably return an ERROR because nothing was read
-    return 10;
+      GGF_CHECK_READ_ERROR(readAxisOrientationData, DREAM3D::HDF5::AxisOrientation)
+      //FIXME: This should probably return an ERROR because nothing was read
+      return 10;
     }
     size = 36 * 36 * 36;
-    if (size != density.size() )
+    if(size != density.size())
     {
-    std::cout << "GrainGeneratorFunc::readAxisOrientationData Error: Mismatch in number of elements in the 'AxisOrientation' "
-       << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
-       << " elements and we need " << size << " Elements. "<< std::endl;
-    return -1;
+      std::cout << "GrainGeneratorFunc::readAxisOrientationData Error: Mismatch in number of elements in the 'AxisOrientation' "
+          << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size() << " elements and we need " << size << " Elements. "
+          << std::endl;
+      return -1;
     }
     for (size_t k = 0; k < size; k++)
     {
-		totaldensity = totaldensity + density[k];
-		axisodf[phase][k] = totaldensity;
+      totaldensity = totaldensity + density[k];
+      axisodf[phase][k] = totaldensity;
     }
   }
   return err;

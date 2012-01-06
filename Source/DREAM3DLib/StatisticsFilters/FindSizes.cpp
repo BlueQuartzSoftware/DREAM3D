@@ -47,8 +47,7 @@ const static float m_pi = M_PI;
 FindSizes::FindSizes() :
             AbstractFilter()
 {
-  graincounts = NULL;
-  INIT_DataArray(m_GrainCounts,float);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -74,7 +73,7 @@ void FindSizes::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == gi) { return; }
   grain_indicies = gi;
 
@@ -96,7 +95,9 @@ void FindSizes::find_sizes()
   float radcubed;
   float diameter;
   size_t numgrains = m->m_Grains.size();
-  graincounts = m_GrainCounts->WritePointer(0, numgrains);
+
+  DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
+  float* graincounts = m_GrainCounts->GetPointer(0);
 
   // Initialize every element to 0.0
   for (size_t i = 0; i < numgrains * 1; i++)
@@ -127,7 +128,8 @@ void FindSizes::find_sizes2D()
   float radsquared;
   float diameter;
   size_t numgrains = m->m_Grains.size();
-  graincounts = m_GrainCounts->WritePointer(0, numgrains);
+  DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
+  float* graincounts = m_GrainCounts->GetPointer(0);
 
   for (size_t i = 0; i < numgrains; i++)
   {

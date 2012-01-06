@@ -73,6 +73,10 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
      */
     virtual void execute();
 
+
+  protected:
+    FindShapes();
+
     void find_centroids();
     void find_centroids2D();
     void find_moments();
@@ -84,10 +88,6 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float find_xcoord(size_t index);
     float find_ycoord(size_t index);
     float find_zcoord(size_t index);
-
-
-  protected:
-    FindShapes();
 
   private:
     int32_t* grain_indicies;

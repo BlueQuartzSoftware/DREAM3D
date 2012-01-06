@@ -76,9 +76,10 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
+    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
     DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight);
-    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+
 
     virtual void setupFilterOptions();
 
