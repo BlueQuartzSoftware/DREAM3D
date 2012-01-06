@@ -62,7 +62,12 @@ FindLocalMisorientationGradients::FindLocalMisorientationGradients()
 FindLocalMisorientationGradients::~FindLocalMisorientationGradients()
 {
 }
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindLocalMisorientationGradients::preflight()
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
