@@ -89,6 +89,22 @@ LoadSlices::~LoadSlices()
 {
 }
 
+void LoadSlices::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+
+  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::GoodVoxels, p);
+  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::Phases, q);
+  PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::Quats, r);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -409,8 +425,8 @@ void LoadSlices::threshold_points()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   int neighpoints[6];

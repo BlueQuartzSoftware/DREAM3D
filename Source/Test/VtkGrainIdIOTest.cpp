@@ -54,7 +54,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::DxIOTest::TestFile);
+  MXADir::remove(UnitTest::VtkGrainIdIOTest::TestFile);
 #endif
 }
 
@@ -63,15 +63,15 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestVtkGrainIdWriter()
 {
-  int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
+  int size = UnitTest::VtkGrainIdIOTest::XSize * UnitTest::VtkGrainIdIOTest::YSize * UnitTest::VtkGrainIdIOTest::ZSize;
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
   for (int i = 0; i < size; ++i)
   {
-    grainIds->SetValue(i, i + UnitTest::DxIOTest::Offset);
+    grainIds->SetValue(i, i + UnitTest::VtkGrainIdIOTest::Offset);
   }
-  int nx = UnitTest::DxIOTest::XSize;
-  int ny = UnitTest::DxIOTest::YSize;
-  int nz = UnitTest::DxIOTest::ZSize;
+  int nx = UnitTest::VtkGrainIdIOTest::XSize;
+  int ny = UnitTest::VtkGrainIdIOTest::YSize;
+  int nz = UnitTest::VtkGrainIdIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
@@ -79,7 +79,7 @@ int TestVtkGrainIdWriter()
 
   VtkGrainIdWriter::Pointer writer = VtkGrainIdWriter::New();
   writer->setDataContainer(m.get());
-  writer->setFileName(UnitTest::DxIOTest::TestFile);
+  writer->setFileName(UnitTest::VtkGrainIdIOTest::TestFile);
   m->setDimensions(nx, ny, nz);
   writer->execute();
   int err = writer->getErrorCondition();
@@ -94,7 +94,7 @@ int TestVtkGrainIdReader()
 {
 
   VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
-  reader->setFileName(UnitTest::DxIOTest::TestFile);
+  reader->setFileName(UnitTest::VtkGrainIdIOTest::TestFile);
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;
@@ -109,16 +109,16 @@ int TestVtkGrainIdReader()
   IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
 
 
-  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DxIOTest::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DxIOTest::ZSize);
-  int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
+  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::VtkGrainIdIOTest::XSize);
+  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::VtkGrainIdIOTest::YSize);
+  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::VtkGrainIdIOTest::ZSize);
+  int size = UnitTest::VtkGrainIdIOTest::XSize * UnitTest::VtkGrainIdIOTest::YSize * UnitTest::VtkGrainIdIOTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
 
   for (int i = 0; i < size; ++i)
   {
     int32_t file_value = data[i];
-    int32_t memory_value = i+UnitTest::DxIOTest::Offset;
+    int32_t memory_value = i+UnitTest::VtkGrainIdIOTest::Offset;
     DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
   }
 
