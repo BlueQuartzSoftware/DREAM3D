@@ -385,6 +385,10 @@ void MatchCrystallography::MC_LoopBody2(int grain, int phase, int j, float neigh
   simmdf[phase][curmisobin] = simmdf[phase][curmisobin] - (neighsurfarea / totalsurfacearea[phase]);
   simmdf[phase][newmisobin] = simmdf[phase][newmisobin] + (neighsurfarea / totalsurfacearea[phase]);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::matchCrystallography()
 {
   DataContainer* m = getDataContainer();
@@ -404,6 +408,10 @@ void MatchCrystallography::matchCrystallography()
   float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
   if (NULL == euler3s) { return; }
 
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+  float volResConst = xRes * yRes * zRes;
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
   int iterations = 0, badtrycount = 0;
@@ -440,219 +448,241 @@ void MatchCrystallography::matchCrystallography()
 
       if(random < 0.5) // SwapOutOrientation
       {
-		  good = 0;
-		  while (good == 0)
-		  {
-			good = 1;
-			selectedgrain1 = int(rg.genrand_res53() * m->m_Grains.size());
-			if (selectedgrain1 == 0) selectedgrain1 = 1;
-			if (selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
-			if (m->m_Grains[selectedgrain1]->surfacefield > 0) good = 0;
-		  }
+        good = 0;
+        while (good == 0)
+        {
+          good = 1;
+          selectedgrain1 = int(rg.genrand_res53() * m->m_Grains.size());
+          if(selectedgrain1 == 0) selectedgrain1 = 1;
+          if(selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
+          if(m->m_Grains[selectedgrain1]->surfacefield > 0) good = 0;
+        }
 
-		  ea1 = m->m_Grains[selectedgrain1]->euler1;
-		  ea2 = m->m_Grains[selectedgrain1]->euler2;
-		  ea3 = m->m_Grains[selectedgrain1]->euler3;
-		  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-		  int phase = m->m_Grains[selectedgrain1]->phase;
-		  g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
-		  random = rg.genrand_res53();
-		  int choose = 0;
-		  totaldensity = 0;
-		  for (int i = 0; i < numbins; i++)
-		  {
-			float density = actualodf[phase][i];
-			totaldensity = totaldensity + density;
-			if (random >= totaldensity) choose = i;
-		  }
+        ea1 = m->m_Grains[selectedgrain1]->euler1;
+        ea2 = m->m_Grains[selectedgrain1]->euler2;
+        ea3 = m->m_Grains[selectedgrain1]->euler3;
+        OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        int phase = m->m_Grains[selectedgrain1]->phase;
+        g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
+        random = rg.genrand_res53();
+        int choose = 0;
+        totaldensity = 0;
+        for (int i = 0; i < numbins; i++)
+        {
+          float density = actualodf[phase][i];
+          totaldensity = totaldensity + density;
+          if(random >= totaldensity) choose = i;
+        }
 
-		  m_OrientationOps[m->crystruct[phase]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
-		  OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+        m_OrientationOps[m->crystruct[phase]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
+        OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
-		  odfchange = ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose])) - ((actualodf[phase][choose] - (simodf[phase][choose]
-			  + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
-			  + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
-		  odfchange = odfchange + (((actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin] - simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-			  - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-			  - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
+        odfchange =
+            ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose]))
+                - ((actualodf[phase][choose]
+                    - (simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase])))
+                    * (actualodf[phase][choose]
+                        - (simodf[phase][choose]
+                            + (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase]))));
+        odfchange = odfchange
+            + (((actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]))
+                - ((actualodf[phase][g1odfbin]
+                    - (simodf[phase][g1odfbin]
+                        - (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase])))
+                    * (actualodf[phase][g1odfbin]
+                        - (simodf[phase][g1odfbin]
+                            - (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst/ unbiasedvol[phase])))));
 
-		  mdfchange = 0;
-		  size_t size = 0;
-		  if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
-		  for (size_t j = 0; j < size; j++)
-		  {
-			  int neighbor = neighborlist[selectedgrain1][j];
-		    ea1 = m->m_Grains[neighbor]->euler1;
-		    ea2 = m->m_Grains[neighbor]->euler2;
-		    ea3 = m->m_Grains[neighbor]->euler3;
-		    OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
-			  MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
-		  }
+        mdfchange = 0;
+        size_t size = 0;
+        if(neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
+        for (size_t j = 0; j < size; j++)
+        {
+          int neighbor = neighborlist[selectedgrain1][j];
+          ea1 = m->m_Grains[neighbor]->euler1;
+          ea2 = m->m_Grains[neighbor]->euler2;
+          ea3 = m->m_Grains[neighbor]->euler3;
+          OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+          float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
+          MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
+        }
 
-		  deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
-		  if (deltaerror > 0)
-		  {
-			badtrycount = 0;
-			m->m_Grains[selectedgrain1]->euler1 = g1ea1;
-			m->m_Grains[selectedgrain1]->euler2 = g1ea2;
-			m->m_Grains[selectedgrain1]->euler3 = g1ea3;
-			m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
-			m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
-			m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
-			m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
-			simodf[phase][choose] = simodf[phase][choose] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
-			simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
-			size_t size = 0;
-			if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
-			for (size_t j = 0; j < size; j++)
-			{
-			  int neighbor = neighborlist[selectedgrain1][j];
-		      ea1 = m->m_Grains[neighbor]->euler1;
-		      ea2 = m->m_Grains[neighbor]->euler2;
-		      ea3 = m->m_Grains[neighbor]->euler3;
-		      OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
-			  MC_LoopBody2(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
-			}
-		  }
+        deltaerror = (odfchange / currentodferror) + (mdfchange / currentmdferror);
+        if(deltaerror > 0)
+        {
+          badtrycount = 0;
+          m->m_Grains[selectedgrain1]->euler1 = g1ea1;
+          m->m_Grains[selectedgrain1]->euler2 = g1ea2;
+          m->m_Grains[selectedgrain1]->euler3 = g1ea3;
+          m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
+          m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
+          m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
+          m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
+          simodf[phase][choose] = simodf[phase][choose]
+              + (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase]);
+          simodf[phase][g1odfbin] = simodf[phase][g1odfbin]
+              - (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase]);
+          size_t size = 0;
+          if(neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
+          for (size_t j = 0; j < size; j++)
+          {
+            int neighbor = neighborlist[selectedgrain1][j];
+            ea1 = m->m_Grains[neighbor]->euler1;
+            ea2 = m->m_Grains[neighbor]->euler2;
+            ea3 = m->m_Grains[neighbor]->euler3;
+            OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+            float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
+            MC_LoopBody2(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
+          }
+        }
       }
       else if(random > 0.5) // SwitchOrientation
       {
-		  good = 0;
-		  while (good == 0)
-		  {
-			good = 1;
-			selectedgrain1 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
-			if (selectedgrain1 == 0) selectedgrain1 = 1;
-			if (selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
-			selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
-			if (selectedgrain2 == 0) selectedgrain2 = 1;
-			if (selectedgrain2 == m->m_Grains.size()) selectedgrain2 = m->m_Grains.size() - 1;
-			if (m->m_Grains[selectedgrain1]->surfacefield > 0 || m->m_Grains[selectedgrain2]->surfacefield > 0) good = 0;
-		  }
-		  g1ea1 = m->m_Grains[selectedgrain1]->euler1;
-		  g1ea2 = m->m_Grains[selectedgrain1]->euler2;
-		  g1ea3 = m->m_Grains[selectedgrain1]->euler3;
-		  g2ea1 = m->m_Grains[selectedgrain2]->euler1;
-		  g2ea2 = m->m_Grains[selectedgrain2]->euler2;
-		  g2ea3 = m->m_Grains[selectedgrain2]->euler3;
-		  q1[1] = m->m_Grains[selectedgrain1]->avg_quat[1];
-		  q1[2] = m->m_Grains[selectedgrain1]->avg_quat[2];
-		  q1[3] = m->m_Grains[selectedgrain1]->avg_quat[3];
-		  q1[4] = m->m_Grains[selectedgrain1]->avg_quat[4];
-		  int phase = m->m_Grains[selectedgrain1]->phase;
-		  OrientationMath::eulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
-		  g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
-		  q1[1] = m->m_Grains[selectedgrain2]->avg_quat[1];
-		  q1[2] = m->m_Grains[selectedgrain2]->avg_quat[2];
-		  q1[3] = m->m_Grains[selectedgrain2]->avg_quat[3];
-		  q1[4] = m->m_Grains[selectedgrain2]->avg_quat[4];
-		  OrientationMath::eulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
-		  g2odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
+        good = 0;
+        while (good == 0)
+        {
+          good = 1;
+          selectedgrain1 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
+          if(selectedgrain1 == 0) selectedgrain1 = 1;
+          if(selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
+          selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
+          if(selectedgrain2 == 0) selectedgrain2 = 1;
+          if(selectedgrain2 == m->m_Grains.size()) selectedgrain2 = m->m_Grains.size() - 1;
+          if(m->m_Grains[selectedgrain1]->surfacefield > 0 || m->m_Grains[selectedgrain2]->surfacefield > 0) good = 0;
+        }
+        g1ea1 = m->m_Grains[selectedgrain1]->euler1;
+        g1ea2 = m->m_Grains[selectedgrain1]->euler2;
+        g1ea3 = m->m_Grains[selectedgrain1]->euler3;
+        g2ea1 = m->m_Grains[selectedgrain2]->euler1;
+        g2ea2 = m->m_Grains[selectedgrain2]->euler2;
+        g2ea3 = m->m_Grains[selectedgrain2]->euler3;
+        q1[1] = m->m_Grains[selectedgrain1]->avg_quat[1];
+        q1[2] = m->m_Grains[selectedgrain1]->avg_quat[2];
+        q1[3] = m->m_Grains[selectedgrain1]->avg_quat[3];
+        q1[4] = m->m_Grains[selectedgrain1]->avg_quat[4];
+        int phase = m->m_Grains[selectedgrain1]->phase;
+        OrientationMath::eulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
+        g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
+        q1[1] = m->m_Grains[selectedgrain2]->avg_quat[1];
+        q1[2] = m->m_Grains[selectedgrain2]->avg_quat[2];
+        q1[3] = m->m_Grains[selectedgrain2]->avg_quat[3];
+        q1[4] = m->m_Grains[selectedgrain2]->avg_quat[4];
+        OrientationMath::eulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
+        g2odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 
-		  odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
-			 -(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes()
-				  * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-			  + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
-		  odfchange = odfchange + (((actualodf[phase][g2odfbin]-simodf[phase][g2odfbin]) * (actualodf[phase][g2odfbin]-simodf[phase][g2odfbin])) - ((actualodf[phase][g2odfbin]
-			 -(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes()
-				  * m->getYRes() *m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-			  + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
+        odfchange = ((actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]))
+            - ((actualodf[phase][g1odfbin]
+                - (simodf[phase][g1odfbin] - (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase])
+                    + (float(m->m_Grains[selectedgrain2]->numvoxels) * volResConst / unbiasedvol[phase])))
+                * (actualodf[phase][g1odfbin]
+                    - (simodf[phase][g1odfbin]
+                        - (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase])
+                        + (float(m->m_Grains[selectedgrain2]->numvoxels) * volResConst / unbiasedvol[phase]))));
+        odfchange = odfchange
+            + (((actualodf[phase][g2odfbin] - simodf[phase][g2odfbin]) * (actualodf[phase][g2odfbin] - simodf[phase][g2odfbin]))
+                - ((actualodf[phase][g2odfbin]
+                    - (simodf[phase][g2odfbin]
+                        - (float(m->m_Grains[selectedgrain2]->numvoxels) * volResConst / unbiasedvol[phase])
+                        + (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst/ unbiasedvol[phase])))
+                    * (actualodf[phase][g2odfbin]
+                        - (simodf[phase][g2odfbin]
+                            - (float(m->m_Grains[selectedgrain2]->numvoxels) * volResConst / unbiasedvol[phase])
+                            + (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase])))));
 
+        mdfchange = 0;
+        OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+        size_t size = 0;
+        if(neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
+        for (size_t j = 0; j < size; j++)
+        {
+          int neighbor = neighborlist[selectedgrain1][j];
+          ea1 = m->m_Grains[neighbor]->euler1;
+          ea2 = m->m_Grains[neighbor]->euler2;
+          ea3 = m->m_Grains[neighbor]->euler3;
+          OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+          float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
+          if(neighbor != selectedgrain2)
+          {
+            MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
+          }
+        }
 
-		  mdfchange = 0;
-		  OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
-		  size_t size = 0;
-		  if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
-		  for (size_t j = 0; j < size; j++)
-		  {
-			int neighbor = neighborlist[selectedgrain1][j];
-		    ea1 = m->m_Grains[neighbor]->euler1;
-		    ea2 = m->m_Grains[neighbor]->euler2;
-		    ea3 = m->m_Grains[neighbor]->euler3;
-		    OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
-			if (neighbor != selectedgrain2)
-			{
-			  MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
-			}
-		  }
+        OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+        size = 0;
+        if(neighborlist[selectedgrain2].size() != 0) size = neighborlist[selectedgrain2].size();
+        for (size_t j = 0; j < size; j++)
+        {
+          size_t neighbor = neighborlist[selectedgrain2][j];
+          ea1 = m->m_Grains[neighbor]->euler1;
+          ea2 = m->m_Grains[neighbor]->euler2;
+          ea3 = m->m_Grains[neighbor]->euler3;
+          OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+          float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
+          if(neighbor != selectedgrain1)
+          {
+            MC_LoopBody1(selectedgrain2, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
+          }
+        }
 
-		  OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
-		  size = 0;
-		  if (neighborlist[selectedgrain2].size() != 0) size = neighborlist[selectedgrain2].size();
-		  for (size_t j = 0; j < size; j++)
-		  {
-			size_t neighbor = neighborlist[selectedgrain2][j];
-		    ea1 = m->m_Grains[neighbor]->euler1;
-		    ea2 = m->m_Grains[neighbor]->euler2;
-		    ea3 = m->m_Grains[neighbor]->euler3;
-		    OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
-			if (neighbor != selectedgrain1)
-			{
-			  MC_LoopBody1(selectedgrain2, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
-			}
-		  }
+        deltaerror = (odfchange / currentodferror) + (mdfchange / currentmdferror);
+        if(deltaerror > 0)
+        {
+          badtrycount = 0;
+          m->m_Grains[selectedgrain1]->euler1 = g2ea1;
+          m->m_Grains[selectedgrain1]->euler2 = g2ea2;
+          m->m_Grains[selectedgrain1]->euler3 = g2ea3;
+          m->m_Grains[selectedgrain2]->euler1 = g1ea1;
+          m->m_Grains[selectedgrain2]->euler2 = g1ea2;
+          m->m_Grains[selectedgrain2]->euler3 = g1ea3;
+          simodf[phase][g1odfbin] = simodf[phase][g1odfbin]
+              + (float(m->m_Grains[selectedgrain2]->numvoxels) * volResConst / unbiasedvol[phase])
+              - (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase]);
+          simodf[phase][g2odfbin] = simodf[phase][g2odfbin]
+              + (float(m->m_Grains[selectedgrain1]->numvoxels) * volResConst / unbiasedvol[phase])
+              - (float(m->m_Grains[selectedgrain2]->numvoxels) * volResConst / unbiasedvol[phase]);
 
-		  deltaerror = (odfchange/currentodferror) + (mdfchange/currentmdferror);
-		  if (deltaerror > 0)
-		  {
-			badtrycount = 0;
-			m->m_Grains[selectedgrain1]->euler1 = g2ea1;
-			m->m_Grains[selectedgrain1]->euler2 = g2ea2;
-			m->m_Grains[selectedgrain1]->euler3 = g2ea3;
-			m->m_Grains[selectedgrain2]->euler1 = g1ea1;
-			m->m_Grains[selectedgrain2]->euler2 = g1ea2;
-			m->m_Grains[selectedgrain2]->euler3 = g1ea3;
-			simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-				- (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
-			simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m->m_Grains[selectedgrain1]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-				- (float(m->m_Grains[selectedgrain2]->numvoxels) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
+          OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+          m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
+          m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
+          m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
+          m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
+          size = 0;
+          if(neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
+          for (size_t j = 0; j < size; j++)
+          {
+            size_t neighbor = neighborlist[selectedgrain1][j];
+            ea1 = m->m_Grains[neighbor]->euler1;
+            ea2 = m->m_Grains[neighbor]->euler2;
+            ea3 = m->m_Grains[neighbor]->euler3;
+            OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+            float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
+            if(neighbor != selectedgrain2)
+            {
+              MC_LoopBody2(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
+            }
+          }
 
-		    OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
-			m->m_Grains[selectedgrain1]->avg_quat[1] = q1[1];
-			m->m_Grains[selectedgrain1]->avg_quat[2] = q1[2];
-			m->m_Grains[selectedgrain1]->avg_quat[3] = q1[3];
-			m->m_Grains[selectedgrain1]->avg_quat[4] = q1[4];
-			size = 0;
-			if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
-			for (size_t j = 0; j < size; j++)
-			{
-			  size_t neighbor = neighborlist[selectedgrain1][j];
-		      ea1 = m->m_Grains[neighbor]->euler1;
-		      ea2 = m->m_Grains[neighbor]->euler2;
-		      ea3 = m->m_Grains[neighbor]->euler3;
-		      OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
-			  if (neighbor != selectedgrain2)
-			  {
-				MC_LoopBody2(selectedgrain1, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
-			  }
-			}
-
-		    OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
-			m->m_Grains[selectedgrain2]->avg_quat[1] = q1[1];
-			m->m_Grains[selectedgrain2]->avg_quat[2] = q1[2];
-			m->m_Grains[selectedgrain2]->avg_quat[3] = q1[3];
-			m->m_Grains[selectedgrain2]->avg_quat[4] = q1[4];
-			size = 0;
-			if (neighborlist[selectedgrain2].size() != 0) size = neighborlist[selectedgrain2].size();
-			for (size_t j = 0; j < size; j++)
-			{
-			  size_t neighbor = neighborlist[selectedgrain2][j];
-		      ea1 = m->m_Grains[neighbor]->euler1;
-		      ea2 = m->m_Grains[neighbor]->euler2;
-		      ea3 = m->m_Grains[neighbor]->euler3;
-		      OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			  float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
-			  if (neighbor != selectedgrain1)
-			  {
-				MC_LoopBody2(selectedgrain2, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
-			  }
-			}
-		  }
+          OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+          m->m_Grains[selectedgrain2]->avg_quat[1] = q1[1];
+          m->m_Grains[selectedgrain2]->avg_quat[2] = q1[2];
+          m->m_Grains[selectedgrain2]->avg_quat[3] = q1[3];
+          m->m_Grains[selectedgrain2]->avg_quat[4] = q1[4];
+          size = 0;
+          if(neighborlist[selectedgrain2].size() != 0) size = neighborlist[selectedgrain2].size();
+          for (size_t j = 0; j < size; j++)
+          {
+            size_t neighbor = neighborlist[selectedgrain2][j];
+            ea1 = m->m_Grains[neighbor]->euler1;
+            ea2 = m->m_Grains[neighbor]->euler2;
+            ea3 = m->m_Grains[neighbor]->euler3;
+            OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+            float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
+            if(neighbor != selectedgrain1)
+            {
+              MC_LoopBody2(selectedgrain2, phase, j, neighsurfarea, m->crystruct[phase], q1, q2);
+            }
+          }
+        }
       }
     }
   }

@@ -203,7 +203,7 @@ void AlignSections::align_sections()
   };
 
   int** shifts = AlignSections::Allocate2DArray<int>(dims[2], 2);
-  for (size_t a = 0; a < dims[2]; a++)
+  for (DimType a = 0; a < dims[2]; a++)
   {
     for (int b = 0; b < 2; b++)
     {
@@ -213,15 +213,15 @@ void AlignSections::align_sections()
 
   int** misorients = AlignSections::Allocate2DArray<int>(dims[0], dims[1]);
  // int** misorients = new int *[dims[0]];
-  for (size_t a = 0; a < dims[0]; a++)
+  for (DimType a = 0; a < dims[0]; a++)
   {
 //    misorients[a] = new int[dims[1]];
-    for (size_t b = 0; b < dims[1]; b++)
+    for (DimType b = 0; b < dims[1]; b++)
     {
       misorients[a][b] = 0;
     }
   }
-  for (size_t iter = 1; iter < dims[2]; iter++)
+  for (DimType iter = 1; iter < dims[2]; iter++)
   {
 
     mindisorientation = 100000000;
@@ -250,9 +250,9 @@ void AlignSections::align_sections()
     oldyshift = -1;
     newxshift = 0;
     newyshift = 0;
-    for (size_t a = 0; a < dims[0]; a++)
+    for (DimType a = 0; a < dims[0]; a++)
     {
-      for (size_t b = 0; b < dims[1]; b++)
+      for (DimType b = 0; b < dims[1]; b++)
       {
         misorients[a][b] = 0;
       }
@@ -270,9 +270,9 @@ void AlignSections::align_sections()
           if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
               && (j + oldyshift) < (dims[1] / 2))
           {
-            for (size_t l = 0; l < dims[1]; l = l + 4)
+            for (DimType l = 0; l < dims[1]; l = l + 4)
             {
-              for (size_t n = 0; n < dims[0]; n = n + 4)
+              for (DimType n = 0; n < dims[0]; n = n + 4)
               {
                 count++;
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
@@ -392,12 +392,12 @@ void AlignSections::align_sections()
       mutualinfo12 = NULL;
     }
   }
-  for (size_t iter = 1; iter < dims[2]; iter++)
+  for (DimType iter = 1; iter < dims[2]; iter++)
   {
     slice = (dims[2] - 1) - iter;
-    for (size_t l = 0; l < dims[1]; l++)
+    for (DimType l = 0; l < dims[1]; l++)
     {
-      for (size_t n = 0; n < dims[0]; n++)
+      for (DimType n = 0; n < dims[0]; n++)
       {
         if(shifts[iter][1] >= 0) yspot = l;
         if(shifts[iter][0] >= 0) xspot = n;

@@ -168,11 +168,11 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
        else
        {
          T tmp;
-         for (int z = 0; z < zDim; ++z)
+         for (size_t z = 0; z < zDim; ++z)
          {
-           for (int y = 0; y < yDim; ++y)
+           for (size_t y = 0; y < yDim; ++y)
            {
-             for (int x = 0; x < xDim; ++x)
+             for (size_t x = 0; x < xDim; ++x)
              {
                inStream >> tmp;
              }

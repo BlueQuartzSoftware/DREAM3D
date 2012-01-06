@@ -505,7 +505,7 @@ void LoadSlices::threshold_points()
   size_t count = 0;
   int currentpoint = 0;
   int neighbor = 0;
-  size_t col, row, plane;
+  DimType col, row, plane;
 
 //  int noborder = 0;
   Ebsd::CrystalStructure phase1, phase2;
@@ -527,49 +527,49 @@ void LoadSlices::threshold_points()
   }
   for (size_t j = 0; j < count; j++)
   {
-	currentpoint = voxelslist[j];
-	col = currentpoint % m->getXPoints();
-	row = (currentpoint / m->getXPoints()) % m->getYPoints();
-	plane = currentpoint / (m->getXPoints() * m->getYPoints());
-	q1[0] = 0;
-	q1[1] = quats[currentpoint*5 + 1];
-	q1[2] = quats[currentpoint*5 + 2];
-	q1[3] = quats[currentpoint*5 + 3];
-	q1[4] = quats[currentpoint*5 + 4];
-	phase1 = m->crystruct[phases[currentpoint]];
-	for (size_t i = 0; i < 6; i++)
-	{
-	  good = 1;
-	  neighbor = currentpoint + neighbors[i];
-	  if (i == 0 && plane == 0) good = 0;
-	  if (i == 5 && plane == (dims[2] - 1)) good = 0;
-	  if (i == 1 && row == 0) good = 0;
-	  if (i == 4 && row == (dims[1] - 1)) good = 0;
-	  if (i == 2 && col == 0) good = 0;
-	  if (i == 3 && col == (dims[0] - 1)) good = 0;
-	  if (good == 1 && grain_indicies[neighbor] == 0 && phases[neighbor] > 0)
-	  {
-		w = 10000.0;
-		q2[0] = 0;
-		q2[1] = quats[neighbor*5 + 1];
-		q2[2] = quats[neighbor*5 + 2];
-		q2[3] = quats[neighbor*5 + 3];
-		q2[4] = quats[neighbor*5 + 4];
-		phase2 = m->crystruct[phases[neighbor]];
-		if (phase1 == phase2)
-		{
-		  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-		}
-		if (w < m_MisorientationTolerance)
-		{
-		  grain_indicies[neighbor] = -1;
-		  alreadychecked[neighbor] = true;
-		  voxelslist[count] = neighbor;
-		  count++;
-		  if (count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-		}
-	  }
-	}
+    currentpoint = voxelslist[j];
+    col = currentpoint % m->getXPoints();
+    row = (currentpoint / m->getXPoints()) % m->getYPoints();
+    plane = currentpoint / (m->getXPoints() * m->getYPoints());
+    q1[0] = 0;
+    q1[1] = quats[currentpoint * 5 + 1];
+    q1[2] = quats[currentpoint * 5 + 2];
+    q1[3] = quats[currentpoint * 5 + 3];
+    q1[4] = quats[currentpoint * 5 + 4];
+    phase1 = m->crystruct[phases[currentpoint]];
+    for (DimType i = 0; i < 6; i++)
+    {
+      good = 1;
+      neighbor = currentpoint + neighbors[i];
+      if(i == 0 && plane == 0) good = 0;
+      if(i == 5 && plane == (dims[2] - 1)) good = 0;
+      if(i == 1 && row == 0) good = 0;
+      if(i == 4 && row == (dims[1] - 1)) good = 0;
+      if(i == 2 && col == 0) good = 0;
+      if(i == 3 && col == (dims[0] - 1)) good = 0;
+      if(good == 1 && grain_indicies[neighbor] == 0 && phases[neighbor] > 0)
+      {
+        w = 10000.0;
+        q2[0] = 0;
+        q2[1] = quats[neighbor * 5 + 1];
+        q2[2] = quats[neighbor * 5 + 2];
+        q2[3] = quats[neighbor * 5 + 3];
+        q2[4] = quats[neighbor * 5 + 4];
+        phase2 = m->crystruct[phases[neighbor]];
+        if(phase1 == phase2)
+        {
+          w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+        }
+        if(w < m_MisorientationTolerance)
+        {
+          grain_indicies[neighbor] = -1;
+          alreadychecked[neighbor] = true;
+          voxelslist[count] = neighbor;
+          count++;
+          if(count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
+        }
+      }
+    }
   }
   voxelslist.clear();
 }

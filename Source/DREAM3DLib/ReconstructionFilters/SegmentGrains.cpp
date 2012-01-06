@@ -146,7 +146,7 @@ void SegmentGrains::execute()
   float n1, n2, n3;
   int randpoint = 0;
   int good = 0;
-  size_t col, row, plane;
+  DimType col, row, plane;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
   size_t initialMergeListSize = 10;
@@ -172,14 +172,14 @@ void SegmentGrains::execute()
     randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
     while (seed == -1 && counter < totalPoints)
     {
-      if (randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
-      if (grain_indicies[randpoint] == -1 && phases[randpoint] > 0) seed = randpoint;
+      if(randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
+      if(grain_indicies[randpoint] == -1 && phases[randpoint] > 0) seed = randpoint;
 
       randpoint++;
       counter++;
     }
-    if (seed == -1) noseeds = 1;
-    if (seed >= 0)
+    if(seed == -1) noseeds = 1;
+    if(seed >= 0)
     {
       size = 0;
       grain_indicies[seed] = graincount;
@@ -201,28 +201,28 @@ void SegmentGrains::execute()
           q1[4] = quats[currentpoint * 5 + 4];
           good = 1;
           neighbor = currentpoint + neighpoints[i];
-          if (i == 0 && plane == 0) good = 0;
-          if (i == 5 && plane == (dims[2] - 1)) good = 0;
-          if (i == 1 && row == 0) good = 0;
-          if (i == 4 && row == (dims[1] - 1)) good = 0;
-          if (i == 2 && col == 0) good = 0;
-          if (i == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && grain_indicies[neighbor] == -1 && phases[neighbor] > 0)
+          if(i == 0 && plane == 0) good = 0;
+          if(i == 5 && plane == (dims[2] - 1)) good = 0;
+          if(i == 1 && row == 0) good = 0;
+          if(i == 4 && row == (dims[1] - 1)) good = 0;
+          if(i == 2 && col == 0) good = 0;
+          if(i == 3 && col == (dims[0] - 1)) good = 0;
+          if(good == 1 && grain_indicies[neighbor] == -1 && phases[neighbor] > 0)
           {
             w = 10000.0;
             q2[0] = 1;
-            q2[1] = quats[neighbor*5 + 1];
-            q2[2] = quats[neighbor*5 + 2];
-            q2[3] = quats[neighbor*5 + 3];
-            q2[4] = quats[neighbor*5 + 4];
+            q2[1] = quats[neighbor * 5 + 1];
+            q2[2] = quats[neighbor * 5 + 2];
+            q2[3] = quats[neighbor * 5 + 3];
+            q2[4] = quats[neighbor * 5 + 4];
             phase2 = m->crystruct[phases[neighbor]];
-            if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-            if (w < m_MisorientationTolerance)
+            if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+            if(w < m_MisorientationTolerance)
             {
               grain_indicies[neighbor] = graincount;
               voxelslist[size] = neighbor;
               size++;
-              if (size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
+              if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
             }
           }
         }
@@ -230,7 +230,7 @@ void SegmentGrains::execute()
       m->m_Grains[graincount]->active = 1;
       m->m_Grains[graincount]->phase = phases[seed];
       graincount++;
-      if (graincount >= m->m_Grains.size())
+      if(graincount >= m->m_Grains.size())
       {
         size_t oldSize = m->m_Grains.size();
         m->m_Grains.resize(m->m_Grains.size() + 100);

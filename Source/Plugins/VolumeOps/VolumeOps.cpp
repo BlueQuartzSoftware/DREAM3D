@@ -84,17 +84,30 @@ void VolumeOps::execute()
   CHECK_FOR_ERROR(DataContainer, "Error Loading Volume", err);
   CHECK_FOR_CANCELED(DataContainer, "VolumeOps was canceled",  load_volume)
 
-
+  size_t udims[3] =
+  { 0, 0, 0 };
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] =
+  { static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[1]),
+      static_cast<DimType>(udims[2]), };
 
   // updateProgressAndMessage(("Operating on Volume"), 50);
-  if(m->getXPoints() != (m_XMax-m_XMin) || m->getYPoints() != (m_YMax-m_YMin) || m->getZPoints() != (m_ZMax-m_ZMin))
+  if(dims[0] != (m_XMax-m_XMin)
+      || dims[1] != (m_YMax-m_YMin)
+      || dims[2] != (m_ZMax-m_ZMin))
   {
 	  float xp = (m_XMax-m_XMin);
 	  float yp = (m_YMax-m_YMin);
 	  float zp = (m_ZMax-m_ZMin);
 	  float xstart = m_XMin*m->getXRes();
 	  float ystart = m_YMin*m->getYRes();
-	  float zstart = m_ZMin*m->getZRes();	  
+	  float zstart = m_ZMin*m->getZRes();
 	  updateProgressAndMessage(("Cropping Volume"), 50);
 	  CropVolume::Pointer crop_volume = CropVolume::New();
 	  crop_volume->setXStart(xstart);
@@ -111,7 +124,9 @@ void VolumeOps::execute()
 	  CHECK_FOR_CANCELED(DataContainer, "VolumeOps was canceled",  crop_volume)
   }
 
-  if(m->getXRes() != m_XRes || m->getYRes() != m_YRes || m->getZRes() != m_ZRes)
+  if(m->getXRes() != m_XRes
+      || m->getYRes() != m_YRes
+      || m->getZRes() != m_ZRes)
   {
 	  float sizex = (m_XMax-m_XMin)*m->getXRes();
 	  float sizey = (m_YMax-m_YMin)*m->getYRes();

@@ -169,7 +169,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   float coatinginside = -1;
   int index;
   size_t column, row, plane;
-  size_t xmin, xmax, ymin, ymax, zmin, zmax;
+  DimType xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
@@ -245,63 +245,63 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
     if(zmin < 0) zmin = 0;
     if(zmax > dims[2]-1) zmax = dims[2]-1;
   }
-  for(size_t iter1 = xmin; iter1 < xmax+1; iter1++)
+  for(DimType iter1 = xmin; iter1 < xmax+1; iter1++)
   {
-    for(size_t iter2 = ymin; iter2 < ymax+1; iter2++)
+    for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
     {
-		for(size_t iter3 = zmin; iter3 < zmax+1; iter3++)
-		{
-		  column = iter1;
-		  row = iter2;
-		  plane = iter3;
-		  if(iter1 < 0) column = iter1+dims[0];
-		  if(iter1 > dims[0]-1) column = iter1-dims[0];
-		  if(iter2 < 0) row = iter2+dims[1];
-		  if(iter2 > dims[1]-1) row = iter2-dims[1];
-		  if(iter3 < 0) plane = iter3+dims[2];
-		  if(iter3 > dims[2]-1) plane = iter3-dims[2];
-		  index = (plane*dims[0]*dims[1])+(row*dims[0])+column;
-		  inside = -1;
-		  coatinginside = -1;
-		  x = float(column)*m->getXRes();
-		  y = float(row)*m->getYRes();
-		  z = float(plane)*m->getZRes();
-		  if(iter1 < 0) x = x-sizex;
-		  if(iter1 > dims[0]-1) x = x+sizex;
-		  if(iter2 < 0) y = y-sizey;
-		  if(iter2 > dims[1]-1) y = y+sizey;
-		  if(iter3 < 0) z = z-sizez;
-		  if(iter3 > dims[2]-1) z = z+sizez;
-		  dist = ((x-xc)*(x-xc))+((y-yc)*(y-yc))+((z-zc)*(z-zc));
-		  dist = sqrt(dist);
-		  if(dist < coatingradcur1)
-		  {
-			x = x-xc;
-			y = y-yc;
-			z = z-zc;
-			xp = (x*ga[0][0])+(y*ga[0][1])+(z*ga[0][2]);
-			yp = (x*ga[1][0])+(y*ga[1][1])+(z*ga[1][2]);
-			zp = (x*ga[2][0])+(y*ga[2][1])+(z*ga[2][2]);
-			float axis1comp = xp/radcur1;
-			float axis2comp = yp/radcur2;
-			float axis3comp = zp/radcur3;
-			float coatingaxis1comp = xp/coatingradcur1;
-			float coatingaxis2comp = yp/coatingradcur2;
-			float coatingaxis3comp = zp/coatingradcur3;
-		    inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-		    coatinginside = m_ShapeOps[shapeclass]->inside(coatingaxis1comp, coatingaxis2comp, coatingaxis3comp);
-			if(inside >= 0)
-			{
-				int currentpoint = index;
-				currentprecipvoxellist.push_back(currentpoint);
-			}
-			if(inside < 0 && coatinginside >= 0)
-			{
-				int currentpoint = index;
-				currentcoatingvoxellist.push_back(currentpoint);
-			}
-		  }
-		}
+      for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
+      {
+        column = iter1;
+        row = iter2;
+        plane = iter3;
+        if(iter1 < 0) column = iter1 + dims[0];
+        if(iter1 > dims[0] - 1) column = iter1 - dims[0];
+        if(iter2 < 0) row = iter2 + dims[1];
+        if(iter2 > dims[1] - 1) row = iter2 - dims[1];
+        if(iter3 < 0) plane = iter3 + dims[2];
+        if(iter3 > dims[2] - 1) plane = iter3 - dims[2];
+        index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
+        inside = -1;
+        coatinginside = -1;
+        x = float(column) * m->getXRes();
+        y = float(row) * m->getYRes();
+        z = float(plane) * m->getZRes();
+        if(iter1 < 0) x = x - sizex;
+        if(iter1 > dims[0] - 1) x = x + sizex;
+        if(iter2 < 0) y = y - sizey;
+        if(iter2 > dims[1] - 1) y = y + sizey;
+        if(iter3 < 0) z = z - sizez;
+        if(iter3 > dims[2] - 1) z = z + sizez;
+        dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+        dist = sqrt(dist);
+        if(dist < coatingradcur1)
+        {
+          x = x - xc;
+          y = y - yc;
+          z = z - zc;
+          xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
+          yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
+          zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
+          float axis1comp = xp / radcur1;
+          float axis2comp = yp / radcur2;
+          float axis3comp = zp / radcur3;
+          float coatingaxis1comp = xp / coatingradcur1;
+          float coatingaxis2comp = yp / coatingradcur2;
+          float coatingaxis3comp = zp / coatingradcur3;
+          inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+          coatinginside = m_ShapeOps[shapeclass]->inside(coatingaxis1comp, coatingaxis2comp, coatingaxis3comp);
+          if(inside >= 0)
+          {
+            int currentpoint = index;
+            currentprecipvoxellist.push_back(currentpoint);
+          }
+          if(inside < 0 && coatinginside >= 0)
+          {
+            int currentpoint = index;
+            currentcoatingvoxellist.push_back(currentpoint);
+          }
+        }
+      }
     }
   }
 }
