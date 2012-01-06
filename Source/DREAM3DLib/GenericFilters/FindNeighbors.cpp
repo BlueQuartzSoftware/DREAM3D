@@ -85,7 +85,10 @@ void FindNeighbors::preflight()
   m->addFieldData(DREAM3D::FieldData::NumNeighbors, r);
   PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
   m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea, s);
-
+  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+  m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+  NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
+  m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
   setErrorCondition(err);
   setErrorMessage(ss.str());
 }

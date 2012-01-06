@@ -76,7 +76,8 @@ class DREAM3DLib_EXPORT SMVtkPolyDataWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
-
+  
+    virtual void preflight();
 #if 0
     /**
      * @brief
