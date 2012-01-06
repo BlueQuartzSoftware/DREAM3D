@@ -68,6 +68,29 @@ void FindEuclideanDistMap::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindEuclideanDistMap::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of FindEuclideanDistMap Filter" << std::endl;
+	  err = -300;
+  }
+
+  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::NearestNeighbors, p);
+  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::NearestNeighborDistances, q);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindEuclideanDistMap::find_euclideandistmap()
 {
   DataContainer* m = getDataContainer();

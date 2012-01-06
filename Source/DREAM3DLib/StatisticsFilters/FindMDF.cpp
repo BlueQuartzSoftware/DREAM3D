@@ -68,6 +68,54 @@ FindMDF::~FindMDF()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindMDF::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
+  if(d.get() == NULL)
+  {
+	  ss << "AvgQuats Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Active);
+  if(d.get() == NULL)
+  {
+	  ss << "Active Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
+  if(d.get() == NULL)
+  {
+	  ss << "NeighborLists Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList);
+  if(d.get() == NULL)
+  {
+	  ss << "SharedSurfaceAreaList Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea);
+  if(d.get() == NULL)
+  {
+	  ss << "TotalSurfaceArea Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
+	  err = -300;
+  }
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindMDF::execute()
 {
   DataContainer* m = getDataContainer();

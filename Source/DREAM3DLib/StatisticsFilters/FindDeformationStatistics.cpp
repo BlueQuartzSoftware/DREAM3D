@@ -112,43 +112,43 @@ void FindDeformationStatistics::preflight()
   d = m->getFieldData(DREAM3D::FieldData::Schmids);
   if(d.get() == NULL)
   {
-	  ss << "Schmids Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  ss << "Schmids Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::SlipSystems);
   if(d.get() == NULL)
   {
-	  ss << "SlipSystems Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  ss << "SlipSystems Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
   if(d.get() == NULL)
   {
-	  ss << "AvgQuats Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  ss << "AvgQuats Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::Omega3s);
   if(d.get() == NULL)
   {
-	  ss << "Omega3s Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  ss << "Omega3s Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::Phases);
   if(d.get() == NULL)
   {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  ss << "Phases (Field) Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::Poles);
   if(d.get() == NULL)
   {
-	  ss << "Poles Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  ss << "Poles Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::GrainAvgMisorientations);
   if(d.get() == NULL)
   {
-	  ss << "Volumes Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  ss << "Volumes Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
 	  err = -300;
   }
 
