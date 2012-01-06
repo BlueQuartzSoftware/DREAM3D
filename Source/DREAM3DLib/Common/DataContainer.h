@@ -63,9 +63,7 @@ namespace DREAM3D
   {
     const std::string GrainIds("GrainIds");
     const std::string Phases("Phases");
-    const std::string Euler1("Euler1");
-    const std::string Euler2("Euler2");
-    const std::string Euler3("Euler3");
+    const std::string EulerAngles("EulerAngles");
     const std::string SurfaceVoxels("SurfaceVoxels");
     const std::string Neighbors("Neighbors");
     const std::string Quats("Quats");

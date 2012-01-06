@@ -419,12 +419,8 @@ void MatchCrystallography::matchCrystallography()
   int64_t totalPoints = m->totalPoints();
   int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
-  float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, totalPoints*3, this);
+  if (NULL == eulerangles) { return; }
 
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
@@ -680,9 +676,9 @@ void MatchCrystallography::matchCrystallography()
   }
   for(int i = 0; i < totalPoints; i++)
   {
-    euler1s[i] = m->m_Grains[grain_indicies[i]]->euler1;
-    euler2s[i] = m->m_Grains[grain_indicies[i]]->euler2;
-    euler3s[i] = m->m_Grains[grain_indicies[i]]->euler3;
+	eulerangles[3*i] = m->m_Grains[grain_indicies[i]]->euler1;
+    eulerangles[3*i + 1] = m->m_Grains[grain_indicies[i]]->euler2;
+    eulerangles[3*i + 2] = m->m_Grains[grain_indicies[i]]->euler3;
   }
 }
 

@@ -54,9 +54,7 @@ H5VoxelWriter::~H5VoxelWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelWriter::writeEulerData(float* e1,
-                                  float* e2,
-                                  float* e3,
+int H5VoxelWriter::writeEulerData(float* ea,
                                   int64_t totalPoints,
                                   bool appendFile)
 {
@@ -74,9 +72,9 @@ int H5VoxelWriter::writeEulerData(float* e1,
   std::vector<float> dataf( totalPoints * 3);
   for (int64_t i = 0; i <  totalPoints; ++i)
   {
-    dataf[i * 3] = e1[i];
-    dataf[i * 3 + 1] = e2[i];
-    dataf[i * 3 + 2] = e3[i];
+    dataf[i * 3] = ea[3*i];
+    dataf[i * 3 + 1] = ea[3*i + 1];
+    dataf[i * 3 + 2] = ea[3*i + 2];
   }
   err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
   if (err < 0)

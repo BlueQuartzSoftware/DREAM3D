@@ -169,9 +169,7 @@ class  H5GrainWriter
       int64_t totalPoints = r->totalPoints();
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (totalPoints), euler1s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (totalPoints), euler2s);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (totalPoints), euler3s);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
 
 
 
@@ -195,17 +193,17 @@ class  H5GrainWriter
           phaseValues[j] = phase;
           if (r->crystruct[phase] == Ebsd::Cubic)
           {
-            EbsdColoring::GenerateIPFColor(euler1s[vid],
-                                          euler2s[vid],
-                                          euler3s[vid],
+            EbsdColoring::GenerateIPFColor(eulerangles[3*vid],
+                                          eulerangles[3*vid + 1],
+                                          eulerangles[3*vid + 2],
                                           RefDirection[0], RefDirection[1], RefDirection[2],
                                           rgb, hkl);
           }
           else if (r->crystruct[phase] == Ebsd::Hexagonal)
           {
-            EbsdColoring::CalculateHexIPFColor(euler1s[vid],
-                                              euler2s[vid],
-                                              euler3s[vid],
+            EbsdColoring::CalculateHexIPFColor(eulerangles[3*vid],
+											  eulerangles[3*vid + 1],
+											  eulerangles[3*vid + 2],
                                               RefDirection[0], RefDirection[1], RefDirection[2], rgb);
           }
           ipfColor[j * 3] = rgb[0];

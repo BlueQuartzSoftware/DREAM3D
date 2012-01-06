@@ -725,12 +725,8 @@ void PackGrainsGen2::initializeAttributes()
   if (grain_indicies == NULL) { return; }
   phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
   if (phases == NULL) { return; }
-  euler1s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, 1, this);
-  if (NULL == euler1s) {return;}
-  euler2s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, 1, this);
-  if (NULL == euler2s) {return;}
-  euler3s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, 1, this);
-  if (NULL == euler3s) {return;}
+  eulerangles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
+  if (NULL == eulerangles) {return;}
   surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
   if (NULL == surfacevoxels) {return;}
 
@@ -738,9 +734,9 @@ void PackGrainsGen2::initializeAttributes()
 	{
 		grain_indicies[i] = 0;
 		phases[i] = 0;
-		euler1s[i] = -1.0f;
-		euler2s[i] = -1.0f;
-		euler3s[i] = -1.0f;
+		eulerangles[3*i] = -1.0f;
+		eulerangles[3*i + 1] = -1.0f;
+		eulerangles[3*i + 2] = -1.0f;
 		surfacevoxels[i] = 0;
 	}
 }

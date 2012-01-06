@@ -221,12 +221,8 @@ void LoadSlices::execute()
   int64_t totalPoints = m->totalPoints();
     int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
   if (NULL == phases) { return; }
-    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  if (NULL == eulerangles) { return; }
   bool* goodVoxels = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::GoodVoxels, totalPoints, this);
   if (NULL == goodVoxels) { return; }
 
@@ -235,7 +231,7 @@ void LoadSlices::execute()
   // and fill in the ReconstrucionFunc->goodVoxels array.
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(euler1s, euler2s, euler3s, phases, goodVoxels, m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir, m_QualityMetricFilters);
+  err = ebsdReader->loadData(eulerangles, phases, goodVoxels, m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir, m_QualityMetricFilters);
   setErrorCondition(err);
   if (err < 0)
   {
@@ -247,9 +243,9 @@ void LoadSlices::execute()
   {
 	  for(size_t i = 0; i < (m->getXPoints()*m->getYPoints()*m->getZPoints()); i++)
 	  {
-		  euler1s[i] = euler1s[i] * radianconversion;
-		  euler2s[i] = euler2s[i] * radianconversion;
-		  euler3s[i] = euler3s[i] * radianconversion;
+		  eulerangles[3*i] = eulerangles[3*i] * radianconversion;
+		  eulerangles[3*i + 1] = eulerangles[3*i + 1] * radianconversion;
+		  eulerangles[3*i + 2] = eulerangles[3*i + 2] * radianconversion;
 	  }
   }
 
@@ -321,12 +317,8 @@ void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float y
   if (grain_indicies == NULL) { return; }
   int32_t* phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
   if (phases == NULL) { return; }
-  float* euler1s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, 1, this);
-  if (NULL == euler1s) {return;}
-  float* euler2s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, 1, this);
-  if (NULL == euler2s) {return;}
-  float* euler3s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, 1, this);
-  if (NULL == euler3s) {return;}
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  if (NULL == eulerangles) { return; }
   int8_t* surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
   if (NULL == surfacevoxels) {return;}
   int32_t* neighbors = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, 1, this);
@@ -342,9 +334,9 @@ void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float y
   {
     grain_indicies[i] = -1;
     phases[i] = 1;
-    euler1s[i] = -1;
-    euler2s[i] = -1;
-    euler3s[i] = -1;
+    eulerangles[3*i] = -1;
+    eulerangles[3*i + 1] = -1;
+    eulerangles[3*i + 2] = -1;
     neighbors[i] = -1;
     surfacevoxels[i] = 0;
     alreadychecked[i] = false;
@@ -358,17 +350,12 @@ void LoadSlices::initializeQuats()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
-    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
   if (NULL == phases) { return; }
-    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
-  float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  if (NULL == eulerangles) { return; }  float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
   if (NULL == quats) { return; }
 
   float qr[5];
@@ -376,7 +363,7 @@ void LoadSlices::initializeQuats()
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {
-    OrientationMath::eulertoQuat(qr, euler1s[i], euler2s[i], euler3s[i]);
+    OrientationMath::eulertoQuat(qr, eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2]);
     phase = phases[i];
     xtal = m->crystruct[phase];
     if (xtal == Ebsd::UnknownCrystalStructure)
