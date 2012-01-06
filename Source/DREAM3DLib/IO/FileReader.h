@@ -113,7 +113,7 @@ namespace DREAM3D
       * @param bufSize
       * @return
       */
-     int nonPrintables(char* buf, size_t bufSize);
+     size_t nonPrintables(char* buf, size_t bufSize);
 
      /**
       * @brief

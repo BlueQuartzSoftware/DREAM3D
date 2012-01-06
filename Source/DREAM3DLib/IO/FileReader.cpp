@@ -188,9 +188,9 @@ int FileReader::parse64_3V(const char* input, int64_t* output, int64_t defaultVa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FileReader::nonPrintables(char* buf, size_t bufSize)
+size_t FileReader::nonPrintables(char* buf, size_t bufSize)
 {
-  int n = 0;
+  size_t n = 0;
   for (size_t i = 0; i < bufSize; ++i)
   {
     if (buf[i] < 33 && buf[i] > 0) { n++; }
@@ -219,7 +219,7 @@ int FileReader::readLine(std::istream &in, char* buf, int bufSize)
       buf[in.gcount()-2] = 0;
     }
     size_t len = strlen(buf);
-    int np = nonPrintables(buf, bufSize);
+    size_t np = nonPrintables(buf, bufSize);
     if (len != np)
     {
       readAnotherLine = false;

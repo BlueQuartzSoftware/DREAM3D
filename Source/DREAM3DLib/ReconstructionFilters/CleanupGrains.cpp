@@ -115,7 +115,7 @@ void CleanupGrains::setupFilterOptions()
 void CleanupGrains::execute()
 {
   setErrorCondition(0);
-  int err = 0;
+ // int err = 0;
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -194,7 +194,7 @@ void CleanupGrains::assign_badpoints()
   int neighbor;
   int index = 0;
   float x, y, z;
-  size_t column, row, plane;
+  DimType column, row, plane;
   int neighpoint;
   size_t numgrains = m->m_Grains.size();
 
@@ -226,7 +226,7 @@ void CleanupGrains::assign_badpoints()
 				column = index % dims[0];
 				row = (index / dims[0]) % dims[1];
 				plane = index / (dims[0] * dims[1]);
-				for (size_t j = 0; j < 6; j++)
+				for (DimType j = 0; j < 6; j++)
 				{
 					good = 1;
 					neighbor = index + neighpoints[j];
@@ -390,7 +390,7 @@ void CleanupGrains::reorder_grains()
   int neighpoints[6];
   int good = 0;
   int neighbor = 0;
-  size_t col, row, plane;
+  DimType col, row, plane;
   int gnum;
   float q1[5];
   float q2[5];
@@ -416,7 +416,7 @@ void CleanupGrains::reorder_grains()
   }
 
   // Reset the "already checked" to 0 for all voxels
-  for (int i = 0; i < totalPoints; i++)
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     alreadychecked[i] = false;
     gnum = grain_indicies[i];
@@ -431,15 +431,15 @@ void CleanupGrains::reorder_grains()
     {
       size = 0;
       int nucleus = nuclei[i];
-	  if(phases[nucleus] > 0) phase = m->crystruct[phases[nucleus]];
-	  if(phases[nucleus] <= 0) phase = Ebsd::UnknownCrystalStructure;
+      if(phases[nucleus] > 0) phase = m->crystruct[phases[nucleus]];
+      if(phases[nucleus] <= 0) phase = Ebsd::UnknownCrystalStructure;
       voxellists[currentgrain][size] = nucleus;
       alreadychecked[nucleus] = true;
       grain_indicies[nucleus] = currentgrain;
 
-      if (currentgrain > maxGrain) maxGrain = currentgrain;
+      if(currentgrain > maxGrain) maxGrain = currentgrain;
       size++;
-      for (size_t k = 0; k < 5; k++)
+      for (DimType k = 0; k < 5; k++)
       {
         m->m_Grains[currentgrain]->avg_quat[k] = 0.0;
       }
@@ -449,41 +449,41 @@ void CleanupGrains::reorder_grains()
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
-        for (int k = 0; k < 5; k++)
+        for (DimType k = 0; k < 5; k++)
         {
-            q1[k] = quats[nucleus*5 + k];
-            q2[k] = quats[currentpoint*5 + k];
+          q1[k] = quats[nucleus * 5 + k];
+          q2[k] = quats[currentpoint * 5 + k];
         }
-        if(phases[nucleus] > 0) m_OrientationOps[phase]->getNearestQuat(q1,q2);
-		if(phases[nucleus] <= 0) q2[0] = 1.0, q2[1] = 0.0, q2[2] = 0.0, q2[3] = 0.0, q2[4] = 0.0;
-        for (int k = 0; k < 5; k++)
+        if(phases[nucleus] > 0) m_OrientationOps[phase]->getNearestQuat(q1, q2);
+        if(phases[nucleus] <= 0) q2[0] = 1.0, q2[1] = 0.0, q2[2] = 0.0, q2[3] = 0.0, q2[4] = 0.0;
+        for (DimType k = 0; k < 5; k++)
         {
-            quats[currentpoint*5 + k] = q2[k];
-            m->m_Grains[currentgrain]->avg_quat[k] = m->m_Grains[currentgrain]->avg_quat[k] + quats[currentpoint*5 + k];
+          quats[currentpoint * 5 + k] = q2[k];
+          m->m_Grains[currentgrain]->avg_quat[k] = m->m_Grains[currentgrain]->avg_quat[k] + quats[currentpoint * 5 + k];
         }
-        for (int k = 0; k < 6; k++)
+        for (DimType k = 0; k < 6; k++)
         {
           good = 1;
           neighbor = currentpoint + neighpoints[k];
-          if (k == 0 && plane == 0) good = 0;
-          if (k == 5 && plane == (dims[2] - 1)) good = 0;
-          if (k == 1 && row == 0) good = 0;
-          if (k == 4 && row == (dims[1] - 1)) good = 0;
-          if (k == 2 && col == 0) good = 0;
-          if (k == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && alreadychecked[neighbor] == false)
+          if(k == 0 && plane == 0) good = 0;
+          if(k == 5 && plane == (dims[2] - 1)) good = 0;
+          if(k == 1 && row == 0) good = 0;
+          if(k == 4 && row == (dims[1] - 1)) good = 0;
+          if(k == 2 && col == 0) good = 0;
+          if(k == 3 && col == (dims[0] - 1)) good = 0;
+          if(good == 1 && alreadychecked[neighbor] == false)
           {
             size_t grainname = grain_indicies[neighbor];
-            if (grainname == i)
+            if(grainname == i)
             {
 
               voxellists[currentgrain][size] = neighbor;
               alreadychecked[neighbor] = true;
               grain_indicies[neighbor] = currentgrain;
 
-              if (currentgrain > maxGrain) maxGrain = currentgrain;
+              if(currentgrain > maxGrain) maxGrain = currentgrain;
               size++;
-              if (size >= voxellists[currentgrain].size())
+              if(size >= voxellists[currentgrain].size())
               {
                 voxellists[currentgrain].resize(size + initialVoxellistsSize, -1);
               }
@@ -493,13 +493,13 @@ void CleanupGrains::reorder_grains()
       }
       voxellists[currentgrain].erase(std::remove(voxellists[currentgrain].begin(), voxellists[currentgrain].end(), -1), voxellists[currentgrain].end());
       m->m_Grains[currentgrain]->active = 1;
-	  m->m_Grains[currentgrain]->phase = phases[nucleus];
-      q[1] = m->m_Grains[currentgrain]->avg_quat[1]/m->m_Grains[currentgrain]->avg_quat[0];
-      q[2] = m->m_Grains[currentgrain]->avg_quat[2]/m->m_Grains[currentgrain]->avg_quat[0];
-      q[3] = m->m_Grains[currentgrain]->avg_quat[3]/m->m_Grains[currentgrain]->avg_quat[0];
-      q[4] = m->m_Grains[currentgrain]->avg_quat[4]/m->m_Grains[currentgrain]->avg_quat[0];
-	  OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-	  m->m_Grains[currentgrain]->euler1 = ea1;
+      m->m_Grains[currentgrain]->phase = phases[nucleus];
+      q[1] = m->m_Grains[currentgrain]->avg_quat[1] / m->m_Grains[currentgrain]->avg_quat[0];
+      q[2] = m->m_Grains[currentgrain]->avg_quat[2] / m->m_Grains[currentgrain]->avg_quat[0];
+      q[3] = m->m_Grains[currentgrain]->avg_quat[3] / m->m_Grains[currentgrain]->avg_quat[0];
+      q[4] = m->m_Grains[currentgrain]->avg_quat[4] / m->m_Grains[currentgrain]->avg_quat[0];
+      OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+      m->m_Grains[currentgrain]->euler1 = ea1;
       m->m_Grains[currentgrain]->euler2 = ea2;
       m->m_Grains[currentgrain]->euler3 = ea3;
       currentgrain++;
@@ -524,14 +524,6 @@ void CleanupGrains::remove_smallgrains()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
-  size_t size = 0;
-
-  int good = 0;
-  int neighbor = 0;
-  size_t col, row, plane;
-  int gnum;
-  int currentgrain = 1;
-
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -545,6 +537,12 @@ void CleanupGrains::remove_smallgrains()
     static_cast<DimType>(udims[2]),
   };
 
+  size_t size = 0;
+  int good = 0;
+  int neighbor = 0;
+  DimType col, row, plane;
+  int gnum;
+  int currentgrain = 1;
 
   int neighpoints[6];
   neighpoints[0] = -dims[0]*dims[1];
@@ -554,15 +552,16 @@ void CleanupGrains::remove_smallgrains()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0]*dims[1];
 
-  int numgrains = m->m_Grains.size();
+  DimType numgrains = m->m_Grains.size();
   nuclei.resize(numgrains, -1);
 
-  size_t maxGrain = 0;
+ // size_t maxGrain = 0;
   // Reset all the Grain nucleus values to -1;
-  for (size_t i = 1; i < numgrains; i++)
+  for (DimType i = 1; i < numgrains; i++)
   {
     nuclei[i] = -1;
-  }  for (int64_t i = 0; i < totalPoints; i++)
+  }
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     alreadychecked[i] = false;
     gnum = grain_indicies[i];

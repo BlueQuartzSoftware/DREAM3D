@@ -28,36 +28,36 @@ namespace UnitTest {
     namespace DxIOTest
     {
       static const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DxIOTest.dx");
-      static const int XSize = 3;
-      static const int YSize = 4;
-      static const int ZSize = 5;
-      static const int Offset = 100;
+      static const size_t XSize = 3;
+      static const size_t YSize = 4;
+      static const size_t ZSize = 5;
+      static const size_t Offset = 100;
     }    
     namespace PhIOTest
     {
       const std::string TestFile("@DREAM3DTest_BINARY_DIR@/PhIOTest.ph");
-      static const int XSize = 5;
-      static const int YSize = 4;
-      static const int ZSize = 3;
-      static const int Offset = 200;
+      static const size_t XSize = 5;
+      static const size_t YSize = 4;
+      static const size_t ZSize = 3;
+      static const size_t Offset = 200;
     }
     
     namespace VtkGrainIdIOTest
     {
       const std::string TestFile("@DREAM3DTest_BINARY_DIR@/VtkGrainIdIOTest.vtk");
-      static const int XSize = 5;
-      static const int YSize = 4;
-      static const int ZSize = 3;
-      static const int Offset = 300;
+      static const size_t XSize = 5;
+      static const size_t YSize = 4;
+      static const size_t ZSize = 3;
+      static const size_t Offset = 300;
     }
     
     namespace VTKFileWritersTest
     {
       static const std::string TestFile("@DREAM3DTest_BINARY_DIR@/VtkIOTest.vtk");
-      static const int XSize = 2;
-      static const int YSize = 10;
-      static const int ZSize = 5;
-      static const int Offset = 66;
+      static const size_t XSize = 2;
+      static const size_t YSize = 10;
+      static const size_t ZSize = 5;
+      static const size_t Offset = 66;
     }
     
     namespace NeighborListTest
