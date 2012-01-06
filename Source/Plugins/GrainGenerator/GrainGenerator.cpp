@@ -178,8 +178,8 @@ void GrainGenerator::execute()
   if(m_AlreadyFormed == false)
   {
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
-    place_precipitates->setH5StatsFile(getH5StatsFile());
-    place_precipitates->setperiodic_boundaries(m_PeriodicBoundary);
+    place_precipitates->setH5StatsInputFile(getH5StatsFile());
+    place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
     pipeline.push_back(place_precipitates);
  }
 

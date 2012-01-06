@@ -39,9 +39,8 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-using namespace std;
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -57,6 +56,7 @@ FindDeformationStatistics::FindDeformationStatistics() :
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -391,8 +391,8 @@ void FindDeformationStatistics::execute()
 		  lmgvsfmmssapthresh[sfmmbin][ssapbin][1] = lmgvsfmmssapthresh[sfmmbin][ssapbin][1] + lmg;
 	}
   }
-  outFile << "Kernel Misorientation Data" << endl;
-  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << endl;
+  outFile << "Kernel Misorientation Data" << std::endl;
+  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
   for (int i = 0; i < 10; i++)
   {
     if (kmvgb[i][0] > 0) kmvgb[i][1] = kmvgb[i][1] / kmvgb[i][0];
@@ -408,12 +408,12 @@ void FindDeformationStatistics::execute()
 		<< kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
 		<< kmvsfmm[i][0] << "	" << kmvsfmm[i][1] << "	"
 		<< kmvssap[i][0] << "	" << kmvssap[i][1] << "	"
-		<< kmvdis[i][0] << "	" << kmvdis[i][1] << endl;
+		<< kmvdis[i][0] << "	" << kmvdis[i][1] << std::endl;
   }
-  outFile << endl;
-  outFile << endl;
-  outFile << "Grain Average Misorientation Data" << endl;
-  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << endl;
+  outFile << std::endl;
+  outFile << std::endl;
+  outFile << "Grain Average Misorientation Data" << std::endl;
+  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
   for (int i = 0; i < 10; i++)
   {
     if (gamvgb[i][0] > 0) gamvgb[i][1] = gamvgb[i][1] / gamvgb[i][0];
@@ -429,12 +429,12 @@ void FindDeformationStatistics::execute()
 		<< gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
 		<< gamvsfmm[i][0] << "	" << gamvsfmm[i][1] << "	"
 		<< gamvssap[i][0] << "	" << gamvssap[i][1] << "	"
-		<< gamvdis[i][0] << "	" << gamvdis[i][1] << endl;
+		<< gamvdis[i][0] << "	" << gamvdis[i][1] << std::endl;
   }
-  outFile << endl;
-  outFile << endl;
-  outFile << "Misorientation Gradient Data" << endl;
-  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << endl;
+  outFile << std::endl;
+  outFile << std::endl;
+  outFile << "Misorientation Gradient Data" << std::endl;
+  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
   for (int i = 0; i < 10; i++)
   {
     if (lmgvgb[i][0] > 0) lmgvgb[i][1] = lmgvgb[i][1] / lmgvgb[i][0];
@@ -450,13 +450,13 @@ void FindDeformationStatistics::execute()
 		<< lmgvsf[i][0] << "	" << lmgvsf[i][1] << "	"
 		<< lmgvsfmm[i][0] << "	" << lmgvsfmm[i][1] << "	"
 		<< lmgvssap[i][0] << "	" << lmgvssap[i][1] << "	"
-		<< lmgvdis[i][0] << "	" << lmgvdis[i][1] << endl;
+		<< lmgvdis[i][0] << "	" << lmgvdis[i][1] << std::endl;
   }
-  outFile << endl;
-  outFile << endl;
-  outFile << "Thresheld Data" << endl;
-  outFile << "SF KAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << std::endl;
+  outFile << std::endl;
+  outFile << "Thresheld Data" << std::endl;
+  outFile << "SF KAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -464,10 +464,10 @@ void FindDeformationStatistics::execute()
 	    if (kmvsfdistthresh[j][i][0] > 0) kmvsfdistthresh[j][i][1] = kmvsfdistthresh[j][i][1] / kmvsfdistthresh[j][i][0];
 	    outFile << kmvsfdistthresh[j][i][0] << "	" << kmvsfdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SFMM KAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SFMM KAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -475,10 +475,10 @@ void FindDeformationStatistics::execute()
 	    if (kmvsfmmdistthresh[j][i][0] > 0) kmvsfmmdistthresh[j][i][1] = kmvsfmmdistthresh[j][i][1] / kmvsfmmdistthresh[j][i][0];
 	    outFile << kmvsfmmdistthresh[j][i][0] << "	" << kmvsfmmdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SSAP KAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SSAP KAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -486,10 +486,10 @@ void FindDeformationStatistics::execute()
 	    if (kmvssapdistthresh[j][i][0] > 0) kmvssapdistthresh[j][i][1] = kmvssapdistthresh[j][i][1] / kmvssapdistthresh[j][i][0];
 	    outFile << kmvssapdistthresh[j][i][0] << "	" << kmvssapdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "DIS KAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "DIS KAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -497,10 +497,10 @@ void FindDeformationStatistics::execute()
 	    if (kmvdisdistthresh[j][i][0] > 0) kmvdisdistthresh[j][i][1] = kmvdisdistthresh[j][i][1] / kmvdisdistthresh[j][i][0];
 	    outFile << kmvdisdistthresh[j][i][0] << "	" << kmvdisdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SF GAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SF GAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -508,10 +508,10 @@ void FindDeformationStatistics::execute()
 	    if (gamvsfdistthresh[j][i][0] > 0) gamvsfdistthresh[j][i][1] = gamvsfdistthresh[j][i][1] / gamvsfdistthresh[j][i][0];
 	    outFile << gamvsfdistthresh[j][i][0] << "	" << gamvsfdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SFMM GAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SFMM GAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -519,10 +519,10 @@ void FindDeformationStatistics::execute()
 	    if (gamvsfmmdistthresh[j][i][0] > 0) gamvsfmmdistthresh[j][i][1] = gamvsfmmdistthresh[j][i][1] / gamvsfmmdistthresh[j][i][0];
 	    outFile << gamvsfmmdistthresh[j][i][0] << "	" << gamvsfmmdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SSAP GAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SSAP GAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -530,10 +530,10 @@ void FindDeformationStatistics::execute()
 	    if (gamvssapdistthresh[j][i][0] > 0) gamvssapdistthresh[j][i][1] = gamvssapdistthresh[j][i][1] / gamvssapdistthresh[j][i][0];
 	    outFile << gamvssapdistthresh[j][i][0] << "	" << gamvssapdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "DIS GAM" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "DIS GAM" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -541,10 +541,10 @@ void FindDeformationStatistics::execute()
 	    if (gamvdisdistthresh[j][i][0] > 0) gamvdisdistthresh[j][i][1] = gamvdisdistthresh[j][i][1] / gamvdisdistthresh[j][i][0];
 	    outFile << gamvdisdistthresh[j][i][0] << "	" << gamvdisdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SF LMG" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SF LMG" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -552,10 +552,10 @@ void FindDeformationStatistics::execute()
 	    if (lmgvsfdistthresh[j][i][0] > 0) lmgvsfdistthresh[j][i][1] = lmgvsfdistthresh[j][i][1] / lmgvsfdistthresh[j][i][0];
 	    outFile << lmgvsfdistthresh[j][i][0] << "	" << lmgvsfdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SFMM LMG" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SFMM LMG" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -563,10 +563,10 @@ void FindDeformationStatistics::execute()
 	    if (lmgvsfmmdistthresh[j][i][0] > 0) lmgvsfmmdistthresh[j][i][1] = lmgvsfmmdistthresh[j][i][1] / lmgvsfmmdistthresh[j][i][0];
 	    outFile << lmgvsfmmdistthresh[j][i][0] << "	" << lmgvsfmmdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SSAP LMG" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "SSAP LMG" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -574,10 +574,10 @@ void FindDeformationStatistics::execute()
 	    if (lmgvssapdistthresh[j][i][0] > 0) lmgvssapdistthresh[j][i][1] = lmgvssapdistthresh[j][i][1] / lmgvssapdistthresh[j][i][0];
 	    outFile << lmgvssapdistthresh[j][i][0] << "	" << lmgvssapdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "DIS LMG" << endl;
-  outFile << "0		1		2		3		4		5		6		7		8		9" << endl;
+  outFile << "DIS LMG" << std::endl;
+  outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -585,10 +585,10 @@ void FindDeformationStatistics::execute()
 	    if (lmgvdisdistthresh[j][i][0] > 0) lmgvdisdistthresh[j][i][1] = lmgvdisdistthresh[j][i][1] / lmgvdisdistthresh[j][i][0];
 	    outFile << lmgvdisdistthresh[j][i][0] << "	" << lmgvdisdistthresh[j][i][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SFMM SSAP KAM" << endl;
-  outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << endl;
+  outFile << "SFMM SSAP KAM" << std::endl;
+  outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -596,10 +596,10 @@ void FindDeformationStatistics::execute()
 	    if (kmvsfmmssapthresh[i][j][0] > 0) kmvsfmmssapthresh[i][j][1] = kmvsfmmssapthresh[i][j][1] / kmvsfmmssapthresh[i][j][0];
 	    outFile << kmvsfmmssapthresh[i][j][0] << "	" << kmvsfmmssapthresh[i][j][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SFMM SSAP GAM" << endl;
-  outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << endl;
+  outFile << "SFMM SSAP GAM" << std::endl;
+  outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -607,10 +607,10 @@ void FindDeformationStatistics::execute()
 	    if (gamvsfmmssapthresh[i][j][0] > 0) gamvsfmmssapthresh[i][j][1] = gamvsfmmssapthresh[i][j][1] / gamvsfmmssapthresh[i][j][0];
 	    outFile << gamvsfmmssapthresh[i][j][0] << "	" << gamvsfmmssapthresh[i][j][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "SFMM SSAP LMG" << endl;
-  outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << endl;
+  outFile << "SFMM SSAP LMG" << std::endl;
+  outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << std::endl;
   for (int i = 0; i < 10; i++)
   {
 	  for (int j = 0; j < 10; j++)
@@ -618,12 +618,12 @@ void FindDeformationStatistics::execute()
 	    if (lmgvsfmmssapthresh[i][j][0] > 0) lmgvsfmmssapthresh[i][j][1] = lmgvsfmmssapthresh[i][j][1] / lmgvsfmmssapthresh[i][j][0];
 	    outFile << lmgvsfmmssapthresh[i][j][0] << "	" << lmgvsfmmssapthresh[i][j][1] << "	";
 	  }
-	  outFile << endl;
+	  outFile << std::endl;
   }
-  outFile << "KAM DIST		GAM DIST		LMG DIST" << endl;
+  outFile << "KAM DIST		GAM DIST		LMG DIST" << std::endl;
   for (int i = 0; i < 25; i++)
   {
-	    outFile << float(i)*0.2+0.1 << "	" << kmdist[i] << "	" << float(i)*0.8+0.4 << "	" << gamdist[i] << "	" << float(i)*0.1+0.05 << "	" << lmgdist[i] << endl;
+	    outFile << float(i)*0.2+0.1 << "	" << kmdist[i] << "	" << float(i)*0.8+0.4 << "	" << gamdist[i] << "	" << float(i)*0.1+0.05 << "	" << lmgdist[i] << std::endl;
   }
   outFile.close();
 
@@ -636,7 +636,7 @@ void FindDeformationStatistics::execute()
 	return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
-  fprintf(vtkFile,  "data set from FFT2dx_GB\n");
+  fprintf(vtkFile,  "DREAM3D Generated Data Set: Deformation Statistics\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
   fprintf(vtkFile,  "POINTS %ld float\n", m->m_Grains.size()-1);

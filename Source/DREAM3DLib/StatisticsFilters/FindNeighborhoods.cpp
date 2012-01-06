@@ -50,7 +50,6 @@ FindNeighborhoods::FindNeighborhoods() :
   graincenters = NULL;
   INIT_DataArray(m_GrainCenters,float);
   setupFilterOptions();
-
 }
 
 // -----------------------------------------------------------------------------

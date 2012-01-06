@@ -73,7 +73,7 @@ neighbors(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------

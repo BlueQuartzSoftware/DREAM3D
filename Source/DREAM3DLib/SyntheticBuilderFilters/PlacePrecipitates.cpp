@@ -76,6 +76,8 @@ surfacevoxels(NULL)
   m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
   m_UnknownShapeOps = DREAM3D::ShapeOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
+
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -83,6 +85,32 @@ surfacevoxels(NULL)
 // -----------------------------------------------------------------------------
 PlacePrecipitates::~PlacePrecipitates()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PlacePrecipitates::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input Statistics File");
+    option->setPropertyName("H5StatsInputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Periodic Boundary");
+    option->setPropertyName("PeriodicBoundaries");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -227,7 +255,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   ymax = int(row+((radcur1/m->getYRes())+1));
   zmin = int(plane-((radcur1/m->getZRes())+1));
   zmax = int(plane+((radcur1/m->getZRes())+1));
-  if(m_periodic_boundaries == true)
+  if(m_PeriodicBoundaries == true)
   {
     if(xmin < -dims[0]) xmin = -dims[0];
     if(xmax > 2*dims[0]-1) xmax = (2*dims[0]-1);
@@ -236,7 +264,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
     if(zmin < -dims[2]) zmin = -dims[2];
     if(zmax > 2*dims[2]-1) zmax = (2*dims[2]-1);
   }
-  if(m_periodic_boundaries == false)
+  if(m_PeriodicBoundaries == false)
   {
     if(xmin < 0) xmin = 0;
     if(xmax > dims[0]-1) xmax = dims[0]-1;
@@ -460,7 +488,7 @@ void  PlacePrecipitates::place_precipitates()
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
-  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsFile);
+  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   int err = packGrains->readReconStatsData(h5reader);
   err = packGrains->readAxisOrientationData(h5reader);
   while(totalprecipvol < totalvol*totalprecipitatefractions)
