@@ -61,6 +61,10 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 
     virtual ~FindSchmids();
 
+    DREAM3D_INSTANCE_PROPERTY(float, XLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, YLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, ZLoading)
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
