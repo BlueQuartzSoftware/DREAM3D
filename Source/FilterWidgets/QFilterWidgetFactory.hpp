@@ -33,72 +33,31 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QFILTERWIDGET_H_
-#define QFILTERWIDGET_H_
 
-#include <QtGui/QFrame>
-#include <QtGui/QGroupBox>
+#ifndef QFILTERWIDGETFACTORY_H_
+#define QFILTERWIDGETFACTORY_H_
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "IFilterWidgetFactory.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-
-
-#define FILTER_PROPERTY_WRAPPER(type, name, filter_var)\
-void set##name(type v) { filter_var->set##name(v); }\
-type get##name() { return filter_var->get##name(); }\
-
-
-// This needs to be defined
-class QMouseEvent;
-
-/**
- * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
- * @brief  This class is a subclass of the QGroupBox class and is used to display
- * Filter Options that the user can set. This class is capable of constructing a
- * default GUI widget set for each type of Filter Option that is available. If
- * the programmer needs more specialized widgets then they can simply subclass
- * this class and over ride or implement their custom code.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 6, 2012
- * @version 1.0
- */
-class QFilterWidget : public QGroupBox
+template <class T>
+class QFilterWidgetFactory : public IFilterWidgetFactory
 {
-    Q_OBJECT;
   public:
-    QFilterWidget(QWidget* parent = NULL);
-    virtual ~QFilterWidget();
+    DREAM3D_SHARED_POINTERS(QFilterWidgetFactory<T> )
+    DREAM3D_TYPE_MACRO_SUPER(QFilterWidgetFactory<T>, IFilterWidgetFactory)
+    DREAM3D_STATIC_NEW_MACRO(QFilterWidgetFactory<T>);
 
-    virtual void setupGui();
-
-    virtual AbstractFilter::Pointer getFilter();
-
-   public slots:
-
-     virtual void updateFilterValues();
-     virtual void updateQLineEditDoubleValue();
-     virtual void updateQLineEditIntValue();
-     virtual void selectInputFile();
-     virtual void selectOutputFile();
-     virtual void updateComboBoxValue(int v);
-     virtual void updateQSpinBoxValue(int v);
-     virtual void updateQDoubleSpinBoxValue(double v);
-
-     /**
-      * @brief Sets the style of the Widget to indicate a selected or non-selected
-      * state
-      * @param selected Is the widget selected or not.
-      */
-     void changeStyle(bool selected);
+    QFilterWidget* createWidget()
+    {
+      return new T;
+    }
 
   protected:
-     virtual void  mouseReleaseEvent ( QMouseEvent* event );
+  QFilterWidgetFactory() {}
 
   private:
-    QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterWidget&); // Operator '=' Not Implemented
-
+QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
+void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
 };
-
-
-#endif /* QFILTERWIDGET_H_ */
+#endif /* QFILTERWIDGETFACTORY_H_ */
