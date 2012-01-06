@@ -82,6 +82,58 @@ MatchCrystallography::~MatchCrystallography()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MatchCrystallography::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceFields Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
+  if(d.get() == NULL)
+  {
+	  ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea);
+  if(d.get() == NULL)
+  {
+	  ss << "TotalSurfaceArea Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AvgQuats, p);
+  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EulerAngles, q);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::execute()
 {
   int err = 0;

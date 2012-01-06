@@ -57,6 +57,61 @@
 #include "DREAM3DLib/Common/Field.h"
 #include "DREAM3DLib/Common/Observable.h"
 
+namespace DREAM3D
+{
+  namespace VoxelData
+  {
+    const std::string GrainIds("GrainIds");
+    const std::string Phases("Phases");
+    const std::string Euler1("Euler1");
+    const std::string Euler2("Euler2");
+    const std::string Euler3("Euler3");
+    const std::string SurfaceVoxels("SurfaceVoxels");
+    const std::string Neighbors("Neighbors");
+    const std::string Quats("Quats");
+    const std::string AlreadyChecked("AlreadyChecked");
+    const std::string GoodVoxels("GoodVoxels");
+    const std::string NearestNeighbors("NearestNeighbors");
+    const std::string NearestNeighborDistances("NearestNeighborDistances");
+    const std::string GrainMisorientations("GrainMisorientations");
+    const std::string MisorientationGradients("MisorientationGradients");
+    const std::string KernelAverageMisorientations("KernelAverageMisorientations");
+    const std::string ImageQuality("ImageQuality");
+  }
+
+  namespace FieldData
+  {
+	const std::string Active("Active");
+	const std::string Phases("Phases");
+    const std::string EulerAngles("EulerAngles");
+    const std::string AxisEulerAngles("AxisEulerAngles");
+    const std::string SurfaceFields("SurfaceFields");
+    const std::string UnbiasedFields("UnbiasedFields");
+    const std::string NumNeighbors("NumNeighbors");
+    const std::string RGBs("RGBs");
+    const std::string Centroids("Centroids");
+    const std::string NumCells("NumCells");
+    const std::string Volumes("Volumes");
+    const std::string EquivalentDiameters("EquivalentDiameters");
+    const std::string Schmids("Schmids");
+    const std::string SlipSystems("SlipSystems");
+    const std::string AspectRatios("AspectRatios");
+    const std::string AxisLengths("AxisLengths");
+    const std::string Omega3s("Omega3s");
+    const std::string AvgQuats("AvgQuats");
+    const std::string Poles("Poles");
+    const std::string Neighborhoods("Neighborhoods");
+    const std::string GrainAvgMisorientations("GrainAvgMisorientations");
+    const std::string KernelAvgMisorientations("KernelAvgMisorientations");
+    const std::string NeighborList("NeighborList");
+    const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
+  }
+
+  namespace EnsembleData
+  {
+    const std::string TotalSurfaceArea("TotalSurfaceArea");
+  }
+}
 
 #define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
 template<typename PtrType, typename DataArrayType, typename Observable>\
@@ -205,61 +260,7 @@ type* valuePtr = NULL;\
 #define OLD_WAY 0
 
 
-namespace DREAM3D
-{
-  namespace VoxelData
-  {
-    const std::string GrainIds("GrainIds");
-    const std::string Phases("Phases");
-    const std::string Euler1("Euler1");
-    const std::string Euler2("Euler2");
-    const std::string Euler3("Euler3");
-    const std::string SurfaceVoxels("SurfaceVoxels");
-    const std::string Neighbors("Neighbors");
-    const std::string Quats("Quats");
-    const std::string AlreadyChecked("AlreadyChecked");
-    const std::string GoodVoxels("GoodVoxels");
-    const std::string NearestNeighbors("NearestNeighbors");
-    const std::string NearestNeighborDistances("NearestNeighborDistances");
-    const std::string GrainMisorientations("GrainMisorientations");
-    const std::string MisorientationGradients("MisorientationGradients");
-    const std::string KernelAverageMisorientations("KernelAverageMisorientations");
-    const std::string ImageQuality("ImageQuality");
-  }
 
-  namespace FieldData
-  {
-	const std::string Active("Active");
-	const std::string Phases("Phases");
-    const std::string EulerAngles("EulerAngles");
-    const std::string AxisEulerAngles("AxisEulerAngles");
-    const std::string SurfaceFields("SurfaceFields");
-    const std::string UnbiasedFields("UnbiasedFields");
-    const std::string NumNeighbors("NumNeighbors");
-    const std::string RGBs("RGBs");
-    const std::string Centroids("Centroids");
-    const std::string NumCells("Numcells");
-    const std::string Volumes("Volumes");
-    const std::string EquivalentDiameters("EquivalentDiameters");
-    const std::string Schmids("Schmids");
-    const std::string SlipSystems("SlipSystems");
-    const std::string AspectRatios("AspectRatios");
-    const std::string AxisLengths("AxisLengths");
-    const std::string Omega3s("Omega3s");
-    const std::string AvgQuats("AvgQuats");
-    const std::string Poles("Poles");
-    const std::string Neighborhoods("Neighborhoods");
-    const std::string GrainAvgMisorientations("GrainAvgMisorientations");
-    const std::string KernelAvgMisorientations("KernelAvgMisorientations");
-    const std::string NeighborList("NeighborList");
-    const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
-  }
-
-  namespace EnsembleData
-  {
-    const std::string TotalSurfaceArea("TotalSurfaceArea");
-  }
-}
 
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h

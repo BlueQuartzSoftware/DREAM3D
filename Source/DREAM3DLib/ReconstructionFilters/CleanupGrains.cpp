@@ -109,6 +109,13 @@ void CleanupGrains::preflight()
 	  ss << "Phases (Field) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
 	  err = -300;
   }
+  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
+  if(d.get() == NULL)
+  {
+	  ss << "NeighborLists Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
+	  err = -300;
+  }
+
   PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::AlreadyChecked, p);
   PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);

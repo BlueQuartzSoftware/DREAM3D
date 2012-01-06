@@ -176,6 +176,49 @@ PackGrainsGen2::~PackGrainsGen2()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PackGrainsGen2::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  }
+  d = m->getFieldData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::Phases, p);
+  }
+
+  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Active, p);
+  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Phases, q);
+  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Neighborhoods, r);
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Centroids, s);
+  PFFloatArrayType::Pointer t = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Volumes, t);
+  PFFloatArrayType::Pointer u = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
+  PFFloatArrayType::Pointer v = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
+  PFFloatArrayType::Pointer w = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Omega3s, w);
+  PFFloatArrayType::Pointer x = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackGrainsGen2::execute()
 {
   DataContainer* m = getDataContainer();
