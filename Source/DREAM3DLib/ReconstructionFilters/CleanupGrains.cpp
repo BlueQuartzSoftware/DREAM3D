@@ -80,6 +80,49 @@ CleanupGrains::~CleanupGrains()
 {
 }
 
+void CleanupGrains::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
+  if(d.get() == NULL)
+  {
+	  ss << "Quats Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
+	  err = -300;
+  }
+  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::AlreadyChecked, p);
+  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::Neighbors, q);
+  PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AvgQuats, r);
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EulerAngles, s);
+  PFBoolArrayType::Pointer t = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Active, t);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -154,8 +197,8 @@ void CleanupGrains::assign_badpoints()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   std::vector<int > neighs;
@@ -352,8 +395,8 @@ void CleanupGrains::reorder_grains()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   size_t initialVoxellistsSize = 1000;
@@ -512,8 +555,8 @@ void CleanupGrains::remove_smallgrains()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
 

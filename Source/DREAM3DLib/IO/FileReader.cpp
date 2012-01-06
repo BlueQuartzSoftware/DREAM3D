@@ -119,12 +119,16 @@ void FileReader::execute()
 int FileReader::parseFloat3V(const char* input, float* output, float defaultValue)
 {
   char text[256];
-  int n = sscanf(input, "%s %f %f %f", text, &(output[0]), &(output[1]), &(output[2]) );
+  float d0 = 0.0f, d1 = 0.0f, d2 = 0.0f;
+  int n = sscanf(input, "%s %f %f %f", text, &d0, &d1, &d2 );
   if (n != 4)
   {
     output[0] = output[1] = output[2] = defaultValue;
     return -1;
   }
+  output[0] = d0;
+  output[1] = d1;
+  output[2] = d2;
   return 0;
 }
 
@@ -134,12 +138,16 @@ int FileReader::parseFloat3V(const char* input, float* output, float defaultValu
 int FileReader::parseInt3V(const char* input, int* output, int defaultValue)
 {
   char text[256];
-  int n = sscanf(input, "%s %d %d %d", text, &(output[0]), &(output[1]), &(output[2]) );
+  int d0 = 0, d1 = 0, d2 = 0;
+  int n = sscanf(input, "%s %d %d %d", text, &d0, &d1, &d2 );
   if (n != 4)
   {
     output[0] = output[1] = output[2] = defaultValue;
     return -1;
   }
+  output[0] = d0;
+  output[1] = d1;
+  output[2] = d2;
   return 0;
 }
 
@@ -149,12 +157,16 @@ int FileReader::parseInt3V(const char* input, int* output, int defaultValue)
 int FileReader::parseSizeT_3V(const char* input, size_t* output, size_t defaultValue)
 {
   char text[256];
-  int n = sscanf(input, "%s %ld %ld %ld", text, &(output[0]), &(output[1]), &(output[2]) );
+  size_t d0 = 0, d1 = 0, d2 = 0;
+  int n = sscanf(input, "%s %ld %ld %ld", text, &d0, &d1, &d2 );
   if (n != 4)
   {
     output[0] = output[1] = output[2] = defaultValue;
     return -1;
   }
+  output[0] = d0;
+  output[1] = d1;
+  output[2] = d2;
   return 0;
 }
 

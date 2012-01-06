@@ -69,6 +69,30 @@ CropVolume::~CropVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CropVolume::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of CropVolume Filter" << std::endl;
+	  err = -300;
+  }
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CropVolume::execute()
 {
   int err = 0;

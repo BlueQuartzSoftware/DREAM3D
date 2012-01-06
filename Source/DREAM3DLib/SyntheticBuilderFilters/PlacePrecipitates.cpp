@@ -322,8 +322,8 @@ void  PlacePrecipitates::fillin_precipitates()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   std::vector<int> neighs;

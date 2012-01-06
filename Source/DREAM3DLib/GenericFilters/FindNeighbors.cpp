@@ -41,6 +41,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -66,11 +67,25 @@ void FindNeighbors::preflight()
   IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
   if(d.get() == NULL)
   {
-	  ss << "Graid Ids Array Not Initialized At Beginning of FindNeighbors Filter" << endl;
+	  ss << "Graid Ids Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
 	  err = -300;
   }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Fields) Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
+	  err = -300;
+  }
+
   PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::SurfaceVoxels, p);
+  PFBoolArrayType::Pointer q = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::SurfaceFields, q);
+  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::NumNeighbors, r);
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea, s);
+
   setErrorCondition(err);
   setErrorMessage(ss.str());
 }
@@ -112,8 +127,8 @@ void FindNeighbors::execute()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   int neighpoints[6];

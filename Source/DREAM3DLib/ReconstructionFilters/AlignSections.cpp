@@ -84,6 +84,38 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AlignSections::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Quats);
+  if(d.get() == NULL)
+  {
+	  ss << "Quats Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::GoodVoxels);
+  if(d.get() == NULL)
+  {
+	  ss << "GoodVoxels Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
+	  err = -300;
+  }
+  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSections::execute()
 {
   setErrorCondition(0);
@@ -172,8 +204,8 @@ void AlignSections::align_sections()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   int** shifts = AlignSections::Allocate2DArray<int>(dims[2], 2);
@@ -450,8 +482,8 @@ void AlignSections::form_grains_sections()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
   };
 
   int64_t totalPoints = m->totalPoints();
