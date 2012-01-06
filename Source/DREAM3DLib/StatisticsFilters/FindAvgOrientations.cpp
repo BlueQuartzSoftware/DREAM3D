@@ -64,6 +64,41 @@ FindAvgOrientations::~FindAvgOrientations()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindAvgOrientations::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "Graid Ids Array Not Initialized At Beginning of FindAvgOrientations Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of FindAvgOrientations Filter" << std::endl;
+	  err = -300;
+  }  
+  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
+  if(d.get() == NULL)
+  {
+	  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::Quats, p);
+  }
+
+  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AvgQuats, p);
+  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EulerAngles, q);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindAvgOrientations::execute()
 {
   setErrorCondition(0);

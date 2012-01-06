@@ -100,7 +100,13 @@ void MergeTwins::preflight()
   d = m->getFieldData(DREAM3D::FieldData::Phases);
   if(d.get() == NULL)
   {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of Twins Filter" << std::endl;
+	  ss << "Phases (Field) Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
+  if(d.get() == NULL)
+  {
+	  ss << "NeighborLists Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
 	  err = -300;
   }
 
