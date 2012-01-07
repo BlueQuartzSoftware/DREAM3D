@@ -44,7 +44,7 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "FilterWidgets/QFilterWidgetManager.h"
-#include "FilterWidgets/RegisterKnownFilterWidgets.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
   verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
 
   // Get the QFilterWidget Mangager Instance
-  DREAM3D::QFilterFactory::RegisterAllQFilterWidgets();
+  QFilterWidgetManager::RegisterKnownQFilterWidgets();
   QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
 
   // Get all the Widget Factories and loop over each one we know about and instantiate a new one

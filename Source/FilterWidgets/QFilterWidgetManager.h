@@ -75,6 +75,9 @@ class QFilterWidgetManager
      */
     static void RegisterFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory);
 
+    static void RegisterKnownQFilterWidgets();
+
+
     /**
      * @brief Returns the mapping of names to Factory instances for all the factories that are registered.
      * @return
