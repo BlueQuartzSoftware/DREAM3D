@@ -43,15 +43,19 @@ Macro(D3DCompileDir DirName)
     foreach(file ${${DirName}_FILTERS_HDRS})
         get_filename_component(name ${file} NAME_WE)
         message(STATUS "    ${name}")
-        if (NOT EXISTS ${FilterWidgets_SOURCE_DIR}/${DirName}Widgets/Q${name}Widget.h AND NOT EXISTS ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
-            configure_file(${FilterWidgets_SOURCE_DIR}/QFilterWidget.h.in
-                          ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
-        
+        if (NOT EXISTS ${FilterWidgets_SOURCE_DIR}/${DirName}Widgets/Q${name}Widget.h )
             set(FilterWidget_HDRS ${FilterWidget_HDRS} ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
+            set(FilterWidget_SRCS ${FilterWidget_SRCS} ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.cpp)
+            if ( NOT EXISTS ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
+                configure_file(${FilterWidgets_SOURCE_DIR}/QFilterWidget.h.in
+                              ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
+                configure_file(${FilterWidgets_SOURCE_DIR}/QFilterWidget.h.in
+                              ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.cpp)
+            endif()
         endif()
-
-        
-        file(APPEND ${CodeGeneratorFile} "createFile<${name}>(\"${DirName}\", \"${name}\");\n")
+          
+        file(APPEND ${CodeGeneratorFile} "createHeaderFile<${name}>(\"${DirName}\", \"${name}\");\n")
+        file(APPEND ${CodeGeneratorFile} "createSourceFile<${name}>(\"${DirName}\", \"${name}\");\n")
     
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${name}Widget>::Pointer q${name}WidgetFactory = QFilterWidgetFactory<Q${name}Widget>::New(); \n")
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetManager::Instance()->addFilterWidgetFactory(\"${name}\",q${name}WidgetFactory); \n\n")
@@ -74,14 +78,15 @@ file(WRITE ${AllFilterWidgetsHeaderFile} "#ifndef _ALLFILTERWIDGETS_H_\n#define 
 
 # --------------------------------------------------------------------
 # Create a File that will register all of the DREAM3D Filters
-set(RegisterKnownFilterWidgetsFile ${FilterWidgets_BINARY_DIR}/RegisterKnownFilterWidgets.h)
-file(WRITE ${RegisterKnownFilterWidgetsFile} "#ifndef _RegisterKnownFilterWidgetsFile_H_\n#define _RegisterKnownFilterWidgetsFile_H_\n\n")
-file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"FilterWidgets/QFilterWidgetManager.h\"\n")
+set(RegisterKnownFilterWidgetsFile ${FilterWidgets_BINARY_DIR}/RegisterKnownFilterWidgets.cpp)
+#file(WRITE ${RegisterKnownFilterWidgetsFile} "#ifndef _RegisterKnownFilterWidgetsFile_H_\n#define _RegisterKnownFilterWidgetsFile_H_\n\n")
+file(WRITE ${RegisterKnownFilterWidgetsFile} "#include \"FilterWidgets/QFilterWidgetManager.h\"\n")
 file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"FilterWidgets/QFilterWidgetFactory.hpp\"\n")
 file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"FilterWidgetHeaders.h\"\n")
-file(APPEND ${RegisterKnownFilterWidgetsFile} "\n\nnamespace DREAM3D { \nnamespace QFilterFactory {\n")
-file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid RegisterAllQFilterWidgets()\n{\n")
+#file(APPEND ${RegisterKnownFilterWidgetsFile} "\n\nnamespace DREAM3D { \nnamespace QFilterFactory {\n")
+file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid QFilterWidgetManager::RegisterKnownQFilterWidgets()\n{\n")
 
+    
 
 D3DCompileDir(ReconstructionFilters)
 D3DCompileDir(GenericFilters)
@@ -93,7 +98,7 @@ D3DCompileDir(SurfaceMeshingFilters)
 file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
 
 file(APPEND ${RegisterKnownFilterWidgetsFile} "\n }\n")
-file(APPEND ${RegisterKnownFilterWidgetsFile} "\n}\n}\n #endif")
+#file(APPEND ${RegisterKnownFilterWidgetsFile} "\n}\n}\n #endif")
 
 # Read the file back into a string so we can configure our file
 FILE(READ ${RegisterKnownFilterWidgetsFile} QFILTERWIDGET_FACTORY_SOURCE)
