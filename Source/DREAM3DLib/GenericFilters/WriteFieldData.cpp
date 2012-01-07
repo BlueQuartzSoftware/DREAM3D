@@ -78,6 +78,18 @@ void WriteFieldData::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void WriteFieldData::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WriteFieldData::execute()
 {
   setErrorCondition(0);

@@ -116,6 +116,102 @@ void PlacePrecipitates::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PlacePrecipitates::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::SurfaceVoxels);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceVoxels Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Neighborhoods);
+  if(d.get() == NULL)
+  {
+	  ss << "Neighborhoods Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::EquivalentDiameters);
+  if(d.get() == NULL)
+  {
+	  ss << "EquivalentDiameters Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Omega3s);
+  if(d.get() == NULL)
+  {
+	  ss << "Omega3s Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::AxisEulerAngles);
+  if(d.get() == NULL)
+  {
+	  ss << "AxisEulerAngles Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::AxisLengths);
+  if(d.get() == NULL)
+  {
+	  ss << "AxisLengths Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Volumes);
+  if(d.get() == NULL)
+  {
+	  ss << "Volumes Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Centroids);
+  if(d.get() == NULL)
+  {
+	  ss << "Centroids Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Active);
+  if(d.get() == NULL)
+  {
+	  ss << "Active Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::Phases, p);
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Neighbors);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::Neighbors, q);
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NumCells);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+	  m->addFieldData(DREAM3D::FieldData::NumCells, r);
+  }
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PlacePrecipitates::execute()
 {
   int err = 0;

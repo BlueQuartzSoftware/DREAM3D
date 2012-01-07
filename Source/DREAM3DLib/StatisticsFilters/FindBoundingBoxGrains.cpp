@@ -59,6 +59,32 @@ FindBoundingBoxGrains::~FindBoundingBoxGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindBoundingBoxGrains::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::Centroids);
+  if(d.get() == NULL)
+  {
+	  ss << "Centroids Array Not Initialized At Beginning of FindBoundingBoxGrains Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceFields Array Not Initialized At Beginning of FindBoundingBoxGrains Filter" << std::endl;
+	  err = -300;
+  }  
+  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::UnbiasedFields, p);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::execute()
 {
   DataContainer* m = getDataContainer();

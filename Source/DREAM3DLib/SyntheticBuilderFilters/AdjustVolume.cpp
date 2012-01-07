@@ -85,6 +85,31 @@ void AdjustVolume::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AdjustVolume::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of AdjustVolume Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::EquivalentDiameters);
+  if(d.get() == NULL)
+  {
+	  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+	  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, p);
+  }
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AdjustVolume::execute()
 {
   setErrorCondition(0);

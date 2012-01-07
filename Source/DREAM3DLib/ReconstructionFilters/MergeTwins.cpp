@@ -113,6 +113,43 @@ void MergeTwins::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MergeTwins::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
+  if(d.get() == NULL)
+  {
+	  ss << "AvgQuats Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
+  if(d.get() == NULL)
+  {
+	  ss << "NeighborLists Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeTwins::execute()
 {
   DataContainer* m = getDataContainer();

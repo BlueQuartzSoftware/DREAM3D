@@ -106,6 +106,57 @@ void MatchCrystallography::setupFilterOptions()
   setFilterOptions(options);
 }
 
+
+void MatchCrystallography::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceFields Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
+  if(d.get() == NULL)
+  {
+	  ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea);
+  if(d.get() == NULL)
+  {
+	  ss << "TotalSurfaceArea Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+	  err = -300;
+  }
+  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AvgQuats, p);
+  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EulerAngles, q);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -401,12 +452,8 @@ void MatchCrystallography::matchCrystallography()
   int64_t totalPoints = m->totalPoints();
   int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
   if (NULL == grain_indicies) { return; }
-  float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, totalPoints*3, this);
+  if (NULL == eulerangles) { return; }
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -688,9 +735,9 @@ void MatchCrystallography::matchCrystallography()
   }
   for(int i = 0; i < totalPoints; i++)
   {
-    euler1s[i] = m->m_Grains[grain_indicies[i]]->euler1;
-    euler2s[i] = m->m_Grains[grain_indicies[i]]->euler2;
-    euler3s[i] = m->m_Grains[grain_indicies[i]]->euler3;
+	eulerangles[3*i] = m->m_Grains[grain_indicies[i]]->euler1;
+    eulerangles[3*i + 1] = m->m_Grains[grain_indicies[i]]->euler2;
+    eulerangles[3*i + 2] = m->m_Grains[grain_indicies[i]]->euler3;
   }
 }
 

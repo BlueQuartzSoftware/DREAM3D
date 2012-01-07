@@ -144,26 +144,20 @@ int main(int argc, char **argv)
 
   DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
   DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
-  DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
-  DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
-  DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
+  DECLARE_WRAPPED_ARRAY(eulerangles, m_EulerAngles, float);
 
   m_GrainIndicies = DataArray<int>::CreateArray(0);
   m_Phases = DataArray<int>::CreateArray(0);
-  m_Euler1s = DataArray<float>::CreateArray(0);
-  m_Euler2s = DataArray<float>::CreateArray(0);
-  m_Euler3s = DataArray<float>::CreateArray(0);
+  m_EulerAngles = DataArray<float>::CreateArray(0);
 
 
   int64_t totalpoints = dims[0] * dims[1] * dims[2];
   grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
   phases = m_Phases->WritePointer(0, totalpoints);
-  euler1s = m_Euler1s->WritePointer(0, totalpoints);
-  euler2s = m_Euler2s->WritePointer(0, totalpoints);
-  euler3s = m_Euler3s->WritePointer(0, totalpoints);
+  eulerangles = m_EulerAngles->WritePointer(0, 3*totalpoints);
 
   std::cout << "Reading Voxel Data" << std::endl;
-  err = h5Reader->readVoxelData(grain_indicies, phases, euler1s, euler2s, euler3s, crystruct, phaseType, totalpoints);
+  err = h5Reader->readVoxelData(grain_indicies, phases, eulerangles, crystruct, phaseType, totalpoints);
   if (err < 0)
   {
     std::cout << "Error reading h5voxel file." << std::endl;
@@ -172,9 +166,7 @@ int main(int argc, char **argv)
 
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, m_GrainIndicies);
   m->addVoxelData(DREAM3D::VoxelData::Phases, m_Phases);
-  m->addVoxelData(DREAM3D::VoxelData::Euler1, m_Euler1s);
-  m->addVoxelData(DREAM3D::VoxelData::Euler2, m_Euler2s);
-  m->addVoxelData(DREAM3D::VoxelData::Euler3, m_Euler3s);
+  m->addVoxelData(DREAM3D::VoxelData::EulerAngles, m_EulerAngles);
 
   int64_t totalPoints = m->totalPoints();
 

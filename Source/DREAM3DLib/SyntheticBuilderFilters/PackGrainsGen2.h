@@ -44,6 +44,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/PreFlightArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
@@ -83,10 +85,11 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
     virtual void setupFilterOptions();
 
+    virtual void preflight();
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void execute();
 
     float check_sizedisterror(int gadd, int gremove);
@@ -195,9 +198,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
     int32_t* grain_indicies;
     int32_t* phases;
-    float* euler1s;
-    float* euler2s;
-    float* euler3s;
+    float* eulerangles;
     int8_t* surfacevoxels;
 //    int32_t* neighbors;
 //    float* quats;

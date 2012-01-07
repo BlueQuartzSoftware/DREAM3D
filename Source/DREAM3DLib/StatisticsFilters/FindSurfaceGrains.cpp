@@ -57,6 +57,27 @@ FindSurfaceGrains::~FindSurfaceGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindSurfaceGrains::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of FindSurfaceGrains Filter" << std::endl;
+	  err = -300;
+  }
+
+  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::SurfaceFields, p);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindSurfaceGrains::execute()
 {
   DataContainer* m = getDataContainer();

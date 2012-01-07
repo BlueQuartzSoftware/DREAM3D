@@ -120,26 +120,21 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int64_
 
   DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
   DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
-  DECLARE_WRAPPED_ARRAY(euler1s, m_Euler1s, float);
-  DECLARE_WRAPPED_ARRAY(euler2s, m_Euler2s, float);
-  DECLARE_WRAPPED_ARRAY(euler3s, m_Euler3s, float);
+  DECLARE_WRAPPED_ARRAY(eulerangles, m_EulerAngles, float);
 
   m_GrainIndicies = DataArray<int>::CreateArray(0);
   m_Phases = DataArray<int>::CreateArray(0);
-  m_Euler1s = DataArray<float>::CreateArray(0);
-  m_Euler2s = DataArray<float>::CreateArray(0);
-  m_Euler3s = DataArray<float>::CreateArray(0);
+  m_EulerAngles = DataArray<float>::CreateArray(0);
 
 
   int64_t totalpoints = dims[0] * dims[1] * dims[2];
   grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
   phases = m_Phases->WritePointer(0, totalpoints);
-  euler1s = m_Euler1s->WritePointer(0, totalpoints);
-  euler2s = m_Euler2s->WritePointer(0, totalpoints);
-  euler3s = m_Euler3s->WritePointer(0, totalpoints);
+  eulerangles = m_EulerAngles->WritePointer(0, 3*totalpoints);
+
 
   std::cout << "Reading Voxel Data" << std::endl;
-  err = reader->readVoxelData(grain_indicies, phases, euler1s, euler2s, euler3s, crystruct, phaseType, totalpoints);
+  err = reader->readVoxelData(grain_indicies, phases, eulerangles, crystruct, phaseType, totalpoints);
   if (err < 0)
   {
     std::cout << "Error reading h5voxel file." << std::endl;
@@ -154,15 +149,8 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int64_
   DataArray<int>::Pointer outPhases = DataArray<int>::CreateArray(0);
   processArray<int>(min, max, dims, m_Phases, outPhases);
 
-  DataArray<float>::Pointer outEuler1 = DataArray<float>::CreateArray(0);
-  processArray<float>(min, max, dims, m_Euler1s, outEuler1);
-
-  DataArray<float>::Pointer outEuler2 = DataArray<float>::CreateArray(0);
-  processArray<float>(min, max, dims, m_Euler2s, outEuler2);
-
-  DataArray<float>::Pointer outEuler3 = DataArray<float>::CreateArray(0);
-  processArray<float>(min, max, dims, m_Euler3s, outEuler3);
-
+  DataArray<float>::Pointer outEulerAngles = DataArray<float>::CreateArray(0);
+  processArray<float>(min, max, dims, m_EulerAngles, outEulerAngles);
 
   H5VoxelWriter::Pointer writer = H5VoxelWriter::New();
   writer->setFileName(outfile);
@@ -175,7 +163,7 @@ int cropVolume(H5VoxelReader::Pointer reader, const std::string &outfile, int64_
 
   int64_t volDims[3] = { (max[0]-min[0]+1), (max[1]-min[1]+1), (max[2]-min[2]+1) };
   totalpoints = volDims[0] * volDims[1] * volDims[2];
-  err = writer->writeEulerData(outEuler1->GetPointer(0), outEuler2->GetPointer(0), outEuler3->GetPointer(0), totalpoints, true);
+  err = writer->writeEulerData(outEulerAngles->GetPointer(0), totalpoints, true);
   if (err < 0) { return err; }
 
   err = writer->writeGrainIds(outGrainIdices->GetPointer(0), totalpoints, true);

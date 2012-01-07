@@ -70,6 +70,30 @@ CropVolume::~CropVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CropVolume::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of CropVolume Filter" << std::endl;
+	  err = -300;
+  }
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CropVolume::execute()
 {
   int err = 0;
@@ -89,12 +113,8 @@ void CropVolume::execute()
   if (NULL == grain_indicies) { return; }
     int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
   if (NULL == phases) { return; }
-    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  if (NULL == eulerangles) { return; }
 
   setErrorCondition(0);
   notify("Starting Crop Volume", 0, Observable::UpdateProgressValueAndMessage);
@@ -119,9 +139,9 @@ void CropVolume::execute()
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         grain_indicies[index] = grain_indicies[index_old];
         phases[index] = phases[index_old];
-        euler1s[index] = euler1s[index_old];
-        euler2s[index] = euler2s[index_old];
-        euler3s[index] = euler3s[index_old];
+        eulerangles[3*index] = eulerangles[3*index_old];
+        eulerangles[3*index + 1] = eulerangles[3*index_old + 1];
+        eulerangles[3*index + 2] = eulerangles[3*index_old + 2];
       }
     }
   }
@@ -129,8 +149,6 @@ void CropVolume::execute()
   totalPoints = m_XP*m_YP*m_ZP;
   err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler1)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler2)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Euler3)->Resize(totalPoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::EulerAngles)->Resize(3*totalPoints);
   notify("Crop Volume Complete", 100, Observable::UpdateProgressValueAndMessage);
 }

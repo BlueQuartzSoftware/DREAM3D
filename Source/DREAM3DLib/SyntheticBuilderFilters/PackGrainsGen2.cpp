@@ -150,10 +150,9 @@ PackGrainsGen2::PackGrainsGen2() :
 m_H5StatsInputFile(""),
 m_ErrorOutputFile(""),
 m_VtkOutputFile(""),
+m_MaxIterations(1),
 m_PeriodicBoundaries(false),
-m_NeighborhoodErrorWeight(1.0f),
-m_MaxIterations(1)
-
+m_NeighborhoodErrorWeight(1.0f)
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -224,6 +223,50 @@ void PackGrainsGen2::setupFilterOptions()
   }
 
   setFilterOptions(options);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackGrainsGen2::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  }
+  d = m->getFieldData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::Phases, p);
+  }
+
+  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Active, p);
+  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Phases, q);
+  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Neighborhoods, r);
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Centroids, s);
+  PFFloatArrayType::Pointer t = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Volumes, t);
+  PFFloatArrayType::Pointer u = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
+  PFFloatArrayType::Pointer v = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
+  PFFloatArrayType::Pointer w = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Omega3s, w);
+  PFFloatArrayType::Pointer x = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -746,12 +789,8 @@ void PackGrainsGen2::initializeAttributes()
   if (grain_indicies == NULL) { return; }
   phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
   if (phases == NULL) { return; }
-  euler1s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, 1, this);
-  if (NULL == euler1s) {return;}
-  euler2s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, 1, this);
-  if (NULL == euler2s) {return;}
-  euler3s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, 1, this);
-  if (NULL == euler3s) {return;}
+  eulerangles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
+  if (NULL == eulerangles) {return;}
   surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
   if (NULL == surfacevoxels) {return;}
 
@@ -759,9 +798,9 @@ void PackGrainsGen2::initializeAttributes()
 	{
 		grain_indicies[i] = 0;
 		phases[i] = 0;
-		euler1s[i] = -1.0f;
-		euler2s[i] = -1.0f;
-		euler3s[i] = -1.0f;
+		eulerangles[3*i] = -1.0f;
+		eulerangles[3*i + 1] = -1.0f;
+		eulerangles[3*i + 2] = -1.0f;
 		surfacevoxels[i] = 0;
 	}
 }
