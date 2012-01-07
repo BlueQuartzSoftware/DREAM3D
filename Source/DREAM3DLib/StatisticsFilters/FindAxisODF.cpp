@@ -87,6 +87,30 @@ void FindAxisODF::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindAxisODF::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::AxisEulerAngles);
+  if(d.get() == NULL)
+  {
+	  ss << "AxisEulerAngles Array Not Initialized At Beginning of FindAxisODF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceFields Array Not Initialized At Beginning of FindAxisODF Filter" << std::endl;
+	  err = -300;
+  }  
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindAxisODF::execute()
 {
   DataContainer* m = getDataContainer();

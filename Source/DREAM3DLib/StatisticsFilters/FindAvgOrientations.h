@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/PreFlightArray.hpp"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -72,6 +74,7 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
+    virtual void preflight();
 
   protected:
     FindAvgOrientations();

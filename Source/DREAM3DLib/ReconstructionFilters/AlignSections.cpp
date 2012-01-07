@@ -86,6 +86,7 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
 void AlignSections::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
@@ -106,6 +107,37 @@ void AlignSections::setupFilterOptions()
   setFilterOptions(options);
 }
 
+
+
+void AlignSections::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Quats);
+  if(d.get() == NULL)
+  {
+	  ss << "Quats Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::GoodVoxels);
+  if(d.get() == NULL)
+  {
+	  ss << "GoodVoxels Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
+	  err = -300;
+  }
+  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -154,12 +186,8 @@ void AlignSections::align_sections()
   if (NULL == grain_indicies) { return; }
     int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
   if (NULL == phases) { return; }
-    float* euler1s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, this);
-  if (NULL == euler1s) { return; }
-  float* euler2s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, this);
-  if (NULL == euler2s) { return; }
-  float* euler3s = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, this);
-  if (NULL == euler3s) { return; }
+  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  if (NULL == eulerangles) { return; }
   bool* goodVoxels = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::GoodVoxels, totalPoints, this);
   if (NULL == goodVoxels) { return; }
   float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
@@ -408,9 +436,9 @@ void AlignSections::align_sections()
         if((yspot + shifts[iter][1]) >= 0 && (yspot + shifts[iter][1]) <= dims[1] - 1 && (xspot + shifts[iter][0]) >= 0
             && (xspot + shifts[iter][0]) <= dims[0] - 1)
         {
-          euler1s[position] = euler1s[tempposition];
-          euler2s[position] = euler2s[tempposition];
-          euler3s[position] = euler3s[tempposition];
+          eulerangles[3*position] = eulerangles[3*tempposition];
+          eulerangles[3*position + 1] = eulerangles[3*tempposition + 1];
+          eulerangles[3*position + 2] = eulerangles[3*tempposition + 2];
           quats[position * 5 + 0] = quats[tempposition * 5 + 0];
           quats[position * 5 + 1] = quats[tempposition * 5 + 1];
           quats[position * 5 + 2] = quats[tempposition * 5 + 2];
@@ -423,9 +451,9 @@ void AlignSections::align_sections()
         if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > dims[0] - 1)
         {
-          euler1s[position] = 0.0;
-          euler2s[position] = 0.0;
-          euler3s[position] = 0.0;
+          eulerangles[3*position] = 0.0;
+          eulerangles[3*position + 1] = 0.0;
+          eulerangles[3*position + 2] = 0.0;
           quats[position * 5 + 0] = 0.0;
           quats[position * 5 + 1] = 0.0;
           quats[position * 5 + 2] = 0.0;

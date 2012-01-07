@@ -67,14 +67,30 @@ void FindNeighbors::preflight()
   std::stringstream ss;
   DataContainer::Pointer m = DataContainer::New();
   IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if (d.get()== NULL)
+  if(d.get() == NULL)
   {
-    err = -300;
-    ss << "GrainIDs were not found." << std::endl;
+	  ss << "Graid Ids Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Fields) Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
+	  err = -300;
   }
 
   PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::SurfaceVoxels, p);
+  PFBoolArrayType::Pointer q = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::SurfaceFields, q);
+  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::NumNeighbors, r);
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea, s);
+  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+  m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+  NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
+  m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
 
   setErrorCondition(err);
   setErrorMessage(ss.str());

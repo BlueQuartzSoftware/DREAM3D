@@ -84,6 +84,7 @@ SegmentGrains::~SegmentGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
 void SegmentGrains::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
@@ -98,6 +99,34 @@ void SegmentGrains::setupFilterOptions()
   setFilterOptions(options);
 }
 
+
+void SegmentGrains::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
+  if(d.get() == NULL)
+  {
+	  ss << "Quats Array Not Initialized At Beginning of SegmentGrains Filter" << std::endl;
+	  err = -300;
+  }
+  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Phases, q);
+  PFBoolArrayType::Pointer r = PFBoolArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Active, r);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
 
 // -----------------------------------------------------------------------------
 //

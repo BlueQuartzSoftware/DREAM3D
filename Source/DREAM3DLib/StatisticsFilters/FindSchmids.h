@@ -42,6 +42,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/PreFlightArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
@@ -75,6 +77,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
+    virtual void preflight();
 
   protected:
     FindSchmids();

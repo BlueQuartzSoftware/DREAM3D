@@ -93,6 +93,96 @@ void FindDeformationStatistics::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindDeformationStatistics::preflight()
+{
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations);
+  if(d.get() == NULL)
+  {
+	  ss << "KernelAverageMisorientations Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::GrainMisorientations);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainMisorientations Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::MisorientationGradients);
+  if(d.get() == NULL)
+  {
+	  ss << "MisorientationGradients Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::NearestNeighbors);
+  if(d.get() == NULL)
+  {
+	  ss << "NearestNeighbors Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::NearestNeighborDistances);
+  if(d.get() == NULL)
+  {
+	  ss << "NearestNeighborDistances Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Schmids);
+  if(d.get() == NULL)
+  {
+	  ss << "Schmids Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SlipSystems);
+  if(d.get() == NULL)
+  {
+	  ss << "SlipSystems Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
+  if(d.get() == NULL)
+  {
+	  ss << "AvgQuats Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Omega3s);
+  if(d.get() == NULL)
+  {
+	  ss << "Omega3s Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Poles);
+  if(d.get() == NULL)
+  {
+	  ss << "Poles Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::GrainAvgMisorientations);
+  if(d.get() == NULL)
+  {
+	  ss << "Volumes Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
+	  err = -300;
+  }
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindDeformationStatistics::execute()
 {
   setErrorCondition(0);

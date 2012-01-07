@@ -167,9 +167,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
 // -----------------------------------------------------------------------------
 int H5VoxelReader::readVoxelData(int* grain_indicies,
                   int* phases,
-                  float* euler1s,
-                  float* euler2s,
-                  float* euler3s,
+                  float* eulerangles,
                   std::vector<Ebsd::CrystalStructure> &crystruct,
                   std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
                   int64_t totalpoints)
@@ -217,9 +215,9 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   float* e = fData->GetPointer(0);
   for (int i = 0; i < totalpoints; ++i)
   {
-    euler1s[i] =  e[i * 3];
-    euler2s[i] =  e[i * 3 + 1];
-    euler3s[i] =  e[i * 3 + 2];
+    eulerangles[3*i] =  e[i * 3];
+    eulerangles[3*i + 1] =  e[i * 3 + 1];
+    eulerangles[3*i + 2] =  e[i * 3 + 2];
   }
 
 // Close the group as we are done with it.

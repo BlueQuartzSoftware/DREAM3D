@@ -150,7 +150,7 @@ void LoadVolume::execute()
   }
 
 
-  err = h5Reader->readVoxelData(grain_indicies, phases, euler1s, euler2s, euler3s, m->crystruct, m->phaseType, totalPoints);
+  err = h5Reader->readVoxelData(grain_indicies, phases, eulerangles, m->crystruct, m->phaseType, totalPoints);
   m->phasefraction.resize(m->crystruct.size());
   m->pptFractions.resize(m->crystruct.size());
   initializeGrains();
@@ -227,12 +227,8 @@ void LoadVolume::initializeAttributes()
   if (grain_indicies == NULL) { return; }
   phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
   if (phases == NULL) { return; }
-  euler1s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler1, totalPoints, 1, this);
-  if (NULL == euler1s) {return;}
-  euler2s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler2, totalPoints, 1, this);
-  if (NULL == euler2s) {return;}
-  euler3s = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Euler3, totalPoints, 1, this);
-  if (NULL == euler3s) {return;}
+  eulerangles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
+  if (NULL == eulerangles) {return;}
   surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
   if (NULL == surfacevoxels) {return;}
   neighbors = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, 1, this);
@@ -242,9 +238,9 @@ void LoadVolume::initializeAttributes()
 
   for (int i = 0; i < totalPoints; ++i)
   {
-    euler1s[i] = -1.0f;
-    euler2s[i] = -1.0f;
-    euler3s[i] = -1.0f;
+    eulerangles[3*i] = -1.0f;
+    eulerangles[3*i + 1] = -1.0f;
+    eulerangles[3*i + 2] = -1.0f;
     neighbors[i] = -1.0f;
   }
 
