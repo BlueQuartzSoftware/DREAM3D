@@ -210,19 +210,15 @@ void PlacePrecipitates::execute()
   {
     return;
   }
-  int8_t* surf = m->getEnsembleDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
+  int8_t* surf = m->getVoxelDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
   if(NULL == surf)
   {
     return;
   }
 
-
   grain_indicies = gi;
   phases = ph;
   surfacevoxels = surf;
-
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
 
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();
