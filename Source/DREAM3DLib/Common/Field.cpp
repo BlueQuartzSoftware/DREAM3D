@@ -73,8 +73,8 @@ radius2(0.0),
 radius3(0.0)
 {
 #if CORRUPT_TEST
-  test5 = NULL;
-  test6 = NULL;
+//  test5 = NULL;
+//  test6 = NULL;
 #endif
 }
 
