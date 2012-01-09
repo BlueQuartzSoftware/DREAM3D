@@ -175,7 +175,7 @@ class name : public VtkScalarWriter\
 
 
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, Voxel, DREAM3D::VoxelData::Phases, DREAM3D::VTK::PhaseIdScalarName, Int32ArrayType, int, "%d ")
-VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelGoodVoxelScalarWriter, r, Voxel, DREAM3D::VoxelData::GoodVoxels, DREAM3D::VTK::GoodVoxelScalarName, BoolArrayType, bool, "%d ")
+VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelGoodVoxelScalarWriter, r, Voxel, DREAM3D::VoxelData::GoodVoxels, DREAM3D::VTK::GoodVoxelScalarName, BoolArrayType, char, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, Voxel, DREAM3D::VoxelData::KernelAverageMisorientations, DREAM3D::VTK::KAMScalarName, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, Voxel, DREAM3D::VoxelData::SurfaceVoxels, DREAM3D::VTK::SurfaceVoxelScalarName, Int8ArrayType, char, "%d ")
 
