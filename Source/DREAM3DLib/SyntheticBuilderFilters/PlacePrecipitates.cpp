@@ -216,13 +216,9 @@ void PlacePrecipitates::execute()
     return;
   }
 
-
   grain_indicies = gi;
   phases = ph;
   surfacevoxels = surf;
-
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
 
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();
