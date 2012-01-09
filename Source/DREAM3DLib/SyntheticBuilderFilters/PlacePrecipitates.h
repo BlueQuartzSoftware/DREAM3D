@@ -89,10 +89,10 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     std::vector<float> precipitatephasefractions;
 
   private:
-	std::vector<int> currentprecipvoxellist;
-	std::vector<int> currentcoatingvoxellist;
+    std::vector<int> currentprecipvoxellist;
+	  std::vector<int> currentcoatingvoxellist;
 
-	int numprimarygrains;
+	  int numprimarygrains;
     unsigned long long int Seed;
     float sizex;
     float sizey;
@@ -119,6 +119,9 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int8_t* m_SurfaceVoxels;
     int32_t* m_Neighbors;
     int32_t* m_NumCells;
+    
+    void dataCheck(bool preflight, size_t size);
+
 
     PlacePrecipitates(const PlacePrecipitates&); // Copy Constructor Not Implemented
     void operator=(const PlacePrecipitates&); // Operator '=' Not Implemented
