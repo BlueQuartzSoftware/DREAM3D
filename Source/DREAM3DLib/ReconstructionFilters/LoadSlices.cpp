@@ -101,6 +101,8 @@ void LoadSlices::preflight()
   m->addVoxelData(DREAM3D::VoxelData::Phases, q);
   PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::Quats, r);
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::EulerAngles, s);
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
@@ -317,7 +319,7 @@ void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float y
   if (grain_indicies == NULL) { return; }
   int32_t* phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
   if (phases == NULL) { return; }
-  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
+  float* eulerangles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
   if (NULL == eulerangles) { return; }
   int8_t* surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
   if (NULL == surfacevoxels) {return;}

@@ -101,6 +101,12 @@ void AlignSections::preflight()
 	  ss << "Phases (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
 	  err = -300;
   }
+  d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
+  if(d.get() == NULL)
+  {
+	  ss << "EulerAngles (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
+	  err = -300;
+  }
   d = m->getVoxelData(DREAM3D::VoxelData::GoodVoxels);
   if(d.get() == NULL)
   {
