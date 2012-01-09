@@ -86,6 +86,13 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
+    float* m_AvgQuats;
+	bool* m_Active;
+    int32_t* m_Phases;
+	float* m_TotalSurfaceArea;
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_SharedSurfaceAreaList;
+
 	std::vector<std::vector<float> > misorientationlists;
 
 	FindMDF(const FindMDF&); // Copy Constructor Not Implemented

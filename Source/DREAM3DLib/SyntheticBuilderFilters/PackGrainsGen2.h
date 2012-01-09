@@ -190,12 +190,17 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
 
-    int32_t* grain_indicies;
-    int32_t* phases;
-    float* eulerangles;
-    int8_t* surfacevoxels;
-//    int32_t* neighbors;
-//    float* quats;
+    int32_t* m_GrainIds;
+    float* m_AxisEulerAngles;
+    float* m_Centroids;
+    float* m_Radii;
+    float* m_Volumes;
+    float* m_Omega3s;
+    float* m_EquivalentDiameters;
+	bool* m_Active;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    int32_t* m_Neighborhoods;
 
     PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
     void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented

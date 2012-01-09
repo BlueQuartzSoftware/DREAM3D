@@ -86,7 +86,14 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    FindODF(const FindODF&); // Copy Constructor Not Implemented
+    float* m_Volumes;
+    float* m_EulerAngles;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    bool* m_Active;
+    bool* m_SurfaceFields;
+
+	FindODF(const FindODF&); // Copy Constructor Not Implemented
     void operator=(const FindODF&); // Operator '=' Not Implemented
 };
 

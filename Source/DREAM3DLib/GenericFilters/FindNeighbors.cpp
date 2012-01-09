@@ -159,7 +159,7 @@ void FindNeighbors::execute()
     totalsurfacearea[i] = 0.0f;
   }
 
-    std::vector<std::vector<float> > neighborlist;
+    std::vector<std::vector<int> > neighborlist;
     std::vector<std::vector<float> > neighborsurfacearealist;
 
   notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);

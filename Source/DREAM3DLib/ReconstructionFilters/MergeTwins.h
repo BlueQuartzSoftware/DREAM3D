@@ -81,6 +81,11 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     void renumber_grains();
 
   private:
+    int32_t* m_GrainIds;
+    float* m_AvgQuats;
+    int32_t* m_Phases;
+    NeighborList<int>* m_NeighborList;
+
 	std::vector<int> twinnewnumbers;
 
     unsigned long long int Seed;

@@ -87,11 +87,17 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
 
-    int32_t* grain_indicies;
-    int32_t* phases;
-    bool* alreadychecked;
-    float* quats;
-    int32_t* neighbors;
+    int32_t* m_GrainIds;
+    float* m_Quats;
+    float* m_EulerAngles;
+    float* m_AvgQuats;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    int32_t* m_Neighbors;
+    bool* m_Active;
+    bool* m_AlreadyChecked;
+    NeighborList<int>* m_NeighborList;
+
 	std::vector<std::vector<int> > voxellists;
 	std::vector<int> nuclei;
 
