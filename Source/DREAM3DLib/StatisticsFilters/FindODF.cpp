@@ -85,7 +85,7 @@ void FindODF::preflight()
   d = m->getFieldData(DREAM3D::FieldData::EulerAngles);
   if(d.get() == NULL)
   {
-	  ss << "EulerAngles Array Not Initialized At Beginning of FindODF Filter" << std::endl;
+	  ss << "EulerAngles (Fields) Array Not Initialized At Beginning of FindODF Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);

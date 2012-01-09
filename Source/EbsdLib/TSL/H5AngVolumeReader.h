@@ -68,9 +68,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
     /**
      * @brief This method does the actual loading of the OIM data from the data
      * source (files, streams, etc) into the data structures.
-     * @param euler1s
-     * @param euler2s
-     * @param euler3s
+     * @param eulerangles
      * @param phases
      * @param goodVoxels
      * @param xpoints
@@ -79,7 +77,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      * @param filters
      * @return
      */
-    int loadData(float* euler1s, float* euler2s, float* euler3s,
+    int loadData(float* eulerangles,
                  int* phases, bool* goodVoxels,
                  int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir,
                  std::vector<QualityMetricFilter::Pointer> filters);
