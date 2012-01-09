@@ -60,11 +60,41 @@ grain_indicies(NULL)
 FindShapes::~FindShapes()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindShapes::preflight()
 {
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of FindShapes Filter" << std::endl;
+	  err = -300;
+  }
+
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Centroids, s);
+  PFFloatArrayType::Pointer t = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Volumes, t);
+  PFFloatArrayType::Pointer u = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
+  PFFloatArrayType::Pointer v = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
+  PFFloatArrayType::Pointer w = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Omega3s, w);
+  PFFloatArrayType::Pointer x = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
+  PFFloatArrayType::Pointer y = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::AspectRatios, y);
+  PFInt32ArrayType::Pointer z = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::NumCells, z);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
 }
 // -----------------------------------------------------------------------------
 //

@@ -61,11 +61,54 @@ m_CreateNewStatsFile(true)
 FindODF::~FindODF()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindODF::preflight()
 {
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of FindODF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Field) Array Not Initialized At Beginning of FindODF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::EulerAngles);
+  if(d.get() == NULL)
+  {
+	  ss << "EulerAngles (Fields) Array Not Initialized At Beginning of FindODF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceFields Array Not Initialized At Beginning of FindODF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Volumes);
+  if(d.get() == NULL)
+  {
+	  ss << "Volumes Array Not Initialized At Beginning of FindODF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Active);
+  if(d.get() == NULL)
+  {
+	  ss << "Active Array Not Initialized At Beginning of FindODF Filter" << std::endl;
+	  err = -300;
+  }
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
 }
 // -----------------------------------------------------------------------------
 //

@@ -97,7 +97,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * @param filters The Quality Metric Filters
      * @return
      */
-    virtual int loadData(float* euler1s, float* euler2s, float* euler3s,
+    virtual int loadData(float* eulerangles,
                          int* phases, bool* goodVoxels,
                          int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir,
                          std::vector<QualityMetricFilter::Pointer> filters);

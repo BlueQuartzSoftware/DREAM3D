@@ -216,9 +216,7 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
 
 
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (r->totalPoints()), phases);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Voxel, DREAM3D::VoxelData::Euler1, FloatArrayType, float, (r->totalPoints()), euler1s);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Voxel, DREAM3D::VoxelData::Euler2, FloatArrayType, float, (r->totalPoints()), euler2s);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Voxel, DREAM3D::VoxelData::Euler3, FloatArrayType, float, (r->totalPoints()), euler3s);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*r->totalPoints()), eulerangles);
 
       // Write the IPF Coloring Cell Data
       for (size_t i = 0; i < total; i++)
@@ -236,11 +234,11 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         {
           if(r->crystruct[phase] == Ebsd::Cubic)
           {
-            EbsdColoring::GenerateIPFColor(euler1s[i], euler2s[i], euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
+            EbsdColoring::GenerateIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
           }
           else if(r->crystruct[phase] == Ebsd::Hexagonal)
           {
-            EbsdColoring::CalculateHexIPFColor(euler1s[i], euler2s[i], euler3s[i], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
+            EbsdColoring::CalculateHexIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
           }
         }
         else if(phase <= 0)
