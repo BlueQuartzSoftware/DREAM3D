@@ -121,6 +121,7 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, NodesFile);
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile);
 
+    virtual void preflight();
 
     void execute();
 

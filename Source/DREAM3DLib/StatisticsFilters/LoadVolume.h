@@ -62,11 +62,12 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
     virtual ~LoadVolume();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+  
+    virtual void preflight();
 
 	/**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-
+  * @brief Reimplemented from @see AbstractFilter class
+  */
 	virtual void execute();
 
 	void initializeAttributes();

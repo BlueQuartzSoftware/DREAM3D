@@ -66,6 +66,7 @@ FindAvgOrientations::~FindAvgOrientations()
 // -----------------------------------------------------------------------------
 void FindAvgOrientations::preflight()
 {
+
   int err = 0;
   std::stringstream ss;
   DataContainer::Pointer m = DataContainer::New();
@@ -102,6 +103,7 @@ void FindAvgOrientations::preflight()
   setErrorCondition(err);
   setErrorMessage(ss.str());
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

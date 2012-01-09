@@ -56,6 +56,7 @@ FindNeighbors::FindNeighbors()
 FindNeighbors::~FindNeighbors()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -150,7 +151,6 @@ void FindNeighbors::execute()
   int good = 0;
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
-
 
   float* totalsurfacearea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
   if (NULL == totalsurfacearea) {return;}
@@ -273,3 +273,4 @@ void FindNeighbors::execute()
 
   notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
 }
+
