@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT Field
      */
 
 
-    bool active;
+/*    bool active;
     int numvoxels;
     int numneighbors;
 //    int newfieldname;
@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT Field
     int neighbordistfunc[3];
 #if CORRUPT_TEST
     unsigned long long int* test6;
-#endif
+#endif*/
 
   protected:
     Field();

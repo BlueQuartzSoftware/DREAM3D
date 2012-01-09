@@ -79,6 +79,9 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
     FindBoundingBoxGrains();
 
   private:
+	float* m_Centroids;
+	bool* m_SurfaceFields;
+	bool* m_UnbiasedFields;
 
 
     FindBoundingBoxGrains(const FindBoundingBoxGrains&); // Copy Constructor Not Implemented

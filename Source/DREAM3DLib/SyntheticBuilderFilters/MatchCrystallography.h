@@ -117,9 +117,17 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
 
-    float* totalsurfacearea;
-    NeighborList<int>* neighListPtr;
-    NeighborList<float>* surfListPtr;
+    int32_t* m_GrainIds;
+	int32_t* m_NumCells;
+    float* m_Quats;
+    float* m_EulerAnglesC;
+    float* m_EulerAnglesF;
+    float* m_AvgQuats;
+	bool* m_SurfaceFields;
+    int32_t* m_Phases;
+	float* m_TotalSurfaceArea;
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_SharedSurfaceAreaList;
 
 
 

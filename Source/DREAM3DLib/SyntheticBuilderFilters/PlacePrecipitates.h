@@ -104,9 +104,21 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     DREAM3D::ShapeOps::Pointer m_CylinderOps;
     DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
     DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
-    int32_t* grain_indicies;
-    int32_t* phases;
-    int8_t* surfacevoxels;
+
+    int32_t* m_GrainIds;
+    float* m_AxisEulerAngles;
+    float* m_Centroids;
+    float* m_Radii;
+    float* m_Volumes;
+    float* m_Omega3s;
+    float* m_EquivalentDiameters;
+	bool* m_Active;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    int32_t* m_Neighborhoods;
+    int8_t* m_SurfaceVoxels;
+    int32_t* m_Neighbors;
+    int32_t* m_NumCells;
 
     PlacePrecipitates(const PlacePrecipitates&); // Copy Constructor Not Implemented
     void operator=(const PlacePrecipitates&); // Operator '=' Not Implemented

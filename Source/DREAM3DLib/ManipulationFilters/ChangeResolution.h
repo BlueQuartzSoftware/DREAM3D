@@ -80,6 +80,9 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
 
 
   private:
+    int32_t* m_GrainIds;
+    float* m_EulerAngles;
+    int32_t* m_Phases;
 
     ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
     void operator=(const ChangeResolution&); // Operator '=' Not Implemented

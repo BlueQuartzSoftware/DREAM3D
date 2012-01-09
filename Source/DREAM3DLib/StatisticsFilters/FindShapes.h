@@ -89,9 +89,17 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     FindShapes();
 
   private:
-    int32_t* grain_indicies;
+    int32_t* m_GrainIds;
+    float* m_AxisEulerAngles;
+    float* m_Centroids;
+    float* m_Radii;
+    float* m_Volumes;
+    float* m_Omega3s;
+    float* m_EquivalentDiameters;
+    float* m_AspectRatios;
+    int32_t* m_NumCells;
 
-    FindShapes(const FindShapes&); // Copy Constructor Not Implemented
+	FindShapes(const FindShapes&); // Copy Constructor Not Implemented
     void operator=(const FindShapes&); // Operator '=' Not Implemented
 };
 

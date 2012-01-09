@@ -41,7 +41,7 @@
 //
 // -----------------------------------------------------------------------------
 Field::Field() :
-active(false),
+/*active(false),
 numvoxels(0),
 numneighbors(0),
 surfacefield(false),
@@ -70,7 +70,7 @@ volume(0.0),
 equivdiameter(0.0),
 radius1(0.0),
 radius2(0.0),
-radius3(0.0)
+radius3(0.0)*/
 {
 #if CORRUPT_TEST
 //  test5 = NULL;
@@ -116,7 +116,7 @@ Field::~Field()
 void Field::deepCopy(Field::Pointer field)
 {
   if (field.get() == this) { return; } // The pointers are the same just return
-  active = field->active ;
+/*  active = field->active ;
   numvoxels = field->numvoxels ;
   numneighbors = field->numneighbors ;
   surfacefield = field->surfacefield ;
@@ -146,7 +146,7 @@ void Field::deepCopy(Field::Pointer field)
   radius2 = field->radius2 ;
   radius3 = field->radius3 ;
   COPY_ARRAY_5(avg_quat, field);
-  COPY_ARRAY_3(neighbordistfunc, field);
+  COPY_ARRAY_3(neighbordistfunc, field);*/
 }
 
 
