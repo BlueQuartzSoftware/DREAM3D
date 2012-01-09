@@ -57,11 +57,34 @@ m_ZLoading(0.0f)
 FindSchmids::~FindSchmids()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindSchmids::preflight()
 {
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
+  if(d.get() == NULL)
+  {
+	  ss << "AvgQuats Array Not Initialized At Beginning of FindSchmids Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Active);
+  if(d.get() == NULL)
+  {
+	  ss << "Active Array Not Initialized At Beginning of FindSchmids Filter" << std::endl;
+	  err = -300;
+  }
+  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Schmids, p);
+  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::SlipSystems, q);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
 }
 // -----------------------------------------------------------------------------
 //

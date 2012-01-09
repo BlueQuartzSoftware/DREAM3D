@@ -111,9 +111,7 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfVolumeReader::loadData(float* euler1s,
-                                float* euler2s,
-                                float* euler3s,
+int H5CtfVolumeReader::loadData(float* eulerangles,
                                 int* phases,
                                 bool* goodVoxels,
                                 int64_t xpoints,
@@ -194,9 +192,9 @@ int H5CtfVolumeReader::loadData(float* euler1s,
       for (int i = 0; i < xpointsslice; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
-        euler1s[index] = euler1Ptr[readerIndex]; // Phi1
-        euler2s[index] = euler2Ptr[readerIndex]; // Phi
-        euler3s[index] = euler3Ptr[readerIndex]; // Phi2
+        eulerangles[3*index] = euler1Ptr[readerIndex]; // Phi1
+        eulerangles[3*index + 1] = euler2Ptr[readerIndex]; // Phi
+        eulerangles[3*index + 2] = euler3Ptr[readerIndex]; // Phi2
         phases[index] = phasePtr[readerIndex]; // Phase Add 1 to the phase number because .ctf files are zero based for phases
         if (NULL != good_voxels.get())
         {

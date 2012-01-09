@@ -62,11 +62,51 @@ FindLocalMisorientationGradients::FindLocalMisorientationGradients()
 FindLocalMisorientationGradients::~FindLocalMisorientationGradients()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindLocalMisorientationGradients::preflight()
 {
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Cells) Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
+  if(d.get() == NULL)
+  {
+	  ss << "Quats Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
+  if(d.get() == NULL)
+  {
+	  ss << "AvgQuats Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
+	  err = -300;
+  }
+
+  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations, p);
+  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::GrainMisorientations, q);
+  PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::MisorientationGradients, r);
+  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::GrainAvgMisorientations, s);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
 }
 // -----------------------------------------------------------------------------
 //

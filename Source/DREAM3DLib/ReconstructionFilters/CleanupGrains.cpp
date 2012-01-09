@@ -112,6 +112,13 @@ void CleanupGrains::preflight()
 	  ss << "Phases (Field) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
 	  err = -300;
   }
+  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
+  if(d.get() == NULL)
+  {
+	  ss << "NeighborLists Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
+	  err = -300;
+  }
+
   PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::AlreadyChecked, p);
   PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
@@ -171,8 +178,15 @@ void CleanupGrains::execute()
   notify("Cleanup Grains - Assigning Bad Points", 0, Observable::UpdateProgressMessage);
   assign_badpoints();
 
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setObservers(this->getObservers());
+  find_neighbors->setDataContainer(m);
+  find_neighbors->execute();
+  err = find_neighbors->getErrorCondition();
+  if (err < 0)
+  {
+    return;
+  }
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();

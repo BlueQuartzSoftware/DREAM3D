@@ -56,11 +56,31 @@ FindSizes::FindSizes()
 FindSizes::~FindSizes()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindSizes::preflight()
 {
+  int err = 0;
+  std::stringstream ss;
+  DataContainer::Pointer m = DataContainer::New();
+  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  if(d.get() == NULL)
+  {
+	  ss << "GrainIds Array Not Initialized At Beginning of FindSizes Filter" << std::endl;
+	  err = -300;
+  }
+
+  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::Volumes, p);
+  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, q);
+  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+  m->addFieldData(DREAM3D::FieldData::NumCells, r);
+
+  setErrorCondition(err);
+  setErrorMessage(ss.str());
 }
 // -----------------------------------------------------------------------------
 //
