@@ -77,12 +77,12 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
     LoadVolume();
 
   private:
-    int32_t* grain_indicies;
-    int32_t* phases;
-    float* eulerangles;
-    int8_t* surfacevoxels;
-    int32_t* neighbors;
-    float* quats;
+	int32_t* m_GrainIds;
+	int32_t* m_PhasesC;
+	int32_t* m_PhasesF;
+	int32_t* m_NumCells;
+	bool* m_Active;
+	float* m_EulerAngles;
 
     LoadVolume(const LoadVolume&); // Copy Constructor Not Implemented
     void operator=(const LoadVolume&); // Operator '=' Not Implemented

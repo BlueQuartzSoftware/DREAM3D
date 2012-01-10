@@ -179,10 +179,6 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
-    for (int j = 0; j < 3; j++)
-    {
-      m_Neighborhoods[i] = 0;
-    }
   }
 
   notify("FindNeighbors: Working through all Voxels", 0, Observable::UpdateProgressMessage);

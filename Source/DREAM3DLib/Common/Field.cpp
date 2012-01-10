@@ -40,37 +40,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Field::Field() :
-/*active(false),
-numvoxels(0),
-numneighbors(0),
-surfacefield(false),
-outsideboundbox(false),
-slipsystem(0),
-phase(0),
-centroidx(0.0),
-centroidy(0.0),
-centroidz(0.0),
-aspectratio1(0.0),
-aspectratio2(0.0),
-omega3(0.0),
-averagemisorientation(0.0),
-kernelmisorientation(10000.0),
-red(0.0),
-green(0.0),
-blue(0.0),
-schmidfactor(0.0),
-euler1(0.0),
-euler2(0.0),
-euler3(0.0),
-axiseuler1(0.0),
-axiseuler2(0.0),
-axiseuler3(0.0),
-volume(0.0),
-equivdiameter(0.0),
-radius1(0.0),
-radius2(0.0),
-radius3(0.0)*/
+Field::Field()
 {
 #if CORRUPT_TEST
 //  test5 = NULL;
@@ -116,37 +86,7 @@ Field::~Field()
 void Field::deepCopy(Field::Pointer field)
 {
   if (field.get() == this) { return; } // The pointers are the same just return
-/*  active = field->active ;
-  numvoxels = field->numvoxels ;
-  numneighbors = field->numneighbors ;
-  surfacefield = field->surfacefield ;
-  slipsystem = field->slipsystem;
 
-  centroidx = field->centroidx ;
-  centroidy = field->centroidy ;
-  centroidz = field->centroidz ;
-  omega3 = field->omega3 ;
-  averagemisorientation = field->averagemisorientation ;
-  kernelmisorientation = field->kernelmisorientation;
-  red = field->red ;
-  green = field->green ;
-  blue = field->blue ;
-
-  COPY_ARRAY_3(IPF, field);
-  schmidfactor = field->schmidfactor ;
-  euler1 = field->euler1 ;
-  euler2 = field->euler2 ;
-  euler3 = field->euler3 ;
-  axiseuler1 = field->axiseuler1 ;
-  axiseuler2 = field->axiseuler2 ;
-  axiseuler3 = field->axiseuler3 ;
-  volume = field->volume ;
-  equivdiameter = field->equivdiameter ;
-  radius1 = field->radius1 ;
-  radius2 = field->radius2 ;
-  radius3 = field->radius3 ;
-  COPY_ARRAY_5(avg_quat, field);
-  COPY_ARRAY_3(neighbordistfunc, field);*/
 }
 
 
