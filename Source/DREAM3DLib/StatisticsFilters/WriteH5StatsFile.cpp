@@ -45,8 +45,17 @@ using namespace std;
 //
 // -----------------------------------------------------------------------------
 WriteH5StatsFile::WriteH5StatsFile()  :
-            AbstractFilter(),
-    m_CreateNewStatsFile(true)
+AbstractFilter(),
+m_CreateNewStatsFile(true),
+m_NumNeighbors(NULL),
+m_Phases(NULL),
+m_Neighborhoods(NULL),
+m_Active(NULL),
+m_UnbiasedFields(NULL),
+m_EquivalentDiameters(NULL),
+m_AspectRatios(NULL),
+m_Schmids(NULL),
+m_Omega3s(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -116,7 +125,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   int retErr = 0;
   float actualgrains = 0;
   float avglogdiam = 0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   float *mindiameter;
   float *maxdiameter;
   mindiameter = new float [m->crystruct.size()];
@@ -128,10 +137,10 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   }
   for(size_t iter=1;iter<numgrains;iter++)
   {
-	if (m->m_Grains[iter]->outsideboundbox == false && m->m_Grains[iter]->active == true)
+	if (m_UnbiasedFields[iter] == false && m_Active[iter] == true)
 	{
-	  int phase = m->m_Grains[iter]->phase;
-	  float diam = m->m_Grains[iter]->equivdiameter;
+	  int phase = m_Phases[iter];
+	  float diam = m_EquivalentDiameters[iter];
 	  if(diam < mindiameter[phase]) mindiameter[phase] = diam;
 	  if(diam > maxdiameter[phase]) maxdiameter[phase] = diam;
 	}
@@ -165,16 +174,16 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 	  }
 	  for (size_t i = 1; i < numgrains; i++)
 	  {
-		if (m->m_Grains[i]->outsideboundbox == false && m->m_Grains[i]->active == true && m->m_Grains[i]->phase == static_cast<int>(iter) )
+		if (m_UnbiasedFields[i] == false && m_Active[i] == true && m_Phases[i] == static_cast<int>(iter) )
 		{
 		  actualgrains++;
-		  float diam = m->m_Grains[i]->equivdiameter;
+		  float diam = m_EquivalentDiameters[i];
 		  float logdiam = log(diam);
-		  float bovera = m->m_Grains[i]->aspectratio1;
-		  float covera = m->m_Grains[i]->aspectratio2;
+		  float bovera = m_AspectRatios[2*i];
+		  float covera = m_AspectRatios[2*i+1];
 		  float coverb = covera/bovera;
-		  float schmid = m->m_Grains[i]->schmidfactor;
-		  float omega3 = m->m_Grains[i]->omega3;
+		  float schmid = m_Schmids[i];
+		  float omega3 = m_Omega3s[i];
 		  avglogdiam = avglogdiam + logdiam;
 		  int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
 		  neighborhood[diamint][0]++;
@@ -191,7 +200,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 		  neighborhood[diamint][0]++;
 		  for (int k = 0; k < 3; k++)
 		  {
-			int nnum = m->m_Grains[i]->neighbordistfunc[k];
+			int nnum = m_Neighborhoods[3*i+k];
 			neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
 		  }
 		}
@@ -218,15 +227,15 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 	  float sdlogdiam = 0;
 	  for (size_t j = 1; j < numgrains; j++)
 	  {
-		if (m->m_Grains[j]->outsideboundbox == false && m->m_Grains[j]->active == true && m->m_Grains[j]->phase == static_cast<int>(iter) )
+		if (m_UnbiasedFields[j] == false && m_Active[j] == true && m_Phases[j] == static_cast<int>(iter) )
 		{
-		  float diam = m->m_Grains[j]->equivdiameter;
+		  float diam = m_EquivalentDiameters[j];
 		  float logdiam = log(diam);
-		  float bovera = m->m_Grains[j]->aspectratio1;
-		  float covera = m->m_Grains[j]->aspectratio2;
+		  float bovera = m_AspectRatios[2*j];
+		  float covera = m_AspectRatios[2*j+1];
 		  float coverb = covera/bovera;
-		  float schmid = m->m_Grains[j]->schmidfactor;
-		  float omega3 = m->m_Grains[j]->omega3;
+		  float schmid = m_Schmids[j];
+		  float omega3 = m_Omega3s[j];
 		  sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
 		  int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
 		  svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
@@ -236,7 +245,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 		  svomega3[diamint][2] = svomega3[diamint][2] + ((omega3 - svomega3[diamint][1]) * (omega3 - svomega3[diamint][1]));
 		  for (int k = 0; k < 3; k++)
 		  {
-			int nnum = m->m_Grains[j]->neighbordistfunc[k];
+			int nnum = m_Neighborhoods[3*j+k];
 			neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
 				* (neighborhood[diamint][((2 * k) + 1)] - nnum));
 		  }
@@ -289,7 +298,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
 
   float actualgrains = 0;
   float avglogdiam = 0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   float *mindiameter;
   float *maxdiameter;
   mindiameter = new float [m->crystruct.size()];
@@ -301,10 +310,10 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
   }
   for(size_t iter=1;iter<numgrains;iter++)
   {
-	if (m->m_Grains[iter]->outsideboundbox == false && m->m_Grains[iter]->active == true)
+	if (m_UnbiasedFields[iter] == false && m_Active[iter] == true)
 	{
-	  int phase = m->m_Grains[iter]->phase;
-	  float diam = m->m_Grains[iter]->equivdiameter;
+	  int phase = m_Phases[iter];
+	  float diam = m_EquivalentDiameters[iter];
 	  if(diam < mindiameter[phase]) mindiameter[phase] = diam;
 	  if(diam > maxdiameter[phase]) maxdiameter[phase] = diam;
 	}
@@ -335,15 +344,13 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
     }
     for (size_t i = 1; i < numgrains; i++)
     {
-      if (m->m_Grains[i]->outsideboundbox == false && m->m_Grains[i]->active == true && m->m_Grains[i]->phase == static_cast<int>(iter) )
+      if (m_UnbiasedFields[i] == false && m_Active[i] == true && m_Phases[i] == static_cast<int>(iter) )
       {
         actualgrains++;
-        float diam = m->m_Grains[i]->equivdiameter;
+        float diam = m_EquivalentDiameters[i];
         float logdiam = log(diam);
-        float rad1 = m->m_Grains[i]->radius1;
-        float rad2 = m->m_Grains[i]->radius2;
-        float bovera = rad2 / rad1;
-        float schmid = m->m_Grains[i]->schmidfactor;
+        float bovera = m_AspectRatios[2*i];
+        float schmid = m_Schmids[i];
         avglogdiam = avglogdiam + logdiam;
         int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
         neighborhood[diamint][0]++;
@@ -354,7 +361,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
         neighborhood[diamint][0]++;
         for (int k = 0; k < 3; k++)
         {
-          int nnum = m->m_Grains[i]->neighbordistfunc[k];
+          int nnum = m_Neighborhoods[3*i+k];
           neighborhood[diamint][((2 * k) + 1)] = neighborhood[diamint][((2 * k) + 1)] + nnum;
         }
       }
@@ -378,21 +385,19 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
     float sdlogdiam = 0;
     for (size_t j = 1; j < numgrains; j++)
     {
-      if (m->m_Grains[j]->outsideboundbox == false && m->m_Grains[j]->active == true && m->m_Grains[j]->phase == static_cast<int>(iter) )
+      if (m_UnbiasedFields[j] == false && m_Active[j] == true && m_Phases[j] == static_cast<int>(iter) )
       {
-        float diam = m->m_Grains[j]->equivdiameter;
+        float diam = m_EquivalentDiameters[j];
         float logdiam = log(diam);
-        float rad1 = m->m_Grains[j]->radius1;
-        float rad2 = m->m_Grains[j]->radius2;
-        float bovera = rad2 / rad1;
-        float schmid = m->m_Grains[j]->schmidfactor;
+        float bovera = m_AspectRatios[2*j];
+        float schmid = m_Schmids[j];
         sdlogdiam = sdlogdiam + ((logdiam - avglogdiam) * (logdiam - avglogdiam));
         int diamint = int((diam - mindiameter[iter]) / sizebinstepsize);
         svbovera[diamint][2] = svbovera[diamint][2] + ((bovera - svbovera[diamint][1]) * (bovera - svbovera[diamint][1]));
         svschmid[diamint][2] = svschmid[diamint][2] + ((schmid - svschmid[diamint][1]) * (schmid - svschmid[diamint][1]));
         for (int k = 0; k < 3; k++)
         {
-          int nnum = m->m_Grains[j]->neighbordistfunc[k];
+          int nnum = m_Neighborhoods[3*j+k];
           neighborhood[diamint][((2 * k) + 2)] = neighborhood[diamint][((2 * k) + 2)] + ((neighborhood[diamint][((2 * k) + 1)] - nnum)
               * (neighborhood[diamint][((2 * k) + 1)] - nnum));
         }

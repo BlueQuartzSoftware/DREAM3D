@@ -53,8 +53,9 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/Field.h"
 #include "DREAM3DLib/Common/Observable.h"
 
 namespace DREAM3D
@@ -109,133 +110,6 @@ namespace DREAM3D
   {
     const std::string TotalSurfaceArea("TotalSurfaceArea");
   }
-}
-
-#define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
-template<typename PtrType, typename DataArrayType, typename Observable>\
-PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, Observable* obv)\
-{\
-PtrType* gi = NULL;\
-IDataArray::Pointer iDataArray = GetMethod(arrayName);\
-if (iDataArray.get() == 0) {\
-  std::stringstream s;\
-  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";\
-  obv->setErrorCondition(-10);\
-  obv->setErrorMessage(s.str());\
-  return gi;\
-}\
-if (size != iDataArray->GetNumberOfTuples()) {\
-  std::stringstream s;\
-  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
-  s << "Required: " << size << " Contains: " << iDataArray->GetNumberOfTuples();\
-  obv->setErrorCondition(-11);\
-  obv->setErrorMessage(s.str());\
-  return gi;\
-}\
-gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
-if (NULL == gi) {\
-  std::stringstream s;\
-  s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
-  obv->setErrorCondition(-13);\
-  obv->setErrorMessage(s.str());\
-  return gi;\
-}\
-return gi;\
-}
-
-
-
-#define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
-template<typename PtrType, typename DataArrayType, typename Observable>\
-PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numComp, Observable* obv)\
-{\
-  PtrType* valuePtr = NULL;\
-  IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
-  if (iDataArray.get() == NULL) { \
-    iDataArray = DataArrayType::CreateArray(size);\
-    if (NULL == iDataArray.get()) { \
-      std::stringstream s;\
-      s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
-      obv->setErrorCondition(-25);\
-      obv->setErrorMessage(s.str());\
-      return valuePtr;\
-    }\
-    add##Field##Data(arrayName, iDataArray);\
-    iDataArray->SetNumberOfComponents(numComp);\
-  } \
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
-  if (NULL == valuePtr) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;";\
-    obv->setErrorCondition(-12);\
-    obv->setErrorMessage(s.str());\
-    return valuePtr;\
-  }\
-  return valuePtr;\
-}
-
-#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
-    setErrorCondition(-10);\
-    setErrorMessage(s.str());\
-    return -10;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
-    setErrorCondition(-20);\
-    setErrorMessage(s.str());\
-    return -20;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
-    setErrorCondition(-30);\
-    setErrorMessage(s.str());\
-    return -30;\
-  }\
-}
-
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    return;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
-    return;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    return;\
-  }\
-}
-
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
-{\
-  IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
-  if (iDataArray.get() == NULL) { \
-    return -10;\
-  } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
-    return -20;\
-  }\
-  valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
-  if (NULL == valuePtr) {\
-    return -30;\
-  }\
 }
 
 
@@ -304,6 +178,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumFieldArrays();
 
+    DREAM3D_INSTANCE_PROPERTY(int, TotalFields);
+
+
     /**
     * @brief Adds/overwrites the data for a named array
     * @param name The name that the array will be known by
@@ -336,14 +213,15 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 //  Resolution Methods
 // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
-    float getXRes() { return m_Resolution[0];}
+
+	  float getXRes() { return m_Resolution[0];}
     float getYRes() { return m_Resolution[1];}
     float getZRes() { return m_Resolution[2];}
 
+    // -----------------------------------------------------------------------------
+    //  Origin Methods
+    // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
-
-    // Field Data Pointer Array
-    std::vector<Field::Pointer> m_Grains;
 
     // Ensemble Data??
     // Phase Information (crystal structures, phase types, and shape types)
@@ -353,11 +231,21 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
     std::vector<float> phasefraction;
 
+    void resizeFieldDataArrays(size_t size)
+    {
+
+      for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+      {
+        IDataArray::Pointer d = (*iter).second;
+        d->Resize(size);
+      }
+
+    }
+
   protected:
     DataContainer();
 
   private:
-    int64_t totalpoints;
 
     std::map<std::string, IDataArray::Pointer> m_VoxelData;
     std::map<std::string, IDataArray::Pointer> m_FieldData;

@@ -45,7 +45,11 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 FindSizes::FindSizes() :
-            AbstractFilter()
+AbstractFilter(),
+m_GrainIds(NULL),
+m_Volumes(NULL),
+m_EquivalentDiameters(NULL),
+m_NumCells(NULL)
 {
 
 }
@@ -98,10 +102,9 @@ void FindSizes::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-  int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == gi) { return; }
-  grain_indicies = gi;
 
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == m_GrainIds) { return; }
   setErrorCondition(0);
 
   if(m->getZPoints() > 1) find_sizes();
@@ -119,7 +122,7 @@ void FindSizes::find_sizes()
 
   float radcubed;
   float diameter;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);
@@ -131,18 +134,18 @@ void FindSizes::find_sizes()
   }
   for (int j = 0; j < totalPoints; j++)
   {
-    int gnum = grain_indicies[j];
+    int gnum = m_GrainIds[j];
     graincounts[gnum]++;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
   float vol_term = (4.0/3.0)*m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
-    m->m_Grains[i]->numvoxels = graincounts[i];
-    m->m_Grains[i]->volume = (graincounts[i] * res_scalar);
-    radcubed = m->m_Grains[i]->volume/vol_term;
+    m_NumCells[i] = graincounts[i];
+    m_Volumes[i] = (graincounts[i] * res_scalar);
+    radcubed = m_Volumes[i]/vol_term;
     diameter = 2.0*powf(radcubed, 0.3333333333);
-    m->m_Grains[i]->equivdiameter = diameter;
+    m_EquivalentDiameters[i] = diameter;
   }
 }
 void FindSizes::find_sizes2D()
@@ -152,7 +155,7 @@ void FindSizes::find_sizes2D()
 
   float radsquared;
   float diameter;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);
 
@@ -162,16 +165,16 @@ void FindSizes::find_sizes2D()
   }
   for (int j = 0; j < totalPoints; j++)
   {
-    int gnum = grain_indicies[j];
+    int gnum = m_GrainIds[j];
     graincounts[gnum]++;
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    m->m_Grains[i]->numvoxels = graincounts[i];
-    m->m_Grains[i]->volume = (graincounts[i] * m->getXRes() * m->getYRes());
-    radsquared = m->m_Grains[i]->volume / m_pi;
+    m_NumCells[i] = graincounts[i];
+    m_Volumes[i] = (graincounts[i] * m->getXRes() * m->getYRes());
+    radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
-    m->m_Grains[i]->equivdiameter = diameter;
+    m_EquivalentDiameters[i] = diameter;
   }
 }
 

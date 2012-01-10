@@ -43,7 +43,9 @@
 //
 // -----------------------------------------------------------------------------
 FindSurfaceGrains::FindSurfaceGrains() :
-AbstractFilter()
+AbstractFilter(),
+m_GrainIds(NULL),
+m_SurfaceFields(NULL)
 {
 }
 
@@ -112,34 +114,34 @@ void FindSurfaceGrains::find_surfacegrains()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == m_GrainIds) { return; }
   size_t xPoints = m->getXPoints();
   size_t yPoints = m->getYPoints();
   size_t zPoints = m->getZPoints();
   size_t col, row, plane;
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    int gnum = grain_indicies[j];
-    if(m->m_Grains[gnum]->surfacefield == false)
+    int gnum = m_GrainIds[j];
+    if(m_SurfaceFields[gnum] == false)
     {
       col = j % xPoints;
       row = (j / xPoints) % yPoints;
       plane = j / (xPoints * yPoints);
-      if(col <= 0) m->m_Grains[gnum]->surfacefield = true;
-      if(col >= xPoints - 1) m->m_Grains[gnum]->surfacefield = true;
-      if(row <= 0) m->m_Grains[gnum]->surfacefield = true;
-      if(row >= yPoints - 1) m->m_Grains[gnum]->surfacefield = true;
-      if(plane <= 0) m->m_Grains[gnum]->surfacefield = true;
-      if(plane >= zPoints - 1) m->m_Grains[gnum]->surfacefield = true;
-      if(m->m_Grains[gnum]->surfacefield == false)
+      if(col <= 0) m_SurfaceFields[gnum] = true;
+      if(col >= xPoints - 1) m_SurfaceFields[gnum] = true;
+      if(row <= 0) m_SurfaceFields[gnum] = true;
+      if(row >= yPoints - 1) m_SurfaceFields[gnum] = true;
+      if(plane <= 0) m_SurfaceFields[gnum] = true;
+      if(plane >= zPoints - 1) m_SurfaceFields[gnum] = true;
+      if(m_SurfaceFields[gnum] == false)
       {
-        if(grain_indicies[j - 1] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j + 1] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j - xPoints] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j + xPoints] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j - (xPoints * yPoints)] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j + (xPoints * yPoints)] == 0) m->m_Grains[gnum]->surfacefield = true;
+        if(m_GrainIds[j - 1] == 0) m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j + 1] == 0)m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j - xPoints] == 0) m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j + xPoints] == 0) m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j - (xPoints * yPoints)] == 0) m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j + (xPoints * yPoints)] == 0) m_SurfaceFields[gnum] = true;
       }
     }
   }
@@ -149,8 +151,8 @@ void FindSurfaceGrains::find_surfacegrains2D()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == m_GrainIds) { return; }
 
   size_t dims[3] = {0,0,0};
 
@@ -160,21 +162,21 @@ void FindSurfaceGrains::find_surfacegrains2D()
   size_t col, row;
   for (size_t j = 0; j < planePoints; j++)
   {
-    int gnum = grain_indicies[j];
-    if(m->m_Grains[gnum]->surfacefield == false)
+    int gnum = m_GrainIds[j];
+    if(m_SurfaceFields[gnum] == false)
     {
       col = j % m->getXPoints();
       row = (j / m->getXPoints()) % m->getYPoints();
-      if(col <= 0) m->m_Grains[gnum]->surfacefield = true;
-      if(col >= m->getXPoints() - 1) m->m_Grains[gnum]->surfacefield = true;
-      if(row <= 0) m->m_Grains[gnum]->surfacefield = true;
-      if(row >= m->getYPoints() - 1) m->m_Grains[gnum]->surfacefield = true;
-      if(m->m_Grains[gnum]->surfacefield == false)
+      if(col <= 0) m_SurfaceFields[gnum] = true;
+      if(col >= m->getXPoints() - 1) m_SurfaceFields[gnum] = true;
+      if(row <= 0) m_SurfaceFields[gnum] = true;
+      if(row >= m->getYPoints() - 1) m_SurfaceFields[gnum] = true;
+      if(m_SurfaceFields[gnum] == false)
       {
-        if(grain_indicies[j - 1] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j + 1] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j - m->getXPoints()] == 0) m->m_Grains[gnum]->surfacefield = true;
-        if(grain_indicies[j + m->getXPoints()] == 0) m->m_Grains[gnum]->surfacefield = true;
+        if(m_GrainIds[j - 1] == 0) m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j + 1] == 0) m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j - m->getXPoints()] == 0) m_SurfaceFields[gnum] = true;
+        if(m_GrainIds[j + m->getXPoints()] == 0) m_SurfaceFields[gnum] = true;
       }
     }
   }

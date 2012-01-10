@@ -38,6 +38,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -146,13 +147,24 @@ return err; }
 //
 // -----------------------------------------------------------------------------
 PackGrainsGen2::PackGrainsGen2() :
-            AbstractFilter(),
+AbstractFilter(),
 m_H5StatsInputFile(""),
 m_ErrorOutputFile(""),
 m_VtkOutputFile(""),
 m_MaxIterations(1),
 m_PeriodicBoundaries(false),
-m_NeighborhoodErrorWeight(1.0f)
+m_NeighborhoodErrorWeight(1.0f),
+m_GrainIds(NULL),
+m_AxisEulerAngles(NULL),
+m_Centroids(NULL),
+m_AxisLengths(NULL),
+m_Volumes(NULL),
+m_Omega3s(NULL),
+m_EquivalentDiameters(NULL),
+m_Active(NULL),
+m_PhasesC(NULL),
+m_PhasesF(NULL),
+m_Neighborhoods(NULL)
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -228,45 +240,38 @@ void PackGrainsGen2::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackGrainsGen2::preflight()
+void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-  }
-  d = m->getFieldData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::Phases, p);
-  }
+  DataContainer* m = getDataContainer();
 
-  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Active, p);
-  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Phases, q);
-  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Neighborhoods, r);
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Centroids, s);
-  PFFloatArrayType::Pointer t = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Volumes, t);
-  PFFloatArrayType::Pointer u = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
-  PFFloatArrayType::Pointer v = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
-  PFFloatArrayType::Pointer w = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Omega3s, w);
-  PFFloatArrayType::Pointer x = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, EulerAngles, ss, FloatArrayType, voxels * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, Int8ArrayType, voxels);
+
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, BoolArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, FloatArrayType, fields * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, FloatArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, FloatArrayType, fields * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, FloatArrayType, fields * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, FloatArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields);
+
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackGrainsGen2::preflight()
+{
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -315,6 +320,9 @@ void PackGrainsGen2::execute()
     return;
   }
 
+  int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
   initializeAttributes();
 
   size_t udims[3] =
@@ -391,7 +399,7 @@ void PackGrainsGen2::execute()
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   int gid = 1;
   float currentvol = 0.0;
-  m->m_Grains.resize(2);
+  m->resizeFieldDataArrays(2);
   m->m_Grains[1] = Field::New();
   float factor = 1.0;
   float iter = 0;
@@ -413,20 +421,20 @@ void PackGrainsGen2::execute()
     change = (currentsizedisterror) - (oldsizedisterror);
     if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
     {
-      m->m_Grains[gid]->active = 1;
-      oldsizedisterror = currentsizedisterror;
-      currentvol = currentvol + m->m_Grains[gid]->volume;
-      gid++;
-      m->m_Grains.resize(gid + 1);
-      m->m_Grains[gid] = Field::New();
-      iter = 0;
+       m_Active[gid] = 1;
+       oldsizedisterror = currentsizedisterror;
+       currentvol = currentvol + m_Volumes[gid];
+       gid++;
+       m->resizeFieldDataArrays(gid + 1);
+       m->m_Grains[gid] = Field::New();
+       iter = 0;
     }
   }
   if(m_PeriodicBoundaries == false)
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-    xgrains = int(powf((m->m_Grains.size() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
+    xgrains = int(powf((m->getTotalFields() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
     ygrains = int(xgrains * (sizey / sizex) + 1);
     zgrains = int(xgrains * (sizez / sizex) + 1);
     factor = 0.25f * (1.0f - (float((xgrains - 2) * (ygrains - 2) * (zgrains - 2)) / float(xgrains * ygrains * zgrains)));
@@ -448,11 +456,11 @@ void PackGrainsGen2::execute()
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001f)))
       {
-        m->m_Grains[gid]->active = 1;
+        m_Active[gid] = 1;
         oldsizedisterror = currentsizedisterror;
-        currentvol = currentvol + m->m_Grains[gid]->volume;
+        currentvol = currentvol + m_Volumes[gid];
         gid++;
-        m->m_Grains.resize(gid + 1);
+        m->resizeFieldDataArrays(gid + 1);
         m->m_Grains[gid] = Field::New();
         iter = 0;
       }
@@ -477,7 +485,7 @@ void PackGrainsGen2::execute()
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   columnlist.resize(numgrains);
   rowlist.resize(numgrains);
   planelist.resize(numgrains);
@@ -488,19 +496,19 @@ void PackGrainsGen2::execute()
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
     zc = sizez / 2.0f;
-    m->m_Grains[i]->centroidx = xc;
-    m->m_Grains[i]->centroidy = yc;
-    m->m_Grains[i]->centroidz = zc;
+    m_Centroids[3*i] = xc;
+    m_Centroids[3*i+1] = yc;
+    m_Centroids[3*i+2] = zc;
     insert_grain(i);
     fillingerror = check_fillingerror(i, -1000);
     for (int iter = 0; iter < 10; iter++)
     {
-      xc = rg.genrand_res53() * (dims[0] * xRes);
-      yc = rg.genrand_res53() * (dims[1] * yRes);
-      zc = rg.genrand_res53() * (dims[2] * zRes);
-      oldxc = m->m_Grains[i]->centroidx;
-      oldyc = m->m_Grains[i]->centroidy;
-      oldzc = m->m_Grains[i]->centroidz;
+      xc = rg.genrand_res53() * (dims[0] * m->getXRes());
+      yc = rg.genrand_res53() * (dims[1] * m->getYRes());
+      zc = rg.genrand_res53() * (dims[2] * m->getZRes());
+      oldxc = m_Centroids[3*i];
+      oldyc = m_Centroids[3*i+1];
+      oldzc = m_Centroids[3*i+2];
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, i);
       move_grain(i, xc, yc, zc);
@@ -537,12 +545,13 @@ void PackGrainsGen2::execute()
       if(randomgrain == 0) randomgrain = 1;
       if(randomgrain == numgrains) randomgrain = numgrains - 1;
       Seed++;
-      xc = rg.genrand_res53() * (dims[0] * xRes);
-      yc = rg.genrand_res53() * (dims[1] * yRes);
-      zc = rg.genrand_res53() * (dims[2] * zRes);
-      oldxc = m->m_Grains[randomgrain]->centroidx;
-      oldyc = m->m_Grains[randomgrain]->centroidy;
-      oldzc = m->m_Grains[randomgrain]->centroidz;
+
+      xc = rg.genrand_res53() * (dims[0] * m->getXRes());
+      yc = rg.genrand_res53() * (dims[1] * m->getYRes());
+      zc = rg.genrand_res53() * (dims[2] * m->getZRes());
+      oldxc = m_Centroids[3*randomgrain];
+      oldyc = m_Centroids[3*randomgrain+1];
+      oldzc = m_Centroids[3*randomgrain+2];
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, randomgrain);
       move_grain(randomgrain, xc, yc, zc);
@@ -568,9 +577,9 @@ void PackGrainsGen2::execute()
       if(randomgrain == 0) randomgrain = 1;
       if(randomgrain == numgrains) randomgrain = numgrains - 1;
       Seed++;
-      oldxc = m->m_Grains[randomgrain]->centroidx;
-      oldyc = m->m_Grains[randomgrain]->centroidy;
-      oldzc = m->m_Grains[randomgrain]->centroidz;
+      oldxc = m_Centroids[3*randomgrain];
+      oldyc = m_Centroids[3*randomgrain+1];
+      oldzc = m_Centroids[3*randomgrain+2];
       xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresx));
       yc = oldyc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresy));
       zc = oldzc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresz));
@@ -741,19 +750,19 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
   float omega3f = rg.genrand_beta(mf, s);
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[phase];
   if(shapeclass == DREAM3D::SyntheticBuilder::EllipsoidShape) omega3f = 1;
-  m->m_Grains[gnum]->volume = vol;
-  m->m_Grains[gnum]->equivdiameter = diam;
-  m->m_Grains[gnum]->radius1 = r1;
-  m->m_Grains[gnum]->radius2 = r2;
-  m->m_Grains[gnum]->radius3 = r3;
-  m->m_Grains[gnum]->axiseuler1 = phi1;
-  m->m_Grains[gnum]->axiseuler2 = PHI;
-  m->m_Grains[gnum]->axiseuler3 = phi2;
-  m->m_Grains[gnum]->omega3 = omega3f;
-  m->m_Grains[gnum]->phase = phase;
-  m->m_Grains[gnum]->neighbordistfunc[0] = 0;
-  m->m_Grains[gnum]->neighbordistfunc[1] = 0;
-  m->m_Grains[gnum]->neighbordistfunc[2] = 0;
+  m_Volumes[gnum] = vol;
+  m_EquivalentDiameters[gnum] = diam;
+  m_AxisLengths[3*gnum] = r1;
+  m_AxisLengths[3*gnum+1] = r2;
+  m_AxisLengths[3*gnum+2] = r3;
+  m_AxisEulerAngles[3*gnum] = phi1;
+  m_AxisEulerAngles[3*gnum+1] = PHI;
+  m_AxisEulerAngles[3*gnum+2] = phi2;
+  m_Omega3s[gnum] = omega3f;
+  m_PhasesF[gnum] = phase;
+  m_Neighborhoods[3*gnum] = 0;
+  m_Neighborhoods[3*gnum+1] = 0;
+  m_Neighborhoods[3*gnum+2] = 0;
 }
 
 void PackGrainsGen2::initializeAttributes()
@@ -784,24 +793,14 @@ void PackGrainsGen2::initializeAttributes()
   sizez = dims[2] * zRes;
   totalvol = sizex*sizey*sizez;
 
-
-  grain_indicies = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
-  if (grain_indicies == NULL) { return; }
-  phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
-  if (phases == NULL) { return; }
-  eulerangles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
-  if (NULL == eulerangles) {return;}
-  surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
-  if (NULL == surfacevoxels) {return;}
-
 	for(int i=0;i<totalPoints;i++)
 	{
-		grain_indicies[i] = 0;
-		phases[i] = 0;
-		eulerangles[3*i] = -1.0f;
-		eulerangles[3*i + 1] = -1.0f;
-		eulerangles[3*i + 2] = -1.0f;
-		surfacevoxels[i] = 0;
+		m_GrainIds[i] = 0;
+		m_PhasesC[i] = 0;
+		m_EulerAngles[3*i] = -1.0f;
+		m_EulerAngles[3*i + 1] = -1.0f;
+		m_EulerAngles[3*i + 2] = -1.0f;
+		m_SurfaceVoxels[i] = 0;
 	}
 }
 
@@ -875,7 +874,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 
   for (int i = 0; i < size; i++)
   {
-      phase = phases[i];
+      phase = m_PhasesC[i];
     m->crystruct[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
@@ -956,7 +955,7 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
   for (size_t i = 0; i < count; i++)
   {
     totaldensity = 0.0;
-    phase = phases[i];
+      phase = m_PhasesC[i];
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
     if(err < 0)
     {
@@ -988,9 +987,9 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
   int shiftcolumn, shiftrow, shiftplane;
-  float oxc = m->m_Grains[gnum]->centroidx;
-  float oyc = m->m_Grains[gnum]->centroidy;
-  float ozc = m->m_Grains[gnum]->centroidz;
+  float oxc = m_Centroids[3*gnum];
+  float oyc = m_Centroids[3*gnum+1];
+  float ozc = m_Centroids[3*gnum+2];
   occolumn = (oxc - (packingresx / 2)) / packingresx;
   ocrow = (oyc - (packingresy / 2)) / packingresy;
   ocplane = (ozc - (packingresz / 2)) / packingresz;
@@ -1000,9 +999,9 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
-  m->m_Grains[gnum]->centroidx = xc;
-  m->m_Grains[gnum]->centroidy = yc;
-  m->m_Grains[gnum]->centroidz = zc;
+  m_Centroids[3*gnum] = xc;
+  m_Centroids[3*gnum+1] = yc;
+  m_Centroids[3*gnum+2] = zc;
   size_t size = columnlist[gnum].size();
 
   for (size_t i = 0; i < size; i++)
@@ -1022,16 +1021,16 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
   float xdist, ydist, zdist, totdist;
 //  int nnum = 0;
 //  nnum = 0;
-  x = m->m_Grains[gnum]->centroidx;
-  y = m->m_Grains[gnum]->centroidy;
-  z = m->m_Grains[gnum]->centroidz;
-  dia = m->m_Grains[gnum]->equivdiameter;
-  for (size_t n = 1; n < m->m_Grains.size(); n++)
+  x = m_Centroids[3*gnum];
+  y = m_Centroids[3*gnum+1];
+  z = m_Centroids[3*gnum+2];
+  dia = m_EquivalentDiameters[gnum];
+  for (size_t n = 1; n < m->getTotalFields(); n++)
   {
-    xn = m->m_Grains[n]->centroidx;
-    yn = m->m_Grains[n]->centroidy;
-    zn = m->m_Grains[n]->centroidz;
-    dia2 = m->m_Grains[n]->equivdiameter;
+    xn = m_Centroids[3*n];
+    yn = m_Centroids[3*n+1];
+    zn = m_Centroids[3*n+2];
+    dia2 = m_EquivalentDiameters[n];
     xdist = fabs(x - xn);
     ydist = fabs(y - yn);
     zdist = fabs(z - zn);
@@ -1042,8 +1041,8 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
       DoverR = int(totdist / (dia / 2.0));
       for (int iter = DoverR; iter < 3; iter++)
       {
-        if(add > 0) m->m_Grains[n]->neighbordistfunc[iter]++;
-        if(add < 0) m->m_Grains[n]->neighbordistfunc[iter] = m->m_Grains[n]->neighbordistfunc[iter] - 1;
+        if(add > 0) m_Neighborhoods[3*n + iter]++;
+        if(add < 0) m_Neighborhoods[3*n + iter] = m_Neighborhoods[3*n + iter] - 1;
       }
     }
     if(totdist < (3 * (dia2 / 2.0)))
@@ -1051,8 +1050,8 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
       DoverR = int(totdist / (dia2 / 2.0));
       for (int iter = DoverR; iter < 3; iter++)
       {
-        if(add > 0) m->m_Grains[gnum]->neighbordistfunc[iter]++;
-        if(add < 0) m->m_Grains[gnum]->neighbordistfunc[iter] = m->m_Grains[gnum]->neighbordistfunc[iter] - 1;
+        if(add > 0) m_Neighborhoods[3*gnum + iter]++;
+        if(add < 0) m_Neighborhoods[3*gnum + iter] = m_Neighborhoods[3*gnum + iter] - 1;
       }
     }
   }
@@ -1078,27 +1077,27 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
       simneighbordist[iter][i][1] = 0;
       simneighbordist[iter][i][2] = 0;
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
       determine_neighbors(gadd, 1);
     }
-    if(gremove > 0 && m->m_Grains[gremove]->phase == phase)
+    if(gremove > 0 && m_PhasesF[gremove] == phase)
     {
       determine_neighbors(gremove, -1);
     }
-    for (size_t i = 1; i < m->m_Grains.size(); i++)
+    for (size_t i = 1; i < m->getTotalFields(); i++)
     {
       nnum = 0;
       index = i;
-      if(index != gremove && m->m_Grains[index]->phase == phase)
+      if(index != gremove && m_PhasesF[index] == phase)
       {
-        dia = m->m_Grains[index]->equivdiameter;
+        dia = m_EquivalentDiameters[index];
         if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
         if(dia < mindiameter[phase]) dia = mindiameter[phase];
         dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
         for (int j = 0; j < 3; j++)
         {
-          nnum = m->m_Grains[index]->neighbordistfunc[j];
+          nnum = m_Neighborhoods[3*index + j];
           if(nnum > 0)
           {
             simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
@@ -1107,15 +1106,15 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
         count[dia]++;
       }
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
-      dia = m->m_Grains[index]->equivdiameter;
+      dia = m_EquivalentDiameters[index];
       if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
       if(dia < mindiameter[phase]) dia = mindiameter[phase];
       dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
       for (int j = 0; j < 3; j++)
       {
-        nnum = m->m_Grains[index]->neighbordistfunc[j];
+        nnum = m_Neighborhoods[3*index + j];
         if(nnum > 0)
         {
           simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
@@ -1131,11 +1130,11 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
         if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
       determine_neighbors(gadd, -1);
     }
-    if(gremove > 0 && m->m_Grains[gremove]->phase == phase)
+    if(gremove > 0 && m_PhasesF[gremove] == phase)
     {
       determine_neighbors(gremove, 1);
     }
@@ -1197,12 +1196,12 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
     {
       simgrainsizedist[iter][i] = 0.0;
     }
-    for (size_t b = 1; b < m->m_Grains.size(); b++)
+    for (size_t b = 1; b < m->getTotalFields(); b++)
     {
       index = b;
-      if(index != gremove && m->m_Grains[index]->phase == phase)
+      if(index != gremove && m_PhasesF[index] == phase)
       {
-        dia = m->m_Grains[index]->equivdiameter;
+        dia = m_EquivalentDiameters[index];
         dia = (dia - (mindiameter[phase] / 2.0)) / grainsizediststep[iter];
         if(dia < 0) dia = 0;
         if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
@@ -1210,9 +1209,9 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
         count++;
       }
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
-      dia = m->m_Grains[gadd]->equivdiameter;
+      dia = m_EquivalentDiameters[gadd];
       dia = (dia - (mindiameter[phase] / 2.0)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
       if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
@@ -1313,12 +1312,12 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-  float volcur = m->m_Grains[gnum]->volume;
-  float bovera = m->m_Grains[gnum]->radius2;
-  float covera = m->m_Grains[gnum]->radius3;
-  float omega3 = m->m_Grains[gnum]->omega3;
+  float volcur = m_Volumes[gnum];
+  float bovera = m_AxisLengths[3*gnum+1];
+  float covera = m_AxisLengths[3*gnum+2];
+  float omega3 = m_Omega3s[gnum];
   float radcur1 = 1;
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[gnum]];
 
   // init any values for each of the Shape Ops
   for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
@@ -1336,9 +1335,9 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
-  float phi1 = m->m_Grains[gnum]->axiseuler1;
-  float PHI = m->m_Grains[gnum]->axiseuler2;
-  float phi2 = m->m_Grains[gnum]->axiseuler3;
+  float phi1 = m_AxisEulerAngles[3*gnum];
+  float PHI = m_AxisEulerAngles[3*gnum+1];
+  float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
   ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
   ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
@@ -1349,9 +1348,9 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   ga[2][0] = sinf(phi1) * sinf(PHI);
   ga[2][1] = -cosf(phi1) * sinf(PHI);
   ga[2][2] = cosf(PHI);
-  xc = m->m_Grains[gnum]->centroidx;
-  yc = m->m_Grains[gnum]->centroidy;
-  zc = m->m_Grains[gnum]->centroidz;
+  xc = m_Centroids[3*gnum];
+  yc = m_Centroids[3*gnum+1];
+  zc = m_Centroids[3*gnum+2];
   centercolumn = (xc - (packingresx / 2)) / packingresx;
   centerrow = (yc - (packingresy / 2)) / packingresy;
   centerplane = (zc - (packingresz / 2)) / packingresz;
@@ -1439,24 +1438,24 @@ void PackGrainsGen2::assign_voxels()
   float x, y, z;
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
   int64_t totpoints = m->totalPoints();
-  gsizes.resize(m->m_Grains.size());
+  gsizes.resize(m->getTotalFields());
 
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     gsizes[i] = 0;
   }
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
-    float volcur = m->m_Grains[i]->volume;
-    float bovera = m->m_Grains[i]->radius2;
-    float covera = m->m_Grains[i]->radius3;
-    float omega3 = m->m_Grains[i]->omega3;
-    xc = m->m_Grains[i]->centroidx;
-    yc = m->m_Grains[i]->centroidy;
-    zc = m->m_Grains[i]->centroidz;
+    float volcur = m_Volumes[i];
+    float bovera = m_AxisLengths[3*i+1];
+    float covera = m_AxisLengths[3*i+2];
+    float omega3 = m_Omega3s[i];
+	xc = m_Centroids[3*i];
+	yc = m_Centroids[3*i+1];
+	zc = m_Centroids[3*i+2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[i]->phase];
+    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[i]];
 
     // init any values for each of the Shape Ops
     for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -1474,9 +1473,9 @@ void PackGrainsGen2::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-    float phi1 = m->m_Grains[i]->axiseuler1;
-    float PHI = m->m_Grains[i]->axiseuler2;
-    float phi2 = m->m_Grains[i]->axiseuler3;
+	float phi1 = m_AxisEulerAngles[3*i];
+	float PHI = m_AxisEulerAngles[3*i+1];
+	float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
     ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
     ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
@@ -1558,15 +1557,15 @@ void PackGrainsGen2::assign_voxels()
             {
               int currentpoint = index;
 
-              if (grain_indicies[currentpoint] > 0)
+              if (m_GrainIds[currentpoint] > 0)
               {
-                oldname = grain_indicies[currentpoint];
+                oldname = m_GrainIds[currentpoint];
                 gsizes[oldname] = gsizes[oldname] - 1;
-                grain_indicies[currentpoint] = -1;
+                m_GrainIds[currentpoint] = -1;
               }
-              if (grain_indicies[currentpoint] == 0)
+              if (m_GrainIds[currentpoint] == 0)
               {
-                grain_indicies[currentpoint] = i;
+                m_GrainIds[currentpoint] = i;
                 gsizes[i]++;
               }
             }
@@ -1575,9 +1574,9 @@ void PackGrainsGen2::assign_voxels()
       }
     }
   }
-  newnames.resize(m->m_Grains.size());
+  newnames.resize(m->getTotalFields());
   int goodcount = 1;
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     newnames[i] = 0;
     if (gsizes[i] > 0)
@@ -1589,12 +1588,12 @@ void PackGrainsGen2::assign_voxels()
   }
   for (int i = 0; i < totpoints; i++)
   {
-    if (grain_indicies[i] > 0)
+    if (m_GrainIds[i] > 0)
     {
-	  grain_indicies[i] = newnames[grain_indicies[i]];
+	  m_GrainIds[i] = newnames[m_GrainIds[i]];
     }
   }
-  m->m_Grains.resize(goodcount);
+  m->resizeFieldDataArrays(goodcount);
 }
 
 void PackGrainsGen2::assign_gaps()
@@ -1645,18 +1644,18 @@ void PackGrainsGen2::assign_gaps()
   {
 	  unassignedcount = 0;
 	  timestep = timestep + 50;
-	  for (size_t i = 1; i < m->m_Grains.size(); i++)
+	  for (size_t i = 1; i < m->getTotalFields(); i++)
 	  {
-		float volcur = m->m_Grains[i]->volume;
-		float bovera = m->m_Grains[i]->radius2;
-		float covera = m->m_Grains[i]->radius3;
-		float omega3 = m->m_Grains[i]->omega3;
-		xc = m->m_Grains[i]->centroidx;
-		yc = m->m_Grains[i]->centroidy;
-		zc = m->m_Grains[i]->centroidz;
+		float volcur = m_Volumes[i];
+		float bovera = m_AxisLengths[3*i+1];
+		float covera = m_AxisLengths[3*i+2];
+		float omega3 = m_Omega3s[i];
+		xc = m_Centroids[3*i];
+		yc = m_Centroids[3*i+1];
+		zc = m_Centroids[3*i+2];
 		float radcur1 = 0.0f;
 		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[i]->phase];
+		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[i]];
 
 		// init any values for each of the Shape Ops
 		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -1677,9 +1676,9 @@ void PackGrainsGen2::assign_gaps()
 		radcur1 = (float(timestep)/100.0)*radcur1;
 		radcur2 = (float(timestep)/100.0)*radcur2;
 		radcur3 = (float(timestep)/100.0)*radcur3;
-		float phi1 = m->m_Grains[i]->axiseuler1;
-		float PHI = m->m_Grains[i]->axiseuler2;
-		float phi2 = m->m_Grains[i]->axiseuler3;
+		float phi1 = m_AxisEulerAngles[3*i];
+		float PHI = m_AxisEulerAngles[3*i+1];
+		float phi2 = m_AxisEulerAngles[3*i+2];
 		float ga[3][3];
 		ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
 		ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
@@ -1719,68 +1718,68 @@ void PackGrainsGen2::assign_gaps()
 		}
 		for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
 		{
-        for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
-        {
-          for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
-          {
-            column = iter1;
-            row = iter2;
-            plane = iter3;
-            if(iter1 < 0) column = iter1 + dims[0];
-            if(iter1 > dims[0] - 1) column = iter1 - dims[0];
-            if(iter2 < 0) row = iter2 + dims[1];
-            if(iter2 > dims[1] - 1) row = iter2 - dims[1];
-            if(iter3 < 0) plane = iter3 + dims[2];
-            if(iter3 > dims[2] - 1) plane = iter3 - dims[2];
-            index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
-            if(grain_indicies[index] <= 0)
-            {
-              inside = -1;
-              x = float(column) * xRes;
-              y = float(row) * yRes;
-              z = float(plane) * zRes;
-              if(iter1 < 0) x = x - sizex;
-              if(iter1 > dims[0] - 1) x = x + sizex;
-              if(iter2 < 0) y = y - sizey;
-              if(iter2 > dims[1] - 1) y = y + sizey;
-              if(iter3 < 0) z = z - sizez;
-              if(iter3 > dims[2] - 1) z = z + sizez;
-              dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
-              dist = sqrtf(dist);
-              if(dist < radcur1)
-              {
-                x = x - xc;
-                y = y - yc;
-                z = z - zc;
-                xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
-                yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
-                zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
-                float axis1comp = xp / radcur1;
-                float axis2comp = yp / radcur2;
-                float axis3comp = zp / radcur3;
-                inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-                if(inside >= 0 && inside > ellipfuncs[index])
-                {
-                  newowners[index] = i;
-                  ellipfuncs[index] = inside;
-                }
-              }
-            }
-          }
-        }
-      }
+		  for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
+		  {
+			for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
+			{
+			  column = iter1;
+			  row = iter2;
+			  plane = iter3;
+			  if (iter1 < 0) column = iter1 + dims[0];
+			  if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+			  if (iter2 < 0) row = iter2 + dims[1];
+			  if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+			  if (iter3 < 0) plane = iter3 + dims[2];
+			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
+			  if(m_GrainIds[index] <= 0)
+			  {
+				  inside = -1;
+				  x = float(column) * m->getXRes();
+				  y = float(row) * m->getYRes();
+				  z = float(plane) * m->getZRes();
+				  if (iter1 < 0) x = x - sizex;
+				  if (iter1 > dims[0] - 1) x = x + sizex;
+				  if (iter2 < 0) y = y - sizey;
+				  if (iter2 > dims[1] - 1) y = y + sizey;
+				  if (iter3 < 0) z = z - sizez;
+				  if (iter3 > dims[2] - 1) z = z + sizez;
+				  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+				  dist = sqrtf(dist);
+				  if (dist < radcur1)
+				  {
+					x = x - xc;
+					y = y - yc;
+					z = z - zc;
+					xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
+				    yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
+			        zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
+					float axis1comp = xp / radcur1;
+					float axis2comp = yp / radcur2;
+					float axis3comp = zp / radcur3;
+					inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+					if (inside >= 0 && inside > ellipfuncs[index])
+					{
+						newowners[index] = i;
+						ellipfuncs[index] = inside;
+					}
+				  }
+			  }
+			}
+		  }
+		}
 	  }
 	  for (int i = 0; i < totpoints; i++)
 	  {
-	    if (ellipfuncs[i] >= 0) grain_indicies[i] = newowners[i];
-		if (grain_indicies[i] <= 0) unassignedcount++;
+	    if (ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
+		if (m_GrainIds[i] <= 0) unassignedcount++;
 		newowners[i] = -1;
 		ellipfuncs[i] = -1.0;
 	  }
   }
   for (int i = 0; i < totpoints; i++)
   {
-	  if(grain_indicies[i] > 0) phases[i] = m->m_Grains[grain_indicies[i]]->phase;
+	  if(m_GrainIds[i] > 0) m_PhasesC[i] = m_PhasesF[m_GrainIds[i]];
   }
   delete [] ellipfuncs;
   delete [] newowners;
@@ -1802,7 +1801,7 @@ void PackGrainsGen2::cleanup_grains()
     static_cast<DimType>(udims[2]),
   };
 
-  int neighpoints[6];
+  DimType neighpoints[6];
   DimType xp = dims[0];
   DimType yp = dims[1];
   DimType zp = dims[2];
@@ -1816,19 +1815,19 @@ void PackGrainsGen2::cleanup_grains()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   std::vector<std::vector<int> > vlists;
-  vlists.resize(m->m_Grains.size());
+  vlists.resize(m->getTotalFields());
   std::vector<int> currentvlist;
   std::vector<bool> checked;
   checked.resize(totpoints,false);
   size_t count;
   int touchessurface = 0;
   int good;
-  int neighbor;
-  int column, row, plane;
+  DimType neighbor;
+  DimType column, row, plane;
   int index;
   float minsize = 0;
-  gsizes.resize(m->m_Grains.size());
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  gsizes.resize(m->getTotalFields());
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     gsizes[i] = 0;
   }
@@ -1837,99 +1836,99 @@ void PackGrainsGen2::cleanup_grains()
   for (int i = 0; i < totpoints; i++)
   {
     touchessurface = 0;
-    if(checked[i] == false && grain_indicies[i] > 0)
-    {
-      minsize = mindiameter[phases[i]] * mindiameter[phases[i]] * mindiameter[phases[i]] * M_PI / 6.0;
-      minsize = int(minsize / (resConst));
-      currentvlist.push_back(i);
-      count = 0;
-      while (count < currentvlist.size())
-      {
-        index = currentvlist[count];
-        column = index % xp;
-        row = (index / xp) % yp;
-        plane = index / (xp * yp);
-        if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) touchessurface = 1;
-        for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighbor = index + neighpoints[j];
-          if(m_PeriodicBoundaries == false)
-          {
-            if(j == 0 && plane == 0) good = 0;
-            if(j == 5 && plane == (zp - 1)) good = 0;
-            if(j == 1 && row == 0) good = 0;
-            if(j == 4 && row == (yp - 1)) good = 0;
-            if(j == 2 && column == 0) good = 0;
-            if(j == 3 && column == (xp - 1)) good = 0;
-            if(good == 1 && grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
-            {
-              currentvlist.push_back(neighbor);
-              checked[neighbor] = true;
-            }
-          }
-          else if(m_PeriodicBoundaries == true)
-          {
-            if(j == 0 && plane == 0) neighbor = neighbor + (xp * yp * zp);
-            if(j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp * yp * zp);
-            if(j == 1 && row == 0) neighbor = neighbor + (xp * yp);
-            if(j == 4 && row == (yp - 1)) neighbor = neighbor - (xp * yp);
-            if(j == 2 && column == 0) neighbor = neighbor + (xp);
-            if(j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
-            if(grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
-            {
-              currentvlist.push_back(neighbor);
-              checked[neighbor] = true;
-            }
-          }
-        }
-        count++;
-      }
-      size_t size = vlists[grain_indicies[i]].size();
-      if(size > 0)
-      {
-        if(size < currentvlist.size())
-        {
-          for (size_t k = 0; k < vlists[grain_indicies[i]].size(); k++)
-          {
-            grain_indicies[vlists[grain_indicies[i]][k]] = -1;
-          }
-          vlists[grain_indicies[i]].resize(currentvlist.size());
-          vlists[grain_indicies[i]].swap(currentvlist);
-        }
-        else if(size >= currentvlist.size())
-        {
-          for (size_t k = 0; k < currentvlist.size(); k++)
-          {
-            grain_indicies[currentvlist[k]] = -1;
-          }
-        }
-      }
-      else if(size == 0)
-      {
-        if(currentvlist.size() >= minsize || touchessurface == 1)
-        {
-          vlists[grain_indicies[i]].resize(currentvlist.size());
-          vlists[grain_indicies[i]].swap(currentvlist);
-        }
-        if(currentvlist.size() < minsize && touchessurface == 0)
-        {
-          for (size_t k = 0; k < currentvlist.size(); k++)
-          {
-            grain_indicies[currentvlist[k]] = -1;
-          }
-        }
-      }
-      currentvlist.clear();
-    }
+	if(checked[i] == false && m_GrainIds[i] > 0)
+	{
+		minsize = mindiameter[m_PhasesC[i]]*mindiameter[m_PhasesC[i]]*mindiameter[m_PhasesC[i]]*M_PI/6.0;
+		minsize = int(minsize/(m->getXRes()*m->getYRes()*m->getZRes()));
+		currentvlist.push_back(i);
+		count = 0;
+		while(count < currentvlist.size())
+		{
+			index = currentvlist[count];
+			column = index % xp;
+			row = (index / xp) % yp;
+			plane = index / (xp * yp);
+			if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) touchessurface = 1;
+			for (int j = 0; j < 6; j++)
+			{
+				good = 1;
+				neighbor = index + neighpoints[j];
+				if (m_periodic_boundaries == false)
+				{
+					if (j == 0 && plane == 0) good = 0;
+					if (j == 5 && plane == (zp - 1)) good = 0;
+					if (j == 1 && row == 0) good = 0;
+					if (j == 4 && row == (yp - 1)) good = 0;
+					if (j == 2 && column == 0) good = 0;
+					if (j == 3 && column == (xp - 1)) good = 0;
+					if (good == 1 && m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
+					{
+						currentvlist.push_back(neighbor);
+						checked[neighbor] = true;
+					}
+				}
+				else if (m_periodic_boundaries == true)
+				{
+					if (j == 0 && plane == 0) neighbor = neighbor + (xp*yp*zp);
+					if (j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp*yp*zp);
+					if (j == 1 && row == 0) neighbor = neighbor + (xp*yp);
+					if (j == 4 && row == (yp - 1)) neighbor = neighbor - (xp*yp);
+					if (j == 2 && column == 0) neighbor = neighbor + (xp);
+					if (j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
+					if (m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
+					{
+						currentvlist.push_back(neighbor);
+						checked[neighbor] = true;
+					}
+				}
+			}
+			count++;
+		}
+		size_t size = vlists[m_GrainIds[i]].size();
+		if(size > 0)
+		{
+			if(size < currentvlist.size())
+			{
+				for (size_t k = 0; k < vlists[m_GrainIds[i]].size(); k++)
+				{
+					m_GrainIds[vlists[m_GrainIds[i]][k]] = -1;
+				}
+				vlists[m_GrainIds[i]].resize(currentvlist.size());
+				vlists[m_GrainIds[i]].swap(currentvlist);
+			}
+			else if(size >= currentvlist.size())
+			{
+				for (size_t k = 0; k < currentvlist.size(); k++)
+				{
+					m_GrainIds[currentvlist[k]] = -1;
+				}
+			}
+		}
+		else if(size == 0)
+		{
+			if(currentvlist.size() >= minsize || touchessurface == 1)
+			{
+				vlists[m_GrainIds[i]].resize(currentvlist.size());
+				vlists[m_GrainIds[i]].swap(currentvlist);
+			}
+			if(currentvlist.size() < minsize && touchessurface == 0)
+			{
+				for (size_t k = 0; k < currentvlist.size(); k++)
+				{
+					m_GrainIds[currentvlist[k]] = -1;
+				}
+			}
+		}
+		currentvlist.clear();
+	}
   }
   for (int i = 0; i < totpoints; i++)
   {
-	if(grain_indicies[i] > 0) gsizes[grain_indicies[i]]++;
+	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
-  newnames.resize(m->m_Grains.size());
+  newnames.resize(m->getTotalFields());
   int goodcount = 1;
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
      newnames[i] = 0;
      if(gsizes[i] > 0)
@@ -1941,16 +1940,15 @@ void PackGrainsGen2::cleanup_grains()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	if (grain_indicies[i] > 0)
+	if (m_GrainIds[i] > 0)
 	{
-	  grain_indicies[i] = newnames[grain_indicies[i]];
+	  m_GrainIds[i] = newnames[m_GrainIds[i]];
 	}
   }
   for (int i = 0; i < totpoints; i++)
   {
-
-	  if(grain_indicies[i] > 0) { phases[i] = m->m_Grains[grain_indicies[i]]->phase; }
+	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
-  m->m_Grains.resize(goodcount);
+  m->resizeFieldDataArrays(goodcount);
   assign_gaps();
 }

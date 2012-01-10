@@ -82,7 +82,9 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
     void find_euclideandistmap();
 
   private:
-
+	int32_t* m_GrainIds;
+	int32_t* m_NearestNeighbors;
+	float* m_NearestNeighborDistances;
 
     FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
     void operator=(const FindEuclideanDistMap&); // Operator '=' Not Implemented

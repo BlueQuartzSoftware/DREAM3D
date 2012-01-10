@@ -83,8 +83,19 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     void find_centroids2D();
     void find_neighborhoods();
 
-  private:
+
+private:
+
+    int32_t* m_GrainIds;
+    int32_t* m_NumCells;
+    float* m_Centroids;
+    float* m_Volumes;
+    float* m_EquivalentDiameters;
+    int32_t* m_Neighborhoods;
+    bool* m_Active;
+
     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
+
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

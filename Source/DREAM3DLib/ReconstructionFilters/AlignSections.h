@@ -98,6 +98,11 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     void form_grains_sections();
 
   private:
+    int32_t* m_GrainIds;
+    float* m_Quats;
+    float* m_EulerAngles;
+    int32_t* m_Phases;
+    bool* m_GoodVoxels;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
