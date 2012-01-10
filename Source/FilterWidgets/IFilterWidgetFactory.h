@@ -55,7 +55,7 @@ class IFilterWidgetFactory
     /** @brief This function should NEVER get called. The subclass should ALWAYS implement
      * this method so we are going to crash the program.
      */
-    virtual QFilterWidget* createWidget() { assert(false);}
+    virtual QFilterWidget* createWidget() { assert(false); return NULL;}
 
   protected:
     IFilterWidgetFactory(){}
