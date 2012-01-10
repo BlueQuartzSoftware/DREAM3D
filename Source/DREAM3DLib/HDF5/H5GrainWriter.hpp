@@ -152,23 +152,23 @@ class  H5GrainWriter
     int writeHDF5GrainsFile(DataContainer* r, const std::string &hdfFile)
     {
       int64_t totalPoints = r->totalPoints();
-	  int totalFields = r->getTotalFields();
+
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Field, DREAM3D::FieldData::NumNeighbors, Int32ArrayType, int32_t, (totalFields), numneighbors);
-
+      
+      int totalFields = r->getTotalFields();
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Field, DREAM3D::FieldData::NumNeighbors, Int32ArrayType, int32_t, totalFields, numNeighbors);
 
 
       H5GW_DECLS()
-
       err = 0;
-	  std::vector<std::vector<int> > vlists;
-	  vlists.resize(numgrains);
-	  for (int i = 0; i < totpoints; i++)
-	  {
-		vlists[grain_indicies[i]].push_back(i);
-	  }
+	    std::vector<std::vector<int> > vlists;
+	    vlists.resize(numgrains);
+	    for (int i = 0; i < totpoints; i++)
+	    {
+		    vlists[grain_indicies[i]].push_back(i);
+	    }
       for (int i = 1; i < numgrains; i++)
       {
         H5GW_GRAIN_LOOP_1()
@@ -200,7 +200,9 @@ class  H5GrainWriter
           // Reconstruction Specific Assignments
           grainName[j] = grain_indicies[vid];
         }
-        H5GW_GRAIN_LOOP_2(numneighbors[i])
+
+        int numNeighborsForGrain = numNeighbors[i];
+        H5GW_GRAIN_LOOP_2(numNeighborsForGrain);
       }
 
       err = h5writer->writeObjectIndex(hdfPaths);

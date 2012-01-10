@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
@@ -60,16 +61,15 @@
 // -----------------------------------------------------------------------------
 MatchCrystallography::MatchCrystallography() :
 m_GrainIds(NULL),
-m_Quats(NULL),
-m_NumCells(NULL),
 m_EulerAnglesC(NULL),
+m_SurfaceFields(NULL),
+m_PhasesF(NULL),
+m_NumCells(NULL),
 m_EulerAnglesF(NULL),
 m_AvgQuats(NULL),
-m_SurfaceFields(NULL),
-m_Phases(NULL),
-m_TotalSurfaceArea(NULL),
 m_NeighborList(NULL),
-m_SharedSurfaceAreaList(NULL)
+m_SharedSurfaceAreaList(NULL),
+m_TotalSurfaceArea(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -90,67 +90,59 @@ MatchCrystallography::~MatchCrystallography()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::preflight()
+void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
-  if(d.get() == NULL)
-  {
-	  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::EulerAngles, p);
-  }
-  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
-  if(d.get() == NULL)
-  {
-	  ss << "SurfaceFields Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NumCells);
-  if(d.get() == NULL)
-  {
-	  ss << "NumCells Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
-  if(d.get() == NULL)
+
+  DataContainer* m = getDataContainer();
+
+  // Cell Data
+  PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, FloatArrayType, voxels);
+
+
+  // Field Data
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  int8_t, Int8ArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, -303,  int32_t, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, FloatArrayType, fields*3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AvgQuats, ss, FloatArrayType, fields*5);
+
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  if(m_NeighborList == NULL)
   {
 	  ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
 	  err = -300;
   }
-  d = m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList);
-  if(d.get() == NULL)
+ 
+  // And we do the same for the SharedSurfaceArea list
+  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
+                                 (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  if(m_SharedSurfaceAreaList == NULL)
   {
-	  ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-	  err = -300;
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    err = -300;
   }
-  d = m->getEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea);
-  if(d.get() == NULL)
-  {
-	  ss << "TotalSurfaceArea Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-	  err = -300;
-  }
-  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AvgQuats, p);
-  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EulerAngles, q);
+
+  // Ensemble Data
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size() );
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatchCrystallography::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -182,14 +174,9 @@ void MatchCrystallography::execute()
     return;
   }
 
-   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-
-   // And we do the same for the SharedSurfaceArea list
-   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-
-   m_TotalSurfaceArea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-   if (NULL == m_TotalSurfaceArea) { return; }
+  int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, 1);
 
   assign_eulers();
   measure_misorientations();
@@ -355,7 +342,7 @@ void MatchCrystallography::assign_eulers()
     random = rg.genrand_res53();
     choose = 0;
     totaldensity = 0;
-    phase = m_Phases[i];
+    phase = m_PhasesF[i];
   if(m->crystruct[phase] == Ebsd::Cubic) numbins = 5832;
   if(m->crystruct[phase] == Ebsd::Hexagonal) numbins = 15552;
     for (int j = 0; j < numbins; j++)
@@ -492,7 +479,7 @@ void MatchCrystallography::matchCrystallography()
 		  ea2 = m_EulerAnglesF[3*selectedgrain1+1];
 		  ea3 = m_EulerAnglesF[3*selectedgrain1+2];
 		  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-		  int phase = m_Phases[selectedgrain1];
+		  int phase = m_PhasesF[selectedgrain1];
 		  g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 		  random = rg.genrand_res53();
 		  int choose = 0;
@@ -579,7 +566,7 @@ void MatchCrystallography::matchCrystallography()
 		  q1[2] = m_AvgQuats[5*selectedgrain1+2];
 		  q1[3] = m_AvgQuats[5*selectedgrain1+3];
 		  q1[4] = m_AvgQuats[5*selectedgrain1+4];
-		  int phase = m_Phases[selectedgrain1];
+		  int phase = m_PhasesF[selectedgrain1];
 		  OrientationMath::eulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
 		  g1odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 		  q1[1] = m_AvgQuats[5*selectedgrain2+1];
@@ -736,7 +723,7 @@ void  MatchCrystallography::measure_misorientations ()
     q1[2] = m_AvgQuats[5*i+2];
     q1[3] = m_AvgQuats[5*i+3];
     q1[4] = m_AvgQuats[5*i+4];
-    phase1 = m->crystruct[m_Phases[i]];
+    phase1 = m->crystruct[m_PhasesF[i]];
     size_t size = 0;
     if(neighborlist[i].size() != 0 && neighborsurfacearealist[i].size() != 0 && neighborsurfacearealist[i].size() == neighborlist[i].size())
     {
@@ -752,7 +739,7 @@ void  MatchCrystallography::measure_misorientations ()
       q2[2] = m_AvgQuats[5*nname+2];
       q2[3] = m_AvgQuats[5*nname+3];
       q2[4] = m_AvgQuats[5*nname+4];
-      phase2 = m->crystruct[m_Phases[nname]];
+      phase2 = m->crystruct[m_PhasesF[nname]];
       if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
       OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
       if(phase1 == phase2)
@@ -774,7 +761,7 @@ void  MatchCrystallography::measure_misorientations ()
 
       if(m_SurfaceFields[i] == false && (nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
       {
-        simmdf[m_Phases[i]][mbin] = simmdf[m_Phases[i]][mbin] + (neighsurfarea / m_TotalSurfaceArea[m_Phases[i]]);
+        simmdf[m_PhasesF[i]][mbin] = simmdf[m_PhasesF[i]][mbin] + (neighsurfarea / m_TotalSurfaceArea[m_PhasesF[i]]);
       }
     }
   }
