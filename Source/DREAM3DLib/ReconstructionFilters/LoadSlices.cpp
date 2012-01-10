@@ -353,8 +353,8 @@ void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ,
   int64_t totalPoints = m->totalPoints();
   int numgrains = 100;
   size_t oldSize = 0;
-  m->m_Grains.resize(numgrains + 1);
-  for(size_t g = oldSize; g < m->m_Grains.size(); ++g)
+  m->resizeFieldDataArrays(numgrains + 1);
+  for(size_t g = oldSize; g < m->getTotalFields(); ++g)
   {
     m->m_Grains[g] = Field::New();
   }

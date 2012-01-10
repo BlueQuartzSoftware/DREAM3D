@@ -46,7 +46,19 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
-            AbstractFilter()
+AbstractFilter(),
+m_GrainIds(NULL),
+m_Phases(NULL),
+m_NearestNeighbors(NULL),
+m_SlipSystems(NULL),
+m_GrainMisorientations(NULL),
+m_MisorientationGradients(NULL),
+m_KernelAverageMisorientations(NULL),
+m_AvgQuats(NULL),
+m_GrainAvgMisorientations(NULL),
+m_Poles(NULL),
+m_Schmids(NULL),
+m_NearestNeighborDistances(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -197,33 +209,33 @@ void FindDeformationStatistics::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if(NULL == grain_indicies)
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == m_GrainIds)
   {
     return;
   }
-  int32_t* nearestneighbors = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighbors, (totalPoints * 3), this);
-  if(NULL == nearestneighbors)
+  m_NearestNeighbors = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighbors, (totalPoints * 3), this);
+  if(NULL == m_NearestNeighbors)
   {
     return;
   }
-  float* nearestneighbordistances = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighborDistances, (totalPoints * 3), this);
-  if(NULL == nearestneighbordistances)
+  m_NearestNeighborDistances = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighborDistances, (totalPoints * 3), this);
+  if(NULL == m_NearestNeighborDistances)
   {
     return;
   }
-  float* kernelmisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::KernelAverageMisorientations, totalPoints, this);
-  if(NULL == kernelmisorientations)
+  m_KernelAverageMisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::KernelAverageMisorientations, totalPoints, this);
+  if(NULL == m_KernelAverageMisorientations)
   {
     return;
   }
-  float* grainmisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainMisorientations, totalPoints, this);
-  if(NULL == grainmisorientations)
+  m_GrainMisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainMisorientations, totalPoints, this);
+  if(NULL == m_GrainMisorientations)
   {
     return;
   }
-  float* misorientationgradients = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::MisorientationGradients, totalPoints, this);
-  if(NULL == misorientationgradients)
+  m_MisorientationGradients = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::MisorientationGradients, totalPoints, this);
+  if(NULL == m_MisorientationGradients)
   {
     return;
   }
@@ -338,31 +350,31 @@ void FindDeformationStatistics::execute()
 
   for (int i = 0; i < totalPoints; i++)
   {
-    gname = grain_indicies[i];
+    gname = m_GrainIds[i];
 	if(gname > 0)
 	{
-		  km = kernelmisorientations[i];
-		  gam = grainmisorientations[i];
-		  lmg = misorientationgradients[i];
-		  gbdist = nearestneighbordistances[i*3 + 0];
-		  tjdist = nearestneighbordistances[i*3 + 1];
-		  qpdist = nearestneighbordistances[i*3 + 2];
-		  nearestneighbor = nearestneighbors[i*3 + 0];
-		  gname2 = grain_indicies[nearestneighbor];
-		  sf = m->m_Grains[gname]->schmidfactor;
-		  sf2 = m->m_Grains[gname2]->schmidfactor;
+		  km = m_KernelAverageMisorientations[i];
+		  gam = m_GrainMisorientations[i];
+		  lmg = m_MisorientationGradients[i];
+		  gbdist = m_NearestNeighborDistances[i*3 + 0];
+		  tjdist = m_NearestNeighborDistances[i*3 + 1];
+		  qpdist = m_NearestNeighborDistances[i*3 + 2];
+		  nearestneighbor = m_NearestNeighbors[i*3 + 0];
+		  gname2 = m_GrainIds[nearestneighbor];
+		  sf = m_Schmids[gname];
+		  sf2 = m_Schmids[gname2];
 		  sfmm = sf / sf2;
-		  ss1 = m->m_Grains[gname]->slipsystem;
-	//	  ss2 = m->m_Grains[gname2]->slipsystem;
+		  ss1 = m_SlipSystems[gname];
+	//	  ss2 = m_SlipSystems[gname2];
 		  for(int j=0;j<5;j++)
 		  {
-			q1[j] = m->m_Grains[gname]->avg_quat[j]/m->m_Grains[gname]->avg_quat[0];
-			q2[j] = m->m_Grains[gname2]->avg_quat[j]/m->m_Grains[gname2]->avg_quat[0];
+			q1[j] = m_AvgQuats[5*gname+j]/m_AvgQuats[gname];
+			q2[j] = m_AvgQuats[5*gname2+j]/m_AvgQuats[gname2];
 		  }
 		  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
-		  if (m->crystruct[m->m_Grains[gname]->phase] == m->crystruct[m->m_Grains[gname2]->phase] && m->m_Grains[gname]->phase > 0)
+		  if (m->crystruct[m_Phases[gname]] == m->crystruct[m_Phases[gname2]] && m_Phases[gname] > 0)
 		  {
-			w = m_OrientationOps[m->crystruct[m->m_Grains[gname]->phase]]->getMisoQuat(q1, q2, n1, n2, n3);
+			w = m_OrientationOps[m->crystruct[m_Phases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
 		  }
 		  else
 		  {
@@ -420,7 +432,7 @@ void FindDeformationStatistics::execute()
 		  gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
 		  lmgvqp[qpbin][0]++;
 		  lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
-		  distance = int(nearestneighbordistances[i*3 + 0]);
+		  distance = int(m_NearestNeighborDistances[i*3 + 0]);
 		  if(distance > 9) distance = 9;
 		  if(distance <= 5)
 		  {
@@ -729,19 +741,19 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "DREAM3D Generated Data Set: Deformation Statistics\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %ld float\n", m->m_Grains.size()-1);
+  fprintf(vtkFile,  "POINTS %ld float\n", m->getTotalFields()-1);
 
-  std::vector<Field::Pointer>::size_type size = m->m_Grains.size();
+  std::vector<Field::Pointer>::size_type size = m->getTotalFields();
 
   for(size_t i=1;i<size;i++)
   {
-		float x = m->m_Grains[i]->IPF[0] - (m->m_Grains[i]->IPF[0] * (m->m_Grains[i]->IPF[2] / (m->m_Grains[i]->IPF[2] + 1)));;
-		float y = m->m_Grains[i]->IPF[1] - (m->m_Grains[i]->IPF[1] * (m->m_Grains[i]->IPF[2] / (m->m_Grains[i]->IPF[2] + 1)));;
+		float x = m_Poles[3*i] - (m_Poles[3*i] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1)));;
+		float y = m_Poles[3*i+1] - (m_Poles[3*i+1] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1)));;
 		float z = 0.0;
 		fprintf(vtkFile, "%f %f %f\n", x, y, z);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", m->m_Grains.size()-1, ((m->m_Grains.size()-1)*2));
+  fprintf(vtkFile, "CELLS %ld %ld\n", m->getTotalFields()-1, ((m->getTotalFields()-1)*2));
 //  Store the Grain Ids so we don't have to re-read the triangles file again
   for(size_t i=1;i<size;i++)
   {
@@ -750,7 +762,7 @@ void FindDeformationStatistics::execute()
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %ld\n", m->m_Grains.size()-1);
+  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getTotalFields()-1);
   for(size_t i=1;i<size;i++)
   {
 	fprintf(vtkFile, "1\n");
@@ -759,12 +771,12 @@ void FindDeformationStatistics::execute()
 
   // Write the GrainId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", m->m_Grains.size()-1);
+  fprintf(vtkFile, "CELL_DATA %ld\n", m->getTotalFields()-1);
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)
   {
-	  float miso = m->m_Grains[i]->averagemisorientation;
+	  float miso = m_GrainAvgMisorientations[i];
 	  fprintf(vtkFile, "%f\n", miso);
   }
   fclose(vtkFile);

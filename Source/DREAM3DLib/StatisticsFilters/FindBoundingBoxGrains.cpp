@@ -43,10 +43,11 @@
 //
 // -----------------------------------------------------------------------------
 FindBoundingBoxGrains::FindBoundingBoxGrains() :
-AbstractFilter()
+AbstractFilter(),
+m_Centroids(NULL),
+m_SurfaceFields(NULL),
+m_UnbiasedFields(NULL)
 {
-    totalsurfacearea = NULL;
-    INIT_DataArray(m_TotalSurfaceArea, float);
 }
 
 // -----------------------------------------------------------------------------
@@ -75,7 +76,7 @@ void FindBoundingBoxGrains::preflight()
   {
 	  ss << "SurfaceFields Array Not Initialized At Beginning of FindBoundingBoxGrains Filter" << std::endl;
 	  err = -300;
-  }  
+  }
   PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::UnbiasedFields, p);
 
@@ -102,7 +103,7 @@ void FindBoundingBoxGrains::execute()
 void FindBoundingBoxGrains::find_boundingboxgrains()
 {
   DataContainer* m = getDataContainer();
-  size_t size = m->m_Grains.size();
+  size_t size = m->getTotalFields();
   float boundbox[7];
   float coords[7];
   float x, y, z;
@@ -117,13 +118,13 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
   boundbox[6] = m->getZPoints()*m->getZRes();
   for (size_t i = 1; i < size; i++)
   {
-	  if(m->m_Grains[i]->surfacefield > 0)
+	  if(m_SurfaceFields[i] > 0)
 	  {
 		  move = 1;
 		  mindist = 10000000000.0;
-		  x = m->m_Grains[i]->centroidx;
-		  y = m->m_Grains[i]->centroidy;
-		  z = m->m_Grains[i]->centroidz;
+		  x = m_Centroids[3*i];
+		  y = m_Centroids[3*i+1];
+		  z = m_Centroids[3*i+2];
 		  coords[1] = x;
 		  coords[2] = x;
 		  coords[3] = y;
@@ -150,18 +151,18 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
   }
   for (size_t j = 1; j < size; j++)
   {
-	if(m->m_Grains[j]->centroidx <= boundbox[1]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidx >= boundbox[2]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidy <= boundbox[3]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidy >= boundbox[4]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidz <= boundbox[5]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidz >= boundbox[6]) m->m_Grains[j]->outsideboundbox = true;
+	if(m_Centroids[3*j] <= boundbox[1]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j] >= boundbox[2]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j+1] <= boundbox[3]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j+1] >= boundbox[4]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j+2] <= boundbox[5]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j+2] >= boundbox[6]) m_UnbiasedFields[j] = true;
   }
 }
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
 {
   DataContainer* m = getDataContainer();
-  size_t size = m->m_Grains.size();
+  size_t size = m->getTotalFields();
   float boundbox[5];
   float coords[5];
   float x, y;
@@ -174,12 +175,12 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
   boundbox[4] = m->getYPoints()*m->getYRes();
   for (size_t i = 1; i < size; i++)
   {
-	  if(m->m_Grains[i]->surfacefield > 0)
+	  if(m_SurfaceFields[i] > 0)
 	  {
 		  move = 1;
 		  mindist = 10000000000.0;
-		  x = m->m_Grains[i]->centroidx;
-		  y = m->m_Grains[i]->centroidy;
+		  x = m_Centroids[3*i];
+		  y = m_Centroids[3*i+1];
 		  coords[1] = x;
 		  coords[2] = x;
 		  coords[3] = y;
@@ -204,9 +205,9 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
   }
   for (size_t j = 1; j < size; j++)
   {
-	if(m->m_Grains[j]->centroidx <= boundbox[1]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidx >= boundbox[2]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidy <= boundbox[3]) m->m_Grains[j]->outsideboundbox = true;
-	if(m->m_Grains[j]->centroidy >= boundbox[4]) m->m_Grains[j]->outsideboundbox = true;
+	if(m_Centroids[3*j] <= boundbox[1]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j] >= boundbox[2]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j+1] <= boundbox[3]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j+1] >= boundbox[4]) m_UnbiasedFields[j] = true;
   }
 }

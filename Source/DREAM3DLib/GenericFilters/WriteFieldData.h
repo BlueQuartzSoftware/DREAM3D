@@ -83,6 +83,13 @@ class DREAM3DLib_EXPORT WriteFieldData : public AbstractFilter
     WriteFieldData();
 
   private:
+    int32_t* m_Phases;
+    float* m_EulerAngles;
+    float* m_EquivalentDiameters;
+	float* m_AspectRatios;
+	float* m_Omega3s;
+	bool* m_SurfaceFields;
+	bool* m_UnbiasedFields;
 
     WriteFieldData(const WriteFieldData&); // Copy Constructor Not Implemented
     void operator=(const WriteFieldData&); // Operator '=' Not Implemented

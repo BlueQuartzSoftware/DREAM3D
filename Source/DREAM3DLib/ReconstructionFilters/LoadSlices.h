@@ -105,6 +105,11 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     void threshold_points();
 
   private:
+    int32_t* m_Phases;
+    float* m_Quats;
+    float* m_EulerAngles;
+    bool* m_GoodVoxels;
+
     unsigned long long int Seed;
 
     int tempxpoints;

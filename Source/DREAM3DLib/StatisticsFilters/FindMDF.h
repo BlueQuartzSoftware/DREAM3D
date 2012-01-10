@@ -51,6 +51,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
  * @class FindMDF FindMDF.h DREAM3DLib/GenericFilters/FindMDF.h
@@ -92,6 +93,14 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
+
+    float* m_AvgQuats;
+	bool* m_Active;
+	bool* m_SurfaceFields;
+    int32_t* m_Phases;
+	float* m_TotalSurfaceArea;
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_SharedSurfaceAreaList;
 
 	std::vector<std::vector<float> > misorientationlists;
 

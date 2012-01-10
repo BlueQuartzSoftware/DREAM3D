@@ -46,8 +46,11 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
-            AbstractFilter(),
-m_CreateNewStatsFile(true)
+AbstractFilter(),
+m_CreateNewStatsFile(true),
+m_Phases(NULL),
+m_SurfaceFields(NULL),
+m_AxisEulerAngles(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -103,7 +106,13 @@ void FindAxisODF::preflight()
   {
 	  ss << "SurfaceFields Array Not Initialized At Beginning of FindAxisODF Filter" << std::endl;
 	  err = -300;
-  }  
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Phases);
+  if(d.get() == NULL)
+  {
+	  ss << "Phases (Fields) Array Not Initialized At Beginning of FindAxisODF Filter" << std::endl;
+	  err = -300;
+  }
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
@@ -143,19 +152,19 @@ void FindAxisODF::execute()
 		axisodf[i][j] = 0.0;
 	  }
   }
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
-    float ea1 = m->m_Grains[i]->axiseuler1;
-    float ea2 = m->m_Grains[i]->axiseuler2;
-	float ea3 = m->m_Grains[i]->axiseuler3;
-    if (m->m_Grains[i]->surfacefield == 0)
+    float ea1 = m_AxisEulerAngles[3*i];
+    float ea2 = m_AxisEulerAngles[3*i+1];
+	float ea3 = m_AxisEulerAngles[3*i+2];
+    if (m_SurfaceFields[i] == 0)
     {
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
 	  m_OrientationOps[Ebsd::OrthoRhombic]->getFZRod(r1, r2, r3);
 	  bin = m_OrientationOps[Ebsd::OrthoRhombic]->getOdfBin(r1, r2, r3);
-      axisodf[m->m_Grains[i]->phase][bin] = axisodf[m->m_Grains[i]->phase][bin]++;
-      totalaxes[m->m_Grains[i]->phase]++;
+      axisodf[m_Phases[i]][bin] = axisodf[m_Phases[i]][bin]++;
+      totalaxes[m_Phases[i]]++;
     }
   }
   int err;

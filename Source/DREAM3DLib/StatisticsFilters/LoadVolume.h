@@ -65,18 +65,18 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
 
     virtual void preflight();
 
-
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Load Voxel Volume"; }
 
     virtual void setupFilterOptions();
 
-    /**
+	  /**
     * @brief Reimplemented from @see AbstractFilter class
     */
-    virtual void execute();
+	  virtual void execute();
 
-
+	  void initializeAttributes();
+    void initializeGrains();
 
   protected:
     LoadVolume();
@@ -85,12 +85,12 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
     void initializeGrains();
 
   private:
-    int32_t* grain_indicies;
-    int32_t* phases;
-    float* eulerangles;
-    int8_t* surfacevoxels;
-    int32_t* neighbors;
-    float* quats;
+    int32_t* m_GrainIds;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    int32_t* m_NumCells;
+    bool* m_Active;
+    float* m_EulerAngles;
 
     LoadVolume(const LoadVolume&); // Copy Constructor Not Implemented
     void operator=(const LoadVolume&); // Operator '=' Not Implemented

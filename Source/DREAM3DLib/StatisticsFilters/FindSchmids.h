@@ -83,6 +83,10 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     FindSchmids();
 
   private:
+    float* m_Schmids;
+    float* m_AvgQuats;
+    bool* m_Active;
+    int32_t* m_SlipSystems;
 
 
     FindSchmids(const FindSchmids&); // Copy Constructor Not Implemented

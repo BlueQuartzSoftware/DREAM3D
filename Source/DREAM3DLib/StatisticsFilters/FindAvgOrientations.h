@@ -85,6 +85,13 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
+	int32_t* m_GrainIds;
+	int32_t* m_Phases;
+	float* m_EulerAnglesC;
+	float* m_EulerAnglesF;
+	float* m_Quats;
+	float* m_AvgQuats;
+
     FindAvgOrientations(const FindAvgOrientations&); // Copy Constructor Not Implemented
     void operator=(const FindAvgOrientations&); // Operator '=' Not Implemented
 };

@@ -47,7 +47,13 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 LoadVolume::LoadVolume() :
-            AbstractFilter()
+AbstractFilter(),
+m_GrainIds(NULL),
+m_PhasesC(NULL),
+m_PhasesF(NULL),
+m_NumCells(NULL),
+m_Active(NULL),
+m_EulerAngles(NULL)
 {
   setupFilterOptions();
 }
@@ -155,7 +161,7 @@ void LoadVolume::execute()
   }
 
 
-  err = h5Reader->readVoxelData(grain_indicies, phases, eulerangles, m->crystruct, m->phaseType, totalPoints);
+  err = h5Reader->readVoxelData(m_GrainIds, m_PhasesC, m_EulerAngles, m->crystruct, m->phaseType, totalPoints);
   m->phasefraction.resize(m->crystruct.size());
   m->pptFractions.resize(m->crystruct.size());
   initializeGrains();
@@ -178,36 +184,36 @@ void LoadVolume::initializeGrains()
    */
   // Put at least 1 Grain in the Vector
   DataContainer* m = getDataContainer();
-  m->m_Grains.resize(1);
+  m->resizeFieldDataArrays(1);
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;
   Field::Pointer grain;
   int64_t totalPoints = m->totalPoints();
   for (int i = 0; i < totalPoints; ++i)
   {
-    grainIndex = grain_indicies[i];
-  //  curGrainSize = m->m_Grains.size();
-    if (grainIndex > m->m_Grains.size() - 1)
+    grainIndex = m_GrainIds[i];
+  //  curGrainSize = m->getTotalFields();
+    if (grainIndex > m->getTotalFields() - 1)
     {
       // Resize the Grain Vector to be as large as this index. The other Grain
       // objects will be copied to the resized Vector. This probably isn't really
       // efficient at all.
-      m->m_Grains.resize(grainIndex + 1);
+      m->resizeFieldDataArrays(grainIndex + 1);
     }
-  //  curGrainSize = m->m_Grains.size();
+  //  curGrainSize = m->getTotalFields();
     grain = m->m_Grains[grainIndex];
     if (NULL == grain.get())
     {
       m->m_Grains[grainIndex] = Field::New();
       grain = m->m_Grains[grainIndex];
-      grain->phase = phases[i];
+      m_PhasesF[grainIndex] = m_PhasesC[i];
     }
-    grain->numvoxels++;
-	grain->active = true;
+    m_NumCells[grainIndex]++;
+	m_Active[grainIndex] = true;
   }
 
   // Loop over the Grains and initialize them as necessary
-  size_t gSize = m->m_Grains.size();
+  size_t gSize = m->getTotalFields();
   for (size_t g = 0; g < gSize; ++g)
   {
     grain = m->m_Grains[g];
@@ -215,7 +221,7 @@ void LoadVolume::initializeGrains()
     {
       m->m_Grains[g] = Field::New();
       grain = m->m_Grains[g];
-	  grain->phase = 0;
+	  m_PhasesF[g] = 0;
     }
   }
 }
@@ -228,25 +234,20 @@ void LoadVolume::initializeAttributes()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  grain_indicies = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
-  if (grain_indicies == NULL) { return; }
-  phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
-  if (phases == NULL) { return; }
-  eulerangles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
-  if (NULL == eulerangles) {return;}
-  surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
-  if (NULL == surfacevoxels) {return;}
-  neighbors = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, 1, this);
-  if (neighbors == NULL) { return; }
-  quats = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, totalPoints*5, 1, this);
-  if (NULL == quats) {return;}
+  m_GrainIds = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
+  if (m_GrainIds == NULL) { return; }
+  m_PhasesC = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
+  if (m_PhasesC == NULL) { return; }
+  m_EulerAngles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
+  if (NULL == m_EulerAngles) {return;}
 
   for (int i = 0; i < totalPoints; ++i)
   {
-    eulerangles[3*i] = -1.0f;
-    eulerangles[3*i + 1] = -1.0f;
-    eulerangles[3*i + 2] = -1.0f;
-    neighbors[i] = -1.0f;
+    m_GrainIds[i] = 0;
+	m_PhasesC[i] = 0;
+    m_EulerAngles[3*i] = -1.0f;
+    m_EulerAngles[3*i + 1] = -1.0f;
+    m_EulerAngles[3*i + 2] = -1.0f;
   }
 
 }

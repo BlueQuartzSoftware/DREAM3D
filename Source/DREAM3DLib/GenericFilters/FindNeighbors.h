@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/PreFlightArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
  * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
@@ -74,6 +75,15 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     FindNeighbors();
 
   private:
+    int32_t* m_GrainIds;
+    int8_t* m_SurfaceVoxels;
+    bool* m_SurfaceFields;
+    int32_t* m_Phases;
+    int32_t* m_NumNeighbors;
+    float* m_TotalSurfaceArea;
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_SharedSurfaceAreaList;
+
     FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNeighbors&); // Operator '=' Not Implemented
 };
