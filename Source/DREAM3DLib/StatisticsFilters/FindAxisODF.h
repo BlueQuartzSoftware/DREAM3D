@@ -88,6 +88,7 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
 	bool* m_SurfaceFields;
+	int32_t* m_Phases;
 	float* m_AxisEulerAngles;
 	
 	FindAxisODF(const FindAxisODF&); // Copy Constructor Not Implemented

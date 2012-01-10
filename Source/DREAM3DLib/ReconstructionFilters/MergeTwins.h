@@ -48,6 +48,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 
 /**
@@ -83,7 +84,10 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     float* m_AvgQuats;
+    float* m_EulerAngles;
     int32_t* m_Phases;
+    int32_t* m_NumNeighbors;
+    int32_t* m_NumCells;
     NeighborList<int>* m_NeighborList;
 
 	std::vector<int> twinnewnumbers;
