@@ -148,7 +148,7 @@ void FindShapes::find_centroids()
   float radcubed;
   float diameter;
 //  float allvol = 0.0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
@@ -197,7 +197,7 @@ void FindShapes::find_centroids2D()
   int col, row;
   float radsquared;
   float diameter;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
@@ -241,7 +241,7 @@ void FindShapes::find_moments()
   float u110 = 0;
   float u011 = 0;
   float u101 = 0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
 
   for (size_t i = 0; i < numgrains*6; i++)
@@ -344,7 +344,7 @@ void FindShapes::find_moments2D()
   float u200 = 0;
   float u020 = 0;
   float u110 = 0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   grainmoments = m_GrainMoments->WritePointer(0, numgrains*6);
   m_GrainMoments->SetNumberOfComponents(6);
   for (size_t i = 0; i < numgrains; i++)
@@ -396,7 +396,7 @@ void FindShapes::find_axes()
   float r1, r2, r3;
   float bovera, covera;
   float value;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
     Ixx = grainmoments[i*6+0];
@@ -460,7 +460,7 @@ void FindShapes::find_axes2D()
 {
   DataContainer* m = getDataContainer();
   float Ixx, Iyy, Ixy;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
     Ixx = grainmoments[i*6+0];
@@ -503,7 +503,7 @@ float FindShapes::find_zcoord(size_t index)
 void FindShapes::find_axiseulers()
 {
   DataContainer* m = getDataContainer();
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
     float Ixx = grainmoments[i*6+0];
@@ -636,7 +636,7 @@ void FindShapes::find_axiseulers()
 void FindShapes::find_axiseulers2D()
 {
   DataContainer* m = getDataContainer();
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
 
   for (size_t i = 1; i < numgrains; i++)
   {

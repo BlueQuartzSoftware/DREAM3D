@@ -54,7 +54,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/Field.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Observable.h"
 
 namespace DREAM3D
@@ -364,11 +364,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     float getYRes() { return m_Resolution[1];}
     float getZRes() { return m_Resolution[2];}
 
-
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
-
-    // Field Data Pointer Array
-    std::vector<Field::Pointer> m_Grains;
 
     // Ensemble Data??
     // Phase Information (crystal structures, phase types, and shape types)

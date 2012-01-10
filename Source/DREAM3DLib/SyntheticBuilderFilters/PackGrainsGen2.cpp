@@ -346,7 +346,6 @@ void PackGrainsGen2::execute()
   int gid = 1;
   float currentvol = 0.0;
   m->m_Grains.resize(2);
-  m->m_Grains[1] = Field::New();
   float factor = 1.0;
   float iter = 0;
   while (currentvol < (factor * totalvol))
@@ -372,7 +371,6 @@ void PackGrainsGen2::execute()
        currentvol = currentvol + m_Volumes[gid];
        gid++;
        m->m_Grains.resize(gid + 1);
-       m->m_Grains[gid] = Field::New();
        iter = 0;
     }
   }
@@ -380,7 +378,7 @@ void PackGrainsGen2::execute()
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-    xgrains = int(powf((m->m_Grains.size()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
+    xgrains = int(powf((m->getTotalFields()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
     ygrains = int(xgrains*(sizey/sizex)+1);
     zgrains = int(xgrains*(sizez/sizex)+1);
     factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
@@ -407,7 +405,6 @@ void PackGrainsGen2::execute()
 		currentvol = currentvol + m_Volumes[gid];
 		gid++;
 		m->m_Grains.resize(gid + 1);
-		m->m_Grains[gid] = Field::New();
 		iter = 0;
 	  }
     }
@@ -431,7 +428,7 @@ void PackGrainsGen2::execute()
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  int numgrains = m->m_Grains.size();
+  int numgrains = m->getTotalFields();
   columnlist.resize(numgrains);
   rowlist.resize(numgrains);
   planelist.resize(numgrains);
@@ -965,7 +962,7 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
   y = m_Centroids[3*gnum+1];
   z = m_Centroids[3*gnum+2];
   dia = m_EquivalentDiameters[gnum];
-  for (size_t n = 1; n < m->m_Grains.size(); n++)
+  for (size_t n = 1; n < m->getTotalFields(); n++)
   {
     xn = m_Centroids[3*n];
     yn = m_Centroids[3*n+1];
@@ -1025,7 +1022,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
     {
       determine_neighbors(gremove, -1);
     }
-    for (size_t i = 1; i < m->m_Grains.size(); i++)
+    for (size_t i = 1; i < m->getTotalFields(); i++)
     {
       nnum = 0;
       index = i;
@@ -1136,7 +1133,7 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
     {
       simgrainsizedist[iter][i] = 0.0;
     }
-    for (size_t b = 1; b < m->m_Grains.size(); b++)
+    for (size_t b = 1; b < m->getTotalFields(); b++)
     {
       index = b;
       if(index != gremove && m_PhasesF[index] == phase)
@@ -1375,13 +1372,13 @@ void PackGrainsGen2::assign_voxels()
   float x, y, z;
   size_t xmin, xmax, ymin, ymax, zmin, zmax;
   int64_t totpoints = m->totalPoints();
-  gsizes.resize(m->m_Grains.size());
+  gsizes.resize(m->getTotalFields());
 
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     gsizes[i] = 0;
   }
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3*i+1];
@@ -1511,9 +1508,9 @@ void PackGrainsGen2::assign_voxels()
       }
     }
   }
-  newnames.resize(m->m_Grains.size());
+  newnames.resize(m->getTotalFields());
   int goodcount = 1;
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     newnames[i] = 0;
     if (gsizes[i] > 0)
@@ -1574,7 +1571,7 @@ void PackGrainsGen2::assign_gaps()
   {
 	  unassignedcount = 0;
 	  timestep = timestep + 50;
-	  for (size_t i = 1; i < m->m_Grains.size(); i++)
+	  for (size_t i = 1; i < m->getTotalFields(); i++)
 	  {
 		float volcur = m_Volumes[i];
 		float bovera = m_AxisLengths[3*i+1];
@@ -1742,7 +1739,7 @@ void PackGrainsGen2::cleanup_grains()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   std::vector<std::vector<int> > vlists;
-  vlists.resize(m->m_Grains.size());
+  vlists.resize(m->getTotalFields());
   std::vector<int> currentvlist;
   std::vector<bool> checked;
   checked.resize(totpoints,false);
@@ -1753,8 +1750,8 @@ void PackGrainsGen2::cleanup_grains()
   int column, row, plane;
   int index;
   float minsize = 0;
-  gsizes.resize(m->m_Grains.size());
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  gsizes.resize(m->getTotalFields());
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
 	gsizes[i] = 0;
   }
@@ -1853,9 +1850,9 @@ void PackGrainsGen2::cleanup_grains()
   {
 	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
-  newnames.resize(m->m_Grains.size());
+  newnames.resize(m->getTotalFields());
   int goodcount = 1;
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
      newnames[i] = 0;
      if(gsizes[i] > 0)

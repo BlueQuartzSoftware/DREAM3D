@@ -102,7 +102,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   int retErr = 0;
   float actualgrains = 0;
   float avglogdiam = 0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   float *mindiameter;
   float *maxdiameter;
   mindiameter = new float [m->crystruct.size()];
@@ -275,7 +275,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
 
   float actualgrains = 0;
   float avglogdiam = 0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   float *mindiameter;
   float *maxdiameter;
   mindiameter = new float [m->crystruct.size()];

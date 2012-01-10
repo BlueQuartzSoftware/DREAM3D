@@ -136,7 +136,7 @@ void FindAvgOrientations::execute()
   m_Quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
   if (NULL == m_Quats) { return; }
 
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   int phase;
   float voxquat[5];
   float curavgquat[5];

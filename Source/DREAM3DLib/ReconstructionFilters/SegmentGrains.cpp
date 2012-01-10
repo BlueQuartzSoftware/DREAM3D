@@ -242,14 +242,10 @@ void SegmentGrains::execute()
       m_Active[graincount] = 1;
       m_PhasesF[graincount] = m_PhasesC[seed];
       graincount++;
-      if (graincount >= m->m_Grains.size())
+      if (graincount >= m->getTotalFields())
       {
-        size_t oldSize = m->m_Grains.size();
-        m->m_Grains.resize(m->m_Grains.size() + 100);
-        for (size_t g = oldSize; g < m->m_Grains.size(); ++g)
-        {
-          m->m_Grains[g] = Field::New();
-        }
+        size_t oldSize = m->getTotalFields();
+        m->m_Grains.resize(m->getTotalFields() + 100);
       }
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);

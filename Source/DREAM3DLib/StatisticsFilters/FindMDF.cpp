@@ -163,7 +163,7 @@ void FindMDF::execute()
   float w;
   float q1[5];
   float q2[5];
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   Ebsd::CrystalStructure phase1, phase2;
   float **misobin;
   int numbins = 0;

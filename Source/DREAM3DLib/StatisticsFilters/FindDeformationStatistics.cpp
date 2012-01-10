@@ -716,9 +716,9 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "data set from FFT2dx_GB\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %ld float\n", m->m_Grains.size()-1);
+  fprintf(vtkFile,  "POINTS %ld float\n", m->getTotalFields()-1);
 
-  std::vector<Field::Pointer>::size_type size = m->m_Grains.size();
+  size_t size = m->getTotalFields();
 
   for(size_t i=1;i<size;i++)
   {
@@ -728,7 +728,7 @@ void FindDeformationStatistics::execute()
 		fprintf(vtkFile, "%f %f %f\n", x, y, z);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", m->m_Grains.size()-1, ((m->m_Grains.size()-1)*2));
+  fprintf(vtkFile, "CELLS %ld %ld\n", m->getTotalFields()-1, ((m->getTotalFields()-1)*2));
 //  Store the Grain Ids so we don't have to re-read the triangles file again
   for(size_t i=1;i<size;i++)
   {
@@ -737,7 +737,7 @@ void FindDeformationStatistics::execute()
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %ld\n", m->m_Grains.size()-1);
+  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getTotalFields()-1);
   for(size_t i=1;i<size;i++)
   {
 	fprintf(vtkFile, "1\n");
@@ -746,7 +746,7 @@ void FindDeformationStatistics::execute()
 
   // Write the GrainId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", m->m_Grains.size()-1);
+  fprintf(vtkFile, "CELL_DATA %ld\n", m->getTotalFields()-1);
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)

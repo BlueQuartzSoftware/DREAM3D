@@ -186,7 +186,7 @@ void MergeColonies::merge_colonies()
   float r1, r2, r3;
   float q1[5];
   float q2[5];
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   Ebsd::CrystalStructure phase1, phase2;
   colonynewnumbers.resize(numgrains, -1);
 
@@ -272,7 +272,7 @@ void MergeColonies::renumber_grains()
   m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
   if (NULL == m_GrainIds) { return; }
 
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   int graincount = 1;
   std::vector<int > newnames(numgrains);
   for (size_t i = 1; i < numgrains; i++)
@@ -312,7 +312,7 @@ void MergeColonies::renumber_grains()
 void MergeColonies::characterize_colonies()
 {
   DataContainer* m = getDataContainer();
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   for (size_t i = 0; i < numgrains; i++)
   {
 

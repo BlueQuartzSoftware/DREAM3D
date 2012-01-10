@@ -169,42 +169,18 @@ void LoadVolume::initializeGrains()
   m->m_Grains.resize(1);
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;
-  Field::Pointer grain;
   int64_t totalPoints = m->totalPoints();
   for (int i = 0; i < totalPoints; ++i)
   {
     grainIndex = m_GrainIds[i];
-  //  curGrainSize = m->m_Grains.size();
-    if (grainIndex > m->m_Grains.size() - 1)
+  //  curGrainSize = m->getTotalFields();
+    if (grainIndex > m->getTotalFields() - 1)
     {
-      // Resize the Grain Vector to be as large as this index. The other Grain
-      // objects will be copied to the resized Vector. This probably isn't really
-      // efficient at all.
-      m->m_Grains.resize(grainIndex + 1);
+      m->setTotalFields(grainIndex+1);
     }
-  //  curGrainSize = m->m_Grains.size();
-    grain = m->m_Grains[grainIndex];
-    if (NULL == grain.get())
-    {
-      m->m_Grains[grainIndex] = Field::New();
-      grain = m->m_Grains[grainIndex];
-      m_PhasesF[grainIndex] = m_PhasesC[i];
-    }
+    m_PhasesF[grainIndex] = m_PhasesC[i];
     m_NumCells[grainIndex]++;
 	m_Active[grainIndex] = true;
-  }
-
-  // Loop over the Grains and initialize them as necessary
-  size_t gSize = m->m_Grains.size();
-  for (size_t g = 0; g < gSize; ++g)
-  {
-    grain = m->m_Grains[g];
-    if (NULL == grain.get())
-    {
-      m->m_Grains[g] = Field::New();
-      grain = m->m_Grains[g];
-	  m_PhasesF[g] = 0;
-    }
   }
 }
 

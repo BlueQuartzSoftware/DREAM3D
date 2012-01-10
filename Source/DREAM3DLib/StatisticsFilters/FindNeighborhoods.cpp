@@ -137,7 +137,7 @@ void FindNeighborhoods::find_centroids()
   float radcubed;
   float diameter;
 //  float allvol = 0.0;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
@@ -197,7 +197,7 @@ void FindNeighborhoods::find_centroids2D()
   int col, row;
   float radsquared;
   float diameter;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
@@ -238,7 +238,7 @@ void FindNeighborhoods::find_neighborhoods()
   float xdist, ydist, zdist;
   float dist, dist2, diam, diam2;
   unsigned int dist_int, dist2_int;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
 
   for (size_t i = 1; i < numgrains; i++)
   {

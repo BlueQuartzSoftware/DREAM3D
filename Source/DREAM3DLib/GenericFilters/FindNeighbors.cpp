@@ -172,9 +172,9 @@ void FindNeighbors::execute()
 
   notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);
   int nListSize = 100;
-  neighborlist.resize(m->m_Grains.size());
-  neighborsurfacearealist.resize(m->m_Grains.size());
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  neighborlist.resize(m->getTotalFields());
+  neighborsurfacearealist.resize(m->getTotalFields());
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
@@ -230,7 +230,7 @@ void FindNeighbors::execute()
   m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
 
   notify("FindNeighbors: Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     int phase = m_Phases[i];
 

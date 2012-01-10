@@ -159,8 +159,8 @@ void FindLocalMisorientationGradients::execute()
   std::vector<float> gamVec(totalPoints);
   float* gam = &(gamVec.front());
 
-  float** avgmiso = new float *[m->m_Grains.size()];
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  float** avgmiso = new float *[m->getTotalFields()];
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
@@ -273,7 +273,7 @@ void FindLocalMisorientationGradients::execute()
     }
   }
 
-  size_t grainsSize = m->m_Grains.size();
+  size_t grainsSize = m->getTotalFields();
   for (size_t i = 1; i < grainsSize; i++)
   {
     m_GrainAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
@@ -327,7 +327,7 @@ void FindLocalMisorientationGradients::execute()
   }
 
   // Clean up all the heap allocated memory
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     delete[] avgmiso[i];
   }

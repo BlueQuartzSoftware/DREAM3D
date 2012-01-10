@@ -230,7 +230,7 @@ void CleanupGrains::assign_badpoints()
   float x, y, z;
   size_t column, row, plane;
   int neighpoint;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
 
   int neighpoints[6];
   neighpoints[0] = -dims[0] * dims[1];
@@ -439,7 +439,7 @@ void CleanupGrains::reorder_grains()
   neighpoints[3] = 1;
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0] * dims[1];
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   nuclei.resize(numgrains, -1);
 
   size_t maxGrain = 0;
@@ -588,7 +588,7 @@ void CleanupGrains::remove_smallgrains()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0]*dims[1];
 
-  int numgrains = m->m_Grains.size();
+  int numgrains = m->getTotalFields();
   nuclei.resize(numgrains, -1);
 
   size_t maxGrain = 0;

@@ -122,7 +122,7 @@ void FindSizes::find_sizes()
 
   float radcubed;
   float diameter;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   graincounts = m_GrainCounts->WritePointer(0, numgrains);
 
   // Initialize every element to 0.0
@@ -153,7 +153,7 @@ void FindSizes::find_sizes2D()
 
   float radsquared;
   float diameter;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   graincounts = m_GrainCounts->WritePointer(0, numgrains);
 
   for (size_t i = 0; i < numgrains; i++)
