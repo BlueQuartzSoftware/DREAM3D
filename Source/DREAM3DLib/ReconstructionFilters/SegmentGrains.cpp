@@ -245,7 +245,7 @@ void SegmentGrains::execute()
       if (graincount >= m->getTotalFields())
       {
         size_t oldSize = m->getTotalFields();
-        m->m_Grains.resize(m->getTotalFields() + 100);
+        m->resizeFieldDataArrays(m->getTotalFields() + 100);
       }
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);

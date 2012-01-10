@@ -166,7 +166,7 @@ void LoadVolume::initializeGrains()
    */
   // Put at least 1 Grain in the Vector
   DataContainer* m = getDataContainer();
-  m->m_Grains.resize(1);
+  m->resizeFieldDataArrays(1);
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;
   int64_t totalPoints = m->totalPoints();
@@ -177,6 +177,7 @@ void LoadVolume::initializeGrains()
     if (grainIndex > m->getTotalFields() - 1)
     {
       m->setTotalFields(grainIndex+1);
+	  m->resizeFieldDataArrays(grainIndex+1);
     }
     m_PhasesF[grainIndex] = m_PhasesC[i];
     m_NumCells[grainIndex]++;

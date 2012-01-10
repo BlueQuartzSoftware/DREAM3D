@@ -342,7 +342,7 @@ void PackGrainsGen2::execute()
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   int gid = 1;
   float currentvol = 0.0;
-  m->m_Grains.resize(2);
+  m->resizeFieldDataArrays(2);
   float factor = 1.0;
   float iter = 0;
   while (currentvol < (factor * totalvol))
@@ -367,7 +367,7 @@ void PackGrainsGen2::execute()
        oldsizedisterror = currentsizedisterror;
        currentvol = currentvol + m_Volumes[gid];
        gid++;
-       m->m_Grains.resize(gid + 1);
+       m->resizeFieldDataArrays(gid + 1);
        iter = 0;
     }
   }
@@ -401,7 +401,7 @@ void PackGrainsGen2::execute()
 		oldsizedisterror = currentsizedisterror;
 		currentvol = currentvol + m_Volumes[gid];
 		gid++;
-		m->m_Grains.resize(gid + 1);
+		m->resizeFieldDataArrays(gid + 1);
 		iter = 0;
 	  }
     }
@@ -1510,7 +1510,7 @@ void PackGrainsGen2::assign_voxels()
     newnames[i] = 0;
     if (gsizes[i] > 0)
     {
-      m->m_Grains[goodcount] = m->m_Grains[i];
+//      m->m_Grains[goodcount] = m->m_Grains[i];
       newnames[i] = goodcount;
       goodcount++;
     }
@@ -1522,7 +1522,7 @@ void PackGrainsGen2::assign_voxels()
 	  m_GrainIds[i] = newnames[m_GrainIds[i]];
     }
   }
-  m->m_Grains.resize(goodcount);
+  m->resizeFieldDataArrays(goodcount);
 }
 
 void PackGrainsGen2::assign_gaps()
@@ -1852,7 +1852,7 @@ void PackGrainsGen2::cleanup_grains()
      newnames[i] = 0;
      if(gsizes[i] > 0)
      {
-        m->m_Grains[goodcount] = m->m_Grains[i];
+//        m->m_Grains[goodcount] = m->m_Grains[i];
         newnames[i] = goodcount;
         goodcount++;
      }
@@ -1868,6 +1868,6 @@ void PackGrainsGen2::cleanup_grains()
   {
 	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
-  m->m_Grains.resize(goodcount);
+  m->resizeFieldDataArrays(goodcount);
   assign_gaps();
 }
