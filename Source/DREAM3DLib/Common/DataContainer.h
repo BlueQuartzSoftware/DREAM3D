@@ -231,6 +231,21 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
     std::vector<float> phasefraction;
 
+
+    void resizeFieldDataArrays(size_t size)
+    {
+      
+      for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+      {
+        IDataArray::Pointer d = (*iter).second;
+        d->Resize(size);
+      }
+
+    }
+
+
+
+
   protected:
     DataContainer();
 
