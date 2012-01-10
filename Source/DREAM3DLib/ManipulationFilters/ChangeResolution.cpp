@@ -86,6 +86,12 @@ void ChangeResolution::preflight()
 	  ss << "Phases (Cells) Array Not Initialized At Beginning of ChangeResolution Filter" << std::endl;
 	  err = -300;
   }
+  d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
+  if(d.get() == NULL)
+  {
+	  ss << "EulerAngles (Cells) Array Not Initialized At Beginning of ChangeResolution Filter" << std::endl;
+	  err = -300;
+  }
 
   setErrorCondition(err);
   setErrorMessage(ss.str());

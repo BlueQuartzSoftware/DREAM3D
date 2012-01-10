@@ -153,7 +153,6 @@ void FindNeighbors::execute()
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
 
-
   float* totalsurfacearea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
   if (NULL == totalsurfacearea) {return;}
   for (size_t i = 1; i < xtalCount; ++i)
@@ -161,7 +160,7 @@ void FindNeighbors::execute()
     totalsurfacearea[i] = 0.0f;
   }
 
-    std::vector<std::vector<float> > neighborlist;
+    std::vector<std::vector<int> > neighborlist;
     std::vector<std::vector<float> > neighborsurfacearealist;
 
   notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);
@@ -275,3 +274,4 @@ void FindNeighbors::execute()
 
   notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
 }
+

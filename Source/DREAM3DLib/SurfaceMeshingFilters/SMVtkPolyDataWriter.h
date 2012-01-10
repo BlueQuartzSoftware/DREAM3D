@@ -80,6 +80,7 @@ class DREAM3DLib_EXPORT SMVtkPolyDataWriter : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const std::string getHumanLabel() { return "Write VTK PolyData File"; }
 
+    virtual void preflight();
 
 #if 0
     /**

@@ -124,6 +124,8 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const std::string getHumanLabel() { return "Surface Mesh"; }
 
+    virtual void preflight();
+
     void execute();
 
   protected:

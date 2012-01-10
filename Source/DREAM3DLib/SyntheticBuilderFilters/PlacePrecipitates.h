@@ -94,10 +94,26 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     std::vector<float> precipitatephasefractions;
 
   private:
-	std::vector<int> currentprecipvoxellist;
-	std::vector<int> currentcoatingvoxellist;
+    int32_t* m_GrainIds;
+    int8_t* m_SurfaceVoxels;
+    int32_t* m_PhasesC;
+    int32_t* m_Neighbors;
 
-	int numprimarygrains;
+    int32_t* m_PhasesF;
+    int32_t* m_Neighborhoods;
+    float* m_EquivalentDiameters;
+    float* m_Omega3s;
+    float* m_AxisEulerAngles;
+    float* m_AxisLengths;
+    float* m_Volumes;
+    float* m_Centroids;
+    bool* m_Active;
+    int32_t* m_NumCells;
+
+    std::vector<int> currentprecipvoxellist;
+	  std::vector<int> currentcoatingvoxellist;
+
+	  int numprimarygrains;
     unsigned long long int Seed;
     float sizex;
     float sizey;
@@ -109,9 +125,10 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     DREAM3D::ShapeOps::Pointer m_CylinderOps;
     DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
     DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
-    int32_t* grain_indicies;
-    int32_t* phases;
-    int8_t* surfacevoxels;
+    
+    int32_t* m_Phases;
+    
+    void dataCheck(bool preflight, size_t size);
 
     PlacePrecipitates(const PlacePrecipitates&); // Copy Constructor Not Implemented
     void operator=(const PlacePrecipitates&); // Operator '=' Not Implemented

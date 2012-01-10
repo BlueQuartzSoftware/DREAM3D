@@ -118,6 +118,12 @@ void MatchCrystallography::preflight()
 	  ss << "GrainIds Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
 	  err = -300;
   }
+  d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
+  if(d.get() == NULL)
+  {
+	  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+	  m->addVoxelData(DREAM3D::VoxelData::EulerAngles, p);
+  }
   d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
   if(d.get() == NULL)
   {

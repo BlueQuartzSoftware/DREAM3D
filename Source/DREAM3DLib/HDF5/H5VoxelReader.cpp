@@ -203,21 +203,13 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   DataArray<float>::Pointer fData = DataArray<float>::CreateArray(0);
   fData->WritePointer(0, totalpoints*3);
   fData->SetNumberOfComponents(3);
-  err = readScalarData(DREAM3D::VTK::EulerAnglesName, fData->GetPointer(0));
+  err = readScalarData(DREAM3D::VTK::EulerAnglesName, eulerangles);
   if(err < 0)
   {
     m_ErrorMessage = "H5VoxelReader Error Reading the Euler Angles";
     err = H5Gclose(scalarGid);
     err = H5Gclose(reconGid);
     return err;
-  }
-  // Now copy the data into our 3 separate Euler Arrays
-  float* e = fData->GetPointer(0);
-  for (int i = 0; i < totalpoints; ++i)
-  {
-    eulerangles[3*i] =  e[i * 3];
-    eulerangles[3*i + 1] =  e[i * 3 + 1];
-    eulerangles[3*i + 2] =  e[i * 3 + 2];
   }
 
 // Close the group as we are done with it.

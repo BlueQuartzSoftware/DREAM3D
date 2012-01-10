@@ -74,8 +74,6 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     FindNeighbors();
 
   private:
-
-
     FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNeighbors&); // Operator '=' Not Implemented
 };

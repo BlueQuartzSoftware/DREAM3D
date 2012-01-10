@@ -63,6 +63,9 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
+    virtual void preflight();
+
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Load Voxel Volume"; }
 
@@ -72,6 +75,7 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
+
 
 
   protected:
