@@ -551,7 +551,7 @@ void CleanupGrains::reorder_grains()
 
   numgrains = currentgrain;
   // Resize the m->m_Grains vector by the appropriate amount
-  m->m_Grains.resize(currentgrain);
+  m->resizeFieldDataArrays(currentgrain);
 }
 
 void CleanupGrains::remove_smallgrains()
@@ -654,7 +654,7 @@ void CleanupGrains::remove_smallgrains()
         }
       }
   }
-  m->m_Grains.resize(currentgrain);
+  m->resizeFieldDataArrays(currentgrain);
 }
 
 
