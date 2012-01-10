@@ -48,6 +48,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 
 /**
@@ -94,6 +95,7 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
     int32_t* m_Neighbors;
+    int32_t* m_NumNeighbors;
     bool* m_Active;
     bool* m_AlreadyChecked;
     NeighborList<int>* m_NeighborList;
