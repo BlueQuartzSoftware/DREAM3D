@@ -73,11 +73,11 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 
   private:
     int32_t* m_GrainIds;
-    int32_t* m_SurfaceVoxels;
+    int8_t* m_SurfaceVoxels;
     bool* m_SurfaceFields;
     int32_t* m_Phases;
     int32_t* m_NumNeighbors;
-    int32_t* m_TotalSurfaceArea;
+    float* m_TotalSurfaceArea;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
