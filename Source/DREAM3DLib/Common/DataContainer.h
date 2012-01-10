@@ -114,11 +114,6 @@ namespace DREAM3D
 }
 
 
-#define OLD_WAY 0
-
-
-
-
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
  * @brief
@@ -165,7 +160,6 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumVoxelArrays();
 
-    DREAM3D_INSTANCE_PROPERTY(int, TotalFields)
 
     /**
     * @brief Adds/overwrites the data for a named array
@@ -184,6 +178,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     std::list<std::string> getFieldArrayNameList();
 
     int getNumFieldArrays();
+
+    DREAM3D_INSTANCE_PROPERTY(int, TotalFields);
+
 
     /**
     * @brief Adds/overwrites the data for a named array
@@ -210,19 +207,21 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     size_t getYPoints() { return m_Dimensions[1];}
     size_t getZPoints() { return m_Dimensions[2];}
 
-
     int64_t totalPoints() { return (int64_t)m_Dimensions[0] * (int64_t)m_Dimensions[1] * (int64_t)m_Dimensions[2]; }
 
 // -----------------------------------------------------------------------------
 //  Resolution Methods
 // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
-    float getXRes() { return m_Resolution[0];}
+
+	  float getXRes() { return m_Resolution[0];}
     float getYRes() { return m_Resolution[1];}
     float getZRes() { return m_Resolution[2];}
 
 
-
+    // -----------------------------------------------------------------------------
+    //  Origin Methods
+    // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
 
     // Field Data Pointer Array

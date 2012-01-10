@@ -47,7 +47,14 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteFieldData::WriteFieldData()
+WriteFieldData::WriteFieldData() :
+m_Phases(NULL),
+m_EulerAngles(NULL),
+m_EquivalentDiameters(NULL),
+m_AspectRatios(NULL),
+m_Omega3s(NULL),
+m_SurfaceFields(NULL),
+m_UnbiasedFields(NULL)
 {
 
 }
@@ -90,9 +97,9 @@ void WriteFieldData::execute()
 
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-	  outFile << i << space << m->m_Grains[i]->phase << space << m->m_Grains[i]->euler1 << space << m->m_Grains[i]->euler2 << space << m->m_Grains[i]->euler3 <<
-		space << m->m_Grains[i]->equivdiameter << space << m->m_Grains[i]->radius2 << space << m->m_Grains[i]->radius3 <<
-		space << m->m_Grains[i]->omega3 << space << int(m->m_Grains[i]->surfacefield) << space << int(m->m_Grains[i]->outsideboundbox) << std::endl;
+	  outFile << i << space << m_Phases[i] << space << m_EulerAngles[3*i] << space << m_EulerAngles[3*i+1] << space << m_EulerAngles[3*i+2] <<
+		space << m_EquivalentDiameters[i] << space << m_AspectRatios[2*i] << space << m_AspectRatios[2*i+1] <<
+		space << m_Omega3s[i] << space << int(m_SurfaceFields[i]) << space << int(m_UnbiasedFields[i]) << std::endl;
   }
   outFile.close();
 

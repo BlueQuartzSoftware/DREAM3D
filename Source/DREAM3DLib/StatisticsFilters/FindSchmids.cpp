@@ -43,6 +43,10 @@
 //
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids() :
+m_Schmids(NULL),
+m_AvgQuats(NULL),
+m_Active(NULL),
+m_SlipSystems(NULL),
 AbstractFilter(),
 m_XLoading(0.0f),
 m_YLoading(0.0f),
@@ -104,13 +108,13 @@ void FindSchmids::execute()
   size_t numgrains = m->m_Grains.size();
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->active == true)
+    if (m_Active[i] == true)
     {
-      q1[1] = m->m_Grains[i]->avg_quat[1]/m->m_Grains[i]->avg_quat[0];
-      q1[2] = m->m_Grains[i]->avg_quat[2]/m->m_Grains[i]->avg_quat[0];
-      q1[3] = m->m_Grains[i]->avg_quat[3]/m->m_Grains[i]->avg_quat[0];
-      q1[4] = m->m_Grains[i]->avg_quat[4]/m->m_Grains[i]->avg_quat[0];
-	  if(m->m_Grains[i]->avg_quat[0] == 0) q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
+      q1[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
+      q1[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
+      q1[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
+      q1[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
+	  if(m_AvgQuats[5*i] == 0) q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
       loadx = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
       loady = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
       loadz = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
@@ -160,8 +164,8 @@ void FindSchmids::execute()
       if (schmid10 > schmid) schmid = schmid10, ss = 9;
       if (schmid11 > schmid) schmid = schmid11, ss = 10;
       if (schmid12 > schmid) schmid = schmid12, ss = 11;
-      m->m_Grains[i]->schmidfactor = schmid;
-	  m->m_Grains[i]->slipsystem = ss;
+      m_Schmids[i] = schmid;
+	  m_SlipSystems[i] = ss;
     }
   }
 

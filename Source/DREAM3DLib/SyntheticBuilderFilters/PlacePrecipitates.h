@@ -89,22 +89,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     std::vector<float> precipitatephasefractions;
 
   private:
-    int32_t* m_GrainIds;
-    int8_t* m_SurfaceVoxels;
-    int32_t* m_PhasesC;
-    int32_t* m_Neighbors;
-
-    int32_t* m_PhasesF;
-    int32_t* m_Neighborhoods;
-    float* m_EquivalentDiameters;
-    float* m_Omega3s;
-    float* m_AxisEulerAngles;
-    float* m_AxisLengths;
-    float* m_Volumes;
-    float* m_Centroids;
-    bool* m_Active;
-    int32_t* m_NumCells;
-
     std::vector<int> currentprecipvoxellist;
 	  std::vector<int> currentcoatingvoxellist;
 
@@ -120,10 +104,25 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     DREAM3D::ShapeOps::Pointer m_CylinderOps;
     DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
     DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
-    
-  
+
+    int32_t* m_GrainIds;
+    float* m_AxisEulerAngles;
+    float* m_Centroids;
+    float* m_AxisLengths;
+    float* m_Volumes;
+    float* m_Omega3s;
+    float* m_EquivalentDiameters;
+	  bool* m_Active;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    int32_t* m_Neighborhoods;
+    int8_t* m_SurfaceVoxels;
+    int32_t* m_Neighbors;
+    int32_t* m_NumCells;
+
     
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
 
     PlacePrecipitates(const PlacePrecipitates&); // Copy Constructor Not Implemented
     void operator=(const PlacePrecipitates&); // Operator '=' Not Implemented

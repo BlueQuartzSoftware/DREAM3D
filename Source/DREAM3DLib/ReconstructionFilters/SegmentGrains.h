@@ -84,7 +84,13 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
-    SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
+    int32_t* m_GrainIds;
+    float* m_Quats;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    bool* m_Active;
+	
+	SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
     void operator=(const SegmentGrains&); // Operator '=' Not Implemented
 };
 

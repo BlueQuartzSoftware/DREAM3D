@@ -251,7 +251,7 @@ void AdjustVolume::execute()
     {
       index = i;
       diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
-      m->m_Grains[index]->equivdiameter = diam;
+      m_EquivalentDiameters[index] = diam;
     }
     PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
     packGrains->setDataContainer(getDataContainer());
@@ -282,7 +282,7 @@ void AdjustVolume::execute()
       {
         index = i;
         diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
-        m->m_Grains[index]->equivdiameter = diam;
+        m_EquivalentDiameters[index] = diam;
       }
     }
     for(int i=0;i<totalPoints;i++)

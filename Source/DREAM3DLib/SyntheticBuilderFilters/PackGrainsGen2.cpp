@@ -146,19 +146,16 @@ return err; }
 // -----------------------------------------------------------------------------
 PackGrainsGen2::PackGrainsGen2() :
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_EulerAngles(NULL),
-m_SurfaceVoxels(NULL),
-m_Active(NULL),
-m_PhasesF(NULL),
-m_Neighborhoods(NULL),
-m_Centroids(NULL),
-m_Volumes(NULL),
-m_AxisLengths(NULL),
 m_AxisEulerAngles(NULL),
+m_Centroids(NULL),
+m_AxisLengths(NULL),
+m_Volumes(NULL),
 m_Omega3s(NULL),
-m_EquivalentDiameters(NULL)
-
+m_EquivalentDiameters(NULL),
+m_Active(NULL),
+m_PhasesC(NULL),
+m_PhasesF(NULL),
+m_Neighborhoods(NULL)
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -367,9 +364,9 @@ void PackGrainsGen2::execute()
     change = (currentsizedisterror) - (oldsizedisterror);
     if(change > 0 || currentsizedisterror > (1.0-(iter*0.001)))
     {
-       m->m_Grains[gid]->active = 1;
+       m_Active[gid] = 1;
        oldsizedisterror = currentsizedisterror;
-       currentvol = currentvol + m->m_Grains[gid]->volume;
+       currentvol = currentvol + m_Volumes[gid];
        gid++;
        m->m_Grains.resize(gid + 1);
        m->m_Grains[gid] = Field::New();
@@ -402,9 +399,9 @@ void PackGrainsGen2::execute()
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0-(iter*0.001f)))
       {
-		m->m_Grains[gid]->active = 1;
+		m_Active[gid] = 1;
 		oldsizedisterror = currentsizedisterror;
-		currentvol = currentvol + m->m_Grains[gid]->volume;
+		currentvol = currentvol + m_Volumes[gid];
 		gid++;
 		m->m_Grains.resize(gid + 1);
 		m->m_Grains[gid] = Field::New();
@@ -442,9 +439,9 @@ void PackGrainsGen2::execute()
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
     zc = sizez / 2.0f;
-    m->m_Grains[i]->centroidx = xc;
-    m->m_Grains[i]->centroidy = yc;
-    m->m_Grains[i]->centroidz = zc;
+    m_Centroids[3*i] = xc;
+    m_Centroids[3*i+1] = yc;
+    m_Centroids[3*i+2] = zc;
     insert_grain(i);
     fillingerror = check_fillingerror(i,-1000);
     for (int iter = 0; iter < 10; iter++)
@@ -452,9 +449,9 @@ void PackGrainsGen2::execute()
       xc = rg.genrand_res53() * (dims[0] * m->getXRes());
       yc = rg.genrand_res53() * (dims[1] * m->getYRes());
       zc = rg.genrand_res53() * (dims[2] * m->getZRes());
-      oldxc = m->m_Grains[i]->centroidx;
-      oldyc = m->m_Grains[i]->centroidy;
-      oldzc = m->m_Grains[i]->centroidz;
+      oldxc = m_Centroids[3*i];
+      oldyc = m_Centroids[3*i+1];
+      oldzc = m_Centroids[3*i+2];
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000,i);
       move_grain(i, xc, yc, zc);
@@ -492,9 +489,9 @@ void PackGrainsGen2::execute()
       xc = rg.genrand_res53() * (dims[0] * m->getXRes());
       yc = rg.genrand_res53() * (dims[1] * m->getYRes());
       zc = rg.genrand_res53() * (dims[2] * m->getZRes());
-      oldxc = m->m_Grains[randomgrain]->centroidx;
-      oldyc = m->m_Grains[randomgrain]->centroidy;
-      oldzc = m->m_Grains[randomgrain]->centroidz;
+      oldxc = m_Centroids[3*randomgrain];
+      oldyc = m_Centroids[3*randomgrain+1];
+      oldzc = m_Centroids[3*randomgrain+2];
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000,randomgrain);
       move_grain(randomgrain, xc, yc, zc);
@@ -520,9 +517,9 @@ void PackGrainsGen2::execute()
       if(randomgrain == 0) randomgrain = 1;
       if(randomgrain == numgrains) randomgrain = numgrains - 1;
       Seed++;
-      oldxc = m->m_Grains[randomgrain]->centroidx;
-      oldyc = m->m_Grains[randomgrain]->centroidy;
-      oldzc = m->m_Grains[randomgrain]->centroidz;
+      oldxc = m_Centroids[3*randomgrain];
+      oldyc = m_Centroids[3*randomgrain+1];
+      oldzc = m_Centroids[3*randomgrain+2];
       xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresx));
       yc = oldyc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresy));
       zc = oldzc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresz));
@@ -693,19 +690,19 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
   float omega3f = rg.genrand_beta(mf, s);
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[phase];
   if(shapeclass == DREAM3D::SyntheticBuilder::EllipsoidShape) omega3f = 1;
-  m->m_Grains[gnum]->volume = vol;
-  m->m_Grains[gnum]->equivdiameter = diam;
-  m->m_Grains[gnum]->radius1 = r1;
-  m->m_Grains[gnum]->radius2 = r2;
-  m->m_Grains[gnum]->radius3 = r3;
-  m->m_Grains[gnum]->axiseuler1 = phi1;
-  m->m_Grains[gnum]->axiseuler2 = PHI;
-  m->m_Grains[gnum]->axiseuler3 = phi2;
-  m->m_Grains[gnum]->omega3 = omega3f;
-  m->m_Grains[gnum]->phase = phase;
-  m->m_Grains[gnum]->neighbordistfunc[0] = 0;
-  m->m_Grains[gnum]->neighbordistfunc[1] = 0;
-  m->m_Grains[gnum]->neighbordistfunc[2] = 0;
+  m_Volumes[gnum] = vol;
+  m_EquivalentDiameters[gnum] = diam;
+  m_AxisLengths[3*gnum] = r1;
+  m_AxisLengths[3*gnum+1] = r2;
+  m_AxisLengths[3*gnum+2] = r3;
+  m_AxisEulerAngles[3*gnum] = phi1;
+  m_AxisEulerAngles[3*gnum+1] = PHI;
+  m_AxisEulerAngles[3*gnum+2] = phi2;
+  m_Omega3s[gnum] = omega3f;
+  m_PhasesF[gnum] = phase;
+  m_Neighborhoods[3*gnum] = 0;
+  m_Neighborhoods[3*gnum+1] = 0;
+  m_Neighborhoods[3*gnum+2] = 0;
 }
 
 void PackGrainsGen2::initializeAttributes()
@@ -730,8 +727,6 @@ void PackGrainsGen2::initializeAttributes()
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
   totalvol = sizex*sizey*sizez;
-
-
 
 	for(int i=0;i<totalPoints;i++)
 	{
@@ -927,9 +922,9 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
   int shiftcolumn, shiftrow, shiftplane;
-  float oxc = m->m_Grains[gnum]->centroidx;
-  float oyc = m->m_Grains[gnum]->centroidy;
-  float ozc = m->m_Grains[gnum]->centroidz;
+  float oxc = m_Centroids[3*gnum];
+  float oyc = m_Centroids[3*gnum+1];
+  float ozc = m_Centroids[3*gnum+2];
   occolumn = (oxc - (packingresx / 2)) / packingresx;
   ocrow = (oyc - (packingresy / 2)) / packingresy;
   ocplane = (ozc - (packingresz / 2)) / packingresz;
@@ -939,9 +934,9 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
-  m->m_Grains[gnum]->centroidx = xc;
-  m->m_Grains[gnum]->centroidy = yc;
-  m->m_Grains[gnum]->centroidz = zc;
+  m_Centroids[3*gnum] = xc;
+  m_Centroids[3*gnum+1] = yc;
+  m_Centroids[3*gnum+2] = zc;
   size_t size = columnlist[gnum].size();
 
   for (size_t i = 0; i < size; i++)
@@ -961,16 +956,16 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
   float xdist, ydist, zdist, totdist;
 //  int nnum = 0;
 //  nnum = 0;
-  x = m->m_Grains[gnum]->centroidx;
-  y = m->m_Grains[gnum]->centroidy;
-  z = m->m_Grains[gnum]->centroidz;
-  dia = m->m_Grains[gnum]->equivdiameter;
+  x = m_Centroids[3*gnum];
+  y = m_Centroids[3*gnum+1];
+  z = m_Centroids[3*gnum+2];
+  dia = m_EquivalentDiameters[gnum];
   for (size_t n = 1; n < m->m_Grains.size(); n++)
   {
-    xn = m->m_Grains[n]->centroidx;
-    yn = m->m_Grains[n]->centroidy;
-    zn = m->m_Grains[n]->centroidz;
-    dia2 = m->m_Grains[n]->equivdiameter;
+    xn = m_Centroids[3*n];
+    yn = m_Centroids[3*n+1];
+    zn = m_Centroids[3*n+2];
+    dia2 = m_EquivalentDiameters[n];
     xdist = fabs(x - xn);
     ydist = fabs(y - yn);
     zdist = fabs(z - zn);
@@ -981,8 +976,8 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
       DoverR = int(totdist / (dia / 2.0));
       for (int iter = DoverR; iter < 3; iter++)
       {
-        if(add > 0) m->m_Grains[n]->neighbordistfunc[iter]++;
-        if(add < 0) m->m_Grains[n]->neighbordistfunc[iter] = m->m_Grains[n]->neighbordistfunc[iter] - 1;
+        if(add > 0) m_Neighborhoods[3*n + iter]++;
+        if(add < 0) m_Neighborhoods[3*n + iter] = m_Neighborhoods[3*n + iter] - 1;
       }
     }
     if(totdist < (3 * (dia2 / 2.0)))
@@ -990,8 +985,8 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
       DoverR = int(totdist / (dia2 / 2.0));
       for (int iter = DoverR; iter < 3; iter++)
       {
-        if(add > 0) m->m_Grains[gnum]->neighbordistfunc[iter]++;
-        if(add < 0) m->m_Grains[gnum]->neighbordistfunc[iter] = m->m_Grains[gnum]->neighbordistfunc[iter] - 1;
+        if(add > 0) m_Neighborhoods[3*gnum + iter]++;
+        if(add < 0) m_Neighborhoods[3*gnum + iter] = m_Neighborhoods[3*gnum + iter] - 1;
       }
     }
   }
@@ -1017,11 +1012,11 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
       simneighbordist[iter][i][1] = 0;
       simneighbordist[iter][i][2] = 0;
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
       determine_neighbors(gadd, 1);
     }
-    if(gremove > 0 && m->m_Grains[gremove]->phase == phase)
+    if(gremove > 0 && m_PhasesF[gremove] == phase)
     {
       determine_neighbors(gremove, -1);
     }
@@ -1029,15 +1024,15 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
     {
       nnum = 0;
       index = i;
-      if(index != gremove && m->m_Grains[index]->phase == phase)
+      if(index != gremove && m_PhasesF[index] == phase)
       {
-        dia = m->m_Grains[index]->equivdiameter;
+        dia = m_EquivalentDiameters[index];
         if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
         if(dia < mindiameter[phase]) dia = mindiameter[phase];
         dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
         for (int j = 0; j < 3; j++)
         {
-          nnum = m->m_Grains[index]->neighbordistfunc[j];
+          nnum = m_Neighborhoods[3*index + j];
           if(nnum > 0)
           {
             simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
@@ -1046,15 +1041,15 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
         count[dia]++;
       }
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
-      dia = m->m_Grains[index]->equivdiameter;
+      dia = m_EquivalentDiameters[index];
       if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
       if(dia < mindiameter[phase]) dia = mindiameter[phase];
       dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
       for (int j = 0; j < 3; j++)
       {
-        nnum = m->m_Grains[index]->neighbordistfunc[j];
+        nnum = m_Neighborhoods[3*index + j];
         if(nnum > 0)
         {
           simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
@@ -1070,11 +1065,11 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
         if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
       determine_neighbors(gadd, -1);
     }
-    if(gremove > 0 && m->m_Grains[gremove]->phase == phase)
+    if(gremove > 0 && m_PhasesF[gremove] == phase)
     {
       determine_neighbors(gremove, 1);
     }
@@ -1139,9 +1134,9 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
     for (size_t b = 1; b < m->m_Grains.size(); b++)
     {
       index = b;
-      if(index != gremove && m->m_Grains[index]->phase == phase)
+      if(index != gremove && m_PhasesF[index] == phase)
       {
-        dia = m->m_Grains[index]->equivdiameter;
+        dia = m_EquivalentDiameters[index];
         dia = (dia - (mindiameter[phase] / 2.0)) / grainsizediststep[iter];
         if(dia < 0) dia = 0;
         if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
@@ -1149,9 +1144,9 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
         count++;
       }
     }
-    if(gadd > 0 && m->m_Grains[gadd]->phase == phase)
+    if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
-      dia = m->m_Grains[gadd]->equivdiameter;
+      dia = m_EquivalentDiameters[gadd];
       dia = (dia - (mindiameter[phase] / 2.0)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
       if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
@@ -1253,12 +1248,12 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-  float volcur = m->m_Grains[gnum]->volume;
-  float bovera = m->m_Grains[gnum]->radius2;
-  float covera = m->m_Grains[gnum]->radius3;
-  float omega3 = m->m_Grains[gnum]->omega3;
+  float volcur = m_Volumes[gnum];
+  float bovera = m_AxisLengths[3*gnum+1];
+  float covera = m_AxisLengths[3*gnum+2];
+  float omega3 = m_Omega3s[gnum];
   float radcur1 = 1;
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[gnum]];
 
   // init any values for each of the Shape Ops
   for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
@@ -1276,9 +1271,9 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
-  float phi1 = m->m_Grains[gnum]->axiseuler1;
-  float PHI = m->m_Grains[gnum]->axiseuler2;
-  float phi2 = m->m_Grains[gnum]->axiseuler3;
+  float phi1 = m_AxisEulerAngles[3*gnum];
+  float PHI = m_AxisEulerAngles[3*gnum+1];
+  float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
   ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
   ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
@@ -1289,9 +1284,9 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   ga[2][0] = sinf(phi1) * sinf(PHI);
   ga[2][1] = -cosf(phi1) * sinf(PHI);
   ga[2][2] = cosf(PHI);
-  xc = m->m_Grains[gnum]->centroidx;
-  yc = m->m_Grains[gnum]->centroidy;
-  zc = m->m_Grains[gnum]->centroidz;
+  xc = m_Centroids[3*gnum];
+  yc = m_Centroids[3*gnum+1];
+  zc = m_Centroids[3*gnum+2];
   centercolumn = (xc - (packingresx / 2)) / packingresx;
   centerrow = (yc - (packingresy / 2)) / packingresy;
   centerplane = (zc - (packingresz / 2)) / packingresz;
@@ -1383,16 +1378,16 @@ void PackGrainsGen2::assign_voxels()
   }
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    float volcur = m->m_Grains[i]->volume;
-    float bovera = m->m_Grains[i]->radius2;
-    float covera = m->m_Grains[i]->radius3;
-    float omega3 = m->m_Grains[i]->omega3;
-    xc = m->m_Grains[i]->centroidx;
-    yc = m->m_Grains[i]->centroidy;
-    zc = m->m_Grains[i]->centroidz;
+    float volcur = m_Volumes[i];
+    float bovera = m_AxisLengths[3*i+1];
+    float covera = m_AxisLengths[3*i+2];
+    float omega3 = m_Omega3s[i];
+	xc = m_Centroids[3*i];
+	yc = m_Centroids[3*i+1];
+	zc = m_Centroids[3*i+2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[i]->phase];
+    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[i]];
 
     // init any values for each of the Shape Ops
     for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -1410,9 +1405,9 @@ void PackGrainsGen2::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-    float phi1 = m->m_Grains[i]->axiseuler1;
-    float PHI = m->m_Grains[i]->axiseuler2;
-    float phi2 = m->m_Grains[i]->axiseuler3;
+	float phi1 = m_AxisEulerAngles[3*i];
+	float PHI = m_AxisEulerAngles[3*i+1];
+	float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
     ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
     ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
@@ -1576,16 +1571,16 @@ void PackGrainsGen2::assign_gaps()
 	  timestep = timestep + 50;
 	  for (size_t i = 1; i < m->m_Grains.size(); i++)
 	  {
-		float volcur = m->m_Grains[i]->volume;
-		float bovera = m->m_Grains[i]->radius2;
-		float covera = m->m_Grains[i]->radius3;
-		float omega3 = m->m_Grains[i]->omega3;
-		xc = m->m_Grains[i]->centroidx;
-		yc = m->m_Grains[i]->centroidy;
-		zc = m->m_Grains[i]->centroidz;
+		float volcur = m_Volumes[i];
+		float bovera = m_AxisLengths[3*i+1];
+		float covera = m_AxisLengths[3*i+2];
+		float omega3 = m_Omega3s[i];
+		xc = m_Centroids[3*i];
+		yc = m_Centroids[3*i+1];
+		zc = m_Centroids[3*i+2];
 		float radcur1 = 0.0f;
 		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[i]->phase];
+		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[i]];
 
 		// init any values for each of the Shape Ops
 		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -1606,9 +1601,9 @@ void PackGrainsGen2::assign_gaps()
 		radcur1 = (float(timestep)/100.0)*radcur1;
 		radcur2 = (float(timestep)/100.0)*radcur2;
 		radcur3 = (float(timestep)/100.0)*radcur3;
-		float phi1 = m->m_Grains[i]->axiseuler1;
-		float PHI = m->m_Grains[i]->axiseuler2;
-		float phi2 = m->m_Grains[i]->axiseuler3;
+		float phi1 = m_AxisEulerAngles[3*i];
+		float PHI = m_AxisEulerAngles[3*i+1];
+		float phi2 = m_AxisEulerAngles[3*i+2];
 		float ga[3][3];
 		ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
 		ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
@@ -1709,7 +1704,7 @@ void PackGrainsGen2::assign_gaps()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	  if(m_GrainIds[i] > 0) m_PhasesC[i] = m->m_Grains[m_GrainIds[i]]->phase;
+	  if(m_GrainIds[i] > 0) m_PhasesC[i] = m_PhasesF[m_GrainIds[i]];
   }
   delete [] ellipfuncs;
   delete [] newowners;
@@ -1874,8 +1869,7 @@ void PackGrainsGen2::cleanup_grains()
   }
   for (int i = 0; i < totpoints; i++)
   {
-
-	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m->m_Grains[m_GrainIds[i]]->phase; }
+	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
   m->m_Grains.resize(goodcount);
   assign_gaps();

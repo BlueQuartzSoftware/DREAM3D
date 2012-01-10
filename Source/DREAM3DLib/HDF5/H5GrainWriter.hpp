@@ -43,20 +43,6 @@
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
 
-#define H5GW_IPF_COLOR()\
-if (r->crystruct[phase] == Ebsd::Cubic) {\
-  EbsdColoring::GenerateIPFColor(r->m_Grains[r->grain_indicies[i]]->euler1, r->m_Grains[r->grain_indicies[i]]->euler2, r->m_Grains[r->grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb, hkl);\
-} else if (r->crystruct[phase] == Ebsd::Hexagonal)\
-{\
-  q1[1] = r->m_Grains[r->grain_indicies[i]]->avg_quat[1];\
-  q1[2] = r->m_Grains[r->grain_indicies[i]]->avg_quat[2];\
-  q1[3] = r->m_Grains[r->grain_indicies[i]]->avg_quat[3];\
-  q1[4] = r->m_Grains[r->grain_indicies[i]]->avg_quat[4];\
-  EbsdColoring::CalculateHexIPFColor(r->m_Grains[r->grain_indicies[i]]->euler1, r->m_Grains[r->grain_indicies[i]]->euler2, r->m_Grains[r->grain_indicies[i]]->euler3, RefDirection[0], RefDirection[1], RefDirection[2], rgb);\
-}\
-ipfColor[j * 3] = rgb[0];\
-ipfColor[j * 3 + 1] = rgb[1];\
-ipfColor[j * 3 + 2] = rgb[2];\
 
 
 #define H5GW_DECLS() \
@@ -166,12 +152,14 @@ class  H5GrainWriter
     int writeHDF5GrainsFile(DataContainer* r, const std::string &hdfFile)
     {
       int64_t totalPoints = r->totalPoints();
+
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
       
       int totalFields = r->getTotalFields();
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Field, DREAM3D::FieldData::NumNeighbors, Int32ArrayType, int32_t, totalFields, numNeighbors);
+
 
       H5GW_DECLS()
       err = 0;
@@ -212,6 +200,7 @@ class  H5GrainWriter
           // Reconstruction Specific Assignments
           grainName[j] = grain_indicies[vid];
         }
+
         int numNeighborsForGrain = numNeighbors[i];
         H5GW_GRAIN_LOOP_2(numNeighborsForGrain);
       }

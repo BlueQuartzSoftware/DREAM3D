@@ -43,7 +43,13 @@
 //
 // -----------------------------------------------------------------------------
 FindODF::FindODF() :
-m_CreateNewStatsFile(true)
+m_CreateNewStatsFile(true),
+m_Volumes(NULL),
+m_EulerAngles(NULL),
+m_PhasesC(NULL),
+m_PhasesF(NULL),
+m_Active(NULL),
+m_SurfaceFields(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -130,8 +136,8 @@ void FindODF::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == phases) { return; }
+  m_PhasesC = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if (NULL == m_PhasesC) { return; }
   size_t bin;
   size_t numgrains = m->m_Grains.size();
   int phase;
@@ -168,7 +174,7 @@ void FindODF::execute()
   float r1, r2, r3;
   for (int i = 0; i < totalPoints; i++)
   {
-	  totalvol[phases[i]]++;
+	  totalvol[m_PhasesC[i]]++;
   }
   for (size_t i = 1; i < m->crystruct.size(); i++)
   {
@@ -176,16 +182,16 @@ void FindODF::execute()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m->m_Grains[i]->surfacefield == false && m->m_Grains[i]->active == true)
+    if (m_SurfaceFields[i] == false && m_Active[i] == true)
     {
-      float vol = m->m_Grains[i]->volume;
-      ea1 = m->m_Grains[i]->euler1;
-      ea2 = m->m_Grains[i]->euler2;
-      ea3 = m->m_Grains[i]->euler3;
-      phase = m->crystruct[m->m_Grains[i]->phase];
+      float vol = m_Volumes[i];
+      ea1 = m_EulerAngles[3*i];
+      ea2 = m_EulerAngles[3*i+1];
+      ea3 = m_EulerAngles[3*i+2];
+      phase = m->crystruct[m_PhasesF[i]];
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
-      eulerodf[m->m_Grains[i]->phase][bin] = eulerodf[m->m_Grains[i]->phase][bin] + (vol / totalvol[m->m_Grains[i]->phase]);
+      eulerodf[m_PhasesF[i]][bin] = eulerodf[m_PhasesF[i]][bin] + (vol / totalvol[m_PhasesF[i]]);
     }
   }
   int err;

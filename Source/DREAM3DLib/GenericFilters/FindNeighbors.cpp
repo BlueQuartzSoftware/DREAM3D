@@ -46,7 +46,15 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighbors::FindNeighbors()
+FindNeighbors::FindNeighbors() :
+m_GrainIds(NULL),
+m_SurfaceVoxels(NULL),
+m_SurfaceFields(NULL),
+m_Phases(NULL),
+m_NumNeighbors(NULL),
+m_TotalSurfaceArea(NULL),
+m_NeighborList(NULL),
+m_SharedSurfaceAreaList(NULL)
 {
 }
 
@@ -112,13 +120,13 @@ void FindNeighbors::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if(NULL == grain_indicies)
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == m_GrainIds)
   {
     return;
   }
-  int8_t* surfacevoxels = m->getVoxelDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
-  if(NULL == surfacevoxels)
+  m_SurfaceVoxels = m->getVoxelDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
+  if(NULL == m_SurfaceVoxels)
   {
     return;
   }
@@ -152,11 +160,11 @@ void FindNeighbors::execute()
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
 
-  float* totalsurfacearea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
-  if (NULL == totalsurfacearea) {return;}
+  m_TotalSurfaceArea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
+  if (NULL == m_TotalSurfaceArea) {return;}
   for (size_t i = 1; i < xtalCount; ++i)
   {
-    totalsurfacearea[i] = 0.0f;
+    m_TotalSurfaceArea[i] = 0.0f;
   }
 
     std::vector<std::vector<int> > neighborlist;
@@ -168,13 +176,9 @@ void FindNeighbors::execute()
   neighborsurfacearealist.resize(m->m_Grains.size());
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    m->m_Grains[i]->numneighbors = 0;
+    m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
-    for (int j = 0; j < 3; j++)
-    {
-      m->m_Grains[i]->neighbordistfunc[j] = 0;
-    }
   }
 
   notify("FindNeighbors: Working through all Voxels", 0, Observable::UpdateProgressMessage);
@@ -183,7 +187,7 @@ void FindNeighbors::execute()
   for (int64_t j = 0; j < totalPoints; j++)
   {
     onsurf = 0;
-    grain = grain_indicies[j];
+    grain = m_GrainIds[j];
     if(grain > 0)
     {
       column = j % m->getXPoints();
@@ -191,11 +195,11 @@ void FindNeighbors::execute()
       plane = j / (m->getXPoints() * m->getYPoints());
       if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1) || plane == 0 || plane == (m->getZPoints() - 1)) && m->getZPoints() != 1)
       {
-        m->m_Grains[grain]->surfacefield = true;
+        m_SurfaceFields[grain] = true;
       }
       if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1)) && m->getZPoints() == 1)
       {
-        m->m_Grains[grain]->surfacefield = true;
+        m_SurfaceFields[grain] = true;
       }
       for (int k = 0; k < 6; k++)
       {
@@ -207,17 +211,17 @@ void FindNeighbors::execute()
         if(k == 4 && row == (m->getYPoints() - 1)) good = 0;
         if(k == 2 && column == 0) good = 0;
         if(k == 3 && column == (m->getXPoints() - 1)) good = 0;
-        if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
+        if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
         {
           onsurf++;
-          nnum = m->m_Grains[grain]->numneighbors;
-          neighborlist[grain].push_back(grain_indicies[neighbor]);
+          nnum = m_NumNeighbors[grain];
+          neighborlist[grain].push_back(m_GrainIds[neighbor]);
           nnum++;
-          m->m_Grains[grain]->numneighbors = nnum;
+          m_NumNeighbors[grain] = nnum;
         }
       }
     }
-    surfacevoxels[j] = onsurf;
+    m_SurfaceVoxels[j] = onsurf;
   }
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
@@ -228,7 +232,7 @@ void FindNeighbors::execute()
   notify("FindNeighbors: Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    int phase = m->m_Grains[i]->phase;
+    int phase = m_Phases[i];
 
     std::map<int, int> neighToCount;
     int numneighs = int(neighborlist[i].size());
@@ -250,25 +254,25 @@ void FindNeighbors::execute()
       int neigh = iter->first; // get the neighbor grain
       int number = iter->second; // get the number of voxels
       float area = number * m->getXRes() * m->getYRes();
-      if(m->m_Grains[i]->surfacefield == 0 && (neigh > i || m->m_Grains[neigh]->surfacefield == 1))
+      if(m_SurfaceFields[i] == 0 && (neigh > i || m_SurfaceFields[neigh] == 1))
       {
-        totalsurfacearea[phase] = totalsurfacearea[phase] + area;
+        m_TotalSurfaceArea[phase] = m_TotalSurfaceArea[phase] + area;
       }
 
       // Push the neighbor grain id back onto the list so we stay synced up
       neighborlist[i].push_back(neigh);
       neighborsurfacearealist[i].push_back(area);
     }
-    m->m_Grains[i]->numneighbors = neighborlist[i].size();
+    m_NumNeighbors[i] = neighborlist[i].size();
 
     // Set the vector for each list into the NeighborList Object
     NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
     sharedNeiLst->assign(neighborlist[i].begin(), neighborlist[i].end());
-    neighborlistPtr->setList(i, sharedNeiLst);
+    m_NeighborList->setList(i, sharedNeiLst);
 
     NeighborList<float>::SharedVectorType sharedSAL(new std::vector<float>);
     sharedSAL->assign(neighborsurfacearealist[i].begin(), neighborsurfacearealist[i].end());
-    sharedSurfaceAreaListPtr->setList(i, sharedSAL);
+    m_SharedSurfaceAreaList->setList(i, sharedSAL);
   }
 
   notify("FindNeighbors Completed", 0, Observable::UpdateProgressMessage);
