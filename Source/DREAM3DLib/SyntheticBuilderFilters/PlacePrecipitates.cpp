@@ -53,19 +53,31 @@
 
 
 
+#define PF_CHECK_ARRAY_EXISTS(var, dc, DType, name, ss, err, ptrType, ArrayType)\
+  IDataArray::Pointer var##ptr = dc->get##DType(name);\
+  if (NULL == var##ptr.get() ) {\
+    ss << name << " Array Not initialized at beginning of " << getNameOfClass() << " Filter" << std::endl;\
+    setErrorCondition(err);\
+  } else if (preflight == false) {\
+    var = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(name, size, this);\
+  }
 
+#define PF_MAKE_SURE_ARRAY_EXISTS(var, dc, DType, name, ss, ArrayType, size)\
+  IDataArray::Pointer var##ptr = dc->get##DType(name);\
+  if (NULL == var##ptr.get() ) {\
+    ArrayType::Pointer p = ArrayType::CreateArray((size));\
+    dc->add##DType(name, p);\
+    var = p->GetPointer(0);\
+  }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PlacePrecipitates::PlacePrecipitates()  :
-AbstractFilter(),
-grain_indicies(NULL),
-phases(NULL),
-surfacevoxels(NULL)
+PlacePrecipitates::PlacePrecipitates() :
+m_GrainIds(NULL),
+m_Phases(NULL),
+m_SurfaceVoxels(NULL)
 {
-
-
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
   m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
@@ -116,97 +128,39 @@ void PlacePrecipitates::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PlacePrecipitates::preflight()
+void PlacePrecipitates::dataCheck(bool preflight, size_t size)
 {
   int err = 0;
   std::stringstream ss;
   DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::SurfaceVoxels);
-  if(d.get() == NULL)
-  {
-	  ss << "SurfaceVoxels Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Neighborhoods);
-  if(d.get() == NULL)
-  {
-	  ss << "Neighborhoods Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::EquivalentDiameters);
-  if(d.get() == NULL)
-  {
-	  ss << "EquivalentDiameters Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Omega3s);
-  if(d.get() == NULL)
-  {
-	  ss << "Omega3s Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::AxisEulerAngles);
-  if(d.get() == NULL)
-  {
-	  ss << "AxisEulerAngles Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::AxisLengths);
-  if(d.get() == NULL)
-  {
-	  ss << "AxisLengths Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Volumes);
-  if(d.get() == NULL)
-  {
-	  ss << "Volumes Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Centroids);
-  if(d.get() == NULL)
-  {
-	  ss << "Centroids Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Active);
-  if(d.get() == NULL)
-  {
-	  ss << "Active Array Not Initialized At Beginning of PlacePrecipitates Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::Phases, p);
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Neighbors);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::Neighbors, q);
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NumCells);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
-	  m->addFieldData(DREAM3D::FieldData::NumCells, r);
-  }
+
+  PF_CHECK_ARRAY_EXISTS(m_GrainIds, m, VoxelData, DREAM3D::VoxelData::GrainIds, ss, -300, int32_t, Int32ArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_SurfaceVoxels, m, VoxelData, DREAM3D::VoxelData::SurfaceVoxels, ss, -301, int8_t, Int8ArrayType);
+  PF_MAKE_SURE_ARRAY_EXISTS(m_PhasesC, m, VoxelData, DREAM3D::VoxelData::Phases, ss, Int32ArrayType, size);
+  PF_MAKE_SURE_ARRAY_EXISTS(m_Neighbors, m, VoxelData, DREAM3D::VoxelData::Neighbors, ss, Int32ArrayType, size);
+
+  PF_CHECK_ARRAY_EXISTS(m_PhasesF, m, FieldData, DREAM3D::FieldData::Phases, ss, -303,  int32_t, Int32ArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_Neighborhoods, m, FieldData, DREAM3D::FieldData::Neighborhoods, ss, -304,  int32_t, Int32ArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_EquivalentDiameters, m, FieldData, DREAM3D::FieldData::EquivalentDiameters, ss, -305, float, FloatArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_Omega3s, m, FieldData, DREAM3D::FieldData::Omega3s, ss, -306, float, FloatArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_AxisEulerAngles, m, FieldData, DREAM3D::FieldData::AxisEulerAngles, ss, -307, float, FloatArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_AxisLengths, m, FieldData, DREAM3D::FieldData::AxisLengths, ss, -308, float, FloatArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_Volumes, m, FieldData, DREAM3D::FieldData::Volumes, ss, -309, float, FloatArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_Centroids, m, FieldData, DREAM3D::FieldData::Centroids, ss, -310, float, FloatArrayType);
+  PF_CHECK_ARRAY_EXISTS(m_Active, m, FieldData, DREAM3D::FieldData::Active, ss, -311, bool, BoolArrayType);
+  PF_MAKE_SURE_ARRAY_EXISTS(m_NumCells, m, FieldData, DREAM3D::FieldData::NumCells, ss, Int32ArrayType, size);
+
+
   setErrorCondition(err);
   setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PlacePrecipitates::preflight()
+{
+  dataCheck(true, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -230,29 +184,25 @@ void PlacePrecipitates::execute()
 
   int64_t totalPoints = m->totalPoints();
 
-  int32_t* gi = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if(NULL == gi)
+  // Now make sure all the arrays are either available or are created
+  dataCheck(false, totalPoints);
+
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if(NULL == m_GrainIds)
   {
     return;
   }
-  int32_t* ph = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if(NULL == ph)
+  m_Phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
+  if(NULL == m_Phases)
   {
     return;
   }
-  int8_t* surf = m->getEnsembleDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
-  if(NULL == surf)
+  m_SurfaceVoxels = m->getVoxelDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
+  if(NULL == m_SurfaceVoxels)
   {
     return;
   }
 
-
-  grain_indicies = gi;
-  phases = ph;
-  surfacevoxels = surf;
-
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
 
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();
@@ -474,7 +424,7 @@ void  PlacePrecipitates::fillin_precipitates()
     count = 0;
     for (int64_t i = 0; i < totalPoints; i++)
     {
-      int grainname = grain_indicies[i];
+      int grainname = m_GrainIds[i];
       if(grainname <= 0)
       {
         count++;
@@ -497,7 +447,7 @@ void  PlacePrecipitates::fillin_precipitates()
           if(j == 3 && x == (dims[0] - 1)) good = 0;
           if(good == 1)
           {
-            int grain = grain_indicies[neighpoint];
+            int grain = m_GrainIds[neighpoint];
             if(grain > 0 && grain >= numprimarygrains)
             {
               neighs.push_back(grain);
@@ -528,12 +478,12 @@ void  PlacePrecipitates::fillin_precipitates()
     }
     for (int64_t j = 0; j < totalPoints; j++)
     {
-      int grainname = grain_indicies[j];
+      int grainname = m_GrainIds[j];
       int neighbor = neighbors[j];
       if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
       {
-        grain_indicies[j] = neighbor;
-        phases[j] = m->m_Grains[neighbor]->phase;
+        m_GrainIds[j] = neighbor;
+        m_Phases[j] = m->m_Grains[neighbor]->phase;
       }
     }
   }
@@ -541,7 +491,7 @@ void  PlacePrecipitates::fillin_precipitates()
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    int name = grain_indicies[i];
+    int name = m_GrainIds[i];
     gsizes[name]++;
   }
   for (size_t i = 1; i < m->m_Grains.size(); i++)
@@ -608,7 +558,7 @@ void  PlacePrecipitates::place_precipitates()
     if(random <= precipboundaryfraction)
     {
 		random2 = int(rg.genrand_res53()*double(totalPoints-1));
-		while(surfacevoxels[random2] == 0 || grain_indicies[random2] > numprimarygrains)
+		while(m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] > numprimarygrains)
 		{
 		  random2++;
 		  if(random2 >= totalPoints) random2 = random2-totalPoints;
@@ -617,7 +567,7 @@ void  PlacePrecipitates::place_precipitates()
     else if(random > precipboundaryfraction)
     {
 		random2 = rg.genrand_res53()*(totalPoints-1);
-		while(surfacevoxels[random2] != 0 || grain_indicies[random2] > numprimarygrains)
+		while(m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] > numprimarygrains)
 		{
 		  random2++;
 		  if(random2 >= totalPoints) random2 = random2-totalPoints;
@@ -636,7 +586,7 @@ void  PlacePrecipitates::place_precipitates()
     for(size_t j = 0; j < currentprecipvoxellist.size(); j++)
     {
 
-		if(grain_indicies[currentprecipvoxellist[j]] > 0 && grain_indicies[currentprecipvoxellist[j]] < numprimarygrains)
+		if(m_GrainIds[currentprecipvoxellist[j]] > 0 && m_GrainIds[currentprecipvoxellist[j]] < numprimarygrains)
 		{
 		  precipvoxelcounter++;
 		}
@@ -646,15 +596,15 @@ void  PlacePrecipitates::place_precipitates()
 		precipvoxelcounter = 0;
 		for(size_t j = 0; j < currentprecipvoxellist.size(); j++)
 		{
-		    grain_indicies[currentprecipvoxellist[j]] = currentnumgrains;
-		    phases[currentprecipvoxellist[j]] = m->m_Grains[currentnumgrains]->phase;
+		    m_GrainIds[currentprecipvoxellist[j]] = currentnumgrains;
+		    m_Phases[currentprecipvoxellist[j]] = m->m_Grains[currentnumgrains]->phase;
 		    precipvoxelcounter++;
 		}
 		for(size_t j = 0; j < currentcoatingvoxellist.size(); j++)
 		{
-			if(grain_indicies[currentcoatingvoxellist[j]] < numprimarygrains)
+			if(m_GrainIds[currentcoatingvoxellist[j]] < numprimarygrains)
 			{
-			    phases[currentcoatingvoxellist[j]] = 3;
+			    m_Phases[currentcoatingvoxellist[j]] = 3;
 			}
 		}
 		totalprecipvol = totalprecipvol + (precipvoxelcounter*m->getXRes()*m->getYRes()*m->getZRes());

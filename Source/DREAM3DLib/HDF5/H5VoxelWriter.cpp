@@ -69,20 +69,13 @@ int H5VoxelWriter::writeEulerData(float* ea,
   int numComp = 3;
   int32_t rank = 2;
   hsize_t dims[2] = { totalPoints, numComp };
-  std::vector<float> dataf( totalPoints * 3);
-  for (int64_t i = 0; i <  totalPoints; ++i)
-  {
-    dataf[i * 3] = ea[3*i];
-    dataf[i * 3 + 1] = ea[3*i + 1];
-    dataf[i * 3 + 2] = ea[3*i + 2];
-  }
   err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
   if (err < 0)
   {
     std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
     return err;
   }
-  err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, &(dataf.front()), DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
+  err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, ea, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
   if (err < 0)
   {
     std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
