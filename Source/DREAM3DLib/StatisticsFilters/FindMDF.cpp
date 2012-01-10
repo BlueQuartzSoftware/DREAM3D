@@ -38,7 +38,6 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
@@ -46,7 +45,14 @@
 //
 // -----------------------------------------------------------------------------
 FindMDF::FindMDF() :
-m_CreateNewStatsFile(true)
+m_CreateNewStatsFile(true),
+m_AvgQuats(NULL),
+m_Active(NULL),
+m_SurfaceFields(NULL),
+m_Phases(NULL),
+m_TotalSurfaceArea(NULL),
+m_NeighborList(NULL),
+m_SharedSurfaceAreaList(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -83,6 +89,12 @@ void FindMDF::preflight()
   if(d.get() == NULL)
   {
 	  ss << "Active Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
+  if(d.get() == NULL)
+  {
+	  ss << "SurfaceFields Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::Phases);
@@ -132,18 +144,18 @@ void FindMDF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
+  m_TotalSurfaceArea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
+  if (NULL == m_TotalSurfaceArea) { return; }
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *neighListPtr;
+  NeighborList<int>& neighborlist = *m_NeighborList;
   // And we do the same for the SharedSurfaceArea list
-  NeighborList<float>* surfListPtr = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-  NeighborList<float>& neighborsurfacearealist = *surfListPtr;
+  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
   float n1, n2, n3;
   float r1, r2, r3;
@@ -180,25 +192,25 @@ void FindMDF::execute()
   misorientationlists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-	  if(m->m_Grains[i]->active == true)
+	  if(m_Active[i] == true)
 	  {
-		q1[0] = m->m_Grains[i]->avg_quat[0] / m->m_Grains[i]->avg_quat[0];
-		q1[1] = m->m_Grains[i]->avg_quat[1] / m->m_Grains[i]->avg_quat[0];
-		q1[2] = m->m_Grains[i]->avg_quat[2] / m->m_Grains[i]->avg_quat[0];
-		q1[3] = m->m_Grains[i]->avg_quat[3] / m->m_Grains[i]->avg_quat[0];
-		q1[4] = m->m_Grains[i]->avg_quat[4] / m->m_Grains[i]->avg_quat[0];
-		phase1 = m->crystruct[m->m_Grains[i]->phase];
+		q1[0] = m_AvgQuats[3*i] / m_AvgQuats[3*i];
+		q1[1] = m_AvgQuats[3*i+1] / m_AvgQuats[3*i+1];
+		q1[2] = m_AvgQuats[3*i+2] / m_AvgQuats[3*i+2];
+		q1[3] = m_AvgQuats[3*i+3] / m_AvgQuats[3*i+3];
+		q1[4] = m_AvgQuats[3*i+4] / m_AvgQuats[3*i+4];
+		phase1 = m->crystruct[m_Phases[i]];
 		misorientationlists[i].resize(neighborlist[i].size() * 3, -1.0);
 		for (size_t j = 0; j < neighborlist[i].size(); j++)
 		{
 		  w = 10000.0;
 		  nname = neighborlist[i][j];
-		  q2[0] = m->m_Grains[nname]->avg_quat[0] / m->m_Grains[nname]->avg_quat[0];
-		  q2[1] = m->m_Grains[nname]->avg_quat[1] / m->m_Grains[nname]->avg_quat[0];
-		  q2[2] = m->m_Grains[nname]->avg_quat[2] / m->m_Grains[nname]->avg_quat[0];
-		  q2[3] = m->m_Grains[nname]->avg_quat[3] / m->m_Grains[nname]->avg_quat[0];
-		  q2[4] = m->m_Grains[nname]->avg_quat[4] / m->m_Grains[nname]->avg_quat[0];
-		  phase2 = m->crystruct[m->m_Grains[nname]->phase];
+		  q2[0] = m_AvgQuats[3*nname] / m_AvgQuats[3*nname];
+		  q2[1] = m_AvgQuats[3*nname+1] / m_AvgQuats[3*nname+1];
+		  q2[2] = m_AvgQuats[3*nname+2] / m_AvgQuats[3*nname+2];
+		  q2[3] = m_AvgQuats[3*nname+3] / m_AvgQuats[3*nname+3];
+		  q2[4] = m_AvgQuats[3*nname+4] / m_AvgQuats[3*nname+4];
+		  phase2 = m->crystruct[m_Phases[nname]];
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
@@ -217,10 +229,10 @@ void FindMDF::execute()
 																   misorientationlists[i][3*j],
 																   misorientationlists[i][3 * j + 1],
 																   misorientationlists[i][3 * j + 2]);
-		  if ((nname > i || m->m_Grains[nname]->surfacefield == 1) && phase1 == phase2)
+		  if ((nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
 		  {
 			nsa = neighborsurfacearealist[i][j];
-			misobin[m->m_Grains[i]->phase][mbin] = misobin[m->m_Grains[i]->phase][mbin] + (nsa / totalsurfacearea[m->m_Grains[i]->phase]);
+			misobin[m_Phases[i]][mbin] = misobin[m_Phases[i]][mbin] + (nsa / m_TotalSurfaceArea[m_Phases[i]]);
 		  }
 		}
 	  }

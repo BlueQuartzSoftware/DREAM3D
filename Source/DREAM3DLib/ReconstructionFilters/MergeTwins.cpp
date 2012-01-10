@@ -40,7 +40,6 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
@@ -62,7 +61,14 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeTwins::MergeTwins()
+MergeTwins::MergeTwins() :
+m_GrainIds(NULL),
+m_AvgQuats(NULL),
+m_EulerAngles(NULL),
+m_Phases(NULL),
+m_NumNeighbors(NULL),
+m_NumCells(NULL),
+m_NeighborList(NULL)
 {
 
   m_HexOps = HexagonalOps::New();
@@ -97,10 +103,28 @@ void MergeTwins::preflight()
 	  ss << "AvgQuats Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
 	  err = -300;
   }
+  d = m->getFieldData(DREAM3D::FieldData::EulerAngles);
+  if(d.get() == NULL)
+  {
+	  ss << "EulerAngles (Fields) Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
   d = m->getFieldData(DREAM3D::FieldData::Phases);
   if(d.get() == NULL)
   {
 	  ss << "Phases (Field) Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NumCells);
+  if(d.get() == NULL)
+  {
+	  ss << "Numcells Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::NumNeighbors);
+  if(d.get() == NULL)
+  {
+	  ss << "NumNeighbors Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
 	  err = -300;
   }
   d = m->getFieldData(DREAM3D::FieldData::NeighborList);
@@ -129,9 +153,6 @@ void MergeTwins::execute()
   }
   setErrorCondition(0);
 
-  float* totalsurfacearea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == totalsurfacearea) { return; }
-
   merge_twins();
   characterize_twins();
   renumber_grains();
@@ -149,14 +170,14 @@ void MergeTwins::merge_twins()
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  NeighborList<int>* neighListPtr = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *neighListPtr;
+  NeighborList<int>& neighborlist = *m_NeighborList;
 
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
-  if (NULL == grain_indicies) { return; }
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
+  if (NULL == m_GrainIds) { return; }
 
  // float angcur = 180.0f;
   std::vector<int> twinlist;
@@ -172,7 +193,7 @@ void MergeTwins::merge_twins()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	if (twinnewnumbers[i] == -1 && m->m_Grains[i]->phase > 0)
+	if (twinnewnumbers[i] == -1 && m_Phases[i] > 0)
     {
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
@@ -184,19 +205,19 @@ void MergeTwins::merge_twins()
        //   angcur = 180.0f;
           int twin = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && twinnewnumbers[neigh] == -1 && m->m_Grains[neigh]->phase > 0)
+          if (neigh != i && twinnewnumbers[neigh] == -1 && m_Phases[neigh] > 0)
           {
             w = 10000.0f;
-            q1[1] = m->m_Grains[firstgrain]->avg_quat[1]/m->m_Grains[firstgrain]->avg_quat[0];
-            q1[2] = m->m_Grains[firstgrain]->avg_quat[2]/m->m_Grains[firstgrain]->avg_quat[0];
-            q1[3] = m->m_Grains[firstgrain]->avg_quat[3]/m->m_Grains[firstgrain]->avg_quat[0];
-            q1[4] = m->m_Grains[firstgrain]->avg_quat[4]/m->m_Grains[firstgrain]->avg_quat[0];
-            phase1 = m->crystruct[m->m_Grains[firstgrain]->phase];
-            q2[1] = m->m_Grains[neigh]->avg_quat[1]/m->m_Grains[neigh]->avg_quat[0];
-            q2[2] = m->m_Grains[neigh]->avg_quat[2]/m->m_Grains[neigh]->avg_quat[0];
-            q2[3] = m->m_Grains[neigh]->avg_quat[3]/m->m_Grains[neigh]->avg_quat[0];
-            q2[4] = m->m_Grains[neigh]->avg_quat[4]/m->m_Grains[neigh]->avg_quat[0];
-            phase2 = m->crystruct[m->m_Grains[neigh]->phase];
+            q1[1] = m_AvgQuats[5*firstgrain+1]/m_AvgQuats[5*firstgrain];
+            q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
+            q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
+            q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
+            phase1 = m->crystruct[m_Phases[firstgrain]];
+            q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];
+            q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
+            q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
+            q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
+            phase2 = m->crystruct[m_Phases[neigh]];
             if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
@@ -216,8 +237,8 @@ void MergeTwins::merge_twins()
   size_t totalPoints = static_cast<size_t>(m->totalPoints());
   for (size_t k = 0; k < totalPoints; k++)
   {
-    int grainname = grain_indicies[k];
-	if (twinnewnumbers[grainname] != -1) { grain_indicies[k] = twinnewnumbers[grainname];}
+    int grainname = m_GrainIds[k];
+	if (twinnewnumbers[grainname] != -1) { m_GrainIds[k] = twinnewnumbers[grainname];}
   }
 }
 
@@ -233,8 +254,8 @@ void MergeTwins::renumber_grains()
     return;
   }
 
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
-  if (NULL == grain_indicies) { return; }
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
+  if (NULL == m_GrainIds) { return; }
 
   size_t numgrains = m->m_Grains.size();
   int graincount = 1;
@@ -244,16 +265,16 @@ void MergeTwins::renumber_grains()
     if (twinnewnumbers[i] == -1)
     {
       newnames[i] = graincount;
-      float ea1good = m->m_Grains[i]->euler1;
-      float ea2good = m->m_Grains[i]->euler2;
-      float ea3good = m->m_Grains[i]->euler3;
-      int size = m->m_Grains[i]->numvoxels;
-      int numneighbors = m->m_Grains[i]->numneighbors;
-      m->m_Grains[graincount]->numvoxels = size;
-      m->m_Grains[graincount]->numneighbors = numneighbors;
-      m->m_Grains[graincount]->euler1 = ea1good;
-      m->m_Grains[graincount]->euler2 = ea2good;
-      m->m_Grains[graincount]->euler3 = ea3good;
+      float ea1good = m_EulerAngles[3*i];
+      float ea2good = m_EulerAngles[3*i+1];
+      float ea3good = m_EulerAngles[3*i+2];
+      int size = m_NumCells[i];
+      int numneighbors = m_NumNeighbors[i];
+      m_NumCells[graincount] = size;
+      m_NumNeighbors[graincount] = numneighbors;
+      m_EulerAngles[3*graincount] = ea1good;
+      m_EulerAngles[3*graincount+1] = ea2good;
+      m_EulerAngles[3*graincount+2] = ea3good;
       graincount++;
     }
   }
@@ -263,11 +284,11 @@ void MergeTwins::renumber_grains()
   int64_t totalPoints = m->totalPoints();
  for (int j = 0; j < totalPoints; j++)
   {
-    int grainname = grain_indicies[j];
+    int grainname = m_GrainIds[j];
     if (grainname >= 1)
     {
       int newgrainname = newnames[grainname];
-      grain_indicies[j] = newgrainname;
+      m_GrainIds[j] = newgrainname;
     }
   }
 #endif

@@ -63,8 +63,6 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
 
     virtual ~FindBoundingBoxGrains();
 
-    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
-
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
