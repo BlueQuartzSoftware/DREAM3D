@@ -38,6 +38,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -53,7 +54,7 @@
 
 
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\
@@ -143,7 +144,21 @@ return err; }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PackGrainsGen2::PackGrainsGen2()
+PackGrainsGen2::PackGrainsGen2() :
+m_GrainIds(NULL),
+m_PhasesC(NULL),
+m_EulerAngles(NULL),
+m_SurfaceVoxels(NULL),
+m_Active(NULL),
+m_PhasesF(NULL),
+m_Neighborhoods(NULL),
+m_Centroids(NULL),
+m_Volumes(NULL),
+m_AxisLengths(NULL),
+m_AxisEulerAngles(NULL),
+m_Omega3s(NULL),
+m_EquivalentDiameters(NULL)
+
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -176,46 +191,39 @@ PackGrainsGen2::~PackGrainsGen2()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackGrainsGen2::preflight()
+void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-  }
-  d = m->getFieldData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::Phases, p);
-  }
+  DataContainer* m = getDataContainer();
 
-  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Active, p);
-  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Phases, q);
-  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Neighborhoods, r);
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Centroids, s);
-  PFFloatArrayType::Pointer t = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Volumes, t);
-  PFFloatArrayType::Pointer u = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
-  PFFloatArrayType::Pointer v = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
-  PFFloatArrayType::Pointer w = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Omega3s, w);
-  PFFloatArrayType::Pointer x = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, EulerAngles, ss, FloatArrayType, voxels * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, Int8ArrayType, voxels);
+
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, BoolArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, FloatArrayType, fields * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, FloatArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, FloatArrayType, fields * 3); 
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, FloatArrayType, fields * 3);  
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, FloatArrayType, fields);  
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields);  
+
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackGrainsGen2::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -262,6 +270,9 @@ void PackGrainsGen2::execute()
     return;
   }
 
+  int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
   initializeAttributes();
 
   size_t udims[3] = {0,0,0};
@@ -721,23 +732,15 @@ void PackGrainsGen2::initializeAttributes()
   totalvol = sizex*sizey*sizez;
 
 
-  grain_indicies = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
-  if (grain_indicies == NULL) { return; }
-  phases = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
-  if (phases == NULL) { return; }
-  eulerangles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
-  if (NULL == eulerangles) {return;}
-  surfacevoxels = m->createVoxelData<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, 1, this);
-  if (NULL == surfacevoxels) {return;}
 
 	for(int i=0;i<totalPoints;i++)
 	{
-		grain_indicies[i] = 0;
-		phases[i] = 0;
-		eulerangles[3*i] = -1.0f;
-		eulerangles[3*i + 1] = -1.0f;
-		eulerangles[3*i + 2] = -1.0f;
-		surfacevoxels[i] = 0;
+		m_GrainIds[i] = 0;
+		m_PhasesC[i] = 0;
+		m_EulerAngles[3*i] = -1.0f;
+		m_EulerAngles[3*i + 1] = -1.0f;
+		m_EulerAngles[3*i + 2] = -1.0f;
+		m_SurfaceVoxels[i] = 0;
 	}
 }
 
@@ -811,7 +814,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 
   for (int i = 0; i < size; i++)
   {
-      phase = phases[i];
+      phase = m_PhasesC[i];
     m->crystruct[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
@@ -892,7 +895,7 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
   for(size_t i = 0; i< count ;i++)
   {
     totaldensity = 0.0;
-      phase = phases[i];
+      phase = m_PhasesC[i];
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
     if (err < 0)
     {
@@ -1491,15 +1494,15 @@ void PackGrainsGen2::assign_voxels()
             {
               int currentpoint = index;
 
-              if (grain_indicies[currentpoint] > 0)
+              if (m_GrainIds[currentpoint] > 0)
               {
-                oldname = grain_indicies[currentpoint];
+                oldname = m_GrainIds[currentpoint];
                 gsizes[oldname] = gsizes[oldname] - 1;
-                grain_indicies[currentpoint] = -1;
+                m_GrainIds[currentpoint] = -1;
               }
-              if (grain_indicies[currentpoint] == 0)
+              if (m_GrainIds[currentpoint] == 0)
               {
-                grain_indicies[currentpoint] = i;
+                m_GrainIds[currentpoint] = i;
                 gsizes[i]++;
               }
             }
@@ -1522,9 +1525,9 @@ void PackGrainsGen2::assign_voxels()
   }
   for (int i = 0; i < totpoints; i++)
   {
-    if (grain_indicies[i] > 0)
+    if (m_GrainIds[i] > 0)
     {
-	  grain_indicies[i] = newnames[grain_indicies[i]];
+	  m_GrainIds[i] = newnames[m_GrainIds[i]];
     }
   }
   m->m_Grains.resize(goodcount);
@@ -1659,7 +1662,7 @@ void PackGrainsGen2::assign_gaps()
 			  if (iter3 < 0) plane = iter3 + dims[2];
 			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
 			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
-			  if(grain_indicies[index] <= 0)
+			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
 				  x = float(column) * m->getXRes();
@@ -1698,15 +1701,15 @@ void PackGrainsGen2::assign_gaps()
 	  }
 	  for (int i = 0; i < totpoints; i++)
 	  {
-	    if (ellipfuncs[i] >= 0) grain_indicies[i] = newowners[i];
-		if (grain_indicies[i] <= 0) unassignedcount++;
+	    if (ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
+		if (m_GrainIds[i] <= 0) unassignedcount++;
 		newowners[i] = -1;
 		ellipfuncs[i] = -1.0;
 	  }
   }
   for (int i = 0; i < totpoints; i++)
   {
-	  if(grain_indicies[i] > 0) phases[i] = m->m_Grains[grain_indicies[i]]->phase;
+	  if(m_GrainIds[i] > 0) m_PhasesC[i] = m->m_Grains[m_GrainIds[i]]->phase;
   }
   delete [] ellipfuncs;
   delete [] newowners;
@@ -1728,7 +1731,7 @@ void PackGrainsGen2::cleanup_grains()
     static_cast<DimType>(udims[2]),
   };
 
-  int neighpoints[6];
+  DimType neighpoints[6];
   DimType xp = dims[0];
   DimType yp = dims[1];
   DimType zp = dims[2];
@@ -1746,8 +1749,8 @@ void PackGrainsGen2::cleanup_grains()
   size_t count;
   int touchessurface = 0;
   int good;
-  int neighbor;
-  int column, row, plane;
+  DimType neighbor;
+  DimType column, row, plane;
   int index;
   float minsize = 0;
   gsizes.resize(m->m_Grains.size());
@@ -1760,9 +1763,9 @@ void PackGrainsGen2::cleanup_grains()
   for (int i = 0; i < totpoints; i++)
   {
     touchessurface = 0;
-	if(checked[i] == false && grain_indicies[i] > 0)
+	if(checked[i] == false && m_GrainIds[i] > 0)
 	{
-		minsize = mindiameter[phases[i]]*mindiameter[phases[i]]*mindiameter[phases[i]]*M_PI/6.0;
+		minsize = mindiameter[m_PhasesC[i]]*mindiameter[m_PhasesC[i]]*mindiameter[m_PhasesC[i]]*M_PI/6.0;
 		minsize = int(minsize/(m->getXRes()*m->getYRes()*m->getZRes()));
 		currentvlist.push_back(i);
 		count = 0;
@@ -1785,7 +1788,7 @@ void PackGrainsGen2::cleanup_grains()
 					if (j == 4 && row == (yp - 1)) good = 0;
 					if (j == 2 && column == 0) good = 0;
 					if (j == 3 && column == (xp - 1)) good = 0;
-					if (good == 1 && grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
+					if (good == 1 && m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
 						checked[neighbor] = true;
@@ -1799,7 +1802,7 @@ void PackGrainsGen2::cleanup_grains()
 					if (j == 4 && row == (yp - 1)) neighbor = neighbor - (xp*yp);
 					if (j == 2 && column == 0) neighbor = neighbor + (xp);
 					if (j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
-					if (grain_indicies[neighbor] == grain_indicies[index] && checked[neighbor] == false)
+					if (m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
 						checked[neighbor] = true;
@@ -1808,23 +1811,23 @@ void PackGrainsGen2::cleanup_grains()
 			}
 			count++;
 		}
-		size_t size = vlists[grain_indicies[i]].size();
+		size_t size = vlists[m_GrainIds[i]].size();
 		if(size > 0)
 		{
 			if(size < currentvlist.size())
 			{
-				for (size_t k = 0; k < vlists[grain_indicies[i]].size(); k++)
+				for (size_t k = 0; k < vlists[m_GrainIds[i]].size(); k++)
 				{
-					grain_indicies[vlists[grain_indicies[i]][k]] = -1;
+					m_GrainIds[vlists[m_GrainIds[i]][k]] = -1;
 				}
-				vlists[grain_indicies[i]].resize(currentvlist.size());
-				vlists[grain_indicies[i]].swap(currentvlist);
+				vlists[m_GrainIds[i]].resize(currentvlist.size());
+				vlists[m_GrainIds[i]].swap(currentvlist);
 			}
 			else if(size >= currentvlist.size())
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
-					grain_indicies[currentvlist[k]] = -1;
+					m_GrainIds[currentvlist[k]] = -1;
 				}
 			}
 		}
@@ -1832,14 +1835,14 @@ void PackGrainsGen2::cleanup_grains()
 		{
 			if(currentvlist.size() >= minsize || touchessurface == 1)
 			{
-				vlists[grain_indicies[i]].resize(currentvlist.size());
-				vlists[grain_indicies[i]].swap(currentvlist);
+				vlists[m_GrainIds[i]].resize(currentvlist.size());
+				vlists[m_GrainIds[i]].swap(currentvlist);
 			}
 			if(currentvlist.size() < minsize && touchessurface == 0)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
-					grain_indicies[currentvlist[k]] = -1;
+					m_GrainIds[currentvlist[k]] = -1;
 				}
 			}
 		}
@@ -1848,7 +1851,7 @@ void PackGrainsGen2::cleanup_grains()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	if(grain_indicies[i] > 0) gsizes[grain_indicies[i]]++;
+	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
   newnames.resize(m->m_Grains.size());
   int goodcount = 1;
@@ -1864,15 +1867,15 @@ void PackGrainsGen2::cleanup_grains()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	if (grain_indicies[i] > 0)
+	if (m_GrainIds[i] > 0)
 	{
-	  grain_indicies[i] = newnames[grain_indicies[i]];
+	  m_GrainIds[i] = newnames[m_GrainIds[i]];
 	}
   }
   for (int i = 0; i < totpoints; i++)
   {
 
-	  if(grain_indicies[i] > 0) { phases[i] = m->m_Grains[grain_indicies[i]]->phase; }
+	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m->m_Grains[m_GrainIds[i]]->phase; }
   }
   m->m_Grains.resize(goodcount);
   assign_gaps();

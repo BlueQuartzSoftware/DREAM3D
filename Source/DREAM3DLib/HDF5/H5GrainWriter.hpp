@@ -127,10 +127,9 @@ for (int k = 0; k < 8; k++) {\
 }
 
 
-#define H5GW_GRAIN_LOOP_2() \
+#define H5GW_GRAIN_LOOP_2(size) \
 err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);\
 err = h5writer->writeFieldData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
-size_t size = r->m_Grains[i]->numneighbors;\
 if (size > 0) {\
 }\
 err = h5writer->writeCellData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
@@ -170,18 +169,18 @@ class  H5GrainWriter
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
-
-
+      
+      int totalFields = r->getTotalFields();
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Field, DREAM3D::FieldData::NumNeighbors, Int32ArrayType, int32_t, totalFields, numNeighbors);
 
       H5GW_DECLS()
-
       err = 0;
-	  std::vector<std::vector<int> > vlists;
-	  vlists.resize(numgrains);
-	  for (int i = 0; i < totpoints; i++)
-	  {
-		vlists[grain_indicies[i]].push_back(i);
-	  }
+	    std::vector<std::vector<int> > vlists;
+	    vlists.resize(numgrains);
+	    for (int i = 0; i < totpoints; i++)
+	    {
+		    vlists[grain_indicies[i]].push_back(i);
+	    }
       for (int i = 1; i < numgrains; i++)
       {
         H5GW_GRAIN_LOOP_1()
@@ -213,7 +212,8 @@ class  H5GrainWriter
           // Reconstruction Specific Assignments
           grainName[j] = grain_indicies[vid];
         }
-        H5GW_GRAIN_LOOP_2()
+        int numNeighborsForGrain = numNeighbors[i];
+        H5GW_GRAIN_LOOP_2(numNeighborsForGrain);
       }
 
       err = h5writer->writeObjectIndex(hdfPaths);

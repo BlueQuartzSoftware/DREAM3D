@@ -125,6 +125,27 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     int writeVtkFile();
 
   private:
+    // Cell Data - make sure these are all initialized to NULL in the constructor
+    int32_t* m_GrainIds;
+    int32_t* m_PhasesC;
+    float*   m_EulerAngles;
+    int8_t*  m_SurfaceVoxels;
+    
+    // Field Data - make sure these are all initialized to NULL in the constructor
+    bool* m_Active;
+    int32_t* m_PhasesF;
+    int32_t* m_Neighborhoods;
+    float* m_Centroids;
+    float* m_Volumes;
+    float* m_AxisLengths;
+    float* m_AxisEulerAngles;
+    float* m_Omega3s;
+    float* m_EquivalentDiameters;
+
+    // Ensemble Data - make sure these are all initialized to NULL in the constructor
+
+
+    // All other private variables
     std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
     DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
     DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
@@ -190,12 +211,9 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
 
-    int32_t* grain_indicies;
-    int32_t* phases;
-    float* eulerangles;
-    int8_t* surfacevoxels;
-//    int32_t* neighbors;
-//    float* quats;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
 
     PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
     void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented
