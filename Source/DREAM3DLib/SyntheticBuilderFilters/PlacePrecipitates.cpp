@@ -57,21 +57,20 @@
 //
 // -----------------------------------------------------------------------------
 PlacePrecipitates::PlacePrecipitates() :
- m_GrainIds(NULL),
- m_SurfaceVoxels(NULL),
- m_PhasesC(NULL),
- m_Neighbors(NULL),
-
- m_PhasesF(NULL),
- m_Neighborhoods(NULL),
- m_EquivalentDiameters(NULL),
- m_Omega3s(NULL),
- m_AxisEulerAngles(NULL),
- m_AxisLengths(NULL),
- m_Volumes(NULL),
- m_Centroids(NULL),
- m_Active(NULL),
- m_NumCells(NULL)
+m_GrainIds(NULL),
+m_PhasesC(NULL),
+m_SurfaceVoxels(NULL),
+m_AxisEulerAngles(NULL),
+m_Centroids(NULL),
+m_AxisLengths(NULL),
+m_Volumes(NULL),
+m_Omega3s(NULL),
+m_EquivalentDiameters(NULL),
+m_Active(NULL),
+m_PhasesF(NULL),
+m_Neighborhoods(NULL),
+m_Neighbors(NULL),
+m_NumCells(NULL)
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -152,7 +151,6 @@ void PlacePrecipitates::execute()
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size() );
 
-
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();
   sizez = m->getZPoints() * m->getZRes();
@@ -190,22 +188,22 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   float dist;
   float inside = -1;
   float coatinginside = -1;
-  int index;
-  size_t column, row, plane;
-  size_t xmin, xmax, ymin, ymax, zmin, zmax;
+  DimType index;
+  DimType column, row, plane;
+  DimType xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
-  float volcur = m->m_Grains[gnum]->volume;
-  float bovera = m->m_Grains[gnum]->radius2;
-  float covera = m->m_Grains[gnum]->radius3;
-  float omega3 = m->m_Grains[gnum]->omega3;
+  float volcur = m_Volumes[gnum];
+  float bovera = m_AxisLengths[3*gnum+1];
+  float covera = m_AxisLengths[3*gnum+2];
+  float omega3 = m_Omega3s[gnum];
   float radcur1, radcur2, radcur3;
   float coatingradcur1, coatingradcur2, coatingradcur3;
   currentprecipvoxellist.resize(0);
   currentcoatingvoxellist.resize(0);
 
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m->m_Grains[gnum]->phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[gnum]];
   // init any values for each of the Shape Ops
   for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
   {
@@ -225,9 +223,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   coatingradcur1 = radcur1+coatingthickness;
   coatingradcur2 = radcur2+coatingthickness;
   coatingradcur3 = radcur3+coatingthickness;
-  float phi1 = m->m_Grains[gnum]->axiseuler1;
-  float PHI = m->m_Grains[gnum]->axiseuler2;
-  float phi2 = m->m_Grains[gnum]->axiseuler3;
+  float phi1 = m_AxisEulerAngles[3*gnum];
+  float PHI = m_AxisEulerAngles[3*gnum+1];
+  float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
   ga[0][0] = cosf(phi1)*cosf(phi2)-sinf(phi1)*sinf(phi2)*cosf(PHI);
   ga[0][1] = sinf(phi1)*cosf(phi2)+cosf(phi1)*sinf(phi2)*cosf(PHI);
@@ -238,9 +236,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   ga[2][0] =  sinf(phi1)*sinf(PHI);
   ga[2][1] = -cosf(phi1)*sinf(PHI);
   ga[2][2] =  cosf(PHI);
-  xc = m->m_Grains[gnum]->centroidx;
-  yc = m->m_Grains[gnum]->centroidy;
-  zc = m->m_Grains[gnum]->centroidz;
+  xc = m_Centroids[3*gnum];
+  yc = m_Centroids[3*gnum+1];
+  zc = m_Centroids[3*gnum+2];
   column = (xc-(m->getXRes()/2))/m->getXRes();
   row = (yc-(m->getYRes()/2))/m->getYRes();
   plane = (zc-(m->getZRes()/2))/m->getZRes();
@@ -268,11 +266,11 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
     if(zmin < 0) zmin = 0;
     if(zmax > dims[2]-1) zmax = dims[2]-1;
   }
-  for(size_t iter1 = xmin; iter1 < xmax+1; iter1++)
+  for(DimType iter1 = xmin; iter1 < xmax+1; iter1++)
   {
-    for(size_t iter2 = ymin; iter2 < ymax+1; iter2++)
+    for(DimType iter2 = ymin; iter2 < ymax+1; iter2++)
     {
-		for(size_t iter3 = zmin; iter3 < zmax+1; iter3++)
+		for(DimType iter3 = zmin; iter3 < zmax+1; iter3++)
 		{
 		  column = iter1;
 		  row = iter2;
@@ -428,11 +426,11 @@ void  PlacePrecipitates::fillin_precipitates()
     for (int64_t j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
-      int neighbor = neighbors[j];
+      int neighbor = m_Neighbors[j];
       if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
       {
         m_GrainIds[j] = neighbor;
-        m_PhasesC[j] = m->m_Grains[neighbor]->phase;
+        m_PhasesC[j] = m_PhasesF[neighbor];
       }
     }
   }
@@ -445,7 +443,7 @@ void  PlacePrecipitates::fillin_precipitates()
   }
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
-    m->m_Grains[i]->numvoxels = gsizes[i];
+    m_NumCells[i] = gsizes[i];
   }
   gsizes.clear();
 }
@@ -525,12 +523,12 @@ void  PlacePrecipitates::place_precipitates()
     xc = find_xcoord(random2);
     yc = find_ycoord(random2);
     zc = find_zcoord(random2);
-    m->m_Grains[currentnumgrains]->centroidx = xc;
-    m->m_Grains[currentnumgrains]->centroidy = yc;
-    m->m_Grains[currentnumgrains]->centroidz = zc;
+    m_Centroids[3*currentnumgrains] = xc;
+    m_Centroids[3*currentnumgrains+1] = yc;
+    m_Centroids[3*currentnumgrains+2] = zc;
     insert_precipitate(currentnumgrains, thickness);
 
-    m->m_Grains[currentnumgrains]->active = 1;
+    m_Active[currentnumgrains] = true;
     precipvoxelcounter = 0;
     for(size_t j = 0; j < currentprecipvoxellist.size(); j++)
     {
@@ -546,7 +544,7 @@ void  PlacePrecipitates::place_precipitates()
 		for(size_t j = 0; j < currentprecipvoxellist.size(); j++)
 		{
 		    m_GrainIds[currentprecipvoxellist[j]] = currentnumgrains;
-		    m_PhasesC[currentprecipvoxellist[j]] = m->m_Grains[currentnumgrains]->phase;
+		    m_PhasesC[currentprecipvoxellist[j]] = m_PhasesF[currentnumgrains];
 		    precipvoxelcounter++;
 		}
 		for(size_t j = 0; j < currentcoatingvoxellist.size(); j++)

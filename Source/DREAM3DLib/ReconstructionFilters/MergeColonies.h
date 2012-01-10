@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
  * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
@@ -79,6 +80,14 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     void renumber_grains();
 
   private:
+    int32_t* m_GrainIds;
+    float* m_AvgQuats;
+    float* m_EulerAngles;
+    int32_t* m_NumCells;
+    int32_t* m_NumNeighbors;
+    int32_t* m_Phases;
+    NeighborList<int>* m_NeighborList;
+
 	std::vector<int> colonynewnumbers;
 
     OrientationMath::Pointer m_CubicOps;

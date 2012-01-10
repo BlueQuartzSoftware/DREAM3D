@@ -82,9 +82,9 @@ namespace smooth
         n[1] = a[2] * b[0] - a[0] * b[2];
         n[2] = a[0] * b[1] - a[1] * b[0];
         float norm = sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
-        if (norm > 0.0)
+        if (norm > 0.0f)
         {
-          float rnorm = 1.0 / norm;
+          float rnorm = 1.0f / norm;
           n[0] *= rnorm;
           n[1] *= rnorm;
           n[2] *= rnorm;

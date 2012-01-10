@@ -44,7 +44,14 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighborhoods::FindNeighborhoods()
+FindNeighborhoods::FindNeighborhoods() :
+m_GrainIds(NULL),
+m_NumCells(NULL),
+m_Centroids(NULL),
+m_Volumes(NULL),
+m_EquivalentDiameters(NULL),
+m_Active(NULL),
+m_Neighborhoods(NULL)
 {
   graincenters = NULL;
   INIT_DataArray(m_GrainCenters,float);
@@ -69,6 +76,12 @@ void FindNeighborhoods::preflight()
   if(d.get() == NULL)
   {
 	  ss << "GrainIds Array Not Initialized At Beginning of FindNeighborhoods Filter" << std::endl;
+	  err = -300;
+  }
+  d = m->getFieldData(DREAM3D::FieldData::Active);
+  if(d.get() == NULL)
+  {
+	  ss << "Active Array Not Initialized At Beginning of FindNeighborhoods Filter" << std::endl;
 	  err = -300;
   }
 
@@ -116,8 +129,8 @@ void FindNeighborhoods::find_centroids()
   }
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == m_GrainIds) { return; }
 
   float x, y, z;
   int col, row, plane;
@@ -135,7 +148,7 @@ void FindNeighborhoods::find_centroids()
   }
   for (int j = 0; j < totalPoints; j++)
   {
-    int gnum = grain_indicies[j];
+    int gnum = m_GrainIds[j];
     graincenters[gnum*5 + 0]++;
     col = j % m->getXPoints();
     row = (j / m->getXPoints()) % m->getYPoints();
@@ -154,14 +167,14 @@ void FindNeighborhoods::find_centroids()
     graincenters[i*5 + 1] = graincenters[i*5 + 1] / graincenters[i*5 + 0];
     graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
     graincenters[i*5 + 3] = graincenters[i*5 + 3] / graincenters[i*5 + 0];
-    m->m_Grains[i]->centroidx = graincenters[i*5 + 1];
-    m->m_Grains[i]->centroidy = graincenters[i*5 + 2];
-    m->m_Grains[i]->centroidz = graincenters[i*5 + 3];
-    m->m_Grains[i]->numvoxels = graincenters[i*5 + 0];
-    m->m_Grains[i]->volume = (graincenters[i*5 + 0] * res_scalar);
-    radcubed = m->m_Grains[i]->volume/vol_term;
+    m_Centroids[3*i] = graincenters[i*5 + 1];
+    m_Centroids[3*i+1] = graincenters[i*5 + 2];
+    m_Centroids[3*i+2] = graincenters[i*5 + 3];
+    m_NumCells[i] = graincenters[i*5 + 0];
+    m_Volumes[i] = (graincenters[i*5 + 0] * res_scalar);
+    radcubed = m_Volumes[i]/vol_term;
     diameter = 2.0*powf(radcubed, 0.3333333333);
-    m->m_Grains[i]->equivdiameter = diameter;
+    m_EquivalentDiameters[i] = diameter;
   }
 }
 void FindNeighborhoods::find_centroids2D()
@@ -177,8 +190,8 @@ void FindNeighborhoods::find_centroids2D()
   }
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
+  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  if (NULL == m_GrainIds) { return; }
 
   float x, y;
   int col, row;
@@ -194,7 +207,7 @@ void FindNeighborhoods::find_centroids2D()
   }
   for (int j = 0; j < totalPoints; j++)
   {
-    int gnum = grain_indicies[j];
+    int gnum = m_GrainIds[j];
     graincenters[gnum*5 + 0]++;
     col = j % m->getXPoints();
     row = (j / m->getXPoints()) % m->getYPoints();
@@ -207,13 +220,13 @@ void FindNeighborhoods::find_centroids2D()
   {
     graincenters[i*5 + 1] = graincenters[i*5 + 1] / graincenters[i*5 + 0];
     graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
-    m->m_Grains[i]->centroidx = graincenters[i*5 + 1];
-    m->m_Grains[i]->centroidy = graincenters[i*5 + 2];
-    m->m_Grains[i]->numvoxels = graincenters[i*5 + 0];
-    m->m_Grains[i]->volume = (graincenters[i*5 + 0] * m->getXRes() * m->getYRes());
-    radsquared = m->m_Grains[i]->volume / m_pi;
+    m_Centroids[3*i] = graincenters[i*5 + 1];
+    m_Centroids[3*i+1] = graincenters[i*5 + 2];
+    m_NumCells[i] = graincenters[i*5 + 0];
+    m_Volumes[i] = (graincenters[i*5 + 0] * m->getXRes() * m->getYRes());
+    radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
-    m->m_Grains[i]->equivdiameter = diameter;
+    m_EquivalentDiameters[i] = diameter;
   }
 }
 
@@ -229,22 +242,20 @@ void FindNeighborhoods::find_neighborhoods()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    Field& grain = *(m->m_Grains[i].get());
-    if (grain.active == true)
+    if (m_Active[i] == true)
     {
-      x = grain.centroidx;
-      y = grain.centroidy;
-      z = grain.centroidz;
-      diam = grain.equivdiameter;
+      x = m_Centroids[3*i];
+      y = m_Centroids[3*i+1];
+      z = m_Centroids[3*i+2];
+      diam = m_EquivalentDiameters[i];
       for (size_t j = i; j < numgrains; j++)
       {
-        Field& grain_j = *(m->m_Grains[j].get());
-        if (grain_j.active == true)
+        if (m_Active[j] == true)
         {
-          xn = grain_j.centroidx;
-          yn = grain_j.centroidy;
-          zn = grain_j.centroidz;
-          diam2 = grain_j.equivdiameter;
+		  xn = m_Centroids[3*j];
+		  yn = m_Centroids[3*j+1];
+		  zn = m_Centroids[3*j+2];
+		  diam2 = m_EquivalentDiameters[j];
           xdist = fabs(x - xn);
           ydist = fabs(y - yn);
           zdist = fabs(z - zn);
@@ -257,14 +268,14 @@ void FindNeighborhoods::find_neighborhoods()
           {
             for (int iter = dist_int; iter < 3; iter++)
             {
-              grain.neighbordistfunc[dist_int]++;
+              m_Neighborhoods[3*i+dist_int]++;
             }
           }
           if (dist2_int < 3)
           {
             for (int iter = dist2_int; iter < 3; iter++)
             {
-              grain_j.neighbordistfunc[dist2_int]++;
+              m_Neighborhoods[3*j+dist2_int]++;
             }
           }
         }
