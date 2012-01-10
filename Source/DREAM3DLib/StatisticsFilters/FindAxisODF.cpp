@@ -132,7 +132,7 @@ void FindAxisODF::execute()
 		axisodf[i][j] = 0.0;
 	  }
   }
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
     float ea1 = m_AxisEulerAngles[3*i];

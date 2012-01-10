@@ -386,11 +386,11 @@ void  PlacePrecipitates::fillin_precipitates()
   int count = 1;
   int good = 1;
   float x, y, z;
-  gsizes.resize(m->m_Grains.size(), 0);
+  gsizes.resize(m->getTotalFields(), 0);
   neighbors.resize(m->totalPoints(), 0);
   int neighpoint;
   int neighpoints[6];
-  std::vector<int> n(m->m_Grains.size());
+  std::vector<int> n(m->getTotalFields());
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -406,7 +406,7 @@ void  PlacePrecipitates::fillin_precipitates()
       if(grainname <= 0)
       {
         count++;
-        for (size_t c = 1; c < m->m_Grains.size(); c++)
+        for (size_t c = 1; c < m->getTotalFields(); c++)
         {
           n[c] = 0;
         }
@@ -465,14 +465,14 @@ void  PlacePrecipitates::fillin_precipitates()
       }
     }
   }
-  gsizes.resize(m->m_Grains.size(), 0);
+  gsizes.resize(m->getTotalFields(), 0);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
     int name = m_GrainIds[i];
     gsizes[name]++;
   }
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     m_NumCells[i] = gsizes[i];
   }
@@ -487,8 +487,8 @@ void  PlacePrecipitates::place_precipitates()
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
   float thickness = 0.25;
-  size_t currentnumgrains = m->m_Grains.size();
-  numprimarygrains = m->m_Grains.size();
+  size_t currentnumgrains = m->getTotalFields();
+  numprimarygrains = m->getTotalFields();
  // size_t index;
   int phase;
   float precipboundaryfraction = 0.0;
@@ -529,7 +529,6 @@ void  PlacePrecipitates::place_precipitates()
     }
 
     m->m_Grains.resize(currentnumgrains+1);
-    m->m_Grains[currentnumgrains] = Field::New();
     packGrains->generate_grain(currentnumgrains, phase, Seed);
     precipboundaryfraction = m->pptFractions[phase];
     random = rg.genrand_res53();

@@ -102,7 +102,7 @@ void FindBoundingBoxGrains::execute()
 void FindBoundingBoxGrains::find_boundingboxgrains()
 {
   DataContainer* m = getDataContainer();
-  size_t size = m->m_Grains.size();
+  size_t size = m->getTotalFields();
   float boundbox[7];
   float coords[7];
   float x, y, z;
@@ -161,7 +161,7 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
 {
   DataContainer* m = getDataContainer();
-  size_t size = m->m_Grains.size();
+  size_t size = m->getTotalFields();
   float boundbox[5];
   float coords[5];
   float x, y;

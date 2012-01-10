@@ -105,7 +105,7 @@ void FindSchmids::execute()
   float theta1, theta2, theta3, theta4;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
   float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
     if (m_Active[i] == true)

@@ -53,7 +53,7 @@
   std::stringstream ss;\
   std::string hdfPath;\
   std::vector<std::string > hdfPaths;\
-  int numgrains = r->m_Grains.size();\
+  int numgrains = r->getTotalFields();\
   int totpoints = r->totalPoints();\
   int phase;\
   int pcount = 0;\

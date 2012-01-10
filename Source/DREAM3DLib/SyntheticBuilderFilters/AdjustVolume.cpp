@@ -144,11 +144,11 @@ void AdjustVolume::execute()
 
   float voxtovol = m->getXRes()*m->getYRes()*m->getZRes()*(3.0/4.0)*(1.0/m_pi);
 
-  gsizes.resize(m->m_Grains.size());
+  gsizes.resize(m->getTotalFields());
 
   std::vector<int> voxellist(vListSize,-1);
   std::vector<int> affectedvoxellist(vListSize,-1);
-  for(size_t i=1;i<m->m_Grains.size();i++)
+  for(size_t i=1;i<m->getTotalFields();i++)
   {
     gsizes[i] = 0;
   }
@@ -170,8 +170,8 @@ void AdjustVolume::execute()
     while (good == 0)
     {
       good = 1;
-      selectedgrain = int(rg.genrand_res53() * m->m_Grains.size());
-      if (selectedgrain >= m->m_Grains.size()) selectedgrain = m->m_Grains.size()-1;
+      selectedgrain = int(rg.genrand_res53() * m->getTotalFields());
+      if (selectedgrain >= m->getTotalFields()) selectedgrain = m->getTotalFields()-1;
       if (selectedgrain == 0) selectedgrain = 1;
     }
     growth = 1;
@@ -240,7 +240,7 @@ void AdjustVolume::execute()
         gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
       }
     }
-    for(size_t i=1;i<m->m_Grains.size();i++)
+    for(size_t i=1;i<m->getTotalFields();i++)
     {
       index = i;
       diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
@@ -253,7 +253,7 @@ void AdjustVolume::execute()
     if(currentsizedisterror <= oldsizedisterror)
     {
       oldsizedisterror = currentsizedisterror;
-      for(size_t i=1;i<m->m_Grains.size();i++)
+      for(size_t i=1;i<m->getTotalFields();i++)
       {
         if(gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
       }
@@ -271,7 +271,7 @@ void AdjustVolume::execute()
           gsizes[m_GrainIds[index]]++;
         }
       }
-      for(size_t i=1;i<m->m_Grains.size();i++)
+      for(size_t i=1;i<m->getTotalFields();i++)
       {
         index = i;
         diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
@@ -283,9 +283,9 @@ void AdjustVolume::execute()
       reassigned[i] = 0;
     }
   }
-  NEW_SHARED_ARRAY(newnames, int, m->m_Grains.size())
+  NEW_SHARED_ARRAY(newnames, int, m->getTotalFields())
 
-  for (size_t i=1;i<m->m_Grains.size();i++)
+  for (size_t i=1;i<m->getTotalFields();i++)
   {
     newnames[i] = i;
   }

@@ -280,10 +280,7 @@ void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ, float xRes, float y
   int numgrains = 100;
   size_t oldSize = 0;
   m->m_Grains.resize(numgrains + 1);
-  for(size_t g = oldSize; g < m->m_Grains.size(); ++g)
-  {
-    m->m_Grains[g] = Field::New();
-  }
+
 
 #if 1
   /* ********** This is the proposed way to add arrays to the DataContainer */

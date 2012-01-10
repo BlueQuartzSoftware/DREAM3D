@@ -139,7 +139,7 @@ void FindODF::execute()
   m_PhasesC = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
   if (NULL == m_PhasesC) { return; }
   size_t bin;
-  size_t numgrains = m->m_Grains.size();
+  size_t numgrains = m->getTotalFields();
   int phase;
   float *totalvol;
   //  Ebsd::CrystalStructure xtal;

@@ -350,7 +350,7 @@ void MatchCrystallography::assign_eulers()
   {
    unbiasedvol[i] = 0;
   }
-  for(size_t i=1;i<m->m_Grains.size();i++)
+  for(size_t i=1;i<m->getTotalFields();i++)
   {
     random = rg.genrand_res53();
     choose = 0;
@@ -482,9 +482,9 @@ void MatchCrystallography::matchCrystallography()
 		  while (good == 0)
 		  {
 			good = 1;
-			selectedgrain1 = int(rg.genrand_res53() * m->m_Grains.size());
+			selectedgrain1 = int(rg.genrand_res53() * m->getTotalFields());
 			if (selectedgrain1 == 0) selectedgrain1 = 1;
-			if (selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
+			if (selectedgrain1 == m->getTotalFields()) selectedgrain1 = m->getTotalFields() - 1;
 			if (m_SurfaceFields[selectedgrain1] == true) good = 0;
 		  }
 
@@ -561,12 +561,12 @@ void MatchCrystallography::matchCrystallography()
 		  while (good == 0)
 		  {
 			good = 1;
-			selectedgrain1 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
+			selectedgrain1 = static_cast<size_t>(rg.genrand_res53() * m->getTotalFields());
 			if (selectedgrain1 == 0) selectedgrain1 = 1;
-			if (selectedgrain1 == m->m_Grains.size()) selectedgrain1 = m->m_Grains.size() - 1;
-			selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->m_Grains.size());
+			if (selectedgrain1 == m->getTotalFields()) selectedgrain1 = m->getTotalFields() - 1;
+			selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->getTotalFields());
 			if (selectedgrain2 == 0) selectedgrain2 = 1;
-			if (selectedgrain2 == m->m_Grains.size()) selectedgrain2 = m->m_Grains.size() - 1;
+			if (selectedgrain2 == m->getTotalFields()) selectedgrain2 = m->getTotalFields() - 1;
 			if (m_SurfaceFields[selectedgrain1] == true || m_SurfaceFields[selectedgrain2] == true) good = 0;
 		  }
 		  g1ea1 = m_EulerAnglesF[3*selectedgrain1];
@@ -720,8 +720,8 @@ void  MatchCrystallography::measure_misorientations ()
   Ebsd::CrystalStructure phase1, phase2;
   int mbin;
 
-  misorientationlists.resize(m->m_Grains.size());
-  for (size_t i = 1; i < m->m_Grains.size(); i++)
+  misorientationlists.resize(m->getTotalFields());
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     if(misorientationlists[i].size() != 0)
     {
