@@ -75,9 +75,6 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
     */
 	  virtual void execute();
 
-	  void initializeAttributes();
-    void initializeGrains();
-
   protected:
     LoadVolume();
 

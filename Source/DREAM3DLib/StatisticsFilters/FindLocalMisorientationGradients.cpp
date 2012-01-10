@@ -63,6 +63,7 @@ m_Quats(NULL)
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
+  m_KernelSize = 1;
   setupFilterOptions();
 }
 
@@ -179,7 +180,7 @@ void FindLocalMisorientationGradients::execute()
   float* gam = &(gamVec.front());
 
   float** avgmiso = new float *[m->getTotalFields()];
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (int i = 1; i < m->getTotalFields(); i++)
   {
     avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
@@ -235,7 +236,7 @@ void FindLocalMisorientationGradients::execute()
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
           phase1 = m->crystruct[m_Phases[point]];
-          for (int j = -steps; j < steps + 1; j++)
+          for (int j = -m_KernelSize; j < m_KernelSize + 1; j++)
 
           {
             jStride = j * xPoints * yPoints;

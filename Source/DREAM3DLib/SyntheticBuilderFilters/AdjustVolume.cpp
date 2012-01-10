@@ -283,7 +283,7 @@ void AdjustVolume::execute()
       oldsizedisterror = currentsizedisterror;
       for(size_t i=1;i<m->getTotalFields();i++)
       {
-        if(gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
+//        if(gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
       }
     }
     if(currentsizedisterror > oldsizedisterror)

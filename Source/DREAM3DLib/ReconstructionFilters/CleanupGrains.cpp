@@ -620,7 +620,9 @@ void CleanupGrains::remove_smallgrains()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0]*dims[1];
 
+
   DimType numgrains = m->getTotalFields();
+
   nuclei.resize(numgrains, -1);
 
  // size_t maxGrain = 0;

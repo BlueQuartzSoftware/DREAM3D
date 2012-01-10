@@ -40,37 +40,41 @@
  * @brief These are used in the filters to run checks on available arrays
  */
 
+#define TEST_MACRO(NameSpace, DType, Name)\
+  std::string t = NameSpace::DType::Name;
+
+
 #define PF_CHECK_ARRAY_EXISTS( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size)\
-  IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace##::##DType##::##Name);\
+  IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL == m_##Name##_Ptr.get() ) {\
   ss << #NameSpace << "::" << #DType << "::" <<  #Name << " Array Not initialized at beginning of " << getNameOfClass() << " Filter" << std::endl;\
     setErrorCondition(err);\
   } else if (preflight == false) {\
-    m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace##::##DType##::##Name, size, this);\
+    m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
   }
 
 #define PF_CHECK_ARRAY_EXISTS_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size)\
-  IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace##::##DType##::##Name);\
+  IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL == m_##Name##Post##_Ptr.get() ) {\
     ss << #NameSpace << "::" << #DType << "::" <<  #Name << " Array Not initialized at beginning of " << getNameOfClass() << " Filter" << std::endl;\
     setErrorCondition(err);\
   } else if (preflight == false) {\
-    m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace##::##DType##::##Name, size, this);\
+    m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
   }
 
 #define PF_MAKE_SURE_ARRAY_EXISTS(dc, NameSpace, DType, Name, ss, ArrayType, size)\
-  IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace##::##DType##::##Name);\
+  IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL ==  m_##Name##_Ptr.get() ) {\
     ArrayType::Pointer p = ArrayType::CreateArray((size));\
-    dc->add##DType(NameSpace##::##DType##::##Name, p);\
+    dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name = p->GetPointer(0);\
   }
 
 #define PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ArrayType, size)\
-  IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace##::##DType##::##Name);\
+  IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL ==  m_##Name##Post##_Ptr.get() ) {\
     ArrayType::Pointer p = ArrayType::CreateArray((size));\
-    dc->add##DType(NameSpace##::##DType##::##Name, p);\
+    dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name##Post = p->GetPointer(0);\
   }
 /**

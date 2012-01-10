@@ -526,7 +526,7 @@ void  PlacePrecipitates::place_precipitates()
     }
 
     m->resizeFieldDataArrays(currentnumgrains+1);
-    m->m_Grains[currentnumgrains] = Field::New();
+    //FIXME: Initialize the grain with default data
     packGrains->generate_grain(currentnumgrains, phase, Seed);
     precipboundaryfraction = m->pptFractions[phase];
     random = rg.genrand_res53();

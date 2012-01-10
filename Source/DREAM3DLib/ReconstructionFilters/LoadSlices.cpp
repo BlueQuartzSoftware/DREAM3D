@@ -354,10 +354,12 @@ void LoadSlices::initialize(size_t nX, size_t nY, size_t nZ,
   int numgrains = 100;
   size_t oldSize = 0;
   m->resizeFieldDataArrays(numgrains + 1);
+
   for(size_t g = oldSize; g < m->getTotalFields(); ++g)
   {
-    m->m_Grains[g] = Field::New();
+    //FIXME: This needs to have some default data set into all the arrays
   }
+
 
 #if 1
   /* ********** This is the proposed way to add arrays to the DataContainer */

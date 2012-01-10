@@ -87,7 +87,6 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Field.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SMTempFile.hpp"
