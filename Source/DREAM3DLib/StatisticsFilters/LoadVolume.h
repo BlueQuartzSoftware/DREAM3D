@@ -65,12 +65,12 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
   
     virtual void preflight();
 
-	/**
-  * @brief Reimplemented from @see AbstractFilter class
-  */
-	virtual void execute();
+	  /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+	  virtual void execute();
 
-	void initializeAttributes();
+	  void initializeAttributes();
     void initializeGrains();
 
   protected:

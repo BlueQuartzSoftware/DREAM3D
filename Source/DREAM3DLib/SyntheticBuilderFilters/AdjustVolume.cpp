@@ -39,6 +39,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 
 
@@ -51,7 +52,9 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AdjustVolume::AdjustVolume()
+AdjustVolume::AdjustVolume() :
+m_GrainIds(NULL),
+m_EquivalentDiameters(NULL)
 {
 }
 
@@ -65,27 +68,32 @@ AdjustVolume::~AdjustVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolume::preflight()
+void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of AdjustVolume Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::EquivalentDiameters);
-  if(d.get() == NULL)
-  {
-	  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
-	  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, p);
-  }
+  DataContainer* m = getDataContainer();
+
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields);
+
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
+
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AdjustVolume::preflight()
+{
+ dataCheck(true, 1, 1, 1);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -104,9 +112,10 @@ void AdjustVolume::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
 
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
+  // Check to make sure we have all of our data arrays available or make them available.
+  dataCheck(false, totalPoints, totalFields, 1);
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -155,7 +164,7 @@ void AdjustVolume::execute()
   for(int i=0;i<totalPoints;i++)
   {
     reassigned[i] = 0;
-    gsizes[grain_indicies[i]]++;
+    gsizes[m_GrainIds[i]]++;
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
@@ -178,7 +187,7 @@ void AdjustVolume::execute()
     nucleus = 0;
     count = 0;
     affectedcount = 0;
-    while(grain_indicies[nucleus] != selectedgrain)
+    while(m_GrainIds[nucleus] != selectedgrain)
     {
       nucleus++;
       if(nucleus >= totalPoints) selectedgrain++, nucleus = 0;
@@ -201,27 +210,27 @@ void AdjustVolume::execute()
         if(j == 4 && y == (dims[1]-1)) good = 0;
         if(j == 2 && x == 0) good = 0;
         if(j == 3 && x == (dims[0]-1)) good = 0;
-        if(good == 1 && grain_indicies[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
+        if(good == 1 && m_GrainIds[neighpoint] == selectedgrain && reassigned[neighpoint] == 0)
         {
 	        voxellist[count] = neighpoint;
 	        reassigned[neighpoint] = -1;
 	        count++;
 	        if(count >= voxellist.size()) voxellist.resize(voxellist.size()+vListSize,-1);
         }
-        if(good == 1 && grain_indicies[neighpoint] != selectedgrain && grain_indicies[index] == selectedgrain)
+        if(good == 1 && m_GrainIds[neighpoint] != selectedgrain && m_GrainIds[index] == selectedgrain)
         {
 	        if(growth == 1 && reassigned[neighpoint] <= 0)
 	        {
-	          reassigned[neighpoint] = grain_indicies[neighpoint];
-	          grain_indicies[neighpoint] = grain_indicies[index];
+	          reassigned[neighpoint] = m_GrainIds[neighpoint];
+	          m_GrainIds[neighpoint] = m_GrainIds[index];
 	          affectedvoxellist[affectedcount] = neighpoint;
 	          affectedcount++;
 	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
 	        }
 	        if(growth == -1 && reassigned[neighpoint] <= 0)
 	        {
-	          reassigned[index] = grain_indicies[index];
-	          grain_indicies[index] = grain_indicies[neighpoint];
+	          reassigned[index] = m_GrainIds[index];
+	          m_GrainIds[index] = m_GrainIds[neighpoint];
 	          affectedvoxellist[affectedcount] = index;
 	          affectedcount++;
 	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
@@ -234,7 +243,7 @@ void AdjustVolume::execute()
       index = affectedvoxellist[i];
       if(reassigned[index] > 0)
       {
-        gsizes[grain_indicies[index]]++;
+        gsizes[m_GrainIds[index]]++;
         gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
       }
     }
@@ -264,9 +273,9 @@ void AdjustVolume::execute()
         index = affectedvoxellist[i];
         if(reassigned[index] > 0)
         {
-          gsizes[grain_indicies[index]] = gsizes[grain_indicies[index]]-1;
-          grain_indicies[index] = reassigned[index];
-          gsizes[grain_indicies[index]]++;
+          gsizes[m_GrainIds[index]] = gsizes[m_GrainIds[index]]-1;
+          m_GrainIds[index] = reassigned[index];
+          gsizes[m_GrainIds[index]]++;
         }
       }
       for(size_t i=1;i<m->m_Grains.size();i++)
@@ -289,7 +298,7 @@ void AdjustVolume::execute()
   }
   for(int i=0;i<totalPoints;i++)
   {
-    grain_indicies[i] = newnames[grain_indicies[i]];
+    m_GrainIds[i] = newnames[m_GrainIds[i]];
   }
 
   // If there is an error set this to something negative and also set a message

@@ -76,8 +76,14 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     AdjustVolume();
 
   private:
-    std::vector<int> gsizes;
+    int32_t* m_GrainIds;
+    float*   m_EquivalentDiameters;
 
+    std::vector<int> gsizes;
+  
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    
     AdjustVolume(const AdjustVolume&); // Copy Constructor Not Implemented
     void operator=(const AdjustVolume&); // Operator '=' Not Implemented
 };

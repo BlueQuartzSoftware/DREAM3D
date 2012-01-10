@@ -111,7 +111,7 @@ namespace smooth
         float a = distance(*p[0], *p[1]);
         float b = distance(*p[1], *p[2]);
         float c = distance(*p[2], *p[0]);
-        float s = 0.5 * (a + b + c);
+        float s = 0.5f * (a + b + c);
         float r = area / s;
         float R = a * b * c / 4 / area;
         return R / r;

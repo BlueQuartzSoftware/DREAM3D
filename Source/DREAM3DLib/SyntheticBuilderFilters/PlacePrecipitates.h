@@ -121,9 +121,9 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
     DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
     
-    int32_t* m_Phases;
+  
     
-    void dataCheck(bool preflight, size_t size);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     PlacePrecipitates(const PlacePrecipitates&); // Copy Constructor Not Implemented
     void operator=(const PlacePrecipitates&); // Operator '=' Not Implemented

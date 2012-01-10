@@ -12,26 +12,27 @@
 SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/DataContainerMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/Field.h
   ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/Field.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/NeighborList.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PreFlightArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
 )
 
 SET (DREAM3DLib_Common_SRCS
