@@ -147,7 +147,7 @@ PackGrainsGen2::PackGrainsGen2() :
 m_GrainIds(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
-m_Radii(NULL),
+m_AxisLengths(NULL),
 m_Volumes(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
@@ -695,9 +695,9 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
   if(shapeclass == DREAM3D::SyntheticBuilder::EllipsoidShape) omega3f = 1;
   m_Volumes[gnum] = vol;
   m_EquivalentDiameters[gnum] = diam;
-  m_Radii[3*gnum] = r1;
-  m_Radii[3*gnum+1] = r2;
-  m_Radii[3*gnum+2] = r3;
+  m_AxisLengths[3*gnum] = r1;
+  m_AxisLengths[3*gnum+1] = r2;
+  m_AxisLengths[3*gnum+2] = r3;
   m_AxisEulerAngles[3*gnum] = phi1;
   m_AxisEulerAngles[3*gnum+1] = PHI;
   m_AxisEulerAngles[3*gnum+2] = phi2;
@@ -1254,8 +1254,8 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   float xp, yp, zp;
   float x, y, z;
   float volcur = m_Volumes[gnum];
-  float bovera = m_Radii[3*gnum+1];
-  float covera = m_Radii[3*gnum+2];
+  float bovera = m_AxisLengths[3*gnum+1];
+  float covera = m_AxisLengths[3*gnum+2];
   float omega3 = m_Omega3s[gnum];
   float radcur1 = 1;
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[gnum]];
@@ -1384,8 +1384,8 @@ void PackGrainsGen2::assign_voxels()
   for (size_t i = 1; i < m->m_Grains.size(); i++)
   {
     float volcur = m_Volumes[i];
-    float bovera = m_Radii[3*i+1];
-    float covera = m_Radii[3*i+2];
+    float bovera = m_AxisLengths[3*i+1];
+    float covera = m_AxisLengths[3*i+2];
     float omega3 = m_Omega3s[i];
 	xc = m_Centroids[3*i];
 	yc = m_Centroids[3*i+1];
@@ -1577,8 +1577,8 @@ void PackGrainsGen2::assign_gaps()
 	  for (size_t i = 1; i < m->m_Grains.size(); i++)
 	  {
 		float volcur = m_Volumes[i];
-		float bovera = m_Radii[3*i+1];
-		float covera = m_Radii[3*i+2];
+		float bovera = m_AxisLengths[3*i+1];
+		float covera = m_AxisLengths[3*i+2];
 		float omega3 = m_Omega3s[i];
 		xc = m_Centroids[3*i];
 		yc = m_Centroids[3*i+1];

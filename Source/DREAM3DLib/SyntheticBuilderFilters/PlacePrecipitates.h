@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int32_t* m_GrainIds;
     float* m_AxisEulerAngles;
     float* m_Centroids;
-    float* m_Radii;
+    float* m_AxisLengths;
     float* m_Volumes;
     float* m_Omega3s;
     float* m_EquivalentDiameters;
