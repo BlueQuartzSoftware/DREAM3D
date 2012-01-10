@@ -48,7 +48,6 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/Field.h"
 #include "Reconstruction/Reconstruction.h"
 
 

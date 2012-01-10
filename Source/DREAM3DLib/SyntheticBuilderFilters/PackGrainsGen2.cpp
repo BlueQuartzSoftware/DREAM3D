@@ -246,6 +246,10 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  TEST_MACRO(DREAM3D, VoxelData, GrainIds);
+
+
+
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, Int32ArrayType, voxels);
   PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType, voxels);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, EulerAngles, ss, FloatArrayType, voxels * 3);
@@ -400,7 +404,7 @@ void PackGrainsGen2::execute()
   int gid = 1;
   float currentvol = 0.0;
   m->resizeFieldDataArrays(2);
-  m->m_Grains[1] = Field::New();
+//FIXME: Initialize the Grain with some sort of default data
   float factor = 1.0;
   float iter = 0;
   while (currentvol < (factor * totalvol))
@@ -426,7 +430,7 @@ void PackGrainsGen2::execute()
        currentvol = currentvol + m_Volumes[gid];
        gid++;
        m->resizeFieldDataArrays(gid + 1);
-       m->m_Grains[gid] = Field::New();
+       //FIXME: Initialize the Grain with some sort of default data
        iter = 0;
     }
   }
@@ -434,11 +438,12 @@ void PackGrainsGen2::execute()
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-    xgrains = int(powf((m->getTotalFields() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
-    ygrains = int(xgrains * (sizey / sizex) + 1);
-    zgrains = int(xgrains * (sizez / sizex) + 1);
-    factor = 0.25f * (1.0f - (float((xgrains - 2) * (ygrains - 2) * (zgrains - 2)) / float(xgrains * ygrains * zgrains)));
-    while (currentvol < ((1 + factor) * totalvol))
+
+    xgrains = int(powf((m->getTotalFields()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
+    ygrains = int(xgrains*(sizey/sizex)+1);
+    zgrains = int(xgrains*(sizez/sizex)+1);
+    factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
+    while (currentvol < ((1+factor) * totalvol))
     {
       iter++;
       Seed++;
@@ -461,9 +466,10 @@ void PackGrainsGen2::execute()
         currentvol = currentvol + m_Volumes[gid];
         gid++;
         m->resizeFieldDataArrays(gid + 1);
-        m->m_Grains[gid] = Field::New();
+        //FIXME: Initialize the new grain with default data
         iter = 0;
       }
+
     }
   }
   // initialize the sim and goal neighbor distribution for the primary phases
@@ -485,7 +491,9 @@ void PackGrainsGen2::execute()
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
-  size_t numgrains = m->getTotalFields();
+
+  int numgrains = m->getTotalFields();
+
   columnlist.resize(numgrains);
   rowlist.resize(numgrains);
   planelist.resize(numgrains);
@@ -1581,7 +1589,7 @@ void PackGrainsGen2::assign_voxels()
     newnames[i] = 0;
     if (gsizes[i] > 0)
     {
-      m->m_Grains[goodcount] = m->m_Grains[i];
+//      m->m_Grains[goodcount] = m->m_Grains[i];
       newnames[i] = goodcount;
       goodcount++;
     }
@@ -1853,7 +1861,7 @@ void PackGrainsGen2::cleanup_grains()
 			{
 				good = 1;
 				neighbor = index + neighpoints[j];
-				if (m_periodic_boundaries == false)
+				if (m_PeriodicBoundaries == false)
 				{
 					if (j == 0 && plane == 0) good = 0;
 					if (j == 5 && plane == (zp - 1)) good = 0;
@@ -1867,7 +1875,7 @@ void PackGrainsGen2::cleanup_grains()
 						checked[neighbor] = true;
 					}
 				}
-				else if (m_periodic_boundaries == true)
+				else if (m_PeriodicBoundaries == true)
 				{
 					if (j == 0 && plane == 0) neighbor = neighbor + (xp*yp*zp);
 					if (j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp*yp*zp);
@@ -1933,7 +1941,7 @@ void PackGrainsGen2::cleanup_grains()
      newnames[i] = 0;
      if(gsizes[i] > 0)
      {
-        m->m_Grains[goodcount] = m->m_Grains[i];
+//        m->m_Grains[goodcount] = m->m_Grains[i];
         newnames[i] = goodcount;
         goodcount++;
      }

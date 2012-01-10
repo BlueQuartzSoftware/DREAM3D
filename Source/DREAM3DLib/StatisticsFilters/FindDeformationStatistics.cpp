@@ -743,7 +743,8 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
   fprintf(vtkFile,  "POINTS %ld float\n", m->getTotalFields()-1);
 
-  std::vector<Field::Pointer>::size_type size = m->getTotalFields();
+
+  size_t size = m->getTotalFields();
 
   for(size_t i=1;i<size;i++)
   {

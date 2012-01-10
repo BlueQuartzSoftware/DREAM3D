@@ -272,8 +272,9 @@ void SegmentGrains::execute()
         m->resizeFieldDataArrays(m->getTotalFields() + 100);
         for (size_t g = oldSize; g < m->getTotalFields(); ++g)
         {
-          m->m_Grains[g] = Field::New();
-        }
+//FIXME::THis needs to set some default data
+          }
+
       }
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
