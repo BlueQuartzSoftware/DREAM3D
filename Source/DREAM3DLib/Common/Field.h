@@ -81,49 +81,6 @@ class DREAM3DLib_EXPORT Field
      */
 
 
-/*    bool active;
-    int numvoxels;
-    int numneighbors;
-//    int newfieldname;
-    uint8_t surfacefield;
-    bool outsideboundbox;
-//    int twinnewnumber;
-//    int colonynewnumber;
-    int slipsystem;
-    int phase;
-    float centroidx;
-    float centroidy;
-    float centroidz;
-    float aspectratio1;
-    float aspectratio2;
-    float omega3;
-    float averagemisorientation;
-    float kernelmisorientation;
-    float red;
-    float green;
-    float blue;
-    float IPF[3];
-    float schmidfactor;
-    float euler1;
-    float euler2;
-    float euler3;
-    float axiseuler1;
-    float axiseuler2;
-    float axiseuler3;
-    float volume;
-    float equivdiameter;
-    float radius1;
-    float radius2;
-    float radius3;
-//    float packquality;
-    float avg_quat[5];
-#if CORRUPT_TEST
-    unsigned long long int* test5;
-#endif
-    int neighbordistfunc[3];
-#if CORRUPT_TEST
-    unsigned long long int* test6;
-#endif*/
 
   protected:
     Field();

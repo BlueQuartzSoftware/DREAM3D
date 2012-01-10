@@ -89,6 +89,16 @@ class DREAM3DLib_EXPORT WriteH5StatsFile : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
+	int32_t* m_NumNeighbors;
+	int32_t* m_Phases;
+	int32_t* m_Neighborhoods;
+	bool* m_Active;
+	bool* m_UnbiasedFields;
+	float* m_EquivalentDiameters;
+	float* m_AspectRatios;
+	float* m_Schmids;
+	float* m_Omega3s;
+
     WriteH5StatsFile(const WriteH5StatsFile&); // Copy Constructor Not Implemented
     void operator=(const WriteH5StatsFile&); // Operator '=' Not Implemented
 };

@@ -344,98 +344,28 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int getNumEnsembleArrays();
 
     /* ****************** END Map Based Methods *******************************/
-#if OLD_WAY
-    void setDimensions(size_t dims[3]) {
-       xpoints = dims[0];
-       ypoints = dims[1];
-       zpoints = dims[2];
-       totalpoints = (int64_t)xpoints * (int64_t)ypoints * (int64_t)zpoints;
-    }
-    void setDimensions(size_t d0, size_t d1, size_t d2)
-    {
-      xpoints = d0;
-      ypoints = d1;
-      zpoints = d2;
-      totalpoints = xpoints * ypoints * zpoints;
-    }
-    void getDimensions(size_t &d0, size_t &d1, size_t &d2)
-    {
-      d0 = xpoints;
-      d1 = ypoints;
-      d2 = zpoints;
-    }
-    void getDimensions(size_t dims[3])
-    {
-      dims[0] = xpoints;
-      dims[1] = ypoints;
-      dims[2] = zpoints;
-    }
-#else
     DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions);
 
     size_t getXPoints() { return m_Dimensions[0];}
     size_t getYPoints() { return m_Dimensions[1];}
     size_t getZPoints() { return m_Dimensions[2];}
-#endif
 
-#if OLD_WAY
-    int64_t totalPoints() { return (int64_t)xpoints * (int64_t)ypoints * (int64_t)zpoints; }
-#else
     int64_t totalPoints() { return (int64_t)m_Dimensions[0] * (int64_t)m_Dimensions[1] * (int64_t)m_Dimensions[2]; }
 
-#endif
+	DREAM3D_INSTANCE_PROPERTY(int, TotalFields);
 
 // -----------------------------------------------------------------------------
 //  Resolution Methods
 // -----------------------------------------------------------------------------
 
-#if OLD_WAY
-    void setResolution(float x, float y, float z)
-    {
-      resx = x; resy = y; resz = z;
-    }
-    void setResolution(float resolution[3])
-    {
-      resx = resolution[0];
-      resy = resolution[1];
-      resz = resolution[2];
-    }
-    void getResolution(float res[3])
-    {
-      res[0] = resx;
-      res[1] = resy;
-      res[2] = resz;
-    }
-#else
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
-    float getXRes() { return m_Resolution[0];}
+
+	float getXRes() { return m_Resolution[0];}
     float getYRes() { return m_Resolution[1];}
     float getZRes() { return m_Resolution[2];}
-#endif
 
 
-#if OLD_WAY
-    void setOrigin(float orig[3])
-    {
-       origin[0] = orig[0];
-       origin[1] = orig[1];
-       origin[2] = orig[2];
-    }
-#else
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
-#endif
-
-#if OLD_WAY
-    // Volume Dimensional Information
-    float resx;
-    float resy;
-    float resz;
-    int64_t xpoints;
-    int64_t ypoints;
-    int64_t zpoints;
-
-    float origin[3];
-#endif
 
     // Field Data Pointer Array
     std::vector<Field::Pointer> m_Grains;
