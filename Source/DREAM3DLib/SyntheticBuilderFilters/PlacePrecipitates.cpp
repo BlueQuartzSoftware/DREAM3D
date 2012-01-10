@@ -79,7 +79,7 @@ m_PhasesC(NULL),
 m_SurfaceVoxels(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
-m_Radii(NULL),
+m_AxisLengths(NULL),
 m_Volumes(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
@@ -226,8 +226,8 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   float xp, yp, zp;
   float x, y, z;
   float volcur = m_Volumes[gnum];
-  float bovera = m_Radii[3*gnum+1];
-  float covera = m_Radii[3*gnum+2];
+  float bovera = m_AxisLengths[3*gnum+1];
+  float covera = m_AxisLengths[3*gnum+2];
   float omega3 = m_Omega3s[gnum];
   float radcur1, radcur2, radcur3;
   float coatingradcur1, coatingradcur2, coatingradcur3;

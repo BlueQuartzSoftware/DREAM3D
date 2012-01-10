@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
+    bool* m_Active;
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented
