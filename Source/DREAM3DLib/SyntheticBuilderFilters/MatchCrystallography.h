@@ -99,8 +99,25 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void measure_misorientations();
 
   private:
-	float mdfchange;
-	float odfchange;
+    // Cell Data
+    int32_t* m_GrainIds;
+    float*   m_EulerAnglesC;
+    
+    // Field Data
+    int8_t* m_SurfaceFields;
+    int32_t* m_PhasesF;
+    int32_t* m_NumCells;
+    float* m_EulerAnglesF;
+    float* m_AvgQuats;
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_SharedSurfaceAreaList;
+
+    //Ensemble Data
+    float* m_TotalSurfaceArea;
+
+    // All other private instance variables
+	  float mdfchange;
+	  float odfchange;
 
     std::vector<float> unbiasedvol;
     std::vector<Ebsd::CrystalStructure> crystruct;
@@ -110,27 +127,14 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<SharedFloatArray> actualmdf;
     std::vector<SharedFloatArray> simmdf;
 
-	std::vector<std::vector<float> > misorientationlists;
+	  std::vector<std::vector<float> > misorientationlists;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
 
-    int32_t* m_GrainIds;
-	int32_t* m_NumCells;
-    float* m_Quats;
-    float* m_EulerAnglesC;
-    float* m_EulerAnglesF;
-    float* m_AvgQuats;
-	bool* m_SurfaceFields;
-    int32_t* m_Phases;
-	float* m_TotalSurfaceArea;
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
-
-
-
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
     void operator=(const MatchCrystallography&); // Operator '=' Not Implemented

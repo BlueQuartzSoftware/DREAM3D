@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
@@ -51,24 +52,6 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 
-
-
-#define PF_CHECK_ARRAY_EXISTS(var, dc, DType, name, ss, err, ptrType, ArrayType)\
-  IDataArray::Pointer var##ptr = dc->get##DType(name);\
-  if (NULL == var##ptr.get() ) {\
-    ss << name << " Array Not initialized at beginning of " << getNameOfClass() << " Filter" << std::endl;\
-    setErrorCondition(err);\
-  } else if (preflight == false) {\
-    var = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(name, size, this);\
-  }
-
-#define PF_MAKE_SURE_ARRAY_EXISTS(var, dc, DType, name, ss, ArrayType, size)\
-  IDataArray::Pointer var##ptr = dc->get##DType(name);\
-  if (NULL == var##ptr.get() ) {\
-    ArrayType::Pointer p = ArrayType::CreateArray((size));\
-    dc->add##DType(name, p);\
-    var = p->GetPointer(0);\
-  }
 
 // -----------------------------------------------------------------------------
 //
@@ -88,7 +71,6 @@ m_PhasesF(NULL),
 m_Neighborhoods(NULL),
 m_Neighbors(NULL),
 m_NumCells(NULL)
-
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -109,27 +91,30 @@ PlacePrecipitates::~PlacePrecipitates()
 {
 }
 
-void PlacePrecipitates::dataCheck(bool preflight, size_t size)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
+  DataContainer* m = getDataContainer();
 
-  PF_CHECK_ARRAY_EXISTS(m_GrainIds, m, VoxelData, DREAM3D::VoxelData::GrainIds, ss, -300, int32_t, Int32ArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_SurfaceVoxels, m, VoxelData, DREAM3D::VoxelData::SurfaceVoxels, ss, -301, int8_t, Int8ArrayType);
-  PF_MAKE_SURE_ARRAY_EXISTS(m_PhasesC, m, VoxelData, DREAM3D::VoxelData::Phases, ss, Int32ArrayType, size);
-  PF_MAKE_SURE_ARRAY_EXISTS(m_Neighbors, m, VoxelData, DREAM3D::VoxelData::Neighbors, ss, Int32ArrayType, size);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType,  voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, Neighbors, ss, Int32ArrayType, voxels);
 
-  PF_CHECK_ARRAY_EXISTS(m_PhasesF, m, FieldData, DREAM3D::FieldData::Phases, ss, -303,  int32_t, Int32ArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_Neighborhoods, m, FieldData, DREAM3D::FieldData::Neighborhoods, ss, -304,  int32_t, Int32ArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_EquivalentDiameters, m, FieldData, DREAM3D::FieldData::EquivalentDiameters, ss, -305, float, FloatArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_Omega3s, m, FieldData, DREAM3D::FieldData::Omega3s, ss, -306, float, FloatArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_AxisEulerAngles, m, FieldData, DREAM3D::FieldData::AxisEulerAngles, ss, -307, float, FloatArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_AxisLengths, m, FieldData, DREAM3D::FieldData::AxisLengths, ss, -308, float, FloatArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_Volumes, m, FieldData, DREAM3D::FieldData::Volumes, ss, -309, float, FloatArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_Centroids, m, FieldData, DREAM3D::FieldData::Centroids, ss, -310, float, FloatArrayType);
-  PF_CHECK_ARRAY_EXISTS(m_Active, m, FieldData, DREAM3D::FieldData::Active, ss, -311, bool, BoolArrayType);
-  PF_MAKE_SURE_ARRAY_EXISTS(m_NumCells, m, FieldData, DREAM3D::FieldData::NumCells, ss, Int32ArrayType, size);
+  PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, -304,  int32_t, Int32ArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, -308, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, -311, bool, BoolArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, Int32ArrayType, fields);
   
 
   setErrorCondition(err);
@@ -141,7 +126,7 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t size)
 // -----------------------------------------------------------------------------
 void PlacePrecipitates::preflight()
 {
-  dataCheck(true, 1);
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -163,24 +148,8 @@ void PlacePrecipitates::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if(NULL == m_GrainIds)
-  {
-    return;
-  }
-
-  m_PhasesC = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if(NULL == m_PhasesC)
-  {
-    return;
-  }
-  m_SurfaceVoxels = m->getVoxelDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
-  if(NULL == m_SurfaceVoxels)
-  {
-    return;
-  }
-
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size() );
 
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();
@@ -219,9 +188,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   float dist;
   float inside = -1;
   float coatinginside = -1;
-  int index;
-  size_t column, row, plane;
-  size_t xmin, xmax, ymin, ymax, zmin, zmax;
+  DimType index;
+  DimType column, row, plane;
+  DimType xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
   float xp, yp, zp;
   float x, y, z;
@@ -297,11 +266,11 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
     if(zmin < 0) zmin = 0;
     if(zmax > dims[2]-1) zmax = dims[2]-1;
   }
-  for(size_t iter1 = xmin; iter1 < xmax+1; iter1++)
+  for(DimType iter1 = xmin; iter1 < xmax+1; iter1++)
   {
-    for(size_t iter2 = ymin; iter2 < ymax+1; iter2++)
+    for(DimType iter2 = ymin; iter2 < ymax+1; iter2++)
     {
-		for(size_t iter3 = zmin; iter3 < zmax+1; iter3++)
+		for(DimType iter3 = zmin; iter3 < zmax+1; iter3++)
 		{
 		  column = iter1;
 		  row = iter2;
@@ -388,8 +357,8 @@ void  PlacePrecipitates::fillin_precipitates()
   float x, y, z;
   gsizes.resize(m->getTotalFields(), 0);
   neighbors.resize(m->totalPoints(), 0);
-  int neighpoint;
-  int neighpoints[6];
+  DimType neighpoint;
+  DimType neighpoints[6];
   std::vector<int> n(m->getTotalFields());
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
@@ -410,9 +379,9 @@ void  PlacePrecipitates::fillin_precipitates()
         {
           n[c] = 0;
         }
-        x = i % dims[0];
-        y = (i / dims[0]) % dims[1];
-        z = i / (dims[0] * dims[1]);
+        x = static_cast<float>(i % dims[0]);
+        y = static_cast<float>((i / dims[0]) % dims[1]);
+        z = static_cast<float>(i / (dims[0] * dims[1]));
         for (int j = 0; j < 6; j++)
         {
           good = 1;

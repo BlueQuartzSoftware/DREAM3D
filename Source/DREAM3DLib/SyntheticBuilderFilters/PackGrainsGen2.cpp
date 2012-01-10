@@ -38,6 +38,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -53,7 +54,7 @@
 
 
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\
@@ -187,46 +188,39 @@ PackGrainsGen2::~PackGrainsGen2()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackGrainsGen2::preflight()
+void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-  }
-  d = m->getFieldData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::Phases, p);
-  }
+  DataContainer* m = getDataContainer();
 
-  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Active, p);
-  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Phases, q);
-  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Neighborhoods, r);
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Centroids, s);
-  PFFloatArrayType::Pointer t = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Volumes, t);
-  PFFloatArrayType::Pointer u = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
-  PFFloatArrayType::Pointer v = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
-  PFFloatArrayType::Pointer w = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Omega3s, w);
-  PFFloatArrayType::Pointer x = PFFloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, EulerAngles, ss, FloatArrayType, voxels * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, Int8ArrayType, voxels);
+
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, BoolArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, FloatArrayType, fields * 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, FloatArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, FloatArrayType, fields * 3); 
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, FloatArrayType, fields * 3);  
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, FloatArrayType, fields);  
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields);  
+
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackGrainsGen2::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -273,6 +267,9 @@ void PackGrainsGen2::execute()
     return;
   }
 
+  int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
   initializeAttributes();
 
   size_t udims[3] = {0,0,0};
@@ -728,16 +725,14 @@ void PackGrainsGen2::initializeAttributes()
   sizez = dims[2] * m->getZRes();
   totalvol = sizex*sizey*sizez;
 
-
-  m_GrainIds = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
-  if (m_GrainIds == NULL) { return; }
-  m_PhasesC = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
-  if (m_PhasesC == NULL) { return; }
-
 	for(int i=0;i<totalPoints;i++)
 	{
 		m_GrainIds[i] = 0;
 		m_PhasesC[i] = 0;
+		m_EulerAngles[3*i] = -1.0f;
+		m_EulerAngles[3*i + 1] = -1.0f;
+		m_EulerAngles[3*i + 2] = -1.0f;
+		m_SurfaceVoxels[i] = 0;
 	}
 }
 
@@ -811,7 +806,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 
   for (int i = 0; i < size; i++)
   {
-      phase = phases[i];
+      phase = m_PhasesC[i];
     m->crystruct[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
@@ -892,7 +887,7 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
   for(size_t i = 0; i< count ;i++)
   {
     totaldensity = 0.0;
-      phase = phases[i];
+      phase = m_PhasesC[i];
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
     if (err < 0)
     {
@@ -1728,7 +1723,7 @@ void PackGrainsGen2::cleanup_grains()
     static_cast<DimType>(udims[2]),
   };
 
-  int neighpoints[6];
+  DimType neighpoints[6];
   DimType xp = dims[0];
   DimType yp = dims[1];
   DimType zp = dims[2];
@@ -1746,8 +1741,8 @@ void PackGrainsGen2::cleanup_grains()
   size_t count;
   int touchessurface = 0;
   int good;
-  int neighbor;
-  int column, row, plane;
+  DimType neighbor;
+  DimType column, row, plane;
   int index;
   float minsize = 0;
   gsizes.resize(m->getTotalFields());
@@ -1871,7 +1866,6 @@ void PackGrainsGen2::cleanup_grains()
   }
   for (int i = 0; i < totpoints; i++)
   {
-
 	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
   m->m_Grains.resize(goodcount);

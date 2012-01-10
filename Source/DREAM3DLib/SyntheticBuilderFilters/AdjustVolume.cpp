@@ -39,6 +39,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 
 
@@ -67,27 +68,32 @@ AdjustVolume::~AdjustVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolume::preflight()
+void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of AdjustVolume Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::EquivalentDiameters);
-  if(d.get() == NULL)
-  {
-	  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
-	  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, p);
-  }
+  DataContainer* m = getDataContainer();
+
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields);
+
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
+
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AdjustVolume::preflight()
+{
+ dataCheck(true, 1, 1, 1);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -106,9 +112,10 @@ void AdjustVolume::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
 
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
+  // Check to make sure we have all of our data arrays available or make them available.
+  dataCheck(false, totalPoints, totalFields, 1);
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

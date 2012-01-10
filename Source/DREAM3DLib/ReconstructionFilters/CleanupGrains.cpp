@@ -313,9 +313,9 @@ void CleanupGrains::assign_badpoints()
         {
           n[c] = 0;
         }
-        x = i % dims[0];
-        y = (i / dims[0]) % dims[1];
-        z = i / (dims[0] * dims[1]);
+        x = static_cast<float>(i % dims[0]);
+        y = static_cast<float>((i / dims[0]) % dims[1]);
+        z = static_cast<float>(i / (dims[0] * dims[1]));
         for (int j = 0; j < 6; j++)
         {
           good = 1;
