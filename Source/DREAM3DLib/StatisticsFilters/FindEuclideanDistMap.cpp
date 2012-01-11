@@ -89,12 +89,12 @@ class FindEuclideanMap : public AbstractFilter
       double resy = m->getYRes();
       double resz = m->getZRes();
 
-      neighbors[0] = -m->getXPoints() * m->getYPoints();
-      neighbors[1] = -m->getXPoints();
+      neighbors[0] = -xpoints * ypoints;
+      neighbors[1] = -xpoints;
       neighbors[2] = -1;
       neighbors[3] = 1;
-      neighbors[4] = m->getXPoints();
-      neighbors[5] = m->getXPoints() * m->getYPoints();
+      neighbors[4] = xpoints;
+      neighbors[5] = xpoints * ypoints;
       int* voxel_NearestNeighbor = new int[totalPoints];
       double* voxel_NearestNeighborDistance = new double[totalPoints];
       nearestneighbordistance = 0;
@@ -287,7 +287,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
     static_cast<DimType>(udims[2]),
   };
 
-  int neighbors[6];
+  DimType neighbors[6];
   neighbors[0] = -dims[0]*dims[1];
   neighbors[1] = -dims[0];
   neighbors[2] = -1;
