@@ -138,7 +138,15 @@ class DataArray : public IDataArray
       }
       this->Array = NULL;
       this->_ownsData = true;
-      size_t newSize = (this->Size > 0 ? this->Size : 1);
+      
+      if (this->Size == 0)
+      {
+        initialize();
+        return 1;
+      }
+
+
+      size_t newSize = this->Size;
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       Array = static_cast<T*>( _mm_malloc (newSize * sizeof(T), 16) );
 #else
@@ -193,9 +201,10 @@ class DataArray : public IDataArray
       {
         _deallocate();
       }
-      this->Array = 0;
+      this->Array = NULL;
       this->Size = 0;
       this->_ownsData = true;
+      this->MaxId = 0;
    //   this->_dims[0] = _nElements;
     }
 
@@ -262,6 +271,7 @@ class DataArray : public IDataArray
      */
     virtual size_t GetNumberOfTuples()
     {
+      if (Size == 0) { return 0; }
       return (this->MaxId + 1)/this->NumberOfComponents;
     }
 
@@ -368,7 +378,7 @@ class DataArray : public IDataArray
       _ownsData(ownsData)
     {
       NumberOfComponents = 1;
-      MaxId = Size - 1;
+      MaxId = (Size > 0) ? Size - 1: Size;
     }
 
     /**
@@ -376,6 +386,10 @@ class DataArray : public IDataArray
      */
     void _deallocate()
     {
+      if (sizeof(T) == 1 && Size > 0) { this->Array[0] = static_cast<T>(0xAB); }
+      if (sizeof(T) == 2 && Size > 0) { this->Array[0] = static_cast<T>(0xABAB); }
+      if (sizeof(T) == 4 && Size > 0) { this->Array[0] = static_cast<T>(0xABABABAB); }
+      if (sizeof(T) == 8 && Size > 0) { this->Array[0] = static_cast<T>(0xABABABABABABABAB); }
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       _mm_free( this->m_buffer );
 #else
