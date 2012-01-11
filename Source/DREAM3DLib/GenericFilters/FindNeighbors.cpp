@@ -75,7 +75,7 @@ void FindNeighbors::preflight()
   std::stringstream ss;
   DataContainer* m = getDataContainer();
   IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
+  if(d.get() == NULL) 
   {
 	  ss << "Graid Ids Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
 	  err = -300;
