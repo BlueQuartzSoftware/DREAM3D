@@ -401,9 +401,10 @@ void PackGrainsGen2::execute()
     }
   }
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
-  int gid = 1;
+  Field field;
+  int gid = 0;
   float currentvol = 0.0;
-  m->resizeFieldDataArrays(2);
+  m->resizeFieldDataArrays(1);
 //FIXME: Initialize the Grain with some sort of default data
   float factor = 1.0;
   float iter = 0;
@@ -420,16 +421,17 @@ void PackGrainsGen2::execute()
         break;
       }
     }
-    generate_grain(gid, phase, Seed);
+    generate_grain(phase, Seed, &field);
     currentsizedisterror = check_sizedisterror(gid, -1000);
     change = (currentsizedisterror) - (oldsizedisterror);
     if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
     {
+	   gid++;
+       m->resizeFieldDataArrays(gid + 1);
        m_Active[gid] = 1;
+	   transfer_attributes(gid, &field);
        oldsizedisterror = currentsizedisterror;
        currentvol = currentvol + m_Volumes[gid];
-       gid++;
-       m->resizeFieldDataArrays(gid + 1);
        //FIXME: Initialize the Grain with some sort of default data
        iter = 0;
     }
@@ -456,12 +458,15 @@ void PackGrainsGen2::execute()
           break;
         }
       }
-      generate_grain(gid, phase, Seed);
+      generate_grain(phase, Seed, &field);
       currentsizedisterror = check_sizedisterror(gid, -1000);
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001f)))
       {
+	    gid++;
+        m->resizeFieldDataArrays(gid + 1);
         m_Active[gid] = 1;
+	    transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
         currentvol = currentvol + m_Volumes[gid];
         gid++;
@@ -698,7 +703,7 @@ void PackGrainsGen2::initialize_packinggrid()
   }
 }
 
-void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
+void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
     DataContainer* m = getDataContainer();
@@ -758,21 +763,36 @@ void PackGrainsGen2::generate_grain(int gnum, int phase, int Seed)
   float omega3f = rg.genrand_beta(mf, s);
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[phase];
   if(shapeclass == DREAM3D::SyntheticBuilder::EllipsoidShape) omega3f = 1;
-  m_Volumes[gnum] = vol;
-  m_EquivalentDiameters[gnum] = diam;
-  m_AxisLengths[3*gnum] = r1;
-  m_AxisLengths[3*gnum+1] = r2;
-  m_AxisLengths[3*gnum+2] = r3;
-  m_AxisEulerAngles[3*gnum] = phi1;
-  m_AxisEulerAngles[3*gnum+1] = PHI;
-  m_AxisEulerAngles[3*gnum+2] = phi2;
-  m_Omega3s[gnum] = omega3f;
-  m_PhasesF[gnum] = phase;
-  m_Neighborhoods[3*gnum] = 0;
-  m_Neighborhoods[3*gnum+1] = 0;
-  m_Neighborhoods[3*gnum+2] = 0;
+  field->m_Volumes = vol;
+  field->m_EquivalentDiameters = diam;
+  field->m_AxisLengths[0] = r1;
+  field->m_AxisLengths[1] = r2;
+  field->m_AxisLengths[2] = r3;
+  field->m_AxisEulerAngles[0] = phi1;
+  field->m_AxisEulerAngles[1] = PHI;
+  field->m_AxisEulerAngles[2] = phi2;
+  field->m_Omega3s = omega3f;
+  field->m_PhasesF = phase;
+  field->m_Neighborhoods[0] = 0;
+  field->m_Neighborhoods[1] = 0;
+  field->m_Neighborhoods[2] = 0;
 }
-
+void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
+{
+  m_Volumes[gnum] = field->m_Volumes;
+  m_EquivalentDiameters[gnum] = field->m_EquivalentDiameters;
+  m_AxisLengths[3*gnum+0] = field->m_AxisLengths[0];
+  m_AxisLengths[3*gnum+1] = field->m_AxisLengths[1];
+  m_AxisLengths[3*gnum+2] = field->m_AxisLengths[2];
+  m_AxisEulerAngles[3*gnum+0] = field->m_AxisEulerAngles[0];
+  m_AxisEulerAngles[3*gnum+1] = field->m_AxisEulerAngles[1];
+  m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
+  m_Omega3s[gnum] = field->m_Omega3s;
+  m_PhasesF[gnum] = field->m_PhasesF;
+  m_Neighborhoods[3*gnum+0] = field->m_Neighborhoods[0];
+  m_Neighborhoods[3*gnum+1] = field->m_Neighborhoods[1];
+  m_Neighborhoods[3*gnum+2] = field->m_Neighborhoods[2];
+}
 void PackGrainsGen2::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
@@ -1650,7 +1670,7 @@ void PackGrainsGen2::assign_gaps()
 
   while (unassignedcount != 0)
   {
-	  unassignedcount = 0;
+ 	  unassignedcount = 0;
 	  timestep = timestep + 50;
 	  for (size_t i = 1; i < m->getTotalFields(); i++)
 	  {
