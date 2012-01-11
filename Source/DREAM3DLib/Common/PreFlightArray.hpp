@@ -186,12 +186,16 @@ class PreFlightArray : public IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t Resize(size_t size)
+    virtual int32_t RawResize(size_t size)
     {
       Size = size;
       return 0;
     }
 
+    virtual int32_t Resize(size_t numTuples)
+    {
+      return RawResize(numTuples * this->NumberOfComponents);
+    }
     /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
      * pointers are entirely possible. No checks are performed to make sure

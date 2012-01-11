@@ -262,7 +262,7 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, FloatArrayType, fields, 1);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, FloatArrayType, fields, 3);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, FloatArrayType, fields, 3);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, FloatArrayType, field, 1s);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, FloatArrayType, fields, 1);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields, 1);
 
 
