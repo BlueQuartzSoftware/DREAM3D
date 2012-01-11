@@ -171,6 +171,13 @@ void MatchCrystallography::preflight()
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(getDataContainer());
   find_neighbors->preflight();
+  if (find_neighbors->getErrorCondition() < 0)
+  {
+    setErrorCondition(find_neighbors->getErrorCondition());
+    setErrorMessage(find_neighbors->getErrorMessage());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -195,6 +202,7 @@ void MatchCrystallography::execute()
     return;
   }
 
+
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
@@ -204,6 +212,7 @@ void MatchCrystallography::execute()
   {
     return;
   }
+
 
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   readODFData(h5reader);

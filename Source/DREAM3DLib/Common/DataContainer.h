@@ -178,8 +178,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumFieldArrays();
 
-    DREAM3D_INSTANCE_PROPERTY(int, TotalFields);
-
+    DREAM3D_INSTANCE_PROPERTY(size_t, TotalFields);
+    
+    void resizeFieldDataArrays(size_t size);
 
     /**
     * @brief Adds/overwrites the data for a named array
@@ -231,15 +232,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
     std::vector<float> phasefraction;
 
-    void resizeFieldDataArrays(size_t size)
-    {
-      for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
-      {
-        IDataArray::Pointer d = (*iter).second;
-        d->Resize(size);
-      }
-      m_TotalFields = size;
-    }
+
 
 
   protected:
