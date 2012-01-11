@@ -126,7 +126,7 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   PtrType* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
   if (iDataArray.get() == NULL) { \
-    iDataArray = DataArrayType::CreateArray(size * NumComp);\
+    iDataArray = DataArrayType::CreateArray(size * numComp);\
     iDataArray->SetNumberOfComponents(numComp);\
     iDataArray->SetName(arrayName);\
     if (NULL == iDataArray.get()) { \
