@@ -73,7 +73,7 @@ void FindNeighbors::preflight()
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
+  DataContainer* m = getDataContainer();
   IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
   if(d.get() == NULL)
   {

@@ -166,6 +166,17 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 // -----------------------------------------------------------------------------
 void MatchCrystallography::preflight()
 {
+  FindNeighbors::Pointer p = FindNeighbors::New();
+  p->setDataContainer(getDataContainer());
+  p->preflight();
+
+  if (p->getErrorCondition() < 0)
+  {
+    setErrorCondition(p->getErrorCondition());
+    setErrorMessage(p->getErrorMessage());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -189,6 +200,18 @@ void MatchCrystallography::execute()
     setErrorMessage(ss.str());
     return;
   }
+
+  FindNeighbors::Pointer p = FindNeighbors::New();
+  p->setDataContainer(getDataContainer());
+  p->setObservers(getObservers());
+  p->execute();
+  if (p->getErrorCondition() < 0)
+  {
+    setErrorCondition(p->getErrorCondition());
+    setErrorMessage(p->getErrorMessage());
+    return;
+  }
+  
 
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   readODFData(h5reader);
