@@ -66,9 +66,9 @@ AbstractFilter(),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_EulerAngles(NULL),
-m_Phases(NULL),
-m_NumNeighbors(NULL),
 m_NumCells(NULL),
+m_NumNeighbors(NULL),
+m_Phases(NULL),
 m_NeighborList(NULL)
 {
   m_HexOps = HexagonalOps::New();

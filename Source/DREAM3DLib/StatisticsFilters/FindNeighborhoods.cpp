@@ -51,8 +51,8 @@ m_NumCells(NULL),
 m_Centroids(NULL),
 m_Volumes(NULL),
 m_EquivalentDiameters(NULL),
-m_Active(NULL),
-m_Neighborhoods(NULL)
+m_Neighborhoods(NULL),
+m_Active(NULL)
 {
   graincenters = NULL;
   INIT_DataArray(m_GrainCenters,float);

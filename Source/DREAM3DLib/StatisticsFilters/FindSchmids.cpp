@@ -43,14 +43,15 @@
 //
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids() :
-m_Schmids(NULL),
-m_AvgQuats(NULL),
-m_Active(NULL),
-m_SlipSystems(NULL),
 AbstractFilter(),
 m_XLoading(1.0f),
 m_YLoading(1.0f),
-m_ZLoading(1.0f)
+m_ZLoading(1.0f),
+m_Schmids(NULL),
+m_AvgQuats(NULL),
+m_Active(NULL),
+m_SlipSystems(NULL)
+
 
 {
   setupFilterOptions();

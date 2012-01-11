@@ -45,6 +45,12 @@
 #include "DREAM3DLib/Common/PreFlightArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+class TestFilter : public AbstractFilter
+{
+  public:
+    TestFilter(): AbstractFilter() {}
+    virtual ~TestFilter() {}
+};
 
 
 #include "UnitTestSupport.hpp"
@@ -66,15 +72,23 @@ void RemoveTestFiles()
 int TestPreFlightArray()
 {
   DataContainer::Pointer m = DataContainer::New();
+  TestFilter* filt = new TestFilter;
   int totalPoints = 100;
   {
-    int32_t* grain_indicies = m->createVoxelData<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, NULL);
+    int32_t* grain_indicies = m->createVoxelData<int32_t, PFInt32ArrayType, TestFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, filt);
     // This macro is used ONLY during unit testing
     DREAM3D_REQUIRE_NE(grain_indicies, NULL);
   }
 
   {
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, PFInt32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, NULL);
+    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, PFInt32ArrayType, TestFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, filt);
+    if (filt->getErrorCondition() < 0)
+    {
+      std::cout << filt->getErrorMessage() << std::endl;
+    }
+    IDataArray::Pointer array = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+
+
     // This macro is used ONLY during unit testing
     DREAM3D_REQUIRE_NE(grain_indicies, NULL);
   }
