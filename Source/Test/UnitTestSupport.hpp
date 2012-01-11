@@ -196,11 +196,15 @@ void TestFailed(const std::string &test)
    DREAM3D_TEST_THROW_EXCEPTION( s ) }
 
 
+
 #define DREAM3D_REQUIRE_EQUAL( L, R) \
-    if ( (L) != (R) )\
-    { std::string s ( #L);\
-     s = s.append("==").append(#R);\
-    DREAM3D_TEST_THROW_EXCEPTION( s ) }
+    if ( (L) != (R) ) {  \
+      std::stringstream ss;\
+      ss << "Your test required the following\n            '";\
+      ss << #L << " == " << #R << "'\n            but this condition was not met.\n";\
+      ss << "           " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
+
 
 
 #define DREAM3D_ENTER_TEST( test )\

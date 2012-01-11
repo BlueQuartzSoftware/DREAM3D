@@ -178,7 +178,7 @@ class DataArray : public IDataArray
         }
       if ( (--newSize) > this->MaxId )
         {
-        this->MaxId = newSize;
+        this->MaxId = newSize-1;
         }
 
       return this->Array + id;
@@ -261,6 +261,11 @@ class DataArray : public IDataArray
      * @brief Returns the number of elements in the internal array.
      */
     virtual size_t GetNumberOfTuples()
+    {
+      return (this->MaxId + 1)/this->NumberOfComponents;
+    }
+
+    virtual size_t GetSize()
     {
       return Size;
     }
@@ -358,8 +363,10 @@ class DataArray : public IDataArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numElements, bool ownsData = true) :
-    TEST0(0),
-      Array(NULL), TEST1(0), Size(numElements), _ownsData(ownsData)
+      Array(NULL),
+      Size(numElements),
+      _ownsData(ownsData),
+      MaxId(numElements-1)
     {
       NumberOfComponents = 1;
     }
@@ -400,11 +407,18 @@ class DataArray : public IDataArray
       }
 
       // Wipe out the array completely if new size is zero.
-      if (newSize <= 0)
+      if (newSize == 0)
       {
         this->initialize();
         return 0;
       }
+      // OS X's realloc does not free memory if the new block is smaller.  This
+      // is a very serious problem and causes huge amount of memory to be
+      // wasted. Do not use realloc on the Mac.
+      bool dontUseRealloc=false;
+      #if defined __APPLE__
+      dontUseRealloc=true;
+      #endif
 
       // Allocate a new array if we DO NOT own the current array
       if ((NULL != this->Array) && (false == this->_ownsData))
@@ -421,7 +435,7 @@ class DataArray : public IDataArray
         // Copy the data from the old array.
         memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
       }
-      else
+      else if (!dontUseRealloc)
       {
         // Try to reallocate with minimal memory usage and possibly avoid copying.
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
@@ -431,6 +445,20 @@ class DataArray : public IDataArray
           return 0;
         }
       }
+      else
+      {
+        newArray = (T*)malloc(newSize * sizeof(T));
+        if (!newArray)
+        {
+          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          return 0;
+        }
+
+        // Copy the data from the old array.
+        memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
+        // Free the old array
+        free(this->Array);
+      }
 
       // Allocation was successful.  Save it.
       this->Size = newSize;
@@ -438,13 +466,14 @@ class DataArray : public IDataArray
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
+      this->MaxId = newSize-1;
+
       return this->Array;
     }
 
   private:
-    uint64_t TEST0;
+
     T* Array;
-    uint64_t TEST1;
     size_t Size;
     bool _ownsData;
     size_t MaxId;

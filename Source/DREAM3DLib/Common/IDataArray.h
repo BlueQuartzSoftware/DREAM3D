@@ -87,35 +87,16 @@ class IDataArray
      */
     virtual void* GetVoidPointer ( size_t i) = 0;
 
-
-    /* This method, while possibly useful, would probably lead to more errors than
-     * anything else. There is NO checking if the pointers are valid or compatible
-     * with each other and there really is no way of figuring out that information
-     */
-//    template<typename T>
-//    T* GetCastPointer(size_t i) { return reinterpret_cast<T*>(GetVoidPointer(i)); }
-
      /**
-     * @brief Returns the number of elements in the internal array.
+     * @brief Returns the number of Tuples in the array.
      */
     virtual size_t GetNumberOfTuples () = 0;
 
     /**
-     * Returns the number of dimensions the data has.
+     * @brief Return the number of elements in the array
+     * @return
      */
-//    virtual int32_t getNumberOfDimensions () = 0;
-
-    /**
-     * @brief Copies the values of the dimensions into the supplied pointer.
-     * @param dims
-     */
-//    virtual void getDimensions(size_t* dims) = 0;
-
-    /**
-     * @brief Returns an enumerated type that can be used to find out the type
-     * of primitive stored in the internal array.
-     */
- //   virtual int32_t getDataType () = 0;
+    virtual size_t GetSize() = 0;
 
     virtual void SetNumberOfComponents(int nc)  = 0;
     virtual int GetNumberOfComponents()  = 0;
@@ -142,7 +123,7 @@ class IDataArray
 
     /**
      * @brief Resizes the array to the new number of elements
-     * @param size The total number of elements in the array to allocate memory. 
+     * @param size The total number of elements in the array to allocate memory.
      * @return
      */
     virtual int32_t RawResize(size_t size) = 0;
