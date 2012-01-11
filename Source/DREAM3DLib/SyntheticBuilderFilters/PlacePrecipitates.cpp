@@ -130,8 +130,8 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
   PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType,  voxels, 1);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, Neighbors, ss, Int32ArrayType, voxels, 1);
 
