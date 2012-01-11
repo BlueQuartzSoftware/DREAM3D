@@ -109,8 +109,6 @@ void GrainGenerator::execute()
     m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
     m->shapeTypes = m_ShapeTypes;
 
-
-
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsInputFile(getH5StatsFile());
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);

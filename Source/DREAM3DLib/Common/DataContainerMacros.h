@@ -94,24 +94,24 @@ IDataArray::Pointer iDataArray = GetMethod(arrayName);\
 if (iDataArray.get() == 0) {\
   std::stringstream s;\
   s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";\
-  obv->setErrorCondition(-10);\
-  obv->setErrorMessage(s.str());\
+  if (NULL != obv) {obv->setErrorCondition(-10);\
+  obv->setErrorMessage(s.str());}\
   return gi;\
 }\
 if (size != iDataArray->GetNumberOfTuples()) {\
   std::stringstream s;\
   s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
   s << "Required: " << size << " Contains: " << iDataArray->GetNumberOfTuples();\
-  obv->setErrorCondition(-11);\
-  obv->setErrorMessage(s.str());\
+  if (NULL != obv) {obv->setErrorCondition(-11);\
+  obv->setErrorMessage(s.str());}\
   return gi;\
 }\
 gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
 if (NULL == gi) {\
   std::stringstream s;\
   s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
-  obv->setErrorCondition(-13);\
-  obv->setErrorMessage(s.str());\
+  if (NULL != obv) {obv->setErrorCondition(-13);\
+  obv->setErrorMessage(s.str());}\
   return gi;\
 }\
 return gi;\
@@ -132,8 +132,8 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
     if (NULL == iDataArray.get()) { \
       std::stringstream s;\
       s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
-      obv->setErrorCondition(-25);\
-      obv->setErrorMessage(s.str());\
+      if (NULL != obv) {obv->setErrorCondition(-25);\
+      obv->setErrorMessage(s.str());}\
       return valuePtr;\
     }\
     add##Field##Data(arrayName, iDataArray);\
@@ -143,8 +143,8 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   if (NULL == valuePtr) {\
     std::stringstream s;\
     s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;";\
-    obv->setErrorCondition(-12);\
-    obv->setErrorMessage(s.str());\
+    if (NULL != obv) {obv->setErrorCondition(-12);\
+    obv->setErrorMessage(s.str());}\
     return valuePtr;\
   }\
   return valuePtr;\

@@ -11,6 +11,10 @@
 
 project(DREAM3DTest)
 
+set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
+
+
+
 configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
                ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
 configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
@@ -33,6 +37,17 @@ macro(MXA_ADD_TEST testname Exename)
         endforeach()
     endif()
 endmacro()
+
+
+if (NOT ${DREAM3D_DATA_DIR} STREQUAL "")
+    message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
+    message(STATUS " Please make sure the proper files are available in that directory")
+    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
+    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
+    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
+
+endif()
+
 
 
 # --------------------------------------------------------------------------
@@ -60,15 +75,6 @@ add_test(H5UtilitiesTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5UtilitiesTest)
 add_executable(DataArrayTest ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp)
 target_link_libraries(DataArrayTest DREAM3DLib)
 add_test(DataArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataArrayTest)
-
-
-
-# --------------------------------------------------------------------------
-# PreFlightArrayTest Testing
-# --------------------------------------------------------------------------
-add_executable(PreFlightArrayTest ${DREAM3DTest_SOURCE_DIR}/PreFlightArrayTest.cpp)
-target_link_libraries(PreFlightArrayTest DREAM3DLib)
-add_test(PreFlightArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreFlightArrayTest)
 
 # --------------------------------------------------------------------------
 # File Conversion Testing

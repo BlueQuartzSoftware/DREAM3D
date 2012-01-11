@@ -54,6 +54,10 @@
 #define NUM_COMPONENTS_3 2
 #define NUM_TUPLES_3     8
 
+#define NUM_ELEMENTS_4   16
+#define NUM_COMPONENTS_4 4
+#define NUM_TUPLES_4     4
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,16 +81,52 @@ void TestDataArray()
   DREAM3D_REQUIRE_EQUAL(NUM_TUPLES , int32Array->GetNumberOfTuples());
   DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS , int32Array->GetSize());
 
+  for(int i = 0; i < NUM_TUPLES; ++i)
+  {
+    for(int c = 0; c < NUM_COMPONENTS; ++c)
+    {
+      int32Array->SetComponent(i, c, i+c);
+    }
+  }
+
+
   // Resize Larger
   int32Array->Resize(NUM_TUPLES_2);
   DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2 , int32Array->GetNumberOfTuples());
   DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2 , int32Array->GetSize());
 
+  // This should have saved our data so lets look at the data and compare it
+  for(int i = 0; i < NUM_TUPLES; ++i)
+  {
+    for(int c = 0; c < NUM_COMPONENTS; ++c)
+    {
+      DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c) )
+    }
+  }
 
-  // Resize Smaller
+
+
+  // Resize Smaller - Which should have still save some of our data
   int32Array->Resize(NUM_TUPLES_3);
   DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3 , int32Array->GetNumberOfTuples());
   DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3 , int32Array->GetSize());
+
+  // This should have saved our data so lets look at the data and compare it
+  for(int i = 0; i < NUM_TUPLES; ++i)
+  {
+    for(int c = 0; c < NUM_COMPONENTS; ++c)
+    {
+      DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c) )
+    }
+  }
+
+
+  // Change number of components
+  int32Array->SetNumberOfComponents(NUM_COMPONENTS_4);
+  DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4 , int32Array->GetNumberOfTuples());
+  DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4 , int32Array->GetSize());
+
+
 
 }
 

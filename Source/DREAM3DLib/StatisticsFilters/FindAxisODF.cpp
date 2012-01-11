@@ -47,9 +47,10 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
 AbstractFilter(),
+m_H5StatsFile(""),
 m_CreateNewStatsFile(true),
-m_Phases(NULL),
 m_SurfaceFields(NULL),
+m_Phases(NULL),
 m_AxisEulerAngles(NULL)
 {
   m_HexOps = HexagonalOps::New();
