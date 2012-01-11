@@ -142,11 +142,16 @@ class IDataArray
 
     /**
      * @brief Resizes the array to the new number of elements
-     * @param size
+     * @param size The total number of elements in the array to allocate memory. 
      * @return
      */
-    virtual int32_t Resize(size_t size) = 0;
+    virtual int32_t RawResize(size_t size) = 0;
 
+    /**
+    * @brief
+    * @param numTuples The total number of tuples to allocate memory for
+    */
+    virtual int32_t Resize(size_t numTuples) = 0;
 #if 0
     /**
      * @brief Prints information about the class to ostream.

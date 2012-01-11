@@ -91,7 +91,9 @@ class NeighborList : public IDataArray
     void initializeWithZeros() { _data.clear(); }
 
 
-    int32_t Resize(size_t size)  { return 0; }
+    int32_t RawResize(size_t size)  { return 0; }
+
+    virtual int32_t Resize(size_t numTuples) { return 0; }
 
 /**
  *

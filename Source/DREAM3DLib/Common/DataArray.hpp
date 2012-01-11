@@ -213,7 +213,7 @@ class DataArray : public IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t Resize(size_t size)
+    virtual int32_t RawResize(size_t size)
     {
       if (this->ResizeAndExtend(size) || size <= 0)
       {
@@ -223,6 +223,11 @@ class DataArray : public IDataArray
       {
         return 0;
       }
+    }
+
+    virtual int32_t Resize(size_t numTuples)
+    {
+      return RawResize(numTuples * this->NumberOfComponents);
     }
 
     /**
