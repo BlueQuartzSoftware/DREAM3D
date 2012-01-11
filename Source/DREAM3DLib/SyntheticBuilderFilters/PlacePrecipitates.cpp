@@ -57,6 +57,7 @@
 //
 // -----------------------------------------------------------------------------
 PlacePrecipitates::PlacePrecipitates() :
+AbstractFilter(),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_SurfaceVoxels(NULL),
