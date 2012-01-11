@@ -407,7 +407,8 @@ void PackGrainsGen2::execute()
   Field field;
   int gid = 0;
   float currentvol = 0.0;
-  m->resizeFieldDataArrays(1);
+ // m->resizeFieldDataArrays(1);
+ // dataCheck(false, totalPoints, gid+1, m->crystruct.size());
 //FIXME: Initialize the Grain with some sort of default data
   float factor = 1.0;
   float iter = 0;
@@ -432,8 +433,9 @@ void PackGrainsGen2::execute()
     {
 	   gid++;
        m->resizeFieldDataArrays(gid + 1);
+       dataCheck(false, totalPoints, gid+1, m->crystruct.size());
        m_Active[gid] = 1;
-	   transfer_attributes(gid, &field);
+	     transfer_attributes(gid, &field);
        oldsizedisterror = currentsizedisterror;
        currentvol = currentvol + m_Volumes[gid];
        //FIXME: Initialize the Grain with some sort of default data
@@ -470,8 +472,9 @@ void PackGrainsGen2::execute()
       {
 	    gid++;
         m->resizeFieldDataArrays(gid + 1);
+        dataCheck(false, totalPoints, gid+1, m->crystruct.size());
         m_Active[gid] = 1;
-	    transfer_attributes(gid, &field);
+	      transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
         currentvol = currentvol + m_Volumes[gid];
         //FIXME: Initialize the new grain with default data
