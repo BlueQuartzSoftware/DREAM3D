@@ -120,7 +120,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
 	  bool* m_Active;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
-    int32_t* m_Neighborhoods;
     int8_t* m_SurfaceVoxels;
     int32_t* m_Neighbors;
     int32_t* m_NumCells;

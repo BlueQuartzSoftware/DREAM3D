@@ -69,7 +69,6 @@ m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_Active(NULL),
 m_PhasesF(NULL),
-m_Neighborhoods(NULL),
 m_Neighbors(NULL),
 m_NumCells(NULL)
 {
@@ -136,7 +135,6 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, Neighbors, ss, Int32ArrayType, voxels, 1);
 
   PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields,1);
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, -304,  int32_t, Int32ArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields);
@@ -180,6 +178,16 @@ void PlacePrecipitates::execute()
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size() );
+
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setObservers(this->getObservers());
+  find_neighbors->setDataContainer(m);
+  find_neighbors->execute();
+  err = find_neighbors->getErrorCondition();
+  if (err < 0)
+  {
+    return;
+  }
 
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();
