@@ -105,15 +105,15 @@ void FindNeighborhoods::preflight()
 	  err = -300;
   }
 
-  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Centroids, p);
-  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Volumes, q);
-  PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, r);
-  PFInt32ArrayType::Pointer s = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer s = Int32ArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::NumCells, s);
-  PFInt32ArrayType::Pointer t = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer t = Int32ArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Neighborhoods, t);
 
   setErrorCondition(err);

@@ -71,7 +71,7 @@ void FindSurfaceGrains::preflight()
 	  err = -300;
   }
 
-  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::SurfaceFields, p);
 
   setErrorCondition(err);

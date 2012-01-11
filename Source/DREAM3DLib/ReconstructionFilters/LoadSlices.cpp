@@ -102,13 +102,13 @@ void LoadSlices::preflight()
   std::stringstream ss;
   DataContainer::Pointer m = DataContainer::New();
 
-  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::GoodVoxels, p);
-  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::Phases, q);
-  PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::Quats, r);
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::EulerAngles, s);
 
   setErrorCondition(err);

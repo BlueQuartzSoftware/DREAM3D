@@ -87,13 +87,13 @@ void FindNeighbors::preflight()
 	  err = -300;
   }
 
-  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::SurfaceVoxels, p);
-  PFBoolArrayType::Pointer q = PFBoolArrayType::CreateArray(1);
+  BoolArrayType::Pointer q = BoolArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::SurfaceFields, q);
-  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer r = Int32ArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::NumNeighbors, r);
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
   m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea, s);
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);

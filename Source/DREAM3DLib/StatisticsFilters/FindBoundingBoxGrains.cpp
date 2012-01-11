@@ -77,7 +77,7 @@ void FindBoundingBoxGrains::preflight()
 	  ss << "SurfaceFields Array Not Initialized At Beginning of FindBoundingBoxGrains Filter" << std::endl;
 	  err = -300;
   }
-  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::UnbiasedFields, p);
 
   setErrorCondition(err);
