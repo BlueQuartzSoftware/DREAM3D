@@ -106,6 +106,9 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
     void generate_grain(int phase, int Seed, Field* grain);
 
+	void transfer_attributes(int gnum, Field* field);
+
+
   protected:
     PackGrainsGen2();
 
