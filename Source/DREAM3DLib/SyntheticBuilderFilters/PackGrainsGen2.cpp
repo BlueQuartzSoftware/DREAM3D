@@ -426,7 +426,7 @@ void PackGrainsGen2::execute()
     }
 
     generate_grain(phase, Seed, &field);
-    currentsizedisterror = check_sizedisterror(gid, -1000);
+    currentsizedisterror = check_sizedisterror(&field);
     change = (currentsizedisterror) - (oldsizedisterror);
     if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
     {
@@ -464,7 +464,7 @@ void PackGrainsGen2::execute()
       }
 
       generate_grain(phase, Seed, &field);
-      currentsizedisterror = check_sizedisterror(gid, -1000);
+      currentsizedisterror = check_sizedisterror(&field);
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001f)))
       {
@@ -474,8 +474,6 @@ void PackGrainsGen2::execute()
 	    transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
         currentvol = currentvol + m_Volumes[gid];
-        gid++;
-        m->resizeFieldDataArrays(gid + 1);
         //FIXME: Initialize the new grain with default data
         iter = 0;
       }
@@ -543,12 +541,13 @@ void PackGrainsGen2::execute()
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * numgrains);
+  int totalAdjustments = static_cast<int>(100 * (numgrains-1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
 //    change1 = 0;
 //    change2 = 0;
     int option = iteration % 2;
+	iteration = 99;
 
     if(writeErrorFile == true && iteration % 25 == 0)
     {
@@ -1218,7 +1217,7 @@ void PackGrainsGen2::compare_3Ddistributions(std::vector<std::vector<std::vector
   }
 }
 
-float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
+float PackGrainsGen2::check_sizedisterror(Field* field)
 {
   DataContainer* m = getDataContainer();
   float dia;
@@ -1238,7 +1237,7 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
     for (size_t b = 1; b < m->getTotalFields(); b++)
     {
       index = b;
-      if(index != gremove && m_PhasesF[index] == phase)
+      if(m_PhasesF[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
         dia = (dia - (mindiameter[phase] / 2.0)) / grainsizediststep[iter];
@@ -1248,9 +1247,9 @@ float PackGrainsGen2::check_sizedisterror(int gadd, int gremove)
         count++;
       }
     }
-    if(gadd > 0 && m_PhasesF[gadd] == phase)
+    if(field->m_PhasesF == phase)
     {
-      dia = m_EquivalentDiameters[gadd];
+      dia = field->m_EquivalentDiameters;
       dia = (dia - (mindiameter[phase] / 2.0)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
       if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
