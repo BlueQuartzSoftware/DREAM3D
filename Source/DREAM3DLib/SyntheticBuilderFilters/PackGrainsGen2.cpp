@@ -257,7 +257,7 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, BoolArrayType, fields, 1);
   PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, Int32ArrayType, fields, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, Int32ArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, Int32ArrayType, fields, 3);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, FloatArrayType, fields, 3);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, FloatArrayType, fields, 1);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, FloatArrayType, fields, 3);
@@ -284,7 +284,7 @@ void PackGrainsGen2::preflight()
 void PackGrainsGen2::execute()
 {
   DataContainer* m = getDataContainer();
-  bool writeErrorFile = false;
+  bool writeErrorFile = true;
   std::ofstream outFile;
   if(m_ErrorOutputFile.empty() == false)
   {
