@@ -53,6 +53,17 @@
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
 
+typedef struct {
+    float m_Volumes;
+    float m_EquivalentDiameters;
+    float m_AxisLengths[3];
+    float m_AxisEulerAngles[3];
+    float m_Omega3s;
+    int m_PhasesF;
+    int m_Neighborhoods[3];
+} Field;
+
+
 /**
  * @class PackGrainsGen2 PackGrainsGen2.h DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h
  * @brief
@@ -95,7 +106,8 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float check_sizedisterror(int gadd, int gremove);
     int readReconStatsData(H5StatsReader::Pointer h5io);
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
-    void generate_grain(int, int, int);
+    void generate_grain(int, int, Field*);
+	void transfer_attributes(int gnum, Field* field);
 
   protected:
     PackGrainsGen2();

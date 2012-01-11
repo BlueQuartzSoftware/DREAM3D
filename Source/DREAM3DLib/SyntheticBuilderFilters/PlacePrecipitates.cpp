@@ -536,9 +536,11 @@ void  PlacePrecipitates::place_precipitates()
       }
     }
 
+	Field field;
+    packGrains->generate_grain(phase, Seed, &field);
     m->resizeFieldDataArrays(currentnumgrains+1);
-    //FIXME: Initialize the grain with default data
-    packGrains->generate_grain(currentnumgrains, phase, Seed);
+    packGrains->transfer_attributes(currentnumgrains, &field);
+	//FIXME: Initialize the grain with default data
     precipboundaryfraction = m->pptFractions[phase];
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)
