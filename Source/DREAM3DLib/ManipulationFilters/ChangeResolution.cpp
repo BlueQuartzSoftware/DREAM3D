@@ -54,7 +54,10 @@
 //
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
-AbstractFilter()
+AbstractFilter(),
+m_GrainIds(NULL),
+m_EulerAngles(NULL),
+m_Phases(NULL)
 {
 
 }

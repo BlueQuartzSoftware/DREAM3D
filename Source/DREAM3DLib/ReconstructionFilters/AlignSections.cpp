@@ -58,7 +58,12 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
-        AbstractFilter()
+AbstractFilter(),
+m_GrainIds(NULL),
+m_Quats(NULL),
+m_EulerAngles(NULL),
+m_Phases(NULL),
+m_GoodVoxels(NULL)
 {
   Seed = MXA::getMilliSeconds();
 
