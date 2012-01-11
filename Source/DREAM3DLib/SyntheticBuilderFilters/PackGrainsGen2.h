@@ -45,13 +45,12 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/PreFlightArray.hpp"
+
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
-
 
 typedef struct {
     float m_Volumes;
@@ -62,7 +61,6 @@ typedef struct {
     int m_PhasesF;
     int m_Neighborhoods[3];
 } Field;
-
 
 /**
  * @class PackGrainsGen2 PackGrainsGen2.h DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h
@@ -106,8 +104,10 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float check_sizedisterror(Field* field);
     int readReconStatsData(H5StatsReader::Pointer h5io);
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
-    void generate_grain(int, int, Field*);
+    void generate_grain(int phase, int Seed, Field* grain);
+
 	void transfer_attributes(int gnum, Field* field);
+
 
   protected:
     PackGrainsGen2();
@@ -148,7 +148,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     int32_t* m_PhasesC;
     float*   m_EulerAngles;
     int8_t*  m_SurfaceVoxels;
-    
+
     // Field Data - make sure these are all initialized to NULL in the constructor
     bool* m_Active;
     int32_t* m_PhasesF;

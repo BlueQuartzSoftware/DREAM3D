@@ -122,13 +122,13 @@ void FindLocalMisorientationGradients::preflight()
 	  err = -300;
   }
 
-  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations, p);
-  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::GrainMisorientations, q);
-  PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::MisorientationGradients, r);
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::GrainAvgMisorientations, s);
 
   setErrorCondition(err);

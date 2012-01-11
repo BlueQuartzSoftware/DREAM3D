@@ -130,12 +130,74 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual ~DataContainer();
 
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Voxel)
+   // METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Voxel)
+    template<typename PtrType, typename DataArrayType, typename Observable>
+    PtrType* createVoxelData(const std::string &arrayName, size_t size, int numComp, Observable* obv)
+    {
+      PtrType* valuePtr = 0;
+      IDataArray::Pointer iDataArray = getVoxelData(arrayName);
+      if (iDataArray.get() == 0) {
+        iDataArray = DataArrayType::CreateArray(size * numComp);
+        assert(size == iDataArray->GetNumberOfTuples() );
+        iDataArray->SetNumberOfComponents(numComp);
+        iDataArray->SetName(arrayName);
+        if (0 == iDataArray.get()) {
+          std::stringstream s;
+          s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";
+          if (0 != obv) {obv->setErrorCondition(-25);
+          obv->setErrorMessage(s.str());}
+          return valuePtr;
+        }
+        addVoxelData(arrayName, iDataArray);
+      }
+      valuePtr =
+      IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
+      if (0 == valuePtr) {
+        std::stringstream s;
+        s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;";
+        if (0 != obv) {obv->setErrorCondition(-12);
+        obv->setErrorMessage(s.str());}
+        return valuePtr;
+      }
+      return valuePtr;
+    }
+
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Ensemble)
 
 
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getVoxelData);
+  //  METHOD_DEF_TEMPLATE_GETARRAYDATA(getVoxelData);
+    template<typename PtrType, typename DataArrayType, typename Observable>
+    PtrType* getVoxelDataSizeCheck(const std::string &arrayName, size_t size, Observable* obv)
+    {
+    PtrType* gi = 0;
+    IDataArray::Pointer iDataArray = getVoxelData(arrayName);
+    if (iDataArray.get() == 0) {
+      std::stringstream s;
+      s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";
+      if (0 != obv) {obv->setErrorCondition(-10);
+      obv->setErrorMessage(s.str());}
+      return gi;
+    }
+    if (size != iDataArray->GetNumberOfTuples()) {
+      std::stringstream s;
+      s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";
+      s << "Required: " << size << " Contains: " << iDataArray->GetNumberOfTuples();
+      if (0 != obv) {obv->setErrorCondition(-11);
+      obv->setErrorMessage(s.str());}
+      return gi;
+    }
+    gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
+    if (0 == gi) {
+      std::stringstream s;
+      s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";
+      if (0 != obv) {obv->setErrorCondition(-13);
+      obv->setErrorMessage(s.str());}
+      return gi;
+    }
+    return gi;
+    }
+
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
 
@@ -179,7 +241,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     int getNumFieldArrays();
 
     DREAM3D_INSTANCE_PROPERTY(size_t, TotalFields);
-    
+
     void resizeFieldDataArrays(size_t size);
 
     /**

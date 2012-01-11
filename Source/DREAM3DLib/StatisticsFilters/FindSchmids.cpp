@@ -43,14 +43,15 @@
 //
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids() :
-m_Schmids(NULL),
-m_AvgQuats(NULL),
-m_Active(NULL),
-m_SlipSystems(NULL),
 AbstractFilter(),
 m_XLoading(1.0f),
 m_YLoading(1.0f),
-m_ZLoading(1.0f)
+m_ZLoading(1.0f),
+m_Schmids(NULL),
+m_AvgQuats(NULL),
+m_Active(NULL),
+m_SlipSystems(NULL)
+
 
 {
   setupFilterOptions();
@@ -116,9 +117,9 @@ void FindSchmids::preflight()
 	  ss << "Active Array Not Initialized At Beginning of FindSchmids Filter" << std::endl;
 	  err = -300;
   }
-  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Schmids, p);
-  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::SlipSystems, q);
 
   setErrorCondition(err);

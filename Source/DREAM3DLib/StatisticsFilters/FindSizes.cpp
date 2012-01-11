@@ -76,11 +76,11 @@ void FindSizes::preflight()
 	  err = -300;
   }
 
-  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Volumes, p);
-  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, q);
-  PFInt32ArrayType::Pointer r = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer r = Int32ArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::NumCells, r);
 
   setErrorCondition(err);

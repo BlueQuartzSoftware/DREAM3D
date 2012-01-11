@@ -162,9 +162,9 @@ void AdjustVolume::execute()
   int nucleus;
   int bad = 0;
   float random, oldsizedisterror, currentsizedisterror, diam;
-  size_t x, y, z;
+  DimType x, y, z;
   int neighpoint, index;
-  size_t count, affectedcount;
+  DimType count, affectedcount;
   int vListSize = 1000;
 
   float voxtovol = m->getXRes()*m->getYRes()*m->getZRes()*(3.0/4.0)*(1.0/m_pi);
@@ -213,13 +213,13 @@ void AdjustVolume::execute()
     }
     voxellist[count] = nucleus;
     count++;
-    for(size_t i=0;i<count;++i)
+    for(DimType i=0;i<count;++i)
     {
       index = voxellist[i];
       x = index%dims[0];
       y = (index/dims[0])%dims[1];
       z = index/(dims[0]*dims[1]);
-      for(size_t j=0;j<6;j++)
+      for(DimType j=0;j<6;j++)
       {
         good = 1;
         neighpoint = index+neighpoints[j];

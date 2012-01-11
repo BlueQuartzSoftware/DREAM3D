@@ -365,10 +365,10 @@ class DataArray : public IDataArray
     DataArray(size_t numElements, bool ownsData = true) :
       Array(NULL),
       Size(numElements),
-      _ownsData(ownsData),
-      MaxId(numElements-1)
+      _ownsData(ownsData)
     {
       NumberOfComponents = 1;
+      MaxId = Size - 1;
     }
 
     /**
@@ -381,6 +381,7 @@ class DataArray : public IDataArray
 #else
       free(this->Array);
 #endif
+      this->Array = NULL;
     }
 
     /**
@@ -457,7 +458,7 @@ class DataArray : public IDataArray
         // Copy the data from the old array.
         memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
         // Free the old array
-        free(this->Array);
+        _deallocate();
       }
 
       // Allocation was successful.  Save it.

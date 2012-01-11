@@ -122,11 +122,11 @@ void SegmentGrains::preflight()
 	  ss << "Quats Array Not Initialized At Beginning of SegmentGrains Filter" << std::endl;
 	  err = -300;
   }
-  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Phases, q);
-  PFBoolArrayType::Pointer r = PFBoolArrayType::CreateArray(1);
+  BoolArrayType::Pointer r = BoolArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Active, r);
 
   setErrorCondition(err);

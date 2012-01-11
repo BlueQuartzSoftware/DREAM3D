@@ -155,16 +155,18 @@ m_MaxIterations(1),
 m_PeriodicBoundaries(false),
 m_NeighborhoodErrorWeight(1.0f),
 m_GrainIds(NULL),
-m_AxisEulerAngles(NULL),
-m_Centroids(NULL),
-m_AxisLengths(NULL),
-m_Volumes(NULL),
-m_Omega3s(NULL),
-m_EquivalentDiameters(NULL),
-m_Active(NULL),
 m_PhasesC(NULL),
+m_EulerAngles(NULL),
+m_SurfaceVoxels(NULL),
+m_Active(NULL),
 m_PhasesF(NULL),
-m_Neighborhoods(NULL)
+m_Neighborhoods(NULL),
+m_Centroids(NULL),
+m_Volumes(NULL),
+m_AxisLengths(NULL),
+m_AxisEulerAngles(NULL),
+m_Omega3s(NULL),
+m_EquivalentDiameters(NULL)
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -346,6 +348,7 @@ void PackGrainsGen2::execute()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
+
   // float change1, change2;
   float change;
   int phase;
@@ -421,6 +424,7 @@ void PackGrainsGen2::execute()
         break;
       }
     }
+
     generate_grain(phase, Seed, &field);
     currentsizedisterror = check_sizedisterror(&field);
     change = (currentsizedisterror) - (oldsizedisterror);
@@ -458,6 +462,7 @@ void PackGrainsGen2::execute()
           break;
         }
       }
+
       generate_grain(phase, Seed, &field);
       currentsizedisterror = check_sizedisterror(&field);
       change = (currentsizedisterror) - (oldsizedisterror);
@@ -502,7 +507,7 @@ void PackGrainsGen2::execute()
   planelist.resize(numgrains);
   packqualities.resize(numgrains);
   fillingerror = 1;
-  for (size_t i = 1; i < numgrains; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
@@ -702,14 +707,15 @@ void PackGrainsGen2::initialize_packinggrid()
   }
 }
 
+
 void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
-    DataContainer* m = getDataContainer();
+  DataContainer* m = getDataContainer();
 //  int good = 0;
   float r1 = 1;
-  float a1 = 0,  a3 = 0;
-  float b1 = 0,  b3 = 0;
+  float a1 = 0, a3 = 0;
+  float b1 = 0, b3 = 0;
   float r2 = 0, r3 = 0;
   float diam = 0;
   float vol = 0;
@@ -729,32 +735,33 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   b1 = bovera[phase][diameter][1];
   if(a1 == 0)
   {
-      a1 = bovera[phase][diameter - 1][0];
-      b1 = bovera[phase][diameter - 1][1];
+    a1 = bovera[phase][diameter - 1][0];
+    b1 = bovera[phase][diameter - 1][1];
   }
   r2 = rg.genrand_beta(a1, b1);
-/*  a2 = m->covera[phase][diameter][0];
-  b2 = m->covera[phase][diameter][1];
-  if(a2 == 0)
-  {
-      a2 = m->covera[phase][diameter - 1][0];
-      b2 = m->covera[phase][diameter - 1][1];
-  }
-  r3 = rg.genrand_beta(a2, b2);
-  float cob = r3 / r2;
-*/  a3 = coverb[phase][diameter][0];
+  /*  a2 = m->covera[phase][diameter][0];
+   b2 = m->covera[phase][diameter][1];
+   if(a2 == 0)
+   {
+   a2 = m->covera[phase][diameter - 1][0];
+   b2 = m->covera[phase][diameter - 1][1];
+   }
+   r3 = rg.genrand_beta(a2, b2);
+   float cob = r3 / r2;
+   */
+  a3 = coverb[phase][diameter][0];
   b3 = coverb[phase][diameter][1];
   if(a3 == 0)
   {
-      a3 = coverb[phase][diameter - 1][0];
-      b3 = coverb[phase][diameter - 1][1];
+    a3 = coverb[phase][diameter - 1][0];
+    b3 = coverb[phase][diameter - 1][1];
   }
   r3 = rg.genrand_beta(a3, b3) * r2;
   float random = rg.genrand_res53();
   int bin = 0;
   while (random > axisodf[phase][bin])
   {
-	bin++;
+    bin++;
   }
   m_OrientationOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float mf = omega3[phase][diameter][0];
@@ -762,6 +769,7 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   float omega3f = rg.genrand_beta(mf, s);
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[phase];
   if(shapeclass == DREAM3D::SyntheticBuilder::EllipsoidShape) omega3f = 1;
+
   field->m_Volumes = vol;
   field->m_EquivalentDiameters = diam;
   field->m_AxisLengths[0] = r1;
@@ -776,6 +784,10 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   field->m_Neighborhoods[1] = 0;
   field->m_Neighborhoods[2] = 0;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
 {
   m_Volumes[gnum] = field->m_Volumes;
@@ -792,6 +804,10 @@ void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
   m_Neighborhoods[3*gnum+1] = field->m_Neighborhoods[1];
   m_Neighborhoods[3*gnum+2] = field->m_Neighborhoods[2];
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackGrainsGen2::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
@@ -810,14 +826,9 @@ void PackGrainsGen2::initializeAttributes()
     static_cast<DimType>(udims[0])
   };
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-
-
-  sizex = dims[0] * xRes;
-  sizey = dims[1] * yRes;
-  sizez = dims[2] * zRes;
+  sizex = dims[0] * m->getXRes();
+  sizey = dims[1] * m->getYRes();
+  sizez = dims[2] * m->getZRes();
   totalvol = sizex*sizey*sizez;
 
 	for(int i=0;i<totalPoints;i++)
@@ -1762,9 +1773,9 @@ void PackGrainsGen2::assign_gaps()
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
-				  x = float(column) * m->getXRes();
-				  y = float(row) * m->getYRes();
-				  z = float(plane) * m->getZRes();
+				  x = float(column) * xRes;
+				  y = float(row) * yRes;
+				  z = float(plane) * zRes;
 				  if (iter1 < 0) x = x - sizex;
 				  if (iter1 > dims[0] - 1) x = x + sizex;
 				  if (iter2 < 0) y = y - sizey;
@@ -1863,91 +1874,91 @@ void PackGrainsGen2::cleanup_grains()
   for (int i = 0; i < totpoints; i++)
   {
     touchessurface = 0;
-	if(checked[i] == false && m_GrainIds[i] > 0)
-	{
-		minsize = mindiameter[m_PhasesC[i]]*mindiameter[m_PhasesC[i]]*mindiameter[m_PhasesC[i]]*M_PI/6.0;
-		minsize = int(minsize/(m->getXRes()*m->getYRes()*m->getZRes()));
-		currentvlist.push_back(i);
-		count = 0;
-		while(count < currentvlist.size())
-		{
-			index = currentvlist[count];
-			column = index % xp;
-			row = (index / xp) % yp;
-			plane = index / (xp * yp);
-			if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) touchessurface = 1;
-			for (int j = 0; j < 6; j++)
-			{
-				good = 1;
-				neighbor = index + neighpoints[j];
-				if (m_PeriodicBoundaries == false)
-				{
-					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (zp - 1)) good = 0;
-					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (yp - 1)) good = 0;
-					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (xp - 1)) good = 0;
-					if (good == 1 && m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
-					{
-						currentvlist.push_back(neighbor);
-						checked[neighbor] = true;
-					}
-				}
-				else if (m_PeriodicBoundaries == true)
-				{
-					if (j == 0 && plane == 0) neighbor = neighbor + (xp*yp*zp);
-					if (j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp*yp*zp);
-					if (j == 1 && row == 0) neighbor = neighbor + (xp*yp);
-					if (j == 4 && row == (yp - 1)) neighbor = neighbor - (xp*yp);
-					if (j == 2 && column == 0) neighbor = neighbor + (xp);
-					if (j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
-					if (m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
-					{
-						currentvlist.push_back(neighbor);
-						checked[neighbor] = true;
-					}
-				}
-			}
-			count++;
-		}
-		size_t size = vlists[m_GrainIds[i]].size();
-		if(size > 0)
-		{
-			if(size < currentvlist.size())
-			{
-				for (size_t k = 0; k < vlists[m_GrainIds[i]].size(); k++)
-				{
-					m_GrainIds[vlists[m_GrainIds[i]][k]] = -1;
-				}
-				vlists[m_GrainIds[i]].resize(currentvlist.size());
-				vlists[m_GrainIds[i]].swap(currentvlist);
-			}
-			else if(size >= currentvlist.size())
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = -1;
-				}
-			}
-		}
-		else if(size == 0)
-		{
-			if(currentvlist.size() >= minsize || touchessurface == 1)
-			{
-				vlists[m_GrainIds[i]].resize(currentvlist.size());
-				vlists[m_GrainIds[i]].swap(currentvlist);
-			}
-			if(currentvlist.size() < minsize && touchessurface == 0)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = -1;
-				}
-			}
-		}
-		currentvlist.clear();
-	}
+    if(checked[i] == false && m_GrainIds[i] > 0)
+    {
+      minsize = mindiameter[m_PhasesC[i]] * mindiameter[m_PhasesC[i]] * mindiameter[m_PhasesC[i]] * M_PI / 6.0;
+      minsize = int(minsize / (resConst));
+      currentvlist.push_back(i);
+      count = 0;
+      while (count < currentvlist.size())
+      {
+        index = currentvlist[count];
+        column = index % xp;
+        row = (index / xp) % yp;
+        plane = index / (xp * yp);
+        if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) touchessurface = 1;
+        for (int j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighbor = index + neighpoints[j];
+          if(m_PeriodicBoundaries == false)
+          {
+            if(j == 0 && plane == 0) good = 0;
+            if(j == 5 && plane == (zp - 1)) good = 0;
+            if(j == 1 && row == 0) good = 0;
+            if(j == 4 && row == (yp - 1)) good = 0;
+            if(j == 2 && column == 0) good = 0;
+            if(j == 3 && column == (xp - 1)) good = 0;
+            if(good == 1 && m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
+            {
+              currentvlist.push_back(neighbor);
+              checked[neighbor] = true;
+            }
+          }
+          else if(m_PeriodicBoundaries == true)
+          {
+            if(j == 0 && plane == 0) neighbor = neighbor + (xp * yp * zp);
+            if(j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp * yp * zp);
+            if(j == 1 && row == 0) neighbor = neighbor + (xp * yp);
+            if(j == 4 && row == (yp - 1)) neighbor = neighbor - (xp * yp);
+            if(j == 2 && column == 0) neighbor = neighbor + (xp);
+            if(j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
+            if(m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
+            {
+              currentvlist.push_back(neighbor);
+              checked[neighbor] = true;
+            }
+          }
+        }
+        count++;
+      }
+      size_t size = vlists[m_GrainIds[i]].size();
+      if(size > 0)
+      {
+        if(size < currentvlist.size())
+        {
+          for (size_t k = 0; k < vlists[m_GrainIds[i]].size(); k++)
+          {
+            m_GrainIds[vlists[m_GrainIds[i]][k]] = -1;
+          }
+          vlists[m_GrainIds[i]].resize(currentvlist.size());
+          vlists[m_GrainIds[i]].swap(currentvlist);
+        }
+        else if(size >= currentvlist.size())
+        {
+          for (size_t k = 0; k < currentvlist.size(); k++)
+          {
+            m_GrainIds[currentvlist[k]] = -1;
+          }
+        }
+      }
+      else if(size == 0)
+      {
+        if(currentvlist.size() >= minsize || touchessurface == 1)
+        {
+          vlists[m_GrainIds[i]].resize(currentvlist.size());
+          vlists[m_GrainIds[i]].swap(currentvlist);
+        }
+        if(currentvlist.size() < minsize && touchessurface == 0)
+        {
+          for (size_t k = 0; k < currentvlist.size(); k++)
+          {
+            m_GrainIds[currentvlist[k]] = -1;
+          }
+        }
+      }
+      currentvlist.clear();
+    }
   }
   for (int i = 0; i < totpoints; i++)
   {

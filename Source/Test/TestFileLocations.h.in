@@ -64,6 +64,12 @@ namespace UnitTest {
     {
       const std::string TestDir("@DREAM3DTest_BINARY_DIR@/NeighborListTest");
     }
+    
+    namespace SyntheticBuilderTest
+    {
+      const std::string OutputDir("@DREAM3DTest_BINARY_DIR@");
+      const std::string TestDir("@DREAM3D_DATA_DIR@");
+    }
 }
 
 #endif
