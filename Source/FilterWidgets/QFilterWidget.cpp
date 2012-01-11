@@ -136,7 +136,7 @@ void QFilterWidget::setupGui()
     //  hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
-      QIntValidator* ival = new QIntValidator;
+      QIntValidator* ival = new QIntValidator(this);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       //hLayout->addWidget(le);
@@ -152,7 +152,7 @@ void QFilterWidget::setupGui()
 //      hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
-      QDoubleValidator* ival = new QDoubleValidator;
+      QDoubleValidator* ival = new QDoubleValidator(this);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
 //      hLayout->addWidget(le);
