@@ -882,7 +882,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 
   for (int i = 0; i < size; i++)
   {
-      phase = m_PhasesC[i];
+      phase = phases[i];
     m->crystruct[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
@@ -963,7 +963,7 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
   for (size_t i = 0; i < count; i++)
   {
     totaldensity = 0.0;
-      phase = m_PhasesC[i];
+      phase = phases[i];
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
     if(err < 0)
     {
