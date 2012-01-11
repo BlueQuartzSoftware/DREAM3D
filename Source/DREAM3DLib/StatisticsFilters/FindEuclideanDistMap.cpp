@@ -188,7 +188,10 @@ class FindEuclideanMap : public AbstractFilter
 //
 // -----------------------------------------------------------------------------
 FindEuclideanDistMap::FindEuclideanDistMap() :
-            AbstractFilter()
+AbstractFilter(),
+m_GrainIds(NULL),
+m_NearestNeighbors(NULL),
+m_NearestNeighborDistances(NULL)
 {
 }
 

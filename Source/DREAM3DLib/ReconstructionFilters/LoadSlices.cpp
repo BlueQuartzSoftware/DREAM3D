@@ -71,7 +71,11 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 LoadSlices::LoadSlices() :
-            AbstractFilter()
+AbstractFilter(),
+m_Phases(NULL),
+m_Quats(NULL),
+m_EulerAngles(NULL),
+m_GoodVoxels(NULL)
 {
   Seed = MXA::getMilliSeconds();
 
