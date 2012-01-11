@@ -500,7 +500,7 @@ void LoadSlices::threshold_points()
     static_cast<DimType>(udims[2]),
   };
 
-  int neighpoints[6];
+  DimType neighpoints[6];
   neighpoints[0] = -dims[0]*dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;

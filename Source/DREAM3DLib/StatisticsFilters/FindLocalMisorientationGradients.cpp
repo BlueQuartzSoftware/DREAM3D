@@ -204,7 +204,6 @@ void FindLocalMisorientationGradients::execute()
   float n1, n2, n3;
   Ebsd::CrystalStructure phase1 = Ebsd::UnknownCrystalStructure;
   Ebsd::CrystalStructure phase2 = Ebsd::UnknownCrystalStructure;
-
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -218,15 +217,15 @@ void FindLocalMisorientationGradients::execute()
 
   size_t neighbor = 0;
 //  int m_KernelSize = 1;
-  int jStride;
-  int kStride;
+  DimType jStride;
+  DimType kStride;
   for (DimType col = 0; col < xPoints; col++)
   {
     for (DimType row = 0; row < yPoints; row++)
     {
       for (DimType plane = 0; plane < zPoints; plane++)
       {
-        point = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
+        point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_Phases[point] > 0)
         {
           totalmisorientation = 0.0;
