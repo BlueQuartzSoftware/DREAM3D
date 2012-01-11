@@ -124,6 +124,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
   DataContainer* m = getDataContainer();
 
+
   // Cell Data
   PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
   PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, FloatArrayType, voxels, 3);
@@ -166,14 +167,14 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 // -----------------------------------------------------------------------------
 void MatchCrystallography::preflight()
 {
-  FindNeighbors::Pointer p = FindNeighbors::New();
-  p->setDataContainer(getDataContainer());
-  p->preflight();
-
-  if (p->getErrorCondition() < 0)
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setObservers(this->getObservers());
+  find_neighbors->setDataContainer(getDataContainer());
+  find_neighbors->preflight();
+  if (find_neighbors->getErrorCondition() < 0)
   {
-    setErrorCondition(p->getErrorCondition());
-    setErrorMessage(p->getErrorMessage());
+    setErrorCondition(find_neighbors->getErrorCondition());
+    setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
 
@@ -201,17 +202,17 @@ void MatchCrystallography::execute()
     return;
   }
 
-  FindNeighbors::Pointer p = FindNeighbors::New();
-  p->setDataContainer(getDataContainer());
-  p->setObservers(getObservers());
-  p->execute();
-  if (p->getErrorCondition() < 0)
+
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setObservers(this->getObservers());
+  find_neighbors->setDataContainer(m);
+  find_neighbors->execute();
+  err = find_neighbors->getErrorCondition();
+  if (err < 0)
   {
-    setErrorCondition(p->getErrorCondition());
-    setErrorMessage(p->getErrorMessage());
     return;
   }
-  
+
 
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   readODFData(h5reader);

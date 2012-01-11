@@ -284,7 +284,7 @@ void PackGrainsGen2::preflight()
 void PackGrainsGen2::execute()
 {
   DataContainer* m = getDataContainer();
-  bool writeErrorFile = false;
+  bool writeErrorFile = true;
   std::ofstream outFile;
   if(m_ErrorOutputFile.empty() == false)
   {
