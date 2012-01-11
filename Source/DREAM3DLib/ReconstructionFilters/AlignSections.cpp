@@ -204,6 +204,20 @@ void AlignSections::align_sections()
   float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
   if (NULL == quats) { return; }
 
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+
   float disorientation = 0;
   float mindisorientation = 100000000;
   float **mutualinfo12 = NULL;
@@ -225,21 +239,8 @@ void AlignSections::align_sections()
   int refposition = 0;
   int curposition = 0;
   int position;
-  int tempposition;
+  DimType tempposition;
   Ebsd::CrystalStructure phase1, phase2;
-
-  size_t udims[3] = {0,0,0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
 
   int** shifts = AlignSections::Allocate2DArray<int>(dims[2], 2);
   for (DimType a = 0; a < dims[2]; a++)
@@ -542,18 +543,18 @@ void AlignSections::form_grains_sections()
   float n1;
   float n2;
   float n3;
-  int randx = 0;
-  int randy = 0;
-  int good = 0;
-  int x, y, z;
-  int col, row;
+  DimType randx = 0;
+  DimType randy = 0;
+  DimType good = 0;
+  DimType x, y, z;
+  DimType col, row;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
   graincounts = m_GrainCounts->WritePointer(0, dims[2]);
 
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
-  int neighpoints[8];
+  DimType neighpoints[8];
   neighpoints[0] = -dims[0] - 1;
   neighpoints[1] = -dims[0];
   neighpoints[2] = -dims[0] + 1;

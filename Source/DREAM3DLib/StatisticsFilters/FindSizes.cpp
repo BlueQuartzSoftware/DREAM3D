@@ -145,7 +145,7 @@ void FindSizes::find_sizes()
     m_NumCells[i] = graincounts[i];
     m_Volumes[i] = (graincounts[i] * res_scalar);
     radcubed = m_Volumes[i]/vol_term;
-    diameter = 2.0*powf(radcubed, 0.3333333333);
+    diameter = 2.0f*powf(radcubed, 0.3333333333f);
     m_EquivalentDiameters[i] = diameter;
   }
 }
