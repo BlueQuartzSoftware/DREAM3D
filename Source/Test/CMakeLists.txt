@@ -38,8 +38,10 @@ endmacro()
 # --------------------------------------------------------------------------
 # FilterManager Test
 # --------------------------------------------------------------------------
+if (TARGET FilterWidgets)
 add_executable(FilterManagerTest ${DREAM3DTest_SOURCE_DIR}/FilterManagerTest.cpp)
 target_link_libraries(FilterManagerTest FilterWidgets)
+endif()
 
 # --------------------------------------------------------------------------
 # H5Support Library Testing
