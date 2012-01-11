@@ -238,6 +238,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         IDataArray::Pointer d = (*iter).second;
         d->Resize(size);
       }
+      m_TotalFields = size;
     }
 
 

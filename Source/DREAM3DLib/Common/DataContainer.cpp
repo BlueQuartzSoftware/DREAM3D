@@ -54,24 +54,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::DataContainer()
+DataContainer::DataContainer() :
+m_TotalFields(0)
 {
-#if OLD_WAY
-  xpoints = 0;
-  ypoints = 0;
-  zpoints = 0;
-  totalpoints = 0;
-
-  resx = 1.0f;
-  resy = 1.0f;
-  resz = 1.0f;
-
-  origin[0] = 0.0f; origin[1] = 0.0f; origin[2] = 0.0f;
-#else
   m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
   m_Resolution[0] = 1.0f; m_Resolution[1] = 1.0f; m_Resolution[2] = 1.0f;
   m_Origin[0] = 0.0f; m_Origin[1] = 0.0f; m_Origin[2] = 0.0f;
-#endif
 }
 
 // -----------------------------------------------------------------------------
