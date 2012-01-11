@@ -138,6 +138,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       IDataArray::Pointer iDataArray = getVoxelData(arrayName);
       if (iDataArray.get() == 0) {
         iDataArray = DataArrayType::CreateArray(size * numComp);
+        assert(size == iDataArray->GetNumberOfTuples() );
         iDataArray->SetNumberOfComponents(numComp);
         iDataArray->SetName(arrayName);
         if (0 == iDataArray.get()) {

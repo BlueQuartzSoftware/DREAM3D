@@ -228,9 +228,9 @@ void FindEuclideanDistMap::preflight()
 	  err = -300;
   }
 
-  PFInt32ArrayType::Pointer p = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::NearestNeighbors, p);
-  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::NearestNeighborDistances, q);
 
   setErrorCondition(err);

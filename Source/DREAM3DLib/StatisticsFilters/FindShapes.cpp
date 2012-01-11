@@ -86,21 +86,21 @@ void FindShapes::preflight()
 	  err = -300;
   }
 
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Centroids, s);
-  PFFloatArrayType::Pointer t = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer t = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Volumes, t);
-  PFFloatArrayType::Pointer u = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer u = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
-  PFFloatArrayType::Pointer v = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer v = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
-  PFFloatArrayType::Pointer w = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer w = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Omega3s, w);
-  PFFloatArrayType::Pointer x = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer x = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
-  PFFloatArrayType::Pointer y = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer y = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::AspectRatios, y);
-  PFInt32ArrayType::Pointer z = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer z = Int32ArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::NumCells, z);
 
   setErrorCondition(err);

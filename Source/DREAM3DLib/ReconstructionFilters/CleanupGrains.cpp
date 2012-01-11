@@ -133,15 +133,15 @@ void CleanupGrains::preflight()
 	  err = -300;
   }
 
-  PFBoolArrayType::Pointer p = PFBoolArrayType::CreateArray(1);
+  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::AlreadyChecked, p);
-  PFInt32ArrayType::Pointer q = PFInt32ArrayType::CreateArray(1);
+  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::Neighbors, q);
-  PFFloatArrayType::Pointer r = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::AvgQuats, r);
-  PFFloatArrayType::Pointer s = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::EulerAngles, s);
-  PFBoolArrayType::Pointer t = PFBoolArrayType::CreateArray(1);
+  BoolArrayType::Pointer t = BoolArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::Active, t);
 
   setErrorCondition(err);

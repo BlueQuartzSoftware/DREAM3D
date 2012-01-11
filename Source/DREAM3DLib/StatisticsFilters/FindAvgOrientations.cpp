@@ -98,13 +98,13 @@ void FindAvgOrientations::preflight()
   d = m->getVoxelData(DREAM3D::VoxelData::Quats);
   if(d.get() == NULL)
   {
-	  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+	  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
 	  m->addVoxelData(DREAM3D::VoxelData::Quats, p);
   }
 
-  PFFloatArrayType::Pointer p = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::AvgQuats, p);
-  PFFloatArrayType::Pointer q = PFFloatArrayType::CreateArray(1);
+  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
   m->addFieldData(DREAM3D::FieldData::EulerAngles, q);
 
   setErrorCondition(err);
