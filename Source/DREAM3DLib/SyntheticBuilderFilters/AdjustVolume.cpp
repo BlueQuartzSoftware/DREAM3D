@@ -187,7 +187,8 @@ void AdjustVolume::execute()
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
   packGrains->setObservers(this->getObservers());
-  oldsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
+  Field field;
+  oldsizedisterror = packGrains->check_sizedisterror(&field);
   while(iterations < m_MaxIterations)
   {
     iterations++;
@@ -271,10 +272,7 @@ void AdjustVolume::execute()
       diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
       m_EquivalentDiameters[index] = diam;
     }
-    PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-    packGrains->setDataContainer(getDataContainer());
-    currentsizedisterror = packGrains->check_sizedisterror(-1000,-1000);
-
+	currentsizedisterror = packGrains->check_sizedisterror(&field);
     if(currentsizedisterror <= oldsizedisterror)
     {
       oldsizedisterror = currentsizedisterror;
