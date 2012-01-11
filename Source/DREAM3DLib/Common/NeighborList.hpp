@@ -77,6 +77,7 @@ class NeighborList : public IDataArray
 
 
     size_t GetNumberOfTuples() {   return _data.size(); }
+    size_t GetSize() { return _data.size(); }
 
 
     void SetNumberOfComponents(int nc) { }

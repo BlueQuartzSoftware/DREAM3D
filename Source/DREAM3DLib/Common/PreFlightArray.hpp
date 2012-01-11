@@ -228,6 +228,11 @@ class PreFlightArray : public IDataArray
      */
     virtual size_t GetNumberOfTuples()
     {
+      return (this->MaxId + 1)/this->NumberOfComponents;
+    }
+
+    virtual size_t GetSize()
+    {
       return Size;
     }
 
@@ -324,7 +329,10 @@ class PreFlightArray : public IDataArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     PreFlightArray(size_t numElements, bool ownsData = true) :
-      Array(NULL), Size(numElements), _ownsData(ownsData)
+      Array(NULL),
+      Size(numElements),
+      _ownsData(ownsData),
+      MaxId(numElements)
     {
       NumberOfComponents = 1;
     }

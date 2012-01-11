@@ -21,9 +21,6 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
-
-
-//-- Boost Test Headers
 #include "UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
