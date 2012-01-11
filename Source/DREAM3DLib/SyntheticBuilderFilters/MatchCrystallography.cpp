@@ -533,7 +533,7 @@ void MatchCrystallography::matchCrystallography()
 			selectedgrain1 = int(rg.genrand_res53() * m->getTotalFields());
 			if (selectedgrain1 == 0) selectedgrain1 = 1;
 			if (selectedgrain1 == m->getTotalFields()) selectedgrain1 = m->getTotalFields() - 1;
-			if (m_SurfaceFields[selectedgrain1] == true) good = 0;
+			if (m_SurfaceFields[selectedgrain1] > 0) good = 0;
 		  }
 
 		  ea1 = m_EulerAnglesF[3*selectedgrain1];
@@ -615,7 +615,7 @@ void MatchCrystallography::matchCrystallography()
 			selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->getTotalFields());
 			if (selectedgrain2 == 0) selectedgrain2 = 1;
 			if (selectedgrain2 == m->getTotalFields()) selectedgrain2 = m->getTotalFields() - 1;
-			if (m_SurfaceFields[selectedgrain1] == true || m_SurfaceFields[selectedgrain2] == true) good = 0;
+			if (m_SurfaceFields[selectedgrain1] > 0 || m_SurfaceFields[selectedgrain2] > 0) good = 0;
 		  }
 		  g1ea1 = m_EulerAnglesF[3*selectedgrain1];
 		  g1ea2 = m_EulerAnglesF[3*selectedgrain1+1];
@@ -820,7 +820,7 @@ void  MatchCrystallography::measure_misorientations ()
         mbin = m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3 * j], misorientationlists[i][3 * j + 1], misorientationlists[i][3 * j + 2]);
       }
 
-      if(m_SurfaceFields[i] == false && (nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
+      if(m_SurfaceFields[i] == 0 && (nname > i || m_SurfaceFields[nname] > 0) && phase1 == phase2)
       {
         simmdf[m_PhasesF[i]][mbin] = simmdf[m_PhasesF[i]][mbin] + (neighsurfarea / m_TotalSurfaceArea[m_PhasesF[i]]);
       }
