@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
      */
     virtual void execute();
 
-    float check_sizedisterror(int gadd, int gremove);
+    float check_sizedisterror(Field* field);
     int readReconStatsData(H5StatsReader::Pointer h5io);
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
     void generate_grain(int, int, Field*);
