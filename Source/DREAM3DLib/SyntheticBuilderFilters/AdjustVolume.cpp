@@ -91,19 +91,16 @@ void AdjustVolume::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-
   int err = 0;
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
 
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields);
-
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields, 1);
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
-
 }
 
 

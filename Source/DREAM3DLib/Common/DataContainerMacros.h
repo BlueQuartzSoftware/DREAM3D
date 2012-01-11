@@ -62,18 +62,22 @@
     m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
   }
 
-#define PF_MAKE_SURE_ARRAY_EXISTS(dc, NameSpace, DType, Name, ss, ArrayType, size)\
+#define PF_MAKE_SURE_ARRAY_EXISTS(dc, NameSpace, DType, Name, ss, ArrayType, size, NumComp)\
   IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL ==  m_##Name##_Ptr.get() ) {\
-    ArrayType::Pointer p = ArrayType::CreateArray((size));\
+    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
+    p->SetNumberOfComponents(NumComp);\
+    p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name = p->GetPointer(0);\
   }
 
-#define PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ArrayType, size)\
+#define PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ArrayType, size, NumComp)\
   IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL ==  m_##Name##Post##_Ptr.get() ) {\
-    ArrayType::Pointer p = ArrayType::CreateArray((size));\
+    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
+    p->SetNumberOfComponents(NumComp);\
+    p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name##Post = p->GetPointer(0);\
   }
@@ -122,7 +126,9 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   PtrType* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
   if (iDataArray.get() == NULL) { \
-    iDataArray = DataArrayType::CreateArray(size);\
+    iDataArray = DataArrayType::CreateArray(size * NumComp);\
+    iDataArray->SetNumberOfComponents(numComp);\
+    iDataArray->SetName(arrayName);\
     if (NULL == iDataArray.get()) { \
       std::stringstream s;\
       s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
@@ -131,7 +137,6 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
       return valuePtr;\
     }\
     add##Field##Data(arrayName, iDataArray);\
-    iDataArray->SetNumberOfComponents(numComp);\
   } \
   valuePtr =\
   IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
@@ -144,20 +149,6 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   }\
   return valuePtr;\
 }
-
-#if OLD_WAY
-#define INITIALIZE_FLOAT_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, FloatArrayType, float, size, valuePtr, numComp)
-
-#define INITIALIZE_INT32_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, Int32ArrayType, int32_t, size, valuePtr, numComp)
-
-#define INITIALIZE_INT8_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, Int8ArrayType, int8_t, size, valuePtr, numComp)
-
-#define INITIALIZE_BOOL_NAMED_ARRAY_TO_PTR(m, field, name, size, valuePtr, numComp) \
-INITIALIZE_NAMED_ARRAY_TO_PTR(m, field, name, BoolArrayType, bool, size, valuePtr, numComp)
-#endif
 
 
 #define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, type, size, valuePtr) \

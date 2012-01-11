@@ -353,7 +353,8 @@ class DataArray : public IDataArray
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
     DataArray(size_t numElements, bool ownsData = true) :
-      Array(NULL), Size(numElements), _ownsData(ownsData)
+    TEST0(0),
+      Array(NULL), TEST1(0), Size(numElements), _ownsData(ownsData)
     {
       NumberOfComponents = 1;
     }
@@ -436,8 +437,9 @@ class DataArray : public IDataArray
     }
 
   private:
-
+    uint64_t TEST0;
     T* Array;
+    uint64_t TEST1;
     size_t Size;
     bool _ownsData;
     size_t MaxId;

@@ -126,15 +126,15 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
   // Cell Data
   PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
-  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, FloatArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, FloatArrayType, voxels, 3);
 
 
   // Field Data
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  int8_t, Int8ArrayType, fields);
   PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, -303,  int32_t, Int32ArrayType, fields);
-  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, FloatArrayType, fields*3);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AvgQuats, ss, FloatArrayType, fields*5);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, FloatArrayType, fields, 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AvgQuats, ss, FloatArrayType, fields, 5);
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
