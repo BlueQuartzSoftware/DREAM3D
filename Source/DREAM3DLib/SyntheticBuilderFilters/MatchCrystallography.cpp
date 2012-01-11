@@ -379,50 +379,50 @@ void MatchCrystallography::assign_eulers()
   DataContainer* m = getDataContainer();
   int numbins = 0;
   float totaldensity = 0;
-  float synea1=0,synea2=0,synea3=0;
+  float synea1 = 0, synea2 = 0, synea3 = 0;
   float q[5];
   float random;
   int choose, phase;
 
   size_t xtalCount = m->crystruct.size();
   unbiasedvol.resize(xtalCount);
-  for(size_t i=1;i<xtalCount;++i)
+  for (size_t i = 1; i < xtalCount; ++i)
   {
-   unbiasedvol[i] = 0;
+    unbiasedvol[i] = 0;
   }
-  for(size_t i=1;i<m->getTotalFields();i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     random = rg.genrand_res53();
     choose = 0;
     totaldensity = 0;
     phase = m_PhasesF[i];
-  if(m->crystruct[phase] == Ebsd::Cubic) numbins = 5832;
-  if(m->crystruct[phase] == Ebsd::Hexagonal) numbins = 15552;
+    if(m->crystruct[phase] == Ebsd::Cubic) numbins = 5832;
+    if(m->crystruct[phase] == Ebsd::Hexagonal) numbins = 15552;
     for (int j = 0; j < numbins; j++)
     {
       float density = actualodf[phase][j];
       totaldensity = totaldensity + density;
-      if (random >= totaldensity) choose = j;
+      if(random >= totaldensity) choose = j;
     }
     m_OrientationOps[m->crystruct[phase]]->determineEulerAngles(choose, synea1, synea2, synea3);
-    m_EulerAnglesF[3*i] = synea1;
-    m_EulerAnglesF[3*i+1] = synea2;
-    m_EulerAnglesF[3*i+2] = synea3;
+    m_EulerAnglesF[3 * i] = synea1;
+    m_EulerAnglesF[3 * i + 1] = synea2;
+    m_EulerAnglesF[3 * i + 2] = synea3;
     OrientationMath::eulertoQuat(q, synea1, synea2, synea3);
-    m_AvgQuats[5*i] = q[0];
-    m_AvgQuats[5*i+1] = q[1];
-    m_AvgQuats[5*i+2] = q[2];
-    m_AvgQuats[5*i+3] = q[3];
-    m_AvgQuats[5*i+4] = q[4];
-    if (m_SurfaceFields[i] == false)
+    m_AvgQuats[5 * i] = q[0];
+    m_AvgQuats[5 * i + 1] = q[1];
+    m_AvgQuats[5 * i + 2] = q[2];
+    m_AvgQuats[5 * i + 3] = q[3];
+    m_AvgQuats[5 * i + 4] = q[4];
+    if(m_SurfaceFields[i] == false)
     {
       simodf[phase][choose] = simodf[phase][choose] + (float(m_NumCells[i]) * m->getXRes() * m->getYRes() * m->getZRes());
       unbiasedvol[phase] = unbiasedvol[phase] + (float(m_NumCells[i]) * m->getXRes() * m->getYRes() * m->getZRes());
     }
   }
-  for(int i=0;i<numbins;i++)
+  for (int i = 0; i < numbins; i++)
   {
-	  simodf[phase][i] = simodf[phase][i]/unbiasedvol[phase];
+    simodf[phase][i] = simodf[phase][i] / unbiasedvol[phase];
   }
 }
 
@@ -556,11 +556,11 @@ void MatchCrystallography::matchCrystallography()
 		  OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
 		  odfchange = ((actualodf[phase][choose] - simodf[phase][choose]) * (actualodf[phase][choose] - simodf[phase][choose])) - ((actualodf[phase][choose] - (simodf[phase][choose]
-			  + (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
-			  + (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
+			  + (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase]))) * (actualodf[phase][choose] - (simodf[phase][choose]
+			  + (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase]))));
 		  odfchange = odfchange + (((actualodf[phase][g1odfbin] - simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin] - simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-			  - (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
-			  - (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
+			  - (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin] - (simodf[phase][g1odfbin]
+			  - (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase])))));
 
 		  mdfchange = 0;
 		  size_t size = 0;
@@ -587,8 +587,8 @@ void MatchCrystallography::matchCrystallography()
 			m_AvgQuats[5*selectedgrain1+2] = q1[2];
 			m_AvgQuats[5*selectedgrain1+3] = q1[3];
 			m_AvgQuats[5*selectedgrain1+4] = q1[4];
-			simodf[phase][choose] = simodf[phase][choose] + (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
-			simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
+			simodf[phase][choose] = simodf[phase][choose] + (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase]);
+			simodf[phase][g1odfbin] = simodf[phase][g1odfbin] - (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase]);
 			size_t size = 0;
 			if (neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
 			for (size_t j = 0; j < size; j++)
@@ -638,13 +638,13 @@ void MatchCrystallography::matchCrystallography()
 		  g2odfbin = m_OrientationOps[m->crystruct[phase]]->getOdfBin(r1, r2, r3);
 
 		  odfchange = ((actualodf[phase][g1odfbin]-simodf[phase][g1odfbin]) * (actualodf[phase][g1odfbin]-simodf[phase][g1odfbin])) - ((actualodf[phase][g1odfbin]
-			 -(simodf[phase][g1odfbin] - (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m_NumCells[selectedgrain2]) * m->getXRes()
-				  * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-			  + (float(m_NumCells[selectedgrain2]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]))));
+			 -(simodf[phase][g1odfbin] - (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase]) + (float(m_NumCells[selectedgrain2]) * m->getXRes()
+				  * m->getYRes() * m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g1odfbin]-(simodf[phase][g1odfbin] - (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase])
+			  + (float(m_NumCells[selectedgrain2]) * volResConst / unbiasedvol[phase]))));
 		  odfchange = odfchange + (((actualodf[phase][g2odfbin]-simodf[phase][g2odfbin]) * (actualodf[phase][g2odfbin]-simodf[phase][g2odfbin])) - ((actualodf[phase][g2odfbin]
-			 -(simodf[phase][g2odfbin] - (float(m_NumCells[selectedgrain2]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]) + (float(m_NumCells[selectedgrain1]) * m->getXRes()
-				  * m->getYRes() *m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m_NumCells[selectedgrain2]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-			  + (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])))));
+			 -(simodf[phase][g2odfbin] - (float(m_NumCells[selectedgrain2]) * volResConst / unbiasedvol[phase]) + (float(m_NumCells[selectedgrain1]) * m->getXRes()
+				  * m->getYRes() *m->getZRes() / unbiasedvol[phase]))) * (actualodf[phase][g2odfbin]-(simodf[phase][g2odfbin] - (float(m_NumCells[selectedgrain2]) * volResConst / unbiasedvol[phase])
+			  + (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase])))));
 
 
 		  mdfchange = 0;
@@ -692,10 +692,10 @@ void MatchCrystallography::matchCrystallography()
 			m_EulerAnglesF[3*selectedgrain2] = g1ea1;
 			m_EulerAnglesF[3*selectedgrain2+1] = g1ea2;
 			m_EulerAnglesF[3*selectedgrain2+2] = g1ea3;
-			simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m_NumCells[selectedgrain2]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-				- (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
-			simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m_NumCells[selectedgrain1]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase])
-				- (float(m_NumCells[selectedgrain2]) * m->getXRes() * m->getYRes() * m->getZRes() / unbiasedvol[phase]);
+			simodf[phase][g1odfbin] = simodf[phase][g1odfbin] + (float(m_NumCells[selectedgrain2]) * volResConst / unbiasedvol[phase])
+				- (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase]);
+			simodf[phase][g2odfbin] = simodf[phase][g2odfbin] + (float(m_NumCells[selectedgrain1]) * volResConst / unbiasedvol[phase])
+				- (float(m_NumCells[selectedgrain2]) * volResConst / unbiasedvol[phase]);
 
 		    OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
 			m_AvgQuats[5*selectedgrain1+1] = q1[1];

@@ -52,6 +52,15 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
+typedef struct {
+    float m_Volumes;
+    float m_EquivalentDiameters;
+    float m_AxisLengths[3];
+    float m_AxisEulerAngles[3];
+    float m_Omega3s;
+    int m_PhasesF;
+    int m_Neighborhoods[3];
+} Field;
 
 /**
  * @class PackGrainsGen2 PackGrainsGen2.h DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h
@@ -95,7 +104,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float check_sizedisterror(int gadd, int gremove);
     int readReconStatsData(H5StatsReader::Pointer h5io);
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
-    void generate_grain(int, int, int);
+    void generate_grain(int phase, int Seed, Field* grain);
 
   protected:
     PackGrainsGen2();
@@ -136,7 +145,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     int32_t* m_PhasesC;
     float*   m_EulerAngles;
     int8_t*  m_SurfaceVoxels;
-    
+
     // Field Data - make sure these are all initialized to NULL in the constructor
     bool* m_Active;
     int32_t* m_PhasesF;

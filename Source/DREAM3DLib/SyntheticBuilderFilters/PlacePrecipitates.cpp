@@ -59,8 +59,6 @@
 PlacePrecipitates::PlacePrecipitates() :
 AbstractFilter(),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_SurfaceVoxels(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
 m_AxisLengths(NULL),
@@ -68,7 +66,9 @@ m_Volumes(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_Active(NULL),
+m_PhasesC(NULL),
 m_PhasesF(NULL),
+m_SurfaceVoxels(NULL),
 m_Neighbors(NULL),
 m_NumCells(NULL)
 {
@@ -536,9 +536,10 @@ void  PlacePrecipitates::place_precipitates()
       }
     }
 
+    Field grain;
     m->resizeFieldDataArrays(currentnumgrains+1);
     //FIXME: Initialize the grain with default data
-    packGrains->generate_grain(currentnumgrains, phase, Seed);
+    packGrains->generate_grain(phase, Seed, &grain);
     precipboundaryfraction = m->pptFractions[phase];
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)

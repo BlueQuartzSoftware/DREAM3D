@@ -89,11 +89,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 
 
   private:
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
-
     int32_t* m_GrainIds;
     float* m_Quats;
     float* m_EulerAngles;
@@ -106,8 +101,13 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     bool* m_AlreadyChecked;
     NeighborList<int>* m_NeighborList;
 
-	std::vector<std::vector<int> > voxellists;
-	std::vector<int> nuclei;
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath*> m_OrientationOps;
+
+    std::vector<std::vector<int> > voxellists;
+    std::vector<int> nuclei;
 
 
 	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
