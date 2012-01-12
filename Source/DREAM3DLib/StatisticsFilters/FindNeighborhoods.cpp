@@ -193,7 +193,7 @@ void FindNeighborhoods::find_centroids()
     m_NumCells[i] = graincenters[i*5 + 0];
     m_Volumes[i] = (graincenters[i*5 + 0] * res_scalar);
     radcubed = m_Volumes[i]/vol_term;
-    diameter = 2.0*powf(radcubed, 0.3333333333);
+    diameter = 2.0f*powf(radcubed, 0.3333333333f);
     m_EquivalentDiameters[i] = diameter;
   }
 }

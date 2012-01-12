@@ -73,8 +73,20 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void TestDataArray()
 {
-  Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
+  int32_t* ptr = NULL;
+  {
+  
+  Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0);
+  DREAM3D_REQUIRE_EQUAL(0, d->GetSize() );
+  DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples() );
+    ptr = d->GetPointer(0);
+  }
 
+
+  {
+  
+  Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
+  ptr = int32Array->GetPointer(0);
   DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS , int32Array->GetNumberOfTuples());
   DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS , int32Array->GetSize());
   int32Array->SetNumberOfComponents(NUM_COMPONENTS);
@@ -126,6 +138,8 @@ void TestDataArray()
   DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4 , int32Array->GetNumberOfTuples());
   DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4 , int32Array->GetSize());
 
+   ptr = int32Array->GetPointer(0);
+  }
 
 
 }
