@@ -48,6 +48,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindSurfaceGrains.h"
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -177,6 +178,17 @@ void MatchCrystallography::preflight()
     return;
   }
 
+  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+  find_surfacefields->setObservers(this->getObservers());
+  find_surfacefields->setDataContainer(getDataContainer());
+  find_surfacefields->preflight();
+  if (find_surfacefields->getErrorCondition() < 0)
+  {
+    setErrorCondition(find_surfacefields->getErrorCondition());
+    setErrorMessage(find_surfacefields->getErrorMessage());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -206,12 +218,19 @@ void MatchCrystallography::execute()
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
   find_neighbors->execute();
-  err = find_neighbors->getErrorCondition();
-  if (err < 0)
+  if (find_neighbors->getErrorCondition() < 0)
   {
     return;
   }
 
+  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+  find_surfacefields->setObservers(this->getObservers());
+  find_surfacefields->setDataContainer(getDataContainer());
+  find_surfacefields->execute();
+  if (find_surfacefields->getErrorCondition() < 0)
+  {
+    return;
+  }
 
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   readODFData(h5reader);
