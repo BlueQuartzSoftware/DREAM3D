@@ -480,10 +480,7 @@ void MatchCrystallography::matchCrystallography()
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
   int64_t totalPoints = m->totalPoints();
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
-  m_EulerAnglesC = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, totalPoints*3, this);
-  if (NULL == m_EulerAnglesC) { return; }
+  size_t totalFields = m->getTotalFields();
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -493,7 +490,7 @@ void MatchCrystallography::matchCrystallography()
   int numbins = 0;
   int iterations = 0, badtrycount = 0;
   float random = 0;
-  int good = 0;
+  int counter = 0;
   float q1[5], q2[5];
   float ea1 = 0, ea2 = 0, ea3 = 0;
   float r1 = 0, r2 = 0, r3 = 0;
@@ -525,15 +522,14 @@ void MatchCrystallography::matchCrystallography()
 
       if(random < 0.5) // SwapOutOrientation
       {
-		  good = 0;
-		  while (good == 0)
+		  counter = 0;
+		  selectedgrain1 = int(rg.genrand_res53() * totalFields);
+		  while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < totalFields)
 		  {
-			good = 1;
-			selectedgrain1 = int(rg.genrand_res53() * m->getTotalFields());
-			if (selectedgrain1 == 0) selectedgrain1 = 1;
-			if (selectedgrain1 == m->getTotalFields()) selectedgrain1 = m->getTotalFields() - 1;
-			if (m_SurfaceFields[selectedgrain1] > 0) good = 0;
+			if (selectedgrain1 >= totalFields) selectedgrain1 = selectedgrain1 - totalFields;
+			counter++;
 		  }
+		  if(counter == totalFields) return;
 
 		  ea1 = m_EulerAnglesF[3*selectedgrain1];
 		  ea2 = m_EulerAnglesF[3*selectedgrain1+1];
@@ -604,18 +600,23 @@ void MatchCrystallography::matchCrystallography()
       }
       else if(random > 0.5) // SwitchOrientation
       {
-		  good = 0;
-		  while (good == 0)
+		  counter = 0;
+		  selectedgrain1 = int(rg.genrand_res53() * totalFields);
+		  while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < totalFields)
 		  {
-			good = 1;
-			selectedgrain1 = static_cast<size_t>(rg.genrand_res53() * m->getTotalFields());
-			if (selectedgrain1 == 0) selectedgrain1 = 1;
-			if (selectedgrain1 == m->getTotalFields()) selectedgrain1 = m->getTotalFields() - 1;
-			selectedgrain2 = static_cast<size_t>(rg.genrand_res53() * m->getTotalFields());
-			if (selectedgrain2 == 0) selectedgrain2 = 1;
-			if (selectedgrain2 == m->getTotalFields()) selectedgrain2 = m->getTotalFields() - 1;
-			if (m_SurfaceFields[selectedgrain1] > 0 || m_SurfaceFields[selectedgrain2] > 0) good = 0;
+			if (selectedgrain1 >= totalFields) selectedgrain1 = selectedgrain1 - totalFields;
+			counter++;
 		  }
+		  if(counter == totalFields) return;
+		  counter = 0;
+		  selectedgrain2 = int(rg.genrand_res53() * totalFields);
+		  while ((m_SurfaceFields[selectedgrain2] == true || m_PhasesF[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < totalFields)
+		  {
+			if (selectedgrain2 >= totalFields) selectedgrain2 = selectedgrain2 - totalFields;
+			counter++;
+		  }
+		  if(counter == totalFields) return;
+
 		  g1ea1 = m_EulerAnglesF[3*selectedgrain1];
 		  g1ea2 = m_EulerAnglesF[3*selectedgrain1+1];
 		  g1ea3 = m_EulerAnglesF[3*selectedgrain1+2];
