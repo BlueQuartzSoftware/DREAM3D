@@ -333,6 +333,8 @@ void PackGrainsGen2::execute()
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+
+  notify("Initializing Attribtues", 0, Observable::UpdateProgressMessage);
   initializeAttributes();
 
   size_t udims[3] =
@@ -380,6 +382,7 @@ void PackGrainsGen2::execute()
     if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
+  notify("Initializing Packing Grid", 0, Observable::UpdateProgressMessage);
   initialize_packinggrid();
   // initialize the sim and goal size distributions for the primary phases
   grainsizedist.resize(primaryphases.size());
@@ -407,7 +410,6 @@ void PackGrainsGen2::execute()
   Field field;
   int gid = 0;
   float currentvol = 0.0;
-//FIXME: Initialize the Grain with some sort of default data
   float factor = 1.0;
   float iter = 0;
   while (currentvol < (factor * totalvol))
@@ -429,17 +431,25 @@ void PackGrainsGen2::execute()
     change = (currentsizedisterror) - (oldsizedisterror);
     if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
     {
-	   gid++;
-       m->resizeFieldDataArrays(gid + 1);
-       dataCheck(false, totalPoints, gid+1, m->crystruct.size());
-       m_Active[gid] = 1;
-	     transfer_attributes(gid, &field);
-       oldsizedisterror = currentsizedisterror;
-       currentvol = currentvol + m_Volumes[gid];
-       //FIXME: Initialize the Grain with some sort of default data
-       iter = 0;
+      gid++;
+      std::stringstream ss;
+      ss << "Adding Grain #" << gid;
+      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+
+      m->resizeFieldDataArrays(gid + 1);
+      dataCheck(false, totalPoints, gid + 1, m->crystruct.size());
+      m_Active[gid] = 1;
+      transfer_attributes(gid, &field);
+      oldsizedisterror = currentsizedisterror;
+      currentvol = currentvol + m_Volumes[gid];
+      //FIXME: Initialize the Grain with some sort of default data
+      iter = 0;
     }
   }
+
+  notify("Initial Round of Grain Additions Complete", 0, Observable::UpdateProgressMessage);
+
+
   if(m_PeriodicBoundaries == false)
   {
     iter = 0;
@@ -468,7 +478,11 @@ void PackGrainsGen2::execute()
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001f)))
       {
-	    gid++;
+        gid++;
+        std::stringstream ss;
+        ss << "Adding Grain #" << gid;
+        notify(ss.str(), 0, Observable::UpdateProgressMessage);
+
         m->resizeFieldDataArrays(gid + 1);
         dataCheck(false, totalPoints, gid+1, m->crystruct.size());
         m_Active[gid] = 1;
@@ -510,12 +524,16 @@ void PackGrainsGen2::execute()
   fillingerror = 1;
   for (int i = 1; i < numgrains; i++)
   {
+    std::stringstream ss;
+    ss << "Moving Grain #" << i;
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
     zc = sizez / 2.0f;
-    m_Centroids[3*i] = xc;
-    m_Centroids[3*i+1] = yc;
-    m_Centroids[3*i+2] = zc;
+    m_Centroids[3 * i] = xc;
+    m_Centroids[3 * i + 1] = yc;
+    m_Centroids[3 * i + 2] = zc;
     insert_grain(i);
     fillingerror = check_fillingerror(i, -1000);
     for (int iter = 0; iter < 10; iter++)
@@ -523,9 +541,9 @@ void PackGrainsGen2::execute()
       xc = rg.genrand_res53() * (dims[0] * m->getXRes());
       yc = rg.genrand_res53() * (dims[1] * m->getYRes());
       zc = rg.genrand_res53() * (dims[2] * m->getZRes());
-      oldxc = m_Centroids[3*i];
-      oldyc = m_Centroids[3*i+1];
-      oldzc = m_Centroids[3*i+2];
+      oldxc = m_Centroids[3 * i];
+      oldyc = m_Centroids[3 * i + 1];
+      oldzc = m_Centroids[3 * i + 2];
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, i);
       move_grain(i, xc, yc, zc);
@@ -545,10 +563,14 @@ void PackGrainsGen2::execute()
   int totalAdjustments = static_cast<int>(100 * (numgrains-1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
+    std::stringstream ss;
+    ss << "Swapping/Moving/Adding/Removing Grains iteration " << iteration << "/" << totalAdjustments;
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+
 //    change1 = 0;
 //    change2 = 0;
     int option = iteration % 2;
-	iteration = 99;
+    //iteration = 99;
 
     if(writeErrorFile == true && iteration % 25 == 0)
     {
@@ -567,9 +589,9 @@ void PackGrainsGen2::execute()
       xc = rg.genrand_res53() * (dims[0] * m->getXRes());
       yc = rg.genrand_res53() * (dims[1] * m->getYRes());
       zc = rg.genrand_res53() * (dims[2] * m->getZRes());
-      oldxc = m_Centroids[3*randomgrain];
-      oldyc = m_Centroids[3*randomgrain+1];
-      oldzc = m_Centroids[3*randomgrain+2];
+      oldxc = m_Centroids[3 * randomgrain];
+      oldyc = m_Centroids[3 * randomgrain + 1];
+      oldzc = m_Centroids[3 * randomgrain + 2];
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, randomgrain);
       move_grain(randomgrain, xc, yc, zc);
@@ -595,9 +617,9 @@ void PackGrainsGen2::execute()
       if(randomgrain == 0) randomgrain = 1;
       if(randomgrain == numgrains) randomgrain = numgrains - 1;
       Seed++;
-      oldxc = m_Centroids[3*randomgrain];
-      oldyc = m_Centroids[3*randomgrain+1];
-      oldzc = m_Centroids[3*randomgrain+2];
+      oldxc = m_Centroids[3 * randomgrain];
+      oldyc = m_Centroids[3 * randomgrain + 1];
+      oldzc = m_Centroids[3 * randomgrain + 2];
       xc = oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx));
       yc = oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy));
       zc = oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz));
@@ -1445,6 +1467,8 @@ void PackGrainsGen2::insert_grain(size_t gnum)
 
 void PackGrainsGen2::assign_voxels()
 {
+  notify("Assigning Voxels", 0, Observable::UpdateProgressMessage);
+
   DataContainer* m = getDataContainer();
   int index;
   size_t udims[3] = {0,0,0};
@@ -1637,21 +1661,18 @@ void PackGrainsGen2::assign_voxels()
     }
   }
   m->resizeFieldDataArrays(goodcount);
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackGrainsGen2::assign_gaps()
 {
+  notify("Assigning Gaps", 0, Observable::UpdateProgressMessage);
+
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->totalPoints();
-  int index;
-  int timestep = 100;
-  int unassignedcount = 1;
-  int column, row, plane;
-  float inside;
-  float xc, yc, zc;
-  float xp, yp, zp;
-  float dist;
-  float x, y, z;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1666,6 +1687,16 @@ void PackGrainsGen2::assign_gaps()
     static_cast<DimType>(udims[2]),
   };
 
+
+  int index;
+  int timestep = 100;
+  int unassignedcount = 1;
+  DimType column, row, plane;
+  float inside;
+  float xc, yc, zc;
+  float xp, yp, zp;
+  float dist;
+  float x, y, z;
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
@@ -1829,6 +1860,8 @@ void PackGrainsGen2::assign_gaps()
 }
 void PackGrainsGen2::cleanup_grains()
 {
+  notify("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->totalPoints();
   size_t udims[3] = {0,0,0};
@@ -1993,5 +2026,6 @@ void PackGrainsGen2::cleanup_grains()
 	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
   m->resizeFieldDataArrays(goodcount);
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
   assign_gaps();
 }

@@ -96,6 +96,17 @@ class NeighborList : public IDataArray
 
     virtual int32_t Resize(size_t numTuples) { return 0; }
 
+
+    //FIXME: These need to be implemented
+    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    {
+        assert(false);
+    }
+    virtual void printComponent(std::ostream &out, size_t i, int j)
+    {
+      assert(false);
+    }
+
 /**
  *
  */
@@ -149,7 +160,7 @@ class NeighborList : public IDataArray
      */
     int getNumberOfLists()
     {
-      return _data.size();
+      return static_cast<int>(_data.size());
     }
 
     /**
@@ -161,7 +172,7 @@ class NeighborList : public IDataArray
       {
         return 0;
       }
-      return _data[grainId]->size();
+      return static_cast<int>(_data[grainId]->size());
     }
 
     /**
