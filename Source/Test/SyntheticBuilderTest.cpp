@@ -132,7 +132,7 @@ void RemoveTestFiles()
 void TestSyntheticBuilder()
 {
   Observer* observer = new Observer;
-
+  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::UnknownShapeType);
   m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
   m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::CylinderShape);
 
