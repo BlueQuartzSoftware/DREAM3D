@@ -209,7 +209,8 @@ void PlacePrecipitates::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
+//void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
+void PlacePrecipitates::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
@@ -242,9 +243,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
   float covera = m_AxisLengths[3 * gnum + 2];
   float omega3 = m_Omega3s[gnum];
   float radcur1, radcur2, radcur3;
-  float coatingradcur1, coatingradcur2, coatingradcur3;
+//  float coatingradcur1, coatingradcur2, coatingradcur3;
   currentprecipvoxellist.resize(0);
-  currentcoatingvoxellist.resize(0);
+//  currentcoatingvoxellist.resize(0);
 
   DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[gnum]];
   // init any values for each of the Shape Ops
@@ -263,9 +264,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 
   radcur2 = (radcur1 * bovera);
   radcur3 = (radcur1 * covera);
-  coatingradcur1 = radcur1 + coatingthickness;
-  coatingradcur2 = radcur2 + coatingthickness;
-  coatingradcur3 = radcur3 + coatingthickness;
+//  coatingradcur1 = radcur1 + coatingthickness;
+//  coatingradcur2 = radcur2 + coatingthickness;
+//  coatingradcur3 = radcur3 + coatingthickness;
   float phi1 = m_AxisEulerAngles[3 * gnum];
   float PHI = m_AxisEulerAngles[3 * gnum + 1];
   float phi2 = m_AxisEulerAngles[3 * gnum + 2];
@@ -326,7 +327,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
         if(iter3 > dims[2] - 1) plane = iter3 - dims[2];
         index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
         inside = -1;
-        coatinginside = -1;
+//        coatinginside = -1;
         x = float(column) * m->getXRes();
         y = float(row) * m->getYRes();
         z = float(plane) * m->getZRes();
@@ -338,7 +339,8 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
         if(iter3 > dims[2] - 1) z = z + sizez;
         dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
         dist = sqrt(dist);
-        if(dist < coatingradcur1)
+//        if(dist < coatingradcur1)
+        if(dist < radcur1)
         {
           x = x - xc;
           y = y - yc;
@@ -349,21 +351,21 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
           float axis1comp = xp / radcur1;
           float axis2comp = yp / radcur2;
           float axis3comp = zp / radcur3;
-          float coatingaxis1comp = xp / coatingradcur1;
-          float coatingaxis2comp = yp / coatingradcur2;
-          float coatingaxis3comp = zp / coatingradcur3;
+//          float coatingaxis1comp = xp / coatingradcur1;
+//          float coatingaxis2comp = yp / coatingradcur2;
+//          float coatingaxis3comp = zp / coatingradcur3;
           inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-          coatinginside = m_ShapeOps[shapeclass]->inside(coatingaxis1comp, coatingaxis2comp, coatingaxis3comp);
+//          coatinginside = m_ShapeOps[shapeclass]->inside(coatingaxis1comp, coatingaxis2comp, coatingaxis3comp);
           if(inside >= 0)
           {
             int currentpoint = index;
             currentprecipvoxellist.push_back(currentpoint);
           }
-          if(inside < 0 && coatinginside >= 0)
-          {
-            int currentpoint = index;
-            currentcoatingvoxellist.push_back(currentpoint);
-          }
+//          if(inside < 0 && coatinginside >= 0)
+//          {
+//            int currentpoint = index;
+//            currentcoatingvoxellist.push_back(currentpoint);
+//          }
         }
       }
     }
@@ -498,7 +500,7 @@ void  PlacePrecipitates::place_precipitates()
   int64_t totalPoints = m->totalPoints();
   totalprecipvol = 0;
   int precipvoxelcounter = 0;
-  float thickness = 0.25;
+//  float thickness = 0.25;
   size_t currentnumgrains = m->getTotalFields();
   numprimarygrains = m->getTotalFields();
  // size_t index;
@@ -574,7 +576,8 @@ void  PlacePrecipitates::place_precipitates()
     m_Centroids[3 * currentnumgrains] = xc;
     m_Centroids[3 * currentnumgrains + 1] = yc;
     m_Centroids[3 * currentnumgrains + 2] = zc;
-    insert_precipitate(currentnumgrains, thickness);
+//    insert_precipitate(currentnumgrains, thickness);
+    insert_precipitate(currentnumgrains);
 
     m_Active[currentnumgrains] = true;
     precipvoxelcounter = 0;
