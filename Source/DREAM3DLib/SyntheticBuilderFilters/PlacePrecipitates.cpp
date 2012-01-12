@@ -131,8 +131,8 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
-  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType,  voxels, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, Neighbors, ss, Int32ArrayType, voxels, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, int32_t, Int32ArrayType,  voxels, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
 
 
@@ -144,7 +144,7 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, -311, bool, BoolArrayType, fields);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, Int32ArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
