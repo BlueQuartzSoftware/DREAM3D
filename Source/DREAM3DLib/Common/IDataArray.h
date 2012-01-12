@@ -92,6 +92,9 @@ class IDataArray
      */
     virtual size_t GetNumberOfTuples () = 0;
 
+    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',') = 0;
+    virtual void printComponent(std::ostream &out, size_t i, int j) = 0;
+
     /**
      * @brief Return the number of elements in the array
      * @return
@@ -111,12 +114,6 @@ class IDataArray
     virtual size_t getTypeSize() = 0;
 
     /**
-     * @brief Byte swaps the Elements in the array. Needed if you want to convert
-     * the endianess of the data.
-     */
-  //  virtual void byteSwapElements() = 0;
-
-    /**
      * @brief Sets all the values to zero.
      */
     virtual void initializeWithZeros() = 0;
@@ -134,30 +131,6 @@ class IDataArray
      * @return 1 on success, 0 on failure
      */
     virtual int32_t Resize(size_t numTuples) = 0;
-#if 0
-    /**
-     * @brief Prints information about the class to ostream.
-     * @param os
-     * @param indent
-     */
-    virtual void printSelf(std::ostream &os, int32_t indent) = 0;
-
-    /**
-     * @brief Converts the data array into a string delimited by the supplied
-     * delimiter.
-     * @param delimiter The delimiter to use between each value
-     * @return The generated string
-     */
-    virtual std::string valueToString(char delimiter) = 0;
-
-     /**
-     * @brief Converts the data array into a string delimited by the supplied
-     * delimiter.
-     * @param delimiter The delimiter to use between each value
-     * @return The generated string
-     */
-    virtual std::string valueToString(const std::string &delimiter=" ") = 0;
-#endif
 
 
   protected:

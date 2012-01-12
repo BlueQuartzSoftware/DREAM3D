@@ -110,7 +110,7 @@ std::list<std::string> DataContainer::getVoxelArrayNameList()
 // -----------------------------------------------------------------------------
 int DataContainer::getNumVoxelArrays()
 {
-  return m_VoxelData.size();
+  return static_cast<int>(m_VoxelData.size());
 }
 
 
@@ -142,7 +142,7 @@ void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer da
 // -----------------------------------------------------------------------------
 std::list<std::string> DataContainer::getFieldArrayNameList()
 {
-  std::list<std::string> keys(m_FieldData.size());
+  std::list<std::string> keys;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -155,7 +155,7 @@ std::list<std::string> DataContainer::getFieldArrayNameList()
 // -----------------------------------------------------------------------------
 int DataContainer::getNumFieldArrays()
 {
-  return m_FieldData.size();
+  return static_cast<int>(m_FieldData.size());
 }
 
 // -----------------------------------------------------------------------------
@@ -215,7 +215,7 @@ std::list<std::string> DataContainer::getEnsembleArrayNameList()
 // -----------------------------------------------------------------------------
 int DataContainer::getNumEnsembleArrays()
 {
-  return m_EnsembleData.size();
+  return static_cast<int>(m_EnsembleData.size());
 }
 
 

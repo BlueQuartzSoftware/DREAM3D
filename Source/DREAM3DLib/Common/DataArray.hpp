@@ -309,6 +309,20 @@ class DataArray : public IDataArray
       Array[i*this->NumberOfComponents + j] = c;
     }
 
+
+    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    {
+        for(int j = 0; j < NumberOfComponents; ++j)
+        {
+          if (j != 0) { out << delimiter; }         
+          out << Array[i*NumberOfComponents + j];
+        }
+    }
+    virtual void printComponent(std::ostream &out, size_t i, int j)
+    {
+        out << Array[i*NumberOfComponents + j];
+    }
+
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char
@@ -386,10 +400,12 @@ class DataArray : public IDataArray
      */
     void _deallocate()
     {
-      if (sizeof(T) == 1 && Size > 0) { this->Array[0] = static_cast<T>(0xAB); }
-      if (sizeof(T) == 2 && Size > 0) { this->Array[0] = static_cast<T>(0xABAB); }
-      if (sizeof(T) == 4 && Size > 0) { this->Array[0] = static_cast<T>(0xABABABAB); }
-      if (sizeof(T) == 8 && Size > 0) { this->Array[0] = static_cast<T>(0xABABABABABABABAB); }
+      // We are going to splat 0xABABAB across the first value of the array as a debugging aid
+      unsigned char* cptr = reinterpret_cast<unsigned char*>(this->Array);
+      if (sizeof(T) >= 1 && Size > 0) { cptr[0] = 0xAB; }
+      if (sizeof(T) >= 2 && Size > 0) { cptr[1] = 0xAB; }
+      if (sizeof(T) >= 4 && Size > 0) { cptr[2] = 0xAB; cptr[3] = 0xAB;}
+      if (sizeof(T) >= 8 && Size > 0) { cptr[4] = 0xAB; cptr[5] = 0xAB; cptr[6] = 0xAB; cptr[7] = 0xAB;}
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       _mm_free( this->m_buffer );
 #else

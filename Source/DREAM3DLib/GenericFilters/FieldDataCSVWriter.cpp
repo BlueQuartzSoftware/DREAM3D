@@ -82,37 +82,13 @@ void FieldDataCSVWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FieldDataCSVWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
-{
-  int err = 0;
-  std::stringstream ss;
-  DataContainer* m = getDataContainer();
-
-
-  // Field Data
-  PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, EulerAngles, ss, -305, float, FloatArrayType, fields);
-
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields);
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, AspectRatios, ss, -307, float, FloatArrayType, fields);
-
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields);
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, -306, bool, BoolArrayType, fields);
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, UnbiasedFields, ss, -306, bool, BoolArrayType, fields);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -122,7 +98,6 @@ void FieldDataCSVWriter::execute()
   int err = 0;
   setErrorCondition(err);
   DataContainer* m = getDataContainer();
-
   if(NULL == m)
   {
     setErrorCondition(-1);
@@ -134,13 +109,64 @@ void FieldDataCSVWriter::execute()
 
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size() );
+
   std::string filename = getFieldDataFile();
 
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
+  // Write the total number of grains
   outFile << m->getTotalFields()-1 << std::endl;
+  // Get all the names of the arrays from the Data Container
+  std::list<std::string> headers = m->getFieldArrayNameList();
+
+  std::vector<IDataArray::Pointer> data;
+  
+  // Print the GrainIds Header before the rest of the headers
+  outFile << DREAM3D::GrainData::GrainID;
+  // Loop throught the list and print the rest of the headers, ignoring those we don't want
+  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  {
+    // Only get the array if the name does NOT match those listed
+    if ( (*iter).compare(DREAM3D::FieldData::NeighborList) && (*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) )
+    {
+      IDataArray::Pointer p = m->getFieldData(*iter);
+      if (p->GetNumberOfComponents() == 1) {
+        outFile << space << (*iter);
+      }
+      else // There are more than a single component so we need to add multiple header values
+      {
+        for(int k = 0; k < p->GetNumberOfComponents(); ++k)
+        {
+          outFile << space << (*iter) << "_" << k;
+        }
+      }
+      // Get the IDataArray from the DataContainer
+      data.push_back(p);
+    }
+  }
+  outFile << std::endl;
+  
+  // Get the number of tuples in the arrays
+  size_t numTuples = data[0]->GetNumberOfTuples();
+  
+  // Skip the first grain
+  for(size_t i = 1; i < numTuples; ++i)
+  {
+    // Print the grain id
+    outFile << i;
+    // Print a row of data
+    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    {
+      outFile << space;
+      (*p)->printTuple(outFile, i, space);
+    }
+    outFile << std::endl;
+
+  }
+
+#if 0
+
   outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
       << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
       << DREAM3D::GrainData::EquivDiam << space
@@ -153,6 +179,9 @@ void FieldDataCSVWriter::execute()
 		space << m_EquivalentDiameters[i] << space << m_AspectRatios[2*i] << space << m_AspectRatios[2*i+1] <<
 		space << m_Omega3s[i] << space << int(m_SurfaceFields[i]) << space << int(m_UnbiasedFields[i]) << std::endl;
   }
+#endif
+
+
   outFile.close();
 
   // If there is an error set this to something negative and also set a message

@@ -105,7 +105,7 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
     filter->setFieldName(Ebsd::Ang::ConfidenceIndex);
-    filter->setFieldValue(0.1);
+    filter->setFieldValue(0.1f);
     filter->setFieldOperator(">");
     filters.push_back(filter);
   }

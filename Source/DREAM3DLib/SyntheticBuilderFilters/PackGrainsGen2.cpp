@@ -1645,15 +1645,6 @@ void PackGrainsGen2::assign_gaps()
 {
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->totalPoints();
-  int index;
-  int timestep = 100;
-  int unassignedcount = 1;
-  int column, row, plane;
-  float inside;
-  float xc, yc, zc;
-  float xp, yp, zp;
-  float dist;
-  float x, y, z;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1668,6 +1659,16 @@ void PackGrainsGen2::assign_gaps()
     static_cast<DimType>(udims[2]),
   };
 
+
+  int index;
+  int timestep = 100;
+  int unassignedcount = 1;
+  DimType column, row, plane;
+  float inside;
+  float xc, yc, zc;
+  float xp, yp, zp;
+  float dist;
+  float x, y, z;
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
