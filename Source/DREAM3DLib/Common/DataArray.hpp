@@ -138,7 +138,7 @@ class DataArray : public IDataArray
       }
       this->Array = NULL;
       this->_ownsData = true;
-      
+
       if (this->Size == 0)
       {
         initialize();
@@ -224,7 +224,7 @@ class DataArray : public IDataArray
      */
     virtual int32_t RawResize(size_t size)
     {
-      if (this->ResizeAndExtend(size) || size <= 0)
+      if (this->ResizeAndExtend(size) || size == 0)
       {
         return 1;
       }
@@ -425,7 +425,7 @@ class DataArray : public IDataArray
       if (newSize == 0)
       {
         this->initialize();
-        return 0;
+        return this->Array;
       }
       // OS X's realloc does not free memory if the new block is smaller.  This
       // is a very serious problem and causes huge amount of memory to be
@@ -470,7 +470,9 @@ class DataArray : public IDataArray
         }
 
         // Copy the data from the old array.
-        memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
+        if (this->Array != NULL) {
+          memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
+        }
         // Free the old array
         _deallocate();
       }
