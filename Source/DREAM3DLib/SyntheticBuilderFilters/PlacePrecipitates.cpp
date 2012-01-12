@@ -224,8 +224,8 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 
   DimType dims[3] =
   {   static_cast<DimType>(udims[0]),
-      static_cast<DimType>(udims[0]),
-      static_cast<DimType>(udims[0]) };
+      static_cast<DimType>(udims[1]),
+      static_cast<DimType>(udims[2]) };
 
   float dist;
   float inside = -1;

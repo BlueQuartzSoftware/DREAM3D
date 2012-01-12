@@ -825,8 +825,8 @@ void PackGrainsGen2::initializeAttributes()
 #endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[0])
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2])
   };
 
   sizex = dims[0] * m->getXRes();
