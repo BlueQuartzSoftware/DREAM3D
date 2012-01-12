@@ -407,7 +407,6 @@ void PackGrainsGen2::execute()
   Field field;
   int gid = 0;
   float currentvol = 0.0;
-  m->resizeFieldDataArrays(1);
 //FIXME: Initialize the Grain with some sort of default data
   float factor = 1.0;
   float iter = 0;
