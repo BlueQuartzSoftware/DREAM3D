@@ -51,7 +51,7 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
-#include "DREAM3DLib/GenericFilters/WriteFieldData.h"
+#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -184,7 +184,7 @@ void TestSyntheticBuilder()
   //  pipeline.push_back(match_crystallography);
 
   MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
-  WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
+  FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
   write_fielddata->setFieldDataFile(FieldDataFile);
   pipeline.push_back(write_fielddata);
 

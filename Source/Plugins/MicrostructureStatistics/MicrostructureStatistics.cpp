@@ -55,7 +55,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 #include "DREAM3DLib/StatisticsFilters/FindSchmids.h"
 #include "DREAM3DLib/StatisticsFilters/FindBoundingBoxGrains.h"
-#include "DREAM3DLib/GenericFilters/WriteFieldData.h"
+#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighborhoods.h"
 #include "DREAM3DLib/StatisticsFilters/FindDeformationStatistics.h"
@@ -194,7 +194,7 @@ void MicrostructureStatistics::execute()
   if(m_WriteGrainFile == true)
   {
     MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::MicroStats::GrainDataFile);
-    WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
+    FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
     write_fielddata->setFieldDataFile(FieldDataFile);
     pipeline.push_back(write_fielddata);
   }

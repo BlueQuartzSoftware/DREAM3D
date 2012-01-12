@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "WriteFieldData.h"
+#include "FieldDataCSVWriter.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -47,7 +47,7 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteFieldData::WriteFieldData() :
+FieldDataCSVWriter::FieldDataCSVWriter() :
 AbstractFilter(),
 m_PhasesF(NULL),
 m_EulerAngles(NULL),
@@ -63,13 +63,13 @@ m_UnbiasedFields(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteFieldData::~WriteFieldData()
+FieldDataCSVWriter::~FieldDataCSVWriter()
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteFieldData::setupFilterOptions()
+void FieldDataCSVWriter::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
@@ -85,7 +85,7 @@ void WriteFieldData::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FieldDataCSVWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
@@ -110,14 +110,14 @@ void WriteFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteFieldData::preflight()
+void FieldDataCSVWriter::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteFieldData::execute()
+void FieldDataCSVWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -156,7 +156,7 @@ void WriteFieldData::execute()
   outFile.close();
 
   // If there is an error set this to something negative and also set a message
-  notify("WriteFieldData Completed", 0, Observable::UpdateProgressMessage);
+  notify("FieldDataCSVWriter Completed", 0, Observable::UpdateProgressMessage);
 
 }
 
