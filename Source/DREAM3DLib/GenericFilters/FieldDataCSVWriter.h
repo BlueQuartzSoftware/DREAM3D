@@ -91,8 +91,6 @@ class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
     bool* m_SurfaceFields;
     bool* m_UnbiasedFields;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
     FieldDataCSVWriter(const FieldDataCSVWriter&); // Copy Constructor Not Implemented
     void operator=(const FieldDataCSVWriter&); // Operator '=' Not Implemented
 };

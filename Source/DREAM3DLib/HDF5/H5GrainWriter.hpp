@@ -53,8 +53,8 @@
   std::stringstream ss;\
   std::string hdfPath;\
   std::vector<std::string > hdfPaths;\
-  int numgrains = r->getTotalFields();\
-  int totpoints = r->totalPoints();\
+  size_t numgrains = r->getTotalFields();\
+  int64_t totpoints = r->totalPoints();\
   int phase;\
   int pcount = 0;\
   unsigned char rgb[3] =  { 0, 0, 0 };\
@@ -63,6 +63,12 @@
   int ocol, orow, oplane;\
   int col, row, plane;\
   int pid;\
+  int xPoints = static_cast<int>(r->getXPoints());\
+  int yPoints = static_cast<int>(r->getYPoints());\
+  int zPoints = static_cast<int>(r->getZPoints());\
+  float xRes = r->getXRes();\
+  float yRes = r->getYRes();\
+  float zRes = r->getZRes();
 
 
 #define H5GW_GRAIN_LOOP_1() \
@@ -86,9 +92,9 @@
 
 #define H5GW_VLIST_LOOP_1()\
 vid = vlist[j];\
-ocol = vid % r->getXPoints();\
-orow = (vid / r->getXPoints()) % r->getYPoints();\
-oplane = vid / (r->getXPoints() * r->getYPoints());\
+ocol = vid % xPoints;\
+orow = (vid / xPoints) % yPoints;\
+oplane = vid / (xPoints * yPoints);\
 cells[cIdx] = 8;\
 ++cIdx;\
 for (int k = 0; k < 8; k++) {\
@@ -100,13 +106,13 @@ for (int k = 0; k < 8; k++) {\
   if (k == 5) col = ocol + 1, row = orow, plane = oplane + 1;\
   if (k == 6) col = ocol, row = orow + 1, plane = oplane + 1;\
   if (k == 7) col = ocol + 1, row = orow + 1, plane = oplane + 1;\
-  pid = (plane * (r->getXPoints() + 1) * (r->getYPoints() + 1)) + (row * (r->getXPoints() + 1)) + col;\
+  pid = (plane * (xPoints + 1) * (yPoints + 1)) + (row * (xPoints + 1)) + col;\
   if (pointMap.find(pid) == pointMap.end())  {\
     pointMap[pid] = pcount;\
     pcount++;\
-    points.push_back((col * r->getXRes()));\
-    points.push_back((row * r->getYRes()));\
-    points.push_back((plane * r->getZRes()));\
+    points.push_back((col * xRes));\
+    points.push_back((row * yRes));\
+    points.push_back((plane * zRes));\
   }\
   cells[cIdx] = pointMap[pid];\
   ++cIdx;\
@@ -157,7 +163,7 @@ class  H5GrainWriter
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
       
-      int totalFields = r->getTotalFields();
+      size_t totalFields = r->getTotalFields();
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Field, DREAM3D::FieldData::NumNeighbors, Int32ArrayType, int32_t, totalFields, numNeighbors);
 
 

@@ -610,9 +610,9 @@ void CleanupGrains::remove_smallgrains()
   int neighbor = 0;
   DimType col, row, plane;
   int gnum;
-  int currentgrain = 1;
+  DimType currentgrain = 1;
 
-  int neighpoints[6];
+  DimType neighpoints[6];
   neighpoints[0] = -dims[0]*dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
