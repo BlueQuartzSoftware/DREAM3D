@@ -526,9 +526,10 @@ void MatchCrystallography::matchCrystallography()
 		  selectedgrain1 = int(rg.genrand_res53() * totalFields);
 		  while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < totalFields)
 		  {
-          if(selectedgrain1 >= totalFields) selectedgrain1 = selectedgrain1 - totalFields;
-          counter++;
-        }
+			if (selectedgrain1 >= totalFields) selectedgrain1 = selectedgrain1 - totalFields;
+			selectedgrain1++;
+			counter++;
+		  }
 		  if(counter == totalFields) return;
 
 		  ea1 = m_EulerAnglesF[3*selectedgrain1];
@@ -605,6 +606,7 @@ void MatchCrystallography::matchCrystallography()
 		  while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < totalFields)
 		  {
 			if (selectedgrain1 >= totalFields) selectedgrain1 = selectedgrain1 - totalFields;
+			selectedgrain1++;
 			counter++;
 		  }
 		  if(counter == totalFields) return;
@@ -613,6 +615,7 @@ void MatchCrystallography::matchCrystallography()
 		  while ((m_SurfaceFields[selectedgrain2] == true || m_PhasesF[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < totalFields)
 		  {
 			if (selectedgrain2 >= totalFields) selectedgrain2 = selectedgrain2 - totalFields;
+			selectedgrain2++;
 			counter++;
 		  }
 		  if(counter == totalFields) return;
