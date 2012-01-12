@@ -196,7 +196,7 @@ int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructu
    {
      fieldData[i] = crystruct[i];
    }
-   err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData,
+   err = h5writer->FieldDataCSVWriter<int>(DREAM3D::HDF5::VoxelDataName, fieldData,
                                        DREAM3D::VTK::CrystalStructureName.c_str(), 1);
    if (err < 0)
    {
@@ -230,7 +230,7 @@ int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::Ph
   {
     fieldData[i] = phaseType[i];
   }
-  err = h5writer->writeFieldData<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
+  err = h5writer->FieldDataCSVWriter<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
   if (err < 0)
   {
     std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;

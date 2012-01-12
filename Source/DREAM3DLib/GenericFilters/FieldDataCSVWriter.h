@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef WRITEFIELDDATA_H_
-#define WRITEFIELDDATA_H_
+#ifndef FieldDataCSVWriter_H_
+#define FieldDataCSVWriter_H_
 
 #include <vector>
 #include <string>
@@ -49,20 +49,20 @@
 
 
 /**
- * @class WriteFieldData WriteFieldData.h DREAM3DLib/GenericFilters/WriteFieldData.h
+ * @class FieldDataCSVWriter FieldDataCSVWriter.h DREAM3DLib/GenericFilters/FieldDataCSVWriter.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT WriteFieldData : public AbstractFilter
+class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(WriteFieldData);
-    DREAM3D_STATIC_NEW_MACRO(WriteFieldData);
-    DREAM3D_TYPE_MACRO_SUPER(WriteFieldData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FieldDataCSVWriter);
+    DREAM3D_STATIC_NEW_MACRO(FieldDataCSVWriter);
+    DREAM3D_TYPE_MACRO_SUPER(FieldDataCSVWriter, AbstractFilter);
 
-    virtual ~WriteFieldData();
+    virtual ~FieldDataCSVWriter();
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldDataFile)
@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT WriteFieldData : public AbstractFilter
 
 
   protected:
-    WriteFieldData();
+    FieldDataCSVWriter();
 
   private:
     int32_t* m_PhasesF;
@@ -93,8 +93,8 @@ class DREAM3DLib_EXPORT WriteFieldData : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    WriteFieldData(const WriteFieldData&); // Copy Constructor Not Implemented
-    void operator=(const WriteFieldData&); // Operator '=' Not Implemented
+    FieldDataCSVWriter(const FieldDataCSVWriter&); // Copy Constructor Not Implemented
+    void operator=(const FieldDataCSVWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* WRITEFIELDDATA_H_ */
+#endif /* FieldDataCSVWriter_H_ */
