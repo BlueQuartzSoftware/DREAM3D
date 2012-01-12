@@ -121,7 +121,6 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 {
   int err = 0;
   std::stringstream ss;
-
   DataContainer* m = getDataContainer();
 
 

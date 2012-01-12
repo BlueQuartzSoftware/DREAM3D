@@ -168,7 +168,7 @@ void DataContainer::resizeFieldDataArrays(size_t size)
   {
     IDataArray::Pointer d = (*iter).second;
     success = d->Resize(size);
-    std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+   // std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
   }
   m_TotalFields = size;
 }

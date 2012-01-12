@@ -51,7 +51,7 @@ AbstractFilter(),
 m_GrainIds(NULL),
 m_SurfaceVoxels(NULL),
 m_SurfaceFields(NULL),
-m_Phases(NULL),
+m_PhasesF(NULL),
 m_NumNeighbors(NULL),
 m_TotalSurfaceArea(NULL),
 m_NeighborList(NULL),
@@ -69,40 +69,68 @@ FindNeighbors::~FindNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighbors::preflight()
+void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+
   int err = 0;
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL) 
-  {
-	  ss << "Graid Ids Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Fields) Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
-	  err = -300;
-  }
 
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::SurfaceVoxels, p);
-  BoolArrayType::Pointer q = BoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::SurfaceFields, q);
-  Int32ArrayType::Pointer r = Int32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::NumNeighbors, r);
-  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
-  m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea, s);
+  // Cell Data
+  PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
+
+
+  // Field Data
+  PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, fields, 1);
+
+
+
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+
   NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
   m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
 
+
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  if(m_NeighborList == NULL)
+  {
+    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    err = -300;
+  }
+
+  // And we do the same for the SharedSurfaceArea list
+  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
+                                 (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  if(m_SharedSurfaceAreaList == NULL)
+  {
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    err = -300;
+  }
+
+
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->crystruct.size(), 1);
+
+
   setErrorCondition(err);
   setErrorMessage(ss.str());
+
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNeighbors::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -120,17 +148,11 @@ void FindNeighbors::execute()
     return;
   }
 
+
   int64_t totalPoints = m->totalPoints();
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if(NULL == m_GrainIds)
-  {
-    return;
-  }
-  m_SurfaceVoxels = m->getVoxelDataSizeCheck<int8_t, Int8ArrayType, AbstractFilter>(DREAM3D::VoxelData::SurfaceVoxels, totalPoints, this);
-  if(NULL == m_SurfaceVoxels)
-  {
-    return;
-  }
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -161,8 +183,8 @@ void FindNeighbors::execute()
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
 
-  m_TotalSurfaceArea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
-  if (NULL == m_TotalSurfaceArea) {return;}
+//  m_TotalSurfaceArea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
+//  if (NULL == m_TotalSurfaceArea) {return;}
   for (size_t i = 1; i < xtalCount; ++i)
   {
     m_TotalSurfaceArea[i] = 0.0f;
@@ -225,15 +247,14 @@ void FindNeighbors::execute()
     m_SurfaceVoxels[j] = onsurf;
   }
 
-  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-  m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
-  NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
-  m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
+  // We do this to create new set of NeighborList objects
+  totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
 
   notify("FindNeighbors: Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);
   for (size_t i = 1; i < m->getTotalFields(); i++)
   {
-    int phase = m_Phases[i];
+    int phase = m_PhasesF[i];
 
     std::map<int, int> neighToCount;
     int numneighs = int(neighborlist[i].size());

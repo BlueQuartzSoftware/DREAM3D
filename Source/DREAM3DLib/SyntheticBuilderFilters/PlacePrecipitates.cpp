@@ -49,8 +49,8 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 
 
 // -----------------------------------------------------------------------------
@@ -129,13 +129,13 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  // Cell Data
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
   PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, int32_t, Int32ArrayType,  voxels, 1);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
-
-
+  // Field Data
   PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields);
@@ -145,6 +145,8 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, -311, bool, BoolArrayType, fields);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
+
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
@@ -221,7 +223,9 @@ void PlacePrecipitates::insert_precipitate(size_t gnum, float coatingthickness)
 #endif
 
   DimType dims[3] =
-  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[0]), static_cast<DimType>(udims[0]), };
+  {   static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[0]) };
 
   float dist;
   float inside = -1;
@@ -520,6 +524,8 @@ void  PlacePrecipitates::place_precipitates()
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
+  packGrains->dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   int err = packGrains->readReconStatsData(h5reader);
   err = packGrains->readAxisOrientationData(h5reader);
@@ -527,80 +533,86 @@ void  PlacePrecipitates::place_precipitates()
   {
     Seed++;
     random = rg.genrand_res53();
-    for (size_t j = 0; j < precipitatephases.size();++j)
+    for (size_t j = 0; j < precipitatephases.size(); ++j)
     {
-      if (random < precipitatephasefractions[j])
+      if(random < precipitatephasefractions[j])
       {
         phase = precipitatephases[j];
         break;
       }
     }
 
-
-	Field field;
+    Field field;
+    // We need to tell PackGrains to update all of its internal pointers with the
+    // latest from the DataContainer
+    packGrains->dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
     packGrains->generate_grain(phase, Seed, &field);
-    m->resizeFieldDataArrays(currentnumgrains+1);
+    m->resizeFieldDataArrays(currentnumgrains + 1);
+    // And again because we just resized the Field Arrays
+    packGrains->dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+    dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
     packGrains->transfer_attributes(currentnumgrains, &field);
-	//FIXME: Initialize the grain with default data
     precipboundaryfraction = m->pptFractions[phase];
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)
     {
-		random2 = int(rg.genrand_res53()*double(totalPoints-1));
-		while(m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] > numprimarygrains)
-		{
-		  random2++;
-		  if(random2 >= totalPoints) random2 = random2-totalPoints;
-		}
-	}
+      random2 = int(rg.genrand_res53() * double(totalPoints - 1));
+      while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] > numprimarygrains)
+      {
+        random2++;
+        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+      }
+    }
     else if(random > precipboundaryfraction)
     {
-		random2 = rg.genrand_res53()*(totalPoints-1);
-		while(m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] > numprimarygrains)
-		{
-		  random2++;
-		  if(random2 >= totalPoints) random2 = random2-totalPoints;
-		}
+      random2 = rg.genrand_res53() * (totalPoints - 1);
+      while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] > numprimarygrains)
+      {
+        random2++;
+        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+      }
     }
     xc = find_xcoord(random2);
     yc = find_ycoord(random2);
     zc = find_zcoord(random2);
-    m_Centroids[3*currentnumgrains] = xc;
-    m_Centroids[3*currentnumgrains+1] = yc;
-    m_Centroids[3*currentnumgrains+2] = zc;
+    m_Centroids[3 * currentnumgrains] = xc;
+    m_Centroids[3 * currentnumgrains + 1] = yc;
+    m_Centroids[3 * currentnumgrains + 2] = zc;
     insert_precipitate(currentnumgrains, thickness);
 
     m_Active[currentnumgrains] = true;
     precipvoxelcounter = 0;
-    for(size_t j = 0; j < currentprecipvoxellist.size(); j++)
+    for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
     {
 
-		if(m_GrainIds[currentprecipvoxellist[j]] > 0 && m_GrainIds[currentprecipvoxellist[j]] < numprimarygrains)
-		{
-		  precipvoxelcounter++;
-		}
-	}
+      if(m_GrainIds[currentprecipvoxellist[j]] > 0 && m_GrainIds[currentprecipvoxellist[j]] < numprimarygrains)
+      {
+        precipvoxelcounter++;
+      }
+    }
     if(precipvoxelcounter == currentprecipvoxellist.size())
     {
-		precipvoxelcounter = 0;
-		for(size_t j = 0; j < currentprecipvoxellist.size(); j++)
-		{
-		    m_GrainIds[currentprecipvoxellist[j]] = currentnumgrains;
-		    m_PhasesC[currentprecipvoxellist[j]] = m_PhasesF[currentnumgrains];
-		    precipvoxelcounter++;
-		}
-		for(size_t j = 0; j < currentcoatingvoxellist.size(); j++)
-		{
-			if(m_GrainIds[currentcoatingvoxellist[j]] < numprimarygrains)
-			{
-			    m_PhasesC[currentcoatingvoxellist[j]] = 3;
-			}
-		}
-		totalprecipvol = totalprecipvol + (precipvoxelcounter*m->getXRes()*m->getYRes()*m->getZRes());
-		currentnumgrains++;
-	}
+      precipvoxelcounter = 0;
+      for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
+      {
+        m_GrainIds[currentprecipvoxellist[j]] = currentnumgrains;
+        m_PhasesC[currentprecipvoxellist[j]] = m_PhasesF[currentnumgrains];
+        precipvoxelcounter++;
+      }
+      for (size_t j = 0; j < currentcoatingvoxellist.size(); j++)
+      {
+        if(m_GrainIds[currentcoatingvoxellist[j]] < numprimarygrains)
+        {
+          m_PhasesC[currentcoatingvoxellist[j]] = 3;
+        }
+      }
+      totalprecipvol = totalprecipvol + (precipvoxelcounter * m->getXRes() * m->getYRes() * m->getZRes());
+      currentnumgrains++;
+    }
   }
 }
+
+
 float PlacePrecipitates::find_xcoord(long long int index)
 {
   DataContainer* m = getDataContainer();

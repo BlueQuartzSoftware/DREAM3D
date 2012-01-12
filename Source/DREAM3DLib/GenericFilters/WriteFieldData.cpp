@@ -49,7 +49,7 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 WriteFieldData::WriteFieldData() :
 AbstractFilter(),
-m_Phases(NULL),
+m_PhasesF(NULL),
 m_EulerAngles(NULL),
 m_EquivalentDiameters(NULL),
 m_AspectRatios(NULL),
@@ -85,23 +85,58 @@ void WriteFieldData::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteFieldData::preflight()
+void WriteFieldData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
+  DataContainer* m = getDataContainer();
+
+
+  // Field Data
+  PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, EulerAngles, ss, -305, float, FloatArrayType, fields);
+
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, AspectRatios, ss, -307, float, FloatArrayType, fields);
+
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, -306, bool, BoolArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, UnbiasedFields, ss, -306, bool, BoolArrayType, fields);
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteFieldData::preflight()
+{
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void WriteFieldData::execute()
 {
-  setErrorCondition(0);
-  std::string filename = getFieldDataFile();
+  int err = 0;
+  setErrorCondition(err);
   DataContainer* m = getDataContainer();
+
+  if(NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
+  int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size() );
+  std::string filename = getFieldDataFile();
+
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
@@ -109,11 +144,12 @@ void WriteFieldData::execute()
   outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
       << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
       << DREAM3D::GrainData::EquivDiam << space
-	  << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3 << space << DREAM3D::GrainData::SurfaceGrain << space << DREAM3D::GrainData::OutsideBoundingBox << std::endl;
+	  << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3
+	  << space << DREAM3D::GrainData::SurfaceGrain << space << DREAM3D::GrainData::OutsideBoundingBox << std::endl;
 
   for (size_t i = 1; i < m->getTotalFields(); i++)
   {
-	  outFile << i << space << m_Phases[i] << space << m_EulerAngles[3*i] << space << m_EulerAngles[3*i+1] << space << m_EulerAngles[3*i+2] <<
+	  outFile << i << space << m_PhasesF[i] << space << m_EulerAngles[3*i] << space << m_EulerAngles[3*i+1] << space << m_EulerAngles[3*i+2] <<
 		space << m_EquivalentDiameters[i] << space << m_AspectRatios[2*i] << space << m_AspectRatios[2*i+1] <<
 		space << m_Omega3s[i] << space << int(m_SurfaceFields[i]) << space << int(m_UnbiasedFields[i]) << std::endl;
   }
