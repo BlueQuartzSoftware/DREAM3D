@@ -82,7 +82,7 @@ class ReconstructionFunc;
  *
  * Cell Data, Point Data and Field Data can also be added to the vtk object.
  * @code
- * err = h5writer->writeFieldData<int>( hdfPath, grainName, "Grain_ID", 1);
+ * err = h5writer->FieldDataCSVWriter<int>( hdfPath, grainName, "Grain_ID", 1);
  * std::vector<float> kernelAvgDisorientation(vlist->size());
  * ...Code to copy data into the vector ....
  * err = h5writer->writeCellData<float>(hdfPath, kernelAvgDisorientation, "KernelAvgDisorientation", 1);
@@ -206,7 +206,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
      * @return
      */
     template<typename T>
-    int writeFieldData(const std::string &hdfPath,
+    int FieldDataCSVWriter(const std::string &hdfPath,
                        const std::vector<T> &field_data,
                        const char* label,
                        int numComp)
