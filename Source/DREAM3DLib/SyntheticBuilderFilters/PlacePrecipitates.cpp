@@ -50,7 +50,7 @@
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -524,7 +524,6 @@ void  PlacePrecipitates::place_precipitates()
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
-  packGrains->dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
 
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   int err = packGrains->readReconStatsData(h5reader);
@@ -543,15 +542,12 @@ void  PlacePrecipitates::place_precipitates()
     }
 
     Field field;
-    // We need to tell PackGrains to update all of its internal pointers with the
-    // latest from the DataContainer
-    packGrains->dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+
     packGrains->generate_grain(phase, Seed, &field);
     m->resizeFieldDataArrays(currentnumgrains + 1);
-    // And again because we just resized the Field Arrays
-    packGrains->dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+
     dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
-    packGrains->transfer_attributes(currentnumgrains, &field);
+    transfer_attributes(currentnumgrains, &field);
     precipboundaryfraction = m->pptFractions[phase];
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)
@@ -612,6 +608,25 @@ void  PlacePrecipitates::place_precipitates()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PlacePrecipitates::transfer_attributes(int gnum, Field* field)
+{
+  m_Volumes[gnum] = field->m_Volumes;
+  m_EquivalentDiameters[gnum] = field->m_EquivalentDiameters;
+  m_AxisLengths[3*gnum+0] = field->m_AxisLengths[0];
+  m_AxisLengths[3*gnum+1] = field->m_AxisLengths[1];
+  m_AxisLengths[3*gnum+2] = field->m_AxisLengths[2];
+  m_AxisEulerAngles[3*gnum+0] = field->m_AxisEulerAngles[0];
+  m_AxisEulerAngles[3*gnum+1] = field->m_AxisEulerAngles[1];
+  m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
+  m_Omega3s[gnum] = field->m_Omega3s;
+  m_PhasesF[gnum] = field->m_PhasesF;
+  m_Neighborhoods[3*gnum+0] = field->m_Neighborhoods[0];
+  m_Neighborhoods[3*gnum+1] = field->m_Neighborhoods[1];
+  m_Neighborhoods[3*gnum+2] = field->m_Neighborhoods[2];
+}
 
 float PlacePrecipitates::find_xcoord(long long int index)
 {
