@@ -106,7 +106,8 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     int readAxisOrientationData(H5StatsReader::Pointer h5io);
     void generate_grain(int phase, int Seed, Field* grain);
 
-	void transfer_attributes(int gnum, Field* field);
+    void transfer_attributes(int gnum, Field* field);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
   protected:
@@ -176,9 +177,9 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
-	std::vector<std::vector<int> > columnlist;
-	std::vector<std::vector<int> > rowlist;
-	std::vector<std::vector<int> > planelist;
+    std::vector<std::vector<int> > columnlist;
+    std::vector<std::vector<int> > rowlist;
+    std::vector<std::vector<int> > planelist;
 
     unsigned long long int Seed;
 
@@ -229,7 +230,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented
     void operator=(const PackGrainsGen2&); // Operator '=' Not Implemented

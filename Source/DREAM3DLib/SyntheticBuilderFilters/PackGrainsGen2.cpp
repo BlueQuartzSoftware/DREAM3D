@@ -43,6 +43,8 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
+#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
@@ -274,6 +276,11 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 // -----------------------------------------------------------------------------
 void PackGrainsGen2::preflight()
 {
+  // Find Neighbors would be run first so run its PreFlight first before ours
+  FindNeighbors::Pointer p = FindNeighbors::New();
+  p->setDataContainer(getDataContainer());
+  p->preflight();
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -340,10 +347,6 @@ void PackGrainsGen2::execute()
   { static_cast<DimType>(udims[0]),
       static_cast<DimType>(udims[1]),
       static_cast<DimType>(udims[2]), };
-
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
 
 
   // float change1, change2;

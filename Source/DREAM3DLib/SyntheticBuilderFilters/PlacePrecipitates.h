@@ -48,6 +48,8 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 
+
+
 /**
  * @class PlacePrecipitates PlacePrecipitates.h DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h
  * @brief
@@ -123,8 +125,8 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int8_t* m_SurfaceVoxels;
     int32_t* m_Neighbors;
     int32_t* m_NumCells;
+    int32_t* m_Neighborhoods;
 
-    
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
