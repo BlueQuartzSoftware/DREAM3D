@@ -38,18 +38,6 @@ macro(MXA_ADD_TEST testname Exename)
     endif()
 endmacro()
 
-
-if (NOT ${DREAM3D_DATA_DIR} STREQUAL "")
-    message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
-    message(STATUS " Please make sure the proper files are available in that directory")
-    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
-    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
-
-endif()
-
-
-
 # --------------------------------------------------------------------------
 # FilterManager Test
 # --------------------------------------------------------------------------
@@ -109,6 +97,25 @@ add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
 add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
 target_link_libraries(FindNeighborsTest DREAM3DLib)
 add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
+
+# --------------------------------------------------------------------------
+# SyntheticBuilder Test
+# --------------------------------------------------------------------------
+if (NOT ${DREAM3D_DATA_DIR} STREQUAL "")
+    message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
+    message(STATUS " Please make sure the proper files are available in that directory")
+    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
+    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
+    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
+
+endif()
+
+# --------------------------------------------------------------------------
+# Preflight Test
+# --------------------------------------------------------------------------
+add_executable(PreflightTest ${DREAM3DTest_SOURCE_DIR}/PreflightTest.cpp)
+target_link_libraries(PreflightTest DREAM3DLib)
+add_test(PreflightTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreflightTest)
 
 
 # --------

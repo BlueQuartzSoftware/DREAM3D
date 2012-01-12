@@ -410,7 +410,6 @@ void PackGrainsGen2::execute()
   Field field;
   int gid = 0;
   float currentvol = 0.0;
-
   float factor = 1.0;
   float iter = 0;
   while (currentvol < (factor * totalvol))
