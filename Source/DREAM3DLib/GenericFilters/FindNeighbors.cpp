@@ -80,13 +80,10 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
 
-
   // Field Data
   PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, fields, 1);
-
-
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
@@ -94,13 +91,12 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
   m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
 
-
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "NeighborLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
     err = -300;
   }
 
@@ -109,17 +105,14 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
                                  (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
-    ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
     err = -300;
   }
 
-
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->crystruct.size(), 1);
-
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
-
 }
 
 
@@ -183,8 +176,6 @@ void FindNeighbors::execute()
   int neighbor = 0;
   size_t xtalCount = m->crystruct.size();
 
-//  m_TotalSurfaceArea = m->createEnsembleData<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, xtalCount, 1, this);
-//  if (NULL == m_TotalSurfaceArea) {return;}
   for (size_t i = 1; i < xtalCount; ++i)
   {
     m_TotalSurfaceArea[i] = 0.0f;

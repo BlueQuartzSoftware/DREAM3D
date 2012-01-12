@@ -168,7 +168,7 @@ type* valuePtr = NULL;\
     setErrorMessage(s.str());\
     return -10;\
   } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+  if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
     std::stringstream s;\
     s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
     setErrorCondition(-20);\
@@ -193,7 +193,7 @@ type* valuePtr = NULL;\
   if (iDataArray.get() == NULL) { \
     return;\
   } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+  if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
     return;\
   }\
   valuePtr =\
