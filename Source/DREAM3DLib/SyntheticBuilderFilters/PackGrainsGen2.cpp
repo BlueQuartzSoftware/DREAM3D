@@ -248,24 +248,21 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  TEST_MACRO(DREAM3D, VoxelData, GrainIds);
 
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, EulerAngles, ss, float, FloatArrayType, voxels, 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
 
-
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, Int32ArrayType, voxels, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, Int32ArrayType, voxels, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, EulerAngles, ss, FloatArrayType, voxels, 3);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, Int8ArrayType, voxels, 1);
-
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, BoolArrayType, fields, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, Int32ArrayType, fields, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, Int32ArrayType, fields, 3);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, FloatArrayType, fields, 3);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, FloatArrayType, fields, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, FloatArrayType, fields, 3);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, FloatArrayType, fields, 3);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, FloatArrayType, fields, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, FloatArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, fields, 1);
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
 
 
   setErrorCondition(err);
