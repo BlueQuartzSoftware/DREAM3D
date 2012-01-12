@@ -122,16 +122,17 @@ class IDataArray
     virtual void initializeWithZeros() = 0;
 
     /**
-     * @brief Resizes the array to the new number of elements
-     * @param size The total number of elements in the array to allocate memory.
-     * @return
+     * @brief Reseizes the internal array
+     * @param size The new size of the internal array
+     * @return 1 on success, 0 on failure
      */
     virtual int32_t RawResize(size_t size) = 0;
 
     /**
-    * @brief
-    * @param numTuples The total number of tuples to allocate memory for
-    */
+     * @brief Reseizes the internal array
+     * @param size The new size of the internal array
+     * @return 1 on success, 0 on failure
+     */
     virtual int32_t Resize(size_t numTuples) = 0;
 #if 0
     /**

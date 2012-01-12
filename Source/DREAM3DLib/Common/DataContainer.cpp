@@ -163,10 +163,12 @@ int DataContainer::getNumFieldArrays()
 // -----------------------------------------------------------------------------
 void DataContainer::resizeFieldDataArrays(size_t size)
 {
+  int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
     IDataArray::Pointer d = (*iter).second;
-    d->Resize(size);
+    success = d->Resize(size);
+    std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
   }
   m_TotalFields = size;
 }
