@@ -81,6 +81,8 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
+
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Pack Grains"; }
 
@@ -107,7 +109,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     void generate_grain(int phase, int Seed, Field* grain);
 
     void transfer_attributes(int gnum, Field* field);
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
   protected:
@@ -229,6 +230,8 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
     PackGrainsGen2(const PackGrainsGen2&); // Copy Constructor Not Implemented

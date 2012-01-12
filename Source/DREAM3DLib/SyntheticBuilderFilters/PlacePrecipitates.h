@@ -47,7 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-
+#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 
 
 /**
@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(PlacePrecipitates, AbstractFilter);
 
     virtual ~PlacePrecipitates();
+
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Place Precipitates"; }
@@ -128,7 +129,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int32_t* m_Neighborhoods;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
+    void transfer_attributes(int gnum, Field* field);
 
     PlacePrecipitates(const PlacePrecipitates&); // Copy Constructor Not Implemented
     void operator=(const PlacePrecipitates&); // Operator '=' Not Implemented

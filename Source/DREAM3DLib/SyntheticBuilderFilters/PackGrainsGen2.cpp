@@ -713,6 +713,10 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    return;
+  }
 //  int good = 0;
   float r1 = 1;
   float a1 = 0, a3 = 0;
