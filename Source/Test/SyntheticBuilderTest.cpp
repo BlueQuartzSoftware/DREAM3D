@@ -62,35 +62,35 @@
 
 
 
-  std::string m_H5StatsFile("");
-  std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::OutputDir;
-  std::string m_OutputFilePrefix("");
-  size_t m_XPoints = 128;
-  size_t m_YPoints = 128;
-  size_t m_ZPoints = 128;
+std::string m_H5StatsFile("");
+std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::OutputDir;
+std::string m_OutputFilePrefix("");
+size_t m_XPoints = 128;
+size_t m_YPoints = 128;
+size_t m_ZPoints = 128;
 
-  std::vector<DREAM3D::SyntheticBuilder::ShapeType> m_ShapeTypes;
+std::vector<DREAM3D::SyntheticBuilder::ShapeType> m_ShapeTypes;
 
 
-  float m_XResolution = 0.1f;
-  float m_YResolution = 0.1f;
-  float m_ZResolution = 0.1f;
-  double m_NeighborhoodErrorWeight = 1.0f;
-  double m_FractionPrecipitates = 0.0f;
+float m_XResolution = 0.1f;
+float m_YResolution = 0.1f;
+float m_ZResolution = 0.1f;
+double m_NeighborhoodErrorWeight = 1.0f;
+double m_FractionPrecipitates = 0.0f;
 
-  bool m_PeriodicBoundary = false;
-  std::string m_StructureFile("");
-  bool m_AlreadyFormed = false;
+bool m_PeriodicBoundary = false;
+std::string m_StructureFile("");
+bool m_AlreadyFormed = false;
 
-  int m_Precipitates = 0;
+int m_Precipitates = 0;
 
-  bool m_WriteBinaryVTKFiles = true;
-  bool m_WriteVtkFile = true;
-  bool m_WriteSurfaceVoxel = true;
-  bool m_WritePhaseId = true;
-  bool m_WriteIPFColor = true;
+bool m_WriteBinaryVTKFiles = true;
+bool m_WriteVtkFile = true;
+bool m_WriteSurfaceVoxel = true;
+bool m_WritePhaseId = true;
+bool m_WriteIPFColor = true;
 
-  bool m_WriteHDF5GrainFile = false;
+bool m_WriteHDF5GrainFile = false;
 
 
 // -----------------------------------------------------------------------------
