@@ -67,7 +67,7 @@ std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::OutputDir;
 std::string m_OutputFilePrefix("");
 size_t m_XPoints = 128;
 size_t m_YPoints = 128;
-size_t m_ZPoints = 1;
+size_t m_ZPoints = 128;
 
 std::vector<DREAM3D::SyntheticBuilder::ShapeType> m_ShapeTypes;
 
@@ -98,7 +98,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::SyntheticBuilderTest::TestDir + MXADir::Separator + "SyntheticBuilderTest.h5stats";
+  std::string s = UnitTest::SyntheticBuilderTest::TestDir + MXADir::Separator + "Equiaxed_Precip.h5stats";
   return s;
 }
 
@@ -134,7 +134,7 @@ void TestSyntheticBuilder()
   Observer* observer = new Observer;
   m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::UnknownShapeType);
   m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
-  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::CylinderShape);
+  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
 
   int err = 0;
   // Instantiate our DataContainer object
@@ -142,8 +142,13 @@ void TestSyntheticBuilder()
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   std::vector<AbstractFilter::Pointer> pipeline;
 
+#if PACK_GRAINS_ERROR_TXT_OUT
   MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile)
+#endif
+
+#if PACK_GRAINS_VTK_FILE_OUT
   MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile)
+#endif
 
   if(m_AlreadyFormed == false)
   {
