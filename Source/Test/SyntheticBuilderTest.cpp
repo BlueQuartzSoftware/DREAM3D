@@ -67,7 +67,7 @@ std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::OutputDir;
 std::string m_OutputFilePrefix("");
 size_t m_XPoints = 128;
 size_t m_YPoints = 128;
-size_t m_ZPoints = 128;
+size_t m_ZPoints = 1;
 
 std::vector<DREAM3D::SyntheticBuilder::ShapeType> m_ShapeTypes;
 
@@ -132,9 +132,9 @@ void RemoveTestFiles()
 void TestSyntheticBuilder()
 {
   Observer* observer = new Observer;
-
+  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::UnknownShapeType);
   m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
-  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
+  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::CylinderShape);
 
   int err = 0;
   // Instantiate our DataContainer object
