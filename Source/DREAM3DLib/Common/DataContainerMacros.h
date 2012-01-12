@@ -73,9 +73,6 @@
   }else if (preflight == false) {\
     m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
   }
-//  else if (NULL != m_##Name##_Ptr.get() ) {\
-//    m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
-//  }
 
 #define PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
   IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
