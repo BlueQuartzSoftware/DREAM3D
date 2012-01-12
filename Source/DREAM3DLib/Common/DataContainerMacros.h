@@ -211,6 +211,7 @@ type* valuePtr = NULL;\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+    std::cout << name << " Size did not match." << size << " vs " << iDataArray->GetNumberOfTuples() << std::endl;\
     return -20;\
   }\
   valuePtr =\
