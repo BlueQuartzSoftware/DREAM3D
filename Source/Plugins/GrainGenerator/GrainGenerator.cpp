@@ -51,7 +51,7 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
-#include "DREAM3DLib/GenericFilters/WriteFieldData.h"
+#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
 
 #define PACK_GRAINS_ERROR_TXT_OUT 1
 #define PACK_GRAINS_VTK_FILE_OUT 1
@@ -188,7 +188,7 @@ void GrainGenerator::execute()
 
 
   MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
-  WriteFieldData::Pointer write_fielddata = WriteFieldData::New();
+  FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
   write_fielddata->setFieldDataFile(FieldDataFile);
   pipeline.push_back(write_fielddata);
 
