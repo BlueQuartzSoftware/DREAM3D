@@ -431,8 +431,9 @@ void PackGrainsGen2::execute()
     {
 	   gid++;
        m->resizeFieldDataArrays(gid + 1);
+       dataCheck(false, totalPoints, gid+1, m->crystruct.size());
        m_Active[gid] = 1;
-	   transfer_attributes(gid, &field);
+	     transfer_attributes(gid, &field);
        oldsizedisterror = currentsizedisterror;
        currentvol = currentvol + m_Volumes[gid];
        //FIXME: Initialize the Grain with some sort of default data
@@ -469,8 +470,9 @@ void PackGrainsGen2::execute()
       {
 	    gid++;
         m->resizeFieldDataArrays(gid + 1);
+        dataCheck(false, totalPoints, gid+1, m->crystruct.size());
         m_Active[gid] = 1;
-	    transfer_attributes(gid, &field);
+	      transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
         currentvol = currentvol + m_Volumes[gid];
         //FIXME: Initialize the new grain with default data
@@ -596,9 +598,9 @@ void PackGrainsGen2::execute()
       oldxc = m_Centroids[3*randomgrain];
       oldyc = m_Centroids[3*randomgrain+1];
       oldzc = m_Centroids[3*randomgrain+2];
-      xc = oldxc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresx));
-      yc = oldyc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresy));
-      zc = oldzc + ((2.0 * (rg.genrand_res53() - 0.5)) * (2.0 * packingresz));
+      xc = oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx));
+      yc = oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy));
+      zc = oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz));
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, randomgrain);
       move_grain(randomgrain, xc, yc, zc);
@@ -688,9 +690,9 @@ void PackGrainsGen2::initialize_packinggrid()
 {
   DataContainer* m = getDataContainer();
 
-  packingresx = m->getXRes() * 2.0;
-  packingresy = m->getYRes() * 2.0;
-  packingresz = m->getZRes() * 2.0;
+  packingresx = m->getXRes() * 2.0f;
+  packingresy = m->getYRes() * 2.0f;
+  packingresz = m->getZRes() * 2.0f;
   packingxpoints = int(sizex / packingresx);
   packingypoints = int(sizey / packingresy);
   packingzpoints = int(sizez / packingresz);
@@ -1523,9 +1525,9 @@ void PackGrainsGen2::assign_voxels()
     ga[2][0] = sinf(phi1) * sinf(PHI);
     ga[2][1] = -cosf(phi1) * sinf(PHI);
     ga[2][2] = cosf(PHI);
-    column = (xc - (xRes / 2)) / xRes;
-    row = (yc - (yRes / 2)) / yRes;
-    plane = (zc - (zRes / 2)) / zRes;
+    column = (xc - (xRes / 2.0f)) / xRes;
+    row = (yc - (yRes / 2.0f)) / yRes;
+    plane = (zc - (zRes / 2.0f)) / zRes;
     xmin = int(column - ((radcur1 / xRes) + 1));
     xmax = int(column + ((radcur1 / xRes) + 1));
     ymin = int(row - ((radcur1 / yRes) + 1));
