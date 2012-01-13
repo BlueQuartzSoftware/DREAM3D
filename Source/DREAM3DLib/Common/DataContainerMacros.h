@@ -106,10 +106,10 @@ if (iDataArray.get() == 0) {\
   obv->setErrorMessage(s.str());}\
   return gi;\
 }\
-if (size != iDataArray->GetNumberOfTuples()) {\
+if (size != iDataArray->GetSize()) {\
   std::stringstream s;\
   s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
-  s << "Required: " << size << " Contains: " << iDataArray->GetNumberOfTuples();\
+  s << "Required: " << size << " Contains: " << iDataArray->GetSize();\
   if (NULL != obv) {obv->setErrorCondition(-11);\
   obv->setErrorMessage(s.str());}\
   return gi;\
@@ -212,7 +212,7 @@ type* valuePtr = NULL;\
   if (iDataArray.get() == NULL) { \
     return -10;\
   } \
-  if (static_cast<size_t>(size) != iDataArray->GetNumberOfTuples()) {\
+  if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
     std::cout << name << " Size did not match." << size << " vs " << iDataArray->GetNumberOfTuples() << std::endl;\
     return -20;\
   }\
