@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     float*   m_EulerAnglesC;
 
     // Field Data
-    int8_t* m_SurfaceFields;
+    bool* m_SurfaceFields;
     int32_t* m_PhasesF;
     int32_t* m_NumCells;
     float* m_EulerAnglesF;

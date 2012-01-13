@@ -47,9 +47,6 @@
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -57,7 +54,7 @@ ChangeResolution::ChangeResolution() :
 AbstractFilter(),
 m_GrainIds(NULL),
 m_EulerAngles(NULL),
-m_Phases(NULL)
+m_PhasesC(NULL)
 {
 
 }
@@ -72,33 +69,28 @@ ChangeResolution::~ChangeResolution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeResolution::preflight()
+void ChangeResolution::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Cells) Array Not Initialized At Beginning of ChangeResolution Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
-  if(d.get() == NULL)
-  {
-	  ss << "EulerAngles (Cells) Array Not Initialized At Beginning of ChangeResolution Filter" << std::endl;
-	  err = -300;
-  }
+  DataContainer* m = getDataContainer();
 
-  setErrorCondition(err);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -300, float, FloatArrayType,  voxels);
+
   setErrorMessage(ss.str());
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ChangeResolution::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -118,11 +110,7 @@ void ChangeResolution::execute()
   }
 
   int64_t totalPoints = m->totalPoints();
-  int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
-  int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
-  if (NULL == eulerangles) { return; }
+  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
 
 
   setErrorCondition(0);
@@ -146,11 +134,11 @@ void ChangeResolution::execute()
         plane = int(z / m->getZRes());
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
-        grain_indicies[index] = grain_indicies[index_old];
-        phases[index] = phases[index_old];
-        eulerangles[3*index] = eulerangles[3*index_old];
-        eulerangles[3*index + 1] = eulerangles[3*index_old + 1];
-        eulerangles[3*index + 2] = eulerangles[3*index_old + 2];
+        m_GrainIds[index] = m_GrainIds[index_old];
+        m_PhasesC[index] = m_PhasesC[index_old];
+        m_EulerAngles[3*index] = m_EulerAngles[3*index_old];
+        m_EulerAngles[3*index + 1] = m_EulerAngles[3*index_old + 1];
+        m_EulerAngles[3*index + 2] = m_EulerAngles[3*index_old + 2];
       }
     }
   }

@@ -48,6 +48,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindSurfaceGrains.h"
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -129,11 +130,12 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  int8_t, Int8ArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  bool, BoolArrayType, fields);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -303,  int32_t, Int32ArrayType, fields);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
+
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -175,6 +177,17 @@ void MatchCrystallography::preflight()
     return;
   }
 
+  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+  find_surfacefields->setObservers(this->getObservers());
+  find_surfacefields->setDataContainer(getDataContainer());
+  find_surfacefields->preflight();
+  if (find_surfacefields->getErrorCondition() < 0)
+  {
+    setErrorCondition(find_surfacefields->getErrorCondition());
+    setErrorMessage(find_surfacefields->getErrorMessage());
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -204,12 +217,19 @@ void MatchCrystallography::execute()
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
   find_neighbors->execute();
-  err = find_neighbors->getErrorCondition();
-  if (err < 0)
+  if (find_neighbors->getErrorCondition() < 0)
   {
     return;
   }
 
+  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+  find_surfacefields->setObservers(this->getObservers());
+  find_surfacefields->setDataContainer(getDataContainer());
+  find_surfacefields->execute();
+  if (find_surfacefields->getErrorCondition() < 0)
+  {
+    return;
+  }
 
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   readODFData(h5reader);
