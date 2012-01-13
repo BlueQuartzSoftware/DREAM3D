@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     float* m_EulerAngles;
     int32_t* m_NumCells;
     int32_t* m_NumNeighbors;
-    int32_t* m_Phases;
+    int32_t* m_PhasesF;
     NeighborList<int>* m_NeighborList;
 
     std::vector<int> colonynewnumbers;
@@ -104,6 +104,9 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
 
     MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented
     void operator=(const MergeColonies&); // Operator '=' Not Implemented

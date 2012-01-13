@@ -61,7 +61,7 @@ CleanupGrains::CleanupGrains() :
 AbstractFilter(),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_EulerAngles(NULL),
+m_EulerAnglesF(NULL),
 m_AvgQuats(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
@@ -91,65 +91,6 @@ CleanupGrains::~CleanupGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CleanupGrains::preflight()
-{
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Cells) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
-  if(d.get() == NULL)
-  {
-	  ss << "Quats Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
-  if(d.get() == NULL)
-  {
-	  ss << "NeighborLists Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NumNeighbors);
-  if(d.get() == NULL)
-  {
-	  ss << "NumNeighbor Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
-	  err = -300;
-  }
-
-  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::AlreadyChecked, p);
-  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::Neighbors, q);
-  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AvgQuats, r);
-  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EulerAngles, s);
-  BoolArrayType::Pointer t = BoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Active, t);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void CleanupGrains::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
@@ -176,6 +117,52 @@ void CleanupGrains::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType,  voxels);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
+
+
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
+  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
+
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  if(m_NeighborList == NULL)
+  {
+    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    setErrorCondition(-308);
+  }
+
+
+  setErrorMessage(ss.str());
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CleanupGrains::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CleanupGrains::execute()
 {
   setErrorCondition(0);
@@ -190,18 +177,7 @@ void CleanupGrains::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
-
-	// Make sure we have all the arrays available and allocated
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
-  m_PhasesC = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == m_PhasesC) { return; }
-  m_AlreadyChecked = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::AlreadyChecked, totalPoints, this);
-  if (NULL == m_AlreadyChecked) { return; }
-  m_Quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, totalPoints * 5, this);
-  if (NULL == m_Quats) { return; }
-  m_Neighbors = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Neighbors, totalPoints, this);
-  if (NULL == m_Neighbors) { return; }
+  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
 
 
   notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
@@ -219,6 +195,10 @@ void CleanupGrains::execute()
   {
     return;
   }
+
+  // FindNeighbors may have messed with the pointers so revalidate our internal pointers
+  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
@@ -261,7 +241,7 @@ void CleanupGrains::assign_badpoints()
   int neighpoint;
   size_t numgrains = m->getTotalFields();
 
-  int neighpoints[6];
+  DimType neighpoints[6];
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -567,9 +547,9 @@ void CleanupGrains::reorder_grains()
       q[3] = m_AvgQuats[5 * currentgrain + 3] / m_AvgQuats[5 * currentgrain];
       q[4] = m_AvgQuats[5 * currentgrain + 4] / m_AvgQuats[5 * currentgrain];
       OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-      m_EulerAngles[3 * currentgrain] = ea1;
-      m_EulerAngles[3 * currentgrain + 1] = ea2;
-      m_EulerAngles[3 * currentgrain + 2] = ea3;
+      m_EulerAnglesF[3 * currentgrain] = ea1;
+      m_EulerAnglesF[3 * currentgrain + 1] = ea2;
+      m_EulerAnglesF[3 * currentgrain + 2] = ea3;
       currentgrain++;
     }
   }

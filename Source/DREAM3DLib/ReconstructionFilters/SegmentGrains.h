@@ -93,8 +93,11 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
     bool* m_Active;
-	
-	SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+
+    SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
     void operator=(const SegmentGrains&); // Operator '=' Not Implemented
 };
 

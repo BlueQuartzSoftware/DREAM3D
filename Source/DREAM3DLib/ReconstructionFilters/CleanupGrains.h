@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     float* m_Quats;
-    float* m_EulerAngles;
+    float* m_EulerAnglesF;
     float* m_AvgQuats;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
@@ -109,8 +109,10 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-	CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
+
+    CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
     void operator=(const CleanupGrains&); // Operator '=' Not Implemented
 };
 

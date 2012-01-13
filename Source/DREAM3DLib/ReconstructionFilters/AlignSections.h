@@ -101,7 +101,7 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     int32_t* m_GrainIds;
     float* m_Quats;
     float* m_EulerAngles;
-    int32_t* m_Phases;
+    int32_t* m_PhasesC;
     bool* m_GoodVoxels;
 
     OrientationMath::Pointer m_CubicOps;
@@ -110,6 +110,9 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     std::vector<OrientationMath*> m_OrientationOps;
 
     unsigned long long int Seed;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
 
     AlignSections(const AlignSections&); // Copy Constructor Not Implemented
     void operator=(const AlignSections&); // Operator '=' Not Implemented

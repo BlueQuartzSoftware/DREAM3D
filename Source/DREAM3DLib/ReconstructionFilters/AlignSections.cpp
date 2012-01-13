@@ -40,6 +40,8 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
+
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -62,7 +64,7 @@ AbstractFilter(),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_EulerAngles(NULL),
-m_Phases(NULL),
+m_PhasesC(NULL),
 m_GoodVoxels(NULL)
 {
   Seed = MXA::getMilliSeconds();
@@ -113,41 +115,33 @@ void AlignSections::setupFilterOptions()
 }
 
 
-
-void AlignSections::preflight()
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Quats);
-  if(d.get() == NULL)
-  {
-	  ss << "Quats Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  setErrorCondition(-300);
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  setErrorCondition(-300);
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
-  if(d.get() == NULL)
-  {
-	  ss << "EulerAngles (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  setErrorCondition(-300);
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::GoodVoxels);
-  if(d.get() == NULL)
-  {
-	  ss << "GoodVoxels Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  setErrorCondition(-300);
-  }
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  DataContainer* m = getDataContainer();
 
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+  //TODO: Initialize the array to something known - like 0
+
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -303,  int32_t, Int32ArrayType, voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels);
 
   setErrorMessage(ss.str());
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::preflight()
+{
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -156,6 +150,21 @@ void AlignSections::preflight()
 void AlignSections::execute()
 {
   setErrorCondition(0);
+  DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+  int64_t totalPoints = m->totalPoints();
+  dataCheck(false, totalPoints, 0, 0);
+
+
+
+
   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
   {
     form_grains_sections();
@@ -183,26 +192,7 @@ void AlignSections::execute()
 void AlignSections::align_sections()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
-    return;
-  }
   int64_t totalPoints = m->totalPoints();
-
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
-    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == phases) { return; }
-  float* eulerangles = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
-  if (NULL == eulerangles) { return; }
-  bool* goodVoxels = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::GoodVoxels, totalPoints, this);
-  if (NULL == goodVoxels) { return; }
-  float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
-  if (NULL == quats) { return; }
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -319,8 +309,8 @@ void AlignSections::align_sections()
                 {
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
                   curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
-                  refgnum = grain_indicies[refposition];
-                  curgnum = grain_indicies[curposition];
+                  refgnum = m_GrainIds[refposition];
+                  curgnum = m_GrainIds[curposition];
                   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
                   {
                     if(curgnum >= 0 && refgnum >= 0)
@@ -332,31 +322,31 @@ void AlignSections::align_sections()
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::Misorientation)
                   {
-                    if(goodVoxels[refposition] == true && goodVoxels[curposition] == true)
+                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                     {
                       w = 10000.0;
-                      if(phases[refposition] > 0 && phases[curposition] > 0)
+                      if(m_PhasesC[refposition] > 0 && m_PhasesC[curposition] > 0)
                       {
-                        q1[1] = quats[refposition * 5 + 1];
-                        q1[2] = quats[refposition * 5 + 2];
-                        q1[3] = quats[refposition * 5 + 3];
-                        q1[4] = quats[refposition * 5 + 4];
-                        phase1 = m->crystruct[phases[refposition]];
-                        q2[1] = quats[curposition * 5 + 1];
-                        q2[2] = quats[curposition * 5 + 2];
-                        q2[3] = quats[curposition * 5 + 3];
-                        q2[4] = quats[curposition * 5 + 4];
-                        phase2 = m->crystruct[phases[curposition]];
+                        q1[1] = m_Quats[refposition * 5 + 1];
+                        q1[2] = m_Quats[refposition * 5 + 2];
+                        q1[3] = m_Quats[refposition * 5 + 3];
+                        q1[4] = m_Quats[refposition * 5 + 4];
+                        phase1 = m->crystruct[m_PhasesC[refposition]];
+                        q2[1] = m_Quats[curposition * 5 + 1];
+                        q2[2] = m_Quats[curposition * 5 + 2];
+                        q2[3] = m_Quats[curposition * 5 + 3];
+                        q2[4] = m_Quats[curposition * 5 + 4];
+                        phase2 = m->crystruct[m_PhasesC[curposition]];
                         if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                       if(w > m_misorientationtolerance) disorientation++;
                     }
-                    if(goodVoxels[refposition] == true && goodVoxels[curposition] == false) disorientation++;
-                    if(goodVoxels[refposition] == false && goodVoxels[curposition] == true) disorientation++;
+                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
+                    if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary)
                   {
-                    if(grain_indicies[refposition] != grain_indicies[curposition]) disorientation++;
+                    if(m_GrainIds[refposition] != m_GrainIds[curposition]) disorientation++;
                   }
                 }
                 else
@@ -448,32 +438,32 @@ void AlignSections::align_sections()
         if((yspot + shifts[iter][1]) >= 0 && (yspot + shifts[iter][1]) <= dims[1] - 1 && (xspot + shifts[iter][0]) >= 0
             && (xspot + shifts[iter][0]) <= dims[0] - 1)
         {
-          eulerangles[3*position] = eulerangles[3*tempposition];
-          eulerangles[3*position + 1] = eulerangles[3*tempposition + 1];
-          eulerangles[3*position + 2] = eulerangles[3*tempposition + 2];
-          quats[position * 5 + 0] = quats[tempposition * 5 + 0];
-          quats[position * 5 + 1] = quats[tempposition * 5 + 1];
-          quats[position * 5 + 2] = quats[tempposition * 5 + 2];
-          quats[position * 5 + 3] = quats[tempposition * 5 + 3];
-          quats[position * 5 + 4] = quats[tempposition * 5 + 4];
-          goodVoxels[position] = goodVoxels[tempposition];
-          phases[position] = phases[tempposition];
-          grain_indicies[position] = grain_indicies[tempposition];
+          m_EulerAngles[3*position] = m_EulerAngles[3*tempposition];
+          m_EulerAngles[3*position + 1] = m_EulerAngles[3*tempposition + 1];
+          m_EulerAngles[3*position + 2] = m_EulerAngles[3*tempposition + 2];
+          m_Quats[position * 5 + 0] = m_Quats[tempposition * 5 + 0];
+          m_Quats[position * 5 + 1] = m_Quats[tempposition * 5 + 1];
+          m_Quats[position * 5 + 2] = m_Quats[tempposition * 5 + 2];
+          m_Quats[position * 5 + 3] = m_Quats[tempposition * 5 + 3];
+          m_Quats[position * 5 + 4] = m_Quats[tempposition * 5 + 4];
+          m_GoodVoxels[position] = m_GoodVoxels[tempposition];
+          m_PhasesC[position] = m_PhasesC[tempposition];
+          m_GrainIds[position] = m_GrainIds[tempposition];
         }
         if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > dims[0] - 1)
         {
-          eulerangles[3*position] = 0.0;
-          eulerangles[3*position + 1] = 0.0;
-          eulerangles[3*position + 2] = 0.0;
-          quats[position * 5 + 0] = 0.0;
-          quats[position * 5 + 1] = 0.0;
-          quats[position * 5 + 2] = 0.0;
-          quats[position * 5 + 3] = 0.0;
-          quats[position * 5 + 4] = 1.0;
-          goodVoxels[position] = false;
-          phases[position] = 0;
-          grain_indicies[position] = 0;
+          m_EulerAngles[3*position] = 0.0;
+          m_EulerAngles[3*position + 1] = 0.0;
+          m_EulerAngles[3*position + 2] = 0.0;
+          m_Quats[position * 5 + 0] = 0.0;
+          m_Quats[position * 5 + 1] = 0.0;
+          m_Quats[position * 5 + 2] = 0.0;
+          m_Quats[position * 5 + 3] = 0.0;
+          m_Quats[position * 5 + 4] = 1.0;
+          m_GoodVoxels[position] = false;
+          m_PhasesC[position] = 0;
+          m_GrainIds[position] = 0;
         }
       }
     }
@@ -521,14 +511,7 @@ void AlignSections::form_grains_sections()
   };
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
-    int32_t* phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == phases) { return; }
-  bool* goodVoxels = m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>(DREAM3D::VoxelData::GoodVoxels, totalPoints, this);
-  if (NULL == goodVoxels) { return; }
-  float* quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
-  if (NULL == quats) { return; }
+
 
   int point = 0;
   int seed = 0;
@@ -583,7 +566,7 @@ void AlignSections::form_grains_sections()
           if(x > dims[0] - 1) x = x - dims[0];
           if(y > dims[1] - 1) y = y - dims[1];
           point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
-          if(goodVoxels[point] == true && grain_indicies[point] == -1 && phases[point] > 0)
+          if(m_GoodVoxels[point] == true && m_GrainIds[point] == -1 && m_PhasesC[point] > 0)
           {
             seed = point;
           }
@@ -595,25 +578,25 @@ void AlignSections::form_grains_sections()
       if(seed >= 0)
       {
         size = 0;
-        grain_indicies[seed] = graincount;
+        m_GrainIds[seed] = graincount;
         voxelslist[size] = seed;
         size++;
 //        qs[0] = 0;
-//        qs[1] = quats[seed * 5 + 1];
-//        qs[2] = quats[seed * 5 + 2];
-//        qs[3] = quats[seed * 5 + 3];
-//        qs[4] = quats[seed * 5 + 4];
+//        qs[1] = m_Quats[seed * 5 + 1];
+//        qs[2] = m_Quats[seed * 5 + 2];
+//        qs[3] = m_Quats[seed * 5 + 3];
+//        qs[4] = m_Quats[seed * 5 + 4];
         for (size_t j = 0; j < size; ++j)
         {
           int currentpoint = voxelslist[j];
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
           q1[0] = 0;
-          q1[1] = quats[currentpoint * 5 + 1];
-          q1[2] = quats[currentpoint * 5 + 2];
-          q1[3] = quats[currentpoint * 5 + 3];
-          q1[4] = quats[currentpoint * 5 + 4];
-          phase1 = m->crystruct[phases[currentpoint]];
+          q1[1] = m_Quats[currentpoint * 5 + 1];
+          q1[2] = m_Quats[currentpoint * 5 + 2];
+          q1[3] = m_Quats[currentpoint * 5 + 3];
+          q1[4] = m_Quats[currentpoint * 5 + 4];
+          phase1 = m->crystruct[m_PhasesC[currentpoint]];
           for (int i = 0; i < 8; i++)
           {
             good = 1;
@@ -622,19 +605,19 @@ void AlignSections::form_grains_sections()
             if((i == 5 || i == 6 || i == 7) && row == (dims[1] - 1)) good = 0;
             if((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
             if((i == 2 || i == 4 || i == 7) && col == (dims[0] - 1)) good = 0;
-            if(good == 1 && grain_indicies[neighbor] <= 0 && phases[neighbor] > 0)
+            if(good == 1 && m_GrainIds[neighbor] <= 0 && m_PhasesC[neighbor] > 0)
             {
               w = 10000.0;
               q2[0] = 0;
-              q2[1] = quats[neighbor * 5 + 1];
-              q2[2] = quats[neighbor * 5 + 2];
-              q2[3] = quats[neighbor * 5 + 3];
-              q2[4] = quats[neighbor * 5 + 4];
-              phase2 = m->crystruct[phases[neighbor]];
+              q2[1] = m_Quats[neighbor * 5 + 1];
+              q2[2] = m_Quats[neighbor * 5 + 2];
+              q2[3] = m_Quats[neighbor * 5 + 3];
+              q2[4] = m_Quats[neighbor * 5 + 4];
+              phase2 = m->crystruct[m_PhasesC[neighbor]];
               if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               if(w < m_misorientationtolerance)
               {
-                grain_indicies[neighbor] = graincount;
+                m_GrainIds[neighbor] = graincount;
                 voxelslist[size] = neighbor;
                 size++;
                 if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);

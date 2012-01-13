@@ -121,6 +121,9 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+
     LoadSlices(const LoadSlices&); // Copy Constructor Not Implemented
     void operator=(const LoadSlices&); // Operator '=' Not Implemented
 
