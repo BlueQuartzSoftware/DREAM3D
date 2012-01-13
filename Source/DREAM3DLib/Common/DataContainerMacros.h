@@ -45,47 +45,41 @@
 
 
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
-  IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
-  if (NULL == m_##Name##_Ptr.get() ) {\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  if (NULL == m_##Name ) {\
     ss << "Filter " << getNameOfClass() << " requires the data array '" << \
     #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
+    ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
     setErrorCondition(err);\
-  } else if (preflight == false) {\
-    m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   }
 
 #define GET_PREREQ_DATA_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size, NumComp)\
-  IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
-  if (NULL == m_##Name##Post##_Ptr.get() ) {\
+  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  if (NULL == m_##Name##Post ) {\
     ss << "Filter " << getNameOfClass() << " requires the data array '" << \
     #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
+    ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
     setErrorCondition(err);\
-  } else if (preflight == false) {\
-    m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   }
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
-  IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
-  if (NULL ==  m_##Name##_Ptr.get() ) {\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  if (NULL ==  m_##Name ) {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
     p->SetNumberOfComponents(NumComp);\
     p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name = p->GetPointer(0);\
-  }else if (preflight == false) {\
-    m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   }
 
 #define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
-  IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
-  if (NULL ==  m_##Name##Post##_Ptr.get() ) {\
+  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  if (NULL ==  m_##Name##Post ) {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
     p->SetNumberOfComponents(NumComp);\
     p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name##Post = p->GetPointer(0);\
-  }else if (preflight == false) {\
-    m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   }
 
 
