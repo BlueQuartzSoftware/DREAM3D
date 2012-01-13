@@ -66,7 +66,7 @@ void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);

@@ -76,11 +76,11 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
 
   // Field Data
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, fields, 1);
 
