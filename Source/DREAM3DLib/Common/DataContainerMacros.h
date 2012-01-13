@@ -231,16 +231,23 @@ type* valuePtr = NULL;\
 /*
    // Cell Data
 
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, MisorientationGradients, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, EulerAngles, C, ss, -300, float, FloatArrayType,  voxels, 3);
 
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, float, FloatArrayType, fields, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
 
@@ -248,20 +255,28 @@ type* valuePtr = NULL;\
   // Field Data
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  bool, BoolArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, -308, float, FloatArrayType, fields);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1);
 
+
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, UnbiasedFields, ss, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
@@ -274,8 +289,10 @@ type* valuePtr = NULL;\
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float,FloatArrayType, fields, 2);
 
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+ // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
@@ -284,10 +301,18 @@ type* valuePtr = NULL;\
     setErrorCondition(-308);
   }
 
+  // And we do the same for the SharedSurfaceArea list
+  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
+                                 (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  if(m_SharedSurfaceAreaList == NULL)
+  {
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    setErrorCondition(-309);
+  }
 
 
 
-
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size(), 1);
 
 
 

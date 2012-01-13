@@ -66,6 +66,10 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, UnbiasedFields, ss, bool, BoolArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -76,26 +80,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 // -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::Centroids);
-  if(d.get() == NULL)
-  {
-	  ss << "Centroids Array Not Initialized At Beginning of FindBoundingBoxGrains Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
-  if(d.get() == NULL)
-  {
-	  ss << "SurfaceFields Array Not Initialized At Beginning of FindBoundingBoxGrains Filter" << std::endl;
-	  err = -300;
-  }
-  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::UnbiasedFields, p);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1,1,1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -103,7 +88,18 @@ void FindBoundingBoxGrains::preflight()
 void FindBoundingBoxGrains::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+
   setErrorCondition(0);
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 
   if(m->getZPoints() > 1) find_boundingboxgrains();
   if(m->getZPoints() == 1) find_boundingboxgrains2D();

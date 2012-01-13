@@ -69,7 +69,11 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -80,25 +84,7 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 // -----------------------------------------------------------------------------
 void FindSizes::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of FindSizes Filter" << std::endl;
-	  err = -300;
-  }
-
-  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Volumes, p);
-  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, q);
-  Int32ArrayType::Pointer r = Int32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::NumCells, r);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -114,12 +100,10 @@ void FindSizes::execute()
     setErrorMessage(ss.str());
     return;
   }
-
-  int64_t totalPoints = m->totalPoints();
-
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
   setErrorCondition(0);
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
 
   if(m->getZPoints() > 1) find_sizes();
   if(m->getZPoints() == 1) find_sizes2D();

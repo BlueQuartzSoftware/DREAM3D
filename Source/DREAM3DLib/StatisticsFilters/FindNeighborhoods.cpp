@@ -54,8 +54,7 @@ m_EquivalentDiameters(NULL),
 m_Neighborhoods(NULL),
 m_Active(NULL)
 {
-  graincenters = NULL;
-  INIT_DataArray(m_GrainCenters,float);
+
   setupFilterOptions();
 }
 
@@ -93,6 +92,16 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
+
 
   setErrorMessage(ss.str());
 }
@@ -103,35 +112,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of FindNeighborhoods Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Active);
-  if(d.get() == NULL)
-  {
-	  ss << "Active Array Not Initialized At Beginning of FindNeighborhoods Filter" << std::endl;
-	  err = -300;
-  }
-
-  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Centroids, p);
-  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Volumes, q);
-  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, r);
-  Int32ArrayType::Pointer s = Int32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::NumCells, s);
-  Int32ArrayType::Pointer t = Int32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Neighborhoods, t);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -139,7 +120,18 @@ void FindNeighborhoods::preflight()
 void FindNeighborhoods::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
   setErrorCondition(0);
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
 
   if(m->getZPoints() > 1) find_centroids();
   if(m->getZPoints() == 1) find_centroids2D();
@@ -153,18 +145,11 @@ void FindNeighborhoods::execute()
 void FindNeighborhoods::find_centroids()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
-    return;
-  }
 
   int64_t totalPoints = m->totalPoints();
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
+  DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
+  graincenters = NULL;
+  INIT_DataArray(m_GrainCenters,float);
 
   float x, y, z;
   int col, row, plane;
@@ -214,18 +199,10 @@ void FindNeighborhoods::find_centroids()
 void FindNeighborhoods::find_centroids2D()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
-    return;
-  }
-
   int64_t totalPoints = m->totalPoints();
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
+  DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
+  graincenters = NULL;
+  INIT_DataArray(m_GrainCenters,float);
 
   float x, y;
   int col, row;
@@ -267,6 +244,8 @@ void FindNeighborhoods::find_centroids2D()
 void FindNeighborhoods::find_neighborhoods()
 {
   DataContainer* m = getDataContainer();
+
+
   float x, y, z;
   float xn, yn, zn;
   float xdist, ydist, zdist;

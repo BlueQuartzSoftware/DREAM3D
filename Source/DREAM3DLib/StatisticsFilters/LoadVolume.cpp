@@ -99,6 +99,7 @@ void LoadVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 // -----------------------------------------------------------------------------
 void LoadVolume::preflight()
 {
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -115,9 +116,8 @@ void LoadVolume::execute()
     setErrorMessage(ss.str());
     return;
   }
-  int64_t totalPoints = m->totalPoints();
-
   setErrorCondition(0);
+
   int err = 0;
 
   H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
@@ -166,7 +166,7 @@ void LoadVolume::execute()
 
   m->setDimensions(dcDims);
   m->setResolution(spacing);
-  totalPoints = m->totalPoints();
+  int64_t totalPoints = m->totalPoints();
 
   initializeAttributes();
   if (getErrorCondition() < 0)

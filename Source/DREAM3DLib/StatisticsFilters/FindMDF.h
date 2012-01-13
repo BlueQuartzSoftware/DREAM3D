@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     float* m_AvgQuats;
     bool* m_Active;
     bool* m_SurfaceFields;
-    int32_t* m_Phases;
+    int32_t* m_PhasesF;
     float* m_TotalSurfaceArea;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;

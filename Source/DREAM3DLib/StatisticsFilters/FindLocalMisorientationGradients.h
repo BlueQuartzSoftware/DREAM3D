@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     int32_t* m_GrainIds;
-    int32_t* m_Phases;
+    int32_t* m_PhasesC;
     float* m_GrainMisorientations;
     float* m_MisorientationGradients;
     float* m_KernelAverageMisorientations;

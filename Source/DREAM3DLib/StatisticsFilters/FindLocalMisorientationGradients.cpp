@@ -47,7 +47,7 @@ const static float m_pi = M_PI;
 FindLocalMisorientationGradients::FindLocalMisorientationGradients() :
 AbstractFilter(),
 m_GrainIds(NULL),
-m_Phases(NULL),
+m_PhasesC(NULL),
 m_GrainMisorientations(NULL),
 m_MisorientationGradients(NULL),
 m_KernelAverageMisorientations(NULL),
@@ -101,6 +101,16 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, KernelAverageMisorientations, ss, float, FloatArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainMisorientations, ss, float, FloatArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, MisorientationGradients, ss, float, FloatArrayType, voxels, 1);
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, fields, 3);
+
 
   setErrorMessage(ss.str());
 }
@@ -111,45 +121,7 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
 // -----------------------------------------------------------------------------
 void FindLocalMisorientationGradients::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Cells) Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
-  if(d.get() == NULL)
-  {
-	  ss << "Quats Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
-  if(d.get() == NULL)
-  {
-	  ss << "AvgQuats Array Not Initialized At Beginning of FindLocalMisorientationGradients Filter" << std::endl;
-	  err = -300;
-  }
-
-  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations, p);
-  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::GrainMisorientations, q);
-  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::MisorientationGradients, r);
-  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::GrainAvgMisorientations, s);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1,1,1);
 }
 
 // -----------------------------------------------------------------------------
@@ -171,22 +143,8 @@ void FindLocalMisorientationGradients::execute()
 
   int64_t totalPoints = m->totalPoints();
 
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
-    int32_t* m_Phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == m_Phases) { return; }
-  float* m_Quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
-  if (NULL == m_Quats) { return; }
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 
-
-  float* m_KernelAverageMisorientations = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::KernelAverageMisorientations, totalPoints, 1, this);
-  if (NULL == m_KernelAverageMisorientations) {return;}
-
-  float* m_GrainMisorientations = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainMisorientations, totalPoints, 1, this);
-  if (NULL == m_GrainMisorientations) {return;}
-
-  float* m_MisorientationGradients = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::MisorientationGradients, totalPoints, 1, this);
-  if (NULL == m_MisorientationGradients) {return;}
 
 
   // We need to keep a reference to the wrapper DataArray class in addition to the raw pointer
@@ -243,7 +201,7 @@ void FindLocalMisorientationGradients::execute()
       for (DimType plane = 0; plane < zPoints; plane++)
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
-        if (m_GrainIds[point] > 0 && m_Phases[point] > 0)
+        if (m_GrainIds[point] > 0 && m_PhasesC[point] > 0)
         {
           totalmisorientation = 0.0;
           numVoxel = 0;
@@ -251,7 +209,7 @@ void FindLocalMisorientationGradients::execute()
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
-          phase1 = m->crystruct[m_Phases[point]];
+          phase1 = m->crystruct[m_PhasesC[point]];
           for (int j = -m_KernelSize; j < m_KernelSize + 1; j++)
 
           {
@@ -276,7 +234,7 @@ void FindLocalMisorientationGradients::execute()
                   q2[2] = m_Quats[neighbor*5 + 2];
                   q2[3] = m_Quats[neighbor*5 + 3];
                   q2[4] = m_Quats[neighbor*5 + 4];
-                  phase2 = m->crystruct[m_Phases[neighbor]];
+                  phase2 = m->crystruct[m_PhasesC[neighbor]];
                   if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                   if (w < 5.0)
 
@@ -313,7 +271,7 @@ void FindLocalMisorientationGradients::execute()
           avgmiso[m_GrainIds[point]][0]++;
           avgmiso[m_GrainIds[point]][1] = avgmiso[m_GrainIds[point]][1] + w;
         }
-        if (m_GrainIds[point] == 0 || m_Phases[point] == 0)
+        if (m_GrainIds[point] == 0 || m_PhasesC[point] == 0)
         {
           m_KernelAverageMisorientations[point] = 0;
           m_GrainMisorientations[point] = 0;
@@ -339,7 +297,7 @@ void FindLocalMisorientationGradients::execute()
       for (DimType plane = 0; plane < zPoints; plane++)
       {
         point = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
-        if (m_GrainIds[point] > 0 && m_Phases[point] > 0)
+        if (m_GrainIds[point] > 0 && m_PhasesC[point] > 0)
 
         {
           totalmisorientation = 0.0;
@@ -355,11 +313,11 @@ void FindLocalMisorientationGradients::execute()
                 good = 1;
                 neighbor = point + (jStride) + (kStride) + (l);
                 if (plane + j < 0) good = 0;
-                if (plane + j > m->getZPoints() - 1) good = 0;
+                if (plane + j > zPoints - 1) good = 0;
                 if (row + k < 0) good = 0;
-                if (row + k > m->getYPoints() - 1) good = 0;
+                if (row + k > yPoints - 1) good = 0;
                 if (col + l < 0) good = 0;
-                if (col + l > m->getXPoints() - 1) good = 0;
+                if (col + l > xPoints - 1) good = 0;
                 if (good == 1 && m_GrainIds[point] == m_GrainIds[neighbor])
                 {
                   numchecks++;
@@ -371,7 +329,7 @@ void FindLocalMisorientationGradients::execute()
           m_MisorientationGradients[point] = totalmisorientation / (float)numchecks;
         }
 
-        if (m_GrainIds[point] == 0 || m_Phases[point] == 0)
+        if (m_GrainIds[point] == 0 || m_PhasesC[point] == 0)
         {
           m_MisorientationGradients[point] = 0;
         }

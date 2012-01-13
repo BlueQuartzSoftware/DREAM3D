@@ -115,6 +115,7 @@ void WriteH5StatsFile::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 void WriteH5StatsFile::preflight()
 {
+  dataCheck(true, 1, 1, 1);
 }
 
 
@@ -124,6 +125,14 @@ void WriteH5StatsFile::preflight()
 void WriteH5StatsFile::execute()
 {
   DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
   setErrorCondition(0);
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);

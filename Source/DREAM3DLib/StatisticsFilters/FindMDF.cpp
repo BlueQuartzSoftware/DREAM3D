@@ -50,7 +50,7 @@ m_CreateNewStatsFile(true),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_SurfaceFields(NULL),
-m_Phases(NULL),
+m_PhasesF(NULL),
 m_TotalSurfaceArea(NULL),
 m_NeighborList(NULL),
 m_SharedSurfaceAreaList(NULL)
@@ -101,6 +101,34 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+   if(m_NeighborList == NULL)
+   {
+     ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+     setErrorCondition(-308);
+   }
+
+   // And we do the same for the SharedSurfaceArea list
+   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
+                                  (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+   if(m_SharedSurfaceAreaList == NULL)
+   {
+     ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+     setErrorCondition(-309);
+   }
+
+
+
+
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size(), 1);
+
 
   setErrorMessage(ss.str());
 }
@@ -110,54 +138,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 // -----------------------------------------------------------------------------
 void FindMDF::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
-  if(d.get() == NULL)
-  {
-	  ss << "AvgQuats Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Active);
-  if(d.get() == NULL)
-  {
-	  ss << "Active Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
-  if(d.get() == NULL)
-  {
-	  ss << "SurfaceFields Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
-  if(d.get() == NULL)
-  {
-	  ss << "NeighborLists Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList);
-  if(d.get() == NULL)
-  {
-	  ss << "SharedSurfaceAreaList Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea);
-  if(d.get() == NULL)
-  {
-	  ss << "TotalSurfaceArea Array Not Initialized At Beginning of FindMDF Filter" << std::endl;
-	  err = -300;
-  }
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -178,17 +159,13 @@ void FindMDF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  m_TotalSurfaceArea = m->getEnsembleDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::EnsembleData::TotalSurfaceArea, (m->crystruct.size()), this);
-  if (NULL == m_TotalSurfaceArea) { return; }
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
   // And we do the same for the SharedSurfaceArea list
-  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
   float n1, n2, n3;
@@ -233,7 +210,7 @@ void FindMDF::execute()
 		q1[2] = m_AvgQuats[3*i+2] / m_AvgQuats[3*i+2];
 		q1[3] = m_AvgQuats[3*i+3] / m_AvgQuats[3*i+3];
 		q1[4] = m_AvgQuats[3*i+4] / m_AvgQuats[3*i+4];
-		phase1 = m->crystruct[m_Phases[i]];
+		phase1 = m->crystruct[m_PhasesF[i]];
 		misorientationlists[i].resize(neighborlist[i].size() * 3, -1.0);
 		for (size_t j = 0; j < neighborlist[i].size(); j++)
 		{
@@ -244,7 +221,7 @@ void FindMDF::execute()
 		  q2[2] = m_AvgQuats[3*nname+2] / m_AvgQuats[3*nname+2];
 		  q2[3] = m_AvgQuats[3*nname+3] / m_AvgQuats[3*nname+3];
 		  q2[4] = m_AvgQuats[3*nname+4] / m_AvgQuats[3*nname+4];
-		  phase2 = m->crystruct[m_Phases[nname]];
+		  phase2 = m->crystruct[m_PhasesF[nname]];
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
@@ -266,7 +243,7 @@ void FindMDF::execute()
 		  if ((nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
 		  {
 			nsa = neighborsurfacearealist[i][j];
-			misobin[m_Phases[i]][mbin] = misobin[m_Phases[i]][mbin] + (nsa / m_TotalSurfaceArea[m_Phases[i]]);
+			misobin[m_PhasesF[i]][mbin] = misobin[m_PhasesF[i]][mbin] + (nsa / m_TotalSurfaceArea[m_PhasesF[i]]);
 		  }
 		}
 	  }

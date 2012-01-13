@@ -72,8 +72,8 @@ class FindEuclideanMap : public AbstractFilter
     {
       std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
       int64_t totalPoints = m->totalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), nearestneighbors);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), nearestneighbordistances);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), m_NearestNeighbors);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), m_NearestNeighborDistances);
 
       int nearestneighbordistance = 0;
       int count = 1;
@@ -100,8 +100,8 @@ class FindEuclideanMap : public AbstractFilter
       nearestneighbordistance = 0;
       for (int a = 0; a < (totalPoints); ++a)
       {
-        voxel_NearestNeighbor[a] = nearestneighbors[a*3 + loop];
-        voxel_NearestNeighborDistance[a] = nearestneighbordistances[a*3 + loop];
+        voxel_NearestNeighbor[a] = m_NearestNeighbors[a*3 + loop];
+        voxel_NearestNeighborDistance[a] = m_NearestNeighborDistances[a*3 + loop];
       }
       count = 1;
       int i;
@@ -173,8 +173,8 @@ class FindEuclideanMap : public AbstractFilter
       }
       for (int a = 0; a < (totalPoints); ++a)
       {
-        nearestneighbors[a*3 + loop] = voxel_NearestNeighbor[a];
-        nearestneighbordistances[a*3 + loop] = voxel_NearestNeighborDistance[a];
+        m_NearestNeighbors[a*3 + loop] = voxel_NearestNeighbor[a];
+        m_NearestNeighborDistances[a*3 + loop] = voxel_NearestNeighborDistance[a];
       }
       delete[] voxel_NearestNeighbor;
       delete[] voxel_NearestNeighborDistance;
@@ -212,21 +212,12 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighbors, ss, int32_t, Int32ArrayType, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighborDistances, ss, float, FloatArrayType, voxels, 3);
 
   setErrorMessage(ss.str());
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindEuclideanDistMap::execute()
-{
-  setErrorCondition(0);
-
-  find_euclideandistmap();
-  notify("FindEuclideanDistMap Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -234,28 +225,13 @@ void FindEuclideanDistMap::execute()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of FindEuclideanDistMap Filter" << std::endl;
-	  err = -300;
-  }
-
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::NearestNeighbors, p);
-  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::NearestNeighborDistances, q);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1,1);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::find_euclideandistmap()
+void FindEuclideanDistMap::execute()
 {
   DataContainer* m = getDataContainer();
   if (NULL == m)
@@ -266,22 +242,28 @@ void FindEuclideanDistMap::find_euclideandistmap()
     setErrorMessage(ss.str());
     return;
   }
+  setErrorCondition(0);
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
+  find_euclideandistmap();
+  notify("FindEuclideanDistMap Completed", 0, Observable::UpdateProgressMessage);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::find_euclideandistmap()
+{
+  DataContainer* m = getDataContainer();
 
   int64_t totalPoints = m->totalPoints();
-    int32_t* grain_indicies = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == grain_indicies) { return; }
-
-  int32_t* nearestneighbors = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighbors, totalPoints*3, 1, this);
-  if (nearestneighbors == NULL) { return; }
-
-  float* nearestneighbordistances = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighborDistances, totalPoints*3, 1, this);
-  if (NULL == nearestneighbordistances) {return;}
-
 
   for (int i = 0; i < totalPoints*3; i++)
   {
-    nearestneighbors[i] = -1;
-    nearestneighbordistances[i] = -1;
+    m_NearestNeighbors[i] = -1;
+    m_NearestNeighborDistances[i] = -1;
   }
 
   size_t column, row, plane;
@@ -314,7 +296,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 
   for (int64_t a = 0; a < (totalPoints); ++a)
   {
-	grain = grain_indicies[a];
+	grain = m_GrainIds[a];
 	if(grain > 0)
 	{
 	  coordination.resize(0);
@@ -331,21 +313,21 @@ void FindEuclideanDistMap::find_euclideandistmap()
 		if(k == 4 && row == (m->getYPoints() - 1)) good = 0;
 		if(k == 2 && column == 0) good = 0;
 		if(k == 3 && column == (m->getXPoints() - 1)) good = 0;
-		if(good == 1 && grain_indicies[neighbor] != grain && grain_indicies[neighbor] > 0)
+		if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
 		{
 			add = 1;
 			for(size_t i=0;i<coordination.size();i++)
 			{
-				if(grain_indicies[neighbor] == coordination[i]) add = 0;
+				if(m_GrainIds[neighbor] == coordination[i]) add = 0;
 			}
-			if(add == 1) coordination.push_back(grain_indicies[neighbor]);
+			if(add == 1) coordination.push_back(m_GrainIds[neighbor]);
 		}
 	  }
 	}
-	if(coordination.size() > 2) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = 0, nearestneighbordistances[a*3+2] = 0, nearestneighbors[a*3+0] = coordination[0], nearestneighbors[a*3+1] = coordination[0], nearestneighbors[a*3+2] = coordination[0];
-	if(coordination.size() == 2) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = 0, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = coordination[0], nearestneighbors[a*3+1] = coordination[0], nearestneighbors[a*3+2] = -1;
-	if(coordination.size() == 1) nearestneighbordistances[a*3+0] = 0, nearestneighbordistances[a*3+1] = -1, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = coordination[0], nearestneighbors[a*3+1] = -1, nearestneighbors[a*3+2] = -1;
-	if(coordination.size() == 0) nearestneighbordistances[a*3+0] = -1, nearestneighbordistances[a*3+1] = -1, nearestneighbordistances[a*3+2] = -1, nearestneighbors[a*3+0] = -1, nearestneighbors[a*3+1] = -1, nearestneighbors[a*3+2] = -1;
+	if(coordination.size() > 2) m_NearestNeighborDistances[a*3+0] = 0, m_NearestNeighborDistances[a*3+1] = 0, m_NearestNeighborDistances[a*3+2] = 0, m_NearestNeighbors[a*3+0] = coordination[0], m_NearestNeighbors[a*3+1] = coordination[0], m_NearestNeighbors[a*3+2] = coordination[0];
+	if(coordination.size() == 2) m_NearestNeighborDistances[a*3+0] = 0, m_NearestNeighborDistances[a*3+1] = 0, m_NearestNeighborDistances[a*3+2] = -1, m_NearestNeighbors[a*3+0] = coordination[0], m_NearestNeighbors[a*3+1] = coordination[0], m_NearestNeighbors[a*3+2] = -1;
+	if(coordination.size() == 1) m_NearestNeighborDistances[a*3+0] = 0, m_NearestNeighborDistances[a*3+1] = -1, m_NearestNeighborDistances[a*3+2] = -1, m_NearestNeighbors[a*3+0] = coordination[0], m_NearestNeighbors[a*3+1] = -1, m_NearestNeighbors[a*3+2] = -1;
+	if(coordination.size() == 0) m_NearestNeighborDistances[a*3+0] = -1, m_NearestNeighborDistances[a*3+1] = -1, m_NearestNeighborDistances[a*3+2] = -1, m_NearestNeighbors[a*3+0] = -1, m_NearestNeighbors[a*3+1] = -1, m_NearestNeighbors[a*3+2] = -1;
  }
 #if AIM_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
