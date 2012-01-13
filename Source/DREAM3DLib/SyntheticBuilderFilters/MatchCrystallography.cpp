@@ -119,10 +119,9 @@ void MatchCrystallography::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-
 
   // Cell Data
   PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
@@ -142,7 +141,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(m_NeighborList == NULL)
   {
 	  ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-	  err = -300;
+    setErrorCondition(-308);
   }
 
   // And we do the same for the SharedSurfaceArea list
@@ -151,13 +150,12 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(m_SharedSurfaceAreaList == NULL)
   {
     ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
-    err = -300;
+    setErrorCondition(-309);
   }
 
   // Ensemble Data
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size() );
 
-  setErrorCondition(err);
   setErrorMessage(ss.str());
 }
 

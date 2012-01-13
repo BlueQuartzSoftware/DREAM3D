@@ -33,6 +33,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXADir.h"
@@ -41,17 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
-#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
-#include "DREAM3DLib/HDF5/H5VoxelReader.h"
-
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
-#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
+#include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -91,20 +82,10 @@ void RemoveTestFiles()
 #endif
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NonWorkingPreflight()
-{
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SyntheticPreflight()
+void SyntheticBuilder_PreFlight()
 {
 
   std::string m_H5StatsFile("");
@@ -206,13 +187,107 @@ void SyntheticPreflight()
 
 }
 
+#define PASS 0
+#define FAIL_IS_PASS 1
+
+#define MAKE_FILTER_TEST(name, condition)\
+void name##_PreFlightTest() {\
+  int err = 0;\
+  DataContainer::Pointer m = DataContainer::New();\
+  std::vector<AbstractFilter::Pointer> pipeline;\
+  name::Pointer filter = name::New();\
+  pipeline.push_back(filter);\
+  int preflightError = 0;\
+  std::stringstream ss;\
+  ss << "------------------------------------------------" << std::endl;\
+  ss << "Starting Preflight test for " << #name << std::endl;\
+  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
+    (*filter)->setDataContainer(m.get());\
+    setCurrentFilter(*filter);\
+    (*filter)->preflight();\
+    err = (*filter)->getErrorCondition();\
+    if(err < 0) {\
+      preflightError |= err;\
+      ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
+      ss << (*filter)->getErrorMessage();\
+    }\
+  }\
+  std::cout << ss.str() << std::endl;\
+  if (condition) { DREAM3D_REQUIRE_NE(err, 0);}\
+  else { DREAM3D_REQUIRE_EQUAL(err, 0);  }\
+}
+
+
+MAKE_FILTER_TEST(  LoadSlices, PASS)
+MAKE_FILTER_TEST(  AlignSections, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  SegmentGrains, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  CleanupGrains, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  MergeTwins, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  MergeColonies, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindNeighbors, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FieldDataCSVWriter, PASS)
+MAKE_FILTER_TEST(  ChangeResolution, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  CropVolume, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindAvgOrientations, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindAxisODF, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindBoundingBoxGrains, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindEuclideanDistMap, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindMDF, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindNeighborhoods, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindODF, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindDeformationStatistics, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindSchmids, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindShapes, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindSizes, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  LoadVolume, PASS)
+MAKE_FILTER_TEST(  FindLocalMisorientationGradients, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  FindSurfaceGrains, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  WriteH5StatsFile, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  AdjustVolume, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  PackGrainsGen2, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  MatchCrystallography, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  PlacePrecipitates, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  SurfaceMeshFilter, FAIL_IS_PASS)
+
+
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( SyntheticPreflight() );
+  DREAM3D_REGISTER_TEST( SyntheticBuilder_PreFlight() );
+  DREAM3D_REGISTER_TEST( LoadSlices_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( AlignSections_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( SegmentGrains_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( CleanupGrains_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( MergeTwins_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( MergeColonies_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindNeighbors_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FieldDataCSVWriter_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( ChangeResolution_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( CropVolume_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindAvgOrientations_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindAxisODF_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindBoundingBoxGrains_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindEuclideanDistMap_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindMDF_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindNeighborhoods_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindODF_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindDeformationStatistics_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindSchmids_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindShapes_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindSizes_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( LoadVolume_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindLocalMisorientationGradients_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( FindSurfaceGrains_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( WriteH5StatsFile_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( AdjustVolume_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( PackGrainsGen2_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( MatchCrystallography_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( PlacePrecipitates_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( SurfaceMeshFilter_PreFlightTest() );
 
 
   PRINT_TEST_SUMMARY();

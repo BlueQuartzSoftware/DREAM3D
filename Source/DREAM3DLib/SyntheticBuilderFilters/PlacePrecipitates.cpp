@@ -125,7 +125,7 @@ void PlacePrecipitates::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
@@ -147,8 +147,6 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
 
-
-  setErrorCondition(err);
   setErrorMessage(ss.str());
 }
 
