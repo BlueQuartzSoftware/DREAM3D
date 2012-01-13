@@ -69,8 +69,8 @@ set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 # happen to the code such as GUI refactoring or major infrastructure changes to
 # the code.
 
-set(CMP_VERSION_MAJOR "2")
-set(CMP_VERSION_MINOR "2")
+set(CMP_VERSION_MAJOR "3")
+set(CMP_VERSION_MINOR "0")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module

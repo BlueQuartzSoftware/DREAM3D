@@ -91,7 +91,7 @@ void AdjustVolume::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
@@ -99,7 +99,6 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, fields, 1);
 
-  setErrorCondition(err);
   setErrorMessage(ss.str());
 }
 
