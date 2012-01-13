@@ -59,23 +59,27 @@ FindSurfaceGrains::~FindSurfaceGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSurfaceGrains::preflight()
+void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   int err = 0;
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of FindSurfaceGrains Filter" << std::endl;
-	  err = -300;
-  }
+  DataContainer* m = getDataContainer();
 
-  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::SurfaceFields, p);
+  // Cell Data
+  PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+
+  // Field Data
+  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
 
   setErrorCondition(err);
   setErrorMessage(ss.str());
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindSurfaceGrains::preflight()
+{
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -92,6 +96,10 @@ void FindSurfaceGrains::execute()
     return;
   }
   setErrorCondition(0);
+
+  int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, 1);
 
   if(m->getZPoints() > 1) find_surfacegrains();
 
