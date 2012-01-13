@@ -85,7 +85,9 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     float* m_EulerAngles;
-    int32_t* m_Phases;
+    int32_t* m_PhasesC;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     CropVolume(const CropVolume&); // Copy Constructor Not Implemented
     void operator=(const CropVolume&); // Operator '=' Not Implemented

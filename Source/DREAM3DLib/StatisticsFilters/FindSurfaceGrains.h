@@ -83,7 +83,9 @@ class DREAM3DLib_EXPORT FindSurfaceGrains : public AbstractFilter
     int32_t* m_GrainIds;
     bool* m_SurfaceFields;
 
-    FindSurfaceGrains(const FindSurfaceGrains&); // Copy Constructor Not Implemented
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+	FindSurfaceGrains(const FindSurfaceGrains&); // Copy Constructor Not Implemented
     void operator=(const FindSurfaceGrains&); // Operator '=' Not Implemented
 };
 
