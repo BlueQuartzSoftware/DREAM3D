@@ -125,14 +125,14 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
 
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  bool, BoolArrayType, fields);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -303,  int32_t, Int32ArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
 
@@ -156,7 +156,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   }
 
   // Ensemble Data
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size() );
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size(), 1);
 
   setErrorMessage(ss.str());
 }

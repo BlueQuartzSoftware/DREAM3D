@@ -95,9 +95,10 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-	FindAxisODF(const FindAxisODF&); // Copy Constructor Not Implemented
+    FindAxisODF(const FindAxisODF&); // Copy Constructor Not Implemented
     void operator=(const FindAxisODF&); // Operator '=' Not Implemented
 };
 

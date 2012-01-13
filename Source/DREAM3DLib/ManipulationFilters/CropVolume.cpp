@@ -82,8 +82,8 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -300, float, FloatArrayType,  voxels);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -300, float, FloatArrayType,  voxels, 3);
 
   setErrorMessage(ss.str());
 }
