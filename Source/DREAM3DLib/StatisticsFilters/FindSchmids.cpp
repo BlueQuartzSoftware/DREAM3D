@@ -106,6 +106,11 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -116,28 +121,7 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 // -----------------------------------------------------------------------------
 void FindSchmids::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
-  if(d.get() == NULL)
-  {
-	  ss << "AvgQuats Array Not Initialized At Beginning of FindSchmids Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Active);
-  if(d.get() == NULL)
-  {
-	  ss << "Active Array Not Initialized At Beginning of FindSchmids Filter" << std::endl;
-	  err = -300;
-  }
-  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Schmids, p);
-  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::SlipSystems, q);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -145,9 +129,20 @@ void FindSchmids::preflight()
 // -----------------------------------------------------------------------------
 void FindSchmids::execute()
 {
+  DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
   setErrorCondition(0);
 
-  DataContainer* m = getDataContainer();
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
   int ss = 0;
   float q1[5];
   float schmid = 0;

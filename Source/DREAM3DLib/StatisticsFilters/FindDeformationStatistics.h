@@ -104,9 +104,10 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     int32_t* m_GrainIds;
-    int32_t* m_Phases;
+    int32_t* m_PhasesF;
     int32_t* m_NearestNeighbors;
     int32_t* m_SlipSystems;
+    float* m_Omega3s;
     float* m_GrainMisorientations;
     float* m_MisorientationGradients;
     float* m_KernelAverageMisorientations;

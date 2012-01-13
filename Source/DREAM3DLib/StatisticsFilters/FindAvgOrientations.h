@@ -86,7 +86,7 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     int32_t* m_GrainIds;
-    int32_t* m_Phases;
+    int32_t* m_PhasesC;
     float* m_EulerAnglesC;
     float* m_EulerAnglesF;
     float* m_Quats;

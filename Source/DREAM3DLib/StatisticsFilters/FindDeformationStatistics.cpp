@@ -48,9 +48,10 @@ const static float m_pi = static_cast<float>(M_PI);
 FindDeformationStatistics::FindDeformationStatistics() :
 AbstractFilter(),
 m_GrainIds(NULL),
-m_Phases(NULL),
+m_PhasesF(NULL),
 m_NearestNeighbors(NULL),
 m_SlipSystems(NULL),
+m_Omega3s(NULL),
 m_GrainMisorientations(NULL),
 m_MisorientationGradients(NULL),
 m_KernelAverageMisorientations(NULL),
@@ -113,6 +114,21 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, MisorientationGradients, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3);
+
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -123,98 +139,13 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations);
-  if(d.get() == NULL)
-  {
-	  ss << "KernelAverageMisorientations Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::GrainMisorientations);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainMisorientations Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::MisorientationGradients);
-  if(d.get() == NULL)
-  {
-	  ss << "MisorientationGradients Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::NearestNeighbors);
-  if(d.get() == NULL)
-  {
-	  ss << "NearestNeighbors Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::NearestNeighborDistances);
-  if(d.get() == NULL)
-  {
-	  ss << "NearestNeighborDistances Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Schmids);
-  if(d.get() == NULL)
-  {
-	  ss << "Schmids Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::SlipSystems);
-  if(d.get() == NULL)
-  {
-	  ss << "SlipSystems Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
-  if(d.get() == NULL)
-  {
-	  ss << "AvgQuats Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Omega3s);
-  if(d.get() == NULL)
-  {
-	  ss << "Omega3s Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Poles);
-  if(d.get() == NULL)
-  {
-	  ss << "Poles Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::GrainAvgMisorientations);
-  if(d.get() == NULL)
-  {
-	  ss << "Volumes Array Not Initialized At Beginning of FindDeformationStatistics Filter" << std::endl;
-	  err = -300;
-  }
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1,1 ,1);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::execute()
 {
-  setErrorCondition(0);
-
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -224,37 +155,11 @@ void FindDeformationStatistics::execute()
     setErrorMessage(ss.str());
     return;
   }
+  setErrorCondition(0);
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
   int64_t totalPoints = m->totalPoints();
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if(NULL == m_GrainIds)
-  {
-    return;
-  }
-  m_NearestNeighbors = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighbors, (totalPoints * 3), this);
-  if(NULL == m_NearestNeighbors)
-  {
-    return;
-  }
-  m_NearestNeighborDistances = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::NearestNeighborDistances, (totalPoints * 3), this);
-  if(NULL == m_NearestNeighborDistances)
-  {
-    return;
-  }
-  m_KernelAverageMisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::KernelAverageMisorientations, totalPoints, this);
-  if(NULL == m_KernelAverageMisorientations)
-  {
-    return;
-  }
-  m_GrainMisorientations = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainMisorientations, totalPoints, this);
-  if(NULL == m_GrainMisorientations)
-  {
-    return;
-  }
-  m_MisorientationGradients = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::MisorientationGradients, totalPoints, this);
-  if(NULL == m_MisorientationGradients)
-  {
-    return;
-  }
+
 //  std::string filename = m_OutputFile1;
   std::ofstream outFile;
   outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
@@ -388,9 +293,9 @@ void FindDeformationStatistics::execute()
 			q2[j] = m_AvgQuats[5*gname2+j]/m_AvgQuats[gname2];
 		  }
 		  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
-		  if (m->crystruct[m_Phases[gname]] == m->crystruct[m_Phases[gname2]] && m_Phases[gname] > 0)
+		  if (m->crystruct[m_PhasesF[gname]] == m->crystruct[m_PhasesF[gname2]] && m_PhasesF[gname] > 0)
 		  {
-			w = m_OrientationOps[m->crystruct[m_Phases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
+			w = m_OrientationOps[m->crystruct[m_PhasesF[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
 		  }
 		  else
 		  {

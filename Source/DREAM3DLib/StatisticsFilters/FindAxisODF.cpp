@@ -50,7 +50,7 @@ AbstractFilter(),
 m_H5StatsFile(""),
 m_CreateNewStatsFile(true),
 m_SurfaceFields(NULL),
-m_Phases(NULL),
+m_PhasesF(NULL),
 m_AxisEulerAngles(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -96,41 +96,19 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindAxisODF::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getFieldData(DREAM3D::FieldData::AxisEulerAngles);
-  if(d.get() == NULL)
-  {
-	  ss << "AxisEulerAngles Array Not Initialized At Beginning of FindAxisODF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
-  if(d.get() == NULL)
-  {
-	  ss << "SurfaceFields Array Not Initialized At Beginning of FindAxisODF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Fields) Array Not Initialized At Beginning of FindAxisODF Filter" << std::endl;
-	  err = -300;
-  }
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1,1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -149,6 +127,8 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
   float r1, r2, r3;
@@ -160,26 +140,26 @@ void FindAxisODF::execute()
   axisodf[0] = NULL;
   for(size_t i=1;i<m->crystruct.size();i++)
   {
-	  totalaxes[i] = 0.0;
-	  axisodf[i] = new float[36*36*36];
-	  for(int j=0;j<(36*36*36);j++)
-	  {
-		axisodf[i][j] = 0.0;
-	  }
+    totalaxes[i] = 0.0;
+    axisodf[i] = new float[36 * 36 * 36];
+    for (int j = 0; j < (36 * 36 * 36); j++)
+    {
+      axisodf[i][j] = 0.0;
+    }
   }
   size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
-    float ea1 = m_AxisEulerAngles[3*i];
-    float ea2 = m_AxisEulerAngles[3*i+1];
-	float ea3 = m_AxisEulerAngles[3*i+2];
-    if (m_SurfaceFields[i] == 0)
+    float ea1 = m_AxisEulerAngles[3 * i];
+    float ea2 = m_AxisEulerAngles[3 * i + 1];
+    float ea3 = m_AxisEulerAngles[3 * i + 2];
+    if(m_SurfaceFields[i] == 0)
     {
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-	  m_OrientationOps[Ebsd::OrthoRhombic]->getFZRod(r1, r2, r3);
-	  bin = m_OrientationOps[Ebsd::OrthoRhombic]->getOdfBin(r1, r2, r3);
-      axisodf[m_Phases[i]][bin] = axisodf[m_Phases[i]][bin]++;
-      totalaxes[m_Phases[i]]++;
+      m_OrientationOps[Ebsd::OrthoRhombic]->getFZRod(r1, r2, r3);
+      bin = m_OrientationOps[Ebsd::OrthoRhombic]->getOdfBin(r1, r2, r3);
+      axisodf[m_PhasesF[i]][bin] = axisodf[m_PhasesF[i]][bin]++;
+      totalaxes[m_PhasesF[i]]++;
     }
   }
   int err;

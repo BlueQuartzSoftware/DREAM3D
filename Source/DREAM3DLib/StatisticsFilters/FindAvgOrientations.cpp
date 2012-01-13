@@ -45,7 +45,7 @@
 FindAvgOrientations::FindAvgOrientations() :
 AbstractFilter(),
 m_GrainIds(NULL),
-m_Phases(NULL),
+m_PhasesC(NULL),
 m_EulerAnglesC(NULL),
 m_EulerAnglesF(NULL),
 m_Quats(NULL),
@@ -76,6 +76,14 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, EulerAngles, C, ss, -300, float, FloatArrayType,  voxels, 3);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, float, FloatArrayType, fields, 5);
+
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
+  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
 
 
   setErrorMessage(ss.str());
@@ -87,42 +95,7 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 void FindAvgOrientations::preflight()
 {
-
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "Graid Ids Array Not Initialized At Beginning of FindAvgOrientations Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
-  if(d.get() == NULL)
-  {
-	  ss << "EulerAngles (Cells) Array Not Initialized At Beginning of FindAvgOrientations Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Cells) Array Not Initialized At Beginning of FindAvgOrientations Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
-  if(d.get() == NULL)
-  {
-	  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
-	  m->addVoxelData(DREAM3D::VoxelData::Quats, p);
-  }
-
-  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AvgQuats, p);
-  FloatArrayType::Pointer q = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EulerAngles, q);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -142,14 +115,8 @@ void FindAvgOrientations::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
-  m_Phases = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == m_Phases) { return; }
-  m_EulerAnglesC = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, this);
-  if (NULL == m_EulerAnglesC) { return; }
-  m_Quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
-  if (NULL == m_Quats) { return; }
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
 
   size_t numgrains = m->getTotalFields();
   int phase;
@@ -167,10 +134,10 @@ void FindAvgOrientations::execute()
   float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
-    if(m_GrainIds[i] > 0 && m_Phases[i] > 0)
+    if(m_GrainIds[i] > 0 && m_PhasesC[i] > 0)
 	{
 		OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
-		phase = m_Phases[i];
+		phase = m_PhasesC[i];
 		xtal = m->crystruct[phase];
 		m_OrientationOps[xtal]->getFZQuat(qr);
 		m_Quats[i*5 + 0] = 1.0;

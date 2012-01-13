@@ -80,6 +80,18 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float,FloatArrayType, fields, 2);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
+
 
   setErrorMessage(ss.str());
 }
@@ -90,35 +102,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 // -----------------------------------------------------------------------------
 void FindShapes::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
-  {
-	  ss << "GrainIds Array Not Initialized At Beginning of FindShapes Filter" << std::endl;
-	  err = -300;
-  }
-
-  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Centroids, s);
-  FloatArrayType::Pointer t = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Volumes, t);
-  FloatArrayType::Pointer u = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisLengths, u);
-  FloatArrayType::Pointer v = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, v);
-  FloatArrayType::Pointer w = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Omega3s, w);
-  FloatArrayType::Pointer x = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::EquivalentDiameters, x);
-  FloatArrayType::Pointer y = FloatArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::AspectRatios, y);
-  Int32ArrayType::Pointer z = Int32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::NumCells, z);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
@@ -134,12 +118,10 @@ void FindShapes::execute()
     setErrorMessage(ss.str());
     return;
   }
-
-  int64_t totalPoints = m->totalPoints();
-
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
   setErrorCondition(0);
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
 
   if(m->getZPoints() > 1) find_centroids();
   if(m->getZPoints() == 1) find_centroids2D();

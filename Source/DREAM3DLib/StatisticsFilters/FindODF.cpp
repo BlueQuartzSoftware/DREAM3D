@@ -95,7 +95,13 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
 
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -106,58 +112,13 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 // -----------------------------------------------------------------------------
 void FindODF::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Cells) Array Not Initialized At Beginning of FindODF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of FindODF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::EulerAngles);
-  if(d.get() == NULL)
-  {
-	  ss << "EulerAngles (Fields) Array Not Initialized At Beginning of FindODF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::SurfaceFields);
-  if(d.get() == NULL)
-  {
-	  ss << "SurfaceFields Array Not Initialized At Beginning of FindODF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Volumes);
-  if(d.get() == NULL)
-  {
-	  ss << "Volumes Array Not Initialized At Beginning of FindODF Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Active);
-  if(d.get() == NULL)
-  {
-	  ss << "Active Array Not Initialized At Beginning of FindODF Filter" << std::endl;
-	  err = -300;
-  }
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindODF::execute()
 {
-  setErrorCondition(0);
-
-  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
-
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -167,10 +128,11 @@ void FindODF::execute()
     setErrorMessage(ss.str());
     return;
   }
+  setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
-  m_PhasesC = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == m_PhasesC) { return; }
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
   size_t bin;
   size_t numgrains = m->getTotalFields();
   int phase;
@@ -228,6 +190,9 @@ void FindODF::execute()
     }
   }
   int err;
+
+  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
+
   for(size_t i=1;i<m->crystruct.size();i++)
   {
 	  err = h5io->writeODFData(i, &dims, eulerodf[i]);

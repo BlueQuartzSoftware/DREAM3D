@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 
   private:
     bool* m_SurfaceFields;
-    int32_t* m_Phases;
+    int32_t* m_PhasesF;
     float* m_AxisEulerAngles;
 
     std::vector<OrientationMath*> m_OrientationOps;
