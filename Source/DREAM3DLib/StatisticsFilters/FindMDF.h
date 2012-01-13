@@ -95,16 +95,18 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-	bool* m_Active;
-	bool* m_SurfaceFields;
+    bool* m_Active;
+    bool* m_SurfaceFields;
     int32_t* m_Phases;
-	float* m_TotalSurfaceArea;
+    float* m_TotalSurfaceArea;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
-	std::vector<std::vector<float> > misorientationlists;
+    std::vector<std::vector<float> > misorientationlists;
 
-	FindMDF(const FindMDF&); // Copy Constructor Not Implemented
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindMDF(const FindMDF&); // Copy Constructor Not Implemented
     void operator=(const FindMDF&); // Operator '=' Not Implemented
 };
 

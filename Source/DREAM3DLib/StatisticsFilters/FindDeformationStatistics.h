@@ -103,19 +103,20 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-	int32_t* m_GrainIds;
-	int32_t* m_Phases;
-	int32_t* m_NearestNeighbors;
-	int32_t* m_SlipSystems;
-	float* m_GrainMisorientations;
-	float* m_MisorientationGradients;
-	float* m_KernelAverageMisorientations;
-	float* m_AvgQuats;
-	float* m_GrainAvgMisorientations;
-	float* m_Poles;
-	float* m_Schmids;
-	float* m_NearestNeighborDistances;
+    int32_t* m_GrainIds;
+    int32_t* m_Phases;
+    int32_t* m_NearestNeighbors;
+    int32_t* m_SlipSystems;
+    float* m_GrainMisorientations;
+    float* m_MisorientationGradients;
+    float* m_KernelAverageMisorientations;
+    float* m_AvgQuats;
+    float* m_GrainAvgMisorientations;
+    float* m_Poles;
+    float* m_Schmids;
+    float* m_NearestNeighborDistances;
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindDeformationStatistics(const FindDeformationStatistics&); // Copy Constructor Not Implemented
     void operator=(const FindDeformationStatistics&); // Operator '=' Not Implemented

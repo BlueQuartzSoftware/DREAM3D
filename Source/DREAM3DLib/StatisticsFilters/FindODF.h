@@ -98,8 +98,9 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     int32_t* m_PhasesF;
     bool* m_Active;
     bool* m_SurfaceFields;
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-	FindODF(const FindODF&); // Copy Constructor Not Implemented
+    FindODF(const FindODF&); // Copy Constructor Not Implemented
     void operator=(const FindODF&); // Operator '=' Not Implemented
 };
 

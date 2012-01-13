@@ -88,6 +88,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     bool* m_Active;
     int32_t* m_SlipSystems;
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindSchmids(const FindSchmids&); // Copy Constructor Not Implemented
     void operator=(const FindSchmids&); // Operator '=' Not Implemented

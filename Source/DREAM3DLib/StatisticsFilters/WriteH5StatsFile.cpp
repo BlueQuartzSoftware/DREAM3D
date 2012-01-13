@@ -78,12 +78,6 @@ WriteH5StatsFile::~WriteH5StatsFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteH5StatsFile::preflight()
-{
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void WriteH5StatsFile::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
@@ -98,6 +92,29 @@ void WriteH5StatsFile::setupFilterOptions()
   setFilterOptions(options);
   // We are NOT going to expose the "Bin Step Size" and "Create New File"
 
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteH5StatsFile::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+
+  setErrorMessage(ss.str());
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteH5StatsFile::preflight()
+{
 }
 
 
