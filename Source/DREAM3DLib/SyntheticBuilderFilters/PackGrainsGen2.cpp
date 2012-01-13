@@ -246,10 +246,9 @@ void PackGrainsGen2::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-
 
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
@@ -267,7 +266,6 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
 
 
-  setErrorCondition(err);
   setErrorMessage(ss.str());
 }
 
@@ -277,9 +275,16 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 void PackGrainsGen2::preflight()
 {
   // Find Neighbors would be run first so run its PreFlight first before ours
-  FindNeighbors::Pointer p = FindNeighbors::New();
-  p->setDataContainer(getDataContainer());
-  p->preflight();
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  find_neighbors->setObservers(this->getObservers());
+  find_neighbors->setDataContainer(getDataContainer());
+  find_neighbors->preflight();
+  if (find_neighbors->getErrorCondition() < 0)
+  {
+    setErrorCondition(find_neighbors->getErrorCondition());
+    setErrorMessage(find_neighbors->getErrorMessage());
+    return;
+  }
 
   dataCheck(true, 1, 1, 1);
 }
