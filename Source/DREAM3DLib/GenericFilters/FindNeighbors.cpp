@@ -71,8 +71,7 @@ FindNeighbors::~FindNeighbors()
 // -----------------------------------------------------------------------------
 void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
@@ -97,7 +96,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   if(m_NeighborList == NULL)
   {
     ss << "NeighborLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
-    err = -300;
+    setErrorCondition(-308);
   }
 
   // And we do the same for the SharedSurfaceArea list
@@ -106,12 +105,11 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   if(m_SharedSurfaceAreaList == NULL)
   {
     ss << "SurfaceAreaLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
-    err = -300;
+    setErrorCondition(-308);
   }
 
   PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->crystruct.size(), 1);
 
-  setErrorCondition(err);
   setErrorMessage(ss.str());
 }
 

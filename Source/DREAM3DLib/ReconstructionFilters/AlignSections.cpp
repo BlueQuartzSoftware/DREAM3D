@@ -116,37 +116,37 @@ void AlignSections::setupFilterOptions()
 
 void AlignSections::preflight()
 {
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
   DataContainer::Pointer m = DataContainer::New();
   IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Quats);
   if(d.get() == NULL)
   {
 	  ss << "Quats Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  err = -300;
+	  setErrorCondition(-300);
   }
   d = m->getVoxelData(DREAM3D::VoxelData::Phases);
   if(d.get() == NULL)
   {
 	  ss << "Phases (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  err = -300;
+	  setErrorCondition(-300);
   }
   d = m->getVoxelData(DREAM3D::VoxelData::EulerAngles);
   if(d.get() == NULL)
   {
 	  ss << "EulerAngles (Cells) Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  err = -300;
+	  setErrorCondition(-300);
   }
   d = m->getVoxelData(DREAM3D::VoxelData::GoodVoxels);
   if(d.get() == NULL)
   {
 	  ss << "GoodVoxels Array Not Initialized At Beginning of AlignSections Filter" << std::endl;
-	  err = -300;
+	  setErrorCondition(-300);
   }
   Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
 
-  setErrorCondition(err);
+
   setErrorMessage(ss.str());
 }
 

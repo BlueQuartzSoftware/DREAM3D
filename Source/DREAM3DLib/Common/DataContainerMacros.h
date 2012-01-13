@@ -47,7 +47,8 @@
 #define PF_CHECK_ARRAY_EXISTS( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size)\
   IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL == m_##Name##_Ptr.get() ) {\
-    ss << #NameSpace << "::" << #DType << "::" <<  #Name << " Array Not initialized at beginning of " << getNameOfClass() << " Filter" << std::endl;\
+    ss << "Filter " << getNameOfClass() << " requires the data array '" << \
+    #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
     setErrorCondition(err);\
   } else if (preflight == false) {\
     m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
@@ -56,7 +57,8 @@
 #define PF_CHECK_ARRAY_EXISTS_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size)\
   IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL == m_##Name##Post##_Ptr.get() ) {\
-    ss << #NameSpace << "::" << #DType << "::" <<  #Name << " Array Not initialized at beginning of " << getNameOfClass() << " Filter" << std::endl;\
+    ss << "Filter " << getNameOfClass() << " requires the data array '" << \
+    #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
     setErrorCondition(err);\
   } else if (preflight == false) {\
     m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
