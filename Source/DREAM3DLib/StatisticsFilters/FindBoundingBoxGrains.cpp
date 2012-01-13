@@ -60,6 +60,20 @@ FindBoundingBoxGrains::~FindBoundingBoxGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+
+  setErrorMessage(ss.str());
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::preflight()
 {
   int err = 0;

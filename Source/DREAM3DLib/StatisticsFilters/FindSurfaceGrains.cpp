@@ -61,7 +61,6 @@ FindSurfaceGrains::~FindSurfaceGrains()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  int err = 0;
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
@@ -71,7 +70,6 @@ void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   // Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
 
-  setErrorCondition(err);
   setErrorMessage(ss.str());
 }
 // -----------------------------------------------------------------------------

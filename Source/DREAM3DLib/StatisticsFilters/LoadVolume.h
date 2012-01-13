@@ -89,6 +89,8 @@ class DREAM3DLib_EXPORT LoadVolume : public AbstractFilter
     bool* m_Active;
     float* m_EulerAngles;
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
     LoadVolume(const LoadVolume&); // Copy Constructor Not Implemented
     void operator=(const LoadVolume&); // Operator '=' Not Implemented
 };

@@ -91,16 +91,18 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-	int32_t* m_GrainIds;
-	int32_t* m_Phases;
-	float* m_GrainMisorientations;
-	float* m_MisorientationGradients;
-	float* m_KernelAverageMisorientations;
-	float* m_AvgQuats;
-	float* m_GrainAvgMisorientations;
-	float* m_Quats;
-	
-	FindLocalMisorientationGradients(const FindLocalMisorientationGradients&); // Copy Constructor Not Implemented
+    int32_t* m_GrainIds;
+    int32_t* m_Phases;
+    float* m_GrainMisorientations;
+    float* m_MisorientationGradients;
+    float* m_KernelAverageMisorientations;
+    float* m_AvgQuats;
+    float* m_GrainAvgMisorientations;
+    float* m_Quats;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindLocalMisorientationGradients(const FindLocalMisorientationGradients&); // Copy Constructor Not Implemented
     void operator=(const FindLocalMisorientationGradients&); // Operator '=' Not Implemented
 };
 

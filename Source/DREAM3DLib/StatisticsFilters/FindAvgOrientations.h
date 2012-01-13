@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
     float* m_Quats;
     float* m_AvgQuats;
 
-  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
     FindAvgOrientations(const FindAvgOrientations&); // Copy Constructor Not Implemented

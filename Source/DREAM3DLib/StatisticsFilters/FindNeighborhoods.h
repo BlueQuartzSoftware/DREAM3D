@@ -96,6 +96,7 @@ private:
 
     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

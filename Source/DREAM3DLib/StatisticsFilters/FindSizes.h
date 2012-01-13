@@ -85,7 +85,9 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     float* m_EquivalentDiameters;
     int32_t* m_NumCells;
 
-	FindSizes(const FindSizes&); // Copy Constructor Not Implemented
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindSizes(const FindSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSizes&); // Operator '=' Not Implemented
 };
 

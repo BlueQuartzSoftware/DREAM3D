@@ -92,6 +92,23 @@ void FindLocalMisorientationGradients::setupFilterOptions()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+
+  setErrorMessage(ss.str());
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindLocalMisorientationGradients::preflight()
 {
   int err = 0;

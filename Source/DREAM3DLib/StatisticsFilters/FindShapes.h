@@ -103,7 +103,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_AspectRatios;
     int32_t* m_NumCells;
 
-	FindShapes(const FindShapes&); // Copy Constructor Not Implemented
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindShapes(const FindShapes&); // Copy Constructor Not Implemented
     void operator=(const FindShapes&); // Operator '=' Not Implemented
 };
 
