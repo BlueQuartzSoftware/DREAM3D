@@ -44,7 +44,7 @@
   std::string t = NameSpace::DType::Name;
 
 
-#define PF_CHECK_ARRAY_EXISTS( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size)\
+#define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size)\
   IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL == m_##Name##_Ptr.get() ) {\
     ss << "Filter " << getNameOfClass() << " requires the data array '" << \
@@ -54,7 +54,7 @@
     m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
   }
 
-#define PF_CHECK_ARRAY_EXISTS_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size)\
+#define GET_PREREQ_DATA_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size)\
   IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL == m_##Name##Post##_Ptr.get() ) {\
     ss << "Filter " << getNameOfClass() << " requires the data array '" << \
@@ -64,7 +64,7 @@
     m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
   }
 
-#define PF_MAKE_SURE_ARRAY_EXISTS(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
+#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
   IDataArray::Pointer m_##Name##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL ==  m_##Name##_Ptr.get() ) {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
@@ -76,7 +76,7 @@
     m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size, this);\
   }
 
-#define PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
+#define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
   IDataArray::Pointer m_##Name##Post##_Ptr = dc->get##DType(NameSpace::DType::Name);\
   if (NULL ==  m_##Name##Post##_Ptr.get() ) {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\

@@ -93,18 +93,21 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     int32_t* m_GrainIds;
     float* m_AvgQuats;
     float* m_EulerAngles;
-    int32_t* m_Phases;
+    int32_t* m_PhasesF;
     int32_t* m_NumNeighbors;
     int32_t* m_NumCells;
     NeighborList<int>* m_NeighborList;
 
-	std::vector<int> twinnewnumbers;
+    std::vector<int> twinnewnumbers;
 
     unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
 
     MergeTwins(const MergeTwins&); // Copy Constructor Not Implemented
     void operator=(const MergeTwins&); // Operator '=' Not Implemented

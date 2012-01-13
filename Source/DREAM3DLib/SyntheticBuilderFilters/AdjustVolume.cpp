@@ -95,9 +95,9 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
 
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }

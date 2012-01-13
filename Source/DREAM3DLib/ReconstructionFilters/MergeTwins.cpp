@@ -66,7 +66,7 @@ AbstractFilter(),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_EulerAngles(NULL),
-m_Phases(NULL),
+m_PhasesF(NULL),
 m_NumNeighbors(NULL),
 m_NumCells(NULL),
 m_NeighborList(NULL)
@@ -119,56 +119,39 @@ void MergeTwins::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeTwins::preflight()
+void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  int err = 0;
+  setErrorCondition(0);
   std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-  if(d.get() == NULL)
+  DataContainer* m = getDataContainer();
+
+  // Cell Data
+  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EulerAngles, ss, -301, float, FloatArrayType, fields);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields);
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  if(m_NeighborList == NULL)
   {
-	  ss << "GrainIds Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::AvgQuats);
-  if(d.get() == NULL)
-  {
-	  ss << "AvgQuats Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::EulerAngles);
-  if(d.get() == NULL)
-  {
-	  ss << "EulerAngles (Fields) Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Field) Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NumCells);
-  if(d.get() == NULL)
-  {
-	  ss << "Numcells Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NumNeighbors);
-  if(d.get() == NULL)
-  {
-	  ss << "NumNeighbors Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getFieldData(DREAM3D::FieldData::NeighborList);
-  if(d.get() == NULL)
-  {
-	  ss << "NeighborLists Array Not Initialized At Beginning of MergeTwins Filter" << std::endl;
-	  err = -300;
+    ss << "NeighborLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
+    setErrorCondition(-308);
   }
 
-  setErrorCondition(err);
+
   setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MergeTwins::preflight()
+{
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -186,6 +169,8 @@ void MergeTwins::execute()
     return;
   }
   setErrorCondition(0);
+
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 
   merge_twins();
   characterize_twins();
@@ -227,7 +212,7 @@ void MergeTwins::merge_twins()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	if (twinnewnumbers[i] == -1 && m_Phases[i] > 0)
+	if (twinnewnumbers[i] == -1 && m_PhasesF[i] > 0)
     {
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
@@ -239,19 +224,19 @@ void MergeTwins::merge_twins()
        //   angcur = 180.0f;
           int twin = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && twinnewnumbers[neigh] == -1 && m_Phases[neigh] > 0)
+          if (neigh != i && twinnewnumbers[neigh] == -1 && m_PhasesF[neigh] > 0)
           {
             w = 10000.0f;
             q1[1] = m_AvgQuats[5*firstgrain+1]/m_AvgQuats[5*firstgrain];
             q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
             q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
             q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
-            phase1 = m->crystruct[m_Phases[firstgrain]];
+            phase1 = m->crystruct[m_PhasesF[firstgrain]];
             q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];
             q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
             q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
             q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
-            phase2 = m->crystruct[m_Phases[neigh]];
+            phase2 = m->crystruct[m_PhasesF[neigh]];
             if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);

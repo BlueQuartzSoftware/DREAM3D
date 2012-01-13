@@ -104,33 +104,32 @@ void SegmentGrains::setupFilterOptions()
   setFilterOptions(options);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
 
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType,  voxels);
+
+  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
+
+
+  setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SegmentGrains::preflight()
 {
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-  IDataArray::Pointer d = m->getVoxelData(DREAM3D::VoxelData::Phases);
-  if(d.get() == NULL)
-  {
-	  ss << "Phases (Cells) Array Not Initialized At Beginning of CleanupGrains Filter" << std::endl;
-	  err = -300;
-  }
-  d = m->getVoxelData(DREAM3D::VoxelData::Quats);
-  if(d.get() == NULL)
-  {
-	  ss << "Quats Array Not Initialized At Beginning of SegmentGrains Filter" << std::endl;
-	  err = -300;
-  }
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Phases, q);
-  BoolArrayType::Pointer r = BoolArrayType::CreateArray(1);
-  m->addFieldData(DREAM3D::FieldData::Active, r);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -149,13 +148,7 @@ void SegmentGrains::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
-
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
-  if (NULL == m_GrainIds) { return; }
-  m_PhasesC = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, this);
-  if (NULL == m_PhasesC) { return; }
-  m_Quats = m->getVoxelDataSizeCheck<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::Quats, (totalPoints*5), this);
-  if (NULL == m_Quats) { return; }
+  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -187,7 +180,7 @@ void SegmentGrains::execute()
   size_t initialMergeListSize = 10;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   std::vector<int> mergelist(initialMergeListSize, -1);
-  int neighpoints[6];
+  DimType neighpoints[6];
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;

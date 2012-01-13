@@ -76,13 +76,13 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  PF_CHECK_ARRAY_EXISTS( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
 
   // Field Data
-  PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, fields, 1);
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
@@ -108,7 +108,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     setErrorCondition(-308);
   }
 
-  PF_MAKE_SURE_ARRAY_EXISTS(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->crystruct.size(), 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->crystruct.size(), 1);
 
   setErrorMessage(ss.str());
 }

@@ -96,24 +96,6 @@ LoadSlices::~LoadSlices()
 {
 }
 
-void LoadSlices::preflight()
-{
-  int err = 0;
-  std::stringstream ss;
-  DataContainer::Pointer m = DataContainer::New();
-
-  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::GoodVoxels, p);
-  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::Phases, q);
-  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::Quats, r);
-  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
-  m->addVoxelData(DREAM3D::VoxelData::EulerAngles, s);
-
-  setErrorCondition(err);
-  setErrorMessage(ss.str());
-}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -182,7 +164,33 @@ void LoadSlices::setupFilterOptions()
   setFilterOptions(options);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+  BoolArrayType::Pointer p = BoolArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::GoodVoxels, p);
+  Int32ArrayType::Pointer q = Int32ArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::Phases, q);
+  FloatArrayType::Pointer r = FloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::Quats, r);
+  FloatArrayType::Pointer s = FloatArrayType::CreateArray(1);
+  m->addVoxelData(DREAM3D::VoxelData::EulerAngles, s);
 
+  setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LoadSlices::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
 
 // -----------------------------------------------------------------------------
 //
