@@ -131,7 +131,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
 
   // Field Data
-  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  int8_t, Int8ArrayType, fields);
+  PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, SurfaceFields, ss, -303,  bool, BoolArrayType, fields);
   PF_CHECK_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields);
   PF_CHECK_ARRAY_EXISTS(m, DREAM3D, FieldData, NumCells, ss, -303,  int32_t, Int32ArrayType, fields);
   PF_MAKE_SURE_ARRAY_EXISTS_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
