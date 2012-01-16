@@ -183,17 +183,19 @@ void TestFailed(const std::string &test)
   if ( (b) == (false) ) \
   {\
     std::string s ("Your test required the following\n            '");\
-    s = s.append(#P).append("'\n            but this condition was not met.");\
+    s = s.append(#P).append("'\n             but this condition was not met.");\
     DREAM3D_TEST_THROW_EXCEPTION( s )\
   }\
   }
 
 
 #define DREAM3D_REQUIRE_NE( L, R )\
-  if ( (L) == (R) )\
-  { std::string s ( #L);\
-   s = s.append("!=").append(#R);\
-   DREAM3D_TEST_THROW_EXCEPTION( s ) }
+  if ( (L) == (R) ) {  \
+    std::stringstream ss;\
+    ss << "Your test required the following\n            '";\
+    ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
+    ss << "             " << L << "==" << R;\
+  DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
 
 
 
@@ -201,8 +203,8 @@ void TestFailed(const std::string &test)
     if ( (L) != (R) ) {  \
       std::stringstream ss;\
       ss << "Your test required the following\n            '";\
-      ss << #L << " == " << #R << "'\n            but this condition was not met.\n";\
-      ss << "           " << L << "==" << R;\
+      ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
+      ss << "             " << L << "==" << R;\
     DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
 
 

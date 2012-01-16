@@ -76,7 +76,6 @@ class DREAM3DLib_EXPORT WriteH5StatsFile : public AbstractFilter
 
     virtual void setupFilterOptions();
 
-
     virtual void preflight();
 
 
@@ -85,11 +84,13 @@ class DREAM3DLib_EXPORT WriteH5StatsFile : public AbstractFilter
      */
     virtual void execute();
 
-    void write_h5statsfile(H5StatsWriter::Pointer h5io, float binstepsize);
-    void write_h5statsfile2D(H5StatsWriter::Pointer h5io, float binstepsize);
+
 
   protected:
     WriteH5StatsFile();
+
+    void write_h5statsfile(H5StatsWriter::Pointer h5io, float binstepsize);
+    void write_h5statsfile2D(H5StatsWriter::Pointer h5io, float binstepsize);
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;
