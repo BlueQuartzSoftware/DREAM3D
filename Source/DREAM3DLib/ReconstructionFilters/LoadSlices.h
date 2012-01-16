@@ -94,21 +94,23 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
   protected:
     LoadSlices();
 
-    void initialize(size_t nX, size_t nY, size_t nZ,
-                    float xRes, float yRes, float zRes,
-                    std::vector<Ebsd::CrystalStructure> crystalStructures,
-                    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes,
-                    std::vector<float> precipFractions);
+    void initializeArrays(int64_t totalPoints);
 
 
     void initializeQuats();
     void threshold_points();
 
   private:
-    int32_t* m_Phases;
-    float* m_Quats;
-    float* m_EulerAngles;
+    int32_t* m_GrainIds;
+    int32_t* m_PhasesC;
     bool* m_GoodVoxels;
+    bool* m_AlreadyChecked;
+    float* m_Quats;
+    int32_t* m_Neighbors;
+    float* m_EulerAnglesC;
+    int8_t*  m_SurfaceVoxels;
+
+
 
     unsigned long long int Seed;
 
