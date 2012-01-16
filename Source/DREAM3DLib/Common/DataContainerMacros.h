@@ -90,8 +90,8 @@
  */
 
 #define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
-template<typename PtrType, typename DataArrayType, typename Observable>\
-PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, Observable* obv)\
+template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
+PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, AbstractFilter* obv)\
 {\
 PtrType* gi = NULL;\
 IDataArray::Pointer iDataArray = GetMethod(arrayName);\
@@ -124,8 +124,8 @@ return gi;\
 
 
 #define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
-template<typename PtrType, typename DataArrayType, typename Observable>\
-PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numComp, Observable* obv)\
+template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
+PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numComp, AbstractFilter* obv)\
 {\
   PtrType* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\

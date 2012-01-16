@@ -46,6 +46,14 @@ add_executable(FilterManagerTest ${DREAM3DTest_SOURCE_DIR}/FilterManagerTest.cpp
 target_link_libraries(FilterManagerTest FilterWidgets)
 endif()
 
+
+# --------------------------------------------------------------------------
+# DataContainer Test
+# --------------------------------------------------------------------------
+add_executable(DataContainerTest DataContainerTest.cpp )
+target_link_libraries(DataContainerTest DREAM3DLib)
+add_test(DataContainerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerTest)
+
 # --------------------------------------------------------------------------
 # H5Support Library Testing
 # --------------------------------------------------------------------------

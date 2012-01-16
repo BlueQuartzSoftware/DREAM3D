@@ -524,10 +524,21 @@ class DataArray : public IDataArray
 // -----------------------------------------------------------------------------
 
 typedef DataArray<bool> BoolArrayType;
-typedef DataArray<int32_t> Int32ArrayType;
-typedef DataArray<int8_t> Int8ArrayType;
-typedef DataArray<float> FloatArrayType;
-typedef DataArray<double> DoubleArrayType;
+
+typedef DataArray<int8_t>  Int8ArrayType;
+typedef DataArray<uint8_t>  UInt8ArrayType;
+
+typedef DataArray<int16_t>  Int16ArrayType;
+typedef DataArray<uint16_t>  UInt16ArrayType;
+
+typedef DataArray<int32_t>  Int32ArrayType;
+typedef DataArray<uint32_t>  UInt32ArrayType;
+
+typedef DataArray<int64_t>  Int64ArrayType;
+typedef DataArray<uint64_t>  UInt64ArrayType;
+
+typedef DataArray<float>  FloatArrayType;
+typedef DataArray<double>  DoubleArrayType;
 
 #endif //_DataArray_h_
 
