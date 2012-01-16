@@ -11,6 +11,7 @@
 
 SET (GenericFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FieldDataCSVWriter.h
 )
 
@@ -19,6 +20,7 @@ SET (DREAM3DLib_GenericFilters_HDRS
 )
 SET (DREAM3DLib_GenericFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.cpp
+     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FieldDataCSVWriter.cpp
 )
 

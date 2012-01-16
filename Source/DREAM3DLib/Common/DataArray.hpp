@@ -219,11 +219,10 @@ class DataArray : public IDataArray
 
     virtual int eraseTuples(std::vector<size_t> &idxs)
     {
-      <<<<<<<<<<<< Mike Put your code here
+      int err = 0;
+
+        return err;
     }
-
-
-
 
     /**
      * @brief Reseizes the internal array
