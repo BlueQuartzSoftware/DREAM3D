@@ -139,9 +139,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
 
-    /* *********** These methods will eventually replace those below **********/
-
-  /**
+   /**
    * @brief Adds/overwrites the data for a named array
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
@@ -155,8 +153,25 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      */
     IDataArray::Pointer getVoxelData(const std::string &name);
 
+    /**
+    * @brief Removes the named data array from the Data Container and returns it to the calling
+    * method.
+    * @param name The name of the array
+    * @return
+    */
+    IDataArray::Pointer removeVoxelData(const std::string &name);
+
+    /**
+    * @brief Returns a list that contains the names of all the arrays currently stored in the 
+    * Cell (Formerly Voxel) group
+    * @return
+    */
     std::list<std::string> getVoxelArrayNameList();
 
+    /**
+    * @brief Returns the total number of arrays that are stored in the Voxel group
+    * @return
+    */
     int getNumVoxelArrays();
 
 
@@ -174,12 +189,39 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     */
     IDataArray::Pointer getFieldData(const std::string &name);
 
+    /**
+    * @brief Removes the named data array from the Data Container and returns it to the calling
+    * method
+    * @param name The name of the array
+    * @return
+    */
+    IDataArray::Pointer removeFieldData(const std::string &name);
+
+
+    /**
+    * @brief Returns a list that contains the names of all the arrays currently stored in the 
+    * Field (Formerly Grain) group
+    * @return
+    */
     std::list<std::string> getFieldArrayNameList();
 
+    /**
+    * @brief Returns the total number of arrays that are stored in the Field group
+    * @return
+    */
     int getNumFieldArrays();
 
+    /**
+    * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+    * in during a set of filtering operations then the a value of '32' would be returned.
+    * @return
+    */
     DREAM3D_INSTANCE_PROPERTY(size_t, TotalFields);
 
+    /**
+    * @brief Resizes all of the Field Arrays to have 'size' tuples
+    * @param size The number of tuples that each DataArray should contain.
+    */
     void resizeFieldDataArrays(size_t size);
 
     /**
@@ -195,6 +237,14 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param name The name of the data array
      */
     IDataArray::Pointer getEnsembleData(const std::string &name);
+
+    /**
+    * @brief Removes the named data array from the Data Container and returns it to the calling
+    * method.
+    * @param name The name of the array
+    * @return
+    */
+    IDataArray::Pointer removeEnsembleData(const std::string &name);
 
     std::list<std::string> getEnsembleArrayNameList();
 
