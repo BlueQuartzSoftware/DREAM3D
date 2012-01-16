@@ -70,6 +70,7 @@
     p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name = p->GetPointer(0);\
+    setErrorCondition(0);\
   }
 
 #define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
@@ -80,6 +81,7 @@
     p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name##Post = p->GetPointer(0);\
+    setErrorCondition(0);\
   }
 
 
@@ -96,7 +98,7 @@ IDataArray::Pointer iDataArray = GetMethod(arrayName);\
 if (iDataArray.get() == 0) {\
   std::stringstream s;\
   s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";\
-  if (NULL != obv) {obv->setErrorCondition(-10);\
+  if (NULL != obv) {obv->setErrorCondition(-500);\
   obv->setErrorMessage(s.str());}\
   return gi;\
 }\
@@ -104,7 +106,7 @@ if (size != iDataArray->GetSize()) {\
   std::stringstream s;\
   s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
   s << "Required: " << size << " Contains: " << iDataArray->GetSize();\
-  if (NULL != obv) {obv->setErrorCondition(-11);\
+  if (NULL != obv) {obv->setErrorCondition(-501);\
   obv->setErrorMessage(s.str());}\
   return gi;\
 }\
@@ -112,7 +114,7 @@ gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDa
 if (NULL == gi) {\
   std::stringstream s;\
   s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
-  if (NULL != obv) {obv->setErrorCondition(-13);\
+  if (NULL != obv) {obv->setErrorCondition(-502);\
   obv->setErrorMessage(s.str());}\
   return gi;\
 }\
