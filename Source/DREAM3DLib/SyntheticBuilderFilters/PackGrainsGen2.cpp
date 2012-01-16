@@ -1643,11 +1643,11 @@ void PackGrainsGen2::assign_voxels()
   {
     if (m_GrainIds[i] > 0)
     {
-	  m_GrainIds[i] = newnames[m_GrainIds[i]];
+//	  m_GrainIds[i] = newnames[m_GrainIds[i]];
     }
   }
-  m->resizeFieldDataArrays(goodcount);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+//  m->resizeFieldDataArrays(goodcount);
+//  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 }
 
 void PackGrainsGen2::assign_gaps()
@@ -2008,7 +2008,7 @@ void PackGrainsGen2::cleanup_grains()
   {
 	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
-  m->resizeFieldDataArrays(goodcount);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+//  m->resizeFieldDataArrays(goodcount);
+//  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
   assign_gaps();
 }
