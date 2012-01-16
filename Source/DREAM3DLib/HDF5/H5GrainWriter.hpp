@@ -53,8 +53,6 @@
   std::stringstream ss;\
   std::string hdfPath;\
   std::vector<std::string > hdfPaths;\
-  size_t numgrains = r->getTotalFields();\
-  int64_t totpoints = r->totalPoints();\
   int phase;\
   int pcount = 0;\
   unsigned char rgb[3] =  { 0, 0, 0 };\
@@ -65,7 +63,6 @@
   int pid;\
   int xPoints = static_cast<int>(r->getXPoints());\
   int yPoints = static_cast<int>(r->getYPoints());\
-  int zPoints = static_cast<int>(r->getZPoints());\
   float xRes = r->getXRes();\
   float yRes = r->getYRes();\
   float zRes = r->getZRes();
@@ -162,7 +159,7 @@ class  H5GrainWriter
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
-      
+
       size_t totalFields = r->getTotalFields();
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Field, DREAM3D::FieldData::NumNeighbors, Int32ArrayType, int32_t, totalFields, numNeighbors);
 
@@ -170,12 +167,12 @@ class  H5GrainWriter
       H5GW_DECLS()
       err = 0;
 	    std::vector<std::vector<int> > vlists;
-	    vlists.resize(numgrains);
-	    for (int i = 0; i < totpoints; i++)
+	    vlists.resize(totalFields);
+	    for (int64_t i = 0; i < totalPoints; i++)
 	    {
 		    vlists[grain_indicies[i]].push_back(i);
 	    }
-      for (int i = 1; i < numgrains; i++)
+      for (size_t i = 1; i < totalFields; i++)
       {
         H5GW_GRAIN_LOOP_1()
         for (std::vector<int >::size_type j = 0; j < vlist.size(); j++)

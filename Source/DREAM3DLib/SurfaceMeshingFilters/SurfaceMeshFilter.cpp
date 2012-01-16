@@ -293,8 +293,28 @@ SurfaceMeshFilter::~SurfaceMeshFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SurfaceMeshFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+ // std::stringstream ss;
+  //DataContainer* m = getDataContainer();
+
+  if (getInputFile().empty() == true)
+  {
+    setErrorCondition(-1);
+    setErrorMessage("SurfaceMesh Filter needs an input file set. The current value is empty");
+    return;
+  }
+
+ // setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshFilter::preflight()
 {
+  dataCheck(true, 1, 1, 1);
 }
 
 
