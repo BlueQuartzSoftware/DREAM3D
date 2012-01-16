@@ -73,6 +73,14 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataContainer::addVoxelData(const std::string &name, IDataArray::Pointer data)
+{
+  m_VoxelData[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 IDataArray::Pointer DataContainer::getVoxelData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
@@ -87,9 +95,17 @@ IDataArray::Pointer DataContainer::getVoxelData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::addVoxelData(const std::string &name, IDataArray::Pointer data)
+IDataArray::Pointer DataContainer::removeVoxelData(const std::string &name)
 {
-  m_VoxelData[name] = data;
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_VoxelData.find(name);
+  if ( it == m_VoxelData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_VoxelData.erase(it);
+  return p;
 }
 
 // -----------------------------------------------------------------------------
@@ -136,6 +152,23 @@ void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer da
 {
   m_FieldData[name] = data;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer DataContainer::removeFieldData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(name);
+  if ( it == m_FieldData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_FieldData.erase(it);
+  return p;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -196,6 +229,25 @@ void DataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer
 {
   m_EnsembleData[name] = data;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer DataContainer::removeEnsembleData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EnsembleData.find(name);
+  if ( it == m_EnsembleData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_EnsembleData.erase(it);
+  return p;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
