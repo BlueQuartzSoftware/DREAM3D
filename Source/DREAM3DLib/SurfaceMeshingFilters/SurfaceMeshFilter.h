@@ -189,6 +189,8 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     EdgeMapType eMap;
     LabelTriangleMapType labelTriangleMap;
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
     SurfaceMeshFilter(const SurfaceMeshFilter&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshFilter&); // Operator '=' Not Implemented
 };

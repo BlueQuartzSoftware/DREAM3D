@@ -213,8 +213,8 @@ void name##_PreFlightTest() {\
     }\
   }\
   std::cout << ss.str() << std::endl;\
-  if (condition) { DREAM3D_REQUIRE_NE(err, 0);}\
-  else { DREAM3D_REQUIRE_EQUAL(err, 0);  }\
+  if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
+  else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
 }
 
 
