@@ -46,7 +46,7 @@ template<typename T>
 void insertDeleteArray(DataContainer::Pointer m)
 {
 
-  IDataArray::Pointer p = typename T::CreateArray(5);
+  IDataArray::Pointer p = T::CreateArray(5);
   p->SetName( "Test" );
   m->addVoxelData("Test", p);
   IDataArray::Pointer t = m->getVoxelData("Test");
@@ -107,7 +107,7 @@ void TestInsertDelete()
 
   nameList = m->getFieldArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
-  
+
   nameList = m->getEnsembleArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 }
@@ -144,7 +144,7 @@ void _arrayCreation(DataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
-  // Next, pass in all the correct values which should produce a Non NULL pointer value and 
+  // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
   ptr = m->getVoxelDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
@@ -180,7 +180,7 @@ void _arrayCreation(DataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
-  // Next, pass in all the correct values which should produce a Non NULL pointer value and 
+  // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
   ptr = m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
@@ -217,7 +217,7 @@ void _arrayCreation(DataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
-  // Next, pass in all the correct values which should produce a Non NULL pointer value and 
+  // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
   ptr = m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
