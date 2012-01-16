@@ -72,9 +72,9 @@ size_t m_ZPoints = 128;
 std::vector<DREAM3D::SyntheticBuilder::ShapeType> m_ShapeTypes;
 
 
-float m_XResolution = 0.1f;
-float m_YResolution = 0.1f;
-float m_ZResolution = 0.1f;
+float m_XResolution = 0.25f;
+float m_YResolution = 0.25f;
+float m_ZResolution = 0.25f;
 double m_NeighborhoodErrorWeight = 1.0f;
 double m_FractionPrecipitates = 0.0f;
 
@@ -98,7 +98,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::SyntheticBuilderTest::TestDir + MXADir::Separator + "Equiaxed_Precip.h5stats";
+  std::string s = UnitTest::SyntheticBuilderTest::TestDir + MXADir::Separator + "2PhaseBulk.h5";
   return s;
 }
 
@@ -186,7 +186,7 @@ void TestSyntheticBuilder()
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
   match_crystallography->setH5StatsInputFile(getH5StatsFile());
-  //  pipeline.push_back(match_crystallography);
+  pipeline.push_back(match_crystallography);
 
   MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
   FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
