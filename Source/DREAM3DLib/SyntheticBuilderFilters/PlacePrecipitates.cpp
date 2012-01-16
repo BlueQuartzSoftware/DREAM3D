@@ -559,8 +559,8 @@ void  PlacePrecipitates::place_precipitates()
 
     packGrains->generate_grain(phase, Seed, &field);
     m->resizeFieldDataArrays(currentnumgrains + 1);
-
     dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+
     transfer_attributes(currentnumgrains, &field);
     precipboundaryfraction = m->pptFractions[phase];
     random = rg.genrand_res53();

@@ -148,6 +148,10 @@ void SegmentGrains::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
+
+  // Create at least 2 grains:
+  m->resizeFieldDataArrays(2);
+  // Update our pointers
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
 
   size_t udims[3] = {0,0,0};
@@ -263,11 +267,12 @@ void SegmentGrains::execute()
       {
         size_t oldSize = m->getTotalFields();
         m->resizeFieldDataArrays(m->getTotalFields() + 100);
+        dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
         for (size_t g = oldSize; g < m->getTotalFields(); ++g)
         {
-//FIXME::THis needs to set some default data
-          }
+          //FIXME::THis needs to set some default data
 
+        }
       }
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
