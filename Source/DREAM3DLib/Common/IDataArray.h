@@ -113,6 +113,9 @@ class IDataArray
      */
     virtual size_t getTypeSize() = 0;
 
+
+    virtual int eraseTuples(std::vector<size_t> &idxs) = 0;
+
     /**
      * @brief Sets all the values to zero.
      */

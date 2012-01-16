@@ -133,7 +133,7 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     void get_neighbor_list();
     void initialize_nodes(int zID);
     void initialize_squares(int zID);
-    int get_nodes_Edges(int et2d[20][8], int NST2d[20][8], int zID);
+    size_t get_nodes_Edges(int et2d[20][8], int NST2d[20][8], int zID);
     int get_square_index(int tns[4]);
     int treat_anomaly(int tnst[4], int zID1);
     void get_nodes(int cst, int ord, int nidx[2], int *nid);

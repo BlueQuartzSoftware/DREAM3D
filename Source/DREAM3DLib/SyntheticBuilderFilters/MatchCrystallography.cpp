@@ -849,7 +849,7 @@ void MatchCrystallography::measure_misorientations()
         mbin = m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3 * j], misorientationlists[i][3 * j + 1], misorientationlists[i][3 * j + 2]);
       }
 
-      if(m_SurfaceFields[i] == 0 && (nname > i || m_SurfaceFields[nname] > 0) && phase1 == phase2)
+      if(m_SurfaceFields[i] == false && (nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
       {
         simmdf[m_PhasesF[i]][mbin] = simmdf[m_PhasesF[i]][mbin] + (neighsurfarea / m_TotalSurfaceArea[m_PhasesF[i]]);
       }
