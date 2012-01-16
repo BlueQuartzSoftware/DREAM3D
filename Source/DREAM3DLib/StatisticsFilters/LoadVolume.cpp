@@ -199,6 +199,8 @@ void LoadVolume::initializeGrains()
   // Put at least 1 Grain in the Vector
   DataContainer* m = getDataContainer();
   m->resizeFieldDataArrays(1);
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;
   int64_t totalPoints = m->totalPoints();

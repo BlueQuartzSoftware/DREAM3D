@@ -566,6 +566,7 @@ void CleanupGrains::reorder_grains()
   numgrains = currentgrain;
   // Resize the m->m_Grains vector by the appropriate amount
   m->resizeFieldDataArrays(currentgrain);
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 }
 
 void CleanupGrains::remove_smallgrains()
@@ -670,6 +671,7 @@ void CleanupGrains::remove_smallgrains()
       }
   }
   m->resizeFieldDataArrays(currentgrain);
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 }
 
 
