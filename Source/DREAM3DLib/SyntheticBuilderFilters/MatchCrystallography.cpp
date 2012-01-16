@@ -520,6 +520,8 @@ void MatchCrystallography::matchCrystallography()
   size_t xtalSize = m->crystruct.size();
   for (size_t iter = 1; iter < xtalSize; ++iter)
   {
+    iterations = 0;
+	badtrycount = 0;
     if(m->crystruct[iter] == Ebsd::Cubic) numbins = 18 * 18 * 18;
     if(m->crystruct[iter] == Ebsd::Hexagonal) numbins = 36 * 36 * 12;
     while (badtrycount < 10000 && iterations < 1000000)

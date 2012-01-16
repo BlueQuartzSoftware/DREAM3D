@@ -563,7 +563,6 @@ void PackGrainsGen2::execute()
 //    change1 = 0;
 //    change2 = 0;
     int option = iteration % 2;
-    //iteration = 99;
 
     if(writeErrorFile == true && iteration % 25 == 0)
     {
@@ -805,9 +804,6 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   field->m_Neighborhoods[2] = 0;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
 {
   m_Volumes[gnum] = field->m_Volumes;
@@ -825,9 +821,6 @@ void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
   m_Neighborhoods[3*gnum+2] = field->m_Neighborhoods[2];
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PackGrainsGen2::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
@@ -1657,9 +1650,6 @@ void PackGrainsGen2::assign_voxels()
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PackGrainsGen2::assign_gaps()
 {
   notify("Assigning Gaps", 0, Observable::UpdateProgressMessage);
@@ -2011,7 +2001,7 @@ void PackGrainsGen2::cleanup_grains()
   {
 	if (m_GrainIds[i] > 0)
 	{
-	  m_GrainIds[i] = newnames[m_GrainIds[i]];
+//	  m_GrainIds[i] = newnames[m_GrainIds[i]];
 	}
   }
   for (int i = 0; i < totpoints; i++)
