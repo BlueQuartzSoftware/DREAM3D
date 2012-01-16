@@ -891,7 +891,7 @@ void SurfaceMeshFilter::initialize_squares(int zID)
     }
   }
 }
-int SurfaceMeshFilter::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
+size_t SurfaceMeshFilter::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
 {
   int j, k, m, ii;
   int tsite;
