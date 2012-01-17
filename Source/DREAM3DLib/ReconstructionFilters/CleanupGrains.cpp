@@ -402,12 +402,6 @@ void CleanupGrains::merge_containedgrains()
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
- // m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-  // But since a pointer is difficult to use operators with we will now create a
-  // reference variable to the pointer with the correct variable name that allows
-  // us to use the same syntax as the "vector of vectors"
- // NeighborList<int>& neighborlist = *m_NeighborList;
 
   size_t totalPoints = static_cast<size_t>(m->totalPoints());
   for (size_t i = 0; i < totalPoints; i++)
