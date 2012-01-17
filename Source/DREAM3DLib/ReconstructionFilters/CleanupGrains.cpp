@@ -47,6 +47,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 const static float m_pi = M_PI;
 
@@ -186,6 +187,7 @@ void CleanupGrains::execute()
   notify("Cleanup Grains - Assigning Bad Points", 0, Observable::UpdateProgressMessage);
   assign_badpoints();
 
+  notify("Cleanup Grains - Finding Neighbors", 0, Observable::UpdateProgressMessage);
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
@@ -202,6 +204,17 @@ void CleanupGrains::execute()
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
+
+  notify("Cleanup Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
+  renumber_grains->setObservers(this->getObservers());
+  renumber_grains->setDataContainer(m);
+  renumber_grains->execute();
+  err = renumber_grains->getErrorCondition();
+  if (err < 0)
+  {
+    return;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("CleanupGrains Completed", 0, Observable::UpdateProgressMessage);
