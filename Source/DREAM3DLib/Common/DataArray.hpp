@@ -217,33 +217,102 @@ class DataArray : public IDataArray
       ::memset(this->Array, 0, this->Size * typeSize);
     }
 
-    virtual int eraseTuples(std::vector<size_t> &idxs)
+    /**
+     * @brief Removes Tuples from the Array
+     * @param idxs The indices to remove
+     * @return
+     */
+    virtual int EraseTuples(std::vector<size_t> &idxs)
     {
-      int err = 0;
 
-        return err;
+      int err = 0;
+#if 0
+      // If nothing is to be erased just return
+      if (idxs.size() == 0) { return 0; }
+
+      // Calculate the new size of the array to copy into
+      size_t newSize = (GetNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T);
+      T* currentSrc = this->Array;
+
+      // Create a new Array to copy into
+      T* newArray = (T*)malloc(newSize);
+      // Splat AB across the array so we know if we are copying the values or not
+      ::memset(newArray, 0xAB, newSize);
+
+      // Keep the current Destination Pointer
+      T* currentDest = newArray;
+      size_t j = 0;
+      size_t k = 0;
+      // Find the first chunk to copy by walking the idxs array until we get an
+      // index that is NOT a continuous increment from the start
+      for(k = 0; k < idxs.size(); ++k)
+      {
+        if (j == idxs[k])
+        {
+          ++j;
+        }
+        else { break; }
+      }
+
+
+      currentDest = currentDest + NumberOfComponents * (idxs[k] - j);
+      currentSrc = Array + ((idxs[k]+1)*NumberOfComponents);
+      ::memcpy(currentDest, currentSrc, sizeof(T)* NumberOfComponents*(idxs[k] - j));
+
+
+      // We are done copying - delete the current Array
+      _deallocate();
+
+
+      // Allocation was successful.  Save it.
+      this->Size = newSize;
+      this->Array = newArray;
+      // This object has now allocated its memory and owns it.
+      this->_ownsData = true;
+
+      this->MaxId = newSize-1;
+#endif
+      return err;
+    }
+
+
+    /**
+     * @brief Returns the number of bytes that make up the data type.
+     * 1 = char
+     * 2 = 16 bit integer
+     * 4 = 32 bit integer/Float
+     * 8 = 64 bit integer/Double
+     */
+    virtual size_t GetTypeSize()
+    {
+      return sizeof(T);
     }
 
     /**
-     * @brief Reseizes the internal array
-     * @param size The new size of the internal array
-     * @return 1 on success, 0 on failure
+     * @brief Returns the number of elements in the internal array.
      */
-    virtual int32_t RawResize(size_t size)
+    virtual size_t GetNumberOfTuples()
     {
-      if (this->ResizeAndExtend(size) || size == 0)
-      {
-        return 1;
-      }
-      else
-      {
-        return 0;
-      }
+      if (Size == 0) { return 0; }
+      return (this->MaxId + 1)/this->NumberOfComponents;
     }
 
-    virtual int32_t Resize(size_t numTuples)
+    virtual size_t GetSize()
     {
-      return RawResize(numTuples * this->NumberOfComponents);
+      return Size;
+    }
+
+    // Description:
+    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetNumberOfComponents(int nc)
+    {
+      if(nc > 0) this->NumberOfComponents = nc;
+    }
+
+    int GetNumberOfComponents()
+    {
+      return this->NumberOfComponents;
     }
 
     /**
@@ -264,6 +333,18 @@ class DataArray : public IDataArray
 
 
     /**
+     * @brief Returns the pointer to a specific index into the array. No checks are made
+     * as to the correctness of the index being passed in. If you ask for an index off
+     * then end of the array they you will likely cause your program to abort.
+     * @param i The index to return the pointer to.
+     * @return The pointer to the index
+     */
+    virtual T* GetPointer(size_t i)
+    {
+      return (T*)(&(Array[i]));
+    }
+
+    /**
      * @brief Returns the value for a given index
      * @param i The index to return the value at
      * @return The value at index i
@@ -272,26 +353,6 @@ class DataArray : public IDataArray
     {
       return this->Array[i];
     }
-
-    /**
-     * @brief Returns the number of elements in the internal array.
-     */
-    virtual size_t GetNumberOfTuples()
-    {
-      if (Size == 0) { return 0; }
-      return (this->MaxId + 1)/this->NumberOfComponents;
-    }
-
-    virtual size_t GetSize()
-    {
-      return Size;
-    }
-
-    // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
-    // this is set before allocation.
-    void SetNumberOfComponents(int nc) { if (nc > 0) this->NumberOfComponents = nc; }
-    int GetNumberOfComponents() { return this->NumberOfComponents; }
 
     /**
      * @brief Sets a specific value in the array
@@ -316,12 +377,33 @@ class DataArray : public IDataArray
       Array[i*this->NumberOfComponents + j] = c;
     }
 
+    /**
+     * @brief Reseizes the internal array
+     * @param size The new size of the internal array
+     * @return 1 on success, 0 on failure
+     */
+    virtual int32_t RawResize(size_t size)
+    {
+      if (this->ResizeAndExtend(size) || size == 0)
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
+    }
+
+    virtual int32_t Resize(size_t numTuples)
+    {
+      return RawResize(numTuples * this->NumberOfComponents);
+    }
 
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
         for(int j = 0; j < NumberOfComponents; ++j)
         {
-          if (j != 0) { out << delimiter; }         
+          if (j != 0) { out << delimiter; }
           out << Array[i*NumberOfComponents + j];
         }
     }
@@ -330,17 +412,6 @@ class DataArray : public IDataArray
         out << Array[i*NumberOfComponents + j];
     }
 
-    /**
-     * @brief Returns the number of bytes that make up the data type.
-     * 1 = char
-     * 2 = 16 bit integer
-     * 4 = 32 bit integer/Float
-     * 8 = 64 bit integer/Double
-     */
-    virtual size_t getTypeSize()
-    {
-      return sizeof(T);
-    }
 
     /**
      * @brief
@@ -349,7 +420,7 @@ class DataArray : public IDataArray
     {
       char* ptr = (char*)(Array);
       char t[8];
-      size_t size = getTypeSize();
+      size_t size = GetTypeSize();
       for (uint64_t var = 0; var < Size; ++var)
       {
         if (sizeof(T) == 2)
@@ -372,17 +443,6 @@ class DataArray : public IDataArray
       }
     }
 
-    /**
-     * @brief Returns the pointer to a specific index into the array. No checks are made
-     * as to the correctness of the index being passed in. If you ask for an index off
-     * then end of the array they you will likely cause your program to abort.
-     * @param i The index to return the pointer to.
-     * @return The pointer to the index
-     */
-    virtual T* GetPointer(size_t i)
-    {
-      return (T*)(&(Array[i]));
-    }
 
   protected:
 

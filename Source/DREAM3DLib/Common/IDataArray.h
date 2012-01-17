@@ -94,8 +94,6 @@ class IDataArray
      */
     virtual size_t GetNumberOfTuples () = 0;
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',') = 0;
-    virtual void printComponent(std::ostream &out, size_t i, int j) = 0;
 
     /**
      * @brief Return the number of elements in the array
@@ -113,10 +111,10 @@ class IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t getTypeSize() = 0;
+    virtual size_t GetTypeSize() = 0;
 
 
-    virtual int eraseTuples(std::vector<size_t> &idxs) = 0;
+    virtual int EraseTuples(std::vector<size_t> &idxs) = 0;
 
     /**
      * @brief Sets all the values to zero.
@@ -137,6 +135,9 @@ class IDataArray
      */
     virtual int32_t Resize(size_t numTuples) = 0;
 
+
+    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',') = 0;
+    virtual void printComponent(std::ostream &out, size_t i, int j) = 0;
 
   protected:
 
