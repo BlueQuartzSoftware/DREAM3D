@@ -305,6 +305,7 @@ void PackGrainsGen2::execute()
     return;
   }
 
+  notify("Packing Grains - Reading Statistics", 0, Observable::UpdateProgressMessage);
   err = readReconStatsData(h5reader);
   if(err < 0)
   {
@@ -327,8 +328,10 @@ void PackGrainsGen2::execute()
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
 
-  notify("Initializing Attribtues", 0, Observable::UpdateProgressMessage);
+  notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
   initializeAttributes();
+  // this initializes the arrays to hold the details of the locations of all of the grains during packing
+  initialize_packinggrid();
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -374,9 +377,6 @@ void PackGrainsGen2::execute()
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
     if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
-  // this initializes the arrays to hold the details of the locations of all of the grains during packing
-  notify("Initializing Packing Grid", 0, Observable::UpdateProgressMessage);
-  initialize_packinggrid();
   // initialize the sim and goal size distributions for the primary phases
   grainsizedist.resize(primaryphases.size());
   simgrainsizedist.resize(primaryphases.size());
@@ -426,7 +426,7 @@ void PackGrainsGen2::execute()
     {
       gid++;
       std::stringstream ss;
-      ss << "Adding Grain #" << gid;
+      ss << "Packing Grains - Generating Grain #" << gid;
       notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
       m->resizeFieldDataArrays(gid + 1);
@@ -439,9 +439,6 @@ void PackGrainsGen2::execute()
       iter = 0;
     }
   }
-
-  notify("Initial Round of Grain Additions Complete", 0, Observable::UpdateProgressMessage);
-
 
   if(m_PeriodicBoundaries == false)
   {
@@ -473,7 +470,7 @@ void PackGrainsGen2::execute()
       {
         gid++;
         std::stringstream ss;
-        ss << "Adding Grain #" << gid;
+        ss << "Packing Grains - Generating Grain #" << gid;
         notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
         m->resizeFieldDataArrays(gid + 1);
@@ -488,6 +485,9 @@ void PackGrainsGen2::execute()
 
     }
   }
+
+  notify("Packing Grains - Grain Generation Complete", 0, Observable::UpdateProgressMessage);
+
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
   simneighbordist.resize(primaryphases.size());
@@ -518,7 +518,7 @@ void PackGrainsGen2::execute()
   for (int i = 1; i < numgrains; i++)
   {
     std::stringstream ss;
-    ss << "Moving Grain #" << i;
+    ss << "Packing Grains - Placing Grain #" << i;
     notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
     xc = sizex / 2.0f;
@@ -550,6 +550,8 @@ void PackGrainsGen2::execute()
     }
   }
 
+  notify("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
+
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
@@ -557,7 +559,7 @@ void PackGrainsGen2::execute()
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     std::stringstream ss;
-    ss << "Swapping/Moving/Adding/Removing Grains iteration " << iteration << "/" << totalAdjustments;
+    ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
     notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
 //    change1 = 0;
@@ -635,6 +637,8 @@ void PackGrainsGen2::execute()
     }
   }
 
+  notify("Packing Grains - Grain Adjustment Complete", 0, Observable::UpdateProgressMessage);
+
   if(m_VtkOutputFile.empty() == false)
   {
     err = writeVtkFile();
@@ -644,10 +648,16 @@ void PackGrainsGen2::execute()
     }
   }
 
+  notify("Packing Grains - Assigning Voxels", 0, Observable::UpdateProgressMessage);
   assign_voxels();
+
+  notify("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
   assign_gaps();
+
+  notify("Packing Grains - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
   cleanup_grains();
 
+  notify("Packing Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -659,7 +669,7 @@ void PackGrainsGen2::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("PackGrainsGen2 Completed", 0, Observable::UpdateProgressMessage);
+  notify("Packing Grains Complete", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
