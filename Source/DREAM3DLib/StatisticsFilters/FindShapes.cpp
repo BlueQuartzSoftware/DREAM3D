@@ -467,7 +467,7 @@ void FindShapes::find_axes2D()
     Ixy = grainmoments[i*6+2];
     float r1 = (Ixx + Iyy) / 2.0f + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
     float r2 = (Ixx + Iyy) / 2.0f - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
-    float preterm = 4 / M_PI;
+    float preterm = 4.0f / M_PI;
     preterm = powf(preterm, 0.25f);
     float postterm1 = r1 * r1 * r1 / r2;
     float postterm2 = r2 * r2 * r2 / r1;
