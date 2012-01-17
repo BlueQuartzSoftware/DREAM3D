@@ -172,9 +172,13 @@ void MergeColonies::execute()
   setErrorCondition(0);
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 
+  notify("Merge Colonies - Merging Colonies", 0, Observable::UpdateProgressMessage);
   merge_colonies();
+
+  notify("Merge Colonies - Characterizing Colonies", 0, Observable::UpdateProgressMessage);
   characterize_colonies();
 
+  notify("Merge Colonies - Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
