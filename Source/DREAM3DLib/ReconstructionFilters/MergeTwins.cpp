@@ -173,10 +173,13 @@ void MergeTwins::execute()
 
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 
+  notify("Merge Twins - Merging Twins", 0, Observable::UpdateProgressMessage);
   merge_twins();
+
+  notify("Merge Twins - Characterizing Twins", 0, Observable::UpdateProgressMessage);
   characterize_twins();
 
-  // If there is an error set this to something negative and also set a message  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
+  notify("Merge Twins - Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
