@@ -62,9 +62,9 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
    std::stringstream ss;
    DataContainer* m = getDataContainer();
 
-   // Need Voxel Grain Ids
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-   // Need Field Active
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1);
 
    setErrorMessage(ss.str());
 }
@@ -96,22 +96,41 @@ void RenumberGrains::execute()
     return;
   }
 
-
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
 
-  std::vector<size_t> gsizes(m->getTotalFields());
+  size_t goodcount = 1;
+  std::vector<size_t> NewNames;
+  NewNames.resize(totalFields);
+
+  std::vector<size_t> RemoveList;
+  for(size_t i = 1; i < totalFields; i++)
+  {
+	if(m_Active[i] == false)
+	{
+		RemoveList.push_back(i);
+		NewNames[i] = -1;
+	}
+	if(m_Active[i] == true)
+	{
+		NewNames[i] = goodcount;
+		goodcount++;
+	}
+  }
+
+  std::list<std::string> headers = m->getFieldArrayNameList();
+  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  {
+      IDataArray::Pointer p = m->getFieldData(*iter);
+//	  p->RemoveElement(RemoveList);
+  }
+
   for (int i = 0; i < totalPoints; i++)
   {
-//    if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
+    if(m_GrainIds[i] > 0) m_GrainIds[i] = NewNames[m_GrainIds[i]];
   }
-  
-  //Loop to figure out which ones are active based on a gsizes[i] > 0
-  
-
-
-
+    
 }
 
 

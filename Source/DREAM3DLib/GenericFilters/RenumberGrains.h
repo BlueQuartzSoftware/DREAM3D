@@ -71,6 +71,9 @@ class RenumberGrains : public AbstractFilter
    private:
      void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    int32_t* m_GrainIds;
+    bool* m_Active;
+
      RenumberGrains(const RenumberGrains&); // Copy Constructor Not Implemented
      void operator=(const RenumberGrains&); // Operator '=' Not Implemented
 
