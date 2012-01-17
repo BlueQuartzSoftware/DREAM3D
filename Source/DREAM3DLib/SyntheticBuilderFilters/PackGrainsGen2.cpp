@@ -54,7 +54,7 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-
+#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -647,6 +647,16 @@ void PackGrainsGen2::execute()
   assign_voxels();
   assign_gaps();
   cleanup_grains();
+
+  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
+  renumber_grains->setObservers(this->getObservers());
+  renumber_grains->setDataContainer(m);
+  renumber_grains->execute();
+  err = renumber_grains->getErrorCondition();
+  if (err < 0)
+  {
+    return;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("PackGrainsGen2 Completed", 0, Observable::UpdateProgressMessage);

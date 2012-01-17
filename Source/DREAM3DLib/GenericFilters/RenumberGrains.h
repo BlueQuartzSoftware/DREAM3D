@@ -46,12 +46,12 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
-
 /*
  *
  */
 class RenumberGrains : public AbstractFilter
 {
+  public:
     DREAM3D_SHARED_POINTERS(RenumberGrains);
      DREAM3D_STATIC_NEW_MACRO(RenumberGrains);
      DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);

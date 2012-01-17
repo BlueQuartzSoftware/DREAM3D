@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -173,6 +174,16 @@ void MergeColonies::execute()
 
   merge_colonies();
   characterize_colonies();
+
+  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
+  renumber_grains->setObservers(this->getObservers());
+  renumber_grains->setDataContainer(m);
+  renumber_grains->execute();
+  int err = renumber_grains->getErrorCondition();
+  if (err < 0)
+  {
+    return;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("MergeColonies Completed", 0, Observable::UpdateProgressMessage);
