@@ -52,7 +52,7 @@
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::SyntheticBuilderTest::TestDir + MXADir::Separator + "Equiaxed_Precip.h5stats";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed_Precip.h5stats";
   return s;
 }
 

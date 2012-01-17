@@ -226,7 +226,7 @@ class DataArray : public IDataArray
     {
 
       int err = 0;
-#if 0
+#if 1
       // If nothing is to be erased just return
       if (idxs.size() == 0) { return 0; }
 
@@ -254,15 +254,50 @@ class DataArray : public IDataArray
         else { break; }
       }
 
+      if (k == idxs.size()) // Only front elements are being dropped
+      {
+        currentSrc = Array + (j * NumberOfComponents);
+        ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T));
+        _deallocate(); // We are done copying - delete the current Array
+        this->Size = newSize;
+        this->Array = newArray;
+        this->_ownsData = true;
+        this->MaxId = newSize-1;
+        return 0;
+      }
+  
+      std::vector<size_t> srcIdx(idxs.size() + 1);
+      std::vector<size_t> destIdx(idxs.size() + 1);
+      std::vector<size_t> copyElements(idxs.size() + 1);
+      srcIdx[0] = 0;
+      destIdx[0] = 0;
+      copyElements[0] = (idxs[0] - 0) * NumberOfComponents;
 
-      currentDest = currentDest + NumberOfComponents * (idxs[k] - j);
-      currentSrc = Array + ((idxs[k]+1)*NumberOfComponents);
-      ::memcpy(currentDest, currentSrc, sizeof(T)* NumberOfComponents*(idxs[k] - j));
+      for(int i = 1; i < srcIdx.size(); ++i)
+      {
+          srcIdx[i] = (idxs[i-1] + 1) * NumberOfComponents;
 
+          if (i < srcIdx.size() - 1) {
+            copyElements[i] = (idxs[i] - idxs[i-1] - 1) * NumberOfComponents;
+          }
+          else
+          {
+            copyElements[i] = (GetNumberOfTuples() - idxs[i-1] - 1) * NumberOfComponents;
+          }
+          destIdx[i] = copyElements[i-1] + destIdx[i-1];
+      }
+
+// Copy the data
+      for(int i = 0; i < srcIdx.size(); ++i)
+      {
+        currentDest = newArray + destIdx[i];
+        currentSrc = Array + srcIdx[i];
+        size_t bytes = copyElements[i] * sizeof(T);
+        ::memcpy(currentDest, currentSrc, bytes);
+      }
 
       // We are done copying - delete the current Array
       _deallocate();
-
 
       // Allocation was successful.  Save it.
       this->Size = newSize;

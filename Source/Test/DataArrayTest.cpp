@@ -71,25 +71,222 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestEraseElements()
+template<typename T>
+void __TestEraseElements()
 {
-  Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
-  for(size_t i = 0; i < NUM_ELEMENTS; ++i)
+  // Test dropping of front elements only
   {
-    int32Array->SetComponent(i, 0, i);
+    T::Pointer array = T::CreateArray(NUM_ELEMENTS);
+    for(size_t i = 0; i < NUM_ELEMENTS; ++i)
+    {
+      array->SetComponent(i, 0, i);
+    }
+
+    std::vector<size_t> eraseElements;
+    eraseElements.push_back(0);
+    eraseElements.push_back(1);
+
+    array->EraseTuples(eraseElements);
+
+    DREAM3D_REQUIRE_EQUAL(array->GetValue(0), 2);
+    DREAM3D_REQUIRE_EQUAL(array->GetValue(1), 3);
+    DREAM3D_REQUIRE_EQUAL(array->GetValue(2), 4);
   }
 
-  std::vector<size_t> eraseElements;
-  eraseElements.push_back(0);
-  eraseElements.push_back(1);
+  // Test Dropping of internal elements
+  {
+    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    array->SetNumberOfComponents(NUM_COMPONENTS_2);
+    for(size_t i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->SetComponent(i, 0, i);
+      array->SetComponent(i, 1, i);
+    }
 
-  int32Array->EraseTuples(eraseElements);
+    for(int i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
 
-  DREAM3D_REQUIRE_EQUAL(int32Array->GetValue(0), 2);
-  DREAM3D_REQUIRE_EQUAL(int32Array->GetValue(1), 3);
-  DREAM3D_REQUIRE_EQUAL(int32Array->GetValue(2), 4);
+    std::cout << std::endl;
+    std::vector<size_t> eraseElements;
+    eraseElements.push_back(3);
+    eraseElements.push_back(6);
+    eraseElements.push_back(8);
 
+    array->EraseTuples(eraseElements);
+
+    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+    std::cout << std::endl;
+
+
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 0), 9);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 1), 9);
+  }
+
+  // Test Dropping of internal elements
+  {
+    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    array->SetNumberOfComponents(NUM_COMPONENTS_2);
+    for(size_t i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->SetComponent(i, 0, i);
+      array->SetComponent(i, 1, i);
+    }
+    for(int i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+
+    std::cout << std::endl;
+    std::vector<size_t> eraseElements;
+    eraseElements.push_back(3);
+    eraseElements.push_back(6);
+    eraseElements.push_back(9);
+    array->EraseTuples(eraseElements);
+    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+    std::cout << std::endl;
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(6, 1), 8);
+  }
+
+  // Test Dropping of internal continuous elements
+  {
+    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    array->SetNumberOfComponents(NUM_COMPONENTS_2);
+    for(size_t i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->SetComponent(i, 0, i);
+      array->SetComponent(i, 1, i);
+    }
+    for(int i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+
+    std::cout << std::endl;
+    std::vector<size_t> eraseElements;
+    eraseElements.push_back(3);
+    eraseElements.push_back(4);
+    eraseElements.push_back(5);
+    array->EraseTuples(eraseElements);
+    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+    std::cout << std::endl;
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 6);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 6);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 7);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 1), 7);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 8);
+  }
+
+  // Test Dropping of Front and Back Elements
+  {
+    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    array->SetNumberOfComponents(NUM_COMPONENTS_2);
+    for(size_t i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->SetComponent(i, 0, i);
+      array->SetComponent(i, 1, i);
+    }
+    for(int i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+
+    std::cout << std::endl;
+    std::vector<size_t> eraseElements;
+    eraseElements.push_back(0);
+    eraseElements.push_back(9);
+
+    array->EraseTuples(eraseElements);
+    for(int i = 0; i < NUM_TUPLES_2 - 2; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+    std::cout << std::endl;
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 0), 1);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 1), 1);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(7, 0), 8);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(7, 1), 8);
+  }
+
+  // Test Dropping of Back Elements
+  {
+    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    array->SetNumberOfComponents(NUM_COMPONENTS_2);
+    for(size_t i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->SetComponent(i, 0, i);
+      array->SetComponent(i, 1, i);
+    }
+    for(int i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+
+    std::cout << std::endl;
+    std::vector<size_t> eraseElements;
+    eraseElements.push_back(7);
+    eraseElements.push_back(8);
+    eraseElements.push_back(9);
+    array->EraseTuples(eraseElements);
+    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
+    {
+      array->printTuple(std::cout, i);
+      std::cout << " | ";
+    }
+    std::cout << std::endl;
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 4);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 1), 4);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 5);
+    DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 5);
+  }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestEraseElements()
+{
+  __TestEraseElements<Int8ArrayType>();
+  __TestEraseElements<UInt8ArrayType>();
+  __TestEraseElements<Int16ArrayType>();
+  __TestEraseElements<UInt16ArrayType>();
+  __TestEraseElements<Int32ArrayType>();
+  __TestEraseElements<UInt32ArrayType>();
+  __TestEraseElements<Int64ArrayType>();
+  __TestEraseElements<UInt64ArrayType>();
+  __TestEraseElements<FloatArrayType>();
+  __TestEraseElements<DoubleArrayType>();
+}
+
 
 
 // -----------------------------------------------------------------------------

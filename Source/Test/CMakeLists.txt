@@ -99,22 +99,26 @@ add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp
 target_link_libraries(EbsdImportTest DREAM3DLib MXA EbsdLib H5Support)
 add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
 
-# --------------------------------------------------------------------------
-# FindNeighbors Testing
-# --------------------------------------------------------------------------
-add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
-target_link_libraries(FindNeighborsTest DREAM3DLib)
-add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
-# --------------------------------------------------------------------------
-# SyntheticBuilder Test
-# --------------------------------------------------------------------------
+
+
 if (NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
     message(STATUS " Please make sure the proper files are available in that directory")
+    
+    # --------------------------------------------------------------------------
+    # SyntheticBuilder Test
+    # --------------------------------------------------------------------------
     add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
     target_link_libraries(SyntheticBuilderTest DREAM3DLib)
     add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
+
+    # --------------------------------------------------------------------------
+    # FindNeighbors Testing
+    # --------------------------------------------------------------------------
+    add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
+    target_link_libraries(FindNeighborsTest DREAM3DLib)
+    add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
 endif()
 
