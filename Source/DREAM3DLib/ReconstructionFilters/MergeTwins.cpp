@@ -174,7 +174,6 @@ void MergeTwins::execute()
 
   merge_twins();
   characterize_twins();
-  renumber_grains();
 
   // If there is an error set this to something negative and also set a message
   notify("MergeTwins Completed", 0, Observable::UpdateProgressMessage);
@@ -259,58 +258,6 @@ void MergeTwins::merge_twins()
     int grainname = m_GrainIds[k];
 	if (twinnewnumbers[grainname] != -1) { m_GrainIds[k] = twinnewnumbers[grainname];}
   }
-}
-
-void MergeTwins::renumber_grains()
-{
-  DataContainer* m = getDataContainer();
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
-    return;
-  }
-
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
-  if (NULL == m_GrainIds) { return; }
-
-  size_t numgrains = m->getTotalFields();
-  int graincount = 1;
-  std::vector<int > newnames(numgrains);
-  for (size_t i = 1; i < numgrains; i++)
-  {
-    if (twinnewnumbers[i] == -1)
-    {
-      newnames[i] = graincount;
-      float ea1good = m_EulerAngles[3*i];
-      float ea2good = m_EulerAngles[3*i+1];
-      float ea3good = m_EulerAngles[3*i+2];
-      int size = m_NumCells[i];
-      int numneighbors = m_NumNeighbors[i];
-      m_NumCells[graincount] = size;
-      m_NumNeighbors[graincount] = numneighbors;
-      m_EulerAngles[3*graincount] = ea1good;
-      m_EulerAngles[3*graincount+1] = ea2good;
-      m_EulerAngles[3*graincount+2] = ea3good;
-      graincount++;
-    }
-  }
-#if 0
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalpoints ), ParallelRenumberGrains( this) );
-#else
-  int64_t totalPoints = m->totalPoints();
- for (int j = 0; j < totalPoints; j++)
-  {
-    int grainname = m_GrainIds[j];
-    if (grainname >= 1)
-    {
-      int newgrainname = newnames[grainname];
-      m_GrainIds[j] = newgrainname;
-    }
-  }
-#endif
 }
 
 void MergeTwins::characterize_twins()

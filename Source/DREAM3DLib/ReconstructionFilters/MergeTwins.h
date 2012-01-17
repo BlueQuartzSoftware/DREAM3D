@@ -87,7 +87,6 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     void merge_twins();
     void characterize_twins();
-    void renumber_grains();
 
   private:
     int32_t* m_GrainIds;

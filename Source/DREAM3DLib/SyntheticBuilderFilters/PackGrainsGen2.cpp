@@ -697,9 +697,6 @@ int PackGrainsGen2::writeVtkFile()
   return 0;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PackGrainsGen2::initialize_packinggrid()
 {
   DataContainer* m = getDataContainer();
@@ -1627,27 +1624,10 @@ void PackGrainsGen2::assign_voxels()
       }
     }
   }
-  newnames.resize(m->getTotalFields());
-  int goodcount = 1;
   for (size_t i = 1; i < m->getTotalFields(); i++)
   {
-    newnames[i] = 0;
-    if (gsizes[i] > 0)
-    {
-//      m->m_Grains[goodcount] = m->m_Grains[i];
-      newnames[i] = goodcount;
-      goodcount++;
-    }
+    if (gsizes[i] == 0) m_Active[i] = false;
   }
-  for (int i = 0; i < totpoints; i++)
-  {
-    if (m_GrainIds[i] > 0)
-    {
-//	  m_GrainIds[i] = newnames[m_GrainIds[i]];
-    }
-  }
-//  m->resizeFieldDataArrays(goodcount);
-//  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 }
 
 void PackGrainsGen2::assign_gaps()
@@ -1985,30 +1965,13 @@ void PackGrainsGen2::cleanup_grains()
   {
 	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
-  newnames.resize(m->getTotalFields());
-  int goodcount = 1;
   for (size_t i = 1; i < m->getTotalFields(); i++)
   {
-     newnames[i] = 0;
-     if(gsizes[i] > 0)
-     {
-//        m->m_Grains[goodcount] = m->m_Grains[i];
-        newnames[i] = goodcount;
-        goodcount++;
-     }
-  }
-  for (int i = 0; i < totpoints; i++)
-  {
-	if (m_GrainIds[i] > 0)
-	{
-//	  m_GrainIds[i] = newnames[m_GrainIds[i]];
-	}
+     if(gsizes[i] == 0) m_Active[i] = false;
   }
   for (int i = 0; i < totpoints; i++)
   {
 	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
-//  m->resizeFieldDataArrays(goodcount);
-//  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
   assign_gaps();
 }
