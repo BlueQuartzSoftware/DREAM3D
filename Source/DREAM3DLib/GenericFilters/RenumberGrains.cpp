@@ -123,7 +123,7 @@ void RenumberGrains::execute()
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
       IDataArray::Pointer p = m->getFieldData(*iter);
-//	  p->RemoveElement(RemoveList);
+	  p->EraseTuples(RemoveList);
   }
 
   for (int i = 0; i < totalPoints; i++)

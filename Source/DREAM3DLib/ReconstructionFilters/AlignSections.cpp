@@ -167,6 +167,7 @@ void AlignSections::execute()
 
   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
   {
+    notify("Align Sections - Identifying Grains on Sections", 0, Observable::UpdateProgressMessage);
     form_grains_sections();
   }
 
