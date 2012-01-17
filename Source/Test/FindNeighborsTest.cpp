@@ -166,6 +166,7 @@ int main(int argc, char **argv)
   load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
+  load_slices->setZEndIndex(50);
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
 
@@ -224,11 +225,20 @@ int main(int argc, char **argv)
   }
 
   updateProgressAndMessage("FindNeighborsTest Complete", 100);
-
-  Int32ArrayType::Pointer p = Int32ArrayType::NullPointer();
-  // Forcibly clean up the Grain IDs
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-
+  {
+    int64_t totalPoints = m->totalPoints();
+    IDataArray::Pointer p = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+    int32_t* ptr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(p.get());
+    for(int64_t i = 0; i < totalPoints; ++i)
+    {
+      ptr[i] = 0xAABBCCDD;
+    }
+  }
+  {
+    Int32ArrayType::Pointer p = Int32ArrayType::NullPointer();
+    // Forcibly clean up the Grain IDs
+    m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  }
 
   return EXIT_SUCCESS;
 }
