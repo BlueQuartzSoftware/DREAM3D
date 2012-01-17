@@ -77,7 +77,12 @@ class NeighborList : public IDataArray
 
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
-      int err = -1;
+      int err = 0;
+
+      for(size_t i = 0; i < idxs.size(); ++i)
+      {
+        _data.erase(static_cast<int>(idxs[i]) );
+      }
 
       return err;
     }

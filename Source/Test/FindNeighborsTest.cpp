@@ -56,7 +56,8 @@
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 
-//#include "UnitTestSupport.hpp"
+#include "UnitTestSupport.hpp"
+
 #include "TestFileLocations.h"
 
 
@@ -81,7 +82,8 @@ void updateProgressAndMessage(const std::string &msg, int prog)
 
 std::string getH5EbsdFile()
 {
-  return EBSDFile;
+  std::string s = UnitTest::DataDir + MXADir::Separator + "Small_IN100.h5ebsd";
+  return s;
 }
 
 int getZStartIndex() { return 1; }
@@ -222,6 +224,12 @@ int main(int argc, char **argv)
   }
 
   updateProgressAndMessage("FindNeighborsTest Complete", 100);
+
+  Int32ArrayType::Pointer p = Int32ArrayType::NullPointer();
+  // Forcibly clean up the Grain IDs
+  m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+
+
   return EXIT_SUCCESS;
 }
 
