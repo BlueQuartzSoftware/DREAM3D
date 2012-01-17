@@ -180,7 +180,7 @@ int main(int argc, char **argv)
   pipeline.push_back(segment_grains);
 
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
-  cleanup_grains->setminallowedgrainsize(m_MinAllowedGrainSize);
+  cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(cleanup_grains);
 
