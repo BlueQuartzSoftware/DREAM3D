@@ -75,6 +75,12 @@ class NeighborList : public IDataArray
 
     void* GetVoidPointer(size_t i) { return NULL; }
 
+    virtual int eraseTuples(std::vector<size_t> &idxs)
+    {
+      int err = -1;
+
+      return err;
+    }
 
     size_t GetNumberOfTuples() {   return _data.size(); }
     size_t GetSize() { return _data.size(); }

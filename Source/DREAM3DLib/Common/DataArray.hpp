@@ -217,6 +217,13 @@ class DataArray : public IDataArray
       ::memset(this->Array, 0, this->Size * typeSize);
     }
 
+    virtual int eraseTuples(std::vector<size_t> &idxs)
+    {
+      int err = 0;
+
+        return err;
+    }
+
     /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array

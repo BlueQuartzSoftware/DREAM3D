@@ -37,9 +37,9 @@
 template <typename type>
 class Vector{
 public:
-	Vector(int n) {x.assign(n,0.0);}
-	type& operator[](int i) {return x[i];}
-	type operator[](int i) const {return x[i];}
+	Vector(size_t n) {x.assign(n,0.0);}
+	type& operator[](size_t i) {return x[i];}
+	type operator[](size_t i) const {return x[i];}
 	void operator=(const Vector&);
 	void operator=(type c);
 	Vector operator+(const Vector&) const;
@@ -48,7 +48,7 @@ public:
 	void operator+=(const Vector&);
 	void operator-=(const Vector&);
 	void operator*=(type c);
-	int dimension() const {return x.size();}
+	size_t dimension() const {return x.size();}
 private:
 	std::vector<type> x;
 };
@@ -56,99 +56,99 @@ private:
 template <typename type>
 void Vector<type>::operator=(const Vector<type>& v)
 {
-	int n = dimension();
-	for (int i=0; i<n; i++) x[i] = v[i];
+	size_t n = dimension();
+	for (size_t i=0; i<n; i++) x[i] = v[i];
 }
 
 template <typename type>
 void Vector<type>::operator=(type c)
 {
-	int n = dimension();
-	for (int i=0; i<n; i++) x[i] = c;
+	size_t n = dimension();
+	for (size_t i=0; i<n; i++) x[i] = c;
 }
 
 template <typename type>
 Vector<type> Vector<type>::operator+(const Vector<type>& v) const
 {
-	int n = dimension();
+	size_t n = dimension();
 	Vector<type> y(n);
-	for (int i=0; i<n; i++) y[i] = x[i]+v[i];
+	for (size_t i=0; i<n; i++) y[i] = x[i]+v[i];
 	return y;
 }
 
 template <typename type>
 Vector<type> Vector<type>::operator-(const Vector<type>& v) const
 {
-	int n = dimension();
+	size_t n = dimension();
 	Vector<type> y(n);
-	for (int i=0; i<n; i++) y[i] = x[i]-v[i];
+	for (size_t i=0; i<n; i++) y[i] = x[i]-v[i];
 	return y;
 }
 
 template <typename type>
 Vector<type> Vector<type>::operator*(type c) const
 {
-	int n = dimension();
+	size_t n = dimension();
 	Vector<type> y(n);
-	for (int i=0; i<n; i++) y[i] = c*x[i];
+	for (size_t i=0; i<n; i++) y[i] = c*x[i];
 	return y;
 }
 
 template <typename type>
 void Vector<type>::operator+=(const Vector<type>& v)
 {
-	int n = dimension();
-	for (int i=0; i<n; i++) x[i] += v[i];
+	size_t n = dimension();
+	for (size_t i=0; i<n; i++) x[i] += v[i];
 }
 
 template <typename type>
 void Vector<type>::operator-=(const Vector<type>& v)
 {
-	int n = dimension();
-	for (int i=0; i<n; i++) x[i] -= v[i];
+	size_t n = dimension();
+	for (size_t i=0; i<n; i++) x[i] -= v[i];
 }
 
 template <typename type>
 void Vector<type>::operator*=(type c)
 {
-	int n = dimension();
-	for (int i=0; i<n; i++) x[i] *= c;
+	size_t n = dimension();
+	for (size_t i=0; i<n; i++) x[i] *= c;
 }
 
 template <typename type>
 Vector<type> operator*(type c, const Vector<type>& x)
 {
-	int n = x.dimension();
+	size_t n = x.dimension();
 	Vector<type> y(n);
-	for (int i=0; i<n; i++) y[i] = c*x[i];
+	for (size_t i=0; i<n; i++) y[i] = c*x[i];
 	return y;
 }
 
 template <typename type>
 type inner(const Vector<type>& x, const Vector<type>& y)
 {
-	int n = x.dimension();
+	size_t n = x.dimension();
 	type inner = 0.0;
-	for (int i=0; i<n; i++) inner += x[i]*y[i];
+	for (size_t i=0; i<n; i++) inner += x[i]*y[i];
 	return inner;
 }
 
 template <typename type>
 type norm(const Vector<type>& x)
 {
-	int n = x.dimension();
+	size_t n = x.dimension();
 	type norm = 0.0;
 
-	for (int i=0; i<n; i++)	norm += x[i]*x[i];
+	for (size_t i=0; i<n; i++)	norm += x[i]*x[i];
 	return sqrt(norm);
 }
 
 template <typename type>
 type inorm(const Vector<type>& x)
 {
-	int n = x.dimension();
+	size_t n = x.dimension();
 	type norm = 0.0;
-	for (int i=0; i<n; i++) {
+	for (size_t i=0; i<n; i++) {
 		type value = fabs(x[i]);
 		if (value>norm) norm=value;
 	}
@@ -200,11 +200,11 @@ template <typename vtype = double, typename itype = unsigned int>
 class SVector{
 	struct Sitem{vtype value; itype index;};
 public:
-	SVector(int n) {d=n;}
+	SVector(size_t n) {d=n;}
 	vtype& operator[](itype index);
 	vtype operator[](itype index) const;
-	vtype value(int i) const {return data[i].value;}
-	itype index(int i) const {return data[i].index;}
+	vtype value(size_t i) const {return data[i].value;}
+	itype index(size_t i) const {return data[i].index;}
 	size_t nonzero() const {return data.size();}
 	int dimension() const {return d;}
 private:
@@ -215,8 +215,8 @@ private:
 template <typename vtype, typename itype>
 vtype& SVector<vtype,itype>::operator[](itype index)
 {
-	int n = nonzero();
-	for (int i=0; i<n; i++)
+	size_t n = nonzero();
+	for (size_t i=0; i<n; i++)
 		if (data[i].index==index)
 			return data[i].value;
 	Sitem item;
@@ -229,8 +229,8 @@ vtype& SVector<vtype,itype>::operator[](itype index)
 template <typename vtype, typename itype>
 vtype SVector<vtype,itype>::operator[](itype index) const
 {
-	int n = nonzero();
-	for (int i=0; i<n; i++)
+	size_t n = nonzero();
+	for (size_t i=0; i<n; i++)
 		if (data[i].index==index)
 			return data[i].value;
 	return 0.0;
@@ -239,9 +239,9 @@ vtype SVector<vtype,itype>::operator[](itype index) const
 template <typename vtype, typename itype>
 SVector<vtype,itype> operator*(vtype c, const SVector<vtype,itype>& x)
 {
-	int n = x.nonzero();
+	size_t n = x.nonzero();
 	SVector<vtype,itype> y(x.dimension());
-	for (int i=0; i<n; i++) {
+	for (size_t i=0; i<n; i++) {
 		itype index = x.index(i);
 		vtype value = x.value(i);
 		y[index] = c*value;
@@ -252,9 +252,9 @@ SVector<vtype,itype> operator*(vtype c, const SVector<vtype,itype>& x)
 template <typename type>
 type inorm(const SVector<type>& x)
 {
-	int n = x.nonzero();
+	size_t n = x.nonzero();
 	type norm = 0.0;
-	for (int i=0; i<n; i++) {
+	for (size_t i=0; i<n; i++) {
 		type value = fabs(x.value(i));
 		if (value>norm) norm=value;
 	}
@@ -354,7 +354,7 @@ int CR(const matrix& A, vector& x, const vector& b, int max, type tolerance)
 {
 	// Conjugate residual (CR) algorithm
 	// Use for solving symmetric, possibly indefinite linear systems
-	int n = x.dimension();
+	size_t n = x.dimension();
 	vector p(n), r(n), Ar(n), Ap(n);
 
 	r = b-A*x;

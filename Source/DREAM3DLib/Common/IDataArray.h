@@ -14,6 +14,8 @@
 
 //-- C++
 #include <iostream>
+#include <vector>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -112,6 +114,9 @@ class IDataArray
      * 8 = 64 bit integer/Double
      */
     virtual size_t getTypeSize() = 0;
+
+
+    virtual int eraseTuples(std::vector<size_t> &idxs) = 0;
 
     /**
      * @brief Sets all the values to zero.

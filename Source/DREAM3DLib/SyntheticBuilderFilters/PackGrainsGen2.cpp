@@ -1881,7 +1881,7 @@ void PackGrainsGen2::cleanup_grains()
   size_t count;
   int touchessurface = 0;
   int good;
-  DimType neighbor;
+  int neighbor;
   DimType column, row, plane;
   int index;
   float minsize = 0;
