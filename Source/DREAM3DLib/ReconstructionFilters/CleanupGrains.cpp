@@ -398,6 +398,7 @@ void CleanupGrains::merge_containedgrains()
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_PhasesF[grainname] > 0)
     {
+	  m_Active[grainname] = false;
       m_GrainIds[i] = 0;
     }
   }
