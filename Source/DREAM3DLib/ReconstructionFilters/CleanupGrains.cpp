@@ -625,7 +625,6 @@ void CleanupGrains::remove_smallgrains()
       int nucleus = nuclei[i];
       voxellists[i].push_back(nucleus);
       m_AlreadyChecked[nucleus] = true;
-      m_GrainIds[nucleus] = currentgrain;
       size++;
       for (size_t j = 0; j < size; j++)
       {
@@ -650,7 +649,6 @@ void CleanupGrains::remove_smallgrains()
             {
               voxellists[i].push_back(neighbor);
               m_AlreadyChecked[neighbor] = true;
-              m_GrainIds[neighbor] = currentgrain;
               size++;
             }
           }
@@ -658,11 +656,11 @@ void CleanupGrains::remove_smallgrains()
       }
       if(voxellists[i].size() >= static_cast<size_t>(m_minallowedgrainsize) )
       {
-		m_Active[currentgrain] = true;
-		currentgrain++;
+		m_Active[i] = true;
       }
       if(voxellists[i].size() < static_cast<size_t>(m_minallowedgrainsize) )
       {
+		m_Active[i] = false;
         for (size_t b = 0; b < voxellists[i].size(); b++)
         {
           int index = voxellists[i][b];
@@ -670,8 +668,6 @@ void CleanupGrains::remove_smallgrains()
         }
       }
   }
-  m->resizeFieldDataArrays(currentgrain);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
 }
 
 

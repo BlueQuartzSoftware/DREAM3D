@@ -85,7 +85,6 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     void merge_colonies();
     void characterize_colonies();
-    void renumber_grains();
 
   private:
 
