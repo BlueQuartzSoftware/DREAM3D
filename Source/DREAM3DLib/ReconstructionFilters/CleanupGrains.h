@@ -67,7 +67,8 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 
     virtual ~CleanupGrains();
 
-    DREAM3D_INSTANCE_PROPERTY(int, minallowedgrainsize);
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
+    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -85,7 +86,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     void remove_smallgrains();
     void assign_badpoints();
     void merge_containedgrains();
-    void reorder_grains();
 
 
   private:
