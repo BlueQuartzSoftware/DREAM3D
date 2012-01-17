@@ -144,7 +144,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "NeighborLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
     setErrorCondition(-308);
   }
 
@@ -179,7 +179,10 @@ void CleanupGrains::execute()
   }
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
   remove_smallgrains();
