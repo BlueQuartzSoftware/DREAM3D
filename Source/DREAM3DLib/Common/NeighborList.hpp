@@ -75,7 +75,7 @@ class NeighborList : public IDataArray
 
     void* GetVoidPointer(size_t i) { return NULL; }
 
-    virtual int eraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(std::vector<size_t> &idxs)
     {
       int err = -1;
 
@@ -92,7 +92,7 @@ class NeighborList : public IDataArray
     int GetNumberOfComponents() { return 1; }
 
 
-    size_t getTypeSize()  { return sizeof(SharedVectorType); }
+    size_t GetTypeSize()  { return sizeof(SharedVectorType); }
 
 
     void initializeWithZeros() { _data.clear(); }

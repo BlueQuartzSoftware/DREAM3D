@@ -71,11 +71,35 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TestEraseElements()
+{
+  Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
+  for(size_t i = 0; i < NUM_ELEMENTS; ++i)
+  {
+    int32Array->SetComponent(i, 0, i);
+  }
+
+  std::vector<size_t> eraseElements;
+  eraseElements.push_back(0);
+  eraseElements.push_back(1);
+
+  int32Array->EraseTuples(eraseElements);
+
+  DREAM3D_REQUIRE_EQUAL(int32Array->GetValue(0), 2);
+  DREAM3D_REQUIRE_EQUAL(int32Array->GetValue(1), 3);
+  DREAM3D_REQUIRE_EQUAL(int32Array->GetValue(2), 4);
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TestDataArray()
 {
   int32_t* ptr = NULL;
   {
-  
+
   Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0);
   DREAM3D_REQUIRE_EQUAL(0, d->GetSize() );
   DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples() );
@@ -84,7 +108,7 @@ void TestDataArray()
 
 
   {
-  
+
   Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
   ptr = int32Array->GetPointer(0);
   DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS , int32Array->GetNumberOfTuples());
@@ -151,7 +175,7 @@ int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestDataArray() );
-
+  DREAM3D_REGISTER_TEST( TestEraseElements() );
 
   PRINT_TEST_SUMMARY();
   return err;
