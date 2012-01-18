@@ -283,6 +283,9 @@ void SegmentGrains::execute()
     }
   }
 
+  m->resizeFieldDataArrays(graincount);
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
 }

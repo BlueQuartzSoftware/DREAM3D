@@ -117,15 +117,16 @@ PtrType* gi = NULL;\
 IDataArray::Pointer iDataArray = GetMethod(arrayName);\
 if (iDataArray.get() == 0) {\
   std::stringstream s;\
-  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class was not in the DataContainer";\
+  s << getNameOfClass() << "::" << #GetMethod << "(std::string name) where name = '" << arrayName \
+  << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer";\
   if (NULL != obv) {obv->setErrorCondition(-500);\
   obv->setErrorMessage(s.str());}\
   return gi;\
 }\
 if (size != iDataArray->GetSize()) {\
   std::stringstream s;\
-  s << getNameOfClass() << " - Array " << arrayName << " from the DataContainer class did not have the correct number of elements.";\
-  s << "Required: " << size << " Contains: " << iDataArray->GetSize();\
+  s << getNameOfClass() << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
+  s << " Required: " << size << " Contains: " << iDataArray->GetSize();\
   if (NULL != obv) {obv->setErrorCondition(-501);\
   obv->setErrorMessage(s.str());}\
   return gi;\

@@ -49,7 +49,7 @@
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -259,13 +259,13 @@ void CleanupGrains::assign_badpoints()
   int neighpoint;
   size_t numgrains = m->getTotalFields();
 
-  DimType neighpoints[6];
-  neighpoints[0] = -dims[0] * dims[1];
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = dims[0] * dims[1];
+  int neighpoints[6];
+  neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
+  neighpoints[1] = static_cast<int>(-dims[0]);
+  neighpoints[2] = static_cast<int>(-1);
+  neighpoints[3] = static_cast<int>(1);
+  neighpoints[4] = static_cast<int>(dims[0]);
+  neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
 
 
@@ -276,7 +276,6 @@ void CleanupGrains::assign_badpoints()
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-
 		std::stringstream ss;
 		ss << "Cleaning Up Grains - Identifying Bad Points - " << ((float)i/totalPoints)*100 << " Percent Complete";
 		notify(ss.str(), 0, Observable::UpdateProgressMessage);
@@ -453,13 +452,13 @@ void CleanupGrains::remove_smallgrains()
   int gnum;
  // DimType currentgrain = 1;
 
-  DimType neighpoints[6];
-  neighpoints[0] = -dims[0]*dims[1];
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = dims[0]*dims[1];
+  int neighpoints[6];
+  neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
+  neighpoints[1] = static_cast<int>(-dims[0]);
+  neighpoints[2] = static_cast<int>(-1);
+  neighpoints[3] = static_cast<int>(1);
+  neighpoints[4] = static_cast<int>(dims[0]);
+  neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
 
   DimType numgrains = m->getTotalFields();
@@ -476,7 +475,7 @@ void CleanupGrains::remove_smallgrains()
   {
     m_AlreadyChecked[i] = false;
     gnum = m_GrainIds[i];
-    if(gnum >= 0) nuclei[gnum] = i;
+    if(gnum >= 0) nuclei[gnum] = static_cast<int>(i);
   }
   voxellists.resize(numgrains);
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)

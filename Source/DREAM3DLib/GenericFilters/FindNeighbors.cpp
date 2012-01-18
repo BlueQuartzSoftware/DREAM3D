@@ -104,7 +104,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
                                  (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
-    ss << "SurfaceAreaLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
     setErrorCondition(-308);
   }
 
@@ -246,7 +246,7 @@ void FindNeighbors::execute()
   // We do this to create new set of NeighborList objects
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
 
-  for (size_t i = 1; i < totalFields; i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
