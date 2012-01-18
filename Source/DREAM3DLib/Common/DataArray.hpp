@@ -495,7 +495,7 @@ class DataArray : public IDataArray
     {
       NumberOfComponents = 1;
       MaxId = (Size > 0) ? Size - 1: Size;
-          MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+    //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
     /**
@@ -509,7 +509,7 @@ class DataArray : public IDataArray
       if (sizeof(T) >= 2 && Size > 0) { cptr[1] = 0xAB; }
       if (sizeof(T) >= 4 && Size > 0) { cptr[2] = 0xAB; cptr[3] = 0xAB;}
       if (sizeof(T) >= 8 && Size > 0) { cptr[4] = 0xAB; cptr[5] = 0xAB; cptr[6] = 0xAB; cptr[7] = 0xAB;}
-
+#if 0
       if (MUD_FLAP_0 != 0xABABABABABABABABul
         || MUD_FLAP_1 != 0xABABABABABABABABul
         || MUD_FLAP_2 != 0xABABABABABABABABul
@@ -519,7 +519,7 @@ class DataArray : public IDataArray
       {
         assert(false);
       }
-
+#endif
 
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
       _mm_free( this->m_buffer );
@@ -621,17 +621,17 @@ class DataArray : public IDataArray
 
   private:
 
-    unsigned long long int MUD_FLAP_0;
+  //  unsigned long long int MUD_FLAP_0;
     T* Array;
-    unsigned long long int MUD_FLAP_1;
+  //  unsigned long long int MUD_FLAP_1;
     size_t Size;
-    unsigned long long int MUD_FLAP_4;
+  //  unsigned long long int MUD_FLAP_4;
     bool _ownsData;
-    unsigned long long int MUD_FLAP_2;
+  //  unsigned long long int MUD_FLAP_2;
     size_t MaxId;
-    unsigned long long int MUD_FLAP_3;
+ //   unsigned long long int MUD_FLAP_3;
     std::string m_Name;
-    unsigned long long int MUD_FLAP_5;
+  //  unsigned long long int MUD_FLAP_5;
 
     DataArray(const DataArray&); //Not Implemented
     void operator=(const DataArray&); //Not Implemented
