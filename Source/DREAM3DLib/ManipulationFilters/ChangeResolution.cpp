@@ -118,14 +118,16 @@ void ChangeResolution::execute()
   }
 
 
-  notify("Starting Resolution Change", 0, Observable::UpdateProgressValueAndMessage);
+
   float x, y, z;
   int col, row, plane;
   int index;
   int index_old;
   for (int i = 0; i < m_ZP; i++)
   {
-    notify("Changing Percent", ((float)i/m->getZPoints())*100, Observable::UpdateProgressValue);
+    std::stringstream ss;
+    ss << "Changing Resolution - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -155,5 +157,5 @@ void ChangeResolution::execute()
   err = m->getVoxelData(DREAM3D::VoxelData::EulerAngles)->Resize(3*totalPoints);
 
   setErrorCondition(0);
-  notify("Resolution Change Complete", 100, Observable::UpdateProgressValueAndMessage);
+  notify("Changing Resolution Complete", 0, Observable::UpdateProgressValueAndMessage);
 }

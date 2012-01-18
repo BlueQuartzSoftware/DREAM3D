@@ -248,7 +248,7 @@ void MatchCrystallography::execute()
   matchCrystallography();
 
   // If there is an error set this to something negative and also set a message
-  notify("MatchCrystallography Completed", 0, Observable::UpdateProgressMessage);
+  notify("Matching Crystallography Complete", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -396,14 +396,18 @@ void MatchCrystallography::assign_eulers()
   float random;
   int choose, phase;
 
+  int totalFields = m->getTotalFields();
   size_t xtalCount = m->crystruct.size();
   unbiasedvol.resize(xtalCount);
   for (size_t i = 1; i < xtalCount; ++i)
   {
     unbiasedvol[i] = 0;
   }
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < totalFields; i++)
   {
+    std::stringstream ss;
+	ss << "Matching Crystallography - Assigning Euler Angles - " << ((float)i/totalFields)*100 << "Percent Complete";
+	notify(ss.str(), 0, Observable::UpdateProgressMessage);
     random = rg.genrand_res53();
     choose = 0;
     totaldensity = 0;
@@ -527,6 +531,9 @@ void MatchCrystallography::matchCrystallography()
     if(m->crystruct[iter] == Ebsd::Hexagonal) numbins = 36 * 36 * 12;
     while (badtrycount < 10000 && iterations < 1000000)
     {
+      std::stringstream ss;
+	  ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/1000000)*100 << "Percent Complete";
+	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       currentodferror = 0;
       currentmdferror = 0;
       for (int i = 0; i < numbins; i++)
@@ -797,10 +804,14 @@ void MatchCrystallography::measure_misorientations()
   float q2[5];
   Ebsd::CrystalStructure phase1, phase2;
   int mbin;
+  int totalFields = m->getTotalFields();
 
-  misorientationlists.resize(m->getTotalFields());
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  misorientationlists.resize(totalFields);
+  for (size_t i = 1; i < totalFields; i++)
   {
+    std::stringstream ss;
+	ss << "Matching Crystallography - Measuring Misorientations - " << ((float)i/totalFields)*100 << "Percent Complete";
+	notify(ss.str(), 0, Observable::UpdateProgressMessage);
     if(misorientationlists[i].size() != 0)
     {
       misorientationlists[i].clear();

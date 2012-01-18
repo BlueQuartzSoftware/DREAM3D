@@ -122,14 +122,15 @@ void CropVolume::execute()
   }
 
 
-  notify("Starting Crop Volume", 0, Observable::UpdateProgressValueAndMessage);
   float x, y, z;
   int col, row, plane;
   int index;
   int index_old;
   for (int i = 0; i < m_ZP; i++)
   {
-    notify("Cropping Percent", ((float)i/m->getZPoints())*100, Observable::UpdateProgressValue);
+    std::stringstream ss;
+    ss << "Cropping Volume - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -155,5 +156,5 @@ void CropVolume::execute()
   err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::EulerAngles)->Resize(3*totalPoints);
-  notify("Crop Volume Complete", 100, Observable::UpdateProgressValueAndMessage);
+  notify("Cropping Volume Complete", 0, Observable::UpdateProgressValueAndMessage);
 }
