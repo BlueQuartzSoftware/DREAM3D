@@ -85,7 +85,6 @@ void RenumberGrains::preflight()
 void RenumberGrains::execute()
 {
   setErrorCondition(0);
-
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
@@ -107,6 +106,9 @@ void RenumberGrains::execute()
   std::vector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
+    std::stringstream ss;
+    ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
 	if(m_Active[i] == false)
 	{
 		RemoveList.push_back(i);
@@ -128,6 +130,9 @@ void RenumberGrains::execute()
 
   for (int i = 0; i < totalPoints; i++)
   {
+    std::stringstream ss;
+    ss << "Renumbering Grains - Updating Cell Grain Ids - " << ((float)i/totalPoints)*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
     if(m_GrainIds[i] > 0) m_GrainIds[i] = NewNames[m_GrainIds[i]];
   }
     
