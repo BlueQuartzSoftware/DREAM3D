@@ -192,7 +192,7 @@ void FindNeighbors::execute()
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Initializing Neighbor Lists - " << ((float)i/totalFields)*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notify(ss.str(), 0, Observable::UpdateProgressMessage);
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
@@ -204,7 +204,7 @@ void FindNeighbors::execute()
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Determining Neighbor Lists - " << ((float)j/totalPoints)*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notify(ss.str(), 0, Observable::UpdateProgressMessage);
     onsurf = 0;
     grain = m_GrainIds[j];
     if(grain > 0)
@@ -250,7 +250,7 @@ void FindNeighbors::execute()
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
     int phase = m_PhasesF[i];
 
     std::map<int, int> neighToCount;

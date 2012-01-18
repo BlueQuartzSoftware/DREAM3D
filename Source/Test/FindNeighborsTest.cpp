@@ -142,7 +142,43 @@ void pipelineFinished()
   std::cout << "Pipeline Complete." << std::endl;
 }
 
+typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int preflightPipeline(FilterContainerType &pipeline)
+{
+  // Create the DataContainer object
+  DataContainer::Pointer m = DataContainer::New();
+ // m->addObserver(static_cast<Observer*>(this));
+  setErrorCondition(0);
+  int preflightError = 0;
+  std::stringstream ss;
+
+
+  // Start looping through the Pipeline and preflight everything
+  for (FilterContainerType::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
+  {
+    (*filter)->setDataContainer(m.get());
+ //   setCurrentFilter(*filter);
+    (*filter)->preflight();
+    int err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      preflightError |= err;
+      setErrorCondition(preflightError);
+      setErrorCondition(err);
+      ss << (*filter)->getErrorMessage();
+    }
+  }
+  if (preflightError < 0)
+  {
+    pipelineErrorMessage(ss.str().c_str());
+  }
+  return preflightError;
+}
 
 int main(int argc, char **argv)
 {
@@ -158,7 +194,7 @@ int main(int argc, char **argv)
   std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::NeighborListTest::TestDir);
 
   // Create a Vector to hold all the filters. Later on we will execute all the filters
-  std::vector<AbstractFilter::Pointer> pipeline;
+  FilterContainerType pipeline;
 
  // updateProgressAndMessage(("Loading Slices"), 10);
   LoadSlices::Pointer load_slices = LoadSlices::New();
@@ -187,8 +223,20 @@ int main(int argc, char **argv)
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(cleanup_grains);
 
+
+  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
+  int err = preflightPipeline(pipeline);
+  if (err < 0)
+  {
+    return EXIT_FAILURE;
+  }
+  m = DataContainer::New();
+
+
+
+  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
   Observer observer;
-  int err = 0;
+  err = 0;
   // Start a Benchmark Clock so we can keep track of each filter's execution time
   START_CLOCK()
   // Start looping through the Pipeline
