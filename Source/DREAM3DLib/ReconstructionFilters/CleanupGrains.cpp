@@ -124,16 +124,17 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -350, int32_t, Int32ArrayType, fields, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -302, float, FloatArrayType, voxels, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1);
+
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
@@ -145,7 +146,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   if(m_NeighborList == NULL)
   {
     ss << "NeighborLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
-    setErrorCondition(-308);
+    setErrorCondition(-350);
   }
 
 
@@ -179,10 +180,11 @@ void CleanupGrains::execute()
   }
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
-  if (getErrorCondition() < 0)
+  if (getErrorCondition() < 0 && getErrorCondition() != -350)
   {
     return;
   }
+  setErrorCondition(0);
 
   notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
   remove_smallgrains();
@@ -198,12 +200,17 @@ void CleanupGrains::execute()
   int err = find_neighbors->getErrorCondition();
   if (err < 0)
   {
+    setErrorCondition(find_neighbors->getErrorCondition());
+    setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
 
   // FindNeighbors may have messed with the pointers so revalidate our internal pointers
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
@@ -267,62 +274,60 @@ void CleanupGrains::assign_badpoints()
   neighpoints[5] = dims[0] * dims[1];
   std::vector<int> currentvlist;
 
-  notify("Assigning Bad Voxels", 0, Observable::UpdateProgressMessage);
-
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
     m_AlreadyChecked[iter] = false;
-	if (m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
+    if(m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
-		{
-			currentvlist.push_back(i);
-			count = 0;
-			while(count < currentvlist.size())
-			{
-				index = currentvlist[count];
-				column = index % dims[0];
-				row = (index / dims[0]) % dims[1];
-				plane = index / (dims[0] * dims[1]);
-				for (DimType j = 0; j < 6; j++)
-				{
-					good = 1;
-					neighbor = index + neighpoints[j];
-					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (dims[2] - 1)) good = 0;
-					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (dims[1] - 1)) good = 0;
-					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (dims[0] - 1)) good = 0;
-					if (good == 1 && m_GrainIds[neighbor] <= 0 && m_AlreadyChecked[neighbor] == false)
-					{
-						currentvlist.push_back(neighbor);
-						m_AlreadyChecked[neighbor] = true;
-					}
-				}
-				count++;
-			}
-			if((int)currentvlist.size() >= m_MinAllowedGrainSize*100)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = 0;
-					m_PhasesC[currentvlist[k]] = 0;
-				}
-				m_PhasesF[0] = 0;
-			}
-			if((int)currentvlist.size() < m_MinAllowedGrainSize*100)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = -1;
-					m_PhasesC[currentvlist[k]] = 0;
-				}
-			}
-			currentvlist.clear();
-		}
+    if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
+    {
+      currentvlist.push_back(i);
+      count = 0;
+      while (count < currentvlist.size())
+      {
+        index = currentvlist[count];
+        column = index % dims[0];
+        row = (index / dims[0]) % dims[1];
+        plane = index / (dims[0] * dims[1]);
+        for (DimType j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighbor = index + neighpoints[j];
+          if(j == 0 && plane == 0) good = 0;
+          if(j == 5 && plane == (dims[2] - 1)) good = 0;
+          if(j == 1 && row == 0) good = 0;
+          if(j == 4 && row == (dims[1] - 1)) good = 0;
+          if(j == 2 && column == 0) good = 0;
+          if(j == 3 && column == (dims[0] - 1)) good = 0;
+          if(good == 1 && m_GrainIds[neighbor] <= 0 && m_AlreadyChecked[neighbor] == false)
+          {
+            currentvlist.push_back(neighbor);
+            m_AlreadyChecked[neighbor] = true;
+          }
+        }
+        count++;
+      }
+      if((int)currentvlist.size() >= m_MinAllowedGrainSize * 100)
+      {
+        for (size_t k = 0; k < currentvlist.size(); k++)
+        {
+          m_GrainIds[currentvlist[k]] = 0;
+          m_PhasesC[currentvlist[k]] = 0;
+        }
+        m_PhasesF[0] = 0;
+      }
+      if((int)currentvlist.size() < m_MinAllowedGrainSize * 100)
+      {
+        for (size_t k = 0; k < currentvlist.size(); k++)
+        {
+          m_GrainIds[currentvlist[k]] = -1;
+          m_PhasesC[currentvlist[k]] = 0;
+        }
+      }
+      currentvlist.clear();
+    }
   }
 
   std::vector<int > n(numgrains + 1);
