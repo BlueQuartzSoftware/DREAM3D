@@ -107,8 +107,8 @@ void FieldDataCSVWriter::execute()
     return;
   }
 
-  int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+//  int64_t totalPoints = m->totalPoints();
+//  int totalFields = m->getTotalFields();
 
   std::string filename = getFieldDataFile();
 
@@ -121,7 +121,7 @@ void FieldDataCSVWriter::execute()
   std::list<std::string> headers = m->getFieldArrayNameList();
 
   std::vector<IDataArray::Pointer> data;
-  
+
   // Print the GrainIds Header before the rest of the headers
   outFile << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
@@ -146,10 +146,10 @@ void FieldDataCSVWriter::execute()
     }
   }
   outFile << std::endl;
-  
+
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  
+
   // Skip the first grain
   for(size_t i = 1; i < numTuples; ++i)
   {

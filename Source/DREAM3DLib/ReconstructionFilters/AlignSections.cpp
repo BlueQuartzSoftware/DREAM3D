@@ -161,7 +161,10 @@ void AlignSections::execute()
   }
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, 0, 0);
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
 
 
@@ -193,7 +196,7 @@ void AlignSections::execute()
 void AlignSections::align_sections()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  //int64_t totalPoints = m->totalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -511,7 +514,7 @@ void AlignSections::form_grains_sections()
     static_cast<DimType>(udims[2]),
   };
 
-  int64_t totalPoints = m->totalPoints();
+ // int64_t totalPoints = m->totalPoints();
 
 
   int point = 0;

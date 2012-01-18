@@ -122,8 +122,12 @@ void RenumberGrains::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+  size_t totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
@@ -153,15 +157,15 @@ void RenumberGrains::execute()
     notify(ss.str(), 0, Observable::UpdateProgressMessage);
     IDataArray::Pointer p = m->getFieldData(*iter);
 	  p->EraseTuples(RemoveList);
-    
+
   }
-  
+
   // Loop over all the points and correct all the grain names
   for (int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0) { m_GrainIds[i] = NewNames[m_GrainIds[i]]; }
   }
-    
+
 }
 
 

@@ -98,6 +98,11 @@ void FindSurfaceGrains::execute()
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, 1);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
 
   if(m->getZPoints() > 1) find_surfacegrains();
 

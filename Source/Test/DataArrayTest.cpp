@@ -76,7 +76,7 @@ void __TestEraseElements()
 {
   // Test dropping of front elements only
   {
-    T::Pointer array = T::CreateArray(NUM_ELEMENTS);
+    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS);
     for(size_t i = 0; i < NUM_ELEMENTS; ++i)
     {
       array->SetComponent(i, 0, i);
@@ -95,7 +95,7 @@ void __TestEraseElements()
 
   // Test Dropping of internal elements
   {
-    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -135,7 +135,7 @@ void __TestEraseElements()
 
   // Test Dropping of internal elements
   {
-    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -170,7 +170,7 @@ void __TestEraseElements()
 
   // Test Dropping of internal continuous elements
   {
-    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -205,7 +205,7 @@ void __TestEraseElements()
 
   // Test Dropping of Front and Back Elements
   {
-    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -238,7 +238,7 @@ void __TestEraseElements()
 
   // Test Dropping of Back Elements
   {
-    T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
