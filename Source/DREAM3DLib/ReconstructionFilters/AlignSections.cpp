@@ -159,6 +159,7 @@ void AlignSections::execute()
     setErrorMessage(ss.str());
     return;
   }
+
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
@@ -167,10 +168,8 @@ void AlignSections::execute()
   }
 
 
-
   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
   {
-    notify("Align Sections - Identifying Grains on Sections", 0, Observable::UpdateProgressMessage);
     form_grains_sections();
   }
 
@@ -186,7 +185,7 @@ void AlignSections::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("AlignSections Completed", 0, Observable::UpdateProgressMessage);
+  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
 }
 
 
@@ -257,7 +256,9 @@ void AlignSections::align_sections()
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-
+    std::stringstream ss;
+    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
     slice = (dims[2] - 1) - iter;
     if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
@@ -428,6 +429,9 @@ void AlignSections::align_sections()
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
+    std::stringstream ss;
+    ss << "Aligning Sections - Transferring Cell Data - " << ((float)iter/dims[2])*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
     slice = (dims[2] - 1) - iter;
     for (DimType l = 0; l < dims[1]; l++)
     {
@@ -553,6 +557,9 @@ void AlignSections::form_grains_sections()
   Ebsd::CrystalStructure phase1, phase2;
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
+    std::stringstream ss;
+    ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)

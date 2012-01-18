@@ -117,7 +117,6 @@ void AdjustVolume::preflight()
 void AdjustVolume::execute()
 {
   setErrorCondition(0);
-
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
   if (NULL == m)
@@ -194,6 +193,9 @@ void AdjustVolume::execute()
   oldsizedisterror = packGrains->check_sizedisterror(&field);
   while(iterations < m_MaxIterations)
   {
+    std::stringstream ss;
+	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
+	notify(ss.str(), 0, Observable::UpdateProgressMessage);
     iterations++;
     good = 0;
     while (good == 0)
@@ -309,17 +311,7 @@ void AdjustVolume::execute()
       reassigned[i] = 0;
     }
   }
-  NEW_SHARED_ARRAY(newnames, int, m->getTotalFields())
-
-  for (size_t i=1;i<m->getTotalFields();i++)
-  {
-    newnames[i] = i;
-  }
-  for(int i=0;i<totalPoints;i++)
-  {
-    m_GrainIds[i] = newnames[m_GrainIds[i]];
-  }
 
   // If there is an error set this to something negative and also set a message
-  notify("AdjustVolume Completed", 0, Observable::UpdateProgressMessage);
+  notify("Adjusting Grain Boundaries Complete", 0, Observable::UpdateProgressMessage);
 }

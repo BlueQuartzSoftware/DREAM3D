@@ -153,6 +153,9 @@ void FieldDataCSVWriter::execute()
   // Skip the first grain
   for(size_t i = 1; i < numTuples; ++i)
   {
+    std::stringstream ss;
+    ss << "Writing Field Data - " << ((float)i/numTuples)*100 << " Percent Complete";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
     // Print the grain id
     outFile << i;
     // Print a row of data
