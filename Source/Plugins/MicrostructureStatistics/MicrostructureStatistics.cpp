@@ -86,6 +86,44 @@ MicrostructureStatistics::~MicrostructureStatistics()
 {
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int MicrostructureStatistics::preflightPipeline(MicrostructureStatistics::FilterContainerType &pipeline)
+{
+  // Create the DataContainer object
+  DataContainer::Pointer m = DataContainer::New();
+  m->addObserver(static_cast<Observer*>(this));
+  setErrorCondition(0);
+  int preflightError = 0;
+  std::stringstream ss;
+
+
+  // Start looping through the Pipeline and preflight everything
+  for (FilterContainerType::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
+  {
+    (*filter)->setDataContainer(m.get());
+    setCurrentFilter(*filter);
+    (*filter)->preflight();
+    int err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      preflightError |= err;
+      setErrorCondition(preflightError);
+      setErrorCondition(err);
+      ss << (*filter)->getErrorMessage();
+    }
+  }
+  if (preflightError < 0)
+  {
+    pipelineErrorMessage(ss.str().c_str());
+  }
+  return preflightError;
+}
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -198,6 +236,14 @@ void MicrostructureStatistics::execute()
     write_fielddata->setFieldDataFile(FieldDataFile);
     pipeline.push_back(write_fielddata);
   }
+
+
+  err = preflightPipeline(pipeline);
+  if (err < 0)
+  {
+    return;
+  }
+  m = DataContainer::New();
 
 
   // Start a Benchmark Clock so we can keep track of each filter's execution time

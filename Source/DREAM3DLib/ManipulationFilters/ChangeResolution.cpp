@@ -117,7 +117,19 @@ void ChangeResolution::execute()
     return;
   }
 
+  if(m->getXRes() == m_XRes
+      && m->getYRes() == m_YRes
+      && m->getZRes() == m_ZRes)
+  {
+    return;
+  }
 
+  float sizex = (m_XMax-m_XMin)*m->getXRes();
+  float sizey = (m_YMax-m_YMin)*m->getYRes();
+  float sizez = (m_ZMax-m_ZMin)*m->getZRes();
+  int m_XP = int(sizex / m_XRes);
+  int m_YP = int(sizey / m_YRes);
+  int m_ZP = int(sizez / m_ZRes);
 
   float x, y, z;
   int col, row, plane;

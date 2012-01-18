@@ -821,7 +821,7 @@ function(cmpVersionStringsFromGit)
     
     Find_package(Git)
 
-    if (GIT_FOUND)
+        if (GIT_FOUND)
         execute_process(COMMAND ${GIT_EXECUTABLE} describe
             OUTPUT_VARIABLE DVERS
             RESULT_VARIABLE did_run
@@ -833,10 +833,6 @@ function(cmpVersionStringsFromGit)
         list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
         list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
         list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
-        
-        set(VERSION_GEN_VER_MAJOR ${CMP_VERSION_MAJOR})
-        set(VERSION_GEN_VER_PATCH ${VERSION_GEN_VER_MINOR})
-        set(VERSION_GEN_VER_MINOR ${CMP_VERSION_MINOR})
     
         set (VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
         set (VERSION_GEN_NAME "${GVS_cmpProjectName}")
@@ -844,7 +840,7 @@ function(cmpVersionStringsFromGit)
        # message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
        # message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
 
-        set (${GVS_cmpProjectName}_VER_MAJOR ${VERSION_GEN_VER_MAJOR} CACHE STRING "" FORCE)
+        set (${GVS_cmpProjectName}_VER_MAJOR ${CMP_VERSION_MAJOR} CACHE STRING "" FORCE)
         set (${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
         set (${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "" FORCE)
         set(VERSION_GEN_COMPLETE "${VERSION_GEN_VER_MAJOR}.${VERSION_GEN_VER_MINOR}.${VERSION_GEN_VER_PATCH}" )

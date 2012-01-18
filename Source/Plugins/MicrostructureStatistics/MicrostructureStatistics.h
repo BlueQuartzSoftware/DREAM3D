@@ -112,6 +112,11 @@ class MicrostructureStatistics  : public AbstractPipeline, public Observer
      */
     void execute();
 
+
+    typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
+    int preflightPipeline(FilterContainerType &pipeline);
+
+
   protected:
 
     MicrostructureStatistics();
