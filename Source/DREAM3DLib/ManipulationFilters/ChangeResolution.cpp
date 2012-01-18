@@ -108,12 +108,17 @@ void ChangeResolution::execute()
     setErrorMessage(ss.str());
     return;
   }
+  setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
 
-  setErrorCondition(0);
+
   float x, y, z;
   int col, row, plane;
   int index;

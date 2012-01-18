@@ -143,7 +143,10 @@ void FindNeighbors::execute()
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

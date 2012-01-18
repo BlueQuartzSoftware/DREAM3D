@@ -309,6 +309,10 @@ void LoadSlices::execute()
 
   // This will create the arrays with the correct sizes
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Initialize all the arrays with some default values
   int64_t totalPoints = m->totalPoints();

@@ -124,16 +124,17 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -350, int32_t, Int32ArrayType, fields, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -302, float, FloatArrayType, voxels, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1);
+
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
@@ -145,7 +146,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   if(m_NeighborList == NULL)
   {
     ss << "NeighborLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
-    setErrorCondition(-308);
+    setErrorCondition(-350);
   }
 
 
@@ -179,10 +180,11 @@ void CleanupGrains::execute()
   }
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
-  if (getErrorCondition() < 0)
+  if (getErrorCondition() < 0 && getErrorCondition() != -350)
   {
     return;
   }
+  setErrorCondition(0);
 
   remove_smallgrains();
 
@@ -195,12 +197,17 @@ void CleanupGrains::execute()
   int err = find_neighbors->getErrorCondition();
   if (err < 0)
   {
+    setErrorCondition(find_neighbors->getErrorCondition());
+    setErrorMessage(find_neighbors->getErrorMessage());
     return;
   }
 
   // FindNeighbors may have messed with the pointers so revalidate our internal pointers
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   merge_containedgrains();
 
@@ -265,10 +272,11 @@ void CleanupGrains::assign_badpoints()
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
     m_AlreadyChecked[iter] = false;
-	if (m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
+    if(m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
+
 		std::stringstream ss;
 		ss << "Cleaning Up Grains - Identifying Bad Points - " << ((float)i/totalPoints)*100 << " Percent Complete";
 		notify(ss.str(), 0, Observable::UpdateProgressMessage);
@@ -443,7 +451,7 @@ void CleanupGrains::remove_smallgrains()
   int neighbor = 0;
   DimType col, row, plane;
   int gnum;
-  DimType currentgrain = 1;
+ // DimType currentgrain = 1;
 
   DimType neighpoints[6];
   neighpoints[0] = -dims[0]*dims[1];

@@ -131,7 +131,10 @@ void FindNeighborhoods::execute()
   setErrorCondition(0);
 
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   if(m->getZPoints() > 1) find_centroids();
   if(m->getZPoints() == 1) find_centroids2D();

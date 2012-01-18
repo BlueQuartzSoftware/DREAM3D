@@ -265,7 +265,7 @@ class DataArray : public IDataArray
         this->MaxId = newSize-1;
         return 0;
       }
-  
+
       std::vector<size_t> srcIdx(idxs.size() + 1);
       std::vector<size_t> destIdx(idxs.size() + 1);
       std::vector<size_t> copyElements(idxs.size() + 1);
@@ -273,7 +273,7 @@ class DataArray : public IDataArray
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0) * NumberOfComponents;
 
-      for(int i = 1; i < srcIdx.size(); ++i)
+      for(size_t i = 1; i < srcIdx.size(); ++i)
       {
           srcIdx[i] = (idxs[i-1] + 1) * NumberOfComponents;
 
@@ -288,7 +288,7 @@ class DataArray : public IDataArray
       }
 
 // Copy the data
-      for(int i = 0; i < srcIdx.size(); ++i)
+      for(size_t i = 0; i < srcIdx.size(); ++i)
       {
         currentDest = newArray + destIdx[i];
         currentSrc = Array + srcIdx[i];
@@ -512,10 +512,10 @@ class DataArray : public IDataArray
 
       if (MUD_FLAP_0 != 0xABABABABABABABABul
         || MUD_FLAP_1 != 0xABABABABABABABABul
-|| MUD_FLAP_2 != 0xABABABABABABABABul
-|| MUD_FLAP_3 != 0xABABABABABABABABul
-|| MUD_FLAP_4 != 0xABABABABABABABABul
-|| MUD_FLAP_5 != 0xABABABABABABABABul)
+        || MUD_FLAP_2 != 0xABABABABABABABABul
+        || MUD_FLAP_3 != 0xABABABABABABABABul
+        || MUD_FLAP_4 != 0xABABABABABABABABul
+        || MUD_FLAP_5 != 0xABABABABABABABABul)
       {
         assert(false);
       }
@@ -622,16 +622,16 @@ class DataArray : public IDataArray
   private:
 
     unsigned long long int MUD_FLAP_0;
-    size_t Size;
+    T* Array;
     unsigned long long int MUD_FLAP_1;
+    size_t Size;
+    unsigned long long int MUD_FLAP_4;
     bool _ownsData;
     unsigned long long int MUD_FLAP_2;
     size_t MaxId;
     unsigned long long int MUD_FLAP_3;
-    T* Array;
-unsigned long long int MUD_FLAP_4;
     std::string m_Name;
-unsigned long long int MUD_FLAP_5;
+    unsigned long long int MUD_FLAP_5;
 
     DataArray(const DataArray&); //Not Implemented
     void operator=(const DataArray&); //Not Implemented

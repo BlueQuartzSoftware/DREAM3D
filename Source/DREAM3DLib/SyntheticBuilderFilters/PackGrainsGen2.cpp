@@ -327,6 +327,11 @@ void PackGrainsGen2::execute()
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
 
   notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
   initializeAttributes();
@@ -1052,7 +1057,7 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
 
 void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 {
-  DataContainer* m = getDataContainer();
+ // DataContainer* m = getDataContainer();
  // int column, row, plane;
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
@@ -1509,7 +1514,7 @@ void PackGrainsGen2::assign_voxels()
   float dist;
   float x, y, z;
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
-  int64_t totpoints = m->totalPoints();
+ // int64_t totpoints = m->totalPoints();
   gsizes.resize(m->getTotalFields());
 
   for (size_t i = 1; i < m->getTotalFields(); i++)

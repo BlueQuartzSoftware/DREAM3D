@@ -153,6 +153,10 @@ void SegmentGrains::execute()
   m->resizeFieldDataArrays(2);
   // Update our pointers
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

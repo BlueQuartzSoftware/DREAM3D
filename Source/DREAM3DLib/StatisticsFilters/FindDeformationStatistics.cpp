@@ -157,8 +157,14 @@ void FindDeformationStatistics::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
   int64_t totalPoints = m->totalPoints();
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
+
 
 //  std::string filename = m_OutputFile1;
   std::ofstream outFile;
