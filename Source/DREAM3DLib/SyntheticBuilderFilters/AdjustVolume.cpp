@@ -133,6 +133,10 @@ void AdjustVolume::execute()
 
   // Check to make sure we have all of our data arrays available or make them available.
   dataCheck(false, totalPoints, totalFields, 1);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -155,7 +159,7 @@ void AdjustVolume::execute()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0]*dims[1];
   int iterations = 0;
-  size_t selectedgrain = 0;
+  int selectedgrain = 0;
   int good = 0;
   int growth = 1;
   int nucleus;
@@ -196,7 +200,7 @@ void AdjustVolume::execute()
     {
       good = 1;
       selectedgrain = int(rg.genrand_res53() * m->getTotalFields());
-      if (selectedgrain >= m->getTotalFields()) selectedgrain = m->getTotalFields()-1;
+      if (selectedgrain >= static_cast<int>(m->getTotalFields())) { selectedgrain = m->getTotalFields()-1;}
       if (selectedgrain == 0) selectedgrain = 1;
     }
     growth = 1;
@@ -233,7 +237,7 @@ void AdjustVolume::execute()
 	        voxellist[count] = neighpoint;
 	        reassigned[neighpoint] = -1;
 	        count++;
-	        if(count >= voxellist.size()) voxellist.resize(voxellist.size()+vListSize,-1);
+	        if(count >= static_cast<DimType>(voxellist.size())) { voxellist.resize(voxellist.size()+vListSize,-1); }
         }
         if(good == 1 && m_GrainIds[neighpoint] != selectedgrain && m_GrainIds[index] == selectedgrain)
         {
@@ -243,7 +247,7 @@ void AdjustVolume::execute()
 	          m_GrainIds[neighpoint] = m_GrainIds[index];
 	          affectedvoxellist[affectedcount] = neighpoint;
 	          affectedcount++;
-	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
+	          if(affectedcount >= static_cast<DimType>(affectedvoxellist.size())) { affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);}
 	        }
 	        if(growth == -1 && reassigned[neighpoint] <= 0)
 	        {
@@ -251,12 +255,12 @@ void AdjustVolume::execute()
 	          m_GrainIds[index] = m_GrainIds[neighpoint];
 	          affectedvoxellist[affectedcount] = index;
 	          affectedcount++;
-	          if(affectedcount >= affectedvoxellist.size()) affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);
+	          if(affectedcount >= static_cast<DimType>(affectedvoxellist.size())) { affectedvoxellist.resize(affectedvoxellist.size()+vListSize,-1);}
 	        }
         }
       }
     }
-    for(size_t i=0;i<affectedcount;i++)
+    for(DimType i=0;i<affectedcount;i++)
     {
       index = affectedvoxellist[i];
       if(reassigned[index] > 0)
@@ -271,7 +275,7 @@ void AdjustVolume::execute()
       diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
       m_EquivalentDiameters[index] = diam;
     }
-	currentsizedisterror = packGrains->check_sizedisterror(&field);
+    currentsizedisterror = packGrains->check_sizedisterror(&field);
     if(currentsizedisterror <= oldsizedisterror)
     {
       oldsizedisterror = currentsizedisterror;
@@ -283,7 +287,7 @@ void AdjustVolume::execute()
     if(currentsizedisterror > oldsizedisterror)
     {
       bad++;
-      for(size_t i=0;i<affectedcount;i++)
+      for(DimType i=0;i<affectedcount;i++)
       {
         index = affectedvoxellist[i];
         if(reassigned[index] > 0)

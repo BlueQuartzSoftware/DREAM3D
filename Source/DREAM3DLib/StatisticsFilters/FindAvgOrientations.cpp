@@ -116,7 +116,10 @@ void FindAvgOrientations::execute()
   }
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t numgrains = m->getTotalFields();
   int phase;

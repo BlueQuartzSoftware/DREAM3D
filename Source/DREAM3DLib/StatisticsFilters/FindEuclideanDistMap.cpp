@@ -245,6 +245,10 @@ void FindEuclideanDistMap::execute()
   setErrorCondition(0);
 
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   find_euclideandistmap();
   notify("FindEuclideanDistMap Completed", 0, Observable::UpdateProgressMessage);

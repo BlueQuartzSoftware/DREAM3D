@@ -108,12 +108,16 @@ void ChangeResolution::execute()
     setErrorMessage(ss.str());
     return;
   }
+  setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
 
-  setErrorCondition(0);
   notify("Starting Resolution Change", 0, Observable::UpdateProgressValueAndMessage);
   float x, y, z;
   int col, row, plane;

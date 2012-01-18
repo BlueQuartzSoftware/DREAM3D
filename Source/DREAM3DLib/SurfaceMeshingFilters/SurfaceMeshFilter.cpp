@@ -323,9 +323,15 @@ void SurfaceMeshFilter::preflight()
 // -----------------------------------------------------------------------------
 void SurfaceMeshFilter::execute()
 {
-
   notify(("Running Surface Meshing"), 0, UpdateProgressMessage);
   int err = 0;
+
+
+  dataCheck(false, 1, 1, 1);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   std::string NodesFile = m_OutputDirectory + MXADir::Separator
       + m_OutputFilePrefix + DREAM3D::SurfaceMesh::NodesFileBin;
