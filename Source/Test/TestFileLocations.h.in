@@ -60,6 +60,9 @@ namespace UnitTest {
       static const size_t Offset = 66;
     }
     
+    
+    const std::string DataDir("@DREAM3D_DATA_DIR@");
+    
     namespace NeighborListTest
     {
       const std::string TestDir("@DREAM3DTest_BINARY_DIR@/NeighborListTest");
@@ -68,8 +71,13 @@ namespace UnitTest {
     namespace SyntheticBuilderTest
     {
       const std::string OutputDir("@DREAM3DTest_BINARY_DIR@");
-      const std::string TestDir("@DREAM3D_DATA_DIR@");
     }
+    
+    namespace FindNeighborTest
+    {
+      const std::string OutputDir("@DREAM3DTest_BINARY_DIR@");
+    }
+    
 }
 
 #endif

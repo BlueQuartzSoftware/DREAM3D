@@ -665,6 +665,8 @@ void PackGrainsGen2::execute()
   err = renumber_grains->getErrorCondition();
   if (err < 0)
   {
+    setErrorCondition(renumber_grains->getErrorCondition());
+    setErrorMessage(renumber_grains->getErrorMessage());
     return;
   }
 

@@ -57,25 +57,27 @@ class RenumberGrains : public AbstractFilter
      DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);
 
      virtual ~RenumberGrains();
-
-     virtual void execute();
-     virtual void preflight();
+  
+     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
      virtual const std::string getHumanLabel() { return "Renumber Grains"; }
-
+     
+     virtual void execute();
+     virtual void preflight();
+     virtual void setupFilterOptions();
 
    protected:
      RenumberGrains();
 
    private:
-     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
     int32_t* m_GrainIds;
     bool* m_Active;
+    
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-     RenumberGrains(const RenumberGrains&); // Copy Constructor Not Implemented
-     void operator=(const RenumberGrains&); // Operator '=' Not Implemented
+    RenumberGrains(const RenumberGrains&); // Copy Constructor Not Implemented
+    void operator=(const RenumberGrains&); // Operator '=' Not Implemented
 
 };
 

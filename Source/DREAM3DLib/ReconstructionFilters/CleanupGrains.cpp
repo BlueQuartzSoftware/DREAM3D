@@ -144,7 +144,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "NeighborLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
     setErrorCondition(-308);
   }
 
@@ -179,7 +179,10 @@ void CleanupGrains::execute()
   }
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   remove_smallgrains();
 
@@ -208,8 +211,11 @@ void CleanupGrains::execute()
   err = renumber_grains->getErrorCondition();
   if (err < 0)
   {
+    setErrorCondition(renumber_grains->getErrorCondition());
+    setErrorMessage(renumber_grains->getErrorMessage());
     return;
   }
+
 
   // If there is an error set this to something negative and also set a message
   notify("Cleaning Up Grains Complete", 0, Observable::UpdateProgressMessage);
@@ -398,12 +404,6 @@ void CleanupGrains::merge_containedgrains()
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-  // But since a pointer is difficult to use operators with we will now create a
-  // reference variable to the pointer with the correct variable name that allows
-  // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *m_NeighborList;
 
   size_t totalPoints = static_cast<size_t>(m->totalPoints());
   for (size_t i = 0; i < totalPoints; i++)

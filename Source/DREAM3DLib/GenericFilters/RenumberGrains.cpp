@@ -41,15 +41,39 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
-RenumberGrains::RenumberGrains()
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+RenumberGrains::RenumberGrains() :
+AbstractFilter(),
+m_GrainIds(NULL),
+m_Active(NULL)
 {
-  // TODO Auto-generated constructor stub
-
+  setupFilterOptions();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 RenumberGrains::~RenumberGrains()
 {
-  // TODO Auto-generated destructor stub
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RenumberGrains::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Name of Array for Active Grains");
+    option->setPropertyName("ActiveArrayName");
+    option->setWidgetType(FilterOption::StringWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -94,6 +118,7 @@ void RenumberGrains::execute()
     setErrorMessage(ss.str());
     return;
   }
+  setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
@@ -121,13 +146,19 @@ void RenumberGrains::execute()
 	}
   }
 
+  std::stringstream ss;
   std::list<std::string> headers = m->getFieldArrayNameList();
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
-      IDataArray::Pointer p = m->getFieldData(*iter);
+    ss.str("");
+    ss << getNameOfClass() << " Updating Array '" << *iter << "'";
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    IDataArray::Pointer p = m->getFieldData(*iter);
 	  p->EraseTuples(RemoveList);
+    
   }
-
+  
+  // Loop over all the points and correct all the grain names
   for (int i = 0; i < totalPoints; i++)
   {
     std::stringstream ss;

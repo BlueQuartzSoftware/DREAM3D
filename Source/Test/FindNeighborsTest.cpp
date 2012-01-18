@@ -56,7 +56,8 @@
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 
-//#include "UnitTestSupport.hpp"
+#include "UnitTestSupport.hpp"
+
 #include "TestFileLocations.h"
 
 
@@ -81,7 +82,8 @@ void updateProgressAndMessage(const std::string &msg, int prog)
 
 std::string getH5EbsdFile()
 {
-  return EBSDFile;
+  std::string s = UnitTest::DataDir + MXADir::Separator + "Small_IN100.h5ebsd";
+  return s;
 }
 
 int getZStartIndex() { return 1; }
@@ -164,6 +166,7 @@ int main(int argc, char **argv)
   load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
+  load_slices->setZEndIndex(50);
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
 
@@ -222,6 +225,21 @@ int main(int argc, char **argv)
   }
 
   updateProgressAndMessage("FindNeighborsTest Complete", 100);
+  {
+    int64_t totalPoints = m->totalPoints();
+    IDataArray::Pointer p = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+    int32_t* ptr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(p.get());
+    for(int64_t i = 0; i < totalPoints; ++i)
+    {
+      ptr[i] = 0xAABBCCDD;
+    }
+  }
+  {
+    Int32ArrayType::Pointer p = Int32ArrayType::NullPointer();
+    // Forcibly clean up the Grain IDs
+    m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
+  }
+
   return EXIT_SUCCESS;
 }
 
