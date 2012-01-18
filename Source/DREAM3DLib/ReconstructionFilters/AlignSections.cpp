@@ -258,7 +258,7 @@ void AlignSections::align_sections()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
     slice = (dims[2] - 1) - iter;
     if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
@@ -431,7 +431,7 @@ void AlignSections::align_sections()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Transferring Cell Data - " << ((float)iter/dims[2])*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
     slice = (dims[2] - 1) - iter;
     for (DimType l = 0; l < dims[1]; l++)
     {
@@ -559,7 +559,7 @@ void AlignSections::form_grains_sections()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notify(ss.str(), 0, Observable::UpdateProgressMessage);
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)
