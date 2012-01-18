@@ -181,13 +181,10 @@ void CleanupGrains::execute()
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
 
 
-  notify("Cleanup Grains - Removing Small Grains", 0, Observable::UpdateProgressMessage);
   remove_smallgrains();
 
-  notify("Cleanup Grains - Assigning Bad Points", 0, Observable::UpdateProgressMessage);
   assign_badpoints();
 
-  notify("Cleanup Grains - Finding Neighbors", 0, Observable::UpdateProgressMessage);
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
@@ -202,10 +199,8 @@ void CleanupGrains::execute()
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
 
 
-  notify("Cleanup Grains - Merging Grains", 0, Observable::UpdateProgressMessage);
   merge_containedgrains();
 
-  notify("Cleanup Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -217,7 +212,7 @@ void CleanupGrains::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("CleanupGrains Completed", 0, Observable::UpdateProgressMessage);
+  notify("Cleaning Up Grains Complete", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -260,7 +255,6 @@ void CleanupGrains::assign_badpoints()
   neighpoints[5] = dims[0] * dims[1];
   std::vector<int> currentvlist;
 
-  notify("Assigning Bad Voxels", 0, Observable::UpdateProgressMessage);
 
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
@@ -269,6 +263,9 @@ void CleanupGrains::assign_badpoints()
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
+		std::stringstream ss;
+		ss << "Cleaning Up Grains - Identifying Bad Points - " << ((float)i/totalPoints)*100 << " Percent Complete";
+		notify(ss.str(), 0, Observable::UpdateProgressMessage);
 		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
 		{
 			currentvlist.push_back(i);
@@ -324,6 +321,9 @@ void CleanupGrains::assign_badpoints()
     count = 0;
     for (int i = 0; i < totalPoints; i++)
     {
+	  std::stringstream ss;
+	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
+	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       int grainname = m_GrainIds[i];
       if (grainname < 0)
       {
@@ -408,6 +408,9 @@ void CleanupGrains::merge_containedgrains()
   size_t totalPoints = static_cast<size_t>(m->totalPoints());
   for (size_t i = 0; i < totalPoints; i++)
   {
+	std::stringstream ss;
+	ss << "Cleaning Up Grains - Removing Contained Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
+	notify(ss.str(), 0, Observable::UpdateProgressMessage);
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_PhasesF[grainname] > 0)
     {
@@ -470,6 +473,9 @@ void CleanupGrains::remove_smallgrains()
   voxellists.resize(numgrains);
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
+	  std::stringstream ss;
+	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
+	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       size = 0;
       int nucleus = nuclei[i];
       voxellists[i].push_back(nucleus);
