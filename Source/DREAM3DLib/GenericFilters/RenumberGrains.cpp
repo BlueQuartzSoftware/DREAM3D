@@ -129,10 +129,13 @@ void RenumberGrains::execute()
     return;
   }
 
+  std::stringstream ss;
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
   NewNames.resize(totalFields);
 
+  ss << getNameOfClass() << " - Generating Active Grain List";
+  notify(ss.str(), 0, Observable::UpdateProgressMessage);
   std::vector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
@@ -148,17 +151,19 @@ void RenumberGrains::execute()
 	  }
   }
 
-  std::stringstream ss;
+  
   std::list<std::string> headers = m->getFieldArrayNameList();
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     ss.str("");
-    ss << getNameOfClass() << " Updating Array '" << *iter << "'";
+    ss << getNameOfClass() << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
     notify(ss.str(), 0, Observable::UpdateProgressMessage);
     IDataArray::Pointer p = m->getFieldData(*iter);
 	  p->EraseTuples(RemoveList);
-
   }
+  m->setTotalFields(m->getTotalFields()-RemoveList.size());
+  totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
 
   // Loop over all the points and correct all the grain names
   for (int i = 0; i < totalPoints; i++)
@@ -166,6 +171,9 @@ void RenumberGrains::execute()
     if(m_GrainIds[i] > 0) { m_GrainIds[i] = NewNames[m_GrainIds[i]]; }
   }
 
+  ss.str("");
+  ss << getNameOfClass() << " - Complete";
+ notify(ss.str(), 0, Observable::UpdateProgressMessage);
 }
 
 
