@@ -98,7 +98,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::SyntheticBuilderTest::TestDir + MXADir::Separator + "2PhaseBulk.h5";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "2PhaseBulk.h5";
   return s;
 }
 
