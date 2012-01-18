@@ -225,6 +225,7 @@ int main(int argc, char **argv)
   }
 
   updateProgressAndMessage("FindNeighborsTest Complete", 100);
+#if 0
   {
     int64_t totalPoints = m->totalPoints();
     IDataArray::Pointer p = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
@@ -239,7 +240,7 @@ int main(int argc, char **argv)
     // Forcibly clean up the Grain IDs
     m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
   }
-
+#endif
   return EXIT_SUCCESS;
 }
 

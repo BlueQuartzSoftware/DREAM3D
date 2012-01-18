@@ -104,7 +104,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
                                  (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
-    ss << "SurfaceAreaLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
     setErrorCondition(-308);
   }
 
@@ -185,7 +185,7 @@ void FindNeighbors::execute()
     std::vector<std::vector<int> > neighborlist;
     std::vector<std::vector<float> > neighborsurfacearealist;
 
-  notify("FindNeighbors: Working through all Grains", 0, Observable::UpdateProgressMessage);
+  notify("FindNeighbors - Working through all Grains", 0, Observable::UpdateProgressMessage);
   int nListSize = 100;
   neighborlist.resize(m->getTotalFields());
   neighborsurfacearealist.resize(m->getTotalFields());
@@ -196,7 +196,7 @@ void FindNeighbors::execute()
     neighborsurfacearealist[i].resize(nListSize, -1.0);
   }
 
-  notify("FindNeighbors: Working through all Voxels", 0, Observable::UpdateProgressMessage);
+  notify("FindNeighbors - Working through all Voxels", 0, Observable::UpdateProgressMessage);
   totalPoints = m->totalPoints();
 
   for (int64_t j = 0; j < totalPoints; j++)
@@ -243,7 +243,7 @@ void FindNeighbors::execute()
   totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, m->crystruct.size());
 
-  notify("FindNeighbors: Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);
+  notify("FindNeighbors - Working through all Grains - Second Time", 0, Observable::UpdateProgressMessage);
   for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     int phase = m_PhasesF[i];
