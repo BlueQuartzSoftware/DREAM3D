@@ -140,8 +140,11 @@ void FindSchmids::execute()
   }
   setErrorCondition(0);
 
-
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   int ss = 0;
   float q1[5];

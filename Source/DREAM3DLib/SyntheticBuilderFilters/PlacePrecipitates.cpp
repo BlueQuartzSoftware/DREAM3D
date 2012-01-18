@@ -204,6 +204,10 @@ void PlacePrecipitates::execute()
   }
 
   dataCheck(false, totalPoints, totalFields, m->crystruct.size() );
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   sizex = m->getXPoints() * m->getXRes();
   sizey = m->getYPoints() * m->getYRes();
@@ -242,7 +246,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 
   float dist;
   float inside = -1;
-  float coatinginside = -1;
+//  float coatinginside = -1;
 
   DimType index;
   DimType column, row, plane;
@@ -511,7 +515,7 @@ void  PlacePrecipitates::place_precipitates()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
   totalprecipvol = 0;
-  int precipvoxelcounter = 0;
+  size_t precipvoxelcounter = 0;
 //  float thickness = 0.25;
   size_t currentnumgrains = m->getTotalFields();
   numprimarygrains = m->getTotalFields();

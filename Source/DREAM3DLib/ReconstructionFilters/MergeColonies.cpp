@@ -171,6 +171,10 @@ void MergeColonies::execute()
   }
   setErrorCondition(0);
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   notify("Merge Colonies - Merging Colonies", 0, Observable::UpdateProgressMessage);
   merge_colonies();

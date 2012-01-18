@@ -128,7 +128,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-308);
   }
 
@@ -137,7 +137,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
       NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
-    ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-309);
   }
 
@@ -184,11 +184,7 @@ void MatchCrystallography::execute()
 {
   int err = 0;
   setErrorCondition(err);
-
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
-
   if(NULL == m)
   {
     setErrorCondition(-1);
@@ -241,6 +237,11 @@ void MatchCrystallography::execute()
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, 1);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
 
   assign_eulers();
   measure_misorientations();
@@ -512,7 +513,7 @@ void MatchCrystallography::matchCrystallography()
   int numbins = 0;
   int iterations = 0, badtrycount = 0;
   float random = 0;
-  int counter = 0;
+  size_t counter = 0;
   float q1[5], q2[5];
   float ea1 = 0, ea2 = 0, ea3 = 0;
   float r1 = 0, r2 = 0, r3 = 0;
@@ -525,7 +526,7 @@ void MatchCrystallography::matchCrystallography()
   for (size_t iter = 1; iter < xtalSize; ++iter)
   {
     iterations = 0;
-	badtrycount = 0;
+    badtrycount = 0;
     if(m->crystruct[iter] == Ebsd::Cubic) numbins = 18 * 18 * 18;
     if(m->crystruct[iter] == Ebsd::Hexagonal) numbins = 36 * 36 * 12;
     while (badtrycount < 10000 && iterations < 1000000)

@@ -200,6 +200,10 @@ void LoadVolume::initializeGrains()
   DataContainer* m = getDataContainer();
   m->resizeFieldDataArrays(1);
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;

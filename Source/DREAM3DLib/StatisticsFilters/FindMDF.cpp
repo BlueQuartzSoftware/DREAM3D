@@ -160,6 +160,11 @@ void FindMDF::execute()
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows

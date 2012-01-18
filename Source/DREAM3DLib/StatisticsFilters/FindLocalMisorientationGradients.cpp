@@ -144,7 +144,10 @@ void FindLocalMisorientationGradients::execute()
   int64_t totalPoints = m->totalPoints();
 
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
-
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
 
   // We need to keep a reference to the wrapper DataArray class in addition to the raw pointer
@@ -155,7 +158,7 @@ void FindLocalMisorientationGradients::execute()
   float* gam = &(gamVec.front());
 
   float** avgmiso = new float *[m->getTotalFields()];
-  for (int i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < m->getTotalFields(); i++)
   {
     avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
