@@ -139,8 +139,8 @@ void RenumberGrains::execute()
   for(size_t i = 1; i < totalFields; i++)
   {
     std::stringstream ss;
-    ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+   // ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
+   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
 	if(m_Active[i] == false)
 	{
 		RemoveList.push_back(i);
@@ -153,13 +153,13 @@ void RenumberGrains::execute()
 	}
   }
 
-  
+
   std::list<std::string> headers = m->getFieldArrayNameList();
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     ss.str("");
     ss << getNameOfClass() << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
     IDataArray::Pointer p = m->getFieldData(*iter);
 	  p->EraseTuples(RemoveList);
   }
@@ -172,13 +172,13 @@ void RenumberGrains::execute()
   {
     std::stringstream ss;
     ss << "Renumbering Grains - Updating Cell Grain Ids - " << ((float)i/totalPoints)*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
     if(m_GrainIds[i] > 0) m_GrainIds[i] = NewNames[m_GrainIds[i]];
   }
 
   ss.str("");
   ss << getNameOfClass() << " - Complete";
- notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notify(ss.str(), 0, Observable::UpdateProgressMessage);
 }
 
 
