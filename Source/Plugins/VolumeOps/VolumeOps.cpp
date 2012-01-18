@@ -66,88 +66,124 @@ VolumeOps::~VolumeOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int VolumeOps::preflightPipeline(VolumeOps::FilterContainerType &pipeline)
+{
+  // Create the DataContainer object
+  DataContainer::Pointer m = DataContainer::New();
+  m->addObserver(static_cast<Observer*>(this));
+  setErrorCondition(0);
+  int preflightError = 0;
+  std::stringstream ss;
+
+
+  // Start looping through the Pipeline and preflight everything
+  for (FilterContainerType::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
+  {
+    (*filter)->setDataContainer(m.get());
+    setCurrentFilter(*filter);
+    (*filter)->preflight();
+    int err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      preflightError |= err;
+      setErrorCondition(preflightError);
+      setErrorCondition(err);
+      ss << (*filter)->getErrorMessage();
+    }
+  }
+  if (preflightError < 0)
+  {
+    pipelineErrorMessage(ss.str().c_str());
+  }
+  return preflightError;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VolumeOps::execute()
 {
   int err = 0;
-  // Start the Benchmark Clock
-  START_CLOCK()
 
   m = DataContainer::New();
+  m->addObserver(static_cast<Observer*>(this));
 
-  updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
+  // Create a Vector to hold all the filters. Later on we will execute all the filters
+  FilterContainerType pipeline;
+
   LoadVolume::Pointer load_volume = LoadVolume::New();
   load_volume->setInputFile(m_H5InputFile);
-  load_volume->addObserver(static_cast<Observer*>(this));
-  load_volume->setDataContainer(m.get());
-  load_volume->execute();
-  err = load_volume->getErrorCondition();
-  CHECK_FOR_ERROR(DataContainer, "Error Loading Volume", err);
-  CHECK_FOR_CANCELED(DataContainer, "VolumeOps was canceled",  load_volume)
+  pipeline.push_back(load_volume);
 
-  size_t udims[3] =
-  { 0, 0, 0 };
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]),
-      static_cast<DimType>(udims[1]),
-      static_cast<DimType>(udims[2]), };
 
-  // updateProgressAndMessage(("Operating on Volume"), 50);
-  if(dims[0] != (m_XMax-m_XMin)
-      || dims[1] != (m_YMax-m_YMin)
-      || dims[2] != (m_ZMax-m_ZMin))
+  CropVolume::Pointer crop_volume = CropVolume::New();
+  crop_volume->setXMin(m_XMin);
+  crop_volume->setYMin(m_YMin);
+  crop_volume->setZMin(m_ZMin);
+  crop_volume->setXMax(m_XMax);
+  crop_volume->setYMax(m_YMax);
+  crop_volume->setZMax(m_ZMax);
+  crop_volume->setXRes(m_XRes);
+  crop_volume->setYRes(m_YRes);
+  crop_volume->setZRes(m_ZRes);
+  pipeline.push_back(crop_volume);
+
+  ChangeResolution::Pointer change_resolution = ChangeResolution::New();
+  change_resolution->setXMin(m_XMin);
+  change_resolution->setYMin(m_YMin);
+  change_resolution->setZMin(m_ZMin);
+  change_resolution->setXMax(m_XMax);
+  change_resolution->setYMax(m_YMax);
+  change_resolution->setZMax(m_ZMax);
+  change_resolution->setXRes(m_XRes);
+  change_resolution->setYRes(m_YRes);
+  change_resolution->setZRes(m_ZRes);
+  pipeline.push_back(change_resolution);
+
+
+
+  err = preflightPipeline(pipeline);
+  if (err < 0)
   {
-	  float xp = (m_XMax-m_XMin);
-	  float yp = (m_YMax-m_YMin);
-	  float zp = (m_ZMax-m_ZMin);
-	  float xstart = m_XMin*m->getXRes();
-	  float ystart = m_YMin*m->getYRes();
-	  float zstart = m_ZMin*m->getZRes();
-	  updateProgressAndMessage(("Cropping Volume"), 50);
-	  CropVolume::Pointer crop_volume = CropVolume::New();
-	  crop_volume->setXStart(xstart);
-	  crop_volume->setYStart(ystart);
-	  crop_volume->setZStart(zstart);
-	  crop_volume->setXP(xp);
-	  crop_volume->setYP(yp);
-	  crop_volume->setZP(zp);
-	  crop_volume->addObserver(static_cast<Observer*>(this));
-	  crop_volume->setDataContainer(m.get());
-	  crop_volume->execute();
-	  err = crop_volume->getErrorCondition();
-	  CHECK_FOR_ERROR(DataContainer, "Error Croping Volume", err);
-	  CHECK_FOR_CANCELED(DataContainer, "VolumeOps was canceled",  crop_volume)
+    return;
   }
+  m = DataContainer::New();
 
-  if(m->getXRes() != m_XRes
-      || m->getYRes() != m_YRes
-      || m->getZRes() != m_ZRes)
+  // Start a Benchmark Clock so we can keep track of each filter's execution time
+  START_CLOCK()
+  // Start looping through the Pipeline
+  float progress = 0.0f;
+  std::stringstream ss;
+  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter )
   {
-	  float sizex = (m_XMax-m_XMin)*m->getXRes();
-	  float sizey = (m_YMax-m_YMin)*m->getYRes();
-	  float sizez = (m_ZMax-m_ZMin)*m->getZRes();
-	  int xp = int(sizex / m_XRes);
-	  int yp = int(sizey / m_YRes);
-	  int zp = int(sizez / m_ZRes);
-	  updateProgressAndMessage(("Changing Resolution"), 50);
-	  ChangeResolution::Pointer change_resolution = ChangeResolution::New();
-	  change_resolution->setXRes(m_XRes);
-	  change_resolution->setYRes(m_YRes);
-	  change_resolution->setZRes(m_ZRes);
-	  change_resolution->setXP(xp);
-	  change_resolution->setYP(yp);
-	  change_resolution->setZP(zp);
-	  change_resolution->addObserver(static_cast<Observer*>(this));
-	  change_resolution->setDataContainer(m.get());
-	  change_resolution->execute();
-	  err = change_resolution->getErrorCondition();
-	  CHECK_FOR_ERROR(DataContainer, "Error Changing Resolution", err);
-	  CHECK_FOR_CANCELED(DataContainer, "VolumeOps was canceled",  change_resolution)
+    progress = progress + 1.0f;
+    pipelineProgress( progress/(pipeline.size() + 1) * 100.0f);
+    ss.str("");
+    ss << "Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass() ;
+    pipelineProgressMessage(ss.str());
+    (*filter)->addObserver(static_cast<Observer*>(this));
+    (*filter)->setDataContainer(m.get());
+    setCurrentFilter(*filter);
+    (*filter)->execute();
+    (*filter)->removeObserver(static_cast<Observer*>(this));
+    err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      setErrorCondition(err);
+      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
+      pipelineProgress(100);
+      pipelineFinished();
+      return;
+    }
+    CHECK_FOR_CANCELED(DataContainer, "MicrostructureStatistics was canceled", write_fielddata)
+
+    if(DREAM3D_BENCHMARKS)
+    {
+      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+      millis = MXA::getMilliSeconds();
+    }
   }
 
   /** ********** This section writes the Voxel Data for the VolumeOps Module *** */

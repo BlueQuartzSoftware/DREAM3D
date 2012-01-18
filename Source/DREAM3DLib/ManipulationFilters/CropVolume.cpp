@@ -121,6 +121,35 @@ void CropVolume::execute()
     return;
   }
 
+  size_t udims[3] =
+   { 0, 0, 0 };
+   m->getDimensions(udims);
+ #if (CMP_SIZEOF_SIZE_T == 4)
+   typedef int32_t DimType;
+ #else
+   typedef int64_t DimType;
+ #endif
+   DimType dims[3] =
+   {
+       static_cast<DimType>(udims[0]),
+       static_cast<DimType>(udims[1]),
+       static_cast<DimType>(udims[2]), };
+
+   // updateProgressAndMessage(("Operating on Volume"), 50);
+   if(dims[0] == (m_XMax-m_XMin)
+       && dims[1] == (m_YMax-m_YMin)
+       && dims[2] == (m_ZMax-m_ZMin))
+   {
+     return;
+   }
+
+   float m_XP = (m_XMax-m_XMin);
+   float m_YP = (m_YMax-m_YMin);
+   float m_ZP = (m_ZMax-m_ZMin);
+   float m_XStart = m_XMin*m->getXRes();
+   float m_YStart = m_YMin*m->getYRes();
+   float m_ZStart = m_ZMin*m->getZRes();
+
 
   float x, y, z;
   int col, row, plane;
