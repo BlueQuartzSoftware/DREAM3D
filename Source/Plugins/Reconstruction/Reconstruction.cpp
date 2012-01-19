@@ -56,6 +56,8 @@
 
 #define MIKE_G_DEBUG 0
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,6 +79,43 @@ Reconstruction::~Reconstruction()
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
     std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int Reconstruction::preflightPipeline(Reconstruction::FilterContainerType &pipeline)
+{
+  // Create the DataContainer object
+  DataContainer::Pointer m = DataContainer::New();
+  m->addObserver(static_cast<Observer*>(this));
+  setErrorCondition(0);
+  int preflightError = 0;
+  std::stringstream ss;
+
+
+  // Start looping through the Pipeline and preflight everything
+  for (FilterContainerType::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
+  {
+    (*filter)->setDataContainer(m.get());
+    setCurrentFilter(*filter);
+    (*filter)->preflight();
+    int err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      preflightError |= err;
+      setErrorCondition(preflightError);
+      setErrorCondition(err);
+      ss << (*filter)->getErrorMessage();
+    }
+  }
+  if (preflightError < 0)
+  {
+    pipelineErrorMessage(ss.str().c_str());
+  }
+  return preflightError;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -91,7 +130,7 @@ void Reconstruction::execute()
   m_OutputDirectory = MXADir::toNativeSeparators(m_OutputDirectory);
 
   // Create a Vector to hold all the filters. Later on we will execute all the filters
-  std::vector<AbstractFilter::Pointer> pipeline;
+  FilterContainerType pipeline;
 
   updateProgressAndMessage(("Loading Slices"), 10);
   LoadSlices::Pointer load_slices = LoadSlices::New();
@@ -130,6 +169,14 @@ void Reconstruction::execute()
     MergeColonies::Pointer merge_colonies = MergeColonies::New();
     pipeline.push_back(merge_colonies);
   }
+
+
+  err = preflightPipeline(pipeline);
+  if (err < 0)
+  {
+    return;
+  }
+  m = DataContainer::New();
 
   // Start a Benchmark Clock so we can keep track of each filter's execution time
   START_CLOCK()

@@ -62,12 +62,17 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
 
     virtual ~CropVolume();
 
-	DREAM3D_INSTANCE_PROPERTY(float, XStart);
-	DREAM3D_INSTANCE_PROPERTY(float, YStart);
-	DREAM3D_INSTANCE_PROPERTY(float, ZStart);
-	DREAM3D_INSTANCE_PROPERTY(int, XP);
-	DREAM3D_INSTANCE_PROPERTY(int, YP);
-	DREAM3D_INSTANCE_PROPERTY(int, ZP);
+    DREAM3D_INSTANCE_PROPERTY(int, XMin)
+    DREAM3D_INSTANCE_PROPERTY(int, YMin)
+    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+
+    DREAM3D_INSTANCE_PROPERTY(int, XMax)
+    DREAM3D_INSTANCE_PROPERTY(int, YMax)
+    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+
+    DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    DREAM3D_INSTANCE_PROPERTY(float, YRes)
+    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
 
 	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ManipulationFilters; }
   virtual const std::string getHumanLabel() { return "Crop Volume"; }

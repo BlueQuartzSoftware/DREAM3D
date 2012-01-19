@@ -102,6 +102,11 @@ class GrainGenerator : public AbstractPipeline, public Observer
     */
     virtual void execute();
 
+
+    typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
+    int preflightPipeline(FilterContainerType &pipeline);
+
+
   protected:
     GrainGenerator();
 
