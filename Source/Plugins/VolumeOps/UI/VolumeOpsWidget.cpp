@@ -94,7 +94,7 @@ void VolumeOpsWidget::readSettings(QSettings &prefs)
 {
   qint32 i;
   bool ok;
-
+  float f;
   prefs.beginGroup("VolumeOps");
   READ_FILEPATH_SETTING(prefs, m_, InputFile, "");
   on_m_InputFile_textChanged(QString(""));
@@ -108,10 +108,9 @@ void VolumeOpsWidget::readSettings(QSettings &prefs)
   READ_SETTING(prefs, m_, XMax, ok, i, 0, Int)
   READ_SETTING(prefs, m_, YMax, ok, i, 0, Int)
   READ_SETTING(prefs, m_, ZMax, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, XResolution, ok, i, 0.0, Float)
-  READ_SETTING(prefs, m_, YResolution, ok, i, 0.0, Float)
-  READ_SETTING(prefs, m_, ZResolution, ok, i, 0.0, Float)
-
+  READ_SETTING(prefs, m_, XResolution, ok, f, 0.25, Float)
+  READ_SETTING(prefs, m_, YResolution, ok, f, 0.25, Float)
+  READ_SETTING(prefs, m_, ZResolution, ok, f, 0.25, Float)
 
   prefs.endGroup();
 
@@ -208,7 +207,7 @@ void VolumeOpsWidget::on_m_SaveSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 void VolumeOpsWidget::checkIOFiles()
 {
-
+  verifyPathExists(m_H5OutputFile->text(), m_H5OutputFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -218,7 +217,7 @@ void VolumeOpsWidget::on_m_H5Btn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("HDF5 EBSD Files (*.h5voxel)") );
+                                                 tr("HDF5 Voxel Files (*.h5voxel)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
   m_InputFile->blockSignals(true);
@@ -235,7 +234,6 @@ void VolumeOpsWidget::on_m_H5Btn_clicked()
 // -----------------------------------------------------------------------------
 void VolumeOpsWidget::on_m_InputFile_textChanged(const QString &text)
 {
-
   verifyPathExists(m_InputFile->text(), m_InputFile);
 
   QFileInfo fi(m_InputFile->text());
@@ -267,12 +265,18 @@ void VolumeOpsWidget::on_m_InputFile_textChanged(const QString &text)
       m_YMin->setRange(0,dims[1]-1);
       m_ZMin->setValue(0);
       m_ZMin->setRange(0,dims[2]-1);
-      m_XMax->setValue(dims[0]);
+
       m_XMax->setRange(0,dims[0]-1);
-      m_YMax->setValue(dims[1]);
+      m_XMax->setValue(dims[0]);
       m_YMax->setRange(0,dims[1]-1);
-      m_ZMax->setValue(dims[2]);
+      m_YMax->setValue(dims[1]);
       m_ZMax->setRange(0,dims[2]-1);
+      m_ZMax->setValue(dims[2]);
+
+      m_XResolution->setRange(0.0, 1000);
+      m_YResolution->setRange(0.0, 1000);
+      m_ZResolution->setRange(0.0, 1000);
+
 
       m_XResolution->setValue(spacing[0]);
       m_YResolution->setValue(spacing[1]);
@@ -325,6 +329,46 @@ void VolumeOpsWidget::on_m_GoBtn_clicked()
     return;
   }
 
+  if (m_H5OutputFile->text().isEmpty() == true)
+   {
+     QMessageBox::critical(this, tr("Output File Error"), tr("Please select a file name for the converted voxel file to be saved as."), QMessageBox::Ok);
+     return;
+   }
+   QFile file(m_H5OutputFile->text());
+   if (file.exists() == true)
+   {
+     int ret = QMessageBox::warning(this, tr("Volume Ops"),
+                                    tr("The Output File Already Exists\nDo you want to over write the existing file?"),
+                                    QMessageBox::No | QMessageBox::Default,
+                                    QMessageBox::Yes,
+                                    QMessageBox::Cancel);
+     if (ret == QMessageBox::Cancel)
+     {
+       return;
+     }
+     else if (ret == QMessageBox::No)
+     {
+       QString outputFile = m_OpenDialogLastDirectory + QDir::separator() + "VoxelFile.h5voxel";
+       outputFile = QFileDialog::getSaveFileName(this, tr("Save Output File As ..."), outputFile, tr("HDF5 Voxel Files (*.h5voxel)"));
+       if (outputFile.isNull())
+       {
+         return;
+       }
+       m_H5OutputFile->setText(outputFile);
+     }
+   }
+
+   QFileInfo fi = QFileInfo(m_H5OutputFile->text());
+   QDir outputDir(fi.absolutePath());
+   if (outputDir.exists() == false)
+   {
+     bool ok = outputDir.mkpath(".");
+     if (ok == false)
+     {
+       QMessageBox::critical(this, tr("Output Directory Creation"), tr("The output directory could not be created."), QMessageBox::Ok);
+       return;
+     }
+   }
 
   if (m_WorkerThread != NULL)
   {
