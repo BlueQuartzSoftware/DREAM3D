@@ -71,38 +71,39 @@
 class Reconstruction : public AbstractPipeline, public Observer
 {
   public:
-    MXA_SHARED_POINTERS(Reconstruction);
-    MXA_TYPE_MACRO(Reconstruction);
-    MXA_STATIC_NEW_MACRO(Reconstruction);
+    DREAM3D_SHARED_POINTERS(Reconstruction);
+    DREAM3D_TYPE_MACRO(Reconstruction);
+    DREAM3D_STATIC_NEW_MACRO(Reconstruction);
 
     virtual ~Reconstruction();
 
 
-    MXA_INSTANCE_STRING_PROPERTY(H5EbsdFile)
-    MXA_INSTANCE_PROPERTY(int, ZStartIndex)
-    MXA_INSTANCE_PROPERTY(int, ZEndIndex)
-    MXA_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
-    MXA_INSTANCE_PROPERTY(bool, MergeTwins)
-    MXA_INSTANCE_PROPERTY(bool, MergeColonies)
-    MXA_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
 
-    MXA_INSTANCE_PROPERTY(double, MisorientationTolerance)
-    MXA_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
-    MXA_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
-    MXA_INSTANCE_PROPERTY(bool, ReorderArray)
-    MXA_INSTANCE_PROPERTY(bool, RotateSlice)
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
+    DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
+    DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    DREAM3D_INSTANCE_PROPERTY(bool, MergeTwins)
+    DREAM3D_INSTANCE_PROPERTY(bool, MergeColonies)
+    DREAM3D_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
 
-    MXA_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
-    MXA_INSTANCE_PROPERTY(bool, WriteVtkFile)
-    MXA_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
-    MXA_INSTANCE_PROPERTY(bool, WritePhaseId)
-    MXA_INSTANCE_PROPERTY(bool, WriteIPFColor)
+    DREAM3D_INSTANCE_PROPERTY(double, MisorientationTolerance)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
+    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReorderArray)
+    DREAM3D_INSTANCE_PROPERTY(bool, RotateSlice)
 
-    MXA_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVtkFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
+    DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseId)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteIPFColor)
 
-    MXA_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteHDF5GrainFile)
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 
     /**
     * @brief Main method to run the operation
@@ -114,6 +115,9 @@ class Reconstruction : public AbstractPipeline, public Observer
      * @param stream The std::ostream object to print to
      */
     virtual void printSettings(std::ostream &stream);
+
+    typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
+    int preflightPipeline(FilterContainerType &pipeline);
 
   protected:
     Reconstruction();
