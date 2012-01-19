@@ -179,11 +179,6 @@ void AlignSections::execute()
     return;
   }
 
-  if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
-  {
-    //    threshold_points();
-  }
-
   // If there is an error set this to something negative and also set a message
   notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
 }
@@ -244,7 +239,7 @@ void AlignSections::align_sections()
     }
   }
 
-  int** misorients = AlignSections::Allocate2DArray<int>(dims[0], dims[1]);
+  float** misorients = AlignSections::Allocate2DArray<float>(dims[0], dims[1]);
  // int** misorients = new int *[dims[0]];
   for (DimType a = 0; a < dims[0]; a++)
   {
@@ -309,7 +304,6 @@ void AlignSections::align_sections()
             {
               for (DimType n = 0; n < dims[0]; n = n + 4)
               {
-                count++;
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
@@ -323,6 +317,7 @@ void AlignSections::align_sections()
                       mutualinfo12[curgnum][refgnum]++;
                       mutualinfo1[curgnum]++;
                       mutualinfo2[refgnum]++;
+	                  count++;
                     }
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::Misorientation)
@@ -330,6 +325,7 @@ void AlignSections::align_sections()
                     if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                     {
                       w = 10000.0;
+	                  count++;
                       if(m_PhasesC[refposition] > 0 && m_PhasesC[curposition] > 0)
                       {
                         q1[1] = m_Quats[refposition * 5 + 1];
@@ -346,12 +342,13 @@ void AlignSections::align_sections()
                       }
                       if(w > m_misorientationtolerance) disorientation++;
                     }
-                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
-                    if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
+//                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
+//                    if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary)
                   {
-                    if(m_GrainIds[refposition] != m_GrainIds[curposition]) disorientation++;
+                    if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
+	                count++;
                   }
                 }
                 else
@@ -402,8 +399,7 @@ void AlignSections::align_sections()
               }
               disorientation = 1.0 / disorientation;
             }
-            if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary || m_alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation
-                / count;
+            if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary || m_alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation/count;
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
             if(disorientation < mindisorientation)
             {
@@ -415,8 +411,8 @@ void AlignSections::align_sections()
         }
       }
     }
-    shifts[iter][0] = shifts[iter - 1][0] + newxshift;
-    shifts[iter][1] = shifts[iter - 1][1] + newyshift;
+    shifts[iter][0] = shifts[iter][0] + newxshift;
+    shifts[iter][1] = shifts[iter][1] + newyshift;
     if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
     {
       AlignSections::Deallocate2DArray<float>(graincount1, graincount2, mutualinfo12);

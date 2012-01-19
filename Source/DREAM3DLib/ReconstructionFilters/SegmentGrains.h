@@ -93,6 +93,7 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
     bool* m_Active;
+    bool* m_GoodVoxels;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
