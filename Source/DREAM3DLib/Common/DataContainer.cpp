@@ -75,6 +75,13 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 void DataContainer::addVoxelData(const std::string &name, IDataArray::Pointer data)
 {
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Voxel array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
   m_VoxelData[name] = data;
 }
 
@@ -113,7 +120,7 @@ IDataArray::Pointer DataContainer::removeVoxelData(const std::string &name)
 // -----------------------------------------------------------------------------
 std::list<std::string> DataContainer::getVoxelArrayNameList()
 {
-  std::list<std::string> keys(m_VoxelData.size());
+  std::list<std::string> keys;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VoxelData.begin(); iter != m_VoxelData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -150,6 +157,13 @@ IDataArray::Pointer DataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
 {
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Field array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
   m_FieldData[name] = data;
 }
 
@@ -227,6 +241,13 @@ IDataArray::Pointer DataContainer::getEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 void DataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
 {
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
   m_EnsembleData[name] = data;
 }
 
@@ -254,7 +275,7 @@ IDataArray::Pointer DataContainer::removeEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 std::list<std::string> DataContainer::getEnsembleArrayNameList()
 {
-  std::list<std::string> keys(m_EnsembleData.size());
+  std::list<std::string> keys;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
   {
     keys.push_back( (*iter).first);

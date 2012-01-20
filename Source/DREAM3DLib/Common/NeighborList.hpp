@@ -87,6 +87,12 @@ class NeighborList : public IDataArray
       return err;
     }
 
+    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    {
+      _data[newPos] = _data[currentPos];
+      return 0;
+    }
+
     size_t GetNumberOfTuples() {   return _data.size(); }
     size_t GetSize() { return _data.size(); }
 
