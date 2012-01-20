@@ -226,8 +226,8 @@ void AlignSections::align_sections()
   int refgnum, curgnum;
   int refposition = 0;
   int curposition = 0;
-  int position;
-  DimType tempposition;
+  DimType newPosition;
+  DimType currentPosition;
   Ebsd::CrystalStructure phase1, phase2;
 
   int** shifts = AlignSections::Allocate2DArray<int>(dims[2], 2);
@@ -423,6 +423,7 @@ void AlignSections::align_sections()
       mutualinfo12 = NULL;
     }
   }
+  std::list<std::string> voxelArrayNames = m->getVoxelArrayNameList();
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
@@ -437,37 +438,47 @@ void AlignSections::align_sections()
         if(shifts[iter][0] >= 0) xspot = n;
         if(shifts[iter][1] < 0) yspot = dims[1] - 1 - l;
         if(shifts[iter][0] < 0) xspot = dims[0] - 1 - n;
-        position = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
-        tempposition = (slice * dims[0] * dims[1]) + ((yspot + shifts[iter][1]) * dims[0]) + (xspot + shifts[iter][0]);
+        newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
+        currentPosition = (slice * dims[0] * dims[1]) + ((yspot + shifts[iter][1]) * dims[0]) + (xspot + shifts[iter][0]);
         if((yspot + shifts[iter][1]) >= 0 && (yspot + shifts[iter][1]) <= dims[1] - 1 && (xspot + shifts[iter][0]) >= 0
             && (xspot + shifts[iter][0]) <= dims[0] - 1)
         {
+
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getVoxelData(*iter);
+        	  p->CopyTuple(currentPosition, newPosition);
+          }
+
+          #if 0
           m_EulerAngles[3*position] = m_EulerAngles[3*tempposition];
-          m_EulerAngles[3*position + 1] = m_EulerAngles[3*tempposition + 1];
-          m_EulerAngles[3*position + 2] = m_EulerAngles[3*tempposition + 2];
-          m_Quats[position * 5 + 0] = m_Quats[tempposition * 5 + 0];
-          m_Quats[position * 5 + 1] = m_Quats[tempposition * 5 + 1];
-          m_Quats[position * 5 + 2] = m_Quats[tempposition * 5 + 2];
-          m_Quats[position * 5 + 3] = m_Quats[tempposition * 5 + 3];
-          m_Quats[position * 5 + 4] = m_Quats[tempposition * 5 + 4];
-          m_GoodVoxels[position] = m_GoodVoxels[tempposition];
-          m_PhasesC[position] = m_PhasesC[tempposition];
-          m_GrainIds[position] = m_GrainIds[tempposition];
+          m_EulerAngles[3*position + 1] = m_EulerAngles[3*currentPosition + 1];
+          m_EulerAngles[3*position + 2] = m_EulerAngles[3*currentPosition + 2];
+          m_Quats[position * 5 + 0] = m_Quats[currentPosition * 5 + 0];
+          m_Quats[position * 5 + 1] = m_Quats[currentPosition * 5 + 1];
+          m_Quats[position * 5 + 2] = m_Quats[currentPosition * 5 + 2];
+          m_Quats[position * 5 + 3] = m_Quats[currentPosition * 5 + 3];
+          m_Quats[position * 5 + 4] = m_Quats[currentPosition * 5 + 4];
+          m_GoodVoxels[position] = m_GoodVoxels[currentPosition];
+          m_PhasesC[position] = m_PhasesC[currentPosition];
+          m_GrainIds[position] = m_GrainIds[currentPosition];
+          #endif
         }
         if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > dims[0] - 1)
         {
-          m_EulerAngles[3*position] = 0.0;
-          m_EulerAngles[3*position + 1] = 0.0;
-          m_EulerAngles[3*position + 2] = 0.0;
-          m_Quats[position * 5 + 0] = 0.0;
-          m_Quats[position * 5 + 1] = 0.0;
-          m_Quats[position * 5 + 2] = 0.0;
-          m_Quats[position * 5 + 3] = 0.0;
-          m_Quats[position * 5 + 4] = 1.0;
-          m_GoodVoxels[position] = false;
-          m_PhasesC[position] = 0;
-          m_GrainIds[position] = 0;
+          m_EulerAngles[3*newPosition] = 0.0;
+          m_EulerAngles[3*newPosition + 1] = 0.0;
+          m_EulerAngles[3*newPosition + 2] = 0.0;
+          m_Quats[newPosition * 5 + 0] = 0.0;
+          m_Quats[newPosition * 5 + 1] = 0.0;
+          m_Quats[newPosition * 5 + 2] = 0.0;
+          m_Quats[newPosition * 5 + 3] = 0.0;
+          m_Quats[newPosition * 5 + 4] = 1.0;
+          m_GoodVoxels[newPosition] = false;
+          m_PhasesC[newPosition] = 0;
+          m_GrainIds[newPosition] = 0;
         }
       }
     }
