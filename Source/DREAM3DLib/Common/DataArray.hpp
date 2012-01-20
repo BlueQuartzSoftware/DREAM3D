@@ -318,6 +318,10 @@ class DataArray : public IDataArray
      */
     virtual int CopyTuple(size_t currentPos, size_t newPos)
     {
+      size_t max =  ((this->MaxId + 1)/this->NumberOfComponents);
+      if (currentPos >= max
+        || newPos >= max )
+        {return -1;}
       T* src = this->Array + (currentPos * NumberOfComponents);
       T* dest = this->Array + (newPos * NumberOfComponents);
       size_t bytes = sizeof(T) * NumberOfComponents;
