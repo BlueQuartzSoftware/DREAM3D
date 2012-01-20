@@ -342,8 +342,8 @@ void AlignSections::align_sections()
                       }
                       if(w > m_misorientationtolerance) disorientation++;
                     }
-//                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
-//                    if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
+                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
+                    if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary)
                   {

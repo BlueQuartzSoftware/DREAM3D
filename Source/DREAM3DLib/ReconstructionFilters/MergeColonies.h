@@ -87,12 +87,9 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     void characterize_colonies();
 
   private:
-
     int32_t* m_GrainIds;
     float* m_AvgQuats;
-    float* m_EulerAngles;
-    int32_t* m_NumCells;
-    int32_t* m_NumNeighbors;
+    bool* m_Active;
     int32_t* m_PhasesF;
     NeighborList<int>* m_NeighborList;
 

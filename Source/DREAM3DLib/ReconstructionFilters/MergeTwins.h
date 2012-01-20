@@ -91,10 +91,8 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     float* m_AvgQuats;
-    float* m_EulerAngles;
+    bool* m_Active;
     int32_t* m_PhasesF;
-    int32_t* m_NumNeighbors;
-    int32_t* m_NumCells;
     NeighborList<int>* m_NeighborList;
 
     std::vector<int> twinnewnumbers;
