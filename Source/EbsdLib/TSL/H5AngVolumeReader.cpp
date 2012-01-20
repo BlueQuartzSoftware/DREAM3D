@@ -100,7 +100,7 @@ int H5AngVolumeReader::readZHeader(int &zStart, int &zEnd, float &zRes)
     retErr = err;
   }
 
-  err = H5Fclose(fileId);
+  err = H5Utilities::closeFile(fileId);
   return retErr;
 }
 
@@ -139,7 +139,7 @@ int H5AngVolumeReader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpo
     {
       std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
       err = H5Gclose(gid);
-      err = H5Fclose(fileId);
+      err = H5Utilities::closeFile(fileId);
       return -1;
     }
     xres = reader->getXStep();
@@ -150,7 +150,7 @@ int H5AngVolumeReader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpo
     if(ypointstemp > ypoints) ypoints = ypointstemp;
     err = H5Gclose(gid);
   }
-  err = H5Fclose(fileId);
+  err = H5Utilities::closeFile(fileId);
 
   return err;
 }
@@ -184,17 +184,12 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
   {
     std::cout  << "Error reading the header information from the .h5ebsd file" << std::endl;
     err = H5Gclose(gid);
-    err = H5Fclose(fileId);
+    err = H5Utilities::closeFile(fileId);
     return m_Phases;
   }
   m_Phases = reader->getPhases();
-  if (err < 0)
-  {
-    std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
-    err = H5Gclose(gid);
-    err = H5Fclose(fileId);
-    return m_Phases;
-  }
+  err = H5Gclose(gid);
+  err = H5Utilities::closeFile(fileId);
   return m_Phases;
 }
 

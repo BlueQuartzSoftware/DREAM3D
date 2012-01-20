@@ -94,17 +94,12 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   {
     std::cout  << "Error reading the header information from the .h5ebsd file" << std::endl;
     err = H5Gclose(gid);
-    err = H5Fclose(fileId);
+    err = H5Utilities::closeFile(fileId);
     return m_Phases;
   }
   m_Phases = reader->getPhases();
-  if (err < 0)
-  {
-    std::cout << "Error reading the .HDF5 EBSD Header data" << std::endl;
-    err = H5Gclose(gid);
-    err = H5Fclose(fileId);
-    return m_Phases;
-  }
+  err = H5Gclose(gid);
+  err = H5Utilities::closeFile(fileId);
   return m_Phases;
 }
 

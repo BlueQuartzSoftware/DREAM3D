@@ -94,8 +94,8 @@ int H5CtfReader::readHeaderOnly()
   }
 
   // Read all the header information
- // std::cout << "H5CtfReader:: reading Header .. " << std::endl;
   err = readHeader(gid);
+  err = H5Utilities::closeFile(fileId);
   return err;
 }
 
@@ -135,7 +135,7 @@ int H5CtfReader::readFile()
   err = readData(gid);
 
   err = H5Gclose(gid);
-  err = H5Fclose(fileId);
+  err = H5Utilities::closeFile(fileId);
 
   if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
   {
