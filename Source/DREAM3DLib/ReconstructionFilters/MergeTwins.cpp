@@ -66,10 +66,8 @@ MergeTwins::MergeTwins() :
 AbstractFilter(),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
-m_EulerAngles(NULL),
+m_Active(NULL),
 m_PhasesF(NULL),
-m_NumNeighbors(NULL),
-m_NumCells(NULL),
 m_NeighborList(NULL)
 {
 
@@ -129,11 +127,10 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
+  // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 3);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EulerAngles, ss, -301, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -212,9 +209,6 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, m->totalPoints(), this);
-  if (NULL == m_GrainIds) { return; }
-
  // float angcur = 180.0f;
   std::vector<int> twinlist;
   float w;
@@ -231,6 +225,7 @@ void MergeTwins::merge_twins()
   {
 	if (twinnewnumbers[i] == -1 && m_PhasesF[i] > 0)
     {
+	  m_Active[i] = true;
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
       {
@@ -263,6 +258,7 @@ void MergeTwins::merge_twins()
             {
               twinnewnumbers[neigh] = i;
               twinlist.push_back(neigh);
+			  m_Active[neigh] = false;
             }
           }
         }
