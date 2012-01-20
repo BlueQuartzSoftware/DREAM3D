@@ -113,8 +113,20 @@ class IDataArray
      */
     virtual size_t GetTypeSize() = 0;
 
-
+    /**
+     * @brief Erases tuples based on a list of specific Tuple indices
+     * @param idxs The indices to erase
+     * @return
+     */
     virtual int EraseTuples(std::vector<size_t> &idxs) = 0;
+
+    /**
+     * @brief Copies a Tuple from one position to another.
+     * @param currentPos The index of the source data
+     * @param newPos The destination index to place the copied data
+     * @return
+     */
+    virtual int CopyTuple(size_t currentPos, size_t newPos) = 0;
 
     /**
      * @brief Sets all the values to zero.
