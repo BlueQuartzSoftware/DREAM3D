@@ -48,14 +48,7 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FieldDataCSVWriter::FieldDataCSVWriter() :
-AbstractFilter(),
-m_PhasesF(NULL),
-m_EulerAngles(NULL),
-m_EquivalentDiameters(NULL),
-m_AspectRatios(NULL),
-m_Omega3s(NULL),
-m_SurfaceFields(NULL),
-m_UnbiasedFields(NULL)
+AbstractFilter()
 {
   setupFilterOptions();
 }
@@ -167,23 +160,6 @@ void FieldDataCSVWriter::execute()
     outFile << std::endl;
 
   }
-
-#if 0
-
-  outFile << DREAM3D::GrainData::GrainID  << space << DREAM3D::GrainData::PhaseID << space
-      << DREAM3D::GrainData::Phi1 << space << DREAM3D::GrainData::PHI<< space << DREAM3D::GrainData::Phi2 << space
-      << DREAM3D::GrainData::EquivDiam << space
-	  << DREAM3D::GrainData::B_Over_A << space << DREAM3D::GrainData::C_Over_A << space << DREAM3D::GrainData::Omega3
-	  << space << DREAM3D::GrainData::SurfaceGrain << space << DREAM3D::GrainData::OutsideBoundingBox << std::endl;
-
-  for (size_t i = 1; i < m->getTotalFields(); i++)
-  {
-	  outFile << i << space << m_PhasesF[i] << space << m_EulerAngles[3*i] << space << m_EulerAngles[3*i+1] << space << m_EulerAngles[3*i+2] <<
-		space << m_EquivalentDiameters[i] << space << m_AspectRatios[2*i] << space << m_AspectRatios[2*i+1] <<
-		space << m_Omega3s[i] << space << int(m_SurfaceFields[i]) << space << int(m_UnbiasedFields[i]) << std::endl;
-  }
-#endif
-
 
   outFile.close();
 

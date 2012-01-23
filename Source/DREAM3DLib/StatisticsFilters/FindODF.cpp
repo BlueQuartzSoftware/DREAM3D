@@ -47,9 +47,7 @@ AbstractFilter(),
 m_CreateNewStatsFile(true),
 m_Volumes(NULL),
 m_EulerAngles(NULL),
-m_PhasesC(NULL),
 m_PhasesF(NULL),
-m_Active(NULL),
 m_SurfaceFields(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -95,13 +93,11 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -171,9 +167,9 @@ void FindODF::execute()
   }
   float ea1, ea2, ea3;
   float r1, r2, r3;
-  for (int i = 0; i < totalPoints; i++)
+  for (int i = 0; i < numgrains; i++)
   {
-	  totalvol[m_PhasesC[i]]++;
+	  totalvol[m_PhasesF[i]] = totalvol[m_PhasesF[i]] + m_Volumes[i];
   }
   for (size_t i = 1; i < m->crystruct.size(); i++)
   {
@@ -181,16 +177,15 @@ void FindODF::execute()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_SurfaceFields[i] == false && m_Active[i] == true)
+    if (m_SurfaceFields[i] == false)
     {
-      float vol = m_Volumes[i];
       ea1 = m_EulerAngles[3*i];
       ea2 = m_EulerAngles[3*i+1];
       ea3 = m_EulerAngles[3*i+2];
       phase = m->crystruct[m_PhasesF[i]];
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
-      eulerodf[m_PhasesF[i]][bin] = eulerodf[m_PhasesF[i]][bin] + (vol / totalvol[m_PhasesF[i]]);
+      eulerodf[m_PhasesF[i]][bin] = eulerodf[m_PhasesF[i]][bin] + (m_Volumes[i] / totalvol[m_PhasesF[i]]);
     }
   }
   int err;

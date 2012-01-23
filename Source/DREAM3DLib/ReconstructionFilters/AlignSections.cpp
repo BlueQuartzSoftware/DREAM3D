@@ -441,29 +441,14 @@ void AlignSections::align_sections()
         if((yspot + shifts[iter][1]) >= 0 && (yspot + shifts[iter][1]) <= dims[1] - 1 && (xspot + shifts[iter][0]) >= 0
             && (xspot + shifts[iter][0]) <= dims[0] - 1)
         {
-
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getVoxelData(*iter);
         	  p->CopyTuple(currentPosition, newPosition);
           }
-
-          #if 0
-          m_EulerAngles[3*position] = m_EulerAngles[3*tempposition];
-          m_EulerAngles[3*position + 1] = m_EulerAngles[3*currentPosition + 1];
-          m_EulerAngles[3*position + 2] = m_EulerAngles[3*currentPosition + 2];
-          m_Quats[position * 5 + 0] = m_Quats[currentPosition * 5 + 0];
-          m_Quats[position * 5 + 1] = m_Quats[currentPosition * 5 + 1];
-          m_Quats[position * 5 + 2] = m_Quats[currentPosition * 5 + 2];
-          m_Quats[position * 5 + 3] = m_Quats[currentPosition * 5 + 3];
-          m_Quats[position * 5 + 4] = m_Quats[currentPosition * 5 + 4];
-          m_GoodVoxels[position] = m_GoodVoxels[currentPosition];
-          m_PhasesC[position] = m_PhasesC[currentPosition];
-          m_GrainIds[position] = m_GrainIds[currentPosition];
-          #endif
         }
-        if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
+/*        if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > dims[0] - 1)
         {
           m_Quats[newPosition * 5 + 0] = 0.0;
@@ -474,7 +459,7 @@ void AlignSections::align_sections()
           m_GoodVoxels[newPosition] = false;
           m_PhasesC[newPosition] = 0;
           m_GrainIds[newPosition] = 0;
-        }
+        }*/
       }
     }
   }

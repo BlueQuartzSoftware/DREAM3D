@@ -83,13 +83,7 @@ class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
     FieldDataCSVWriter();
 
   private:
-    int32_t* m_PhasesF;
-    float* m_EulerAngles;
-    float* m_EquivalentDiameters;
-    float* m_AspectRatios;
-    float* m_Omega3s;
-    bool* m_SurfaceFields;
-    bool* m_UnbiasedFields;
+
 
     FieldDataCSVWriter(const FieldDataCSVWriter&); // Copy Constructor Not Implemented
     void operator=(const FieldDataCSVWriter&); // Operator '=' Not Implemented
