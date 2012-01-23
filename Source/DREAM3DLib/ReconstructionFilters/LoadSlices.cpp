@@ -491,7 +491,7 @@ void LoadSlices::threshold_points()
         }
         if(w < m_MisorientationTolerance)
         {
-          m_GoodVoxels[neighbor] = -1;
+          m_GoodVoxels[neighbor] = true;
           AlreadyChecked[neighbor] = true;
           voxelslist[count] = neighbor;
           count++;

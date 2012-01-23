@@ -269,7 +269,7 @@ void SegmentGrains::execute()
           }
         }
       }
-      m_Active[graincount] = 1;
+      m_Active[graincount] = true;
       m_PhasesF[graincount] = m_PhasesC[seed];
       graincount++;
       if(graincount >= m->getTotalFields())

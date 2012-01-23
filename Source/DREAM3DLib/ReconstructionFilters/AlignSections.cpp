@@ -63,7 +63,6 @@ AlignSections::AlignSections() :
 AbstractFilter(),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_EulerAngles(NULL),
 m_PhasesC(NULL),
 m_GoodVoxels(NULL)
 {
@@ -129,7 +128,6 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -303,  int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
 
   setErrorMessage(ss.str());
@@ -308,10 +306,10 @@ void AlignSections::align_sections()
                 {
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
                   curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
-                  refgnum = m_GrainIds[refposition];
-                  curgnum = m_GrainIds[curposition];
                   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
                   {
+                    refgnum = m_GrainIds[refposition];
+                    curgnum = m_GrainIds[curposition];
                     if(curgnum >= 0 && refgnum >= 0)
                     {
                       mutualinfo12[curgnum][refgnum]++;
@@ -468,9 +466,6 @@ void AlignSections::align_sections()
         if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > dims[0] - 1)
         {
-          m_EulerAngles[3*newPosition] = 0.0;
-          m_EulerAngles[3*newPosition + 1] = 0.0;
-          m_EulerAngles[3*newPosition + 2] = 0.0;
           m_Quats[newPosition * 5 + 0] = 0.0;
           m_Quats[newPosition * 5 + 1] = 0.0;
           m_Quats[newPosition * 5 + 2] = 0.0;
