@@ -85,9 +85,11 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, fields, 1);
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+  neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
   m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
 
   NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
+  sharedSurfaceAreaListPtr->SetName(DREAM3D::FieldData::SharedSurfaceAreaList);
   m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
