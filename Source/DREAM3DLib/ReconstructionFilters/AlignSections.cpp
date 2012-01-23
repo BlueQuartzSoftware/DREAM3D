@@ -447,7 +447,7 @@ void AlignSections::align_sections()
           m_EulerAngles[3*position + 2] = m_EulerAngles[3*tempposition + 2];
           m_Quats[position * 5 + 0] = m_Quats[tempposition * 5 + 0];
           m_Quats[position * 5 + 1] = m_Quats[tempposition * 5 + 1];
-          m_Quats[position * 5 + 2] = m_Quats[tempposition * 5 + 2];
+          m_Quats[position * 5 + 2] = m_Quats[tempposition * 5 + 2]; 
           m_Quats[position * 5 + 3] = m_Quats[tempposition * 5 + 3];
           m_Quats[position * 5 + 4] = m_Quats[tempposition * 5 + 4];
           m_GoodVoxels[position] = m_GoodVoxels[tempposition];
