@@ -100,7 +100,7 @@ int H5AngReader::readFile()
   err = readData(gid);
 
   err = H5Gclose(gid);
-  err = H5Fclose(fileId);
+  err = H5Utilities::closeFile(fileId);
 
   if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
   {
@@ -140,6 +140,7 @@ int H5AngReader::readHeaderOnly()
   // Read all the header information
  // std::cout << "H5AngReader:: reading Header .. " << std::endl;
   err = readHeader(gid);
+  err = H5Utilities::closeFile(fileId);
   return err;
 }
 
@@ -214,12 +215,11 @@ int H5AngReader::readHeader(hid_t parId)
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
-  err = H5Gclose(phasesGid);
 
   std::string completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
-
+  err = H5Gclose(phasesGid);
   err = H5Gclose(gid);
   return err;
 }
@@ -254,6 +254,8 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
       std::cout << "H5AngReader Error: Could not read the HKLFamily data for family number " << i << std::endl;
       break;
     }
+    status = H5Dclose(dataset); // Close the data set
+    
     HKLFamily::Pointer f = HKLFamily::New();
     f->copyFromStruct(&data);
     families.push_back(f);

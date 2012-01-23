@@ -226,7 +226,7 @@ class DataArray : public IDataArray
     {
 
       int err = 0;
-#if 1
+
       // If nothing is to be erased just return
       if (idxs.size() == 0) { return 0; }
 
@@ -306,10 +306,28 @@ class DataArray : public IDataArray
       this->_ownsData = true;
 
       this->MaxId = newSize-1;
-#endif
+
       return err;
     }
 
+    /**
+     * @brief
+     * @param currentPos
+     * @param newPos
+     * @return
+     */
+    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    {
+      size_t max =  ((this->MaxId + 1)/this->NumberOfComponents);
+      if (currentPos >= max
+        || newPos >= max )
+        {return -1;}
+      T* src = this->Array + (currentPos * NumberOfComponents);
+      T* dest = this->Array + (newPos * NumberOfComponents);
+      size_t bytes = sizeof(T) * NumberOfComponents;
+      ::memcpy(dest, src, bytes);
+      return 0;
+    }
 
     /**
      * @brief Returns the number of bytes that make up the data type.

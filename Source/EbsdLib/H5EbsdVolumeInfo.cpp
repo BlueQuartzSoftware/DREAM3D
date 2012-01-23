@@ -44,7 +44,7 @@
     err = H5Lite::readScalarDataset(fileId, path, var);\
     if (err < 0) {\
       std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
-      err = H5Fclose(fileId);\
+      err = H5Utilities::closeFile(fileId);\
       return err;\
     }
 
@@ -54,7 +54,7 @@
     err = H5Lite::readScalarDataset(fileId, path, t);\
     if (err < 0) {\
       std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
-      err = H5Fclose(fileId);\
+      err = H5Utilities::closeFile(fileId);\
       return err;\
     }\
     var = static_cast<type>(t); }
@@ -148,7 +148,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   if (err < 0)
   {
     std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << Ebsd::H5::Manufacturer << std::endl;
-    err = H5Fclose(fileId);
+    err = H5Utilities::closeFile(fileId);
     return err;
   }
 
@@ -179,7 +179,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   }
 
   m_ValuesAreCached = true;
-  err = H5Fclose(fileId);
+  err = H5Utilities::closeFile(fileId);
   return retErr;
 }
 
