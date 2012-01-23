@@ -184,6 +184,6 @@ void CropVolume::execute()
   totalPoints = m_XP*m_YP*m_ZP;
   err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
   err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::EulerAngles)->Resize(3*totalPoints);
+  err = m->getVoxelData(DREAM3D::VoxelData::EulerAngles)->Resize(totalPoints);
   notify("Cropping Volume Complete", 0, Observable::UpdateProgressValueAndMessage);
 }

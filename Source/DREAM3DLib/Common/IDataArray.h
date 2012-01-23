@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 
+#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -150,6 +151,15 @@ class IDataArray
 
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',') = 0;
     virtual void printComponent(std::ostream &out, size_t i, int j) = 0;
+
+
+    /**
+     *
+     * @param parentId
+     * @return
+     */
+    virtual int writeH5Data(hid_t parentId) = 0;
+
 
   protected:
 
