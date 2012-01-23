@@ -51,8 +51,7 @@ m_NumCells(NULL),
 m_Centroids(NULL),
 m_Volumes(NULL),
 m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL),
-m_Active(NULL)
+m_Neighborhoods(NULL)
 {
 
   setupFilterOptions();
@@ -94,8 +93,6 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
@@ -258,16 +255,12 @@ void FindNeighborhoods::find_neighborhoods()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_Active[i] == true)
-    {
       x = m_Centroids[3*i];
       y = m_Centroids[3*i+1];
       z = m_Centroids[3*i+2];
       diam = m_EquivalentDiameters[i];
       for (size_t j = i; j < numgrains; j++)
       {
-        if (m_Active[j] == true)
-        {
 		  xn = m_Centroids[3*j];
 		  yn = m_Centroids[3*j+1];
 		  zn = m_Centroids[3*j+2];
@@ -294,9 +287,7 @@ void FindNeighborhoods::find_neighborhoods()
               m_Neighborhoods[3*j+dist2_int]++;
             }
           }
-        }
       }
-    }
   }
 }
 

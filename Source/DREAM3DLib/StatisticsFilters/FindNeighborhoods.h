@@ -92,7 +92,6 @@ private:
     float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
-    bool* m_Active;
 
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
