@@ -59,7 +59,7 @@ int H5VoxelWriter::writeEulerData(float* ea,
                                   bool appendFile)
 {
   int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+  H5DataWriter::Pointer h5writer = H5DataWriter::New();
   h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
@@ -69,16 +69,16 @@ int H5VoxelWriter::writeEulerData(float* ea,
   int numComp = 3;
   int32_t rank = 2;
   hsize_t dims[2] = { totalPoints, numComp };
-  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::DataContainerName, H5_VTK_STRUCTURED_POINTS);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
-  err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, ea, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
+  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, ea, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
   }
   return err;
 }
@@ -89,7 +89,7 @@ int H5VoxelWriter::writeEulerData(float* ea,
 int H5VoxelWriter::writeGrainIds(int* grain_indicies, int64_t totalPoints, bool appendFile)
 {
   int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+  H5DataWriter::Pointer h5writer = H5DataWriter::New();
   h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
@@ -99,16 +99,16 @@ int H5VoxelWriter::writeGrainIds(int* grain_indicies, int64_t totalPoints, bool 
   int numComp = 1;
   int32_t rank = 1;
   hsize_t dims[2] = { totalPoints, numComp };
-  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::DataContainerName, H5_VTK_STRUCTURED_POINTS);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
-  err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, grain_indicies, DREAM3D::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
+  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, grain_indicies, DREAM3D::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::GrainIdScalarName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::GrainIdScalarName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
     return -1;
   }
   return err;
@@ -119,7 +119,7 @@ int H5VoxelWriter::writeGrainIds(int* grain_indicies, int64_t totalPoints, bool 
 int H5VoxelWriter::writePhaseIds(int* phases, int64_t totalPoints, bool appendFile)
 {
   int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+  H5DataWriter::Pointer h5writer = H5DataWriter::New();
   h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
@@ -129,16 +129,16 @@ int H5VoxelWriter::writePhaseIds(int* phases, int64_t totalPoints, bool appendFi
   int numComp = 1;
   int32_t rank = 1;
   hsize_t dims[2] = { totalPoints, numComp };
-  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::DataContainerName, H5_VTK_STRUCTURED_POINTS);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
-  err = h5writer->writeScalarData(DREAM3D::HDF5::VoxelDataName, phases, DREAM3D::VTK::PhaseIdScalarName.c_str(), numComp, rank, dims);
+  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, phases, DREAM3D::VTK::PhaseIdScalarName.c_str(), numComp, rank, dims);
   if (err < 0)
     {
-      std::cout << "Error Writing Scalars '" << DREAM3D::VTK::PhaseIdScalarName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+      std::cout << "Error Writing Scalars '" << DREAM3D::VTK::PhaseIdScalarName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
       return -1;
     }
   return err;
@@ -150,21 +150,21 @@ int H5VoxelWriter::writePhaseIds(int* phases, int64_t totalPoints, bool appendFi
 int H5VoxelWriter::writeStructuredPoints(int64_t volDims[3], float spacing[3], float origin[3], bool appendFile)
 {
   int err = -1;
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+  H5DataWriter::Pointer h5writer = H5DataWriter::New();
   h5writer->setFileName(m_FileName);
   err = h5writer->openFile(appendFile);
   if (err < 0)
   {
     return -1;
   }
-  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::DataContainerName, H5_VTK_STRUCTURED_POINTS);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
   // This just creates the group and writes the header information
-  err = h5writer->writeStructuredPoints(DREAM3D::HDF5::VoxelDataName, volDims, spacing, origin);
+  err = h5writer->writeStructuredPoints(DREAM3D::HDF5::DataContainerName, volDims, spacing, origin);
   if (err < 0)
   {
     std::cout << "Error Writing Structured Points to .h5voxel file" << std::endl;
@@ -177,7 +177,7 @@ int H5VoxelWriter::writeStructuredPoints(int64_t volDims[3], float spacing[3], f
 // -----------------------------------------------------------------------------
 int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructure>  &crystruct, bool appendFile)
  {
-   AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+   H5DataWriter::Pointer h5writer = H5DataWriter::New();
    h5writer->setFileName(m_FileName);
    int err = h5writer->openFile(appendFile);
    if (err < 0)
@@ -185,10 +185,10 @@ int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructu
      return -1;
    }
 
-   err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+   err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::DataContainerName, H5_VTK_STRUCTURED_POINTS);
    if (err < 0)
    {
-     std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+     std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
      return err;
    }
    std::vector<int> fieldData(crystruct.size());
@@ -196,11 +196,11 @@ int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructu
    {
      fieldData[i] = crystruct[i];
    }
-   err = h5writer->FieldDataCSVWriter<int>(DREAM3D::HDF5::VoxelDataName, fieldData,
+   err = h5writer->writeFieldData<int>(DREAM3D::HDF5::DataContainerName, fieldData,
                                        DREAM3D::VTK::CrystalStructureName.c_str(), 1);
    if (err < 0)
    {
-     std::cout << "Error Writing Field Data '" << DREAM3D::VTK::CrystalStructureName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+     std::cout << "Error Writing Field Data '" << DREAM3D::VTK::CrystalStructureName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
    }
    return err;
  }
@@ -210,7 +210,7 @@ int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructu
 // -----------------------------------------------------------------------------
 int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType, bool appendFile)
 {
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();
+  H5DataWriter::Pointer h5writer = H5DataWriter::New();
   h5writer->setFileName(m_FileName);
   int err = h5writer->openFile(appendFile);
   if (err < 0)
@@ -218,10 +218,10 @@ int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::Ph
     return -1;
   }
 
-  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::VoxelDataName, H5_VTK_STRUCTURED_POINTS);
+  err = h5writer->createVtkObjectGroup(DREAM3D::HDF5::DataContainerName, H5_VTK_STRUCTURED_POINTS);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
 
@@ -230,10 +230,10 @@ int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::Ph
   {
     fieldData[i] = phaseType[i];
   }
-  err = h5writer->FieldDataCSVWriter<int>(DREAM3D::HDF5::VoxelDataName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
+  err = h5writer->writeFieldData<int>(DREAM3D::HDF5::DataContainerName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
   if (err < 0)
   {
-    std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
   }
   return err;
 }

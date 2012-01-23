@@ -89,7 +89,7 @@ void SyntheticBuilder_PreFlight()
 {
 
   std::string m_H5StatsFile("");
-  std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::OutputDir;
+  std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
   std::string m_OutputFilePrefix("");
   size_t m_XPoints = 128;
   size_t m_YPoints = 128;

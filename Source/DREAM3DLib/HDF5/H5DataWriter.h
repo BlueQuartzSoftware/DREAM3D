@@ -93,13 +93,13 @@ class ReconstructionFunc;
  * @date Nov 19, 2010
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
+class DREAM3DLib_EXPORT H5DataWriter
 {
   public:
-    MXA_SHARED_POINTERS(AIM_H5VtkDataWriter);
-    MXA_STATIC_NEW_MACRO(AIM_H5VtkDataWriter);
+    MXA_SHARED_POINTERS(H5DataWriter);
+    MXA_STATIC_NEW_MACRO(H5DataWriter);
 
-    virtual ~AIM_H5VtkDataWriter();
+    virtual ~H5DataWriter();
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
     MXA_INSTANCE_PROPERTY(hid_t, FileId);
@@ -197,6 +197,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
       return err;
     }
 
+
     /**
      * @brief
      * @param hdfPath
@@ -206,7 +207,7 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
      * @return
      */
     template<typename T>
-    int FieldDataCSVWriter(const std::string &hdfPath,
+    int writeFieldData(const std::string &hdfPath,
                        const std::vector<T> &field_data,
                        const char* label,
                        int numComp)
@@ -303,7 +304,53 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
       return err;
     }
 
+    /**
+     *
+     */
+    template<typename T>
+    int writeCellData(const std::string &hdfPath,
+                        T* data,
+                        const char *label,
+                        int numComp, int32_t rank, hsize_t* dims)
+    {
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
+      if (gid < 0)
+      {
+        std::cout << "Error opening Group " << hdfPath << std::endl;
+        return gid;
+      }
+      herr_t err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, gid);
+      if (err < 0)
+      {
+        std::cout << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+        return err;
+      }
+      hid_t cellGroupId = H5Gopen(gid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT );
+      if(err < 0)
+      {
+        std::cout << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+        return err;
+      }
 
+      //T* data = const_cast<T*>(&(scalar_data.front()));
+
+
+      std::string name (label);
+      err = H5Lite::writePointerDataset(cellGroupId, name, rank, dims, data);
+      if (err < 0)
+      {
+        std::cout << "Error writing array with name: " << std::string (label) << std::endl;
+      }
+      err = H5Lite::writeScalarAttribute(cellGroupId, name, std::string(H5_NUMCOMPONENTS), numComp);
+      if (err < 0)
+      {
+        std::cout << "Error writing dataset " << label << std::endl;
+      }
+      err = H5Gclose(cellGroupId);
+
+      err = H5Gclose(gid);
+      return err;
+    }
 
     /**
      * @brief
@@ -355,14 +402,14 @@ class DREAM3DLib_EXPORT AIM_H5VtkDataWriter
     int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
   protected:
-    AIM_H5VtkDataWriter();
+    H5DataWriter();
 
 
   private:
 
 
-    AIM_H5VtkDataWriter(const AIM_H5VtkDataWriter&); // Copy Constructor Not Implemented
-    void operator=(const AIM_H5VtkDataWriter&); // Operator '=' Not Implemented
+    H5DataWriter(const H5DataWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5DataWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* _AIMH5DATAWRITER_H_ */

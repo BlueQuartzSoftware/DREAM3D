@@ -23,6 +23,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/HDF5/H5DataArrayWriter.hpp"
 
 #define mxa_bswap(s,d,t)\
   t[0] = ptr[s];\
@@ -467,6 +468,17 @@ class DataArray : public IDataArray
 
 
     /**
+     *
+     * @param parentId
+     * @return
+     */
+    virtual int writeH5Data(hid_t parentId)
+    {
+      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array);
+    }
+
+
+    /**
      * @brief
      */
     virtual void byteSwapElements()
@@ -495,7 +507,6 @@ class DataArray : public IDataArray
         ptr += size; // increment the pointer
       }
     }
-
 
   protected:
 
