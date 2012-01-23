@@ -90,9 +90,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 
   private:
     int32_t* m_GrainIds;
-    float* m_Quats;
-    float* m_EulerAnglesF;
-    float* m_AvgQuats;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
     int32_t* m_Neighbors;
