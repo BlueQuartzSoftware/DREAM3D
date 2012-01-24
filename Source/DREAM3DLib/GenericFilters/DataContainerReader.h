@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,78 +34,55 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MERGECOLONIES_H_
-#define MERGECOLONIES_H_
+#ifndef DATACONTAINER_READER_H_
+#define DATACONTAINER_READER_H_
 
-#include <vector>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
 
-/**
- * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+
+/*
+ *
  */
-class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
+class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MergeColonies)
-    DREAM3D_STATIC_NEW_MACRO(MergeColonies)
-    DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(DataContainerReader);
+    DREAM3D_STATIC_NEW_MACRO(DataContainerReader);
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerReader, AbstractFilter);
 
+    virtual ~DataContainerReader();
 
-    virtual ~MergeColonies();
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Merge Colonies"; }
+    virtual void preflight();
 
-    DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance);
-    DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance);
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Read Data Container"; }
 
     virtual void setupFilterOptions();
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
-    virtual void preflight();
+
 
   protected:
-    MergeColonies();
-
-    void merge_colonies();
-    void characterize_colonies();
-
-  private:
-    int32_t* m_GrainIds;
-    float* m_AvgQuats;
-    bool* m_Active;
-    int32_t* m_PhasesF;
-    NeighborList<int>* m_NeighborList;
-
-    std::vector<int> colonynewnumbers;
-
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
+    DataContainerReader();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented
-    void operator=(const MergeColonies&); // Operator '=' Not Implemented
+  private:
+    DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerReader&); // Operator '=' Not Implemented
+
+
 };
 
-#endif /* MERGECOLONIES_H_ */
+#endif /* DATACONTAINER_READER_H_ */

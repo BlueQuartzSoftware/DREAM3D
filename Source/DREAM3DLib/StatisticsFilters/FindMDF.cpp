@@ -48,7 +48,6 @@ FindMDF::FindMDF()  :
 AbstractFilter(),
 m_CreateNewStatsFile(true),
 m_AvgQuats(NULL),
-m_Active(NULL),
 m_SurfaceFields(NULL),
 m_PhasesF(NULL),
 m_TotalSurfaceArea(NULL),
@@ -102,7 +101,6 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
 
@@ -123,9 +121,6 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
      ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
      setErrorCondition(-309);
    }
-
-
-
 
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size(), 1);
 
@@ -208,8 +203,6 @@ void FindMDF::execute()
   misorientationlists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-	  if(m_Active[i] == true)
-	  {
 		q1[0] = m_AvgQuats[3*i] / m_AvgQuats[3*i];
 		q1[1] = m_AvgQuats[3*i+1] / m_AvgQuats[3*i+1];
 		q1[2] = m_AvgQuats[3*i+2] / m_AvgQuats[3*i+2];
@@ -251,7 +244,6 @@ void FindMDF::execute()
 			misobin[m_PhasesF[i]][mbin] = misobin[m_PhasesF[i]][mbin] + (nsa / m_TotalSurfaceArea[m_PhasesF[i]]);
 		  }
 		}
-	  }
   }
   unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for(size_t i=1;i<m->crystruct.size();i++)

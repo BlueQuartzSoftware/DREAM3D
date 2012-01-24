@@ -218,10 +218,10 @@ int writeVtkDataToHDF5File(const std::string &h5File, DataArray<int>::Pointer da
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData<int>(DREAM3D::HDF5::VoxelDataName, data, DREAM3D::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
+  err = writeScalarData<int>(DREAM3D::HDF5::DataContainerName, data, DREAM3D::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::GrainIdScalarName.c_str() << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::GrainIdScalarName.c_str() << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.
@@ -237,10 +237,10 @@ int writeEulerDataToHDF5File(const std::string &h5File, DataArray<float>::Pointe
   int err = 0;
   err = openHDF5File(h5File, true);
 
-  err = writeScalarData<float>(DREAM3D::HDF5::VoxelDataName, data, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
+  err = writeScalarData<float>(DREAM3D::HDF5::DataContainerName, data, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName.c_str() << "' to " << DREAM3D::HDF5::VoxelDataName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName.c_str() << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.

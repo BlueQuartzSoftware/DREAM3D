@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (DREAM3DLib_HDF5_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/AIM_H5VtkDataWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataWriter.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5GrainWriter.hpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsWriter.h
@@ -22,7 +22,7 @@ SET (DREAM3DLib_HDF5_HDRS
 )
 
 SET (DREAM3DLib_HDF5_SRCS
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/AIM_H5VtkDataWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelWriter.cpp

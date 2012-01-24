@@ -54,10 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 CropVolume::CropVolume() :
-AbstractFilter(),
-m_GrainIds(NULL),
-m_EulerAngles(NULL),
-m_PhasesC(NULL)
+AbstractFilter()
 {
 
 
@@ -74,27 +71,10 @@ CropVolume::~CropVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
-{
-  setErrorCondition(0);
-  std::stringstream ss;
-  DataContainer* m = getDataContainer();
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
-
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -300, float, FloatArrayType,  voxels, 3);
-
-  setErrorMessage(ss.str());
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void CropVolume::preflight()
 {
-  dataCheck(true, 1,1,1);
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -115,7 +95,6 @@ void CropVolume::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
-  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
   if (getErrorCondition() < 0)
   {
     return;
@@ -155,6 +134,7 @@ void CropVolume::execute()
   int col, row, plane;
   int index;
   int index_old;
+  std::list<std::string> voxelArrayNames = m->getVoxelArrayNameList();
   for (int i = 0; i < m_ZP; i++)
   {
     std::stringstream ss;
@@ -170,20 +150,25 @@ void CropVolume::execute()
         col = int(x / m->getXRes());
         row = int(y / m->getYRes());
         plane = int(z / m->getZRes());
-		    index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
+		index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
-        m_GrainIds[index] = m_GrainIds[index_old];
-        m_PhasesC[index] = m_PhasesC[index_old];
-        m_EulerAngles[3*index] = m_EulerAngles[3*index_old];
-        m_EulerAngles[3*index + 1] = m_EulerAngles[3*index_old + 1];
-        m_EulerAngles[3*index + 2] = m_EulerAngles[3*index_old + 2];
+        for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        {
+          std::string name = *iter;
+          IDataArray::Pointer p = m->getVoxelData(*iter);
+          p->CopyTuple(index_old, index);
+        }
       }
     }
   }
   m->setDimensions(m_XP, m_YP, m_ZP);
   totalPoints = m_XP*m_YP*m_ZP;
-  err = m->getVoxelData(DREAM3D::VoxelData::GrainIds)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::Phases)->Resize(totalPoints);
-  err = m->getVoxelData(DREAM3D::VoxelData::EulerAngles)->Resize(3*totalPoints);
+
+  for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+     std::string name = *iter;
+     IDataArray::Pointer p = m->getVoxelData(*iter);
+     err = p->Resize(totalPoints);
+  }
   notify("Cropping Volume Complete", 0, Observable::UpdateProgressValueAndMessage);
 }

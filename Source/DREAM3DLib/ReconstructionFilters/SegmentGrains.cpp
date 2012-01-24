@@ -114,6 +114,7 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   DataContainer* m = getDataContainer();
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -300, bool, BoolArrayType,  voxels, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
 
@@ -199,6 +200,10 @@ void SegmentGrains::execute()
 
   // Precalculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
+  for(size_t i = 0; i < totalPoints; i++)
+  {
+	m_GrainIds[i] = 0;
+  }
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
@@ -209,7 +214,7 @@ void SegmentGrains::execute()
     while (seed == -1 && counter < totalPoints)
     {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
-      if (m_GrainIds[randpoint] == -1 && m_PhasesC[randpoint] > 0) seed = randpoint;
+      if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_PhasesC[randpoint] > 0) seed = randpoint;
 
       randpoint++;
       counter++;
@@ -244,7 +249,7 @@ void SegmentGrains::execute()
           if (i == 4 && row == (dims[1] - 1)) good = 0;
           if (i == 2 && col == 0) good = 0;
           if (i == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && m_GrainIds[neighbor] == -1 && m_PhasesC[neighbor] > 0)
+          if (good == 1 && m_GrainIds[neighbor] == 0 && m_PhasesC[neighbor] > 0)
           {
             w = 10000.0;
             q2[0] = 1;
@@ -264,7 +269,7 @@ void SegmentGrains::execute()
           }
         }
       }
-      m_Active[graincount] = 1;
+      m_Active[graincount] = true;
       m_PhasesF[graincount] = m_PhasesC[seed];
       graincount++;
       if(graincount >= m->getTotalFields())

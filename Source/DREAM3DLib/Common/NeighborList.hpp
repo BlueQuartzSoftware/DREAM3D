@@ -43,6 +43,9 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "H5Support/H5Utilities.h"
+
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
@@ -87,6 +90,12 @@ class NeighborList : public IDataArray
       return err;
     }
 
+    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    {
+      _data[newPos] = _data[currentPos];
+      return 0;
+    }
+
     size_t GetNumberOfTuples() {   return _data.size(); }
     size_t GetSize() { return _data.size(); }
 
@@ -116,6 +125,47 @@ class NeighborList : public IDataArray
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
       assert(false);
+    }
+
+    /**
+     *
+     * @param parentId
+     * @return
+     */
+    virtual int writeH5Data(hid_t parentId)
+    {
+
+      int err = 0;
+      // Write the Voxel Data
+      err = H5Utilities::createGroupsFromPath(GetName(), parentId);
+      if (err < 0)
+      {
+       return err;
+      }
+      hid_t gid = H5Gopen(parentId, GetName().c_str(), H5P_DEFAULT );
+      if(err < 0)
+      {
+       return err;
+      }
+
+
+      for (typename std::map<int, SharedVectorType>::iterator iter = _data.begin(); iter != _data.end(); ++iter )
+      {
+
+        SharedVectorType data = (*iter).second;
+        std::string datasetName = StringUtils::numToString((*iter).first);
+        std::vector<hsize_t> dims(1, data->size());
+        err = H5Lite::writeVectorDataset(gid, datasetName, dims, *(data.get()));
+        if (err < 0)
+        {
+          std::cout << "Error Writing Neighbor list for grain id " << (*iter).first << std::endl;
+        }
+
+
+      }
+
+      H5Gclose(gid);
+      return err;
     }
 
 /**

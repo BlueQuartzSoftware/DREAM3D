@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 
+#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -113,8 +114,20 @@ class IDataArray
      */
     virtual size_t GetTypeSize() = 0;
 
-
+    /**
+     * @brief Erases tuples based on a list of specific Tuple indices
+     * @param idxs The indices to erase
+     * @return
+     */
     virtual int EraseTuples(std::vector<size_t> &idxs) = 0;
+
+    /**
+     * @brief Copies a Tuple from one position to another.
+     * @param currentPos The index of the source data
+     * @param newPos The destination index to place the copied data
+     * @return
+     */
+    virtual int CopyTuple(size_t currentPos, size_t newPos) = 0;
 
     /**
      * @brief Sets all the values to zero.
@@ -138,6 +151,15 @@ class IDataArray
 
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',') = 0;
     virtual void printComponent(std::ostream &out, size_t i, int j) = 0;
+
+
+    /**
+     *
+     * @param parentId
+     * @return
+     */
+    virtual int writeH5Data(hid_t parentId) = 0;
+
 
   protected:
 

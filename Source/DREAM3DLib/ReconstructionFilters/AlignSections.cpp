@@ -63,7 +63,6 @@ AlignSections::AlignSections() :
 AbstractFilter(),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_EulerAngles(NULL),
 m_PhasesC(NULL),
 m_GoodVoxels(NULL)
 {
@@ -129,7 +128,6 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -303,  int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
 
   setErrorMessage(ss.str());
@@ -179,11 +177,6 @@ void AlignSections::execute()
     return;
   }
 
-  if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
-  {
-    //    threshold_points();
-  }
-
   // If there is an error set this to something negative and also set a message
   notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
 }
@@ -231,8 +224,8 @@ void AlignSections::align_sections()
   int refgnum, curgnum;
   int refposition = 0;
   int curposition = 0;
-  int position;
-  DimType tempposition;
+  DimType newPosition;
+  DimType currentPosition;
   Ebsd::CrystalStructure phase1, phase2;
 
   int** shifts = AlignSections::Allocate2DArray<int>(dims[2], 2);
@@ -244,7 +237,7 @@ void AlignSections::align_sections()
     }
   }
 
-  int** misorients = AlignSections::Allocate2DArray<int>(dims[0], dims[1]);
+  float** misorients = AlignSections::Allocate2DArray<float>(dims[0], dims[1]);
  // int** misorients = new int *[dims[0]];
   for (DimType a = 0; a < dims[0]; a++)
   {
@@ -309,20 +302,20 @@ void AlignSections::align_sections()
             {
               for (DimType n = 0; n < dims[0]; n = n + 4)
               {
-                count++;
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
                   curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
-                  refgnum = m_GrainIds[refposition];
-                  curgnum = m_GrainIds[curposition];
                   if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
                   {
+                    refgnum = m_GrainIds[refposition];
+                    curgnum = m_GrainIds[curposition];
                     if(curgnum >= 0 && refgnum >= 0)
                     {
                       mutualinfo12[curgnum][refgnum]++;
                       mutualinfo1[curgnum]++;
                       mutualinfo2[refgnum]++;
+	                  count++;
                     }
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::Misorientation)
@@ -330,6 +323,7 @@ void AlignSections::align_sections()
                     if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                     {
                       w = 10000.0;
+	                  count++;
                       if(m_PhasesC[refposition] > 0 && m_PhasesC[curposition] > 0)
                       {
                         q1[1] = m_Quats[refposition * 5 + 1];
@@ -351,7 +345,8 @@ void AlignSections::align_sections()
                   }
                   else if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary)
                   {
-                    if(m_GrainIds[refposition] != m_GrainIds[curposition]) disorientation++;
+                    if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
+	                count++;
                   }
                 }
                 else
@@ -402,8 +397,7 @@ void AlignSections::align_sections()
               }
               disorientation = 1.0 / disorientation;
             }
-            if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary || m_alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation
-                / count;
+            if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary || m_alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation/count;
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
             if(disorientation < mindisorientation)
             {
@@ -415,8 +409,8 @@ void AlignSections::align_sections()
         }
       }
     }
-    shifts[iter][0] = shifts[iter - 1][0] + newxshift;
-    shifts[iter][1] = shifts[iter - 1][1] + newyshift;
+    shifts[iter][0] = shifts[iter][0] + newxshift;
+    shifts[iter][1] = shifts[iter][1] + newyshift;
     if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
     {
       AlignSections::Deallocate2DArray<float>(graincount1, graincount2, mutualinfo12);
@@ -427,6 +421,7 @@ void AlignSections::align_sections()
       mutualinfo12 = NULL;
     }
   }
+  std::list<std::string> voxelArrayNames = m->getVoxelArrayNameList();
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
@@ -441,38 +436,30 @@ void AlignSections::align_sections()
         if(shifts[iter][0] >= 0) xspot = n;
         if(shifts[iter][1] < 0) yspot = dims[1] - 1 - l;
         if(shifts[iter][0] < 0) xspot = dims[0] - 1 - n;
-        position = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
-        tempposition = (slice * dims[0] * dims[1]) + ((yspot + shifts[iter][1]) * dims[0]) + (xspot + shifts[iter][0]);
+        newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
+        currentPosition = (slice * dims[0] * dims[1]) + ((yspot + shifts[iter][1]) * dims[0]) + (xspot + shifts[iter][0]);
         if((yspot + shifts[iter][1]) >= 0 && (yspot + shifts[iter][1]) <= dims[1] - 1 && (xspot + shifts[iter][0]) >= 0
             && (xspot + shifts[iter][0]) <= dims[0] - 1)
         {
-          m_EulerAngles[3*position] = m_EulerAngles[3*tempposition];
-          m_EulerAngles[3*position + 1] = m_EulerAngles[3*tempposition + 1];
-          m_EulerAngles[3*position + 2] = m_EulerAngles[3*tempposition + 2];
-          m_Quats[position * 5 + 0] = m_Quats[tempposition * 5 + 0];
-          m_Quats[position * 5 + 1] = m_Quats[tempposition * 5 + 1];
-          m_Quats[position * 5 + 2] = m_Quats[tempposition * 5 + 2];
-          m_Quats[position * 5 + 3] = m_Quats[tempposition * 5 + 3];
-          m_Quats[position * 5 + 4] = m_Quats[tempposition * 5 + 4];
-          m_GoodVoxels[position] = m_GoodVoxels[tempposition];
-          m_PhasesC[position] = m_PhasesC[tempposition];
-          m_GrainIds[position] = m_GrainIds[tempposition];
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getVoxelData(*iter);
+        	  p->CopyTuple(currentPosition, newPosition);
+          }
         }
-        if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
+/*        if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > dims[0] - 1)
         {
-          m_EulerAngles[3*position] = 0.0;
-          m_EulerAngles[3*position + 1] = 0.0;
-          m_EulerAngles[3*position + 2] = 0.0;
-          m_Quats[position * 5 + 0] = 0.0;
-          m_Quats[position * 5 + 1] = 0.0;
-          m_Quats[position * 5 + 2] = 0.0;
-          m_Quats[position * 5 + 3] = 0.0;
-          m_Quats[position * 5 + 4] = 1.0;
-          m_GoodVoxels[position] = false;
-          m_PhasesC[position] = 0;
-          m_GrainIds[position] = 0;
-        }
+          m_Quats[newPosition * 5 + 0] = 0.0;
+          m_Quats[newPosition * 5 + 1] = 0.0;
+          m_Quats[newPosition * 5 + 2] = 0.0;
+          m_Quats[newPosition * 5 + 3] = 0.0;
+          m_Quats[newPosition * 5 + 4] = 1.0;
+          m_GoodVoxels[newPosition] = false;
+          m_PhasesC[newPosition] = 0;
+          m_GrainIds[newPosition] = 0;
+        }*/
       }
     }
   }
