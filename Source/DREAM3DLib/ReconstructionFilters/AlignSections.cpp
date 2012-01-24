@@ -448,7 +448,7 @@ void AlignSections::align_sections()
         	  p->CopyTuple(currentPosition, newPosition);
           }
         }
-/*        if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
+        if((yspot + shifts[iter][1]) < 0 || (yspot + shifts[iter][1]) > dims[1] - 1 || (xspot + shifts[iter][0]) < 0
             || (xspot + shifts[iter][0]) > dims[0] - 1)
         {
           m_Quats[newPosition * 5 + 0] = 0.0;
@@ -458,8 +458,7 @@ void AlignSections::align_sections()
           m_Quats[newPosition * 5 + 4] = 1.0;
           m_GoodVoxels[newPosition] = false;
           m_PhasesC[newPosition] = 0;
-          m_GrainIds[newPosition] = 0;
-        }*/
+        }
       }
     }
   }
