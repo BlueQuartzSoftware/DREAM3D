@@ -67,14 +67,14 @@
   fprintf(f, "data set from DREAM3D\n");\
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET RECTILINEAR_GRID\n");\
-  fprintf(f, "DIMENSIONS %lld %lld %lld\n", xpoints, ypoints, zpoints);\
+  fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);\
 
 #define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from DREAM3D\n");\
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET STRUCTURED_POINTS\n");\
-  fprintf(f, "DIMENSIONS %lld %lld %lld\n", ptr->getXPoints(), ptr->getYPoints(), ptr->getZPoints());\
+  fprintf(f, "DIMENSIONS %ld %ld %ld\n", ptr->getXPoints(), ptr->getYPoints(), ptr->getZPoints());\
   fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
   fprintf(f, "SPACING %f %f %f\n", ptr->getXRes(), ptr->getYRes(), ptr->getZRes());\
   fprintf(f, "POINT_DATA %lld\n\n", ptr->getXPoints() * ptr->getYPoints() * ptr->getZPoints() );\

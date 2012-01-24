@@ -69,18 +69,19 @@ int TestVtkGrainIdWriter()
   {
     grainIds->SetValue(i, i + UnitTest::VtkGrainIdIOTest::Offset);
   }
-  int nx = UnitTest::VtkGrainIdIOTest::XSize;
-  int ny = UnitTest::VtkGrainIdIOTest::YSize;
-  int nz = UnitTest::VtkGrainIdIOTest::ZSize;
+  size_t nx = UnitTest::VtkGrainIdIOTest::XSize;
+  size_t ny = UnitTest::VtkGrainIdIOTest::YSize;
+  size_t nz = UnitTest::VtkGrainIdIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
   m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
-
+  m->setDimensions(nx, ny, nz);
+  m->setResolution(2.0f, 3.0f, 4.0f);
+  m->setOrigin(1.0f, 2.0f, 3.0f);
 
   VtkGrainIdWriter::Pointer writer = VtkGrainIdWriter::New();
   writer->setDataContainer(m.get());
   writer->setFileName(UnitTest::VtkGrainIdIOTest::TestFile);
-  m->setDimensions(nx, ny, nz);
   writer->execute();
   int err = writer->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -103,6 +104,9 @@ int TestVtkGrainIdReader()
   reader->setDataContainer(m.get());
   reader->execute( );
   int err = reader->getErrorCondition();
+  if (err < 0) {
+    std::cout << reader->getErrorMessage() << std::endl;
+  }
   DREAM3D_REQUIRE_EQUAL(err, 0);
   m->getDimensions(nx, ny, nz);
 

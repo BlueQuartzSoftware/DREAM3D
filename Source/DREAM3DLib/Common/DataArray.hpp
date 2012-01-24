@@ -385,6 +385,9 @@ class DataArray : public IDataArray
      */
     virtual void* GetVoidPointer(size_t i)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       if (i >= this->GetNumberOfTuples())
       {
         return 0x0;
@@ -402,6 +405,9 @@ class DataArray : public IDataArray
      */
     virtual T* GetPointer(size_t i)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       return (T*)(&(Array[i]));
     }
 
@@ -412,6 +418,9 @@ class DataArray : public IDataArray
      */
     virtual T GetValue(size_t i)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       return this->Array[i];
     }
 
@@ -422,6 +431,9 @@ class DataArray : public IDataArray
      */
     void SetValue(size_t i, T value)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       this->Array[i] = value;
     }
 
@@ -429,12 +441,18 @@ class DataArray : public IDataArray
     // These can be overridden for more efficiency
     T GetComponent(size_t i, int j)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i*NumberOfComponents+j < Size);}
+#endif
       return Array[i*this->NumberOfComponents + j];
     }
 
     //----------------------------------------------------------------------------
     void SetComponent(size_t i, int j, T c)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i*NumberOfComponents+j < Size);}
+#endif
       Array[i*this->NumberOfComponents + j] = c;
     }
 
