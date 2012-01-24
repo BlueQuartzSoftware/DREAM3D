@@ -159,6 +159,7 @@ class IDataArray
      * @return
      */
     virtual int writeH5Data(hid_t parentId) = 0;
+    virtual int readH5Data(hid_t parentId) = 0;
 
 
   protected:

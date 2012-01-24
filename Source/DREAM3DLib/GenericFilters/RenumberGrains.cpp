@@ -139,29 +139,33 @@ void RenumberGrains::execute()
   for(size_t i = 1; i < totalFields; i++)
   {
     std::stringstream ss;
-   // ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
-   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
-	if(m_Active[i] == false)
-	{
-		RemoveList.push_back(i);
-		NewNames[i] = -1;
-	}
-	if(m_Active[i] == true)
-	{
-		NewNames[i] = goodcount;
-		goodcount++;
-	}
+    // ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
+    // notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(m_Active[i] == false)
+    {
+      RemoveList.push_back(i);
+      NewNames[i] = -1;
+    }
+    if(m_Active[i] == true)
+    {
+      NewNames[i] = goodcount;
+      goodcount++;
+    }
   }
 
 
   std::list<std::string> headers = m->getFieldArrayNameList();
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
+
+    IDataArray::Pointer p = m->getFieldData(*iter);
     ss.str("");
     ss << getNameOfClass() << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
-   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
-    IDataArray::Pointer p = m->getFieldData(*iter);
+    ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
+    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+
 	  p->EraseTuples(RemoveList);
+	  std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
   }
   m->setTotalFields(m->getTotalFields()-RemoveList.size());
   totalFields = m->getTotalFields();
