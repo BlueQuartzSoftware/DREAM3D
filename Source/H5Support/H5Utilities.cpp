@@ -304,7 +304,7 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
     else
     {
       H5O_info_t object_info;
-      err = H5Oget_info( loc_id, &object_info);
+      err = H5Oget_info_by_name( loc_id, &(name.front()), &object_info, H5P_DEFAULT);
       if (err >= 0)
       {
         type = object_info.type;
