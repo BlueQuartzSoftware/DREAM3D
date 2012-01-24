@@ -49,7 +49,6 @@ m_YLoading(1.0f),
 m_ZLoading(1.0f),
 m_Schmids(NULL),
 m_AvgQuats(NULL),
-m_Active(NULL),
 m_SlipSystems(NULL)
 
 
@@ -107,7 +106,6 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1);
@@ -156,8 +154,6 @@ void FindSchmids::execute()
   size_t numgrains = m->getTotalFields();
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_Active[i] == true)
-    {
       q1[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
       q1[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
       q1[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
@@ -216,7 +212,6 @@ void FindSchmids::execute()
       if (schmid12 > schmid) schmid = schmid12, ss = 11;
       m_Schmids[i] = schmid;
 	  m_SlipSystems[i] = ss;
-    }
   }
 
   notify("FindSchmids Completed", 0, Observable::UpdateProgressMessage);

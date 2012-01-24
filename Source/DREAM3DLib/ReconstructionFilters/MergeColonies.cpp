@@ -66,9 +66,7 @@ MergeColonies::MergeColonies() :
 AbstractFilter(),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
-m_EulerAngles(NULL),
-m_NumCells(NULL),
-m_NumNeighbors(NULL),
+m_Active(NULL),
 m_PhasesF(NULL),
 m_NeighborList(NULL)
 {
@@ -129,11 +127,8 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 3);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EulerAngles, ss, -301, float, FloatArrayType, fields, 3);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -224,6 +219,7 @@ void MergeColonies::merge_colonies()
   {
     if (colonynewnumbers[i] == -1 && m_PhasesF[i] > 0)
     {
+	  m_Active[i] = true;
       colonylist.push_back(i);
       int csize = int(colonylist.size());
       for (int j = 0; j < csize; j++)
@@ -269,6 +265,7 @@ void MergeColonies::merge_colonies()
             {
               colonynewnumbers[neigh] = i;
               colonylist.push_back(neigh);
+			  m_Active[neigh] = false;
             }
           }
         }

@@ -94,9 +94,7 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
 
     float* m_Volumes;
     float* m_EulerAngles;
-    int32_t* m_PhasesC;
     int32_t* m_PhasesF;
-    bool* m_Active;
     bool* m_SurfaceFields;
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

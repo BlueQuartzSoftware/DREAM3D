@@ -85,7 +85,6 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
   private:
     float* m_Schmids;
     float* m_AvgQuats;
-    bool* m_Active;
     int32_t* m_SlipSystems;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

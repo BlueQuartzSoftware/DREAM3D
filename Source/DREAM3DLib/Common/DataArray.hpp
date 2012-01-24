@@ -23,6 +23,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/HDF5/H5DataArrayWriter.hpp"
 
 #define mxa_bswap(s,d,t)\
   t[0] = ptr[s];\
@@ -226,7 +227,7 @@ class DataArray : public IDataArray
     {
 
       int err = 0;
-#if 1
+
       // If nothing is to be erased just return
       if (idxs.size() == 0) { return 0; }
 
@@ -306,10 +307,28 @@ class DataArray : public IDataArray
       this->_ownsData = true;
 
       this->MaxId = newSize-1;
-#endif
+
       return err;
     }
 
+    /**
+     * @brief
+     * @param currentPos
+     * @param newPos
+     * @return
+     */
+    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    {
+      size_t max =  ((this->MaxId + 1)/this->NumberOfComponents);
+      if (currentPos >= max
+        || newPos >= max )
+        {return -1;}
+      T* src = this->Array + (currentPos * NumberOfComponents);
+      T* dest = this->Array + (newPos * NumberOfComponents);
+      size_t bytes = sizeof(T) * NumberOfComponents;
+      ::memcpy(dest, src, bytes);
+      return 0;
+    }
 
     /**
      * @brief Returns the number of bytes that make up the data type.
@@ -449,6 +468,17 @@ class DataArray : public IDataArray
 
 
     /**
+     *
+     * @param parentId
+     * @return
+     */
+    virtual int writeH5Data(hid_t parentId)
+    {
+      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array);
+    }
+
+
+    /**
      * @brief
      */
     virtual void byteSwapElements()
@@ -477,7 +507,6 @@ class DataArray : public IDataArray
         ptr += size; // increment the pointer
       }
     }
-
 
   protected:
 

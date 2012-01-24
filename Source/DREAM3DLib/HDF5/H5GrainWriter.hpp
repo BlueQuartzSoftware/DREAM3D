@@ -41,13 +41,13 @@
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
-#include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
+#include "DREAM3DLib/HDF5/H5DataWriter.h"
 
 
 
 #define H5GW_DECLS() \
     int err = -1;\
-  AIM_H5VtkDataWriter::Pointer h5writer = AIM_H5VtkDataWriter::New();\
+  H5DataWriter::Pointer h5writer = H5DataWriter::New();\
   h5writer->setFileName(hdfFile);\
   err = h5writer->openFile(false);\
   std::stringstream ss;\
@@ -118,7 +118,7 @@ for (int k = 0; k < 8; k++) {\
 
 #define H5GW_GRAIN_LOOP_2(size) \
 err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);\
-err = h5writer->FieldDataCSVWriter<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
+err = h5writer->writeFieldData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
 if (size > 0) {\
 }\
 err = h5writer->writeCellData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\

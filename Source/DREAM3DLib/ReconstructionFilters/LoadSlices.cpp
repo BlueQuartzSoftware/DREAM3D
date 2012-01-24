@@ -35,6 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <limits>
+#include <vector>
 #include "LoadSlices.h"
 
 
@@ -72,14 +73,10 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 LoadSlices::LoadSlices() :
 AbstractFilter(),
-m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_GoodVoxels(NULL),
-m_AlreadyChecked(NULL),
 m_Quats(NULL),
-m_Neighbors(NULL),
-m_EulerAnglesC(NULL),
-m_SurfaceVoxels(NULL)
+m_EulerAnglesC(NULL)
 {
   Seed = MXA::getMilliSeconds();
 
@@ -177,13 +174,9 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, float, FloatArrayType, voxels, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, bool, BoolArrayType, voxels, 1);
 
   setErrorMessage(ss.str());
@@ -336,7 +329,7 @@ void LoadSlices::execute()
   {
 	  for(size_t i = 0; i < (m->getXPoints()*m->getYPoints()*m->getZPoints()); i++)
 	  {
-	    m_EulerAnglesC[3*i] = m_EulerAnglesC[3*i] * radianconversion;
+	      m_EulerAnglesC[3*i] = m_EulerAnglesC[3*i] * radianconversion;
 		  m_EulerAnglesC[3*i + 1] = m_EulerAnglesC[3*i + 1] * radianconversion;
 		  m_EulerAnglesC[3*i + 2] = m_EulerAnglesC[3*i + 2] * radianconversion;
 	  }
@@ -359,14 +352,10 @@ void LoadSlices::initializeArrays(int64_t totalPoints)
 
   for(int i = 0;i < totalPoints;i++)
   {
-    m_GrainIds[i] = -1;
     m_PhasesC[i] = 1;
     m_EulerAnglesC[3*i] = -1;
     m_EulerAnglesC[3*i + 1] = -1;
     m_EulerAnglesC[3*i + 2] = -1;
-    m_Neighbors[i] = -1;
-    m_SurfaceVoxels[i] = 0;
-    m_AlreadyChecked[i] = false;
     m_GoodVoxels[i] = false; // All Voxels are "Bad"
   }
 
@@ -437,6 +426,7 @@ void LoadSlices::threshold_points()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0]*dims[1];
 
+  std::vector<bool> AlreadyChecked;
   float w, n1, n2, n3;
   float q1[5];
   float q2[5];
@@ -452,15 +442,14 @@ void LoadSlices::threshold_points()
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
 
+  AlreadyChecked.resize(totalPoints);
   for (int iter = 0; iter < totalPoints; iter++)
   {
-    m_AlreadyChecked[iter] = false;
-    if(m_GoodVoxels[iter] == 0) m_GrainIds[iter] = 0;
+    AlreadyChecked[iter] = false;
     if(m_GoodVoxels[iter] == 1 && m_PhasesC[iter] > 0)
     {
-      m_GrainIds[iter] = -1;
       voxelslist[count] = iter;
-      m_AlreadyChecked[iter] = true;
+      AlreadyChecked[iter] = true;
       count++;
       if(count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
     }
@@ -480,14 +469,14 @@ void LoadSlices::threshold_points()
     for (DimType i = 0; i < 6; i++)
     {
       good = 1;
-      neighbor = currentpoint + m_Neighbors[i];
+      neighbor = currentpoint + neighpoints[i];
       if(i == 0 && plane == 0) good = 0;
       if(i == 5 && plane == (dims[2] - 1)) good = 0;
       if(i == 1 && row == 0) good = 0;
       if(i == 4 && row == (dims[1] - 1)) good = 0;
       if(i == 2 && col == 0) good = 0;
       if(i == 3 && col == (dims[0] - 1)) good = 0;
-      if(good == 1 && m_GrainIds[neighbor] == 0 && m_PhasesC[neighbor] > 0)
+      if(good == 1 && m_GoodVoxels[neighbor] == 0 && m_PhasesC[neighbor] > 0)
       {
         w = 10000.0;
         q2[0] = 0;
@@ -502,8 +491,8 @@ void LoadSlices::threshold_points()
         }
         if(w < m_MisorientationTolerance)
         {
-          m_GrainIds[neighbor] = -1;
-          m_AlreadyChecked[neighbor] = true;
+          m_GoodVoxels[neighbor] = true;
+          AlreadyChecked[neighbor] = true;
           voxelslist[count] = neighbor;
           count++;
           if(count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,73 +33,51 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef ABSTRACTARRAYWRITER_H_
+#define ABSTRACTARRAYWRITER_H_
 
-#ifndef SEGMENTGRAINS_H_
-#define SEGMENTGRAINS_H_
+#include <hdf5.h>
 
-#include <vector>
 #include <string>
 
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "H5Support/H5Lite.h"
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
 
-/**
- * @class SegmentGrains SegmentGrains.h DREAM3DLib/ReconstructionFilters/SegmentGrains.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
- */
-class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
+
+template<typename T>
+class H5DataArrayWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SegmentGrains);
-    DREAM3D_STATIC_NEW_MACRO(SegmentGrains);
-    DREAM3D_TYPE_MACRO_SUPER(SegmentGrains, AbstractFilter);
+  virtual ~H5DataArrayWriter() {}
 
-    virtual ~SegmentGrains();
+  static int writeArray(hid_t gid, const std::string name, size_t numTuples, int numComp, T* data)
+  {
+    int32_t rank = 0;
+    if (numComp == 1) { rank = 1;}
+    else { rank = 2;}
+    hsize_t dims[2] = { numTuples, numComp};
+    int err = 0;
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
-
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Segment Grains"; }
-
-    virtual void setupFilterOptions();
-
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
-    virtual void preflight();
+    err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
+    if (err < 0)
+    {
+    //  std::cout << "Error writing array with name: " << name << std::endl;
+    }
+    err = H5Lite::writeScalarAttribute(gid, name, std::string(H5_NUMCOMPONENTS), numComp);
+    if (err < 0)
+    {
+    //  std::cout << "Error writing dataset " << name << std::endl;
+    }
+    return err;
+  }
 
   protected:
-    SegmentGrains();
+  H5DataArrayWriter(){}
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-
-    int32_t* m_GrainIds;
-    float* m_Quats;
-    int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
-    bool* m_Active;
-    bool* m_GoodVoxels;
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
-
-    SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
-    void operator=(const SegmentGrains&); // Operator '=' Not Implemented
+  H5DataArrayWriter(const H5DataArrayWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5DataArrayWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* SEGMENTGRAINS_H_ */
+#endif /* ABSTRACTARRAYWRITER_H_ */

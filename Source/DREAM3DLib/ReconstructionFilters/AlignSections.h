@@ -100,7 +100,6 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     float* m_Quats;
-    float* m_EulerAngles;
     int32_t* m_PhasesC;
     bool* m_GoodVoxels;
 
