@@ -403,7 +403,7 @@ void MatchCrystallography::assign_eulers()
   {
     unbiasedvol[i] = 0;
   }
-  for (size_t i = 1; i < totalFields; i++)
+  for (int i = 1; i < totalFields; i++)
   {
     std::stringstream ss;
 	ss << "Matching Crystallography - Assigning Euler Angles - " << ((float)i/totalFields)*100 << "Percent Complete";
