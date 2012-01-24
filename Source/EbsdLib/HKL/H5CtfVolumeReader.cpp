@@ -119,10 +119,10 @@ int H5CtfVolumeReader::loadData(float* eulerangles,
   int err = -1;
 
   int readerIndex;
-  int xpointsslice;
-  int ypointsslice;
-  int xpointstemp;
-  int ypointstemp;
+  int64_t xpointsslice;
+  int64_t ypointsslice;
+  int64_t xpointstemp;
+  int64_t ypointstemp;
 //  int xstop;
 //  int ystop;
   int zval;

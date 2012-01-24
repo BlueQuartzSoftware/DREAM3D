@@ -150,16 +150,15 @@ class NeighborList : public IDataArray
 
       for (typename std::map<int, SharedVectorType>::iterator iter = _data.begin(); iter != _data.end(); ++iter )
       {
-
         SharedVectorType data = (*iter).second;
-        if (data->size() == 0) continue;
-
+        if (data->size() == 0) { continue; }
         std::string datasetName = StringUtils::numToString((*iter).first);
         std::vector<hsize_t> dims(1, data->size());
         err = H5Lite::writeVectorDataset(gid, datasetName, dims, *(data.get()));
         if (err < 0)
         {
           std::cout << "Error Writing Neighbor list for grain id " << (*iter).first << std::endl;
+          break;
         }
       }
       H5Gclose(gid);
