@@ -66,6 +66,13 @@ target_link_libraries(H5UtilitiesTest H5Support MXA)
 add_test(H5UtilitiesTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5UtilitiesTest)
 
 # --------------------------------------------------------------------------
+# DataContainerIO Testing
+# --------------------------------------------------------------------------
+add_executable(DataContainerIOTest ${DREAM3DTest_SOURCE_DIR}/DataContainerIOTest.cpp)
+target_link_libraries(DataContainerIOTest DREAM3DLib)
+add_test(DataContainerIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerIOTest)
+
+# --------------------------------------------------------------------------
 # DataArray Testing
 # --------------------------------------------------------------------------
 add_executable(DataArrayTest ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp)

@@ -152,7 +152,7 @@ namespace DREAM3D
     const std::string LogNormalDistribution("Log Normal Distribution");
     const std::string PowerLawDistribution("Power Law Distribution");
 
-    const std::string VoxelDataName("VoxelData");
+    const std::string DataContainerName("DataContainer");
 
     enum ColumnCount
     {
