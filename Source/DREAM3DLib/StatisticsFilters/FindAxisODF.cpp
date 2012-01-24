@@ -171,6 +171,10 @@ void FindAxisODF::execute()
   for(size_t i=1;i<m->crystruct.size();i++)
   {
 	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
+	  if (err < 0)
+	  {
+		  //FIXME: Error Trap correctly
+	  }
 	  delete[] axisodf[i];
   }
   delete[] axisodf;
