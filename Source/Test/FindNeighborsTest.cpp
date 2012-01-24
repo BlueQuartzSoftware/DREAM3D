@@ -58,7 +58,6 @@
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 
 #include "UnitTestSupport.hpp"
-
 #include "TestFileLocations.h"
 
 
@@ -183,10 +182,8 @@ int preflightPipeline(FilterContainerType &pipeline)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int TestFindNeighbors()
 {
-
-
   float m_MisorientationTolerance = 0.5f;
   int m_MinAllowedGrainSize = 10;
 
@@ -299,3 +296,17 @@ int main(int argc, char **argv)
   return EXIT_SUCCESS;
 }
 
+
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv) {
+  int err = EXIT_SUCCESS;
+
+  DREAM3D_REGISTER_TEST( TestFindNeighbors() );
+//  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
+//
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  PRINT_TEST_SUMMARY();
+  return err;
+}

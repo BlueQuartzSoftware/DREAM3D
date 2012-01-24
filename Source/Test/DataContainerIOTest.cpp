@@ -131,34 +131,33 @@ int TestDataContainerWriter()
 // -----------------------------------------------------------------------------
 int TestDataContainerReader()
 {
-
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(UnitTest::DataContainerIOTest::TestFile);
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;
 
   DataContainer::Pointer m = DataContainer::New();
+
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(UnitTest::DataContainerIOTest::TestFile);
   reader->setDataContainer(m.get());
   reader->execute( );
   int err = reader->getErrorCondition();
   m->getDimensions(nx, ny, nz);
 
-  IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DataContainerIOTest::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DataContainerIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DataContainerIOTest::ZSize);
-  int size = UnitTest::DataContainerIOTest::XSize * UnitTest::DataContainerIOTest::YSize * UnitTest::DataContainerIOTest::ZSize;
-  int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
-
-  for (int i = 0; i < size; ++i)
-  {
-    int32_t file_value = data[i];
-    int32_t memory_value = i+UnitTest::DataContainerIOTest::Offset;
-    DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
-  }
+//  int size = UnitTest::DataContainerIOTest::XSize * UnitTest::DataContainerIOTest::YSize * UnitTest::DataContainerIOTest::ZSize;
+//  int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
+//
+//  for (int i = 0; i < size; ++i)
+//  {
+//    int32_t file_value = data[i];
+//    int32_t memory_value = i+UnitTest::DataContainerIOTest::Offset;
+//    DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
+//  }
 
 
   return EXIT_SUCCESS;
@@ -172,7 +171,7 @@ int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestDataContainerWriter() );
-//  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
+  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
 //
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
   PRINT_TEST_SUMMARY();
