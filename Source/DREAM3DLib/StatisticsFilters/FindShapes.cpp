@@ -162,31 +162,31 @@ void FindShapes::find_centroids()
   for (int j = 0; j < totalPoints; j++)
   {
     int gnum = m_GrainIds[j];
-    graincenters[gnum*5 + 0]++;
+    graincenters[gnum * 5 + 0]++;
     col = j % m->getXPoints();
     row = (j / m->getXPoints()) % m->getYPoints();
     plane = j / (m->getXPoints() * m->getYPoints());
-	x = float(col)*m->getXRes();
-	y = float(row)*m->getYRes();
-	z = float(plane)*m->getZRes();
-    graincenters[gnum*5 + 1] = graincenters[gnum*5 + 1] + x;
-    graincenters[gnum*5 + 2] = graincenters[gnum*5 + 2] + y;
-    graincenters[gnum*5 + 3] = graincenters[gnum*5 + 3] + z;
+    x = float(col) * m->getXRes();
+    y = float(row) * m->getYRes();
+    z = float(plane) * m->getZRes();
+    graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
+    graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
+    graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = (4.0/3.0)*m_pi;
+  float vol_term = (4.0 / 3.0) * m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
-    graincenters[i*5 + 1] = graincenters[i*5 + 1] / graincenters[i*5 + 0];
-    graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
-    graincenters[i*5 + 3] = graincenters[i*5 + 3] / graincenters[i*5 + 0];
-    m_Centroids[3*i] = graincenters[i*5 + 1];
-    m_Centroids[3*i+1] = graincenters[i*5 + 2];
-    m_Centroids[3*i+2] = graincenters[i*5 + 3];
-    m_NumCells[i] = graincenters[i*5 + 0];
-    m_Volumes[i] = (graincenters[i*5 + 0] * res_scalar);
-    radcubed = m_Volumes[i]/vol_term;
-    diameter = 2.0*powf(radcubed, 0.3333333333);
+    graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
+    graincenters[i * 5 + 2] = graincenters[i * 5 + 2] / graincenters[i * 5 + 0];
+    graincenters[i * 5 + 3] = graincenters[i * 5 + 3] / graincenters[i * 5 + 0];
+    m_Centroids[3 * i] = graincenters[i * 5 + 1];
+    m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
+    m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
+    m_NumCells[i] = graincenters[i * 5 + 0];
+    m_Volumes[i] = (graincenters[i * 5 + 0] * res_scalar);
+    radcubed = m_Volumes[i] / vol_term;
+    diameter = 2.0 * powf(radcubed, 0.3333333333);
     m_EquivalentDiameters[i] = diameter;
   }
 }

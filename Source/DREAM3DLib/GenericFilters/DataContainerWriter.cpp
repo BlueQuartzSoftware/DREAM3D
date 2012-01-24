@@ -186,7 +186,7 @@ void DataContainerWriter::execute()
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening voxel Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
    setErrorCondition(-64);
    setErrorMessage(ss.str());
    return;
@@ -214,7 +214,7 @@ void DataContainerWriter::execute()
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-65);
     setErrorMessage(ss.str());
     return;
@@ -246,7 +246,7 @@ void DataContainerWriter::execute()
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-67);
     setErrorMessage(ss.str());
     return;
