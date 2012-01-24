@@ -76,12 +76,12 @@ void __TestCopyTuples()
 {
   int err = 0;
   {
-      typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+      typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
       array->SetNumberOfComponents(NUM_COMPONENTS_2);
       for(size_t i = 0; i < NUM_TUPLES_2; ++i)
       {
-        array->SetComponent(i, 0, i);
-        array->SetComponent(i, 1, i);
+        array->SetComponent(i, 0, static_cast<T>(i));
+        array->SetComponent(i, 1, static_cast<T>(i));
       }
 
 //      for(int i = 0; i < NUM_TUPLES_2; ++i)
@@ -131,16 +131,16 @@ void __TestCopyTuples()
 // -----------------------------------------------------------------------------
 void TestCopyTuples()
 {
-  __TestCopyTuples<Int8ArrayType>();
-  __TestCopyTuples<UInt8ArrayType>();
-  __TestCopyTuples<Int16ArrayType>();
-  __TestCopyTuples<UInt16ArrayType>();
-  __TestCopyTuples<Int32ArrayType>();
-  __TestCopyTuples<UInt32ArrayType>();
-  __TestCopyTuples<Int64ArrayType>();
-  __TestCopyTuples<UInt64ArrayType>();
-  __TestCopyTuples<FloatArrayType>();
-  __TestCopyTuples<DoubleArrayType>();
+  __TestCopyTuples<int8_t>();
+  __TestCopyTuples<uint8_t>();
+  __TestCopyTuples<int16_t>();
+  __TestCopyTuples<uint16_t>();
+  __TestCopyTuples<int32_t>();
+  __TestCopyTuples<uint32_t>();
+  __TestCopyTuples<int64_t>();
+  __TestCopyTuples<uint64_t>();
+  __TestCopyTuples<float>();
+  __TestCopyTuples<double>();
 }
 
 // -----------------------------------------------------------------------------
@@ -151,12 +151,11 @@ void __TestEraseElements()
 {
   // Test dropping of front elements only
   {
-    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS);
     for(size_t i = 0; i < NUM_ELEMENTS; ++i)
     {
-      array->SetComponent(i, 0, i);
+      array->SetComponent(i, 0, static_cast<T>(i) );
     }
-
 
     std::vector<size_t> eraseElements;
     eraseElements.push_back(0);
@@ -167,19 +166,17 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->GetValue(0), 2);
     DREAM3D_REQUIRE_EQUAL(array->GetValue(1), 3);
     DREAM3D_REQUIRE_EQUAL(array->GetValue(2), 4);
-
   }
 
   // Test Dropping of internal elements
   {
-    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, i);
-      array->SetComponent(i, 1, i);
+      array->SetComponent(i, 0, static_cast<T>(i));
+      array->SetComponent(i, 1, static_cast<T>(i));
     }
-    DREAM3D_REQUIRE_EQUAL(array->GetNumberOfTuples(), NUM_TUPLES_2);
 
 //    for(int i = 0; i < NUM_TUPLES_2; ++i)
 //    {
@@ -202,7 +199,6 @@ void __TestEraseElements()
 //    }
 ////    std::cout << std::endl;
 
-    DREAM3D_REQUIRE_EQUAL(array->GetNumberOfTuples(), NUM_TUPLES_2-eraseElements.size());
 
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
@@ -214,12 +210,12 @@ void __TestEraseElements()
 
   // Test Dropping of internal elements
   {
-    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, i);
-      array->SetComponent(i, 1, i);
+      array->SetComponent(i, 0, static_cast<T>(i));
+      array->SetComponent(i, 1, static_cast<T>(i));
     }
 //    for(int i = 0; i < NUM_TUPLES_2; ++i)
 //    {
@@ -249,12 +245,12 @@ void __TestEraseElements()
 
   // Test Dropping of internal continuous elements
   {
-    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, i);
-      array->SetComponent(i, 1, i);
+      array->SetComponent(i, 0, static_cast<T>(i));
+      array->SetComponent(i, 1, static_cast<T>(i));
     }
 //    for(int i = 0; i < NUM_TUPLES_2; ++i)
 //    {
@@ -284,12 +280,12 @@ void __TestEraseElements()
 
   // Test Dropping of Front and Back Elements
   {
-    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, i);
-      array->SetComponent(i, 1, i);
+      array->SetComponent(i, 0, static_cast<T>(i));
+      array->SetComponent(i, 1, static_cast<T>(i));
     }
 //    for(int i = 0; i < NUM_TUPLES_2; ++i)
 //    {
@@ -317,12 +313,12 @@ void __TestEraseElements()
 
   // Test Dropping of Back Elements
   {
-    typename T::Pointer array = T::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
-      array->SetComponent(i, 0, i);
-      array->SetComponent(i, 1, i);
+      array->SetComponent(i, 0, static_cast<T>(i));
+      array->SetComponent(i, 1, static_cast<T>(i));
     }
 //    for(int i = 0; i < NUM_TUPLES_2; ++i)
 //    {
@@ -353,26 +349,16 @@ void __TestEraseElements()
 // -----------------------------------------------------------------------------
 void TestEraseElements()
 {
-  std::cout << "Int8ArrayType" << std::endl;
-  __TestEraseElements<Int8ArrayType>();
-  std::cout << "UInt8ArrayType" << std::endl;
-  __TestEraseElements<UInt8ArrayType>();
-  std::cout << "Int16ArrayType" << std::endl;
-  __TestEraseElements<Int16ArrayType>();
-  std::cout << "UInt16ArrayType" << std::endl;
-  __TestEraseElements<UInt16ArrayType>();
-  std::cout << "Int32ArrayType" << std::endl;
-  __TestEraseElements<Int32ArrayType>();
-  std::cout << "UInt32ArrayType" << std::endl;
-  __TestEraseElements<UInt32ArrayType>();
-  std::cout << "Int64ArrayType" << std::endl;
-  __TestEraseElements<Int64ArrayType>();
-  std::cout << "UInt64ArrayType" << std::endl;
- __TestEraseElements<UInt64ArrayType>();
-  std::cout << "FloatArrayType" << std::endl;
- __TestEraseElements<FloatArrayType>();
-  std::cout << "DoubleArrayType" << std::endl;
- __TestEraseElements<DoubleArrayType>();
+  __TestEraseElements<int8_t>();
+  __TestEraseElements<uint8_t>();
+  __TestEraseElements<int16_t>();
+  __TestEraseElements<uint16_t>();
+  __TestEraseElements<int32_t>();
+  __TestEraseElements<uint32_t>();
+  __TestEraseElements<int64_t>();
+  __TestEraseElements<uint64_t>();
+  __TestEraseElements<float>();
+  __TestEraseElements<double>();
 }
 
 
