@@ -157,6 +157,7 @@ void __TestEraseElements()
       array->SetComponent(i, 0, i);
     }
 
+
     std::vector<size_t> eraseElements;
     eraseElements.push_back(0);
     eraseElements.push_back(1);
@@ -166,6 +167,7 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->GetValue(0), 2);
     DREAM3D_REQUIRE_EQUAL(array->GetValue(1), 3);
     DREAM3D_REQUIRE_EQUAL(array->GetValue(2), 4);
+
   }
 
   // Test Dropping of internal elements
@@ -177,6 +179,7 @@ void __TestEraseElements()
       array->SetComponent(i, 0, i);
       array->SetComponent(i, 1, i);
     }
+    DREAM3D_REQUIRE_EQUAL(array->GetNumberOfTuples(), NUM_TUPLES_2);
 
 //    for(int i = 0; i < NUM_TUPLES_2; ++i)
 //    {
@@ -199,6 +202,7 @@ void __TestEraseElements()
 //    }
 ////    std::cout << std::endl;
 
+    DREAM3D_REQUIRE_EQUAL(array->GetNumberOfTuples(), NUM_TUPLES_2-eraseElements.size());
 
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
@@ -349,16 +353,26 @@ void __TestEraseElements()
 // -----------------------------------------------------------------------------
 void TestEraseElements()
 {
+  std::cout << "Int8ArrayType" << std::endl;
   __TestEraseElements<Int8ArrayType>();
+  std::cout << "UInt8ArrayType" << std::endl;
   __TestEraseElements<UInt8ArrayType>();
+  std::cout << "Int16ArrayType" << std::endl;
   __TestEraseElements<Int16ArrayType>();
+  std::cout << "UInt16ArrayType" << std::endl;
   __TestEraseElements<UInt16ArrayType>();
+  std::cout << "Int32ArrayType" << std::endl;
   __TestEraseElements<Int32ArrayType>();
+  std::cout << "UInt32ArrayType" << std::endl;
   __TestEraseElements<UInt32ArrayType>();
+  std::cout << "Int64ArrayType" << std::endl;
   __TestEraseElements<Int64ArrayType>();
-  __TestEraseElements<UInt64ArrayType>();
-  __TestEraseElements<FloatArrayType>();
-  __TestEraseElements<DoubleArrayType>();
+  std::cout << "UInt64ArrayType" << std::endl;
+ __TestEraseElements<UInt64ArrayType>();
+  std::cout << "FloatArrayType" << std::endl;
+ __TestEraseElements<FloatArrayType>();
+  std::cout << "DoubleArrayType" << std::endl;
+ __TestEraseElements<DoubleArrayType>();
 }
 
 
