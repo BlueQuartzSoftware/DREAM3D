@@ -74,7 +74,7 @@ CropVolume::~CropVolume()
 
 void CropVolume::preflight()
 {
-  
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -163,11 +163,12 @@ void CropVolume::execute()
   }
   m->setDimensions(m_XP, m_YP, m_ZP);
   totalPoints = m_XP*m_YP*m_ZP;
+
   for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
      std::string name = *iter;
      IDataArray::Pointer p = m->getVoxelData(*iter);
-	 err = p->Resize(totalPoints);
+     err = p->Resize(totalPoints);
   }
   notify("Cropping Volume Complete", 0, Observable::UpdateProgressValueAndMessage);
 }

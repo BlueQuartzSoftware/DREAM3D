@@ -52,7 +52,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/HDF5/AIM_H5VtkDataWriter.h"
+#include "DREAM3DLib/HDF5/H5DataWriter.h"
 
 #define H5_WRITE_SCALAR(type, group, scalar_name, voxel_attr)\
 {\

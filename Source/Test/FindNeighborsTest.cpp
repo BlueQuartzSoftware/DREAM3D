@@ -51,6 +51,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3Dlib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
@@ -73,7 +74,6 @@
 #endif
 
 
-const std::string EBSDFile("/Users/Shared/Data/Ang_Data/Small_IN100_Output/Small_IN100.h5ebsd");
 
 void updateProgressAndMessage(const std::string &msg, int prog)
 {
@@ -180,6 +180,9 @@ int preflightPipeline(FilterContainerType &pipeline)
   return preflightError;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 
@@ -191,7 +194,7 @@ int main(int argc, char **argv)
   DataContainer::Pointer m = DataContainer::New();
 //  m->addObserver(static_cast<Observer*>(this));
 
-  std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::NeighborListTest::TestDir);
+  std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
 
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   FilterContainerType pipeline;
@@ -222,6 +225,10 @@ int main(int argc, char **argv)
   cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline.push_back(cleanup_grains);
+
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile);
+  pipeline.push_back(writer);
 
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
