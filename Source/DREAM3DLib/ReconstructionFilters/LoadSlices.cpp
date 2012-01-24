@@ -446,7 +446,7 @@ void LoadSlices::threshold_points()
   for (int iter = 0; iter < totalPoints; iter++)
   {
     AlreadyChecked[iter] = false;
-    if(m_GoodVoxels[iter] == 1 && m_PhasesC[iter] > 0)
+    if(m_GoodVoxels[iter] == true && m_PhasesC[iter] > 0)
     {
       voxelslist[count] = iter;
       AlreadyChecked[iter] = true;
