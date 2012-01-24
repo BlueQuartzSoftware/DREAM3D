@@ -42,6 +42,7 @@
 
 #include "H5Support/H5Lite.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 
@@ -51,26 +52,40 @@ class H5DataArrayWriter
   public:
   virtual ~H5DataArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string name, size_t numTuples, int numComp, T* data)
+  static int writeArray(hid_t gid, const std::string name, size_t numTuples, int numComp, T* data, const std::string &className)
   {
-    int32_t rank = 0;
-    if (numComp == 1) { rank = 1;}
-    else { rank = 2;}
-    hsize_t dims[2] = { numTuples, numComp};
-    int err = 0;
+      int32_t rank = 0;
+      if(numComp == 1)
+      {
+        rank = 1;
+      }
+      else
+      {
+        rank = 2;
+      }
+      hsize_t dims[2] =
+      { numTuples, numComp };
+      int err = 0;
 
-    err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
-    if (err < 0)
-    {
-    //  std::cout << "Error writing array with name: " << name << std::endl;
+      err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
+      if(err < 0)
+      {
+        //FIXME: Add Error Handling Code
+      }
+      err = H5Lite::writeScalarAttribute(gid, name, std::string(H5_NUMCOMPONENTS), numComp);
+      if(err < 0)
+      {
+        //FIXME: Add Error Handling Code
+      }
+
+      err = H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
+      if(err < 0)
+      {
+        //FIXME: Add Error Handling Code
+      }
+      return err;
     }
-    err = H5Lite::writeScalarAttribute(gid, name, std::string(H5_NUMCOMPONENTS), numComp);
-    if (err < 0)
-    {
-    //  std::cout << "Error writing dataset " << name << std::endl;
-    }
-    return err;
-  }
+
 
   protected:
   H5DataArrayWriter(){}
