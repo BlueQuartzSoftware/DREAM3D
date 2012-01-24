@@ -96,7 +96,7 @@ int TestDataContainerWriter()
 
 
   FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4);
-  for (int i = 0; i < size; ++i)
+  for (int i = 0; i < 4; ++i)
   {
     surfArea->SetValue(i, i + 41.2f);
   }
