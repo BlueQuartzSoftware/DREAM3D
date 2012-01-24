@@ -187,8 +187,8 @@ int main(int argc, char **argv)
 {
 
 
-  float m_MisorientationTolerance = 0.5f;
-  int m_MinAllowedGrainSize = 10;
+  float m_MisorientationTolerance = 5.0f;
+  int m_MinAllowedGrainSize = 12;
 
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();

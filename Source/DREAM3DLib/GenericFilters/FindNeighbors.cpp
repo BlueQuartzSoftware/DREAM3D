@@ -198,6 +198,7 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
+	m_SurfaceFields[i] = false;
   }
 
   totalPoints = m->totalPoints();
