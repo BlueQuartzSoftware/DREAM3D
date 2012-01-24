@@ -229,7 +229,7 @@ void DataContainerWriter::execute()
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-65);
     setErrorMessage(ss.str());
     H5Gclose(dcGid); // Close the Data Container Group
@@ -271,7 +271,7 @@ void DataContainerWriter::execute()
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-67);
     setErrorMessage(ss.str());
     H5Gclose(dcGid); // Close the Data Container Group
