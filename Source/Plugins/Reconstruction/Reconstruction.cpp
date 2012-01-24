@@ -146,16 +146,16 @@ void Reconstruction::execute()
   AlignSections::Pointer align_sections = AlignSections::New();
   align_sections->setmisorientationtolerance(m_MisorientationTolerance);
   align_sections->setalignmeth(m_AlignmentMethod);
-//  pipeline.push_back(align_sections);
+  pipeline.push_back(align_sections);
 
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();
   segment_grains->setMisorientationTolerance(m_MisorientationTolerance);
-//  pipeline.push_back(segment_grains);
+  pipeline.push_back(segment_grains);
 
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
-//  pipeline.push_back(cleanup_grains);
+  pipeline.push_back(cleanup_grains);
 
 
   if(m_MergeTwins == true)
