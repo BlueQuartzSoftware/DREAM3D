@@ -352,10 +352,10 @@ void LoadSlices::initializeArrays(int64_t totalPoints)
 
   for(int i = 0;i < totalPoints;i++)
   {
-    m_PhasesC[i] = 1;
-    m_EulerAnglesC[3*i] = -1;
-    m_EulerAnglesC[3*i + 1] = -1;
-    m_EulerAnglesC[3*i + 2] = -1;
+    m_PhasesC[i] = 0;
+    m_EulerAnglesC[3*i] = 0;
+    m_EulerAnglesC[3*i + 1] = 0;
+    m_EulerAnglesC[3*i + 2] = 0;
     m_GoodVoxels[i] = false; // All Voxels are "Bad"
   }
 
@@ -476,7 +476,7 @@ void LoadSlices::threshold_points()
       if(i == 4 && row == (dims[1] - 1)) good = 0;
       if(i == 2 && col == 0) good = 0;
       if(i == 3 && col == (dims[0] - 1)) good = 0;
-      if(good == 1 && m_GoodVoxels[neighbor] == 0 && m_PhasesC[neighbor] > 0)
+      if(good == 1 && m_GoodVoxels[neighbor] == false && m_PhasesC[neighbor] > 0)
       {
         w = 10000.0;
         q2[0] = 0;
