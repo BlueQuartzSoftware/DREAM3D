@@ -229,16 +229,19 @@ class DataArray : public IDataArray
       int err = 0;
 
       // If nothing is to be erased just return
-      if (idxs.size() == 0) { return 0; }
+      if(idxs.size() == 0)
+      {
+        return 0;
+      }
 
       // Calculate the new size of the array to copy into
-      size_t newSize = (GetNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T);
+      size_t newSize = (GetNumberOfTuples() - idxs.size()) * NumberOfComponents ;
       T* currentSrc = this->Array;
 
       // Create a new Array to copy into
-      T* newArray = (T*)malloc(newSize);
+      T* newArray = (T*)malloc(newSize * sizeof(T));
       // Splat AB across the array so we know if we are copying the values or not
-      ::memset(newArray, 0xAB, newSize);
+      ::memset(newArray, 0xAB, newSize * sizeof(T));
 
       // Keep the current Destination Pointer
       T* currentDest = newArray;
@@ -246,16 +249,19 @@ class DataArray : public IDataArray
       size_t k = 0;
       // Find the first chunk to copy by walking the idxs array until we get an
       // index that is NOT a continuous increment from the start
-      for(k = 0; k < idxs.size(); ++k)
+      for (k = 0; k < idxs.size(); ++k)
       {
-        if (j == idxs[k])
+        if(j == idxs[k])
         {
           ++j;
         }
-        else { break; }
+        else
+        {
+          break;
+        }
       }
 
-      if (k == idxs.size()) // Only front elements are being dropped
+      if(k == idxs.size()) // Only front elements are being dropped
       {
         currentSrc = Array + (j * NumberOfComponents);
         ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T));
@@ -263,7 +269,7 @@ class DataArray : public IDataArray
         this->Size = newSize;
         this->Array = newArray;
         this->_ownsData = true;
-        this->MaxId = newSize-1;
+        this->MaxId = newSize - 1;
         return 0;
       }
 
@@ -274,22 +280,23 @@ class DataArray : public IDataArray
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0) * NumberOfComponents;
 
-      for(size_t i = 1; i < srcIdx.size(); ++i)
+      for (size_t i = 1; i < srcIdx.size(); ++i)
       {
-          srcIdx[i] = (idxs[i-1] + 1) * NumberOfComponents;
+        srcIdx[i] = (idxs[i - 1] + 1) * NumberOfComponents;
 
-          if (i < srcIdx.size() - 1) {
-            copyElements[i] = (idxs[i] - idxs[i-1] - 1) * NumberOfComponents;
-          }
-          else
-          {
-            copyElements[i] = (GetNumberOfTuples() - idxs[i-1] - 1) * NumberOfComponents;
-          }
-          destIdx[i] = copyElements[i-1] + destIdx[i-1];
+        if(i < srcIdx.size() - 1)
+        {
+          copyElements[i] = (idxs[i] - idxs[i - 1] - 1) * NumberOfComponents;
+        }
+        else
+        {
+          copyElements[i] = (GetNumberOfTuples() - idxs[i - 1] - 1) * NumberOfComponents;
+        }
+        destIdx[i] = copyElements[i - 1] + destIdx[i - 1];
       }
 
-// Copy the data
-      for(size_t i = 0; i < srcIdx.size(); ++i)
+      // Copy the data
+      for (size_t i = 0; i < srcIdx.size(); ++i)
       {
         currentDest = newArray + destIdx[i];
         currentSrc = Array + srcIdx[i];
@@ -306,7 +313,7 @@ class DataArray : public IDataArray
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
-      this->MaxId = newSize-1;
+      this->MaxId = newSize - 1;
 
       return err;
     }
@@ -378,6 +385,9 @@ class DataArray : public IDataArray
      */
     virtual void* GetVoidPointer(size_t i)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       if (i >= this->GetNumberOfTuples())
       {
         return 0x0;
@@ -395,6 +405,9 @@ class DataArray : public IDataArray
      */
     virtual T* GetPointer(size_t i)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       return (T*)(&(Array[i]));
     }
 
@@ -405,6 +418,9 @@ class DataArray : public IDataArray
      */
     virtual T GetValue(size_t i)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       return this->Array[i];
     }
 
@@ -415,6 +431,9 @@ class DataArray : public IDataArray
      */
     void SetValue(size_t i, T value)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i < Size);}
+#endif
       this->Array[i] = value;
     }
 
@@ -422,12 +441,18 @@ class DataArray : public IDataArray
     // These can be overridden for more efficiency
     T GetComponent(size_t i, int j)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i*NumberOfComponents+j < Size);}
+#endif
       return Array[i*this->NumberOfComponents + j];
     }
 
     //----------------------------------------------------------------------------
     void SetComponent(size_t i, int j, T c)
     {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i*NumberOfComponents+j < Size);}
+#endif
       Array[i*this->NumberOfComponents + j] = c;
     }
 
@@ -474,7 +499,19 @@ class DataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array);
+      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getNameOfClass());
+    }
+
+    /**
+     * @brief
+     * @param parentId
+     * @return
+     */
+    virtual int readH5Data(hid_t parentId)
+    {
+      int err = -1;
+
+      return err;
     }
 
 

@@ -97,7 +97,6 @@ void FileReader::execute()
   int err = readHeader();
   if (err < 0)
   {
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
     setErrorCondition(err);
     notify(getErrorMessage(), 0, UpdateErrorMessage);
     return;
@@ -105,7 +104,6 @@ void FileReader::execute()
   err = readFile();
   if (err < 0)
   {
-    setErrorMessage("Error Reading the file");
     setErrorCondition(err);
     notify(getErrorMessage(), 0, UpdateErrorMessage);
     return;

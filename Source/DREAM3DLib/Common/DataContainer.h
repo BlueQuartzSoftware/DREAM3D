@@ -162,7 +162,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     IDataArray::Pointer removeVoxelData(const std::string &name);
 
     /**
-    * @brief Returns a list that contains the names of all the arrays currently stored in the 
+     * @brief Removes all the Voxel Arrays
+     */
+    void clearVoxelData();
+
+    /**
+    * @brief Returns a list that contains the names of all the arrays currently stored in the
     * Cell (Formerly Voxel) group
     * @return
     */
@@ -197,9 +202,13 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     */
     IDataArray::Pointer removeFieldData(const std::string &name);
 
+    /**
+     * @brief Removes all the Field Arrays
+     */
+    void clearFieldData();
 
     /**
-    * @brief Returns a list that contains the names of all the arrays currently stored in the 
+    * @brief Returns a list that contains the names of all the arrays currently stored in the
     * Field (Formerly Grain) group
     * @return
     */
@@ -245,6 +254,11 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * @return
     */
     IDataArray::Pointer removeEnsembleData(const std::string &name);
+
+    /**
+     * @brief Removes all the ensemble data
+     */
+    void clearEnsembleData();
 
     std::list<std::string> getEnsembleArrayNameList();
 

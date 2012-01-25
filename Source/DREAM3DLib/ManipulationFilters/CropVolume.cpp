@@ -150,7 +150,7 @@ void CropVolume::execute()
         col = int(x / m->getXRes());
         row = int(y / m->getYRes());
         plane = int(z / m->getZRes());
-		index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
+        index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
