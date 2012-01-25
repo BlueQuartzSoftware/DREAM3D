@@ -123,12 +123,12 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   //TODO: Initialize the array to something known - like 0
 
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -303,  int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -303,  int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
 
   setErrorMessage(ss.str());
 }
@@ -427,7 +427,7 @@ void AlignSections::align_sections()
       mutualinfo12 = NULL;
     }
   }
-  std::list<std::string> voxelArrayNames = m->getVoxelArrayNameList();
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
@@ -450,7 +450,7 @@ void AlignSections::align_sections()
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             std::string name = *iter;
-            IDataArray::Pointer p = m->getVoxelData(*iter);
+            IDataArray::Pointer p = m->getCellData(*iter);
         	  p->CopyTuple(currentPosition, newPosition);
           }
         }

@@ -60,16 +60,17 @@
 
 namespace DREAM3D
 {
-  namespace VoxelData
+#if 0
+  namespace CellData
   {
     const std::string GrainIds("GrainIds");
     const std::string Phases("Phases");
     const std::string EulerAngles("EulerAngles");
-    const std::string SurfaceVoxels("SurfaceVoxels");
+    const std::string SurfaceCells("SurfaceCells");
     const std::string Neighbors("Neighbors");
     const std::string Quats("Quats");
     const std::string AlreadyChecked("AlreadyChecked");
-    const std::string GoodVoxels("GoodVoxels");
+    const std::string GoodCells("GoodCells");
     const std::string NearestNeighbors("NearestNeighbors");
     const std::string NearestNeighborDistances("NearestNeighborDistances");
     const std::string GrainMisorientations("GrainMisorientations");
@@ -110,6 +111,7 @@ namespace DREAM3D
   {
     const std::string TotalSurfaceArea("TotalSurfaceArea");
   }
+#endif
 }
 
 
@@ -130,12 +132,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual ~DataContainer();
 
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Voxel)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Cell)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Ensemble)
 
 
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getVoxelData);
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData);
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
 
@@ -144,14 +146,14 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
    */
-    void addVoxelData(const std::string &name, IDataArray::Pointer data);
+    void addCellData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVoxelData(const std::string &name);
+    IDataArray::Pointer getCellData(const std::string &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -159,25 +161,25 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    IDataArray::Pointer removeVoxelData(const std::string &name);
+    IDataArray::Pointer removeCellData(const std::string &name);
 
     /**
-     * @brief Removes all the Voxel Arrays
+     * @brief Removes all the Cell Arrays
      */
-    void clearVoxelData();
+    void clearCellData();
 
     /**
     * @brief Returns a list that contains the names of all the arrays currently stored in the
-    * Cell (Formerly Voxel) group
+    * Cell (Formerly Cell) group
     * @return
     */
-    std::list<std::string> getVoxelArrayNameList();
+    std::list<std::string> getCellArrayNameList();
 
     /**
-    * @brief Returns the total number of arrays that are stored in the Voxel group
+    * @brief Returns the total number of arrays that are stored in the Cell group
     * @return
     */
-    int getNumVoxelArrays();
+    int getNumCellArrays();
 
 
     /**
@@ -304,7 +306,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
   private:
 
-    std::map<std::string, IDataArray::Pointer> m_VoxelData;
+    std::map<std::string, IDataArray::Pointer> m_CellData;
     std::map<std::string, IDataArray::Pointer> m_FieldData;
     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 

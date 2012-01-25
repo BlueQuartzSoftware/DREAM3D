@@ -74,7 +74,7 @@ int TestVtkGrainIdWriter()
   size_t nz = UnitTest::VtkGrainIdIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
   m->setDimensions(nx, ny, nz);
   m->setResolution(2.0f, 3.0f, 4.0f);
   m->setOrigin(1.0f, 2.0f, 3.0f);
@@ -110,7 +110,7 @@ int TestVtkGrainIdReader()
   DREAM3D_REQUIRE_EQUAL(err, 0);
   m->getDimensions(nx, ny, nz);
 
-  IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  IDataArray::Pointer mdata = reader->getDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
 
 
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::VtkGrainIdIOTest::XSize);

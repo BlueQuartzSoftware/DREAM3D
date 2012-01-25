@@ -74,7 +74,7 @@ int TestDxWriter()
   size_t nz = UnitTest::DxIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
   m->setDimensions(nx, ny, nz);
 
   DxWriter::Pointer writer = DxWriter::New();
@@ -105,7 +105,7 @@ int TestDxReader()
   int err = reader->getErrorCondition();
   m->getDimensions(nx, ny, nz);
 
-  IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  IDataArray::Pointer mdata = reader->getDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);

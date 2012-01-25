@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
+#include "DREAM3DLib/HDF5/H5DataWriter.h"
 
 /*
  *
@@ -81,6 +82,28 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
   private:
     DataContainerWriter(const DataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const DataContainerWriter&); // Operator '=' Not Implemented
+
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    template<typename T, typename K>
+    int writeEnsembleDataArray(H5DataWriter::Pointer h5writer, const std::vector<T> &data, const std::string &name)
+     {
+       std::vector<int> fieldData(data.size());
+       for (size_t i = 0; i < data.size(); ++i)
+       {
+         fieldData[i] = data[i];
+       }
+       int err = h5writer->writeEnsembleData<K>(DREAM3D::HDF5::DataContainerName, fieldData,
+                                           name.c_str(), 1);
+       if (err < 0)
+       {
+         std::cout << "Error Writing Ensemble Data '" << name << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
+       }
+       return err;
+     }
+
 
 
 };

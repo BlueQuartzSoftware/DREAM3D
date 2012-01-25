@@ -177,7 +177,7 @@ class NeighborList : public IDataArray
         currentStart += _data[dIdx]->size();
       }
 
-      int32_t rank = 0;
+      int32_t rank = 1;
       hsize_t dims[1] = { total };
       err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
       if(err < 0)

@@ -84,7 +84,7 @@ int PhWriter::writeFile()
 
   int32_t* grain_indicies = 0;
   {
-    IDataArray::Pointer iDataArray = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
+    IDataArray::Pointer iDataArray = m->getCellData(DREAM3D::CellData::GrainIds);
     if (iDataArray.get() == 0) {
       return -10;
     }
@@ -92,7 +92,7 @@ int PhWriter::writeFile()
       return -20;
     }
     grain_indicies =
-    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getVoxelData(DREAM3D::VoxelData::GrainIds).get());
+    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getCellData(DREAM3D::CellData::GrainIds).get());
     if (0 == grain_indicies) {
       return -30;
     }

@@ -95,7 +95,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1);
 

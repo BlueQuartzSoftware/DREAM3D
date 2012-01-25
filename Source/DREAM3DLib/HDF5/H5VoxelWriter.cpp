@@ -75,10 +75,10 @@ int H5VoxelWriter::writeEulerData(float* ea,
     std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
-  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, ea, DREAM3D::VTK::EulerAnglesName.c_str(), numComp, rank, dims);
+  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, ea, DREAM3D::CellData::EulerAngles.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::EulerAnglesName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
   }
   return err;
 }
@@ -105,10 +105,10 @@ int H5VoxelWriter::writeGrainIds(int* grain_indicies, int64_t totalPoints, bool 
     std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
-  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, grain_indicies, DREAM3D::VTK::GrainIdScalarName.c_str(), numComp, rank, dims);
+  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, grain_indicies, DREAM3D::CellData::GrainIds.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::VTK::GrainIdScalarName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
     return -1;
   }
   return err;
@@ -135,10 +135,10 @@ int H5VoxelWriter::writePhaseIds(int* phases, int64_t totalPoints, bool appendFi
     std::cout << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     return err;
   }
-  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, phases, DREAM3D::VTK::PhaseIdScalarName.c_str(), numComp, rank, dims);
+  err = h5writer->writeScalarData(DREAM3D::HDF5::DataContainerName, phases, DREAM3D::CellData::Phases.c_str(), numComp, rank, dims);
   if (err < 0)
     {
-      std::cout << "Error Writing Scalars '" << DREAM3D::VTK::PhaseIdScalarName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
+      std::cout << "Error Writing Scalars '" << DREAM3D::CellData::Phases << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
       return -1;
     }
   return err;
@@ -197,10 +197,10 @@ int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructu
      fieldData[i] = crystruct[i];
    }
    err = h5writer->writeFieldData<int>(DREAM3D::HDF5::DataContainerName, fieldData,
-                                       DREAM3D::VTK::CrystalStructureName.c_str(), 1);
+                                       DREAM3D::EnsembleData::CrystalStructure.c_str(), 1);
    if (err < 0)
    {
-     std::cout << "Error Writing Field Data '" << DREAM3D::VTK::CrystalStructureName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
+     std::cout << "Error Writing Ensemble Data '" << DREAM3D::EnsembleData::CrystalStructure << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
    }
    return err;
  }
@@ -230,10 +230,10 @@ int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::Ph
   {
     fieldData[i] = phaseType[i];
   }
-  err = h5writer->writeFieldData<int>(DREAM3D::HDF5::DataContainerName, fieldData, DREAM3D::VTK::PhaseTypeName.c_str(), 1);
+  err = h5writer->writeFieldData<int>(DREAM3D::HDF5::DataContainerName, fieldData, DREAM3D::FieldData::Phases.c_str(), 1);
   if (err < 0)
   {
-    std::cout << "Error Writing Field Data '" << DREAM3D::VTK::PhaseTypeName << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
+    std::cout << "Error Writing Ensemble Data '" << DREAM3D::FieldData::Phases << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
   }
   return err;
 }

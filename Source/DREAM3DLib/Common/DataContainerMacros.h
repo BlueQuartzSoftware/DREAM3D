@@ -248,38 +248,38 @@ type* valuePtr = NULL;\
 /*
    // Cell Data
 
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, -300, bool, BoolArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -300, bool, BoolArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, MisorientationGradients, ss, -300, float, FloatArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, EulerAngles, C, ss, -300, float, FloatArrayType,  voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, -300, bool, BoolArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -300, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, -300, float, FloatArrayType,  voxels, 3);
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, float, FloatArrayType, fields, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, fields, 5);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
 
 
   // Field Data
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields, 1);

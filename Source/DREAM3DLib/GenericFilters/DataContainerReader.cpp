@@ -128,7 +128,7 @@ void DataContainerReader::execute()
   m->setResolution(spacing);
   m->setOrigin(origin);
 
-  m->clearVoxelData();
+  m->clearCellData();
   m->clearFieldData();
   m->clearEnsembleData();
 

@@ -72,8 +72,8 @@ class FindEuclideanMap : public AbstractFilter
     {
       std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
       int64_t totalPoints = m->totalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), m_NearestNeighbors);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Voxel, DREAM3D::VoxelData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), m_NearestNeighborDistances);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), m_NearestNeighbors);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), m_NearestNeighborDistances);
 
       int nearestneighbordistance = 0;
       int count = 1;
@@ -212,10 +212,10 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighbors, ss, int32_t, Int32ArrayType, voxels, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, NearestNeighborDistances, ss, float, FloatArrayType, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, int32_t, Int32ArrayType, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, float, FloatArrayType, voxels, 3);
 
   setErrorMessage(ss.str());
 }

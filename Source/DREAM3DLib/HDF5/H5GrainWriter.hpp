@@ -118,12 +118,12 @@ for (int k = 0; k < 8; k++) {\
 
 #define H5GW_GRAIN_LOOP_2(size) \
 err = h5writer->writeUnstructuredGrid(hdfPath, points, cells, cell_types);\
-err = h5writer->writeFieldData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
+err = h5writer->writeFieldData<int> (hdfPath, grainName, DREAM3D::CellData::GrainIds.c_str(), 1);\
 if (size > 0) {\
 }\
-err = h5writer->writeCellData<int> (hdfPath, grainName, DREAM3D::HDF5::Grain_ID.c_str(), 1);\
-err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, DREAM3D::HDF5::IPFColor.c_str(), 3);\
-err = h5writer->writeCellData<int32_t> (hdfPath, phaseValues, DREAM3D::HDF5::Phase.c_str(), 1);
+err = h5writer->writeCellData<int> (hdfPath, grainName, DREAM3D::CellData::GrainIds.c_str(), 1);\
+err = h5writer->writeCellData<unsigned char> (hdfPath, ipfColor, DREAM3D::CellData::IPFColor.c_str(), 3);\
+err = h5writer->writeCellData<int32_t> (hdfPath, phaseValues, DREAM3D::CellData::Phases.c_str(), 1);
 
 
 
@@ -156,9 +156,9 @@ class  H5GrainWriter
     {
       int64_t totalPoints = r->totalPoints();
 
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, (totalPoints), phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
 
       size_t totalFields = r->getTotalFields();
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(r, Field, DREAM3D::FieldData::NumNeighbors, Int32ArrayType, int32_t, totalFields, numNeighbors);

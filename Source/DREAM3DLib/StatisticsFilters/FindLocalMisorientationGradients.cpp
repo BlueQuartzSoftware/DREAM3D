@@ -101,12 +101,12 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, VoxelData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, VoxelData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, KernelAverageMisorientations, ss, float, FloatArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, GrainMisorientations, ss, float, FloatArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, MisorientationGradients, ss, float, FloatArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, float, FloatArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, float, FloatArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, float, FloatArrayType, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, fields, 3);
@@ -152,7 +152,7 @@ void FindLocalMisorientationGradients::execute()
 
   // We need to keep a reference to the wrapper DataArray class in addition to the raw pointer
   FloatArrayType* m_KernelMisorientations =
-      FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType*>(m->getVoxelData(DREAM3D::VoxelData::KernelAverageMisorientations).get());
+      FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType*>(m->getCellData(DREAM3D::CellData::KernelAverageMisorientations).get());
 
   std::vector<float> gamVec(totalPoints);
   float* gam = &(gamVec.front());

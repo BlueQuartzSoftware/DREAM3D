@@ -97,17 +97,105 @@ namespace DREAM3D
     const std::string SurfaceMeshingFilters("Surface Meshing");
   }
 
+  namespace CellData
+  {
+    const std::string GrainIds("GrainIds");
+    const std::string Phases("Phases");
+    const std::string EulerAngles("EulerAngles");
+    const std::string SurfaceVoxels("SurfaceVoxels");
+    const std::string Neighbors("Neighbors");
+    const std::string Quats("Quats");
+    const std::string AlreadyChecked("AlreadyChecked");
+    const std::string GoodVoxels("GoodVoxels");
+    const std::string NearestNeighbors("NearestNeighbors");
+    const std::string NearestNeighborDistances("NearestNeighborDistances");
+    const std::string GrainMisorientations("GrainMisorientations");
+    const std::string MisorientationGradients("MisorientationGradients");
+    const std::string KernelAverageMisorientations("KernelAverageMisorientations");
+    const std::string ImageQuality("ImageQuality");
+    const std::string IPFColor("IPFColor");
+  }
+
+  namespace FieldData
+  {
+    const std::string Active("Active");
+    const std::string Phases("Phases");
+    const std::string EulerAngles("EulerAngles");
+    const std::string AxisEulerAngles("AxisEulerAngles");
+    const std::string SurfaceFields("SurfaceFields");
+    const std::string UnbiasedFields("UnbiasedFields");
+    const std::string NumNeighbors("NumNeighbors");
+    const std::string RGBs("RGBs");
+    const std::string Centroids("Centroids");
+    const std::string NumCells("NumCells");
+    const std::string Volumes("Volumes");
+    const std::string EquivalentDiameters("EquivalentDiameters");
+    const std::string Schmids("Schmids");
+    const std::string SlipSystems("SlipSystems");
+    const std::string AspectRatios("AspectRatios");
+    const std::string AxisLengths("AxisLengths");
+    const std::string Omega3s("Omega3s");
+    const std::string AvgQuats("AvgQuats");
+    const std::string Poles("Poles");
+    const std::string Neighborhoods("Neighborhoods");
+    const std::string GrainAvgMisorientations("GrainAvgMisorientations");
+    const std::string KernelAvgMisorientations("KernelAvgMisorientations");
+    const std::string NeighborList("NeighborList");
+    const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
+    const std::string LMG("LMG");
+  }
+
+  namespace EnsembleData
+  {
+    const std::string TotalSurfaceArea("TotalSurfaceArea");
+    const std::string CrystalStructure("CrystalStructure");
+    const std::string PhaseType("PhaseType");
+  }
+
+#if 0
+  namespace VTK {
+     const std::string GrainIdScalarName("GrainIds");
+     const std::string PhaseIdScalarName("Phases");
+     const std::string EulerAnglesName("EulerAngles");
+     const std::string SurfaceVoxelScalarName("SurfaceVoxels");
+     const std::string NeighborsScalarName("Neighbors");
+     //Quats
+     //AlreadyChecked
+     const std::string GoodVoxelScalarName("GoodVoxels");
+     //NearestNeighbors
+     //NearestNeighborDistances
+     //GrainMisorientations
+     //MisorientationGradients
+     //KernelAverageMisorientations
+     const std::string ImageQualityScalarName("ImageQuality");
+
+
+
+
+     const std::string EuclideanScalarName("Euclidean");
+     const std::string SchmidFactorScalarName("SchmidFactor");
+     const std::string KAMScalarName("KAM");
+     const std::string GAMScalarName("GAM");
+     const std::string LMGScalarName("LMG");
+  }
+
+#endif
 
   namespace HDF5
   {
-    const std::string Grain_ID("Grain_ID");
-    const std::string SchmidFactor ("SchmidFactor");
+
+    const std::string DataContainerName("DataContainer");
+    const std::string ObjectType("ObjectType");
+
+
+  //  const std::string Grain_ID("Grain_ID");
+   // const std::string SchmidFactor ("SchmidFactor");
     const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
     const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
     const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
-    const std::string ImageQuality( "ImageQuality");
-    const std::string IPFColor("IPFColor");
-    const std::string Phase("Phase");
+  //  const std::string ImageQuality( "ImageQuality");
+
+   // const std::string Phase("Phase");
 
     const std::string Statistics("Statistics");
     const std::string AxisOrientation("AxisOrientation");
@@ -150,9 +238,6 @@ namespace DREAM3D
     const std::string BetaDistribution("Beta Distribution");
     const std::string LogNormalDistribution("Log Normal Distribution");
     const std::string PowerLawDistribution("Power Law Distribution");
-
-    const std::string DataContainerName("DataContainer");
-    const std::string ObjectType("ObjectType");
 
     enum ColumnCount
     {
@@ -308,21 +393,8 @@ namespace DREAM3D
     const std::string VoxelDataName("VoxelData");
   }
 
-  namespace VTK {
-     const std::string GrainIdScalarName("GrainID");
-     const std::string EulerAnglesName("Euler Angles");
-     const std::string CrystalStructureName("CrystalStructure");
-     const std::string PhaseTypeName("PhaseType");
-     const std::string EuclideanScalarName("Euclidean");
-     const std::string SchmidFactorScalarName("SchmidFactor");
-     const std::string KAMScalarName("KAM");
-     const std::string GAMScalarName("GAM");
-     const std::string LMGScalarName("LMG");
-     const std::string PhaseIdScalarName("PhaseID");
-     const std::string GoodVoxelScalarName("GoodVoxel");
-     const std::string ImageQualityScalarName("ImageQuality");
-     const std::string SurfaceVoxelScalarName("SurfaceVoxel");
-  }
+
+
 
   /*   Surface Meshing Related   */
   namespace SurfaceMesh

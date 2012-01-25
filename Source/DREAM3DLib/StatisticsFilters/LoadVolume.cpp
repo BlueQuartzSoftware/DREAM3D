@@ -176,6 +176,13 @@ void LoadVolume::execute()
 
 
   err = h5Reader->readVoxelData(m_GrainIds, m_PhasesC, m_EulerAngles, m->crystruct, m->phaseType, totalPoints);
+  if (err < 0)
+  {
+    setErrorCondition(err);
+    setErrorMessage("Error Reading Voxel Data from input file");
+    notify(getErrorMessage().c_str(), 0, Observable::UpdateProgressMessage);
+    return;
+  }
   m->phasefraction.resize(m->crystruct.size());
   m->pptFractions.resize(m->crystruct.size());
   initializeGrains();
@@ -200,7 +207,7 @@ void LoadVolume::initializeGrains()
   DataContainer* m = getDataContainer();
   m->resizeFieldDataArrays(1);
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
@@ -208,20 +215,31 @@ void LoadVolume::initializeGrains()
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;
   int64_t totalPoints = m->totalPoints();
+  size_t totalGrains = 0;
   for (int i = 0; i < totalPoints; ++i)
   {
     grainIndex = m_GrainIds[i];
-  //  curGrainSize = m->getTotalFields();
-    if (grainIndex > m->getTotalFields() - 1)
+    //  curGrainSize = m->getTotalFields();
+    if(grainIndex >= totalGrains)
     {
-      m->setTotalFields(grainIndex+1);
-	    m->resizeFieldDataArrays(grainIndex+1);
+      ++totalGrains;
     }
+  }
+  // Now we know how many grains there are, lets do some initilization
+  m->resizeFieldDataArrays(totalGrains);
+  std::stringstream ss;
+  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, totalGrains, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, totalGrains, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, totalGrains, 1);
+
+  for (int i = 0; i < totalPoints; ++i)
+  {
+    grainIndex = m_GrainIds[i];
+
     m_PhasesF[grainIndex] = m_PhasesC[i];
     m_NumCells[grainIndex]++;
-	m_Active[grainIndex] = true;
+    m_Active[grainIndex] = true;
   }
-
 
   // Loop over the Grains and initialize them as necessary
   size_t gSize = m->getTotalFields();
@@ -240,11 +258,11 @@ void LoadVolume::initializeAttributes()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  m_GrainIds = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, 1, this);
+  m_GrainIds = m->createCellData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, 1, this);
   if (m_GrainIds == NULL) { return; }
-  m_PhasesC = m->createVoxelData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::Phases, totalPoints, 1, this);
+  m_PhasesC = m->createCellData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::Phases, totalPoints, 1, this);
   if (m_PhasesC == NULL) { return; }
-  m_EulerAngles = m->createVoxelData<float, FloatArrayType, AbstractFilter>(DREAM3D::VoxelData::EulerAngles, 3*totalPoints, 1, this);
+  m_EulerAngles = m->createCellData<float, FloatArrayType, AbstractFilter>(DREAM3D::CellData::EulerAngles, 3*totalPoints, 1, this);
   if (NULL == m_EulerAngles) {return;}
 
   for (int i = 0; i < totalPoints; ++i)

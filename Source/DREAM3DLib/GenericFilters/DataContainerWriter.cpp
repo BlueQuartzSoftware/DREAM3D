@@ -36,7 +36,8 @@
 
 #include "DataContainerWriter.h"
 
-#include "DREAM3DLib/HDF5/H5DataWriter.h"
+#include "EbsdLib/EbsdConstants.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -129,7 +130,7 @@ void DataContainerWriter::execute()
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
 
-  err = writer->openFile(false); // Creates a New File by over writing any existing file
+  err = writer->openFile(false); // Do NOT append to any existing file
   if (err < 0)
   {
     ss.str("");
@@ -194,10 +195,10 @@ void DataContainerWriter::execute()
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
-  NameListType names = m->getVoxelArrayNameList();
+  NameListType names = m->getCellArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter )
   {
-    IDataArray::Pointer array = m->getVoxelData(*iter);
+    IDataArray::Pointer array = m->getCellData(*iter);
     err = array->writeH5Data(cellGroupId);
     if (err < 0)
     {
@@ -293,6 +294,14 @@ void DataContainerWriter::execute()
       return;
     }
   }
+
+
+  // These should eventually go away when these "Ensemble Data" items get wrapped into the map structure of the
+  // data container class.
+  err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(writer, m->phaseType, DREAM3D::EnsembleData::PhaseType);
+  err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(writer, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
+
+
   H5Gclose(ensembleGid);
 
 
@@ -302,5 +311,4 @@ void DataContainerWriter::execute()
   setErrorCondition(0);
   notify("DataContainerWriter Complete", 0, Observable::UpdateProgressMessage);
 }
-
 

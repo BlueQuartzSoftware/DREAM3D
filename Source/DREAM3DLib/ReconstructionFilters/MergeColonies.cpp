@@ -123,7 +123,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 3);
