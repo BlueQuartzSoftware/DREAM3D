@@ -394,8 +394,8 @@ void __TestNeighborList()
    }
 
    // Reset and erase the back 2 "Tuples"
-  for(int i = 0; i < 4; ++i) {
-    n->removeList(i); // Erase the list first
+  n->clearAllLists();
+  for(int i = 0; i < 4; ++i) {   
     for(T j = 0; j < i+4; ++j) {
       n->addEntry(i, j*i+3);
     }
@@ -415,14 +415,11 @@ void __TestNeighborList()
   }
 
   // Reset and erase the back 2 "Tuples"
+  n->clearAllLists();
   for(int i = 0; i < 4; ++i) {
-   n->removeList(i); // Erase the list first
-  // std::cout << i << ": ";
    for(T j = 0; j < i+4; ++j) {
      n->addEntry(i, j*i+3);
-   //  std::cout << (j*i+3) << " ";
    }
-  // std::cout << std::endl;
   }
   eraseElements.clear();
   eraseElements.push_back(1);
