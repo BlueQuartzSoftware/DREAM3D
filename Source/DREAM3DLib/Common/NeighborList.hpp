@@ -97,6 +97,7 @@ class NeighborList : public IDataArray
           if (idxsIndex == idxs.size() ) { idxsIndex--;}
         }
       }
+      _data = replacement;
       return err;
     }
 
@@ -167,6 +168,7 @@ class NeighborList : public IDataArray
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
         size_t nEle = _data[dIdx]->size();
+        if (nEle == 0) { continue; }
         T* start = &(_data[dIdx]->front()); // Get the pointer to the front of the array
     //    T* end = start + nEle; // Get the pointer to the end of the array
         T* dst = &(flat.front()) + currentStart;
@@ -221,16 +223,12 @@ class NeighborList : public IDataArray
       _data[grainId]->push_back(value);
     }
 
-
-
     /**
      *
      */
-    void removeList(int grainId)
+    void clearAllLists()
     {
-      typename std::vector<SharedVectorType>::iterator it = _data.begin();
-      it = it + grainId;
-      _data.erase(it);
+      _data.clear();
     }
 
 
@@ -239,6 +237,16 @@ class NeighborList : public IDataArray
      */
     void setList(int grainId, SharedVectorType neighborList)
     {
+      if(grainId >= static_cast<int>(_data.size()) )
+      {
+        size_t old = _data.size();
+        _data.resize(grainId + 1);
+        // Initialize with zero length Vectors
+        for(size_t i = old; i < _data.size(); ++i)
+        {
+          _data[i] = SharedVectorType(new VectorType);
+        }
+      }
       _data[grainId] = neighborList;
     }
 
@@ -247,7 +255,9 @@ class NeighborList : public IDataArray
      */
     T getValue(int grainId, int index, bool &ok)
     {
-
+#ifndef NDEBUG
+      if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}
+#endif
       SharedVectorType vec = _data[grainId];
       if(index < 0 || static_cast<size_t>(index) >= vec->size())
       {
@@ -303,6 +313,9 @@ class NeighborList : public IDataArray
 
     VectorType& operator[](int grainId)
     {
+#ifndef NDEBUG
+      if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}
+#endif
       return *(_data[grainId]);
     }
 
