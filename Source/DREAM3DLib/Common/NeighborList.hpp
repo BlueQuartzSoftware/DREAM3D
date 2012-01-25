@@ -81,22 +81,22 @@ class NeighborList : public IDataArray
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
       int err = 0;
-
-      for(size_t i = 0; i < idxs.size(); ++i)
+      std::vector<SharedVectorType> replacement(_data.size() - idxs.size());
+      size_t idxsIndex = 0;
+      size_t rIdx = 0;
+      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
-        _data.erase(static_cast<int>(idxs[i]) );
+        if (dIdx != idxs[idxsIndex])
+        {
+          replacement[rIdx] = _data[dIdx];
+          ++rIdx;
+        }
+        else
+        {
+          ++idxsIndex;
+          if (idxsIndex == idxs.size() ) { idxsIndex--;}
+        }
       }
-
-      std::map<int, SharedVectorType> replacement;
-      int i = 0;
-      for (typename std::map<int, SharedVectorType>::iterator iter = _data.begin(); iter != _data.end(); ++iter )
-      {
-        assert (i <= (*iter).first);
-        replacement[i] = (*iter).second;
-        ++i;
-      }
-      _data = replacement;
-
       return err;
     }
 
@@ -146,32 +146,54 @@ class NeighborList : public IDataArray
     {
 
       int err = 0;
-      // Write the Voxel Data
-      err = H5Utilities::createGroupsFromPath(GetName(), parentId);
-      if (err < 0)
+
+      // Generate the number of neighbors array and also compute the total number
+      // of elements that would be needed to flatten the array
+      std::vector<size_t> numNeighbors(_data.size());
+      size_t total = 0;
+      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
-       return err;
-      }
-      hid_t gid = H5Gopen(parentId, GetName().c_str(), H5P_DEFAULT );
-      if(err < 0)
-      {
-       return err;
+        numNeighbors[dIdx] = _data[dIdx]->size();
+        total += _data[dIdx]->size();
       }
 
-      for (typename std::map<int, SharedVectorType>::iterator iter = _data.begin(); iter != _data.end(); ++iter )
+      //FIXME: Check to see if the NumNeighbors is already written to the file
+      //FIXME: and if it is then validate that we have the correct values
+
+
+      // Allocate an array of the proper size
+      std::vector<T> flat (total);
+      size_t currentStart = 0;
+      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
-        SharedVectorType data = (*iter).second;
-        if (data->size() == 0) { continue; }
-        std::string datasetName = StringUtils::numToString((*iter).first);
-        std::vector<hsize_t> dims(1, data->size());
-        err = H5Lite::writeVectorDataset(gid, datasetName, dims, *(data.get()));
-        if (err < 0)
-        {
-          std::cout << "Error Writing Neighbor list for grain id " << (*iter).first << std::endl;
-          break;
-        }
+        size_t nEle = _data[dIdx]->size();
+        T* start = &(_data[dIdx]->front()); // Get the pointer to the front of the array
+    //    T* end = start + nEle; // Get the pointer to the end of the array
+        T* dst = &(flat.front()) + currentStart;
+        ::memcpy(dst, start, nEle*sizeof(T));
+
+        currentStart += _data[dIdx]->size();
       }
-      H5Gclose(gid);
+
+      int32_t rank = 0;
+      hsize_t dims[1] = { total };
+      err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
+      if(err < 0)
+      {
+        //FIXME: Add Error Handling Code
+      }
+      err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
+      if(err < 0)
+      {
+        //FIXME: Add Error Handling Code
+      }
+
+      err = H5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
+      if(err < 0)
+      {
+        //FIXME: Add Error Handling Code
+      }
+
       return err;
     }
 
@@ -186,21 +208,31 @@ class NeighborList : public IDataArray
  */
     void addEntry(int grainId, int value)
     {
-      if(_data.find(grainId) == _data.end())
+      if(grainId >= static_cast<int>(_data.size()) )
       {
-        _data[grainId] = SharedVectorType(new VectorType);
+        size_t old = _data.size();
+        _data.resize(grainId + 1);
+        // Initialize with zero length Vectors
+        for(size_t i = old; i < _data.size(); ++i)
+        {
+          _data[i] = SharedVectorType(new VectorType);
+        }
       }
-      SharedVectorType sharedVector = _data[grainId];
       _data[grainId]->push_back(value);
     }
+
+
 
     /**
      *
      */
     void removeList(int grainId)
     {
-      _data.erase(grainId);
+      typename std::vector<SharedVectorType>::iterator it = _data.begin();
+      it = it + grainId;
+      _data.erase(it);
     }
+
 
     /**
      *
@@ -213,13 +245,9 @@ class NeighborList : public IDataArray
     /**
      *
      */
-    int getValue(int grainId, int index, bool &ok)
+    T getValue(int grainId, int index, bool &ok)
     {
-      if(_data.find(grainId) == _data.end())
-      {
-        ok = false;
-        return -1;
-      }
+
       SharedVectorType vec = _data[grainId];
       if(index < 0 || static_cast<size_t>(index) >= vec->size())
       {
@@ -242,23 +270,21 @@ class NeighborList : public IDataArray
      */
     int getListSize(int grainId)
     {
-      if(_data.find(grainId) == _data.end())
-      {
-        return 0;
-      }
+#ifndef NDEBUG
+      if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}
+#endif
       return static_cast<int>(_data[grainId]->size());
     }
+
 
     /**
      *
      */
     SharedVectorType pointerToList(int grainId)
     {
-      if(_data.find(grainId) == _data.end())
-      {
-        SharedVectorType copy;
-        return copy;
-      }
+#ifndef NDEBUG
+      if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}
+#endif
       return _data[grainId];
     }
 
@@ -267,12 +293,10 @@ class NeighborList : public IDataArray
      */
     VectorType copyOfList(int grainId)
     {
+#ifndef NDEBUG
+      if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}
+#endif
 
-      if(_data.find(grainId) == _data.end())
-      {
-        VectorType copy;
-        return copy;
-      }
       VectorType copy(*(_data[grainId]));
       return copy;
     }
@@ -289,7 +313,7 @@ class NeighborList : public IDataArray
   private:
     std::string m_Name;
 
-    std::map<int, SharedVectorType> _data;
+    std::vector<SharedVectorType> _data;
 
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented
     void operator=(const NeighborList&); // Operator '=' Not Implemented

@@ -83,14 +83,14 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
 
   setErrorCondition(0);
-   std::stringstream ss;
-   DataContainer* m = getDataContainer();
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1);
 
-   setErrorMessage(ss.str());
+  setErrorMessage(ss.str());
 }
 
 
@@ -162,10 +162,10 @@ void RenumberGrains::execute()
     ss.str("");
     ss << getNameOfClass() << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
     ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    //notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
 	  p->EraseTuples(RemoveList);
-	  std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
+	  //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
   }
   m->setTotalFields(m->getTotalFields()-RemoveList.size());
   totalFields = m->getTotalFields();
