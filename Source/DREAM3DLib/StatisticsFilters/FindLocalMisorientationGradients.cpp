@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -177,7 +177,7 @@ void FindLocalMisorientationGradients::execute()
   int numchecks; // number of voxels in the grain...
   int good = 0;
 
-  int point;
+
   float w, totalmisorientation;
   float n1, n2, n3;
   Ebsd::CrystalStructure phase1 = Ebsd::UnknownCrystalStructure;
@@ -192,7 +192,7 @@ void FindLocalMisorientationGradients::execute()
   DimType xPoints = static_cast<DimType>(udims[0]);
   DimType yPoints = static_cast<DimType>(udims[1]);
   DimType zPoints = static_cast<DimType>(udims[2]);
-
+  DimType point;
   size_t neighbor = 0;
 //  int m_KernelSize = 1;
   DimType jStride;
@@ -214,7 +214,6 @@ void FindLocalMisorientationGradients::execute()
           q1[4] = m_Quats[point*5 + 4];
           phase1 = m->crystruct[m_PhasesC[point]];
           for (int j = -m_KernelSize; j < m_KernelSize + 1; j++)
-
           {
             jStride = j * xPoints * yPoints;
             for (int k = -m_KernelSize; k < m_KernelSize + 1; k++)
@@ -287,9 +286,8 @@ void FindLocalMisorientationGradients::execute()
   size_t grainsSize = m->getTotalFields();
   for (size_t i = 1; i < grainsSize; i++)
   {
-
     m_GrainAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
-	if(avgmiso[i][0] == 0) m_GrainAvgMisorientations[i] = 0.0;
+	  if(avgmiso[i][0] == 0) m_GrainAvgMisorientations[i] = 0.0;
   }
 
 //  m_KernelSize = 1;
@@ -299,11 +297,10 @@ void FindLocalMisorientationGradients::execute()
     {
       for (DimType plane = 0; plane < zPoints; plane++)
       {
-        point = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
-        if (m_GrainIds[point] > 0 && m_PhasesC[point] > 0)
-
+        point = (plane *xPoints * yPoints) + (row * xPoints) + col;
+        if (m_GrainIds[point] > 0 && m_PhasesC[point] > 0)\
         {
-          totalmisorientation = 0.0;
+          totalmisorientation = 0.0f;
           numchecks = 0;
           for (int j = -m_KernelSize; j < m_KernelSize + 1; j++)
           {

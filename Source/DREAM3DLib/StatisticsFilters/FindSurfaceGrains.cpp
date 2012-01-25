@@ -96,7 +96,7 @@ void FindSurfaceGrains::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+  size_t totalFields = m->getTotalFields();
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)
   {
