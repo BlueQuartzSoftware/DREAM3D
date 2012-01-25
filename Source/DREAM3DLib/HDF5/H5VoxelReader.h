@@ -40,6 +40,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include <boost/shared_array.hpp>
 
@@ -112,13 +113,15 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	    m_FileId = fileId;
 	  }
 	  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
-	  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
+	  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
 
 	// Read in the Grain ID data
 	  err = H5Lite::readPointerDataset(scalarGid, dsetName, data);
 	  if(err < 0)
 	  {
-	    m_ErrorMessage = "H5ReconVolumeReader Error Reading the " + dsetName;
+	    std::stringstream ss;
+	    ss << getNameOfClass() << ": Error Reading the " << dsetName;
+	    m_ErrorMessage = ss.str();
 	    err = H5Gclose(scalarGid);
 	    err = H5Gclose(reconGid);
 	    return err;
@@ -133,7 +136,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	 *
 	 */
 	template<typename CastTo, typename NativeType>
-	int readFieldDataWithCast(const std::string &dsetName, std::vector<CastTo> &data)
+	int readEnsembleDataWithCast(const std::string &dsetName, std::vector<CastTo> &data)
 	{
     int err = 0;
     if (m_FileId < 0)
@@ -147,15 +150,17 @@ class DREAM3DLib_EXPORT H5VoxelReader
       m_FileId = fileId;
     }
     OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
-    OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
+    OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_ENSEMBLE_DATA_GROUP_NAME, reconGid);
 
     std::vector<NativeType> nativeData;
     err = H5Lite::readVectorDataset(fieldGid, dsetName, nativeData);
     if(err < 0)
     {
-      m_ErrorMessage = "H5ReconVolumeReader Error Reading the Crystal Structure Field Data";
-      err = H5Gclose(fieldGid);
-      err = H5Gclose(reconGid);
+      std::stringstream ss;
+      ss << getNameOfClass() << ": Error Reading the " << dsetName;
+      m_ErrorMessage = ss.str();
+      err |= H5Gclose(fieldGid);
+      err |= H5Gclose(reconGid);
       return err;
     }
     data.resize(nativeData.size());

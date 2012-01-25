@@ -164,9 +164,9 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, m_GrainIndicies);
-  m->addVoxelData(DREAM3D::VoxelData::Phases, m_Phases);
-  m->addVoxelData(DREAM3D::VoxelData::EulerAngles, m_EulerAngles);
+  m->addCellData(DREAM3D::CellData::GrainIds, m_GrainIndicies);
+  m->addCellData(DREAM3D::CellData::Phases, m_Phases);
+  m->addCellData(DREAM3D::CellData::EulerAngles, m_EulerAngles);
 
   int64_t totalPoints = m->totalPoints();
 
@@ -182,7 +182,7 @@ int main(int argc, char **argv)
   ipfWriter.m_WriteBinaryFiles = false;
   ipfWriter.writeScalars(f);
 
-  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::VTK::GrainIdScalarName)
+  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds)
 
   fclose(f);
 

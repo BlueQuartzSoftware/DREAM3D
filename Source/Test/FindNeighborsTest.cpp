@@ -56,6 +56,7 @@
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
+#include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -182,7 +183,7 @@ int preflightPipeline(FilterContainerType &pipeline)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TestFindNeighbors()
+void TestFindNeighbors()
 {
   float m_MisorientationTolerance = 5.0f;
   int m_MinAllowedGrainSize = 12;
@@ -230,10 +231,7 @@ int TestFindNeighbors()
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
   int err = preflightPipeline(pipeline);
-  if (err < 0)
-  {
-    return EXIT_FAILURE;
-  }
+  DREAM3D_REQUIRE_EQUAL(err, 0);
   m = DataContainer::New();
 
 
@@ -266,7 +264,7 @@ int TestFindNeighbors()
       pipelineErrorMessage((*filter)->getErrorMessage().c_str());
       pipelineProgress(100);
       pipelineFinished();
-      return EXIT_FAILURE;
+      DREAM3D_REQUIRE_EQUAL(err, 0);;
     }
 
     if(DREAM3D_BENCHMARKS)
@@ -277,25 +275,68 @@ int TestFindNeighbors()
   }
 
   updateProgressAndMessage("FindNeighborsTest Complete", 100);
-#if 0
-  {
-    int64_t totalPoints = m->totalPoints();
-    IDataArray::Pointer p = m->getVoxelData(DREAM3D::VoxelData::GrainIds);
-    int32_t* ptr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(p.get());
-    for(int64_t i = 0; i < totalPoints; ++i)
-    {
-      ptr[i] = 0xAABBCCDD;
-    }
-  }
-  {
-    Int32ArrayType::Pointer p = Int32ArrayType::NullPointer();
-    // Forcibly clean up the Grain IDs
-    m->addVoxelData(DREAM3D::VoxelData::GrainIds, p);
-  }
-#endif
-  return EXIT_SUCCESS;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestLoadVolume()
+{
+  // Create the DataContainer object
+    DataContainer::Pointer m = DataContainer::New();
+
+  // Create a Vector to hold all the filters. Later on we will execute all the filters
+  FilterContainerType pipeline;
+
+  LoadVolume::Pointer load_volume = LoadVolume::New();
+  load_volume->setInputFile(UnitTest::FindNeighborTest::OutputFile);
+  pipeline.push_back(load_volume);
+
+  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
+  int err = preflightPipeline(pipeline);
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+  m = DataContainer::New();
+
+
+
+  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+  Observer observer;
+  err = 0;
+  // Start a Benchmark Clock so we can keep track of each filter's execution time
+  START_CLOCK()
+  // Start looping through the Pipeline
+  float progress = 0.0f;
+  std::stringstream ss;
+  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
+  {
+
+    progress = progress + 1.0f;
+    pipelineProgress(progress / (pipeline.size() + 1) * 100.0f);
+    ss.str("");
+    ss << logTime() << " Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass();
+    pipelineProgressMessage(ss.str());
+    (*filter)->addObserver(&observer);
+    (*filter)->setDataContainer(m.get());
+ //   setCurrentFilter(*filter);
+    (*filter)->execute();
+    (*filter)->removeObserver(&observer);
+    err = (*filter)->getErrorCondition();
+    if(err < 0)
+    {
+      setErrorCondition(err);
+      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
+      pipelineProgress(100);
+      pipelineFinished();
+      DREAM3D_REQUIRE_EQUAL(err, 0);
+    }
+
+    if(DREAM3D_BENCHMARKS)
+    {
+      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+      millis = MXA::getMilliSeconds();
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------
 //  Use test framework
@@ -304,6 +345,7 @@ int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestFindNeighbors() );
+  DREAM3D_REGISTER_TEST( TestLoadVolume() );
 //  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
 //
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() );

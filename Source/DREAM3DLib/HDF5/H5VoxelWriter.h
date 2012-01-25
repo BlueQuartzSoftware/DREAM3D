@@ -134,9 +134,9 @@ class DREAM3DLib_EXPORT H5VoxelWriter
     {
       int64_t totalPoints = m->totalPoints();
       int err = -1;
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
-      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Voxel, DREAM3D::VoxelData::EulerAngles, FloatArrayType, float, 3*totalPoints, eulerangles);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
+      GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, 3*totalPoints, eulerangles);
 
 
       err = writeCrystalStructures(m->crystruct, false);

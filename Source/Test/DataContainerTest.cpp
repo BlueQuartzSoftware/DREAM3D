@@ -65,7 +65,7 @@
 #define MAKE_ARRAY(type, name)\
 IDataArray::Pointer type##Ptr = DataArray<type>::CreateArray(5);\
 type##Ptr->SetName( name );\
-dataContainer->addVoxelData(name, type##Ptr);
+dataContainer->addCellData(name, type##Ptr);
 
 
 #define TEST_DATA_CONTAINER(Type, DCType)\
@@ -110,8 +110,8 @@ void TestDataContainerWriter()
   {
     grainIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
-  grainIds->SetName(DREAM3D::VoxelData::GrainIds);
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  grainIds->SetName(DREAM3D::CellData::GrainIds);
+  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
 
 
 
@@ -192,12 +192,12 @@ void insertDeleteArray(DataContainer::Pointer m)
 
   IDataArray::Pointer p = T::CreateArray(5);
   p->SetName( "Test" );
-  m->addVoxelData("Test", p);
-  IDataArray::Pointer t = m->getVoxelData("Test");
+  m->addCellData("Test", p);
+  IDataArray::Pointer t = m->getCellData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeVoxelData( "Test" );
+  t = m->removeCellData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getVoxelData( "Test" );
+  t = m->getCellData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
 
@@ -244,7 +244,7 @@ void TestInsertDelete()
   insertDeleteArray<FloatArrayType> (m);
   insertDeleteArray<DoubleArrayType> (m);
 
-  nameList = m->getVoxelArrayNameList();
+  nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   nameList = m->getFieldArrayNameList();
@@ -260,39 +260,39 @@ void _arrayCreation(DataContainer::Pointer m)
 {
   AbstractFilter::Pointer absFilt = AbstractFilter::New();
 
-  T* ptr = m->createVoxelData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  T* ptr = m->createCellData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
 
   // First try getting the array, but pass in a bad array name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getVoxelDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10*2, absFilt.get());
+  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10*2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getVoxelDataSizeCheck<T, K, AbstractFilter>("Test", 10, absFilt.get());
+  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
-  bool* bool_ptr =  m->getVoxelDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10*2, absFilt.get());
+  bool* bool_ptr =  m->getCellDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10*2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
-  ptr = m->getVoxelDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
+  ptr = m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
-  IDataArray::Pointer t = m->removeVoxelData( "Test" );
+  IDataArray::Pointer t = m->removeCellData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
 /********************************* Field Data Tests *********************************************/
@@ -392,7 +392,7 @@ void TestArrayCreation()
   _arrayCreation<double, DoubleArrayType>(m);
 
 
-  nameList = m->getVoxelArrayNameList();
+  nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   nameList = m->getFieldArrayNameList();
@@ -438,7 +438,7 @@ void TestDataContainer()
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
   DataContainer::Pointer dataContainer = DataContainer::New();
-  dataContainer->addVoxelData("NeighborList", iDataArray);
+  dataContainer->addCellData("NeighborList", iDataArray);
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );
     MAKE_ARRAY(int16_t, "int16_t_Array" );
@@ -454,7 +454,7 @@ void TestDataContainer()
 
   {
     // We can get a smaart pointer to the IDataArray Class
-    IDataArray::Pointer ptr = dataContainer->getVoxelData("int32_t_Array");
+    IDataArray::Pointer ptr = dataContainer->getCellData("int32_t_Array");
 
 
     double* dPtr = IDataArray::SafeReinterpretCast<IDataArray*, DoubleArrayType*, double*>(ptr.get());
@@ -464,7 +464,7 @@ void TestDataContainer()
     assert(NULL != iPtr);
 
     // Or we can downcast to the type we know it is (in line)
-    Int32ArrayType* intPtr = Int32ArrayType::SafeObjectDownCast<IDataArray*, Int32ArrayType* >(dataContainer->getVoxelData("int32_t_Array").get());
+    Int32ArrayType* intPtr = Int32ArrayType::SafeObjectDownCast<IDataArray*, Int32ArrayType* >(dataContainer->getCellData("int32_t_Array").get());
     if (NULL != intPtr)
     {
       std::cout << "Downcast to intPtr pointer was successful" << std::endl;

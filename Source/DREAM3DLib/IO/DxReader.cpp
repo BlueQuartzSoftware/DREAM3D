@@ -233,7 +233,7 @@ int DxReader::readFile()
     inFile.close();
   }
 
-  getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, m_Data);
+  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
   getDataContainer()->setDimensions(nx, ny, nz);
 
   getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);

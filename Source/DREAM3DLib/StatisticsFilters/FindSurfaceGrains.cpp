@@ -65,7 +65,7 @@ void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
@@ -125,7 +125,7 @@ void FindSurfaceGrains::find_surfacegrains()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, this);
   if (NULL == m_GrainIds) { return; }
   size_t xPoints = m->getXPoints();
   size_t yPoints = m->getYPoints();
@@ -162,7 +162,7 @@ void FindSurfaceGrains::find_surfacegrains2D()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
-  m_GrainIds = m->getVoxelDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::VoxelData::GrainIds, totalPoints, this);
+  m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, this);
   if (NULL == m_GrainIds) { return; }
 
   size_t dims[3] = {0,0,0};

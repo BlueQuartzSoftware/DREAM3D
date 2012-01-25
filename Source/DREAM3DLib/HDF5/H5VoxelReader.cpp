@@ -133,7 +133,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
   herr_t status;
   int rankc = 1;
 
-  dataset = H5Dopen(scalarGid, DREAM3D::VTK::GrainIdScalarName.c_str(), H5P_DEFAULT);
+  dataset = H5Dopen(scalarGid, DREAM3D::CellData::GrainIds.c_str(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset); /* Get filespace handle first. */
   col_dims[0] = xdim * ydim;
   memspace = H5Screate_simple(rankc, col_dims, NULL);
@@ -180,30 +180,32 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   }
 
 
-  err = readScalarData(DREAM3D::VTK::GrainIdScalarName, grain_indicies);
+  err = readScalarData(DREAM3D::CellData::GrainIds, grain_indicies);
   if (err < 0) { return err; }
 
-  err = readScalarData(DREAM3D::VTK::PhaseIdScalarName, phases);
+  err = readScalarData(DREAM3D::CellData::Phases, phases);
   if (err < 0) { return err; }
 
 
   OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
-  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
+  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
 
   // Check to make sure we can read the amount of data requested. On a 32 bit
   // system size_t is a 32 bit unsigned value. On a 64 bit system it will be
   // a 64 bit unsigend number
+#if   (CMP_SIZEOF_SSIZE_T==4)
   if (totalpoints * 3 > static_cast<int64_t>(std::numeric_limits<size_t>::max()) )
   {
     setErrorMessage("Trying to read more data than this architecture can handle.");
     return -400;
   }
+#endif
 
   // Allocate an Array for the Euler Data with is nRows X 3 Columns
   DataArray<float>::Pointer fData = DataArray<float>::CreateArray(0);
   fData->WritePointer(0, totalpoints*3);
   fData->SetNumberOfComponents(3);
-  err = readScalarData(DREAM3D::VTK::EulerAnglesName, eulerangles);
+  err = readScalarData(DREAM3D::CellData::EulerAngles, eulerangles);
   if(err < 0)
   {
     m_ErrorMessage = "H5VoxelReader Error Reading the Euler Angles";
@@ -216,25 +218,25 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   err |= H5Gclose(scalarGid);
 
 
-  err = readFieldDataWithCast<Ebsd::CrystalStructure, uint32_t>(DREAM3D::VTK::CrystalStructureName, crystruct);
+  err = readEnsembleDataWithCast<Ebsd::CrystalStructure, uint32_t>(DREAM3D::EnsembleData::CrystalStructure, crystruct);
   if(err < 0)
     {
       m_ErrorMessage = "H5VoxelReader Error Reading the Crystal Structure Field Data";
-      err = H5Gclose(reconGid);
+      err |= H5Gclose(reconGid);
       return err;
     }
 
-  err = readFieldDataWithCast<DREAM3D::Reconstruction::PhaseType, uint32_t>(DREAM3D::VTK::PhaseTypeName, phaseType);
+  err = readEnsembleDataWithCast<DREAM3D::Reconstruction::PhaseType, uint32_t>(DREAM3D::EnsembleData::PhaseType, phaseType);
   if(err < 0)
     {
       m_ErrorMessage = "H5VoxelReader Error Reading the Phase Type Data";
-      err = H5Gclose(reconGid);
+      err |= H5Gclose(reconGid);
       return err;
     }
 
 
-  err = H5Gclose(reconGid);
-  err = H5Fclose(m_FileId);
+  err |= H5Gclose(reconGid);
+  err |= H5Fclose(m_FileId);
   m_FileId = 0;
   return err;
 }

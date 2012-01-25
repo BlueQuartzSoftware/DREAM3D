@@ -85,7 +85,7 @@ int H5VoxelGrainIdReader::readFile()
   // Create an DataArray to hold the data
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints);
 
-  err = reader->readScalarData<int>(DREAM3D::VTK::GrainIdScalarName, grainIds->GetPointer(0));
+  err = reader->readScalarData<int>(DREAM3D::CellData::GrainIds, grainIds->GetPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
@@ -93,6 +93,6 @@ int H5VoxelGrainIdReader::readFile()
     grainIds = DataArray<int>::NullPointer();
   }
 
-  getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
   return err;
 }

@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
 DREAM3D::FileReader(),
-m_GrainIdScalarName(DREAM3D::VTK::GrainIdScalarName)
+m_GrainIdScalarName(DREAM3D::CellData::GrainIds)
 {
 
 }
@@ -413,7 +413,7 @@ int VtkGrainIdReader::readFile()
   }
 
   // push our grain id data into the DataContainer map
-  getDataContainer()->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
 
   instream.close();
   return err;

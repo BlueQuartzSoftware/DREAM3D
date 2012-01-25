@@ -114,8 +114,8 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, VoxelData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, VoxelData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);

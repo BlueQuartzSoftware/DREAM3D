@@ -257,6 +257,64 @@ class DREAM3DLib_EXPORT H5DataWriter
     }
 
     /**
+     * @brief
+     * @param hdfPath
+     * @param field_data
+     * @param label
+     * @param numComp
+     * @return
+     */
+    template<typename T>
+    int writeEnsembleData(const std::string &hdfPath,
+                       const std::vector<T> &field_data,
+                       const char* label,
+                       int numComp)
+    {
+      if (field_data.size() == 0 )
+      {
+        std::cout << "Field Data '" << label << "' has a Zero length array. No data is written" << std::endl;
+        return -1;
+      }
+      if (field_data.empty() == true)
+      {
+        std::cout << "Field Data '" << label << "' has a Zero length array. No data is written" << std::endl;
+        return -1;
+      }
+      hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
+      int err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, gid);
+      if (err < 0)
+      {
+        std::cout << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+        return err;
+      }
+      err = H5Lite::writeStringAttribute(gid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+
+
+      hid_t fieldGroupId = H5Gopen(gid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+      if(err < 0)
+      {
+        std::cout << "Error writing string attribute to HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+        return err;
+      }
+
+      T* data = const_cast<T*>(&(field_data.front()));
+      int num = static_cast<int>(field_data.size() / numComp);
+      if(field_data.size() > 0)
+      {
+        err = vtkWriteDataArray(fieldGroupId, data, label, num, numComp);
+        if (err < 0)
+        {
+          std::cout << "Error writing dataset " << label << std::endl;
+        }
+      }
+      err = H5Gclose(fieldGroupId);
+
+      err = H5Gclose(gid);
+
+      return err;
+    }
+
+    /**
      *
      */
     template<typename T>

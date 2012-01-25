@@ -78,7 +78,7 @@ int TestPhWriter()
   int64_t nz = UnitTest::PhIOTest::ZSize;
 
   DataContainer::Pointer m = DataContainer::New();
-  m->addVoxelData(DREAM3D::VoxelData::GrainIds, grainIds);
+  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
   m->setDimensions(nx, ny, nz);
 
   PhWriter::Pointer writer = PhWriter::New();
@@ -114,7 +114,7 @@ int TestPhReader()
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::PhIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::PhIOTest::ZSize);
 
-  IDataArray::Pointer mdata = reader->getDataContainer()->getVoxelData(DREAM3D::VoxelData::GrainIds);
+  IDataArray::Pointer mdata = reader->getDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
 
   int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());

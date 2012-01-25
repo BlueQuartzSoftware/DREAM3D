@@ -119,7 +119,7 @@ void ChangeResolution::execute()
   int col, row, plane;
   int index;
   int index_old;
-  std::list<std::string> voxelArrayNames = m->getVoxelArrayNameList();
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
   for (int i = 0; i < m_ZP; i++)
   {
     std::stringstream ss;
@@ -140,7 +140,7 @@ void ChangeResolution::execute()
         for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           std::string name = *iter;
-          IDataArray::Pointer p = m->getVoxelData(*iter);
+          IDataArray::Pointer p = m->getCellData(*iter);
           p->CopyTuple(index_old, index);
         }
       }
@@ -153,7 +153,7 @@ void ChangeResolution::execute()
   for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
      std::string name = *iter;
-     IDataArray::Pointer p = m->getVoxelData(*iter);
+     IDataArray::Pointer p = m->getCellData(*iter);
 	 err = p->Resize(totalPoints);
   }
   notify("Changing Resolution Complete", 0, Observable::UpdateProgressValueAndMessage);
