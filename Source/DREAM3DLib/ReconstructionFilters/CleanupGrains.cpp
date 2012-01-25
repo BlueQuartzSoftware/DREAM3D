@@ -150,8 +150,8 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 void CleanupGrains::preflight()
 {
   DataContainer* m = getDataContainer();
-  m->clearFieldData();
-  m->clearEnsembleData();
+//  m->clearFieldData();
+//  m->clearEnsembleData();
 
   // Find Neighbors would be run first so run its PreFlight first before ours
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
@@ -185,8 +185,8 @@ void CleanupGrains::execute()
     setErrorMessage(ss.str());
     return;
   }
-  m->clearFieldData();
-  m->clearEnsembleData();
+//  m->clearFieldData();
+//  m->clearEnsembleData();
 
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
