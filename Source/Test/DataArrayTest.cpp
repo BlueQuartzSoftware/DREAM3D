@@ -36,6 +36,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 
 #include "UnitTestSupport.hpp"
@@ -75,54 +76,33 @@ template<typename T>
 void __TestCopyTuples()
 {
   int err = 0;
+  typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
+  array->SetNumberOfComponents(NUM_COMPONENTS_2);
+  for(size_t i = 0; i < NUM_TUPLES_2; ++i)
   {
-      typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
-      array->SetNumberOfComponents(NUM_COMPONENTS_2);
-      for(size_t i = 0; i < NUM_TUPLES_2; ++i)
-      {
-        array->SetComponent(i, 0, static_cast<T>(i));
-        array->SetComponent(i, 1, static_cast<T>(i));
-      }
+    array->SetComponent(i, 0, static_cast<T>(i));
+    array->SetComponent(i, 1, static_cast<T>(i));
+  }
 
-//      for(int i = 0; i < NUM_TUPLES_2; ++i)
-//      {
-//        array->printTuple(std::cout, i);
-//        std::cout << " | ";
-//      }
-//  //    std::cout << std::endl;
+  err = array->CopyTuple(0, 1);
+  DREAM3D_REQUIRE_EQUAL(0, err);
+  err = array->CopyTuple(3, 2);
+  DREAM3D_REQUIRE_EQUAL(0, err);
+  err = array->CopyTuple(4, 5);
+  DREAM3D_REQUIRE_EQUAL(0, err);
+  err = array->CopyTuple(8, 9);
+  DREAM3D_REQUIRE_EQUAL(0, err);
+  err = array->CopyTuple(18, 19);
+  DREAM3D_REQUIRE_EQUAL(-1, err);
 
-      err = array->CopyTuple(0, 1);
-      DREAM3D_REQUIRE_EQUAL(0, err);
-      err = array->CopyTuple(3, 2);
-      DREAM3D_REQUIRE_EQUAL(0, err);
-      err = array->CopyTuple(4, 5);
-      DREAM3D_REQUIRE_EQUAL(0, err);
-      err = array->CopyTuple(8, 9);
-      DREAM3D_REQUIRE_EQUAL(0, err);
-
-      err = array->CopyTuple(18, 19);
-      DREAM3D_REQUIRE_EQUAL(-1, err);
-
-//      for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
-//      {
-//        array->printTuple(std::cout, i);
-//        std::cout << " | ";
-//      }
-//  //    std::cout << std::endl;
-
-
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 0), 0);
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 1), 0);
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 0), 3);
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 1), 3);
-
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 4);
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 4);
-
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 0), 8);
-      DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 1), 8);
-    }
-
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 0), 0);
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(1, 1), 0);
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 0), 3);
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(2, 1), 3);
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 4);
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 4);
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 0), 8);
+  DREAM3D_REQUIRE_EQUAL(array->GetComponent(9, 1), 8);
 }
 
 
@@ -178,27 +158,12 @@ void __TestEraseElements()
       array->SetComponent(i, 1, static_cast<T>(i));
     }
 
-//    for(int i = 0; i < NUM_TUPLES_2; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
-
-//    std::cout << std::endl;
     std::vector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(6);
     eraseElements.push_back(8);
 
     array->EraseTuples(eraseElements);
-
-//    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
-////    std::cout << std::endl;
-
 
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
@@ -217,24 +182,13 @@ void __TestEraseElements()
       array->SetComponent(i, 0, static_cast<T>(i));
       array->SetComponent(i, 1, static_cast<T>(i));
     }
-//    for(int i = 0; i < NUM_TUPLES_2; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
 
-//    std::cout << std::endl;
     std::vector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(6);
     eraseElements.push_back(9);
     array->EraseTuples(eraseElements);
-//    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
-////    std::cout << std::endl;
+
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 4);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 4);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 7);
@@ -252,24 +206,13 @@ void __TestEraseElements()
       array->SetComponent(i, 0, static_cast<T>(i));
       array->SetComponent(i, 1, static_cast<T>(i));
     }
-//    for(int i = 0; i < NUM_TUPLES_2; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
 
-//    std::cout << std::endl;
     std::vector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(4);
     eraseElements.push_back(5);
     array->EraseTuples(eraseElements);
-//    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
-////    std::cout << std::endl;
+
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 0), 6);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(3, 1), 6);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 7);
@@ -287,24 +230,13 @@ void __TestEraseElements()
       array->SetComponent(i, 0, static_cast<T>(i));
       array->SetComponent(i, 1, static_cast<T>(i));
     }
-//    for(int i = 0; i < NUM_TUPLES_2; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
 
-//    std::cout << std::endl;
     std::vector<size_t> eraseElements;
     eraseElements.push_back(0);
     eraseElements.push_back(9);
 
     array->EraseTuples(eraseElements);
-//    for(int i = 0; i < NUM_TUPLES_2 - 2; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
-////    std::cout << std::endl;
+
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 0), 1);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(0, 1), 1);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(7, 0), 8);
@@ -320,23 +252,13 @@ void __TestEraseElements()
       array->SetComponent(i, 0, static_cast<T>(i));
       array->SetComponent(i, 1, static_cast<T>(i));
     }
-//    for(int i = 0; i < NUM_TUPLES_2; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
-//    std::cout << std::endl;
+
     std::vector<size_t> eraseElements;
     eraseElements.push_back(7);
     eraseElements.push_back(8);
     eraseElements.push_back(9);
     array->EraseTuples(eraseElements);
-//    for(int i = 0; i < NUM_TUPLES_2 - 3; ++i)
-//    {
-//      array->printTuple(std::cout, i);
-//      std::cout << " | ";
-//    }
-////    std::cout << std::endl;
+
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 0), 4);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(4, 1), 4);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 5);
@@ -371,72 +293,173 @@ void TestDataArray()
   int32_t* ptr = NULL;
   {
 
-  Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0);
-  DREAM3D_REQUIRE_EQUAL(0, d->GetSize() );
-  DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples() );
+    Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0);
+    DREAM3D_REQUIRE_EQUAL(0, d->GetSize());
+    DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples());
     ptr = d->GetPointer(0);
   }
 
-
   {
 
-  Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
-  ptr = int32Array->GetPointer(0);
-  DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS , int32Array->GetNumberOfTuples());
-  DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS , int32Array->GetSize());
-  int32Array->SetNumberOfComponents(NUM_COMPONENTS);
-  DREAM3D_REQUIRE_EQUAL(NUM_TUPLES , int32Array->GetNumberOfTuples());
-  DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS , int32Array->GetSize());
+    Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
+    ptr = int32Array->GetPointer(0);
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetSize());
+    int32Array->SetNumberOfComponents(NUM_COMPONENTS);
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetSize());
 
-  for(int i = 0; i < NUM_TUPLES; ++i)
-  {
-    for(int c = 0; c < NUM_COMPONENTS; ++c)
+    for (int i = 0; i < NUM_TUPLES; ++i)
     {
-      int32Array->SetComponent(i, c, i+c);
+      for (int c = 0; c < NUM_COMPONENTS; ++c)
+      {
+        int32Array->SetComponent(i, c, i + c);
+      }
+    }
+
+    // Resize Larger
+    int32Array->Resize(NUM_TUPLES_2);
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2, int32Array->GetSize());
+
+    // This should have saved our data so lets look at the data and compare it
+    for (int i = 0; i < NUM_TUPLES; ++i)
+    {
+      for (int c = 0; c < NUM_COMPONENTS; ++c)
+      {
+        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c))
+      }
+    }
+
+    // Resize Smaller - Which should have still save some of our data
+    int32Array->Resize(NUM_TUPLES_3);
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3, int32Array->GetSize());
+
+    // This should have saved our data so lets look at the data and compare it
+    for (int i = 0; i < NUM_TUPLES; ++i)
+    {
+      for (int c = 0; c < NUM_COMPONENTS; ++c)
+      {
+        DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c))
+      }
+    }
+
+    // Change number of components
+    int32Array->SetNumberOfComponents(NUM_COMPONENTS_4);
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->GetSize());
+
+    ptr = int32Array->GetPointer(0);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//  Test the NeighborList Class
+// -----------------------------------------------------------------------------
+template<typename T>
+void __TestNeighborList()
+{
+  typename NeighborList<T>::Pointer n = NeighborList<T>::New();
+  n->SetName("Test");
+
+   for(int i = 0; i < 4; ++i) {
+     for(T j = 0; j < i+4; ++j) {
+       n->addEntry(i, static_cast<T>(j*i+3) );
+     }
+   }
+
+   typename NeighborList<T>::SharedVectorType v;
+   for(int i = 0; i < 4; ++i)
+   {
+     v = n->pointerToList(i);
+     DREAM3D_REQUIRE_NE(v.get(), NULL);
+   }
+
+   // Remove the front 2 elements and test
+   std::vector<size_t> eraseElements;
+   eraseElements.push_back(0);
+   eraseElements.push_back(1);
+
+   n->EraseTuples(eraseElements);
+   for(int i = 0; i < 2; ++i)
+   {
+     v = n->pointerToList(i);
+     DREAM3D_REQUIRE_NE(v.get(), NULL);
+     DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+2+4) );
+     for(T j = 0; j < i+4+2; ++j) {
+       DREAM3D_REQUIRE_EQUAL(v->at(j), j*(i+2)+3);
+     }
+   }
+
+   // Reset and erase the back 2 "Tuples"
+  for(int i = 0; i < 4; ++i) {
+    n->removeList(i); // Erase the list first
+    for(T j = 0; j < i+4; ++j) {
+      n->addEntry(i, j*i+3);
     }
   }
-
-
-  // Resize Larger
-  int32Array->Resize(NUM_TUPLES_2);
-  DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2 , int32Array->GetNumberOfTuples());
-  DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2 , int32Array->GetSize());
-
-  // This should have saved our data so lets look at the data and compare it
-  for(int i = 0; i < NUM_TUPLES; ++i)
+  eraseElements.clear();
+  eraseElements.push_back(2);
+  eraseElements.push_back(3);
+  n->EraseTuples(eraseElements);
+  for(int i = 0; i < 2; ++i)
   {
-    for(int c = 0; c < NUM_COMPONENTS; ++c)
-    {
-      DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c) )
-    }
+   v = n->pointerToList(i);
+   DREAM3D_REQUIRE_NE(v.get(), NULL);
+   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
+   for(T j = 0; j < i+4; ++j) {
+     DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
+   }
   }
 
-
-
-  // Resize Smaller - Which should have still save some of our data
-  int32Array->Resize(NUM_TUPLES_3);
-  DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3 , int32Array->GetNumberOfTuples());
-  DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3 , int32Array->GetSize());
-
-  // This should have saved our data so lets look at the data and compare it
-  for(int i = 0; i < NUM_TUPLES; ++i)
-  {
-    for(int c = 0; c < NUM_COMPONENTS; ++c)
-    {
-      DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(i, c)), (i+c) )
-    }
+  // Reset and erase the back 2 "Tuples"
+  for(int i = 0; i < 4; ++i) {
+   n->removeList(i); // Erase the list first
+  // std::cout << i << ": ";
+   for(T j = 0; j < i+4; ++j) {
+     n->addEntry(i, j*i+3);
+   //  std::cout << (j*i+3) << " ";
+   }
+  // std::cout << std::endl;
   }
-
-
-  // Change number of components
-  int32Array->SetNumberOfComponents(NUM_COMPONENTS_4);
-  DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4 , int32Array->GetNumberOfTuples());
-  DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4 , int32Array->GetSize());
-
-   ptr = int32Array->GetPointer(0);
+  eraseElements.clear();
+  eraseElements.push_back(1);
+  eraseElements.push_back(2);
+  n->EraseTuples(eraseElements);
+  int i = 0;
+  v = n->pointerToList(i);
+  DREAM3D_REQUIRE_NE(v.get(), NULL);
+  DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
+  for(T j = 0; j < i+4; ++j) {
+    DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
   }
+  i = 1;
+  v = n->pointerToList(i);
+  DREAM3D_REQUIRE_NE(v.get(), NULL);
+  i=3;
+  DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
+  for(T j = 0; j < i+4; ++j) {
+    DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
+  }
+}
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestNeighborList()
+{
+  __TestNeighborList<int8_t>();
+  __TestNeighborList<uint8_t>();
+  __TestNeighborList<int16_t>();
+  __TestNeighborList<uint16_t>();
+  __TestNeighborList<int32_t>();
+  __TestNeighborList<uint32_t>();
+  __TestNeighborList<int64_t>();
+  __TestNeighborList<uint64_t>();
+  __TestNeighborList<float>();
+  __TestNeighborList<double>();
 }
 
 // -----------------------------------------------------------------------------
@@ -448,6 +471,7 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( TestDataArray() );
   DREAM3D_REGISTER_TEST( TestEraseElements() );
   DREAM3D_REGISTER_TEST( TestCopyTuples() );
+  DREAM3D_REGISTER_TEST( TestNeighborList() );
 
   PRINT_TEST_SUMMARY();
   return err;
