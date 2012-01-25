@@ -68,7 +68,9 @@ ChangeResolution::~ChangeResolution()
 // -----------------------------------------------------------------------------
 void ChangeResolution::preflight()
 {
-  
+  DataContainer* m = getDataContainer();
+  m->clearFieldData();  
+  m->clearEnsembleData();
 }
 
 // -----------------------------------------------------------------------------
@@ -88,6 +90,9 @@ void ChangeResolution::execute()
     setErrorMessage(ss.str());
     return;
   }
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();

@@ -140,7 +140,6 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     setErrorCondition(-308);
   }
 
-
   setErrorMessage(ss.str());
 }
 
@@ -149,6 +148,10 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 // -----------------------------------------------------------------------------
 void MergeTwins::preflight()
 {
+  DataContainer* m = getDataContainer();
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -166,6 +169,9 @@ void MergeTwins::execute()
     setErrorMessage(ss.str());
     return;
   }
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   setErrorCondition(0);
 
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());

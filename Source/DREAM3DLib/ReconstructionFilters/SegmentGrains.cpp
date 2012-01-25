@@ -121,7 +121,6 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
 
-
   setErrorMessage(ss.str());
 }
 
@@ -130,6 +129,10 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void SegmentGrains::preflight()
 {
+  DataContainer* m = getDataContainer();
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -148,6 +151,9 @@ void SegmentGrains::execute()
     setErrorMessage(ss.str());
     return;
   }
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   int64_t totalPoints = m->totalPoints();
 
   // Create at least 2 grains:
