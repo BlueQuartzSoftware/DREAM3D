@@ -87,6 +87,16 @@ class NeighborList : public IDataArray
         _data.erase(static_cast<int>(idxs[i]) );
       }
 
+      std::map<int, SharedVectorType> replacement;
+      int i = 0;
+      for (typename std::map<int, SharedVectorType>::iterator iter = _data.begin(); iter != _data.end(); ++iter )
+      {
+        assert (i <= (*iter).first);
+        replacement[i] = (*iter).second;
+        ++i;
+      }
+      _data = replacement;
+
       return err;
     }
 
