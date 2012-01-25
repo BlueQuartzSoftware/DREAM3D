@@ -127,7 +127,6 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, VoxelData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
-
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -350, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
@@ -141,7 +140,6 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
     setErrorCondition(-350);
   }
 
-
   setErrorMessage(ss.str());
 }
 
@@ -151,6 +149,10 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void CleanupGrains::preflight()
 {
+  DataContainer* m = getDataContainer();
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   // Find Neighbors would be run first so run its PreFlight first before ours
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setObservers(this->getObservers());
@@ -183,6 +185,9 @@ void CleanupGrains::execute()
     setErrorMessage(ss.str());
     return;
   }
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   int64_t totalPoints = m->totalPoints();
   dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
   if (getErrorCondition() < 0 && getErrorCondition() != -350)

@@ -138,7 +138,6 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
     setErrorCondition(-308);
   }
 
-
   setErrorMessage(ss.str());
 }
 
@@ -147,6 +146,10 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void MergeColonies::preflight()
 {
+  DataContainer* m = getDataContainer();
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -164,6 +167,9 @@ void MergeColonies::execute()
     setErrorMessage(ss.str());
     return;
   }
+  m->clearFieldData();
+  m->clearEnsembleData();
+
   setErrorCondition(0);
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
   if (getErrorCondition() < 0)
