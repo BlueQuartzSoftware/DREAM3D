@@ -118,6 +118,14 @@ IDataArray::Pointer DataContainer::removeVoxelData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataContainer::clearVoxelData()
+{
+  m_VoxelData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 std::list<std::string> DataContainer::getVoxelArrayNameList()
 {
   std::list<std::string> keys;
@@ -183,6 +191,13 @@ IDataArray::Pointer DataContainer::removeFieldData(const std::string &name)
   return p;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::clearFieldData()
+{
+  m_FieldData.clear();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -268,7 +283,13 @@ IDataArray::Pointer DataContainer::removeEnsembleData(const std::string &name)
   return p;
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::clearEnsembleData()
+{
+  m_EnsembleData.clear();
+}
 
 // -----------------------------------------------------------------------------
 //
