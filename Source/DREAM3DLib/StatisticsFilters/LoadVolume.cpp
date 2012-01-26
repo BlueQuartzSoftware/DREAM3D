@@ -183,8 +183,6 @@ void LoadVolume::execute()
     notify(getErrorMessage().c_str(), 0, Observable::UpdateProgressMessage);
     return;
   }
-  m->phasefraction.resize(m->crystruct.size());
-  m->pptFractions.resize(m->crystruct.size());
   initializeGrains();
   if (getErrorCondition() < 0)
   {
