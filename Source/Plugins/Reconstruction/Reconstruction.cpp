@@ -47,6 +47,7 @@
 #include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
+#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
@@ -170,6 +171,12 @@ void Reconstruction::execute()
     pipeline.push_back(merge_colonies);
   }
 
+  // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
+  MAKE_OUTPUT_FILE_PATH( hdf5VolumeFile, DREAM3D::Reconstruction::H5VoxelFile)
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(hdf5VolumeFile);
+  pipeline.push_back(writer);
+
 
   err = preflightPipeline(pipeline);
   if (err < 0)
@@ -213,9 +220,8 @@ void Reconstruction::execute()
     }
   }
 
-  /** ********** This section writes the Voxel Data for the Stats Module *** */
-  // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
-  MAKE_OUTPUT_FILE_PATH( hdf5VolumeFile, DREAM3D::Reconstruction::H5VoxelFile)
+#if 0
+  /** ********** This section writes the Voxel Data for the Reconstruction Module *** */
   H5VoxelWriter::Pointer h5VolWriter = H5VoxelWriter::New();
   if(h5VolWriter.get() == NULL)
   {
@@ -225,6 +231,7 @@ void Reconstruction::execute()
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
   err = h5VolWriter->writeData<DataContainer>(m.get());
   CHECK_FOR_ERROR(DataContainer, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+#endif
 
   /** ********** This section writes the VTK files for visualization *** */
   updateProgressAndMessage(("Writing VTK Visualization File"), 93);
