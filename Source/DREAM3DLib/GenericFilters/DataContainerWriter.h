@@ -120,10 +120,10 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
         eData[i] = v[i];
       }
 
-      K* eDataPtr = const_cast<K*>(&(eData.front()));
-      int num = static_cast<int>(eData.size() / numComp);
       if(eData.size() > 0)
       {
+        K* eDataPtr = const_cast<K*>(&(eData.front()));
+        int num = static_cast<int>(eData.size() / numComp);
         int32_t rank = 1;
         hsize_t dims[1] =
         { (hsize_t)num * (hsize_t)numComp };

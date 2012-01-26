@@ -73,6 +73,15 @@
   millis = 0;
 #endif
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
+#if REMOVE_TEST_FILES
+  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
+#endif
+}
 
 
 void updateProgressAndMessage(const std::string &msg, int prog)
@@ -203,7 +212,7 @@ void TestFindNeighbors()
   load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
-  load_slices->setZEndIndex(50);
+  load_slices->setZEndIndex(10);
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
 
@@ -337,6 +346,14 @@ void TestLoadVolume()
 }
 
 // -----------------------------------------------------------------------------
+//  
+// -----------------------------------------------------------------------------
+void TestDataContainerReader()
+{
+
+}
+
+// -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv) {
@@ -344,9 +361,9 @@ int main(int argc, char **argv) {
 
   DREAM3D_REGISTER_TEST( TestFindNeighbors() );
   DREAM3D_REGISTER_TEST( TestLoadVolume() );
-//  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
-//
-//  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
+
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
   PRINT_TEST_SUMMARY();
   return err;
 }

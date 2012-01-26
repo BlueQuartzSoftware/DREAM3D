@@ -247,7 +247,6 @@ void DataContainerWriter::execute()
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter )
   {
     IDataArray::Pointer array = m->getFieldData(*iter);
-    std::cout << "Writing Field Data Array: " << *iter << std::endl;
     err = array->writeH5Data(fieldGroupId);
     if (err < 0)
     {
