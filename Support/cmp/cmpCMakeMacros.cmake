@@ -820,12 +820,13 @@ function(cmpVersionStringsFromGit)
    # message(STATUS "GVS_GENERATED_FILE_PATH: ${GVS_GENERATED_FILE_PATH}")
     
     Find_package(Git)
-
-        set(GIT_FOUND false)
+        
         if (GIT_FOUND)
         execute_process(COMMAND ${GIT_EXECUTABLE} describe
             OUTPUT_VARIABLE DVERS
             RESULT_VARIABLE did_run
+            ERROR_VARIABLE git_error
+            WORKING_DIRECTORY ${DREAM3DProj_SOURCE_DIR} 
          )
         string(STRIP ${DVERS} DVERS)
        # message(STATUS "DVERS: ${DVERS}")

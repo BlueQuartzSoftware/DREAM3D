@@ -155,11 +155,11 @@ class NeighborList : public IDataArray
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
-        numNeighbors[dIdx] = _data[dIdx]->size();
+        numNeighbors[dIdx] = static_cast<int32_t>(_data[dIdx]->size());
         total += _data[dIdx]->size();
       }
 
-      //FIXME: Check to see if the NumNeighbors is already written to the file
+      // Check to see if the NumNeighbors is already written to the file
       bool rewrite = false;
       if (H5Lite::datasetExists(parentId, DREAM3D::FieldData::NumNeighbors) == false)
       {
