@@ -46,7 +46,7 @@
 //#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"

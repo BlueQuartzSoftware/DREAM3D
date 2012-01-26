@@ -56,7 +56,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindSchmids.h"
 #include "DREAM3DLib/StatisticsFilters/FindBoundingBoxGrains.h"
 #include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighborhoods.h"
 #include "DREAM3DLib/StatisticsFilters/FindDeformationStatistics.h"
 #include "DREAM3DLib/StatisticsFilters/FindLocalMisorientationGradients.h"
