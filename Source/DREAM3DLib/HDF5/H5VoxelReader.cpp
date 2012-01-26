@@ -121,7 +121,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
   }
   OPEN_HDF5_FILE(fileId, m_FileName);
   OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), fileId);
-  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
+  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
 
   hid_t dataset;
   hid_t filespace;
