@@ -39,12 +39,14 @@
 
 #include <string>
 
+#include <hdf5.h>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
-#include "DREAM3DLib/HDF5/H5DataWriter.h"
+
 
 /*
  *
@@ -78,8 +80,28 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    /**
+     * @brief Opens or Creates an HDF5 file to write data into
+     * @param append Should a new file be created or append data to a currenlty existing file
+     * @return
+     */
+    int openFile(bool append = false);
+
+    /**
+     * @brief Closes the currently open file
+     * @return
+     */
+    int closeFile();
+
+    int writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
+                              float spacing[3], float origin[3]);
+
+    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
   private:
+    hid_t m_FileId;
+
+
     DataContainerWriter(const DataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const DataContainerWriter&); // Operator '=' Not Implemented
 
@@ -88,21 +110,38 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     //
     // -----------------------------------------------------------------------------
     template<typename T, typename K>
-    int writeEnsembleDataArray(H5DataWriter::Pointer h5writer, const std::vector<T> &data, const std::string &name)
+    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const std::string &label)
      {
-       std::vector<int> fieldData(data.size());
-       for (size_t i = 0; i < data.size(); ++i)
-       {
-         fieldData[i] = data[i];
-       }
-       int err = h5writer->writeEnsembleData<K>(DREAM3D::HDF5::DataContainerName, fieldData,
-                                           name.c_str(), 1);
-       if (err < 0)
-       {
-         std::cout << "Error Writing Ensemble Data '" << name << "' to " << DREAM3D::HDF5::DataContainerName << std::endl;
-       }
-       return err;
-     }
+      herr_t err = 0;
+      int numComp = 1;
+      std::vector<int> eData(v.size());
+      for (size_t i = 0; i < v.size(); ++i)
+      {
+        eData[i] = v[i];
+      }
+
+      K* eDataPtr = const_cast<K*>(&(eData.front()));
+      int num = static_cast<int>(eData.size() / numComp);
+      if(eData.size() > 0)
+      {
+        int32_t rank = 1;
+        hsize_t dims[1] =
+        { (hsize_t)num * (hsize_t)numComp };
+
+        err |= H5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
+        err |= H5Lite::writeScalarAttribute(ensembleGid, label, std::string(H5_NUMCOMPONENTS), numComp);
+        err |= H5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
+
+        if(err < 0)
+        {
+          setErrorCondition(err);
+          std::stringstream ss;
+          ss << getNameOfClass() << ": Error writing Ensemble data set '" << label << "'";
+        }
+      }
+
+      return err;
+    }
 
 
 

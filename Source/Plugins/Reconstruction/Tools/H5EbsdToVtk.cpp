@@ -66,8 +66,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
-#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"

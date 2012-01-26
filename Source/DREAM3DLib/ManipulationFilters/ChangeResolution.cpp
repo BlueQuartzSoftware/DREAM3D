@@ -44,7 +44,6 @@
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -69,7 +68,7 @@ ChangeResolution::~ChangeResolution()
 void ChangeResolution::preflight()
 {
   DataContainer* m = getDataContainer();
-  m->clearFieldData();  
+  m->clearFieldData();
   m->clearEnsembleData();
 }
 
