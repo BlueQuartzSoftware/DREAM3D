@@ -66,22 +66,23 @@ class H5DataArrayWriter
       hsize_t dims[2] =
       { numTuples, numComp };
       int err = 0;
-
-      err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
-      if(err < 0)
-      {
-        //FIXME: Add Error Handling Code
+      if (H5Lite::datasetExists(gid, name) == false) {
+        err |= H5Lite::writePointerDataset(gid, name, rank, dims, data);
+        if(err < 0)
+        {
+          return err;
+        }
       }
-      err = H5Lite::writeScalarAttribute(gid, name, std::string(H5_NUMCOMPONENTS), numComp);
+      err |= H5Lite::writeScalarAttribute(gid, name, std::string(H5_NUMCOMPONENTS), numComp);
       if(err < 0)
       {
-        //FIXME: Add Error Handling Code
+        return err;
       }
 
-      err = H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
+      err |= H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
       if(err < 0)
       {
-        //FIXME: Add Error Handling Code
+        return err;
       }
       return err;
     }
