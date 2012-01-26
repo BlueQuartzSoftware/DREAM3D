@@ -216,15 +216,14 @@ herr_t H5Lite::findAttribute( hid_t loc_id, const std::string& attrName )
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-//herr_t H5Lite::findDataset( hid_t loc_id, const std::string& dsetName )
-//{
-//
-// herr_t  ret = 0;
-//
-// ret = H5Giterate( loc_id, ".", 0, find_dataset, (void*)(dsetName.c_str() ) );
-//
-// return ret;
-//}
+bool H5Lite::datasetExists( hid_t loc_id, const std::string& dsetName )
+{
+  H5O_info_t ginfo;
+  HDF_ERROR_HANDLER_OFF
+  herr_t err = H5Oget_info_by_name(loc_id, dsetName.c_str(), &ginfo, H5P_DEFAULT);
+  HDF_ERROR_HANDLER_ON
+  return (err < 0) ? false : true;
+}
 
 // -----------------------------------------------------------------------------
 //  We assume a null terminated string
