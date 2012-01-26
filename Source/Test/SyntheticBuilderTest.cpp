@@ -42,10 +42,8 @@
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
-#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-
+#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
@@ -192,6 +190,12 @@ void TestSyntheticBuilder()
   FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
   write_fielddata->setFieldDataFile(FieldDataFile);
   pipeline.push_back(write_fielddata);
+
+  MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile)
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(h5VoxelFile);
+  pipeline.push_back(writer);
+
 
   // Start a Benchmark Clock so we can keep track of each filter's execution time
   START_CLOCK()

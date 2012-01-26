@@ -44,8 +44,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
-#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
 
 #include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
@@ -283,6 +281,7 @@ void Reconstruction::execute()
 
   CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", vtk_viz_files)
 
+#if 0
   /* ********** Optionally write the .h5grain file */
   if(m_WriteHDF5GrainFile)
   {
@@ -292,6 +291,7 @@ void Reconstruction::execute()
     err = h5GrainWriter->writeHDF5GrainsFile<DataContainer>(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(DataContainer, "The HDF5 Grain file could not be written to. Does the path exist and do you have write access to the output directory.", err);
   }
+#endif
 
   updateProgressAndMessage(("Reconstruction Complete"), 100);
 

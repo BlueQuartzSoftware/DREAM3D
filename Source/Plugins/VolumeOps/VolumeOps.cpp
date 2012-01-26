@@ -43,8 +43,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
-
+#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
 #include "DREAM3DLib/ManipulationFilters/CropVolume.h"
 #include "DREAM3DLib/ManipulationFilters/ChangeResolution.h"
@@ -143,6 +142,10 @@ void VolumeOps::execute()
   pipeline.push_back(change_resolution);
 
 
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(m_H5OutputFile);
+  pipeline.push_back(writer);
+
 
   err = preflightPipeline(pipeline);
   if (err < 0)
@@ -186,6 +189,7 @@ void VolumeOps::execute()
     }
   }
 
+#if 0
   /** ********** This section writes the Voxel Data for the VolumeOps Module *** */
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
   //MAKE_OUTPUT_FILE_PATH ( m_H5OutputFile, DREAM3D::Reconstruction::H5VoxelFile)
@@ -198,6 +202,7 @@ void VolumeOps::execute()
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 90);
   err = h5VolWriter->writeData<DataContainer>(m.get());
   CHECK_FOR_ERROR(DataContainer, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+#endif
 
   updateProgressAndMessage(("Generation Completed"), 100);
 }

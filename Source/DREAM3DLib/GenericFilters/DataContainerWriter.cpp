@@ -36,14 +36,22 @@
 
 #include "DataContainerWriter.h"
 
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
+
 #include "EbsdLib/EbsdConstants.h"
+
+#define APPEND_DATA_TRUE 1
+#define APPEND_DATA_FALSE 0
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DataContainerWriter::DataContainerWriter() :
-AbstractFilter()
+AbstractFilter(),
+m_FileId(-1)
 {
   setupFilterOptions();
 }
@@ -53,6 +61,7 @@ AbstractFilter()
 // -----------------------------------------------------------------------------
 DataContainerWriter::~DataContainerWriter()
 {
+  closeFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -120,8 +129,6 @@ void DataContainerWriter::execute()
   int err = 0;
   hid_t dcGid = -1;
 
-  H5DataWriter::Pointer writer = H5DataWriter::New();
-  writer->setFileName(m_OutputFile);
 
   int64_t volDims[3] =
   { m->getXPoints(), m->getYPoints(), m->getZPoints() };
@@ -130,18 +137,18 @@ void DataContainerWriter::execute()
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
 
-  err = writer->openFile(false); // Do NOT append to any existing file
+  err = openFile(false); // Do NOT append to any existing file
   if (err < 0)
   {
     ss.str("");
-    ss << getNameOfClass() << ": Error creating output file;";
+    ss << getNameOfClass() << ": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_OutputFile<< "]";
     setErrorCondition(-59);
     setErrorMessage(ss.str());
     return;
   }
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerName.c_str(), writer->getFileId());
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
   if (err < 0)
   {
     ss.str("");
@@ -150,7 +157,7 @@ void DataContainerWriter::execute()
     setErrorMessage(ss.str());
     return;
   }
-  dcGid = H5Gopen(writer->getFileId(), DREAM3D::HDF5::DataContainerName.c_str(), H5P_DEFAULT );
+  dcGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.c_str(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -161,7 +168,7 @@ void DataContainerWriter::execute()
   }
 
   // This just writes the header information
-  err = writer->writeStructuredPoints(DREAM3D::HDF5::DataContainerName, volDims, spacing, origin);
+  err = writeMetaInfo(DREAM3D::HDF5::DataContainerName, volDims, spacing, origin);
   if (err < 0)
   {
     ss.str("");
@@ -298,26 +305,110 @@ void DataContainerWriter::execute()
 
   // These should eventually go away when these "Ensemble Data" items get wrapped into the map structure of the
   // data container class.
-  err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(writer, m->phaseType, DREAM3D::EnsembleData::PhaseType);
-  err = H5Lite::writeStringAttribute(ensembleGid, DREAM3D::EnsembleData::PhaseType, DREAM3D::HDF5::ObjectType, "vector");
-  if(err < 0)
+  err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(ensembleGid, m->phaseType, DREAM3D::EnsembleData::PhaseType);
+  if (getErrorCondition() < 0)
   {
-    //FIXME: Add Error Handling Code
+    return;
   }
-  err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(writer, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
-  err = H5Lite::writeStringAttribute(ensembleGid, DREAM3D::EnsembleData::CrystalStructure, DREAM3D::HDF5::ObjectType, "vector");
-  if(err < 0)
+  err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(ensembleGid, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
+  if (getErrorCondition() < 0)
   {
-    //FIXME: Add Error Handling Code
+    return;
   }
 
   H5Gclose(ensembleGid);
 
 
   H5Gclose(dcGid); // Close the Data Container Group
-  writer->closeFile();
-  writer = H5DataWriter::NullPointer();
-  setErrorCondition(0);
+  closeFile();
   notify("DataContainerWriter Complete", 0, Observable::UpdateProgressMessage);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::openFile(bool appendData)
+{
+  // Try to open a file to append data into
+    if (APPEND_DATA_TRUE == appendData)
+    {
+      m_FileId = H5Utilities::openFile(m_OutputFile, false);
+    }
+    // No file was found or we are writing new data only to a clean file
+    if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
+    {
+      m_FileId = H5Utilities::createFile (m_OutputFile);
+    }
+    return m_FileId;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::closeFile()
+{
+  // Close the file when we are finished with it
+  return H5Utilities::closeFile(m_FileId);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
+                          float spacing[3], float origin[3])
+{
+  herr_t err = 0;
+  err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
+  if (err < 0)  {
+    return err;
+  }
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
+
+  int32_t rank =1;
+  hsize_t dims[1] = {3};
+  err = H5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
+  if (err < 0)
+  {
+     std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
+  }
+  err = H5Lite::writePointerDataset(gid, H5_ORIGIN, rank, dims, origin);
+  if (err < 0)
+  {
+     std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
+  }
+  err = H5Lite::writePointerDataset(gid, H5_SPACING, rank, dims, spacing);
+  if (err < 0)
+  {
+     std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
+  }
+  int64_t nPoints = volDims[0] * volDims[1] * volDims[2];
+  err = H5Lite::writeScalarAttribute(m_FileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
+  if (err < 0)
+  {
+    std::cout << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << std::endl;
+  }
+
+  err |= H5Gclose(gid);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+{
+  // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
+  herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_FileId);
+  if (err < 0)
+  {
+    std::cout << "Error creating HDF Group " << hdfGroupPath << std::endl;
+  }
+  err = H5Lite::writeStringAttribute(m_FileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
+  if(err < 0)
+  {
+    std::cout << "Error writing string attribute to HDF Group " << hdfGroupPath << std::endl;
+  }
+  return err;
+}

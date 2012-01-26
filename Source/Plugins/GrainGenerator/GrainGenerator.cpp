@@ -42,11 +42,12 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
-#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
+//#include "DREAM3DLib/HDF5/H5GrainWriter.hpp"
+//#include "DREAM3DLib/HDF5/H5VoxelWriter.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
@@ -227,6 +228,11 @@ void GrainGenerator::execute()
   write_fielddata->setFieldDataFile(FieldDataFile);
   pipeline.push_back(write_fielddata);
 
+  MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile)
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(h5VoxelFile);
+  pipeline.push_back(writer);
+
 
   err = preflightPipeline(pipeline);
   if (err < 0)
@@ -273,7 +279,7 @@ void GrainGenerator::execute()
 
 
 
-
+#if 0
   /** ********** This section writes the Voxel Data for the Stats Module ****/
   // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
   MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile)
@@ -288,6 +294,7 @@ void GrainGenerator::execute()
   updateProgressAndMessage(("Writing HDF5 Voxel Data File"), 83);
   err = h5VoxelWriter->writeData<DataContainer>(m.get());
   CHECK_FOR_ERROR(DataContainer, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
+#endif
 
   /* ********** This section writes the VTK files for visualization *** */
   if(m_WriteVtkFile)
@@ -341,6 +348,7 @@ void GrainGenerator::execute()
   CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", writeVisualizationFile)
   /* ******* End VTK Visualization File Writing Section ****** */
 
+#if 0
   /* ********** HDF5 Grains File  ********** */
   if(m_WriteHDF5GrainFile)
   {
@@ -350,6 +358,7 @@ void GrainGenerator::execute()
     err = h5GrainWriter->writeHDF5GrainsFile<DataContainer>(m.get(), hdf5GrainFile);
     CHECK_FOR_ERROR(DataContainer, "The Grain Generator threw an Error writing the HDF5 Grain file format.", err);
   }
+#endif
 
   CHECK_FOR_CANCELED(DataContainer, "GrainGenerator Was canceled", writeHDF5GrainsFile)
 
