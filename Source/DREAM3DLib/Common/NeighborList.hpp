@@ -150,7 +150,8 @@ class NeighborList : public IDataArray
 
       // Generate the number of neighbors array and also compute the total number
       // of elements that would be needed to flatten the array
-      std::vector<size_t> numNeighbors(_data.size());
+      std::vector<int32_t> numNeighbors(_data.size());
+
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
@@ -159,8 +160,53 @@ class NeighborList : public IDataArray
       }
 
       //FIXME: Check to see if the NumNeighbors is already written to the file
-      //FIXME: and if it is then validate that we have the correct values
+      bool rewrite = false;
+      if (H5Lite::datasetExists(parentId, DREAM3D::FieldData::NumNeighbors) == false)
+      {
+        rewrite = true;
+      }
+      else
+      {
+        std::vector<int32_t> fileNumNeigh(_data.size());
+        err = H5Lite::readVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, fileNumNeigh);
+        if (err < 0)
+        {
+          return -602;
+        }
 
+        // Compare the 2 vectors to make sure they are exactly the same;
+        if (fileNumNeigh.size() != numNeighbors.size())
+        {
+          rewrite = true;
+        }
+        // The sizes are the same, now compare each value;
+        int32_t* numNeighPtr = &(numNeighbors.front());
+        int32_t* fileNumNeiPtr = &(fileNumNeigh.front());
+        size_t nBytes = numNeighbors.size() * sizeof(int32_t);
+        if (::memcmp(numNeighPtr, fileNumNeiPtr, nBytes) != 0)
+        {
+          rewrite = true;
+        }
+      }
+      if(rewrite == true)
+      {
+        std::vector<hsize_t> dims(1, numNeighbors.size());
+        err = H5Lite::writeVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, dims, numNeighbors);
+        if(err < 0)
+        {
+          return -603;
+        }
+        err = H5Lite::writeScalarAttribute(parentId, DREAM3D::FieldData::NumNeighbors, std::string(H5_NUMCOMPONENTS), 1);
+        if(err < 0)
+        {
+          return -605;
+        }
+        err = H5Lite::writeStringAttribute(parentId, DREAM3D::FieldData::NumNeighbors, DREAM3D::HDF5::ObjectType, "DataArray<T>");
+        if(err < 0)
+        {
+          return -604;
+        }
+      }
 
       // Allocate an array of the proper size
       std::vector<T> flat (total);
