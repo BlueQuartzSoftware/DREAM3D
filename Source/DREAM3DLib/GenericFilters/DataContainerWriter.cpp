@@ -299,8 +299,17 @@ void DataContainerWriter::execute()
   // These should eventually go away when these "Ensemble Data" items get wrapped into the map structure of the
   // data container class.
   err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(writer, m->phaseType, DREAM3D::EnsembleData::PhaseType);
+  err = H5Lite::writeStringAttribute(ensembleGid, DREAM3D::EnsembleData::PhaseType, DREAM3D::HDF5::ObjectType, "vector");
+  if(err < 0)
+  {
+    //FIXME: Add Error Handling Code
+  }
   err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(writer, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
-
+  err = H5Lite::writeStringAttribute(ensembleGid, DREAM3D::EnsembleData::CrystalStructure, DREAM3D::HDF5::ObjectType, "vector");
+  if(err < 0)
+  {
+    //FIXME: Add Error Handling Code
+  }
 
   H5Gclose(ensembleGid);
 
