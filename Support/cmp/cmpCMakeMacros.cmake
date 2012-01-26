@@ -821,6 +821,7 @@ function(cmpVersionStringsFromGit)
     
     Find_package(Git)
 
+        set(GIT_FOUND false)
         if (GIT_FOUND)
         execute_process(COMMAND ${GIT_EXECUTABLE} describe
             OUTPUT_VARIABLE DVERS
