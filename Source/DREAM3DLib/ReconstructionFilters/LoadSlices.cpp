@@ -112,14 +112,6 @@ void LoadSlices::setupFilterOptions()
     option->setValueType("string");
     options.push_back(option);
   }
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setPropertyName("MisorientationTolerance");
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    options.push_back(option);
-  }
 #if 0
    This should be read from the file so we are NOT going to expose it to the user
   {
@@ -260,7 +252,6 @@ void LoadSlices::execute()
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
-  std::vector<float> precipFractions;
   std::vector<Ebsd::CrystalStructure> crystalStructures;
   if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
@@ -272,7 +263,7 @@ void LoadSlices::execute()
       return;
     }
     H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
-    err = loadInfo<H5AngVolumeReader, AngPhase>(angReader, precipFractions, crystalStructures );
+    err = loadInfo<H5AngVolumeReader, AngPhase>(angReader, crystalStructures );
   }
   else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
@@ -284,7 +275,7 @@ void LoadSlices::execute()
       return;
     }
     H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
-    err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader, precipFractions, crystalStructures );
+    err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader, crystalStructures );
   }
   else
   {
@@ -298,7 +289,6 @@ void LoadSlices::execute()
 
   m->crystruct = crystalStructures;
   m->phaseType = m_PhaseTypes;
-  m->pptFractions = precipFractions;
 
   // This will create the arrays with the correct sizes
   dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
