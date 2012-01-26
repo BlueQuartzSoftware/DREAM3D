@@ -493,7 +493,11 @@ void TestDataContainer()
 
   }
 
-  // Test Getting
+  // Test Getting an Array
+
+  // Test removing an Array
+
+  // Test Size of all types of maps
 
 }
 

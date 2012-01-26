@@ -246,7 +246,6 @@ void TestFindNeighbors()
   std::stringstream ss;
   for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
   {
-
     progress = progress + 1.0f;
     pipelineProgress(progress / (pipeline.size() + 1) * 100.0f);
     ss.str("");
@@ -254,7 +253,6 @@ void TestFindNeighbors()
     pipelineProgressMessage(ss.str());
     (*filter)->addObserver(&observer);
     (*filter)->setDataContainer(m.get());
- //   setCurrentFilter(*filter);
     (*filter)->execute();
     (*filter)->removeObserver(&observer);
     err = (*filter)->getErrorCondition();
@@ -264,7 +262,7 @@ void TestFindNeighbors()
       pipelineErrorMessage((*filter)->getErrorMessage().c_str());
       pipelineProgress(100);
       pipelineFinished();
-      DREAM3D_REQUIRE_EQUAL(err, 0);;
+      DREAM3D_REQUIRE_EQUAL(err, 0);
     }
 
     if(DREAM3D_BENCHMARKS)
