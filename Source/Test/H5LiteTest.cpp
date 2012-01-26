@@ -570,6 +570,12 @@ herr_t testWriteScalarDataset(hid_t file_id)
   err = H5Lite::writeScalarDataset(file_id, dsetName, value );
   DREAM3D_REQUIRE(err >= 0);
 
+  bool exists = H5Lite::datasetExists(file_id, dsetName);
+  DREAM3D_REQUIRE_EQUAL(exists, true);
+
+  exists = H5Lite::datasetExists(file_id, "DOES_NOT_EXIST");
+  DREAM3D_REQUIRE_EQUAL(exists, false);
+
   std::cout << " Passed" << std::endl;
   return err;
 }
@@ -847,13 +853,13 @@ herr_t testReadPointer2DArrayDataset(hid_t file_id)
   }
 
   DREAM3D_REQUIRE (tid > 0);
-  std::cout << H5Lite::StringForHDFType(tid) << std::endl;
+//  std::cout << H5Lite::StringForHDFType(tid) << std::endl;
   err = H5Tclose(tid);
   DREAM3D_REQUIRE(err >= 0);
 
   hid_t dsType = H5Lite::getDatasetType(file_id, dsetName);
   DREAM3D_REQUIRE (dsType > 0);
-  std::cout << H5Lite::StringForHDFType(dsType) << std::endl;
+//  std::cout << H5Lite::StringForHDFType(dsType) << std::endl;
 
 
   err = H5Tclose(dsType);

@@ -289,10 +289,10 @@ static H5Support_EXPORT herr_t findAttribute( hid_t loc_id, const std::string& a
 /**
  * @brief Finds a Data set given a data set name
  * @param loc_id The location to search
- * @param name The attribute to search for
- * @return Standard HDF5 Error condition
+ * @param name The dataset to search for
+ * @return Standard HDF5 Error condition. Negative=DataSet
  */
-static H5Support_EXPORT herr_t findDataset( hid_t loc_id, const std::string& name );
+static H5Support_EXPORT bool datasetExists( hid_t loc_id, const std::string& name );
 
 /**
  * @brief Creates a Dataset with the given name at the location defined by loc_id
