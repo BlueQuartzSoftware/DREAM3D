@@ -131,7 +131,7 @@ void SegmentGrains::preflight()
 {
   DataContainer* m = getDataContainer();
   m->clearFieldData();
-  m->clearEnsembleData();
+ // m->clearEnsembleData();
 
   dataCheck(true, 1, 1, 1);
 }
@@ -152,7 +152,7 @@ void SegmentGrains::execute()
     return;
   }
   m->clearFieldData();
-  m->clearEnsembleData();
+//  m->clearEnsembleData();
 
   int64_t totalPoints = m->totalPoints();
 
