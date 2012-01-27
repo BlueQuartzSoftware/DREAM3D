@@ -2,7 +2,7 @@
 #define _TestFileLocation_h_
 #include <string>
 
-#define REMOVE_TEST_FILES 1
+#define REMOVE_TEST_FILES 0
 
 namespace UnitTest {
 
@@ -72,13 +72,17 @@ namespace UnitTest {
     namespace SyntheticBuilderTest
     {
       const std::string TestDir("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest");
+      const std::string CsvFile("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.csv");
+      const std::string OutputFile("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.h5");
+      const std::string VtkOutputFile("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.vtk");
+
     }
     
     namespace FindNeighborTest
     {
       const std::string TestDir("@DREAM3DTest_BINARY_DIR@/FindNeighborTest");
-      const std::string OutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest.h5");
-      const std::string VtkOutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest.vtk");
+      const std::string OutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest/FindNeighborTest.h5");
+      const std::string VtkOutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest/FindNeighborTest.vtk");
     }
     
     namespace DataContainerIOTest
@@ -88,7 +92,7 @@ namespace UnitTest {
       static const size_t YSize = 4;
       static const size_t ZSize = 3;
       const std::string TestDir("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest");
-      const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest.h5");
+      const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest/DataContainerIOTest.h5");
     }
  
     
