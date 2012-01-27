@@ -13,6 +13,7 @@ SET (GenericFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DataContainerReader.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DataContainerWriter.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FieldDataCSVWriter.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/VtkRectilinearGridWriter.h
 )
 
 #-- Add in any addition NON Filter classes here
@@ -24,6 +25,7 @@ SET (DREAM3DLib_GenericFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DataContainerReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DataContainerWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FieldDataCSVWriter.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/VtkRectilinearGridWriter.cpp
 )
 
 

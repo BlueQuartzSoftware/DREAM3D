@@ -87,7 +87,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
 
   if(m_InputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The output file must be set before executing this filter.";
+    ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
     setErrorCondition(-1);
   }
 
