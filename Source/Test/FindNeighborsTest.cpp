@@ -52,6 +52,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3Dlib/GenericFilters/DataContainerWriter.h"
+#include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
@@ -80,6 +81,7 @@ void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
 //  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
+//  MXADir::remove(UnitTest::FindNeighborTest::VtkOutputFile);
 #endif
 }
 
@@ -216,7 +218,7 @@ void TestFindNeighbors()
   load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
-  load_slices->setZEndIndex(10);
+//  load_slices->setZEndIndex(10);
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
 
@@ -240,6 +242,25 @@ void TestFindNeighbors()
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile);
   pipeline.push_back(writer);
+
+  bool m_WriteVtkFile(true);
+  bool m_WriteBinaryVTKFiles(true);
+  bool m_WritePhaseId(true);
+  bool m_WriteIPFColor(true);
+  bool m_WriteGoodVoxels(true);
+
+  if(m_WriteVtkFile)
+  {
+    VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+    vtkWriter->setOutputFile(UnitTest::FindNeighborTest::VtkOutputFile);
+    vtkWriter->setWriteGrainIds(true);
+    vtkWriter->setWritePhaseIds(m_WritePhaseId);
+    vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
+    vtkWriter->setWriteIPFColors(m_WriteIPFColor);
+    vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
+    pipeline.push_back(vtkWriter);
+  }
+
 
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;

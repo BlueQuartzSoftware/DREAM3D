@@ -46,6 +46,7 @@
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
 #include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
+#include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
@@ -61,9 +62,18 @@
 //
 // -----------------------------------------------------------------------------
 Reconstruction::Reconstruction() :
-    m_H5EbsdFile(""), m_OutputDirectory("."), m_OutputFilePrefix("Reconstruction_"), m_MergeTwins(false), m_MergeColonies(false), m_MinAllowedGrainSize(0), m_MisorientationTolerance(0.0), m_WriteBinaryVTKFiles(true), m_WriteVtkFile(true), m_WritePhaseId(true),
+    m_H5EbsdFile(""),
+    m_OutputDirectory("."),
+    m_OutputFilePrefix("Reconstruction_"),
+    m_MergeTwins(false), m_MergeColonies(false),
+    m_MinAllowedGrainSize(0),
+    m_MisorientationTolerance(0.0),
+    m_WriteBinaryVTKFiles(true),
+    m_WriteVtkFile(true),
+    m_WritePhaseId(true),
 //m_WriteImageQuality(true),
-    m_WriteIPFColor(true), m_WriteHDF5GrainFile(false)
+    m_WriteIPFColor(true),
+    m_WriteHDF5GrainFile(false)
 {
 
 }
@@ -174,6 +184,22 @@ void Reconstruction::execute()
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(hdf5VolumeFile);
   pipeline.push_back(writer);
+
+
+  if(m_WriteVtkFile)
+  {
+    MAKE_OUTPUT_FILE_PATH( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
+    VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+    vtkWriter->setOutputFile(reconVisFile);
+    vtkWriter->setWriteGrainIds(true);
+    vtkWriter->setWritePhaseIds(m_WritePhaseId);
+    vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
+    vtkWriter->setWriteIPFColors(m_WriteIPFColor);
+    vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
+    pipeline.push_back(vtkWriter);
+  }
+
+
 
 
   err = preflightPipeline(pipeline);

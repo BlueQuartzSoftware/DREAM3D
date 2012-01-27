@@ -78,6 +78,7 @@ namespace UnitTest {
     {
       const std::string TestDir("@DREAM3DTest_BINARY_DIR@/FindNeighborTest");
       const std::string OutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest.h5");
+      const std::string VtkOutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest.vtk");
     }
     
     namespace DataContainerIOTest
