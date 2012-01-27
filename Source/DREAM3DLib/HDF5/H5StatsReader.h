@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT H5StatsReader
       herr_t err = 0;
       herr_t retErr = 0;
       OPEN_HDF5_FILE(fileId, m_FileName)
-
+      HDF_ERROR_HANDLER_OFF
       OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::Statistics.c_str(), fileId)
 
       std::string index = StringUtils::numToString(phase);
@@ -141,6 +141,7 @@ class DREAM3DLib_EXPORT H5StatsReader
       if (err < 0) { retErr = err; }
       err = H5Utilities::closeFile(fileId);
       if (err < 0) { retErr = err; }
+      HDF_ERROR_HANDLER_ON
       return retErr;
     }
 

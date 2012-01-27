@@ -143,7 +143,7 @@ void FindLocalMisorientationGradients::execute()
 
   int64_t totalPoints = m->totalPoints();
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -177,6 +177,12 @@ void FindLocalMisorientationGradients::execute()
   int numchecks; // number of voxels in the grain...
   int good = 0;
 
+
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystructPtr
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   float w, totalmisorientation;
   float n1, n2, n3;
@@ -212,7 +218,7 @@ void FindLocalMisorientationGradients::execute()
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
-          phase1 = m->crystruct[m_PhasesC[point]];
+          phase1 = crystruct[m_PhasesC[point]];
           for (int j = -m_KernelSize; j < m_KernelSize + 1; j++)
           {
             jStride = j * xPoints * yPoints;
@@ -236,7 +242,7 @@ void FindLocalMisorientationGradients::execute()
                   q2[2] = m_Quats[neighbor*5 + 2];
                   q2[3] = m_Quats[neighbor*5 + 3];
                   q2[4] = m_Quats[neighbor*5 + 4];
-                  phase2 = m->crystruct[m_PhasesC[neighbor]];
+                  phase2 = crystruct[m_PhasesC[neighbor]];
                   if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                   if (w < 5.0)
 

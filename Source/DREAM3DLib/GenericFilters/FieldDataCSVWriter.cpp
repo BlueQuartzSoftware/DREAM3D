@@ -142,13 +142,22 @@ void FieldDataCSVWriter::execute()
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
+  std::stringstream ss;
+  float threshold = 0.0f;
 
   // Skip the first grain
   for(size_t i = 1; i < numTuples; ++i)
   {
-    std::stringstream ss;
-    ss << "Writing Field Data - " << ((float)i/numTuples)*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    if (((float)i / numTuples) * 100.0f > threshold) {
+      ss.str("");
+      ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
+      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      threshold = threshold + 5.0f;
+      if (threshold < ((float)i / numTuples) * 100.0f) {
+        threshold = ((float)i / numTuples) * 100.0f;
+      }
+    }
+
     // Print the grain id
     outFile << i;
     // Print a row of data
@@ -158,7 +167,6 @@ void FieldDataCSVWriter::execute()
       (*p)->printTuple(outFile, i, space);
     }
     outFile << std::endl;
-
   }
 
   outFile.close();

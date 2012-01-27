@@ -163,6 +163,11 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float* m_EquivalentDiameters;
 
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
+    Ebsd::CrystalStructure* m_CrystalStructure;
+    DREAM3D::Reconstruction::PhaseType* m_PhaseType;
+    float* m_PhaseFractions;
+    float* m_PrecipitateFractions;
+    DREAM3D::SyntheticBuilder::ShapeType* m_ShapeTypes;
 
 
     // All other private variables

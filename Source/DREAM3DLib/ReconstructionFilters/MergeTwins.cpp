@@ -174,7 +174,7 @@ void MergeTwins::execute()
 
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -215,6 +215,11 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystruct
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+
+
  // float angcur = 180.0f;
   std::vector<int> twinlist;
   float w;
@@ -249,16 +254,16 @@ void MergeTwins::merge_twins()
             q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
             q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
             q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
-            phase1 = m->crystruct[m_PhasesF[firstgrain]];
+            phase1 = crystruct->GetValue(m_PhasesF[firstgrain]);
             q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];
             q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
             q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
             q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
-            phase2 = m->crystruct[m_PhasesF[neigh]];
-            if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-//			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-			float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
-			float angdiff60 = fabs(w-60.0f);
+            phase2 = crystruct->GetValue(m_PhasesF[neigh]);
+            if (phase1 == phase2 && phase1 > 0) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
+      //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+            float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
+            float angdiff60 = fabs(w-60.0f);
             if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
             if (twin == 1)
             {

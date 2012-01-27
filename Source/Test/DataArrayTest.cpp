@@ -373,7 +373,7 @@ void __TestNeighborList()
    typename NeighborList<T>::SharedVectorType v;
    for(int i = 0; i < 4; ++i)
    {
-     v = n->pointerToList(i);
+     v = n->getList(i);
      DREAM3D_REQUIRE_NE(v.get(), NULL);
    }
 
@@ -385,7 +385,7 @@ void __TestNeighborList()
    n->EraseTuples(eraseElements);
    for(int i = 0; i < 2; ++i)
    {
-     v = n->pointerToList(i);
+     v = n->getList(i);
      DREAM3D_REQUIRE_NE(v.get(), NULL);
      DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+2+4) );
      for(T j = 0; j < i+4+2; ++j) {
@@ -395,7 +395,7 @@ void __TestNeighborList()
 
    // Reset and erase the back 2 "Tuples"
   n->clearAllLists();
-  for(int i = 0; i < 4; ++i) {   
+  for(int i = 0; i < 4; ++i) {
     for(T j = 0; j < i+4; ++j) {
       n->addEntry(i, j*i+3);
     }
@@ -406,7 +406,7 @@ void __TestNeighborList()
   n->EraseTuples(eraseElements);
   for(int i = 0; i < 2; ++i)
   {
-   v = n->pointerToList(i);
+   v = n->getList(i);
    DREAM3D_REQUIRE_NE(v.get(), NULL);
    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
    for(T j = 0; j < i+4; ++j) {
@@ -426,14 +426,14 @@ void __TestNeighborList()
   eraseElements.push_back(2);
   n->EraseTuples(eraseElements);
   int i = 0;
-  v = n->pointerToList(i);
+  v = n->getList(i);
   DREAM3D_REQUIRE_NE(v.get(), NULL);
   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
   for(T j = 0; j < i+4; ++j) {
     DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
   }
   i = 1;
-  v = n->pointerToList(i);
+  v = n->getList(i);
   DREAM3D_REQUIRE_NE(v.get(), NULL);
   i=3;
   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );

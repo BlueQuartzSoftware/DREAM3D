@@ -95,7 +95,8 @@ void SyntheticBuilder_PreFlight()
   size_t m_YPoints = 128;
   size_t m_ZPoints = 128;
 
-  std::vector<DREAM3D::SyntheticBuilder::ShapeType> m_ShapeTypes;
+  typedef DataArray<DREAM3D::SyntheticBuilder::ShapeType> ShapeTypeArrayType;
+  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
 
 
   float m_XResolution = 0.1f;
@@ -118,9 +119,9 @@ void SyntheticBuilder_PreFlight()
 //
 //  bool m_WriteHDF5GrainFile = false;
 
-  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::UnknownShapeType);
-  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
-  m_ShapeTypes.push_back(DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
+  m_ShapeTypes->SetValue(0, DREAM3D::SyntheticBuilder::UnknownShapeType);
+  m_ShapeTypes->SetValue(1, DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
+  m_ShapeTypes->SetValue(2, DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
 
   int err = 0;
   // Instantiate our DataContainer object
@@ -132,7 +133,7 @@ void SyntheticBuilder_PreFlight()
   {
     m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
     m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
-    m->shapeTypes = m_ShapeTypes;
+    m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
 
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsInputFile(getH5StatsFile());

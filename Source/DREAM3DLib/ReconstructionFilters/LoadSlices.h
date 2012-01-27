@@ -1,3 +1,4 @@
+
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
@@ -76,7 +77,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
-    DREAM3D_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
+    DREAM3D_INSTANCE_PROPERTY(DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer, PhaseTypes)
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -132,8 +133,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
      * @return Zero/Positive on Success - Negative on error.
      */
     template<typename EbsdReader, typename EbsdPhase>
-    int loadInfo(EbsdReader* reader,
-                 std::vector<Ebsd::CrystalStructure> &crystalStructures)
+    int loadInfo(EbsdReader* reader)
     {
       reader->setFileName(m_H5EbsdFile);
       reader->setSliceStart(m_ZStartIndex);
@@ -144,17 +144,23 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
       {
         return -1;
       }
-      crystalStructures.resize(phases.size() + 1);
+
+      DataArray<Ebsd::CrystalStructure>::Pointer crystalStructures = DataArray<Ebsd::CrystalStructure>::CreateArray(phases.size() + 1);
+      crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructure);
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
-      crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-      m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
+      crystalStructures->SetValue(0, Ebsd::UnknownCrystalStructure);
+
+      m_PhaseTypes->SetValue(0, DREAM3D::Reconstruction::UnknownPhaseType);
       for(size_t i=0;i<phases.size();i++)
       {
         int phaseID = phases[i]->getPhaseIndex();
-        crystalStructures[phaseID] = phases[i]->determineCrystalStructure();
+        crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
       }
+      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructure, crystalStructures);
+      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseType, m_PhaseTypes);
+      getDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }
 };

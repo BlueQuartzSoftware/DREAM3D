@@ -98,6 +98,11 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
+    int writeCellData(hid_t dcGid);
+    int writeFieldData(hid_t dcGid);
+    int writeEnsembleData(hid_t dcGid);
+
+
   private:
     hid_t m_FileId;
 

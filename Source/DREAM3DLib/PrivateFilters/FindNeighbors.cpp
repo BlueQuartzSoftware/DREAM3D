@@ -110,7 +110,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     setErrorCondition(-308);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->crystruct.size(), 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->getNumEnsembleTuples(), 1);
 
   setErrorMessage(ss.str());
 }
@@ -144,7 +144,7 @@ void FindNeighbors::execute()
 
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -177,7 +177,8 @@ void FindNeighbors::execute()
   int onsurf = 0;
   int good = 0;
   int neighbor = 0;
-  size_t xtalCount = m->crystruct.size();
+
+  size_t xtalCount = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure)->GetNumberOfTuples();
 
   for (size_t i = 1; i < xtalCount; ++i)
   {
@@ -190,7 +191,7 @@ void FindNeighbors::execute()
   int nListSize = 100;
   neighborlist.resize(totalFields);
   neighborsurfacearealist.resize(totalFields);
-  for (size_t i = 1; i < totalFields; i++)
+  for (int i = 1; i < totalFields; i++)
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Initializing Neighbor Lists - " << ((float)i/totalFields)*100 << " Percent Complete";
@@ -247,7 +248,7 @@ void FindNeighbors::execute()
   }
 
   // We do this to create new set of NeighborList objects
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
   for (size_t i = 1; i < m->getTotalFields(); i++)
   {

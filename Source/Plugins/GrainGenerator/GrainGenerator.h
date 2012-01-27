@@ -74,7 +74,7 @@ class GrainGenerator : public AbstractPipeline, public Observer
     DREAM3D_INSTANCE_PROPERTY(size_t, YPoints)
     DREAM3D_INSTANCE_PROPERTY(size_t, ZPoints)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<DREAM3D::SyntheticBuilder::ShapeType>, ShapeTypes)
+    DREAM3D_INSTANCE_PROPERTY(DataArray<DREAM3D::SyntheticBuilder::ShapeType>::Pointer, ShapeTypes)
 
     DREAM3D_INSTANCE_PROPERTY(float, XResolution)
     DREAM3D_INSTANCE_PROPERTY(float, YResolution)

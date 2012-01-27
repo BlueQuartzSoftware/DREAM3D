@@ -189,7 +189,7 @@ void CleanupGrains::execute()
 //  m->clearEnsembleData();
 
   int64_t totalPoints = m->totalPoints();
-  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -350)
   {
     return;
@@ -213,7 +213,7 @@ void CleanupGrains::execute()
   }
 
   // FindNeighbors may have messed with the pointers so revalidate our internal pointers
-  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;

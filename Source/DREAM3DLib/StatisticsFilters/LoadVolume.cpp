@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/GenericFilters/DataContainerReader.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -88,7 +88,7 @@ void LoadVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+//  DataContainer* m = getDataContainer();
 
 
   setErrorMessage(ss.str());
@@ -120,16 +120,25 @@ void LoadVolume::execute()
 
   int err = 0;
 
-  H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-  h5Reader->setFileName(getInputFile());
-  int64_t dims[3];
+  DataContainerReader::Pointer h5Reader = DataContainerReader::New();
+  h5Reader->setInputFile(m_InputFile);
+  h5Reader->setDataContainer(m);
+  size_t dcDims[3];
   float spacing[3];
   float origin[3];
-  err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
+  h5Reader->execute();
+  err = h5Reader->getErrorCondition();
   if (err < 0)
   {
+    setErrorCondition(err);
+    setErrorMessage(h5Reader->getErrorMessage());
     return;
   }
+  m->getDimensions(dcDims);
+  m->getResolution(spacing);
+  m->getOrigin(origin);
+
+  int64_t dims[3] = {dcDims[0], dcDims[1], dcDims[2]};
 
   /* Sanity check what we are trying to load to make sure it can fit in our address space.
    * Note that this does not guarantee the user has enough left, just that the
@@ -162,10 +171,7 @@ void LoadVolume::execute()
     return;
   }
   /* ************ End Sanity Check *************************** */
-  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
 
-  m->setDimensions(dcDims);
-  m->setResolution(spacing);
   int64_t totalPoints = m->totalPoints();
 
   initializeAttributes();
@@ -175,7 +181,6 @@ void LoadVolume::execute()
   }
 
 
-  err = h5Reader->readVoxelData(m_GrainIds, m_PhasesC, m_EulerAngles, m->crystruct, m->phaseType, totalPoints);
   if (err < 0)
   {
     setErrorCondition(err);
@@ -183,6 +188,24 @@ void LoadVolume::execute()
     notify(getErrorMessage().c_str(), 0, Observable::UpdateProgressMessage);
     return;
   }
+
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystructPtr
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  size_t numXTals = crystructPtr->GetNumberOfTuples();
+
+  FloatArrayType::Pointer phaseFractions = FloatArrayType::CreateArray(numXTals);
+  phaseFractions->SetName(DREAM3D::EnsembleData::PhaseFractions);
+  m->addEnsembleData(DREAM3D::EnsembleData::PhaseFractions, phaseFractions);
+ // m_PhaseFractions = phaseFractions->GetPointer(0);
+
+
+  FloatArrayType::Pointer pptFractions = FloatArrayType::CreateArray(numXTals);
+  pptFractions->SetName(DREAM3D::EnsembleData::PrecipitateFractions);
+  m->addEnsembleData(DREAM3D::EnsembleData::PrecipitateFractions, pptFractions);
+ // m_PrecipitateFractions = pptFractions->GetPointer(0);
+
   initializeGrains();
   if (getErrorCondition() < 0)
   {
@@ -204,7 +227,7 @@ void LoadVolume::initializeGrains()
   // Put at least 1 Grain in the Vector
   DataContainer* m = getDataContainer();
   m->resizeFieldDataArrays(1);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -266,7 +289,7 @@ void LoadVolume::initializeAttributes()
   for (int i = 0; i < totalPoints; ++i)
   {
     m_GrainIds[i] = 0;
-	m_PhasesC[i] = 0;
+	  m_PhasesC[i] = 0;
     m_EulerAngles[3*i] = -1.0f;
     m_EulerAngles[3*i + 1] = -1.0f;
     m_EulerAngles[3*i + 2] = -1.0f;

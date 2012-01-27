@@ -519,8 +519,14 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
 
   m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-  std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes(1, DREAM3D::SyntheticBuilder::UnknownShapeType);
+
   int count = m_ShapeTypeCombos.count();
+
+  DataArray<DREAM3D::SyntheticBuilder::ShapeType>::Pointer shapeTypes =
+                   DataArray<DREAM3D::SyntheticBuilder::ShapeType>::CreateArray(count+1);
+  shapeTypes->SetValue(0, DREAM3D::SyntheticBuilder::UnknownShapeType);
+
+
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
@@ -534,7 +540,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
       QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
       return;
     }
-    shapeTypes.push_back(enPtValue);
+    shapeTypes->SetValue(i+1, enPtValue);
   }
   m_GrainGenerator->setShapeTypes(shapeTypes);
 

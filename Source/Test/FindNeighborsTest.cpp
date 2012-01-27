@@ -97,9 +97,13 @@ std::string getH5EbsdFile()
 
 int getZStartIndex() { return 1; }
 int getZEndIndex() { return 117; }
-std::vector<DREAM3D::Reconstruction::PhaseType> getPhaseTypes() {
-  std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(1, DREAM3D::Reconstruction::UnknownPhaseType);
-  phaseTypes.push_back(DREAM3D::Reconstruction::PrimaryPhase);
+DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer getPhaseTypes()
+{
+  DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer phaseTypes
+                = DataArray<DREAM3D::Reconstruction::PhaseType>::CreateArray(2);
+  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
+  phaseTypes->SetValue(0, DREAM3D::Reconstruction::UnknownPhaseType);
+  phaseTypes->SetValue(1, DREAM3D::Reconstruction::PrimaryPhase);
   return phaseTypes;
 }
 
@@ -346,7 +350,7 @@ void TestLoadVolume()
 }
 
 // -----------------------------------------------------------------------------
-//  
+//
 // -----------------------------------------------------------------------------
 void TestDataContainerReader()
 {
