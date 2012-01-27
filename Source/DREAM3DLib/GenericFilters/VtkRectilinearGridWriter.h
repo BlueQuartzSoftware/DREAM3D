@@ -58,7 +58,7 @@
  * @date Jun 13, 2011
  * @version 1.0
  */
-class VtkRectilinearGridWriter : public AbstractFilter
+class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(VtkRectilinearGridWriter);
