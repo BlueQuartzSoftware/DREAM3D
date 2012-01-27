@@ -1119,11 +1119,19 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 
   for (size_t i = 0; i < size; i++)
   {
-    columnlist[gnum][i] = columnlist[gnum][i] + shiftcolumn;
-    rowlist[gnum][i] = rowlist[gnum][i] + shiftrow;
-    planelist[gnum][i] = planelist[gnum][i] + shiftplane;
+    int& cl = columnlist[gnum][i];
+    cl += shiftcolumn;
+    int& rl = rowlist[gnum][i];
+    rl += shiftrow;
+    int& pl = planelist[gnum][i];
+    pl += shiftplane;
   }
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
 {
   DataContainer* m = getDataContainer();
@@ -1349,62 +1357,72 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
   if(gadd > 0)
   {
     size_t size = columnlist[gadd].size();
-
-	float packquality = 0;
+    std::vector<int>& cl_gadd = columnlist[gadd];
+    std::vector<int>& rl_gadd = rowlist[gadd];
+    std::vector<int>& pl_gadd = planelist[gadd];
+    float packquality = 0;
     for (size_t i = 0; i < size; i++)
     {
-      col = columnlist[gadd][i];
-      row = rowlist[gadd][i];
-      plane = planelist[gadd][i];
+      col = cl_gadd[i];
+      row = rl_gadd[i];
+      plane = pl_gadd[i];
+
       if(m_PeriodicBoundaries == true)
       {
+        int& currentGrainOwner = grainowners[col][row][plane];
         if(col < 0) col = col + packingxpoints;
         if(col > packingxpoints - 1) col = col - packingxpoints;
         if(row < 0) row = row + packingypoints;
         if(row > packingypoints - 1) row = row - packingypoints;
         if(plane < 0) plane = plane + packingzpoints;
         if(plane > packingzpoints - 1) plane = plane - packingzpoints;
-        fillingerror = fillingerror + (2 * grainowners[col][row][plane] - 1);
-		grainowners[col][row][plane]++;
-		packquality = packquality + ((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1));
+        fillingerror = fillingerror + (2 * currentGrainOwner - 1);
+        packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
+        ++currentGrainOwner;
       }
-      if(m_PeriodicBoundaries == false)
+      else
       {
         if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
         {
-          fillingerror = fillingerror + (2 * grainowners[col][row][plane] - 1);
-		  grainowners[col][row][plane]++;
-		  packquality = packquality + ((grainowners[col][row][plane]-1)*(grainowners[col][row][plane]-1));
+          int& currentGrainOwner = grainowners[col][row][plane];
+          fillingerror = fillingerror + (2 * currentGrainOwner - 1);
+          packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
+          ++currentGrainOwner;
         }
       }
     }
-	packqualities[gadd] = packquality/float(size);
+    packqualities[gadd] = packquality / float(size);
   }
   if(gremove > 0)
   {
     size_t size = columnlist[gremove].size();
+    std::vector<int>& cl_gremove = columnlist[gremove];
+    std::vector<int>& rl_gremove = rowlist[gremove];
+    std::vector<int>& pl_gremove = planelist[gremove];
     for (size_t i = 0; i < size; i++)
     {
-      col = columnlist[gremove][i];
-      row = rowlist[gremove][i];
-      plane = planelist[gremove][i];
+      col = cl_gremove[i];
+      row = rl_gremove[i];
+      plane = pl_gremove[i];
       if(m_PeriodicBoundaries == true)
       {
+        int& currentGrainOwner = grainowners[col][row][plane];
         if(col < 0) col = col + packingxpoints;
         if(col > packingxpoints - 1) col = col - packingxpoints;
         if(row < 0) row = row + packingypoints;
         if(row > packingypoints - 1) row = row - packingypoints;
         if(plane < 0) plane = plane + packingzpoints;
         if(plane > packingzpoints - 1) plane = plane - packingzpoints;
-        fillingerror = fillingerror + (-2 * grainowners[col][row][plane] + 3);
-		grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
+        fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
+        currentGrainOwner = currentGrainOwner - 1;
       }
-      if(m_PeriodicBoundaries == false)
+      else
       {
         if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
         {
-          fillingerror = fillingerror + (-2 * grainowners[col][row][plane] + 3);
-		  grainowners[col][row][plane] = grainowners[col][row][plane] - 1;
+          int& currentGrainOwner = grainowners[col][row][plane];
+          fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
+          currentGrainOwner = currentGrainOwner - 1;
         }
       }
     }
