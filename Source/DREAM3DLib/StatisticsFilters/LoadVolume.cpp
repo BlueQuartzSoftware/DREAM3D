@@ -206,7 +206,6 @@ void LoadVolume::execute()
   m->addEnsembleData(DREAM3D::EnsembleData::PrecipitateFractions, pptFractions);
  // m_PrecipitateFractions = pptFractions->GetPointer(0);
 
-
   initializeGrains();
   if (getErrorCondition() < 0)
   {

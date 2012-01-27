@@ -46,7 +46,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindSurfaceGrains.h"
 
 #define NEW_SHARED_ARRAY(var, type, size)\
