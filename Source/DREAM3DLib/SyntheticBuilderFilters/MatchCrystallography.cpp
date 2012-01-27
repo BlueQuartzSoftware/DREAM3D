@@ -47,7 +47,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
-#include "DREAM3DLib/StatisticsFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\

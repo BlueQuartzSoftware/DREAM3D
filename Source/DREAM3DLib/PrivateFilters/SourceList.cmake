@@ -13,6 +13,8 @@ SET (PrivateFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNeighbors.h
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainPhases.h
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/RenumberGrains.h
+    ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindSurfaceGrains.h
+    ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindBoundingBoxGrains.h
 )
 
 #-- Add in any addition NON Filter classes here
@@ -24,6 +26,8 @@ SET (DREAM3DLib_PrivateFilters_SRCS
         ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNeighbors.cpp    
 ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainPhases.cpp
  ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/RenumberGrains.cpp
+ ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindSurfaceGrains.cpp
+ ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindBoundingBoxGrains.cpp
 )
 
 
