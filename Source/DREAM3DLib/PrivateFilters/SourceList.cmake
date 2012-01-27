@@ -21,12 +21,10 @@ SET (DREAM3DLib_PrivateFilters_HDRS
 )
 
 SET (DREAM3DLib_PrivateFilters_SRCS
-        ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNeighbors.cpp    
-${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainPhases.cpp
- ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/RenumberGrains.cpp
+  ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNeighbors.cpp    
+  ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainPhases.cpp
+  ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/RenumberGrains.cpp
 )
-
-
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/PrivateFilters" "${DREAM3DLib_PrivateFilters_HDRS}" "${DREAM3DLib_PrivateFilters_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
