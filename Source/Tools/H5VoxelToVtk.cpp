@@ -56,7 +56,7 @@
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
-#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/GenericFilters/DataContainerReader.h"
 
 
 typedef struct {
@@ -72,6 +72,49 @@ typedef struct {
     float* quats;
     Ebsd::CrystalStructure* crystruct;
 } Test;
+
+
+
+void updateProgressAndMessage(const std::string &msg, int prog)
+{
+  std::cout << prog << "% - " << msg << std::endl;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void pipelineProgress(int value)
+{
+  std::cout << value << "%" << std::endl;
+}
+
+void pipelineProgressMessage(const std::string &msg)
+{
+  std::cout << msg << std::endl;
+}
+
+void pipelineErrorMessage(const char* message)
+{
+  std::cout << "Error Message: " << message << std::endl;
+}
+
+void setErrorCondition(int err) {
+  std::cout << "Error Condition: " << err << std::endl;
+}
+
+void pipelineFinished()
+{
+  std::cout << "Pipeline Complete." << std::endl;
+}
+
+void setErrorMessage(const std::string &msg)
+{
+  std::cout << msg << std::endl;
+}
+
+std::string getNameOfClass()
+{
+  return "H5VoxelToVtk";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -92,19 +135,26 @@ int main(int argc, char **argv)
 
   DataContainer::Pointer m = DataContainer::New();
 
-  H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-  h5Reader->setFileName(iFile);
-
-  int64_t dims[3];
+  DataContainerReader::Pointer h5Reader = DataContainerReader::New();
+  h5Reader->setInputFile(iFile);
+  h5Reader->setDataContainer(m.get());
+  size_t dcDims[3];
   float spacing[3];
   float origin[3];
-  std::cout << "Getting Size and Resolution" << std::endl;
-  err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
+  h5Reader->execute();
+  err = h5Reader->getErrorCondition();
   if (err < 0)
   {
-    std::cout << "Error Reading the Dimensions and Resolution from the File." << std::endl;
+    setErrorCondition(err);
+    setErrorMessage(h5Reader->getErrorMessage());
     return EXIT_FAILURE;
   }
+  m->getDimensions(dcDims);
+  m->getResolution(spacing);
+  m->getOrigin(origin);
+
+  int64_t dims[3] = {dcDims[0], dcDims[1], dcDims[2]};
+
   /* Sanity check what we are trying to load to make sure it can fit in our address space.
    * Note that this does not guarantee the user has enough left, just that the
    * size of the volume can fit in the address space of the program
@@ -120,7 +170,8 @@ int main(int argc, char **argv)
     std::stringstream s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
                 << "' is greater than this program can hold. Try the 64 bit version.";
-    std::cout << s.str() << std::endl;
+    setErrorCondition(err);
+    setErrorMessage(s.str());
     return EXIT_FAILURE;
   }
 
@@ -130,47 +181,14 @@ int main(int argc, char **argv)
     std::stringstream s;
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
     s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
-    std::cout << s.str() << std::endl;
+    setErrorCondition(err);
+    setErrorMessage(s.str());
     return EXIT_FAILURE;
   }
   /* ************ End Sanity Check *************************** */
-  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
-  m->setDimensions(dcDims);
-  m->setResolution(spacing);
-  m->setOrigin(origin);
-
-  std::vector<Ebsd::CrystalStructure> crystruct;
-  std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
-
-  DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
-  DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
-  DECLARE_WRAPPED_ARRAY(eulerangles, m_EulerAngles, float);
-
-  m_GrainIndicies = DataArray<int>::CreateArray(0);
-  m_Phases = DataArray<int>::CreateArray(0);
-  m_EulerAngles = DataArray<float>::CreateArray(0);
 
 
-  int64_t totalpoints = dims[0] * dims[1] * dims[2];
-  grain_indicies = m_GrainIndicies->WritePointer(0, totalpoints);
-  phases = m_Phases->WritePointer(0, totalpoints);
-  eulerangles = m_EulerAngles->WritePointer(0, 3*totalpoints);
-
-  std::cout << "Reading Voxel Data" << std::endl;
-  err = h5Reader->readVoxelData(grain_indicies, phases, eulerangles, crystruct, phaseType, totalpoints);
-  if (err < 0)
-  {
-    std::cout << "Error reading h5voxel file." << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  m->addCellData(DREAM3D::CellData::GrainIds, m_GrainIndicies);
-  m->addCellData(DREAM3D::CellData::Phases, m_Phases);
-  m->addCellData(DREAM3D::CellData::EulerAngles, m_EulerAngles);
-
-  int64_t totalPoints = m->totalPoints();
-
-  m->crystruct = crystruct;
+  std::stringstream ss;
 
   std::cout << "Writing VTK file" << std::endl;
 
@@ -182,7 +200,16 @@ int main(int argc, char **argv)
   ipfWriter.m_WriteBinaryFiles = false;
   ipfWriter.writeScalars(f);
 
-  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds)
+  int64_t totalPoints = m->totalPoints();
+  int32_t* m_GrainIds = NULL;
+  m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, NULL);
+    if (0 == m_GrainIds ) {
+      ss << "Filter " << getNameOfClass() << " requires the data array '" <<
+      "DREAM3D" << "::" << "CellData" << "::" <<  "GrainIds" << "' to already be created prior to execution." << std::endl;
+      setErrorCondition(-300);
+    }
+
+  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, m_GrainIds)
 
   fclose(f);
 

@@ -449,16 +449,16 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
 
   // These should eventually go away when these "Ensemble Data" items get wrapped into the map structure of the
   // data container class.
-  err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(ensembleGid, m->phaseType, DREAM3D::EnsembleData::PhaseType);
-  if(getErrorCondition() < 0)
-  {
-    return err;
-  }
-  err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(ensembleGid, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
-  if(getErrorCondition() < 0)
-  {
-    return err;
-  }
+//  err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(ensembleGid, m->phaseType, DREAM3D::EnsembleData::PhaseType);
+//  if(getErrorCondition() < 0)
+//  {
+//    return err;
+//  }
+//  err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(ensembleGid, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
+//  if(getErrorCondition() < 0)
+//  {
+//    return err;
+//  }
 
   H5Gclose(ensembleGid);
 

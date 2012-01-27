@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DataContainerReader();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int readGroupsData(hid_t dcGid, const std::string &groupName);
 
 
   private:

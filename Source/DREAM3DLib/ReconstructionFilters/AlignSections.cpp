@@ -209,6 +209,9 @@ void AlignSections::align_sections()
     static_cast<DimType>(udims[2]),
   };
 
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystruct
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 
   float disorientation = 0;
   float mindisorientation = 100000000;
@@ -336,12 +339,12 @@ void AlignSections::align_sections()
                         q1[2] = m_Quats[refposition * 5 + 2];
                         q1[3] = m_Quats[refposition * 5 + 3];
                         q1[4] = m_Quats[refposition * 5 + 4];
-                        phase1 = m->crystruct[m_PhasesC[refposition]];
+                        phase1 = crystruct->GetValue(m_PhasesC[refposition]);
                         q2[1] = m_Quats[curposition * 5 + 1];
                         q2[2] = m_Quats[curposition * 5 + 2];
                         q2[3] = m_Quats[curposition * 5 + 3];
                         q2[4] = m_Quats[curposition * 5 + 4];
-                        phase2 = m->crystruct[m_PhasesC[curposition]];
+                        phase2 = crystruct->GetValue(m_PhasesC[curposition]);
                         if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                       if(w > m_misorientationtolerance) disorientation++;
@@ -536,6 +539,11 @@ void AlignSections::form_grains_sections()
 
   graincounts = m_GrainCounts->WritePointer(0, dims[2]);
 
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystruct
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+
+
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[8];
   neighpoints[0] = -dims[0] - 1;
@@ -599,7 +607,7 @@ void AlignSections::form_grains_sections()
           q1[2] = m_Quats[currentpoint * 5 + 2];
           q1[3] = m_Quats[currentpoint * 5 + 3];
           q1[4] = m_Quats[currentpoint * 5 + 4];
-          phase1 = m->crystruct[m_PhasesC[currentpoint]];
+          phase1 = crystruct->GetValue(m_PhasesC[currentpoint]);
           for (int i = 0; i < 8; i++)
           {
             good = 1;
@@ -616,7 +624,7 @@ void AlignSections::form_grains_sections()
               q2[2] = m_Quats[neighbor * 5 + 2];
               q2[3] = m_Quats[neighbor * 5 + 3];
               q2[4] = m_Quats[neighbor * 5 + 4];
-              phase2 = m->crystruct[m_PhasesC[neighbor]];
+              phase2 = crystruct->GetValue(m_PhasesC[neighbor]);
               if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               if(w < m_misorientationtolerance)
               {

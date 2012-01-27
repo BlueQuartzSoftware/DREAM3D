@@ -666,8 +666,12 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   }
   SANITY_CHECK_INPUT(m_ , OutputDir)
 
-  std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(1, DREAM3D::Reconstruction::UnknownPhaseType);
   int count = phaseTypeList->count();
+
+  DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer phaseTypes =
+                   DataArray<DREAM3D::Reconstruction::PhaseType>::CreateArray(count+1);
+  phaseTypes->SetValue(0, DREAM3D::Reconstruction::UnknownPhaseType);
+
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
@@ -682,7 +686,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
       QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
       return;
     }
-    phaseTypes.push_back(enPtValue);
+    phaseTypes->SetValue(i+1, enPtValue);
   }
 
   ok = checkPhaseTypes();

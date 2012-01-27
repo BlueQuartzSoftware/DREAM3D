@@ -41,13 +41,15 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.hpp"
 
+typedef std::list<std::string> NameListType;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
-AbstractFilter()
+    AbstractFilter()
 {
   setupFilterOptions();
 }
@@ -83,7 +85,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   std::stringstream ss;
 
-  if (m_InputFile.empty() == true)
+  if(m_InputFile.empty() == true)
   {
     ss << getNameOfClass() << ": The output file must be set before executing this filter.";
     setErrorCondition(-1);
@@ -106,7 +108,7 @@ void DataContainerReader::preflight()
 void DataContainerReader::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
@@ -118,12 +120,14 @@ void DataContainerReader::execute()
   dataCheck(false, 1, 1, 1);
   int err = 0;
   std::stringstream ss;
-  typedef std::list<std::string> NameListType;
 
   // Clear out everything from the data container before we start.
-  int64_t volDims[3] = {0, 0, 0};
-  float spacing[3] = {1.0f, 1.0f, 1.0f};
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  int64_t volDims[3] =
+  { 0, 0, 0 };
+  float spacing[3] =
+  { 1.0f, 1.0f, 1.0f };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
   m->setDimensions(volDims[0], volDims[1], volDims[2]);
   m->setResolution(spacing);
   m->setOrigin(origin);
@@ -151,7 +155,6 @@ void DataContainerReader::execute()
     setErrorMessage(ss.str());
     return;
   }
-
 
   err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
@@ -186,53 +189,96 @@ void DataContainerReader::execute()
   }
   m->setOrigin(origin);
 
-
-//Read the Voxel Data
-  hid_t cellGroupId = H5Gopen(dcGid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT );
+  err = readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error opening voxel Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-154);
-    setErrorMessage(ss.str());
+    err = H5Gclose(dcGid);
+    err = H5Fclose(fileId);
     return;
   }
 
-  NameListType names;
-  H5Utilities::getGroupObjects(cellGroupId, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_GROUP, names);
-  std::cout << "Number of Items in CELL Group: " << names.size() << std::endl;
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter )
-  {
-    std::cout << "Voxel Array: " << *iter << std::endl;
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
-
-
-  //Read the Field Data
-  hid_t fieldGroupId = H5Gopen(dcGid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT );
+  err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error opening Field Data Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-154);
-    setErrorMessage(ss.str());
+    err = H5Gclose(dcGid);
+    err = H5Fclose(fileId);
     return;
   }
 
-  names.clear();
-  H5Utilities::getGroupObjects(fieldGroupId, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_GROUP, names);
-  std::cout << "Number of Items in Field Group: " << names.size() << std::endl;
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter )
+  err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
+  if(err < 0)
   {
-    std::cout << "Field Array: " << *iter << std::endl;
+    err = H5Gclose(dcGid);
+    err = H5Fclose(fileId);
+    return;
   }
-  H5Gclose(fieldGroupId); // Close the Cell Group
-
 
   err = H5Gclose(dcGid);
   err = H5Fclose(fileId);
+}
 
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName)
+{
+  std::stringstream ss;
+  int err = 0;
+  //Read the Cell Data
+  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error opening HDF5 Group " << groupName << std::endl;
+    setErrorCondition(-154);
+    setErrorMessage(ss.str());
+    return -154;
+  }
+
+  NameListType names;
+  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, names);
+  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  std::string classType;
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    classType.clear();
+    err = H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
+    IDataArray::Pointer dPtr = IDataArray::NullPointer();
+
+    if(classType.compare("DataArray<T>") == 0)
+    {
+      dPtr = H5DataArrayReader::readIDataArray(gid, *iter);
+    }
+    else if(classType.compare("vector") == 0)
+    {
+
+    }
+    else if(classType.compare("NeighborList<T>") == 0)
+    {
+      dPtr = H5DataArrayReader::readNeighborListData(gid, *iter);
+    }
+
+    if (NULL != dPtr.get())
+    {
+      if(groupName.compare(H5_CELL_DATA_GROUP_NAME) == 0)
+      {
+        getDataContainer()->addCellData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      {
+        getDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      {
+        getDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+      }
+    }
+
+  }
+  H5Gclose(gid); // Close the Cell Group
+  return err;
 }

@@ -128,6 +128,14 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int32_t* m_Neighbors;
     int32_t* m_NumCells;
     int32_t* m_Neighborhoods;
+    DREAM3D::Reconstruction::PhaseType* m_PhaseType;
+    float* m_PhaseFractions;
+    float* m_PrecipitateFractions;
+
+    DREAM3D::SyntheticBuilder::ShapeType* m_ShapeTypes;
+
+
+
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
     void transfer_attributes(int gnum, Field* field);

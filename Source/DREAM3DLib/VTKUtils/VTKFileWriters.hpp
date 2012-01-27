@@ -105,7 +105,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
     }
     else
     {
-      WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::GrainIds)
+      WRITE_VTK_GRAIN_IDS_ASCII(r, DREAM3D::CellData::GrainIds, grain_indicies)
     }
     return err;
   }
@@ -218,6 +218,8 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, (r->totalPoints()), phases);
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*r->totalPoints()), eulerangles);
 
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructure, DataArray<Ebsd::CrystalStructure>, Ebsd::CrystalStructure, (r->getNumEnsembleTuples()), crystruct);
+
       // Write the IPF Coloring Cell Data
       for (size_t i = 0; i < total; i++)
       {
@@ -232,11 +234,11 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         }
         if(phase > 0)
         {
-          if(r->crystruct[phase] == Ebsd::Cubic)
+          if(crystruct[phase] == Ebsd::Cubic)
           {
             EbsdColoring::GenerateIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], hkl);
           }
-          else if(r->crystruct[phase] == Ebsd::Hexagonal)
+          else if(crystruct[phase] == Ebsd::Hexagonal)
           {
             EbsdColoring::CalculateHexIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
           }
@@ -537,7 +539,7 @@ class VtkMiscFileWriter
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds)
+        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, grain_indicies)
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation, "%f ")
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation, "%f ")
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
@@ -580,7 +582,7 @@ class VtkMiscFileWriter
       }
       else
       {
-        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds)
+        WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, grain_indicies)
         WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(m, DREAM3D::FieldData::Schmids, float, schmidfactor, "%f ")
       }
       fclose(f);

@@ -55,7 +55,8 @@
 //
 // -----------------------------------------------------------------------------
 DataContainer::DataContainer() :
-m_TotalFields(0)
+m_TotalFields(0),
+m_NumEnsembleTuples(0)
 {
   m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
   m_Resolution[0] = 1.0f; m_Resolution[1] = 1.0f; m_Resolution[2] = 1.0f;
@@ -235,8 +236,6 @@ void DataContainer::resizeFieldDataArrays(size_t size)
   m_TotalFields = size;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -264,6 +263,7 @@ void DataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer
     data->SetName(name);
   }
   m_EnsembleData[name] = data;
+  m_NumEnsembleTuples = data->GetNumberOfTuples();
 }
 
 
@@ -289,6 +289,7 @@ IDataArray::Pointer DataContainer::removeEnsembleData(const std::string &name)
 void DataContainer::clearEnsembleData()
 {
   m_EnsembleData.clear();
+  m_NumEnsembleTuples = 0;
 }
 
 // -----------------------------------------------------------------------------
