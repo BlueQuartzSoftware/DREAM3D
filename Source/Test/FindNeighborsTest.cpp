@@ -79,10 +79,8 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-#if REMOVE_TEST_FILES
-//  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
-//  MXADir::remove(UnitTest::FindNeighborTest::VtkOutputFile);
-#endif
+  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
+  MXADir::remove(UnitTest::FindNeighborTest::VtkOutputFile);
 }
 
 
@@ -201,13 +199,16 @@ int preflightPipeline(FilterContainerType &pipeline)
 void TestFindNeighbors()
 {
   float m_MisorientationTolerance = 5.0f;
-  int m_MinAllowedGrainSize = 12;
+  int m_MinAllowedGrainSize = 10;
+
+
 
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();
 //  m->addObserver(static_cast<Observer*>(this));
 
   std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
+  MXADir::mkdir(m_OutputDirectory, true);
 
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   FilterContainerType pipeline;
@@ -383,12 +384,16 @@ void TestDataContainerReader()
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
-
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
   DREAM3D_REGISTER_TEST( TestFindNeighbors() );
   DREAM3D_REGISTER_TEST( TestLoadVolume() );
   DREAM3D_REGISTER_TEST( TestDataContainerReader() );
 
+#if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
   PRINT_TEST_SUMMARY();
   return err;
 }

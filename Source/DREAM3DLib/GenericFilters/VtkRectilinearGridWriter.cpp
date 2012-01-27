@@ -43,7 +43,12 @@
 //
 // -----------------------------------------------------------------------------
 VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
-AbstractFilter()
+AbstractFilter(),
+m_WriteGrainIds(true),
+m_WritePhaseIds(false),
+m_WriteGoodVoxels(false),
+m_WriteIPFColors(false),
+m_WriteBinaryFile(false)
 {
   setupFilterOptions();
 }

@@ -44,6 +44,7 @@
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
+#include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
@@ -119,9 +120,9 @@ void setErrorCondition(int err)
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-#if REMOVE_TEST_FILES
-
-#endif
+  MXADir::remove(UnitTest::SyntheticBuilderTest::CsvFile);
+  MXADir::remove(UnitTest::SyntheticBuilderTest::OutputFile);
+  MXADir::remove(UnitTest::SyntheticBuilderTest::VtkOutputFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -191,15 +192,31 @@ void TestSyntheticBuilder()
   match_crystallography->setH5StatsInputFile(getH5StatsFile());
   pipeline.push_back(match_crystallography);
 
-  MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
   FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
-  write_fielddata->setFieldDataFile(FieldDataFile);
+  write_fielddata->setFieldDataFile(UnitTest::SyntheticBuilderTest::CsvFile);
   pipeline.push_back(write_fielddata);
 
-  MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile)
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(h5VoxelFile);
+  writer->setOutputFile(UnitTest::SyntheticBuilderTest::OutputFile);
   pipeline.push_back(writer);
+
+  bool m_WriteVtkFile(true);
+  bool m_WriteBinaryVTKFiles(true);
+  bool m_WritePhaseId(true);
+  bool m_WriteIPFColor(true);
+  bool m_WriteGoodVoxels(false);
+
+  if(m_WriteVtkFile)
+  {
+    VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+    vtkWriter->setOutputFile(UnitTest::SyntheticBuilderTest::VtkOutputFile);
+    vtkWriter->setWriteGrainIds(true);
+    vtkWriter->setWritePhaseIds(m_WritePhaseId);
+   // vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
+    vtkWriter->setWriteIPFColors(m_WriteIPFColor);
+    vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
+    pipeline.push_back(vtkWriter);
+  }
 
 
   // Start a Benchmark Clock so we can keep track of each filter's execution time
@@ -250,7 +267,16 @@ void TestSyntheticBuilder()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
+
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
+
   DREAM3D_REGISTER_TEST( TestSyntheticBuilder() );
+
+#if REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
 
 
   PRINT_TEST_SUMMARY();
