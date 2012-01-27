@@ -391,7 +391,7 @@ int main(int argc, char **argv) {
   DREAM3D_REGISTER_TEST( TestLoadVolume() );
   DREAM3D_REGISTER_TEST( TestDataContainerReader() );
 
-#if !REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
   PRINT_TEST_SUMMARY();
