@@ -342,6 +342,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
     }
   }
   H5Gclose(cellGroupId); // Close the Cell Group
+  return err;
 }
 
 
@@ -394,7 +395,7 @@ int DataContainerWriter::writeFieldData(hid_t dcGid)
     }
   }
   H5Gclose(fieldGroupId);
-
+  return err;
 }
 
 
