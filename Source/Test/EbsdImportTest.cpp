@@ -90,6 +90,7 @@ void RunTslImporter(const std::string file, bool rotateSlice, bool reorderArray,
 
   m_EbsdImport->setEbsdFileList(fileList);
   m_EbsdImport->execute();
+  DREAM3D_REQUIRE(m_EbsdImport->getErrorCondition() >= 0)
 }
 
 
@@ -146,6 +147,7 @@ void RunHklImporter(const std::string outfile, bool rotateSlice, bool reorderArr
 
   m_EbsdImport->setEbsdFileList(fileList);
   m_EbsdImport->execute();
+  DREAM3D_REQUIRE(m_EbsdImport->getErrorCondition() >= 0)
 }
 
 // -----------------------------------------------------------------------------
@@ -171,6 +173,7 @@ void RunHklEuropeanImporter(const std::string outfile, bool rotateSlice, bool re
 
   m_EbsdImport->setEbsdFileList(fileList);
   m_EbsdImport->execute();
+  DREAM3D_REQUIRE(m_EbsdImport->getErrorCondition() >= 0)
 }
 
 // -----------------------------------------------------------------------------

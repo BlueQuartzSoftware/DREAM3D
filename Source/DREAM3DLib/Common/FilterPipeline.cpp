@@ -293,22 +293,30 @@ void FilterPipeline::execute()
    FilterContainerType::iterator prev;
    FilterContainerType::iterator next;
 
+   AbstractFilter::Pointer prevFilt;
+   AbstractFilter::Pointer nextFilt;
+   AbstractFilter::Pointer currFilt;
+
    // Start a Benchmark Clock so we can keep track of each filter's execution time
    START_CLOCK()
 
    for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
    {
-
+     currFilt = *iter;
      if (iter != m_Pipeline.begin())
      {
        prev = iter; prev--;
+       prevFilt = *prev;
+       (*iter)->setPreviousFilter(*prev);
      }
      if (iter != m_Pipeline.end())
      {
        next = iter; next++;
+       nextFilt = *next;
+       (*iter)->setNextFilter(*next);
      }
-     (*iter)->setPreviousFilter(*prev);
-     (*iter)->setNextFilter(*next);
+
+
 
      progress = progress + 1.0f;
      pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);
@@ -338,4 +346,17 @@ void FilterPipeline::execute()
      }
    }
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::printFilterNames(std::ostream &out)
+{
+  out << "---------------------------------------------------------------------" << std::endl;
+  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
+  {
+    out << (*iter)->getNameOfClass() << std::endl;
+  }
+  out << "---------------------------------------------------------------------" << std::endl;
 }

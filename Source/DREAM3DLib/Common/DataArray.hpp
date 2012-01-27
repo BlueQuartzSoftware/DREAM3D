@@ -510,7 +510,7 @@ class DataArray : public IDataArray
     virtual int readH5Data(hid_t parentId)
     {
       int err = -1;
-
+      assert(false);
       return err;
     }
 

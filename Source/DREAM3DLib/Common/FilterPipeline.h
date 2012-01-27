@@ -109,7 +109,7 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     virtual AbstractFilter::Pointer removeFirstFilterByName(const std::string &name);
 
 
-
+    virtual void printFilterNames(std::ostream &out);
 
 
   protected:

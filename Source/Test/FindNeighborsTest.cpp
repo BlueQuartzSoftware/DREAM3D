@@ -51,6 +51,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3Dlib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
@@ -157,7 +158,7 @@ void pipelineFinished()
 
 typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -192,6 +193,8 @@ int preflightPipeline(FilterContainerType &pipeline)
   }
   return preflightError;
 }
+#endif
+
 
 // -----------------------------------------------------------------------------
 //
@@ -201,17 +204,11 @@ void TestFindNeighbors()
   float m_MisorientationTolerance = 5.0f;
   int m_MinAllowedGrainSize = 10;
 
-
-
-  // Create the DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
-//  m->addObserver(static_cast<Observer*>(this));
+  // Create our Pipeline object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
   MXADir::mkdir(m_OutputDirectory, true);
-
-  // Create a Vector to hold all the filters. Later on we will execute all the filters
-  FilterContainerType pipeline;
 
  // updateProgressAndMessage(("Loading Slices"), 10);
   LoadSlices::Pointer load_slices = LoadSlices::New();
@@ -224,25 +221,25 @@ void TestFindNeighbors()
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
 
   load_slices->setMisorientationTolerance(m_MisorientationTolerance);
-  pipeline.push_back(load_slices);
+
 
   AlignSections::Pointer align_sections = AlignSections::New();
   align_sections->setMisorientationTolerance(m_MisorientationTolerance);
   align_sections->setAlignmentMethod(DREAM3D::AlignmentMethod::OuterBoundary);
-  pipeline.push_back(align_sections);
+  pipeline->pushBack(align_sections);
 
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();
   segment_grains->setMisorientationTolerance(m_MisorientationTolerance);
-  pipeline.push_back(segment_grains);
+  pipeline->pushBack(segment_grains);
 
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
-  pipeline.push_back(cleanup_grains);
+  pipeline->pushBack(cleanup_grains);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile);
-  pipeline.push_back(writer);
+  pipeline->pushBack(writer);
 
   bool m_WriteVtkFile(true);
   bool m_WriteBinaryVTKFiles(true);
@@ -250,62 +247,66 @@ void TestFindNeighbors()
   bool m_WriteIPFColor(true);
   bool m_WriteGoodVoxels(true);
 
+  VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
   if(m_WriteVtkFile)
   {
-    VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
     vtkWriter->setOutputFile(UnitTest::FindNeighborTest::VtkOutputFile);
     vtkWriter->setWriteGrainIds(true);
     vtkWriter->setWritePhaseIds(m_WritePhaseId);
     vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
     vtkWriter->setWriteIPFColors(m_WriteIPFColor);
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
-    pipeline.push_back(vtkWriter);
+    pipeline->pushBack(vtkWriter);
   }
+/*****************************
+ * This section is convoluted because we are testing all the methods of
+ * the FilterPipeline class. You would normally NOT build a pipeline this
+ * way in normal code.
+ */
+
+
+  pipeline->popFront();
+//  pipeline->printFilterNames(std::cout);
+  DREAM3D_REQUIRE_EQUAL(4, pipeline->size());
+
+  pipeline->pushFront(align_sections);
+//  pipeline->printFilterNames(std::cout);
+  DREAM3D_REQUIRE_EQUAL(5, pipeline->size());
+
+  pipeline->pushFront(load_slices);
+//  pipeline->printFilterNames(std::cout);
+  DREAM3D_REQUIRE_EQUAL(6, pipeline->size());
+
+  pipeline->popBack(); // Pop off the vtkwriter
+//  pipeline->printFilterNames(std::cout);
+  DREAM3D_REQUIRE_EQUAL(5, pipeline->size());
+
+  pipeline->erase(pipeline->size()-1); // Erase the data container writer
+//  pipeline->printFilterNames(std::cout);
+  DREAM3D_REQUIRE_EQUAL(4, pipeline->size());
+
+  pipeline->insert(pipeline->size(), writer);
+  pipeline->insert(pipeline->size(), vtkWriter);
+//  pipeline->printFilterNames(std::cout);
+  DREAM3D_REQUIRE_EQUAL(6, pipeline->size());
 
 
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
-  int err = preflightPipeline(pipeline);
+  int err = pipeline->preflightPipeline();
   DREAM3D_REQUIRE_EQUAL(err, 0);
-  m = DataContainer::New();
-
 
 
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
-  Observer observer;
-  err = 0;
-  // Start a Benchmark Clock so we can keep track of each filter's execution time
-  START_CLOCK()
-  // Start looping through the Pipeline
-  float progress = 0.0f;
-  std::stringstream ss;
-  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
-  {
-    progress = progress + 1.0f;
-    pipelineProgress(progress / (pipeline.size() + 1) * 100.0f);
-    ss.str("");
-    ss << logTime() << " Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass();
-    pipelineProgressMessage(ss.str());
-    (*filter)->addObserver(&observer);
-    (*filter)->setDataContainer(m.get());
-    (*filter)->execute();
-    (*filter)->removeObserver(&observer);
-    err = (*filter)->getErrorCondition();
-    if(err < 0)
-    {
-      setErrorCondition(err);
-      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
-      pipelineProgress(100);
-      pipelineFinished();
-      DREAM3D_REQUIRE_EQUAL(err, 0);
-    }
+  pipeline->run();
+  err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
 
-    if(DREAM3D_BENCHMARKS)
-    {
-      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
-      millis = MXA::getMilliSeconds();
-    }
-  }
+  DREAM3D_REQUIRE_EQUAL(false, pipeline->empty());
+
+  pipeline->clear();
+  DREAM3D_REQUIRE_EQUAL(0, pipeline->size());
+  DREAM3D_REQUIRE_EQUAL(true, pipeline->empty());
 
   updateProgressAndMessage("FindNeighborsTest Complete", 100);
 }
@@ -316,59 +317,29 @@ void TestFindNeighbors()
 void TestLoadVolume()
 {
   // Create the DataContainer object
-    DataContainer::Pointer m = DataContainer::New();
+  DataContainer::Pointer m = DataContainer::New();
 
   // Create a Vector to hold all the filters. Later on we will execute all the filters
-  FilterContainerType pipeline;
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
 
   LoadVolume::Pointer load_volume = LoadVolume::New();
   load_volume->setInputFile(UnitTest::FindNeighborTest::OutputFile);
-  pipeline.push_back(load_volume);
+  pipeline->pushBack(load_volume);
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
-  int err = preflightPipeline(pipeline);
+  int err = pipeline->preflightPipeline();
   DREAM3D_REQUIRE_EQUAL(err, 0);
   m = DataContainer::New();
 
 
 
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
-  Observer observer;
-  err = 0;
-  // Start a Benchmark Clock so we can keep track of each filter's execution time
-  START_CLOCK()
-  // Start looping through the Pipeline
-  float progress = 0.0f;
-  std::stringstream ss;
-  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
-  {
+  pipeline->run();
+  err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
 
-    progress = progress + 1.0f;
-    pipelineProgress(progress / (pipeline.size() + 1) * 100.0f);
-    ss.str("");
-    ss << logTime() << " Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass();
-    pipelineProgressMessage(ss.str());
-    (*filter)->addObserver(&observer);
-    (*filter)->setDataContainer(m.get());
- //   setCurrentFilter(*filter);
-    (*filter)->execute();
-    (*filter)->removeObserver(&observer);
-    err = (*filter)->getErrorCondition();
-    if(err < 0)
-    {
-      setErrorCondition(err);
-      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
-      pipelineProgress(100);
-      pipelineFinished();
-      DREAM3D_REQUIRE_EQUAL(err, 0);
-    }
 
-    if(DREAM3D_BENCHMARKS)
-    {
-      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
-      millis = MXA::getMilliSeconds();
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
