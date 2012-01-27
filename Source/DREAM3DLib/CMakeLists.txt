@@ -80,6 +80,7 @@ file(WRITE ${AllFiltersHeaderFile} "#ifndef _DREAM3D_FILTERS_H_\n#define _DREAM3
 
 # Add in our Filter classes
 D3DCompileFilters(GenericFilters ${AllFiltersHeaderFile})
+D3DCompileFilters(PrivateFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(ReconstructionFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(ManipulationFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(StatisticsFilters ${AllFiltersHeaderFile})

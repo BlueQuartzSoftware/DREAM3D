@@ -41,8 +41,8 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/RenumberGrains.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"

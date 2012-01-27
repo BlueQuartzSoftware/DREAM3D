@@ -46,8 +46,8 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/RenumberGrains.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 

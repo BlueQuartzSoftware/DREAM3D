@@ -49,7 +49,7 @@ AbstractFilter(),
 m_GrainIds(NULL),
 m_Active(NULL)
 {
-  setupFilterOptions();
+//  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
