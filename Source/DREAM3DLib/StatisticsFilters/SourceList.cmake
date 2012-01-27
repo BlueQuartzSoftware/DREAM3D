@@ -11,7 +11,6 @@
 SET (StatisticsFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindBoundingBoxGrains.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindEuclideanDistMap.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindMDF.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNeighborhoods.h
@@ -22,7 +21,6 @@ SET (StatisticsFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/LoadVolume.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindLocalMisorientationGradients.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSurfaceGrains.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/WriteH5StatsFile.h
 )
 
@@ -34,7 +32,6 @@ SET (DREAM3DLib_StatisticsFilters_HDRS
 SET (DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindBoundingBoxGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindEuclideanDistMap.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindMDF.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNeighborhoods.cpp
@@ -45,7 +42,6 @@ SET (DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/LoadVolume.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindLocalMisorientationGradients.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSurfaceGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/WriteH5StatsFile.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/StatisticsFilters" "${DREAM3DLib_StatisticsFilters_HDRS}" "${DREAM3DLib_StatisticsFilters_SRCS}" "0")
