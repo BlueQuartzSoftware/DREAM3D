@@ -45,12 +45,12 @@
 #include "DREAM3DLib/IO/FileWriter.h"
 
 
-class DREAM3DLib_EXPORT DxWriter : public DREAM3D::FileWriter
+class DREAM3DLib_EXPORT DxWriter : public FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(DxWriter)
     DREAM3D_STATIC_NEW_MACRO(DxWriter)
-    DREAM3D_TYPE_MACRO_SUPER(DxWriter, DREAM3D::FileWriter)
+    DREAM3D_TYPE_MACRO_SUPER(DxWriter, FileWriter)
 
 
     virtual ~DxWriter();

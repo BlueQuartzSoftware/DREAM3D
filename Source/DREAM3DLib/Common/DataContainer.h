@@ -237,8 +237,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     // Ensemble Data??
     // Phase Information (crystal structures, phase types, and shape types)
-//    std::vector<Ebsd::CrystalStructure> crystruct;
-//    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
+//    std::vector<unsigned int> crystruct;
+//    std::vector<unsigned int> phaseType;
 //
 //    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
 //    std::vector<float> phasefraction;

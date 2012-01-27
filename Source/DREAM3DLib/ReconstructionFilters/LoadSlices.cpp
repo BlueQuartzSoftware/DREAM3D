@@ -252,7 +252,7 @@ void LoadSlices::execute()
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
-  std::vector<Ebsd::CrystalStructure> crystalStructures;
+  std::vector<unsigned int> crystalStructures;
   if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     ebsdReader = H5AngVolumeReader::New();
@@ -357,16 +357,16 @@ void LoadSlices::initializeQuats()
   int64_t totalPoints = m->totalPoints();
 
   float qr[5];
-  Ebsd::CrystalStructure xtal = Ebsd::UnknownCrystalStructure;
-  DataArray<Ebsd::CrystalStructure>* crystruct
-      = DataArray<Ebsd::CrystalStructure>::SafeObjectDownCast<IDataArray*, DataArray<Ebsd::CrystalStructure>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  unsigned int xtal = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  DataArray<unsigned int>* crystruct
+      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {
     OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
     phase = m_PhasesC[i];
     xtal = crystruct->GetValue(phase);
-    if (xtal == Ebsd::UnknownCrystalStructure)
+    if (xtal == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       qr[1] = 0.0;
       qr[2] = 0.0;
@@ -428,10 +428,10 @@ void LoadSlices::threshold_points()
 
 //  int noborder = 0;
 
-  DataArray<Ebsd::CrystalStructure>* crystruct
-      = DataArray<Ebsd::CrystalStructure>::SafeObjectDownCast<IDataArray*, DataArray<Ebsd::CrystalStructure>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  DataArray<unsigned int>* crystruct
+      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 
-  Ebsd::CrystalStructure phase1, phase2;
+  unsigned int phase1, phase2;
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
 

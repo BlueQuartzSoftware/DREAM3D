@@ -70,7 +70,7 @@ typedef struct {
     float* euler2s;
     float* euler3s;
     float* quats;
-    Ebsd::CrystalStructure* crystruct;
+    unsigned int* crystruct;
 } Test;
 
 

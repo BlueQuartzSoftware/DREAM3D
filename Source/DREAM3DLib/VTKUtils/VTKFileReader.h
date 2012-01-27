@@ -84,11 +84,11 @@
  * @date May 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VTKFileReader : public DREAM3D::FileReader
+class DREAM3DLib_EXPORT VTKFileReader : public FileReader
 {
   public:
     DREAM3D_SHARED_POINTERS(VTKFileReader)
-    DREAM3D_TYPE_MACRO_SUPER(VTKFileReader, DREAM3D::FileReader)
+    DREAM3D_TYPE_MACRO_SUPER(VTKFileReader, FileReader)
     DREAM3D_STATIC_NEW_MACRO(VTKFileReader)
 
     virtual ~VTKFileReader();

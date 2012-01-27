@@ -143,8 +143,8 @@ void Reconstruction::execute()
   pipeline.push_back(load_slices);
 
   AlignSections::Pointer align_sections = AlignSections::New();
-  align_sections->setmisorientationtolerance(m_MisorientationTolerance);
-  align_sections->setalignmeth(m_AlignmentMethod);
+  align_sections->setMisorientationTolerance(m_MisorientationTolerance);
+  align_sections->setAlignmentMethod(m_AlignmentMethod);
   pipeline.push_back(align_sections);
 
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();

@@ -215,7 +215,7 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 
@@ -229,7 +229,7 @@ void MergeTwins::merge_twins()
   float q1[5];
   float q2[5];
   size_t numgrains = m->getTotalFields();
-  Ebsd::CrystalStructure phase1, phase2;
+  unsigned int phase1, phase2;
   twinnewnumbers.resize(numgrains, -1);
 
   for (size_t i = 1; i < numgrains; i++)

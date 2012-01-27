@@ -367,7 +367,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     }
     // Read the Phase and Crystal Structure information from the Stats File
     std::vector<int> phases;
-    std::vector<Ebsd::CrystalStructure> structures;
+    std::vector<unsigned int> structures;
     int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
     if(err < 0)
     {
@@ -376,9 +376,9 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
 
     int size = static_cast<int>(phases.size());
     std::vector<std::string> shapeTypeStrings;
-    DREAM3D::ShapeType::getShapeTypeStrings(shapeTypeStrings);
-    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypeEnums;
-    DREAM3D::ShapeType::getShapeTypeEnums(shapeTypeEnums);
+    ShapeType::getShapeTypeStrings(shapeTypeStrings);
+    std::vector<unsigned int> shapeTypeEnums;
+    ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
     // Remove all the items from the GUI and from the internal tracking Lists
     QLayoutItem *child;
@@ -522,17 +522,17 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   int count = m_ShapeTypeCombos.count();
 
-  DataArray<DREAM3D::SyntheticBuilder::ShapeType>::Pointer shapeTypes =
-                   DataArray<DREAM3D::SyntheticBuilder::ShapeType>::CreateArray(count+1);
-  shapeTypes->SetValue(0, DREAM3D::SyntheticBuilder::UnknownShapeType);
+  DataArray<unsigned int>::Pointer shapeTypes =
+                   DataArray<unsigned int>::CreateArray(count+1);
+  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
 
 
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
     QComboBox* cb = m_ShapeTypeCombos.at(i);
-    DREAM3D::SyntheticBuilder::ShapeType enPtValue = static_cast<DREAM3D::SyntheticBuilder::ShapeType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    if (enPtValue >= DREAM3D::SyntheticBuilder::UnknownShapeType)
+    unsigned int enPtValue = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= DREAM3D::ShapeType::UnknownShapeType)
     {
       QString msg("The Shape Type for phase ");
 //      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary, Precipitate or Transformation.");
@@ -674,8 +674,8 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   float totalvol;
   int phase;
   std::vector<int> phases;
-  std::vector<Ebsd::CrystalStructure> structures;
-  std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
+  std::vector<unsigned int> structures;
+  std::vector<unsigned int> phaseType;
   std::vector<float> phasefraction;
   std::vector<float> double_data;
   std::vector<float> avgdiam;
@@ -711,7 +711,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     std::vector<unsigned int> phasetypes;
     err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
     if (err < 0) {break;}
-    phaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType> (phasetypes[0]);
+    phaseType[phase] = static_cast<unsigned int> (phasetypes[0]);
 
 	  err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
     if (err < 0) {break;}
@@ -736,7 +736,7 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType.size(); ++i)
   {
-    if (phaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
+    if (phaseType[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
       primaryphases.push_back(i);
       primaryphasefractions.push_back(phasefraction[i]);

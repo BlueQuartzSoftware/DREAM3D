@@ -45,12 +45,12 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT VtkGrainIdWriter : public DREAM3D::FileWriter
+class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(VtkGrainIdWriter);
     DREAM3D_STATIC_NEW_MACRO(VtkGrainIdWriter);
-    DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdWriter, DREAM3D::FileWriter);
+    DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdWriter, FileWriter);
 
 
     virtual ~VtkGrainIdWriter();

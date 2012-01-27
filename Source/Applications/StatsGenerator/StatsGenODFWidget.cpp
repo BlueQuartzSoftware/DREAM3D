@@ -60,7 +60,7 @@ QWidget(parent),
 m_EnableAxisDecorations(false),
 m_Initializing(true),
 m_PhaseIndex(-1),
-m_CrystalStructure(Ebsd::Cubic),
+m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
 m_ODFTableModel(NULL),
 m_MDFWidget(NULL),
 m_PoleFigureFuture(NULL)
@@ -159,11 +159,11 @@ int StatsGenODFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
     e3s[i] = e3s[i] * M_PI / 180.0;
   }
 
-  if (m_CrystalStructure == Ebsd::Cubic)
+  if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
-  else if (m_CrystalStructure == Ebsd::Hexagonal)
+  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
   {
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
   }
@@ -217,17 +217,17 @@ void StatsGenODFWidget::enableMDFTab(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::setCrystalStructure(Ebsd::CrystalStructure value)
+void StatsGenODFWidget::setCrystalStructure(unsigned int value)
 {
   if (m_CrystalStructure != value)
   {
     this->m_CrystalStructure = value;
 //    switch(value)
 //    {
-//      case Ebsd::Cubic:
+//      case Ebsd::CrystalStructure::Cubic:
 //        setPlotTabTitles("<001> PF", "<011> PF", "<111> PF");
 //        break;
-//      case Ebsd::Hexagonal:
+//      case Ebsd::CrystalStructure::Hexagonal:
 //        setPlotTabTitles("<0001> PF", "<11-20> PF", "<10-10> PF");
 //        break;
 //      default:
@@ -243,7 +243,7 @@ void StatsGenODFWidget::setCrystalStructure(Ebsd::CrystalStructure value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::CrystalStructure StatsGenODFWidget::getCrystalStructure()
+unsigned int StatsGenODFWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }
@@ -511,7 +511,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   StatsGen sg;
   int size = 2500;
 
-  if (m_CrystalStructure == Ebsd::Cubic)
+  if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
     static const size_t eighteenCubed = 5832;
     float totalweight = 0;
@@ -519,7 +519,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
     err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
-  else if (m_CrystalStructure == Ebsd::Hexagonal) {
+  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal) {
     static const size_t odfsize = 15552;
     float totalweight = 0;
     odf.resize(odfsize);
@@ -540,12 +540,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
   switch(this->m_CrystalStructure)
   {
-    case Ebsd::Cubic:
+    case Ebsd::CrystalStructure::Cubic:
       data.push_back(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
       data.push_back(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
       data.push_back(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
       break;
-    case Ebsd::Hexagonal:
+    case Ebsd::CrystalStructure::Hexagonal:
       data.push_back(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
       data.push_back(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
       data.push_back(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));

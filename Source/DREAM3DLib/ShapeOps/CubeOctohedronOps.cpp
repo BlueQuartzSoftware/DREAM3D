@@ -36,7 +36,7 @@
 #include "CubeOctohedronOps.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-using namespace DREAM3D;
+
 
 float root3 = sqrt(3.0);
 float ShapeClass3Omega3[41][2] = {{0.787873524f, 0.0f},

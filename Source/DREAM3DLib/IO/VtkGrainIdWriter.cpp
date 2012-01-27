@@ -41,7 +41,7 @@
 //
 // -----------------------------------------------------------------------------
 VtkGrainIdWriter::VtkGrainIdWriter() :
-DREAM3D::FileWriter(),
+FileWriter(),
 m_WriteBinaryFiles(true)
 {
 

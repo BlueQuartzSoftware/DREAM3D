@@ -175,7 +175,7 @@ int H5VoxelWriter::writeStructuredPoints(int64_t volDims[3], float spacing[3], f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructure>  &crystruct, bool appendFile)
+int H5VoxelWriter::writeCrystalStructures(const std::vector<unsigned int>  &crystruct, bool appendFile)
  {
    H5DataWriter::Pointer h5writer = H5DataWriter::New();
    h5writer->setFileName(m_FileName);
@@ -208,7 +208,7 @@ int H5VoxelWriter::writeCrystalStructures(const std::vector<Ebsd::CrystalStructu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelWriter::writePhaseTypes(const std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType, bool appendFile)
+int H5VoxelWriter::writePhaseTypes(const std::vector<unsigned int> &phaseType, bool appendFile)
 {
   H5DataWriter::Pointer h5writer = H5DataWriter::New();
   h5writer->setFileName(m_FileName);

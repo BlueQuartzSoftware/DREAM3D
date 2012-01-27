@@ -93,7 +93,7 @@ class EbsdLib_EXPORT CtfPhase
     /**
      * @brief Returns the type of crystal structure for this phase.
      */
-    Ebsd::CrystalStructure determineCrystalStructure();
+    unsigned int determineCrystalStructure();
 
 
     /**

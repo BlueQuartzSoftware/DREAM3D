@@ -109,8 +109,8 @@ H5StatsWriter::Pointer H5StatsWriter::New(const std::string &filename, bool crea
 //
 // -----------------------------------------------------------------------------
 int H5StatsWriter::writePhaseInformation(int phase,
-                                              DREAM3D::Reconstruction::PhaseType  phaseType,
-                                              Ebsd::CrystalStructure xtal,
+                                              unsigned int  phaseType,
+                                              unsigned int xtal,
                                               float phasefraction, float pptFraction)
 {
   herr_t err = 0;
@@ -148,7 +148,7 @@ int H5StatsWriter::writePhaseInformation(int phase,
     H5RSW_ERROR_CHECK(DREAM3D::HDF5::PhaseType)
     retErr = err;
   }
-  std::string ptName = DREAM3D::PhaseType::getPhaseTypeString(phaseType);
+  std::string ptName = PhaseType::getPhaseTypeString(phaseType);
   name = std::string("Name");
   err = H5Lite::writeStringAttribute(pid, DREAM3D::HDF5::PhaseType, name, ptName);
   if (err < 0)
@@ -405,8 +405,8 @@ int H5StatsWriter::writeDistributionData(int phase, const std::string &disType,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
-                                         DREAM3D::Reconstruction::PhaseType phaseType,
+int H5StatsWriter::writeVolumeStats(int phase, unsigned int xtal,
+                                         unsigned int phaseType,
                                          float phasefraction, float pptFraction,
                                          float maxdiameter, float mindiameter, float diamStepSize,
                                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
@@ -522,8 +522,8 @@ int H5StatsWriter::writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
 //
 // -----------------------------------------------------------------------------
 int H5StatsWriter::writeVolumeStats2D(int phase,
-                                           Ebsd::CrystalStructure xtal,
-                                           DREAM3D::Reconstruction::PhaseType phaseType,
+                                           unsigned int xtal,
+                                           unsigned int phaseType,
                                            float phasefraction, float pptFraction,
                                            float maxdiameter, float mindiameter, float diamStepSize,
                                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,

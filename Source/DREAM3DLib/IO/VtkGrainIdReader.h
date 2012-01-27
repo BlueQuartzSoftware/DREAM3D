@@ -41,12 +41,12 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 
 
-class DREAM3DLib_EXPORT VtkGrainIdReader : public DREAM3D::FileReader
+class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
 {
   public:
   DREAM3D_SHARED_POINTERS(VtkGrainIdReader);
   DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader);
-  DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, DREAM3D::FileReader);
+  DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, FileReader);
 
 
     virtual ~VtkGrainIdReader();

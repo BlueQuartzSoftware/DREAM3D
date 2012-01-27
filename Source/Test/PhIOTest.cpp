@@ -136,10 +136,10 @@ int TestCasting()
 {
   PhReader::Pointer ptr = PhReader::New();
 
-  DREAM3D::FileReader* super = static_cast<DREAM3D::FileReader*>(ptr.get());
-  DREAM3D::FileWriter::Pointer other = DREAM3D::FileWriter::New();
+  FileReader* super = static_cast<FileReader*>(ptr.get());
+  FileWriter::Pointer other = FileWriter::New();
 
-  PhReader* derived = PhReader::SafeObjectDownCast<DREAM3D::FileReader*, PhReader*>(super);
+  PhReader* derived = PhReader::SafeObjectDownCast<FileReader*, PhReader*>(super);
   DREAM3D_ASSERT(derived != NULL);
   derived = dynamic_cast<PhReader*>(other.get());
   DREAM3D_ASSERT(derived == NULL);

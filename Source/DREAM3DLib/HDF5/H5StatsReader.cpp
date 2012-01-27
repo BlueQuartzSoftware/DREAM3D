@@ -82,7 +82,7 @@ H5StatsReader::Pointer H5StatsReader::New(const std::string &filename)
 // -----------------------------------------------------------------------------
 std::string H5StatsReader::getDistributionType(int phase,
                                                     const std::string &group,
-                                                    DREAM3D::Reconstruction::DistributionType &dt)
+                                                    unsigned int &dt)
 {
   herr_t err = 0;
 
@@ -106,19 +106,19 @@ std::string H5StatsReader::getDistributionType(int phase,
 
   if (data.compare(DREAM3D::HDF5::BetaDistribution) == 0)
   {
-    dt = DREAM3D::Reconstruction::Beta;
+    dt = DREAM3D::DistributionType::Beta;
   }
   else if (data.compare(DREAM3D::HDF5::LogNormalDistribution) == 0)
   {
-    dt = DREAM3D::Reconstruction::LogNormal;
+    dt = DREAM3D::DistributionType::LogNormal;
   }
   else if (data.compare(DREAM3D::HDF5::PowerLawDistribution) == 0)
   {
-    dt = DREAM3D::Reconstruction::Power;
+    dt = DREAM3D::DistributionType::Power;
   }
   else
   {
-    dt = DREAM3D::Reconstruction::UnknownDistributionType;
+    dt = DREAM3D::DistributionType::UnknownDistributionType;
   }
   return data;
 }
@@ -127,7 +127,7 @@ std::string H5StatsReader::getDistributionType(int phase,
 //
 // -----------------------------------------------------------------------------
 int H5StatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
-                                  std::vector<Ebsd::CrystalStructure> &xtals)
+                                  std::vector<unsigned int> &xtals)
 {
   phases.clear();
   xtals.clear();
@@ -150,13 +150,13 @@ int H5StatsReader::getPhaseAndCrystalStructures(std::vector<int> &phases,
     StringUtils::stringToNum(i, *pString);
     phases.push_back(i);
     hid_t gid = H5Gopen(reconGid,(*pString).c_str(), H5P_DEFAULT);
-    unsigned int xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);
+    unsigned int xtal = static_cast<unsigned int>(Ebsd::CrystalStructure::UnknownCrystalStructure);
     err = H5Lite::readScalarDataset(gid, DREAM3D::HDF5::CrystalStructure, xtal);
     if (err < 0)
     {
-      xtal = static_cast<unsigned int>(Ebsd::UnknownCrystalStructure);
+      xtal = static_cast<unsigned int>(Ebsd::CrystalStructure::UnknownCrystalStructure);
     }
-    xtals.push_back(static_cast<Ebsd::CrystalStructure>(xtal) );
+    xtals.push_back(static_cast<unsigned int>(xtal) );
     err = H5Gclose(gid);
   }
 

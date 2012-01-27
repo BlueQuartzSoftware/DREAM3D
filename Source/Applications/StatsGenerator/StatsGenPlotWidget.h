@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -75,8 +75,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
                          QVector<float>  &bins,
                          const std::string &hdf5GroupName);
 
-    void setStatisticsType(DREAM3D::Reconstruction::StatisticsType statsType);
-    void setDistributionType(DREAM3D::Reconstruction::DistributionType distributionType, bool updatePlots = true);
+    void setStatisticsType(unsigned int statsType);
+    void setDistributionType(unsigned int distributionType, bool updatePlots = true);
     void blockDistributionTypeChanges(bool block);
 
     void setXAxisName(QString name);
@@ -101,7 +101,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     MXA_INSTANCE_PROPERTY(float, BinStep);
 
     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
 
 
     void setSizeDistributionValues(float mu, float sigma,
@@ -131,8 +131,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
   private:
     SGAbstractTableModel* m_TableModel;
     QwtPlotGrid* m_grid;
-    DREAM3D::Reconstruction::DistributionType m_DistributionType;
-    DREAM3D::Reconstruction::StatisticsType    m_StatsType;
+    unsigned int m_DistributionType;
+    unsigned int m_StatsType;
     bool m_UserUpdatedData;
 
     QVector<QwtPlotCurve* > m_PlotCurves;

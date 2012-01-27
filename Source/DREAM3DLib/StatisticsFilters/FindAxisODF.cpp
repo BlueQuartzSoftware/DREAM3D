@@ -134,7 +134,7 @@ void FindAxisODF::execute()
   }
 
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 
@@ -166,8 +166,8 @@ void FindAxisODF::execute()
     if(m_SurfaceFields[i] == 0)
     {
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      m_OrientationOps[Ebsd::OrthoRhombic]->getFZRod(r1, r2, r3);
-      bin = m_OrientationOps[Ebsd::OrthoRhombic]->getOdfBin(r1, r2, r3);
+      m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getFZRod(r1, r2, r3);
+      bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
       axisodf[m_PhasesF[i]][bin] = axisodf[m_PhasesF[i]][bin]++;
       totalaxes[m_PhasesF[i]]++;
     }

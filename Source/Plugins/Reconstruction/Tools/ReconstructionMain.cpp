@@ -144,12 +144,12 @@ int main(int argc, char **argv)
     m_Reconstruction->setMergeTwins(mergeTwins.getValue() );
 
 #if 0
-    Ebsd::CrystalStructure crystruct = static_cast<Ebsd::CrystalStructure>(CrystalStructure.getValue());
-    std::vector<Ebsd::CrystalStructure> xtals(static_cast<Ebsd::CrystalStructure>(CrystalStructure.getValue()));
+    unsigned int crystruct = static_cast<unsigned int>(CrystalStructure.getValue());
+    std::vector<unsigned int> xtals(static_cast<unsigned int>(CrystalStructure.getValue()));
     m_Reconstruction->setCrystalStructure(crystruct);
 #endif
 
-    DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(AlignMeth.getValue() );
+    unsigned int alignmeth = static_cast<unsigned int>(AlignMeth.getValue() );
 
     m_Reconstruction->setAlignmentMethod(alignmeth);
 
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
 #endif
     m_Reconstruction->setZStartIndex(10074);
     m_Reconstruction->setZEndIndex(10376);
-    m_Reconstruction->setCrystalStructure(Ebsd::Cubic);
+    m_Reconstruction->setCrystalStructure(Ebsd::CrystalStructure::Cubic);
     m_Reconstruction->setAlignmentMethod(DREAM3D::Reconstruction::OuterBoundary);
     m_Reconstruction->setm_minallowedgrainsize(24);
     m_Reconstruction->setMisorientationTolerance(5.0);

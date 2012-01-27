@@ -107,12 +107,12 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     float sizey;
     float sizez;
     float totalvol;
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
-    DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
-    DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
-    DREAM3D::ShapeOps::Pointer m_CylinderOps;
-    DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
-    DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
+    std::map<unsigned int, ShapeOps*> m_ShapeOps;
+    ShapeOps::Pointer m_UnknownShapeOps;
+    ShapeOps::Pointer m_CubicOctohedronOps;
+    ShapeOps::Pointer m_CylinderOps;
+    ShapeOps::Pointer m_EllipsoidOps;
+    ShapeOps::Pointer m_SuprtEllipsoidOps;
 
     int32_t* m_GrainIds;
     float* m_AxisEulerAngles;
@@ -128,11 +128,11 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int32_t* m_Neighbors;
     int32_t* m_NumCells;
     int32_t* m_Neighborhoods;
-    DREAM3D::Reconstruction::PhaseType* m_PhaseType;
+    unsigned int* m_PhaseType;
     float* m_PhaseFractions;
     float* m_PrecipitateFractions;
 
-    DREAM3D::SyntheticBuilder::ShapeType* m_ShapeTypes;
+    unsigned int* m_ShapeTypes;
 
 
 

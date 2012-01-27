@@ -172,7 +172,7 @@ void AlignSections::execute()
   }
 
 
-  if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
+  if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
   {
     form_grains_sections();
   }
@@ -209,7 +209,7 @@ void AlignSections::align_sections()
     static_cast<DimType>(udims[2]),
   };
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 
@@ -235,7 +235,7 @@ void AlignSections::align_sections()
   int curposition = 0;
   DimType newPosition;
   DimType currentPosition;
-  Ebsd::CrystalStructure phase1, phase2;
+  unsigned int phase1, phase2;
 
   int** shifts = AlignSections::Allocate2DArray<int>(dims[2], 2);
   for (DimType a = 0; a < dims[2]; a++)
@@ -263,7 +263,7 @@ void AlignSections::align_sections()
   //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
     slice = (dims[2] - 1) - iter;
-    if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
+    if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
     {
       graincount1 = graincounts[slice];
       graincount2 = graincounts[slice + 1];
@@ -315,7 +315,7 @@ void AlignSections::align_sections()
                 {
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
                   curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
-                  if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
+                  if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
                   {
                     refgnum = m_GrainIds[refposition];
                     curgnum = m_GrainIds[curposition];
@@ -327,7 +327,7 @@ void AlignSections::align_sections()
 	                  count++;
                     }
                   }
-                  else if(m_alignmeth == DREAM3D::Reconstruction::Misorientation)
+                  else if(m_AlignmentMethod == DREAM3D::AlignmentMethod::Misorientation)
                   {
                     if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                     {
@@ -347,12 +347,12 @@ void AlignSections::align_sections()
                         phase2 = crystruct->GetValue(m_PhasesC[curposition]);
                         if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
-                      if(w > m_misorientationtolerance) disorientation++;
+                      if(w > m_MisorientationTolerance) disorientation++;
                     }
                     if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
                     if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
                   }
-                  else if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary)
+                  else if(m_AlignmentMethod == DREAM3D::AlignmentMethod::OuterBoundary)
                   {
                     if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
 	                count++;
@@ -360,7 +360,7 @@ void AlignSections::align_sections()
                 }
                 else
                 {
-                  if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
+                  if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
                   {
                     mutualinfo12[0][0]++;
                     mutualinfo1[0]++;
@@ -369,7 +369,7 @@ void AlignSections::align_sections()
                 }
               }
             }
-            if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
+            if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
             {
               float ha = 0;
               float hb = 0;
@@ -406,7 +406,7 @@ void AlignSections::align_sections()
               }
               disorientation = 1.0 / disorientation;
             }
-            if(m_alignmeth == DREAM3D::Reconstruction::OuterBoundary || m_alignmeth == DREAM3D::Reconstruction::Misorientation) disorientation = disorientation/count;
+            if(m_AlignmentMethod == DREAM3D::AlignmentMethod::OuterBoundary || m_AlignmentMethod == DREAM3D::AlignmentMethod::Misorientation) disorientation = disorientation/count;
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
             if(disorientation < mindisorientation)
             {
@@ -420,7 +420,7 @@ void AlignSections::align_sections()
     }
     shifts[iter][0] = shifts[iter][0] + newxshift;
     shifts[iter][1] = shifts[iter][1] + newyshift;
-    if(m_alignmeth == DREAM3D::Reconstruction::MutualInformation)
+    if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
     {
       AlignSections::Deallocate2DArray<float>(graincount1, graincount2, mutualinfo12);
       delete [] mutualinfo1;
@@ -539,7 +539,7 @@ void AlignSections::form_grains_sections()
 
   graincounts = m_GrainCounts->WritePointer(0, dims[2]);
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 
@@ -554,7 +554,7 @@ void AlignSections::form_grains_sections()
   neighpoints[5] = dims[0] - 1;
   neighpoints[6] = dims[0];
   neighpoints[7] = dims[0] + 1;
-  Ebsd::CrystalStructure phase1, phase2;
+  unsigned int phase1, phase2;
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
     std::stringstream ss;
@@ -626,7 +626,7 @@ void AlignSections::form_grains_sections()
               q2[4] = m_Quats[neighbor * 5 + 4];
               phase2 = crystruct->GetValue(m_PhasesC[neighbor]);
               if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
-              if(w < m_misorientationtolerance)
+              if(w < m_MisorientationTolerance)
               {
                 m_GrainIds[neighbor] = graincount;
                 voxelslist[size] = neighbor;

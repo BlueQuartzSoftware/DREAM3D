@@ -155,8 +155,8 @@ int TestVtkWriters()
   r->getYRes() = 0.50;
   r->getZRes() = 0.75;
 
-  std::vector<Ebsd::CrystalStructure> crystalStructures(2);
-  std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2);
+  std::vector<unsigned int> crystalStructures(2);
+  std::vector<unsigned int> phaseTypes(2);
   std::vector<float> precipFractions(2);
 
   r->initialize(5,5,5, 0.35, 0.35, 0.55, false, false, 25, 1.0, 5.0, crystalStructures , phaseTypes ,precipFractions ,0);

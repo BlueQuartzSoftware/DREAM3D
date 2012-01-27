@@ -202,9 +202,9 @@ void SegmentGrains::execute()
   neighpoints[3] = 1;
   neighpoints[4] = dims[0];
   neighpoints[5] = (dims[0] * dims[1]);
-  Ebsd::CrystalStructure phase1, phase2;
+  unsigned int phase1, phase2;
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
    XTalType* crystruct
        = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 

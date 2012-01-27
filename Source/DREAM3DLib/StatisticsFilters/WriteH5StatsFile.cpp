@@ -155,14 +155,14 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   float *mindiameter;
   float *maxdiameter;
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
-  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
   std::stringstream ss;
-  DREAM3D::Reconstruction::PhaseType* m_PhaseType = NULL;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+  unsigned int* m_PhaseType = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
 
   float* m_PhaseFractions = NULL;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
@@ -339,14 +339,14 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float sizebinstepsize)
 {
   DataContainer* m = getDataContainer();
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
-  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
   std::stringstream ss;
-  DREAM3D::Reconstruction::PhaseType* m_PhaseType = NULL;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+  unsigned int* m_PhaseType = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
 
   float* m_PhaseFractions = NULL;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);

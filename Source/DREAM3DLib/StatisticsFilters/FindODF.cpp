@@ -137,13 +137,13 @@ void FindODF::execute()
   size_t numgrains = m->getTotalFields();
   int phase;
   float *totalvol;
-  //  Ebsd::CrystalStructure xtal;
+  //  unsigned int xtal;
   float **eulerodf;
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
-  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   totalvol = new float [numXTals];
@@ -152,7 +152,7 @@ void FindODF::execute()
   for(unsigned long long i=1;i<numXTals;i++)
   {
 	  totalvol[i] = 0;
-	  if (crystruct[i] == Ebsd::Hexagonal)
+	  if (crystruct[i] == Ebsd::CrystalStructure::Hexagonal)
 	  {
 	    dims = 36 * 36 * 12;
 	    eulerodf[i] = new float[dims];
@@ -161,7 +161,7 @@ void FindODF::execute()
 	      eulerodf[i][j] = 0.0;
 	    }
 	  }
-	  else if (crystruct[i] == Ebsd::Cubic)
+	  else if (crystruct[i] == Ebsd::CrystalStructure::Cubic)
 	  {
 	    dims = 18 * 18 * 18;
 		  eulerodf[i] = new float[dims];

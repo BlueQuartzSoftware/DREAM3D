@@ -93,13 +93,13 @@ if (err < 0) {\
 // -----------------------------------------------------------------------------
 SGWidget::SGWidget(QWidget *parent) :
 QWidget(parent),
-m_PhaseType(DREAM3D::Reconstruction::PrimaryPhase),
+m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
 m_PptFraction(-1.0f),
 m_DataHasBeenGenerated(false),
 m_PhaseIndex(0),
-m_CrystalStructure(Ebsd::Cubic),
+m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
 m_SizeDistributionCurve(NULL),
 m_CutOffMin(NULL),
 m_CutOffMax(NULL),
@@ -152,7 +152,7 @@ void SGWidget::setupGui()
   distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
   distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
   distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
-  distributionTypeCombo->setCurrentIndex(DREAM3D::Reconstruction::LogNormal);
+  distributionTypeCombo->setCurrentIndex(DREAM3D::DistributionType::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
@@ -186,8 +186,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("Size Vs. Omega 3"));
    w->setXAxisName(QString("Omega 3"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::Reconstruction::Beta);
-   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVOmega3);
+   w->setDistributionType(DREAM3D::DistributionType::Beta);
+   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVOmega3);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -203,8 +203,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("B/A Shape Distribution"));
    w->setXAxisName(QString("B/A"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::Reconstruction::Beta);
-   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVBoverA);
+   w->setDistributionType(DREAM3D::DistributionType::Beta);
+   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVBoverA);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -219,8 +219,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("C/A Shape Distribution"));
    w->setXAxisName(QString("C/A"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::Reconstruction::Beta);
-   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVCoverA);
+   w->setDistributionType(DREAM3D::DistributionType::Beta);
+   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverA);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -235,8 +235,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("C/B Shape Distribution"));
    w->setXAxisName(QString("C/B"));
    w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::Reconstruction::Beta);
-   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVCoverB);
+   w->setDistributionType(DREAM3D::DistributionType::Beta);
+   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverB);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -251,8 +251,8 @@ void SGWidget::setupGui()
    w->setPlotTitle(QString("Neighbors Distributions"));
    w->setXAxisName(QString("Distance (Multiples of Diameter)"));
    w->setYAxisName(QString("Number of Grains"));
-   w->setDistributionType(DREAM3D::Reconstruction::Power);
-   w->setStatisticsType(DREAM3D::Reconstruction::Grain_SizeVNeighbors);
+   w->setDistributionType(DREAM3D::DistributionType::Power);
+   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVNeighbors);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);
    w->setMu(mu);
@@ -312,7 +312,7 @@ int SGWidget::getPhaseIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::setCrystalStructure(Ebsd::CrystalStructure xtal)
+void SGWidget::setCrystalStructure(unsigned int xtal)
 {
   m_CrystalStructure = xtal;
   m_Omega3Plot->setCrystalStructure(xtal);
@@ -329,7 +329,7 @@ void SGWidget::setCrystalStructure(Ebsd::CrystalStructure xtal)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::CrystalStructure SGWidget::getCrystalStructure()
+unsigned int SGWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }
@@ -342,11 +342,11 @@ QString SGWidget::getComboString()
 {
   QString s = QString::number(m_PhaseIndex);
   s.append(" - ");
-  if (m_CrystalStructure == Ebsd::Cubic)
+  if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
     s.append("Cubic");
   }
-  else if (m_CrystalStructure == Ebsd::Hexagonal)
+  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
   {
     s.append("Hexagonal");
   }
@@ -805,12 +805,12 @@ int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
   std::vector<unsigned int> xtal;
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::CrystalStructure, xtal);
   CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::CrystalStructure)
-  m_CrystalStructure = static_cast<Ebsd::CrystalStructure>(xtal[0]);
+  m_CrystalStructure = static_cast<unsigned int>(xtal[0]);
 
   std::vector<unsigned int> pt;
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, pt);
   CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PhaseType)
-  m_PhaseType = static_cast<DREAM3D::Reconstruction::PhaseType>(pt[0]);
+  m_PhaseType = static_cast<unsigned int>(pt[0]);
 
   std::vector<float> phaseFraction;
   err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, phaseFraction);
@@ -818,7 +818,7 @@ int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
   m_PhaseFraction = phaseFraction[0];
 
   m_PptFraction = -1.0;
-  if (DREAM3D::Reconstruction::PrecipitatePhase == m_PhaseType) {
+  if (DREAM3D::PhaseType::PrecipitatePhase == m_PhaseType) {
     err = reader->readScalarAttribute<float>(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, m_PptFraction);
     CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PrecipitateBoundaryFraction)
   }

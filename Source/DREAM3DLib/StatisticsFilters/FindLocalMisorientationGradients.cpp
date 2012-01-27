@@ -178,16 +178,16 @@ void FindLocalMisorientationGradients::execute()
   int good = 0;
 
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
-  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   float w, totalmisorientation;
   float n1, n2, n3;
-  Ebsd::CrystalStructure phase1 = Ebsd::UnknownCrystalStructure;
-  Ebsd::CrystalStructure phase2 = Ebsd::UnknownCrystalStructure;
+  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)

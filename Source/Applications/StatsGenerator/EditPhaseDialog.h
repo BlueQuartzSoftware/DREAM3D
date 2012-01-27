@@ -60,14 +60,14 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     EditPhaseDialog(QWidget *parent = 0);
     virtual ~EditPhaseDialog();
 
-    Ebsd::CrystalStructure getCrystalStructure();
-    void setCrystalStructure(Ebsd::CrystalStructure xtal);
+    unsigned int getCrystalStructure();
+    void setCrystalStructure(unsigned int xtal);
 
     float getPhaseFraction();
     void setPhaseFraction(float d);
 
-    void setPhaseType(DREAM3D::Reconstruction::PhaseType pt);
-    DREAM3D::Reconstruction::PhaseType getPhaseType();
+    void setPhaseType(unsigned int pt);
+    unsigned int getPhaseType();
 
     void setOtherPhaseFractionTotal(float t);
 

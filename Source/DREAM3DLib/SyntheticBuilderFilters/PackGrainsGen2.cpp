@@ -174,16 +174,16 @@ m_PhaseFractions(NULL),
 m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
 {
-  m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
-  m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
-  m_CylinderOps = DREAM3D::CylinderOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
-  m_UnknownShapeOps = DREAM3D::ShapeOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
+  m_EllipsoidOps = EllipsoidOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
+  m_SuprtEllipsoidOps = SuperEllipsoidOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_CubicOctohedronOps = CubeOctohedronOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::CubeOctahedronShape] = m_CubicOctohedronOps.get();
+  m_CylinderOps = CylinderOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::CylinderShape] = m_CylinderOps.get();
+  m_UnknownShapeOps = ShapeOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
 
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -359,17 +359,17 @@ void PackGrainsGen2::execute()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
   m_CrystalStructure = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
   std::stringstream ss;
 
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305,  float, FloatArrayType, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  DREAM3D::SyntheticBuilder::ShapeType, DataArray<DREAM3D::SyntheticBuilder::ShapeType>, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  unsigned int, DataArray<unsigned int>, numXTals, 1);
 
 
   // float change1, change2;
@@ -389,7 +389,7 @@ void PackGrainsGen2::execute()
   // find which phases are primary phases
   for (size_t i = 1; i < numXTals; ++i)
   {
-    if(m_PhaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
+    if(m_PhaseType[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
       primaryphases.push_back(i);
       primaryphasefractions.push_back(m_PhaseFractions[i]);
@@ -832,12 +832,12 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   {
     bin++;
   }
-  m_OrientationOps[Ebsd::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
+  m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
   float mf = omega3[phase][diameter][0];
   float s = omega3[phase][diameter][1];
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[phase];
-  if(shapeclass == DREAM3D::SyntheticBuilder::EllipsoidShape) omega3f = 1;
+  unsigned int shapeclass = m_ShapeTypes[phase];
+  if(shapeclass == DREAM3D::ShapeType::EllipsoidShape) omega3f = 1;
 
   field->m_Volumes = vol;
   field->m_EquivalentDiameters = diam;
@@ -906,7 +906,7 @@ void PackGrainsGen2::initializeAttributes()
 }
 
 
-void PackGrainsGen2::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
+void PackGrainsGen2::initializeArrays(std::vector<unsigned int> structures)
 {
   DataContainer* m = getDataContainer();
   //------------------
@@ -918,23 +918,23 @@ void PackGrainsGen2::initializeArrays(std::vector<Ebsd::CrystalStructure> struct
 //  m->getEnsembleData(DREAM3D::EnsembleData::PhaseType)->Resize(size+1);
 //  m->getEnsembleData(DREAM3D::EnsembleData::PhaseFractions)->Resize(size+1);
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalStructArrayType;
-  typedef DataArray<DREAM3D::Reconstruction::PhaseType> PhaseTypeArrayType;
-  typedef DataArray<DREAM3D::SyntheticBuilder::ShapeType> ShapeTypeArrayType;
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
 
   std::stringstream ss;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructure, ss, Ebsd::CrystalStructure, XTalStructArrayType, size, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, DREAM3D::Reconstruction::PhaseType, PhaseTypeArrayType, size, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructure, ss, unsigned int, XTalStructArrayType, size, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, unsigned int, PhaseTypeArrayType, size, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, size, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, size, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, DREAM3D::SyntheticBuilder::ShapeType, ShapeTypeArrayType, size, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, size, 1);
 
 
 
   // Initialize the first slot in these arrays since they should never be used
-  m_CrystalStructure[0] = Ebsd::UnknownCrystalStructure;
+  m_CrystalStructure[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
   m_PhaseFractions[0] = 0.0;
-  m_PhaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
+  m_PhaseType[0] = DREAM3D::PhaseType::UnknownPhaseType;
   m_PrecipitateFractions[0] = -1.0;
 
   mindiameter.resize(size+1);
@@ -972,7 +972,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<Ebsd::CrystalStructure> structures;
+  std::vector<unsigned int> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if (err < 0)
   {
@@ -997,10 +997,10 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 
     std::vector<unsigned int> phasetypes;
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
-    m_PhaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType>(phasetypes[0]);
+    m_PhaseType[phase] = static_cast<unsigned int>(phasetypes[0]);
 
     // If the Phase Type is Precipitate then we need the pptFraction on Boundary
-    if (m_PhaseType[phase] == DREAM3D::Reconstruction::PrecipitatePhase)
+    if (m_PhaseType[phase] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       float f = -1.0f;
       err = h5io->readScalarAttribute(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, f);
@@ -1009,7 +1009,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
       }
       m_PrecipitateFractions[phase] = f;
     }
-    if (m_PhaseType[phase] != DREAM3D::Reconstruction::PrecipitatePhase) m_PrecipitateFractions[phase] = -1.0;
+    if (m_PhaseType[phase] != DREAM3D::PhaseType::PrecipitatePhase) m_PrecipitateFractions[phase] = -1.0;
 
     /* Read the BinNumbers data set */
     std::vector<float> bins;
@@ -1032,19 +1032,19 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
     avgdiam[phase] = double_data[0];
     sddiam[phase] = double_data[1];
 
-    DREAM3D::Reconstruction::DistributionType dt;
+    unsigned int dt;
     std::string disType;
 
     /* Read the Shape Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, bovera, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions, covera, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions, coverb, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, bovera, DREAM3D::DistributionType::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions, covera, DREAM3D::DistributionType::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions, coverb, DREAM3D::DistributionType::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
 
     /* Read the Omega3 Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions, omega3, DREAM3D::Reconstruction::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
+    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions, omega3, DREAM3D::DistributionType::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
 
     /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
-    READ_3_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, DREAM3D::Reconstruction::Power, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::Exp_k, DREAM3D::HDF5::PowerLawColumnCount);
+    READ_3_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, DREAM3D::DistributionType::Power, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::Exp_k, DREAM3D::HDF5::PowerLawColumnCount);
   }
   return err;
 }
@@ -1057,7 +1057,7 @@ int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
   size_t size = 0;
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<Ebsd::CrystalStructure> structures;
+  std::vector<unsigned int> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if(err < 0)
   {
@@ -1448,19 +1448,19 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   float covera = m_AxisLengths[3*gnum+2];
   float omega3 = m_Omega3s[gnum];
   float radcur1 = 1;
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
+  unsigned int shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
 
   // init any values for each of the Shape Ops
-  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
     (*ops).second->init();
   }
   // Create our Argument Map
-  std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
-  shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
-  shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
-  shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
-  shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+  std::map<ShapeOps::ArgName, float> shapeArgMap;
+  shapeArgMap[ShapeOps::Omega3] = omega3;
+  shapeArgMap[ShapeOps::VolCur] = volcur;
+  shapeArgMap[ShapeOps::B_OverA] = bovera;
+  shapeArgMap[ShapeOps::C_OverA] = covera;
 
   radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
@@ -1588,19 +1588,19 @@ void PackGrainsGen2::assign_voxels()
 	zc = m_Centroids[3*i+2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[i]];
+    unsigned int shapeclass = m_ShapeTypes[m_PhasesF[i]];
 
     // init any values for each of the Shape Ops
-    for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
       (*ops).second->init();
     }
     // Create our Argument Map
-    std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
-    shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
-    shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
-    shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
-    shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+    std::map<ShapeOps::ArgName, float> shapeArgMap;
+    shapeArgMap[ShapeOps::Omega3] = omega3;
+    shapeArgMap[ShapeOps::VolCur] = volcur;
+    shapeArgMap[ShapeOps::B_OverA] = bovera;
+    shapeArgMap[ShapeOps::C_OverA] = covera;
 
     radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
@@ -1775,19 +1775,19 @@ void PackGrainsGen2::assign_gaps()
 		zc = m_Centroids[3*i+2];
 		float radcur1 = 0.0f;
 		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[i]];
+		unsigned int shapeclass = m_ShapeTypes[m_PhasesF[i]];
 
 		// init any values for each of the Shape Ops
-		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+		for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
 		{
 		  (*ops).second->init();
 		}
 		// Create our Argument Map
-		std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
-		shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
-		shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
-		shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
-		shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+		std::map<ShapeOps::ArgName, float> shapeArgMap;
+		shapeArgMap[ShapeOps::Omega3] = omega3;
+		shapeArgMap[ShapeOps::VolCur] = volcur;
+		shapeArgMap[ShapeOps::B_OverA] = bovera;
+		shapeArgMap[ShapeOps::C_OverA] = covera;
 
 		radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 

@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT H5StatsReader
      * @param xtals std::vector to store the crystal structure values into
      */
     int getPhaseAndCrystalStructures(std::vector<int> &phases,
-                                     std::vector<Ebsd::CrystalStructure> &xtals);
+                                     std::vector<unsigned int> &xtals);
 
 
     /**
@@ -224,7 +224,7 @@ class DREAM3DLib_EXPORT H5StatsReader
      * @param group
      * @param dt (out) Enumerated value for the distribution type
      */
-    std::string getDistributionType(int phase, const std::string &group, DREAM3D::Reconstruction::DistributionType &dt);
+    std::string getDistributionType(int phase, const std::string &group, unsigned int &dt);
 
 
 

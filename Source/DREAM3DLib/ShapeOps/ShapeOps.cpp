@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-using namespace DREAM3D;
+
 
 static const float cube_root_of_one = powf(1.0f, 0.333333333f);
 

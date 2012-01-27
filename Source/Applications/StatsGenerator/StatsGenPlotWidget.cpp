@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -81,8 +81,8 @@ m_PhaseIndex(-1),
 m_TableModel(NULL),
 //m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
 m_grid(NULL),
-m_DistributionType(DREAM3D::Reconstruction::UnknownDistributionType),
-m_StatsType(DREAM3D::Reconstruction::UnknownStatisticsGroup),
+m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+m_StatsType(DREAM3D::StatisticsType::UnknownStatisticsGroup),
 m_UserUpdatedData(false)
 {
   this->setupUi(this);
@@ -100,7 +100,7 @@ StatsGenPlotWidget::~StatsGenPlotWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setStatisticsType(DREAM3D::Reconstruction::StatisticsType distributionType)
+void StatsGenPlotWidget::setStatisticsType(unsigned int distributionType)
 {
   m_StatsType = distributionType;
 }
@@ -136,7 +136,7 @@ int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
                                          const std::string &hdf5GroupName)
 {
   int err = 0;
-  if (m_StatsType == DREAM3D::Reconstruction::UnknownStatisticsGroup)
+  if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
     tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
@@ -145,9 +145,9 @@ int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
     return -1;
   }
 
-  DREAM3D::Reconstruction::DistributionType dt;
+  unsigned int dt;
   std::string disType = reader->getDistributionType(m_PhaseIndex, hdf5GroupName, dt);
-  if (dt == DREAM3D::Reconstruction::UnknownDistributionType)
+  if (dt == DREAM3D::DistributionType::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
     tr("The 'Distribution Type' attribute was either not found on the HDF5 Group or it was of an unknown type. Please verify your HDF5 file has been written correctly"),
@@ -167,17 +167,17 @@ int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
   std::vector<std::string> names;
   switch(m_DistributionType)
   {
-    case DREAM3D::Reconstruction::Beta:
+    case DREAM3D::DistributionType::Beta:
       names.push_back(DREAM3D::HDF5::Alpha);
       names.push_back(DREAM3D::HDF5::Beta);
       loadTableData(reader, binNumbers, names, hdf5GroupName);
       break;
-    case DREAM3D::Reconstruction::LogNormal:
+    case DREAM3D::DistributionType::LogNormal:
       names.push_back(DREAM3D::HDF5::Average);
       names.push_back(DREAM3D::HDF5::StandardDeviation);
       loadTableData(reader, binNumbers, names, hdf5GroupName);
       break;
-    case DREAM3D::Reconstruction::Power:
+    case DREAM3D::DistributionType::Power:
       names.push_back(DREAM3D::HDF5::Alpha);
       names.push_back(DREAM3D::HDF5::Exp_k);
       names.push_back(DREAM3D::HDF5::Beta);
@@ -236,7 +236,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5StatsWriter::Pointer writer,
                                         const std::string &hdf5GroupName)
 {
   int err = 0;
-  if (m_StatsType == DREAM3D::Reconstruction::UnknownStatisticsGroup)
+  if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
     tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
@@ -245,7 +245,7 @@ int StatsGenPlotWidget::writeDataToHDF5(H5StatsWriter::Pointer writer,
     return -1;
   }
 
-  if (m_DistributionType == DREAM3D::Reconstruction::UnknownDistributionType)
+  if (m_DistributionType == DREAM3D::DistributionType::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
     tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
@@ -263,19 +263,19 @@ int StatsGenPlotWidget::writeDataToHDF5(H5StatsWriter::Pointer writer,
   // Create a new Table Model
   switch(m_DistributionType)
   {
-  case DREAM3D::Reconstruction::Beta:
+  case DREAM3D::DistributionType::Beta:
     col0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
     col1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
     err = writer->writeBetaDistribution(m_PhaseIndex, hdf5GroupName, col0, col1);
     if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
     break;
-  case DREAM3D::Reconstruction::LogNormal:
+  case DREAM3D::DistributionType::LogNormal:
     col0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
     col1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
     err = writer->writeLogNormalDistribution(m_PhaseIndex, hdf5GroupName, col0, col1);
     if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
     break;
-  case DREAM3D::Reconstruction::Power:
+  case DREAM3D::DistributionType::Power:
     col0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
     col1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
     col2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
@@ -304,13 +304,13 @@ void StatsGenPlotWidget::resetTableModel()
   // Create a new Table Model
   switch(m_DistributionType)
   {
-    case DREAM3D::Reconstruction::Beta:
+    case DREAM3D::DistributionType::Beta:
       m_TableModel = new SGBetaTableModel;
       break;
-    case DREAM3D::Reconstruction::LogNormal:
+    case DREAM3D::DistributionType::LogNormal:
       m_TableModel = new SGLogNormalTableModel;
       break;
-    case DREAM3D::Reconstruction::Power:
+    case DREAM3D::DistributionType::Power:
       m_TableModel = new SGPowerLawTableModel;
       break;
 
@@ -346,7 +346,7 @@ void StatsGenPlotWidget::userCommittedData(QWidget* w)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setDistributionType(DREAM3D::Reconstruction::DistributionType curveType, bool updatePlots)
+void StatsGenPlotWidget::setDistributionType(unsigned int curveType, bool updatePlots)
 {
   m_DistributionType = curveType;
   distributionTypeCombo->setCurrentIndex(m_DistributionType);
@@ -362,7 +362,7 @@ void StatsGenPlotWidget::setDistributionType(DREAM3D::Reconstruction::Distributi
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_distributionTypeCombo_currentIndexChanged(int index)
 {
-  m_DistributionType = static_cast<DREAM3D::Reconstruction::DistributionType>(distributionTypeCombo->currentIndex());
+  m_DistributionType = static_cast<unsigned int>(distributionTypeCombo->currentIndex());
   resetTableModel();
   // Update the plots
   updatePlotCurves();
@@ -473,13 +473,13 @@ void StatsGenPlotWidget::updatePlotCurves()
 
     switch(m_DistributionType)
     {
-      case DREAM3D::Reconstruction::Beta:
+      case DREAM3D::DistributionType::Beta:
         createBetaCurve(r, xMax, yMax);
         break;
-      case DREAM3D::Reconstruction::LogNormal:
+      case DREAM3D::DistributionType::LogNormal:
         createLogNormalCurve(r, xMax, yMax);
         break;
-      case DREAM3D::Reconstruction::Power:
+      case DREAM3D::DistributionType::Power:
         createPowerCurve(r, xMax, yMax);
         break;
       default:

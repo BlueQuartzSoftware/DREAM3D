@@ -116,7 +116,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
 
     void initializeAttributes();
-    void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
+    void initializeArrays(std::vector<unsigned int> structures);
 
 
     void initialize_packinggrid();
@@ -163,20 +163,20 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float* m_EquivalentDiameters;
 
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
-    Ebsd::CrystalStructure* m_CrystalStructure;
-    DREAM3D::Reconstruction::PhaseType* m_PhaseType;
+    unsigned int* m_CrystalStructure;
+    unsigned int* m_PhaseType;
     float* m_PhaseFractions;
     float* m_PrecipitateFractions;
-    DREAM3D::SyntheticBuilder::ShapeType* m_ShapeTypes;
+    unsigned int* m_ShapeTypes;
 
 
     // All other private variables
-    std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*> m_ShapeOps;
-    DREAM3D::ShapeOps::Pointer m_UnknownShapeOps;
-    DREAM3D::ShapeOps::Pointer m_CubicOctohedronOps;
-    DREAM3D::ShapeOps::Pointer m_CylinderOps;
-    DREAM3D::ShapeOps::Pointer m_EllipsoidOps;
-    DREAM3D::ShapeOps::Pointer m_SuprtEllipsoidOps;
+    std::map<unsigned int, ShapeOps*> m_ShapeOps;
+    ShapeOps::Pointer m_UnknownShapeOps;
+    ShapeOps::Pointer m_CubicOctohedronOps;
+    ShapeOps::Pointer m_CylinderOps;
+    ShapeOps::Pointer m_EllipsoidOps;
+    ShapeOps::Pointer m_SuprtEllipsoidOps;
 
     std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;

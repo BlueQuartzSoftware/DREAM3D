@@ -119,8 +119,8 @@ class DREAM3DLib_EXPORT H5StatsWriter
                               float avglogdiam, float sdlogdiam,
                               size_t &numberOfBins);
 
-    int writeVolumeStats(int phase, Ebsd::CrystalStructure xtal,
-                         DREAM3D::Reconstruction::PhaseType phaseType,
+    int writeVolumeStats(int phase, unsigned int xtal,
+                         unsigned int phaseType,
                          float phasefraction, float pptFraction,
                          float maxdiameter, float mindiameter, float diamStepSize,
                          float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
@@ -128,15 +128,15 @@ class DREAM3DLib_EXPORT H5StatsWriter
                          std::vector<std::vector<float> > &neighborhoodfit, std::vector<std::vector<float> > &svomega3);
 
     int writeVolumeStats2D(int phase,
-                           Ebsd::CrystalStructure xtal,
-                           DREAM3D::Reconstruction::PhaseType phaseType,
+                           unsigned int xtal,
+                           unsigned int phaseType,
                            float phasefraction, float pptFraction,
                            float maxdiameter, float mindiameter, float diamStepSize,
                            float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
                            std::vector<std::vector<float> > &neighborhoodfit);
     int writePhaseInformation(int phase,
-                              DREAM3D::Reconstruction::PhaseType  pt,
-                              Ebsd::CrystalStructure xtal,
+                              unsigned int  pt,
+                              unsigned int xtal,
                               float phasefraction, float pptFraction);
   protected:
     H5StatsWriter();

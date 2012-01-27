@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -57,7 +57,7 @@ class DREAM3DLib_EXPORT TexturePreset
 
     MXA_STATIC_NEW_MACRO(TexturePreset);
     MXA_TYPE_MACRO(TexturePreset);
-    static Pointer New(Ebsd::CrystalStructure xtal,
+    static Pointer New(unsigned int xtal,
                        const std::string &name,
                        double e1, double e2, double e3)
     {
@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT TexturePreset
 
     virtual ~TexturePreset();
 
-    MXA_INSTANCE_PROPERTY(Ebsd::CrystalStructure, CrystalStructure);
+    MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
     MXA_INSTANCE_STRING_PROPERTY(Name);
     MXA_INSTANCE_PROPERTY(double, Euler1);
     MXA_INSTANCE_PROPERTY(double, Euler2);

@@ -63,7 +63,7 @@ QWidget(parent),
 m_EnableAxisDecorations(false),
 m_Initializing(true),
 m_PhaseIndex(-1),
-m_CrystalStructure(Ebsd::AxisOrthoRhombic),
+m_CrystalStructure(Ebsd::CrystalStructure::AxisOrthoRhombic),
 m_ODFTableModel(NULL),
 m_MDFWidget(NULL),
 m_PoleFigureFuture(NULL)
@@ -188,7 +188,7 @@ int SGAxisODFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::CrystalStructure SGAxisODFWidget::getCrystalStructure()
+unsigned int SGAxisODFWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }

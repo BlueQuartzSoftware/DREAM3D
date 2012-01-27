@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
-    DREAM3D_INSTANCE_PROPERTY(DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer, PhaseTypes)
+    DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PhaseTypes)
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -145,14 +145,14 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
         return -1;
       }
 
-      DataArray<Ebsd::CrystalStructure>::Pointer crystalStructures = DataArray<Ebsd::CrystalStructure>::CreateArray(phases.size() + 1);
+      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1);
       crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructure);
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
-      crystalStructures->SetValue(0, Ebsd::UnknownCrystalStructure);
+      crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
 
-      m_PhaseTypes->SetValue(0, DREAM3D::Reconstruction::UnknownPhaseType);
+      m_PhaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
       for(size_t i=0;i<phases.size();i++)
       {
         int phaseID = phases[i]->getPhaseIndex();

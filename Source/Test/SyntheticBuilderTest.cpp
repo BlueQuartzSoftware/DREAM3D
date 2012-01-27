@@ -67,7 +67,7 @@ size_t m_XPoints = 128;
 size_t m_YPoints = 128;
 size_t m_ZPoints = 128;
 
-typedef DataArray<DREAM3D::SyntheticBuilder::ShapeType> ShapeTypeArrayType;
+typedef DataArray<unsigned int> ShapeTypeArrayType;
 
 
 float m_XResolution = 0.25f;
@@ -135,9 +135,9 @@ void TestSyntheticBuilder()
   Observer* observer = new Observer;
   ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
   m_ShapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
-  m_ShapeTypes->SetValue(0, DREAM3D::SyntheticBuilder::UnknownShapeType);
-  m_ShapeTypes->SetValue(1, DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
-  m_ShapeTypes->SetValue(2, DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
+  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::SuperEllipsoidShape);
+  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::SuperEllipsoidShape);
 
   int err = 0;
   // Instantiate our DataContainer object
