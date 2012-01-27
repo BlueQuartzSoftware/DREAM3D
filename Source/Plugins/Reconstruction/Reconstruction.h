@@ -82,7 +82,7 @@ class Reconstruction : public AbstractPipeline, public Observer
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer, PhaseTypes)
+    DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PhaseTypes)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     DREAM3D_INSTANCE_PROPERTY(bool, MergeTwins)
@@ -90,7 +90,7 @@ class Reconstruction : public AbstractPipeline, public Observer
     DREAM3D_INSTANCE_PROPERTY(int32_t, MinAllowedGrainSize)
 
     DREAM3D_INSTANCE_PROPERTY(double, MisorientationTolerance)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Reconstruction::AlignmentMethod, AlignmentMethod)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, AlignmentMethod)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(bool, ReorderArray)
     DREAM3D_INSTANCE_PROPERTY(bool, RotateSlice)

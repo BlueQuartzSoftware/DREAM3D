@@ -37,7 +37,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-using namespace DREAM3D;
+
 
 const static float m_pi = (float)M_PI;
 

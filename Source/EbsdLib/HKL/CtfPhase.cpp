@@ -100,11 +100,11 @@ void CtfPhase::printSelf(std::ostream &stream)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::CrystalStructure CtfPhase::determineCrystalStructure()
+unsigned int CtfPhase::determineCrystalStructure()
 {
   Ebsd::Ctf::LaueGroupTable symmetry = getLaueGroup();
-  Ebsd::CrystalStructure crystal_structure = Ebsd::UnknownCrystalStructure;
-  if (symmetry == Ebsd::Ctf::LG_Cubic_High || symmetry == Ebsd::Ctf::LG_Cubic_Low) crystal_structure = Ebsd::Cubic;
-  else if (symmetry == Ebsd::Ctf::LG_Hexagonal_High || symmetry == Ebsd::Ctf::LG_Hexagonal_Low) crystal_structure = Ebsd::Hexagonal;
+  unsigned int crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  if (symmetry == Ebsd::Ctf::LG_Cubic_High || symmetry == Ebsd::Ctf::LG_Cubic_Low) crystal_structure = Ebsd::CrystalStructure::Cubic;
+  else if (symmetry == Ebsd::Ctf::LG_Hexagonal_High || symmetry == Ebsd::Ctf::LG_Hexagonal_Low) crystal_structure = Ebsd::CrystalStructure::Hexagonal;
   return crystal_structure;
 }

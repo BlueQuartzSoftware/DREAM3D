@@ -43,10 +43,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 
 
-namespace DREAM3D
-{
-
-
 class DREAM3DLib_EXPORT ShapeOps
 {
   public:
@@ -80,5 +76,4 @@ class DREAM3DLib_EXPORT ShapeOps
     void operator=(const ShapeOps&); // Operator '=' Not Implemented
 };
 
-}
 #endif /* SHAPEOPS_H_ */

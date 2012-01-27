@@ -146,7 +146,7 @@ void StatsGeneratorUI::writeSettings()
 void StatsGeneratorUI::setupGui()
 {
   m_SGWidget->setPhaseIndex(1);
-  m_SGWidget->setCrystalStructure(Ebsd::Cubic);
+  m_SGWidget->setCrystalStructure(Ebsd::CrystalStructure::Cubic);
   m_SGWidget->setPhaseFraction(1.0);
   m_SGWidget->setTotalPhaseFraction(1.0);
   m_SGWidgets.push_back(m_SGWidget);
@@ -593,7 +593,7 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Get the list of Phases from the HDF5 file
   std::vector<int> phases;
-  std::vector<Ebsd::CrystalStructure> xtals;
+  std::vector<unsigned int> xtals;
   int err = reader->getPhaseAndCrystalStructures(phases, xtals);
   if (err < 0)
   {

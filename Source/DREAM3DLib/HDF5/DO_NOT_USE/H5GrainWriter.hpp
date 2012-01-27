@@ -181,7 +181,7 @@ class  H5GrainWriter
 
           phase = phases[vid];
           phaseValues[j] = phase;
-          if (r->crystruct[phase] == Ebsd::Cubic)
+          if (r->crystruct[phase] == Ebsd::CrystalStructure::Cubic)
           {
             EbsdColoring::GenerateIPFColor(eulerangles[3*vid],
                                           eulerangles[3*vid + 1],
@@ -189,7 +189,7 @@ class  H5GrainWriter
                                           RefDirection[0], RefDirection[1], RefDirection[2],
                                           rgb, hkl);
           }
-          else if (r->crystruct[phase] == Ebsd::Hexagonal)
+          else if (r->crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)
           {
             EbsdColoring::CalculateHexIPFColor(eulerangles[3*vid],
 											  eulerangles[3*vid + 1],

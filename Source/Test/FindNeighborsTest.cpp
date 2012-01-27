@@ -79,7 +79,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
+//  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
 #endif
 }
 
@@ -97,13 +97,13 @@ std::string getH5EbsdFile()
 
 int getZStartIndex() { return 1; }
 int getZEndIndex() { return 117; }
-DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer getPhaseTypes()
+DataArray<unsigned int>::Pointer getPhaseTypes()
 {
-  DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer phaseTypes
-                = DataArray<DREAM3D::Reconstruction::PhaseType>::CreateArray(2);
+  DataArray<unsigned int>::Pointer phaseTypes
+                = DataArray<unsigned int>::CreateArray(2);
   phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
-  phaseTypes->SetValue(0, DREAM3D::Reconstruction::UnknownPhaseType);
-  phaseTypes->SetValue(1, DREAM3D::Reconstruction::PrimaryPhase);
+  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+  phaseTypes->SetValue(1, DREAM3D::PhaseType::PrimaryPhase);
   return phaseTypes;
 }
 
@@ -224,8 +224,8 @@ void TestFindNeighbors()
   pipeline.push_back(load_slices);
 
   AlignSections::Pointer align_sections = AlignSections::New();
-  align_sections->setmisorientationtolerance(m_MisorientationTolerance);
-  align_sections->setalignmeth(DREAM3D::Reconstruction::OuterBoundary);
+  align_sections->setMisorientationTolerance(m_MisorientationTolerance);
+  align_sections->setAlignmentMethod(DREAM3D::AlignmentMethod::OuterBoundary);
   pipeline.push_back(align_sections);
 
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();

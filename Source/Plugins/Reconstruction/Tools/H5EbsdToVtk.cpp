@@ -79,8 +79,8 @@
 template<typename EbsdReader, typename EbsdPhase>
 int loadInfo(EbsdReader* reader,
              std::vector<float> &precipFractions,
-             std::vector<Ebsd::CrystalStructure> &crystalStructures,
-             std::vector<DREAM3D::Reconstruction::PhaseType> &m_PhaseTypes)
+             std::vector<unsigned int> &crystalStructures,
+             std::vector<unsigned int> &m_PhaseTypes)
 {
 
 
@@ -95,8 +95,8 @@ int loadInfo(EbsdReader* reader,
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
-  crystalStructures[0] = Ebsd::UnknownCrystalStructure;
-  m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
+  crystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
   precipFractions[0] = -1.0f;
   for(size_t i=0;i<phases.size();i++)
   {
@@ -137,7 +137,7 @@ int main(int argc, char **argv)
 //  int m_ZEndIndex = 0;
 
   DataContainer::Pointer m = DataContainer::New();
-  std::vector<DREAM3D::Reconstruction::PhaseType> m_PhaseTypes(1);
+  std::vector<unsigned int> m_PhaseTypes(1);
   // updateProgressAndMessage(("Gathering Size and Resolution Information from OIM Data"), 1);
    std::string manufacturer;
    // Get the Size and Resolution of the Volume
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
    }
    H5EbsdVolumeReader::Pointer ebsdReader;
    std::vector<float> precipFractions;
-   std::vector<Ebsd::CrystalStructure> crystalStructures;
+   std::vector<unsigned int> crystalStructures;
    if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
    {
      ebsdReader = H5AngVolumeReader::New();

@@ -95,7 +95,7 @@ void SyntheticBuilder_PreFlight()
   size_t m_YPoints = 128;
   size_t m_ZPoints = 128;
 
-  typedef DataArray<DREAM3D::SyntheticBuilder::ShapeType> ShapeTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
   ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
 
 
@@ -119,9 +119,9 @@ void SyntheticBuilder_PreFlight()
 //
 //  bool m_WriteHDF5GrainFile = false;
 
-  m_ShapeTypes->SetValue(0, DREAM3D::SyntheticBuilder::UnknownShapeType);
-  m_ShapeTypes->SetValue(1, DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
-  m_ShapeTypes->SetValue(2, DREAM3D::SyntheticBuilder::SuperEllipsoidShape);
+  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::SuperEllipsoidShape);
+  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::SuperEllipsoidShape);
 
   int err = 0;
   // Instantiate our DataContainer object

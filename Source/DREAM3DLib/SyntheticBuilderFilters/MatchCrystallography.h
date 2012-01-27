@@ -98,13 +98,13 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
   protected:
     MatchCrystallography();
 
-    void initializeArrays(std::vector<Ebsd::CrystalStructure> structures);
+    void initializeArrays(std::vector<unsigned int> structures);
     int readODFData(H5StatsReader::Pointer h5io);
     int readMisorientationData(H5StatsReader::Pointer h5io);
 
     void assign_eulers();
-    void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, Ebsd::CrystalStructure sym, float q1[5], float q2[5]);
-    void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, Ebsd::CrystalStructure sym, float q1[5], float q2[5]);
+    void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
+    void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
     void matchCrystallography();
     void measure_misorientations();
 
@@ -125,9 +125,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     //Ensemble Data
     float* m_TotalSurfaceArea;
-    Ebsd::CrystalStructure* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
     float* m_PrecipitateFractions;
-    DREAM3D::Reconstruction::PhaseType* m_PhaseTypes;
+    unsigned int* m_PhaseTypes;
     float* m_PhaseFractions;
 
     // All other private instance variables

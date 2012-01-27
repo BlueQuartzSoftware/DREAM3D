@@ -175,25 +175,25 @@ void FindMDF::execute()
   float q1[5];
   float q2[5];
   size_t numgrains = m->getTotalFields();
-  Ebsd::CrystalStructure phase1, phase2;
+  unsigned int phase1, phase2;
   float **misobin;
   int numbins = 0;
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
-  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   misobin = new float *[numXTals];
   for(size_t i=1;i<numXTals;i++)
   {
-    if (crystruct[i] == Ebsd::Hexagonal)
+    if (crystruct[i] == Ebsd::CrystalStructure::Hexagonal)
     {
       numbins = 36 * 36 * 12;
       misobin[i] = new float[numbins];
     }
-    else if (crystruct[i] == Ebsd::Cubic)
+    else if (crystruct[i] == Ebsd::CrystalStructure::Cubic)
     {
       numbins = 18 * 18 * 18;
       misobin[i] = new float[numbins];

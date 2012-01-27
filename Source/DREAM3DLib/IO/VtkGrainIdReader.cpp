@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
-DREAM3D::FileReader(),
+FileReader(),
 m_GrainIdScalarName(DREAM3D::CellData::GrainIds)
 {
 

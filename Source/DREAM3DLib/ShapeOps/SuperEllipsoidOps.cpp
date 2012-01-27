@@ -40,7 +40,7 @@
 
 const static float m_pi = M_PI;
 
-using namespace DREAM3D;
+
 
 float ShapeClass2Omega3[41][2] = {{0.0f, 0.0f},
                     {0.0f, 0.25f},

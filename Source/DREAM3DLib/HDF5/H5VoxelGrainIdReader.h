@@ -56,12 +56,12 @@
  * @date Dec 21, 2011
  * @version 1.0
  */
- class H5VoxelGrainIdReader : public DREAM3D::FileReader
+ class H5VoxelGrainIdReader : public FileReader
   {
     public:
       DREAM3D_SHARED_POINTERS(H5VoxelGrainIdReader);
       DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdReader);
-      DREAM3D_TYPE_MACRO_SUPER(H5VoxelGrainIdReader, DREAM3D::FileReader);
+      DREAM3D_TYPE_MACRO_SUPER(H5VoxelGrainIdReader, FileReader);
 
 
       virtual ~H5VoxelGrainIdReader();

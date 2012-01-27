@@ -117,12 +117,12 @@ class DREAM3DLib_EXPORT H5VoxelWriter
     /**
      *
      */
-    int writeCrystalStructures(const std::vector<Ebsd::CrystalStructure> &crystruct, bool appendFile = true);
+    int writeCrystalStructures(const std::vector<unsigned int> &crystruct, bool appendFile = true);
 
     /**
      *
      */
-    int writePhaseTypes(const std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType, bool appendFile = true);
+    int writePhaseTypes(const std::vector<unsigned int> &phaseType, bool appendFile = true);
 
     /**
      * @brief Writes a Complete .h5voxel file with all scalar and field data

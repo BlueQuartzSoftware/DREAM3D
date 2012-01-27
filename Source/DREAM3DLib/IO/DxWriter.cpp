@@ -43,8 +43,8 @@
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
-    DREAM3D::FileWriter(),
-    m_AddSurfaceLayer(false)
+FileWriter(),
+m_AddSurfaceLayer(false)
 {
 
 }

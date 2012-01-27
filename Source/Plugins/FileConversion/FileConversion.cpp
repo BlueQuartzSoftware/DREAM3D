@@ -64,12 +64,12 @@ namespace Detail {
    * @date Dec 21, 2011
    * @version 1.0
    */
-  class H5VoxelGrainIdWriter : public DREAM3D::FileWriter
+  class H5VoxelGrainIdWriter : public FileWriter
   {
     public:
        DREAM3D_SHARED_POINTERS(H5VoxelGrainIdWriter)
        DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdWriter)
-       DREAM3D_TYPE_MACRO_SUPER(H5VoxelGrainIdWriter, DREAM3D::FileWriter)
+       DREAM3D_TYPE_MACRO_SUPER(H5VoxelGrainIdWriter, FileWriter)
 
        virtual ~H5VoxelGrainIdWriter() {}
 
@@ -145,14 +145,14 @@ void FileConversion::execute()
     if (inputExtension.compare("vtk") == 0)
     {
       AbstractFilter::Pointer filter = VtkGrainIdReader::New();
-      DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+      FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
       reader->setFileName(m_InputFilePath);
       pipeline.push_back(filter);
     }
     else if (inputExtension.compare("ph") == 0)
     {
       AbstractFilter::Pointer filter = PhReader::New();
-      DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+      FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
       reader->setFileName(m_InputFilePath);
       pipeline.push_back(filter);
     }
@@ -166,7 +166,7 @@ void FileConversion::execute()
     else if (inputExtension.compare("dx") == 0)
     {
       AbstractFilter::Pointer filter = DxReader::New();
-      DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+      FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
       reader->setFileName(m_InputFilePath);
       pipeline.push_back(filter);
     }
@@ -184,14 +184,14 @@ void FileConversion::execute()
   if (outputExtension.compare("vtk") == 0)
   {
     AbstractFilter::Pointer filter = VtkGrainIdWriter::New();
-    DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+    FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
     reader->setFileName(m_OutputFilePath);
     pipeline.push_back(filter);
   }
   else if (outputExtension.compare("ph") == 0)
   {
     AbstractFilter::Pointer filter = PhWriter::New();
-    DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+    FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
     reader->setFileName(m_OutputFilePath);
     pipeline.push_back(filter);
   }
@@ -205,7 +205,7 @@ void FileConversion::execute()
   else if (outputExtension.compare("dx") == 0)
   {
     AbstractFilter::Pointer filter = DxWriter::New();
-    DREAM3D::FileReader* reader = DREAM3D::FileReader::SafeObjectDownCast<AbstractFilter*, DREAM3D::FileReader*>(filter.get());
+    FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
     reader->setFileName(m_OutputFilePath);
     pipeline.push_back(filter);
   }

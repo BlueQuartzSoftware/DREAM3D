@@ -52,12 +52,12 @@
  * @date Jun 7, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT PhWriter : public DREAM3D::FileWriter
+class DREAM3DLib_EXPORT PhWriter : public FileWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(PhWriter);
     DREAM3D_STATIC_NEW_MACRO(PhWriter);
-    DREAM3D_TYPE_MACRO_SUPER(PhWriter, DREAM3D::FileWriter);
+    DREAM3D_TYPE_MACRO_SUPER(PhWriter, FileWriter);
 
 
     virtual ~PhWriter();

@@ -189,10 +189,10 @@ void LoadVolume::execute()
     return;
   }
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
-  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   FloatArrayType::Pointer phaseFractions = FloatArrayType::CreateArray(numXTals);

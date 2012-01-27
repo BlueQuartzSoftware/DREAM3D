@@ -168,8 +168,8 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
 int H5VoxelReader::readVoxelData(int* grain_indicies,
                   int* phases,
                   float* eulerangles,
-                  std::vector<Ebsd::CrystalStructure> &crystruct,
-                  std::vector<DREAM3D::Reconstruction::PhaseType> &phaseType,
+                  std::vector<unsigned int> &crystruct,
+                  std::vector<unsigned int> &phaseType,
                   int64_t totalpoints)
 {
   int err = 0;
@@ -218,7 +218,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   err |= H5Gclose(scalarGid);
 
 
-  err = readEnsembleDataWithCast<Ebsd::CrystalStructure, uint32_t>(DREAM3D::EnsembleData::CrystalStructure, crystruct);
+  err = readEnsembleDataWithCast<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructure, crystruct);
   if(err < 0)
     {
       m_ErrorMessage = "H5VoxelReader Error Reading the Crystal Structure Field Data";
@@ -226,7 +226,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
       return err;
     }
 
-  err = readEnsembleDataWithCast<DREAM3D::Reconstruction::PhaseType, uint32_t>(DREAM3D::EnsembleData::PhaseType, phaseType);
+  err = readEnsembleDataWithCast<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseType, phaseType);
   if(err < 0)
     {
       m_ErrorMessage = "H5VoxelReader Error Reading the Phase Type Data";

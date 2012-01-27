@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -62,7 +62,7 @@ EditPhaseDialog::~EditPhaseDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setCrystalStructure(Ebsd::CrystalStructure xtal)
+void EditPhaseDialog::setCrystalStructure(unsigned int xtal)
 {
   xtalCombo->setCurrentIndex(xtal);
 }
@@ -70,10 +70,10 @@ void EditPhaseDialog::setCrystalStructure(Ebsd::CrystalStructure xtal)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::CrystalStructure EditPhaseDialog::getCrystalStructure()
+unsigned int EditPhaseDialog::getCrystalStructure()
 {
   int index = xtalCombo->currentIndex();
-  return static_cast<Ebsd::CrystalStructure>(index);
+  return static_cast<unsigned int>(index);
 }
 
 // -----------------------------------------------------------------------------
@@ -118,7 +118,7 @@ void EditPhaseDialog::setPptFraction(float d)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setPhaseType(DREAM3D::Reconstruction::PhaseType pt)
+void EditPhaseDialog::setPhaseType(unsigned int pt)
 {
   phaseTypeCombo->setCurrentIndex(pt);
 }
@@ -126,10 +126,10 @@ void EditPhaseDialog::setPhaseType(DREAM3D::Reconstruction::PhaseType pt)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Reconstruction::PhaseType EditPhaseDialog::getPhaseType()
+unsigned int EditPhaseDialog::getPhaseType()
 {
   int index = phaseTypeCombo->currentIndex();
-  return static_cast<DREAM3D::Reconstruction::PhaseType>(index);
+  return static_cast<unsigned int>(index);
 }
 
 
@@ -178,7 +178,7 @@ void EditPhaseDialog::setOtherPhaseFractionTotal(float t)
 void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
 {
   bool b = false;
-  if (phaseTypeCombo->currentIndex() == DREAM3D::Reconstruction::PrecipitatePhase)
+  if (phaseTypeCombo->currentIndex() == DREAM3D::PhaseType::PrecipitatePhase)
   {
     b = true;
   }

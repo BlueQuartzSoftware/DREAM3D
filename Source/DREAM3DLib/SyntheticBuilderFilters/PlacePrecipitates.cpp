@@ -76,16 +76,16 @@ m_PhaseFractions(NULL),
 m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
 {
-  m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuprtEllipsoidOps = DREAM3D::SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
-  m_CubicOctohedronOps = DREAM3D::CubeOctohedronOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::CubeOctahedronShape] = m_CubicOctohedronOps.get();
-  m_CylinderOps = DREAM3D::CylinderOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::CylinderShape] = m_CylinderOps.get();
-  m_UnknownShapeOps = DREAM3D::ShapeOps::New();
-  m_ShapeOps[DREAM3D::SyntheticBuilder::UnknownShapeType] = m_UnknownShapeOps.get();
+  m_EllipsoidOps = EllipsoidOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
+  m_SuprtEllipsoidOps = SuperEllipsoidOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_CubicOctohedronOps = CubeOctohedronOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::CubeOctahedronShape] = m_CubicOctohedronOps.get();
+  m_CylinderOps = CylinderOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::CylinderShape] = m_CylinderOps.get();
+  m_UnknownShapeOps = ShapeOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
 
   setupFilterOptions();
 }
@@ -267,20 +267,20 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
   currentprecipvoxellist.resize(0);
 //  currentcoatingvoxellist.resize(0);
   std::stringstream ss;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  DREAM3D::SyntheticBuilder::ShapeType, DataArray<DREAM3D::SyntheticBuilder::ShapeType>, m->getNumEnsembleTuples(), 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  unsigned int, DataArray<unsigned int>, m->getNumEnsembleTuples(), 1);
 
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
+  unsigned int shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
   // init any values for each of the Shape Ops
-  for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
     (*ops).second->init();
   }
   // Create our Argument Map
-  std::map<DREAM3D::ShapeOps::ArgName, float> shapeArgMap;
-  shapeArgMap[DREAM3D::ShapeOps::Omega3] = omega3;
-  shapeArgMap[DREAM3D::ShapeOps::VolCur] = volcur;
-  shapeArgMap[DREAM3D::ShapeOps::B_OverA] = bovera;
-  shapeArgMap[DREAM3D::ShapeOps::C_OverA] = covera;
+  std::map<ShapeOps::ArgName, float> shapeArgMap;
+  shapeArgMap[ShapeOps::Omega3] = omega3;
+  shapeArgMap[ShapeOps::VolCur] = volcur;
+  shapeArgMap[ShapeOps::B_OverA] = bovera;
+  shapeArgMap[ShapeOps::C_OverA] = covera;
 
   radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
@@ -537,13 +537,13 @@ void  PlacePrecipitates::place_precipitates()
 
   size_t numXTals = m->getNumEnsembleTuples();
   std::stringstream ss;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303, DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303, unsigned int, DataArray<unsigned int>, numXTals, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304, float, FloatArrayType, numXTals, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305, float, FloatArrayType, numXTals, 1);
 
   for (size_t i = 1; i < numXTals; ++i)
   {
-    if(m_PhaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
+    if(m_PhaseType[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       precipitatephases.push_back(i);
       precipitatephasefractions.push_back(m_PhaseFractions[i]);

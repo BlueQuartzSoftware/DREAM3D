@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -59,20 +59,20 @@ TexturePreset::~TexturePreset()
 std::vector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
 {
   std::vector<TexturePreset::Pointer> textures;
-  ADD_NEW_TEXTURE( "Brass", Ebsd::Cubic, 35.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "S",  Ebsd::Cubic, 59.0, 37.0, 63.0)
-  ADD_NEW_TEXTURE( "Copper", Ebsd::Cubic, 90.0, 35.0, 45.0)
-  ADD_NEW_TEXTURE( "S1", Ebsd::Cubic, 55.0, 30.0, 65.0)
-  ADD_NEW_TEXTURE( "S2",  Ebsd::Cubic, 45.0, 35.0, 65.0)
-  ADD_NEW_TEXTURE( "Goss",  Ebsd::Cubic, 0.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "Cube",  Ebsd::Cubic, 0.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(rd1)", Ebsd::Cubic, 0.0, 20.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(rd2)", Ebsd::Cubic, 0.0, 35.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(nd1)", Ebsd::Cubic, 20.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(nd2)", Ebsd::Cubic, 35.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "P", Ebsd::Cubic, 70.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "Q", Ebsd::Cubic, 55.0, 20.0, 0.0)
-  ADD_NEW_TEXTURE( "R", Ebsd::Cubic, 55.0, 75.0, 25.0)
+  ADD_NEW_TEXTURE( "Brass", Ebsd::CrystalStructure::Cubic, 35.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "S",  Ebsd::CrystalStructure::Cubic, 59.0, 37.0, 63.0)
+  ADD_NEW_TEXTURE( "Copper", Ebsd::CrystalStructure::Cubic, 90.0, 35.0, 45.0)
+  ADD_NEW_TEXTURE( "S1", Ebsd::CrystalStructure::Cubic, 55.0, 30.0, 65.0)
+  ADD_NEW_TEXTURE( "S2",  Ebsd::CrystalStructure::Cubic, 45.0, 35.0, 65.0)
+  ADD_NEW_TEXTURE( "Goss",  Ebsd::CrystalStructure::Cubic, 0.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "Cube",  Ebsd::CrystalStructure::Cubic, 0.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(rd1)", Ebsd::CrystalStructure::Cubic, 0.0, 20.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(rd2)", Ebsd::CrystalStructure::Cubic, 0.0, 35.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(nd1)", Ebsd::CrystalStructure::Cubic, 20.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "RC(nd2)", Ebsd::CrystalStructure::Cubic, 35.0, 0.0, 0.0)
+  ADD_NEW_TEXTURE( "P", Ebsd::CrystalStructure::Cubic, 70.0, 45.0, 0.0)
+  ADD_NEW_TEXTURE( "Q", Ebsd::CrystalStructure::Cubic, 55.0, 20.0, 0.0)
+  ADD_NEW_TEXTURE( "R", Ebsd::CrystalStructure::Cubic, 55.0, 75.0, 25.0)
   return textures;
 }
 
@@ -82,7 +82,7 @@ std::vector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
 std::vector<TexturePreset::Pointer> HexTexturePresets::getTextures()
 {
   std::vector<TexturePreset::Pointer> textures;
-//  ADD_NEW_TEXTURE( "Brass", Ebsd::Hexagonal, 35.0, 45.0, 0.0)
+//  ADD_NEW_TEXTURE( "Brass", Ebsd::CrystalStructure::Hexagonal, 35.0, 45.0, 0.0)
 
   return textures;
 }

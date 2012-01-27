@@ -125,9 +125,9 @@ void FindAvgOrientations::execute()
   int phase;
   float voxquat[5];
   float curavgquat[5];
-  Ebsd::CrystalStructure xtal;
+  unsigned int xtal;
 
-  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 

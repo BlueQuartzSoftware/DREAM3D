@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -43,7 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-namespace DREAM3D {
+
 /**
  * @class PhaseType PhaseType.h PathToHeader/PhaseType.h
  * @brief
@@ -63,17 +63,17 @@ class DREAM3DLib_EXPORT PhaseType
     static std::string UnknownPhaseTypeStr() { return std::string("Unknown Phase Type"); }
 
 
-    static std::string getPhaseTypeString(DREAM3D::Reconstruction::PhaseType phaseType)
+    static std::string getPhaseTypeString(unsigned int phaseType)
     {
       switch(phaseType)
       {
-        case DREAM3D::Reconstruction::PrimaryPhase:
+        case DREAM3D::PhaseType::PrimaryPhase:
           return PrimaryStr();
-        case DREAM3D::Reconstruction::PrecipitatePhase:
+        case DREAM3D::PhaseType::PrecipitatePhase:
           return PrecipitateStr();
-        case DREAM3D::Reconstruction::TransformationPhase:
+        case DREAM3D::PhaseType::TransformationPhase:
           return TransformationStr();
-        case DREAM3D::Reconstruction::UnknownPhaseType:
+        case DREAM3D::PhaseType::UnknownPhaseType:
           return UnknownPhaseTypeStr();
         default:
           break;
@@ -81,21 +81,21 @@ class DREAM3DLib_EXPORT PhaseType
       return std::string("Undefined Phase Type (Error)");
     }
 
-    static DREAM3D::Reconstruction::PhaseType getPhaseType(const char* str)
+    static unsigned int getPhaseType(const char* str)
     {
       if (PrimaryStr().compare(str) == 0)
       {
-        return DREAM3D::Reconstruction::PrimaryPhase;
+        return DREAM3D::PhaseType::PrimaryPhase;
       }
       else if (PrecipitateStr().compare(str) == 0)
       {
-        return DREAM3D::Reconstruction::PrecipitatePhase;
+        return DREAM3D::PhaseType::PrecipitatePhase;
       }
       else if (TransformationStr().compare(str) == 0)
       {
-        return DREAM3D::Reconstruction::TransformationPhase;
+        return DREAM3D::PhaseType::TransformationPhase;
       }
-      return DREAM3D::Reconstruction::UnknownPhaseType;
+      return DREAM3D::PhaseType::UnknownPhaseType;
     }
 
 
@@ -108,22 +108,22 @@ class DREAM3DLib_EXPORT PhaseType
       strings.push_back(UnknownPhaseTypeStr());
     }
 
-    static void getPhaseTypeEnums(std::vector<DREAM3D::Reconstruction::PhaseType> &types)
+    static void getPhaseTypeEnums(std::vector<unsigned int> &types)
     {
       types.clear();
-      types.push_back(DREAM3D::Reconstruction::PrimaryPhase);
-      types.push_back(DREAM3D::Reconstruction::PrecipitatePhase);
+      types.push_back(DREAM3D::PhaseType::PrimaryPhase);
+      types.push_back(DREAM3D::PhaseType::PrecipitatePhase);
 //      types.push_back(AIM::Reconstruction::TransformationPhase);
-      types.push_back(DREAM3D::Reconstruction::UnknownPhaseType);
+      types.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     }
 
     static void getPhaseTypeMap(std::map<int, std::string> &map)
     {
       map.clear();
-      map[DREAM3D::Reconstruction::PrimaryPhase] = PrimaryStr();
-      map[DREAM3D::Reconstruction::PrecipitatePhase] = PrecipitateStr();
+      map[DREAM3D::PhaseType::PrimaryPhase] = PrimaryStr();
+      map[DREAM3D::PhaseType::PrecipitatePhase] = PrecipitateStr();
 //      map[AIM::Reconstruction::TransformationPhase] = TransformationStr();
-      map[DREAM3D::Reconstruction::UnknownPhaseType] = UnknownPhaseTypeStr();
+      map[DREAM3D::PhaseType::UnknownPhaseType] = UnknownPhaseTypeStr();
     }
 
   protected:
@@ -135,8 +135,5 @@ class DREAM3DLib_EXPORT PhaseType
 };
 
 
-} // End Namespace 'AIM'
 
 #endif //_PhaseType_h_
-
-

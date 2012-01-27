@@ -45,9 +45,6 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
-namespace DREAM3D
-{
-
   /*
    *
    */
@@ -135,5 +132,4 @@ namespace DREAM3D
       void operator=(const FileReader&); // Operator '=' Not Implemented
   };
 
-} /* namespace DREAM3D */
 #endif /* FILEREADER_H_ */

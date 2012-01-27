@@ -9,7 +9,6 @@
 
 #include "PhaseType.h"
 
-using namespace DREAM3D;
 
 PhaseType::PhaseType() {}
 PhaseType::~PhaseType() {}

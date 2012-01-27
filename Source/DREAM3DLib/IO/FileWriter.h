@@ -40,9 +40,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-namespace DREAM3D
-{
-
   /*
    *
    */
@@ -70,5 +67,4 @@ namespace DREAM3D
       void operator=(const FileWriter&); // Operator '=' Not Implemented
   };
 
-} /* namespace DREAM3D */
 #endif /* FILEWRITER_H_ */

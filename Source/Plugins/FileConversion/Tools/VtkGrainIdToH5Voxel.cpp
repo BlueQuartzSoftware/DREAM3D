@@ -180,8 +180,8 @@ class GrainIdVoxels
     int ypoints;
     int zpoints;
     int totalpoints;
-    std::vector<Ebsd::CrystalStructure>                    crystruct;
-    std::vector<DREAM3D::Reconstruction::PhaseType>        phaseType;
+    std::vector<unsigned int>                    crystruct;
+    std::vector<unsigned int>        phaseType;
 
     DECLARE_WRAPPED_ARRAY(grain_indicies, m_GrainIndicies, int)
     DECLARE_WRAPPED_ARRAY(phases, m_Phases, int);
@@ -436,10 +436,10 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
-	std::vector<Ebsd::CrystalStructure> crystruct(2, Ebsd::Cubic);
+	std::vector<unsigned int> crystruct(2, Ebsd::CrystalStructure::Cubic);
     err = h5VolWriter->writeCrystalStructures(crystruct, true);
 
-	std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypes(2, DREAM3D::Reconstruction::PrimaryPhase);
+	std::vector<unsigned int> phaseTypes(2, DREAM3D::PhaseType::PrimaryPhase);
     err = h5VolWriter->writePhaseTypes(phaseTypes, true);
   }
   catch (TCLAP::ArgException &e) // catch any exceptions

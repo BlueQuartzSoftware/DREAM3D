@@ -256,14 +256,14 @@ void MatchCrystallography::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> structures)
+void MatchCrystallography::initializeArrays(std::vector<unsigned int> structures)
 {
   DataContainer* m = getDataContainer();
   //------------------
   size_t nElements = 0;
   size_t size = structures.size();
 
-  DataArray<Ebsd::CrystalStructure>::Pointer crystalStructures = DataArray<Ebsd::CrystalStructure>::CreateArray(size + 1);
+  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(size + 1);
   crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructure);
   m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructure, crystalStructures);
   m_CrystalStructures = crystalStructures->GetPointer(0);
@@ -275,7 +275,7 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
   m_PrecipitateFractions = pptFractions->GetPointer(0);
 
 
-  DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer phaseTypes = DataArray<DREAM3D::Reconstruction::PhaseType>::CreateArray(size + 1);
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(size + 1);
   phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseType, phaseTypes);
   m_PhaseTypes = phaseTypes->GetPointer(0);
@@ -287,9 +287,9 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
 
 
   // Initialize the first slot in these arrays since they should never be used
-  m_CrystalStructures[0] = Ebsd::UnknownCrystalStructure;
+  m_CrystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
   m_PrecipitateFractions[0] = 0.0;
-  m_PhaseTypes[0] = DREAM3D::Reconstruction::UnknownPhaseType;
+  m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
   m_PrecipitateFractions[0] = -1.0;
 
   actualodf.resize(size + 1);
@@ -299,8 +299,8 @@ void MatchCrystallography::initializeArrays(std::vector<Ebsd::CrystalStructure> 
   for (size_t i = 1; i < size + 1; ++i)
   {
     m_CrystalStructures[i] = structures[i-1];
-    if(m_CrystalStructures[i] == Ebsd::Hexagonal) nElements = 36 * 36 * 12;
-    if(m_CrystalStructures[i] == Ebsd::Cubic) nElements = 18 * 18 * 18;
+    if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal) nElements = 36 * 36 * 12;
+    if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic) nElements = 18 * 18 * 18;
 
     float initValue = 1.0f / (float)(nElements);
     actualodf[i] = SharedFloatArray(new float[nElements]);
@@ -323,7 +323,7 @@ int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<Ebsd::CrystalStructure> structures;
+  std::vector<unsigned int> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if(err < 0)
   {
@@ -344,8 +344,8 @@ int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
       return 10;
     }
     size_t numbins = 0;
-    if(m_CrystalStructures[phase] == Ebsd::Hexagonal) numbins = 15552;
-    if(m_CrystalStructures[phase] == Ebsd::Cubic) numbins = 5832;
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal) numbins = 15552;
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic) numbins = 5832;
 
     if(numbins != density.size())
     {
@@ -371,7 +371,7 @@ int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
   int err = 0;
   // Read the Phase and Crystal Structure information from the Stats File
   std::vector<int> phases;
-  std::vector<Ebsd::CrystalStructure> structures;
+  std::vector<unsigned int> structures;
   err = h5io->getPhaseAndCrystalStructures(phases, structures);
   if(err < 0)
   {
@@ -389,8 +389,8 @@ int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
       return 10;
     }
     size_t numbins = 0;
-    if(m_CrystalStructures[phase] == Ebsd::Hexagonal) numbins = 36 * 36 * 12;
-    if(m_CrystalStructures[phase] == Ebsd::Cubic) numbins = 18 * 18 * 18;
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal) numbins = 36 * 36 * 12;
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic) numbins = 18 * 18 * 18;
 
     if(numbins != density.size())
     {
@@ -448,8 +448,8 @@ void MatchCrystallography::assign_eulers()
     choose = 0;
     totaldensity = 0;
     phase = m_PhasesF[i];
-    if(m_CrystalStructures[phase] == Ebsd::Cubic) numbins = 5832;
-    if(m_CrystalStructures[phase] == Ebsd::Hexagonal) numbins = 15552;
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic) numbins = 5832;
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal) numbins = 15552;
     for (int j = 0; j < numbins; j++)
     {
       float density = actualodf[phase][j];
@@ -478,7 +478,7 @@ void MatchCrystallography::assign_eulers()
   }
 }
 
-void MatchCrystallography::MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, Ebsd::CrystalStructure sym, float q1[5], float q2[5])
+void MatchCrystallography::MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5])
 {
   float w;
   float n1, n2, n3;
@@ -503,7 +503,7 @@ void MatchCrystallography::MC_LoopBody1(int grain, int phase, int j, float neigh
               * (actualmdf[phase][newmisobin] - (simmdf[phase][newmisobin] + (neighsurfarea / m_TotalSurfaceArea[phase])))));
 }
 
-void MatchCrystallography::MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, Ebsd::CrystalStructure sym, float q1[5], float q2[5])
+void MatchCrystallography::MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5])
 {
   float w;
   float n1, n2, n3;
@@ -563,8 +563,8 @@ void MatchCrystallography::matchCrystallography()
   {
     iterations = 0;
     badtrycount = 0;
-    if(m_CrystalStructures[iter] == Ebsd::Cubic) numbins = 18 * 18 * 18;
-    if(m_CrystalStructures[iter] == Ebsd::Hexagonal) numbins = 36 * 36 * 12;
+    if(m_CrystalStructures[iter] == Ebsd::CrystalStructure::Cubic) numbins = 18 * 18 * 18;
+    if(m_CrystalStructures[iter] == Ebsd::CrystalStructure::Hexagonal) numbins = 36 * 36 * 12;
     while (badtrycount < 10000 && iterations < 1000000)
     {
       std::stringstream ss;
@@ -838,7 +838,7 @@ void MatchCrystallography::measure_misorientations()
   float r1, r2, r3;
   float q1[5];
   float q2[5];
-  Ebsd::CrystalStructure phase1, phase2;
+  unsigned int phase1, phase2;
   int mbin;
   int totalFields = m->getTotalFields();
   float threshold = 0.0f;

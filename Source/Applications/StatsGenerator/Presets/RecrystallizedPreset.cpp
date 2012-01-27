@@ -84,7 +84,7 @@ void RecrystallizedPreset::displayUserInputDialog()
 void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -125,7 +125,7 @@ void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, 
 void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -166,7 +166,7 @@ void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, 
 void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -208,7 +208,7 @@ void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, 
 void RecrystallizedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::Reconstruction::Beta, false);
+  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -250,7 +250,7 @@ void RecrystallizedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, 
 void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::Reconstruction::Power, false);
+  plot->setDistributionType(DREAM3D::DistributionType::Power, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*>(plot->tableModel());
   if (NULL == model)

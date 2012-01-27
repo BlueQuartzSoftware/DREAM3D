@@ -258,10 +258,10 @@ int main(int argc, char **argv)
 
     m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions.getValue());
 
-    DataArray<DREAM3D::SyntheticBuilder::ShapeType>::Pointer shapeTypes =
-               DataArray<DREAM3D::SyntheticBuilder::ShapeType>::CreateArray(1);
-    shapeTypes->SetValue(0, DREAM3D::SyntheticBuilder::EllipsoidShape);
-    if ( parseUnknownArray<DREAM3D::SyntheticBuilder::ShapeType>(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)
+    DataArray<unsigned int>::Pointer shapeTypes =
+               DataArray<unsigned int>::CreateArray(1);
+    shapeTypes->SetValue(0, DREAM3D::ShapeType::EllipsoidShape);
+    if ( parseUnknownArray<unsigned int>(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)
     {
       std::cout << "Error parsing the Shape Types. The value should be entered as --shapetypes 1,0,1 for 3 phases." << std::endl;
       return EXIT_FAILURE;

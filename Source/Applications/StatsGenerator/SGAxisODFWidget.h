@@ -90,7 +90,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void setPhaseIndex(int value);
     int getPhaseIndex();
 
-    Ebsd::CrystalStructure getCrystalStructure();
+    unsigned int getCrystalStructure();
 
     int writeDataToHDF5(H5StatsWriter::Pointer writer);
     int readDataFromHDF5(H5StatsReader::Pointer reader, int phase);
@@ -117,7 +117,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     private:
       int      m_PhaseIndex;
-      Ebsd::CrystalStructure      m_CrystalStructure;
+      unsigned int      m_CrystalStructure;
       SGODFTableModel*        m_ODFTableModel;
       StatsGenMDFWidget*      m_MDFWidget;
       QVector<QwtPlotCurve*>  m_PlotCurves;

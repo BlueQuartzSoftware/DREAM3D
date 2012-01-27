@@ -390,9 +390,9 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     int size = h5Reader->getNumPhases();
 
     std::vector<std::string> phaseTypeStrings;
-    DREAM3D::PhaseType::getPhaseTypeStrings(phaseTypeStrings);
-    std::vector<DREAM3D::Reconstruction::PhaseType> phaseTypeEnums;
-    DREAM3D::PhaseType::getPhaseTypeEnums(phaseTypeEnums);
+    PhaseType::getPhaseTypeStrings(phaseTypeStrings);
+    std::vector<unsigned int> phaseTypeEnums;
+    PhaseType::getPhaseTypeEnums(phaseTypeEnums);
 
     // Remove all the items
     phaseTypeList->clear();
@@ -400,7 +400,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     for (int i = 0; i < size; i++)
     {
 
-      phaseTypeList->addItem(DREAM3D::PhaseType::PrimaryStr().c_str());
+      phaseTypeList->addItem(PhaseType::PrimaryStr().c_str());
       QListWidgetItem* item = phaseTypeList->item(i);
       item->setSizeHint(QSize(50, 25));
       QComboBox* cb = new QComboBox(phaseTypeList);
@@ -668,17 +668,17 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 
   int count = phaseTypeList->count();
 
-  DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer phaseTypes =
-                   DataArray<DREAM3D::Reconstruction::PhaseType>::CreateArray(count+1);
-  phaseTypes->SetValue(0, DREAM3D::Reconstruction::UnknownPhaseType);
+  DataArray<unsigned int>::Pointer phaseTypes =
+                   DataArray<unsigned int>::CreateArray(count+1);
+  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
 
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
     QListWidgetItem* item = phaseTypeList->item(i);
     QComboBox* cb = qobject_cast<QComboBox*> (phaseTypeList->itemWidget(item));
-    DREAM3D::Reconstruction::PhaseType enPtValue = static_cast<DREAM3D::Reconstruction::PhaseType>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    if (enPtValue >= DREAM3D::Reconstruction::UnknownPhaseType)
+    unsigned int enPtValue = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= DREAM3D::PhaseType::UnknownPhaseType)
     {
       QString msg("The Phase Type for phase ");
 //      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary, Precipitate or Transformation.");
@@ -713,7 +713,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );
   m_Reconstruction->setMergeTwins(m_MergeTwins->isChecked() );
 
-  DREAM3D::Reconstruction::AlignmentMethod alignmeth = static_cast<DREAM3D::Reconstruction::AlignmentMethod>(m_AlignMeth->currentIndex() );
+  unsigned int alignmeth = static_cast<  unsigned int>(m_AlignMeth->currentIndex() );
   m_Reconstruction->setAlignmentMethod(alignmeth);
 
   m_Reconstruction->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));

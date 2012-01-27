@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextureDialog::TextureDialog(Ebsd::CrystalStructure xtal, QWidget *parent) :
+TextureDialog::TextureDialog(unsigned int xtal, QWidget *parent) :
 QDialog(parent),
 m_CrystalStructure(xtal)
 {
@@ -62,11 +62,11 @@ TextureDialog::~TextureDialog()
 // -----------------------------------------------------------------------------
 void TextureDialog::setupGui()
 {
-  if (Ebsd::Cubic == m_CrystalStructure)
+  if (Ebsd::CrystalStructure::Cubic == m_CrystalStructure)
   {
     m_Presets = CubicTexturePresets::getTextures();
   }
-  else if (Ebsd::Hexagonal == m_CrystalStructure)
+  else if (Ebsd::CrystalStructure::Hexagonal == m_CrystalStructure)
   {
     m_Presets = HexTexturePresets::getTextures();
   }
