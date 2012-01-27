@@ -70,7 +70,11 @@ m_PhasesC(NULL),
 m_PhasesF(NULL),
 m_SurfaceVoxels(NULL),
 m_Neighbors(NULL),
-m_NumCells(NULL)
+m_NumCells(NULL),
+m_PhaseType(NULL),
+m_PhaseFractions(NULL),
+m_PrecipitateFractions(NULL),
+m_ShapeTypes(NULL)
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -203,7 +207,7 @@ void PlacePrecipitates::execute()
     return;
   }
 
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size() );
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -262,8 +266,10 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 //  float coatingradcur1, coatingradcur2, coatingradcur3;
   currentprecipvoxellist.resize(0);
 //  currentcoatingvoxellist.resize(0);
+  std::stringstream ss;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  DREAM3D::SyntheticBuilder::ShapeType, DataArray<DREAM3D::SyntheticBuilder::ShapeType>, m->getNumEnsembleTuples(), 1);
 
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[gnum]];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
   // init any values for each of the Shape Ops
   for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
@@ -393,6 +399,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 
 void  PlacePrecipitates::fillin_precipitates()
 {
+  notify("Filling In Precipitates", 0, Observable::UpdateProgressMessage);
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
 
@@ -511,6 +518,7 @@ void  PlacePrecipitates::fillin_precipitates()
 
 void  PlacePrecipitates::place_precipitates()
 {
+  notify("Placing Precipitates", 0, Observable::UpdateProgressMessage);
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->totalPoints();
@@ -519,26 +527,33 @@ void  PlacePrecipitates::place_precipitates()
 //  float thickness = 0.25;
   size_t currentnumgrains = m->getTotalFields();
   numprimarygrains = m->getTotalFields();
- // size_t index;
+  // size_t index;
   int phase;
   float precipboundaryfraction = 0.0;
   float random;
   int random2;
   float xc, yc, zc;
   double totalprecipitatefractions = 0.0;
-  for (size_t i = 1; i < m->phaseType.size();++i)
+
+  size_t numXTals = m->getNumEnsembleTuples();
+  std::stringstream ss;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303, DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304, float, FloatArrayType, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305, float, FloatArrayType, numXTals, 1);
+
+  for (size_t i = 1; i < numXTals; ++i)
   {
-    if(m->phaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
+    if(m_PhaseType[i] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
-	    precipitatephases.push_back(i);
-	    precipitatephasefractions.push_back(m->phasefraction[i]);
-	    totalprecipitatefractions = totalprecipitatefractions + m->phasefraction[i];
+      precipitatephases.push_back(i);
+      precipitatephasefractions.push_back(m_PhaseFractions[i]);
+      totalprecipitatefractions = totalprecipitatefractions + m_PhaseFractions[i];
     }
   }
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
-    precipitatephasefractions[i] = precipitatephasefractions[i]/totalprecipitatefractions;
-    if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i-1];
+    precipitatephasefractions[i] = precipitatephasefractions[i] / totalprecipitatefractions;
+    if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i - 1];
   }
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
@@ -546,7 +561,7 @@ void  PlacePrecipitates::place_precipitates()
   H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
   int err = packGrains->readReconStatsData(h5reader);
   err = packGrains->readAxisOrientationData(h5reader);
-  while(totalprecipvol < totalvol*totalprecipitatefractions)
+  while (totalprecipvol < totalvol * totalprecipitatefractions)
   {
     Seed++;
     random = rg.genrand_res53();
@@ -563,10 +578,10 @@ void  PlacePrecipitates::place_precipitates()
 
     packGrains->generate_grain(phase, Seed, &field);
     m->resizeFieldDataArrays(currentnumgrains + 1);
-    dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+    dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
 
     transfer_attributes(currentnumgrains, &field);
-    precipboundaryfraction = m->pptFractions[phase];
+    precipboundaryfraction = m_PrecipitateFractions[phase];
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)
     {

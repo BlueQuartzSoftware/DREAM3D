@@ -122,7 +122,7 @@ void RenumberGrains::execute()
 
   int64_t totalPoints = m->totalPoints();
   size_t totalFields = m->getTotalFields();
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -169,7 +169,7 @@ void RenumberGrains::execute()
   }
   m->setTotalFields(m->getTotalFields()-RemoveList.size());
   totalFields = m->getTotalFields();
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
   // Loop over all the points and correct all the grain names
   for (int i = 0; i < totalPoints; i++)

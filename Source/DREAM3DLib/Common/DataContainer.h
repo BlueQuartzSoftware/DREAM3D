@@ -58,62 +58,6 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
 
-namespace DREAM3D
-{
-#if 0
-  namespace CellData
-  {
-    const std::string GrainIds("GrainIds");
-    const std::string Phases("Phases");
-    const std::string EulerAngles("EulerAngles");
-    const std::string SurfaceCells("SurfaceCells");
-    const std::string Neighbors("Neighbors");
-    const std::string Quats("Quats");
-    const std::string AlreadyChecked("AlreadyChecked");
-    const std::string GoodCells("GoodCells");
-    const std::string NearestNeighbors("NearestNeighbors");
-    const std::string NearestNeighborDistances("NearestNeighborDistances");
-    const std::string GrainMisorientations("GrainMisorientations");
-    const std::string MisorientationGradients("MisorientationGradients");
-    const std::string KernelAverageMisorientations("KernelAverageMisorientations");
-    const std::string ImageQuality("ImageQuality");
-  }
-
-  namespace FieldData
-  {
-    const std::string Active("Active");
-    const std::string Phases("Phases");
-    const std::string EulerAngles("EulerAngles");
-    const std::string AxisEulerAngles("AxisEulerAngles");
-    const std::string SurfaceFields("SurfaceFields");
-    const std::string UnbiasedFields("UnbiasedFields");
-    const std::string NumNeighbors("NumNeighbors");
-    const std::string RGBs("RGBs");
-    const std::string Centroids("Centroids");
-    const std::string NumCells("NumCells");
-    const std::string Volumes("Volumes");
-    const std::string EquivalentDiameters("EquivalentDiameters");
-    const std::string Schmids("Schmids");
-    const std::string SlipSystems("SlipSystems");
-    const std::string AspectRatios("AspectRatios");
-    const std::string AxisLengths("AxisLengths");
-    const std::string Omega3s("Omega3s");
-    const std::string AvgQuats("AvgQuats");
-    const std::string Poles("Poles");
-    const std::string Neighborhoods("Neighborhoods");
-    const std::string GrainAvgMisorientations("GrainAvgMisorientations");
-    const std::string KernelAvgMisorientations("KernelAvgMisorientations");
-    const std::string NeighborList("NeighborList");
-    const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
-  }
-
-  namespace EnsembleData
-  {
-    const std::string TotalSurfaceArea("TotalSurfaceArea");
-  }
-#endif
-}
-
 
 /**
  * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
@@ -264,6 +208,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumEnsembleArrays();
 
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples);
+
+
     /* ****************** END Map Based Methods *******************************/
 
     DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions);
@@ -290,13 +237,13 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     // Ensemble Data??
     // Phase Information (crystal structures, phase types, and shape types)
-    std::vector<Ebsd::CrystalStructure> crystruct;
-    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
-    std::vector<float> pptFractions;
-    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
-    std::vector<float> phasefraction;
-
-
+//    std::vector<Ebsd::CrystalStructure> crystruct;
+//    std::vector<DREAM3D::Reconstruction::PhaseType> phaseType;
+//
+//    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
+//    std::vector<float> phasefraction;
+//
+//    std::vector<float> pptFractions;
 
 
   protected:

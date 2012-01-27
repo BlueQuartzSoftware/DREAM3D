@@ -45,6 +45,8 @@
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
 
+typedef std::list<std::string> NameListType;
+
 
 // -----------------------------------------------------------------------------
 //
@@ -124,7 +126,6 @@ void DataContainerWriter::execute()
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 
-  typedef std::list<std::string> NameListType;
   std::stringstream ss;
   int err = 0;
   hid_t dcGid = -1;
@@ -179,145 +180,26 @@ void DataContainerWriter::execute()
     return;
   }
 
-
-
-  // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
+  err = writeCellData(dcGid);
   if (err < 0)
   {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-63);
-    setErrorMessage(ss.str());
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT );
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-64);
-    setErrorMessage(ss.str());
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-  NameListType names = m->getCellArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter )
-  {
-    IDataArray::Pointer array = m->getCellData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if (err < 0)
-    {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      setErrorMessage(ss.str());
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return;
-    }
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
 
-
-  // Write the Field Data
-  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  err = writeFieldData(dcGid);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
-    return ;
-  }
-  err = H5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
-  if (err < 0) {
-    //FIXME: Check for errors
-  }
-
-  hid_t fieldGroupId = H5Gopen(dcGid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-65);
-    setErrorMessage(ss.str());
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
-  names = m->getFieldArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter )
-  {
-    IDataArray::Pointer array = m->getFieldData(*iter);
-    err = array->writeH5Data(fieldGroupId);
-    if (err < 0)
-    {
-      ss.str("");
-      ss << "Error writing field array '" << *iter << "' to the HDF5 File";
-      setErrorMessage(ss.str());
-      setErrorCondition(err);
-      H5Gclose(fieldGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return;
-    }
-  }
-  H5Gclose(fieldGroupId);
 
-  // Write the Ensemble data
-  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  err = writeEnsembleData(dcGid);
   if (err < 0)
   {
-    ss.str("");
-    ss <<  "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-66);
-    setErrorMessage(ss.str());
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
-  err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
-
-
-  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-67);
-    setErrorMessage(ss.str());
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-  names = m->getEnsembleArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter )
-  {
-    IDataArray::Pointer array = m->getEnsembleData(*iter);
-    err = array->writeH5Data(ensembleGid);
-    if (err < 0)
-    {
-      ss.str("");
-      ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
-      setErrorMessage(ss.str());
-      setErrorCondition(err);
-      H5Gclose(ensembleGid); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return;
-    }
-  }
-
-
-  // These should eventually go away when these "Ensemble Data" items get wrapped into the map structure of the
-  // data container class.
-  err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(ensembleGid, m->phaseType, DREAM3D::EnsembleData::PhaseType);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-  err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(ensembleGid, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  H5Gclose(ensembleGid);
-
 
   H5Gclose(dcGid); // Close the Data Container Group
   closeFile();
@@ -412,3 +294,175 @@ int DataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, c
   }
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::writeCellData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  DataContainer* m = getDataContainer();
+
+  // Write the Voxel Data
+  err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-63);
+    setErrorMessage(ss.str());
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  hid_t cellGroupId = H5Gopen(dcGid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-64);
+    setErrorMessage(ss.str());
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  NameListType names = m->getCellArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    IDataArray::Pointer array = m->getCellData(*iter);
+    err = array->writeH5Data(cellGroupId);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing array '" << *iter << "' to the HDF5 File";
+      setErrorMessage(ss.str());
+      setErrorCondition(err);
+      H5Gclose(cellGroupId); // Close the Cell Group
+      H5Gclose(dcGid); // Close the Data Container Group
+      return err;
+    }
+  }
+  H5Gclose(cellGroupId); // Close the Cell Group
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::writeFieldData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  DataContainer* m = getDataContainer();
+
+  // Write the Field Data
+  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    return err;
+  }
+  err = H5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+  if(err < 0)
+  {
+    return err;
+  }
+
+  hid_t fieldGroupId = H5Gopen(dcGid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-65);
+    setErrorMessage(ss.str());
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  NameListType names = m->getFieldArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    IDataArray::Pointer array = m->getFieldData(*iter);
+    err = array->writeH5Data(fieldGroupId);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing field array '" << *iter << "' to the HDF5 File";
+      setErrorMessage(ss.str());
+      setErrorCondition(err);
+      H5Gclose(fieldGroupId); // Close the Cell Group
+      H5Gclose(dcGid); // Close the Data Container Group
+      return err;
+    }
+  }
+  H5Gclose(fieldGroupId);
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::writeEnsembleData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  DataContainer* m = getDataContainer();
+
+  // Write the Ensemble data
+  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-66);
+    setErrorMessage(ss.str());
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+
+  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-67);
+    setErrorMessage(ss.str());
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  NameListType names = m->getEnsembleArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    IDataArray::Pointer array = m->getEnsembleData(*iter);
+    err = array->writeH5Data(ensembleGid);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
+      setErrorMessage(ss.str());
+      setErrorCondition(err);
+      H5Gclose(ensembleGid); // Close the Cell Group
+      H5Gclose(dcGid); // Close the Data Container Group
+      return err;
+    }
+  }
+
+  // These should eventually go away when these "Ensemble Data" items get wrapped into the map structure of the
+  // data container class.
+//  err = writeEnsembleDataArray<DREAM3D::Reconstruction::PhaseType, int>(ensembleGid, m->phaseType, DREAM3D::EnsembleData::PhaseType);
+//  if(getErrorCondition() < 0)
+//  {
+//    return err;
+//  }
+//  err = writeEnsembleDataArray<Ebsd::CrystalStructure, int>(ensembleGid, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
+//  if(getErrorCondition() < 0)
+//  {
+//    return err;
+//  }
+
+  H5Gclose(ensembleGid);
+
+  return err;
+}
+

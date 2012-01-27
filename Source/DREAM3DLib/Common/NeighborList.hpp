@@ -233,22 +233,75 @@ class NeighborList : public IDataArray
       err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
       if(err < 0)
       {
-        //FIXME: Add Error Handling Code
+        return -606;
       }
 
       err = H5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
       if(err < 0)
       {
-        //FIXME: Add Error Handling Code
+        return -607;
       }
+
 
       return err;
     }
 
+    /**
+     *
+     * @param parentId
+     * @return
+     */
     virtual int readH5Data(hid_t parentId)
     {
-      assert(false);
-      return -1;
+      int err = 0;
+
+      // Generate the number of neighbors array and also compute the total number
+      // of elements that would be needed to flatten the array
+      std::vector<int32_t> numNeighbors;
+
+      // Check to see if the NumNeighbors exists in the file, which it must.
+      if(H5Lite::datasetExists(parentId, DREAM3D::FieldData::NumNeighbors) == true)
+      {
+        err = H5Lite::readVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, numNeighbors);
+        if(err < 0)
+        {
+          return -702;
+        }
+
+      }
+      else
+      {
+        return -703;
+      }
+
+      std::vector<T> flat;
+      err = H5Lite::readVectorDataset(parentId, GetName(), flat);
+      if (err < 0)
+      {
+        return err;
+      }
+
+      // Loop over all the entries and make new Vectors to hold the incoming data
+      _data.resize(numNeighbors.size());
+      size_t currentStart = 0;
+      for(std::vector<int32_t>::size_type dIdx = 0; dIdx < numNeighbors.size(); ++dIdx)
+      {
+        size_t nEle = numNeighbors[dIdx];
+        if(nEle > 0)
+        {
+          _data[dIdx] = SharedVectorType(new VectorType(numNeighbors[dIdx]));
+
+          T* dst = &(_data[dIdx]->front()); // Get the pointer to the front of the array
+          //    T* end = start + nEle; // Get the pointer to the end of the array
+          T* start = &(flat.front()) + currentStart;
+          ::memcpy(dst, start, nEle * sizeof(T));
+
+          currentStart += nEle;
+        }
+      }
+
+
+      return err;
     }
 
 /**
@@ -336,7 +389,7 @@ class NeighborList : public IDataArray
     /**
      *
      */
-    SharedVectorType pointerToList(int grainId)
+    SharedVectorType getList(int grainId)
     {
 #ifndef NDEBUG
       if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}

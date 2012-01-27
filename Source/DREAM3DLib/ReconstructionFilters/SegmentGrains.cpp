@@ -131,7 +131,7 @@ void SegmentGrains::preflight()
 {
   DataContainer* m = getDataContainer();
   m->clearFieldData();
-  m->clearEnsembleData();
+ // m->clearEnsembleData();
 
   dataCheck(true, 1, 1, 1);
 }
@@ -152,14 +152,14 @@ void SegmentGrains::execute()
     return;
   }
   m->clearFieldData();
-  m->clearEnsembleData();
+//  m->clearEnsembleData();
 
   int64_t totalPoints = m->totalPoints();
 
   // Create at least 2 grains:
   m->resizeFieldDataArrays(2);
   // Update our pointers
-  dataCheck(false, totalPoints, m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -204,6 +204,10 @@ void SegmentGrains::execute()
   neighpoints[5] = (dims[0] * dims[1]);
   Ebsd::CrystalStructure phase1, phase2;
 
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+   XTalType* crystruct
+       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+
   // Precalculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
   for(size_t i = 0; i < totalPoints; i++)
@@ -238,7 +242,7 @@ void SegmentGrains::execute()
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
-        phase1 = m->crystruct[m_PhasesC[currentpoint]];
+        phase1 = crystruct->GetValue(m_PhasesC[currentpoint]);
         for (int i = 0; i < 6; i++)
         {
           q1[0] = 1;
@@ -263,7 +267,7 @@ void SegmentGrains::execute()
             q2[2] = m_Quats[neighbor*5 + 2];
             q2[3] = m_Quats[neighbor*5 + 3];
             q2[4] = m_Quats[neighbor*5 + 4];
-            phase2 = m->crystruct[m_PhasesC[neighbor]];
+            phase2 = crystruct->GetValue(m_PhasesC[neighbor]);
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
             if (w < m_MisorientationTolerance)
             {
@@ -282,7 +286,7 @@ void SegmentGrains::execute()
       {
         size_t oldSize = m->getTotalFields();
         m->resizeFieldDataArrays(m->getTotalFields() + 100);
-        dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+        dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
         for (size_t g = oldSize; g < m->getTotalFields(); ++g)
         {
           //FIXME::THis needs to set some default data
@@ -295,7 +299,7 @@ void SegmentGrains::execute()
   }
 
   m->resizeFieldDataArrays(graincount);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
 
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);

@@ -107,17 +107,18 @@ void FindGrainPhases::execute()
 
   int64_t totalPoints = m->totalPoints();
   size_t totalFields = m->getTotalFields();
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  size_t totalEnsembles = m->getNumEnsembleTuples();
+  dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
   }
 
   int gnum = 0;
-  for(size_t i = 1; i < totalPoints; i++)
+  for(int64_t i = 1; i < totalPoints; i++)
   {
-	gnum = m_GrainIds[i];
-	m_PhasesF[gnum] = m_PhasesC[i];
+    gnum = m_GrainIds[i];
+    m_PhasesF[gnum] = m_PhasesC[i];
   }
 
   std::stringstream ss;
