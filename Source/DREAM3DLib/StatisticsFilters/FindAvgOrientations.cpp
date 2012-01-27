@@ -115,7 +115,7 @@ void FindAvgOrientations::execute()
     return;
   }
   int64_t totalPoints = m->totalPoints();
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -126,6 +126,12 @@ void FindAvgOrientations::execute()
   float voxquat[5];
   float curavgquat[5];
   Ebsd::CrystalStructure xtal;
+
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystruct
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+
+
   for (size_t i = 1; i < numgrains; i++)
   {
 	  m_AvgQuats[5*i] = 0.0;
@@ -138,32 +144,32 @@ void FindAvgOrientations::execute()
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0 && m_PhasesC[i] > 0)
-	{
-		OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
-		phase = m_PhasesC[i];
-		xtal = m->crystruct[phase];
-		m_OrientationOps[xtal]->getFZQuat(qr);
-		m_Quats[i*5 + 0] = 1.0;
-		m_Quats[i*5 + 1] = qr[1];
-		m_Quats[i*5 + 2] = qr[2];
-		m_Quats[i*5 + 3] = qr[3];
-		m_Quats[i*5 + 4] = qr[4];
-		voxquat[0] = m_Quats[i*5 + 0];
-		voxquat[1] = m_Quats[i*5 + 1];
-		voxquat[2] = m_Quats[i*5 + 2];
-		voxquat[3] = m_Quats[i*5 + 3];
-		voxquat[4] = m_Quats[i*5 + 4];
-        curavgquat[0] = 1;
-		curavgquat[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
-        curavgquat[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
-        curavgquat[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
-        curavgquat[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
-		m_OrientationOps[xtal]->getNearestQuat(curavgquat, voxquat);
-		for (int k = 0; k < 5; k++)
-		{
-		  m_AvgQuats[5*m_GrainIds[i]+k] = m_AvgQuats[5*m_GrainIds[i]+k] + voxquat[k];
-		}
-	}
+    {
+      OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
+      phase = m_PhasesC[i];
+      xtal = crystruct->GetValue(phase);
+      m_OrientationOps[xtal]->getFZQuat(qr);
+      m_Quats[i*5 + 0] = 1.0;
+      m_Quats[i*5 + 1] = qr[1];
+      m_Quats[i*5 + 2] = qr[2];
+      m_Quats[i*5 + 3] = qr[3];
+      m_Quats[i*5 + 4] = qr[4];
+      voxquat[0] = m_Quats[i*5 + 0];
+      voxquat[1] = m_Quats[i*5 + 1];
+      voxquat[2] = m_Quats[i*5 + 2];
+      voxquat[3] = m_Quats[i*5 + 3];
+      voxquat[4] = m_Quats[i*5 + 4];
+          curavgquat[0] = 1;
+      curavgquat[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
+          curavgquat[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
+          curavgquat[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
+          curavgquat[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
+      m_OrientationOps[xtal]->getNearestQuat(curavgquat, voxquat);
+      for (int k = 0; k < 5; k++)
+      {
+        m_AvgQuats[5*m_GrainIds[i]+k] = m_AvgQuats[5*m_GrainIds[i]+k] + voxquat[k];
+      }
+    }
   }
   float q[5];
   float ea1, ea2, ea3;

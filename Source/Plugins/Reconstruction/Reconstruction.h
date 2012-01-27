@@ -82,7 +82,7 @@ class Reconstruction : public AbstractPipeline, public Observer
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<DREAM3D::Reconstruction::PhaseType>, PhaseTypes)
+    DREAM3D_INSTANCE_PROPERTY(DataArray<DREAM3D::Reconstruction::PhaseType>::Pointer, PhaseTypes)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
     DREAM3D_INSTANCE_PROPERTY(bool, MergeTwins)

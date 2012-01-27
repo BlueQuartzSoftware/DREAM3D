@@ -171,9 +171,32 @@ void TestDataContainerReader()
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(UnitTest::DataContainerIOTest::TestFile);
   reader->setDataContainer(m.get());
-  reader->execute( );
+  reader->execute();
   int err = reader->getErrorCondition();
   m->getDimensions(nx, ny, nz);
+
+  DREAM3D_REQUIRE_EQUAL(m->getNumCellArrays(), 1);
+  DREAM3D_REQUIRE_EQUAL(m->getNumFieldArrays(), 3);
+  DREAM3D_REQUIRE_EQUAL(m->getNumEnsembleArrays(), 1);
+
+
+  // Validate the NeighborList Data
+  NeighborList<int32_t>* neighborlistPtr
+          = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
+  NeighborList<int32_t>::SharedVectorType vec;
+  size_t nLists = neighborlistPtr->GetNumberOfTuples();
+  DREAM3D_REQUIRE_EQUAL(nLists, 4);
+  for(size_t l = 0; l < nLists; ++l)
+  {
+    vec = neighborlistPtr->getList(l);
+    for(int j = 0; j < l+4; ++j)
+    {
+      DREAM3D_REQUIRE_EQUAL(vec->at(j), (j*l+3) );
+    }
+
+  }
+
 
 
   DREAM3D_REQUIRE_EQUAL(err, 0);

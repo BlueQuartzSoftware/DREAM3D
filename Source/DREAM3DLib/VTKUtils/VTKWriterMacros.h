@@ -84,7 +84,7 @@
 
 
 
-#define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName)\
+#define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName, grain_indicies)\
   fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\

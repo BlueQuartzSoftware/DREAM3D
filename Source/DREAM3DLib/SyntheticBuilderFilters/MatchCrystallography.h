@@ -125,13 +125,17 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     //Ensemble Data
     float* m_TotalSurfaceArea;
+    Ebsd::CrystalStructure* m_CrystalStructures;
+    float* m_PrecipitateFractions;
+    DREAM3D::Reconstruction::PhaseType* m_PhaseTypes;
+    float* m_PhaseFractions;
 
     // All other private instance variables
 	  float mdfchange;
 	  float odfchange;
 
     std::vector<float> unbiasedvol;
-    std::vector<Ebsd::CrystalStructure> crystruct;
+
 
     std::vector<SharedFloatArray> actualodf;
     std::vector<SharedFloatArray> simodf;

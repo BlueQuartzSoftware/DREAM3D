@@ -154,9 +154,25 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   size_t numgrains = m->getTotalFields();
   float *mindiameter;
   float *maxdiameter;
-  mindiameter = new float [m->crystruct.size()];
-  maxdiameter = new float [m->crystruct.size()];
-  for(unsigned long long i=1;i<m->crystruct.size();i++)
+
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystructPtr
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  size_t numXTals = crystructPtr->GetNumberOfTuples();
+  std::stringstream ss;
+  DREAM3D::Reconstruction::PhaseType* m_PhaseType = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+
+  float* m_PhaseFractions = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
+
+  float* m_PrecipitateFractions = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305,  float, FloatArrayType, numXTals, 1);
+
+  mindiameter = new float [numXTals];
+  maxdiameter = new float [numXTals];
+  for(unsigned long long i=1;i<numXTals;i++)
   {
 	  mindiameter[i] = 0;
 	  maxdiameter[i] = 0;
@@ -178,7 +194,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   std::vector<std::vector<float> > svcoverb;
   std::vector<std::vector<float> > svschmid;
   std::vector<std::vector<float> > svomega3;
-  for(size_t iter=1;iter<m->crystruct.size();iter++)
+  for(size_t iter=1;iter<numXTals;iter++)
   {
 	  int numbins = int((maxdiameter[iter] - mindiameter[iter]) / sizebinstepsize) + 1;
 	  neighborhood.resize(numbins);
@@ -309,7 +325,9 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 	  }
 	  sdlogdiam = sdlogdiam / actualgrains;
 	  sdlogdiam = sqrt(sdlogdiam);
-	  retErr = h5io->writeVolumeStats(iter, m->crystruct[iter], m->phaseType[iter], m->phasefraction[iter], m->pptFractions[iter],
+
+
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], m_PhaseType[iter], m_PhaseFractions[iter], m_PrecipitateFractions[iter],
 	                                  maxdiameter[iter], mindiameter[iter], sizebinstepsize, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
 	  if (retErr < 0)
 	  {
@@ -321,18 +339,33 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float sizebinstepsize)
 {
   DataContainer* m = getDataContainer();
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystructPtr
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  size_t numXTals = crystructPtr->GetNumberOfTuples();
+  std::stringstream ss;
+  DREAM3D::Reconstruction::PhaseType* m_PhaseType = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+
+  float* m_PhaseFractions = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
+
+  float* m_PrecipitateFractions = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305,  float, FloatArrayType, numXTals, 1);
+
 
   float actualgrains = 0;
   float avglogdiam = 0;
   size_t numgrains = m->getTotalFields();
   float *mindiameter;
   float *maxdiameter;
-  mindiameter = new float [m->crystruct.size()];
-  maxdiameter = new float [m->crystruct.size()];
-  for(unsigned long long i=1;i<m->crystruct.size();i++)
+  mindiameter = new float [numXTals];
+  maxdiameter = new float [numXTals];
+  for (unsigned long long i = 1; i < numXTals; i++)
   {
-	  mindiameter[i] = 0;
-	  maxdiameter[i] = 0;
+    mindiameter[i] = 0;
+    maxdiameter[i] = 0;
   }
   for(size_t iter=1;iter<numgrains;iter++)
   {
@@ -351,7 +384,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
   vector<vector<float> > svcoverb;
   vector<vector<float> > svschmid;
   vector<vector<float> > svomega3;
-  for (size_t iter = 1; iter < m->crystruct.size(); iter++)
+  for (size_t iter = 1; iter < numXTals; iter++)
   {
     int numbins = int((maxdiameter[iter] - mindiameter[iter]) / sizebinstepsize) + 1;
     neighborhood.resize(numbins);
@@ -450,7 +483,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
     sdlogdiam = sdlogdiam / actualgrains;
     sdlogdiam = sqrt(sdlogdiam);
 
-    int err = h5io->writeVolumeStats2D(iter, m->crystruct[iter], m->phaseType[iter], m->phasefraction[iter], m->pptFractions[iter],
+    int err = h5io->writeVolumeStats2D(iter, crystruct[iter], m_PhaseType[iter], m_PhaseFractions[iter], m_PrecipitateFractions[iter],
                                    maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
     if (err < 0)
     {

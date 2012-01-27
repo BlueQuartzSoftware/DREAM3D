@@ -112,6 +112,42 @@ int parseUnknownArray(const std::string &values, const char* format, std::vector
   return 0;
 }
 
+/**
+ * @brief Parses unknown number of numeric values from a delimited string and places
+ * the values into the output variable.
+ * @param values The string to be parsed
+ * @param format The stdio format specifier to use (%f for floats, %d for integers
+ * @param output The output location to store the parsed values
+ * @return Error condition
+ */
+template<typename T>
+int parseUnknownArray(const std::string &values, const char* format, typename DataArray<T>::Pointer output)
+{
+  std::string::size_type pos = values.find(",", 0);
+  size_t index = 0;
+  T t;
+  int n = sscanf(values.substr(0, pos).c_str(), format, &t );
+  if (n != 1)
+  {
+    return -1;
+  }
+  size_t oldSize = output->GetSize();
+  output->Resize(oldSize + 1);
+  output->SetValue(oldSize, t);
+
+  ++index;
+  while(pos != std::string::npos && pos != values.size() - 1)
+  {
+    n = sscanf(values.substr(pos+1).c_str(), format, &(t) );
+    oldSize = output->GetSize();
+      output->Resize(oldSize + 1);
+      output->SetValue(oldSize, t);
+    pos = values.find(",", pos+1);
+    ++index;
+  }
+  return 0;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -222,8 +258,10 @@ int main(int argc, char **argv)
 
     m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions.getValue());
 
-    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes(1, DREAM3D::SyntheticBuilder::EllipsoidShape);
-    if ( parseUnknownArray(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)
+    DataArray<DREAM3D::SyntheticBuilder::ShapeType>::Pointer shapeTypes =
+               DataArray<DREAM3D::SyntheticBuilder::ShapeType>::CreateArray(1);
+    shapeTypes->SetValue(0, DREAM3D::SyntheticBuilder::EllipsoidShape);
+    if ( parseUnknownArray<DREAM3D::SyntheticBuilder::ShapeType>(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)
     {
       std::cout << "Error parsing the Shape Types. The value should be entered as --shapetypes 1,0,1 for 3 phases." << std::endl;
       return EXIT_FAILURE;

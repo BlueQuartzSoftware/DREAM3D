@@ -127,7 +127,7 @@ void FindODF::execute()
   setErrorCondition(0);
 
   //int64_t totalPoints = m->totalPoints();
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -140,13 +140,19 @@ void FindODF::execute()
   //  Ebsd::CrystalStructure xtal;
   float **eulerodf;
 
-  totalvol = new float [m->crystruct.size()];
-  eulerodf = new float *[m->crystruct.size()];
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystructPtr
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  size_t numXTals = crystructPtr->GetNumberOfTuples();
+
+  totalvol = new float [numXTals];
+  eulerodf = new float *[numXTals];
   unsigned long long dims = 0;
-  for(unsigned long long i=1;i<m->crystruct.size();i++)
+  for(unsigned long long i=1;i<numXTals;i++)
   {
 	  totalvol[i] = 0;
-	  if (m->crystruct[i] == Ebsd::Hexagonal)
+	  if (crystruct[i] == Ebsd::Hexagonal)
 	  {
 	    dims = 36 * 36 * 12;
 	    eulerodf[i] = new float[dims];
@@ -155,7 +161,7 @@ void FindODF::execute()
 	      eulerodf[i][j] = 0.0;
 	    }
 	  }
-	  else if (m->crystruct[i] == Ebsd::Cubic)
+	  else if (crystruct[i] == Ebsd::Cubic)
 	  {
 	    dims = 18 * 18 * 18;
 		  eulerodf[i] = new float[dims];
@@ -171,7 +177,7 @@ void FindODF::execute()
   {
 	  totalvol[m_PhasesF[i]] = totalvol[m_PhasesF[i]] + m_Volumes[i];
   }
-  for (size_t i = 1; i < m->crystruct.size(); i++)
+  for (size_t i = 1; i < numXTals; i++)
   {
 	  totalvol[i] = totalvol[i]*float(m->getXRes()*m->getYRes()*m->getZRes());
   }
@@ -182,7 +188,7 @@ void FindODF::execute()
       ea1 = m_EulerAngles[3*i];
       ea2 = m_EulerAngles[3*i+1];
       ea3 = m_EulerAngles[3*i+2];
-      phase = m->crystruct[m_PhasesF[i]];
+      phase = crystruct[m_PhasesF[i]];
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
       eulerodf[m_PhasesF[i]][bin] = eulerodf[m_PhasesF[i]][bin] + (m_Volumes[i] / totalvol[m_PhasesF[i]]);
@@ -192,7 +198,7 @@ void FindODF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  for(size_t i=1;i<m->crystruct.size();i++)
+  for(size_t i = 1;i < numXTals;i++)
   {
 	  err = h5io->writeODFData(i, &dims, eulerodf[i]);
 	  delete[] eulerodf[i];

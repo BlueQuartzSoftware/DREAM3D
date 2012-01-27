@@ -122,7 +122,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
      setErrorCondition(-309);
    }
 
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size(), 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, ensembles, 1);
 
 
   setErrorMessage(ss.str());
@@ -154,7 +154,7 @@ void FindMDF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -179,15 +179,21 @@ void FindMDF::execute()
   float **misobin;
   int numbins = 0;
 
-  misobin = new float *[m->crystruct.size()];
-  for(size_t i=1;i<m->crystruct.size();i++)
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystructPtr
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  Ebsd::CrystalStructure* crystruct = crystructPtr->GetPointer(0);
+  size_t numXTals = crystructPtr->GetNumberOfTuples();
+
+  misobin = new float *[numXTals];
+  for(size_t i=1;i<numXTals;i++)
   {
-    if (m->crystruct[i] == Ebsd::Hexagonal)
+    if (crystruct[i] == Ebsd::Hexagonal)
     {
       numbins = 36 * 36 * 12;
       misobin[i] = new float[numbins];
     }
-    else if (m->crystruct[i] == Ebsd::Cubic)
+    else if (crystruct[i] == Ebsd::Cubic)
     {
       numbins = 18 * 18 * 18;
       misobin[i] = new float[numbins];
@@ -208,7 +214,7 @@ void FindMDF::execute()
 		q1[2] = m_AvgQuats[3*i+2] / m_AvgQuats[3*i+2];
 		q1[3] = m_AvgQuats[3*i+3] / m_AvgQuats[3*i+3];
 		q1[4] = m_AvgQuats[3*i+4] / m_AvgQuats[3*i+4];
-		phase1 = m->crystruct[m_PhasesF[i]];
+		phase1 = crystruct[m_PhasesF[i]];
 		misorientationlists[i].resize(neighborlist[i].size() * 3, -1.0);
 		for (size_t j = 0; j < neighborlist[i].size(); j++)
 		{
@@ -219,7 +225,7 @@ void FindMDF::execute()
 		  q2[2] = m_AvgQuats[3*nname+2] / m_AvgQuats[3*nname+2];
 		  q2[3] = m_AvgQuats[3*nname+3] / m_AvgQuats[3*nname+3];
 		  q2[4] = m_AvgQuats[3*nname+4] / m_AvgQuats[3*nname+4];
-		  phase2 = m->crystruct[m_PhasesF[nname]];
+		  phase2 = crystruct[m_PhasesF[nname]];
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
@@ -246,7 +252,7 @@ void FindMDF::execute()
 		}
   }
   unsigned long long int dims = static_cast<unsigned long long int>(numbins);
-  for(size_t i=1;i<m->crystruct.size();i++)
+  for (size_t i = 1; i < numXTals; i++)
   {
 	  h5io->writeMisorientationBinsData(i, &dims, misobin[i]);
 	  delete[] misobin[i];

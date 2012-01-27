@@ -143,7 +143,8 @@ void GrainGenerator::execute()
   {
     m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
     m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
-    m->shapeTypes = m_ShapeTypes;
+    m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
+
 
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsInputFile(getH5StatsFile());

@@ -168,7 +168,12 @@ m_Volumes(NULL),
 m_AxisLengths(NULL),
 m_AxisEulerAngles(NULL),
 m_Omega3s(NULL),
-m_EquivalentDiameters(NULL)
+m_EquivalentDiameters(NULL),
+m_CrystalStructure(NULL),
+m_PhaseType(NULL),
+m_PhaseFractions(NULL),
+m_PrecipitateFractions(NULL),
+m_ShapeTypes(NULL)
 {
   m_EllipsoidOps = DREAM3D::EllipsoidOps::New();
   m_ShapeOps[DREAM3D::SyntheticBuilder::EllipsoidShape] = m_EllipsoidOps.get();
@@ -326,7 +331,7 @@ void PackGrainsGen2::execute()
 
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
-  dataCheck(false, totalPoints, totalFields, m->crystruct.size());
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -355,6 +360,18 @@ void PackGrainsGen2::execute()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystructPtr
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+  m_CrystalStructure = crystructPtr->GetPointer(0);
+  size_t numXTals = crystructPtr->GetNumberOfTuples();
+  std::stringstream ss;
+
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  DREAM3D::Reconstruction::PhaseType, DataArray<DREAM3D::Reconstruction::PhaseType>, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305,  float, FloatArrayType, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  DREAM3D::SyntheticBuilder::ShapeType, DataArray<DREAM3D::SyntheticBuilder::ShapeType>, numXTals, 1);
+
 
   // float change1, change2;
   float change;
@@ -371,13 +388,13 @@ void PackGrainsGen2::execute()
   int acceptedmoves = 0;
   float totalprimaryfractions = 0.0;
   // find which phases are primary phases
-  for (size_t i = 1; i < m->phaseType.size(); ++i)
+  for (size_t i = 1; i < numXTals; ++i)
   {
-    if(m->phaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
+    if(m_PhaseType[i] == DREAM3D::Reconstruction::PrimaryPhase)
     {
       primaryphases.push_back(i);
-      primaryphasefractions.push_back(m->phasefraction[i]);
-      totalprimaryfractions = totalprimaryfractions + m->phasefraction[i];
+      primaryphasefractions.push_back(m_PhaseFractions[i]);
+      totalprimaryfractions = totalprimaryfractions + m_PhaseFractions[i];
     }
   }
   // scale the primary phase fractions to total to 1
@@ -443,7 +460,7 @@ void PackGrainsGen2::execute()
       notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
       m->resizeFieldDataArrays(gid + 1);
-      dataCheck(false, totalPoints, gid + 1, m->crystruct.size());
+      dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
       m_Active[gid] = 1;
       transfer_attributes(gid, &field);
       oldsizedisterror = currentsizedisterror;
@@ -487,7 +504,7 @@ void PackGrainsGen2::execute()
         notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
         m->resizeFieldDataArrays(gid + 1);
-        dataCheck(false, totalPoints, gid+1, m->crystruct.size());
+        dataCheck(false, totalPoints, gid+1, m->getNumEnsembleTuples());
         m_Active[gid] = 1;
 	      transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
@@ -697,12 +714,13 @@ int PackGrainsGen2::writeVtkFile()
   outFile.open(m_VtkOutputFile.c_str(), std::ios_base::binary);
   if(outFile.is_open() == false)
   {
+    std::cout << "m_VtkOutputFile: " << m_VtkOutputFile << std::endl;
     setErrorMessage("Could not open Vtk File for writing from PackGrains");
     setErrorCondition(-55);
     return -1;
   }
   outFile << "# vtk DataFile Version 2.0" << std::endl;
-  outFile << "data set from FFT2dx_GB" << std::endl;
+  outFile << "DREAM.3D Generated from PackGrainsGen2 Filter" << std::endl;
   outFile << "ASCII" << std::endl;
   outFile << "DATASET STRUCTURED_POINTS" << std::endl;
   outFile << "DIMENSIONS " << packingxpoints << " " << packingypoints << " " << packingzpoints << std::endl;
@@ -819,7 +837,7 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   float mf = omega3[phase][diameter][0];
   float s = omega3[phase][diameter][1];
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[phase];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[phase];
   if(shapeclass == DREAM3D::SyntheticBuilder::EllipsoidShape) omega3f = 1;
 
   field->m_Volumes = vol;
@@ -894,18 +912,31 @@ void PackGrainsGen2::initializeArrays(std::vector<Ebsd::CrystalStructure> struct
   DataContainer* m = getDataContainer();
   //------------------
   size_t nElements = 0;
-  size_t size = structures.size();
+  size_t size = structures.size() + 1;
 
-  m->crystruct.resize(size+1);
-  m->pptFractions.resize(size + 1);
-  m->phaseType.resize(size+1);
-  m->phasefraction.resize(size+1);
+//  m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure)->Resize(size+1);
+//  m->getEnsembleData(DREAM3D::EnsembleData::PrecipitateFractions)->Resize(size+1);
+//  m->getEnsembleData(DREAM3D::EnsembleData::PhaseType)->Resize(size+1);
+//  m->getEnsembleData(DREAM3D::EnsembleData::PhaseFractions)->Resize(size+1);
+
+  typedef DataArray<Ebsd::CrystalStructure> XTalStructArrayType;
+  typedef DataArray<DREAM3D::Reconstruction::PhaseType> PhaseTypeArrayType;
+  typedef DataArray<DREAM3D::SyntheticBuilder::ShapeType> ShapeTypeArrayType;
+
+  std::stringstream ss;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructure, ss, Ebsd::CrystalStructure, XTalStructArrayType, size, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, DREAM3D::Reconstruction::PhaseType, PhaseTypeArrayType, size, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, size, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, size, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, DREAM3D::SyntheticBuilder::ShapeType, ShapeTypeArrayType, size, 1);
+
+
 
   // Initialize the first slot in these arrays since they should never be used
-  m->crystruct[0] = Ebsd::UnknownCrystalStructure;
-  m->phasefraction[0] = 0.0;
-  m->phaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
-  m->pptFractions[0] = -1.0;
+  m_CrystalStructure[0] = Ebsd::UnknownCrystalStructure;
+  m_PhaseFractions[0] = 0.0;
+  m_PhaseType[0] = DREAM3D::Reconstruction::UnknownPhaseType;
+  m_PrecipitateFractions[0] = -1.0;
 
   mindiameter.resize(size+1);
   maxdiameter.resize(size+1);
@@ -920,7 +951,7 @@ void PackGrainsGen2::initializeArrays(std::vector<Ebsd::CrystalStructure> struct
   neighborparams.resize(size+1);
   axisodf.resize(size+1);
 
-  for(size_t i= 1; i < size+1; ++i)
+  for(size_t i= 1; i < size; ++i)
   {
     nElements = 36*36*36;
     float initValue = (1.0f/float(nElements));
@@ -929,13 +960,12 @@ void PackGrainsGen2::initializeArrays(std::vector<Ebsd::CrystalStructure> struct
   }
 }
 
-
-
-
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 {
-  DataContainer* m = getDataContainer();
+ // DataContainer* m = getDataContainer();
   int err = -1;
   std::vector<float> grainDiamInfo;
   std::vector<float> double_data;
@@ -959,28 +989,28 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
   for (int i = 0; i < size; i++)
   {
       phase = phases[i];
-    m->crystruct[phase] = structures[i];
+    m_CrystalStructure[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
       std::vector<float> pFraction;
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
-    m->phasefraction[phase] = pFraction.front();
+    m_PhaseFractions[phase] = pFraction.front();
 
     std::vector<unsigned int> phasetypes;
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
-    m->phaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType>(phasetypes[0]);
+    m_PhaseType[phase] = static_cast<DREAM3D::Reconstruction::PhaseType>(phasetypes[0]);
 
     // If the Phase Type is Precipitate then we need the pptFraction on Boundary
-    if (m->phaseType[phase] == DREAM3D::Reconstruction::PrecipitatePhase)
+    if (m_PhaseType[phase] == DREAM3D::Reconstruction::PrecipitatePhase)
     {
       float f = -1.0f;
       err = h5io->readScalarAttribute(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, f);
       if (err < 0) {
         f = -1.0f;
       }
-      m->pptFractions[phase] = f;
+      m_PrecipitateFractions[phase] = f;
     }
-    if (m->phaseType[phase] != DREAM3D::Reconstruction::PrecipitatePhase) m->pptFractions[phase] = -1.0;
+    if (m_PhaseType[phase] != DREAM3D::Reconstruction::PrecipitatePhase) m_PrecipitateFractions[phase] = -1.0;
 
     /* Read the BinNumbers data set */
     std::vector<float> bins;
@@ -1401,7 +1431,7 @@ void PackGrainsGen2::insert_grain(size_t gnum)
   float covera = m_AxisLengths[3*gnum+2];
   float omega3 = m_Omega3s[gnum];
   float radcur1 = 1;
-  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[gnum]];
+  DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
 
   // init any values for each of the Shape Ops
   for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
@@ -1541,7 +1571,7 @@ void PackGrainsGen2::assign_voxels()
 	zc = m_Centroids[3*i+2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[i]];
+    DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[i]];
 
     // init any values for each of the Shape Ops
     for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -1728,7 +1758,7 @@ void PackGrainsGen2::assign_gaps()
 		zc = m_Centroids[3*i+2];
 		float radcur1 = 0.0f;
 		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m->shapeTypes[m_PhasesF[i]];
+		DREAM3D::SyntheticBuilder::ShapeType shapeclass = m_ShapeTypes[m_PhasesF[i]];
 
 		// init any values for each of the Shape Ops
 		for (std::map<DREAM3D::SyntheticBuilder::ShapeType, DREAM3D::ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )

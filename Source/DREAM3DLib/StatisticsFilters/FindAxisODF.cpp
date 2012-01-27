@@ -127,12 +127,16 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
+
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystruct
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
@@ -140,10 +144,11 @@ void FindAxisODF::execute()
   int bin;
   float **axisodf;
   int *totalaxes;
-  axisodf = new float *[m->crystruct.size()];
-  totalaxes = new int [m->crystruct.size()];
+  size_t numXTals = crystruct->GetNumberOfTuples();
+  axisodf = new float *[numXTals];
+  totalaxes = new int [numXTals];
   axisodf[0] = NULL;
-  for(size_t i=1;i<m->crystruct.size();i++)
+  for(size_t i=1;i<numXTals;i++)
   {
     totalaxes[i] = 0.0;
     axisodf[i] = new float[36 * 36 * 36];
@@ -168,7 +173,7 @@ void FindAxisODF::execute()
     }
   }
   int err;
-  for(size_t i=1;i<m->crystruct.size();i++)
+  for(size_t i=1;i<numXTals;i++)
   {
 	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
 	  if (err < 0)

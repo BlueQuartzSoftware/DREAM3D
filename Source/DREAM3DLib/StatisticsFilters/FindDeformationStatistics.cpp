@@ -156,12 +156,17 @@ void FindDeformationStatistics::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->crystruct.size());
+  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
+  typedef DataArray<Ebsd::CrystalStructure> XTalType;
+  XTalType* crystruct
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+
+  size_t numXTals = crystruct->GetNumberOfTuples();
 
 
 //  std::string filename = m_OutputFile1;
@@ -276,147 +281,148 @@ void FindDeformationStatistics::execute()
   for (int i = 0; i < totalPoints; i++)
   {
     gname = m_GrainIds[i];
-	if(gname > 0)
-	{
-		  km = m_KernelAverageMisorientations[i];
-		  gam = m_GrainMisorientations[i];
-		  lmg = m_MisorientationGradients[i];
-		  gbdist = m_NearestNeighborDistances[i*3 + 0];
-		  tjdist = m_NearestNeighborDistances[i*3 + 1];
-		  qpdist = m_NearestNeighborDistances[i*3 + 2];
-		  nearestneighbor = m_NearestNeighbors[i*3 + 0];
-		  gname2 = m_GrainIds[nearestneighbor];
-		  sf = m_Schmids[gname];
-		  sf2 = m_Schmids[gname2];
-		  sfmm = sf / sf2;
-		  ss1 = m_SlipSystems[gname];
-	//	  ss2 = m_SlipSystems[gname2];
-		  for(int j=0;j<5;j++)
-		  {
-			q1[j] = m_AvgQuats[5*gname+j]/m_AvgQuats[gname];
-			q2[j] = m_AvgQuats[5*gname2+j]/m_AvgQuats[gname2];
-		  }
-		  OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
-		  if (m->crystruct[m_PhasesF[gname]] == m->crystruct[m_PhasesF[gname2]] && m_PhasesF[gname] > 0)
-		  {
-			w = m_OrientationOps[m->crystruct[m_PhasesF[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
-		  }
-		  else
-		  {
-			w = 0;
-		  }
-		  kmbin = int(km/0.2);
-		  gambin = int(gam/0.8);
-		  lmgbin = int(lmg/0.1);
-		  gbbin = int(gbdist);
-		  tjbin = int(tjdist);
-		  qpbin = int(qpdist);
-		  sfbin = int((sf-0.25) / 0.025);
-		  if(sfmm >= 1) sfmmbin = int((sfmm-1.0)/0.2)+5;
-		  if(sfmm < 1) sfmmbin = 4-int(((1.0/sfmm)-1.0)/0.2);
-		  ssapbin = int((ssap-0.4) / 0.06);
-		  disbin = int((w) / 10.0);
-		  if (kmbin < 0) kmbin = 0;
-		  if (kmbin > 24) kmbin = 24;
-		  if (gambin < 0) gambin = 0;
-		  if (gambin > 24) gambin = 24;
-		  if (lmgbin < 0) lmgbin = 0;
-		  if (lmgbin > 24) lmgbin = 24;
-		  if (gbbin < 0) gbbin = 0;
-		  if (gbbin > 9) gbbin = 9;
-		  if (tjbin < 0) tjbin = 0;
-		  if (tjbin > 9) tjbin = 9;
-		  if (qpbin < 0) qpbin = 0;
-		  if (qpbin > 9) qpbin = 9;
-		  if (sfbin < 0) sfbin = 0;
-		  if (sfbin > 9) sfbin = 9;
-		  if (sfmmbin < 0) sfmmbin = 0;
-		  if (sfmmbin > 9) sfmmbin = 9;
-		  if (ssapbin < 0) ssapbin = 0;
-		  if (ssapbin > 9) ssapbin = 9;
-		  if (disbin < 0) disbin = 0;
-		  if (disbin > 9) disbin = 9;
-		  kmdist[kmbin]++;
-		  gamdist[gambin]++;
-		  lmgdist[lmgbin]++;
-		  kmvgb[gbbin][0]++;
-		  kmvgb[gbbin][1] = kmvgb[gbbin][1] + km;
-		  gamvgb[gbbin][0]++;
-		  gamvgb[gbbin][1] = gamvgb[gbbin][1] + gam;
-		  lmgvgb[gbbin][0]++;
-		  lmgvgb[gbbin][1] = lmgvgb[gbbin][1] + lmg;
-		  kmvtj[tjbin][0]++;
-		  kmvtj[tjbin][1] = kmvtj[tjbin][1] + km;
-		  gamvtj[tjbin][0]++;
-		  gamvtj[tjbin][1] = gamvtj[tjbin][1] + gam;
-		  lmgvtj[tjbin][0]++;
-		  lmgvtj[tjbin][1] = lmgvtj[tjbin][1] + lmg;
-		  kmvqp[qpbin][0]++;
-		  kmvqp[qpbin][1] = kmvqp[qpbin][1] + km;
-		  gamvqp[qpbin][0]++;
-		  gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
-		  lmgvqp[qpbin][0]++;
-		  lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
-		  distance = int(m_NearestNeighborDistances[i*3 + 0]);
-		  if(distance > 9) distance = 9;
-		  if(distance <= 5)
-		  {
-			  kmvsf[sfbin][0]++;
-			  kmvsf[sfbin][1] = kmvsf[sfbin][1] + km;
-			  gamvsf[sfbin][0]++;
-			  gamvsf[sfbin][1] = gamvsf[sfbin][1] + gam;
-			  lmgvsf[sfbin][0]++;
-			  lmgvsf[sfbin][1] = lmgvsf[sfbin][1] + lmg;
-			  kmvsfmm[sfmmbin][0]++;
-			  kmvsfmm[sfmmbin][1] = kmvsfmm[sfmmbin][1] + km;
-			  gamvsfmm[sfmmbin][0]++;
-			  gamvsfmm[sfmmbin][1] = gamvsfmm[sfmmbin][1] + gam;
-			  lmgvsfmm[sfmmbin][0]++;
-			  lmgvsfmm[sfmmbin][1] = lmgvsfmm[sfmmbin][1] + lmg;
-			  kmvssap[ssapbin][0]++;
-			  kmvssap[ssapbin][1] = kmvssap[ssapbin][1] + km;
-			  gamvssap[ssapbin][0]++;
-			  gamvssap[ssapbin][1] = gamvssap[ssapbin][1] + gam;
-			  lmgvssap[ssapbin][0]++;
-			  lmgvssap[ssapbin][1] = lmgvssap[ssapbin][1] + lmg;
-			  kmvdis[disbin][0]++;
-			  kmvdis[disbin][1] = kmvdis[disbin][1] + km;
-			  gamvdis[disbin][0]++;
-			  gamvdis[disbin][1] = gamvdis[disbin][1] + gam;
-			  lmgvdis[disbin][0]++;
-			  lmgvdis[disbin][1] = lmgvdis[disbin][1] + lmg;
-		  }
-		  kmvsfdistthresh[distance][sfbin][0]++;
-		  kmvsfdistthresh[distance][sfbin][1] = kmvsfdistthresh[distance][sfbin][1] + km;
-		  gamvsfdistthresh[distance][sfbin][0]++;
-		  gamvsfdistthresh[distance][sfbin][1] = gamvsfdistthresh[distance][sfbin][1] + gam;
-		  lmgvsfdistthresh[distance][sfbin][0]++;
-		  lmgvsfdistthresh[distance][sfbin][1] = lmgvsfdistthresh[distance][sfbin][1] + lmg;
-		  kmvsfmmdistthresh[distance][sfmmbin][0]++;
-		  kmvsfmmdistthresh[distance][sfmmbin][1] = kmvsfmmdistthresh[distance][sfmmbin][1] + km;
-		  gamvsfmmdistthresh[distance][sfmmbin][0]++;
-		  gamvsfmmdistthresh[distance][sfmmbin][1] = gamvsfmmdistthresh[distance][sfmmbin][1] + gam;
-		  lmgvsfmmdistthresh[distance][sfmmbin][0]++;
-		  lmgvsfmmdistthresh[distance][sfmmbin][1] = lmgvsfmmdistthresh[distance][sfmmbin][1] + lmg;
-		  kmvssapdistthresh[distance][ssapbin][0]++;
-		  kmvssapdistthresh[distance][ssapbin][1] = kmvssapdistthresh[distance][ssapbin][1] + km;
-		  gamvssapdistthresh[distance][ssapbin][0]++;
-		  gamvssapdistthresh[distance][ssapbin][1] = gamvssapdistthresh[distance][ssapbin][1] + gam;
-		  lmgvssapdistthresh[distance][ssapbin][0]++;
-		  lmgvssapdistthresh[distance][ssapbin][1] = lmgvssapdistthresh[distance][ssapbin][1] + lmg;
-		  kmvdisdistthresh[distance][disbin][0]++;
-		  kmvdisdistthresh[distance][disbin][1] = kmvdisdistthresh[distance][disbin][1] + km;
-		  gamvdisdistthresh[distance][disbin][0]++;
-		  gamvdisdistthresh[distance][disbin][1] = gamvdisdistthresh[distance][disbin][1] + gam;
-		  lmgvdisdistthresh[distance][disbin][0]++;
-		  lmgvdisdistthresh[distance][disbin][1] = lmgvdisdistthresh[distance][disbin][1] + lmg;
-		  kmvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-		  kmvsfmmssapthresh[sfmmbin][ssapbin][1] = kmvsfmmssapthresh[sfmmbin][ssapbin][1] + km;
-		  gamvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-		  gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + gam;
-		  lmgvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-		  lmgvsfmmssapthresh[sfmmbin][ssapbin][1] = lmgvsfmmssapthresh[sfmmbin][ssapbin][1] + lmg;
-	}
+    if(gname > 0)
+    {
+      km = m_KernelAverageMisorientations[i];
+      gam = m_GrainMisorientations[i];
+      lmg = m_MisorientationGradients[i];
+      gbdist = m_NearestNeighborDistances[i * 3 + 0];
+      tjdist = m_NearestNeighborDistances[i * 3 + 1];
+      qpdist = m_NearestNeighborDistances[i * 3 + 2];
+      nearestneighbor = m_NearestNeighbors[i * 3 + 0];
+      gname2 = m_GrainIds[nearestneighbor];
+      sf = m_Schmids[gname];
+      sf2 = m_Schmids[gname2];
+      sfmm = sf / sf2;
+      ss1 = m_SlipSystems[gname];
+      //	  ss2 = m_SlipSystems[gname2];
+      for (int j = 0; j < 5; j++)
+      {
+        q1[j] = m_AvgQuats[5 * gname + j] / m_AvgQuats[gname];
+        q2[j] = m_AvgQuats[5 * gname2 + j] / m_AvgQuats[gname2];
+      }
+      OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
+      if(crystruct->GetValue(m_PhasesF[gname]) == crystruct->GetValue(m_PhasesF[gname2])
+          && m_PhasesF[gname] > 0)
+      {
+        w = m_OrientationOps[crystruct->GetValue(m_PhasesF[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
+      }
+      else
+      {
+        w = 0;
+      }
+      kmbin = int(km / 0.2);
+      gambin = int(gam / 0.8);
+      lmgbin = int(lmg / 0.1);
+      gbbin = int(gbdist);
+      tjbin = int(tjdist);
+      qpbin = int(qpdist);
+      sfbin = int((sf - 0.25) / 0.025);
+      if(sfmm >= 1) sfmmbin = int((sfmm - 1.0) / 0.2) + 5;
+      if(sfmm < 1) sfmmbin = 4 - int(((1.0 / sfmm) - 1.0) / 0.2);
+      ssapbin = int((ssap - 0.4) / 0.06);
+      disbin = int((w) / 10.0);
+      if(kmbin < 0) kmbin = 0;
+      if(kmbin > 24) kmbin = 24;
+      if(gambin < 0) gambin = 0;
+      if(gambin > 24) gambin = 24;
+      if(lmgbin < 0) lmgbin = 0;
+      if(lmgbin > 24) lmgbin = 24;
+      if(gbbin < 0) gbbin = 0;
+      if(gbbin > 9) gbbin = 9;
+      if(tjbin < 0) tjbin = 0;
+      if(tjbin > 9) tjbin = 9;
+      if(qpbin < 0) qpbin = 0;
+      if(qpbin > 9) qpbin = 9;
+      if(sfbin < 0) sfbin = 0;
+      if(sfbin > 9) sfbin = 9;
+      if(sfmmbin < 0) sfmmbin = 0;
+      if(sfmmbin > 9) sfmmbin = 9;
+      if(ssapbin < 0) ssapbin = 0;
+      if(ssapbin > 9) ssapbin = 9;
+      if(disbin < 0) disbin = 0;
+      if(disbin > 9) disbin = 9;
+      kmdist[kmbin]++;
+      gamdist[gambin]++;
+      lmgdist[lmgbin]++;
+      kmvgb[gbbin][0]++;
+      kmvgb[gbbin][1] = kmvgb[gbbin][1] + km;
+      gamvgb[gbbin][0]++;
+      gamvgb[gbbin][1] = gamvgb[gbbin][1] + gam;
+      lmgvgb[gbbin][0]++;
+      lmgvgb[gbbin][1] = lmgvgb[gbbin][1] + lmg;
+      kmvtj[tjbin][0]++;
+      kmvtj[tjbin][1] = kmvtj[tjbin][1] + km;
+      gamvtj[tjbin][0]++;
+      gamvtj[tjbin][1] = gamvtj[tjbin][1] + gam;
+      lmgvtj[tjbin][0]++;
+      lmgvtj[tjbin][1] = lmgvtj[tjbin][1] + lmg;
+      kmvqp[qpbin][0]++;
+      kmvqp[qpbin][1] = kmvqp[qpbin][1] + km;
+      gamvqp[qpbin][0]++;
+      gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
+      lmgvqp[qpbin][0]++;
+      lmgvqp[qpbin][1] = lmgvqp[qpbin][1] + lmg;
+      distance = int(m_NearestNeighborDistances[i * 3 + 0]);
+      if(distance > 9) distance = 9;
+      if(distance <= 5)
+      {
+        kmvsf[sfbin][0]++;
+        kmvsf[sfbin][1] = kmvsf[sfbin][1] + km;
+        gamvsf[sfbin][0]++;
+        gamvsf[sfbin][1] = gamvsf[sfbin][1] + gam;
+        lmgvsf[sfbin][0]++;
+        lmgvsf[sfbin][1] = lmgvsf[sfbin][1] + lmg;
+        kmvsfmm[sfmmbin][0]++;
+        kmvsfmm[sfmmbin][1] = kmvsfmm[sfmmbin][1] + km;
+        gamvsfmm[sfmmbin][0]++;
+        gamvsfmm[sfmmbin][1] = gamvsfmm[sfmmbin][1] + gam;
+        lmgvsfmm[sfmmbin][0]++;
+        lmgvsfmm[sfmmbin][1] = lmgvsfmm[sfmmbin][1] + lmg;
+        kmvssap[ssapbin][0]++;
+        kmvssap[ssapbin][1] = kmvssap[ssapbin][1] + km;
+        gamvssap[ssapbin][0]++;
+        gamvssap[ssapbin][1] = gamvssap[ssapbin][1] + gam;
+        lmgvssap[ssapbin][0]++;
+        lmgvssap[ssapbin][1] = lmgvssap[ssapbin][1] + lmg;
+        kmvdis[disbin][0]++;
+        kmvdis[disbin][1] = kmvdis[disbin][1] + km;
+        gamvdis[disbin][0]++;
+        gamvdis[disbin][1] = gamvdis[disbin][1] + gam;
+        lmgvdis[disbin][0]++;
+        lmgvdis[disbin][1] = lmgvdis[disbin][1] + lmg;
+      }
+      kmvsfdistthresh[distance][sfbin][0]++;
+      kmvsfdistthresh[distance][sfbin][1] = kmvsfdistthresh[distance][sfbin][1] + km;
+      gamvsfdistthresh[distance][sfbin][0]++;
+      gamvsfdistthresh[distance][sfbin][1] = gamvsfdistthresh[distance][sfbin][1] + gam;
+      lmgvsfdistthresh[distance][sfbin][0]++;
+      lmgvsfdistthresh[distance][sfbin][1] = lmgvsfdistthresh[distance][sfbin][1] + lmg;
+      kmvsfmmdistthresh[distance][sfmmbin][0]++;
+      kmvsfmmdistthresh[distance][sfmmbin][1] = kmvsfmmdistthresh[distance][sfmmbin][1] + km;
+      gamvsfmmdistthresh[distance][sfmmbin][0]++;
+      gamvsfmmdistthresh[distance][sfmmbin][1] = gamvsfmmdistthresh[distance][sfmmbin][1] + gam;
+      lmgvsfmmdistthresh[distance][sfmmbin][0]++;
+      lmgvsfmmdistthresh[distance][sfmmbin][1] = lmgvsfmmdistthresh[distance][sfmmbin][1] + lmg;
+      kmvssapdistthresh[distance][ssapbin][0]++;
+      kmvssapdistthresh[distance][ssapbin][1] = kmvssapdistthresh[distance][ssapbin][1] + km;
+      gamvssapdistthresh[distance][ssapbin][0]++;
+      gamvssapdistthresh[distance][ssapbin][1] = gamvssapdistthresh[distance][ssapbin][1] + gam;
+      lmgvssapdistthresh[distance][ssapbin][0]++;
+      lmgvssapdistthresh[distance][ssapbin][1] = lmgvssapdistthresh[distance][ssapbin][1] + lmg;
+      kmvdisdistthresh[distance][disbin][0]++;
+      kmvdisdistthresh[distance][disbin][1] = kmvdisdistthresh[distance][disbin][1] + km;
+      gamvdisdistthresh[distance][disbin][0]++;
+      gamvdisdistthresh[distance][disbin][1] = gamvdisdistthresh[distance][disbin][1] + gam;
+      lmgvdisdistthresh[distance][disbin][0]++;
+      lmgvdisdistthresh[distance][disbin][1] = lmgvdisdistthresh[distance][disbin][1] + lmg;
+      kmvsfmmssapthresh[sfmmbin][ssapbin][0]++;
+      kmvsfmmssapthresh[sfmmbin][ssapbin][1] = kmvsfmmssapthresh[sfmmbin][ssapbin][1] + km;
+      gamvsfmmssapthresh[sfmmbin][ssapbin][0]++;
+      gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + gam;
+      lmgvsfmmssapthresh[sfmmbin][ssapbin][0]++;
+      lmgvsfmmssapthresh[sfmmbin][ssapbin][1] = lmgvsfmmssapthresh[sfmmbin][ssapbin][1] + lmg;
+    }
   }
   outFile << "Kernel Misorientation Data" << std::endl;
   outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
