@@ -110,14 +110,6 @@ namespace DREAM3D
   namespace EnsembleData
   {
     const std::string TotalSurfaceArea("TotalSurfaceArea");
-    const std::string SizeDistributions("SizeDistributions");
-    const std::string AspectRatio1Distributions("AspectRatio1Distributions");
-    const std::string AspectRatio2Distributions("AspectRatio2Distributions");
-    const std::string Omega3Distributions("Omega3Distributions");
-    const std::string NeighborhoodDistributions("NeighborhoodDistributions");
-    const std::string OrientationDistributionFunctions("OrientationDistributionFunctions");
-    const std::string MisorientationDistributionFunctions("MisorientationDistributionFunctions");
-    const std::string AxisOrientationDistributionFunctions("OrientationDistributionFunctions");
   }
 #endif
 }
