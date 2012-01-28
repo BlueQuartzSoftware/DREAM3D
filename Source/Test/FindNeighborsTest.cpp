@@ -123,7 +123,7 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
     filter->setFieldName(Ebsd::Ang::ConfidenceIndex);
     filter->setFieldValue(0.1f);
     filter->setFieldOperator(">");
-    filters.push_back(filter);
+//    filters.push_back(filter);
   }
 
   return filters;
@@ -251,7 +251,7 @@ void TestFindNeighbors()
   if(m_WriteVtkFile)
   {
     vtkWriter->setOutputFile(UnitTest::FindNeighborTest::VtkOutputFile);
-    vtkWriter->setWriteGrainIds(true);
+    vtkWriter->setWriteGrainIds(false);
     vtkWriter->setWritePhaseIds(m_WritePhaseId);
     vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
     vtkWriter->setWriteIPFColors(m_WriteIPFColor);
