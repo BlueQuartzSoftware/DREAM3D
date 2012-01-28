@@ -258,7 +258,7 @@ void Reconstruction::execute()
 #endif
 
   /** ********** This section writes the VTK files for visualization *** */
-  updateProgressAndMessage(("Writing VTK Visualization File"), 93);
+/*  updateProgressAndMessage(("Writing VTK Visualization File"), 93);
   if(m_WriteVtkFile)
   {
     MAKE_OUTPUT_FILE_PATH( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
@@ -302,7 +302,7 @@ void Reconstruction::execute()
       delete (*iter);
     }
     CHECK_FOR_ERROR(DataContainer, vtkWriter.getErrorMessage(), err);
-  }
+  }*/
   /* ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", vtk_viz_files)

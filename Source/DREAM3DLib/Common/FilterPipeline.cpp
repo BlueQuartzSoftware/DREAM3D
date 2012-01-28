@@ -302,7 +302,8 @@ void FilterPipeline::execute()
 
    for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
    {
-     currFilt = *iter;
+/*     
+	 currFilt = *iter;
      if (iter != m_Pipeline.begin())
      {
        prev = iter; prev--;
@@ -316,7 +317,7 @@ void FilterPipeline::execute()
        (*iter)->setNextFilter(*next);
      }
 
-
+*/
 
      progress = progress + 1.0f;
      pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);

@@ -324,7 +324,7 @@ void LoadSlices::execute()
 
   initializeQuats();
 
-  threshold_points();
+//  threshold_points();
 
   // If there is an error set this to something negative and also set a message
   notify("LoadSlices Completed", 0, Observable::UpdateProgressMessage);
