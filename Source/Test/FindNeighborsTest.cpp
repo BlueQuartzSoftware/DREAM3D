@@ -195,6 +195,7 @@ int preflightPipeline(FilterContainerType &pipeline)
 }
 #endif
 
+#define TESTING 0
 
 // -----------------------------------------------------------------------------
 //
@@ -219,9 +220,10 @@ void TestFindNeighbors()
 //  load_slices->setZEndIndex(10);
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
-
   load_slices->setMisorientationTolerance(m_MisorientationTolerance);
-
+  #if !TESTING
+  pipeline->pushBack(load_slices);
+#endif
 
   AlignSections::Pointer align_sections = AlignSections::New();
   align_sections->setMisorientationTolerance(m_MisorientationTolerance);
@@ -258,6 +260,9 @@ void TestFindNeighbors()
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
     pipeline->pushBack(vtkWriter);
   }
+  
+  
+#if TESTING
 /*****************************
  * This section is convoluted because we are testing all the methods of
  * the FilterPipeline class. You would normally NOT build a pipeline this
@@ -289,7 +294,7 @@ void TestFindNeighbors()
   pipeline->insert(pipeline->size(), vtkWriter);
 //  pipeline->printFilterNames(std::cout);
   DREAM3D_REQUIRE_EQUAL(6, pipeline->size());
-
+#endif
 
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
