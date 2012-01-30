@@ -46,6 +46,13 @@ add_executable(FilterManagerTest ${DREAM3DTest_SOURCE_DIR}/FilterManagerTest.cpp
 target_link_libraries(FilterManagerTest FilterWidgets)
 endif()
 
+# --------------------------------------------------------------------------
+# FilterPipelineTest
+# --------------------------------------------------------------------------
+add_executable(FilterPipelineTest FilterPipelineTest.cpp )
+target_link_libraries(FilterPipelineTest DREAM3DLib)
+add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest)
+
 
 # --------------------------------------------------------------------------
 # DataContainer Test
