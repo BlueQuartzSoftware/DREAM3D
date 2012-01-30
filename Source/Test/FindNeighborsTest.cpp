@@ -158,44 +158,6 @@ void pipelineFinished()
 
 typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int preflightPipeline(FilterContainerType &pipeline)
-{
-  // Create the DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
- // m->addObserver(static_cast<Observer*>(this));
-  setErrorCondition(0);
-  int preflightError = 0;
-  std::stringstream ss;
-
-
-  // Start looping through the Pipeline and preflight everything
-  for (FilterContainerType::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
-  {
-    (*filter)->setDataContainer(m.get());
- //   setCurrentFilter(*filter);
-    (*filter)->preflight();
-    int err = (*filter)->getErrorCondition();
-    if(err < 0)
-    {
-      preflightError |= err;
-      setErrorCondition(preflightError);
-      setErrorCondition(err);
-      ss << (*filter)->getErrorMessage();
-    }
-  }
-  if (preflightError < 0)
-  {
-    pipelineErrorMessage(ss.str().c_str());
-  }
-  return preflightError;
-}
-#endif
-
-#define TESTING 0
 
 // -----------------------------------------------------------------------------
 //
@@ -221,9 +183,7 @@ void TestFindNeighbors()
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
   load_slices->setMisorientationTolerance(m_MisorientationTolerance);
-  #if !TESTING
   pipeline->pushBack(load_slices);
-#endif
 
   AlignSections::Pointer align_sections = AlignSections::New();
   align_sections->setMisorientationTolerance(m_MisorientationTolerance);
@@ -260,41 +220,6 @@ void TestFindNeighbors()
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
     pipeline->pushBack(vtkWriter);
   }
-  
-  
-#if TESTING
-/*****************************
- * This section is convoluted because we are testing all the methods of
- * the FilterPipeline class. You would normally NOT build a pipeline this
- * way in normal code.
- */
-
-
-  pipeline->popFront();
-//  pipeline->printFilterNames(std::cout);
-  DREAM3D_REQUIRE_EQUAL(4, pipeline->size());
-
-  pipeline->pushFront(align_sections);
-//  pipeline->printFilterNames(std::cout);
-  DREAM3D_REQUIRE_EQUAL(5, pipeline->size());
-
-  pipeline->pushFront(load_slices);
-//  pipeline->printFilterNames(std::cout);
-  DREAM3D_REQUIRE_EQUAL(6, pipeline->size());
-
-  pipeline->popBack(); // Pop off the vtkwriter
-//  pipeline->printFilterNames(std::cout);
-  DREAM3D_REQUIRE_EQUAL(5, pipeline->size());
-
-  pipeline->erase(pipeline->size()-1); // Erase the data container writer
-//  pipeline->printFilterNames(std::cout);
-  DREAM3D_REQUIRE_EQUAL(4, pipeline->size());
-
-  pipeline->insert(pipeline->size(), writer);
-  pipeline->insert(pipeline->size(), vtkWriter);
-//  pipeline->printFilterNames(std::cout);
-  DREAM3D_REQUIRE_EQUAL(6, pipeline->size());
-#endif
 
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
