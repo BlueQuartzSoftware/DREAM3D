@@ -257,53 +257,6 @@ void Reconstruction::execute()
   CHECK_FOR_ERROR(DataContainer, "The HDF5 Voxel file could not be written to. Does the path exist and do you have write access to the output directory.", err);
 #endif
 
-  /** ********** This section writes the VTK files for visualization *** */
-/*  updateProgressAndMessage(("Writing VTK Visualization File"), 93);
-  if(m_WriteVtkFile)
-  {
-    MAKE_OUTPUT_FILE_PATH( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile);
-
-    // Setup all the classes that will help us write the Scalars to the VTK File
-    std::vector<VtkScalarWriter*> scalarsToWrite;
-    {
-      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m.get()));
-      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
-      scalarsToWrite.push_back(w0);
-    }
-
-    if(m_WritePhaseId == true)
-    {
-      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m.get()));
-      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
-      scalarsToWrite.push_back(w0);
-    }
-
-    if (m_WriteGoodVoxels == true)
-    {
-      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<DataContainer>(m.get()));
-      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
-      scalarsToWrite.push_back(w0);
-    }
-
-    if(m_WriteIPFColor == true)
-    {
-      VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<DataContainer>(m.get()));
-      w0->m_WriteBinaryFiles = m_WriteBinaryVTKFiles;
-      scalarsToWrite.push_back(w0);
-    }
-
-    // Create our File Output Writer Object. This will handle all the File Output duties
-    VTKRectilinearGridFileWriter vtkWriter;
-    vtkWriter.setWriteBinaryFiles(m_WriteBinaryVTKFiles);
-    err = vtkWriter.write<DataContainer>(reconVisFile, m.get(), scalarsToWrite);
-    // Now Delete all the Scalar Helpers that we just created and used.
-    for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter)
-    {
-      delete (*iter);
-    }
-    CHECK_FOR_ERROR(DataContainer, vtkWriter.getErrorMessage(), err);
-  }*/
-  /* ******* End VTK Visualization File Writing Section ****** */
 
   CHECK_FOR_CANCELED(DataContainer, "Reconstruction was canceled", vtk_viz_files)
 
