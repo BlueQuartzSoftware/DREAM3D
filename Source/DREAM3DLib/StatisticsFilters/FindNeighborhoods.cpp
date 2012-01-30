@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -156,6 +156,15 @@ void FindNeighborhoods::find_centroids()
   int col, row, plane;
   float radcubed;
   float diameter;
+
+  size_t xPoints = m->getXPoints();
+  size_t yPoints = m->getYPoints();
+  size_t zPoints = m->getZPoints();
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
 //  float allvol = 0.0;
   size_t numgrains = m->getTotalFields();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
@@ -170,17 +179,17 @@ void FindNeighborhoods::find_centroids()
   {
     int gnum = m_GrainIds[j];
     graincenters[gnum * 5 + 0]++;
-    col = j % m->getXPoints();
-    row = (j / m->getXPoints()) % m->getYPoints();
-    plane = j / (m->getXPoints() * m->getYPoints());
-    x = float(col) * m->getXRes();
-    y = float(row) * m->getYRes();
-    z = float(plane) * m->getZRes();
+    col = j % xPoints;
+    row = (j / xPoints) % yPoints;
+    plane = j / (xPoints * yPoints);
+    x = float(col) * xRes;
+    y = float(row) *yRes;
+    z = float(plane) * zRes;
     graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
     graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
     graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
   }
-  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+  float res_scalar = xRes * yRes * zRes;
   float vol_term = (4.0 / 3.0) * m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -209,6 +218,15 @@ void FindNeighborhoods::find_centroids2D()
   int col, row;
   float radsquared;
   float diameter;
+  
+  size_t xPoints = m->getXPoints();
+  size_t yPoints = m->getYPoints();
+  size_t zPoints = m->getZPoints();
+  
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
   size_t numgrains = m->getTotalFields();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
@@ -221,10 +239,10 @@ void FindNeighborhoods::find_centroids2D()
   {
     int gnum = m_GrainIds[j];
     graincenters[gnum*5 + 0]++;
-    col = j % m->getXPoints();
-    row = (j / m->getXPoints()) % m->getYPoints();
-	x = float(col)*m->getXRes();
-	y = float(row)*m->getYRes();
+    col = j % xPoints;
+    row = (j / xPoints) % yPoints;
+	  x = float(col)*xRes;
+	  y = float(row)*yRes;
     graincenters[gnum*5 + 1] = graincenters[gnum*5 + 1] + x;
     graincenters[gnum*5 + 2] = graincenters[gnum*5 + 2] + y;
   }
@@ -235,7 +253,7 @@ void FindNeighborhoods::find_centroids2D()
     m_Centroids[3*i] = graincenters[i*5 + 1];
     m_Centroids[3*i+1] = graincenters[i*5 + 2];
     m_NumCells[i] = graincenters[i*5 + 0];
-    m_Volumes[i] = (graincenters[i*5 + 0] * m->getXRes() * m->getYRes());
+    m_Volumes[i] = (graincenters[i*5 + 0] * xRes * yRes);
     radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;
@@ -262,33 +280,33 @@ void FindNeighborhoods::find_neighborhoods()
       diam = m_EquivalentDiameters[i];
       for (size_t j = i; j < numgrains; j++)
       {
-		  xn = m_Centroids[3*j];
-		  yn = m_Centroids[3*j+1];
-		  zn = m_Centroids[3*j+2];
-		  diam2 = m_EquivalentDiameters[j];
-          xdist = fabs(x - xn);
-          ydist = fabs(y - yn);
-          zdist = fabs(z - zn);
-          dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-          dist = sqrt(dist);
-          dist2 = dist;
-          dist_int = int(dist / (diam / 2.0));
-          dist2_int = int(dist2 / (diam2 / 2.0));
-          if (dist_int < 3)
+		    xn = m_Centroids[3*j];
+		    yn = m_Centroids[3*j+1];
+		    zn = m_Centroids[3*j+2];
+		    diam2 = m_EquivalentDiameters[j];
+        xdist = fabs(x - xn);
+        ydist = fabs(y - yn);
+        zdist = fabs(z - zn);
+        dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
+        dist = sqrt(dist);
+        dist2 = dist;
+        dist_int = int(dist / (diam / 2.0f));
+        dist2_int = int(dist2 / (diam2 / 2.0f));
+        if (dist_int < 3)
+        {
+          for (int iter = dist_int; iter < 3; iter++)
           {
-            for (int iter = dist_int; iter < 3; iter++)
-            {
-              m_Neighborhoods[3*i+dist_int]++;
-            }
+            m_Neighborhoods[3*i+dist_int]++;
           }
-          if (dist2_int < 3)
+        }
+        if (dist2_int < 3)
+        {
+          for (int iter = dist2_int; iter < 3; iter++)
           {
-            for (int iter = dist2_int; iter < 3; iter++)
-            {
-              m_Neighborhoods[3*j+dist2_int]++;
-            }
+            m_Neighborhoods[3*j+dist2_int]++;
           }
-      }
+        }
+    }
   }
 }
 

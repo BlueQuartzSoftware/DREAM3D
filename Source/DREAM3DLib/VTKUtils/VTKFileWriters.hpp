@@ -245,9 +245,9 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         }
         else if(phase <= 0)
         {
-          rgba[index] = 0.0;
-          rgba[index + 1] = 0.0;
-          rgba[index + 2] = 0.0;
+          rgba[index] = 0;
+          rgba[index + 1] = 0;
+          rgba[index + 2] = 0;
         }
         if(true == m_WriteBinaryFiles)
         {
@@ -255,9 +255,9 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         }
         else
         {
-          red = static_cast<float>(float(rgba[index]) / 255.0);
-          green = static_cast<float>(float(rgba[index + 1]) / 255.0);
-          blue = static_cast<float>(float(rgba[index + 2]) / 255.0);
+          red = static_cast<float>(float(rgba[index]) / 255.0f);
+          green = static_cast<float>(float(rgba[index + 1]) / 255.0f);
+          blue = static_cast<float>(float(rgba[index + 2]) / 255.0f);
           fprintf(f, "%f %f %f\n", red, green, blue);
         }
       }
