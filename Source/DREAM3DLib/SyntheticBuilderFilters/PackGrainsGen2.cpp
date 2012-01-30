@@ -686,6 +686,14 @@ void PackGrainsGen2::execute()
   notify("Packing Grains - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
   cleanup_grains();
 
+  for(int i=0;i<totalPoints;i++)
+  {
+	if(m_GrainIds[i] == -1)
+	{
+		int stop = 0;
+	}
+  }
+
   notify("Packing Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
@@ -959,9 +967,6 @@ void PackGrainsGen2::initializeArrays(std::vector<unsigned int> structures)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 {
  // DataContainer* m = getDataContainer();
@@ -1129,9 +1134,6 @@ void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
 {
   DataContainer* m = getDataContainer();
@@ -2044,6 +2046,7 @@ void PackGrainsGen2::cleanup_grains()
       currentvlist.clear();
     }
   }
+  assign_gaps();
   for (int i = 0; i < totpoints; i++)
   {
 	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
@@ -2056,5 +2059,4 @@ void PackGrainsGen2::cleanup_grains()
   {
 	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
   }
-  assign_gaps();
 }
