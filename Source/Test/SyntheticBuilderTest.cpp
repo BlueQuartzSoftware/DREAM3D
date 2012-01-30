@@ -137,8 +137,8 @@ void TestSyntheticBuilder()
   ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
   m_ShapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
   m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::SuperEllipsoidShape);
-  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::SuperEllipsoidShape);
+  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
+  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
 
   int err = 0;
   // Instantiate our DataContainer object
