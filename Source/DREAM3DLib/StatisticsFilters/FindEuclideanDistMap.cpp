@@ -82,9 +82,9 @@ class FindEuclideanMap : public AbstractFilter
       int neighpoint;
       int nearestneighbor;
       int neighbors[6];
-      int xpoints = m->getXPoints();
-      int ypoints = m->getYPoints();
-      int zpoints = m->getZPoints();
+      int xpoints = static_cast<int>(m->getXPoints());
+      int ypoints = static_cast<int>(m->getYPoints());
+      int zpoints = static_cast<int>(m->getZPoints());
       double resx = m->getXRes();
       double resy = m->getYRes();
       double resz = m->getZRes();
@@ -174,7 +174,7 @@ class FindEuclideanMap : public AbstractFilter
       for (int a = 0; a < (totalPoints); ++a)
       {
         m_NearestNeighbors[a*3 + loop] = voxel_NearestNeighbor[a];
-        m_NearestNeighborDistances[a*3 + loop] = voxel_NearestNeighborDistance[a];
+        m_NearestNeighborDistances[a*3 + loop] = static_cast<float>(voxel_NearestNeighborDistance[a]);
       }
       delete[] voxel_NearestNeighbor;
       delete[] voxel_NearestNeighborDistance;
@@ -297,26 +297,30 @@ void FindEuclideanDistMap::find_euclideandistmap()
   neighbors[4] = dims[0];
   neighbors[5] = dims[0]*dims[1];
 
+  size_t xPoints = m->getXPoints();
+  size_t yPoints = m->getYPoints();
+  size_t zPoints = m->getZPoints();
 
-  for (int64_t a = 0; a < (totalPoints); ++a)
+
+  for (int64_t a = 0; a < totalPoints; ++a)
   {
 	grain = m_GrainIds[a];
 	if(grain > 0)
 	{
 	  coordination.resize(0);
-	  column = a % m->getXPoints();
-	  row = (a / m->getXPoints()) % m->getYPoints();
-	  plane = a / (m->getXPoints() * m->getYPoints());
+	  column = a % xPoints;
+	  row = (a / xPoints) % yPoints;
+	  plane = a / (xPoints * yPoints);
 	  for (size_t k = 0; k < 6; k++)
 	  {
 		good = 1;
 		neighbor = a + neighbors[k];
 		if(k == 0 && plane == 0) good = 0;
-		if(k == 5 && plane == (m->getZPoints() - 1)) good = 0;
+		if(k == 5 && plane == (zPoints - 1)) good = 0;
 		if(k == 1 && row == 0) good = 0;
-		if(k == 4 && row == (m->getYPoints() - 1)) good = 0;
+		if(k == 4 && row == (yPoints - 1)) good = 0;
 		if(k == 2 && column == 0) good = 0;
-		if(k == 3 && column == (m->getXPoints() - 1)) good = 0;
+		if(k == 3 && column == (xPoints - 1)) good = 0;
 		if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
 		{
 			add = 1;

@@ -63,6 +63,7 @@ class H5DataArrayWriter
       {
         rank = 2;
       }
+
       hsize_t dims[2] =
       { numTuples, numComp };
       int err = 0;

@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -175,7 +175,7 @@ void FindAxisODF::execute()
   int err;
   for(size_t i=1;i<numXTals;i++)
   {
-	  err = h5io->writeAxisOrientationData(i, axisodf[i], totalaxes[i]);
+	  err = h5io->writeAxisOrientationData(static_cast<int>(i), axisodf[i], totalaxes[i]);
 	  if (err < 0)
 	  {
 		  //FIXME: Error Trap correctly

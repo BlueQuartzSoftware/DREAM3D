@@ -48,6 +48,8 @@
 namespace Detail
 {
   static const float DegToRads = static_cast<float>(M_PI/180.0f);
+  static const float HalfSqrt2 = sqrt(2.0f) / 2.0f;
+  static const float RadToDegs = static_cast<float>(180.0f/M_PI);
 }
 
 /**
@@ -224,9 +226,9 @@ class EbsdColoring
       hkl[0] = static_cast<unsigned char> (h * 100);
       hkl[1] = static_cast<unsigned char> (k * 100);
       hkl[2] = static_cast<unsigned char> (l * 100);
-      T theta = (cd[0] * 0) + (cd[1] * -sqrt(2.0) / 2.0) + (cd[2] * sqrt(2.0) / 2.0);
-      theta = (180.0 / M_PI) * acos(theta);
-      T red = (90.0 - theta) / 45.0;
+      T theta = (cd[0] * 0) + (cd[1] * -Detail::HalfSqrt2) + (cd[2] * Detail::HalfSqrt2);
+      theta = (Detail::RadToDegs) * acos(theta);
+      T red = (90.0f - theta) / 45.0f;
       d[0] = (cd[1] * 1) - (cd[2] * 0);
       d[1] = (cd[2] * 0) - (cd[0] * 1);
       d[2] = (cd[0] * 0) - (cd[1] * 0);
@@ -237,9 +239,9 @@ class EbsdColoring
       d[0] = d[0] / norm;
       d[1] = d[1] / norm;
       d[2] = d[2] / norm;
-      T phi_local = (d[0] * 0) + (d[1] * sqrt(2.0) / 2.0) + (d[2] * sqrt(2.0) / 2.0);
-      phi_local = (180.0 / M_PI) * acos(phi_local);
-      T green = (1 - red) * ((35.26 - phi_local) / 35.26);
+      T phi_local = (d[0] * 0) + (d[1] * Detail::HalfSqrt2) + (d[2] * Detail::HalfSqrt2);
+      phi_local = (Detail::RadToDegs) * acos(phi_local);
+      T green = (1 - red) * ((35.26f - phi_local) / 35.26f);
       T blue = (1 - red) - green;
       T max = red;
       if (green > max) max = green;
@@ -251,9 +253,9 @@ class EbsdColoring
       blue = blue / max;
 
       // Add in some correction factors
-      red = (0.85 * red) + 0.15;
-      green = (0.85 * green) + 0.15;
-      blue = (0.85 * blue) + 0.15;
+      red = (0.85f * red) + 0.15f;
+      green = (0.85f * green) + 0.15f;
+      blue = (0.85f * blue) + 0.15f;
 
       // Multiply by 255 to get an R/G/B value
       red = red * 255.0f;
@@ -344,22 +346,22 @@ class EbsdColoring
         d[0] = d[0] / norm;
         d[1] = d[1] / norm;
         d[2] = d[2] / norm;
-        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * M_PI / 180.0))
+        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * Detail::DegToRads))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
           if (theta > 1) theta = 1;
 
           if (theta < -1) theta = -1;
 
-          theta = (180.0 / M_PI) * acos(theta);
-          _rgb[0] = (90.0 - theta) / 90.0;
+          theta = (Detail::RadToDegs) * acos(theta);
+          _rgb[0] = (90.0f - theta) / 90.0f;
           phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
           if (phi_local > 1) phi_local = 1;
 
           if (phi_local < -1) phi_local = -1;
 
-          phi_local = (180.0 / M_PI) * acos(phi_local);
-          _rgb[1] = (1 - _rgb[0]) * ((30.0 - phi_local) / 30.0);
+          phi_local = (Detail::RadToDegs) * acos(phi_local);
+          _rgb[1] = (1 - _rgb[0]) * ((30.0f - phi_local) / 30.0f);
           _rgb[2] = (1 - _rgb[0]) - _rgb[1];
         }
       }
@@ -371,9 +373,9 @@ class EbsdColoring
       _rgb[0] = _rgb[0] / max;
       _rgb[1] = _rgb[1] / max;
       _rgb[2] = _rgb[2] / max;
-      _rgb[0] = (0.85 * _rgb[0]) + 0.15;
-      _rgb[1] = (0.85 * _rgb[1]) + 0.15;
-      _rgb[2] = (0.85 * _rgb[2]) + 0.15;
+      _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
+      _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
+      _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
 
       // Multiply by 255 to get an R/G/B value
       _rgb[0] = _rgb[0] * 255.0f;

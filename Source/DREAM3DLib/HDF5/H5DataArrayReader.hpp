@@ -67,7 +67,7 @@ class H5DataArrayReader
       ptr = DataArray<T>::CreateArray(numElements);
       if(dims.size() > 1)
       {
-        ptr->SetNumberOfComponents(dims[1]);
+        ptr->SetNumberOfComponents(static_cast<int>(dims[1]));
       }
       ptr->SetName(datasetPath);
 

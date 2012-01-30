@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -154,6 +154,14 @@ void FindShapes::find_centroids()
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
+  int xPoints = static_cast<int>(m->getXPoints());
+  int yPoints = static_cast<int>(m->getYPoints());
+  int zPoints = static_cast<int>(m->getZPoints());
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
   // Initialize every element to 0.0
   for (size_t i = 0; i < numgrains * 5; i++)
   {
@@ -163,18 +171,18 @@ void FindShapes::find_centroids()
   {
     int gnum = m_GrainIds[j];
     graincenters[gnum * 5 + 0]++;
-    col = j % m->getXPoints();
-    row = (j / m->getXPoints()) % m->getYPoints();
-    plane = j / (m->getXPoints() * m->getYPoints());
-    x = float(col) * m->getXRes();
-    y = float(row) * m->getYRes();
-    z = float(plane) * m->getZRes();
+    col = j % xPoints;
+    row = (j / xPoints) % yPoints;
+    plane = j / (xPoints * yPoints);
+    x = float(col) * xRes;
+    y = float(row) * yRes;
+    z = float(plane) *zRes;
     graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
     graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
     graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
   }
-  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = (4.0 / 3.0) * m_pi;
+  float res_scalar = xRes * yRes * zRes;
+  float vol_term = (4.0f / 3.0f) * m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
     graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
@@ -183,10 +191,10 @@ void FindShapes::find_centroids()
     m_Centroids[3 * i] = graincenters[i * 5 + 1];
     m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
     m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
-    m_NumCells[i] = graincenters[i * 5 + 0];
+    m_NumCells[i] = static_cast<int>(graincenters[i * 5 + 0]);
     m_Volumes[i] = (graincenters[i * 5 + 0] * res_scalar);
     radcubed = m_Volumes[i] / vol_term;
-    diameter = 2.0 * powf(radcubed, 0.3333333333);
+    diameter = 2.0f * powf(radcubed, 0.3333333333f);
     m_EquivalentDiameters[i] = diameter;
   }
 }
@@ -203,6 +211,14 @@ void FindShapes::find_centroids2D()
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
+  int xPoints = static_cast<int>(m->getXPoints());
+  int yPoints = static_cast<int>(m->getYPoints());
+  int zPoints = static_cast<int>(m->getZPoints());
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
   for (size_t i = 0; i < numgrains*5; i++)
   {
       graincenters[i] = 0.0f;
@@ -211,10 +227,10 @@ void FindShapes::find_centroids2D()
   {
     int gnum = m_GrainIds[j];
     graincenters[gnum*5 + 0]++;
-    col = j % m->getXPoints();
-    row = (j / m->getXPoints()) % m->getYPoints();
-	x = float(col)*m->getXRes();
-	y = float(row)*m->getYRes();
+    col = j % xPoints;
+    row = (j / xPoints) % yPoints;
+	  x = float(col)*xRes;
+	  y = float(row)*yRes;
     graincenters[gnum*5 + 1] = graincenters[gnum*5 + 1] + x;
     graincenters[gnum*5 + 2] = graincenters[gnum*5 + 2] + y;
   }
@@ -224,8 +240,8 @@ void FindShapes::find_centroids2D()
     graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
     m_Centroids[3*i] = graincenters[i*5 + 1];
     m_Centroids[3*i+1] = graincenters[i*5 + 2];
-    m_NumCells[i] = graincenters[i*5 + 0];
-    m_Volumes[i] = (graincenters[i*5 + 0] * m->getXRes() * m->getYRes());
+    m_NumCells[i] = static_cast<int>(graincenters[i*5 + 0]);
+    m_Volumes[i] = (graincenters[i*5 + 0] * xRes * yRes);
     radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;
@@ -246,6 +262,10 @@ void FindShapes::find_moments()
   size_t numgrains = m->getTotalFields();
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
 
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
   for (size_t i = 0; i < numgrains*6; i++)
   {
       grainmoments[i] = 0.0f;
@@ -262,12 +282,12 @@ void FindShapes::find_moments()
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float z = find_zcoord(j);
-    float x1 = x + (m->getXRes() / 4);
-    float x2 = x - (m->getXRes() / 4);
-    float y1 = y + (m->getYRes() / 4);
-    float y2 = y - (m->getYRes() / 4);
-    float z1 = z + (m->getZRes() / 4);
-    float z2 = z - (m->getZRes() / 4);
+    float x1 = x + (xRes / 4);
+    float x2 = x - (xRes / 4);
+    float y1 = y + (yRes / 4);
+    float y2 = y - (yRes / 4);
+    float z1 = z + (zRes / 4);
+    float z2 = z - (zRes / 4);
     float xdist1 = (x1 - graincenters[gnum*5 + 1]);
     float ydist1 = (y1 - graincenters[gnum*5 + 2]);
     float zdist1 = (z1 - graincenters[gnum*5 + 3]);
@@ -314,22 +334,23 @@ void FindShapes::find_moments()
     grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + u011;
     grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + u101;
   }
-  float sphere = (2000.0*m_pi*m_pi)/9.0;
+  float sphere = (2000.0f*m_pi*m_pi)/9.0f;
+  float konst1 =  (xRes / 2.0f) * (yRes / 2.0f) * (zRes / 2.0f);
   for (size_t i = 1; i < numgrains; i++)
   {
-    grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0) * (m->getZRes() / 2.0);
-    grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0) * (m->getZRes() / 2.0);
-    grainmoments[i*6 + 2] = grainmoments[i*6 + 2] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0) * (m->getZRes() / 2.0);
-    grainmoments[i*6 + 3] = grainmoments[i*6 + 3] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0) * (m->getZRes() / 2.0);
-    grainmoments[i*6 + 4] = grainmoments[i*6 + 4] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0) * (m->getZRes() / 2.0);
-    grainmoments[i*6 + 5] = grainmoments[i*6 + 5] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0) * (m->getZRes() / 2.0);
-    u200 = (grainmoments[i*6 + 1] + grainmoments[i*6 + 2] - grainmoments[i*6 + 0]) / 2;
-    u020 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 2] - grainmoments[i*6 + 1]) / 2;
-    u002 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 1] - grainmoments[i*6 + 2]) / 2;
+    grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * konst1;
+    grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * konst1;
+    grainmoments[i*6 + 2] = grainmoments[i*6 + 2] * konst1;
+    grainmoments[i*6 + 3] = grainmoments[i*6 + 3] * konst1;
+    grainmoments[i*6 + 4] = grainmoments[i*6 + 4] * konst1;
+    grainmoments[i*6 + 5] = grainmoments[i*6 + 5] * konst1;
+    u200 = (grainmoments[i*6 + 1] + grainmoments[i*6 + 2] - grainmoments[i*6 + 0]) / 2.0f;
+    u020 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 2] - grainmoments[i*6 + 1]) / 2.0f;
+    u002 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 1] - grainmoments[i*6 + 2]) / 2.0f;
     u110 = -grainmoments[i*6 + 3];
     u011 = -grainmoments[i*6 + 4];
     u101 = -grainmoments[i*6 + 5];
-    float o3 = (u200 * u020 * u002) + (2.0 * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
+    float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     float vol5 = m_Volumes[i];
     vol5 = powf(vol5, 5);
     float omega3 = vol5 / o3;
@@ -349,6 +370,11 @@ void FindShapes::find_moments2D()
   size_t numgrains = m->getTotalFields();
   grainmoments = m_GrainMoments->WritePointer(0, numgrains*6);
   m_GrainMoments->SetNumberOfComponents(6);
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
   for (size_t i = 0; i < numgrains; i++)
   {
       grainmoments[i] = 0.0f;
@@ -361,10 +387,10 @@ void FindShapes::find_moments2D()
     int gnum = m_GrainIds[j];
     float x = find_xcoord(j);
     float y = find_ycoord(j);
-    float x1 = x + (m->getXRes() / 2);
-    float x2 = x - (m->getXRes() / 2);
-    float y1 = y + (m->getYRes() / 2);
-    float y2 = y - (m->getYRes() / 2);
+    float x1 = x + (xRes / 2);
+    float x2 = x - (xRes / 2);
+    float y1 = y + (yRes / 2);
+    float y2 = y - (yRes / 2);
     float xdist1 = (x1 - graincenters[gnum*5 + 1]);
     float ydist1 = (y1 - graincenters[gnum*5 + 2]);
     float xdist2 = (x1 - graincenters[gnum*5 + 1]);
@@ -380,11 +406,12 @@ void FindShapes::find_moments2D()
     grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + u020;
     grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + u110;
   }
+  float konst1 = (xRes / 2.0f) * (yRes / 2.0f);
   for (size_t i = 1; i < numgrains; i++)
   {
-    grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0);
-    grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0);
-    grainmoments[i*6 + 2] = -grainmoments[i*6 + 2] * (m->getXRes() / 2.0) * (m->getYRes() / 2.0);
+    grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * konst1;
+    grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * konst1;
+    grainmoments[i*6 + 2] = -grainmoments[i*6 + 2] * konst1;
   }
 }
 void FindShapes::find_axes()
@@ -411,12 +438,12 @@ void FindShapes::find_axes()
     b = -Ixx - Iyy - Izz;
     c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
     d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
-    f = ((3 * c / a) - ((b / a) * (b / a))) / 3;
-    g = ((2 * (b / a) * (b / a) * (b / a)) - (9 * b * c / (a * a)) + (27 * (d / a))) / 27;
-    h = (g * g / 4) + (f * f * f / 27);
+    f = ((3 * c / a) - ((b / a) * (b / a))) / 3.0f;
+    g = ((2 * (b / a) * (b / a) * (b / a)) - (9.0f * b * c / (a * a)) + (27.0f * (d / a))) / 27.0f;
+    h = (g * g / 4.0f) + (f * f * f / 27.0f);
     rsquare = (g * g / 4) - h;
     r = sqrt(rsquare);
-	if(rsquare < 0) r = 0;
+	  if(rsquare < 0) r = 0;
     theta = 0;
     if (r == 0)
     {
@@ -424,9 +451,9 @@ void FindShapes::find_axes()
     }
     if (r != 0)
     {
-	  value = -g / (2 * r);
-	  if(value > 1) value = 1;
-	  if(value < -1) value = -1;
+	  value = -g / (2.0f * r);
+	  if(value > 1) value = 1.0f;
+	  if(value < -1) value = -1.0f;
       theta = acos(value);
     }
     float const1 = powf(r, 0.33333333333f);
@@ -447,7 +474,7 @@ void FindShapes::find_axes()
     B = (I1 + I3 - I2) / 2;
     C = (I2 + I3 - I1) / 2;
     a = (A * A * A * A) / (B * C);
-    a = powf(a, 0.1);
+    a = powf(a, 0.1f);
     b = B / A;
     b = sqrt(b) * a;
     c = A / (a * a * a * b);
@@ -470,7 +497,7 @@ void FindShapes::find_axes2D()
     Ixy = grainmoments[i*6+2];
     float r1 = (Ixx + Iyy) / 2.0f + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
     float r2 = (Ixx + Iyy) / 2.0f - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
-    float preterm = 4.0f / M_PI;
+    float preterm = 4.0f / m_pi;
     preterm = powf(preterm, 0.25f);
     float postterm1 = r1 * r1 * r1 / r2;
     float postterm2 = r2 * r2 * r2 / r1;
@@ -645,8 +672,8 @@ void FindShapes::find_axiseulers2D()
     float Ixx = grainmoments[i*6+0];
     float Iyy = grainmoments[i*6+1];
     float Ixy = grainmoments[i*6+2];
-    float I1 = (Ixx + Iyy) / 2.0f + sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
-    float I2 = (Ixx + Iyy) / 2.0f - sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
+    float I1 = (Ixx + Iyy) / 2.0f + sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
+    float I2 = (Ixx + Iyy) / 2.0f - sqrtf(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
     float n1x = (Ixx - I1) / Ixy;
     float n1y = 1;
     float n2x = (Ixx - I2) / Ixy;
