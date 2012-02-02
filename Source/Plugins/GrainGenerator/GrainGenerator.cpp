@@ -141,11 +141,6 @@ void GrainGenerator::execute()
 
   if(m_AlreadyFormed == false)
   {
-    m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-    m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
-    m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
-
-
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsInputFile(getH5StatsFile());
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
@@ -242,6 +237,9 @@ void GrainGenerator::execute()
   }
   m = DataContainer::New();
 
+  m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
 
   // Start a Benchmark Clock so we can keep track of each filter's execution time
   START_CLOCK()
