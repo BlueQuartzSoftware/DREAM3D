@@ -110,7 +110,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     setErrorCondition(-308);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  m->getNumEnsembleTuples(), 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  ensembles, 1);
 
   setErrorMessage(ss.str());
 }

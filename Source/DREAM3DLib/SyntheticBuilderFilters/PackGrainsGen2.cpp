@@ -257,7 +257,6 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, float, FloatArrayType, voxels, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
@@ -909,7 +908,6 @@ void PackGrainsGen2::initializeAttributes()
 		m_EulerAngles[3*i] = -1.0f;
 		m_EulerAngles[3*i + 1] = -1.0f;
 		m_EulerAngles[3*i + 2] = -1.0f;
-		m_SurfaceVoxels[i] = 0;
 	}
 }
 
