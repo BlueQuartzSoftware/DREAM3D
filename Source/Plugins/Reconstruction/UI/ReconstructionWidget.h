@@ -42,10 +42,10 @@
 
 #include "ui_ReconstructionWidget.h"
 
-
+#include "EbsdLib/QualityMetricFilter.h"
 
 #include "QtSupport/DREAM3DPluginFrame.h"
-#include "QReconstruction.h"
+#include "QFilterPipeline.h"
 
 class QualityMetricTableModel;
 
@@ -132,7 +132,7 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QReconstruction*            m_Reconstruction;
+    QFilterPipeline*            m_FilterPipeline;
     QThread*                    m_WorkerThread;
     QualityMetricTableModel*    m_QualityMetricTableModel;
     bool                        m_phaseTypeEdited;
@@ -153,10 +153,15 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
     bool checkPhaseTypes();
 
     /**
-     * @brief
-     * @param r
+     *
      */
-    void setupQualityMetricFilters(QReconstruction* r);
+    virtual void setupPipeline();
+
+  /**
+   *
+   * @return
+   */
+    virtual std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters();
 
 
     ReconstructionWidget(const ReconstructionWidget&); // Copy Constructor Not Implemented

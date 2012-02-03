@@ -199,12 +199,11 @@ void LoadSlices::preflight()
 // -----------------------------------------------------------------------------
 void LoadSlices::execute()
 {
-
+  std::stringstream ss;
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
     ss << getNameOfClass() << " DataContainer was NULL";
     setErrorMessage(ss.str());
     return;
@@ -320,12 +319,18 @@ void LoadSlices::execute()
 
   // Initialize all the arrays with some default values
   int64_t totalPoints = m->totalPoints();
+  ss.str("");
+  ss << getHumanLabel() << " Initializing " << totalPoints << " voxels";
+  notify(ss.str(), 0, Observable::UpdateProgressMessage);
   initializeArrays(totalPoints);
 
 
 
   // During the loading of the EBSD data the Quality Metric Filters will be run
   // and fill in the ReconstrucionFunc->m_GoodVoxels array.
+  ss.str("");
+  ss << getHumanLabel() << " Reading Ebsd Data from file";
+  notify(ss.str(), 0, Observable::UpdateProgressMessage);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   err = ebsdReader->loadData(m_EulerAnglesC, m_PhasesC, m_GoodVoxels, m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir, m_QualityMetricFilters);
@@ -340,7 +345,7 @@ void LoadSlices::execute()
   {
 	  for(size_t i = 0; i < (m->getXPoints()*m->getYPoints()*m->getZPoints()); i++)
 	  {
-	      m_EulerAnglesC[3*i] = m_EulerAnglesC[3*i] * radianconversion;
+	    m_EulerAnglesC[3*i] = m_EulerAnglesC[3*i] * radianconversion;
 		  m_EulerAnglesC[3*i + 1] = m_EulerAnglesC[3*i + 1] * radianconversion;
 		  m_EulerAnglesC[3*i + 2] = m_EulerAnglesC[3*i + 2] * radianconversion;
 	  }
@@ -348,10 +353,10 @@ void LoadSlices::execute()
 
   initializeQuats();
 
-//  threshold_points();
-
   // If there is an error set this to something negative and also set a message
-  notify("LoadSlices Completed", 0, Observable::UpdateProgressMessage);
+  ss.str("");
+  ss << getHumanLabel() << " Completed";
+  notify(ss.str(), 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -359,7 +364,6 @@ void LoadSlices::execute()
 // -----------------------------------------------------------------------------
 void LoadSlices::initializeArrays(int64_t totalPoints)
 {
-  notify("Initializing Arrays With Default Values", 0, Observable::UpdateProgressValueAndMessage);
 
   for(int i = 0;i < totalPoints;i++)
   {
