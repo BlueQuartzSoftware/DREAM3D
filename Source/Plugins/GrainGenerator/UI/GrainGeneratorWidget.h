@@ -95,6 +95,8 @@ class GrainGeneratorWidget : public DREAM3DPluginFrame, private Ui::GrainGenerat
                            float xres, float yres, float zres);
     void estimateNumGrainsSetup();
 
+    void setupPipeline();
+
   protected slots:
     /* Grain Generator Slots*/
     void on_m_InputH5StatisticsFileBtn_clicked();
