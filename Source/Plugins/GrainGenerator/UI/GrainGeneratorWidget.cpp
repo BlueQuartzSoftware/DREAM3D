@@ -87,7 +87,7 @@ const static float m_pi = (float)M_PI;
 // -----------------------------------------------------------------------------
 GrainGeneratorWidget::GrainGeneratorWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
-m_GrainGenerator(NULL),
+m_FilterPipeline(NULL),
 m_WorkerThread(NULL),
 m_WriteSurfaceVoxelScalars(true),
 m_WritePhaseIdScalars(true),
@@ -487,7 +487,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_GrainGenerator!= NULL)
+    if(m_FilterPipeline!= NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
       emit cancelPipeline();
@@ -510,33 +510,34 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  if (NULL != m_GrainGenerator)
+  if (NULL != m_FilterPipeline)
   {
-    delete m_GrainGenerator;
-    m_GrainGenerator = NULL;
+    delete m_FilterPipeline;
+    m_FilterPipeline = NULL;
   }
-  m_GrainGenerator = new QFilterPipeline(NULL);
 
+  // This method will create all the needed filters and push them into the
+  // pipeline in the correct order
   setupPipeline();
 
   // instantiate a subclass of the FilterPipeline Wrapper which adds Qt Signal/Slots
   // to the FilterPipeline Class
-  m_GrainGenerator->moveToThread(m_WorkerThread);
+  m_FilterPipeline->moveToThread(m_WorkerThread);
 
 #if 0
-  m_GrainGenerator->setH5StatsFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
-  m_GrainGenerator->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
-  m_GrainGenerator->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-  m_GrainGenerator->setXPoints(m_XPoints->value());
-  m_GrainGenerator->setYPoints(m_YPoints->value());
-  m_GrainGenerator->setZPoints(m_ZPoints->value());
+  m_FilterPipeline->setH5StatsFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
+  m_FilterPipeline->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
+  m_FilterPipeline->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
+  m_FilterPipeline->setXPoints(m_XPoints->value());
+  m_FilterPipeline->setYPoints(m_YPoints->value());
+  m_FilterPipeline->setZPoints(m_ZPoints->value());
 
-  m_GrainGenerator->setXResolution(m_XResolution->value());
-  m_GrainGenerator->setYResolution(m_YResolution->value());
-  m_GrainGenerator->setZResolution(m_ZResolution->value());
-  m_GrainGenerator->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
+  m_FilterPipeline->setXResolution(m_XResolution->value());
+  m_FilterPipeline->setYResolution(m_YResolution->value());
+  m_FilterPipeline->setZResolution(m_ZResolution->value());
+  m_FilterPipeline->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
 
-  m_GrainGenerator->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
+  m_FilterPipeline->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
 
   int count = m_ShapeTypeCombos.count();
 
@@ -560,32 +561,32 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
     }
     shapeTypes->SetValue(i+1, enPtValue);
   }
-  m_GrainGenerator->setShapeTypes(shapeTypes);
+  m_FilterPipeline->setShapeTypes(shapeTypes);
 
 
-  m_GrainGenerator->setAlreadyFormed(m_AlreadyFormed->isChecked() );
-  m_GrainGenerator->setStructureFile(m_StructureFile->text().toStdString());
+  m_FilterPipeline->setAlreadyFormed(m_AlreadyFormed->isChecked() );
+  m_FilterPipeline->setStructureFile(m_StructureFile->text().toStdString());
 
-  m_GrainGenerator->setWriteVtkFile(m_VisualizationVizFile->isChecked());
-  m_GrainGenerator->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars);
-  m_GrainGenerator->setWritePhaseId(m_WritePhaseIdScalars);
-  m_GrainGenerator->setWriteIPFColor(m_WriteIPFColorScalars);
-  m_GrainGenerator->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
+  m_FilterPipeline->setWriteVtkFile(m_VisualizationVizFile->isChecked());
+  m_FilterPipeline->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars);
+  m_FilterPipeline->setWritePhaseId(m_WritePhaseIdScalars);
+  m_FilterPipeline->setWriteIPFColor(m_WriteIPFColorScalars);
+  m_FilterPipeline->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
 
-  m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
+  m_FilterPipeline->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
 #endif
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
-   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * Reconstruction object. Since the FilterPipeline object has been moved to another
    * thread of execution and the actual QThread lives in *this* thread then the
    * type of connection will be a Queued connection.
    */
   // When the thread starts its event loop, start the Reconstruction going
   connect(m_WorkerThread, SIGNAL(started()),
-          m_GrainGenerator, SLOT(run()));
+          m_FilterPipeline, SLOT(run()));
 
-  // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_GrainGenerator, SIGNAL(finished() ),
+  // When the FilterPipeline ends then tell the QThread to stop its event loop
+  connect(m_FilterPipeline, SIGNAL(finished() ),
           m_WorkerThread, SLOT(quit()) );
 
   // When the QThread finishes, tell this object that it has finished.
@@ -593,26 +594,31 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
           this, SLOT( pipelineComplete() ) );
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_GrainGenerator, SIGNAL (updateProgress(int)),
+  connect(m_FilterPipeline, SIGNAL (updateProgress(int)),
     this, SLOT(pipelineProgress(int) ) );
 
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_GrainGenerator, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
+  // Send progress messages from FilterPipeline to this object for display
+  connect(m_FilterPipeline, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
 
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_GrainGenerator, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
+  // Send progress messages from FilterPipeline to this object for display
+  connect(m_FilterPipeline, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
 
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_GrainGenerator, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
+  // Send progress messages from FilterPipeline to this object for display
+  connect(m_FilterPipeline, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
 
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelPipeline() ),
-          m_GrainGenerator, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+          m_FilterPipeline, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
-  int err = m_GrainGenerator->preflightPipeline();
+  // Now preflight this pipeline to make sure we can actually run it
+  int err = m_FilterPipeline->preflightPipeline();
+  // If any error occured during the preflight a dialog has been presented to the
+  // user so simply exit
   if(err < 0)
   {
+    delete m_FilterPipeline;
+    m_FilterPipeline = NULL;
     // Show a Dialog with the error from the Preflight
     return;
   }
@@ -643,7 +649,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
 
-
+  // Now actually execute the pipeline
   setWidgetListEnabled(false);
   emit pipelineStarted();
   m_WorkerThread->start();
@@ -656,13 +662,12 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::setupPipeline()
 {
-  int err = 0;
   // Instantiate our DataContainer object
   DataContainer::Pointer m = DataContainer::New();
  // m->addObserver(static_cast<Observer*>(this));
 
-  // Create a Vector to hold all the filters. Later on we will execute all the filters
-  m_GrainGenerator = new QFilterPipeline(this);
+  // Create a FilterPipeline Object to hold all the filters. Later on we will execute all the filters
+  m_FilterPipeline = new QFilterPipeline(NULL);
 
   std::string outDir = QDir::toNativeSeparators(m_OutputDir->text()).toStdString();
   std::string prefix = m_OutputFilePrefix->text().toStdString();
@@ -681,10 +686,10 @@ void GrainGeneratorWidget::setupPipeline()
     MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile, outDir, prefix)
     pack_grains->setVtkOutputFile(vtkFile);
 #endif
-    m_GrainGenerator->pushBack(pack_grains);
+    m_FilterPipeline->pushBack(pack_grains);
 
     AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
-    m_GrainGenerator->pushBack(adjust_grains);
+    m_FilterPipeline->pushBack(adjust_grains);
   }
   else if(m_AlreadyFormed->isChecked() == true)
   {
@@ -739,22 +744,22 @@ void GrainGeneratorWidget::setupPipeline()
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
     place_precipitates->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
     place_precipitates->setPeriodicBoundaries(m_PeriodicBoundaryConditions->isChecked());
-    m_GrainGenerator->pushBack(place_precipitates);
+    m_FilterPipeline->pushBack(place_precipitates);
   }
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
   match_crystallography->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
-  m_GrainGenerator->pushBack(match_crystallography);
+  m_FilterPipeline->pushBack(match_crystallography);
 
   MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile, outDir, prefix)
   FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
   write_fielddata->setFieldDataFile(FieldDataFile);
-  m_GrainGenerator->pushBack(write_fielddata);
+  m_FilterPipeline->pushBack(write_fielddata);
 
   MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile, outDir, prefix)
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(h5VoxelFile);
-  m_GrainGenerator->pushBack(writer);
+  m_FilterPipeline->pushBack(writer);
 
   if(m_VisualizationVizFile->isChecked())
   {
@@ -767,7 +772,7 @@ void GrainGeneratorWidget::setupPipeline()
    // vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
     vtkWriter->setWriteIPFColors(m_WriteIPFColorScalars);
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFile);
-    m_GrainGenerator->pushBack(vtkWriter);
+    m_FilterPipeline->pushBack(vtkWriter);
   }
 
 
@@ -972,7 +977,7 @@ void GrainGeneratorWidget::pipelineComplete()
   this->m_progressBar->setValue(0);
   emit pipelineEnded();
   checkIOFiles();
-  m_GrainGenerator->deleteLater();
+  m_FilterPipeline->deleteLater();
 }
 
 // -----------------------------------------------------------------------------

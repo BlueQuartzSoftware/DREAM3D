@@ -137,7 +137,7 @@ class GrainGeneratorWidget : public DREAM3DPluginFrame, private Ui::GrainGenerat
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QFilterPipeline*            m_GrainGenerator;
+    QFilterPipeline*            m_FilterPipeline;
     QThread*                    m_WorkerThread;
     QList<QLabel*>              m_ShapeTypeLabels;
     QList<QComboBox*>           m_ShapeTypeCombos;
