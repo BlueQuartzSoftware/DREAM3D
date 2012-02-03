@@ -421,6 +421,8 @@ void  PlacePrecipitates::fillin_precipitates()
   std::vector<int> gsizes;
   std::vector<int> neighbors;
   int count = 1;
+  int previouscount = 0;
+  bool flag = false;
   int good = 1;
   float x, y, z;
   gsizes.resize(m->getTotalFields(), 0);
@@ -436,6 +438,8 @@ void  PlacePrecipitates::fillin_precipitates()
   neighpoints[5] = dims[0] * dims[1];
   while (count != 0)
   {
+    if(previouscount == count && flag == false) flag == true;
+    previouscount = count;
     count = 0;
     for (int64_t i = 0; i < totalPoints; i++)
     {
@@ -495,7 +499,7 @@ void  PlacePrecipitates::fillin_precipitates()
     {
       int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
-      if(grainname <= 0 && neighbor > 0 && neighbor >= numprimarygrains)
+      if(grainname <= 0 && neighbor > 0 && (neighbor >= numprimarygrains || flag == true))
       {
         m_GrainIds[j] = neighbor;
         m_PhasesC[j] = m_PhasesF[neighbor];
