@@ -56,16 +56,40 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
-#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
-#include "MicrostructureStatistics/MicrostructureStatistics.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
+#include "DREAM3DLib/GenericFilters/DataContainerReader.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/StatisticsFilters/FindShapes.h"
+#include "DREAM3DLib/StatisticsFilters/FindSchmids.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighborhoods.h"
+#include "DREAM3DLib/StatisticsFilters/FindDeformationStatistics.h"
+#include "DREAM3DLib/StatisticsFilters/FindLocalMisorientationGradients.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+#include "DREAM3DLib/StatisticsFilters/FindAxisODF.h"
+#include "DREAM3DLib/StatisticsFilters/FindODF.h"
+#include "DREAM3DLib/StatisticsFilters/FindMDF.h"
+#include "DREAM3DLib/StatisticsFilters/FindEuclideanDistMap.h"
+#include "DREAM3DLib/StatisticsFilters/WriteH5StatsFile.h"
+
 #include "MicrostructureStatisticsPlugin.h"
+
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename, outdir, prefix)\
+    std::string outpath = outdir + MXADir::Separator + prefix + filename;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 MicrostructureStatisticsWidget::MicrostructureStatisticsWidget(QWidget *parent) :
-  DREAM3DPluginFrame(parent), m_MicrostructureStatistics(NULL), m_WorkerThread(NULL),
+  DREAM3DPluginFrame(parent), m_FilterPipeline(NULL), m_WorkerThread(NULL),
 #if defined(Q_WS_WIN)
       m_OpenDialogLastDirectory("C:\\")
 #else
@@ -202,8 +226,9 @@ void MicrostructureStatisticsWidget::on_m_InputFile_textChanged(const QString &t
     m_OutputFilePrefix->setText(fi.baseName() + QString("_"));
 
     // Load up the voxel data
-    H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
-    h5Reader->setFileName(m_InputFile->text().toStdString());
+    DataContainerReader::Pointer h5Reader = DataContainerReader::New();
+//    H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+    h5Reader->setInputFile(m_InputFile->text().toStdString());
     int64_t dims[3];
     float spacing[3];
     float origin[3];
@@ -330,7 +355,7 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if (m_MicrostructureStatistics != NULL)
+    if (m_FilterPipeline != NULL)
     {
       //std::cout << "canceling from GUI...." << std::endl;
       emit cancelPipeline();
@@ -343,6 +368,88 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
     return;
   }
   SANITY_CHECK_INPUT(m_, OutputDir)
+  if (m_WorkerThread != NULL)
+  {
+    m_WorkerThread->wait(); // Wait until the thread is complete
+    delete m_WorkerThread; // Kill the thread
+    m_WorkerThread = NULL;
+  }
+  m_WorkerThread = new QThread(); // Create a new Thread Resource
+
+  if (NULL != m_FilterPipeline)
+  {
+    delete m_FilterPipeline;
+    m_FilterPipeline = NULL;
+  }
+  // This method will create all the needed filters and push them into the
+  // pipeline in the correct order
+  setupPipeline();
+
+  // instantiate a subclass of the FilterPipeline Wrapper which adds Qt Signal/Slots
+  // to the FilterPipeline Class
+  m_FilterPipeline->moveToThread(m_WorkerThread);
+
+  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
+   * Reconstruction object. Since the Reconstruction object has been moved to another
+   * thread of execution and the actual QThread lives in *this* thread then the
+   * type of connection will be a Queued connection.
+   */
+  // When the thread starts its event loop, start the MicrostructureStatistics going
+  connect(m_WorkerThread, SIGNAL(started()), m_FilterPipeline, SLOT(run()));
+
+  // When the Reconstruction ends then tell the QThread to stop its event loop
+  connect(m_FilterPipeline, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
+
+  // When the QThread finishes, tell this object that it has finished.
+  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( pipelineComplete() ));
+
+  // Send Progress from the Reconstruction to this object for display
+  connect(m_FilterPipeline, SIGNAL (updateProgress(int)), this, SLOT(pipelineProgress(int) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_FilterPipeline, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_FilterPipeline, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
+
+  // Send progress messages from Reconstruction to this object for display
+  connect(m_FilterPipeline, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
+
+  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
+  // We need a Direct Connection so the
+  connect(this, SIGNAL(cancelPipeline() ), m_FilterPipeline, SLOT (on_CancelWorker() ), Qt::DirectConnection);
+
+  // Now preflight this pipeline to make sure we can actually run it
+  int err = m_FilterPipeline->preflightPipeline();
+  // If any error occured during the preflight a dialog has been presented to the
+  // user so simply exit
+  if(err < 0)
+  {
+    delete m_FilterPipeline;
+    m_FilterPipeline = NULL;
+    // Show a Dialog with the error from the Preflight
+    return;
+  }
+  DataContainer::Pointer m = DataContainer::New();
+  m_FilterPipeline->setDataContainer(m);
+
+
+  setWidgetListEnabled(false);
+  emit
+  pipelineStarted();
+  m_WorkerThread->start();
+  m_GoBtn->setText("Cancel");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicrostructureStatisticsWidget::setupPipeline()
+{
+  // Create a FilterPipeline Object to hold all the filters. Later on we will execute all the filters
+  m_FilterPipeline = new QFilterPipeline(NULL);
+  std::string outDir = QDir::toNativeSeparators(m_OutputDir->text()).toStdString();
+  std::string prefix = m_OutputFilePrefix->text().toStdString();
 
 
   m_ComputeGrainSize = false;
@@ -369,81 +476,107 @@ void MicrostructureStatisticsWidget::on_m_GoBtn_clicked()
     m_WriteBinaryVTKFile = false;
   }
 
-  if (m_WorkerThread != NULL)
+
+  MAKE_OUTPUT_FILE_PATH( reconDeformStatsFile, DREAM3D::MicroStats::DeformationStatsFile, outDir, prefix);
+  MAKE_OUTPUT_FILE_PATH( reconDeformIPFFile, DREAM3D::MicroStats::IPFDeformVTKFile, outDir, prefix);
+  MAKE_OUTPUT_FILE_PATH( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile, outDir, prefix);
+  MAKE_OUTPUT_FILE_PATH( hdf5ResultsFile, DREAM3D::MicroStats::H5StatisticsFile, outDir, prefix)
+
+
+  LoadVolume::Pointer load_volume = LoadVolume::New();
+  load_volume->setInputFile(m_InputFile->text().toStdString());
+  m_FilterPipeline->pushBack(load_volume);
+
+  FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
+  m_FilterPipeline->pushBack(find_surfacegrains);
+
+  // Start Computing the statistics
+  if(m_ComputeGrainSize == true)
   {
-    m_WorkerThread->wait(); // Wait until the thread is complete
-    delete m_WorkerThread; // Kill the thread
-    m_WorkerThread = NULL;
+    FindSizes::Pointer find_sizes = FindSizes::New();
+    m_FilterPipeline->pushBack(find_sizes);
   }
-  m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-  m_MicrostructureStatistics = new QMicrostructureStatistics(NULL);
+  if(m_ComputeGrainShapes == true)
+  {
+    FindShapes::Pointer find_shapes = FindShapes::New();
+    m_FilterPipeline->pushBack(find_shapes);
 
-  // Move the MicrostructureStatistics object into the thread that we just created.
-  m_MicrostructureStatistics->moveToThread(m_WorkerThread);
-  m_MicrostructureStatistics->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
-  m_MicrostructureStatistics->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-  m_MicrostructureStatistics->setInputFile(QDir::toNativeSeparators(m_InputFile->text()).toStdString());
+    FindBoundingBoxGrains::Pointer find_boundingboxgrains = FindBoundingBoxGrains::New();
+    m_FilterPipeline->pushBack(find_boundingboxgrains);
+  }
 
-  /********************************
-   * Gather any other values from the User Interface and send those to the lower level code
-   */
-  m_MicrostructureStatistics->setComputeGrainSize(m_ComputeGrainSize);
-  m_MicrostructureStatistics->setComputeGrainShapes(m_ComputeGrainShapes);
-  m_MicrostructureStatistics->setComputeNumNeighbors(m_ComputeNumNeighbors);
+  if(m_ComputeNumNeighbors == true)
+  {
+    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+    m_FilterPipeline->pushBack(find_neighbors);
+
+    FindNeighborhoods::Pointer find_neighborhoods = FindNeighborhoods::New();
+    m_FilterPipeline->pushBack(find_neighborhoods);
+  }
+
+  if(m_WriteAverageOrientations == true
+      || m_H5StatisticsFile->isChecked() == true
+      || m_WriteKernelMisorientationsScalars == true)
+  {
+    FindAvgOrientations::Pointer find_avgorientations = FindAvgOrientations::New();
+    m_FilterPipeline->pushBack(find_avgorientations);
+  }
+
+  if(m_H5StatisticsFile->isChecked() == true)
+  {
+    // Create a new Writer for the Stats Data.
+    FindAxisODF::Pointer find_axisodf = FindAxisODF::New();
+    find_axisodf->setH5StatsFile(hdf5ResultsFile);
+    find_axisodf->setCreateNewStatsFile(true);
+    m_FilterPipeline->pushBack(find_axisodf);
+
+    FindODF::Pointer find_odf = FindODF::New();
+    find_odf->setH5StatsFile(hdf5ResultsFile);
+    find_odf->setCreateNewStatsFile(false);
+    m_FilterPipeline->pushBack(find_odf);
+
+    FindMDF::Pointer find_mdf = FindMDF::New();
+    find_mdf->setH5StatsFile(hdf5ResultsFile);
+    find_mdf->setCreateNewStatsFile(false);
+    m_FilterPipeline->pushBack(find_mdf);
+
+    WriteH5StatsFile::Pointer write_h5statsfile = WriteH5StatsFile::New();
+    write_h5statsfile->setBinStepSize(m_BinStepSize->value());
+    write_h5statsfile->setH5StatsFile(hdf5ResultsFile);
+    write_h5statsfile->setCreateNewStatsFile(false);
+    m_FilterPipeline->pushBack(write_h5statsfile);
+  }
+
+  if(m_WriteKernelMisorientationsScalars == true)
+  {
+    FindLocalMisorientationGradients::Pointer find_localmisorientationgradients = FindLocalMisorientationGradients::New();
+    m_FilterPipeline->pushBack(find_localmisorientationgradients);
+  }
 
 
-  m_MicrostructureStatistics->setBinStepSize(m_BinStepSize->value());
-  m_MicrostructureStatistics->setWriteH5StatsFile(m_H5StatisticsFile->isChecked());
+  FindSchmids::Pointer find_schmids = FindSchmids::New();
+  m_FilterPipeline->pushBack(find_schmids);
 
-  m_MicrostructureStatistics->setWriteGrainFile(m_GrainDataFile->isChecked());
-  m_MicrostructureStatistics->setWriteGrainSize(m_WriteGrainSize);
-  m_MicrostructureStatistics->setWriteGrainShapes(m_WriteGrainShapes);
-  m_MicrostructureStatistics->setWriteNumNeighbors(m_WriteNumNeighbors);
-  m_MicrostructureStatistics->setWriteAverageOrientations(m_WriteAverageOrientations);
+  FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
+  m_FilterPipeline->pushBack(find_euclideandistmap);
 
-  m_MicrostructureStatistics->setWriteVtkFile(m_VisualizationVizFile->isChecked());
-  m_MicrostructureStatistics->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars);
-  m_MicrostructureStatistics->setWritePhaseId(m_WritePhaseIdScalars);
-  m_MicrostructureStatistics->setWriteKernelMisorientations(m_WriteKernelMisorientationsScalars);
-  m_MicrostructureStatistics->setWriteIPFColor(m_WriteIPFColorScalars);
-  m_MicrostructureStatistics->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
+  FindDeformationStatistics::Pointer find_deformationstatistics = FindDeformationStatistics::New();
+  find_deformationstatistics->setDeformationStatisticsFile(reconDeformStatsFile);
+  find_deformationstatistics->setVtkOutputFile(reconDeformIPFFile);
+  m_FilterPipeline->pushBack(find_deformationstatistics);
 
-  /* Connect the signal 'started()' from the QThread to the 'run' slot of the
-   * Reconstruction object. Since the Reconstruction object has been moved to another
-   * thread of execution and the actual QThread lives in *this* thread then the
-   * type of connection will be a Queued connection.
-   */
-  // When the thread starts its event loop, start the MicrostructureStatistics going
-  connect(m_WorkerThread, SIGNAL(started()), m_MicrostructureStatistics, SLOT(run()));
 
-  // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_MicrostructureStatistics, SIGNAL(finished() ), m_WorkerThread, SLOT(quit()));
 
-  // When the QThread finishes, tell this object that it has finished.
-  connect(m_WorkerThread, SIGNAL(finished()), this, SLOT( pipelineComplete() ));
+  if(m_GrainDataFile->isChecked() == true)
+  {
+    MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::MicroStats::GrainDataFile, outDir, prefix);
+    FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
+    write_fielddata->setFieldDataFile(FieldDataFile);
+    m_FilterPipeline->pushBack(write_fielddata);
+  }
 
-  // Send Progress from the Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (updateProgress(int)), this, SLOT(pipelineProgress(int) ));
 
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (progressMessage(QString)), this, SLOT(addProgressMessage(QString) ));
-
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (warningMessage(QString)), this, SLOT(addWarningMessage(QString) ));
-
-  // Send progress messages from Reconstruction to this object for display
-  connect(m_MicrostructureStatistics, SIGNAL (errorMessage(QString)), this, SLOT(addErrorMessage(QString) ));
-
-  // If the use clicks on the "Cancel" button send a message to the Reconstruction object
-  // We need a Direct Connection so the
-  connect(this, SIGNAL(cancelPipeline() ), m_MicrostructureStatistics, SLOT (on_CancelWorker() ), Qt::DirectConnection);
-
-  setWidgetListEnabled(false);
-  emit
-  pipelineStarted();
-  m_WorkerThread->start();
-  m_GoBtn->setText("Cancel");
 }
 
 // -----------------------------------------------------------------------------
@@ -458,7 +591,7 @@ void MicrostructureStatisticsWidget::pipelineComplete()
   emit
   pipelineEnded();
   checkIOFiles();
-  m_MicrostructureStatistics->deleteLater();
+  m_FilterPipeline->deleteLater();
 }
 
 // -----------------------------------------------------------------------------
