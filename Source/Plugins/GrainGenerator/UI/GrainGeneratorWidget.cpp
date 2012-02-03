@@ -647,7 +647,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
     shapeTypes->SetValue(i+1, enPtValue);
   }
   m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
-
+  m_FilterPipeline->setDataContainer(m);
 
   // Now actually execute the pipeline
   setWidgetListEnabled(false);
@@ -672,7 +672,7 @@ void GrainGeneratorWidget::setupPipeline()
   std::string outDir = QDir::toNativeSeparators(m_OutputDir->text()).toStdString();
   std::string prefix = m_OutputFilePrefix->text().toStdString();
 
-  if(m_AlreadyFormed == false)
+  if(m_AlreadyFormed->isChecked() == false)
   {
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
@@ -739,7 +739,7 @@ void GrainGeneratorWidget::setupPipeline()
 #endif
   }
 
-  if(m_AlreadyFormed == false)
+  if(m_AlreadyFormed->isChecked() == false)
   {
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
     place_precipitates->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );

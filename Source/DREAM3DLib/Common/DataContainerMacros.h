@@ -76,6 +76,7 @@
       ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
       setErrorCondition(-500);\
     } else {\
+    p->initializeWithZeros();\
     p->SetNumberOfComponents(NumComp);\
     p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
@@ -97,6 +98,7 @@
       ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
       setErrorCondition(-500);\
     } else {\
+      p->initializeWithZeros();\
       p->SetNumberOfComponents(NumComp);\
       p->SetName(NameSpace::DType::Name);\
       dc->add##DType(NameSpace::DType::Name, p);\
@@ -152,6 +154,7 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
   if (iDataArray.get() == NULL) { \
     iDataArray = DataArrayType::CreateArray(size * numComp);\
+    iDataArray->initializeWithZeros();\
     iDataArray->SetNumberOfComponents(numComp);\
     iDataArray->SetName(arrayName);\
     if (NULL == iDataArray.get()) { \
