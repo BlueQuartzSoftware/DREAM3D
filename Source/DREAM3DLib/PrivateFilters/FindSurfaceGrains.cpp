@@ -84,6 +84,7 @@ void FindSurfaceGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::execute()
 {
+  std::stringstream ss;
   DataContainer* m = getDataContainer();
   if (NULL == m)
   {
@@ -97,6 +98,8 @@ void FindSurfaceGrains::execute()
 
   int64_t totalPoints = m->totalPoints();
   size_t totalFields = m->getTotalFields();
+  ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
+  notify(ss.str(), 0, Observable::UpdateProgressMessage);
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)
   {
