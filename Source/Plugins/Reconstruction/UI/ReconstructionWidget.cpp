@@ -679,8 +679,6 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   }
   SANITY_CHECK_INPUT(m_ , OutputDir)
 
-
-
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
@@ -688,13 +686,12 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
     m_WorkerThread = NULL;
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
+
   if (NULL != m_FilterPipeline)
-    {
-      delete m_FilterPipeline;
-      m_FilterPipeline = NULL;
-    }
-
-
+  {
+    delete m_FilterPipeline;
+    m_FilterPipeline = NULL;
+  }
   // This method will create all the needed filters and push them into the
   // pipeline in the correct order
   setupPipeline();
@@ -859,43 +856,6 @@ void ReconstructionWidget::setupPipeline()
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFile);
     m_FilterPipeline->pushBack(vtkWriter);
   }
-
-#if 0
-
-  m_FilterPipeline->setQualityMetricFilters(filters);
-
-  m_FilterPipeline->setH5EbsdFile(QDir::toNativeSeparators(m_H5EbsdFile->text()).toStdString());
-
-  m_FilterPipeline->setZStartIndex(m_ZStartIndex->value());
-  m_FilterPipeline->setZEndIndex(m_ZEndIndex->value());
-  m_FilterPipeline->setPhaseTypes(phaseTypes);
-
-  m_FilterPipeline->setMergeColonies(m_MergeColonies->isChecked());
-  m_FilterPipeline->setMergeTwins(m_MergeTwins->isChecked());
-
-  unsigned int alignmeth = static_cast<unsigned int>(m_AlignMeth->currentIndex());
-  m_FilterPipeline->setAlignmentMethod(alignmeth);
-
-  m_FilterPipeline->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
-  m_FilterPipeline->setRotateSlice(rotateslice);
-  m_FilterPipeline->setReorderArray(reorderarray);
-
-  m_FilterPipeline->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
-  m_FilterPipeline->setMisorientationTolerance(m_MisOrientationTolerance->value());
-
-  m_FilterPipeline->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
-  m_FilterPipeline->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-
-  m_FilterPipeline->setWriteVtkFile(m_VisualizationVizFile->isChecked());
-  m_FilterPipeline->setWritePhaseId(m_WritePhaseIdScalars);
-  m_FilterPipeline->setWriteGoodVoxels(m_WriteGoodVoxelsScalars);
-  m_FilterPipeline->setWriteIPFColor(m_WriteIPFColorScalars);
-  m_FilterPipeline->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
-
-  m_FilterPipeline->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
-
-
-#endif
 
 }
 

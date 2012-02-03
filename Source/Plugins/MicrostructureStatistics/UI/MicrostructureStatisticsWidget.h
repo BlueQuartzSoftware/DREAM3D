@@ -43,7 +43,7 @@
 #include "ui_MicrostructureStatisticsWidget.h"
 
 #include "QtSupport/DREAM3DPluginFrame.h"
-#include "QMicrostructureStatistics.h"
+#include "QFilterPipeline.h"
 
 class QListWidgetItem;
 
@@ -121,7 +121,7 @@ class MicrostructureStatisticsWidget : public DREAM3DPluginFrame, private Ui::Mi
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QMicrostructureStatistics*  m_MicrostructureStatistics;
+    QFilterPipeline*            m_FilterPipeline;
     QThread*                    m_WorkerThread;
     QString                     m_OpenDialogLastDirectory;
 
@@ -141,6 +141,11 @@ class MicrostructureStatisticsWidget : public DREAM3DPluginFrame, private Ui::Mi
     bool                        m_WriteKernelMisorientationsScalars;
     bool                        m_WriteIPFColorScalars;
     bool                        m_WriteBinaryVTKFile;
+
+    /**
+     *
+     */
+    virtual void setupPipeline();
 
     MicrostructureStatisticsWidget(const MicrostructureStatisticsWidget&); // Copy Constructor Not Implemented
     void operator=(const MicrostructureStatisticsWidget&); // Operator '=' Not Implemented

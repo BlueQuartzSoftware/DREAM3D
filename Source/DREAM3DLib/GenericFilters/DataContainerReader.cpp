@@ -102,6 +102,77 @@ void DataContainerReader::preflight()
   dataCheck(true, 1, 1, 1);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3])
+{
+  int err = 0;
+
+  if(m_InputFile.empty() == true)
+  {
+    setErrorMessage("DataContainerReader Error; Filename was empty");
+    return -1;
+  }
+  std::stringstream ss;
+
+  hid_t fileId = H5Utilities::openFile(m_InputFile, false);
+  if(fileId < 0)
+  {
+    ss.str("");
+    ss << getNameOfClass() << ": Error opening input file '" << m_InputFile << "'";
+    setErrorCondition(-150);
+    setErrorMessage(ss.str());
+    return -1;
+  }
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+  if(dcGid < 0)
+  {
+    err = H5Utilities::closeFile(fileId);
+    ss.str("");
+    ss << getNameOfClass() << ": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
+    setErrorCondition(-150);
+    setErrorMessage(ss.str());
+    return -1;
+  }
+
+  err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+  if(err < 0)
+  {
+    setErrorMessage("H5ReconVolumeReader Error Reading the Dimensions");
+    setErrorCondition(-151);
+    err = H5Gclose(dcGid);
+    err = H5Fclose(fileId);
+    return -1;
+  }
+
+  err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+  if(err < 0)
+  {
+    setErrorMessage("H5ReconVolumeReader Error Reading the Spacing (Resolution)");
+    setErrorCondition(-152);
+    err = H5Gclose(dcGid);
+    err = H5Fclose(fileId);
+    return -1;
+  }
+
+  err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+  if(err < 0)
+  {
+    setErrorMessage("H5ReconVolumeReader Error Reading the Origin");
+    setErrorCondition(-153);
+    err = H5Gclose(dcGid);
+    err = H5Fclose(fileId);
+    return -1;
+  }
+
+
+  err = H5Gclose(dcGid);
+  err = H5Fclose(fileId);
+  return err;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
