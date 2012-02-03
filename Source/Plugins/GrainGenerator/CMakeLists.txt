@@ -49,11 +49,10 @@ if (MSVC)   # Do not generate manifests for the plugins - caused issues loading 
 endif()
 set(CLASS_NAME "FilterPipeline")
 SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QFilterPipelineWrapper.h.in)
-configure_file( ${PROJECT_CODE_DIR}/QtSupport/QFilterPipelineWrapper.h.in
+configure_file( ${ORIGINAL_FILE}
                 ${GrainGeneratorPlugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 set (GrainGeneratorPlugin_UI_HDRS
-    ${GrainGeneratorPlugin_BINARY_DIR}/Q${CLASS_NAME}.h
     ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
@@ -71,7 +70,8 @@ QT4_ADD_RESOURCES( GrainGeneratorPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/
 QT4_WRAP_UI( GrainGeneratorPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/GrainGeneratorWidget.ui )
 
-QT4_WRAP_CPP( GrainGeneratorPlugin_Generated_MOC_SRCS ${GrainGeneratorPlugin_UI_HDRS} )
+QT4_WRAP_CPP( GrainGeneratorPlugin_Generated_MOC_SRCS ${GrainGeneratorPlugin_UI_HDRS} 
+                                                ${GrainGeneratorPlugin_BINARY_DIR}/Q${CLASS_NAME}.h)
 
 cmp_IDE_SOURCE_PROPERTIES("GrainGenerator/UI/" "${GrainGeneratorPlugin_UI_HDRS}" "${GrainGeneratorPlugin_UI_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${GrainGeneratorPlugin_Generated_UI_HDRS};${GrainGeneratorPlugin_Generated_RC_SRCS}" "${GrainGeneratorPlugin_Generated_MOC_SRCS}" "0")

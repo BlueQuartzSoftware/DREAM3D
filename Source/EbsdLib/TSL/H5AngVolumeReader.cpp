@@ -38,7 +38,6 @@
 
 #include <cmath>
 
-
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
@@ -54,7 +53,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5AngVolumeReader::H5AngVolumeReader() :
-H5EbsdVolumeReader()
+    H5EbsdVolumeReader()
 {
 }
 
@@ -108,7 +107,7 @@ int H5AngVolumeReader::readZHeader(int &zStart, int &zEnd, float &zRes)
 //
 // -----------------------------------------------------------------------------
 int H5AngVolumeReader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-                                    float &xres, float &yres, float &zres)
+    float &xres, float &yres, float &zres)
 {
   int err = -1;
   zpoints = (getZEndIndex() - getZStartIndex() );
@@ -123,7 +122,6 @@ int H5AngVolumeReader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpo
     std::cout << "Error - Could not open HDF5 based OIM file" << std::endl;
     return -1;
   }
-
 
   zres = 0.0f;
   err = H5Lite::readScalarDataset(fileId, Ebsd::H5::ZResolution, zres);
@@ -168,21 +166,20 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 
   // Open the hdf5 file and read the data
   hid_t fileId = H5Utilities::openFile(getFileName(), true);
-  if (fileId < 0)
+  if(fileId < 0)
   {
     std::cout << "Error: Could not open .h5ebsd file for reading." << std::endl;
     return m_Phases;
   }
   herr_t err = 0;
 
-
   hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   H5AngReader::Pointer reader = H5AngReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
-  if (err < 0)
+  if(err < 0)
   {
-    std::cout  << "Error reading the header information from the .h5ebsd file" << std::endl;
+    std::cout << "Error reading the header information from the .h5ebsd file" << std::endl;
     err = H5Gclose(gid);
     err = H5Utilities::closeFile(fileId);
     return m_Phases;
@@ -235,13 +232,13 @@ int H5AngVolumeReader::loadData(float* eulerangles,
   {
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFileName());
-    reader->setHDF5Path(StringUtils::numToString(slice + getSliceStart()) );
+    reader->setHDF5Path(StringUtils::numToString(slice + getSliceStart()));
     reader->setUserZDir(getStackingOrder());
     reader->setRotateSlice(getRotateSlice());
     reader->setReorderArray(getReorderArray());
 
     err = reader->readFile();
-    if (err < 0)
+    if(err < 0)
     {
       std::cout << "H5AngDataLoader Error: There was an issue loading the data from the hdf5 file." << std::endl;
       return -1;
@@ -255,7 +252,7 @@ int H5AngVolumeReader::loadData(float* eulerangles,
     phasePtr = reader->getPhasePointer();
 
     // Gather some information about the filters and types in order to run the QualityMetric Filter
-    for(size_t i = 0; i < filters.size(); ++i)
+    for (size_t i = 0; i < filters.size(); ++i)
     {
       dataPointers[i] = reader->getPointerByName(filters[i]->getFieldName());
       dataTypes[i] = reader->getPointerType(filters[i]->getFieldName());
@@ -264,15 +261,20 @@ int H5AngVolumeReader::loadData(float* eulerangles,
     // Figure out which are good voxels
     DataArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointsslice * ypointsslice, dataTypes);
 
-	  xpointstemp = xpoints;
-	  ypointstemp = ypoints;
-      xstartspot = (xpointstemp - xpointsslice) / 2;
-      ystartspot = (ypointstemp - ypointsslice) / 2;
-      xstop = xpointsslice;
-      ystop = ypointsslice;
+    xpointstemp = xpoints;
+    ypointstemp = ypoints;
+    xstartspot = (xpointstemp - xpointsslice) / 2;
+    ystartspot = (ypointstemp - ypointsslice) / 2;
+    xstop = xpointsslice;
+    ystop = ypointsslice;
 
-	if(ZDir == Ebsd::LowtoHigh) zval = slice;
-	if(ZDir == Ebsd::HightoLow) zval = (zpoints-1) - slice;
+    // If no stacking order preference was passed, read it from the file and use that value
+    if(ZDir == Ebsd::UnknownRefFrameZDirection)
+    {
+      ZDir = getStackingOrder();
+    }
+    if(ZDir == Ebsd::LowtoHigh) zval = slice;
+    if(ZDir == Ebsd::HightoLow) zval = (zpoints - 1) - slice;
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ystop; j++)
@@ -280,11 +282,12 @@ int H5AngVolumeReader::loadData(float* eulerangles,
       for (int i = 0; i < xstop; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
-        eulerangles[3*index] = euler1Ptr[readerIndex]; // Phi1
-        eulerangles[3*index + 1] = euler2Ptr[readerIndex]; // Phi
-        eulerangles[3*index + 2] = euler3Ptr[readerIndex]; // Phi2
+        eulerangles[3 * index] = euler1Ptr[readerIndex]; // Phi1
+        eulerangles[3 * index + 1] = euler2Ptr[readerIndex]; // Phi
+        eulerangles[3 * index + 2] = euler3Ptr[readerIndex]; // Phi2
         phases[index] = phasePtr[readerIndex]; // Phase
-        if (NULL != good_voxels.get()) {
+        if(NULL != good_voxels.get())
+        {
           goodVoxels[index] = good_voxels->GetValue(readerIndex);
         }
         /* For TSL OIM Files if there is a single phase then the value of the phase
@@ -294,7 +297,7 @@ int H5AngVolumeReader::loadData(float* eulerangles,
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (phases[index] < 1)
+        if(phases[index] < 1)
         {
           phases[index] = 1;
         }
@@ -305,5 +308,4 @@ int H5AngVolumeReader::loadData(float* eulerangles,
   }
   return err;
 }
-
 

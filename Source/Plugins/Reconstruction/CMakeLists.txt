@@ -14,11 +14,11 @@ include_directories(${PROJECT_SOURCE_DIR}
                     ${PROJECT_CODE_DIR})
 #-- Non Qt Sources
 SET (Reconstruction_HDRS
-  ${PROJECT_SOURCE_DIR}/Reconstruction.h
+#  ${PROJECT_SOURCE_DIR}/Reconstruction.h
 )
 
 SET (Reconstruction_SRCS
-  ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
+#  ${PROJECT_SOURCE_DIR}/Reconstruction.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "Reconstruction" "${Reconstruction_HDRS}" "${Reconstruction_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
@@ -46,10 +46,10 @@ include_directories(${PROJECT_CODE_DIR}/QtSupport
                     ${DREAM3DProj_BINARY_DIR}/QtSupport )
 
 
-set(CLASS_NAME "Reconstruction")
-SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
-configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
-                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
+set(CLASS_NAME "FilterPipeline")
+SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QFilterPipelineWrapper.h.in)
+configure_file( ${ORIGINAL_FILE}
+                ${ReconstructionPlugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 
 set (ReconstructionPlugin_UI_HDRS
@@ -73,10 +73,11 @@ QT4_ADD_RESOURCES( ReconstructionPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/
 QT4_WRAP_UI( ReconstructionPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/ReconstructionWidget.ui )
 
-QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_UI_HDRS} ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h )
+QT4_WRAP_CPP( ReconstructionPlugin_Generated_MOC_SRCS ${ReconstructionPlugin_UI_HDRS}     
+                                            ${ReconstructionPlugin_BINARY_DIR}/Q${CLASS_NAME}.h )
 
 cmp_IDE_SOURCE_PROPERTIES("Reconstruction/UI/" "${ReconstructionPlugin_UI_HDRS};${ReconstructionPlugin_Misc_HDRS}" "${ReconstructionPlugin_UI_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS};${ReconstructionPlugin_Generated_RC_SRCS}" "${ReconstructionPlugin_Generated_MOC_SRCS};${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h" "0")
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${ReconstructionPlugin_Generated_UI_HDRS};${ReconstructionPlugin_Generated_RC_SRCS}" "${ReconstructionPlugin_Generated_MOC_SRCS};${ReconstructionPlugin_BINARY_DIR}/Q${CLASS_NAME}.h" "0")
 
 
 #-- Gather all the Project Source files in this variable

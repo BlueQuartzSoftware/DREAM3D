@@ -54,12 +54,11 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/PhaseType.h"
-
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QCheckboxDialog.h"
+
+#include "MXA/Utilities/MXADir.h"
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
@@ -73,16 +72,30 @@
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 #include "EbsdLib/HKL/CtfFields.h"
 
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/PhaseType.h"
+#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
+#include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
+#include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
+#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
+#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
+#include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
+#include "DREAM3DLib/ReconstructionFilters/MergeTwins.h"
+#include "DREAM3DLib/ReconstructionFilters/MergeColonies.h"
+
+
 #include "Reconstruction/UI/QualityMetricTableModel.h"
 #include "ReconstructionPlugin.h"
 
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename, outdir, prefix)\
+    std::string outpath = outdir + MXADir::Separator + prefix + filename;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ReconstructionWidget::ReconstructionWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
-m_Reconstruction(NULL),
+m_FilterPipeline(NULL),
 m_WorkerThread(NULL),
 m_phaseTypeEdited(false),
 m_WritePhaseIdScalars(true),
@@ -641,7 +654,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 {
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
-    if(m_Reconstruction != NULL)
+    if(m_FilterPipeline != NULL)
     {
       std::cout << "canceling from GUI...." << std::endl;
       emit cancelPipeline();
@@ -666,30 +679,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   }
   SANITY_CHECK_INPUT(m_ , OutputDir)
 
-  int count = phaseTypeList->count();
 
-  DataArray<unsigned int>::Pointer phaseTypes =
-                   DataArray<unsigned int>::CreateArray(count+1);
-  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
-
-  bool ok = false;
-  for (int i = 0; i < count; ++i)
-  {
-    QListWidgetItem* item = phaseTypeList->item(i);
-    QComboBox* cb = qobject_cast<QComboBox*> (phaseTypeList->itemWidget(item));
-    unsigned int enPtValue = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    if (enPtValue >= DREAM3D::PhaseType::UnknownPhaseType)
-    {
-      QString msg("The Phase Type for phase ");
-//      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary, Precipitate or Transformation.");
-      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary or Precipitate.");
-      QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
-      return;
-    }
-    phaseTypes->SetValue(i+1, enPtValue);
-  }
-
-  ok = checkPhaseTypes();
 
   if (m_WorkerThread != NULL)
   {
@@ -698,44 +688,20 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
     m_WorkerThread = NULL;
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
+  if (NULL != m_FilterPipeline)
+    {
+      delete m_FilterPipeline;
+      m_FilterPipeline = NULL;
+    }
 
-  m_Reconstruction = new QReconstruction(NULL);
 
-  // Move the Reconstruction object into the thread that we just created.
-  m_Reconstruction->moveToThread(m_WorkerThread);
+  // This method will create all the needed filters and push them into the
+  // pipeline in the correct order
+  setupPipeline();
 
-  m_Reconstruction->setH5EbsdFile( QDir::toNativeSeparators(m_H5EbsdFile->text()).toStdString());
-
-  m_Reconstruction->setZStartIndex(m_ZStartIndex->value());
-  m_Reconstruction->setZEndIndex(m_ZEndIndex->value());
-  m_Reconstruction->setPhaseTypes(phaseTypes);
-
-  m_Reconstruction->setMergeColonies(m_MergeColonies->isChecked() );
-  m_Reconstruction->setMergeTwins(m_MergeTwins->isChecked() );
-
-  unsigned int alignmeth = static_cast<  unsigned int>(m_AlignMeth->currentIndex() );
-  m_Reconstruction->setAlignmentMethod(alignmeth);
-
-  m_Reconstruction->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
-  m_Reconstruction->setRotateSlice(rotateslice);
-  m_Reconstruction->setReorderArray(reorderarray);
-
-  m_Reconstruction->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
-  m_Reconstruction->setMisorientationTolerance(m_MisOrientationTolerance->value());
-
-  m_Reconstruction->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
-  m_Reconstruction->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-
-  m_Reconstruction->setWriteVtkFile(m_VisualizationVizFile->isChecked());
-  m_Reconstruction->setWritePhaseId(m_WritePhaseIdScalars);
-  m_Reconstruction->setWriteGoodVoxels(m_WriteGoodVoxelsScalars);
-  m_Reconstruction->setWriteIPFColor(m_WriteIPFColorScalars);
-  m_Reconstruction->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
-
-  m_Reconstruction->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
-
-  setupQualityMetricFilters(m_Reconstruction);
-  // m_Reconstruction->printSettings(std::cout);
+  // instantiate a subclass of the FilterPipeline Wrapper which adds Qt Signal/Slots
+  // to the FilterPipeline Class
+  m_FilterPipeline->moveToThread(m_WorkerThread);
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
@@ -744,10 +710,10 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
    */
   // When the thread starts its event loop, start the Reconstruction going
   connect(m_WorkerThread, SIGNAL(started()),
-          m_Reconstruction, SLOT(run()));
+          m_FilterPipeline, SLOT(run()));
 
   // When the Reconstruction ends then tell the QThread to stop its event loop
-  connect(m_Reconstruction, SIGNAL(finished() ),
+  connect(m_FilterPipeline, SIGNAL(finished() ),
           m_WorkerThread, SLOT(quit()) );
 
   // When the QThread finishes, tell this object that it has finished.
@@ -757,26 +723,39 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   // If the use clicks on the "Cancel" button send a message to the Reconstruction object
   // We need a Direct Connection so the
   connect(this, SIGNAL(cancelPipeline() ),
-          m_Reconstruction, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
+          m_FilterPipeline, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
   // Send Progress from the Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (updateProgress(int)),
+  connect(m_FilterPipeline, SIGNAL (updateProgress(int)),
           this, SLOT(pipelineProgress(int) ) );
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (progressMessage(QString)),
+  connect(m_FilterPipeline, SIGNAL (progressMessage(QString)),
           this, SLOT(addProgressMessage(QString) ));
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (warningMessage(QString)),
+  connect(m_FilterPipeline, SIGNAL (warningMessage(QString)),
           this, SLOT(addWarningMessage(QString) ));
 
   // Send progress messages from Reconstruction to this object for display
-  connect(m_Reconstruction, SIGNAL (errorMessage(QString)),
+  connect(m_FilterPipeline, SIGNAL (errorMessage(QString)),
           this, SLOT(addErrorMessage(QString) ));
 
 
 
+  // Now preflight this pipeline to make sure we can actually run it
+  int err = m_FilterPipeline->preflightPipeline();
+  // If any error occured during the preflight a dialog has been presented to the
+  // user so simply exit
+  if(err < 0)
+  {
+    delete m_FilterPipeline;
+    m_FilterPipeline = NULL;
+    // Show a Dialog with the error from the Preflight
+    return;
+  }
+  DataContainer::Pointer m = DataContainer::New();
+  m_FilterPipeline->setDataContainer(m);
 
   setWidgetListEnabled(false);
   emit pipelineStarted();
@@ -787,7 +766,144 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::setupQualityMetricFilters(QReconstruction* r)
+void ReconstructionWidget::setupPipeline()
+{
+  // Create a FilterPipeline Object to hold all the filters. Later on we will execute all the filters
+  m_FilterPipeline = new QFilterPipeline(NULL);
+  std::string outDir = QDir::toNativeSeparators(m_OutputDir->text()).toStdString();
+  std::string prefix = m_OutputFilePrefix->text().toStdString();
+
+  int count = phaseTypeList->count();
+
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(count + 1);
+  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
+  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+
+  bool ok = false;
+  for (int i = 0; i < count; ++i)
+  {
+    QListWidgetItem* item = phaseTypeList->item(i);
+    QComboBox* cb = qobject_cast<QComboBox*>(phaseTypeList->itemWidget(item));
+    unsigned int enPtValue = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if(enPtValue >= DREAM3D::PhaseType::UnknownPhaseType)
+    {
+      QString msg("The Phase Type for phase ");
+      //      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary, Precipitate or Transformation.");
+      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary or Precipitate.");
+      QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
+      return;
+    }
+    phaseTypes->SetValue(i + 1, enPtValue);
+  }
+
+  ok = checkPhaseTypes();
+
+
+
+  typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
+  // Create a Vector to hold all the filters. Later on we will execute all the filters
+  FilterContainerType pipeline;
+
+  LoadSlices::Pointer load_slices = LoadSlices::New();
+  load_slices->setH5EbsdFile(QDir::toNativeSeparators(m_H5EbsdFile->text()).toStdString());
+  load_slices->setZStartIndex(m_ZStartIndex->value());
+  load_slices->setZEndIndex(m_ZEndIndex->value());
+  load_slices->setPhaseTypes(phaseTypes);
+  load_slices->setQualityMetricFilters(getQualityMetricFilters());
+  load_slices->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
+  load_slices->setMisorientationTolerance(m_MisOrientationTolerance->value());
+  m_FilterPipeline->pushBack(load_slices);
+
+  AlignSections::Pointer align_sections = AlignSections::New();
+  align_sections->setMisorientationTolerance(m_MisOrientationTolerance->value());
+  unsigned int alignmeth = static_cast<unsigned int>(m_AlignMeth->currentIndex());
+  align_sections->setAlignmentMethod(alignmeth);
+  m_FilterPipeline->pushBack(align_sections);
+
+  SegmentGrains::Pointer segment_grains = SegmentGrains::New();
+  segment_grains->setMisorientationTolerance(m_MisOrientationTolerance->value());
+  m_FilterPipeline->pushBack(segment_grains);
+
+  CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
+  cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
+  cleanup_grains->setMisorientationTolerance(m_MisOrientationTolerance->value());
+  m_FilterPipeline->pushBack(cleanup_grains);
+
+  if(m_MergeTwins->isChecked() == true)
+  {
+    MergeTwins::Pointer merge_twins = MergeTwins::New();
+    m_FilterPipeline->pushBack(merge_twins);
+  }
+
+  if(m_MergeColonies->isChecked() == true)
+  {
+    MergeColonies::Pointer merge_colonies = MergeColonies::New();
+    m_FilterPipeline->pushBack(merge_colonies);
+  }
+
+  // Create a new HDF5 Volume file by overwriting any HDF5 file that may be in the way
+  MAKE_OUTPUT_FILE_PATH(hdf5VolumeFile, DREAM3D::Reconstruction::H5VoxelFile, outDir, prefix)
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(hdf5VolumeFile);
+  m_FilterPipeline->pushBack(writer);
+
+  if(m_VisualizationVizFile->isChecked() == true)
+  {
+    MAKE_OUTPUT_FILE_PATH(reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile, outDir, prefix);
+    VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+    vtkWriter->setOutputFile(reconVisFile);
+    vtkWriter->setWriteGrainIds(true);
+    vtkWriter->setWritePhaseIds(m_WritePhaseIdScalars);
+    vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxelsScalars);
+    vtkWriter->setWriteIPFColors(m_WriteIPFColorScalars);
+    vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFile);
+    m_FilterPipeline->pushBack(vtkWriter);
+  }
+
+#if 0
+
+  m_FilterPipeline->setQualityMetricFilters(filters);
+
+  m_FilterPipeline->setH5EbsdFile(QDir::toNativeSeparators(m_H5EbsdFile->text()).toStdString());
+
+  m_FilterPipeline->setZStartIndex(m_ZStartIndex->value());
+  m_FilterPipeline->setZEndIndex(m_ZEndIndex->value());
+  m_FilterPipeline->setPhaseTypes(phaseTypes);
+
+  m_FilterPipeline->setMergeColonies(m_MergeColonies->isChecked());
+  m_FilterPipeline->setMergeTwins(m_MergeTwins->isChecked());
+
+  unsigned int alignmeth = static_cast<unsigned int>(m_AlignMeth->currentIndex());
+  m_FilterPipeline->setAlignmentMethod(alignmeth);
+
+  m_FilterPipeline->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
+  m_FilterPipeline->setRotateSlice(rotateslice);
+  m_FilterPipeline->setReorderArray(reorderarray);
+
+  m_FilterPipeline->setMinAllowedGrainSize(m_MinAllowedGrainSize->value());
+  m_FilterPipeline->setMisorientationTolerance(m_MisOrientationTolerance->value());
+
+  m_FilterPipeline->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
+  m_FilterPipeline->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
+
+  m_FilterPipeline->setWriteVtkFile(m_VisualizationVizFile->isChecked());
+  m_FilterPipeline->setWritePhaseId(m_WritePhaseIdScalars);
+  m_FilterPipeline->setWriteGoodVoxels(m_WriteGoodVoxelsScalars);
+  m_FilterPipeline->setWriteIPFColor(m_WriteIPFColorScalars);
+  m_FilterPipeline->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
+
+  m_FilterPipeline->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
+
+
+#endif
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<QualityMetricFilter::Pointer> ReconstructionWidget::getQualityMetricFilters()
 {
   int filterCount = m_QualityMetricTableModel->rowCount();
   std::vector<QualityMetricFilter::Pointer> filters;
@@ -796,7 +912,7 @@ void ReconstructionWidget::setupQualityMetricFilters(QReconstruction* r)
   QVector<QString> fieldOperators;
   m_QualityMetricTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
 
-  for(int i = 0; i < filterCount; ++i)
+  for (int i = 0; i < filterCount; ++i)
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
     filter->setFieldName(fieldNames[i].toStdString());
@@ -804,9 +920,7 @@ void ReconstructionWidget::setupQualityMetricFilters(QReconstruction* r)
     filter->setFieldOperator(fieldOperators[i].toStdString());
     filters.push_back(filter);
   }
-
-  r->setQualityMetricFilters(filters);
-
+  return filters;
 }
 
 
@@ -821,7 +935,7 @@ void ReconstructionWidget::pipelineComplete()
   this->progressBar->setValue(0);
   emit pipelineEnded();
   checkIOFiles();
-  m_Reconstruction->deleteLater();
+  m_FilterPipeline->deleteLater();
 }
 
 // -----------------------------------------------------------------------------

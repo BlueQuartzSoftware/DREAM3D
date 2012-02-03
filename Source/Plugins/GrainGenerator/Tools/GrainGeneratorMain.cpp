@@ -251,7 +251,9 @@ int main(int argc, char **argv)
     }
 
     DataArray<unsigned int>::Pointer shapeTypes = DataArray<unsigned int>::CreateArray(1);
+    shapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
     shapeTypes->SetValue(0, DREAM3D::ShapeType::EllipsoidShape);
+
     if(parseUnknownArray<unsigned int>(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)
     {
       std::cout << "Error parsing the Shape Types. The value should be entered as --shapetypes 1,0,1 for 3 phases." << std::endl;
@@ -268,11 +270,11 @@ int main(int argc, char **argv)
       pack_grains->setPeriodicBoundaries(m_PeriodicBoundaryConditions.getValue());
       pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight.getValue());
 #if PACK_GRAINS_ERROR_TXT_OUT
-      MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile, outputDir.getValue(), "")
+      MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile, outputDir.getValue(), outputPrefix.getValue())
       pack_grains->setErrorOutputFile(errorFile);
 #endif
 #if PACK_GRAINS_VTK_FILE_OUT
-      MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile, outputDir.getValue(), "")
+      MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile, outputDir.getValue(), outputPrefix.getValue())
       pack_grains->setVtkOutputFile(vtkFile);
 #endif
       m_FilterPipeline->pushBack(pack_grains);
@@ -297,19 +299,19 @@ int main(int argc, char **argv)
     match_crystallography->setH5StatsInputFile(h5StatsFile.getValue());
     m_FilterPipeline->pushBack(match_crystallography);
 
-    MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile, outputDir.getValue(), "")
+    MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile,  outputDir.getValue(), outputPrefix.getValue())
     FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
     write_fielddata->setFieldDataFile(FieldDataFile);
     m_FilterPipeline->pushBack(write_fielddata);
 
-    MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile, outputDir.getValue(), "")
+    MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile,  outputDir.getValue(), outputPrefix.getValue())
     DataContainerWriter::Pointer writer = DataContainerWriter::New();
     writer->setOutputFile(h5VoxelFile);
     m_FilterPipeline->pushBack(writer);
 
     if(m_VisualizationVizFile.getValue() == true)
     {
-      MAKE_OUTPUT_FILE_PATH( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile, outputDir.getValue(), "");
+      MAKE_OUTPUT_FILE_PATH( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile,  outputDir.getValue(), outputPrefix.getValue());
 
       VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
       vtkWriter->setOutputFile(vtkVizFile);

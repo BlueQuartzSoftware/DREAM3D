@@ -51,26 +51,27 @@
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QComboBox>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/ShapeType.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
-
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
 
+#include "MXA/Utilities/MXADir.h"
+
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/ShapeType.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "GrainGeneratorPlugin.h"
-
+#include "DREAM3DLib/HDF5/H5StatsReader.h"
+#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
+#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
-#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
+
+#include "GrainGeneratorPlugin.h"
 
 const static float m_pi = (float)M_PI;
 
@@ -524,57 +525,6 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   // to the FilterPipeline Class
   m_FilterPipeline->moveToThread(m_WorkerThread);
 
-#if 0
-  m_FilterPipeline->setH5StatsFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
-  m_FilterPipeline->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
-  m_FilterPipeline->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
-  m_FilterPipeline->setXPoints(m_XPoints->value());
-  m_FilterPipeline->setYPoints(m_YPoints->value());
-  m_FilterPipeline->setZPoints(m_ZPoints->value());
-
-  m_FilterPipeline->setXResolution(m_XResolution->value());
-  m_FilterPipeline->setYResolution(m_YResolution->value());
-  m_FilterPipeline->setZResolution(m_ZResolution->value());
-  m_FilterPipeline->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
-
-  m_FilterPipeline->setPeriodicBoundary(m_PeriodicBoundaryConditions->isChecked());
-
-  int count = m_ShapeTypeCombos.count();
-
-  DataArray<unsigned int>::Pointer shapeTypes =
-                   DataArray<unsigned int>::CreateArray(count+1);
-  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-
-
-  bool ok = false;
-  for (int i = 0; i < count; ++i)
-  {
-    QComboBox* cb = m_ShapeTypeCombos.at(i);
-    unsigned int enPtValue = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    if (enPtValue >= DREAM3D::ShapeType::UnknownShapeType)
-    {
-      QString msg("The Shape Type for phase ");
-//      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary, Precipitate or Transformation.");
-      msg.append(QString::number(i)).append(" is not set correctly. Please select a shape type from the combo box");
-      QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
-      return;
-    }
-    shapeTypes->SetValue(i+1, enPtValue);
-  }
-  m_FilterPipeline->setShapeTypes(shapeTypes);
-
-
-  m_FilterPipeline->setAlreadyFormed(m_AlreadyFormed->isChecked() );
-  m_FilterPipeline->setStructureFile(m_StructureFile->text().toStdString());
-
-  m_FilterPipeline->setWriteVtkFile(m_VisualizationVizFile->isChecked());
-  m_FilterPipeline->setWriteSurfaceVoxel(m_WriteSurfaceVoxelScalars);
-  m_FilterPipeline->setWritePhaseId(m_WritePhaseIdScalars);
-  m_FilterPipeline->setWriteIPFColor(m_WriteIPFColorScalars);
-  m_FilterPipeline->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
-
-  m_FilterPipeline->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
-#endif
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the FilterPipeline object has been moved to another
@@ -662,11 +612,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void GrainGeneratorWidget::setupPipeline()
 {
-  // Instantiate our DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
- // m->addObserver(static_cast<Observer*>(this));
-
-  // Create a FilterPipeline Object to hold all the filters. Later on we will execute all the filters
+ // Create a FilterPipeline Object to hold all the filters. Later on we will execute all the filters
   m_FilterPipeline = new QFilterPipeline(NULL);
 
   std::string outDir = QDir::toNativeSeparators(m_OutputDir->text()).toStdString();
