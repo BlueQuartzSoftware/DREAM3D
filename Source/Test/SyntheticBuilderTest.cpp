@@ -98,7 +98,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "2PhaseBulk.h5";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed-Single.h5";
   return s;
 }
 
@@ -135,11 +135,7 @@ void TestSyntheticBuilder()
   MXADir::mkdir(m_OutputDirectory, true);
 
   Observer* observer = new Observer;
-  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
-  m_ShapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
-  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
-  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
+
 
   int err = 0;
 
@@ -148,27 +144,18 @@ void TestSyntheticBuilder()
   DataContainer::Pointer m = DataContainer::New();
   pipeline->setDataContainer(m);
 
-#if PACK_GRAINS_ERROR_TXT_OUT
-  MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile)
-#endif
-
-#if PACK_GRAINS_VTK_FILE_OUT
-  MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile)
-#endif
-
   if(m_AlreadyFormed == false)
   {
-    m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-    m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
-    m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsInputFile(getH5StatsFile());
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
 #if PACK_GRAINS_ERROR_TXT_OUT
+    MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile)
     pack_grains->setErrorOutputFile(errorFile);
 #endif
 #if PACK_GRAINS_VTK_FILE_OUT
+    MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile)
     pack_grains->setVtkOutputFile(vtkFile);
 #endif
     pipeline->pushBack(pack_grains);
@@ -205,7 +192,7 @@ void TestSyntheticBuilder()
   bool m_WriteBinaryVTKFiles(true);
   bool m_WritePhaseId(true);
   bool m_WriteIPFColor(true);
-  bool m_WriteGoodVoxels(false);
+ // bool m_WriteGoodVoxels(false);
 
   if(m_WriteVtkFile)
   {
@@ -219,7 +206,23 @@ void TestSyntheticBuilder()
     pipeline->pushBack(vtkWriter);
   }
 
+  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
+  err = pipeline->preflightPipeline();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+
+
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+
+  m = DataContainer::New();
+  m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
+
+  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
+  m_ShapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
+  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
+  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
   pipeline->run();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
