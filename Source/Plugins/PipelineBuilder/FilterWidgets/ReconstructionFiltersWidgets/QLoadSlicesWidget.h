@@ -39,6 +39,9 @@
 
 #include "FilterWidgets/ui_QLoadSlicesWidget.h"
 
+class QualityMetricTableModel;
+
+
 class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
 {
   Q_OBJECT;
@@ -62,27 +65,47 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
     FILTER_PROPERTY_WRAPPER(int, ZEndIndex, m_Filter) ;
 
-  public slots:
-    // Manually hooked up slots
-    virtual void selectInputFile();
-    void m_SetSliceInfo();
+  protected slots:
+
+  void on_addQualityMetric_clicked();
+
+  void on_removeQualityMetric_clicked();
+
+  void m_SetSliceInfo();
+
 
 
     // Auto Hookup Slots
     void on_m_H5EbsdBtn_clicked();
     void on_m_H5EbsdFile_textChanged(const QString &text);
 
+
+  private slots:
+    void phaseTypeEdited(int i);
+
   private:
     LoadSlices::Pointer m_Filter;
+    QualityMetricTableModel*    m_QualityMetricTableModel;
+    bool                        m_phaseTypeEdited;
     bool rotateslice;
     bool reorderarray;
     bool aligneulers;
-
     QString m_OpenDialogLastDirectory;
 
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
+    /**
+     * @brief
+     * @return
+     */
+    bool checkPhaseTypes();
+
+    /**
+     * @brief
+     * @param r
+     */
+    void setupQualityMetricFilters();
 
     QLoadSlicesWidget(const QLoadSlicesWidget&); // Copy Constructor Not Implemented
     void operator=(const QLoadSlicesWidget&); // Operator '=' Not Implemented

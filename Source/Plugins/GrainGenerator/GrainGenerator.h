@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 
 
@@ -102,6 +103,12 @@ class GrainGenerator : public AbstractPipeline, public Observer
     */
     virtual void execute();
 
+    /**
+     * @brief over ride this from the superclass because we need to pass the cancel
+     * signal to the FilterPipeline object
+     * @param value
+     */
+    virtual void setCancel(bool value);
 
     typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
     int preflightPipeline(FilterContainerType &pipeline);
@@ -112,6 +119,7 @@ class GrainGenerator : public AbstractPipeline, public Observer
 
   private:
     DataContainer::Pointer m;
+    FilterPipeline::Pointer m_FilterPipeline;
 
     GrainGenerator(const GrainGenerator&);    // Copy Constructor Not Implemented
     void operator=(const GrainGenerator&);  // Operator '=' Not Implemented

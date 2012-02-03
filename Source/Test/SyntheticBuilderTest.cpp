@@ -41,6 +41,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
@@ -141,10 +142,11 @@ void TestSyntheticBuilder()
   m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
 
   int err = 0;
-  // Instantiate our DataContainer object
+
+  // Create our Pipeline object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
   DataContainer::Pointer m = DataContainer::New();
-  // Create a Vector to hold all the filters. Later on we will execute all the filters
-  std::vector<AbstractFilter::Pointer> pipeline;
+  pipeline->setDataContainer(m);
 
 #if PACK_GRAINS_ERROR_TXT_OUT
   MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile)
@@ -159,7 +161,6 @@ void TestSyntheticBuilder()
     m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
     m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
     m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
-
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setH5StatsInputFile(getH5StatsFile());
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
@@ -170,10 +171,10 @@ void TestSyntheticBuilder()
 #if PACK_GRAINS_VTK_FILE_OUT
     pack_grains->setVtkOutputFile(vtkFile);
 #endif
-    pipeline.push_back(pack_grains);
+    pipeline->pushBack(pack_grains);
 
     AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
-    pipeline.push_back(adjust_grains);
+    pipeline->pushBack(adjust_grains);
   }
   else if(m_AlreadyFormed == true)
   {
@@ -185,20 +186,20 @@ void TestSyntheticBuilder()
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
     place_precipitates->setH5StatsInputFile(getH5StatsFile());
     place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
-    pipeline.push_back(place_precipitates);
+    pipeline->pushBack(place_precipitates);
   }
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
   match_crystallography->setH5StatsInputFile(getH5StatsFile());
-  pipeline.push_back(match_crystallography);
+  pipeline->pushBack(match_crystallography);
 
   FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
   write_fielddata->setFieldDataFile(UnitTest::SyntheticBuilderTest::CsvFile);
-  pipeline.push_back(write_fielddata);
+  pipeline->pushBack(write_fielddata);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::SyntheticBuilderTest::OutputFile);
-  pipeline.push_back(writer);
+  pipeline->pushBack(writer);
 
   bool m_WriteVtkFile(true);
   bool m_WriteBinaryVTKFiles(true);
@@ -215,46 +216,19 @@ void TestSyntheticBuilder()
    // vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
     vtkWriter->setWriteIPFColors(m_WriteIPFColor);
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
-    pipeline.push_back(vtkWriter);
+    pipeline->pushBack(vtkWriter);
   }
 
+  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+  pipeline->run();
+  err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
 
-  // Start a Benchmark Clock so we can keep track of each filter's execution time
-  START_CLOCK()
-  // Start looping through the Pipeline
-  float progress = 0.0f;
-  std::stringstream ss;
-  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
-  {
-    progress = progress + 1.0f;
-    observer->pipelineProgress(progress / (pipeline.size() + 1) * 100.0f);
-    ss.str("");
-    ss << "Executing Filter [" << progress << "/" << pipeline.size() << "] - " << (*filter)->getNameOfClass();
-    observer->pipelineProgressMessage(ss.str());
-    (*filter)->addObserver(static_cast<Observer*>(observer));
-    (*filter)->setDataContainer(m.get());
-    setCurrentFilter(*filter);
-    (*filter)->execute();
-    (*filter)->removeObserver(static_cast<Observer*>(observer));
-    err = (*filter)->getErrorCondition();
-    if(err < 0)
-    {
-      setErrorCondition(err);
-      observer->pipelineErrorMessage((*filter)->getErrorMessage().c_str());
-      observer->pipelineProgress(100);
-      pipelineFinished();
-      DREAM3D_REQUIRE(err >= 0);
-      return;
-    }
-    //CHECK_FOR_CANCELED(DataContainer, "Grain Generator was canceled", write_fielddata)
+  DREAM3D_REQUIRE_EQUAL(false, pipeline->empty());
 
-    if(DREAM3D_BENCHMARKS)
-    {
-      std::cout << (*filter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
-      millis = MXA::getMilliSeconds();
-    }
-  }
-
+  pipeline->clear();
+  DREAM3D_REQUIRE_EQUAL(0, pipeline->size());
+  DREAM3D_REQUIRE_EQUAL(true, pipeline->empty());
 
   delete observer;
 }

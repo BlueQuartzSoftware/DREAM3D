@@ -51,6 +51,7 @@
 CropVolume::CropVolume() :
 AbstractFilter()
 {
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -60,6 +61,62 @@ CropVolume::~CropVolume()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CropVolume::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("X Min");
+    option->setPropertyName("XMin");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Y Min");
+    option->setPropertyName("YMin");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Z Min");
+    option->setPropertyName("ZMin");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("X Max");
+    option->setPropertyName("XMax");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Y Max");
+    option->setPropertyName("YMax");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Z Max");
+    option->setPropertyName("ZMax");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,7 +135,7 @@ void CropVolume::execute()
   int err = 0;
   setErrorCondition(err);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
@@ -92,40 +149,34 @@ void CropVolume::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->totalPoints();
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
 
   size_t udims[3] =
-   { 0, 0, 0 };
-   m->getDimensions(udims);
- #if (CMP_SIZEOF_SIZE_T == 4)
-   typedef int32_t DimType;
- #else
-   typedef int64_t DimType;
- #endif
-   DimType dims[3] =
-   {
-       static_cast<DimType>(udims[0]),
-       static_cast<DimType>(udims[1]),
-       static_cast<DimType>(udims[2]), };
+  { 0, 0, 0 };
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] =
+  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
-   // updateProgressAndMessage(("Operating on Volume"), 50);
-   if(dims[0] == (m_XMax-m_XMin)
-       && dims[1] == (m_YMax-m_YMin)
-       && dims[2] == (m_ZMax-m_ZMin))
-   {
-     return;
-   }
+  // updateProgressAndMessage(("Operating on Volume"), 50);
+  if(dims[0] == (m_XMax - m_XMin) && dims[1] == (m_YMax - m_YMin) && dims[2] == (m_ZMax - m_ZMin))
+  {
+    return;
+  }
 
-   float m_XP = (m_XMax-m_XMin);
-   float m_YP = (m_YMax-m_YMin);
-   float m_ZP = (m_ZMax-m_ZMin);
-   float m_XStart = m_XMin*m->getXRes();
-   float m_YStart = m_YMin*m->getYRes();
-   float m_ZStart = m_ZMin*m->getZRes();
-
+  float m_XP = (m_XMax - m_XMin);
+  float m_YP = (m_YMax - m_YMin);
+  float m_ZP = (m_ZMax - m_ZMin);
+  float m_XStart = m_XMin * m->getXRes();
+  float m_YStart = m_YMin * m->getYRes();
+  float m_ZStart = m_ZMin * m->getZRes();
 
   float x, y, z;
   int col, row, plane;
@@ -135,7 +186,7 @@ void CropVolume::execute()
   for (int i = 0; i < m_ZP; i++)
   {
     std::stringstream ss;
-    ss << "Cropping Volume - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
+    ss << "Cropping Volume - " << ((float)i / m->getZPoints()) * 100 << " Percent Complete";
     notify(ss.str(), 0, Observable::UpdateProgressMessage);
     for (int j = 0; j < m_YP; j++)
     {
@@ -149,7 +200,7 @@ void CropVolume::execute()
         plane = int(z / m->getZRes());
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
-        for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           std::string name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
@@ -159,13 +210,13 @@ void CropVolume::execute()
     }
   }
   m->setDimensions(m_XP, m_YP, m_ZP);
-  totalPoints = m_XP*m_YP*m_ZP;
+  totalPoints = m_XP * m_YP * m_ZP;
 
-  for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-     std::string name = *iter;
-     IDataArray::Pointer p = m->getCellData(*iter);
-     err = p->Resize(totalPoints);
+    std::string name = *iter;
+    IDataArray::Pointer p = m->getCellData(*iter);
+    err = p->Resize(totalPoints);
   }
   notify("Cropping Volume Complete", 0, Observable::UpdateProgressValueAndMessage);
 }

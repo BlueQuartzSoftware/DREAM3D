@@ -196,8 +196,6 @@ void TestDataContainerReader()
 
   }
 
-
-
   DREAM3D_REQUIRE_EQUAL(err, 0);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DataContainerIOTest::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DataContainerIOTest::YSize);

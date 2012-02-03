@@ -158,7 +158,6 @@ void pipelineFinished()
 
 typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -166,6 +165,7 @@ void TestFindNeighbors()
 {
   float m_MisorientationTolerance = 5.0f;
   int m_MinAllowedGrainSize = 10;
+  int m_MinNumNeighbors = 1;
 
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
@@ -196,6 +196,7 @@ void TestFindNeighbors()
 
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
+  cleanup_grains->setMinNumNeighbors(m_MinNumNeighbors);
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline->pushBack(cleanup_grains);
 
@@ -221,15 +222,9 @@ void TestFindNeighbors()
     pipeline->pushBack(vtkWriter);
   }
 
-
-  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
-  int err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-
-
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
   pipeline->run();
-  err = pipeline->getErrorCondition();
+  int err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
   DREAM3D_REQUIRE_EQUAL(false, pipeline->empty());
@@ -272,13 +267,6 @@ void TestLoadVolume()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestDataContainerReader()
-{
-
-}
 
 // -----------------------------------------------------------------------------
 //  Use test framework
@@ -290,7 +278,6 @@ int main(int argc, char **argv) {
 #endif
   DREAM3D_REGISTER_TEST( TestFindNeighbors() );
   DREAM3D_REGISTER_TEST( TestLoadVolume() );
-  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
 
 #if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );

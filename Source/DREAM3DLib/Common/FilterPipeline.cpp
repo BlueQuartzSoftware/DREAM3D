@@ -60,8 +60,7 @@
               pipelineProgressMessage(#Message);\
               pipelineProgress(0);\
               pipelineFinished();\
-              m = FuncClass::NullPointer();\
-      return;}\
+              return;}\
 
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
@@ -71,7 +70,6 @@
       pipelineErrorMessage(msg.c_str());\
       pipelineProgress(0);\
       pipelineFinished();\
-      m = FuncClass::NullPointer();\
       return;   }
 
 
@@ -284,8 +282,11 @@ void FilterPipeline::execute()
   }
 
   // Create the DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
-  m->addObserver(static_cast<Observer*>(this));
+  if (NULL == m_DataContainer.get()) {
+    m_DataContainer = DataContainer::New();
+  }
+
+  m_DataContainer->addObserver(static_cast<Observer*>(this));
 
   // Start looping through the Pipeline
    float progress = 0.0f;
@@ -302,7 +303,7 @@ void FilterPipeline::execute()
 
    for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
    {
-/*     
+/*
 	 currFilt = *iter;
      if (iter != m_Pipeline.begin())
      {
@@ -325,7 +326,7 @@ void FilterPipeline::execute()
      ss << "Executing Filter [" << progress << "/" << m_Pipeline.size() << "] - " << (*iter)->getNameOfClass();
      pipelineProgressMessage(ss.str());
      (*iter)->addObserver(static_cast<Observer*>(this));
-     (*iter)->setDataContainer(m.get());
+     (*iter)->setDataContainer(m_DataContainer.get());
      setCurrentFilter(*iter);
      (*iter)->execute();
      (*iter)->removeObserver(static_cast<Observer*>(this));
@@ -346,7 +347,9 @@ void FilterPipeline::execute()
        millis = MXA::getMilliSeconds();
      }
    }
-
+   ss.str("");
+   ss << "Pipeline Complete";
+   pipelineProgressMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------

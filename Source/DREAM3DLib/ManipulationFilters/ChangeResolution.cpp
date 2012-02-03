@@ -52,7 +52,7 @@
 ChangeResolution::ChangeResolution() :
 AbstractFilter()
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -62,6 +62,38 @@ ChangeResolution::~ChangeResolution()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ChangeResolution::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("X Res");
+    option->setPropertyName("XRes");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Y Res");
+    option->setPropertyName("YRes");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Z Res");
+    option->setPropertyName("ZRes");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -107,9 +139,13 @@ void ChangeResolution::execute()
     return;
   }
 
-  float sizex = (m_XMax-m_XMin)*m->getXRes();
-  float sizey = (m_YMax-m_YMin)*m->getYRes();
-  float sizez = (m_ZMax-m_ZMin)*m->getZRes();
+  size_t dims[3];
+  m->getDimensions(dims);
+
+
+  float sizex = (dims[0])*m->getXRes();
+  float sizey = (dims[1])*m->getYRes();
+  float sizez = (dims[2])*m->getZRes();
   int m_XP = int(sizex / m_XRes);
   int m_YP = int(sizey / m_YRes);
   int m_ZP = int(sizez / m_ZRes);
@@ -151,9 +187,9 @@ void ChangeResolution::execute()
   totalPoints = m_XP*m_YP*m_ZP;
   for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-     std::string name = *iter;
-     IDataArray::Pointer p = m->getCellData(*iter);
-	 err = p->Resize(totalPoints);
+    std::string name = *iter;
+    IDataArray::Pointer p = m->getCellData(*iter);
+    err = p->Resize(totalPoints);
   }
   notify("Changing Resolution Complete", 0, Observable::UpdateProgressValueAndMessage);
 }

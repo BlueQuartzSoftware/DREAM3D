@@ -33,31 +33,30 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _QDROPPABLEWIDGET_H_
+#define _QDROPPABLEWIDGET_H_
 
-#ifndef QFILTERWIDGETFACTORY_H_
-#define QFILTERWIDGETFACTORY_H_
+#include <QtGui/QScrollArea>
 
-#include "IFilterWidgetFactory.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-template <class T>
-class QFilterWidgetFactory : public IFilterWidgetFactory
+/*
+ *
+ */
+class QDroppableScrollArea : public QScrollArea
 {
+    Q_OBJECT
+
   public:
-    DREAM3D_SHARED_POINTERS(QFilterWidgetFactory<T> )
-    DREAM3D_TYPE_MACRO_SUPER(QFilterWidgetFactory<T>, IFilterWidgetFactory)
-    DREAM3D_STATIC_NEW_MACRO(QFilterWidgetFactory<T>);
+    QDroppableScrollArea(QWidget *parent = NULL);
 
-    QFilterWidget* createWidget()
-    {
-      return new T;
-    }
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 
-  protected:
-  QFilterWidgetFactory() {}
+
+  signals:
+     void filterDropped(QString filter);
 
   private:
-QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
-void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
+
 };
-#endif /* QFILTERWIDGETFACTORY_H_ */
+
+#endif /* _QDROPPABLEWIDGET_H_ */

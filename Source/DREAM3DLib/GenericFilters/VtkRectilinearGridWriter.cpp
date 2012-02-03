@@ -71,7 +71,7 @@ void VtkRectilinearGridWriter::setupFilterOptions()
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterOption::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }

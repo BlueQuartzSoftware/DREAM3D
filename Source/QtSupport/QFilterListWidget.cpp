@@ -33,72 +33,83 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QFILTERWIDGET_H_
-#define QFILTERWIDGET_H_
 
-#include <QtGui/QFrame>
-#include <QtGui/QGroupBox>
+#include "QFilterListWidget.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include <QtGui/QMouseEvent>
+#include <QtGui/QApplication>
 
 
-
-#define FILTER_PROPERTY_WRAPPER(type, name, filter_var)\
-void set##name(type v) { filter_var->set##name(v); }\
-type get##name() { return filter_var->get##name(); }\
-
-
-// This needs to be defined
-class QMouseEvent;
-
-/**
- * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
- * @brief  This class is a subclass of the QGroupBox class and is used to display
- * Filter Options that the user can set. This class is capable of constructing a
- * default GUI widget set for each type of Filter Option that is available. If
- * the programmer needs more specialized widgets then they can simply subclass
- * this class and over ride or implement their custom code.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jan 6, 2012
- * @version 1.0
- */
-class QFilterWidget : public QGroupBox
+QFilterListWidget::QFilterListWidget(QWidget *parent)
+: QListWidget(parent)
 {
-    Q_OBJECT;
-  public:
-    QFilterWidget(QWidget* parent = NULL);
-    virtual ~QFilterWidget();
+  setAcceptDrops(false);
+}
 
-    virtual void setupGui();
+QFilterListWidget::~QFilterListWidget()
+{
+}
 
-    virtual AbstractFilter::Pointer getFilter();
+void QFilterListWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+        startPos = event->pos();
+    QListWidget::mousePressEvent(event);
+}
 
-   public slots:
+void QFilterListWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if (event->buttons() & Qt::LeftButton) {
+        int distance = (event->pos() - startPos).manhattanLength();
+        if (distance >= QApplication::startDragDistance())
+            performDrag();
+    }
+    QListWidget::mouseMoveEvent(event);
+}
 
-     virtual void updateFilterValues();
-     virtual void updateQLineEditDoubleValue();
-     virtual void updateQLineEditIntValue();
-     virtual void selectInputFile();
-     virtual void selectOutputFile();
-     virtual void updateComboBoxValue(int v);
-     virtual void updateQSpinBoxValue(int v);
-     virtual void updateQDoubleSpinBoxValue(double v);
+void QFilterListWidget::performDrag()
+{
+    QListWidgetItem *item = currentItem();
+    if (item) {
+        QMimeData *mimeData = new QMimeData;
+        mimeData->setText(item->text());
 
-     /**
-      * @brief Sets the style of the Widget to indicate a selected or non-selected
-      * state
-      * @param selected Is the widget selected or not.
-      */
-     void changeStyle(bool selected);
+        QDrag *drag = new QDrag(this);
+        drag->setMimeData(mimeData);
+        if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
+            delete item;
+    }
+}
 
-  protected:
-     virtual void  mouseReleaseEvent ( QMouseEvent* event );
+void QFilterListWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+  QFilterListWidget *source =
+            qobject_cast<QFilterListWidget *>(event->source());
+    if (source && source != this) {
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+    }
+}
 
-  private:
-    QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
-    void operator=(const QFilterWidget&); // Operator '=' Not Implemented
 
-};
+void QFilterListWidget::dragMoveEvent(QDragMoveEvent *event)
+{
+  QFilterListWidget *source =
+            qobject_cast<QFilterListWidget *>(event->source());
+    if (source && source != this) {
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+    }
+}
 
+void QFilterListWidget::dropEvent(QDropEvent *event)
+{
+  QFilterListWidget *source =
+            qobject_cast<QFilterListWidget *>(event->source());
+    if (source && source != this) {
+        addItem(event->mimeData()->text());
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+    }
+}
 
-#endif /* QFILTERWIDGET_H_ */

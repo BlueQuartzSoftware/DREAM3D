@@ -22,11 +22,14 @@ set(Project_SRCS "")
 set (FilterWidget_HDRS
     ${FilterWidgets_SOURCE_DIR}/QFilterWidget.h
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.h
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.h
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricItemDelegate.h
 )
 
 set(FilterWidget_SRCS
     ${FilterWidgets_SOURCE_DIR}/QFilterWidget.cpp
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.cpp
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.cpp
 )
 
 
@@ -101,10 +104,10 @@ file(APPEND ${RegisterKnownFilterWidgetsFile} "\n }\n")
 #file(APPEND ${RegisterKnownFilterWidgetsFile} "\n}\n}\n #endif")
 
 # Read the file back into a string so we can configure our file
-FILE(READ ${RegisterKnownFilterWidgetsFile} QFILTERWIDGET_FACTORY_SOURCE)
-FILE(READ ${CodeGeneratorFile} CODE_GEN_FILTER_FUNCTION)
+file(READ ${RegisterKnownFilterWidgetsFile} QFILTERWIDGET_FACTORY_SOURCE)
+file(READ ${CodeGeneratorFile} CODE_GEN_FILTER_FUNCTION)
 # Remove the temp files that we no longer need
-FILE(REMOVE ${CodeGeneratorFile})
+file(REMOVE ${CodeGeneratorFile})
 
 # --------------------------------------------------------------------            
 # Create our custom executable that will generate most of our QFilterWidget
@@ -158,6 +161,7 @@ set (Project_SRCS
 
 # --------------------------------------------------------------------
 # Set some Include directories
+include_directories(${FilterWidgets_SOURCE_DIR}/..)
 include_directories(${FilterWidgets_SOURCE_DIR})
 include_directories(${FilterWidgets_BINARY_DIR})
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
