@@ -108,7 +108,6 @@ class GrainGenerator : public AbstractPipeline, public Observer
      * signal to the FilterPipeline object
      * @param value
      */
-    virtual void setCancel(bool value);
 
     typedef std::vector<AbstractFilter::Pointer>  FilterContainerType;
     int preflightPipeline(FilterContainerType &pipeline);

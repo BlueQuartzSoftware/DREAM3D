@@ -48,8 +48,8 @@ if (MSVC)   # Do not generate manifests for the plugins - caused issues loading 
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
 endif()
 set(CLASS_NAME "GrainGenerator")
-SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
-configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
+SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QFilterPipelineWrapper.h.in)
+configure_file( ${PROJECT_CODE_DIR}/QtSupport/QFilterPipelineWrapper.h.in
                 ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 set (GrainGeneratorPlugin_UI_HDRS

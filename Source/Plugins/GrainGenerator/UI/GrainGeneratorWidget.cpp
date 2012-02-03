@@ -62,10 +62,25 @@
 
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "GrainGenerator/GrainGenerator.h"
 #include "GrainGeneratorPlugin.h"
 
+#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
+#include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
+#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
+
 const static float m_pi = (float)M_PI;
+
+#define PACK_GRAINS_ERROR_TXT_OUT 1
+#define PACK_GRAINS_VTK_FILE_OUT 1
+
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename, outdir, prefix)\
+    std::string outpath = outdir + MXADir::Separator + prefix + filename;
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -502,10 +517,13 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   }
   m_GrainGenerator = new QGrainGenerator(NULL);
 
-  // Move the GrainGenerator object into the thread that we just created.
+  setupPipeline();
+
+  // instantiate a subclass of the FilterPipeline Wrapper which adds Qt Signal/Slots
+  // to the FilterPipeline Class
   m_GrainGenerator->moveToThread(m_WorkerThread);
 
-
+#if 0
   m_GrainGenerator->setH5StatsFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
   m_GrainGenerator->setOutputDirectory(QDir::toNativeSeparators(m_OutputDir->text()).toStdString());
   m_GrainGenerator->setOutputFilePrefix(m_OutputFilePrefix->text().toStdString());
@@ -555,6 +573,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   m_GrainGenerator->setWriteBinaryVTKFiles(m_WriteBinaryVTKFile);
 
   m_GrainGenerator->setWriteHDF5GrainFile(m_HDF5GrainFile->isChecked());
+#endif
 
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * Reconstruction object. Since the Reconstruction object has been moved to another
@@ -591,11 +610,167 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
   connect(this, SIGNAL(cancelPipeline() ),
           m_GrainGenerator, SLOT (on_CancelWorker() ) , Qt::DirectConnection);
 
+  int err = m_GrainGenerator->preflightPipeline();
+  if(err < 0)
+  {
+    // Show a Dialog with the error from the Preflight
+    return;
+  }
+  DataContainer::Pointer m = DataContainer::New();
+
+  m->setDimensions(m_XPoints->value(), m_YPoints->value(), m_ZPoints->value());
+  m->setResolution(m_XResolution->value(), m_YResolution->value(), m_ZResolution->value());
+
+  int count = m_ShapeTypeCombos.count();
+  DataArray<unsigned int>::Pointer shapeTypes =
+                   DataArray<unsigned int>::CreateArray(count+1);
+  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  bool ok = false;
+  for (int i = 0; i < count; ++i)
+  {
+    QComboBox* cb = m_ShapeTypeCombos.at(i);
+    unsigned int enPtValue = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if (enPtValue >= DREAM3D::ShapeType::UnknownShapeType)
+    {
+      QString msg("The Shape Type for phase ");
+//      msg.append(QString::number(i)).append(" is not set correctly. Please set the shape to Primary, Precipitate or Transformation.");
+      msg.append(QString::number(i)).append(" is not set correctly. Please select a shape type from the combo box");
+      QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
+      return;
+    }
+    shapeTypes->SetValue(i+1, enPtValue);
+  }
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+
+
 
   setWidgetListEnabled(false);
   emit pipelineStarted();
   m_WorkerThread->start();
   m_GoBtn->setText("Cancel");
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GrainGeneratorWidget::setupPipeline()
+{
+  int err = 0;
+  // Instantiate our DataContainer object
+  DataContainer::Pointer m = DataContainer::New();
+ // m->addObserver(static_cast<Observer*>(this));
+
+  // Create a Vector to hold all the filters. Later on we will execute all the filters
+  m_GrainGenerator = new QGrainGenerator(this);
+
+  std::string outDir = QDir::toNativeSeparators(m_OutputDir->text()).toStdString();
+  std::string prefix = m_OutputFilePrefix->text().toStdString();
+
+  if(m_AlreadyFormed == false)
+  {
+    PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
+    pack_grains->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
+    pack_grains->setPeriodicBoundaries(m_PeriodicBoundaryConditions->isChecked());
+    pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
+#if PACK_GRAINS_ERROR_TXT_OUT
+    MAKE_OUTPUT_FILE_PATH( errorFile, DREAM3D::SyntheticBuilder::ErrorFile, outDir, prefix)
+    pack_grains->setErrorOutputFile(errorFile);
+#endif
+#if PACK_GRAINS_VTK_FILE_OUT
+    MAKE_OUTPUT_FILE_PATH( vtkFile, DREAM3D::SyntheticBuilder::VtkFile, outDir, prefix)
+    pack_grains->setVtkOutputFile(vtkFile);
+#endif
+    m_GrainGenerator->pushBack(pack_grains);
+
+    AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
+    m_GrainGenerator->pushBack(adjust_grains);
+  }
+  else if(m_AlreadyFormed->isChecked() == true)
+  {
+    assert(false);
+#if 0
+    updateProgressAndMessage(("Reading Structure"), 40);
+    std::string ext = MXAFileInfo::extension(m_StructureFile);
+    if(ext.compare("vtk") == 0)
+    {
+      VTKStructureReader::Pointer reader = VTKStructureReader::New();
+      reader->setInputFileName(m_StructureFile);
+      reader->setGrainIdScalarName(DREAM3D::VTK::GrainIdScalarName);
+      reader->setPhaseIdScalarName(DREAM3D::VTK::PhaseIdScalarName);
+      err = reader->readStructure(m.get());
+      CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error getting size and resolution from VTK Voxel File", err);
+    }
+    else if(ext.compare("h5") == 0 || ext.compare("h5voxel") == 0)
+    {
+      // Load up the voxel data
+      H5VoxelReader::Pointer h5Reader = H5VoxelReader::New();
+      h5Reader->setFileName(m_StructureFile);
+      int dims[3];
+      float spacing[3];
+      float origin[3];
+      err = h5Reader->getSizeResolutionOrigin(dims, spacing, origin);
+
+      CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error getting size and resolution from HDF5 Voxel File", err);
+      m->setDimensions(dims);
+      //      m->getXPoints() = dims[0];
+      //      m->getYPoints() = dims[1];
+      //      m->getZPoints() = dims[2];
+      //      m->totalpoints = dims[0] * dims[1] * dims[2];
+      m->setResolution(spacing);
+      m->getXRes() = spacing[0];
+      m->getYRes() = spacing[1];
+      m->getZRes() = spacing[2];
+
+      updateProgressAndMessage(("Reading the Voxel Data from the HDF5 File"), 10);
+      err = h5Reader->readVoxelData(m->m_GrainIndicies, m->m_Phases, m->m_Euler1s, m->m_Euler2s, m->m_Euler3s, m->crystruct, m->phaseType, m->totalPoints());
+      CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error reading voxel data from HDF5 Voxel File", err);
+    }
+    else
+    {
+      err = -1;
+      CHECK_FOR_ERROR(DataContainer, "GrainGenerator Error No suitable Voxel Structure Reader found", err);
+    }
+#endif
+  }
+
+  if(m_AlreadyFormed == false)
+  {
+    PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
+    place_precipitates->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
+    place_precipitates->setPeriodicBoundaries(m_PeriodicBoundaryConditions->isChecked());
+    m_GrainGenerator->pushBack(place_precipitates);
+  }
+
+  MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
+  match_crystallography->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
+  m_GrainGenerator->pushBack(match_crystallography);
+
+  MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile, outDir, prefix)
+  FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
+  write_fielddata->setFieldDataFile(FieldDataFile);
+  m_GrainGenerator->pushBack(write_fielddata);
+
+  MAKE_OUTPUT_FILE_PATH( h5VoxelFile, DREAM3D::SyntheticBuilder::H5VoxelFile, outDir, prefix)
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(h5VoxelFile);
+  m_GrainGenerator->pushBack(writer);
+
+  if(m_VisualizationVizFile->isChecked())
+  {
+    MAKE_OUTPUT_FILE_PATH( vtkVizFile, DREAM3D::Reconstruction::VisualizationVizFile, outDir, prefix);
+
+    VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+    vtkWriter->setOutputFile(vtkVizFile);
+    vtkWriter->setWriteGrainIds(true);
+    vtkWriter->setWritePhaseIds(m_WritePhaseIdScalars);
+   // vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
+    vtkWriter->setWriteIPFColors(m_WriteIPFColorScalars);
+    vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFile);
+    m_GrainGenerator->pushBack(vtkWriter);
+  }
+
+
 }
 
 // -----------------------------------------------------------------------------
