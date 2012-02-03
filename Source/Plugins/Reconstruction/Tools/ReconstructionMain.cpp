@@ -311,6 +311,26 @@ int main(int argc, char **argv)
       m_FilterPipeline->pushBack(vtkWriter);
     }
 
+    // Now preflight this pipeline to make sure we can actually run it
+       int err = m_FilterPipeline->preflightPipeline();
+       // If any error occured during the preflight exit now
+       if(err < 0)
+       {
+
+         // Show a Dialog with the error from the Preflight
+         return EXIT_FAILURE;
+       }
+       DataContainer::Pointer m = DataContainer::New();
+       m_FilterPipeline->setDataContainer(m);
+
+       m_FilterPipeline->run();
+       err = m_FilterPipeline->getErrorCondition();
+       if (err < 0)
+       {
+         std::cout << "Grain Generator threw an error during execution." << std::endl;
+         return EXIT_FAILURE;
+       }
+
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
   {
