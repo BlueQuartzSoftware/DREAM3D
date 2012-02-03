@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>806</width>
-    <height>612</height>
+    <height>691</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -67,10 +67,10 @@ font-size: 11px;
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QFSDropLineEdit" name="m_H5InputFile"/>
+         <widget class="QFSDropLineEdit" name="m_H5EbsdFile"/>
         </item>
         <item row="1" column="3">
-         <widget class="QPushButton" name="m_OIMH5Btn">
+         <widget class="QPushButton" name="m_H5EbsdBtn">
           <property name="text">
            <string>Select</string>
           </property>

@@ -92,16 +92,15 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
 void AlignSections::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
     ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
     option->setHumanLabel("Alignment Method");
-    option->setPropertyName("alignmeth");
+    option->setPropertyName("AlignmentMethod");
     option->setWidgetType(FilterOption::ChoiceWidget);
-    option->setValueType("DREAM3D::Reconstruction::AlignmentMethod");
+    option->setValueType("unsigned int");
     option->setCastableValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Outer Boundary");
@@ -110,9 +109,16 @@ void AlignSections::setupFilterOptions()
     option->setChoices(choices);
     options.push_back(option);
   }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Misorientation Tolerance");
+    option->setPropertyName("MisorientationTolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
   setFilterOptions(options);
 }
-
 
 // -----------------------------------------------------------------------------
 //

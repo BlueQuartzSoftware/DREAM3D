@@ -73,6 +73,11 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 LoadSlices::LoadSlices() :
 AbstractFilter(),
+m_H5EbsdFile(""),
+m_MisorientationTolerance(0.0f),
+m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
+m_ZStartIndex(0),
+m_ZEndIndex(0),
 m_PhasesC(NULL),
 m_GoodVoxels(NULL),
 m_Quats(NULL),
@@ -148,7 +153,14 @@ void LoadSlices::setupFilterOptions()
     option->setMaximum(0);
     options.push_back(option);
   }
-
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Misorientation Tolerance");
+    option->setPropertyName("MisorientationTolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
   // Some how need to get the custom GUIs for the Phase Types and QualityMetric Filters
   // into a Filter Option also.
 
@@ -264,6 +276,12 @@ void LoadSlices::execute()
     }
     H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
     err = loadInfo<H5AngVolumeReader, AngPhase>(angReader);
+    if (err < 0)
+    {
+      setErrorCondition(-1);
+      setErrorMessage("Could not read information about the Ebsd Volume.");
+      return;
+    }
   }
   else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
@@ -276,6 +294,12 @@ void LoadSlices::execute()
     }
     H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
     err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader);
+    if (err < 0)
+    {
+      setErrorCondition(-1);
+      setErrorMessage("Could not read information about the Ebsd Volume.");
+      return;
+    }
   }
   else
   {

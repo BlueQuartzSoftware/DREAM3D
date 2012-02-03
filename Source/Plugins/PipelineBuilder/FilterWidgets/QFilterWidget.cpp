@@ -44,6 +44,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QSpinBox>
 #include <QtGui/QLabel>
+#include <QtGui/QCheckBox>
 #include <QtGui/QLineEdit>
 #include <QtGui/QIntValidator>
 #include <QtGui/QDoubleValidator>
@@ -69,51 +70,59 @@ QFilterWidget::~QFilterWidget()
 {
 }
 
-#if 1
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QFilterWidget::changeStyle(bool selected)
 {
-  QString style("QGroupBox\n");
-  if (selected) {
-    style.append("{\n");
-    style.append("font: 75 italic 12pt \"Arial\";");
-    style.append("font-weight: bold;");
-  //  style.append("font-size: 11px;");
-    style.append("border-radius: 10px;");
-    style.append("border: 3px solid purple;\n");
-    style.append("padding: 6px;\n");
-    style.append("}\n");
 
+  QString style("QGroupBox{\n");
+
+  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #E0E0E0, stop: 1 #FFFFFF);");
+  if (selected)
+   {
+    style.append("border: 3px solid purple;");
+   }
+  else {
+    style.append("border: 3px solid gray;");
   }
-  else
-  {
-    style.append("{\n");
-    style.append("font: 75 italic 12pt \"Arial\";");
-    style.append("font-weight: bold;");
-   // style.append("font-size: 11px;");
-    style.append("border-radius: 10px;");
-    style.append("border: 1px solid gray;");
-    style.append("padding: 8px;");
-    style.append("}\n");
-  }
+  style.append("border-radius: 10px;");
+  style.append("padding: 6px;");
+  style.append("font: 75 italic 12pt \"Arial\";");
+  style.append("font-weight: bold;");
+  style.append("}");
+  style.append(" QGroupBox::title {");
+  style.append("    subcontrol-origin: margin;");
+  style.append("    subcontrol-position: top left; /* position at the top center */");
+  style.append("    padding: 4 4px;");
+  style.append("   background-color: rgba(255, 255, 255, 0);");
+  style.append(" }");
+  style.append("QGroupBox::indicator {");
+  style.append("    width: 17px;");
+  style.append("    height: 17px;");
+  style.append("}");
+  style.append("QGroupBox::indicator:unchecked { image: url(:/delete-corner.png);}");
+  style.append("QGroupBox::indicator:unchecked:pressed { image: url(:/delete-corner-pressed.png);}");
+  style.append("QGroupBox::indicator:checked { image: url(:/delete-corner.png);}");
+  style.append("QGroupBox::indicator:checked:pressed { image: url(:/delete-corner-pressed.png);}");
+
   setStyleSheet(style);
-}
 
-#endif
+//  std::cout << "Style\n" << style.toStdString() << std::endl;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QFilterWidget::setupGui()
 {
-
+  setCheckable(true);
 
   delete layout();
 
   //setTitle(getFilter()->getNameOfClass());
-
+  //setMouseTracking(true);
   QFormLayout* frmLayout = new QFormLayout(this);
   frmLayout->setObjectName("QFilterWidget QFormLayout Layout");
 
@@ -132,41 +141,26 @@ void QFilterWidget::setupGui()
     }
     else if (wType == FilterOption::IntWidget)
     {
-    //  QHBoxLayout* hLayout = new QHBoxLayout;
-    //  hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       QIntValidator* ival = new QIntValidator(this);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
-      //hLayout->addWidget(le);
-      //QSpacerItem* horzSpacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
-      //hLayout->addSpacerItem(horzSpacer);
-      //vLayout->addLayout(hLayout);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditIntValue()));
     }
     else if (wType == FilterOption::DoubleWidget)
     {
-//      QHBoxLayout* hLayout = new QHBoxLayout;
-//      hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       QDoubleValidator* ival = new QDoubleValidator(this);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
-//      hLayout->addWidget(le);
-//      QSpacerItem* horzSpacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
-//      hLayout->addSpacerItem(horzSpacer);
-//      vLayout->addLayout(hLayout);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditDoubleValue()));
     }
     else if (wType == FilterOption::InputFileWidget)
     {
-
-    //  hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
-
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
 
       QFrame* frame = new QFrame(this);
@@ -184,8 +178,6 @@ void QFilterWidget::setupGui()
       fp->setWordWrap(true);
       fp->setStyleSheet("QLabel {\nfont-weight: bold;\nfont-size: 10px;\n}");
       frameLayout->addWidget(fp, 1, 0, 1, 2);
-//      hLayout->addWidget(btn);
-//      frmLayout->addLayout(hLayout);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, frame);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectInputFile()));
     }
@@ -208,19 +200,20 @@ void QFilterWidget::setupGui()
       fp->setWordWrap(true);
       fp->setStyleSheet("QLabel {\nfont-weight: bold;\nfont-size: 10px;\n}");
       frameLayout->addWidget(fp, 1, 0, 1, 2);
-//      hLayout->addWidget(btn);
-//      frmLayout->addLayout(hLayout);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, frame);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectOutputFile()));
     }
     else if (wType == FilterOption::BooleanWidget)
     {
-
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      QCheckBox* le = new QCheckBox(this);
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
+      //le->setText(QString::fromStdString(option->getHumanLabel()));
+      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      connect(le, SIGNAL(stateChanged(int)), this, SLOT(updateQCheckBoxValue(int)));
     }
     else if (wType == FilterOption::IntConstrainedWidget)
     {
-//      QHBoxLayout* hLayout = new QHBoxLayout;
-//      hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QSpinBox* le = new QSpinBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
@@ -230,17 +223,11 @@ void QFilterWidget::setupGui()
         le->setRange(filtOpt->getMinimum(), filtOpt->getMaximum());
         le->setValue(0);
       }
-   //   hLayout->addWidget(le);
-  //    QSpacerItem* horzSpacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
-//      hLayout->addSpacerItem(horzSpacer);
-//      frmLayout->addLayout(hLayout);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(valueChanged(int)), this, SLOT(updateQSpinBoxValue(int)));
     }
     else if (wType == FilterOption::DoubleContrainedWidget)
     {
-//      QHBoxLayout* hLayout = new QHBoxLayout;
-//      hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QDoubleSpinBox* le = new QDoubleSpinBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
@@ -250,10 +237,6 @@ void QFilterWidget::setupGui()
         le->setRange(filtOpt->getMinimum(), filtOpt->getMaximum());
         le->setValue(0);
       }
-   //   hLayout->addWidget(le);
-  //    QSpacerItem* horzSpacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
-//      hLayout->addSpacerItem(horzSpacer);
-//      frmLayout->addLayout(hLayout);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(valueChanged(double)), this, SLOT(updateQDoubleSpinBoxValue(double)));
     }
@@ -262,9 +245,6 @@ void QFilterWidget::setupGui()
       ChoiceFilterOption* choiceFilterOption = ChoiceFilterOption::SafeObjectDownCast<FilterOption*, ChoiceFilterOption*>(option);
       if (NULL == choiceFilterOption) { return; }
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
-
-//      QHBoxLayout* hLayout = new QHBoxLayout;
-//      hLayout->addWidget(new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QComboBox* cb = new QComboBox(this);
       cb->setObjectName(QString::fromStdString(option->getPropertyName()));
       std::vector<std::string> choices = choiceFilterOption->getChoices();
@@ -272,16 +252,10 @@ void QFilterWidget::setupGui()
       {
         cb->addItem(QString::fromStdString(choices[i]));
       }
-//      hLayout->addWidget(cb);
-//      QSpacerItem* horzSpacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
-//      hLayout->addSpacerItem(horzSpacer);
-//      frmLayout->addLayout(hLayout);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
       connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
 
     }
-
-
     ++optIndex;
   }
 
@@ -409,7 +383,7 @@ void QFilterWidget::selectOutputFile()
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateComboBoxValue(int v)
 {
-
+  assert(false);
 }
 
 
@@ -418,7 +392,7 @@ void QFilterWidget::updateComboBoxValue(int v)
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateQSpinBoxValue(int v)
 {
-
+  assert(false);
 }
 
 
@@ -427,19 +401,75 @@ void QFilterWidget::updateQSpinBoxValue(int v)
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 {
+  assert(false);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateQCheckBoxValue(int v)
+{
+  QObject* whoSent = sender();
+    std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+        << whoSent->objectName().toStdString() << std::endl;
+    QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
+    if(le) {
+      setProperty(whoSent->objectName().toStdString().c_str(), le->isChecked());
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  QFilterWidget::mousePressEvent ( QMouseEvent* event )
+{
+  // Pass up the chain to the QGroupBox so if the click was on the checkbox it gets registered
+  QGroupBox::mousePressEvent(event);
+  emit widgetSelected(this);
+  changeStyle(true);
+  event->setAccepted(true);
 }
 
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void  QFilterWidget::mouseReleaseEvent ( QMouseEvent* event )
 {
 
-  std::cout << title().toStdString() << " mouse released" << std::endl;
+  std::cout << title().toStdString() << " mouseReleaseEvent" << std::endl;
   event->setAccepted(true);
-  changeStyle(true);
+
+  QPoint pos = event->pos();
+
+  std::cout << "Qpoint at Realease: " << pos.x() << ", " << pos.y() << std::endl;
+
+ // changeStyle(true);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  QFilterWidget::mouseDoubleClickEvent ( QMouseEvent* event )
+{
+
+  std::cout << title().toStdString() << " mouseDoubleClickEvent" << std::endl;
+  event->setAccepted(true);
+  changeStyle(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  QFilterWidget::mouseMoveEvent ( QMouseEvent* event )
+{
+
+//  std::cout << title().toStdString() << " mouseMoveEvent" << std::endl;
+//  event->setAccepted(true);
+//  changeStyle(true);
+}
+#endif
+
 
 

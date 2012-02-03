@@ -124,18 +124,18 @@ void VolumeOps::execute()
   crop_volume->setXMax(m_XMax);
   crop_volume->setYMax(m_YMax);
   crop_volume->setZMax(m_ZMax);
-  crop_volume->setXRes(m_XRes);
-  crop_volume->setYRes(m_YRes);
-  crop_volume->setZRes(m_ZRes);
+//  crop_volume->setXRes(m_XRes);
+//  crop_volume->setYRes(m_YRes);
+//  crop_volume->setZRes(m_ZRes);
   pipeline.push_back(crop_volume);
 
   ChangeResolution::Pointer change_resolution = ChangeResolution::New();
-  change_resolution->setXMin(m_XMin);
-  change_resolution->setYMin(m_YMin);
-  change_resolution->setZMin(m_ZMin);
-  change_resolution->setXMax(m_XMax);
-  change_resolution->setYMax(m_YMax);
-  change_resolution->setZMax(m_ZMax);
+//  change_resolution->setXMin(m_XMin);
+//  change_resolution->setYMin(m_YMin);
+//  change_resolution->setZMin(m_ZMin);
+//  change_resolution->setXMax(m_XMax);
+//  change_resolution->setYMax(m_YMax);
+//  change_resolution->setZMax(m_ZMax);
   change_resolution->setXRes(m_XRes);
   change_resolution->setYRes(m_YRes);
   change_resolution->setZRes(m_ZRes);

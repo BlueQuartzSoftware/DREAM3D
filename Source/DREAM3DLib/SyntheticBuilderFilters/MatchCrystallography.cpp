@@ -211,7 +211,7 @@ void MatchCrystallography::execute()
 
   FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
   find_surfacefields->setObservers(this->getObservers());
-  find_surfacefields->setDataContainer(getDataContainer());
+  find_surfacefields->setDataContainer(m);
   find_surfacefields->execute();
   if(find_surfacefields->getErrorCondition() < 0)
   {

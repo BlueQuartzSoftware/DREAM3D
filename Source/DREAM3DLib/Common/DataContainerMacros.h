@@ -75,13 +75,13 @@
       #NameSpace << "::" << #DType << "::" <<  #Name << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
       ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
       setErrorCondition(-500);\
-    }\
+    } else {\
     p->SetNumberOfComponents(NumComp);\
     p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
     m_##Name = p->GetPointer(0);\
   }\
-  }
+  } }
 
 #define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
   {\
@@ -93,16 +93,16 @@
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
     if (NULL == p.get()) {\
       ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
-      #NameSpace << "::" << #DType << "::" <<  #Name << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
+      #NameSpace << "::" << #DType << "::" <<  #Name << "' with size of " << (size*NumComp) << " but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
       ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
       setErrorCondition(-500);\
+    } else {\
+      p->SetNumberOfComponents(NumComp);\
+      p->SetName(NameSpace::DType::Name);\
+      dc->add##DType(NameSpace::DType::Name, p);\
+      m_##Name##Post = p->GetPointer(0);\
     }\
-    p->SetNumberOfComponents(NumComp);\
-    p->SetName(NameSpace::DType::Name);\
-    dc->add##DType(NameSpace::DType::Name, p);\
-    m_##Name##Post = p->GetPointer(0);\
-  }\
-  }
+  } }
 
 
 /**

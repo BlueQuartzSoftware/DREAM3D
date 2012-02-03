@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MYLINEEDIT_H
-#define MYLINEEDIT_H
+#ifndef _QFSDropLineEdit_H
+#define _QFSDropLineEdit_H
 
 #include <QtGui/QLineEdit>
 

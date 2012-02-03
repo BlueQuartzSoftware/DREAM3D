@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,61 +34,41 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CROPVOLUME_H_
-#define CROPVOLUME_H_
+#ifndef QFILTERWIDGETFACTORY_H_
+#define QFILTERWIDGETFACTORY_H_
 
-#include <string>
-
-#include "DREAM3DLib/DREAM3DLib.h"
+#include "IFilterWidgetFactory.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
-
-/**
- * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
- */
-class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
+template <class Widget>
+class QFilterWidgetFactory : public IFilterWidgetFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(CropVolume);
-    DREAM3D_STATIC_NEW_MACRO(CropVolume);
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(QFilterWidgetFactory<Widget> )
+    DREAM3D_TYPE_MACRO_SUPER(QFilterWidgetFactory<Widget>, IFilterWidgetFactory)
+    DREAM3D_STATIC_NEW_MACRO(QFilterWidgetFactory<Widget>);
 
-    virtual ~CropVolume();
-
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
-    DREAM3D_INSTANCE_PROPERTY(int, YMin)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
-
-    DREAM3D_INSTANCE_PROPERTY(int, XMax)
-    DREAM3D_INSTANCE_PROPERTY(int, YMax)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
-
-	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ManipulationFilters; }
-  virtual const std::string getHumanLabel() { return "Crop Volume"; }
-
-  virtual void setupFilterOptions();
-
-	/**
-     * @brief Reimplemented from @see AbstractFilter class
+    /**
+     * @brief Creates a new widget for this filter. The Calling method MUST set
+     * a parent Widget OR take responsibility for deleting this object.
+     * @return
      */
-    virtual void execute();
-    virtual void preflight();
+    QFilterWidget* createWidget()
+    {
+      return new Widget;
+    }
+
+    std::string getFilterGroup()
+    {
+      Widget w;
+      return w.getFilter()->getGroupName();
+    }
 
   protected:
-    CropVolume();
-
+  QFilterWidgetFactory() {}
 
   private:
-
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
+QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
+void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
 };
-
-#endif /* CROPVOLUME_H_ */
+#endif /* QFILTERWIDGETFACTORY_H_ */

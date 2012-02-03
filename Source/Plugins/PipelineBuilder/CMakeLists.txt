@@ -13,13 +13,16 @@ include_directories(${PROJECT_CODE_DIR}/QtSupport
                     ${PluginPath} 
                     ${PROJECT_BINARY_DIR} )
 
+# --------------------------------------------------------------------
+# Build the FilterWidgets Static Library which is ONLY needed by this plugin
+add_subdirectory( ${PipelineBuilderPlugin_SOURCE_DIR}/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+
+
 #-- Non Qt based source files
 SET (PipelineBuilder_HDRS
-  ${PROJECT_SOURCE_DIR}/PipelineBuilder.h
 )
 
 SET (PipelineBuilder_SRCS
-  ${PROJECT_SOURCE_DIR}/PipelineBuilder.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "PipelineBuilder" "${PipelineBuilder_HDRS}" "${PipelineBuilder_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
@@ -44,18 +47,19 @@ endif()
 
 
 set(CLASS_NAME "PipelineBuilder")
-SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
-configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
-                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
+#SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
+#configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
+#                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 set (PipelineBuilderPlugin_UI_HDRS
-    ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h
+    ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.h
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
 set (PipelineBuilderPlugin_UI_SRCS 
+#    ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
@@ -95,7 +99,8 @@ target_link_libraries(PipelineBuilderPlugin
                         DREAM3DLib
                         ${QT_QTCORE_LIBRARY}   
                         ${QT_QTGUI_LIBRARY}
-                        QtSupport 
+                        QtSupport
+                        FilterWidgets
                    )
 PluginProperties(PipelineBuilderPlugin "_debug" "${DREAM3D_VERSION}" 
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
@@ -148,5 +153,7 @@ IF ( DREAM3D_BUILD_CLI_TOOLS )
 
 endif()
 
+
+add_subdirectory( ${PipelineBuilder_SOURCE_DIR}/Test ${PipelineBuilder_BINARY_DIR}/Test)
 
 

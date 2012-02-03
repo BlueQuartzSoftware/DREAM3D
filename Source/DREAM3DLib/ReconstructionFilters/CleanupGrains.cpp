@@ -60,6 +60,9 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 CleanupGrains::CleanupGrains() :
 AbstractFilter(),
+m_MinAllowedGrainSize(1),
+m_MinNumNeighbors(1),
+m_MisorientationTolerance(0.0f),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
@@ -95,7 +98,15 @@ void CleanupGrains::setupFilterOptions()
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
-    option->setPropertyName("minallowedgrainsize");
+    option->setPropertyName("MinAllowedGrainSize");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Minimum Number Neighbors");
+    option->setPropertyName("MinNumNeighbors");
     option->setWidgetType(FilterOption::IntWidget);
     option->setValueType("int");
     options.push_back(option);
@@ -431,7 +442,7 @@ void CleanupGrains::merge_containedgrains()
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_PhasesF[grainname] > 0)
     {
-	  m_Active[grainname] = false;
+      m_Active[grainname] = false;
       m_GrainIds[i] = 0;
     }
   }

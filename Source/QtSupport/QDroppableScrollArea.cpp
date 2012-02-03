@@ -33,35 +33,57 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "QDroppableScrollArea.h"
 
-#ifndef IFILTERWIDGETFACTOR_H_
-#define IFILTERWIDGETFACTOR_H_
+#include <string>
+#include <iostream>
 
-#include "QFilterWidget.h"
+#include <QtGui/QDragEnterEvent>
 
-/**
- * @brief This class serves as a base class to create Factory classes that can
- * create QFilterWidgets for a GUI based on Qt.
- */
-class IFilterWidgetFactory
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QDroppableScrollArea::QDroppableScrollArea(QWidget *parent)
+: QScrollArea(parent)
 {
-  public:
-    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory);
-    DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
+  setAcceptDrops(true);
+  setFrameShape(QFrame::Box);
+  setFrameShadow(QFrame::Plain);
+  QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  sizePolicy2.setHorizontalStretch(0);
+  sizePolicy2.setVerticalStretch(0);
+  setSizePolicy(sizePolicy2);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDroppableScrollArea::dragEnterEvent(QDragEnterEvent *event)
+{
+  // accept just text/uri-list mime format
+ // if (event->mimeData()->hasFormat("text/uri-list"))
+  {
+    event->acceptProposedAction();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDroppableScrollArea::dropEvent(QDropEvent *event)
+{
+  if (event->mimeData()->hasText())
+  {
+    QByteArray dropData =  event->mimeData()->data("text/plain");
+    QString name(dropData);
+  //  std::cout << "name: " << name.toStdString() << std::endl;
+    emit filterDropped(name);
+  }
 
 
-    virtual ~IFilterWidgetFactory() {}
+  event->acceptProposedAction();
+  event->setAccepted(true);
+}
 
-    /** @brief This function should NEVER get called. The subclass should ALWAYS implement
-     * this method so we are going to crash the program.
-     */
-    virtual QFilterWidget* createWidget() { assert(false); return NULL;}
 
-  protected:
-    IFilterWidgetFactory(){}
-  private:
-    IFilterWidgetFactory(const IFilterWidgetFactory&); // Copy Constructor Not Implemented
-    void operator=(const IFilterWidgetFactory&); // Operator '=' Not Implemented
-};
-
-#endif /* IFILTERWIDGETFACTOR_H_ */

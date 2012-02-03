@@ -151,7 +151,10 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
       crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-
+      if (m_PhaseTypes.get() == NULL || m_PhaseTypes->GetSize() == 0)
+      {
+        return -1;
+      }
       m_PhaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
       for(size_t i=0;i<phases.size();i++)
       {

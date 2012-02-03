@@ -38,15 +38,7 @@ macro(MXA_ADD_TEST testname Exename)
     endif()
 endmacro()
 
-# --------------------------------------------------------------------------
-# FilterManager Test
-# --------------------------------------------------------------------------
-if (TARGET FilterWidgets)
-add_executable(FilterManagerTest ${DREAM3DTest_SOURCE_DIR}/FilterManagerTest.cpp)
-target_link_libraries(FilterManagerTest FilterWidgets)
-endif()
-
-# --------------------------------------------------------------------------
+#---------------------------------------------------------------------
 # FilterPipelineTest
 # --------------------------------------------------------------------------
 add_executable(FilterPipelineTest FilterPipelineTest.cpp )

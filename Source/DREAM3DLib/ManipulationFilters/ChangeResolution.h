@@ -62,13 +62,13 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
 
     virtual ~ChangeResolution();
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
-    DREAM3D_INSTANCE_PROPERTY(int, YMin)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
-
-    DREAM3D_INSTANCE_PROPERTY(int, XMax)
-    DREAM3D_INSTANCE_PROPERTY(int, YMax)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+//    DREAM3D_INSTANCE_PROPERTY(int, XMin)
+//    DREAM3D_INSTANCE_PROPERTY(int, YMin)
+//    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+//
+//    DREAM3D_INSTANCE_PROPERTY(int, XMax)
+//    DREAM3D_INSTANCE_PROPERTY(int, YMax)
+//    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
 
     DREAM3D_INSTANCE_PROPERTY(float, XRes)
     DREAM3D_INSTANCE_PROPERTY(float, YRes)
@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ManipulationFilters; }
     virtual const std::string getHumanLabel() { return "Change Resolution"; }
 
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

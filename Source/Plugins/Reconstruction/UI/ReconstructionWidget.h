@@ -95,14 +95,14 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
   protected slots:
 
     /* Reconstruction Slots */
-    void on_m_OIMH5Btn_clicked();
+    void on_m_H5EbsdBtn_clicked();
     void on_m_OutputDirBtn_clicked();
   //  void on_m_AlreadyFormed_stateChanged(int);
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();
     void on_m_LoadSettingsBtn_clicked();
 
-    void on_m_H5InputFile_textChanged(const QString &text);
+    void on_m_H5EbsdFile_textChanged(const QString &text);
 
     void on_m_OutputDir_textChanged(const QString &text);
     void on_m_OutputFilePrefix_textChanged(const QString &text);
@@ -140,12 +140,11 @@ class ReconstructionWidget : public DREAM3DPluginFrame, private Ui::Reconstructi
     bool                        m_WriteGoodVoxelsScalars;
     bool                        m_WriteIPFColorScalars;
     bool                        m_WriteBinaryVTKFile;
-    bool rotateslice;
-    bool reorderarray;
-    bool aligneulers;
+    bool                        rotateslice;
+    bool                        reorderarray;
+    bool                        aligneulers;
 
     QString                     m_OpenDialogLastDirectory;
-  //  QString                     m_EbsdManufacturer;
 
     /**
      * @brief

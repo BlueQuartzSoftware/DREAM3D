@@ -123,8 +123,8 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
   double d;
 
   prefs.beginGroup("Reconstruction");
-  READ_FILEPATH_SETTING(prefs, m_, H5InputFile, "");
-  on_m_H5InputFile_textChanged(QString(""));
+  READ_FILEPATH_SETTING(prefs, m_, H5EbsdFile, "");
+  on_m_H5EbsdFile_textChanged(QString(""));
 
   READ_FILEPATH_SETTING(prefs, m_, OutputDir, "");
   READ_STRING_SETTING(prefs, m_, OutputFilePrefix, "Reconstruction_")
@@ -199,7 +199,7 @@ void ReconstructionWidget::readSettings(QSettings &prefs)
 void ReconstructionWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("Reconstruction");
-  WRITE_STRING_SETTING(prefs, m_, H5InputFile)
+  WRITE_STRING_SETTING(prefs, m_, H5EbsdFile)
   WRITE_STRING_SETTING(prefs, m_, OutputDir)
   WRITE_STRING_SETTING(prefs, m_, OutputFilePrefix)
   WRITE_SETTING(prefs, m_, ZStartIndex)
@@ -266,9 +266,9 @@ void ReconstructionWidget::setupGui()
 {
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-  m_H5InputFile->setCompleter(com);
+  m_H5EbsdFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_H5InputFile_textChanged(const QString &)));
+           this, SLOT(on_m_H5EbsdFile_textChanged(const QString &)));
 
   QR3DFileCompleter* com2 = new QR3DFileCompleter(this, true);
   m_OutputDir->setCompleter(com2);
@@ -278,10 +278,10 @@ void ReconstructionWidget::setupGui()
 
   QString msg ("All files will be over written that appear in the output directory.");
 
-  QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::Reconstruction::VisualizationVizFile.c_str() );
+  //QFileInfo fi (m_OutputDir->text() + QDir::separator() +  DREAM3D::Reconstruction::VisualizationVizFile.c_str() );
 
 
-  m_WidgetList << m_H5InputFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
+  m_WidgetList << m_H5EbsdFile << m_OutputDir << m_OutputDirBtn << m_OutputFilePrefix;
   m_WidgetList << m_ZStartIndex << m_ZEndIndex;
   m_WidgetList << m_MergeTwins << m_MergeColonies << m_AlignMeth;
   m_WidgetList << m_MinAllowedGrainSize << m_MisOrientationTolerance;
@@ -345,18 +345,18 @@ void ReconstructionWidget::on_m_LoadSettingsBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_m_OIMH5Btn_clicked()
+void ReconstructionWidget::on_m_H5EbsdBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
                                                  tr("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
-  m_H5InputFile->blockSignals(true);
+  m_H5EbsdFile->blockSignals(true);
   QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
-  m_H5InputFile->setText(p);
-  on_m_H5InputFile_textChanged(m_H5InputFile->text() );
-  m_H5InputFile->blockSignals(false);
+  m_H5EbsdFile->setText(p);
+  on_m_H5EbsdFile_textChanged(m_H5EbsdFile->text() );
+  m_H5EbsdFile->blockSignals(false);
 
 }
 
@@ -364,27 +364,27 @@ void ReconstructionWidget::on_m_OIMH5Btn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
+void ReconstructionWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 {
 
-  if (verifyPathExists(m_H5InputFile->text(), m_H5InputFile) )
+  if(verifyPathExists(m_H5EbsdFile->text(), m_H5EbsdFile))
   {
-    QFileInfo fi(m_H5InputFile->text());
+    QFileInfo fi(m_H5EbsdFile->text());
     QString outPath = fi.absolutePath() + QDir::separator() + fi.baseName() + "_Reconstruction";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputDir->setText(outPath);
   }
 
-  QFileInfo fi(m_H5InputFile->text());
-  if (fi.exists() && fi.isFile())
+  QFileInfo fi(m_H5EbsdFile->text());
+  if(fi.exists() && fi.isFile())
   {
     m_SetSliceInfo();
     // Set the output file Prefix based on the name of the input file
-    m_OutputFilePrefix->setText(fi.baseName() + QString("_") );
+    m_OutputFilePrefix->setText(fi.baseName() + QString("_"));
 
     // Read the Phase information from the .h5ang file
     H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
-    h5Reader->setFileName(m_H5InputFile->text().toStdString() );
+    h5Reader->setFileName(m_H5EbsdFile->text().toStdString());
     h5Reader->setSliceStart(m_ZStartIndex->value());
 
     int size = h5Reader->getNumPhases();
@@ -404,15 +404,14 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
       QListWidgetItem* item = phaseTypeList->item(i);
       item->setSizeHint(QSize(50, 25));
       QComboBox* cb = new QComboBox(phaseTypeList);
-      for(size_t i = 0; i < phaseTypeStrings.size(); ++i)
+      for (size_t i = 0; i < phaseTypeStrings.size(); ++i)
       {
-        cb->addItem(QString::fromStdString( phaseTypeStrings[i]), phaseTypeEnums[i] );
+        cb->addItem(QString::fromStdString(phaseTypeStrings[i]), phaseTypeEnums[i]);
         cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
       }
       cb->setMinimumHeight(25);
       phaseTypeList->setItemWidget(item, cb);
-      connect(cb, SIGNAL(currentIndexChanged(int)),
-              this, SLOT(phaseTypeEdited(int)));
+      connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(phaseTypeEdited(int)));
     }
 
     int err = 0;
@@ -434,7 +433,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     h5Reader->setSliceEnd(zEnd);
     zpoints = 1; // Just read the first dataset and hope the rest are the same
     err = h5Reader->getDimsAndResolution(xpoints, ypoints, zpoints, xres, yres, zres);
-    if (err >= 0)
+    if(err >= 0)
     {
       m_XDim->setText(QString::number(xpoints));
       m_YDim->setText(QString::number(ypoints));
@@ -450,14 +449,15 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     // simple swap with our own Table Model object. Multiple times through the model will be the same
     // so we do NOT need to delete the model
     m_QualityMetricTableView->setModel(m_QualityMetricTableModel);
-    if (model != m_QualityMetricTableModel && model == NULL) {
+    if(model != m_QualityMetricTableModel && model == NULL)
+    {
       delete model; // Clean up this memory
     }
 
     // Compare the Manufactureres of the current file versus the one we have cached
     // If they are different then we need to remove all the quality filters
     QString fileManufact = QString::fromStdString(h5Reader->getManufacturer());
-    if (m_EbsdManufacturer->text().compare(fileManufact) != 0)
+    if(m_EbsdManufacturer->text().compare(fileManufact) != 0)
     {
       m_QualityMetricTableModel->removeRows(0, m_QualityMetricTableModel->rowCount());
     }
@@ -467,26 +467,26 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
 
     m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
 
-	rotateslice = h5Reader->getRotateSlice();
-	reorderarray = h5Reader->getReorderArray();
-	aligneulers = h5Reader->getAlignEulers();
+    rotateslice = h5Reader->getRotateSlice();
+    reorderarray = h5Reader->getReorderArray();
+    aligneulers = h5Reader->getAlignEulers();
 
-	if(rotateslice == true) m_RotateSliceLabel->setText("true");
-	else if(rotateslice == false) m_RotateSliceLabel->setText("false");
+    if(rotateslice == true) m_RotateSliceLabel->setText("true");
+    else if(rotateslice == false) m_RotateSliceLabel->setText("false");
 
-	if(reorderarray == true) m_ReorderArrayLabel->setText("true");
-	else if(reorderarray == false) m_ReorderArrayLabel->setText("false");
+    if(reorderarray == true) m_ReorderArrayLabel->setText("true");
+    else if(reorderarray == false) m_ReorderArrayLabel->setText("false");
 
-	if(aligneulers == true) m_AlignEulersLabel->setText("true");
-	else if(aligneulers == false) m_AlignEulersLabel->setText("false");
+    if(aligneulers == true) m_AlignEulersLabel->setText("true");
+    else if(aligneulers == false) m_AlignEulersLabel->setText("false");
 
-	// Get the list of Possible filter Fields based on the Manufacturer
-    if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
+    // Get the list of Possible filter Fields based on the Manufacturer
+    if(m_EbsdManufacturer->text().compare(QString(Ebsd::Ang::Manufacturer.c_str())) == 0)
     {
       AngFields fields;
       m_QualityMetricTableModel->setPossibleFields(fields.getFilterFields<QStringList>());
     }
-    else if (m_EbsdManufacturer->text().compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
+    else if(m_EbsdManufacturer->text().compare(QString(Ebsd::Ctf::Manufacturer.c_str())) == 0)
     {
       CtfFields fields;
       m_QualityMetricTableModel->setPossibleFields(fields.getFilterFields<QStringList>());
@@ -496,7 +496,7 @@ void ReconstructionWidget::on_m_H5InputFile_textChanged(const QString &text)
     m_QualityMetricTableView->setItemDelegate(aid);
 
     // Make sure at least 1 Quality Metric is available.
-    if (m_QualityMetricTableModel->rowCount() < 1)
+    if(m_QualityMetricTableModel->rowCount() < 1)
     {
       on_addQualityMetric_clicked();
     }
@@ -522,7 +522,7 @@ void ReconstructionWidget::on_addQualityMetric_clicked()
 // -----------------------------------------------------------------------------
 void ReconstructionWidget::on_removeQualityMetric_clicked()
 {
-  std::cout << "on_removeQualityMetric_clicked" << std::endl;
+//  std::cout << "on_removeQualityMetric_clicked" << std::endl;
   QItemSelectionModel *selectionModel = m_QualityMetricTableView->selectionModel();
   if (!selectionModel->hasSelection()) return;
   QModelIndex index = selectionModel->currentIndex();
@@ -560,13 +560,13 @@ void ReconstructionWidget::m_SetSliceInfo()
 {
   H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
 
-  QFileInfo fi(m_H5InputFile->text());
+  QFileInfo fi(m_H5EbsdFile->text());
   if (fi.isFile() == false)
   {
     return;
   }
 
-  reader->setFileName(m_H5InputFile->text().toStdString());
+  reader->setFileName(m_H5EbsdFile->text().toStdString());
   if (reader->readVolumeInfo() >= 0)
   {
     float x, y, z;
@@ -704,7 +704,7 @@ void ReconstructionWidget::on_m_GoBtn_clicked()
   // Move the Reconstruction object into the thread that we just created.
   m_Reconstruction->moveToThread(m_WorkerThread);
 
-  m_Reconstruction->setH5EbsdFile( QDir::toNativeSeparators(m_H5InputFile->text()).toStdString());
+  m_Reconstruction->setH5EbsdFile( QDir::toNativeSeparators(m_H5EbsdFile->text()).toStdString());
 
   m_Reconstruction->setZStartIndex(m_ZStartIndex->value());
   m_Reconstruction->setZEndIndex(m_ZEndIndex->value());
