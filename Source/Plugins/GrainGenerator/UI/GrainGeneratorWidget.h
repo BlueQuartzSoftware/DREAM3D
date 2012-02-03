@@ -44,7 +44,7 @@
 #include "ui_GrainGeneratorWidget.h"
 
 #include "QtSupport/DREAM3DPluginFrame.h"
-#include "QGrainGenerator.h"
+#include "QFilterPipeline.h"
 
 class QListWidgetItem;
 class QComboBox;
@@ -137,7 +137,7 @@ class GrainGeneratorWidget : public DREAM3DPluginFrame, private Ui::GrainGenerat
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QGrainGenerator*            m_GrainGenerator;
+    QFilterPipeline*            m_GrainGenerator;
     QThread*                    m_WorkerThread;
     QList<QLabel*>              m_ShapeTypeLabels;
     QList<QComboBox*>           m_ShapeTypeCombos;
