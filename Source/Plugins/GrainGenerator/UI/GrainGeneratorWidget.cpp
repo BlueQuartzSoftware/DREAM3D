@@ -515,7 +515,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
     delete m_GrainGenerator;
     m_GrainGenerator = NULL;
   }
-  m_GrainGenerator = new QGrainGenerator(NULL);
+  m_GrainGenerator = new QFilterPipeline(NULL);
 
   setupPipeline();
 
@@ -662,7 +662,7 @@ void GrainGeneratorWidget::setupPipeline()
  // m->addObserver(static_cast<Observer*>(this));
 
   // Create a Vector to hold all the filters. Later on we will execute all the filters
-  m_GrainGenerator = new QGrainGenerator(this);
+  m_GrainGenerator = new QFilterPipeline(this);
 
   std::string outDir = QDir::toNativeSeparators(m_OutputDir->text()).toStdString();
   std::string prefix = m_OutputFilePrefix->text().toStdString();
