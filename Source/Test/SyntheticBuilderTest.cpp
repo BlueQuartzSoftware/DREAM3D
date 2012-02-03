@@ -98,7 +98,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed-Single.h5";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "2PhaseBulk.h5";
   return s;
 }
 
@@ -223,6 +223,7 @@ void TestSyntheticBuilder()
   m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
   m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
   m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
+  pipeline->setDataContainer(m);
   pipeline->run();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);

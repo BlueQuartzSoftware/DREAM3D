@@ -919,11 +919,6 @@ void PackGrainsGen2::initializeArrays(std::vector<unsigned int> structures)
   size_t nElements = 0;
   size_t size = structures.size() + 1;
 
-//  m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure)->Resize(size+1);
-//  m->getEnsembleData(DREAM3D::EnsembleData::PrecipitateFractions)->Resize(size+1);
-//  m->getEnsembleData(DREAM3D::EnsembleData::PhaseType)->Resize(size+1);
-//  m->getEnsembleData(DREAM3D::EnsembleData::PhaseFractions)->Resize(size+1);
-
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
