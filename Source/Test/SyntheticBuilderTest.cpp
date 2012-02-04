@@ -46,7 +46,7 @@
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
 #include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
-#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+//#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
@@ -98,7 +98,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed-Single.h5";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "2PhaseBulk.h5";
   return s;
 }
 
@@ -223,6 +223,7 @@ void TestSyntheticBuilder()
   m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
   m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
   m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
+  pipeline->setDataContainer(m);
   pipeline->run();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);

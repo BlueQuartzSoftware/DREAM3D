@@ -44,12 +44,38 @@
 #include "MXA/Utilities/MXALogger.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
+#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
+#include "DREAM3DLib/GenericFilters/DataContainerReader.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/StatisticsFilters/FindShapes.h"
+#include "DREAM3DLib/StatisticsFilters/FindSchmids.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighborhoods.h"
+#include "DREAM3DLib/StatisticsFilters/FindDeformationStatistics.h"
+#include "DREAM3DLib/StatisticsFilters/FindLocalMisorientationGradients.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+#include "DREAM3DLib/StatisticsFilters/FindAxisODF.h"
+#include "DREAM3DLib/StatisticsFilters/FindODF.h"
+#include "DREAM3DLib/StatisticsFilters/FindMDF.h"
+#include "DREAM3DLib/StatisticsFilters/FindEuclideanDistMap.h"
+#include "DREAM3DLib/StatisticsFilters/WriteH5StatsFile.h"
 
-#include "MicrostructureStatistics/MicrostructureStatistics.h"
+#define MAKE_OUTPUT_FILE_PATH(outpath, filename, outdir, prefix)\
+    std::string outpath = outdir + MXADir::Separator + prefix + filename;
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 int parseValues(const std::string &values, const char* format, T* output)
 {
@@ -71,6 +97,9 @@ int parseValues(const std::string &values, const char* format, T* output)
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 int parseUnknownArray(const std::string &values, const char* format, std::vector<T> &output)
 {
@@ -151,11 +180,11 @@ int main(int argc, char **argv)
     cmd.add(m_WriteAverageOrientations_arg);
 
 
-    TCLAP::ValueArg<std::string> m_OutputDir("", "outputdir", "Output Directory For Files", true, "", "Output Directory");
-    cmd.add(m_OutputDir);
+    TCLAP::ValueArg<std::string> outputDir("", "outputdir", "Output Directory For Files", true, "", "Output Directory");
+    cmd.add(outputDir);
 
-    TCLAP::ValueArg<std::string> m_OutputFilePrefix("", "outputprefix", "Prefix for generated files.", true, "", "Output File Prefix");
-    cmd.add(m_OutputFilePrefix);
+    TCLAP::ValueArg<std::string> outputPrefix("", "outputprefix", "Prefix for generated files.", true, "", "Output File Prefix");
+    cmd.add(outputPrefix);
 
     if(argc < 2)
     {
@@ -175,7 +204,7 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
-    MXADir::mkdir(m_OutputDir.getValue(), true);
+    MXADir::mkdir(outputDir.getValue(), true);
 
 
     bool m_WriteGrainSize = m_WriteGrainSize_arg.getValue();
@@ -188,7 +217,6 @@ int main(int argc, char **argv)
     bool m_WriteIPFColorScalars = m_WriteIPFColorScalars_arg.getValue();
     bool m_WriteBinaryVTKFile = m_WriteBinaryVTKFile_arg.getValue();
 
-    MicrostructureStatistics::Pointer m_MicrostructureStatistics = MicrostructureStatistics::New();
     bool m_ComputeGrainSize = false;
     bool m_ComputeGrainShapes = false;
     bool m_ComputeNumNeighbors = false;
@@ -212,7 +240,7 @@ int main(int argc, char **argv)
       m_WriteIPFColorScalars = false;
       m_WriteBinaryVTKFile = false;
     }
-
+#if 0
     // Move the MicrostructureStatistics object into the thread that we just created.
     m_MicrostructureStatistics->setOutputDirectory(MXADir::toNativeSeparators(m_OutputDir.getValue()));
     m_MicrostructureStatistics->setOutputFilePrefix(m_OutputFilePrefix.getValue());
@@ -245,6 +273,132 @@ int main(int argc, char **argv)
 
     m_MicrostructureStatistics->run();
     err = m_MicrostructureStatistics->getErrorCondition();
+
+#endif
+
+
+    // Create a FilterPipeline Object to hold all the filters. Later on we will execute all the filters
+    FilterPipeline::Pointer m_FilterPipeline = FilterPipeline::New();
+
+    MAKE_OUTPUT_FILE_PATH( reconDeformStatsFile, DREAM3D::MicroStats::DeformationStatsFile, outputDir.getValue(), outputPrefix.getValue());
+    MAKE_OUTPUT_FILE_PATH( reconDeformIPFFile, DREAM3D::MicroStats::IPFDeformVTKFile, outputDir.getValue(), outputPrefix.getValue());
+    MAKE_OUTPUT_FILE_PATH( reconVisFile, DREAM3D::Reconstruction::VisualizationVizFile, outputDir.getValue(), outputPrefix.getValue());
+    MAKE_OUTPUT_FILE_PATH( hdf5ResultsFile, DREAM3D::MicroStats::H5StatisticsFile, outputDir.getValue(), outputPrefix.getValue())
+
+
+    LoadVolume::Pointer load_volume = LoadVolume::New();
+    load_volume->setInputFile(m_InputFile.getValue());
+    m_FilterPipeline->pushBack(load_volume);
+
+    FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
+    m_FilterPipeline->pushBack(find_surfacegrains);
+
+    // Start Computing the statistics
+    if(m_ComputeGrainSize == true)
+    {
+      FindSizes::Pointer find_sizes = FindSizes::New();
+      m_FilterPipeline->pushBack(find_sizes);
+    }
+
+    if(m_ComputeGrainShapes == true)
+    {
+      FindShapes::Pointer find_shapes = FindShapes::New();
+      m_FilterPipeline->pushBack(find_shapes);
+
+      FindBoundingBoxGrains::Pointer find_boundingboxgrains = FindBoundingBoxGrains::New();
+      m_FilterPipeline->pushBack(find_boundingboxgrains);
+    }
+
+    if(m_ComputeNumNeighbors == true)
+    {
+      FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+      m_FilterPipeline->pushBack(find_neighbors);
+
+      FindNeighborhoods::Pointer find_neighborhoods = FindNeighborhoods::New();
+      m_FilterPipeline->pushBack(find_neighborhoods);
+    }
+
+    if(m_WriteAverageOrientations == true
+        || m_H5StatisticsFile.getValue() == true
+        || m_WriteKernelMisorientationsScalars == true)
+    {
+      FindAvgOrientations::Pointer find_avgorientations = FindAvgOrientations::New();
+      m_FilterPipeline->pushBack(find_avgorientations);
+    }
+
+    if(m_H5StatisticsFile.getValue() == true)
+    {
+      // Create a new Writer for the Stats Data.
+      FindAxisODF::Pointer find_axisodf = FindAxisODF::New();
+      find_axisodf->setH5StatsFile(hdf5ResultsFile);
+      find_axisodf->setCreateNewStatsFile(true);
+      m_FilterPipeline->pushBack(find_axisodf);
+
+      FindODF::Pointer find_odf = FindODF::New();
+      find_odf->setH5StatsFile(hdf5ResultsFile);
+      find_odf->setCreateNewStatsFile(false);
+      m_FilterPipeline->pushBack(find_odf);
+
+      FindMDF::Pointer find_mdf = FindMDF::New();
+      find_mdf->setH5StatsFile(hdf5ResultsFile);
+      find_mdf->setCreateNewStatsFile(false);
+      m_FilterPipeline->pushBack(find_mdf);
+
+      WriteH5StatsFile::Pointer write_h5statsfile = WriteH5StatsFile::New();
+      write_h5statsfile->setBinStepSize(m_BinStepSize.getValue());
+      write_h5statsfile->setH5StatsFile(hdf5ResultsFile);
+      write_h5statsfile->setCreateNewStatsFile(false);
+      m_FilterPipeline->pushBack(write_h5statsfile);
+    }
+
+    if(m_WriteKernelMisorientationsScalars == true)
+    {
+      FindLocalMisorientationGradients::Pointer find_localmisorientationgradients = FindLocalMisorientationGradients::New();
+      m_FilterPipeline->pushBack(find_localmisorientationgradients);
+    }
+
+
+    FindSchmids::Pointer find_schmids = FindSchmids::New();
+    m_FilterPipeline->pushBack(find_schmids);
+
+    FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
+    m_FilterPipeline->pushBack(find_euclideandistmap);
+
+    FindDeformationStatistics::Pointer find_deformationstatistics = FindDeformationStatistics::New();
+    find_deformationstatistics->setDeformationStatisticsFile(reconDeformStatsFile);
+    find_deformationstatistics->setVtkOutputFile(reconDeformIPFFile);
+    m_FilterPipeline->pushBack(find_deformationstatistics);
+
+
+
+    if(m_GrainDataFile.getValue() == true)
+    {
+      MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::MicroStats::GrainDataFile, outputDir.getValue(), outputPrefix.getValue());
+      FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
+      write_fielddata->setFieldDataFile(FieldDataFile);
+      m_FilterPipeline->pushBack(write_fielddata);
+    }
+
+    // Now preflight this pipeline to make sure we can actually run it
+    int err = m_FilterPipeline->preflightPipeline();
+    // If any error occured during the preflight exit now
+    if(err < 0)
+    {
+
+      // Show a Dialog with the error from the Preflight
+      return EXIT_FAILURE;
+    }
+    DataContainer::Pointer m = DataContainer::New();
+    m_FilterPipeline->setDataContainer(m);
+
+    m_FilterPipeline->run();
+    err = m_FilterPipeline->getErrorCondition();
+    if (err < 0)
+    {
+      std::cout << "Microstructure Statistics threw an error during execution." << std::endl;
+      return EXIT_FAILURE;
+    }
+
   }
 
   catch (TCLAP::ArgException &e) // catch any exceptions

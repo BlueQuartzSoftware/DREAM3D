@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     */
     virtual void execute();
 
+    int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 
   protected:
     DataContainerReader();
