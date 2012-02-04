@@ -319,6 +319,14 @@ void PackGrainsGen2::execute()
     return;
   }
 
+  int64_t totalPoints = m->totalPoints();
+  int totalFields = m->getTotalFields();
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
   notify("Packing Grains - Reading Statistics", 0, Observable::UpdateProgressMessage);
   err = readReconStatsData(h5reader);
   if(err < 0)
@@ -337,15 +345,6 @@ void PackGrainsGen2::execute()
     notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
     return;
   }
-
-  int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
 
   notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
   initializeAttributes();
@@ -930,18 +929,18 @@ void PackGrainsGen2::initializeArrays(std::vector<unsigned int> structures)
   m_PhaseType[0] = DREAM3D::PhaseType::UnknownPhaseType;
   m_PrecipitateFractions[0] = -1.0;
 
-  mindiameter.resize(size+1);
-  maxdiameter.resize(size+1);
-  binstepsize.resize(size+1);
-  numdiameterbins.resize(size+1);
-  avgdiam.resize(size+1);
-  sddiam.resize(size+1);
-  bovera.resize(size+1);
-  covera.resize(size+1);
-  coverb.resize(size+1);
-  omega3.resize(size+1);
-  neighborparams.resize(size+1);
-  axisodf.resize(size+1);
+  mindiameter.resize(size);
+  maxdiameter.resize(size);
+  binstepsize.resize(size);
+  numdiameterbins.resize(size);
+  avgdiam.resize(size);
+  sddiam.resize(size);
+  bovera.resize(size);
+  covera.resize(size);
+  coverb.resize(size);
+  omega3.resize(size);
+  neighborparams.resize(size);
+  axisodf.resize(size);
 
   for(size_t i= 1; i < size; ++i)
   {
