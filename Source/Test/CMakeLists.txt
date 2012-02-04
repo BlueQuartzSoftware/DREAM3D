@@ -104,14 +104,7 @@ add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
 
 if (NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
-    message(STATUS " Please make sure the proper files are available in that directory")
-    
-    # --------------------------------------------------------------------------
-    # SyntheticBuilder Test
-    # --------------------------------------------------------------------------
-    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
-    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
+    message(STATUS "  Please make sure the proper files are available in that directory")
 
     # --------------------------------------------------------------------------
     # FindNeighbors Testing
@@ -120,6 +113,12 @@ if (NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     target_link_libraries(FindNeighborsTest DREAM3DLib)
     add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
+    # --------------------------------------------------------------------------
+    # SyntheticBuilder Test
+    # --------------------------------------------------------------------------
+    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
+    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
+    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
 endif()
 
 # --------------------------------------------------------------------------

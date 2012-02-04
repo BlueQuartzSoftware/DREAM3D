@@ -178,6 +178,11 @@ int H5CtfVolumeReader::loadData(float* eulerangles,
     xstartspot = (xpointstemp - xpointsslice) / 2;
     ystartspot = (ypointstemp - ypointsslice) / 2;
 
+    // If no stacking order preference was passed, read it from the file and use that value
+    if(ZDir == Ebsd::UnknownRefFrameZDirection)
+    {
+      ZDir = getStackingOrder();
+    }
     if (ZDir == 0) zval = slice;
     if (ZDir == 1) zval = (zpoints - 1) - slice;
 
