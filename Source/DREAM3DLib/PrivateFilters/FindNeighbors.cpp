@@ -144,11 +144,7 @@ void FindNeighbors::execute()
 
   int64_t totalPoints = m->totalPoints();
   int totalFields = m->getTotalFields();
-  ss << "FN1 Points - " << totalPoints << ", Fields - " << totalFields;
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
-  ss << "FN2 Points - " << totalPoints << ", Fields - " << totalFields;
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
   if (getErrorCondition() < 0)
   {
     return;

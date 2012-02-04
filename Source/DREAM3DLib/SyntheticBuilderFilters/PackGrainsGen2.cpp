@@ -254,10 +254,12 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
+  //Cell Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, float, FloatArrayType, voxels, 3);
 
+  //Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
@@ -268,6 +270,15 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
 
+  //Ensemble Data
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructure, ss, unsigned int, XTalStructArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -364,12 +375,6 @@ void PackGrainsGen2::execute()
   m_CrystalStructure = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
   std::stringstream ss;
-
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305,  float, FloatArrayType, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  unsigned int, DataArray<unsigned int>, numXTals, 1);
-
 
   // float change1, change2;
   float change;
@@ -918,24 +923,6 @@ void PackGrainsGen2::initializeArrays(std::vector<unsigned int> structures)
   //------------------
   size_t nElements = 0;
   size_t size = structures.size() + 1;
-
-//  m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure)->Resize(size+1);
-//  m->getEnsembleData(DREAM3D::EnsembleData::PrecipitateFractions)->Resize(size+1);
-//  m->getEnsembleData(DREAM3D::EnsembleData::PhaseType)->Resize(size+1);
-//  m->getEnsembleData(DREAM3D::EnsembleData::PhaseFractions)->Resize(size+1);
-
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
-
-  std::stringstream ss;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructure, ss, unsigned int, XTalStructArrayType, size, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, unsigned int, PhaseTypeArrayType, size, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, size, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, size, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, size, 1);
-
-
 
   // Initialize the first slot in these arrays since they should never be used
   m_CrystalStructure[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
