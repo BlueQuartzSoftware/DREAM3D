@@ -218,7 +218,7 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, (r->totalPoints()), phases);
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*r->totalPoints()), eulerangles);
 
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructure, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
 
       // Write the IPF Coloring Cell Data
       for (size_t i = 0; i < total; i++)

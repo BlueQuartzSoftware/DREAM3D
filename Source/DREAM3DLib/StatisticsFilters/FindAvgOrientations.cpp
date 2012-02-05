@@ -129,7 +129,7 @@ void FindAvgOrientations::execute()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
 
   for (size_t i = 1; i < numgrains; i++)

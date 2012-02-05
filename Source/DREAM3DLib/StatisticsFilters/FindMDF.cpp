@@ -50,7 +50,7 @@ m_CreateNewStatsFile(true),
 m_AvgQuats(NULL),
 m_SurfaceFields(NULL),
 m_PhasesF(NULL),
-m_TotalSurfaceArea(NULL),
+m_TotalSurfaceAreas(NULL),
 m_NeighborList(NULL),
 m_SharedSurfaceAreaList(NULL)
 {
@@ -122,7 +122,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
      setErrorCondition(-309);
    }
 
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -303,  float, FloatArrayType, ensembles, 1);
 
 
   setErrorMessage(ss.str());
@@ -181,7 +181,7 @@ void FindMDF::execute()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
   unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
 
@@ -247,7 +247,7 @@ void FindMDF::execute()
 		  if ((nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
 		  {
 			nsa = neighborsurfacearealist[i][j];
-			misobin[m_PhasesF[i]][mbin] = misobin[m_PhasesF[i]][mbin] + (nsa / m_TotalSurfaceArea[m_PhasesF[i]]);
+			misobin[m_PhasesF[i]][mbin] = misobin[m_PhasesF[i]][mbin] + (nsa / m_TotalSurfaceAreas[m_PhasesF[i]]);
 		  }
 		}
   }

@@ -102,7 +102,7 @@ DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
                 = DataArray<unsigned int>::CreateArray(2);
-  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
+  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   phaseTypes->SetValue(1, DREAM3D::PhaseType::PrimaryPhase);
   return phaseTypes;

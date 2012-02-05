@@ -53,7 +53,7 @@ m_SurfaceVoxels(NULL),
 m_SurfaceFields(NULL),
 m_PhasesF(NULL),
 m_NumNeighbors(NULL),
-m_TotalSurfaceArea(NULL),
+m_TotalSurfaceAreas(NULL),
 m_NeighborList(NULL),
 m_SharedSurfaceAreaList(NULL)
 {
@@ -110,7 +110,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     setErrorCondition(-308);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, float, FloatArrayType,  ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, float, FloatArrayType,  ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -178,11 +178,11 @@ void FindNeighbors::execute()
   int good = 0;
   int neighbor = 0;
 
-  size_t xtalCount = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure)->GetNumberOfTuples();
+  size_t xtalCount = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
 
   for (size_t i = 1; i < xtalCount; ++i)
   {
-    m_TotalSurfaceArea[i] = 0.0f;
+    m_TotalSurfaceAreas[i] = 0.0f;
   }
 
     std::vector<std::vector<int> > neighborlist;
@@ -279,7 +279,7 @@ void FindNeighbors::execute()
       float area = number * m->getXRes() * m->getYRes();
       if(m_SurfaceFields[i] == 0 && (neigh > i || m_SurfaceFields[neigh] == 1))
       {
-        m_TotalSurfaceArea[phase] = m_TotalSurfaceArea[phase] + area;
+        m_TotalSurfaceAreas[phase] = m_TotalSurfaceAreas[phase] + area;
       }
 
       // Push the neighbor grain id back onto the list so we stay synced up

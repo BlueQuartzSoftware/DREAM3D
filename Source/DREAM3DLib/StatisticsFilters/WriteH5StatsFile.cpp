@@ -157,12 +157,12 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
   unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
   std::stringstream ss;
-  unsigned int* m_PhaseType = NULL;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
+  unsigned int* m_PhaseTypes = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
 
   float* m_PhaseFractions = NULL;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
@@ -327,7 +327,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 	  sdlogdiam = sqrt(sdlogdiam);
 
 
-	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], m_PhaseType[iter], m_PhaseFractions[iter], m_PrecipitateFractions[iter],
+	  retErr = h5io->writeVolumeStats(iter, crystruct[iter], m_PhaseTypes[iter], m_PhaseFractions[iter], m_PrecipitateFractions[iter],
 	                                  maxdiameter[iter], mindiameter[iter], sizebinstepsize, avglogdiam, sdlogdiam, svbovera, svcovera, svcoverb, neighborhoodfit, svomega3);
 	  if (retErr < 0)
 	  {
@@ -341,12 +341,12 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
   DataContainer* m = getDataContainer();
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
   unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
   std::stringstream ss;
-  unsigned int* m_PhaseType = NULL;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
+  unsigned int* m_PhaseTypes = NULL;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -303,  unsigned int, DataArray<unsigned int>, numXTals, 1);
 
   float* m_PhaseFractions = NULL;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304,  float, FloatArrayType, numXTals, 1);
@@ -483,7 +483,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
     sdlogdiam = sdlogdiam / actualgrains;
     sdlogdiam = sqrt(sdlogdiam);
 
-    int err = h5io->writeVolumeStats2D(iter, crystruct[iter], m_PhaseType[iter], m_PhaseFractions[iter], m_PrecipitateFractions[iter],
+    int err = h5io->writeVolumeStats2D(iter, crystruct[iter], m_PhaseTypes[iter], m_PhaseFractions[iter], m_PrecipitateFractions[iter],
                                    maxdiameter[iter], mindiameter[iter], 1.0, avglogdiam, sdlogdiam, svbovera, neighborhoodfit);
     if (err < 0)
     {

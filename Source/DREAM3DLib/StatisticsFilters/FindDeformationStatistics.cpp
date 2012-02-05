@@ -164,7 +164,7 @@ void FindDeformationStatistics::execute()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   size_t numXTals = crystruct->GetNumberOfTuples();
 
