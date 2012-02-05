@@ -71,7 +71,7 @@ m_PhasesF(NULL),
 m_SurfaceVoxels(NULL),
 m_Neighbors(NULL),
 m_NumCells(NULL),
-m_PhaseType(NULL),
+m_PhaseTypes(NULL),
 m_PhaseFractions(NULL),
 m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
@@ -541,13 +541,13 @@ void  PlacePrecipitates::place_precipitates()
 
   size_t numXTals = m->getNumEnsembleTuples();
   std::stringstream ss;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303, unsigned int, DataArray<unsigned int>, numXTals, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -303, unsigned int, DataArray<unsigned int>, numXTals, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304, float, FloatArrayType, numXTals, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305, float, FloatArrayType, numXTals, 1);
 
   for (size_t i = 1; i < numXTals; ++i)
   {
-    if(m_PhaseType[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       precipitatephases.push_back(i);
       precipitatephasefractions.push_back(m_PhaseFractions[i]);

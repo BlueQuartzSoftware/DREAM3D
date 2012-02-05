@@ -147,9 +147,9 @@ namespace DREAM3D
 
   namespace EnsembleData
   {
-    const std::string TotalSurfaceArea("TotalSurfaceArea");
-    const std::string CrystalStructure("CrystalStructure");
-    const std::string PhaseType("PhaseType");
+    const std::string TotalSurfaceAreas("TotalSurfaceArea");
+    const std::string CrystalStructures("CrystalStructure");
+    const std::string PhaseTypes("PhaseType");
     const std::string PrecipitateFractions("PrecipitateFractions");
     const std::string PhaseFractions("PhaseFractions");
     const std::string ShapeTypes("ShapeTypes");

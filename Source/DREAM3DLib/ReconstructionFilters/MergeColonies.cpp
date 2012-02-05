@@ -212,7 +212,7 @@ void MergeColonies::merge_colonies()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   float angcur = 180.0f;
   std::vector<int> colonylist;

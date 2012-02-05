@@ -168,8 +168,8 @@ m_AxisLengths(NULL),
 m_AxisEulerAngles(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
-m_CrystalStructure(NULL),
-m_PhaseType(NULL),
+m_CrystalStructures(NULL),
+m_PhaseTypes(NULL),
 m_PhaseFractions(NULL),
 m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
@@ -274,8 +274,8 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructure, ss, unsigned int, XTalStructArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
@@ -370,8 +370,8 @@ void PackGrainsGen2::execute()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
-  m_CrystalStructure = crystructPtr->GetPointer(0);
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
+  m_CrystalStructures = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
   std::stringstream ss;
 
@@ -392,7 +392,7 @@ void PackGrainsGen2::execute()
   // find which phases are primary phases
   for (size_t i = 1; i < numXTals; ++i)
   {
-    if(m_PhaseType[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
       primaryphases.push_back(i);
       primaryphasefractions.push_back(m_PhaseFractions[i]);
@@ -923,12 +923,6 @@ void PackGrainsGen2::initializeArrays(std::vector<unsigned int> structures)
   size_t nElements = 0;
   size_t size = structures.size() + 1;
 
-  // Initialize the first slot in these arrays since they should never be used
-  m_CrystalStructure[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  m_PhaseFractions[0] = 0.0;
-  m_PhaseType[0] = DREAM3D::PhaseType::UnknownPhaseType;
-  m_PrecipitateFractions[0] = -1.0;
-
   mindiameter.resize(size);
   maxdiameter.resize(size);
   binstepsize.resize(size);
@@ -977,7 +971,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
   for (int i = 0; i < size; i++)
   {
       phase = phases[i];
-    m_CrystalStructure[phase] = structures[i];
+    m_CrystalStructures[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
       std::vector<float> pFraction;
@@ -986,10 +980,10 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
 
     std::vector<unsigned int> phasetypes;
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
-    m_PhaseType[phase] = static_cast<unsigned int>(phasetypes[0]);
+    m_PhaseTypes[phase] = static_cast<unsigned int>(phasetypes[0]);
 
     // If the Phase Type is Precipitate then we need the pptFraction on Boundary
-    if (m_PhaseType[phase] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[phase] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       float f = -1.0f;
       err = h5io->readScalarAttribute(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, f);
@@ -998,7 +992,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
       }
       m_PrecipitateFractions[phase] = f;
     }
-    if (m_PhaseType[phase] != DREAM3D::PhaseType::PrecipitatePhase) m_PrecipitateFractions[phase] = -1.0;
+    if (m_PhaseTypes[phase] != DREAM3D::PhaseType::PrecipitatePhase) m_PrecipitateFractions[phase] = -1.0;
 
     /* Read the BinNumbers data set */
     std::vector<float> bins;

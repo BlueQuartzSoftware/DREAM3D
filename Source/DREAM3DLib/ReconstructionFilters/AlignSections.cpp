@@ -217,7 +217,7 @@ void AlignSections::align_sections()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   float disorientation = 0;
   float mindisorientation = 100000000;
@@ -547,7 +547,7 @@ void AlignSections::form_grains_sections()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
 
   std::vector<int> voxelslist(initialVoxelsListSize, -1);

@@ -131,8 +131,8 @@ void TestDataContainerWriter()
   {
     surfArea->SetValue(i, i + 41.2f);
   }
-  surfArea->SetName(DREAM3D::EnsembleData::TotalSurfaceArea);
-  m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceArea, surfArea);
+  surfArea->SetName(DREAM3D::EnsembleData::TotalSurfaceAreas);
+  m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
 
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();

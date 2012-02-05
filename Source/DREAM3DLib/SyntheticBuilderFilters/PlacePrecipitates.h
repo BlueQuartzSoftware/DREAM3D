@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int32_t* m_Neighbors;
     int32_t* m_NumCells;
     int32_t* m_Neighborhoods;
-    unsigned int* m_PhaseType;
+    unsigned int* m_PhaseTypes;
     float* m_PhaseFractions;
     float* m_PrecipitateFractions;
 
