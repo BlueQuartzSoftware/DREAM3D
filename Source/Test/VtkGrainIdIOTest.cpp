@@ -42,8 +42,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/VtkGrainIdWriter.h"
-#include "DREAM3DLib/IO/VtkGrainIdReader.h"
+#include "DREAM3DLib/IOFilters/VtkGrainIdWriter.h"
+#include "DREAM3DLib/IOFilters/VtkGrainIdReader.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"

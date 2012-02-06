@@ -34,8 +34,9 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DXREADER_H_
-#define _DXREADER_H_
+
+#ifndef _PHReader_h_
+#define _PHReader_h_
 
 #include <string>
 #include <vector>
@@ -43,33 +44,39 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileReader.h"
+#include "DREAM3DLib/Common/FileReader.h"
 
 /**
- * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
+ * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
  * @brief
  * @author mjackson
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class DREAM3DLib_EXPORT DxReader : public FileReader
+class DREAM3DLib_EXPORT PhReader : public FileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(DxReader);
-    DREAM3D_STATIC_NEW_MACRO(DxReader);
-    DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader);
+    DREAM3D_SHARED_POINTERS(PhReader);
+    DREAM3D_STATIC_NEW_MACRO(PhReader);
+    DREAM3D_TYPE_MACRO_SUPER(PhReader, FileReader);
 
-    virtual ~DxReader();
+    virtual ~PhReader();
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Grain Ids from Ph File"; }
 
   protected:
-    DxReader();
+    PhReader();
 
     virtual int readHeader();
     virtual int readFile();
 
   private:
-    DxReader(const DxReader&); // Copy Constructor Not Implemented
-    void operator=(const DxReader&); // Operator '=' Not Implemented
+    PhReader(const PhReader&); //Not Implemented
+    void operator=(const PhReader&); //Not Implemented
+
 };
 
-#endif /* DXREADER_H_ */
+#endif //_PHReader_h_
+
+

@@ -34,39 +34,47 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DXGRAINIDWRITER_H_
-#define DXGRAINIDWRITER_H_
-
+#ifndef PHWRITER_HPP_
+#define PHWRITER_HPP_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileWriter.h"
+#include "DREAM3DLib/Common/FileWriter.h"
 
-
-class DREAM3DLib_EXPORT DxWriter : public FileWriter
+/**
+ * @class PhWriter PhWriter.h DREAM3D/IO/PhWriter.h
+ * @brief This class writes a "Ph" file from the Grain Generator Data but is templated
+ * so that possibly other classes can use this writing method. This code was adapted
+ * from code supplied by S. Sintay and J. Tucker.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jun 7, 2011
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT PhWriter : public FileWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DxWriter)
-    DREAM3D_STATIC_NEW_MACRO(DxWriter)
-    DREAM3D_TYPE_MACRO_SUPER(DxWriter, FileWriter)
+    DREAM3D_SHARED_POINTERS(PhWriter);
+    DREAM3D_STATIC_NEW_MACRO(PhWriter);
+    DREAM3D_TYPE_MACRO_SUPER(PhWriter, FileWriter);
 
+    virtual ~PhWriter();
 
-    virtual ~DxWriter();
-
-    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
-
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Write Grain Ids as Ph File"; }
 
   protected:
-    DxWriter();
+    PhWriter();
 
     virtual int writeHeader();
+
     virtual int writeFile();
 
+
   private:
-    DxWriter(const DxWriter&); // Copy Constructor Not Implemented
-    void operator=(const DxWriter&); // Operator '=' Not Implemented
+    PhWriter(const PhWriter&); // Copy Constructor Not Implemented
+    void operator=(const PhWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* DXGRAINIDWRITER_H_ */
+#endif /* PHWRITER_HPP_ */

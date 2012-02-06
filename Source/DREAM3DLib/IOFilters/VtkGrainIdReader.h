@@ -37,7 +37,7 @@
 #include "MXA/Common/MXAEndian.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IO/FileReader.h"
+#include "DREAM3DLib/Common/FileReader.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
 
@@ -56,7 +56,8 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary);
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName);
 
-
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Grain Ids from Vtk File"; }
 
 
   protected:
