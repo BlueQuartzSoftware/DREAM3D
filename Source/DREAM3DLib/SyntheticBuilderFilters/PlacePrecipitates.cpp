@@ -151,6 +151,11 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
 
+  //Ensemble Data
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -303, unsigned int, DataArray<unsigned int>, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  unsigned int, DataArray<unsigned int>, ensembles, 1);
   setErrorMessage(ss.str());
 }
 
@@ -266,8 +271,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 //  float coatingradcur1, coatingradcur2, coatingradcur3;
   currentprecipvoxellist.resize(0);
 //  currentcoatingvoxellist.resize(0);
-  std::stringstream ss;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  unsigned int, DataArray<unsigned int>, m->getNumEnsembleTuples(), 1);
+
 
   unsigned int shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
   // init any values for each of the Shape Ops
@@ -540,10 +544,6 @@ void  PlacePrecipitates::place_precipitates()
   double totalprecipitatefractions = 0.0;
 
   size_t numXTals = m->getNumEnsembleTuples();
-  std::stringstream ss;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -303, unsigned int, DataArray<unsigned int>, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304, float, FloatArrayType, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305, float, FloatArrayType, numXTals, 1);
 
   for (size_t i = 1; i < numXTals; ++i)
   {

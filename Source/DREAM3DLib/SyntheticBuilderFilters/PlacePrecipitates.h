@@ -115,26 +115,25 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     ShapeOps::Pointer m_SuprtEllipsoidOps;
 
     int32_t* m_GrainIds;
-    float* m_AxisEulerAngles;
+    int32_t* m_PhasesC;
+    int8_t* m_SurfaceVoxels;
+    int32_t* m_Neighbors;
+
+	float* m_AxisEulerAngles;
     float* m_Centroids;
     float* m_AxisLengths;
     float* m_Volumes;
     float* m_Omega3s;
     float* m_EquivalentDiameters;
-	  bool* m_Active;
-    int32_t* m_PhasesC;
+	bool* m_Active;
     int32_t* m_PhasesF;
-    int8_t* m_SurfaceVoxels;
-    int32_t* m_Neighbors;
     int32_t* m_NumCells;
     int32_t* m_Neighborhoods;
-    unsigned int* m_PhaseTypes;
+
+	unsigned int* m_PhaseTypes;
     float* m_PhaseFractions;
     float* m_PrecipitateFractions;
-
     unsigned int* m_ShapeTypes;
-
-
 
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
