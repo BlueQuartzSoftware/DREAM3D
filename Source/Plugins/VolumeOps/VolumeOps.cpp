@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
 #include "DREAM3DLib/ManipulationFilters/CropVolume.h"
 #include "DREAM3DLib/ManipulationFilters/ChangeResolution.h"

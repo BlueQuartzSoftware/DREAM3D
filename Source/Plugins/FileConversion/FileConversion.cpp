@@ -43,13 +43,13 @@
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 
-#include "DREAM3DLib/IO/FileReader.h"
-#include "DREAM3DLib/IO/PhReader.h"
-#include "DREAM3DLib/IO/DxReader.h"
-#include "DREAM3DLib/IO/PhWriter.h"
-#include "DREAM3DLib/IO/DxWriter.h"
-#include "DREAM3DLib/IO/VtkGrainIdReader.h"
-#include "DREAM3DLib/IO/VtkGrainIdWriter.h"
+#include "DREAM3DLib/Common/FileReader.h"
+#include "DREAM3DLib/IOFilters/PhReader.h"
+#include "DREAM3DLib/IOFilters/DxReader.h"
+#include "DREAM3DLib/IOFilters/PhWriter.h"
+#include "DREAM3DLib/IOFilters/DxWriter.h"
+#include "DREAM3DLib/IOFilters/VtkGrainIdReader.h"
+#include "DREAM3DLib/IOFilters/VtkGrainIdWriter.h"
 #include "DREAM3DLib/HDF5/H5VoxelGrainIdReader.h"
 
 

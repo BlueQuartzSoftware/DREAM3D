@@ -42,8 +42,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/DxWriter.h"
-#include "DREAM3DLib/IO/DxReader.h"
+#include "DREAM3DLib/IOFilters/DxWriter.h"
+#include "DREAM3DLib/IOFilters/DxReader.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"

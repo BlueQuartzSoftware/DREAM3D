@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,45 +34,57 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PHWRITER_HPP_
-#define PHWRITER_HPP_
+#ifndef DATACONTAINER_READER_H_
+#define DATACONTAINER_READER_H_
 
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileWriter.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
-/**
- * @class PhWriter PhWriter.h DREAM3D/IO/PhWriter.h
- * @brief This class writes a "Ph" file from the Grain Generator Data but is templated
- * so that possibly other classes can use this writing method. This code was adapted
- * from code supplied by S. Sintay and J. Tucker.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jun 7, 2011
- * @version 1.0
+
+/*
+ *
  */
-class DREAM3DLib_EXPORT PhWriter : public FileWriter
+class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(PhWriter);
-    DREAM3D_STATIC_NEW_MACRO(PhWriter);
-    DREAM3D_TYPE_MACRO_SUPER(PhWriter, FileWriter);
+    DREAM3D_SHARED_POINTERS(DataContainerReader);
+    DREAM3D_STATIC_NEW_MACRO(DataContainerReader);
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerReader, AbstractFilter);
 
+    virtual ~DataContainerReader();
 
-    virtual ~PhWriter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+
+    virtual void preflight();
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Data Container"; }
+
+    virtual void setupFilterOptions();
+
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+    virtual void execute();
+
+    int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 
   protected:
-    PhWriter();
+    DataContainerReader();
 
-    virtual int writeHeader();
-
-    virtual int writeFile();
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int readGroupsData(hid_t dcGid, const std::string &groupName);
 
 
   private:
-    PhWriter(const PhWriter&); // Copy Constructor Not Implemented
-    void operator=(const PhWriter&); // Operator '=' Not Implemented
+    DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerReader&); // Operator '=' Not Implemented
+
+
 };
 
-#endif /* PHWRITER_HPP_ */
+#endif /* DATACONTAINER_READER_H_ */

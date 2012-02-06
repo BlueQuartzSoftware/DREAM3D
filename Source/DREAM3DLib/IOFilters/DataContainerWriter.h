@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Write Data Container"; }
 
     virtual void setupFilterOptions();
