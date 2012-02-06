@@ -49,7 +49,7 @@
 PhReader::PhReader() :
 FileReader()
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -58,6 +58,23 @@ FileReader()
 PhReader::~PhReader()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PhReader::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -93,11 +110,11 @@ int  PhReader::readFile()
   int nz = 0;
 
   std::ifstream inFile;
-  inFile.open(getFileName().c_str(), std::ios_base::binary);
+  inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
     std::stringstream ss;
-    ss << "Failed to open: " << getFileName();
+    ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
     setErrorMessage(ss.str());
     return -1;

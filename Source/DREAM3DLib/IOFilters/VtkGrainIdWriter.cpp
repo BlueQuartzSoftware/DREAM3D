@@ -44,7 +44,7 @@ VtkGrainIdWriter::VtkGrainIdWriter() :
 FileWriter(),
 m_WriteBinaryFiles(true)
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -53,6 +53,23 @@ m_WriteBinaryFiles(true)
 VtkGrainIdWriter::~VtkGrainIdWriter()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VtkGrainIdWriter::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output File");
+    option->setPropertyName("OutputFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 
@@ -96,7 +113,7 @@ int VtkGrainIdWriter::writeFile()
   scalarsToWrite.push_back(w0);
   VTKRectilinearGridFileWriter writer;
   writer.setWriteBinaryFiles(m_WriteBinaryFiles);
-  int err = writer.write<DataContainer>(getFileName(), m, scalarsToWrite);
+  int err = writer.write<DataContainer>(getOutputFile(), m, scalarsToWrite);
   if (err < 0)
   {
     setErrorCondition(err);

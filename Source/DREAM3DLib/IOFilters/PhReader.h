@@ -65,11 +65,14 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Grain Ids from Ph File"; }
 
+    virtual void setupFilterOptions();
+
   protected:
     PhReader();
 
     virtual int readHeader();
     virtual int readFile();
+
 
   private:
     PhReader(const PhReader&); //Not Implemented
