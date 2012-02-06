@@ -46,7 +46,7 @@ DxWriter::DxWriter() :
 FileWriter(),
 m_AddSurfaceLayer(false)
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -55,6 +55,31 @@ m_AddSurfaceLayer(false)
 DxWriter::~DxWriter()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DxWriter::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output File");
+    option->setPropertyName("OutputFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Add Surface Layer");
+    option->setPropertyName("AddSurfaceLayer");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +123,7 @@ int DxWriter::writeFile()
   };
   // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
 
-  std::ofstream out(getFileName().c_str(), std::ios_base::binary);
+  std::ofstream out(getOutputFile().c_str(), std::ios_base::binary);
   if(out.is_open() == false)
   {
     return -1;

@@ -146,14 +146,14 @@ void FileConversion::execute()
     {
       AbstractFilter::Pointer filter = VtkGrainIdReader::New();
       FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
-      reader->setFileName(m_InputFilePath);
+      reader->setInputFile(m_InputFilePath);
       pipeline.push_back(filter);
     }
     else if (inputExtension.compare("ph") == 0)
     {
       AbstractFilter::Pointer filter = PhReader::New();
       FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
-      reader->setFileName(m_InputFilePath);
+      reader->setInputFile(m_InputFilePath);
       pipeline.push_back(filter);
     }
     else if (inputExtension.compare("h5voxel") == 0)
@@ -167,7 +167,7 @@ void FileConversion::execute()
     {
       AbstractFilter::Pointer filter = DxReader::New();
       FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
-      reader->setFileName(m_InputFilePath);
+      reader->setInputFile(m_InputFilePath);
       pipeline.push_back(filter);
     }
     else
@@ -184,15 +184,15 @@ void FileConversion::execute()
   if (outputExtension.compare("vtk") == 0)
   {
     AbstractFilter::Pointer filter = VtkGrainIdWriter::New();
-    FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
-    reader->setFileName(m_OutputFilePath);
+    FileWriter* reader = FileWriter::SafeObjectDownCast<AbstractFilter*, FileWriter*>(filter.get());
+    reader->setOutputFile(m_OutputFilePath);
     pipeline.push_back(filter);
   }
   else if (outputExtension.compare("ph") == 0)
   {
     AbstractFilter::Pointer filter = PhWriter::New();
-    FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
-    reader->setFileName(m_OutputFilePath);
+    FileWriter* reader = FileWriter::SafeObjectDownCast<AbstractFilter*, FileWriter*>(filter.get());
+    reader->setOutputFile(m_OutputFilePath);
     pipeline.push_back(filter);
   }
   else if (outputExtension.compare("h5voxel") == 0)
@@ -205,8 +205,8 @@ void FileConversion::execute()
   else if (outputExtension.compare("dx") == 0)
   {
     AbstractFilter::Pointer filter = DxWriter::New();
-    FileReader* reader = FileReader::SafeObjectDownCast<AbstractFilter*, FileReader*>(filter.get());
-    reader->setFileName(m_OutputFilePath);
+    FileWriter* reader = FileWriter::SafeObjectDownCast<AbstractFilter*, FileWriter*>(filter.get());
+    reader->setOutputFile(m_OutputFilePath);
     pipeline.push_back(filter);
   }
   else

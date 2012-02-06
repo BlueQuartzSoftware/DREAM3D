@@ -52,7 +52,7 @@
 
       virtual ~FileWriter();
 
-      DREAM3D_INSTANCE_STRING_PROPERTY(FileName);
+      DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile);
 
       virtual void execute();
 

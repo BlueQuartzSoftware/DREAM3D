@@ -36,7 +36,7 @@ set(FilterWidget_SRCS
 # --------------------------------------------------------------------
 #
 # --------------------------------------------------------------------
-Macro(D3DCompileDir DirName)
+Macro(WidgetGeneration DirName)
     set(group ${DirName})
     file(APPEND ${CodeGeneratorFile} "//----- ${DirName} --------------- \n")
     # Make sure this directory is created.
@@ -91,12 +91,14 @@ file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid QFilterWidgetManager::Regi
 
     
 
-D3DCompileDir(ReconstructionFilters)
-D3DCompileDir(GenericFilters)
-D3DCompileDir(ManipulationFilters)
-D3DCompileDir(StatisticsFilters)
-D3DCompileDir(SyntheticBuilderFilters)
-D3DCompileDir(SurfaceMeshingFilters)
+
+WidgetGeneration(GenericFilters)
+WidgetGeneration(IOFilters)
+WidgetGeneration(ManipulationFilters)
+WidgetGeneration(ReconstructionFilters)
+WidgetGeneration(StatisticsFilters)
+WidgetGeneration(SyntheticBuilderFilters)
+WidgetGeneration(SurfaceMeshingFilters)
 
 file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
 

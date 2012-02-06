@@ -44,7 +44,7 @@
 DxReader::DxReader() :
 FileReader()
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -52,6 +52,23 @@ FileReader()
 // -----------------------------------------------------------------------------
 DxReader::~DxReader()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DxReader::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -84,10 +101,10 @@ int DxReader::readFile()
   //int nx, ny, nz;
 
   std::ifstream inFile;
-  inFile.open(getFileName().c_str(), std::ios_base::binary);
+  inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
-    std::cout << "Failed to open: " << getFileName() << std::endl;
+    std::cout << "Failed to open: " << getInputFile() << std::endl;
     exit(0);
   }
 

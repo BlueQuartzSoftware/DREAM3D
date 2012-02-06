@@ -79,7 +79,7 @@ int TestDxWriter()
 
   DxWriter::Pointer writer = DxWriter::New();
   writer->setDataContainer(m.get());
-  writer->setFileName(UnitTest::DxIOTest::TestFile);
+  writer->setOutputFile(UnitTest::DxIOTest::TestFile);
 
   writer->execute();
   int err = writer->getErrorCondition();
@@ -94,7 +94,7 @@ int TestDxReader()
 {
 
   DxReader::Pointer reader = DxReader::New();
-  reader->setFileName(UnitTest::DxIOTest::TestFile);
+  reader->setInputFile(UnitTest::DxIOTest::TestFile);
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;
