@@ -57,7 +57,8 @@
 
       virtual ~FileReader();
 
-      DREAM3D_INSTANCE_STRING_PROPERTY(FileName);
+      DREAM3D_INSTANCE_STRING_PROPERTY(InputFile);
+
 
       /* This will internally call readHeader() and readFile() with appropriate
        * error checkes after each one. Subclasses should just implement the readHeader
@@ -126,6 +127,8 @@
      virtual int readHeader();
 
      virtual int readFile();
+
+     virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     private:
       FileReader(const FileReader&); // Copy Constructor Not Implemented

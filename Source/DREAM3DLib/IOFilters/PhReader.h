@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,57 +34,52 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DATACONTAINER_READER_H_
-#define DATACONTAINER_READER_H_
+
+#ifndef _PHReader_h_
+#define _PHReader_h_
 
 #include <string>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/FileReader.h"
 
-
-/*
- *
+/**
+ * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
+ * @brief
+ * @author mjackson
+ * @date Sep 28, 2011
+ * @version $Revision$
  */
-class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
+class DREAM3DLib_EXPORT PhReader : public FileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(DataContainerReader);
-    DREAM3D_STATIC_NEW_MACRO(DataContainerReader);
-    DREAM3D_TYPE_MACRO_SUPER(DataContainerReader, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(PhReader);
+    DREAM3D_STATIC_NEW_MACRO(PhReader);
+    DREAM3D_TYPE_MACRO_SUPER(PhReader, FileReader);
 
-    virtual ~DataContainerReader();
+    virtual ~PhReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-
-    virtual void preflight();
-
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getHumanLabel() { return "Read Data Container"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Grain Ids from Ph File"; }
 
     virtual void setupFilterOptions();
 
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
-    virtual void execute();
-
-    int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
-
   protected:
-    DataContainerReader();
+    PhReader();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    int readGroupsData(hid_t dcGid, const std::string &groupName);
+    virtual int readHeader();
+    virtual int readFile();
 
 
   private:
-    DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
-    void operator=(const DataContainerReader&); // Operator '=' Not Implemented
-
+    PhReader(const PhReader&); //Not Implemented
+    void operator=(const PhReader&); //Not Implemented
 
 };
 
-#endif /* DATACONTAINER_READER_H_ */
+#endif //_PHReader_h_
+
+

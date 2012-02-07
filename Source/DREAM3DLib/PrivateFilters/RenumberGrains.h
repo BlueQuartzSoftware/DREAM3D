@@ -60,7 +60,7 @@ class RenumberGrains : public AbstractFilter
   
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
      virtual const std::string getHumanLabel() { return "Renumber Grains"; }
      
      virtual void execute();

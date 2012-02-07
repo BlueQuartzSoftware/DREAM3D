@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,39 +34,57 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DXGRAINIDWRITER_H_
-#define DXGRAINIDWRITER_H_
+#ifndef DATACONTAINER_READER_H_
+#define DATACONTAINER_READER_H_
 
-
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileWriter.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 
-class DREAM3DLib_EXPORT DxWriter : public FileWriter
+/*
+ *
+ */
+class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DxWriter)
-    DREAM3D_STATIC_NEW_MACRO(DxWriter)
-    DREAM3D_TYPE_MACRO_SUPER(DxWriter, FileWriter)
+    DREAM3D_SHARED_POINTERS(DataContainerReader);
+    DREAM3D_STATIC_NEW_MACRO(DataContainerReader);
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerReader, AbstractFilter);
 
+    virtual ~DataContainerReader();
 
-    virtual ~DxWriter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
+    virtual void preflight();
 
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Data Container"; }
+
+    virtual void setupFilterOptions();
+
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+    virtual void execute();
+
+    int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 
   protected:
-    DxWriter();
+    DataContainerReader();
 
-    virtual int writeHeader();
-    virtual int writeFile();
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int readGroupsData(hid_t dcGid, const std::string &groupName);
+
 
   private:
-    DxWriter(const DxWriter&); // Copy Constructor Not Implemented
-    void operator=(const DxWriter&); // Operator '=' Not Implemented
+    DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerReader&); // Operator '=' Not Implemented
+
+
 };
 
-#endif /* DXGRAINIDWRITER_H_ */
+#endif /* DATACONTAINER_READER_H_ */

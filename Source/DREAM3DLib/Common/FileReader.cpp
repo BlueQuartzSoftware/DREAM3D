@@ -58,6 +58,24 @@ FileReader::~FileReader()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+
+  if(getInputFile().empty() == true)
+  {
+    ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
+    setErrorCondition(-1);
+  }
+
+  setErrorMessage(ss.str());
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -86,7 +104,8 @@ int FileReader::readFile()
 // -----------------------------------------------------------------------------
 void FileReader::execute()
 {
-  if (getDataContainer() == NULL)
+  DataContainer* m = getDataContainer();
+  if(NULL == m)
   {
     setErrorCondition(-1);
     setErrorMessage("The DataContainer Object was NOT set correctly.");
@@ -94,7 +113,10 @@ void FileReader::execute()
     return;
   }
   setErrorCondition(0);
-  int err = readHeader();
+  dataCheck(false, 1, 1, 1);
+  int err = 0;
+
+  err = readHeader();
   if (err < 0)
   {
     setErrorCondition(err);

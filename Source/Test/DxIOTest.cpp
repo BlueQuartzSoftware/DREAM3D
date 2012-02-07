@@ -42,8 +42,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/DxWriter.h"
-#include "DREAM3DLib/IO/DxReader.h"
+#include "DREAM3DLib/IOFilters/DxWriter.h"
+#include "DREAM3DLib/IOFilters/DxReader.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -79,7 +79,7 @@ int TestDxWriter()
 
   DxWriter::Pointer writer = DxWriter::New();
   writer->setDataContainer(m.get());
-  writer->setFileName(UnitTest::DxIOTest::TestFile);
+  writer->setOutputFile(UnitTest::DxIOTest::TestFile);
 
   writer->execute();
   int err = writer->getErrorCondition();
@@ -94,7 +94,7 @@ int TestDxReader()
 {
 
   DxReader::Pointer reader = DxReader::New();
-  reader->setFileName(UnitTest::DxIOTest::TestFile);
+  reader->setInputFile(UnitTest::DxIOTest::TestFile);
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;

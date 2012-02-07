@@ -74,8 +74,8 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/PhaseType.h"
-#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
-#include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"

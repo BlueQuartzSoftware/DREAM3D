@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,46 +33,38 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef PHWRITER_HPP_
-#define PHWRITER_HPP_
-
+#ifndef FILEWRITER_H_
+#define FILEWRITER_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileWriter.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
-/**
- * @class PhWriter PhWriter.h DREAM3D/IO/PhWriter.h
- * @brief This class writes a "Ph" file from the Grain Generator Data but is templated
- * so that possibly other classes can use this writing method. This code was adapted
- * from code supplied by S. Sintay and J. Tucker.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jun 7, 2011
- * @version 1.0
- */
-class DREAM3DLib_EXPORT PhWriter : public FileWriter
-{
-  public:
-    DREAM3D_SHARED_POINTERS(PhWriter);
-    DREAM3D_STATIC_NEW_MACRO(PhWriter);
-    DREAM3D_TYPE_MACRO_SUPER(PhWriter, FileWriter);
+  /*
+   *
+   */
+  class DREAM3DLib_EXPORT FileWriter : public AbstractFilter
+  {
+    public:
+      DREAM3D_SHARED_POINTERS(FileWriter);
+      DREAM3D_STATIC_NEW_MACRO(FileWriter);
+      DREAM3D_TYPE_MACRO_SUPER(FileWriter, AbstractFilter)
 
+      virtual ~FileWriter();
 
-    virtual ~PhWriter();
+      DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile);
 
-  protected:
-    PhWriter();
+      virtual void execute();
 
-    virtual int writeHeader();
+    protected:
+      FileWriter();
 
-    virtual int writeFile();
+      virtual int writeHeader();
+      virtual int writeFile();
 
+    private:
+      FileWriter(const FileWriter&); // Copy Constructor Not Implemented
+      void operator=(const FileWriter&); // Operator '=' Not Implemented
+  };
 
-  private:
-    PhWriter(const PhWriter&); // Copy Constructor Not Implemented
-    void operator=(const PhWriter&); // Operator '=' Not Implemented
-};
-
-#endif /* PHWRITER_HPP_ */
+#endif /* FILEWRITER_H_ */

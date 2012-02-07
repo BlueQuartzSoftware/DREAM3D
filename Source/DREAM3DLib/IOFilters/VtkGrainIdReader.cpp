@@ -128,7 +128,7 @@ int VtkGrainIdReader::readHeader()
 {
 
   int err = 0;
-  if (getFileName().empty() == true)
+  if (getInputFile().empty() == true)
   {
     std::stringstream ss;
     ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
@@ -147,11 +147,11 @@ int VtkGrainIdReader::readHeader()
   }
 
   std::ifstream instream;
-  instream.open(getFileName().c_str(), std::ios_base::binary);
+  instream.open(getInputFile().c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
     std::stringstream ss;
-    ss << "Vtk file could not be opened: " << getFileName();
+    ss << "Vtk file could not be opened: " << getInputFile();
     setErrorMessage(ss.str());
     return -1;
   }
@@ -249,7 +249,7 @@ int VtkGrainIdReader::readFile()
 {
   int err = 0;
 
-  std::string filename = getFileName();
+  std::string filename = getInputFile();
   std::ifstream instream;
   instream.open(filename.c_str(), std::ios_base::binary);
   if (!instream.is_open())
