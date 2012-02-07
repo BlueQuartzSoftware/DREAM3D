@@ -48,6 +48,7 @@
 PhWriter::PhWriter() :
 FileWriter()
 {
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -56,6 +57,23 @@ FileWriter()
 PhWriter::~PhWriter()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PhWriter::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output File");
+    option->setPropertyName("OutputFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -118,10 +136,10 @@ int PhWriter::writeFile()
 
   //OutputName = tokens[0] + ".ph";
   std::ofstream outfile;
-  outfile.open(getFileName().c_str(), std::ios_base::binary);
+  outfile.open(getOutputFile().c_str(), std::ios_base::binary);
   if(!outfile)
   {
-    std::cout << "Failed to open: " << getFileName() << std::endl;
+    std::cout << "Failed to open: " << getOutputFile() << std::endl;
     return -1;
   }
 

@@ -33,43 +33,44 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef VTKGRAINIDWRITER_H_
+#define VTKGRAINIDWRITER_H_
 
-#ifndef _DXREADER_H_
-#define _DXREADER_H_
-
-#include <string>
-#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileReader.h"
+#include "DREAM3DLib/Common/FileWriter.h"
 
-/**
- * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+/*
+ *
  */
-class DREAM3DLib_EXPORT DxReader : public FileReader
+class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DxReader);
-    DREAM3D_STATIC_NEW_MACRO(DxReader);
-    DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader);
+    DREAM3D_SHARED_POINTERS(VtkGrainIdWriter);
+    DREAM3D_STATIC_NEW_MACRO(VtkGrainIdWriter);
+    DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdWriter, FileWriter);
 
-    virtual ~DxReader();
+
+    virtual ~VtkGrainIdWriter();
+
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Write Grain IDs to Vtk File"; }
+    virtual void setupFilterOptions();
 
   protected:
-    DxReader();
+    VtkGrainIdWriter();
 
-    virtual int readHeader();
-    virtual int readFile();
+    virtual int writeHeader();
+
+    virtual int writeFile();
+
 
   private:
-    DxReader(const DxReader&); // Copy Constructor Not Implemented
-    void operator=(const DxReader&); // Operator '=' Not Implemented
+    VtkGrainIdWriter(const VtkGrainIdWriter&); // Copy Constructor Not Implemented
+    void operator=(const VtkGrainIdWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* DXREADER_H_ */
+#endif /* VTKGRAINIDWRITER_H_ */

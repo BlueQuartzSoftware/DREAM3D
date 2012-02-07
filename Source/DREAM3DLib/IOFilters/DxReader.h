@@ -34,59 +34,47 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FieldDataCSVWriter_H_
-#define FieldDataCSVWriter_H_
+#ifndef _DXREADER_H_
+#define _DXREADER_H_
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
-
+#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/FileReader.h"
 
 /**
- * @class FieldDataCSVWriter FieldDataCSVWriter.h DREAM3DLib/GenericFilters/FieldDataCSVWriter.h
+ * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
  * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @author mjackson
+ * @date Sep 28, 2011
+ * @version $Revision$
  */
-class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
+class DREAM3DLib_EXPORT DxReader : public FileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(FieldDataCSVWriter);
-    DREAM3D_STATIC_NEW_MACRO(FieldDataCSVWriter);
-    DREAM3D_TYPE_MACRO_SUPER(FieldDataCSVWriter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(DxReader);
+    DREAM3D_STATIC_NEW_MACRO(DxReader);
+    DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader);
 
-    virtual ~FieldDataCSVWriter();
+    virtual ~DxReader();
 
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldDataFile)
-
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getHumanLabel() { return "Write Field Data"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Grain Ids from Dx File"; }
 
     virtual void setupFilterOptions();
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
-    virtual void preflight();
-
-
   protected:
-    FieldDataCSVWriter();
+    DxReader();
+
+    virtual int readHeader();
+    virtual int readFile();
 
   private:
-
-
-    FieldDataCSVWriter(const FieldDataCSVWriter&); // Copy Constructor Not Implemented
-    void operator=(const FieldDataCSVWriter&); // Operator '=' Not Implemented
+    DxReader(const DxReader&); // Copy Constructor Not Implemented
+    void operator=(const DxReader&); // Operator '=' Not Implemented
 };
 
-#endif /* FieldDataCSVWriter_H_ */
+#endif /* DXREADER_H_ */

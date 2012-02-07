@@ -56,7 +56,7 @@
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
-#include "DREAM3DLib/GenericFilters/DataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 typedef struct {

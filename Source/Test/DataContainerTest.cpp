@@ -51,8 +51,8 @@
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/GenericFilters/DataContainerReader.h"
-#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "UnitTestSupport.hpp"
 

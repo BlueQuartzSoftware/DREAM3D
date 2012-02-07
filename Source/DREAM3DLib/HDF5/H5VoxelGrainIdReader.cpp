@@ -75,7 +75,7 @@ int H5VoxelGrainIdReader::readFile()
 
   int err = 0;
   H5VoxelReader::Pointer reader = H5VoxelReader::New();
-  reader->setFileName(getFileName());
+  reader->setFileName(getInputFile());
   int64_t volDims[3];
   float spacing[3];
   float origin[3];

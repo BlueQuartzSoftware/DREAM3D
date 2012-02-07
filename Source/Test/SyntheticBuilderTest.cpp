@@ -44,14 +44,14 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-#include "DREAM3DLib/GenericFilters/DataContainerWriter.h"
-#include "DREAM3DLib/GenericFilters/VtkRectilinearGridWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 //#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
-#include "DREAM3DLib/GenericFilters/FieldDataCSVWriter.h"
+#include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 
 #include "UnitTestSupport.hpp"
 

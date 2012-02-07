@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/DataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 

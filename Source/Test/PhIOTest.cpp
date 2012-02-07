@@ -44,8 +44,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/PhWriter.h"
-#include "DREAM3DLib/IO/PhReader.h"
+#include "DREAM3DLib/IOFilters/PhWriter.h"
+#include "DREAM3DLib/IOFilters/PhReader.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -83,7 +83,7 @@ int TestPhWriter()
 
   PhWriter::Pointer writer = PhWriter::New();
   writer->setDataContainer(m.get());
-  writer->setFileName(UnitTest::PhIOTest::TestFile);
+  writer->setOutputFile(UnitTest::PhIOTest::TestFile);
 
 
   writer->execute();
@@ -99,7 +99,7 @@ int TestPhReader()
 {
   DataContainer::Pointer m = DataContainer::New();
   PhReader::Pointer reader = PhReader::New();
-  reader->setFileName(UnitTest::PhIOTest::TestFile);
+  reader->setInputFile(UnitTest::PhIOTest::TestFile);
   reader->setDataContainer(m.get());
   size_t nx = 0;
   size_t ny = 0;

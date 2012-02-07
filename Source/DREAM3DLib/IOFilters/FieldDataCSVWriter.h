@@ -34,46 +34,59 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef FieldDataCSVWriter_H_
+#define FieldDataCSVWriter_H_
 
-#ifndef _PHReader_h_
-#define _PHReader_h_
-
-#include <string>
 #include <vector>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/FileReader.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DataContainer.h"
+
 
 /**
- * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
+ * @class FieldDataCSVWriter FieldDataCSVWriter.h DREAM3DLib/GenericFilters/FieldDataCSVWriter.h
  * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT PhReader : public FileReader
+class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(PhReader);
-    DREAM3D_STATIC_NEW_MACRO(PhReader);
-    DREAM3D_TYPE_MACRO_SUPER(PhReader, FileReader);
+    DREAM3D_SHARED_POINTERS(FieldDataCSVWriter);
+    DREAM3D_STATIC_NEW_MACRO(FieldDataCSVWriter);
+    DREAM3D_TYPE_MACRO_SUPER(FieldDataCSVWriter, AbstractFilter);
 
-    virtual ~PhReader();
+    virtual ~FieldDataCSVWriter();
+
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldDataFile)
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Write Field Data"; }
+
+    virtual void setupFilterOptions();
+
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
+    virtual void preflight();
+
 
   protected:
-    PhReader();
-
-    virtual int readHeader();
-    virtual int readFile();
+    FieldDataCSVWriter();
 
   private:
-    PhReader(const PhReader&); //Not Implemented
-    void operator=(const PhReader&); //Not Implemented
 
+
+    FieldDataCSVWriter(const FieldDataCSVWriter&); // Copy Constructor Not Implemented
+    void operator=(const FieldDataCSVWriter&); // Operator '=' Not Implemented
 };
 
-#endif //_PHReader_h_
-
-
+#endif /* FieldDataCSVWriter_H_ */

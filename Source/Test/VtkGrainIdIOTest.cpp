@@ -42,8 +42,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/IO/VtkGrainIdWriter.h"
-#include "DREAM3DLib/IO/VtkGrainIdReader.h"
+#include "DREAM3DLib/IOFilters/VtkGrainIdWriter.h"
+#include "DREAM3DLib/IOFilters/VtkGrainIdReader.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -81,7 +81,7 @@ int TestVtkGrainIdWriter()
 
   VtkGrainIdWriter::Pointer writer = VtkGrainIdWriter::New();
   writer->setDataContainer(m.get());
-  writer->setFileName(UnitTest::VtkGrainIdIOTest::TestFile);
+  writer->setOutputFile(UnitTest::VtkGrainIdIOTest::TestFile);
   writer->execute();
   int err = writer->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -95,7 +95,7 @@ int TestVtkGrainIdReader()
 {
 
   VtkGrainIdReader::Pointer reader = VtkGrainIdReader::New();
-  reader->setFileName(UnitTest::VtkGrainIdIOTest::TestFile);
+  reader->setInputFile(UnitTest::VtkGrainIdIOTest::TestFile);
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;
