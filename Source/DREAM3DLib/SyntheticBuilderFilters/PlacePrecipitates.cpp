@@ -152,10 +152,14 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
 
   //Ensemble Data
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -303, unsigned int, DataArray<unsigned int>, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304, float, FloatArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305, float, FloatArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  unsigned int, DataArray<unsigned int>, ensembles, 1);
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
+
   setErrorMessage(ss.str());
 }
 

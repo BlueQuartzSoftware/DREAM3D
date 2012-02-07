@@ -143,7 +143,13 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   }
 
   // Ensemble Data
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -303, float, FloatArrayType, ensembles, 1);
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -284,13 +290,6 @@ void MatchCrystallography::initializeArrays(std::vector<unsigned int> structures
   phaseFractions->SetName(DREAM3D::EnsembleData::PhaseFractions);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseFractions, phaseFractions);
   m_PhaseFractions = phaseFractions->GetPointer(0);
-
-
-  // Initialize the first slot in these arrays since they should never be used
-  m_CrystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  m_PrecipitateFractions[0] = 0.0;
-  m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
-  m_PrecipitateFractions[0] = -1.0;
 
   actualodf.resize(size + 1);
   simodf.resize(size + 1);
