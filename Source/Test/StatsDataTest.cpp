@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <stdlib.h>
+#include <string.h>
+
 
 #include <iostream>
 #include <string>
@@ -409,12 +411,18 @@ StatsDataArray::Pointer createStatsDataArray()
   float sdlogdiam = sigma;
 
   size_t nBins = binsizes.size();
+  // Copy this into the DataArray<float>
+  FloatArrayType::Pointer binNumbers = FloatArrayType::CreateArray(nBins);
+  binNumbers->SetName(DREAM3D::HDF5::BinNumber);
+  ::memcpy(binNumbers->GetVoidPointer(0), &(binsizes.front()), binsizes.size() * sizeof(float));
+
 
   // Phase 1
   StatsData::Pointer data1 = StatsData::New();
   data1->setPhaseFraction(calcPhaseFraction);
   data1->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
   data1->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+  data1->setBinNumbers(binNumbers);
   initializeOmega3(data1, nBins);
   initializeBOverA(data1, nBins);
   initializeCOverA(data1, nBins);
@@ -430,6 +438,7 @@ StatsDataArray::Pointer createStatsDataArray()
   data2->setPhaseFraction(calcPhaseFraction);
   data2->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
   data2->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+  data2->setBinNumbers(binNumbers);
   initializeOmega3(data2, nBins);
   initializeBOverA(data2, nBins);
   initializeCOverA(data2, nBins);
@@ -469,6 +478,11 @@ void TestStatsData()
   statsArray->setStatsData(1, s1);
   statsArray->setStatsData(2, s2);
   DREAM3D_REQUIRE_EQUAL(3, statsArray->GetNumberOfTuples());
+
+
+  StatsDataArray& arrayRef = *statsArray;
+  StatsData::Pointer t0 = arrayRef[0];
+  DREAM3D_REQUIRE_EQUAL(NULL, t0.get());
 
 }
 
@@ -516,6 +530,52 @@ void TestWriteData()
   writer->execute();
   DREAM3D_REQUIRE( writer->getErrorCondition() >= 0)
 
+
+  // This is an example of getting the StatsDataArray back from the DataContiner
+  // and being able to do something meaningful with it.
+  // Since StatsDataArray subclasses the IDataArray there are some simple things you
+  // can do like ask how many StatsData instances are being stored:
+  int numStatsData = m->getEnsembleData(DREAM3D::EnsembleData::Statistics)->GetSize(); // This works because the
+  // size of each Tuple is 1
+  numStatsData = m->getEnsembleData(DREAM3D::EnsembleData::Statistics)->GetNumberOfTuples();
+  // This also works. Either way the value at this point should be '3'
+  DREAM3D_REQUIRE_EQUAL(3, numStatsData);
+
+  // This will get us a Pointer to the instance of StatsDataArray class that is stored
+  // in the DataContainer.
+  StatsDataArray* statsArrayPtr = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+
+  // Unfortunately we can NOT use the operator [] with a pointer so sometimes creating
+  // a reference variable can be help. We do this by dereferencing the pointer and
+  // assigning that to a "reference variable"
+  StatsDataArray& statsArrayRef = *statsArrayPtr;
+
+  // So now we can get to the actual "StatsData" instances stored in the StatsDataArray object.
+  StatsData::Pointer s1 = statsArrayRef[1];
+  // We could have also done it using the pointer from above in this manner:
+  StatsData::Pointer s1_Alt = statsArrayPtr->getStatsData(1);
+
+  // Both shared pointer objects should wrapp the SAME StatsData Pointer. This line
+  // will verify that. You would NOT use this next line in normal production code. It
+  // is for Unit Testing ONLY.
+  DREAM3D_REQUIRE_EQUAL( (s1.get()), (s1_Alt.get()))
+
+  size_t numBins = s1->getNumberOfBins();
+
+  // So Now if you want to get the B Over A values you can do this:
+  VectorOfFloatArray bovera = s1->getGrainSize_BOverA();
+  // This holds 2 arrays. Alphas and Betas whic are of type FloatArrayType, or a
+  // DataArray<float>::Pointer
+
+  FloatArrayType::Pointer alphas = bovera[0];
+  FloatArrayType::Pointer betas = bovera[1];
+
+  DREAM3D_REQUIRE_EQUAL(numBins, alphas->GetSize());
+  // Since these are all shared_pointers, well at least the alphas and betas are,
+  // anything you do to this array (adding, erasing, changing values) you are doing
+  // to the arrays stored in the Data Container.
+  alphas->SetValue(0, 100.0f); // This sets the value at index 0 to 100.0
+  betas->SetValue(0, 6.0f); // This sets the value at index 0 to 6.0
 }
 
 // -----------------------------------------------------------------------------
