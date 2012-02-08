@@ -47,14 +47,14 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT StatsDataContainer : public IDataArray
+class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 {
   public:
-    DREAM3D_SHARED_POINTERS(StatsDataContainer)
-    DREAM3D_STATIC_NEW_MACRO(StatsDataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(StatsDataContainer, IDataArray)
+    DREAM3D_SHARED_POINTERS(StatsDataArray)
+    DREAM3D_STATIC_NEW_MACRO(StatsDataArray)
+    DREAM3D_TYPE_MACRO_SUPER(StatsDataArray, IDataArray)
 
-    virtual ~StatsDataContainer();
+    virtual ~StatsDataArray();
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<StatsData::Pointer>, StatsDataArray)
 
@@ -205,13 +205,13 @@ class DREAM3DLib_EXPORT StatsDataContainer : public IDataArray
     virtual int readH5Data(hid_t parentId);
 
   protected:
-    StatsDataContainer();
+    StatsDataArray();
 
   private:
     std::string m_Name;
 
-    StatsDataContainer(const StatsDataContainer&); // Copy Constructor Not Implemented
-    void operator=(const StatsDataContainer&); // Operator '=' Not Implemented
+    StatsDataArray(const StatsDataArray&); // Copy Constructor Not Implemented
+    void operator=(const StatsDataArray&); // Operator '=' Not Implemented
 };
 
 #endif /* _STATSDATA_H_ */
