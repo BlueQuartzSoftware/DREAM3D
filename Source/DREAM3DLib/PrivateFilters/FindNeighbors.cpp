@@ -84,21 +84,18 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, fields, 1);
 
-  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-  neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
-  m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
-
-  NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
-  sharedSurfaceAreaListPtr->SetName(DREAM3D::FieldData::SharedSurfaceAreaList);
-  m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
-
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                           (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
-    setErrorCondition(-308);
+    NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+    neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
+    m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+    if (neighborlistPtr.get() == NULL) {
+      ss << "NeighborLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
+      setErrorCondition(-308);
+    }
   }
 
   // And we do the same for the SharedSurfaceArea list
@@ -106,9 +103,13 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
                                  (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
-    ss << "SurfaceAreaLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
-    setErrorCondition(-308);
-  }
+    NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
+    sharedSurfaceAreaListPtr->SetName(DREAM3D::FieldData::SharedSurfaceAreaList);
+    m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
+    if (sharedSurfaceAreaListPtr.get() == NULL){
+      ss << "SurfaceAreaLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
+      setErrorCondition(-308);
+    }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, float, FloatArrayType,  ensembles, 1);
 
@@ -287,6 +288,9 @@ void FindNeighbors::execute()
       neighborsurfacearealist[i].push_back(area);
     }
     m_NumNeighbors[i] = neighborlist[i].size();
+
+
+
 
     // Set the vector for each list into the NeighborList Object
     NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
