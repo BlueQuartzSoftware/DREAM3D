@@ -57,7 +57,7 @@
  * @date Dec 16, 2010
  * @version 1.0
  */
-class StatsGen
+class DREAM3DLib_EXPORT StatsGen
 {
   public:
     StatsGen();
