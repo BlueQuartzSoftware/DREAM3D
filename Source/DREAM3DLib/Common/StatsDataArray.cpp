@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "StatsDataContainer.h"
+#include "StatsDataArray.h"
 
 #include "MXA/Utilities/StringUtils.h"
 
@@ -43,8 +43,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsDataContainer::StatsDataContainer() :
-    m_Name("")
+StatsDataArray::StatsDataArray() :
+    m_Name(DREAM3D::EnsembleData::Statistics)
 {
 
 }
@@ -52,21 +52,21 @@ StatsDataContainer::StatsDataContainer() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsDataContainer::~StatsDataContainer()
+StatsDataArray::~StatsDataArray()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataContainer::SetName(const std::string &name)
+void StatsDataArray::SetName(const std::string &name)
 {
   m_Name = name;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string StatsDataContainer::GetName()
+std::string StatsDataArray::GetName()
 {
   return m_Name;
 }
@@ -74,21 +74,21 @@ std::string StatsDataContainer::GetName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataContainer::takeOwnership()
+void StatsDataArray::takeOwnership()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataContainer::releaseOwnership()
+void StatsDataArray::releaseOwnership()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* StatsDataContainer::GetVoidPointer(size_t i)
+void* StatsDataArray::GetVoidPointer(size_t i)
 {
 #ifndef NDEBUG
       if (m_StatsDataArray.size() > 0) { assert(i < m_StatsDataArray.size());}
@@ -103,7 +103,7 @@ void* StatsDataContainer::GetVoidPointer(size_t i)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t StatsDataContainer::GetNumberOfTuples()
+size_t StatsDataArray::GetNumberOfTuples()
 {
   return m_StatsDataArray.size();
 }
@@ -111,7 +111,7 @@ size_t StatsDataContainer::GetNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t StatsDataContainer::GetSize()
+size_t StatsDataArray::GetSize()
 {
   return m_StatsDataArray.size();
 }
@@ -119,7 +119,7 @@ size_t StatsDataContainer::GetSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataContainer::SetNumberOfComponents(int nc)
+void StatsDataArray::SetNumberOfComponents(int nc)
 {
   if (nc != 1)
   {
@@ -130,7 +130,7 @@ void StatsDataContainer::SetNumberOfComponents(int nc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataContainer::GetNumberOfComponents()
+int StatsDataArray::GetNumberOfComponents()
 {
   return 1;
 }
@@ -138,7 +138,7 @@ int StatsDataContainer::GetNumberOfComponents()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t StatsDataContainer::GetTypeSize()
+size_t StatsDataArray::GetTypeSize()
 {
   return sizeof(StatsData);
 }
@@ -146,7 +146,7 @@ size_t StatsDataContainer::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataContainer::EraseTuples(std::vector<size_t> &idxs)
+int StatsDataArray::EraseTuples(std::vector<size_t> &idxs)
 {
   int err = 0;
   std::vector<StatsData::Pointer> replacement(m_StatsDataArray.size() - idxs.size());
@@ -172,7 +172,7 @@ int StatsDataContainer::EraseTuples(std::vector<size_t> &idxs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataContainer::CopyTuple(size_t currentPos, size_t newPos)
+int StatsDataArray::CopyTuple(size_t currentPos, size_t newPos)
 {
   m_StatsDataArray[newPos] = m_StatsDataArray[currentPos];
   return 0;
@@ -181,7 +181,7 @@ int StatsDataContainer::CopyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataContainer::initializeWithZeros()
+void StatsDataArray::initializeWithZeros()
 {
 
   for(size_t i = 0; i < m_StatsDataArray.size(); ++i)
@@ -194,7 +194,7 @@ void StatsDataContainer::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t StatsDataContainer::RawResize(size_t size)
+int32_t StatsDataArray::RawResize(size_t size)
 {
   m_StatsDataArray.resize(size);
   return 1;
@@ -203,7 +203,7 @@ int32_t StatsDataContainer::RawResize(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t StatsDataContainer::Resize(size_t numTuples)
+int32_t StatsDataArray::Resize(size_t numTuples)
 {
   return RawResize(numTuples);
 }
@@ -211,14 +211,14 @@ int32_t StatsDataContainer::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataContainer::printTuple(std::ostream &out, size_t i, char delimiter)
+void StatsDataArray::printTuple(std::ostream &out, size_t i, char delimiter)
 {
   assert(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataContainer::printComponent(std::ostream &out, size_t i, int j)
+void StatsDataArray::printComponent(std::ostream &out, size_t i, int j)
 {
   assert(false);
 }
@@ -226,7 +226,7 @@ void StatsDataContainer::printComponent(std::ostream &out, size_t i, int j)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataContainer::writeH5Data(hid_t parentId)
+int StatsDataArray::writeH5Data(hid_t parentId)
 {
   herr_t err = 0;
   hid_t gid = H5Utilities::createGroup(parentId, DREAM3D::HDF5::Statistics);
@@ -236,11 +236,13 @@ int StatsDataContainer::writeH5Data(hid_t parentId)
   }
   for(size_t i = 0; i < m_StatsDataArray.size(); ++i)
   {
+    if (m_StatsDataArray[i].get() != NULL) {
     // We start numbering our phases at 1
-    std::string indexString = StringUtils::numToString(i+1);
+    std::string indexString = StringUtils::numToString(i);
     hid_t tupleId = H5Utilities::createGroup(gid, indexString);
     err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
     err |= H5Utilities::closeHDF5Object(tupleId);
+    }
   }
   err |= H5Utilities::closeHDF5Object(gid);
   return err;
@@ -248,7 +250,7 @@ int StatsDataContainer::writeH5Data(hid_t parentId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataContainer::readH5Data(hid_t parentId)
+int StatsDataArray::readH5Data(hid_t parentId)
 {
   assert(false);
   return -1;

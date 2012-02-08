@@ -60,13 +60,35 @@ class DREAM3DLib_EXPORT StatsData
      * @brief The values are encoded into 3 floats: Average, Max, Min
      */
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, GrainDiameterInfo);
+    void setAverageGrainDiameter(float v) { m_GrainDiameterInfo[0] = v;}
+    float getAverageGrainDiameter() { return m_GrainDiameterInfo[0]; }
+
+    void setMaxGrainDiameter(float v) { m_GrainDiameterInfo[1] = v;}
+    float getMaxGrainDiameter() { return m_GrainDiameterInfo[1]; }
+
+    void setMinGrainDiameter(float v) { m_GrainDiameterInfo[2] = v;}
+    float getMinGrainDiameter() { return m_GrainDiameterInfo[2]; }
 
     /**
       * @brief The values are encoded into 2 floats: Average, Standard Deviation
       */
     DREAM3D_INSTANCE_VEC2_PROPERTY(float, GrainSizeDistribution);
+    void setGrainSizeAverage(float v) { m_GrainSizeDistribution[0] = v;}
+    float getGrainSizeAverage() { return m_GrainSizeDistribution[0]; }
 
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumber);
+    void setGrainSizeStdDev(float v) { m_GrainSizeDistribution[1] = v;}
+    float getGrainSizeStdDev() { return m_GrainSizeDistribution[1]; }
+
+
+    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers);
+    /**
+     * @breif this will generate the Bin Numbers values;
+     */
+    FloatArrayType::Pointer generateBinNumbers();
+    size_t getNumberOfBins()
+    {
+      return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
+    }
 
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_BOverA);
     DREAM3D_INSTANCE_PROPERTY(uint32_t, BOverA_DistType);
@@ -102,6 +124,16 @@ class DREAM3DLib_EXPORT StatsData
 
   protected:
     StatsData();
+
+    int writePhaseFraction(hid_t groupId);
+    int writeGrainDiameterInfo(hid_t groupId);
+    int writeGrainSizeDistribution(hid_t groupId);
+    int writeBinNumbers(hid_t groupId);
+    int writeDistributionData(hid_t pid, const std::string &disType,
+                                          const std::string &hdf5GroupName,
+                                          VectorOfFloatArray colData);
+    int writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
+                                               VectorOfFloatArray colData);
 
   private:
     StatsData(const StatsData&); // Copy Constructor Not Implemented
