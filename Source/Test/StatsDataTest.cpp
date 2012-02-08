@@ -37,6 +37,7 @@
 #include <stdlib.h>
 
 #include <iostream>
+#include <limits>
 #include <string>
 
 #include "MXA/Utilities/MXADir.h"
