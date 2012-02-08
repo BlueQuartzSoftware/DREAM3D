@@ -504,18 +504,18 @@ void TestWriteData()
   m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsArray);
 
   DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(3);
-  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructure);
+  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
   crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   crystalStructures->SetValue(1, Ebsd::CrystalStructure::Cubic);
   crystalStructures->SetValue(2, Ebsd::CrystalStructure::Cubic);
-  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructure, crystalStructures);
+  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
   DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(3);
-  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
+  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   phaseTypes->SetValue(1, DREAM3D::PhaseType::PrimaryPhase);
   phaseTypes->SetValue(2, DREAM3D::PhaseType::PrimaryPhase);
-  m->addEnsembleData(DREAM3D::EnsembleData::PhaseType, phaseTypes);
+  m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
   DataArray<unsigned int>::Pointer shapeTypes = DataArray<unsigned int>::CreateArray(3);
   shapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
