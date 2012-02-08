@@ -33,7 +33,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
 #  ${DREAM3DLib_SOURCE_DIR}/Common/PreFlightArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
@@ -54,7 +54,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataContainer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp

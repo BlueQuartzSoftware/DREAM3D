@@ -15,7 +15,7 @@ SET (DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsWriter.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/VTKH5Constants.h
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataWriter.h
+#  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataWriter.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5Macros.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelGrainIdReader.h
@@ -25,7 +25,7 @@ SET (DREAM3DLib_HDF5_SRCS
 #  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsWriter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataWriter.cpp
+#  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelGrainIdReader.cpp
   )

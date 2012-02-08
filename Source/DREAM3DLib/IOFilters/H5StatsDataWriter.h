@@ -37,42 +37,58 @@
 #ifndef H5STATSDATAWRITER_H_
 #define H5STATSDATAWRITER_H_
 
+#include <vector>
 #include <string>
 
 #include <hdf5.h>
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsData.h"
 
 /*
  *
  */
-class DREAM3DLib_EXPORT H5StatsDataWriter
+class DREAM3DLib_EXPORT H5StatsDataWriter : public AbstractFilter
 {
   public:
 
     DREAM3D_SHARED_POINTERS(H5StatsDataWriter)
     DREAM3D_STATIC_NEW_MACRO(H5StatsDataWriter)
-    DREAM3D_TYPE_MACRO(H5StatsDataWriter)
+    DREAM3D_TYPE_MACRO_SUPER(H5StatsDataWriter, AbstractFilter)
+
     virtual ~H5StatsDataWriter();
 
-    int writeStatsData(StatsData* data, hid_t groupId);
 
-    int writePhaseFraction(StatsData* data, hid_t groupId);
-    int writeGrainDiameterInfo(StatsData* data, hid_t groupId);
-    int writeGrainSizeDistribution(StatsData* data, hid_t groupId);
-    int writeBinNumbers(StatsData* data, hid_t groupId);
-    int writeDistributionData(hid_t pid, const std::string &disType,
-                                          const std::string &hdf5GroupName,
-                                          VectorOfFloatArray colData);
-    int writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
-                                               VectorOfFloatArray colData);
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Write Statistics Data"; }
+
+    virtual void setupFilterOptions();
+
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
+    virtual void preflight();
+
+
+
   protected:
     H5StatsDataWriter();
 
+
+
   private:
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+
+
     H5StatsDataWriter(const H5StatsDataWriter&); // Copy Constructor Not Implemented
     void operator=(const H5StatsDataWriter&); // Operator '=' Not Implemented
 };
