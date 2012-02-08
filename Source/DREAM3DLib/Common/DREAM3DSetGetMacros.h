@@ -248,7 +248,7 @@ static Pointer New args \
       value_0 = varname[0]; value_1 = varname[1]; }
 
 
-#define DREAM3D_INSTANCE_2DVECTOR_PROPERTY(type, prpty)\
+#define DREAM3D_INSTANCE_VEC2_PROPERTY(type, prpty)\
   private:\
     type   m_##prpty[2];\
   public:\

@@ -40,7 +40,7 @@
 
 #include "UnitTestSupport.hpp"
 
-#include "StatsGenerator/StatsGen.cpp"
+#include "DREAM3DLib/Common/StatsGen.cpp"
 
 void GenHexMDFPlotData()
 {

@@ -54,7 +54,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "StatsGenerator/TableModels/SGMDFTableModel.h"
-#include "StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.h"
 
 // -----------------------------------------------------------------------------
 //
