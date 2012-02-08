@@ -424,8 +424,8 @@ void AlignSections::align_sections()
         }
       }
     }
-    shifts[iter][0] = shifts[iter-1][0] - newxshift;
-    shifts[iter][1] = shifts[iter-1][1] - newyshift;
+    shifts[iter][0] = shifts[iter-1][0] + newxshift;
+    shifts[iter][1] = shifts[iter-1][1] + newyshift;
     if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
     {
       AlignSections::Deallocate2DArray<float>(graincount1, graincount2, mutualinfo12);
