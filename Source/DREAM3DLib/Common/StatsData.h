@@ -103,6 +103,16 @@ class DREAM3DLib_EXPORT StatsData
   protected:
     StatsData();
 
+    int writePhaseFraction(hid_t groupId);
+    int writeGrainDiameterInfo(hid_t groupId);
+    int writeGrainSizeDistribution(hid_t groupId);
+    int writeBinNumbers(hid_t groupId);
+    int writeDistributionData(hid_t pid, const std::string &disType,
+                                          const std::string &hdf5GroupName,
+                                          VectorOfFloatArray colData);
+    int writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
+                                               VectorOfFloatArray colData);
+
   private:
     StatsData(const StatsData&); // Copy Constructor Not Implemented
     void operator=(const StatsData&); // Operator '=' Not Implemented
