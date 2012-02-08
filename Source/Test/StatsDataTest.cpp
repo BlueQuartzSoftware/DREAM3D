@@ -35,6 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <stdlib.h>
+#include <string.h>
+
+
 #include <limits>
 #include <iostream>
 #include <string>
@@ -47,15 +50,15 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/StatsDataContainer.h"
+#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
-
+#include "DREAM3DLib/IOFilters/H5StatsDataWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
-
-StatsDataContainer::Pointer g_StatsContainer;
 
 // -----------------------------------------------------------------------------
 //
@@ -68,7 +71,7 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeOmega3( StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
+void initializeOmega3(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
 {
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
@@ -79,22 +82,21 @@ void initializeOmega3( StatsData::Pointer statsData, int count, uint32_t distTyp
   betas->SetName(DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 10.0 + rg.genrand_res53();
-    beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
+  {
+    alpha = (0 * i) + 10.0 + rg.genrand_res53();
+    beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
     alphas->SetValue(i, alpha);
     betas->SetValue(i, beta);
-   }
+  }
   data.push_back(alphas);
   data.push_back(betas);
   statsData->setGrainSize_Omegas(data);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeBOverA( StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
+void initializeBOverA(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
 {
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
@@ -105,12 +107,12 @@ void initializeBOverA( StatsData::Pointer statsData, int count, uint32_t distTyp
   betas->SetName(DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 15.0 + rg.genrand_res53();
-    beta = (0*i) + 1.25 + (0.5*rg.genrand_res53());
+  {
+    alpha = (0 * i) + 15.0 + rg.genrand_res53();
+    beta = (0 * i) + 1.25 + (0.5 * rg.genrand_res53());
     alphas->SetValue(i, alpha);
     betas->SetValue(i, beta);
-   }
+  }
   data.push_back(alphas);
   data.push_back(betas);
   statsData->setGrainSize_BOverA(data);
@@ -119,7 +121,7 @@ void initializeBOverA( StatsData::Pointer statsData, int count, uint32_t distTyp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeCOverA( StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
+void initializeCOverA(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
 {
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
@@ -130,22 +132,21 @@ void initializeCOverA( StatsData::Pointer statsData, int count, uint32_t distTyp
   betas->SetName(DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 14.0 + rg.genrand_res53();
-    beta = (0*i) + 1.15 + (0.5*rg.genrand_res53());
+  {
+    alpha = (0 * i) + 14.0 + rg.genrand_res53();
+    beta = (0 * i) + 1.15 + (0.5 * rg.genrand_res53());
     alphas->SetValue(i, alpha);
     betas->SetValue(i, beta);
-   }
+  }
   data.push_back(alphas);
   data.push_back(betas);
   statsData->setGrainSize_COverA(data);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeCOverB( StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
+void initializeCOverB(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
 {
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
@@ -156,12 +157,12 @@ void initializeCOverB( StatsData::Pointer statsData, int count, uint32_t distTyp
   betas->SetName(DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (0*i) + 13.0 + rg.genrand_res53();
-    beta = (0*i) + 1.05 + (0.5*rg.genrand_res53());
+  {
+    alpha = (0 * i) + 13.0 + rg.genrand_res53();
+    beta = (0 * i) + 1.05 + (0.5 * rg.genrand_res53());
     alphas->SetValue(i, alpha);
     betas->SetValue(i, beta);
-   }
+  }
   data.push_back(alphas);
   data.push_back(betas);
   statsData->setGrainSize_COverB(data);
@@ -170,7 +171,7 @@ void initializeCOverB( StatsData::Pointer statsData, int count, uint32_t distTyp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeNeighbors( StatsData::Pointer statsData, std::vector<float> binNumbers, uint32_t distType = DREAM3D::DistributionType::Power)
+void initializeNeighbors(StatsData::Pointer statsData, std::vector<float> binNumbers, uint32_t distType = DREAM3D::DistributionType::Power)
 {
   float alpha, k, beta;
   int32_t count = binNumbers.size();
@@ -184,18 +185,17 @@ void initializeNeighbors( StatsData::Pointer statsData, std::vector<float> binNu
   FloatArrayType::Pointer ks = FloatArrayType::CreateArray(count);
   ks->SetName(DREAM3D::HDF5::Exp_k);
 
-
-  int middlebin = count/2;
+  int middlebin = count / 2;
 
   for (qint32 i = 0; i < count; ++i)
-   {
-    alpha = (4*(binNumbers[i]/binNumbers[middlebin])) + rg.genrand_res53();
-    k = 2 + (0.2*(binNumbers[i]/binNumbers[middlebin])) + (0.05*rg.genrand_res53());
-    beta = (0*i) + 1;
+  {
+    alpha = (4 * (binNumbers[i] / binNumbers[middlebin])) + rg.genrand_res53();
+    k = 2 + (0.2 * (binNumbers[i] / binNumbers[middlebin])) + (0.05 * rg.genrand_res53());
+    beta = (0 * i) + 1;
     alphas->SetValue(i, alpha);
     ks->SetValue(i, k);
     betas->SetValue(i, beta);
-   }
+  }
   data.push_back(alphas);
   data.push_back(ks);
   data.push_back(betas);
@@ -205,7 +205,7 @@ void initializeNeighbors( StatsData::Pointer statsData, std::vector<float> binNu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeODF_MDF( StatsData::Pointer statsData)
+void initializeODF_MDF(StatsData::Pointer statsData)
 {
   float totalWeight = 0.0;
 
@@ -222,9 +222,9 @@ void initializeODF_MDF( StatsData::Pointer statsData)
   Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
-  FloatArrayType::Pointer odfData = FloatArrayType::CreateArray(odf.size() );
+  FloatArrayType::Pointer odfData = FloatArrayType::CreateArray(odf.size());
   odfData->SetName(DREAM3D::HDF5::ODF);
-  for(size_t i = 0; i < odf.size(); ++i)
+  for (size_t i = 0; i < odf.size(); ++i)
   {
     odfData->SetValue(i, odf[i]);
   }
@@ -262,9 +262,9 @@ void initializeODF_MDF( StatsData::Pointer statsData)
   Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
-  FloatArrayType::Pointer mdfData = FloatArrayType::CreateArray(mdf.size() );
+  FloatArrayType::Pointer mdfData = FloatArrayType::CreateArray(mdf.size());
   mdfData->SetName(DREAM3D::HDF5::MisorientationBins);
-  for(size_t i = 0; i < mdf.size(); ++i)
+  for (size_t i = 0; i < mdf.size(); ++i)
   {
     mdfData->SetValue(i, mdf[i]);
   }
@@ -295,7 +295,7 @@ void initializeODF_MDF( StatsData::Pointer statsData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeAxisODF( StatsData::Pointer statsData)
+void initializeAxisODF(StatsData::Pointer statsData)
 {
   float totalWeight = 0.0;
 
@@ -309,9 +309,9 @@ void initializeAxisODF( StatsData::Pointer statsData)
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
-  FloatArrayType::Pointer aodfData = FloatArrayType::CreateArray(aodf.size() );
+  FloatArrayType::Pointer aodfData = FloatArrayType::CreateArray(aodf.size());
   aodfData->SetName(DREAM3D::HDF5::AxisOrientation);
-  for(size_t i = 0; i < aodf.size(); ++i)
+  for (size_t i = 0; i < aodf.size(); ++i)
   {
     aodfData->SetValue(i, aodf[i]);
   }
@@ -320,27 +320,28 @@ void initializeAxisODF( StatsData::Pointer statsData)
   statsData->setAxisOrientation(aodfData);
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int computeBinsAndCutOffs( float mu, float sigma,
-                                     float minCutOff, float maxCutOff,
-                                     float binStepSize,
-                                     std::vector<float> &binsizes,
-                                     std::vector<float> &xCo,
-                                     std::vector<float> &yCo,
-                                     float &xMax, float &yMax,
-                                     std::vector<float> &x,
-                                     std::vector<float> &y)
+int computeBinsAndCutOffs(float mu,
+                          float sigma,
+                          float minCutOff,
+                          float maxCutOff,
+                          float binStepSize,
+                          std::vector<float> &binsizes,
+                          std::vector<float> &xCo,
+                          std::vector<float> &yCo,
+                          float &xMax,
+                          float &yMax,
+                          std::vector<float> &x,
+                          std::vector<float> &y)
 {
   int err = 0;
   int size = 250;
 
   StatsGen sg;
-  err = sg.GenLogNormalPlotData<std::vector<float> > (mu, sigma, x, y, size);
-  if (err == 1)
+  err = sg.GenLogNormalPlotData<std::vector<float> >(mu, sigma, x, y, size);
+  if(err == 1)
   {
     //TODO: Present Error Message
     return -1;
@@ -351,11 +352,11 @@ int computeBinsAndCutOffs( float mu, float sigma,
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
-    if (x[i] > xMax)
+    if(x[i] > xMax)
     {
       xMax = x[i];
     }
-    if (y[i] > yMax)
+    if(y[i] > yMax)
     {
       yMax = y[i];
     }
@@ -366,7 +367,7 @@ int computeBinsAndCutOffs( float mu, float sigma,
   int numsizebins = 1;
   binsizes.clear();
   // std::vector<int> numgrains;
-  err = sg.GenCutOff<float, std::vector<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
+  err = sg.GenCutOff<float, std::vector<float> >(mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
   return 0;
 }
@@ -374,10 +375,12 @@ int computeBinsAndCutOffs( float mu, float sigma,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestStatsData()
+StatsDataArray::Pointer createStatsDataArray()
 {
 
-  StatsDataContainer::Pointer statsContainer = StatsDataContainer::New();
+  StatsDataArray::Pointer statsArray = StatsDataArray::New();
+  StatsData::Pointer s0; // Create a NULL instance of StatsData;
+  statsArray->setStatsData(0, s0); // The underlying storage will resize as needed.
 
   float m_PhaseFraction = 0.25;
   float m_TotalPhaseFraction = 1.0f;
@@ -409,12 +412,18 @@ void TestStatsData()
   float sdlogdiam = sigma;
 
   size_t nBins = binsizes.size();
+  // Copy this into the DataArray<float>
+  FloatArrayType::Pointer binNumbers = FloatArrayType::CreateArray(nBins);
+  binNumbers->SetName(DREAM3D::HDF5::BinNumber);
+  ::memcpy(binNumbers->GetVoidPointer(0), &(binsizes.front()), binsizes.size() * sizeof(float));
+
 
   // Phase 1
   StatsData::Pointer data1 = StatsData::New();
   data1->setPhaseFraction(calcPhaseFraction);
   data1->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
   data1->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+  data1->setBinNumbers(binNumbers);
   initializeOmega3(data1, nBins);
   initializeBOverA(data1, nBins);
   initializeCOverA(data1, nBins);
@@ -422,8 +431,7 @@ void TestStatsData()
   initializeNeighbors(data1, binsizes);
   initializeODF_MDF(data1);
   initializeAxisODF(data1);
-  statsContainer->setStatsData(0, data1);
-  DREAM3D_REQUIRE_EQUAL(1, statsContainer->GetNumberOfTuples());
+  statsArray->setStatsData(1, data1);
 
   // Phase 2
   StatsData::Pointer data2 = StatsData::New();
@@ -431,6 +439,7 @@ void TestStatsData()
   data2->setPhaseFraction(calcPhaseFraction);
   data2->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
   data2->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+  data2->setBinNumbers(binNumbers);
   initializeOmega3(data2, nBins);
   initializeBOverA(data2, nBins);
   initializeCOverA(data2, nBins);
@@ -438,17 +447,43 @@ void TestStatsData()
   initializeNeighbors(data2, binsizes);
   initializeODF_MDF(data2);
   initializeAxisODF(data2);
-  statsContainer->setStatsData(1, data2);
-  DREAM3D_REQUIRE_EQUAL(2, statsContainer->GetNumberOfTuples());
+  statsArray->setStatsData(2, data2);
 
-  statsContainer->clearAll();
-  DREAM3D_REQUIRE_EQUAL(0, statsContainer->GetNumberOfTuples());
+  return statsArray;
+}
 
-  statsContainer->setStatsData(0, data1);
-  statsContainer->setStatsData(1, data2);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestStatsData()
+{
+  StatsDataArray::Pointer statsArray = createStatsDataArray();
+  DREAM3D_REQUIRE_EQUAL(3, statsArray->GetNumberOfTuples());
 
-  // Set the Global variable
-  g_StatsContainer = statsContainer;
+  StatsData::Pointer s0 = statsArray->getStatsData(0);
+
+  StatsData::Pointer s1 = statsArray->getStatsData(1);
+  StatsData::Pointer s2 = statsArray->getStatsData(2);
+
+  std::vector<size_t> idx(1, 1);
+  statsArray->EraseTuples(idx);
+  DREAM3D_REQUIRE_EQUAL(2, statsArray->GetNumberOfTuples());
+  idx[0] = 0;
+  statsArray->EraseTuples(idx);
+  DREAM3D_REQUIRE_EQUAL(1, statsArray->GetNumberOfTuples());
+
+  statsArray->clearAll();
+  DREAM3D_REQUIRE_EQUAL(0, statsArray->GetNumberOfTuples());
+
+  statsArray->setStatsData(0, s0);
+  statsArray->setStatsData(1, s1);
+  statsArray->setStatsData(2, s2);
+  DREAM3D_REQUIRE_EQUAL(3, statsArray->GetNumberOfTuples());
+
+
+  StatsDataArray& arrayRef = *statsArray;
+  StatsData::Pointer t0 = arrayRef[0];
+  DREAM3D_REQUIRE_EQUAL(NULL, t0.get());
 
 }
 
@@ -457,36 +492,91 @@ void TestStatsData()
 // -----------------------------------------------------------------------------
 void TestWriteData()
 {
-
   // Make sure the output directory is created
   MXADir::mkdir(UnitTest::StatsDataTest::TestDir, true);
 
-  herr_t err = 0;
-  hid_t fileId = H5Utilities::createFile(UnitTest::StatsDataTest::TestFile);
-  DREAM3D_REQUIRE( fileId > 0);
+  // Create some test data for a 2 phase material
+  StatsDataArray::Pointer statsArray = createStatsDataArray();
+
+  // Create a data container and set the StatsArray
+  DataContainer::Pointer m = DataContainer::New();
+  m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsArray);
+
+  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(3);
+  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructure);
+  crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  crystalStructures->SetValue(1, Ebsd::CrystalStructure::Cubic);
+  crystalStructures->SetValue(2, Ebsd::CrystalStructure::Cubic);
+  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructure, crystalStructures);
+
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(3);
+  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
+  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+  phaseTypes->SetValue(1, DREAM3D::PhaseType::PrimaryPhase);
+  phaseTypes->SetValue(2, DREAM3D::PhaseType::PrimaryPhase);
+  m->addEnsembleData(DREAM3D::EnsembleData::PhaseType, phaseTypes);
+
+  DataArray<unsigned int>::Pointer shapeTypes = DataArray<unsigned int>::CreateArray(3);
+  shapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
+  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  shapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
+  shapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
 
-  hid_t dcGid = H5Utilities::createGroup(fileId, DREAM3D::HDF5::DataContainerName);
-  DREAM3D_REQUIRE( dcGid > 0);
-
-  // Write the Ensemble data
-  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
-  DREAM3D_REQUIRE( err >= 0);
-
-  err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
-  DREAM3D_REQUIRE( err >= 0);
-
-  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
-  DREAM3D_REQUIRE( ensembleGid > 0);
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  // H5StatsDataWriter::Pointer writer = H5StatsDataWriter::New();
+  writer->setDataContainer(m.get());
+  writer->setOutputFile(UnitTest::StatsDataTest::TestFile);
+  writer->execute();
+  DREAM3D_REQUIRE( writer->getErrorCondition() >= 0)
 
 
-  g_StatsContainer->writeH5Data(ensembleGid);
+  // This is an example of getting the StatsDataArray back from the DataContiner
+  // and being able to do something meaningful with it.
+  // Since StatsDataArray subclasses the IDataArray there are some simple things you
+  // can do like ask how many StatsData instances are being stored:
+  int numStatsData = m->getEnsembleData(DREAM3D::EnsembleData::Statistics)->GetSize(); // This works because the
+  // size of each Tuple is 1
+  numStatsData = m->getEnsembleData(DREAM3D::EnsembleData::Statistics)->GetNumberOfTuples();
+  // This also works. Either way the value at this point should be '3'
+  DREAM3D_REQUIRE_EQUAL(3, numStatsData);
 
+  // This will get us a Pointer to the instance of StatsDataArray class that is stored
+  // in the DataContainer.
+  StatsDataArray* statsArrayPtr = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
 
+  // Unfortunately we can NOT use the operator [] with a pointer so sometimes creating
+  // a reference variable can be help. We do this by dereferencing the pointer and
+  // assigning that to a "reference variable"
+  StatsDataArray& statsArrayRef = *statsArrayPtr;
 
-  err = H5Utilities::closeHDF5Object(ensembleGid);
-  err = H5Utilities::closeHDF5Object(dcGid);
-  err = H5Utilities::closeFile(fileId);
+  // So now we can get to the actual "StatsData" instances stored in the StatsDataArray object.
+  StatsData::Pointer s1 = statsArrayRef[1];
+  // We could have also done it using the pointer from above in this manner:
+  StatsData::Pointer s1_Alt = statsArrayPtr->getStatsData(1);
+
+  // Both shared pointer objects should wrapp the SAME StatsData Pointer. This line
+  // will verify that. You would NOT use this next line in normal production code. It
+  // is for Unit Testing ONLY.
+  DREAM3D_REQUIRE_EQUAL( (s1.get()), (s1_Alt.get()))
+
+  size_t numBins = s1->getNumberOfBins();
+
+  // So Now if you want to get the B Over A values you can do this:
+  VectorOfFloatArray bovera = s1->getGrainSize_BOverA();
+  // This holds 2 arrays. Alphas and Betas whic are of type FloatArrayType, or a
+  // DataArray<float>::Pointer
+
+  FloatArrayType::Pointer alphas = bovera[0];
+  FloatArrayType::Pointer betas = bovera[1];
+
+  DREAM3D_REQUIRE_EQUAL(numBins, alphas->GetSize());
+  // Since these are all shared_pointers, well at least the alphas and betas are,
+  // anything you do to this array (adding, erasing, changing values) you are doing
+  // to the arrays stored in the Data Container.
+  alphas->SetValue(0, 100.0f); // This sets the value at index 0 to 100.0
+  betas->SetValue(0, 6.0f); // This sets the value at index 0 to 6.0
 }
 
 // -----------------------------------------------------------------------------
@@ -504,18 +594,16 @@ int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles());
 #endif
 
-  DREAM3D_REGISTER_TEST( TestStatsData() );
-  DREAM3D_REGISTER_TEST( TestWriteData() );
-  DREAM3D_REGISTER_TEST( TestReadData() );
-
+  DREAM3D_REGISTER_TEST( TestStatsData());
+  DREAM3D_REGISTER_TEST( TestWriteData());
+  DREAM3D_REGISTER_TEST( TestReadData());
 
 #if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
-
 
   PRINT_TEST_SUMMARY();
   return err;

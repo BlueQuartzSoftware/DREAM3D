@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,20 +34,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FieldDataCSVWriter.h"
+#include "H5StatsDataWriter.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-
-
-const static float m_pi = static_cast<float>(M_PI);
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FieldDataCSVWriter::FieldDataCSVWriter() :
+H5StatsDataWriter::H5StatsDataWriter() :
 AbstractFilter()
 {
   setupFilterOptions();
@@ -56,19 +52,20 @@ AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FieldDataCSVWriter::~FieldDataCSVWriter()
+H5StatsDataWriter::~H5StatsDataWriter()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldDataCSVWriter::setupFilterOptions()
+void H5StatsDataWriter::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Output File");
-    option->setPropertyName("FieldDataFile");
+    option->setPropertyName("OutputFile");
     option->setWidgetType(FilterOption::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
@@ -79,15 +76,32 @@ void FieldDataCSVWriter::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldDataCSVWriter::preflight()
+void H5StatsDataWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+  setErrorCondition(0);
+  std::stringstream ss;
 
+  if (m_OutputFile.empty() == true)
+  {
+    ss << getNameOfClass() << ": The output file must be set before executing this filter.";
+    setErrorCondition(-1);
+  }
+
+  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldDataCSVWriter::execute()
+void H5StatsDataWriter::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5StatsDataWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -103,83 +117,49 @@ void FieldDataCSVWriter::execute()
 
 //  int64_t totalPoints = m->totalPoints();
 //  int totalFields = m->getTotalFields();
+#if 0
+  std::string filename = getOutputFile();
 
-  std::string filename = getFieldDataFile();
-
-  std::ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
-  char space = DREAM3D::GrainData::Delimiter;
-  // Write the total number of grains
-  outFile << m->getTotalFields()-1 << std::endl;
-  // Get all the names of the arrays from the Data Container
-  std::list<std::string> headers = m->getFieldArrayNameList();
-
-  std::vector<IDataArray::Pointer> data;
-
-  // Print the GrainIds Header before the rest of the headers
-  outFile << DREAM3D::GrainData::GrainID;
-  // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  IDataArray::Pointer statsContainer = m->getEnsembleData(DREAM3D::EnsembleData::Statistics);
+  if(NULL != statsContainer.get())
   {
-    // Only get the array if the name does NOT match those listed
-    if ( (*iter).compare(DREAM3D::FieldData::NeighborList) && (*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) )
+    herr_t err = 0;
+    hid_t fileId = H5Utilities::createFile(UnitTest::StatsDataTest::TestFile);
+    if(fileId < 0)
+
+    hid_t dcGid = H5Utilities::createGroup(fileId, DREAM3D::HDF5::DataContainerName);
+    if(dcGid < 0)
     {
-      IDataArray::Pointer p = m->getFieldData(*iter);
-      if (p->GetNumberOfComponents() == 1) {
-        outFile << space << (*iter);
-      }
-      else // There are more than a single component so we need to add multiple header values
-      {
-        for(int k = 0; k < p->GetNumberOfComponents(); ++k)
-        {
-          outFile << space << (*iter) << "_" << k;
-        }
-      }
-      // Get the IDataArray from the DataContainer
-      data.push_back(p);
-    }
-  }
-  outFile << std::endl;
-
-  // Get the number of tuples in the arrays
-  size_t numTuples = data[0]->GetNumberOfTuples();
-  std::stringstream ss;
-  float threshold = 0.0f;
-
-  // Skip the first grain
-  for(size_t i = 1; i < numTuples; ++i)
-  {
-    if (((float)i / numTuples) * 100.0f > threshold) {
-      ss.str("");
-      ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
-      notify(ss.str(), 0, Observable::UpdateProgressMessage);
-      threshold = threshold + 5.0f;
-      if (threshold < ((float)i / numTuples) * 100.0f) {
-        threshold = ((float)i / numTuples) * 100.0f;
-      }
     }
 
-    // Print the grain id
-    outFile << i;
-    // Print a row of data
-    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    // Write the Ensemble data
+    err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+    if(err < 0)
     {
-      outFile << space;
-      (*p)->printTuple(outFile, i, space);
     }
-    outFile << std::endl;
+
+    err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+    if(err < 0)
+    {
+    }
+
+    hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+    if(ensembleGid < 0)
+    {
+    }
+
+    err = statsContainer->writeH5Data(ensembleGid);
+    if(err < 0)
+    {
+
+    }
+
+    err = H5Utilities::closeHDF5Object(ensembleGid);
+    err = H5Utilities::closeHDF5Object(dcGid);
+    err = H5Utilities::closeFile(fileId);
   }
-
-  outFile.close();
-
+#endif
   // If there is an error set this to something negative and also set a message
-  notify("FieldDataCSVWriter Completed", 0, Observable::UpdateProgressMessage);
+  notify("H5StatsDataWriter Completed", 0, Observable::UpdateProgressMessage);
 
 }
-
-
-
-
-
-
-
