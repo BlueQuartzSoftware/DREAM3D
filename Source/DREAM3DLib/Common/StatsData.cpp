@@ -304,27 +304,39 @@ int StatsData::writeGrainSizeDistribution(hid_t pid)
   return H5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Size_Distribution, rank, dims, grainSizeDistribution);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FloatArrayType::Pointer StatsData::generateBinNumbers()
+{
+  float grainDiameterInfo[3];
+  getGrainDiameterInfo(grainDiameterInfo);
+  std::vector<float> bins;
+  float d = grainDiameterInfo[2];
+  while (d <= grainDiameterInfo[1])
+  {
+    std::cout << d << std::endl;
+    bins.push_back(d);
+    d = d + grainDiameterInfo[0];
+  }
+  // Copy this into the DataArray<float>
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size() );
+  m_BinNumbers->SetName(DREAM3D::HDF5::BinNumber);
+  ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
+  return m_BinNumbers;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int StatsData::writeBinNumbers(hid_t groupId)
 {
-  float grainDiameterInfo[3];
-  getGrainDiameterInfo(grainDiameterInfo);
-
-  std::vector<hsize_t> dims(1, 0);
-
-  std::vector<float> bins;
-  float d = grainDiameterInfo[2];
-  while (d <= grainDiameterInfo[1])
+  // Ensure we have valid bin numbers
+  if(NULL == m_BinNumbers.get())
   {
-    bins.push_back(d);
-    d = d + grainDiameterInfo[0];
+    generateBinNumbers();
   }
-  dims[0] = bins.size();
-
-  return H5Lite::writeVectorDataset(groupId, DREAM3D::HDF5::BinNumber, dims, bins);
+  return m_BinNumbers->writeH5Data(groupId);
 }
 
 

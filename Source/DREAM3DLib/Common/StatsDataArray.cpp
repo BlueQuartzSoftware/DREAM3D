@@ -238,7 +238,7 @@ int StatsDataArray::writeH5Data(hid_t parentId)
   {
     if (m_StatsDataArray[i].get() != NULL) {
     // We start numbering our phases at 1
-    std::string indexString = StringUtils::numToString(i+1);
+    std::string indexString = StringUtils::numToString(i);
     hid_t tupleId = H5Utilities::createGroup(gid, indexString);
     err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
     err |= H5Utilities::closeHDF5Object(tupleId);
