@@ -51,7 +51,7 @@
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
-#include "StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.h"
 
 #define MAKE_COLOR_POLE_FIGURES 1
 

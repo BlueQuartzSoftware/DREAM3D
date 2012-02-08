@@ -60,7 +60,9 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/StatsGen.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
@@ -68,7 +70,7 @@
 #include "StatsGenerator/Presets/EquiaxedPreset.h"
 #include "StatsGenerator/Presets/RolledPreset.h"
 #include "StatsGenerator/Presets/RecrystallizedPreset.h"
-#include "StatsGen.h"
+
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
     if (err < 0) {\

@@ -94,6 +94,7 @@ class DREAM3DLib_EXPORT H5StatsWriter
 
     std::vector<float> generateBins(int phase, float maxDiameter, float minDiameter, float diameterStep);
 
+
     int writeBetaDistribution(int phase, const std::string &hdf5GroupName,
                                std::vector<float> &alpha,
                                std::vector<float> &beta);

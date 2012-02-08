@@ -1,0 +1,217 @@
+/* ============================================================================
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+#ifndef _STATSDATA_H_
+#define _STATSDATA_H_
+
+#include <string>
+#include <vector>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/StatsData.h"
+
+/*
+ *
+ */
+class DREAM3DLib_EXPORT StatsDataContainer : public IDataArray
+{
+  public:
+    DREAM3D_SHARED_POINTERS(StatsDataContainer)
+    DREAM3D_STATIC_NEW_MACRO(StatsDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(StatsDataContainer, IDataArray)
+
+    virtual ~StatsDataContainer();
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<StatsData::Pointer>, StatsDataArray)
+
+    /**
+     *
+     */
+    void clearAll()
+    {
+      m_StatsDataArray.clear();
+    }
+
+    /**
+     *
+     */
+    void setStatsData(int grainId, StatsData::Pointer neighborList)
+    {
+      if(grainId >= static_cast<int>(m_StatsDataArray.size()))
+      {
+        size_t old = m_StatsDataArray.size();
+        m_StatsDataArray.resize(grainId + 1);
+        // Initialize with zero length Vectors
+        for (size_t i = old; i < m_StatsDataArray.size(); ++i)
+        {
+          m_StatsDataArray[i] = StatsData::New();
+        }
+      }
+      m_StatsDataArray[grainId] = neighborList;
+    }
+
+    /**
+     *
+     */
+    StatsData::Pointer getStatsData(int idx)
+    {
+#ifndef NDEBUG
+      if(m_StatsDataArray.size() > 0u)
+      {
+        assert(idx < static_cast<int>(m_StatsDataArray.size()));
+      }
+#endif
+      return m_StatsDataArray[idx];
+    }
+
+    StatsData::Pointer operator[](int idx)
+    {
+#ifndef NDEBUG
+      if(m_StatsDataArray.size() > 0u)
+      {
+        assert(idx < static_cast<int>(m_StatsDataArray.size()));
+      }
+#endif
+      return m_StatsDataArray[idx];
+    }
+
+    /* **************** This is the interface for the IDataArray Class which MUST
+     *  Be implemented. Most of it is useless and will simply ASSERT if called. */
+
+    void SetName(const std::string &name);
+    std::string GetName();
+
+    /**
+     * @brief Makes this class responsible for freeing the memory.
+     */
+    virtual void takeOwnership();
+
+    /**
+     * @brief This class will NOT free the memory associated with the internal pointer.
+     * This can be useful if the user wishes to keep the data around after this
+     * class goes out of scope.
+     */
+    virtual void releaseOwnership();
+
+    /**
+     * @brief Returns a void pointer pointing to the index of the array. NULL
+     * pointers are entirely possible. No checks are performed to make sure
+     * the index is with in the range of the internal data array.
+     * @param i The index to have the returned pointer pointing to.
+     * @return Void Pointer. Possibly NULL.
+     */
+    virtual void* GetVoidPointer(size_t i);
+
+    /**
+     * @brief Returns the number of Tuples in the array.
+     */
+    virtual size_t GetNumberOfTuples();
+
+    /**
+     * @brief Return the number of elements in the array
+     * @return
+     */
+    virtual size_t GetSize();
+
+    virtual void SetNumberOfComponents(int nc);
+    virtual int GetNumberOfComponents();
+
+    /**
+     * @brief Returns the number of bytes that make up the data type.
+     * 1 = char
+     * 2 = 16 bit integer
+     * 4 = 32 bit integer/Float
+     * 8 = 64 bit integer/Double
+     */
+    virtual size_t GetTypeSize();
+
+    /**
+     * @brief Erases tuples based on a list of specific Tuple indices
+     * @param idxs The indices to erase
+     * @return
+     */
+    virtual int EraseTuples(std::vector<size_t> &idxs);
+
+    /**
+     * @brief Copies a Tuple from one position to another.
+     * @param currentPos The index of the source data
+     * @param newPos The destination index to place the copied data
+     * @return
+     */
+    virtual int CopyTuple(size_t currentPos, size_t newPos);
+
+    /**
+     * @brief Sets all the values to zero.
+     */
+    virtual void initializeWithZeros();
+
+    /**
+     * @brief Reseizes the internal array
+     * @param size The new size of the internal array
+     * @return 1 on success, 0 on failure
+     */
+    virtual int32_t RawResize(size_t size);
+
+    /**
+     * @brief Reseizes the internal array
+     * @param size The new size of the internal array
+     * @return 1 on success, 0 on failure
+     */
+    virtual int32_t Resize(size_t numTuples);
+
+    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',');
+    virtual void printComponent(std::ostream &out, size_t i, int j);
+
+    /**
+     *
+     * @param parentId
+     * @return
+     */
+    virtual int writeH5Data(hid_t parentId);
+    virtual int readH5Data(hid_t parentId);
+
+  protected:
+    StatsDataContainer();
+
+  private:
+    std::string m_Name;
+
+    StatsDataContainer(const StatsDataContainer&); // Copy Constructor Not Implemented
+    void operator=(const StatsDataContainer&); // Operator '=' Not Implemented
+};
+
+#endif /* _STATSDATA_H_ */
