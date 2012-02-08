@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,66 +34,47 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-/**
- * @brief main.cpp This is mainly a test to make sure that the Texture.h
- * file will compile using strict STL containers
- * @param argc
- * @param argv
- * @return
+#ifndef H5STATSDATAWRITER_H_
+#define H5STATSDATAWRITER_H_
+
+#include <string>
+
+#include <hdf5.h>
+
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/StatsData.h"
+
+/*
+ *
  */
-#include <iostream>
-#include <vector>
-
-
-#include "DREAM3DLib/Common/Texture.h"
-#include "DREAM3DLib/Common/StatsGen.h"
-
-#define POPULATE_DATA(i, e1, e2, e3, w, s)\
-  e1s[i] = e1;\
-  e2s[i] = e2;\
-  e3s[i] = e3;\
-  weights[i] = w;\
-  sigmas[i] = s;
-
-
-
-int main(int argc, char **argv)
+class DREAM3DLib_EXPORT H5StatsDataWriter
 {
-  float totalweight = 0.0;
-  std::vector<float> odf;
-  std::vector<float> e1s(2);
-  std::vector<float> e2s(2);
-  std::vector<float> e3s(2);
-  std::vector<float> weights(2);
-  std::vector<float> sigmas(2);
+  public:
 
-  POPULATE_DATA(0, 35, 45, 0, 1.0, 1.0)
-  POPULATE_DATA(1, 59, 37, 63, 1.0, 1.0)
-  // Resize the ODF vector properly for Cubic
-  odf.resize(5832);
+    DREAM3D_SHARED_POINTERS(H5StatsDataWriter)
+    DREAM3D_STATIC_NEW_MACRO(H5StatsDataWriter)
+    DREAM3D_TYPE_MACRO(H5StatsDataWriter)
+    virtual ~H5StatsDataWriter();
 
-  // Calculate the ODF Data
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+    int writeStatsData(StatsData* data, hid_t groupId);
 
+    int writePhaseFraction(StatsData* data, hid_t groupId);
+    int writeGrainDiameterInfo(StatsData* data, hid_t groupId);
+    int writeGrainSizeDistribution(StatsData* data, hid_t groupId);
+    int writeBinNumbers(StatsData* data, hid_t groupId);
+    int writeDistributionData(hid_t pid, const std::string &disType,
+                                          const std::string &hdf5GroupName,
+                                          VectorOfFloatArray colData);
+    int writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
+                                               VectorOfFloatArray colData);
+  protected:
+    H5StatsDataWriter();
 
-  std::vector<float > x001;
-  std::vector<float > y001;
-  std::vector<float > x011;
-  std::vector<float > y011;
-  std::vector<float > x111;
-  std::vector<float > y111;
+  private:
+    H5StatsDataWriter(const H5StatsDataWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5StatsDataWriter&); // Operator '=' Not Implemented
+};
 
-  StatsGen sg;
-  int size = 1000;
-  int err = 0;
-  err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
-  if (err == 1)
-  {
-    //TODO: Present Error Message
-    return 1;
-  }
-
-
-  return 0;
-}
-
+#endif /* H5STATSDATAWRITER_H_ */

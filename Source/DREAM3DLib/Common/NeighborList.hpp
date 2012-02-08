@@ -65,14 +65,10 @@ class NeighborList : public IDataArray
     virtual ~NeighborList() {}
 
     void SetName(const std::string &name) { m_Name = name; }
-
-
     std::string GetName() { return m_Name; }
 
 
     void takeOwnership() {    }
-
-
     void releaseOwnership()  { }
 
 

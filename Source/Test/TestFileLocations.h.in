@@ -95,7 +95,11 @@ namespace UnitTest {
       const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest/DataContainerIOTest.h5");
     }
  
-    
+    namespace StatsDataTest
+    {
+      const std::string TestDir("@DREAM3DTest_BINARY_DIR@/StatsDataTest");
+      const std::string TestFile("@DREAM3DTest_BINARY_DIR@/StatsDataTest/StatsDataTest.h5");
+    }
 }
 
 #endif

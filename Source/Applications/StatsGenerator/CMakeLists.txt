@@ -51,7 +51,7 @@ include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 set (StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
     ${StatsGenerator_SOURCE_DIR}/SGApplication.cpp
-    ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
+  #  ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenPlotWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.cpp
@@ -63,7 +63,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.cpp
     )
 set (StatsGenerator_HDRS 
-    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
+#    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
 )
                    
 SET( StatsGenerator_MOC_HDRS
