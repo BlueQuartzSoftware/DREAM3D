@@ -38,13 +38,19 @@ macro(MXA_ADD_TEST testname Exename)
     endif()
 endmacro()
 
-#---------------------------------------------------------------------
+# --------------------------------------------------------------------------
 # FilterPipelineTest
 # --------------------------------------------------------------------------
 add_executable(FilterPipelineTest FilterPipelineTest.cpp )
 target_link_libraries(FilterPipelineTest DREAM3DLib)
 add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest)
 
+# --------------------------------------------------------------------------
+# StatsData Test
+# --------------------------------------------------------------------------
+add_executable(StatsDataTest StatsDataTest.cpp )
+target_link_libraries(StatsDataTest DREAM3DLib)
+add_test(StatsDataTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsDataTest)
 
 # --------------------------------------------------------------------------
 # DataContainer Test
@@ -134,7 +140,7 @@ add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest
                                 ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
 
 # --------
-add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp  ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/StatsGen.cpp)
+add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp)
 target_link_libraries(ODFTest DREAM3DLib)
 
 # --------

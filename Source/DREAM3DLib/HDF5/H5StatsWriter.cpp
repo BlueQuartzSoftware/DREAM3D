@@ -409,9 +409,12 @@ int H5StatsWriter::writeVolumeStats(int phase, unsigned int xtal,
                                          unsigned int phaseType,
                                          float phasefraction, float pptFraction,
                                          float maxdiameter, float mindiameter, float diamStepSize,
-                                         float avglogdiam, float sdlogdiam, std::vector<std::vector<float> > &svbovera,
-                                         std::vector<std::vector<float> > &svcovera, std::vector<std::vector<float> > &svcoverb,
-                                         std::vector<std::vector<float> > &neighborhoodfit, std::vector<std::vector<float> > &svomega3)
+                                         float avglogdiam, float sdlogdiam,
+                                         std::vector<std::vector<float> > &svbovera,
+                                         std::vector<std::vector<float> > &svcovera,
+                                         std::vector<std::vector<float> > &svcoverb,
+                                         std::vector<std::vector<float> > &neighborhoodfit,
+                                         std::vector<std::vector<float> > &svomega3)
 {
   int err = 0;
   int retErr = 0;

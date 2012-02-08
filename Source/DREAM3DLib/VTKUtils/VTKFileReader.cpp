@@ -135,7 +135,7 @@ int VTKFileReader::readHeader()
 {
 
   int err = 0;
-  if (getFileName().empty() == true)
+  if (getInputFile().empty() == true)
   {
     setErrorCondition(-1);
     setErrorMessage("FileName was not set and must be valid");
@@ -150,10 +150,10 @@ int VTKFileReader::readHeader()
   }
 
   std::ifstream instream;
-  instream.open(getFileName().c_str(), std::ios_base::binary);
+  instream.open(getInputFile().c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
-    std::cout << logTime() << " vtk file could not be opened: " << getFileName() << std::endl;
+    std::cout << logTime() << " vtk file could not be opened: " << getInputFile() << std::endl;
     return -1;
   }
   char buf[kBufferSize];
