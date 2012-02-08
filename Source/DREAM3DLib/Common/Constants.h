@@ -154,6 +154,7 @@ namespace DREAM3D
     const std::string PrecipitateFractions("PrecipitateFractions");
     const std::string PhaseFractions("PhaseFractions");
     const std::string ShapeTypes("ShapeTypes");
+    const std::string Statistics("Statistics");
   }
 
 #if 0
