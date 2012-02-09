@@ -49,7 +49,7 @@
 /*
  *
  */
-class DetermineGoodVoxels : public AbstractFilter
+class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(DetermineGoodVoxels);

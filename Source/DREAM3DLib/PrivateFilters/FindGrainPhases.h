@@ -49,7 +49,7 @@
 /*
  *
  */
-class FindGrainPhases : public AbstractFilter
+class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(FindGrainPhases);
@@ -57,12 +57,12 @@ class FindGrainPhases : public AbstractFilter
      DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter);
 
      virtual ~FindGrainPhases();
-  
+
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
      virtual const std::string getHumanLabel() { return "Renumber Grains"; }
-     
+
      virtual void execute();
      virtual void preflight();
 
@@ -73,7 +73,7 @@ class FindGrainPhases : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
-    
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindGrainPhases(const FindGrainPhases&); // Copy Constructor Not Implemented

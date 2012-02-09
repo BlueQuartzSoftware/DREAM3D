@@ -49,7 +49,7 @@
 /*
  *
  */
-class RenumberGrains : public AbstractFilter
+class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(RenumberGrains);
@@ -57,12 +57,12 @@ class RenumberGrains : public AbstractFilter
      DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);
 
      virtual ~RenumberGrains();
-  
+
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
      virtual const std::string getHumanLabel() { return "Renumber Grains"; }
-     
+
      virtual void execute();
      virtual void preflight();
      virtual void setupFilterOptions();
@@ -73,7 +73,7 @@ class RenumberGrains : public AbstractFilter
    private:
     int32_t* m_GrainIds;
     bool* m_Active;
-    
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     RenumberGrains(const RenumberGrains&); // Copy Constructor Not Implemented
