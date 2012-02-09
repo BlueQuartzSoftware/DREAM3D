@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5STATSDATAWRITER_H_
-#define H5STATSDATAWRITER_H_
+#ifndef _H5STATSDATA_DELEGATE_H_
+#define _H5STATSDATA_DELEGATE_H_
 
 #include <string>
 
@@ -85,4 +85,4 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
     void operator=(const H5StatsDataDelegate&); // Operator '=' Not Implemented
 };
 
-#endif /* H5STATSDATAWRITER_H_ */
+#endif /* _H5STATSDATA_DELEGATE_H_ */

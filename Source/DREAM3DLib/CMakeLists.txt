@@ -23,6 +23,11 @@ IF (BUILD_SHARED_LIBS)
     ENDIF (WIN32)
 ENDIF (BUILD_SHARED_LIBS)
 
+option(DREAM3D_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
+IF (DREAM3D_DISABLE_MSVC_WARNINGS)
+    add_definitions(-DDREAM3D_DISABLE_MSVC_WARNINGS)
+endif()
+
 SET (PROJECT_PREFIX "DREAM3D" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set (PROJECT_INSTALL_HEADERS 0)
 #-------------------------------------------------------------------------------

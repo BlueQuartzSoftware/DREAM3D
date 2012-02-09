@@ -51,6 +51,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp

@@ -62,13 +62,14 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 {
   int err = 0;
   //Read the PhaseFraction
+
   err |= readPhaseFraction(data, groupId);
 
   // Read the Grain Diameter Info
   err |= readGrainDiameterInfo(data, groupId);
 
 
-#error Start Here
+
 
   return err;
 }
@@ -308,10 +309,6 @@ int H5StatsDataDelegate::writeGrainDiameterInfo(StatsData* data, hid_t pid)
 int H5StatsDataDelegate::readGrainDiameterInfo(StatsData* data, hid_t groupId)
 {
   int err = 0;
- // hsize_t dims[1];
- // dims[0] = 3;
- // int32_t rank = 1;
-
   /*
    * Grain Diameter Info is encode as 3 floats: BinStepSize, MaxDiameter, MinDiameter
    */
