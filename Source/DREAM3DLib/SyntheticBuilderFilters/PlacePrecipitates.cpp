@@ -59,6 +59,9 @@
 PlacePrecipitates::PlacePrecipitates() :
 AbstractFilter(),
 m_GrainIds(NULL),
+m_PhasesC(NULL),
+m_SurfaceVoxels(NULL),
+m_Neighbors(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
 m_AxisLengths(NULL),
@@ -66,10 +69,7 @@ m_Volumes(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_Active(NULL),
-m_PhasesC(NULL),
 m_PhasesF(NULL),
-m_SurfaceVoxels(NULL),
-m_Neighbors(NULL),
 m_NumCells(NULL),
 m_PhaseTypes(NULL),
 m_PhaseFractions(NULL),
@@ -446,7 +446,7 @@ void  PlacePrecipitates::fillin_precipitates()
   neighpoints[5] = dims[0] * dims[1];
   while (count != 0)
   {
-    if(previouscount == count && flag == false) flag == true;
+    if(previouscount == count && flag == false) { flag = true;}
     previouscount = count;
     count = 0;
     for (int64_t i = 0; i < totalPoints; i++)
