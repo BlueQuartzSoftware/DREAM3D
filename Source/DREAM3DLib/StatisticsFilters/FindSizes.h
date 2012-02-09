@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -81,9 +83,12 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 
   private:
     int32_t* m_GrainIds;
-    float* m_Volumes;
+
+	float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_NumCells;
+
+	StatsDataArray* m_StatsDataArray;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
