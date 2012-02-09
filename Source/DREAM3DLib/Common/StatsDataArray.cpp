@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsDataArray.h"
 
+#include <list>
+
 #include "MXA/Utilities/StringUtils.h"
 
 
@@ -252,6 +254,41 @@ int StatsDataArray::writeH5Data(hid_t parentId)
 // -----------------------------------------------------------------------------
 int StatsDataArray::readH5Data(hid_t parentId)
 {
-  assert(false);
-  return -1;
+  int err = 0;
+
+  hid_t gid = H5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
+  if (gid < 0)
+  {
+    return err;
+  }
+
+  std::list<std::string> names;
+  err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
+  if (err < 0)
+  {
+    err |= H5Utilities::closeHDF5Object(gid);
+    return err;
+  }
+
+  for (std::list<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter )
+  {
+    int index = 0;
+    bool ok = StringUtils::stringToNum(index, *iter);
+    StatsData::Pointer data = StatsData::New();
+    hid_t statId = H5Utilities::openHDF5Object(gid, *iter);
+    if (statId < 0)
+    {
+      continue;
+      err |= -1;
+    }
+    data->readHDF5Data(statId);
+    err |= H5Utilities::closeHDF5Object(statId);
+
+  }
+
+  // Do not forget to close the object
+  err |= H5Utilities::closeHDF5Object(gid);
+
+
+  return err;
 }

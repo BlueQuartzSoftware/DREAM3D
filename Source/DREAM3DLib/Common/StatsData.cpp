@@ -40,7 +40,7 @@
 
 #include "H5Support/H5Utilities.h"
 
-#include "DREAM3DLib/IOFilters/H5StatsDataWriter.h"
+#include "DREAM3DLib/HDF5/H5StatsDataDelegate.h"
 
 
 // -----------------------------------------------------------------------------
@@ -73,236 +73,6 @@ void StatsData::initialize()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsData::writeHDF5Data(hid_t groupId)
-{
-  int err = 0;
-
-  // Write the PhaseFraction
-  err |= writePhaseFraction( groupId);
-  if (err < 0)
-  {
-    return err;
-  }
-
-  // Write the Grain Diameter Info
-
-  err |= writeGrainDiameterInfo(groupId);
-  // Write the Grain Size Distribution
-  err |= writeGrainSizeDistribution(groupId);
-  // Write the Bin Numbers
-  err |= writeBinNumbers(groupId);
-
-  // Write the B Over A
-  err |= writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
-                               DREAM3D::HDF5::Grain_SizeVBoverA_Distributions,
-                               getGrainSize_BOverA());
-
-  // Write the C Over A
-  err |= writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
-                               DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
-                               getGrainSize_COverA());
-  // Write the C Over B
-  err |= writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
-                               DREAM3D::HDF5::Grain_SizeVCoverB_Distributions,
-                               getGrainSize_COverB());
-  // Write the Neighbors
-  err |= writeDistributionData(groupId,
-                               DREAM3D::HDF5::PowerLawDistribution,
-                               DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
-                               getGrainSize_Neighbors());
-  // Write the Omegas
-  err |= writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
-                               DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
-                               getGrainSize_Omegas());
-  // Write the Misorientation Bins
-  if (NULL != getMisorientationBins().get())
-  {
-    err |= getMisorientationBins()->writeH5Data(groupId);
-  }
-  err |= writeVectorOfArrays(groupId, DREAM3D::HDF5::MDFWeights, getMDF_Weights());
-
-
-  // Write the ODF
-  if (NULL != getODF().get())
-  {
-    err |= getODF()->writeH5Data(groupId);
-  }
-  err |= writeVectorOfArrays(groupId, DREAM3D::HDF5::ODFWeights, getODF_Weights());
-
-
-  // Write the Axis ODF
-  if (NULL != getAxisOrientation().get())
-  {
-    err |= getAxisOrientation()->writeH5Data(groupId);
-  }
-  err |= writeVectorOfArrays(groupId, DREAM3D::HDF5::AxisODFWeights, getAxisODF_Weights());
-
-  return err;
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsData::writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
-                                           VectorOfFloatArray colData)
-{
-
-  herr_t err = 0;
-  herr_t retErr = 0;
-
-  // Create the Group Folder
-  hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
-  if (disId > 0)
-  {
-    // Loop through all the column data and write each one to the HDF5 file
-    size_t numColumns = colData.size();
-    for (size_t c = 0; c < numColumns; ++c)
-    {
-      //std::cout << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] << std::endl;
-      err = -1;
-      if(NULL != colData[c].get() && colData[c]->GetSize() > 0)
-      {
-        err = colData[c]->writeH5Data(disId);
-        if(err < 0)
-        {
-          retErr = err;
-          break;
-        }
-      }
-      else
-      {
-        std::cout << hdf5GroupName << ":Null Data Column had no data. Did you create the data?" << std::endl;
-        std::cout << "  File: " << __FILE__ << std::endl;
-        std::cout << "  Line: " << __LINE__ << std::endl;
-        break;
-      }
-
-    }
-
-    // Close the HDF5 Group
-    err = H5Gclose(disId);
-  }
-  else
-  {
-    retErr = disId;
-  }
-
-  return retErr;
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsData::writeDistributionData(hid_t pid, const std::string &disType,
-                                              const std::string &hdf5GroupName,
-                                              VectorOfFloatArray colData)
-{
-  herr_t err = 0;
-  herr_t retErr = 0;
-
-  // Create the Group Folder
-  hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
-  if (disId > 0)
-  {
-    err = H5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disType);
-    if(err >= 0)
-    {
-      // Loop through all the column data and write each one to the HDF5 file
-      size_t numColumns = colData.size();
-      for (size_t c = 0; c < numColumns; ++c)
-      {
-        //std::cout << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] << std::endl;
-        err = -1;
-        if(NULL != colData[c].get() && colData[c]->GetSize() > 0)
-        {
-          err = colData[c]->writeH5Data(disId);
-          if(err < 0)
-          {
-            retErr = err;
-            break;
-          }
-        }
-        else
-        {
-          std::cout << hdf5GroupName << ":Null Data Column had no data. Did you create the data?" << std::endl;
-          std::cout << "  File: " << __FILE__ << std::endl;
-          std::cout << "  Line: " << __LINE__ << std::endl;
-          break;
-        }
-
-      }
-    }
-    else
-    {
-      retErr = err;
-    }
-    // Close the HDF5 Group
-    err = H5Gclose(disId);
-  }
-  else
-  {
-    retErr = disId;
-  }
-
-  return retErr;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsData::writePhaseFraction(hid_t pid)
-{
-  float phaseFraction = getPhaseFraction();
-  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsData::writeGrainDiameterInfo(hid_t pid)
-{
-  hsize_t dims[1];
-  dims[0] = 3;
-  int32_t rank = 1;
-
-  /*
-   * Grain Diameter Info is encode as 3 floats: BinStepSize, MaxDiameter, MinDiameter
-   */
-  float grainDiameterInfo[3];
-  getGrainDiameterInfo(grainDiameterInfo);
-
-  return H5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Diameter_Info, rank, dims, grainDiameterInfo);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsData::writeGrainSizeDistribution(hid_t pid)
-{
-  hsize_t dims[1];
-  dims[0] = 2;
-  int32_t rank = 1;
-
-  /*
-   * Grain Size Distribution Info is encode as 2 floats: Average and Standard Deviation
-   */
-  float grainSizeDistribution[2];
-  getGrainSizeDistribution(grainSizeDistribution);
-
-  return H5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Size_Distribution, rank, dims, grainSizeDistribution);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -329,14 +99,22 @@ FloatArrayType::Pointer StatsData::generateBinNumbers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsData::writeBinNumbers(hid_t groupId)
+int StatsData::writeHDF5Data(hid_t groupId)
 {
-  // Ensure we have valid bin numbers
-  if(NULL == m_BinNumbers.get())
-  {
-    generateBinNumbers();
-  }
-  return m_BinNumbers->writeH5Data(groupId);
+  int err = 0;
+  H5StatsDataDelegate::Pointer writer = H5StatsDataDelegate::New();
+  err = writer->writeStatsData(this, groupId);
+  return err;
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int StatsData::readHDF5Data(hid_t groupId)
+{
+  int err = 0;
+  H5StatsDataDelegate::Pointer reader = H5StatsDataDelegate::New();
+  err = reader->readStatsData(this, groupId);
+  return err;
+}

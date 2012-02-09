@@ -42,8 +42,7 @@
 
 #include "ui_ReconstructionWidget.h"
 
-#include "EbsdLib/QualityMetricFilter.h"
-
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QFilterPipeline.h"
 

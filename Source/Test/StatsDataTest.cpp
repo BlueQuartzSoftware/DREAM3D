@@ -53,8 +53,8 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/IOFilters/H5StatsDataWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -584,6 +584,18 @@ void TestWriteData()
 // -----------------------------------------------------------------------------
 void TestReadData()
 {
+  DataContainer::Pointer m = DataContainer::New();
+
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(UnitTest::StatsDataTest::TestFile);
+  reader->setDataContainer(m.get());
+  reader->execute();
+  int err = reader->getErrorCondition();
+  if (err < 0)
+  {
+    std::cout << reader->getErrorMessage() << std::endl;
+  }
+  DREAM3D_REQUIRE( err >= 0);
 
 }
 

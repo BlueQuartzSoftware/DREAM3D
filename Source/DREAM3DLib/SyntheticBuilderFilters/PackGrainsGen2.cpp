@@ -980,7 +980,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
     m_CrystalStructure[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
-      std::vector<float> pFraction;
+    std::vector<float> pFraction;
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
     m_PhaseFractions[phase] = pFraction.front();
 

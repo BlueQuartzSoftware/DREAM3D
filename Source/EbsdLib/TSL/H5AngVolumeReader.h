@@ -44,7 +44,6 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
-#include "EbsdLib/QualityMetricFilter.h"
 
 #include "EbsdLib/TSL/AngPhase.h"
 
@@ -65,28 +64,57 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 
     virtual ~H5AngVolumeReader();
 
+
+    EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
+    EBSD_POINTER_PROPERTY(Phi, Phi, float)
+    EBSD_POINTER_PROPERTY(Phi2, Phi2, float)
+    EBSD_POINTER_PROPERTY(XPos, X, float)
+    EBSD_POINTER_PROPERTY(YPos, Y, float)
+    EBSD_POINTER_PROPERTY(ImageQuality, Iq, float)
+    EBSD_POINTER_PROPERTY(ConfidenceIndex, Ci, float)
+    EBSD_POINTER_PROPERTY(Phase, PhaseData, int)
+    EBSD_POINTER_PROPERTY(SEMSignal, SEMSignal, float)
+    EBSD_POINTER_PROPERTY(Fit, Fit, float)
+
     /**
      * @brief This method does the actual loading of the OIM data from the data
      * source (files, streams, etc) into the data structures.
      * @param eulerangles
      * @param phases
-     * @param goodVoxels
      * @param xpoints
      * @param ypoints
      * @param zpoints
      * @param filters
      * @return
      */
-    int loadData(float* eulerangles,
-                 int* phases, bool* goodVoxels,
-                 int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir,
-                 std::vector<QualityMetricFilter::Pointer> filters);
+    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir);
 
     /**
      * @brief
      * @return
      */
     std::vector<AngPhase::Pointer> getPhases();
+    /**
+      * @brief Returns the pointer to the data for a given field
+      * @param fieldName The name of the field to return the pointer to.
+      */
+     void* getPointerByName(const std::string &fieldName);
+
+     /**
+      * @brief Returns an enumeration value that depicts the numerical
+      * primitive type that the data is stored as (Int, Float, etc).
+      * @param fieldName The name of the field.
+      */
+     Ebsd::NumType getPointerType(const std::string &fieldName);
+
+     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+     * and then splats '0' across all the bytes of the memory allocation
+     */
+     void initPointers(size_t numElements);
+
+     /** @brief 'free's the allocated memory and sets the pointer to NULL
+     */
+     void deletePointers();
 
   protected:
     H5AngVolumeReader();
@@ -96,6 +124,44 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 
     H5AngVolumeReader(const H5AngVolumeReader&);    // Copy Constructor Not Implemented
     void operator=(const H5AngVolumeReader&);  // Operator '=' Not Implemented
+
+    /**
+     * @brief Allocats a contiguous chunk of memory to store values from the .ang file
+     * @param numberOfElements The number of elements in the Array. This method can
+     * also optionally produce SSE aligned memory for use with SSE intrinsics
+     * @return Pointer to allocated memory
+     */
+      template<typename T>
+      T* allocateArray(size_t numberOfElements)
+      {
+  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+  #else
+        T*  m_buffer = new T[numberOfElements];
+  #endif
+  //      m_NumberOfElements = numberOfElements;
+        return m_buffer;
+      }
+
+    /**
+     * @brief Deallocates memory that has been previously allocated. This will set the
+     * value of the pointer passed in as the argument to NULL.
+     * @param ptr The pointer to be freed.
+     */
+      template<typename T>
+      void deallocateArrayData(T* &ptr)
+      {
+        if (ptr != NULL && getManageMemory() == true)
+        {
+  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+          _mm_free(ptr );
+  #else
+          delete[] ptr;
+  #endif
+          ptr = NULL;
+   //       m_NumberOfElements = 0;
+        }
+      }
 
 };
 
