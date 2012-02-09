@@ -313,14 +313,14 @@ void LoadSlices::execute()
   }
 
   // This will create the arrays with the correct sizes
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
   }
 
   // Initialize all the arrays with some default values
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   ss.str("");
   ss << getHumanLabel() << " - Initializing " << totalPoints << " voxels";
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
@@ -340,7 +340,7 @@ void LoadSlices::execute()
   }
 
   // The GoodVoxels array was just created so rerun the dataCheck to update the pointers
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -430,7 +430,7 @@ void LoadSlices::initializeArrays(int64_t totalPoints)
 void LoadSlices::initializeQuats()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   float qr[5];
   unsigned int xtal = Ebsd::CrystalStructure::UnknownCrystalStructure;
@@ -469,7 +469,7 @@ void LoadSlices::initializeQuats()
 void LoadSlices::threshold_points()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t getTotalPoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -512,8 +512,8 @@ void LoadSlices::threshold_points()
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
 
-  AlreadyChecked.resize(totalPoints);
-  for (int iter = 0; iter < totalPoints; iter++)
+  AlreadyChecked.resize(getTotalPoints);
+  for (int iter = 0; iter < getTotalPoints; iter++)
   {
     AlreadyChecked[iter] = false;
     if(m_GoodVoxels[iter] == true && m_PhasesC[iter] > 0)

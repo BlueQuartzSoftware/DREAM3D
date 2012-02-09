@@ -200,7 +200,7 @@ int main(int argc, char **argv)
   ipfWriter.m_WriteBinaryFiles = false;
   ipfWriter.writeScalars(f);
 
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   int32_t* m_GrainIds = NULL;
   m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, NULL);
     if (0 == m_GrainIds ) {

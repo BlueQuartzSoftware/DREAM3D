@@ -126,7 +126,7 @@ void ChangeResolution::execute()
 
   setErrorCondition(0);
 
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   if (getErrorCondition() < 0)
   {
     return;

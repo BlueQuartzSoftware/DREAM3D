@@ -123,6 +123,13 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     */
     int getNumCellArrays();
 
+    /**
+    * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+    * in during a set of filtering operations then the a value of '32' would be returned.
+    * @return
+    */
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellTuples);
+
 
     /**
     * @brief Adds/overwrites the data for a named array
@@ -169,7 +176,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * in during a set of filtering operations then the a value of '32' would be returned.
     * @return
     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, TotalFields);
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples);
 
     /**
     * @brief Resizes all of the Field Arrays to have 'size' tuples
@@ -219,7 +226,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     size_t getYPoints() { return m_Dimensions[1];}
     size_t getZPoints() { return m_Dimensions[2];}
 
-    int64_t totalPoints() { return (int64_t)m_Dimensions[0] * (int64_t)m_Dimensions[1] * (int64_t)m_Dimensions[2]; }
+    int64_t getTotalPoints() { return (int64_t)m_Dimensions[0] * (int64_t)m_Dimensions[1] * (int64_t)m_Dimensions[2]; }
 
 // -----------------------------------------------------------------------------
 //  Resolution Methods
@@ -234,17 +241,6 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     //  Origin Methods
     // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
-
-    // Ensemble Data??
-    // Phase Information (crystal structures, phase types, and shape types)
-//    std::vector<unsigned int> crystruct;
-//    std::vector<unsigned int> phaseType;
-//
-//    std::vector<DREAM3D::SyntheticBuilder::ShapeType> shapeTypes;
-//    std::vector<float> phasefraction;
-//
-//    std::vector<float> pptFractions;
-
 
   protected:
     DataContainer();

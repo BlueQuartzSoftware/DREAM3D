@@ -151,7 +151,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   int retErr = 0;
   float actualgrains = 0;
   float avglogdiam = 0;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   float *mindiameter;
   float *maxdiameter;
 
@@ -357,7 +357,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
 
   float actualgrains = 0;
   float avglogdiam = 0;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   float *mindiameter;
   float *maxdiameter;
   mindiameter = new float [numXTals];

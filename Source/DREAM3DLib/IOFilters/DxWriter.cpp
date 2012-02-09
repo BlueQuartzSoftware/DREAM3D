@@ -105,7 +105,7 @@ int DxWriter::writeFile()
     setErrorCondition(-1);
     return -1;
   }
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
 
   int err = 0;
@@ -250,9 +250,9 @@ int DxWriter::writeFile()
   out.write((const char*)(&dims[0]), 4);
   out.write((const char*)(&dims[1]), 4);
   out.write((const char*)(&dims[2]), 4);
-  totalPoints = dims[0] * dims[1] * dims[2];
+  getTotalPoints = dims[0] * dims[1] * dims[2];
   int32_t d = 0;
-  for(int index = 0; index < totalPoints; ++index)
+  for(int index = 0; index < getTotalPoints; ++index)
   {
     d = grainIds[index];
     if (d == 0)

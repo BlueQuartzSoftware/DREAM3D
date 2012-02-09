@@ -143,8 +143,8 @@ void FindNeighbors::execute()
   }
 
 
-  int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  int totalFields = m->getNumFieldTuples();
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -203,7 +203,7 @@ void FindNeighbors::execute()
 	m_SurfaceFields[i] = false;
   }
 
-  totalPoints = m->totalPoints();
+  totalPoints = m->getTotalPoints();
 
   for (int64_t j = 0; j < totalPoints; j++)
   {
@@ -251,7 +251,7 @@ void FindNeighbors::execute()
   // We do this to create new set of NeighborList objects
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";

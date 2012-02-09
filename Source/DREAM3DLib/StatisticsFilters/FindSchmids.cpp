@@ -138,7 +138,7 @@ void FindSchmids::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -151,7 +151,7 @@ void FindSchmids::execute()
   float theta1, theta2, theta3, theta4;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
   float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
       q1[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];

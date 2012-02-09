@@ -236,10 +236,10 @@ int StatsDataArray::writeH5Data(hid_t parentId)
   {
     return -1;
   }
-  for(size_t i = 0; i < m_StatsDataArray.size(); ++i)
+  // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
+  for(size_t i = 1; i < m_StatsDataArray.size(); ++i)
   {
     if (m_StatsDataArray[i].get() != NULL) {
-    // We start numbering our phases at 1
     std::string indexString = StringUtils::numToString(i);
     hid_t tupleId = H5Utilities::createGroup(gid, indexString);
     err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
