@@ -363,7 +363,7 @@ void __TestNeighborList()
   n->SetName("Test");
 
    for(int i = 0; i < 4; ++i) {
-     for(T j = 0; j < i+4; ++j) {
+     for(T j = 0; j < (T)(i+4); ++j) {
        n->addEntry(i, static_cast<T>(j*i+3) );
      }
    }
@@ -386,7 +386,7 @@ void __TestNeighborList()
      v = n->getList(i);
      DREAM3D_REQUIRE_NE(v.get(), NULL);
      DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+2+4) );
-     for(T j = 0; j < i+4+2; ++j) {
+     for(T j = 0; j < (T)(i+4+2); ++j) {
        DREAM3D_REQUIRE_EQUAL(v->at(j), j*(i+2)+3);
      }
    }
@@ -394,7 +394,7 @@ void __TestNeighborList()
    // Reset and erase the back 2 "Tuples"
   n->clearAllLists();
   for(int i = 0; i < 4; ++i) {
-    for(T j = 0; j < i+4; ++j) {
+    for(T j = 0; j < (T)(i+4); ++j) {
       n->addEntry(i, j*i+3);
     }
   }
@@ -407,7 +407,7 @@ void __TestNeighborList()
    v = n->getList(i);
    DREAM3D_REQUIRE_NE(v.get(), NULL);
    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
-   for(T j = 0; j < i+4; ++j) {
+   for(T j = 0; j < (T)(i+4); ++j) {
      DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
    }
   }
@@ -415,7 +415,7 @@ void __TestNeighborList()
   // Reset and erase the back 2 "Tuples"
   n->clearAllLists();
   for(int i = 0; i < 4; ++i) {
-   for(T j = 0; j < i+4; ++j) {
+   for(T j = 0; j < (T)(i+4); ++j) {
      n->addEntry(i, j*i+3);
    }
   }
@@ -427,7 +427,7 @@ void __TestNeighborList()
   v = n->getList(i);
   DREAM3D_REQUIRE_NE(v.get(), NULL);
   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
-  for(T j = 0; j < i+4; ++j) {
+  for(T j = 0; j < (T)(i+4); ++j) {
     DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
   }
   i = 1;
@@ -435,7 +435,7 @@ void __TestNeighborList()
   DREAM3D_REQUIRE_NE(v.get(), NULL);
   i=3;
   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
-  for(T j = 0; j < i+4; ++j) {
+  for(T j = 0; j < (T)(i+4); ++j) {
     DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
   }
 }
