@@ -38,9 +38,12 @@
 #include <string>
 #include <map>
 
-#include "UnitTestSupport.hpp"
 
-#include "DREAM3DLib/Common/StatsGen.cpp"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/StatsGen.h"
+
+
+#include "UnitTestSupport.hpp"
 
 void GenHexMDFPlotData()
 {
