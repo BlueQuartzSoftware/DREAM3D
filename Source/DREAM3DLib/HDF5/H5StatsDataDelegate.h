@@ -70,14 +70,23 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
     int writeGrainDiameterInfo(StatsData* data, hid_t groupId);
     int readGrainDiameterInfo(StatsData* data, hid_t groupId);
 
-
-
     int writeGrainSizeDistribution(StatsData* data, hid_t groupId);
+    int readGrainSizeDistribution(StatsData* data, hid_t groupId);
+
     int writeBinNumbers(StatsData* data, hid_t groupId);
+    int readBinNumbers(StatsData* data, hid_t groupId);
+
     int writeDistributionData(hid_t pid, const std::string &disType,
                                           const std::string &hdf5GroupName,
                                           VectorOfFloatArray colData);
+    int readDistributionData(hid_t pid, const std::string &disType,
+                                          const std::string &hdf5GroupName,
+                                          VectorOfFloatArray colData);
+
+
     int writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
+                                               VectorOfFloatArray colData);
+    int readVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
                                                VectorOfFloatArray colData);
 
   private:
