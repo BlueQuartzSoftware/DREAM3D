@@ -266,7 +266,9 @@ int H5StatsDataDelegate::writeVectorOfArrays(hid_t pid, const std::string &hdf5G
 int H5StatsDataDelegate::readVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
                                            VectorOfFloatArray colData)
 {
+  int err = 0;
   assert(false);
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -333,7 +335,9 @@ int H5StatsDataDelegate::readDistributionData(hid_t pid, const std::string &disT
                                       const std::string &hdf5GroupName,
                                       VectorOfFloatArray colData)
 {
+  int err = 0;
   assert(false);
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -414,7 +418,9 @@ int H5StatsDataDelegate::writeGrainSizeDistribution(StatsData* data, hid_t pid)
 // -----------------------------------------------------------------------------
 int H5StatsDataDelegate::readGrainSizeDistribution(StatsData* data, hid_t groupId)
 {
+  int err = 0;
   assert(false);
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -435,7 +441,9 @@ int H5StatsDataDelegate::writeBinNumbers(StatsData* data, hid_t groupId)
 // -----------------------------------------------------------------------------
 int H5StatsDataDelegate::readBinNumbers(StatsData* data, hid_t groupId)
 {
+  int err = 0;
   assert(false);
+  return err;
 }
 
 
