@@ -90,6 +90,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
     neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
+    neighborlistPtr->Resize(fields);
     m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
       ss << "NeighborLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
@@ -104,6 +105,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
     sharedSurfaceAreaListPtr->SetName(DREAM3D::FieldData::SharedSurfaceAreaList);
+    sharedSurfaceAreaListPtr->Resize(fields);
     m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL){
       ss << "SurfaceAreaLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
@@ -293,9 +295,6 @@ void FindNeighbors::execute()
       neighborsurfacearealist[i].push_back(area);
     }
     m_NumNeighbors[i] = neighborlist[i].size();
-
-
-
 
     // Set the vector for each list into the NeighborList Object
     NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);

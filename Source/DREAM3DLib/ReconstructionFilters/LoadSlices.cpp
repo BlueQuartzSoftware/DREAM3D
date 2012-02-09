@@ -183,7 +183,7 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, voxels, 5);
-//  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, voxels, 1);
 
   setErrorMessage(ss.str());
 }
@@ -402,6 +402,10 @@ void LoadSlices::execute()
   }
   filter = DetermineGoodVoxels::NullPointer(); // Clean up some memory
 
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
+  threshold_points();
+
   // If there is an error set this to something negative and also set a message
   ss.str("");
   ss << getHumanLabel() << " Completed";
@@ -462,7 +466,7 @@ void LoadSlices::initializeQuats()
   }
 }
 
-#if 0
+#if 1
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

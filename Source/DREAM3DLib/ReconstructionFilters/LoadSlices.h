@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
     void initializeQuats();
 
-//    void threshold_points();
+    void threshold_points();
 
   private:
     int32_t* m_PhasesC;

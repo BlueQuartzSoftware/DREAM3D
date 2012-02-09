@@ -119,9 +119,19 @@ class NeighborList : public IDataArray
     void initializeWithZeros() { _data.clear(); }
 
 
-    int32_t RawResize(size_t size)  { return 0; }
+    int32_t RawResize(size_t size)
+    {
+      size_t old = _data.size();
+      _data.resize(size);
+      // Initialize with zero length Vectors
+      for (size_t i = old; i < _data.size(); ++i)
+      {
+        _data[i] = SharedVectorType(new VectorType);
+      }
+      return 1;
+    }
 
-    virtual int32_t Resize(size_t numTuples) { return 0; }
+    virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
 
 
     //FIXME: These need to be implemented
@@ -417,7 +427,7 @@ class NeighborList : public IDataArray
     VectorType& operator[](size_t grainId)
     {
 #ifndef NDEBUG
-      if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}
+      if (_data.size() > 0ul) { assert(grainId < _data.size());}
 #endif
       return *(_data[grainId]);
 
