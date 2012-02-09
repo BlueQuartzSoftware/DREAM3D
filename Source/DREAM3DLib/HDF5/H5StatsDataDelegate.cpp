@@ -64,7 +64,7 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
   //Read the PhaseFraction
   float phaseFraction = 0.0f;
   err |= H5Lite::readScalarDataset(groupId, DREAM3D::HDF5::PhaseFraction, phaseFraction);
-
+  return err;
 }
 
 
@@ -312,7 +312,7 @@ int H5StatsDataDelegate::readGrainDiameterInfo(StatsData* data, hid_t groupId)
   FloatArrayType::Pointer f = FloatArrayType::CreateArray(3);
   f->SetName(DREAM3D::HDF5::Grain_Diameter_Info);
   err |= f->readH5Data(groupId);
-
+  return err;
 }
 
 // -----------------------------------------------------------------------------
