@@ -37,6 +37,7 @@
 #ifndef _H5EBSDVOLUMEREADER_H_
 #define _H5EBSDVOLUMEREADER_H_
 
+#include <string>
 #include <vector>
 
 
@@ -45,7 +46,6 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 
-#include "EbsdLib/QualityMetricFilter.h"
 
 
 /**
@@ -90,30 +90,44 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * @param euler2s The second set of euler angles (Phi)
      * @param euler3s The third set of euler angles (phi2)
      * @param phases The phase index data
-     * @param goodVoxels The boolean array of good voxels
      * @param xpoints The number of x voxels
      * @param ypoints The number of y voxels
      * @param zpoints The number of z voxels
      * @param filters The Quality Metric Filters
      * @return
      */
-    virtual int loadData(float* eulerangles,
-                         int* phases, bool* goodVoxels,
-                         int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir,
-                         std::vector<QualityMetricFilter::Pointer> filters);
+    virtual int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints,
+                         Ebsd::RefFrameZDir ZDir);
+
+
+    /** @brief Will this class be responsible for deallocating the memory for the data arrays */
+    EBSD_INSTANCE_PROPERTY(bool, ManageMemory);
+
+    /** @brief The number of elements in a column of data. This should be rows * columns */
+    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
 
     /**
-     *
-     * @param filters
-     * @param dataPointers
-     * @param nPoints
-     * @param dTypes
-     * @return
-     */
-    virtual DataArray<bool>::Pointer determineGoodVoxels( std::vector<QualityMetricFilter::Pointer> filters,
-                                    std::vector<void*> dataPointers,
-                                    size_t nPoints,
-                                    std::vector<Ebsd::NumType> dTypes);
+    * @brief Returns the pointer to the data for a given field
+    * @param fieldName The name of the field to return the pointer to.
+    */
+    virtual void* getPointerByName(const std::string &fieldName);
+
+    /**
+    * @brief Returns an enumeration value that depicts the numerical
+    * primitive type that the data is stored as (Int, Float, etc).
+    * @param fieldName The name of the field.
+    */
+    virtual Ebsd::NumType getPointerType(const std::string &fieldName);
+
+    /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+    * and then splats '0' across all the bytes of the memory allocation
+    */
+    virtual void initPointers(size_t numElements);
+
+    /** @brief 'free's the allocated memory and sets the pointer to NULL
+    */
+    virtual void deletePointers();
+
 
   protected:
     H5EbsdVolumeReader();

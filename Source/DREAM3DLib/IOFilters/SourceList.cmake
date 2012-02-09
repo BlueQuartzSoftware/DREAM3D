@@ -20,7 +20,6 @@ SET (IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/H5StatsDataWriter.h
 )
 
 
@@ -39,7 +38,6 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/H5StatsDataWriter.cpp   
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/IOFilters" "${DREAM3DLib_IOFilters_HDRS}" "${DREAM3DLib_IOFilters_SRCS}" "0")
