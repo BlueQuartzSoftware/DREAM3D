@@ -217,7 +217,7 @@ void AlignSections::align_sections()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   float disorientation = 0;
   float mindisorientation = 100000000;
@@ -424,8 +424,8 @@ void AlignSections::align_sections()
         }
       }
     }
-    shifts[iter][0] = shifts[iter][0] + newxshift;
-    shifts[iter][1] = shifts[iter][1] + newyshift;
+    shifts[iter][0] = shifts[iter-1][0] + newxshift;
+    shifts[iter][1] = shifts[iter-1][1] + newyshift;
     if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
     {
       AlignSections::Deallocate2DArray<float>(graincount1, graincount2, mutualinfo12);
@@ -547,7 +547,7 @@ void AlignSections::form_grains_sections()
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
 
   std::vector<int> voxelslist(initialVoxelsListSize, -1);

@@ -146,7 +146,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
       }
 
       DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1);
-      crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructure);
+      crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
@@ -161,8 +161,8 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
       }
-      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructure, crystalStructures);
-      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseType, m_PhaseTypes);
+      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypes);
       getDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }

@@ -71,7 +71,7 @@ m_PhasesF(NULL),
 m_SurfaceVoxels(NULL),
 m_Neighbors(NULL),
 m_NumCells(NULL),
-m_PhaseType(NULL),
+m_PhaseTypes(NULL),
 m_PhaseFractions(NULL),
 m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
@@ -150,6 +150,15 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -311, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
+
+  //Ensemble Data
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -266,8 +275,7 @@ void PlacePrecipitates::insert_precipitate(size_t gnum)
 //  float coatingradcur1, coatingradcur2, coatingradcur3;
   currentprecipvoxellist.resize(0);
 //  currentcoatingvoxellist.resize(0);
-  std::stringstream ss;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305,  unsigned int, DataArray<unsigned int>, m->getNumEnsembleTuples(), 1);
+
 
   unsigned int shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
   // init any values for each of the Shape Ops
@@ -540,14 +548,10 @@ void  PlacePrecipitates::place_precipitates()
   double totalprecipitatefractions = 0.0;
 
   size_t numXTals = m->getNumEnsembleTuples();
-  std::stringstream ss;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseType, ss, -303, unsigned int, DataArray<unsigned int>, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -304, float, FloatArrayType, numXTals, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -305, float, FloatArrayType, numXTals, 1);
 
   for (size_t i = 1; i < numXTals; ++i)
   {
-    if(m_PhaseType[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       precipitatephases.push_back(i);
       precipitatephasefractions.push_back(m_PhaseFractions[i]);

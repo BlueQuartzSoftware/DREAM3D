@@ -206,7 +206,7 @@ void SegmentGrains::execute()
 
   typedef DataArray<unsigned int> XTalType;
    XTalType* crystruct
-       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   // Precalculate some constants
   int64_t totalPMinus1 = totalPoints - 1;

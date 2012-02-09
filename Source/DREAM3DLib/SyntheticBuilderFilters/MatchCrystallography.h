@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     NeighborList<float>* m_SharedSurfaceAreaList;
 
     //Ensemble Data
-    float* m_TotalSurfaceArea;
+    float* m_TotalSurfaceAreas;
     unsigned int* m_CrystalStructures;
     float* m_PrecipitateFractions;
     unsigned int* m_PhaseTypes;
