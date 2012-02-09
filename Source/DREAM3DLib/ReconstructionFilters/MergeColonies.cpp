@@ -171,7 +171,7 @@ void MergeColonies::execute()
   m->clearEnsembleData();
 
   setErrorCondition(0);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -221,7 +221,7 @@ void MergeColonies::merge_colonies()
   float r1, r2, r3;
   float q1[5];
   float q2[5];
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
   colonynewnumbers.resize(numgrains, -1);
 
@@ -283,7 +283,7 @@ void MergeColonies::merge_colonies()
     }
     colonylist.clear();
   }
-  size_t totalPoints = static_cast<size_t>(m->totalPoints());
+  size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
@@ -294,7 +294,7 @@ void MergeColonies::merge_colonies()
 void MergeColonies::characterize_colonies()
 {
   DataContainer* m = getDataContainer();
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {
 

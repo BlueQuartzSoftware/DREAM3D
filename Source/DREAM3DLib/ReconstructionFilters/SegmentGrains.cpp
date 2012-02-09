@@ -154,12 +154,12 @@ void SegmentGrains::execute()
   m->clearFieldData();
 //  m->clearEnsembleData();
 
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   // Create at least 2 grains:
   m->resizeFieldDataArrays(2);
   // Update our pointers
-  dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -282,12 +282,12 @@ void SegmentGrains::execute()
       m_Active[graincount] = true;
       m_PhasesF[graincount] = m_PhasesC[seed];
       graincount++;
-      if(graincount >= m->getTotalFields())
+      if(graincount >= m->getNumFieldTuples())
       {
-        size_t oldSize = m->getTotalFields();
-        m->resizeFieldDataArrays(m->getTotalFields() + 100);
-        dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
-        for (size_t g = oldSize; g < m->getTotalFields(); ++g)
+        size_t oldSize = m->getNumFieldTuples();
+        m->resizeFieldDataArrays(m->getNumFieldTuples() + 100);
+        dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+        for (size_t g = oldSize; g < m->getNumFieldTuples(); ++g)
         {
           //FIXME::THis needs to set some default data
 
@@ -299,7 +299,7 @@ void SegmentGrains::execute()
   }
 
   m->resizeFieldDataArrays(graincount);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);

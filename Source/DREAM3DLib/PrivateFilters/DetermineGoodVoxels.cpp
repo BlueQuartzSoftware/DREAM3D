@@ -98,7 +98,7 @@ void DetermineGoodVoxels::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, m->totalPoints(), 1, 1);
+  dataCheck(false, m->getTotalPoints(), 1, 1);
   //int err = 0;
   std::stringstream ss;
 
@@ -115,7 +115,7 @@ void DetermineGoodVoxels::execute()
   }
 
   // Figure out which are good voxels
-  int64_t nPoints = m->totalPoints();
+  int64_t nPoints = m->getTotalPoints();
 
 
   if(m_QualityMetricFilters.size() == 0)

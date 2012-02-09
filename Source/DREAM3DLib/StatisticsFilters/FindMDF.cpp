@@ -154,7 +154,7 @@ void FindMDF::execute()
 
   H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -174,7 +174,7 @@ void FindMDF::execute()
   float w;
   float q1[5];
   float q2[5];
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
   float **misobin;
   int numbins = 0;

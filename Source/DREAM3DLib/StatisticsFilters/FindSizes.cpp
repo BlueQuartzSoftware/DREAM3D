@@ -102,7 +102,7 @@ void FindSizes::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -120,11 +120,11 @@ void FindSizes::execute()
 void FindSizes::find_sizes()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   float radcubed;
   float diameter;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);
@@ -154,11 +154,11 @@ void FindSizes::find_sizes()
 void FindSizes::find_sizes2D()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   float radsquared;
   float diameter;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);

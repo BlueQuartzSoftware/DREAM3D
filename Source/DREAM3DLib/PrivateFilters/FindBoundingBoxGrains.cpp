@@ -98,7 +98,7 @@ void FindBoundingBoxGrains::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(),  m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(),  m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -116,7 +116,7 @@ void FindBoundingBoxGrains::execute()
 void FindBoundingBoxGrains::find_boundingboxgrains()
 {
   DataContainer* m = getDataContainer();
-  size_t size = m->getTotalFields();
+  size_t size = m->getNumFieldTuples();
   float boundbox[7];
   float coords[7];
   float x, y, z;
@@ -175,7 +175,7 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
 {
   DataContainer* m = getDataContainer();
-  size_t size = m->getTotalFields();
+  size_t size = m->getNumFieldTuples();
   float boundbox[5];
   float coords[5];
   float x, y;
