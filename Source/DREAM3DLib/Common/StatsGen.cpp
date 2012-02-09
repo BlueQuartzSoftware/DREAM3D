@@ -63,6 +63,3 @@ int StatsGen::computeNumberOfBins(float mu, float sigma, float minCutOff, float 
   return static_cast<int>((max -min)/binstep)+1;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------

@@ -414,6 +414,14 @@ class NeighborList : public IDataArray
       return *(_data[grainId]);
     }
 
+    VectorType& operator[](size_t grainId)
+    {
+#ifndef NDEBUG
+      if (_data.size() > 0u) { assert(grainId < static_cast<int>(_data.size()));}
+#endif
+      return *(_data[grainId]);
+
+    }
   protected:
     NeighborList() :
         m_Name("NeighborList")  {    }
