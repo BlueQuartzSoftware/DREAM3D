@@ -75,6 +75,12 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
 
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+  }
+
   setErrorMessage(ss.str());
 }
 
