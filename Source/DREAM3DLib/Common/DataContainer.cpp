@@ -176,6 +176,10 @@ void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer da
   }
   m_FieldData[name] = data;
   m_NumFieldTuples = data->GetNumberOfTuples();
+  if (m_NumFieldTuples == 0)
+  {
+    std::cout << "Bad" << std::endl;
+  }
 }
 
 // -----------------------------------------------------------------------------
