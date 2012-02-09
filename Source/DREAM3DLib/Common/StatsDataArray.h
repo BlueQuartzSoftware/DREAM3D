@@ -85,6 +85,21 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     }
 
     /**
+    *
+    */
+    void fillArrayWithNewStatsData(size_t n)
+    {
+      m_StatsDataArray.resize(n);
+      for (size_t i = 0; i < n; ++i)
+      {
+          if (m_StatsDataArray[i].get() == NULL)
+          {
+            m_StatsDataArray[i] = StatsData::New();
+          }
+      }
+    }
+
+    /**
      *
      */
     StatsData::Pointer getStatsData(int idx)

@@ -243,7 +243,7 @@ int main(int argc, char **argv)
     FilterPipeline::Pointer m_FilterPipeline = FilterPipeline::New();
 
     DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(1);
-    phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
+    phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
     phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
     if(parseUnknownArray<unsigned int>(phaseTypeStr.getValue(), "%d", phaseTypes) < 0)
     {

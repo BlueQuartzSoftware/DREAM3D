@@ -435,7 +435,7 @@ void LoadSlices::initializeQuats()
   float qr[5];
   unsigned int xtal = Ebsd::CrystalStructure::UnknownCrystalStructure;
   DataArray<unsigned int>* crystruct
-      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {
@@ -506,7 +506,7 @@ void LoadSlices::threshold_points()
 //  int noborder = 0;
 
   DataArray<unsigned int>* crystruct
-      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructure).get());
+      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   unsigned int phase1, phase2;
   int initialVoxelsListSize = 10000;

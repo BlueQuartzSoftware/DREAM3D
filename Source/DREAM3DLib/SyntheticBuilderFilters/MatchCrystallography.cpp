@@ -61,7 +61,7 @@
 // -----------------------------------------------------------------------------
 
 MatchCrystallography::MatchCrystallography() :
-    AbstractFilter(), m_GrainIds(NULL), m_EulerAnglesC(NULL), m_SurfaceFields(NULL), m_PhasesF(NULL), m_NumCells(NULL), m_EulerAnglesF(NULL), m_AvgQuats(NULL), m_NeighborList(NULL), m_SharedSurfaceAreaList(NULL), m_TotalSurfaceArea(NULL),
+    AbstractFilter(), m_GrainIds(NULL), m_EulerAnglesC(NULL), m_SurfaceFields(NULL), m_PhasesF(NULL), m_NumCells(NULL), m_EulerAnglesF(NULL), m_AvgQuats(NULL), m_NeighborList(NULL), m_SharedSurfaceAreaList(NULL), m_TotalSurfaceAreas(NULL),
     m_CrystalStructures(NULL), m_PrecipitateFractions(NULL), m_PhaseTypes(NULL), m_PhaseFractions(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -143,7 +143,13 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   }
 
   // Ensemble Data
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, ss, -303, float, FloatArrayType, ensembles, 1);
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -264,8 +270,8 @@ void MatchCrystallography::initializeArrays(std::vector<unsigned int> structures
   size_t size = structures.size();
 
   DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(size + 1);
-  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructure);
-  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructure, crystalStructures);
+  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
+  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
   m_CrystalStructures = crystalStructures->GetPointer(0);
 
 
@@ -276,21 +282,14 @@ void MatchCrystallography::initializeArrays(std::vector<unsigned int> structures
 
 
   DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(size + 1);
-  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseType);
-  m->addEnsembleData(DREAM3D::EnsembleData::PhaseType, phaseTypes);
+  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
+  m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
   m_PhaseTypes = phaseTypes->GetPointer(0);
 
   FloatArrayType::Pointer phaseFractions = FloatArrayType::CreateArray(size + 1);
   phaseFractions->SetName(DREAM3D::EnsembleData::PhaseFractions);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseFractions, phaseFractions);
   m_PhaseFractions = phaseFractions->GetPointer(0);
-
-
-  // Initialize the first slot in these arrays since they should never be used
-  m_CrystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  m_PrecipitateFractions[0] = 0.0;
-  m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
-  m_PrecipitateFractions[0] = -1.0;
 
   actualodf.resize(size + 1);
   simodf.resize(size + 1);
@@ -495,12 +494,12 @@ void MatchCrystallography::MC_LoopBody1(int grain, int phase, int j, float neigh
   newmisobin = m_OrientationOps[sym]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange
       + (((actualmdf[phase][curmisobin] - simmdf[phase][curmisobin]) * (actualmdf[phase][curmisobin] - simmdf[phase][curmisobin]))
-          - ((actualmdf[phase][curmisobin] - (simmdf[phase][curmisobin] - (neighsurfarea / m_TotalSurfaceArea[phase])))
-              * (actualmdf[phase][curmisobin] - (simmdf[phase][curmisobin] - (neighsurfarea / m_TotalSurfaceArea[phase])))));
+          - ((actualmdf[phase][curmisobin] - (simmdf[phase][curmisobin] - (neighsurfarea / m_TotalSurfaceAreas[phase])))
+              * (actualmdf[phase][curmisobin] - (simmdf[phase][curmisobin] - (neighsurfarea / m_TotalSurfaceAreas[phase])))));
   mdfchange = mdfchange
       + (((actualmdf[phase][newmisobin] - simmdf[phase][newmisobin]) * (actualmdf[phase][newmisobin] - simmdf[phase][newmisobin]))
-          - ((actualmdf[phase][newmisobin] - (simmdf[phase][newmisobin] + (neighsurfarea / m_TotalSurfaceArea[phase])))
-              * (actualmdf[phase][newmisobin] - (simmdf[phase][newmisobin] + (neighsurfarea / m_TotalSurfaceArea[phase])))));
+          - ((actualmdf[phase][newmisobin] - (simmdf[phase][newmisobin] + (neighsurfarea / m_TotalSurfaceAreas[phase])))
+              * (actualmdf[phase][newmisobin] - (simmdf[phase][newmisobin] + (neighsurfarea / m_TotalSurfaceAreas[phase])))));
 }
 
 void MatchCrystallography::MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5])
@@ -522,8 +521,8 @@ void MatchCrystallography::MC_LoopBody2(int grain, int phase, int j, float neigh
   misorientationlists[grain][3 * j] = miso1;
   misorientationlists[grain][3 * j + 1] = miso2;
   misorientationlists[grain][3 * j + 2] = miso3;
-  simmdf[phase][curmisobin] = simmdf[phase][curmisobin] - (neighsurfarea / m_TotalSurfaceArea[phase]);
-  simmdf[phase][newmisobin] = simmdf[phase][newmisobin] + (neighsurfarea / m_TotalSurfaceArea[phase]);
+  simmdf[phase][curmisobin] = simmdf[phase][curmisobin] - (neighsurfarea / m_TotalSurfaceAreas[phase]);
+  simmdf[phase][newmisobin] = simmdf[phase][newmisobin] + (neighsurfarea / m_TotalSurfaceAreas[phase]);
 }
 
 // -----------------------------------------------------------------------------
@@ -925,7 +924,7 @@ void MatchCrystallography::measure_misorientations()
 
       if(m_SurfaceFields[i] == false && (nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
       {
-        simmdf[m_PhasesF[i]][mbin] = simmdf[m_PhasesF[i]][mbin] + (neighsurfarea / m_TotalSurfaceArea[m_PhasesF[i]]);
+        simmdf[m_PhasesF[i]][mbin] = simmdf[m_PhasesF[i]][mbin] + (neighsurfarea / m_TotalSurfaceAreas[m_PhasesF[i]]);
       }
     }
   }
