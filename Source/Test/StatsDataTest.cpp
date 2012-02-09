@@ -66,7 +66,8 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-
+  MXADir::remove(UnitTest::StatsDataTest::TestFile);
+  MXADir::remove(UnitTest::StatsDataTest::TestFile2);
 }
 
 // -----------------------------------------------------------------------------
@@ -598,6 +599,19 @@ void TestReadData()
   }
   DREAM3D_REQUIRE( err >= 0);
 
+  IDataArray::Pointer p = m->getEnsembleData(DREAM3D::EnsembleData::Statistics);
+  DREAM3D_REQUIRE_EQUAL(p->GetNumberOfTuples(), 3);
+
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::StatsDataTest::TestFile2);
+  writer->setDataContainer(m.get());
+  writer->execute();
+  err = writer->getErrorCondition();
+  if (err < 0)
+  {
+    std::cout << "Rewriting the data failed" << std::endl;
+  }
+  DREAM3D_REQUIRE( err >= 0);
 }
 
 // -----------------------------------------------------------------------------

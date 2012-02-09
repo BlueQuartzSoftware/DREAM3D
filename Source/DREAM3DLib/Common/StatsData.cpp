@@ -48,7 +48,6 @@
 // -----------------------------------------------------------------------------
 StatsData::StatsData()
 {
-//FIXME: Initialize all the data to Zeros or something like that
   initialize();
 }
 
@@ -70,7 +69,11 @@ void StatsData::initialize()
   m_COverB_DistType = DREAM3D::DistributionType::Beta;
   m_Neighbors_DistType = DREAM3D::DistributionType::Power;
   m_Omegas_DistType = DREAM3D::DistributionType::Beta;
-
+  m_GrainDiameterInfo[0] = 0.25f;
+  m_GrainDiameterInfo[1] = 1.0f;
+  m_GrainDiameterInfo[2] = 0.0f;
+  m_GrainSizeDistribution[0] = 0.0f;
+  m_GrainSizeDistribution[1] = 0.0f;
 }
 
 
@@ -85,7 +88,7 @@ FloatArrayType::Pointer StatsData::generateBinNumbers()
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {
-    std::cout << d << std::endl;
+  //  std::cout << d << std::endl;
     bins.push_back(d);
     d = d + grainDiameterInfo[0];
   }
