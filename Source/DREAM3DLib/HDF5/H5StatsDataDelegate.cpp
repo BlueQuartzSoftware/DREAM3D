@@ -69,6 +69,60 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
   err |= readGrainDiameterInfo(data, groupId);
 
 
+  // Write the Grain Size Distribution
+   err |= readGrainSizeDistribution(data, groupId);
+
+   // Write the Bin Numbers
+   err |= readBinNumbers(data, groupId);
+
+   // Write the B Over A
+   err |= readDistributionData(groupId,
+                                DREAM3D::HDF5::BetaDistribution,
+                                DREAM3D::HDF5::Grain_SizeVBoverA_Distributions,
+                                data->getGrainSize_BOverA());
+
+   // Write the C Over A
+   err |= readDistributionData(groupId,
+                                DREAM3D::HDF5::BetaDistribution,
+                                DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
+                                data->getGrainSize_COverA());
+   // Write the C Over B
+   err |= readDistributionData(groupId,
+                                DREAM3D::HDF5::BetaDistribution,
+                                DREAM3D::HDF5::Grain_SizeVCoverB_Distributions,
+                                data->getGrainSize_COverB());
+   // Write the Neighbors
+   err |= readDistributionData(groupId,
+                                DREAM3D::HDF5::PowerLawDistribution,
+                                DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
+                                data->getGrainSize_Neighbors());
+   // Write the Omegas
+   err |= readDistributionData(groupId,
+                                DREAM3D::HDF5::BetaDistribution,
+                                DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
+                                data->getGrainSize_Omegas());
+   // Write the Misorientation Bins
+   if (NULL != data->getMisorientationBins().get())
+   {
+     err |= data->getMisorientationBins()->readH5Data(groupId);
+   }
+   err |= readVectorOfArrays(groupId, DREAM3D::HDF5::MDFWeights, data->getMDF_Weights());
+
+
+   // Write the ODF
+   if (NULL != data->getODF().get())
+   {
+     err |= data->getODF()->readH5Data(groupId);
+   }
+   err |= readVectorOfArrays(groupId, DREAM3D::HDF5::ODFWeights, data->getODF_Weights());
+
+
+   // Write the Axis ODF
+   if (NULL != data->getAxisOrientation().get())
+   {
+     err |= data->getAxisOrientation()->readH5Data(groupId);
+   }
+   err |= readVectorOfArrays(groupId, DREAM3D::HDF5::AxisODFWeights, data->getAxisODF_Weights());
 
 
   return err;
@@ -206,6 +260,14 @@ int H5StatsDataDelegate::writeVectorOfArrays(hid_t pid, const std::string &hdf5G
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::readVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
+                                           VectorOfFloatArray colData)
+{
+  assert(false);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -264,6 +326,15 @@ int H5StatsDataDelegate::writeDistributionData(hid_t pid, const std::string &dis
   return retErr;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::readDistributionData(hid_t pid, const std::string &disType,
+                                      const std::string &hdf5GroupName,
+                                      VectorOfFloatArray colData)
+{
+  assert(false);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -338,6 +409,13 @@ int H5StatsDataDelegate::writeGrainSizeDistribution(StatsData* data, hid_t pid)
   return H5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Size_Distribution, rank, dims, grainSizeDistribution);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::readGrainSizeDistribution(StatsData* data, hid_t groupId)
+{
+  assert(false);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -351,3 +429,15 @@ int H5StatsDataDelegate::writeBinNumbers(StatsData* data, hid_t groupId)
   }
   return data->getBinNumbers()->writeH5Data(groupId);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::readBinNumbers(StatsData* data, hid_t groupId)
+{
+  assert(false);
+}
+
+
+
+
