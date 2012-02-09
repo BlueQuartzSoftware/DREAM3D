@@ -210,9 +210,9 @@ void SegmentGrains::execute()
 
   // Precalculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
-  for(size_t i = 0; i < totalPoints; i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
-	m_GrainIds[i] = 0;
+    m_GrainIds[i] = 0;
   }
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration

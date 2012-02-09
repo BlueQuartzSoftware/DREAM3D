@@ -594,9 +594,9 @@ void MatchCrystallography::matchCrystallography()
           counter++;
         }
         if(counter == totalFields)
-		{
-			badtrycount < 10*totalFields;
-		}
+        {
+          badtrycount < 10*totalFields;
+        }
 		else
 		{
 			ea1 = m_EulerAnglesF[3 * selectedgrain1];

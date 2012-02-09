@@ -160,7 +160,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void CleanupGrains::preflight()
 {
-  DataContainer* m = getDataContainer();
+//  DataContainer* m = getDataContainer();
 //  m->clearFieldData();
 //  m->clearEnsembleData();
 
