@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     /**
      *
      */
-    void setStatsData(int grainId, StatsData::Pointer neighborList)
+    void setStatsData(int grainId, StatsData::Pointer statsData)
     {
       if(grainId >= static_cast<int>(m_StatsDataArray.size()))
       {
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
           m_StatsDataArray[i] = StatsData::New();
         }
       }
-      m_StatsDataArray[grainId] = neighborList;
+      m_StatsDataArray[grainId] = statsData;
     }
 
     /**

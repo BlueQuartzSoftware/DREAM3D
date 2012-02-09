@@ -228,7 +228,7 @@ void DataContainerReader::execute()
     return;
   }
 
-  err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+  err |= H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
     setErrorMessage("H5ReconVolumeReader Error Reading the Dimensions");
@@ -239,7 +239,7 @@ void DataContainerReader::execute()
   }
   m->setDimensions(volDims[0], volDims[1], volDims[2]);
 
-  err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+  err |= H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
   if(err < 0)
   {
     setErrorMessage("H5ReconVolumeReader Error Reading the Spacing (Resolution)");
@@ -250,7 +250,7 @@ void DataContainerReader::execute()
   }
   m->setResolution(spacing);
 
-  err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+  err |= H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
   if(err < 0)
   {
     setErrorMessage("H5ReconVolumeReader Error Reading the Origin");
@@ -261,32 +261,35 @@ void DataContainerReader::execute()
   }
   m->setOrigin(origin);
 
-  err = readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME);
   if(err < 0)
   {
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
+    err |= H5Gclose(dcGid);
+    err |= H5Fclose(fileId);
+    setErrorCondition(err);
     return;
   }
 
-  err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME);
   if(err < 0)
   {
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
+    err |= H5Gclose(dcGid);
+    err |= H5Fclose(fileId);
+    setErrorCondition(err);
     return;
   }
 
-  err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
   if(err < 0)
   {
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
+    err |= H5Gclose(dcGid);
+    err |= H5Fclose(fileId);
+    setErrorCondition(err);
     return;
   }
 
-  err = H5Gclose(dcGid);
-  err = H5Fclose(fileId);
+  err |= H5Gclose(dcGid);
+  err |= H5Fclose(fileId);
 }
 
 
@@ -317,7 +320,7 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     classType.clear();
-    err = H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
  //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 

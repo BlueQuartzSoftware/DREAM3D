@@ -93,13 +93,16 @@ void StatsDataArray::releaseOwnership()
 void* StatsDataArray::GetVoidPointer(size_t i)
 {
 #ifndef NDEBUG
-      if (m_StatsDataArray.size() > 0) { assert(i < m_StatsDataArray.size());}
+  if(m_StatsDataArray.size() > 0)
+  {
+    assert(i < m_StatsDataArray.size());
+  }
 #endif
-      if (i >= this->GetNumberOfTuples())
-      {
-        return 0x0;
-      }
-      return (void*)(&(m_StatsDataArray[i]));
+  if(i >= this->GetNumberOfTuples())
+  {
+    return 0x0;
+  }
+  return (void*)(&(m_StatsDataArray[i]));
 }
 
 // -----------------------------------------------------------------------------
@@ -127,8 +130,8 @@ void StatsDataArray::SetNumberOfComponents(int nc)
   {
     assert(false);
   }
-
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -283,7 +286,7 @@ int StatsDataArray::readH5Data(hid_t parentId)
     }
     data->readHDF5Data(statId);
     err |= H5Utilities::closeHDF5Object(statId);
-
+    setStatsData(index, data);
   }
 
   // Do not forget to close the object
