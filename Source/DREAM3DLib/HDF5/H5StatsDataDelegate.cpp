@@ -62,8 +62,15 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 {
   int err = 0;
   //Read the PhaseFraction
-  float phaseFraction = 0.0f;
-  err |= H5Lite::readScalarDataset(groupId, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+
+  err |= readPhaseFraction(data, groupId);
+
+  // Read the Grain Diameter Info
+  err |= readGrainDiameterInfo(data, groupId);
+
+
+
+
   return err;
 }
 
@@ -88,10 +95,11 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
   }
 
   // Write the Grain Diameter Info
-
   err |= writeGrainDiameterInfo(data, groupId);
+
   // Write the Grain Size Distribution
   err |= writeGrainSizeDistribution(data, groupId);
+
   // Write the Bin Numbers
   err |= writeBinNumbers(data, groupId);
 
@@ -272,8 +280,9 @@ int H5StatsDataDelegate::writePhaseFraction(StatsData* data, hid_t pid)
 int H5StatsDataDelegate::readPhaseFraction(StatsData* data, hid_t pid)
 {
   float phaseFraction = 0.0f;
-  return H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -300,18 +309,14 @@ int H5StatsDataDelegate::writeGrainDiameterInfo(StatsData* data, hid_t pid)
 int H5StatsDataDelegate::readGrainDiameterInfo(StatsData* data, hid_t groupId)
 {
   int err = 0;
-  hsize_t dims[1];
-  dims[0] = 3;
-  int32_t rank = 1;
-
   /*
    * Grain Diameter Info is encode as 3 floats: BinStepSize, MaxDiameter, MinDiameter
    */
   float grainDiameterInfo[3] =
   { 0.0f, 0.0f, 0.0f };
-  FloatArrayType::Pointer f = FloatArrayType::CreateArray(3);
-  f->SetName(DREAM3D::HDF5::Grain_Diameter_Info);
-  err |= f->readH5Data(groupId);
+
+  err = H5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Diameter_Info, grainDiameterInfo);
+  data->setGrainDiameterInfo(grainDiameterInfo);
   return err;
 }
 
