@@ -292,6 +292,9 @@ void FindNeighbors::execute()
     }
     m_NumNeighbors[i] = neighborlist[i].size();
 
+
+
+
     // Set the vector for each list into the NeighborList Object
     NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
     sharedNeiLst->assign(neighborlist[i].begin(), neighborlist[i].end());

@@ -566,7 +566,7 @@ void TestWriteData()
 
   // So Now if you want to get the B Over A values you can do this:
   VectorOfFloatArray bovera = s1->getGrainSize_BOverA();
-  // This holds 2 arrays. Alphas and Betas whic are of type FloatArrayType, or a
+  // This holds 2 arrays. Alphas and Betas which are of type FloatArrayType, or a
   // DataArray<float>::Pointer
 
   FloatArrayType::Pointer alphas = bovera[0];
