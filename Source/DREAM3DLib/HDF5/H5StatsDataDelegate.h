@@ -76,6 +76,14 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
     int writeBinNumbers(StatsData* data, hid_t groupId);
     int readBinNumbers(StatsData* data, hid_t groupId);
 
+
+    int readMDFWeights(hid_t pid, StatsData* data);
+    int readODFWeights(hid_t pid, StatsData* data);
+    int readAxisODFWeights(hid_t pid, StatsData* data);
+
+    int writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
+                                              VectorOfFloatArray colData);
+
     int writeDistributionData(hid_t pid, const std::string &disType,
                                           const std::string &hdf5GroupName,
                                           VectorOfFloatArray colData);
@@ -84,10 +92,16 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
                                           VectorOfFloatArray colData);
 
 
-    int writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
-                                               VectorOfFloatArray colData);
-    int readVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
-                                               VectorOfFloatArray colData);
+    int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
+    int readVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
+
+    VectorOfFloatArray createDistributionVector(unsigned int distType);
+
+    VectorOfFloatArray createBetaDistributionArrays();
+
+    VectorOfFloatArray createPowerDistributionArrays();
+
+    VectorOfFloatArray createLogNormalDistributionArrays();
 
   private:
     H5StatsDataDelegate(const H5StatsDataDelegate&); // Copy Constructor Not Implemented
