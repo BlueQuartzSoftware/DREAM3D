@@ -44,14 +44,13 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/QualityMetricFilter.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
 
@@ -80,6 +79,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PhaseTypes)
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Load Slices"; }
 
@@ -97,8 +97,8 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
     void initializeArrays(int64_t totalPoints);
 
-
     void initializeQuats();
+
     void threshold_points();
 
   private:

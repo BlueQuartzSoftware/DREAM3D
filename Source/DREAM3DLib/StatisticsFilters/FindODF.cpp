@@ -127,14 +127,14 @@ void FindODF::execute()
   setErrorCondition(0);
 
   //int64_t totalPoints = m->totalPoints();
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
   size_t bin;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   int phase;
   float *totalvol;
   //  unsigned int xtal;

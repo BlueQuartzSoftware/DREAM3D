@@ -127,8 +127,8 @@ void RenumberGrains::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->totalPoints();
-  size_t totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFields = m->getNumFieldTuples();
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -174,8 +174,8 @@ void RenumberGrains::execute()
 	  p->EraseTuples(RemoveList);
 	  //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
   }
-  m->setTotalFields(m->getTotalFields()-RemoveList.size());
-  totalFields = m->getTotalFields();
+  m->setNumFieldTuples(m->getNumFieldTuples()-RemoveList.size());
+  totalFields = m->getNumFieldTuples();
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
   // Loop over all the points and correct all the grain names

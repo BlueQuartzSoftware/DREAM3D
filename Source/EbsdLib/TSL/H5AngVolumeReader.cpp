@@ -55,6 +55,17 @@ using namespace H5Support_NAMESPACE;
 H5AngVolumeReader::H5AngVolumeReader() :
     H5EbsdVolumeReader()
 {
+  // Init all the arrays to NULL
+  m_Phi1 = NULL;
+  m_Phi = NULL;
+  m_Phi2 = NULL;
+  m_Iq = NULL;
+  m_Ci = NULL;
+  m_PhaseData = NULL;
+  m_X = NULL;
+  m_Y = NULL;
+  m_SEMSignal = NULL;
+  m_Fit = NULL;
 }
 
 // -----------------------------------------------------------------------------
@@ -62,97 +73,94 @@ H5AngVolumeReader::H5AngVolumeReader() :
 // -----------------------------------------------------------------------------
 H5AngVolumeReader::~H5AngVolumeReader()
 {
+  deletePointers();
 }
 
-#if 0
-This code is just here for some reference sake. It should NOT be used unless you
-truly know what you are doing.
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngVolumeReader::readZHeader(int &zStart, int &zEnd, float &zRes)
+void H5AngVolumeReader::initPointers(size_t numElements)
 {
-  int err = -1;
-  int retErr = 0;
-  hid_t fileId = H5Utilities::openFile(m_FileName, true);
-  if (fileId < 0)
-  {
-    std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
-    return -1;
-  }
-  err = H5Lite::readScalarDataset(fileId, Ebsd::H5::ZResolution, zRes);
-  if (err < 0)
-  {
-    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZResolution data" << std::endl;
-    retErr = err;
-  }
-  err = H5Lite::readScalarDataset(fileId, Ebsd::H5::ZStartIndex, zStart);
-  if (err < 0)
-  {
-    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZStartIndex data" << std::endl;
-    retErr = err;
-  }
-  err = H5Lite::readScalarDataset(fileId, Ebsd::H5::ZEndIndex, zEnd);
-  if (err < 0)
-  {
-    std::cout << "H5AngDataLoader::readZHeader Error: Could not load ZEndIndex data" << std::endl;
-    retErr = err;
-  }
+  setNumberOfElements(numElements);
+  size_t numBytes = numElements * sizeof(float);
+  m_Phi1 = allocateArray<float > (numElements);
+  m_Phi = allocateArray<float > (numElements);
+  m_Phi2 = allocateArray<float > (numElements);
+  m_Iq = allocateArray<float > (numElements);
+  m_Ci = allocateArray<float > (numElements);
+  m_PhaseData = allocateArray<int> (numElements);
+  m_X = allocateArray<float > (numElements);
+  m_Y = allocateArray<float > (numElements);
+  m_SEMSignal = allocateArray<float > (numElements);
+  m_Fit = allocateArray<float > (numElements);
 
-  err = H5Utilities::closeFile(fileId);
-  return retErr;
+  ::memset(m_Phi1, 0, numBytes);
+  ::memset(m_Phi, 0, numBytes);
+  ::memset(m_Phi2, 0, numBytes);
+  ::memset(m_Iq, 0, numBytes);
+  ::memset(m_Ci, 0, numBytes);
+  ::memset(m_PhaseData, 0, numBytes);
+  ::memset(m_X, 0, numBytes);
+  ::memset(m_Y, 0, numBytes);
+  ::memset(m_SEMSignal, 0, numBytes);
+  ::memset(m_Fit, 0, numBytes);
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngVolumeReader::getSizeAndResolution(int &xpoints, int &ypoints, int &zpoints,
-    float &xres, float &yres, float &zres)
+void H5AngVolumeReader::deletePointers()
 {
-  int err = -1;
-  zpoints = (getZEndIndex() - getZStartIndex() );
-  int xpointstemp = 0;
-  int ypointstemp = 0;
-  xpoints = 0;
-  ypoints = 0;
-
-  hid_t fileId = H5Utilities::openFile(m_FileName, true);
-  if (fileId < 0)
-  {
-    std::cout << "Error - Could not open HDF5 based OIM file" << std::endl;
-    return -1;
-  }
-
-  zres = 0.0f;
-  err = H5Lite::readScalarDataset(fileId, Ebsd::H5::ZResolution, zres);
-
-  for(int i=0;i<zpoints;i++)
-  {
-    std::string index = StringUtils::numToString(i + getZStartIndex());
-    hid_t gid = H5Gopen(fileId, index.c_str());
-    H5AngReader::Pointer reader = H5AngReader::New();
-    reader->setHDF5Path(index);
-    err = reader->readHeader(gid);
-    if (err < 0)
-    {
-      std::cout << "Error reading the .HDF5 Ang Header data" << std::endl;
-      err = H5Gclose(gid);
-      err = H5Utilities::closeFile(fileId);
-      return -1;
-    }
-    xres = reader->getXStep();
-    yres = reader->getYStep();
-    xpointstemp = reader->getNumEvenCols();
-    ypointstemp = reader->getNumRows();
-    if(xpointstemp > xpoints) xpoints = xpointstemp;
-    if(ypointstemp > ypoints) ypoints = ypointstemp;
-    err = H5Gclose(gid);
-  }
-  err = H5Utilities::closeFile(fileId);
-
-  return err;
+  this->deallocateArrayData<float > (m_Phi1);
+  this->deallocateArrayData<float > (m_Phi);
+  this->deallocateArrayData<float > (m_Phi2);
+  this->deallocateArrayData<float > (m_Iq);
+  this->deallocateArrayData<float > (m_Ci);
+  this->deallocateArrayData<int > (m_PhaseData);
+  this->deallocateArrayData<float > (m_X);
+  this->deallocateArrayData<float > (m_Y);
+  this->deallocateArrayData<float > (m_SEMSignal);
+  this->deallocateArrayData<float > (m_Fit);
 }
-#endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void* H5AngVolumeReader::getPointerByName(const std::string &fieldName)
+{
+  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
+  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
+  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return static_cast<void*>(m_Phi2);}
+  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return static_cast<void*>(m_Iq);}
+  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return static_cast<void*>(m_Ci);}
+  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return static_cast<void*>(m_PhaseData);}
+  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return static_cast<void*>(m_X);}
+  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
+  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
+  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
+  return NULL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::NumType H5AngVolumeReader::getPointerType(const std::string &fieldName)
+{
+  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return Ebsd::Float;}
+  return Ebsd::UnknownNumType;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -193,17 +201,15 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngVolumeReader::loadData(float* eulerangles,
-                                int* phases,
-                                bool* goodVoxels,
-                                int64_t xpoints,
+int H5AngVolumeReader::loadData(int64_t xpoints,
                                 int64_t ypoints,
                                 int64_t zpoints,
-                                Ebsd::RefFrameZDir ZDir,
-                                std::vector<QualityMetricFilter::Pointer> filters)
+                                Ebsd::RefFrameZDir ZDir )
 {
   int index = 0;
   int err = -1;
+  // Initialize all the pointers
+    initPointers(xpoints * ypoints * zpoints);
 
   int readerIndex;
   int xpointsslice;
@@ -214,18 +220,8 @@ int H5AngVolumeReader::loadData(float* eulerangles,
   int ystop;
   int zval;
 
-  float* euler1Ptr = NULL;
-  float* euler2Ptr = NULL;
-  float* euler3Ptr = NULL;
-  int* phasePtr = NULL;
-
   int xstartspot;
   int ystartspot;
-
-  // Create an Array of Void Pointers that will point to the data that is going to
-  // serve as the filter data, such as Confidence Index or Image Quality
-  std::vector<void*> dataPointers(filters.size(), NULL);
-  std::vector<Ebsd::NumType> dataTypes(filters.size(), Ebsd::UnknownNumType);
 
   err = readVolumeInfo();
   for (int slice = 0; slice < zpoints; ++slice)
@@ -246,20 +242,17 @@ int H5AngVolumeReader::loadData(float* eulerangles,
     readerIndex = 0;
     xpointsslice = reader->getNumEvenCols();
     ypointsslice = reader->getNumRows();
-    euler1Ptr = reader->getPhi1Pointer();
-    euler2Ptr = reader->getPhiPointer();
-    euler3Ptr = reader->getPhi2Pointer();
-    phasePtr = reader->getPhasePointer();
+    float* euler1Ptr = reader->getPhi1Pointer();
+    float* euler2Ptr = reader->getPhiPointer();
+    float* euler3Ptr = reader->getPhi2Pointer();
+    float* xPtr = reader->getXPosPointer();
+    float* yPtr = reader->getYPosPointer();
+    float* iqPtr = reader->getImageQualityPointer();
+    float* ciPtr = reader->getConfidenceIndexPointer();
+    int* phasePtr = reader->getPhasePointer();
+    float* sigPtr = reader->getSEMSignalPointer();
+    float* fitPtr = reader->getFitPointer();
 
-    // Gather some information about the filters and types in order to run the QualityMetric Filter
-    for (size_t i = 0; i < filters.size(); ++i)
-    {
-      dataPointers[i] = reader->getPointerByName(filters[i]->getFieldName());
-      dataTypes[i] = reader->getPointerType(filters[i]->getFieldName());
-    }
-
-    // Figure out which are good voxels
-    DataArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointsslice * ypointsslice, dataTypes);
 
     xpointstemp = xpoints;
     ypointstemp = ypoints;
@@ -282,14 +275,20 @@ int H5AngVolumeReader::loadData(float* eulerangles,
       for (int i = 0; i < xstop; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
-        eulerangles[3 * index] = euler1Ptr[readerIndex]; // Phi1
-        eulerangles[3 * index + 1] = euler2Ptr[readerIndex]; // Phi
-        eulerangles[3 * index + 2] = euler3Ptr[readerIndex]; // Phi2
-        phases[index] = phasePtr[readerIndex]; // Phase
-        if(NULL != good_voxels.get())
-        {
-          goodVoxels[index] = good_voxels->GetValue(readerIndex);
-        }
+//        eulerangles[3 * index] = euler1Ptr[readerIndex]; // Phi1
+//        eulerangles[3 * index + 1] = euler2Ptr[readerIndex]; // Phi
+//        eulerangles[3 * index + 2] = euler3Ptr[readerIndex]; // Phi2
+        m_Phi1[index] = euler1Ptr[readerIndex];
+        m_Phi[index] = euler2Ptr[readerIndex];
+        m_Phi2[index] = euler3Ptr[readerIndex];
+        m_X[index] = xPtr[readerIndex];
+        m_Y[index] = yPtr[readerIndex];
+        m_Iq[index] = iqPtr[readerIndex];
+        m_Ci[index] = ciPtr[readerIndex];
+        m_PhaseData[index] = phasePtr[readerIndex]; // Phase
+        m_SEMSignal[index] = sigPtr[readerIndex];
+        m_Fit[index] = fitPtr[readerIndex];
+
         /* For TSL OIM Files if there is a single phase then the value of the phase
          * data is zero (0). If there are 2 or more phases then the lowest value
          * of phase is one (1). In the rest of the reconstruction code we follow the
@@ -297,9 +296,9 @@ int H5AngVolumeReader::loadData(float* eulerangles,
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if(phases[index] < 1)
+        if(m_PhaseData[index] < 1)
         {
-          phases[index] = 1;
+          m_PhaseData[index] = 1;
         }
 
         ++readerIndex;

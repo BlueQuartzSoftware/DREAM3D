@@ -172,7 +172,7 @@ void LoadVolume::execute()
   }
   /* ************ End Sanity Check *************************** */
 
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   initializeAttributes();
   if (getErrorCondition() < 0)
@@ -227,7 +227,7 @@ void LoadVolume::initializeGrains()
   // Put at least 1 Grain in the Vector
   DataContainer* m = getDataContainer();
   m->resizeFieldDataArrays(1);
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -235,12 +235,12 @@ void LoadVolume::initializeGrains()
 
 //  size_t curGrainSize = 1;
   size_t grainIndex = 0;
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   size_t totalGrains = 0;
   for (int i = 0; i < totalPoints; ++i)
   {
     grainIndex = m_GrainIds[i];
-    //  curGrainSize = m->getTotalFields();
+    //  curGrainSize = m->getNumFieldTuples();
     if(grainIndex >= totalGrains)
     {
       ++totalGrains;
@@ -263,7 +263,7 @@ void LoadVolume::initializeGrains()
   }
 
   // Loop over the Grains and initialize them as necessary
-  size_t gSize = m->getTotalFields();
+  size_t gSize = m->getNumFieldTuples();
   for (size_t g = 0; g < gSize; ++g)
   {
     //FIXME: Initialize any new grains that were added
@@ -277,7 +277,7 @@ void LoadVolume::initializeGrains()
 void LoadVolume::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   m_GrainIds = m->createCellData<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, 1, this);
   if (m_GrainIds == NULL) { return; }

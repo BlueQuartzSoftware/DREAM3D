@@ -127,7 +127,7 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -157,7 +157,7 @@ void FindAxisODF::execute()
       axisodf[i][j] = 0.0;
     }
   }
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
     float ea1 = m_AxisEulerAngles[3 * i];

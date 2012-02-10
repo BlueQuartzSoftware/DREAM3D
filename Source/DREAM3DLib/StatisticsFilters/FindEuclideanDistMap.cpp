@@ -71,7 +71,7 @@ class FindEuclideanMap : public AbstractFilter
     void operator()() const
     {
       std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
-      int64_t totalPoints = m->totalPoints();
+      int64_t totalPoints = m->getTotalPoints();
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), m_NearestNeighbors);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::NearestNeighborDistances, FloatArrayType, float, (totalPoints*3), m_NearestNeighborDistances);
 
@@ -244,7 +244,7 @@ void FindEuclideanDistMap::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(),  m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(),  m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -262,7 +262,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 {
   DataContainer* m = getDataContainer();
 
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   for (int i = 0; i < totalPoints*3; i++)
   {

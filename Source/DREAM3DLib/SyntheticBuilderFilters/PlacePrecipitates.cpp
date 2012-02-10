@@ -59,6 +59,9 @@
 PlacePrecipitates::PlacePrecipitates() :
 AbstractFilter(),
 m_GrainIds(NULL),
+m_PhasesC(NULL),
+m_SurfaceVoxels(NULL),
+m_Neighbors(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
 m_AxisLengths(NULL),
@@ -66,10 +69,7 @@ m_Volumes(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_Active(NULL),
-m_PhasesC(NULL),
 m_PhasesF(NULL),
-m_SurfaceVoxels(NULL),
-m_Neighbors(NULL),
 m_NumCells(NULL),
 m_PhaseTypes(NULL),
 m_PhaseFractions(NULL),
@@ -202,8 +202,8 @@ void PlacePrecipitates::execute()
     return;
   }
 
-  int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  int totalFields = m->getNumFieldTuples();
 
   //Make sure we find neighbors first before we validate all the pointers
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
@@ -409,7 +409,7 @@ void  PlacePrecipitates::fillin_precipitates()
 {
   notify("Filling In Precipitates", 0, Observable::UpdateProgressMessage);
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -433,11 +433,11 @@ void  PlacePrecipitates::fillin_precipitates()
   bool flag = false;
   int good = 1;
   float x, y, z;
-  gsizes.resize(m->getTotalFields(), 0);
-  neighbors.resize(m->totalPoints(), 0);
+  gsizes.resize(m->getNumFieldTuples(), 0);
+  neighbors.resize(m->getTotalPoints(), 0);
   DimType neighpoint;
   DimType neighpoints[6];
-  std::vector<int> n(m->getTotalFields());
+  std::vector<int> n(m->getNumFieldTuples());
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -446,7 +446,7 @@ void  PlacePrecipitates::fillin_precipitates()
   neighpoints[5] = dims[0] * dims[1];
   while (count != 0)
   {
-    if(previouscount == count && flag == false) flag == true;
+    if(previouscount == count && flag == false) { flag = true;}
     previouscount = count;
     count = 0;
     for (int64_t i = 0; i < totalPoints; i++)
@@ -455,7 +455,7 @@ void  PlacePrecipitates::fillin_precipitates()
       if(grainname <= 0)
       {
         count++;
-        for (size_t c = 1; c < m->getTotalFields(); c++)
+        for (size_t c = 1; c < m->getNumFieldTuples(); c++)
         {
           n[c] = 0;
         }
@@ -514,14 +514,14 @@ void  PlacePrecipitates::fillin_precipitates()
       }
     }
   }
-  gsizes.resize(m->getTotalFields(), 0);
+  gsizes.resize(m->getNumFieldTuples(), 0);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
     int name = m_GrainIds[i];
     gsizes[name]++;
   }
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     m_NumCells[i] = gsizes[i];
   }
@@ -533,12 +533,12 @@ void  PlacePrecipitates::place_precipitates()
   notify("Placing Precipitates", 0, Observable::UpdateProgressMessage);
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   totalprecipvol = 0;
   size_t precipvoxelcounter = 0;
 //  float thickness = 0.25;
-  size_t currentnumgrains = m->getTotalFields();
-  numprimarygrains = m->getTotalFields();
+  size_t currentnumgrains = m->getNumFieldTuples();
+  numprimarygrains = m->getNumFieldTuples();
   // size_t index;
   int phase;
   float precipboundaryfraction = 0.0;
@@ -586,7 +586,7 @@ void  PlacePrecipitates::place_precipitates()
 
     packGrains->generate_grain(phase, Seed, &field);
     m->resizeFieldDataArrays(currentnumgrains + 1);
-    dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
+    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
     transfer_attributes(currentnumgrains, &field);
     precipboundaryfraction = m_PrecipitateFractions[phase];

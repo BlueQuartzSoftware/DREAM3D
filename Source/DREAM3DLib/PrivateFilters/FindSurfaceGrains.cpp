@@ -96,8 +96,8 @@ void FindSurfaceGrains::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->totalPoints();
-  size_t totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFields = m->getNumFieldTuples();
   ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
   dataCheck(false, totalPoints, totalFields, 1);
@@ -126,7 +126,7 @@ void FindSurfaceGrains::execute()
 void FindSurfaceGrains::find_surfacegrains()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, this);
   if (NULL == m_GrainIds) { return; }
@@ -163,7 +163,7 @@ void FindSurfaceGrains::find_surfacegrains()
 void FindSurfaceGrains::find_surfacegrains2D()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, this);
   if (NULL == m_GrainIds) { return; }

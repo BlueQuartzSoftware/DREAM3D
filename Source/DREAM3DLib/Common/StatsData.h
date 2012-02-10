@@ -46,6 +46,39 @@
 
 typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
 
+/**
+ * @class StatsData StatsData.h DREAM3DLib/Common/StatsData.h
+ * @brief This class holds the statistical data for a single phase of a microstructure.
+ * There are several statistics that are held by this class in a varying number of
+ * storage types. Some types have specific ordering of the sub arrays with in them. Those
+ * are enumerated here:@n
+ * For the distributions a std::vector holds objects of the DataArray<float>::Pointer which is
+ * typedef'ed to FloatArrayType @see DataArray.hpp. The order of the FloatArrayType
+ * objects in the std::vector is as follows:
+ *   <b>Beta Distribution</b>@n
+ *    @li Alpha
+ *    @li Beta
+ *    <b>Log Normal Distribution</b>@n
+ *    @li Average
+ *    @li Standard Deviation
+ *    <b>Power Law Distribution</b>@n
+ *    @li Alpha
+ *    @li K
+ *    @li Beta
+ *
+ * The Grain Diameter Info is an array of 3 floats where the values are encoded as:@n
+ * @li [0] = Average
+ * @li [1] = Max
+ * @li [2] = Min
+ *
+ * The Grain Size Distribution is an array of 2 floats where the values are encoded as:@n
+ * @li [0] = Average
+ * @li [1] = Standard Deviation
+ *
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Feb 9, 2012
+ * @version 1.0
+ */
 class DREAM3DLib_EXPORT StatsData
 {
   public:
@@ -89,6 +122,7 @@ class DREAM3DLib_EXPORT StatsData
     {
       return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
     }
+
 
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_BOverA);
     DREAM3D_INSTANCE_PROPERTY(uint32_t, BOverA_DistType);

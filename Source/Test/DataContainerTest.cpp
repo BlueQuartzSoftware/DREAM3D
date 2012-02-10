@@ -189,9 +189,9 @@ void TestDataContainerReader()
   for(size_t l = 0; l < nLists; ++l)
   {
     vec = neighborlistPtr->getList(l);
-    for(int j = 0; j < l+4; ++j)
+    for(int j = 0; j < (int)(l+4); ++j)
     {
-      DREAM3D_REQUIRE_EQUAL(vec->at(j), (j*l+3) );
+      DREAM3D_REQUIRE_EQUAL(vec->at(j), (int32_t)((j*l+3)) );
     }
 
   }

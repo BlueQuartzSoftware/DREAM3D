@@ -65,7 +65,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"
-#include "EbsdLib/QualityMetricFilter.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 #include "EbsdLib/TSL/AngFields.h"
@@ -74,6 +73,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/PhaseType.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"

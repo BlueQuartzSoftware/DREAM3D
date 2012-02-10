@@ -36,18 +36,11 @@
 
 #include "H5EbsdVolumeReader.h"
 
-#include "hdf5.h"
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
-
-#include "EbsdLib/TSL/H5AngVolumeReader.h"
-#include "EbsdLib/HKL/H5CtfVolumeReader.h"
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
 #endif
-
 
 // -----------------------------------------------------------------------------
 //
@@ -55,7 +48,9 @@ using namespace H5Support_NAMESPACE;
 H5EbsdVolumeReader::H5EbsdVolumeReader() :
     m_Cancel(false),
     m_SliceStart(0),
-    m_SliceEnd(0)
+    m_SliceEnd(0),
+    m_ManageMemory(true),
+    m_NumberOfElements(0)
 {
 
 }
@@ -71,71 +66,39 @@ H5EbsdVolumeReader::~H5EbsdVolumeReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5EbsdVolumeReader::loadData(float* eulerangles,
-                         int* phases, bool* goodVoxels,
-                         int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir,
-                         std::vector<QualityMetricFilter::Pointer> filters)
+void H5EbsdVolumeReader::initPointers(size_t numElements)
 {
-  // This class should be subclassed and this method implemented.
-  return -1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArray<bool>::Pointer H5EbsdVolumeReader::determineGoodVoxels(std::vector<QualityMetricFilter::Pointer> filters,
-                                                               std::vector<void*> dataPointers,
-                                                               size_t nPoints,
-                                                               std::vector<Ebsd::NumType> dTypes)
+void H5EbsdVolumeReader::deletePointers()
 {
-  if (filters.size() == 0) { return DataArray<bool>::NullPointer(); }
-
-  size_t nFilters = filters.size();
-  for (size_t i = 0; i < nFilters; ++i)
-  {
-    filters[i]->setInput(dataPointers[i]);
-    filters[i]->setDataType(dTypes[i]);
-    filters[i]->setNumValues(nPoints);
-    filters[i]->filter();
-  }
-
-  // Get the first bool array to use as a reference
-  QualityMetricFilter::Pointer qmFilter = filters[0];
-  if (qmFilter.get() == NULL)
-  {
-    std::cout << "QualityMetricFilter[0] is NULL" << std::endl;
-    return DataArray<bool>::NullPointer();
-  }
-  DataArray<bool>::Pointer baseArray = filters[0]->getOutput();
-  bool* baseArrayPtr = baseArray->GetPointer(0);
-  if (NULL == baseArrayPtr)
-  {
-    std::cout << "baseArrayPtr returned NULL" << std::endl;
-    return DataArray<bool>::NullPointer();
-  }
-
-  for (size_t i = 1; i < nFilters; ++i)
-  {
-    DataArray<bool>::Pointer currentArray = filters[i]->getOutput();
-    if (currentArray.get() == NULL)
-    {
-      std::cout << "currentArray is NULL" << std::endl;
-      return DataArray<bool>::NullPointer();
-    }
-
-    bool* currentArrayPtr = currentArray->GetPointer(0);
-    if (NULL == currentArrayPtr)
-    {
-      std::cout << "currentArrayPtr returned NULL" << std::endl;
-      return DataArray<bool>::NullPointer();
-    }
-    for (size_t p = 0; p < nPoints; ++p)
-    {
-      if (baseArrayPtr[p] == true && currentArrayPtr[p] == true)
-      {
-        baseArrayPtr[p] = true;
-      }
-    }
-  }
-  return baseArray;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void* H5EbsdVolumeReader::getPointerByName(const std::string &fieldName)
+{
+  return NULL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::NumType H5EbsdVolumeReader::getPointerType(const std::string &fieldName)
+{
+  return Ebsd::UnknownNumType;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5EbsdVolumeReader::loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir)
+{
+  // This class should be subclassed and this method implemented.
+  return -1;
+}
+

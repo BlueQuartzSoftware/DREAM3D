@@ -102,7 +102,7 @@ void FieldDataCSVWriter::execute()
   }
 
 //  int64_t totalPoints = m->totalPoints();
-//  int totalFields = m->getTotalFields();
+//  int totalFields = m->getNumFieldTuples();
 
   std::string filename = getFieldDataFile();
 
@@ -110,7 +110,7 @@ void FieldDataCSVWriter::execute()
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getTotalFields()-1 << std::endl;
+  outFile << m->getNumFieldTuples()-1 << std::endl;
   // Get all the names of the arrays from the Data Container
   std::list<std::string> headers = m->getFieldArrayNameList();
 

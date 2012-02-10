@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsDataArray.h"
 
+#include <list>
+
 #include "MXA/Utilities/StringUtils.h"
 
 
@@ -91,13 +93,16 @@ void StatsDataArray::releaseOwnership()
 void* StatsDataArray::GetVoidPointer(size_t i)
 {
 #ifndef NDEBUG
-      if (m_StatsDataArray.size() > 0) { assert(i < m_StatsDataArray.size());}
+  if(m_StatsDataArray.size() > 0)
+  {
+    assert(i < m_StatsDataArray.size());
+  }
 #endif
-      if (i >= this->GetNumberOfTuples())
-      {
-        return 0x0;
-      }
-      return (void*)(&(m_StatsDataArray[i]));
+  if(i >= this->GetNumberOfTuples())
+  {
+    return 0x0;
+  }
+  return (void*)(&(m_StatsDataArray[i]));
 }
 
 // -----------------------------------------------------------------------------
@@ -125,8 +130,8 @@ void StatsDataArray::SetNumberOfComponents(int nc)
   {
     assert(false);
   }
-
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -234,10 +239,10 @@ int StatsDataArray::writeH5Data(hid_t parentId)
   {
     return -1;
   }
-  for(size_t i = 0; i < m_StatsDataArray.size(); ++i)
+  // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
+  for(size_t i = 1; i < m_StatsDataArray.size(); ++i)
   {
     if (m_StatsDataArray[i].get() != NULL) {
-    // We start numbering our phases at 1
     std::string indexString = StringUtils::numToString(i);
     hid_t tupleId = H5Utilities::createGroup(gid, indexString);
     err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
@@ -252,6 +257,41 @@ int StatsDataArray::writeH5Data(hid_t parentId)
 // -----------------------------------------------------------------------------
 int StatsDataArray::readH5Data(hid_t parentId)
 {
-  assert(false);
-  return -1;
+  int err = 0;
+
+  hid_t gid = H5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
+  if (gid < 0)
+  {
+    return err;
+  }
+
+  std::list<std::string> names;
+  err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
+  if (err < 0)
+  {
+    err |= H5Utilities::closeHDF5Object(gid);
+    return err;
+  }
+
+  for (std::list<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter )
+  {
+    int index = 0;
+    bool ok = StringUtils::stringToNum(index, *iter);
+    StatsData::Pointer data = StatsData::New();
+    hid_t statId = H5Utilities::openHDF5Object(gid, *iter);
+    if (statId < 0)
+    {
+      continue;
+      err |= -1;
+    }
+    data->readHDF5Data(statId);
+    err |= H5Utilities::closeHDF5Object(statId);
+    setStatsData(index, data);
+  }
+
+  // Do not forget to close the object
+  err |= H5Utilities::closeHDF5Object(gid);
+
+
+  return err;
 }

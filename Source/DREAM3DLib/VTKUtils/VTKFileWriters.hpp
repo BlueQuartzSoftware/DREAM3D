@@ -97,7 +97,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
   {
     int err = 0;
     std::string file;
-    int64_t totalPoints = r->totalPoints();
+    int64_t totalPoints = r->getTotalPoints();
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
     if (m_WriteBinaryFiles == true) {
@@ -132,8 +132,8 @@ class name : public VtkScalarWriter\
     int writeScalars(FILE* f)  {\
       int err = 0;\
       std::string file;\
-      int64_t totalPoints = r->totalPoints();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, (r->totalPoints()), var);\
+      int64_t totalPoints = r->getTotalPoints();\
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, totalPoints, var);\
       if (m_WriteBinaryFiles == true) {\
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, type, var)\
       }    else    {\
@@ -158,8 +158,8 @@ class name : public VtkScalarWriter\
     int writeScalars(FILE* f)  {\
     int err = 0;\
     std::string file;\
-    int64_t totalPoints = r->totalPoints();\
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, (r->totalPoints()), var);\
+    int64_t totalPoints = r->getTotalPoints();\
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, totalPoints, var);\
     if (m_WriteBinaryFiles == true) {\
       WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, type, var)\
     }    else    {\
@@ -214,9 +214,9 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
       }
 
-
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, (r->totalPoints()), phases);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*r->totalPoints()), eulerangles);
+      int64_t totalPoints = r->getTotalPoints();
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
 
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
 

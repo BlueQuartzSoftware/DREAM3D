@@ -56,6 +56,8 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
+#include "DREAM3DLib/PrivateFilters/DetermineGoodVoxels.h"
+
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -74,12 +76,12 @@ const static float m_pi = M_PI;
 LoadSlices::LoadSlices() :
 AbstractFilter(),
 m_H5EbsdFile(""),
-m_MisorientationTolerance(0.0f),
+//m_MisorientationTolerance(0.0f),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_PhasesC(NULL),
-m_GoodVoxels(NULL),
+//m_GoodVoxels(NULL),
 m_Quats(NULL),
 m_EulerAnglesC(NULL)
 {
@@ -208,7 +210,7 @@ void LoadSlices::execute()
     setErrorMessage(ss.str());
     return;
   }
-	int err = 0;
+  int err = 0;
   setErrorCondition(err);
   std::string manufacturer;
   // Get the Size and Resolution of the Volume
@@ -229,29 +231,29 @@ void LoadSlices::execute()
 #else
     int64_t max = std::numeric_limits<int64_t>::max();
 #endif
-    if (dims[0] * dims[1] * dims[2] > max )
+    if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
       std::stringstream s;
-      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
-                  << "' is greater than this program can hold. Try the 64 bit version.";
+      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
       setErrorCondition(err);
       setErrorMessage(s.str());
       return;
     }
 
-    if (dims[0] > max || dims[1] > max || dims[2] > max)
+    if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
       std::stringstream s;
       s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-      s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
       setErrorCondition(err);
       setErrorMessage(s.str());
       return;
     }
     /* ************ End Sanity Check *************************** */
-    size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+    size_t dcDims[3] =
+    { dims[0], dims[1], dims[2] };
     m->setDimensions(dcDims);
     m->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
@@ -264,10 +266,10 @@ void LoadSlices::execute()
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
   std::vector<unsigned int> crystalStructures;
-  if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     ebsdReader = H5AngVolumeReader::New();
-    if (NULL == ebsdReader)
+    if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
       setErrorMessage("Could not Create H5AngVolumeReader object.");
@@ -275,17 +277,17 @@ void LoadSlices::execute()
     }
     H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
     err = loadInfo<H5AngVolumeReader, AngPhase>(angReader);
-    if (err < 0)
+    if(err < 0)
     {
       setErrorCondition(-1);
       setErrorMessage("Could not read information about the Ebsd Volume.");
       return;
     }
   }
-  else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
     ebsdReader = H5CtfVolumeReader::New();
-    if (NULL == ebsdReader)
+    if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
       setErrorMessage("Could not Create H5CtfVolumeReader object.");
@@ -293,7 +295,7 @@ void LoadSlices::execute()
     }
     H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
     err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader);
-    if (err < 0)
+    if(err < 0)
     {
       setErrorCondition(-1);
       setErrorMessage("Could not read information about the Ebsd Volume.");
@@ -311,47 +313,98 @@ void LoadSlices::execute()
   }
 
   // This will create the arrays with the correct sizes
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  if(getErrorCondition() < 0)
   {
     return;
   }
 
   // Initialize all the arrays with some default values
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   ss.str("");
-  ss << getHumanLabel() << " Initializing " << totalPoints << " voxels";
+  ss << getHumanLabel() << " - Initializing " << totalPoints << " voxels";
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
   initializeArrays(totalPoints);
 
-
-
-  // During the loading of the EBSD data the Quality Metric Filters will be run
-  // and fill in the ReconstrucionFunc->m_GoodVoxels array.
   ss.str("");
-  ss << getHumanLabel() << " Reading Ebsd Data from file";
+  ss << getHumanLabel() << " - Reading Ebsd Data from file";
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
-  err = ebsdReader->loadData(m_EulerAnglesC, m_PhasesC, m_GoodVoxels, m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir, m_QualityMetricFilters);
-  if (err < 0)
+  err = ebsdReader->loadData(m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir);
+  if(err < 0)
   {
     setErrorCondition(err);
     setErrorMessage("Error Loading Data from Ebsd Data file.");
     return;
   }
-  float radianconversion = M_PI/180.0;
-  if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+
+  // The GoodVoxels array was just created so rerun the dataCheck to update the pointers
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  if(getErrorCondition() < 0)
   {
-	  for(size_t i = 0; i < (m->getXPoints()*m->getYPoints()*m->getZPoints()); i++)
-	  {
-	    m_EulerAnglesC[3*i] = m_EulerAnglesC[3*i] * radianconversion;
-		  m_EulerAnglesC[3*i + 1] = m_EulerAnglesC[3*i + 1] * radianconversion;
-		  m_EulerAnglesC[3*i + 2] = m_EulerAnglesC[3*i + 2] * radianconversion;
-	  }
+    return;
+  }
+
+  float* euler1Ptr = NULL;
+  float* euler2Ptr = NULL;
+  float* euler3Ptr = NULL;
+  int* phasePtr = NULL;
+
+  float radianconversion = 1.0f;
+  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  {
+    euler1Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi1));
+    euler2Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
+    euler3Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
+  }
+  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  {
+    radianconversion = M_PI / 180.0;
+    euler1Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler1));
+    euler2Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
+    euler3Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
+  }
+  else
+  {
+    std::string msg("Could not determine or match a supported manufacturer from the data file.");
+    msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
+    msg = msg.append(" and ").append(Ebsd::Ang::Manufacturer);
+    setErrorMessage(msg);
+    return;
+  }
+  // Copy Euler Angles and Phases and possibly convert from degrees to radians
+  for (int64_t i = 0; i < totalPoints; i++)
+  {
+    m_EulerAnglesC[3 * i] = euler1Ptr[i] * radianconversion;
+    m_EulerAnglesC[3 * i + 1] = euler2Ptr[i] * radianconversion;
+    m_EulerAnglesC[3 * i + 2] = euler3Ptr[i] * radianconversion;
+    m_PhasesC[i] = phasePtr[i];
   }
 
   initializeQuats();
+
+  // Run the filter to determine the good Voxels
+  DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();
+  filter->setQualityMetricFilters(m_QualityMetricFilters);
+  filter->setObservers(getObservers());
+  filter->setEbsdVolumeReader(ebsdReader);
+  filter->setDataContainer(m);
+  filter->execute();
+  err = filter->getErrorCondition();
+  if(err < 0)
+  {
+    setErrorCondition(err);
+    setErrorMessage("Error Filtering Ebsd Data.");
+    return;
+  }
+  filter = DetermineGoodVoxels::NullPointer(); // Clean up some memory
+
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
+  threshold_points();
 
   // If there is an error set this to something negative and also set a message
   ss.str("");
@@ -368,10 +421,9 @@ void LoadSlices::initializeArrays(int64_t totalPoints)
   for(int i = 0;i < totalPoints;i++)
   {
     m_PhasesC[i] = 0;
-    m_EulerAnglesC[3*i] = 0;
-    m_EulerAnglesC[3*i + 1] = 0;
-    m_EulerAnglesC[3*i + 2] = 0;
-    m_GoodVoxels[i] = false; // All Voxels are "Bad"
+    m_EulerAnglesC[3*i] = 0.0f;
+    m_EulerAnglesC[3*i + 1] = 0.0f;
+    m_EulerAnglesC[3*i + 2] = 0.0f;
   }
 
 }
@@ -382,7 +434,7 @@ void LoadSlices::initializeArrays(int64_t totalPoints)
 void LoadSlices::initializeQuats()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   float qr[5];
   unsigned int xtal = Ebsd::CrystalStructure::UnknownCrystalStructure;
@@ -414,13 +466,14 @@ void LoadSlices::initializeQuats()
   }
 }
 
+#if 1
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void LoadSlices::threshold_points()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t getTotalPoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -463,8 +516,8 @@ void LoadSlices::threshold_points()
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
 
-  AlreadyChecked.resize(totalPoints);
-  for (int iter = 0; iter < totalPoints; iter++)
+  AlreadyChecked.resize(getTotalPoints);
+  for (int iter = 0; iter < getTotalPoints; iter++)
   {
     AlreadyChecked[iter] = false;
     if(m_GoodVoxels[iter] == true && m_PhasesC[iter] > 0)
@@ -523,4 +576,4 @@ void LoadSlices::threshold_points()
   }
   voxelslist.clear();
 }
-
+#endif
