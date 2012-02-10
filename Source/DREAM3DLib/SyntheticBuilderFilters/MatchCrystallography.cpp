@@ -595,7 +595,7 @@ void MatchCrystallography::matchCrystallography()
         }
         if(counter == totalFields)
 		{
-			badtrycount < 10*totalFields;
+			badtrycount = 10*totalFields;
 		}
 		else
 		{
@@ -680,7 +680,7 @@ void MatchCrystallography::matchCrystallography()
         }
         if(counter == totalFields)
 		{
-			badtrycount < 10*totalFields;
+			badtrycount = 10*totalFields;
 		}
 		else
 		{
@@ -694,7 +694,7 @@ void MatchCrystallography::matchCrystallography()
 			}
 	        if(counter == totalFields)
 			{
-				badtrycount < 10*totalFields;
+				badtrycount = 10*totalFields;
 			}
 			else
 			{
