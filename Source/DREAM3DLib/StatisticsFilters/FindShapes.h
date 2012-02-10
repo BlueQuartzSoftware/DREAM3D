@@ -43,6 +43,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -93,7 +96,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float find_zcoord(size_t index);
 
   private:
-    int32_t* m_GrainIds;
+	bool* m_BiasedFields;
+	int32_t* m_Phases;
+	int32_t* m_GrainIds;
     float* m_AxisEulerAngles;
     float* m_Centroids;
     float* m_AxisLengths;
@@ -102,6 +107,8 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_EquivalentDiameters;
     float* m_AspectRatios;
     int32_t* m_NumCells;
+
+	StatsDataArray* m_StatsDataArray;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
