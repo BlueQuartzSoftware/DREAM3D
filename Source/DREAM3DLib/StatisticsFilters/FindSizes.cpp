@@ -71,7 +71,8 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   DataContainer* m = getDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -300, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
@@ -133,10 +134,15 @@ void FindSizes::find_sizes()
 
   float radcubed;
   float diameter;
-  float avgdiam = 0;
-  float sddiam = 0;
-  size_t unbiasedcount = 0;
+  std::vector<float> avgdiam;
+  std::vector<float> sddiam;
+  std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  avgdiam.resize(numensembles,0);
+  sddiam.resize(numensembles,0);
+  unbiasedcount.resize(numensembles,0);
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);
@@ -163,30 +169,46 @@ void FindSizes::find_sizes()
     m_EquivalentDiameters[i] = diameter;
 	if(m_BiasedFields[i] == false)
 	{
-		unbiasedcount++;
-		avgdiam = avgdiam + m_EquivalentDiameters[i];
+		unbiasedcount[m_Phases[i]]++;
+		avgdiam[m_Phases[i]] = avgdiam[m_Phases[i]] + m_EquivalentDiameters[i];
 	}
   }
-  avgdiam = avgdiam/float(unbiasedcount);
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
+  }
   for (size_t i = 1; i < numgrains; i++)
   {
 	if(m_BiasedFields[i] == false)
 	{
-		sddiam = sddiam + ((m_EquivalentDiameters[i]-avgdiam)*(m_EquivalentDiameters[i]-avgdiam));
+		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((m_EquivalentDiameters[i]-avgdiam[m_Phases[i]])*(m_EquivalentDiameters[i]-avgdiam[m_Phases[i]]));
 	}
   }
-  sddiam = sddiam/float(unbiasedcount);
-  sddiam = sqrt(sddiam);
-  statsDataArray[0]->setGrainSizeAverage(avgdiam);
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
+	  sddiam[i] = sqrt(sddiam[i]);
+	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
+  }
 }
 void FindSizes::find_sizes2D()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float radsquared;
   float diameter;
+  std::vector<float> avgdiam;
+  std::vector<float> sddiam;
+  std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  avgdiam.resize(numensembles,0);
+  sddiam.resize(numensembles,0);
+  unbiasedcount.resize(numensembles,0);
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);
@@ -208,6 +230,28 @@ void FindSizes::find_sizes2D()
     radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;
+	if(m_BiasedFields[i] == false)
+	{
+		unbiasedcount[m_Phases[i]]++;
+		avgdiam[m_Phases[i]] = avgdiam[m_Phases[i]] + m_EquivalentDiameters[i];
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	if(m_BiasedFields[i] == false)
+	{
+		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((m_EquivalentDiameters[i]-avgdiam[m_Phases[i]])*(m_EquivalentDiameters[i]-avgdiam[m_Phases[i]]));
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
+	  sddiam[i] = sqrt(sddiam[i]);
+	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
   }
 }
 
