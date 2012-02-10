@@ -82,7 +82,8 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
@@ -92,6 +93,11 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float,FloatArrayType, fields, 2);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
 
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+  }
 
   setErrorMessage(ss.str());
 }
@@ -253,14 +259,24 @@ void FindShapes::find_moments()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float u200 = 0;
   float u020 = 0;
   float u002 = 0;
   float u110 = 0;
   float u011 = 0;
   float u101 = 0;
+  std::vector<float> avgomega3;
+  std::vector<float> sdomega3;
+  std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+  avgomega3.resize(numensembles,0);
+  sdomega3.resize(numensembles,0);
+  unbiasedcount.resize(numensembles,0);
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -358,6 +374,29 @@ void FindShapes::find_moments()
     if (omega3 > 1) omega3 = 1;
 	if(vol5 == 0) omega3 = 0;
     m_Omega3s[i] = omega3;
+	if(m_BiasedFields[i] == false)
+	{
+		unbiasedcount[m_Phases[i]]++;
+		avgomega3[m_Phases[i]] = avgomega3[m_Phases[i]] + m_Omega3s[i];
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  avgomega3[i] = avgomega3[i]/float(unbiasedcount[i]);
+//	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	if(m_BiasedFields[i] == false)
+	{
+		sdomega3[m_Phases[i]] = sdomega3[m_Phases[i]] + ((m_Omega3s[i]-avgomega3[m_Phases[i]])*(m_Omega3s[i]-avgomega3[m_Phases[i]]));
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  sdomega3[i] = sdomega3[i]/float(unbiasedcount[i]);
+	  sdomega3[i] = sqrt(sdomega3[i]);
+//	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
   }
 }
 void FindShapes::find_moments2D()
@@ -417,6 +456,9 @@ void FindShapes::find_moments2D()
 void FindShapes::find_axes()
 {
   DataContainer* m = getDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float I1, I2, I3;
   float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
   float a, b, c, d, f, g, h;
@@ -488,6 +530,9 @@ void FindShapes::find_axes()
 void FindShapes::find_axes2D()
 {
   DataContainer* m = getDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float Ixx, Iyy, Ixy;
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)

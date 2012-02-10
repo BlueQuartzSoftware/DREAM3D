@@ -176,6 +176,7 @@ void FindSizes::find_sizes()
   for (size_t i = 1; i < numensembles; i++)
   {
 	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
+	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
   }
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -188,7 +189,7 @@ void FindSizes::find_sizes()
   {
 	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
 	  sddiam[i] = sqrt(sddiam[i]);
-	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
+	  statsDataArray[i]->setGrainSizeStdDev(sddiam[i]);
   }
 }
 void FindSizes::find_sizes2D()
