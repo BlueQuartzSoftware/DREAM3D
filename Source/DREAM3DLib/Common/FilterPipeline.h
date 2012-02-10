@@ -115,6 +115,8 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
   protected:
     FilterPipeline();
 
+    void updatePrevNextFilters();
+
   private:
     bool m_Cancel;
     FilterContainerType  m_Pipeline;
