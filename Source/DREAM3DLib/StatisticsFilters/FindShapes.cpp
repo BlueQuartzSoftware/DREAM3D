@@ -39,6 +39,9 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+
+
 const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
@@ -92,6 +95,22 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float, FloatArrayType, fields, 2);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
 
+
+  /*
+   * Mike Groeber. I am not sure where you want this check to occur, possibly in
+   * the preflight to let the user know they need to add the proper filters before
+   * this filter in the pipeline? But here is how you would check to see if a
+   * filter exists at any point before this filter with a given name.
+   */
+  bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
+  if (false == exists)
+  {
+    // Do something here to run the filter?
+
+    // We don't have access to the pipeline object but if we did we could simply
+    // insert the filter at the proper location for the user? Maybe that is better
+    // left up to the gui to decide.
+  }
 
   setErrorMessage(ss.str());
 }
