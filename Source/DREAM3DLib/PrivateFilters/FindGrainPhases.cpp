@@ -105,8 +105,8 @@ void FindGrainPhases::execute()
   }
   setErrorCondition(0);
 
-  int64_t totalPoints = m->totalPoints();
-  size_t totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)

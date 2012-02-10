@@ -37,9 +37,12 @@
 #ifndef _QUALITYMETRICFILTER_H_
 #define _QUALITYMETRICFILTER_H_
 
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
+
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -61,23 +64,23 @@ namespace Detail {
 /*
  *
  */
-class EbsdLib_EXPORT QualityMetricFilter
+class DREAM3DLib_EXPORT QualityMetricFilter
 {
   public:
-    EBSD_SHARED_POINTERS(QualityMetricFilter)
-    EBSD_TYPE_MACRO(QualityMetricFilter)
-    EBSD_STATIC_NEW_MACRO(QualityMetricFilter)
+    DREAM3D_SHARED_POINTERS(QualityMetricFilter)
+    DREAM3D_TYPE_MACRO(QualityMetricFilter)
+    DREAM3D_STATIC_NEW_MACRO(QualityMetricFilter)
 
     virtual ~QualityMetricFilter();
 
-    EBSD_INSTANCE_STRING_PROPERTY(FieldName)
-    EBSD_INSTANCE_PROPERTY(float, FieldValue)
-    EBSD_INSTANCE_STRING_PROPERTY(FieldOperator)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldName)
+    DREAM3D_INSTANCE_PROPERTY(float, FieldValue)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldOperator)
 
-    EBSD_INSTANCE_PROPERTY(void*, Input)
-    EBSD_INSTANCE_PROPERTY(size_t, NumValues)
-    EBSD_INSTANCE_PROPERTY(Ebsd::NumType, DataType);
-    EBSD_INSTANCE_PROPERTY(DataArray<bool>::Pointer, Output)
+    DREAM3D_INSTANCE_PROPERTY(void*, Input)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumValues)
+    DREAM3D_INSTANCE_PROPERTY(Ebsd::NumType, DataType);
+    DREAM3D_INSTANCE_PROPERTY(DataArray<bool>::Pointer, Output)
 
     int filter();
 

@@ -44,7 +44,6 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
-#include "EbsdLib/QualityMetricFilter.h"
 
 #include "EbsdLib/HKL/CtfPhase.h"
 
@@ -65,6 +64,18 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
 
     virtual ~H5CtfVolumeReader();
 
+    EBSD_POINTER_PROPERTY(Phase, Phase, int)
+    EBSD_POINTER_PROPERTY(X, X, float)
+    EBSD_POINTER_PROPERTY(Y, Y, float)
+    EBSD_POINTER_PROPERTY(BandCount, BandCount, int)
+    EBSD_POINTER_PROPERTY(Error, Error, int)
+    EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
+    EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
+    EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
+    EBSD_POINTER_PROPERTY(MeanAngularDeviation, MAD, float)
+    EBSD_POINTER_PROPERTY(BandContrast, BC, int)
+    EBSD_POINTER_PROPERTY(BandSlope, BS, int)
+
     /**
      * @brief This method does the actual loading of the OIM data from the data
      * source (files, streams, etc) into the data structures.
@@ -72,23 +83,44 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
      * @param euler2s
      * @param euler3s
      * @param phases
-     * @param goodVoxels
      * @param xpoints
      * @param ypoints
      * @param zpoints
      * @param filters
      * @return
      */
-    int loadData(float* eulerangles,
-                 int* phases, bool* goodVoxels,
-                 int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir,
-                 std::vector<QualityMetricFilter::Pointer> filters);
+    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints,
+                 Ebsd::RefFrameZDir ZDir);
 
     /**
      * @brief
      * @return
      */
     std::vector<CtfPhase::Pointer> getPhases();
+
+
+
+    /**
+     * @brief Returns the pointer to the data for a given field
+     * @param fieldName The name of the field to return the pointer to.
+     */
+    void* getPointerByName(const std::string &fieldName);
+
+    /**
+     * @brief Returns an enumeration value that depicts the numerical
+     * primitive type that the data is stored as (Int, Float, etc).
+     * @param fieldName The name of the field.
+     */
+    Ebsd::NumType getPointerType(const std::string &fieldName);
+
+    /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+    * and then splats '0' across all the bytes of the memory allocation
+    */
+    void initPointers(size_t numElements);
+
+    /** @brief 'free's the allocated memory and sets the pointer to NULL
+    */
+    void deletePointers();
 
   protected:
     H5CtfVolumeReader();
@@ -98,6 +130,48 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
 
     H5CtfVolumeReader(const H5CtfVolumeReader&); // Copy Constructor Not Implemented
     void operator=(const H5CtfVolumeReader&); // Operator '=' Not Implemented
+
+
+
+    /**
+     * @brief Allocats a contiguous chunk of memory to store values from the .ang file
+     * @param numberOfElements The number of elements in the Array. This method can
+     * also optionally produce SSE aligned memory for use with SSE intrinsics
+     * @return Pointer to allocated memory
+     */
+      template<typename T>
+      T* allocateArray(size_t numberOfElements)
+      {
+  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+  #else
+        T*  m_buffer = new T[numberOfElements];
+  #endif
+  //      m_NumberOfElements = numberOfElements;
+        return m_buffer;
+      }
+
+    /**
+     * @brief Deallocates memory that has been previously allocated. This will set the
+     * value of the pointer passed in as the argument to NULL.
+     * @param ptr The pointer to be freed.
+     */
+      template<typename T>
+      void deallocateArrayData(T* &ptr)
+      {
+        if (ptr != NULL && getManageMemory() == true)
+        {
+  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+          _mm_free(ptr );
+  #else
+          delete[] ptr;
+  #endif
+          ptr = NULL;
+   //       m_NumberOfElements = 0;
+        }
+      }
+
+
 };
 
 #endif /* H5CTFVOLUMEREADER_H_ */

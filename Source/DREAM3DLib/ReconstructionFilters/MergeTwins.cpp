@@ -174,7 +174,7 @@ void MergeTwins::execute()
 
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -228,7 +228,7 @@ void MergeTwins::merge_twins()
   float axistol = 2.0f*M_PI/180.0f;
   float q1[5];
   float q2[5];
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
   twinnewnumbers.resize(numgrains, -1);
 
@@ -277,7 +277,7 @@ void MergeTwins::merge_twins()
     }
     twinlist.clear();
   }
-  size_t totalPoints = static_cast<size_t>(m->totalPoints());
+  size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
@@ -288,7 +288,7 @@ void MergeTwins::merge_twins()
 void MergeTwins::characterize_twins()
 {
   DataContainer* m = getDataContainer();
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {
 

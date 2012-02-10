@@ -34,63 +34,58 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5STATSDATAWRITER_H_
-#define H5STATSDATAWRITER_H_
+#ifndef DETERMINEGOODVOXELS_H_
+#define DETERMINEGOODVOXELS_H_
 
-#include <vector>
 #include <string>
 
-#include <hdf5.h>
+#include "EbsdLib/H5EbsdVolumeReader.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 
 /*
  *
  */
-class DREAM3DLib_EXPORT H5StatsDataWriter : public AbstractFilter
+class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 {
   public:
+    DREAM3D_SHARED_POINTERS(DetermineGoodVoxels);
+    DREAM3D_STATIC_NEW_MACRO(DetermineGoodVoxels);
+    DREAM3D_TYPE_MACRO_SUPER(DetermineGoodVoxels, AbstractFilter);
 
-    DREAM3D_SHARED_POINTERS(H5StatsDataWriter)
-    DREAM3D_STATIC_NEW_MACRO(H5StatsDataWriter)
-    DREAM3D_TYPE_MACRO_SUPER(H5StatsDataWriter, AbstractFilter)
+    virtual ~DetermineGoodVoxels();
 
-    virtual ~H5StatsDataWriter();
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
+    DREAM3D_INSTANCE_PROPERTY(H5EbsdVolumeReader::Pointer, EbsdVolumeReader);
 
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Write Statistics Data"; }
+    virtual const std::string getHumanLabel() { return "Determine Good Voxels"; }
 
     virtual void setupFilterOptions();
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
-    virtual void preflight();
-
 
 
   protected:
-    H5StatsDataWriter();
+      DetermineGoodVoxels();
 
-
+      void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
+    bool* m_GoodVoxels;
 
 
-    H5StatsDataWriter(const H5StatsDataWriter&); // Copy Constructor Not Implemented
-    void operator=(const H5StatsDataWriter&); // Operator '=' Not Implemented
+    DetermineGoodVoxels(const DetermineGoodVoxels&); // Copy Constructor Not Implemented
+    void operator=(const DetermineGoodVoxels&); // Operator '=' Not Implemented
+
 };
 
-#endif /* H5STATSDATAWRITER_H_ */
+#endif /* DETERMINEGOODVOXELS_H_ */

@@ -55,7 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainer::DataContainer() :
-m_TotalFields(0),
+m_NumFieldTuples(0),
 m_NumEnsembleTuples(0)
 {
   m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
@@ -84,6 +84,7 @@ void DataContainer::addCellData(const std::string &name, IDataArray::Pointer dat
     data->SetName(name);
   }
   m_CellData[name] = data;
+  m_NumCellTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -174,6 +175,7 @@ void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer da
     data->SetName(name);
   }
   m_FieldData[name] = data;
+  m_NumFieldTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -233,7 +235,7 @@ void DataContainer::resizeFieldDataArrays(size_t size)
     IDataArray::Pointer d = (*iter).second;
     success = d->Resize(size);
   }
-  m_TotalFields = size;
+  m_NumFieldTuples = size;
 }
 
 // -----------------------------------------------------------------------------

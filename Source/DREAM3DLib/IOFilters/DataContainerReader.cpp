@@ -41,7 +41,8 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
-#include "DREAM3DLib/HDF5/H5DataArrayReader.hpp"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 
 typedef std::list<std::string> NameListType;
 
@@ -227,7 +228,7 @@ void DataContainerReader::execute()
     return;
   }
 
-  err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+  err |= H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
     setErrorMessage("H5ReconVolumeReader Error Reading the Dimensions");
@@ -238,7 +239,7 @@ void DataContainerReader::execute()
   }
   m->setDimensions(volDims[0], volDims[1], volDims[2]);
 
-  err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+  err |= H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
   if(err < 0)
   {
     setErrorMessage("H5ReconVolumeReader Error Reading the Spacing (Resolution)");
@@ -249,7 +250,7 @@ void DataContainerReader::execute()
   }
   m->setResolution(spacing);
 
-  err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+  err |= H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
   if(err < 0)
   {
     setErrorMessage("H5ReconVolumeReader Error Reading the Origin");
@@ -260,32 +261,35 @@ void DataContainerReader::execute()
   }
   m->setOrigin(origin);
 
-  err = readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME);
   if(err < 0)
   {
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
+    err |= H5Gclose(dcGid);
+    err |= H5Fclose(fileId);
+    setErrorCondition(err);
     return;
   }
 
-  err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME);
   if(err < 0)
   {
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
+    err |= H5Gclose(dcGid);
+    err |= H5Fclose(fileId);
+    setErrorCondition(err);
     return;
   }
 
-  err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
   if(err < 0)
   {
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
+    err |= H5Gclose(dcGid);
+    err |= H5Fclose(fileId);
+    setErrorCondition(err);
     return;
   }
 
-  err = H5Gclose(dcGid);
-  err = H5Fclose(fileId);
+  err |= H5Gclose(dcGid);
+  err |= H5Fclose(fileId);
 }
 
 
@@ -310,14 +314,14 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
   }
 
   NameListType names;
-  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, names);
-  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+//  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
   std::string classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     classType.clear();
-    err = H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
-    std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
+    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+ //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
     if(classType.compare("DataArray<T>") == 0)
@@ -331,6 +335,13 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
     else if(classType.compare("NeighborList<T>") == 0)
     {
       dPtr = H5DataArrayReader::readNeighborListData(gid, *iter);
+    }
+    else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
+    {
+      StatsDataArray::Pointer statsData = StatsDataArray::New();
+      statsData->SetName(DREAM3D::EnsembleData::Statistics);
+      statsData->readH5Data(gid);
+      dPtr = statsData;
     }
 
     if (NULL != dPtr.get())

@@ -241,8 +241,8 @@ void MatchCrystallography::execute()
     return;
   }
 
-  int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  int totalFields = m->getNumFieldTuples();
   int numEnsembleTuples = m->getNumEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, numEnsembleTuples);
   if (getErrorCondition() < 0)
@@ -421,7 +421,7 @@ void MatchCrystallography::assign_eulers()
   float random;
   int choose, phase;
 
-  int totalFields = m->getTotalFields();
+  int totalFields = m->getNumFieldTuples();
   size_t xtalCount = m->getNumEnsembleTuples();
   unbiasedvol.resize(xtalCount);
   for (size_t i = 1; i < xtalCount; ++i)
@@ -537,8 +537,8 @@ void MatchCrystallography::matchCrystallography()
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
-  int64_t totalPoints = m->totalPoints();
-  size_t totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFields = m->getNumFieldTuples();
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -594,9 +594,9 @@ void MatchCrystallography::matchCrystallography()
           counter++;
         }
         if(counter == totalFields)
-		{
-			badtrycount = 10*totalFields;
-		}
+        {
+          badtrycount = 10*totalFields;
+        }
 		else
 		{
 			ea1 = m_EulerAnglesF[3 * selectedgrain1];
@@ -855,7 +855,7 @@ void MatchCrystallography::measure_misorientations()
   float q2[5];
   unsigned int phase1, phase2;
   int mbin;
-  int totalFields = m->getTotalFields();
+  int totalFields = m->getNumFieldTuples();
   float threshold = 0.0f;
 
   misorientationlists.resize(totalFields);

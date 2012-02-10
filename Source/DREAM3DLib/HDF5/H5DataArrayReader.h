@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +12,9 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,38 +26,49 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "StatsGen.h"
+#ifndef H5DATAARRAYREADER_HPP_
+#define H5DATAARRAYREADER_HPP_
+
+#include <hdf5.h>
+
+#include <string>
 
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-StatsGen::StatsGen()
+
+class DREAM3DLib_EXPORT H5DataArrayReader
 {
-}
+  public:
+    virtual ~H5DataArrayReader();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-StatsGen::~StatsGen()
-{
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsGen::computeNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff,
-                                  float binstep, float &max, float &min)
-{
-  min = expf(mu - (minCutOff * sigma));
-  max = expf(mu + (maxCutOff * sigma));
-  return static_cast<int>((max -min)/binstep)+1;
-}
+    /**
+     *
+     * @param gid
+     * @param name
+     * @return
+     */
+    static IDataArray::Pointer readIDataArray(hid_t gid, const std::string &name);
 
+    /**
+     *
+     * @param gid
+     * @param name
+     * @return
+     */
+    static IDataArray::Pointer readNeighborListData(hid_t gid, const std::string &name);
+
+  protected:
+    H5DataArrayReader();
+
+  private:
+    H5DataArrayReader(const H5DataArrayReader&); // Copy Constructor Not Implemented
+    void operator=(const H5DataArrayReader&); // Operator '=' Not Implemented
+
+};
+
+#endif /* H5DATAARRAYREADER_HPP_ */

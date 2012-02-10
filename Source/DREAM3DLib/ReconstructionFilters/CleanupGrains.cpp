@@ -160,7 +160,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void CleanupGrains::preflight()
 {
-  DataContainer* m = getDataContainer();
+//  DataContainer* m = getDataContainer();
 //  m->clearFieldData();
 //  m->clearEnsembleData();
 
@@ -199,8 +199,8 @@ void CleanupGrains::execute()
 //  m->clearFieldData();
 //  m->clearEnsembleData();
 
-  int64_t totalPoints = m->totalPoints();
-  dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
+  int64_t totalPoints = m->getTotalPoints();
+  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -350)
   {
     return;
@@ -224,7 +224,7 @@ void CleanupGrains::execute()
   }
 
   // FindNeighbors may have messed with the pointers so revalidate our internal pointers
-  dataCheck(false, totalPoints, m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -255,7 +255,7 @@ void CleanupGrains::execute()
 void CleanupGrains::assign_badpoints()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -278,7 +278,7 @@ void CleanupGrains::assign_badpoints()
   float x, y, z;
   DimType column, row, plane;
   int neighpoint;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -433,7 +433,7 @@ void CleanupGrains::merge_containedgrains()
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
 
-  size_t totalPoints = static_cast<size_t>(m->totalPoints());
+  size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t i = 0; i < totalPoints; i++)
   {
 	std::stringstream ss;
@@ -452,7 +452,7 @@ void CleanupGrains::merge_containedgrains()
 void CleanupGrains::remove_smallgrains()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -482,7 +482,7 @@ void CleanupGrains::remove_smallgrains()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
 
-  DimType numgrains = m->getTotalFields();
+  DimType numgrains = m->getNumFieldTuples();
 
   nuclei.resize(numgrains, -1);
 

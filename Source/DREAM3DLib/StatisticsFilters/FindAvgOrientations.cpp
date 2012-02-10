@@ -114,14 +114,14 @@ void FindAvgOrientations::execute()
     setErrorMessage(ss.str());
     return;
   }
-  int64_t totalPoints = m->totalPoints();
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  int64_t totalPoints = m->getTotalPoints();
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   int phase;
   float voxquat[5];
   float curavgquat[5];

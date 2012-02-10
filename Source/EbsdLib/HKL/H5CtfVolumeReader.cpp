@@ -54,8 +54,19 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5CtfVolumeReader::H5CtfVolumeReader() :
-    H5EbsdVolumeReader()
+H5EbsdVolumeReader()
 {
+  m_Phase = NULL;
+  m_X = NULL;
+  m_Y = NULL;
+  m_BandCount = NULL;
+  m_Error = NULL;
+  m_Euler1 = NULL;
+  m_Euler2 = NULL;
+  m_Euler3 = NULL;
+  m_MAD = NULL;
+  m_BC = NULL;
+  m_BS = NULL;
 
 }
 
@@ -64,7 +75,96 @@ H5CtfVolumeReader::H5CtfVolumeReader() :
 // -----------------------------------------------------------------------------
 H5CtfVolumeReader::~H5CtfVolumeReader()
 {
+  deletePointers();
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfVolumeReader::initPointers(size_t numElements)
+{
+  setNumberOfElements(numElements);
+  if (numElements == 0) { return; }
+  size_t numBytes = numElements * sizeof(float);
+  m_Phase = allocateArray<int > (numElements);
+  m_X = allocateArray<float > (numElements);
+  m_Y = allocateArray<float > (numElements);
+  m_BandCount = allocateArray<int > (numElements);
+  m_Error = allocateArray<int > (numElements);
+  m_Euler1 = allocateArray<float> (numElements);
+  m_Euler2 = allocateArray<float > (numElements);
+  m_Euler3 = allocateArray<float > (numElements);
+  m_MAD = allocateArray<float > (numElements);
+  m_BC = allocateArray<int > (numElements);
+  m_BS = allocateArray<int > (numElements);
+
+  ::memset(m_Phase, 0, numBytes);
+  ::memset(m_X, 0, numBytes);
+  ::memset(m_Y, 0, numBytes);
+  ::memset(m_BandCount, 0, numBytes);
+  ::memset(m_Error, 0, numBytes);
+  ::memset(m_Euler1, 0, numBytes);
+  ::memset(m_Euler2, 0, numBytes);
+  ::memset(m_Euler3, 0, numBytes);
+  ::memset(m_MAD, 0, numBytes);
+  ::memset(m_BC, 0, numBytes);
+  ::memset(m_BS, 0, numBytes);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfVolumeReader::deletePointers()
+{
+  this->deallocateArrayData<int > (m_Phase);
+  this->deallocateArrayData<float > (m_X);
+  this->deallocateArrayData<float > (m_Y);
+  this->deallocateArrayData<int > (m_BandCount);
+  this->deallocateArrayData<int > (m_Error);
+  this->deallocateArrayData<float > (m_Euler1);
+  this->deallocateArrayData<float > (m_Euler2);
+  this->deallocateArrayData<float > (m_Euler3);
+  this->deallocateArrayData<float > (m_MAD);
+  this->deallocateArrayData<int > (m_BC);
+  this->deallocateArrayData<int > (m_BS);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void* H5CtfVolumeReader::getPointerByName(const std::string &fieldName)
+{
+  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
+  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
+  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return static_cast<void*>(m_Y);}
+  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return static_cast<void*>(m_BandCount);}
+  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return static_cast<void*>(m_Error);}
+  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
+  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
+  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
+  if (fieldName.compare(Ebsd::Ctf::MeanAngularDeviation) == 0) { return static_cast<void*>(m_MAD);}
+  if (fieldName.compare(Ebsd::Ctf::BandContrast) == 0) { return static_cast<void*>(m_BC);}
+  if (fieldName.compare(Ebsd::Ctf::BandSlope) == 0) { return static_cast<void*>(m_BS);}
+  return NULL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Ebsd::NumType H5CtfVolumeReader::getPointerType(const std::string &fieldName)
+  {
+  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::MeanAngularDeviation) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::BandContrast) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::BandSlope) == 0) { return Ebsd::Int32;}
+  return Ebsd::UnknownNumType;
 }
 
 // -----------------------------------------------------------------------------
@@ -106,17 +206,16 @@ std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfVolumeReader::loadData(float* eulerangles,
-                                int* phases,
-                                bool* goodVoxels,
-                                int64_t xpoints,
+int H5CtfVolumeReader::loadData(int64_t xpoints,
                                 int64_t ypoints,
                                 int64_t zpoints,
-                                Ebsd::RefFrameZDir ZDir,
-                                std::vector<QualityMetricFilter::Pointer> filters)
+                                Ebsd::RefFrameZDir ZDir)
 {
   int index = 0;
   int err = -1;
+// Initialize all the pointers
+  initPointers(xpoints * ypoints * zpoints);
+
 
   int readerIndex;
   int64_t xpointsslice;
@@ -127,17 +226,9 @@ int H5CtfVolumeReader::loadData(float* eulerangles,
 //  int ystop;
   int zval;
 
-  float* euler1Ptr = NULL;
-  float* euler2Ptr = NULL;
-  float* euler3Ptr = NULL;
-  int* phasePtr = NULL;
+
   int xstartspot;
   int ystartspot;
-
-  // Create an Array of Void Pointers that will point to the data that is going to
-  // serve as the filter data, such as Confidence Index or Image Quality
-  std::vector<void*> dataPointers(filters.size(), NULL);
-  std::vector<Ebsd::NumType> dataTypes(filters.size(), Ebsd::UnknownNumType);
 
   err = readVolumeInfo();
 
@@ -159,19 +250,19 @@ int H5CtfVolumeReader::loadData(float* eulerangles,
     readerIndex = 0;
     xpointsslice = reader->getXCells();
     ypointsslice = reader->getYCells();
-    euler1Ptr = reader->getEuler1Pointer();
-    euler2Ptr = reader->getEuler2Pointer();
-    euler3Ptr = reader->getEuler3Pointer();
-    phasePtr = reader->getPhasePointer();
-    // Gather some information about the filters and types in order to run the QualityMetric Filter
-    for (size_t i = 0; i < filters.size(); ++i)
-    {
-      dataPointers[i] = reader->getPointerByName(filters[i]->getFieldName());
-      dataTypes[i] = reader->getPointerType(filters[i]->getFieldName());
-    }
+    int* phasePtr = reader->getPhasePointer();
+    float* xPtr = reader->getXPointer();
+    float* yPtr = reader->getYPointer();
+    int* bandPtr = reader->getBandCountPointer();
+    int* errorPtr = reader->getErrorPointer();
+    float* euler1Ptr = reader->getEuler1Pointer();
+    float* euler2Ptr = reader->getEuler2Pointer();
+    float* euler3Ptr = reader->getEuler3Pointer();
+    float* madPtr = reader->getMeanAngularDeviationPointer();
+    int* bcPtr = reader->getBandContrastPointer();
+    int* bsPtr = reader->getBandSlopePointer();
 
-    // Figure out which are good voxels
-    DataArray<bool>::Pointer good_voxels = determineGoodVoxels(filters, dataPointers, xpointsslice * ypointsslice, dataTypes);
+    // Gather some information about the filters and types in order to run the QualityMetric Filter
 
     xpointstemp = xpoints;
     ypointstemp = ypoints;
@@ -192,14 +283,19 @@ int H5CtfVolumeReader::loadData(float* eulerangles,
       for (int i = 0; i < xpointsslice; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
-        eulerangles[3*index] = euler1Ptr[readerIndex]; // Phi1
-        eulerangles[3*index + 1] = euler2Ptr[readerIndex]; // Phi
-        eulerangles[3*index + 2] = euler3Ptr[readerIndex]; // Phi2
-        phases[index] = phasePtr[readerIndex]; // Phase Add 1 to the phase number because .ctf files are zero based for phases
-        if (NULL != good_voxels.get())
-        {
-          goodVoxels[index] = good_voxels->GetValue(readerIndex);
-        }
+        m_Phase[index] = phasePtr[readerIndex]; // Phase Add 1 to the phase number because .ctf files are zero based for phases
+        m_X[index] = xPtr[readerIndex];
+        m_Y[index] = yPtr[readerIndex];
+        m_BandCount[index] = bandPtr[readerIndex];
+        m_Error[index] = errorPtr[readerIndex];
+        m_Euler1[index] = euler1Ptr[readerIndex];
+        m_Euler2[index] = euler2Ptr[readerIndex];
+        m_Euler3[index] = euler3Ptr[readerIndex];
+
+        m_MAD[index] = madPtr[readerIndex];
+        m_BC[index] = bcPtr[readerIndex];
+        m_BS[index] = bsPtr[readerIndex];
+
         ++readerIndex;
       }
     }

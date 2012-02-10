@@ -22,9 +22,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
-
-
-
 /**
 * @class IDataArray IDataArray.h PathToHeader/IDataArray.h
 * @brief This class holds a raw pointer to some allocated data that can be stored
@@ -36,7 +33,7 @@
 * @date Jan 3, 2008
 * @version $Revision: 1.2 $
 */
-class IDataArray
+class DREAM3DLib_EXPORT IDataArray
 {
   public:
     DREAM3D_SHARED_POINTERS(IDataArray);
@@ -63,8 +60,8 @@ class IDataArray
     }
 
 
-    IDataArray() {}
-    virtual ~IDataArray() {}
+    IDataArray();
+    virtual ~IDataArray();
 
     virtual void SetName(const std::string &name) = 0;
     virtual std::string GetName() = 0;

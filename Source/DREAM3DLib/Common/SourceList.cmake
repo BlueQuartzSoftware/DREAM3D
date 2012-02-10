@@ -38,6 +38,8 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
+  
 )
 
 SET (DREAM3DLib_Common_SRCS
@@ -49,6 +51,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp
@@ -59,6 +62,8 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.cpp
+  
 
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")

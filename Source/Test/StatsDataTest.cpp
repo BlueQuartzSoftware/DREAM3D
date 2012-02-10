@@ -54,8 +54,8 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/IOFilters/H5StatsDataWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -66,7 +66,8 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-
+  MXADir::remove(UnitTest::StatsDataTest::TestFile);
+  MXADir::remove(UnitTest::StatsDataTest::TestFile2);
 }
 
 // -----------------------------------------------------------------------------
@@ -585,7 +586,32 @@ void TestWriteData()
 // -----------------------------------------------------------------------------
 void TestReadData()
 {
+  DataContainer::Pointer m = DataContainer::New();
 
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(UnitTest::StatsDataTest::TestFile);
+  reader->setDataContainer(m.get());
+  reader->execute();
+  int err = reader->getErrorCondition();
+  if (err < 0)
+  {
+    std::cout << reader->getErrorMessage() << std::endl;
+  }
+  DREAM3D_REQUIRE( err >= 0);
+
+  IDataArray::Pointer p = m->getEnsembleData(DREAM3D::EnsembleData::Statistics);
+  DREAM3D_REQUIRE_EQUAL(p->GetNumberOfTuples(), 3);
+
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::StatsDataTest::TestFile2);
+  writer->setDataContainer(m.get());
+  writer->execute();
+  err = writer->getErrorCondition();
+  if (err < 0)
+  {
+    std::cout << "Rewriting the data failed" << std::endl;
+  }
+  DREAM3D_REQUIRE( err >= 0);
 }
 
 // -----------------------------------------------------------------------------

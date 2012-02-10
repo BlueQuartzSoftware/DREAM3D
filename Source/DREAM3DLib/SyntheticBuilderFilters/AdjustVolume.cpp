@@ -127,8 +127,8 @@ void AdjustVolume::execute()
     setErrorMessage(ss.str());
     return;
   }
-  int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  int totalFields = m->getNumFieldTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
   dataCheck(false, totalPoints, totalFields, 1);
@@ -171,11 +171,11 @@ void AdjustVolume::execute()
 
   float voxtovol = m->getXRes()*m->getYRes()*m->getZRes()*(3.0/4.0)*(1.0/m_pi);
 
-  gsizes.resize(m->getTotalFields());
+  gsizes.resize(m->getNumFieldTuples());
 
   std::vector<int> voxellist(vListSize,-1);
   std::vector<int> affectedvoxellist(vListSize,-1);
-  for(size_t i=1;i<m->getTotalFields();i++)
+  for(size_t i=1;i<m->getNumFieldTuples();i++)
   {
     gsizes[i] = 0;
   }
@@ -201,8 +201,8 @@ void AdjustVolume::execute()
     while (good == 0)
     {
       good = 1;
-      selectedgrain = int(rg.genrand_res53() * m->getTotalFields());
-      if (selectedgrain >= static_cast<int>(m->getTotalFields())) { selectedgrain = m->getTotalFields()-1;}
+      selectedgrain = int(rg.genrand_res53() * m->getNumFieldTuples());
+      if (selectedgrain >= static_cast<int>(m->getNumFieldTuples())) { selectedgrain = m->getNumFieldTuples()-1;}
       if (selectedgrain == 0) selectedgrain = 1;
     }
     growth = 1;
@@ -271,7 +271,7 @@ void AdjustVolume::execute()
         gsizes[reassigned[index]] = gsizes[reassigned[index]]-1;
       }
     }
-    for(size_t i=1;i<m->getTotalFields();i++)
+    for(size_t i=1;i<m->getNumFieldTuples();i++)
     {
       index = i;
       diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));
@@ -281,7 +281,7 @@ void AdjustVolume::execute()
     if(currentsizedisterror <= oldsizedisterror)
     {
       oldsizedisterror = currentsizedisterror;
-      for(size_t i=1;i<m->getTotalFields();i++)
+      for(size_t i=1;i<m->getNumFieldTuples();i++)
       {
 //        if(gsizes[i] == 0) m->m_Grains.erase(m->m_Grains.begin() + i);
       }
@@ -299,7 +299,7 @@ void AdjustVolume::execute()
           gsizes[m_GrainIds[index]]++;
         }
       }
-      for(size_t i=1;i<m->getTotalFields();i++)
+      for(size_t i=1;i<m->getNumFieldTuples();i++)
       {
         index = i;
         diam = 2.0f*powf((gsizes[index]*voxtovol),(1.0f/3.0f));

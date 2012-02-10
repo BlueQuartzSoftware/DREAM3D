@@ -24,6 +24,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/HDF5/H5DataArrayWriter.hpp"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
 
 #define mxa_bswap(s,d,t)\
   t[0] = ptr[s];\
@@ -509,8 +510,20 @@ class DataArray : public IDataArray
      */
     virtual int readH5Data(hid_t parentId)
     {
-      int err = -1;
-      assert(false);
+      int err = 0;
+
+      this->Resize(0);
+      IDataArray::Pointer p = H5DataArrayReader::readIDataArray(parentId, GetName());
+      if (p.get() == NULL)
+      {
+        return -1;
+      }
+      this->NumberOfComponents = p->GetNumberOfComponents();
+      this->Size = p->GetSize();
+      this->MaxId = (Size == 0) ? 0 : Size -1;
+      this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
+      p->releaseOwnership();
+
       return err;
     }
 
@@ -684,6 +697,7 @@ class DataArray : public IDataArray
 
       return this->Array;
     }
+
 
   private:
 

@@ -319,8 +319,8 @@ void PackGrainsGen2::execute()
     return;
   }
 
-  int64_t totalPoints = m->totalPoints();
-  int totalFields = m->getTotalFields();
+  int64_t totalPoints = m->getTotalPoints();
+  int totalFields = m->getNumFieldTuples();
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -477,7 +477,7 @@ void PackGrainsGen2::execute()
     iter = 0;
     int xgrains, ygrains, zgrains;
 
-    xgrains = int(powf((m->getTotalFields()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
+    xgrains = int(powf((m->getNumFieldTuples()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
     ygrains = int(xgrains*(sizey/sizex)+1);
     zgrains = int(xgrains*(sizez/sizex)+1);
     factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
@@ -540,7 +540,7 @@ void PackGrainsGen2::execute()
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
 
-  int numgrains = static_cast<int>(m->getTotalFields());
+  int numgrains = static_cast<int>(m->getNumFieldTuples());
 
   columnlist.resize(numgrains);
   rowlist.resize(numgrains);
@@ -885,7 +885,7 @@ void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
 void PackGrainsGen2::initializeAttributes()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -974,7 +974,7 @@ int PackGrainsGen2::readReconStatsData(H5StatsReader::Pointer h5io)
     m_CrystalStructures[phase] = structures[i];
 
     /* Read the PhaseFraction Value*/
-      std::vector<float> pFraction;
+    std::vector<float> pFraction;
     err = h5io->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
     m_PhaseFractions[phase] = pFraction.front();
 
@@ -1126,7 +1126,7 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
   y = m_Centroids[3*gnum+1];
   z = m_Centroids[3*gnum+2];
   dia = m_EquivalentDiameters[gnum];
-  for (size_t n = 1; n < m->getTotalFields(); n++)
+  for (size_t n = 1; n < m->getNumFieldTuples(); n++)
   {
     xn = m_Centroids[3*n];
     yn = m_Centroids[3*n+1];
@@ -1186,7 +1186,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
     {
       determine_neighbors(gremove, -1);
     }
-    for (size_t i = 1; i < m->getTotalFields(); i++)
+    for (size_t i = 1; i < m->getNumFieldTuples(); i++)
     {
       nnum = 0;
       index = i;
@@ -1297,7 +1297,7 @@ float PackGrainsGen2::check_sizedisterror(Field* field)
     {
       simgrainsizedist[iter][i] = 0.0f;
     }
-    for (size_t b = 1; b < m->getTotalFields(); b++)
+    for (size_t b = 1; b < m->getNumFieldTuples(); b++)
     {
       index = b;
       if(m_PhasesF[index] == phase)
@@ -1551,13 +1551,13 @@ void PackGrainsGen2::assign_voxels()
   float x, y, z;
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
  // int64_t totpoints = m->totalPoints();
-  gsizes.resize(m->getTotalFields());
+  gsizes.resize(m->getNumFieldTuples());
 
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     gsizes[i] = 0;
   }
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3*i+1];
@@ -1687,7 +1687,7 @@ void PackGrainsGen2::assign_voxels()
       }
     }
   }
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     if (gsizes[i] == 0) m_Active[i] = false;
   }
@@ -1698,7 +1698,7 @@ void PackGrainsGen2::assign_gaps()
   notify("Assigning Gaps", 0, Observable::UpdateProgressMessage);
 
   DataContainer* m = getDataContainer();
-  int64_t totpoints = m->totalPoints();
+  int64_t totpoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1744,7 +1744,7 @@ void PackGrainsGen2::assign_gaps()
   {
  	  unassignedcount = 0;
 	  timestep = timestep + 50;
-	  for (size_t i = 1; i < m->getTotalFields(); i++)
+	  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
 	  {
 		float volcur = m_Volumes[i];
 		float bovera = m_AxisLengths[3*i+1];
@@ -1889,7 +1889,7 @@ void PackGrainsGen2::cleanup_grains()
   notify("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
 
   DataContainer* m = getDataContainer();
-  int64_t totpoints = m->totalPoints();
+  int64_t totpoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -1917,7 +1917,7 @@ void PackGrainsGen2::cleanup_grains()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   std::vector<std::vector<int> > vlists;
-  vlists.resize(m->getTotalFields());
+  vlists.resize(m->getNumFieldTuples());
   std::vector<int> currentvlist;
   std::vector<bool> checked;
   checked.resize(totpoints,false);
@@ -1928,8 +1928,8 @@ void PackGrainsGen2::cleanup_grains()
   DimType column, row, plane;
   int index;
   float minsize = 0;
-  gsizes.resize(m->getTotalFields());
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  gsizes.resize(m->getNumFieldTuples());
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     gsizes[i] = 0;
   }
@@ -2029,7 +2029,7 @@ void PackGrainsGen2::cleanup_grains()
   {
 	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
-  for (size_t i = 1; i < m->getTotalFields(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
      if(gsizes[i] == 0) m_Active[i] = false;
   }

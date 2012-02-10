@@ -39,10 +39,10 @@
 
 
 
-static const float k_MachineEpsilon = 5E-16;
+static const float k_MachineEpsilon = 5E-16f;
 //static const float k_MaxRealNumber = 1E300;
 //static const float k_MinRealNumber = 1E-300;
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 DREAM3DMath::DREAM3DMath()
 {
@@ -144,7 +144,7 @@ float DREAM3DMath::gammastirf(float x)
     y = exp(x);
     if(x > 143.01608f)
     {
-        v = powf(x, 0.5f*x-0.25);
+        v = powf(x, 0.5f*x-0.25f);
         y = v*(v/y);
     }
     else
@@ -171,14 +171,14 @@ float DREAM3DMath::LnGamma(float x, float& sgngam)
     float tmp;
 
     sgngam = 1;
-    logpi = 1.14472988584940017414;
-    ls2pi = 0.91893853320467274178;
+    logpi = 1.14472988584940017414f;
+    ls2pi = 0.91893853320467274178f;
     if(x < -34.0)
     {
         q = -x;
         w = LnGamma(q, tmp);
-        p = int(floor(q));
-        i = int(floor(p+0.5));
+        p = (floor(q));
+        i = static_cast<int>(floor(p+0.5f));
         if( i%2==0 )
         {
             sgngam = -1;
@@ -324,7 +324,7 @@ float DREAM3DMath::erfc(float x)
     }
     if(x < 0.5f)
     {
-        result = 1.0-DREAM3DMath::erf(x);
+        result = 1.0f-DREAM3DMath::erf(x);
         return result;
     }
     if(x >= 10)
@@ -410,16 +410,16 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
         t = incompletebetaps(a, b, x, maxgam);
         if(t <= k_MachineEpsilon)
         {
-            result = 1.0-k_MachineEpsilon;
+            result = 1.0f-k_MachineEpsilon;
         }
         else
         {
-            result = 1.0-t;
+            result = 1.0f-t;
         }
         return result;
     }
     y = x*(a+b-2.0f)-(a-1.0f);
-    if(y < 0.0)
+    if(y < 0.0f)
     {
         w = incompletebetafe(a, b, x, big, biginv);
     }
@@ -440,7 +440,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
         {
             if(t <= k_MachineEpsilon)
             {
-                result = 1.0-k_MachineEpsilon;
+                result = 1.0f-k_MachineEpsilon;
             }
             else
             {
@@ -467,7 +467,7 @@ float DREAM3DMath::incompletebeta(float a, float b, float x)
     {
         if(t <= k_MachineEpsilon)
         {
-            t = 1.0-k_MachineEpsilon;
+            t = 1.0f-k_MachineEpsilon;
         }
         else
         {
@@ -516,7 +516,7 @@ float DREAM3DMath::incompletebetafe(float a, float b, float x, float big, float 
     ans = 1.0f;
     r = 1.0f;
     n = 0;
-    thresh = 3.0*k_MachineEpsilon;
+    thresh = 3.0f*k_MachineEpsilon;
     do
     {
         xk = -x*k1*k2/(k3*k4);
@@ -695,9 +695,9 @@ float DREAM3DMath::incompletebetaps(float a, float b, float x, float maxgam)
     float sg;
     float maxrealnumber = std::numeric_limits<float>::max();
     float minrealnumber = std::numeric_limits<float>::min();
-    ai = 1.0/a;
-    u = (1.0-b)*x;
-    v = u/(a+1.0);
+    ai = 1.0f/a;
+    u = (1.0f-b)*x;
+    v = u/(a+1.0f);
     t1 = v;
     t = u;
     n = 2.0;
@@ -709,7 +709,7 @@ float DREAM3DMath::incompletebetaps(float a, float b, float x, float maxgam)
         t = t*u;
         v = t/(a+n);
         s = s+v;
-        n = n+1.0;
+        n = n+1.0f;
     }
     s = s+t1;
     s = s+ai;

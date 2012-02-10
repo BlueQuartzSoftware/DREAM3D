@@ -30,26 +30,27 @@
 
 #include "QLoadSlicesWidget.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QMessageBox>
-#include <QtGui/QComboBox>
-
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/PhaseType.h"
-
-#include "QtSupport/QR3DFileCompleter.h"
-#include "QtSupport/DREAM3DQtMacros.h"
-
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"
-#include "EbsdLib/QualityMetricFilter.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 #include "EbsdLib/HKL/CtfFields.h"
 
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/PhaseType.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
+
+#include <QtGui/QLabel>
+#include <QtGui/QMessageBox>
+#include <QtGui/QComboBox>
+
+#include "QtSupport/QR3DFileCompleter.h"
+#include "QtSupport/DREAM3DQtMacros.h"
+
 #include "PipelineBuilder/FilterWidgets/ReconstructionFiltersWidgets/QualityMetricTableModel.h"
+
 
 // -----------------------------------------------------------------------------
 //

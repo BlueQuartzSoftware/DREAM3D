@@ -127,7 +127,7 @@ void FindNeighborhoods::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->totalPoints(), m->getTotalFields(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -146,7 +146,7 @@ void FindNeighborhoods::find_centroids()
 {
   DataContainer* m = getDataContainer();
 
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float);
   // N x 5 Array
   graincenters = NULL;
@@ -166,7 +166,7 @@ void FindNeighborhoods::find_centroids()
   float zRes = m->getZRes();
 
 //  float allvol = 0.0;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
@@ -209,7 +209,7 @@ void FindNeighborhoods::find_centroids()
 void FindNeighborhoods::find_centroids2D()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
   graincenters = NULL;
   INIT_DataArray(m_GrainCenters,float);
@@ -227,7 +227,7 @@ void FindNeighborhoods::find_centroids2D()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
 
@@ -270,7 +270,7 @@ void FindNeighborhoods::find_neighborhoods()
   float xdist, ydist, zdist;
   float dist, dist2, diam, diam2;
   unsigned int dist_int, dist2_int;
-  size_t numgrains = m->getTotalFields();
+  size_t numgrains = m->getNumFieldTuples();
 
   for (size_t i = 1; i < numgrains; i++)
   {

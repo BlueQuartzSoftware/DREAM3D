@@ -170,7 +170,7 @@ void AlignSections::execute()
   m->clearFieldData();
 //  m->clearEnsembleData();
 
-  int64_t totalPoints = m->totalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, 0, 0);
   if (getErrorCondition() < 0)
   {

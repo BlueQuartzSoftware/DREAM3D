@@ -47,11 +47,12 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/QualityMetricFilter.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
@@ -200,9 +201,6 @@ void TestFindNeighbors()
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline->pushBack(cleanup_grains);
 
-  DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile);
-  pipeline->pushBack(writer);
 
   bool m_WriteVtkFile(true);
   bool m_WriteBinaryVTKFiles(true);
@@ -221,6 +219,11 @@ void TestFindNeighbors()
     vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
     pipeline->pushBack(vtkWriter);
   }
+
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile);
+  pipeline->pushBack(writer);
+
 
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
   pipeline->run();
