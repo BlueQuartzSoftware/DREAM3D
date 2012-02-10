@@ -84,6 +84,7 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
   private:
     int32_t* m_GrainIds;
 
+	bool* m_BiasedFields;
 	float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_NumCells;

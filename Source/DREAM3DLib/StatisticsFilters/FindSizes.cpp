@@ -71,6 +71,7 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   DataContainer* m = getDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -300, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
@@ -128,8 +129,13 @@ void FindSizes::find_sizes()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float radcubed;
   float diameter;
+  float avgdiam = 0;
+  float sddiam = 0;
+  size_t unbiasedcount = 0;
   size_t numgrains = m->getNumFieldTuples();
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
@@ -155,7 +161,23 @@ void FindSizes::find_sizes()
     radcubed = m_Volumes[i]/vol_term;
     diameter = 2.0f*powf(radcubed, 0.3333333333f);
     m_EquivalentDiameters[i] = diameter;
+	if(m_BiasedFields[i] == false)
+	{
+		unbiasedcount++;
+		avgdiam = avgdiam + m_EquivalentDiameters[i];
+	}
   }
+  avgdiam = avgdiam/float(unbiasedcount);
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	if(m_BiasedFields[i] == false)
+	{
+		sddiam = sddiam + ((m_EquivalentDiameters[i]-avgdiam)*(m_EquivalentDiameters[i]-avgdiam));
+	}
+  }
+  sddiam = sddiam/float(unbiasedcount);
+  sddiam = sqrt(sddiam);
+  statsDataArray[0]->setGrainSizeAverage(avgdiam);
 }
 void FindSizes::find_sizes2D()
 {

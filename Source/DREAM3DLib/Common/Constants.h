@@ -124,7 +124,7 @@ namespace DREAM3D
     const std::string EulerAngles("EulerAngles");
     const std::string AxisEulerAngles("AxisEulerAngles");
     const std::string SurfaceFields("SurfaceFields");
-    const std::string UnbiasedFields("UnbiasedFields");
+    const std::string BiasedFields("BiasedFields");
     const std::string NumNeighbors("NumNeighbors");
     const std::string RGBs("RGBs");
     const std::string Centroids("Centroids");
