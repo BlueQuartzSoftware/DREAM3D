@@ -466,7 +466,7 @@ int H5StatsDataDelegate::writeWeightsData(hid_t pid, const std::string &hdf5Grou
                                           VectorOfFloatArray colData)
 {
   herr_t err = 0;
-
+  if (colData.size() == 0) { return err; }
   // Create the Group Folder
   hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
