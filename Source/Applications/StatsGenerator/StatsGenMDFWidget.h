@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -41,7 +41,8 @@
 #include "ui_StatsGenMDFWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
+#include "DREAM3DLib/Common/StatsData.h"
+//#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
@@ -72,14 +73,14 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
     MXA_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
 
-    int writeDataToHDF5(H5StatsWriter::Pointer writer);
+    int getMisrientationData(StatsData::Pointer statsData);
     int readDataFromHDF5(H5StatsReader::Pointer reader,int phase);
 
-  QwtArray<float> generateODFData();
+    std::vector<float> generateODFData();
 
-  void updateMDFPlot(QwtArray<float> odf);
+    void updateMDFPlot(std::vector<float> &odf);
 
-  SGMDFTableModel* tableModel();
+    SGMDFTableModel* tableModel();
 
   protected slots:
     void on_addMDFRowBtn_clicked();

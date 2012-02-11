@@ -57,6 +57,8 @@
 #include <qwt_plot_canvas.h>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
@@ -78,10 +80,9 @@ m_MinCutOff(3.0f),
 m_MaxCutOff(3.0f),
 m_BinStep(1.0f),
 m_PhaseIndex(-1),
-m_TableModel(NULL),
-//m_zoomer(NULL), m_picker(NULL), m_panner(NULL),
-m_grid(NULL),
 m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+m_TableModel(NULL),
+m_grid(NULL),
 m_StatsType(DREAM3D::StatisticsType::UnknownStatisticsGroup),
 m_UserUpdatedData(false)
 {
@@ -232,17 +233,16 @@ void StatsGenPlotWidget::loadTableData(H5StatsReader::Pointer reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::writeDataToHDF5(H5StatsWriter::Pointer writer,
-                                        const std::string &hdf5GroupName)
+VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
 {
-  int err = 0;
+  VectorOfFloatArray data;
   if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
     tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
     QMessageBox::Ok,
     QMessageBox::Ok);
-    return -1;
+    return data;
   }
 
   if (m_DistributionType == DREAM3D::DistributionType::UnknownDistributionType)
@@ -251,42 +251,61 @@ int StatsGenPlotWidget::writeDataToHDF5(H5StatsWriter::Pointer writer,
     tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
     QMessageBox::Ok,
     QMessageBox::Ok);
-    return -1;
+    return data;
   }
 
-  std::vector<float> col0;
-  std::vector<float> col1;
-  std::vector<float> col2;
 
+  FloatArrayType::Pointer col0;
+  FloatArrayType::Pointer col1;
+  FloatArrayType::Pointer col2;
+
+  std::vector<float> v0;
+  std::vector<float> v1;
+  std::vector<float> v2;
   Q_ASSERT(m_PhaseIndex >= 0);
 
   // Create a new Table Model
   switch(m_DistributionType)
   {
   case DREAM3D::DistributionType::Beta:
-    col0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
-    col1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
-    err = writer->writeBetaDistribution(m_PhaseIndex, hdf5GroupName, col0, col1);
-    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    v0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
+    v1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
+    col0 = FloatArrayType::FromStdVector(v0);
+    col0->SetName(DREAM3D::HDF5::Alpha);
+    col1 = FloatArrayType::FromStdVector(v1);
+    col1->SetName(DREAM3D::HDF5::Beta);
+    data.push_back(col0);
+    data.push_back(col1);
     break;
   case DREAM3D::DistributionType::LogNormal:
-    col0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
-    col1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
-    err = writer->writeLogNormalDistribution(m_PhaseIndex, hdf5GroupName, col0, col1);
-    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    v0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
+    v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
+    col0 = FloatArrayType::FromStdVector(v0);
+    col0->SetName(DREAM3D::HDF5::Average);
+    col1 = FloatArrayType::FromStdVector(v1);
+    col1->SetName(DREAM3D::HDF5::StandardDeviation);
+    data.push_back(col0);
+    data.push_back(col1);
     break;
   case DREAM3D::DistributionType::Power:
-    col0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
-    col1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
-    col2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
-    err = writer->writePowerDistribution(m_PhaseIndex, hdf5GroupName, col0, col1, col2);
-    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
+    v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
+    v1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
+    v2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
+    col0 = FloatArrayType::FromStdVector(v0);
+    col0->SetName(DREAM3D::HDF5::Alpha);
+    col1 = FloatArrayType::FromStdVector(v1);
+    col1->SetName(DREAM3D::HDF5::Exp_k);
+    col2 = FloatArrayType::FromStdVector(v2);
+    col2->SetName(DREAM3D::HDF5::Beta);
+    data.push_back(col0);
+    data.push_back(col1);
+    data.push_back(col2);
     break;
 
   default:
-    return -1;
+    return data;
   }
-  return err;
+  return data;
 }
 
 // -----------------------------------------------------------------------------

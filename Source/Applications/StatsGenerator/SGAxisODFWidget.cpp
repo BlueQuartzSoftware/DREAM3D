@@ -129,27 +129,26 @@ int SGAxisODFWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGAxisODFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
+int SGAxisODFWidget::getOrientationData(StatsData::Pointer statsData)
 {
-  int err = -1;
   int retErr = 0;
   float totalWeight = 0.0;
 
-  QwtArray<float> e1s;
-  QwtArray<float> e2s;
-  QwtArray<float> e3s;
-  QwtArray<float> weights;
-  QwtArray<float> sigmas;
-  QwtArray<float> aodf;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
+  std::vector<float> aodf;
 
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1).toStdVector();
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2).toStdVector();
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3).toStdVector();
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
 
-  for(int i=0;i<e1s.size();i++)
+  for(std::vector<float>::size_type i=0;i<e1s.size();i++)
   {
     e1s[i] = e1s[i]*M_PI/180.0;
     e2s[i] = e2s[i]*M_PI/180.0;
@@ -159,28 +158,32 @@ int SGAxisODFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
   if (aodf.size() > 0)
   {
-    float* aodfPtr = &(aodf.front());
-    err = -1;
-    if (aodfPtr != NULL)
+    FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf);
+    aodfData->SetName(DREAM3D::HDF5::AxisOrientation);
+    statsData->setAxisOrientation(aodfData);
+
+    if(e1s.size() > 0)
     {
-      unsigned long long int dims = 36 * 36 * 36;
-      err = writer->writeAxisOrientationData(m_PhaseIndex, aodfPtr, 1.0);
-      if (err < 0)
-      {
-        //FIXME: Display an error message
-        retErr = err;
-      }
-      dims = e1s.size();
-      if (dims > 0)
-      {
-        err = writer->writeAxisODFWeights(m_PhaseIndex, &dims, &(e1s.front()),  &(e2s.front()),  &(e3s.front()),  &(weights.front()),  &(sigmas.front()));
-        if (err < 0)
-        {
-          //FIXME: Display an error message
-          retErr = err;
-        }
-      }
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s);
+      euler1->SetName(DREAM3D::HDF5::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s);
+      euler2->SetName(DREAM3D::HDF5::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s);
+      euler3->SetName(DREAM3D::HDF5::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas);
+      sigma->SetName(DREAM3D::HDF5::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights);
+      weight->SetName(DREAM3D::HDF5::Weight);
+
+      VectorOfFloatArray aodfWeights;
+      aodfWeights.push_back(euler1);
+      aodfWeights.push_back(euler2);
+      aodfWeights.push_back(euler3);
+      aodfWeights.push_back(sigma);
+      aodfWeights.push_back(weight);
+      statsData->setAxisODF_Weights(aodfWeights);
     }
+
   }
   return retErr;
 }

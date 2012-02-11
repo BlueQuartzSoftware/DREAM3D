@@ -48,6 +48,10 @@
 #include <QtGui/QFileDialog>
 
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -484,19 +488,46 @@ void StatsGeneratorUI::on_actionSave_triggered()
     phaseFractionTotal += m_SGWidgets[p]->getPhaseFraction();
   }
 
-  // Instantiate a new HDF5 writer object
-  H5StatsWriter::Pointer writer = H5StatsWriter::New(m_FilePath.toStdString(), true);
-  // Loop on all the phases
   int nPhases = m_SGWidgets.size();
+  DataContainer::Pointer m = DataContainer::New();
+  StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
+  m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
+
+  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1);
+  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
+  crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+
+  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1);
+  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
+  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+  m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+
+//  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(nPhases + 1);
+//  shapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
+//  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+
+  // Loop on all the phases
+
   for(int i = 0; i < nPhases; ++i)
   {
+    StatsData::Pointer data = StatsData::New();
+    statsDataArray->setStatsData(i+1, data);
     SGWidget* sgwidget = m_SGWidgets[i];
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
-    err = sgwidget->writeDataToHDF5(writer);
+    err = sgwidget->gatherStatsData(m);
+
   }
+
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setDataContainer(m.get());
+  writer->setOutputFile(m_FilePath.toStdString());
+  writer->execute();
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
-  writer = H5StatsWriter::NullPointer();
+  writer = DataContainerWriter::NullPointer();
+
+
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);

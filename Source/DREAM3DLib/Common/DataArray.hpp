@@ -60,7 +60,6 @@ class DataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(DataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
 
-
     typedef std::vector<Pointer>   ContainterType;
 
     /**
@@ -79,6 +78,13 @@ class DataArray : public IDataArray
       Pointer ptr((d));
       return ptr;
     }
+
+    static Pointer FromStdVector(std::vector<T> &vec)
+     {
+       Pointer p = CreateArray(vec.size());
+       ::memcpy(p->GetPointer(0), &(vec.front()), vec.size() * sizeof(T));
+       return p;
+     }
 
     /**
      * @brief Destructor
