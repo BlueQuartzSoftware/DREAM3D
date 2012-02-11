@@ -80,7 +80,10 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
+	StatsDataArray::Pointer p = StatsDataArray::New();
+	m_StatsDataArray = p.get();
 	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
   setErrorMessage(ss.str());
