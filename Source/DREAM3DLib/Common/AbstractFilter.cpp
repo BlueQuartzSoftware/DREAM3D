@@ -67,8 +67,56 @@ void AbstractFilter::execute()
   notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AbstractFilter::preflight()
 {
 	std::cout << "AbstractFilter::Preflight needs to be added in some class";
 	assert(false);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name)
+{
+  bool contains = false;
+  // Check the previous filter
+  AbstractFilter::Pointer prev = getPreviousFilter();
+  while(prev.get() != NULL)
+  {
+    if (prev->getNameOfClass().compare(name) == 0)
+    {
+      contains = true;
+      break;
+    }
+    prev = prev->getPreviousFilter();
+  }
+  return contains;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
+{
+  bool contains = false;
+  // Check the previous filter
+  AbstractFilter::Pointer next = getNextFilter();
+  while(next.get() != NULL)
+  {
+    if (next->getNameOfClass().compare(name) == 0)
+    {
+      contains = true;
+      break;
+    }
+    next = next->getNextFilter();
+  }
+  return contains;
+}
+
+
+
+
+
