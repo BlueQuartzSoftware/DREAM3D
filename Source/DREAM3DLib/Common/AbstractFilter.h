@@ -90,6 +90,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual void execute();
     virtual void preflight();
 
+    virtual bool doesPipelineContainFilterBeforeThis(const std::string &name);
+    virtual bool doesPipelineContainFilterAfterThis(const std::string &name);
+
   protected:
     AbstractFilter();
 

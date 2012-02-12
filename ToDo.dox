@@ -7,48 +7,9 @@ so it can be integrated with the other documentation pages.
 @section todoMain ToDo List for Version 2 Release
 
 
-@subsection todomisc Misc Bugs
-@li Add an option for detailed logging for debugging where DREAM3d will write to a log file which can be sent to the developers to try and diagnose the problem
-@li <b>DONE</b>  Update all screen shots for all modules using a single Operating System
-@li Update documentation for each Module
-@li <b>DONE</b>  Generate and post developer documentation in PDF/HTML form
-
-
-
-@subsection infrastructure Infrastructure Changes:
-@li Move to a more modular pipeline architecture for each of the Modules where we start mimicing a VTK filter pipeline.
-
-@subsection pv ParaView Integration:
-@li Create .h5ebsd plugin for ParaView to allow the direct reading of the imported EBSD data
-
-
-@subsection ebsd_import Ebsd Import Plugin
-
-@subsection reconstruction Reconstruction Plugin
-@li Fix Reconstruction Command line application with QualityMetric Filters
-
-
-@subsection  graingenerator GrainGenerator Plugin
-@li Integrate 2D Plots into the output that would show grain size, space, neighbors, etc.
-
-
-@subsection surfacemeshing Surface Meshing Plugin
-@li Implement Surface Mesh Smoothing
-
-@subsection twotothree 2D to 3D Plugin
-
-@subsection microstats Microstructure Statistics Plugin
-
-@subsection volumeops VolumeOps Plugin
-@li Add help file
-
-@subsection volumemeshing Volume Meshing Plugin
-@li Integrate PolyMesh from Cornell as a plugin
-
-
 
 @subsection statsgen StatsGenerator
-@li <b>DONE</b> Create colorized IPF plots
+@li Update the Stats writing to use the Data Container Writer
 @li Update/Create a user manual for the stats generator - last parts need pasting
 @li Add menu for displaying help
 
@@ -56,8 +17,14 @@ so it can be integrated with the other documentation pages.
 
 @section roadmap RoadMap (The way Forward)
 
-@li Organize the code such that each plugin can be broken down into discreet filter
-operations much like VTK/ITK/ParaView
+@li Figure out a better way to compile the PipelineBuilder and FilterWidgets libraries
+@li Update all the stats filters to use the StatsDataArray and StatsData classes
+@li Combine the threshold_points and DetermineGoodVoxels into a single filter
+@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user
+or by the QualityMetricFilters
+@li Create html help file for each filter
+@li Figure out where to load the help from: Internal to the compilation or from the file system.
+@li Implement the saving/loading of pipelines to some sort of file: XML? HDF5? Plain Text?
 @li Reorganize the .h5ebsd file to include Images
 
 

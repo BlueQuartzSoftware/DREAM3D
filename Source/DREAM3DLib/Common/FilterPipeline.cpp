@@ -141,6 +141,7 @@ void FilterPipeline::run()
 void FilterPipeline::pushFront(AbstractFilter::Pointer f)
 {
   m_Pipeline.push_front(f);
+  updatePrevNextFilters();
 }
 // -----------------------------------------------------------------------------
 //
@@ -148,6 +149,7 @@ void FilterPipeline::pushFront(AbstractFilter::Pointer f)
 void FilterPipeline::popFront()
 {
   m_Pipeline.pop_front();
+  updatePrevNextFilters();
 }
 // -----------------------------------------------------------------------------
 //
@@ -155,6 +157,7 @@ void FilterPipeline::popFront()
 void FilterPipeline::pushBack(AbstractFilter::Pointer f)
 {
   m_Pipeline.push_back(f);
+  updatePrevNextFilters();
 }
 // -----------------------------------------------------------------------------
 //
@@ -162,6 +165,7 @@ void FilterPipeline::pushBack(AbstractFilter::Pointer f)
 void FilterPipeline::popBack()
 {
   m_Pipeline.pop_back();
+  updatePrevNextFilters();
 }
 // -----------------------------------------------------------------------------
 //
@@ -174,6 +178,7 @@ void FilterPipeline::insert(size_t index, AbstractFilter::Pointer f)
     ++it;
   }
   m_Pipeline.insert(it, f);
+  updatePrevNextFilters();
 }
 // -----------------------------------------------------------------------------
 //
@@ -186,12 +191,18 @@ void FilterPipeline::erase(size_t index)
     ++it;
   }
   m_Pipeline.erase(it);
+  updatePrevNextFilters();
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FilterPipeline::clear()
 {
+  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
+  {
+    (*iter)->setPreviousFilter(AbstractFilter::NullPointer());
+    (*iter)->setNextFilter(AbstractFilter::NullPointer());
+  }
   m_Pipeline.clear();
 }
 // -----------------------------------------------------------------------------
@@ -224,6 +235,8 @@ AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const std::strin
       break;
     }
   }
+  updatePrevNextFilters();
+
   return f;
 }
 
@@ -233,6 +246,35 @@ AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const std::strin
 FilterPipeline::FilterContainerType& FilterPipeline::getFilterContainer()
 {
   return m_Pipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::updatePrevNextFilters()
+{
+  FilterContainerType::iterator prev;
+  FilterContainerType::iterator next;
+
+  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
+  {
+    // currFilt = *iter;
+    if(iter != m_Pipeline.begin())
+    {
+      prev = iter;
+      prev--;
+      // prevFilt = *prev;
+      (*iter)->setPreviousFilter(*prev);
+    }
+
+    if(iter != m_Pipeline.end())
+    {
+      next = iter;
+      next++;
+      //  nextFilt = *next;
+      if(next != m_Pipeline.end()) { (*iter)->setNextFilter(*next); }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -274,54 +316,31 @@ void FilterPipeline::execute()
 {
   int err = 0;
 
-#if 0
   // Run the preflight first to make sure we can run this combination of filters
   err = preflightPipeline();
   if (err < 0)
   {
     return;
   }
-#endif
 
   // Create the DataContainer object
-  if (NULL == m_DataContainer.get()) {
+  if(NULL == m_DataContainer.get())
+  {
     m_DataContainer = DataContainer::New();
   }
 
   m_DataContainer->addObserver(static_cast<Observer*>(this));
 
   // Start looping through the Pipeline
-   float progress = 0.0f;
-   std::stringstream ss;
-   FilterContainerType::iterator prev;
-   FilterContainerType::iterator next;
+  float progress = 0.0f;
+  std::stringstream ss;
 
-   AbstractFilter::Pointer prevFilt;
-   AbstractFilter::Pointer nextFilt;
-   AbstractFilter::Pointer currFilt;
 
-   // Start a Benchmark Clock so we can keep track of each filter's execution time
-   START_CLOCK()
+// Start a Benchmark Clock so we can keep track of each filter's execution time
+  START_CLOCK()
 
    for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
    {
-/*
-	 currFilt = *iter;
-     if (iter != m_Pipeline.begin())
-     {
-       prev = iter; prev--;
-       prevFilt = *prev;
-       (*iter)->setPreviousFilter(*prev);
-     }
-     if (iter != m_Pipeline.end())
-     {
-       next = iter; next++;
-       nextFilt = *next;
-       (*iter)->setNextFilter(*next);
-     }
-
-*/
-
      progress = progress + 1.0f;
      pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);
      ss.str("");

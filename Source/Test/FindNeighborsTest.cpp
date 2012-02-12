@@ -195,6 +195,10 @@ void TestFindNeighbors()
   segment_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline->pushBack(segment_grains);
 
+  DREAM3D_REQUIRE_EQUAL(true, segment_grains->doesPipelineContainFilterBeforeThis(LoadSlices::ClassName()));
+  DREAM3D_REQUIRE_EQUAL(true, segment_grains->doesPipelineContainFilterBeforeThis(AlignSections::ClassName()));
+  DREAM3D_REQUIRE_EQUAL(false, segment_grains->doesPipelineContainFilterBeforeThis(CleanupGrains::ClassName()));
+
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
   cleanup_grains->setMinNumNeighbors(m_MinNumNeighbors);
@@ -224,10 +228,14 @@ void TestFindNeighbors()
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile);
   pipeline->pushBack(writer);
 
+  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
+  int err = pipeline->preflightPipeline();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+
 
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
   pipeline->run();
-  int err = pipeline->getErrorCondition();
+  err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
   DREAM3D_REQUIRE_EQUAL(false, pipeline->empty());
