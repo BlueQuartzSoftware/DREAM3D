@@ -120,7 +120,7 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
-  QwtArray<float> odf = generateODFData();
+  std::vector<float> odf = generateODFData();
 
   updateMDFPlot(odf);
 }
@@ -128,31 +128,31 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
+void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 {
   int err = 0;
   StatsGen sg;
   int size = 1000;
 
   // These are the output vectors
-  QwtArray<float> x;
-  QwtArray<float> y;
+  std::vector<float> x;
+  std::vector<float> y;
 
   // These are the input vectors
-  QwtArray<float> angles;
-  QwtArray<float> axes;
-  QwtArray<float> weights;
+  std::vector<float> angles;
+  std::vector<float> axes;
+  std::vector<float> weights;
 
-  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
-  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle).toStdVector();
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight).toStdVector();
+  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis).toStdVector();
 
   if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
     // Allocate a new vector to hold the mdf data
-    QwtArray<float> mdf(5832);
+    std::vector<float> mdf(5832);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateMDFData<QwtArray<float>, CubicOps>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenCubicMDFPlotData(mdf, x, y, size);
     if (err < 0)
@@ -163,9 +163,9 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
   else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
   {
     // Allocate a new vector to hold the mdf data
-    QwtArray<float> mdf(15552);
+    std::vector<float> mdf(15552);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateMDFData<QwtArray<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
     err = sg.GenHexMDFPlotData(mdf, x, y, size);
     if (err < 0)
@@ -176,7 +176,7 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
 
   QwtArray<double> xD(x.size());
   QwtArray<double> yD(x.size());
-  for (int i = 0; i < x.size(); ++i)
+  for (std::vector<float>::size_type i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x[i]);
     yD[i] = static_cast<double>(y[i]);
@@ -195,25 +195,25 @@ void StatsGenMDFWidget::updateMDFPlot(QwtArray<float> odf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QwtArray<float> StatsGenMDFWidget::generateODFData()
+std::vector<float> StatsGenMDFWidget::generateODFData()
 {
   float totalWeight = 0.0;
 
-  QwtArray<float> e1s;
-  QwtArray<float> e2s;
-  QwtArray<float> e3s;
-  QwtArray<float> weights;
-  QwtArray<float> sigmas;
-  QwtArray<float> odf;
+  std::vector<float> e1s;
+  std::vector<float> e2s;
+  std::vector<float> e3s;
+  std::vector<float> weights;
+  std::vector<float> sigmas;
+  std::vector<float> odf;
 
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1).toStdVector();
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2).toStdVector();
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3).toStdVector();
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
 
-  for(int i=0;i<e1s.size();i++)
+  for(std::vector<float>::size_type i=0;i<e1s.size();i++)
   {
 	e1s[i] = e1s[i]*M_PI/180.0;
 	e2s[i] = e2s[i]*M_PI/180.0;
@@ -298,55 +298,59 @@ int StatsGenMDFWidget::readDataFromHDF5(H5StatsReader::Pointer reader,int phase)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
+int StatsGenMDFWidget::getMisrientationData(StatsData::Pointer statsData)
 {
-  int err = 0;
   int retErr = 0;
-  QwtArray<float> x;
-  QwtArray<float> y;
+  std::vector<float> x;
+  std::vector<float> y;
 
-  QwtArray<float> angles;
-  QwtArray<float> axes;
-  QwtArray<float> weights;
+  std::vector<float> angles;
+  std::vector<float> axes;
+  std::vector<float> weights;
 
-  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
-  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
-  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle).toStdVector();
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight).toStdVector();
+  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis).toStdVector();
 
   // Generate the ODF Data from the current values in the ODFTableModel
-  QwtArray<float> odf = generateODFData();
-  QwtArray<float> mdf;
+  std::vector<float> odf = generateODFData();
+  std::vector<float> mdf;
 
   unsigned long long int nElements = 0;
 
   if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic) {
-	  Texture::calculateMDFData<QwtArray<float>, CubicOps>(angles, axes, weights, odf, mdf);
+	  Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
 	  nElements = 18 * 18 * 18;
   }
   else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal) {
-	  Texture::calculateMDFData<QwtArray<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+	  Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
 	  nElements = 36 * 36 * 12;
   }
   if (mdf.size() > 0)
   {
-    float* mdfPtr = &(mdf.front());
-    err = -1;
-    if (mdfPtr != NULL)
-    {
-      err = writer->writeMisorientationBinsData(m_PhaseIndex, &nElements, mdfPtr);
-      if (err < 0)
-      {
-        retErr = err;
-      }
+    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(mdf);
+    p->SetName(DREAM3D::HDF5::MisorientationBins);
+    statsData->setMisorientationBins(p);
 
-      if (angles.size() > 0)
-      {
-        nElements = angles.size();
-        err = writer->writeMDFWeights(m_PhaseIndex, &nElements, &(angles.front()), &(axes.front()), &(weights.front()) );
-        if (err < 0)
-        { retErr = err;}
-      }
+    if(angles.size() > 0)
+    {
+      FloatArrayType::Pointer anglesArray = FloatArrayType::FromStdVector(angles);
+      anglesArray->SetName(DREAM3D::HDF5::Angle);
+
+      FloatArrayType::Pointer axisArray = FloatArrayType::FromStdVector(axes);
+      axisArray->SetName(DREAM3D::HDF5::Axis);
+      axisArray->SetNumberOfComponents(3);
+
+      FloatArrayType::Pointer weightArray = FloatArrayType::FromStdVector(weights);
+      weightArray->SetName(DREAM3D::HDF5::Weight);
+
+      VectorOfFloatArray mdfWeights;
+      mdfWeights.push_back(anglesArray);
+      mdfWeights.push_back(axisArray);
+      mdfWeights.push_back(weightArray);
+      statsData->setMDF_Weights(mdfWeights);
     }
+
   }
 
   return retErr;

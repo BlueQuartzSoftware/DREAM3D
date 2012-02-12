@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -40,6 +40,7 @@
 #include "ui_SGWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
@@ -95,7 +96,7 @@ class SGWidget : public QWidget, private Ui::SGWidget
     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
     int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
-    int writeDataToHDF5(H5StatsWriter::Pointer writer);
+    int gatherStatsData(DataContainer::Pointer m);
     int readDataFromHDF5(H5StatsReader::Pointer reader, int phase);
 
   public slots:
