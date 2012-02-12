@@ -42,6 +42,7 @@
 #include "ui_StatsGenPlotWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
@@ -70,13 +71,15 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setPlotTitle(QString title);
 
-    int writeDataToHDF5(H5StatsWriter::Pointer writer, const std::string &hdf5GroupName);
+    VectorOfFloatArray getStatisticsData();
+
     int readDataFromHDF5(H5StatsReader::Pointer reader,
                          QVector<float>  &bins,
                          const std::string &hdf5GroupName);
 
     void setStatisticsType(unsigned int statsType);
     void setDistributionType(unsigned int distributionType, bool updatePlots = true);
+    int getDistributionType() { return m_DistributionType; }
     void blockDistributionTypeChanges(bool block);
 
     void setXAxisName(QString name);
@@ -102,6 +105,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
     MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
+    //MXA_INSTANCE_PROPERTY(unsigned int, DistributionType);
 
 
     void setSizeDistributionValues(float mu, float sigma,
@@ -129,9 +133,9 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
 
   private:
+    unsigned int m_DistributionType;
     SGAbstractTableModel* m_TableModel;
     QwtPlotGrid* m_grid;
-    unsigned int m_DistributionType;
     unsigned int m_StatsType;
     bool m_UserUpdatedData;
 

@@ -63,6 +63,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
@@ -721,7 +724,7 @@ void SGWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
+int SGWidget::gatherStatsData(DataContainer::Pointer m)
 {
   if (m_PhaseIndex < 1)
   {
@@ -763,27 +766,83 @@ int SGWidget::writeDataToHDF5(H5StatsWriter::Pointer writer)
 
   size_t nBins = 0;
 
-  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction, m_PptFraction);
-  CHECK_ERROR_ON_WRITE(err, "PhaseInformation")
-  err = writer->writeSizeDistribution(m_PhaseIndex, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
-  CHECK_ERROR_ON_WRITE(err, "Size Distribution")
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
+  size_t ensembles = m->getNumEnsembleTuples();
+
+  // Get pointers
+  unsigned int* crystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles*1, NULL);
+  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles*1, NULL);
+
+  //unsigned int* shapeTypes = m->getEnsembleDataSizeCheck<unsigned int, ShapeTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::ShapeTypes, ensembles*1, NULL);
+
+  crystalStructures[m_PhaseIndex] = m_CrystalStructure;
+  phaseTypes[m_PhaseIndex] = m_PhaseType;
+
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+
+  //H5StatsWriter::Pointer writer = H5StatsWriter::New();
+
+  statsData->setPhaseFraction(calcPhaseFraction);
+  // Grain Diameter Info
+  statsData->setAverageGrainDiameter(stepSize);
+  statsData->setMaxGrainDiameter(maxdiameter);
+  statsData->setMinGrainDiameter(mindiameter);
+  // Grain Size Distribution
+  statsData->setGrainSizeAverage(avglogdiam);
+  statsData->setGrainSizeStdDev(sdlogdiam);
+
+//  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction, m_PptFraction);
+//  CHECK_ERROR_ON_WRITE(err, "PhaseInformation")
+//  err = writer->writeSizeDistribution(m_PhaseIndex, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
+//  CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
-  // Setup Each Plot Widget
-  err = m_Omega3Plot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions)
-  err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions)
-  err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions)
-  err = m_COverBPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVCoverB_Distributions)
-  err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
-  SGWIGET_WRITE_ERROR_CHECK(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions)
-  err = m_ODFWidget->writeDataToHDF5(writer);
-  SGWIGET_WRITE_ERROR_CHECK(std::string("ODF Data"));
-  err = m_AxisODFWidget->writeDataToHDF5(writer);
-  SGWIGET_WRITE_ERROR_CHECK(std::string("Axis ODF Data"));
+
+  //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
+  {
+    VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
+    statsData->setGrainSize_Omegas(data);
+    statsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
+  }
+
+  //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
+  {
+    VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
+    statsData->setGrainSize_BOverA(data);
+    statsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
+  }
+
+  //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
+  {
+    VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
+    statsData->setGrainSize_COverA(data);
+    statsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
+  }
+
+  //err = m_COverBPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
+  {
+    VectorOfFloatArray data = m_COverBPlot->getStatisticsData();
+    statsData->setGrainSize_COverB(data);
+    statsData->setCOverB_DistType(m_COverBPlot->getDistributionType());
+  }
+
+ // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+  {
+    VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
+    statsData->setGrainSize_Neighbors(data);
+    statsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
+  }
+
+
+  //err = m_ODFWidget->writeDataToHDF5(writer);
+  m_ODFWidget->getOrientationData(statsData);
+
+
+  err = m_AxisODFWidget->getOrientationData(statsData);
+
   return retErr;
 }
 
