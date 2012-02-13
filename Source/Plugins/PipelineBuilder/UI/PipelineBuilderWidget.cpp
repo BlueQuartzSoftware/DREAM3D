@@ -29,6 +29,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "PipelineBuilderWidget.h"
 
+#include <string>
+#include <set>
 
 //-- Qt Includes
 #include <QtCore/QFileInfo>
@@ -104,6 +106,20 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("PipelineBuilder");
 
+  qint32 count = m_FilterWidgetLayout->count();
+  for(qint32 i = 0; i < count; ++i)
+  {
+    QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
+    QFilterWidget* fw = qobject_cast<QFilterWidget*>(w);
+    if (fw)
+    {
+      QString name = QString::fromStdString(fw->getFilter()->getNameOfClass() );
+      prefs.beginGroup(name);
+      prefs.setValue("Test", "Some Value");
+      prefs.endGroup();
+    }
+  }
+
   prefs.endGroup();
 }
 
@@ -129,6 +145,7 @@ void PipelineBuilderWidget::setupGui()
   m_FilterWidgetLayout->setSpacing(15);
   m_FilterWidgetLayout->setObjectName(QString::fromUtf8("verticalLayout"));
 
+
   // Get the QFilterWidget Mangager Instance
   QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
 
@@ -142,12 +159,11 @@ void PipelineBuilderWidget::setupGui()
   {
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
-
     groupToItem.insert(QString::fromStdString(*iter), filterGroup);
   }
   library->setExpanded(true);
 
-  toggleDocs->setChecked(true);
+  toggleDocs->setChecked(false);
   on_toggleDocs_clicked();
 
   connect(scrollArea, SIGNAL(filterDropped(QString)),
@@ -180,8 +196,133 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
     QListWidgetItem* fitlerItem = new QListWidgetItem(filterList);
     fitlerItem->setText(QString::fromStdString((*factory).first));
   }
+}
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem * item, QListWidgetItem * previous )
+{
+  if (NULL == item) { return; }
+  QString filterName = item->text();
+  QFilterWidgetManager::Pointer wm = QFilterWidgetManager::Instance();
+  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
+  AbstractFilter::Pointer filter = wf->getFilterInstance();
+  if (NULL == filter.get())
+  {
+    helpTextEdit->setHtml("");
+    return;
+  }
+
+  QString html;
+  html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">");
+  html.append("<html>");
+  html.append("<head>");
+  html.append("<meta name=\"qrichtext\" content=\"1\" />");
+  html.append("<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>");
+  html.append("</head>");
+  html.append("<body>\n");
+  html.append("<h3>");
+  html.append(filter->getHumanLabel().c_str());
+  html.append("</h3>");
+
+
+  DataContainer::Pointer m = DataContainer::New();
+  filter->setDataContainer(m.get());
+  filter->preflight();
+
+  {
+    std::set<std::string> list = filter->getRequiredCellData();
+    if(list.size() > 0)
+    {
+      html.append("<h4>Required Cell Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        html.append("<li>");
+        html.append(QString::fromStdString(*iter));
+        html.append("</li>");
+      }
+      html.append("</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = filter->getCreatedCellData();
+    if(list.size() > 0)
+    {
+      html.append("<h4>Created Cell Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        html.append("<li>");
+        html.append(QString::fromStdString(*iter));
+        html.append("</li>");
+      }
+      html.append("</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = filter->getRequiredFieldData();
+    if(list.size() > 0)
+    {
+      html.append("<h4>Required Field Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        html.append("<li>");
+        html.append(QString::fromStdString(*iter));
+        html.append("</li>");
+      }
+      html.append("</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = filter->getCreatedFieldData();
+    if(list.size() > 0)
+    {
+      html.append("<h4>Created Field Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        html.append("<li>");
+        html.append(QString::fromStdString(*iter));
+        html.append("</li>");
+      }
+      html.append("</ul>");
+    }
+  }
+
+  {
+    std::set<std::string> list = filter->getRequiredEnsembleData();
+    if(list.size() > 0)
+    {
+      html.append("<h4>Required Ensemble Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        html.append("<li>");
+        html.append(QString::fromStdString(*iter));
+        html.append("</li>");
+      }
+      html.append("</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = filter->getCreatedEnsembleData();
+    if(list.size() > 0)
+    {
+      html.append("<h4>Created Ensemble Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        html.append("<li>");
+        html.append(QString::fromStdString(*iter));
+        html.append("</li>");
+      }
+      html.append("</ul>");
+    }
+  }
+
+
+  filter->setDataContainer(NULL);
+
+  html.append("</body></html>\n");
+  helpTextEdit->setHtml(html);
 }
 
 // -----------------------------------------------------------------------------
@@ -326,7 +467,6 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -335,12 +475,11 @@ void PipelineBuilderWidget::on_m_LoadSettingsBtn_clicked()
   QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"),
                                                  m_OpenDialogLastDirectory,
                                                  tr("Settings File (*.txt)") );
-  if ( true == file.isEmpty() ){  return;  }
+  if ( true == file.isEmpty() ) { return; }
   QSettings prefs(file, QSettings::IniFormat, this);
   readSettings(prefs);
-  // Do any additional validation necessary
-
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -350,12 +489,10 @@ void PipelineBuilderWidget::on_m_SaveSettingsBtn_clicked()
   QString file = QFileDialog::getSaveFileName(this, tr("Save PipelineBuilder Settings"),
                                               proposedFile,
                                               tr("*.txt") );
-  if ( true == file.isEmpty() ){ return;  }
-
+  if ( true == file.isEmpty() ) { return; }
   QSettings prefs(file, QSettings::IniFormat, this);
   writeSettings(prefs);
 }
-
 
 // -----------------------------------------------------------------------------
 //

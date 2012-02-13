@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     virtual const std::string getHumanLabel() { return "Read Grain Ids from Dx File"; }
 
     virtual void setupFilterOptions();
+    virtual void preflight();
 
   protected:
     DxReader();

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DATACONTAINERWRITER_H_
-#define DATACONTAINERWRITER_H_
+#ifndef _DATACONTAINERWRITER_H_
+#define _DATACONTAINERWRITER_H_
 
 #include <string>
 
@@ -152,4 +152,4 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
 };
 
-#endif /* DATACONTAINERWRITER_H_ */
+#endif /* _DATACONTAINERWRITER_H_ */

@@ -66,6 +66,8 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
 
     virtual void setupFilterOptions();
 
+    virtual void preflight();
+
   protected:
     PhWriter();
 
