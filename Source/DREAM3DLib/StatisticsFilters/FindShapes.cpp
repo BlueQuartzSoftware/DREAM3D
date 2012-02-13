@@ -38,8 +38,9 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 
 
 const static float m_pi = static_cast<float>(M_PI);
@@ -86,7 +87,27 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  if(getErrorCondition() == -301)
+  {
+	setErrorCondition(0);
+	FindBoundingBoxGrains::Pointer find_boundingboxfields = FindBoundingBoxGrains::New();
+	find_boundingboxfields->setObservers(this->getObservers());
+	find_boundingboxfields->setDataContainer(getDataContainer());
+	if(preflight == true) find_boundingboxfields->preflight();
+	if(preflight == false) find_boundingboxfields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -302)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -301, int32_t, Int32ArrayType, fields, 1);
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
