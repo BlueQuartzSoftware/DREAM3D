@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
 
 const static float m_pi = M_PI;
 
@@ -72,6 +73,16 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  if(getErrorCondition() == -301)
+  {
+	setErrorCondition(0);
+	FindBoundingBoxGrains::Pointer find_boundingboxfields = FindBoundingBoxGrains::New();
+	find_boundingboxfields->setObservers(this->getObservers());
+	find_boundingboxfields->setDataContainer(getDataContainer());
+	if(preflight == true) find_boundingboxfields->preflight();
+	if(preflight == false) find_boundingboxfields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
@@ -243,6 +254,7 @@ void FindSizes::find_sizes2D()
   for (size_t i = 1; i < numensembles; i++)
   {
 	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
+	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
   }
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -255,7 +267,7 @@ void FindSizes::find_sizes2D()
   {
 	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
 	  sddiam[i] = sqrt(sddiam[i]);
-	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
+	  statsDataArray[i]->setGrainSizeStdDev(sddiam[i]);
   }
 }
 
