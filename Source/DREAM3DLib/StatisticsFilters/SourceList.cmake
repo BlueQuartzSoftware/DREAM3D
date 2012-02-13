@@ -19,7 +19,6 @@ SET (StatisticsFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/LoadVolume.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindLocalMisorientationGradients.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/WriteH5StatsFile.h
 )
@@ -40,7 +39,6 @@ SET (DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/LoadVolume.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindLocalMisorientationGradients.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/WriteH5StatsFile.cpp
 )
