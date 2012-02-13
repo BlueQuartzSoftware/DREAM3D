@@ -46,7 +46,7 @@ FindBoundingBoxGrains::FindBoundingBoxGrains() :
 AbstractFilter(),
 m_Centroids(NULL),
 m_SurfaceFields(NULL),
-m_UnbiasedFields(NULL)
+m_BiasedFields(NULL)
 {
 }
 
@@ -69,7 +69,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, UnbiasedFields, ss, bool, BoolArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, bool, BoolArrayType, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -164,12 +164,12 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
   }
   for (size_t j = 1; j < size; j++)
   {
-	if(m_Centroids[3*j] <= boundbox[1]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j] >= boundbox[2]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j+1] <= boundbox[3]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j+1] >= boundbox[4]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j+2] <= boundbox[5]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j+2] >= boundbox[6]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j] <= boundbox[1]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j] >= boundbox[2]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j+1] <= boundbox[3]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j+1] >= boundbox[4]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j+2] <= boundbox[5]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j+2] >= boundbox[6]) m_BiasedFields[j] = true;
   }
 }
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
@@ -218,9 +218,9 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
   }
   for (size_t j = 1; j < size; j++)
   {
-	if(m_Centroids[3*j] <= boundbox[1]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j] >= boundbox[2]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j+1] <= boundbox[3]) m_UnbiasedFields[j] = true;
-	if(m_Centroids[3*j+1] >= boundbox[4]) m_UnbiasedFields[j] = true;
+	if(m_Centroids[3*j] <= boundbox[1]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j] >= boundbox[2]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j+1] <= boundbox[3]) m_BiasedFields[j] = true;
+	if(m_Centroids[3*j+1] >= boundbox[4]) m_BiasedFields[j] = true;
   }
 }

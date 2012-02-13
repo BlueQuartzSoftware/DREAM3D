@@ -316,14 +316,12 @@ void FilterPipeline::execute()
 {
   int err = 0;
 
-#if 0
   // Run the preflight first to make sure we can run this combination of filters
   err = preflightPipeline();
   if (err < 0)
   {
     return;
   }
-#endif
 
   // Create the DataContainer object
   if(NULL == m_DataContainer.get())

@@ -51,7 +51,7 @@ m_NumNeighbors(NULL),
 m_Phases(NULL),
 m_Neighborhoods(NULL),
 m_Active(NULL),
-m_UnbiasedFields(NULL),
+m_BiasedFields(NULL),
 m_EquivalentDiameters(NULL),
 m_AspectRatios(NULL),
 m_Schmids(NULL),
@@ -179,7 +179,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
   }
   for(size_t iter=1;iter<numgrains;iter++)
   {
-	if (m_UnbiasedFields[iter] == false && m_Active[iter] == true)
+	if (m_BiasedFields[iter] == false && m_Active[iter] == true)
 	{
 	  int phase = m_Phases[iter];
 	  float diam = m_EquivalentDiameters[iter];
@@ -216,7 +216,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 	  }
 	  for (size_t i = 1; i < numgrains; i++)
 	  {
-		if (m_UnbiasedFields[i] == false && m_Active[i] == true && m_Phases[i] == static_cast<int>(iter) )
+		if (m_BiasedFields[i] == false && m_Active[i] == true && m_Phases[i] == static_cast<int>(iter) )
 		{
 		  actualgrains++;
 		  float diam = m_EquivalentDiameters[i];
@@ -269,7 +269,7 @@ void WriteH5StatsFile::write_h5statsfile(H5StatsWriter::Pointer h5io, float size
 	  float sdlogdiam = 0;
 	  for (size_t j = 1; j < numgrains; j++)
 	  {
-		if (m_UnbiasedFields[j] == false && m_Active[j] == true && m_Phases[j] == static_cast<int>(iter) )
+		if (m_BiasedFields[j] == false && m_Active[j] == true && m_Phases[j] == static_cast<int>(iter) )
 		{
 		  float diam = m_EquivalentDiameters[j];
 		  float logdiam = log(diam);
@@ -369,7 +369,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
   }
   for(size_t iter=1;iter<numgrains;iter++)
   {
-	if (m_UnbiasedFields[iter] == false && m_Active[iter] == true)
+	if (m_BiasedFields[iter] == false && m_Active[iter] == true)
 	{
 	  int phase = m_Phases[iter];
 	  float diam = m_EquivalentDiameters[iter];
@@ -403,7 +403,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
     }
     for (size_t i = 1; i < numgrains; i++)
     {
-      if (m_UnbiasedFields[i] == false && m_Active[i] == true && m_Phases[i] == static_cast<int>(iter) )
+      if (m_BiasedFields[i] == false && m_Active[i] == true && m_Phases[i] == static_cast<int>(iter) )
       {
         actualgrains++;
         float diam = m_EquivalentDiameters[i];
@@ -444,7 +444,7 @@ void WriteH5StatsFile::write_h5statsfile2D(H5StatsWriter::Pointer h5io, float si
     float sdlogdiam = 0;
     for (size_t j = 1; j < numgrains; j++)
     {
-      if (m_UnbiasedFields[j] == false && m_Active[j] == true && m_Phases[j] == static_cast<int>(iter) )
+      if (m_BiasedFields[j] == false && m_Active[j] == true && m_Phases[j] == static_cast<int>(iter) )
       {
         float diam = m_EquivalentDiameters[j];
         float logdiam = log(diam);

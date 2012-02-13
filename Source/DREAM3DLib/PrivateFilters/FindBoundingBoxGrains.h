@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
   private:
     float* m_Centroids;
     bool* m_SurfaceFields;
-    bool* m_UnbiasedFields;
+    bool* m_BiasedFields;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
