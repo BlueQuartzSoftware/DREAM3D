@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT WriteH5StatsFile : public AbstractFilter
     int32_t* m_Phases;
     int32_t* m_Neighborhoods;
     bool* m_Active;
-    bool* m_UnbiasedFields;
+    bool* m_BiasedFields;
     float* m_EquivalentDiameters;
     float* m_AspectRatios;
     float* m_Schmids;

@@ -38,6 +38,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 
 const static float m_pi = M_PI;
 
@@ -71,6 +73,28 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   DataContainer* m = getDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  if(getErrorCondition() == -301)
+  {
+	setErrorCondition(0);
+	FindBoundingBoxGrains::Pointer find_boundingboxfields = FindBoundingBoxGrains::New();
+	find_boundingboxfields->setObservers(this->getObservers());
+	find_boundingboxfields->setDataContainer(getDataContainer());
+	if(preflight == true) find_boundingboxfields->preflight();
+	if(preflight == false) find_boundingboxfields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -302)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -301, int32_t, Int32ArrayType, fields, 1);
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
@@ -78,10 +102,10 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    StatsDataArray::Pointer p = StatsDataArray::New();
-    m_StatsDataArray = p.get();
-    m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
-    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+	StatsDataArray::Pointer p = StatsDataArray::New();
+	m_StatsDataArray = p.get();
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
   setErrorMessage(ss.str());
@@ -131,9 +155,19 @@ void FindSizes::find_sizes()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float radcubed;
   float diameter;
+  std::vector<float> avgdiam;
+  std::vector<float> sddiam;
+  std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  avgdiam.resize(numensembles,0);
+  sddiam.resize(numensembles,0);
+  unbiasedcount.resize(numensembles,0);
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);
@@ -158,6 +192,29 @@ void FindSizes::find_sizes()
     radcubed = m_Volumes[i]/vol_term;
     diameter = 2.0f*powf(radcubed, 0.3333333333f);
     m_EquivalentDiameters[i] = diameter;
+	if(m_BiasedFields[i] == false)
+	{
+		unbiasedcount[m_Phases[i]]++;
+		avgdiam[m_Phases[i]] = avgdiam[m_Phases[i]] + m_EquivalentDiameters[i];
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
+	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	if(m_BiasedFields[i] == false)
+	{
+		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((m_EquivalentDiameters[i]-avgdiam[m_Phases[i]])*(m_EquivalentDiameters[i]-avgdiam[m_Phases[i]]));
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
+	  sddiam[i] = sqrt(sddiam[i]);
+	  statsDataArray[i]->setGrainSizeStdDev(sddiam[i]);
   }
 }
 void FindSizes::find_sizes2D()
@@ -165,9 +222,19 @@ void FindSizes::find_sizes2D()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float radsquared;
   float diameter;
+  std::vector<float> avgdiam;
+  std::vector<float> sddiam;
+  std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  avgdiam.resize(numensembles,0);
+  sddiam.resize(numensembles,0);
+  unbiasedcount.resize(numensembles,0);
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
   float* graincounts = m_GrainCounts->GetPointer(0);
@@ -189,6 +256,29 @@ void FindSizes::find_sizes2D()
     radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;
+	if(m_BiasedFields[i] == false)
+	{
+		unbiasedcount[m_Phases[i]]++;
+		avgdiam[m_Phases[i]] = avgdiam[m_Phases[i]] + m_EquivalentDiameters[i];
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
+	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	if(m_BiasedFields[i] == false)
+	{
+		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((m_EquivalentDiameters[i]-avgdiam[m_Phases[i]])*(m_EquivalentDiameters[i]-avgdiam[m_Phases[i]]));
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
+	  sddiam[i] = sqrt(sddiam[i]);
+	  statsDataArray[i]->setGrainSizeStdDev(sddiam[i]);
   }
 }
 
