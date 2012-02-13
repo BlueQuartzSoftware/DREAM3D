@@ -76,8 +76,9 @@ void QFilterListWidget::performDrag()
 
         QDrag *drag = new QDrag(this);
         drag->setMimeData(mimeData);
-        if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
-            delete item;
+        drag->exec(Qt::CopyAction);
+//        if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
+//            delete item;
     }
 }
 

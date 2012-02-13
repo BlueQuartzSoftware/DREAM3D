@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     virtual const std::string getHumanLabel() { return "Write Grain Ids as Dx File"; }
 
     virtual void setupFilterOptions();
+    virtual void preflight();
 
   protected:
     DxWriter();

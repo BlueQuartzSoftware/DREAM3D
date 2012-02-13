@@ -64,6 +64,12 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
       return w.getFilter()->getGroupName();
     }
 
+    AbstractFilter::Pointer getFilterInstance()
+    {
+      Widget w;
+      return w.getFilter();
+    }
+
   protected:
   QFilterWidgetFactory() {}
 
