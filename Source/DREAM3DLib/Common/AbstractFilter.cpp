@@ -116,7 +116,51 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
   return contains;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addRequiredCellData(const std::string &name)
+{
+  m_RequiredCellData.insert(name);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addCreatedCellData(const std::string &name)
+{
+  m_CreatedCellData.insert(name);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addRequiredFieldData(const std::string &name)
+{
+  m_RequiredFieldData.insert(name);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addCreatedFieldData(const std::string &name)
+{
+  m_CreatedFieldData.insert(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addRequiredEnsembleData(const std::string &name)
+{
+  m_RequiredEnsembleData.insert(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addCreatedEnsembleData(const std::string &name)
+{
+  m_CreatedEnsembleData.insert(name);
+}
 

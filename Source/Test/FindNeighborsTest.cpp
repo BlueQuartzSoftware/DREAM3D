@@ -251,7 +251,7 @@ void TestFindNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestLoadVolume()
+void TestDataContainerReader()
 {
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();
@@ -296,7 +296,7 @@ int main(int argc, char **argv) {
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
   DREAM3D_REGISTER_TEST( TestFindNeighbors() );
-  DREAM3D_REGISTER_TEST( TestLoadVolume() );
+  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
 
 #if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );

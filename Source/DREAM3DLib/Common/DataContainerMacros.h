@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef DATACONTAINERMACROS_H_
-#define DATACONTAINERMACROS_H_
+#ifndef _DATACONTAINERMACROS_H_
+#define _DATACONTAINERMACROS_H_
 
 /**
  * @brief These are used in the filters to run checks on available arrays
@@ -45,25 +45,28 @@
 
 
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
+  {std::string _s(#Name); addRequired##DType(_s);\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   if (NULL == m_##Name ) {\
     ss << "Filter " << getNameOfClass() << " requires the data array '" << \
     #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
     ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
     setErrorCondition(err);\
-  }
+  }}
 
 #define GET_PREREQ_DATA_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size, NumComp)\
+  {std::string _s(#Name); addRequired##DType(_s);\
   m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   if (NULL == m_##Name##Post ) {\
     ss << "Filter " << getNameOfClass() << " requires the data array '" << \
     #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
     ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
     setErrorCondition(err);\
-  }
+  }}
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
   {\
+  std::string _s(#Name); addCreated##DType(_s);\
   int preFlightError = getErrorCondition();\
   std::string errorMsg = getErrorMessage();\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
@@ -86,6 +89,7 @@
 
 #define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
   {\
+  std::string _s(#Name); addCreated##DType(_s);\
   int preFlightError = getErrorCondition();\
   std::string errorMsg = getErrorMessage();\
   m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
@@ -245,7 +249,7 @@ type* valuePtr = NULL;\
 
 
 
-#endif /* DATACONTAINERMACROS_H_ */
+#endif /* _DATACONTAINERMACROS_H_ */
 
 
 /*

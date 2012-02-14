@@ -70,7 +70,7 @@
         <enum>QAbstractItemView::DragOnly</enum>
        </property>
        <property name="defaultDropAction">
-        <enum>Qt::CopyAction</enum>
+        <enum>Qt::ActionMask</enum>
        </property>
        <property name="alternatingRowColors">
         <bool>true</bool>
@@ -80,6 +80,9 @@
        </property>
        <property name="horizontalScrollMode">
         <enum>QAbstractItemView::ScrollPerPixel</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -113,7 +116,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QPushButton" name="m_LoadSettingsBtn">
        <property name="text">
-        <string>Load Preset ...</string>
+        <string>Load Pipeline ...</string>
        </property>
       </widget>
      </item>
@@ -136,7 +139,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QPushButton" name="m_SaveSettingsBtn">
        <property name="text">
-        <string>Save Preset ...</string>
+        <string>Save Pipeline ...</string>
        </property>
       </widget>
      </item>
