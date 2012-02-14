@@ -67,6 +67,8 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 
     virtual void setupFilterOptions();
 
+    virtual void preflight();
+
   protected:
     PhReader();
 

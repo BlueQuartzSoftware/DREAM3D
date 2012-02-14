@@ -59,6 +59,7 @@ class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Write Grain IDs to Vtk File"; }
     virtual void setupFilterOptions();
+    virtual void preflight();
 
   protected:
     VtkGrainIdWriter();

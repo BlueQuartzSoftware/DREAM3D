@@ -47,9 +47,9 @@ class QTreeWidgetItem;
 class QFilterWidget;
 
 /**
- * @class PipelineBuilderWidget PipelineBuilderWidget.h AIM/GUI/PipelineBuilderWidget.h
+ * @class PipelineBuilderWidget PipelineBuilderWidget.h PipelineBuilder/UI/PipelineBuilderWidget.h
  * @brief This class represents the User Interface for the Synthetic Grain Generator module
- * of the AIMRepresentation program. The user interface subclasses QFrame which
+ * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 30, 2011
@@ -95,6 +95,8 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
 
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
+    void on_filterList_currentItemChanged( QListWidgetItem * item, QListWidgetItem * previous );
+
 
     void on_toggleDocs_clicked();
 

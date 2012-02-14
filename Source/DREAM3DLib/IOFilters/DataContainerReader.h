@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DATACONTAINER_READER_H_
-#define DATACONTAINER_READER_H_
+#ifndef _DATACONTAINER_READER_H_
+#define _DATACONTAINER_READER_H_
 
 #include <string>
 
@@ -87,4 +87,4 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
 };
 
-#endif /* DATACONTAINER_READER_H_ */
+#endif /* _DATACONTAINER_READER_H_ */
