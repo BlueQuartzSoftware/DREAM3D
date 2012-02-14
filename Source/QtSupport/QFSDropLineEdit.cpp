@@ -76,6 +76,7 @@ void QFSDropLineEdit::dropEvent(QDropEvent *event)
 			fName = urlList[0].toLocalFile(); // convert first QUrl to local path
 			info.setFile( fName ); // information about file
 			 setText( fName ); // if is file, setText
+			 emit textChanged(fName);
 		}
 	}
 

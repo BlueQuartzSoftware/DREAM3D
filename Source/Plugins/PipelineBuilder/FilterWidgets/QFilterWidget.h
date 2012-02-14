@@ -49,6 +49,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#include "QtSupport/QFSDropLineEdit.h"
 
 
 #define FILTER_PROPERTY_WRAPPER(type, name, filter_var)\
