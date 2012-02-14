@@ -240,7 +240,6 @@ MAKE_FILTER_TEST(  FindDeformationStatistics, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindSchmids, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindShapes, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindSizes, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  LoadVolume, PASS)
 MAKE_FILTER_TEST(  FindLocalMisorientationGradients, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindSurfaceGrains, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  WriteH5StatsFile, FAIL_IS_PASS)
@@ -280,7 +279,6 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( FindSchmids_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindShapes_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindSizes_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( LoadVolume_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindLocalMisorientationGradients_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindSurfaceGrains_PreFlightTest() );
   DREAM3D_REGISTER_TEST( WriteH5StatsFile_PreFlightTest() );
