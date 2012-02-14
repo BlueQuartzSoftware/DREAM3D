@@ -54,12 +54,13 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
-#include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -98,7 +99,7 @@ std::string getH5EbsdFile()
 }
 
 int getZStartIndex() { return 1; }
-int getZEndIndex() { return 117; }
+int getZEndIndex() { return 10; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -259,9 +260,16 @@ void TestLoadVolume()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  LoadVolume::Pointer load_volume = LoadVolume::New();
-  load_volume->setInputFile(UnitTest::FindNeighborTest::OutputFile);
-  pipeline->pushBack(load_volume);
+  DataContainerReader::Pointer h5Reader = DataContainerReader::New();
+  h5Reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
+  pipeline->pushBack(h5Reader);
+
+  FindSizes::Pointer find_sizes = FindSizes::New();
+  pipeline->pushBack(find_sizes);
+
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
+  pipeline->pushBack(writer);
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
   int err = pipeline->preflightPipeline();
