@@ -42,9 +42,8 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
-#include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
 #include "DREAM3DLib/ManipulationFilters/CropVolume.h"
 #include "DREAM3DLib/ManipulationFilters/ChangeResolution.h"
 
@@ -112,9 +111,9 @@ void VolumeOps::execute()
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   FilterContainerType pipeline;
 
-  LoadVolume::Pointer load_volume = LoadVolume::New();
-  load_volume->setInputFile(m_H5InputFile);
-  pipeline.push_back(load_volume);
+  DataContainerReader::Pointer h5Reader = DataContainerReader::New();
+  h5Reader->setInputFile(m_H5InputFile);
+  pipeline.push_back(h5Reader);
 
 
   CropVolume::Pointer crop_volume = CropVolume::New();
