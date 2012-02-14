@@ -66,7 +66,7 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     FILTER_PROPERTY_WRAPPER(int, ZEndIndex, m_Filter) ;
 
     virtual void writeOptions(QSettings &prefs);
-
+    virtual void readOptions(QSettings &prefs);
 
   protected slots:
 
@@ -88,10 +88,10 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     LoadSlices::Pointer m_Filter;
     QualityMetricTableModel*    m_QualityMetricTableModel;
     bool                        m_phaseTypeEdited;
-    bool rotateslice;
-    bool reorderarray;
-    bool aligneulers;
-    QString m_OpenDialogLastDirectory;
+    bool                        rotateslice;
+    bool                        reorderarray;
+    bool                        aligneulers;
+    QString                     m_OpenDialogLastDirectory;
 
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);

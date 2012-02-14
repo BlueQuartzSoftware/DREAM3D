@@ -48,6 +48,8 @@
 #include <QtGui/QMouseEvent>
 
 
+#include "QtSupport/QR3DFileCompleter.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -70,40 +72,42 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 void QFilterWidget::changeStyle(bool selected)
 {
+  QString style;
 
-  QString style("QGroupBox{\n");
+  style.append("QGroupBox{\n");
 
-  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #E0E0E0, stop: 1 #FFFFFF);");
+  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC);");
+  style.append("background-image: url(:/filterWidgetBorder.png);");
+  style.append("background-position: top ;\n background-repeat: repeat-x;");
   if (selected)
    {
-    style.append("border: 3px solid purple;");
+    style.append("border: 2px solid purple;");
    }
   else {
-    style.append("border: 3px solid gray;");
+    style.append("border: 1px solid gray;");
+    style.append("margin: 1px;");
   }
   style.append("border-radius: 10px;");
-  style.append("padding: 6px;");
-  style.append("font: 75 italic 12pt \"Arial\";");
+  style.append("padding: 30 0 0 0px;");
+  style.append("font: 85 italic 12pt \"Arial\";");
   style.append("font-weight: bold;");
-  style.append("}");
+  style.append("}\n");
   style.append(" QGroupBox::title {");
-  style.append("    subcontrol-origin: margin;");
-  style.append("    subcontrol-position: top left; /* position at the top center */");
-  style.append("    padding: 4 4px;");
-  style.append("   background-color: rgba(255, 255, 255, 0);");
-  style.append(" }");
+  style.append("    subcontrol-origin: padding;");
+  style.append("    subcontrol-position: top left;");
+  style.append("    padding: 5 5px;");
+  style.append("    background-color: rgba(255, 255, 255, 0);");
+  style.append(" }\n");
   style.append("QGroupBox::indicator {");
   style.append("    width: 17px;");
   style.append("    height: 17px;");
-  style.append("}");
-  style.append("QGroupBox::indicator:unchecked { image: url(:/delete-corner.png);}");
-  style.append("QGroupBox::indicator:unchecked:pressed { image: url(:/delete-corner-pressed.png);}");
-  style.append("QGroupBox::indicator:checked { image: url(:/delete-corner.png);}");
-  style.append("QGroupBox::indicator:checked:pressed { image: url(:/delete-corner-pressed.png);}");
+  style.append("}\n");
+  style.append("\nQGroupBox::indicator:unchecked { image: url(:/delete-corner.png);}");
+  style.append("\nQGroupBox::indicator:unchecked:pressed { image: url(:/delete-corner-pressed.png);}");
+  style.append("\nQGroupBox::indicator:checked { image: url(:/delete-corner.png);}");
+  style.append("\nQGroupBox::indicator:checked:pressed { image: url(:/delete-corner-pressed.png);}");
 
   setStyleSheet(style);
-
-//  std::cout << "Style\n" << style.toStdString() << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +121,11 @@ void QFilterWidget::setupGui()
 
   setTitle(QString::fromStdString(getFilter()->getNameOfClass()));
   //setMouseTracking(true);
-  QFormLayout* frmLayout = new QFormLayout(this);
+
+  QVBoxLayout* vertLayout = new QVBoxLayout(this);
+
+  QFormLayout* frmLayout = new QFormLayout();
+  vertLayout->addLayout(frmLayout);
   frmLayout->setObjectName("QFilterWidget QFormLayout Layout");
 
   changeStyle(false);
@@ -160,48 +168,61 @@ void QFilterWidget::setupGui()
     }
     else if (wType == FilterOption::InputFileWidget)
     {
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      QGridLayout* gridLayout = new QGridLayout();
+      gridLayout->setContentsMargins(0,0,0,0);
 
-      QFrame* frame = new QFrame(this);
-      frame->setContentsMargins(0,0,0,0);
-      QGridLayout* frameLayout = new QGridLayout(frame);
-      frameLayout->setContentsMargins(0,0,0,0);
+      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
+      gridLayout->addWidget(label, 0, 0, 1, 1);
 
-      QPushButton* btn = new QPushButton("Select...", frame);
-      btn->setObjectName(QString::fromStdString(option->getPropertyName()));
-      frameLayout->addWidget(btn, 0, 0, 1, 1);
-      QSpacerItem* spacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
-      frameLayout->addItem(spacer, 0, 1, 1, 1);
-      QLabel* fp = new QLabel("Not Set", this);
+      QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getHumanLabel()));
-      fp->setWordWrap(true);
-      fp->setStyleSheet("QLabel {\nfont-weight: bold;\nfont-size: 10px;\n}");
-      frameLayout->addWidget(fp, 1, 0, 1, 2);
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, frame);
+      QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
+      fp->setCompleter(com);
+      QString theSlot("1");
+      theSlot.append("set");
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
+      theSlot.append("(const QString &)");
+      QObject::connect( com, SIGNAL(activated(const QString &)),
+                      this, theSlot.toAscii());
+      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+                        this, theSlot.toAscii());
+      gridLayout->addWidget(fp, 0, 1, 1, 1);
+
+      QPushButton* btn = new QPushButton("Select...");
+      btn->setObjectName(QString::fromStdString(option->getPropertyName()));
+      gridLayout->addWidget(btn, 0, 2, 1, 1);
+
+      vertLayout->addLayout(gridLayout);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectInputFile()));
       QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
     }
     else if (wType == FilterOption::OutputFileWidget)
     {
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      QGridLayout* gridLayout = new QGridLayout();
+      gridLayout->setContentsMargins(0,0,0,0);
 
-      QFrame* frame = new QFrame(this);
-      frame->setContentsMargins(0,0,0,0);
-      QGridLayout* frameLayout = new QGridLayout(frame);
-      frameLayout->setContentsMargins(0,0,0,0);
+      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
+      gridLayout->addWidget(label, 0, 0, 1, 1);
 
-      QPushButton* btn = new QPushButton("Save As...", frame);
-      btn->setObjectName(QString::fromStdString(option->getPropertyName()));
-      frameLayout->addWidget(btn, 0, 0, 1, 1);
-      QSpacerItem* spacer = new QSpacerItem(20, 40, QSizePolicy::Expanding, QSizePolicy::Minimum);
-      frameLayout->addItem(spacer, 0, 1, 1, 1);
-      QLabel* fp = new QLabel("Not Set", this);
+      QLineEdit* fp = new QLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getHumanLabel()));
-      fp->setWordWrap(true);
-      fp->setStyleSheet("QLabel {\nfont-weight: bold;\nfont-size: 10px;\n}");
-      frameLayout->addWidget(fp, 1, 0, 1, 2);
-      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, frame);
+      QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
+      fp->setCompleter(com);
+      QString theSlot("1");
+      theSlot.append("set");
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
+      theSlot.append("(const QString &)");
+
+      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+                        this, theSlot.toAscii());
+      gridLayout->addWidget(fp, 0, 1, 1, 1);
+
+      QPushButton* btn = new QPushButton("Save As...");
+      btn->setObjectName(QString::fromStdString(option->getPropertyName()));
+      gridLayout->addWidget(btn, 0, 2, 1, 1);
+
+      vertLayout->addLayout(gridLayout);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectOutputFile()));
       QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
@@ -346,7 +367,7 @@ void QFilterWidget::selectInputFile()
    {
      if ( (*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
      {
-       QLabel* lb = qFindChild<QLabel*>(this, QString::fromStdString((*iter)->getHumanLabel()));
+       QFSDropLineEdit* lb = qFindChild<QFSDropLineEdit*>(this, QString::fromStdString((*iter)->getHumanLabel()));
        if (lb)
        {
          lb->setText(file);
@@ -379,7 +400,7 @@ void QFilterWidget::selectOutputFile()
   {
     if ( (*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
     {
-      QLabel* lb = qFindChild<QLabel*>(this, QString::fromStdString((*iter)->getHumanLabel()));
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getHumanLabel()));
       if (lb)
       {
         lb->setText(file);
@@ -387,6 +408,19 @@ void QFilterWidget::selectOutputFile()
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#if 0
+void QFilterWidget::selectOutputFile(QString file)
+{
+  if (true == file.isEmpty()) { return;}
+  QObject* whoSent = sender();
+  bool ok = false;
+    ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
+}
+#endif
 
 // -----------------------------------------------------------------------------
 //

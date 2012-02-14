@@ -69,7 +69,7 @@ set (PipelineBuilderPlugin_UI_SRCS
 QT4_ADD_RESOURCES( PipelineBuilderPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
     
 QT4_WRAP_UI( PipelineBuilderPlugin_Generated_UI_HDRS 
-            ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.ui )
+            ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.ui)
 
 QT4_WRAP_CPP( PipelineBuilderPlugin_Generated_MOC_SRCS ${PipelineBuilderPlugin_UI_HDRS} )
 
