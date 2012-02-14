@@ -54,12 +54,13 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
-#include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
+
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -250,7 +251,7 @@ void TestFindNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestLoadVolume()
+void TestDataContainerReader()
 {
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();
@@ -259,9 +260,13 @@ void TestLoadVolume()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  LoadVolume::Pointer load_volume = LoadVolume::New();
-  load_volume->setInputFile(UnitTest::FindNeighborTest::OutputFile);
-  pipeline->pushBack(load_volume);
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
+  pipeline->pushBack(reader);
+
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
+  pipeline->pushBack(writer);
 
   std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
   int err = pipeline->preflightPipeline();
@@ -288,7 +293,7 @@ int main(int argc, char **argv) {
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
   DREAM3D_REGISTER_TEST( TestFindNeighbors() );
-  DREAM3D_REGISTER_TEST( TestLoadVolume() );
+  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
 
 #if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
