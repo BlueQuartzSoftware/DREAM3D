@@ -277,12 +277,21 @@ class GrainChecker
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshFilter::SurfaceMeshFilter() :
-            AbstractFilter(),
-    neigh(NULL), voxels(NULL), cSquare(NULL)
+AbstractFilter(),
+m_DeleteTempFiles(true),
+m_WriteSTLFile(true),
+m_OutputDirectory(""),
+m_OutputFilePrefix(""),
+neigh(NULL),
+voxels(NULL),
+cSquare(NULL)
 {
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 SurfaceMeshFilter::~SurfaceMeshFilter()
 {
   delete[] neigh;

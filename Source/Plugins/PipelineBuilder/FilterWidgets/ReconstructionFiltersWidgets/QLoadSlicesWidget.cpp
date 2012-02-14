@@ -434,3 +434,17 @@ void QLoadSlicesWidget::setupQualityMetricFilters()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QLoadSlicesWidget::writeOptions(QSettings &prefs)
+{
+  prefs.setValue("Filter_Name", "LoadSlices" );
+  prefs.setValue("H5EbsdFile", m_H5EbsdFile->text());
+  prefs.setValue("MisorientationTolerance", m_MisorientationTolerance->value() );
+  prefs.setValue("ZStartIndex", m_ZStartIndex->value());
+  prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
+
+}
+
+

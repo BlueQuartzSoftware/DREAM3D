@@ -99,7 +99,7 @@ std::string getH5EbsdFile()
 }
 
 int getZStartIndex() { return 1; }
-int getZEndIndex() { return 10; }
+int getZEndIndex() { return 117; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -181,7 +181,6 @@ void TestFindNeighbors()
   load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
   load_slices->setZStartIndex(getZStartIndex());
   load_slices->setZEndIndex(getZEndIndex());
-//  load_slices->setZEndIndex(10);
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
   load_slices->setMisorientationTolerance(m_MisorientationTolerance);

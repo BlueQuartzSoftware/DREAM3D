@@ -161,6 +161,7 @@ void LoadSlices::setupFilterOptions()
     option->setPropertyName("MisorientationTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   // Some how need to get the custom GUIs for the Phase Types and QualityMetric Filters
@@ -257,8 +258,6 @@ void LoadSlices::execute()
     m->setDimensions(dcDims);
     m->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
-    // The GUI code has already added 1 to the end index so nothing special needs to be done
-    // for this calculation
     dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
     m->setDimensions(dcDims);
     manufacturer = volumeInfoReader->getManufacturer();

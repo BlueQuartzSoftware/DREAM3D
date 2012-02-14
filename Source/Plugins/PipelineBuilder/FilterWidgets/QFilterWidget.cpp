@@ -42,13 +42,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QFormLayout>
 #include <QtGui/QGridLayout>
-#include <QtGui/QSpinBox>
-#include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
-#include <QtGui/QComboBox>
+
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
 #include <QtGui/QMouseEvent>
@@ -121,12 +115,13 @@ void QFilterWidget::setupGui()
 
   delete layout();
 
-  //setTitle(getFilter()->getNameOfClass());
+  setTitle(QString::fromStdString(getFilter()->getNameOfClass()));
   //setMouseTracking(true);
   QFormLayout* frmLayout = new QFormLayout(this);
   frmLayout->setObjectName("QFilterWidget QFormLayout Layout");
 
   changeStyle(false);
+  bool ok = false;
 
   std::vector<FilterOption::Pointer> options = getFilter()->getFilterOptions();
   int optIndex = 0;
@@ -148,6 +143,8 @@ void QFilterWidget::setupGui()
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditIntValue()));
+      QVariant v = property(option->getPropertyName().c_str());
+      le->setText(v.toString());
     }
     else if (wType == FilterOption::DoubleWidget)
     {
@@ -158,6 +155,8 @@ void QFilterWidget::setupGui()
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditDoubleValue()));
+      QVariant v = property(option->getPropertyName().c_str());
+      le->setText(v.toString());
     }
     else if (wType == FilterOption::InputFileWidget)
     {
@@ -180,6 +179,8 @@ void QFilterWidget::setupGui()
       frameLayout->addWidget(fp, 1, 0, 1, 2);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, frame);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectInputFile()));
+      QVariant v = property(option->getPropertyName().c_str());
+      fp->setText(v.toString());
     }
     else if (wType == FilterOption::OutputFileWidget)
     {
@@ -202,15 +203,18 @@ void QFilterWidget::setupGui()
       frameLayout->addWidget(fp, 1, 0, 1, 2);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, frame);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectOutputFile()));
+      QVariant v = property(option->getPropertyName().c_str());
+      fp->setText(v.toString());
     }
     else if (wType == FilterOption::BooleanWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QCheckBox* le = new QCheckBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
-      //le->setText(QString::fromStdString(option->getHumanLabel()));
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(stateChanged(int)), this, SLOT(updateQCheckBoxValue(int)));
+      QVariant v = property(option->getPropertyName().c_str());
+      le->setChecked(v.toBool());
     }
     else if (wType == FilterOption::IntConstrainedWidget)
     {
@@ -225,6 +229,8 @@ void QFilterWidget::setupGui()
       }
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(valueChanged(int)), this, SLOT(updateQSpinBoxValue(int)));
+      QVariant v = property(option->getPropertyName().c_str());
+      le->setValue(v.toInt());
     }
     else if (wType == FilterOption::DoubleContrainedWidget)
     {
@@ -239,6 +245,8 @@ void QFilterWidget::setupGui()
       }
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(valueChanged(double)), this, SLOT(updateQDoubleSpinBoxValue(double)));
+      QVariant v = property(option->getPropertyName().c_str());
+      le->setValue(v.toDouble());
     }
     else if (wType == FilterOption::ChoiceWidget)
     {
@@ -254,13 +262,15 @@ void QFilterWidget::setupGui()
       }
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
       connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
-
+      QVariant v = property(option->getPropertyName().c_str());
+      if (v.toInt(&ok) < cb->count()) {
+        cb->setCurrentIndex(v.toInt());
+      }
     }
     ++optIndex;
   }
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -284,8 +294,8 @@ AbstractFilter::Pointer QFilterWidget::getFilter()
 void QFilterWidget::updateQLineEditIntValue()
 {
   QObject* whoSent = sender();
-  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-      << whoSent->objectName().toStdString() << std::endl;
+//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+//      << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
@@ -299,15 +309,15 @@ void QFilterWidget::updateQLineEditIntValue()
 void QFilterWidget::updateQLineEditDoubleValue()
 {
   QObject* whoSent = sender();
-  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-      << whoSent->objectName().toStdString() << std::endl;
+//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+ //     << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
     ok = setProperty(whoSent->objectName().toStdString().c_str(), le->text().toDouble(&ok));
     if (false == ok)
     {
-      std::cout << "QLineEdit '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+  //    std::cout << "QLineEdit '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
     }
   }
 }
@@ -327,7 +337,7 @@ void QFilterWidget::selectInputFile()
   ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
   if (false == ok)
   {
-    std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+  //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
   // Now we need to find the specific filter that we are trying to set the value into
    AbstractFilter::Pointer f = getFilter();
@@ -359,7 +369,7 @@ void QFilterWidget::selectOutputFile()
   ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
   if (false == ok)
   {
-    std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+  //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
@@ -383,9 +393,20 @@ void QFilterWidget::selectOutputFile()
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateComboBoxValue(int v)
 {
-  assert(false);
-}
+  QObject* whoSent = sender();
+//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
+  if(cb)
+  {
+    bool ok = false;
+    ok = setProperty(whoSent->objectName().toStdString().c_str(), v);
+    if(false == ok)
+    {
+  //    std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
+    }
+  }
 
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -410,12 +431,12 @@ void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 void QFilterWidget::updateQCheckBoxValue(int v)
 {
   QObject* whoSent = sender();
-    std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-        << whoSent->objectName().toStdString() << std::endl;
-    QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
-    if(le) {
-      setProperty(whoSent->objectName().toStdString().c_str(), le->isChecked());
-    }
+ // std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
+  if(le)
+  {
+    setProperty(whoSent->objectName().toStdString().c_str(), le->isChecked());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -430,46 +451,19 @@ void  QFilterWidget::mousePressEvent ( QMouseEvent* event )
   event->setAccepted(true);
 }
 
-
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  QFilterWidget::mouseReleaseEvent ( QMouseEvent* event )
+void QFilterWidget::writeOptions(QSettings &prefs)
 {
 
-  std::cout << title().toStdString() << " mouseReleaseEvent" << std::endl;
-  event->setAccepted(true);
-
-  QPoint pos = event->pos();
-
-  std::cout << "Qpoint at Realease: " << pos.x() << ", " << pos.y() << std::endl;
-
- // changeStyle(true);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  QFilterWidget::mouseDoubleClickEvent ( QMouseEvent* event )
+void QFilterWidget::readOptions(QSettings &prefs)
 {
 
-  std::cout << title().toStdString() << " mouseDoubleClickEvent" << std::endl;
-  event->setAccepted(true);
-  changeStyle(false);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void  QFilterWidget::mouseMoveEvent ( QMouseEvent* event )
-{
-
-//  std::cout << title().toStdString() << " mouseMoveEvent" << std::endl;
-//  event->setAccepted(true);
-//  changeStyle(true);
-}
-#endif
-
-
 
