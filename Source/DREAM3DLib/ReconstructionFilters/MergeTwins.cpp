@@ -64,6 +64,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 MergeTwins::MergeTwins() :
 AbstractFilter(),
+m_AxisTolerance(1.0f),
+m_AngleTolerance(1.0f),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
@@ -101,6 +103,7 @@ void MergeTwins::setupFilterOptions()
     option->setPropertyName("AxisTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   {
@@ -109,6 +112,7 @@ void MergeTwins::setupFilterOptions()
     option->setPropertyName("AngleTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
 

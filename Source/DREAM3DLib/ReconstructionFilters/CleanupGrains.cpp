@@ -62,7 +62,7 @@ CleanupGrains::CleanupGrains() :
 AbstractFilter(),
 m_MinAllowedGrainSize(1),
 m_MinNumNeighbors(1),
-m_MisorientationTolerance(0.0f),
+m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
@@ -117,6 +117,7 @@ void CleanupGrains::setupFilterOptions()
     option->setHumanLabel("Misorientation Tolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
 

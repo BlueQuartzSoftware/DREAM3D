@@ -231,6 +231,7 @@ void PackGrainsGen2::setupFilterOptions()
     option->setPropertyName("NeighborhoodErrorWeight");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   {

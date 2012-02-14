@@ -65,10 +65,11 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     virtual ~AdjustVolume();
 
+    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Adjust Volume"; }
 
-    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
     virtual void setupFilterOptions();
 
@@ -88,7 +89,7 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     std::vector<int> gsizes;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    
+
     AdjustVolume(const AdjustVolume&); // Copy Constructor Not Implemented
     void operator=(const AdjustVolume&); // Operator '=' Not Implemented
 };

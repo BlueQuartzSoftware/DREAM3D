@@ -31,12 +31,9 @@ endmacro()
 # --------------------------------------------------------------------------
 # FilterManager Test
 # --------------------------------------------------------------------------
-if (TARGET FilterWidgets)
-
 set(FilterManagerTest_SRCS
     ${PipelineBuilderTest_SOURCE_DIR}/FilterManagerTest.cpp
 )
 add_executable(FilterManagerTest ${FilterManagerTest_SRCS} )
 target_link_libraries(FilterManagerTest FilterWidgets)
 
-endif()

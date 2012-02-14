@@ -65,15 +65,16 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
     FILTER_PROPERTY_WRAPPER(int, ZEndIndex, m_Filter) ;
 
+    virtual void writeOptions(QSettings &prefs);
+
+
   protected slots:
 
-  void on_addQualityMetric_clicked();
+    void on_addQualityMetric_clicked();
 
-  void on_removeQualityMetric_clicked();
+    void on_removeQualityMetric_clicked();
 
-  void m_SetSliceInfo();
-
-
+    void m_SetSliceInfo();
 
     // Auto Hookup Slots
     void on_m_H5EbsdBtn_clicked();

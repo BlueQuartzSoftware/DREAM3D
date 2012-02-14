@@ -61,6 +61,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
 AbstractFilter(),
+m_AlignmentMethod(DREAM3D::AlignmentMethod::UnknownAlignmentMethod),
+m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_PhasesC(NULL),
@@ -101,7 +103,6 @@ void AlignSections::setupFilterOptions()
     option->setPropertyName("AlignmentMethod");
     option->setWidgetType(FilterOption::ChoiceWidget);
     option->setValueType("unsigned int");
-    option->setCastableValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Outer Boundary");
     choices.push_back("Misorientation");
@@ -115,6 +116,7 @@ void AlignSections::setupFilterOptions()
     option->setPropertyName("MisorientationTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   setFilterOptions(options);

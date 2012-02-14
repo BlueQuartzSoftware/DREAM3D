@@ -44,6 +44,9 @@
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
 FileReader(),
+m_Comment("DREAM3D Generated File"),
+m_DatasetType(""),
+m_FileIsBinary(true),
 m_GrainIdScalarName(DREAM3D::CellData::GrainIds)
 {
 

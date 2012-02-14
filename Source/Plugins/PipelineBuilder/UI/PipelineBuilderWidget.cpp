@@ -93,9 +93,35 @@ PipelineBuilderWidget::~PipelineBuilderWidget()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
+  // Clear Any Existing Pipeline
+  qint32 count = m_FilterWidgetLayout->count();
+  for(qint32 i = count - 1; i >= 0; --i)
+  {
+    QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
+    m_FilterWidgetLayout->removeWidget(w);
+    w->deleteLater();
+  }
+
   prefs.beginGroup("PipelineBuilder");
 
+  bool ok = false;
+  int filterCount = prefs.value("Number_Filters").toInt(&ok);
   prefs.endGroup();
+
+  if (false == ok) {filterCount = 0;}
+  for (int i = 0; i < filterCount; ++i)
+  {
+    QString gName = QString::number(i);
+
+    prefs.beginGroup(gName);
+
+    QString filterName = prefs.value("Filter_Name", "").toString();
+
+    addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+    m_SelectedFilterWidget->readOptions(prefs);
+
+    prefs.endGroup();
+  }
 
 }
 
@@ -107,20 +133,24 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
   prefs.beginGroup("PipelineBuilder");
 
   qint32 count = m_FilterWidgetLayout->count();
+  prefs.setValue("Number_Filters", count);
+  prefs.endGroup();
+
   for(qint32 i = 0; i < count; ++i)
   {
     QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
     QFilterWidget* fw = qobject_cast<QFilterWidget*>(w);
     if (fw)
     {
-      QString name = QString::fromStdString(fw->getFilter()->getNameOfClass() );
-      prefs.beginGroup(name);
-      prefs.setValue("Test", "Some Value");
+      //QString name = QString::fromStdString(fw->getFilter()->getNameOfClass() );
+      QString groupName = QString::number(i);
+      prefs.beginGroup(groupName);
+      fw->writeOptions(prefs);
       prefs.endGroup();
     }
   }
 
-  prefs.endGroup();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -486,11 +516,19 @@ void PipelineBuilderWidget::on_m_LoadSettingsBtn_clicked()
 void PipelineBuilderWidget::on_m_SaveSettingsBtn_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "PipelineBuilderSettings.txt";
-  QString file = QFileDialog::getSaveFileName(this, tr("Save PipelineBuilder Settings"),
+  QString filePath = QFileDialog::getSaveFileName(this, tr("Save PipelineBuilder Settings"),
                                               proposedFile,
                                               tr("*.txt") );
-  if ( true == file.isEmpty() ) { return; }
-  QSettings prefs(file, QSettings::IniFormat, this);
+  if ( true == filePath.isEmpty() ) { return; }
+
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  QFileInfo fi(filePath);
+  if (fi.exists() == true)
+  {
+    QFile f(filePath);
+    f.remove();
+  }
+  QSettings prefs(filePath, QSettings::IniFormat, this);
   writeSettings(prefs);
 }
 
