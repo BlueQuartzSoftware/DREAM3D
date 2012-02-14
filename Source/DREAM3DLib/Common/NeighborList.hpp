@@ -301,8 +301,11 @@ class NeighborList : public IDataArray
           //    T* end = start + nEle; // Get the pointer to the end of the array
           T* start = &(flat.front()) + currentStart;
           ::memcpy(dst, start, nEle * sizeof(T));
-
           currentStart += nEle;
+        }
+        else
+        {
+          _data[dIdx] = SharedVectorType(new VectorType(0));
         }
       }
 
