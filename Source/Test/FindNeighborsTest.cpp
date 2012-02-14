@@ -60,7 +60,7 @@
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
-
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -99,7 +99,7 @@ std::string getH5EbsdFile()
 }
 
 int getZStartIndex() { return 1; }
-int getZEndIndex() { return 117; }
+int getZEndIndex() { return 10; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -260,9 +260,12 @@ void TestDataContainerReader()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
-  pipeline->pushBack(reader);
+  DataContainerReader::Pointer h5Reader = DataContainerReader::New();
+  h5Reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
+  pipeline->pushBack(h5Reader);
+
+  FindSizes::Pointer find_sizes = FindSizes::New();
+  pipeline->pushBack(find_sizes);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);

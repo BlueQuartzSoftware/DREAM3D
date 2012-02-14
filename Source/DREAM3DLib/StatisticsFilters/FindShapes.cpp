@@ -39,8 +39,6 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
-#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
-#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 
 
 const static float m_pi = static_cast<float>(M_PI);
@@ -52,14 +50,14 @@ const static float m_pi = static_cast<float>(M_PI);
 FindShapes::FindShapes()  :
 AbstractFilter(),
 m_GrainIds(NULL),
+m_BiasedFields(NULL),
+m_Phases(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
 m_AxisLengths(NULL),
-m_Volumes(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
-m_AspectRatios(NULL),
-m_NumCells(NULL)
+m_AspectRatios(NULL)
 {
   graincenters = NULL;
   grainmoments = NULL;
@@ -86,36 +84,23 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
-  if(getErrorCondition() == -301)
+  bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
+  if (false == exists)
   {
-	setErrorCondition(0);
-	FindBoundingBoxGrains::Pointer find_boundingboxfields = FindBoundingBoxGrains::New();
-	find_boundingboxfields->setObservers(this->getObservers());
-	find_boundingboxfields->setDataContainer(getDataContainer());
-	if(preflight == true) find_boundingboxfields->preflight();
-	if(preflight == false) find_boundingboxfields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+	FindSizes::Pointer find_sizes = FindSizes::New();
+	find_sizes->setObservers(this->getObservers());
+	find_sizes->setDataContainer(getDataContainer());
+	if(preflight == true) find_sizes->preflight();
+	if(preflight == false) find_sizes->execute();
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
-  if(getErrorCondition() == -302)
-  {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -301, int32_t, Int32ArrayType, fields, 1);
-  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -300, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -300, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -300, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float, FloatArrayType, fields, 2);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -123,21 +108,6 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
   }
 
-  /*
-   * Mike Groeber. I am not sure where you want this check to occur, possibly in
-   * the preflight to let the user know they need to add the proper filters before
-   * this filter in the pipeline? But here is how you would check to see if a
-   * filter exists at any point before this filter with a given name.
-   */
-  bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
-  if (false == exists)
-  {
-    // Do something here to run the filter?
-
-    // We don't have access to the pipeline object but if we did we could simply
-    // insert the filter at the proper location for the user? Maybe that is better
-    // left up to the gui to decide.
-  }
 
   setErrorMessage(ss.str());
 }
@@ -193,8 +163,6 @@ void FindShapes::find_centroids()
   int64_t totalPoints = m->getTotalPoints();
   float x, y, z;
   int col, row, plane;
-  float radcubed;
-  float diameter;
 //  float allvol = 0.0;
   size_t numgrains = m->getNumFieldTuples();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
@@ -237,11 +205,6 @@ void FindShapes::find_centroids()
     m_Centroids[3 * i] = graincenters[i * 5 + 1];
     m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
     m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
-    m_NumCells[i] = static_cast<int>(graincenters[i * 5 + 0]);
-    m_Volumes[i] = (graincenters[i * 5 + 0] * res_scalar);
-    radcubed = m_Volumes[i] / vol_term;
-    diameter = 2.0f * powf(radcubed, 0.3333333333f);
-    m_EquivalentDiameters[i] = diameter;
   }
 }
 void FindShapes::find_centroids2D()
@@ -251,8 +214,6 @@ void FindShapes::find_centroids2D()
 
   float x, y;
   int col, row;
-  float radsquared;
-  float diameter;
   size_t numgrains = m->getNumFieldTuples();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
   m_GrainCenters->SetNumberOfComponents(5);
@@ -286,11 +247,7 @@ void FindShapes::find_centroids2D()
     graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
     m_Centroids[3*i] = graincenters[i*5 + 1];
     m_Centroids[3*i+1] = graincenters[i*5 + 2];
-    m_NumCells[i] = static_cast<int>(graincenters[i*5 + 0]);
-    m_Volumes[i] = (graincenters[i*5 + 0] * xRes * yRes);
-    radsquared = m_Volumes[i] / m_pi;
-    diameter = (2 * sqrt(radsquared));
-    m_EquivalentDiameters[i] = diameter;
+
   }
 }
 
@@ -392,6 +349,7 @@ void FindShapes::find_moments()
   }
   float sphere = (2000.0f*m_pi*m_pi)/9.0f;
   float konst1 =  (xRes / 2.0f) * (yRes / 2.0f) * (zRes / 2.0f);
+  float konst2 =  (xRes) * (yRes) * (zRes);
   for (size_t i = 1; i < numgrains; i++)
   {
     grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * konst1;
@@ -407,7 +365,7 @@ void FindShapes::find_moments()
     u011 = -grainmoments[i*6 + 4];
     u101 = -grainmoments[i*6 + 5];
     float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
-    float vol5 = m_Volumes[i];
+    float vol5 = graincenters[i*5 + 0]*konst2;
     vol5 = powf(vol5, 5);
     float omega3 = vol5 / o3;
     omega3 = omega3 / sphere;

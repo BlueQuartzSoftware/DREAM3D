@@ -66,7 +66,6 @@
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
 #include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/StatisticsFilters/LoadVolume.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 #include "DREAM3DLib/StatisticsFilters/FindSchmids.h"
@@ -483,9 +482,9 @@ void MicrostructureStatisticsWidget::setupPipeline()
   MAKE_OUTPUT_FILE_PATH( hdf5ResultsFile, DREAM3D::MicroStats::H5StatisticsFile, outDir, prefix)
 
 
-  LoadVolume::Pointer load_volume = LoadVolume::New();
-  load_volume->setInputFile(m_InputFile->text().toStdString());
-  m_FilterPipeline->pushBack(load_volume);
+  DataContainerReader::Pointer h5Reader = DataContainerReader::New();
+  h5Reader->setInputFile(m_InputFile->text().toStdString());
+  m_FilterPipeline->pushBack(h5Reader);
 
   FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
   m_FilterPipeline->pushBack(find_surfacegrains);
