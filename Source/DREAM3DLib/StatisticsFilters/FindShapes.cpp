@@ -105,9 +105,9 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-308);
   }
-
 
   setErrorMessage(ss.str());
 }
@@ -264,8 +264,10 @@ void FindShapes::find_moments()
   float u110 = 0;
   float u011 = 0;
   float u101 = 0;
-  std::vector<std::vector<float> > alphaomega3;
-  std::vector<std::vector<float> > betaomega3;
+  std::vector<VectorOfFloatArray> alphaomega3;
+  alphaomega3.resize(3);
+  alphaomega3[1].resize(DREAM3D::HDF5::BetaColumnCount);
+  std::vector<FloatArrayType::Pointer> betaomega3;
   std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
