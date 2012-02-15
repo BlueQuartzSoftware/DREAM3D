@@ -72,12 +72,11 @@ IDataArray::Pointer readH5Dataset(hid_t locId,
   {
     numElements *= dims[i];
   }
-  ptr = DataArray<T>::CreateArray(numElements);
+  ptr = DataArray<T>::CreateArray(numElements, datasetPath);
   if(dims.size() > 1)
   {
     ptr->SetNumberOfComponents(static_cast<int>(dims[1]));
   }
-  ptr->SetName(datasetPath);
 
   T* data = (T*)(ptr->GetVoidPointer(0));
   err = H5Lite::readPointerDataset(locId, datasetPath, data);

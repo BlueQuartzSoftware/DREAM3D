@@ -169,7 +169,7 @@ void FindSizes::find_sizes()
   sddiam.resize(numensembles,0);
   unbiasedcount.resize(numensembles,0);
 
-  DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
+  DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains, "GrainCounts");
   float* graincounts = m_GrainCounts->GetPointer(0);
 
 
@@ -236,7 +236,7 @@ void FindSizes::find_sizes2D()
   sddiam.resize(numensembles,0);
   unbiasedcount.resize(numensembles,0);
 
-  DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
+  DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains, "GrainCounts");
   float* graincounts = m_GrainCounts->GetPointer(0);
 
 

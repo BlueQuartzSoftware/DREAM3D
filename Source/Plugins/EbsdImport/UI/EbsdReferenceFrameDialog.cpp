@@ -174,7 +174,7 @@ void EbsdReferenceFrameDialog::loadEbsdData()
   uint32_t width = ebsdReader->getXDimension();
   uint32_t height = ebsdReader->getYDimension();
   uint32_t total = width *height;
-  DataArray<uint32_t>::Pointer rgbArray = DataArray<uint32_t>::CreateArray(total);
+  DataArray<uint32_t>::Pointer rgbArray = DataArray<uint32_t>::CreateArray(total, "rgbArray");
   rgbArray->SetNumberOfComponents(1);
   rgbArray->WritePointer(0, total);
   // Splat 0xFF across all the data

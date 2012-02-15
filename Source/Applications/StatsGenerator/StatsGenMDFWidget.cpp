@@ -328,21 +328,17 @@ int StatsGenMDFWidget::getMisrientationData(StatsData::Pointer statsData)
   }
   if (mdf.size() > 0)
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(mdf);
-    p->SetName(DREAM3D::HDF5::MisorientationBins);
+    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(mdf, DREAM3D::HDF5::MisorientationBins);
     statsData->setMisorientationBins(p);
 
     if(angles.size() > 0)
     {
-      FloatArrayType::Pointer anglesArray = FloatArrayType::FromStdVector(angles);
-      anglesArray->SetName(DREAM3D::HDF5::Angle);
+      FloatArrayType::Pointer anglesArray = FloatArrayType::FromStdVector(angles, DREAM3D::HDF5::Angle);
 
-      FloatArrayType::Pointer axisArray = FloatArrayType::FromStdVector(axes);
-      axisArray->SetName(DREAM3D::HDF5::Axis);
+      FloatArrayType::Pointer axisArray = FloatArrayType::FromStdVector(axes, DREAM3D::HDF5::Axis);
       axisArray->SetNumberOfComponents(3);
 
-      FloatArrayType::Pointer weightArray = FloatArrayType::FromStdVector(weights);
-      weightArray->SetName(DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer weightArray = FloatArrayType::FromStdVector(weights, DREAM3D::HDF5::Weight);
 
       VectorOfFloatArray mdfWeights;
       mdfWeights.push_back(anglesArray);

@@ -92,7 +92,7 @@ int H5VoxelGrainIdReader::readFile()
 
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::GrainIds);
 
   err = reader->readScalarData<int>(DREAM3D::CellData::GrainIds, grainIds->GetPointer(0));
   if(err < 0)

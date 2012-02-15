@@ -96,7 +96,7 @@ void SyntheticBuilder_PreFlight()
   size_t m_ZPoints = 128;
 
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
+  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
 
 
   float m_XResolution = 0.1f;

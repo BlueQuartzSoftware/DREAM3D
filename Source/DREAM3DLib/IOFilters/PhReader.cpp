@@ -152,7 +152,7 @@ int  PhReader::readFile()
   //The most simple thing todo is to read the entire dataset into one
   //long vector and then read that vector to assign values to the grid
   size_t index = 0;
-  Int32ArrayType::Pointer m_Data = Int32ArrayType::CreateArray(nx * ny * nz);
+  Int32ArrayType::Pointer m_Data = Int32ArrayType::CreateArray(nx * ny * nz, DREAM3D::CellData::GrainIds);
 
   while (getline(inFile, line, '\n') != NULL)
   {

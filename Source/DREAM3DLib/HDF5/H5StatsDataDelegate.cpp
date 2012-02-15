@@ -60,10 +60,8 @@ H5StatsDataDelegate::~H5StatsDataDelegate()
 // -----------------------------------------------------------------------------
 VectorOfFloatArray H5StatsDataDelegate::createBetaDistributionArrays()
 {
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0);
-  alphas->SetName(DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0);
-  betas->SetName(DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
   std::vector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(betas);
@@ -72,12 +70,9 @@ VectorOfFloatArray H5StatsDataDelegate::createBetaDistributionArrays()
 
 VectorOfFloatArray H5StatsDataDelegate::createPowerDistributionArrays()
 {
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0);
-  alphas->SetName(DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer ks = FloatArrayType::CreateArray(0);
-  ks->SetName(DREAM3D::HDF5::Exp_k);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0);
-  betas->SetName(DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
+  FloatArrayType::Pointer ks = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Exp_k);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
   std::vector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(ks);
@@ -87,10 +82,8 @@ VectorOfFloatArray H5StatsDataDelegate::createPowerDistributionArrays()
 
 VectorOfFloatArray H5StatsDataDelegate::createLogNormalDistributionArrays()
 {
-  FloatArrayType::Pointer avgs = FloatArrayType::CreateArray(0);
-  avgs->SetName(DREAM3D::HDF5::Average);
-  FloatArrayType::Pointer sd = FloatArrayType::CreateArray(0);
-  sd->SetName(DREAM3D::HDF5::StandardDeviation);
+  FloatArrayType::Pointer avgs = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Average);
+  FloatArrayType::Pointer sd = FloatArrayType::CreateArray(0, DREAM3D::HDF5::StandardDeviation);
   std::vector<FloatArrayType::Pointer> vect;
   vect.push_back(avgs);
   vect.push_back(sd);
@@ -180,8 +173,7 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
                                 data->getGrainSize_Omegas());
 
    // Read the Misorientation Bins
-   FloatArrayType::Pointer misoBins = FloatArrayType::CreateArray(0);
-   misoBins->SetName(DREAM3D::HDF5::MisorientationBins);
+   FloatArrayType::Pointer misoBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::MisorientationBins);
    err |= misoBins->readH5Data(groupId);
    if (err < 0)
    {
@@ -191,8 +183,7 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
    err |= readMDFWeights(groupId, data);
 
    // Read the ODF Data
-   FloatArrayType::Pointer odfBins = FloatArrayType::CreateArray(0);
-   odfBins->SetName(DREAM3D::HDF5::ODF);
+   FloatArrayType::Pointer odfBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::ODF);
    err |= odfBins->readH5Data(groupId);
    if (err < 0)
    {
@@ -202,8 +193,7 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
    err |= readODFWeights(groupId, data);
 
    // Read the Axis ODF Data
-   FloatArrayType::Pointer axisOdfBins = FloatArrayType::CreateArray(0);
-   axisOdfBins->SetName(DREAM3D::HDF5::AxisOrientation);
+   FloatArrayType::Pointer axisOdfBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::AxisOrientation);
    err |= axisOdfBins->readH5Data(groupId);
    if (err < 0)
    {
@@ -354,15 +344,12 @@ int H5StatsDataDelegate::readVectorOfArrays(hid_t pid, VectorOfFloatArray colDat
 int H5StatsDataDelegate::readMDFWeights(hid_t pid, StatsData* data)
 {
   int err = 0;
-  FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1);
-  angles->SetName(DREAM3D::HDF5::Angle);
+  FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Angle);
 
-  FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3);
-  axis->SetName(DREAM3D::HDF5::Axis);
+  FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3, DREAM3D::HDF5::Axis);
   axis->SetNumberOfComponents(3);
 
-  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1);
-  weight->SetName(DREAM3D::HDF5::Weight);
+  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Weight);
 
   VectorOfFloatArray mdfWeights;
   mdfWeights.push_back(angles);
@@ -388,16 +375,11 @@ int H5StatsDataDelegate::readODFWeights(hid_t pid, StatsData* data)
 
   int err = 0;
 
-  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0);
-  euler1->SetName(DREAM3D::HDF5::Euler1);
-  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0);
-  euler2->SetName(DREAM3D::HDF5::Euler2);
-  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0);
-  euler3->SetName(DREAM3D::HDF5::Euler3);
-  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0);
-  sigma->SetName(DREAM3D::HDF5::Sigma);
-  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0);
-  weight->SetName(DREAM3D::HDF5::Weight);
+  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler1);
+  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler2);
+  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler3);
+  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
+  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Weight);
 
   VectorOfFloatArray odfWeights;
   odfWeights.push_back(euler1);
@@ -428,16 +410,11 @@ int H5StatsDataDelegate::readAxisODFWeights(hid_t pid, StatsData* data)
 
   int err = 0;
 
-  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0);
-  euler1->SetName(DREAM3D::HDF5::Euler1);
-  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0);
-  euler2->SetName(DREAM3D::HDF5::Euler2);
-  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0);
-  euler3->SetName(DREAM3D::HDF5::Euler3);
-  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0);
-  sigma->SetName(DREAM3D::HDF5::Sigma);
-  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0);
-  weight->SetName(DREAM3D::HDF5::Weight);
+  FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler1);
+  FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler2);
+  FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler3);
+  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
+  FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Weight);
 
   VectorOfFloatArray odfWeights;
   odfWeights.push_back(euler1);
@@ -644,8 +621,7 @@ int H5StatsDataDelegate::writeBinNumbers(StatsData* data, hid_t groupId)
 int H5StatsDataDelegate::readBinNumbers(StatsData* data, hid_t groupId)
 {
   int err = 0;
-  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1);
-  p->SetName(DREAM3D::HDF5::BinNumber);
+  FloatArrayType::Pointer p = FloatArrayType::CreateArray(1, DREAM3D::HDF5::BinNumber);
   err = p->readH5Data(groupId);
   data->setBinNumbers(p);
   return err;
