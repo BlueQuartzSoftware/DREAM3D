@@ -161,12 +161,20 @@ void FindSizes::find_sizes()
   float diameter;
   std::vector<float> avgdiam;
   std::vector<float> sddiam;
+  std::vector<float> maxdiam;
+  std::vector<float> mindiam;
+  std::vector<float> binstepsize;
+  std::vector<FloatArrayType::Pointer> binnumbers;
   std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
   avgdiam.resize(numensembles,0);
   sddiam.resize(numensembles,0);
+  maxdiam.resize(numensembles,0);
+  mindiam.resize(numensembles,1000000);
+  binstepsize.resize(numensembles,0);
+  binnumbers.resize(numensembles);
   unbiasedcount.resize(numensembles,0);
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains);
@@ -195,7 +203,9 @@ void FindSizes::find_sizes()
 	if(m_BiasedFields[i] == false)
 	{
 		unbiasedcount[m_Phases[i]]++;
-		avgdiam[m_Phases[i]] = avgdiam[m_Phases[i]] + m_EquivalentDiameters[i];
+		avgdiam[m_Phases[i]] = avgdiam[m_Phases[i]] + logf(m_EquivalentDiameters[i]);
+		if(m_EquivalentDiameters[i] > maxdiam[m_Phases[i]]) maxdiam[m_Phases[i]] = m_EquivalentDiameters[i];
+		if(m_EquivalentDiameters[i] < mindiam[m_Phases[i]]) mindiam[m_Phases[i]] = m_EquivalentDiameters[i];
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -207,7 +217,7 @@ void FindSizes::find_sizes()
   {
 	if(m_BiasedFields[i] == false)
 	{
-		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((m_EquivalentDiameters[i]-avgdiam[m_Phases[i]])*(m_EquivalentDiameters[i]-avgdiam[m_Phases[i]]));
+		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((logf(m_EquivalentDiameters[i])-avgdiam[m_Phases[i]])*(logf(m_EquivalentDiameters[i])-avgdiam[m_Phases[i]]));
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -215,6 +225,21 @@ void FindSizes::find_sizes()
 	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
 	  sddiam[i] = sqrt(sddiam[i]);
 	  statsDataArray[i]->setGrainSizeStdDev(sddiam[i]);
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  binnumbers[i] = FloatArrayType::CreateArray(10);
+	  binnumbers[i]->SetName(DREAM3D::HDF5::BinNumber);
+	  float stepsize = (maxdiam[i]-mindiam[i])/10.0;
+	  statsDataArray[i]->setBinStepSize(stepsize);
+	  statsDataArray[i]->setMaxGrainDiameter(maxdiam[i]);
+	  statsDataArray[i]->setMinGrainDiameter(mindiam[i]);
+	  for (size_t j = 0; j < 10; j++)
+	  {
+		  float value = mindiam[i] + (float(j)*stepsize);
+		  binnumbers[i]->SetValue(j,value);
+	  }
+	  statsDataArray[i]->setBinNumbers(binnumbers[i]);
   }
 }
 void FindSizes::find_sizes2D()

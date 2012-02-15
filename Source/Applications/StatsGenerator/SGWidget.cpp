@@ -787,7 +787,7 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
 
   statsData->setPhaseFraction(calcPhaseFraction);
   // Grain Diameter Info
-  statsData->setAverageGrainDiameter(stepSize);
+  statsData->setBinStepSize(stepSize);
   statsData->setMaxGrainDiameter(maxdiameter);
   statsData->setMinGrainDiameter(mindiameter);
   // Grain Size Distribution

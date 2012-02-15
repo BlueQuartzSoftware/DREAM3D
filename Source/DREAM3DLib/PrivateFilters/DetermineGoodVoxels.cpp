@@ -185,9 +185,9 @@ void DetermineGoodVoxels::execute()
     }
     for (int64_t p = 0; p < nPoints; ++p)
     {
-      if(baseArrayPtr[p] == true && currentArrayPtr[p] == true)
+      if(baseArrayPtr[p] == false || currentArrayPtr[p] == false)
       {
-        baseArrayPtr[p] = true;
+        baseArrayPtr[p] = false;
       }
     }
   }

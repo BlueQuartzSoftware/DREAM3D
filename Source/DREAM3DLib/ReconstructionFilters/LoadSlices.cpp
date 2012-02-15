@@ -257,8 +257,6 @@ void LoadSlices::execute()
     m->setDimensions(dcDims);
     m->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
-    // The GUI code has already added 1 to the end index so nothing special needs to be done
-    // for this calculation
     dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
     m->setDimensions(dcDims);
     manufacturer = volumeInfoReader->getManufacturer();
@@ -336,13 +334,6 @@ void LoadSlices::execute()
   {
     setErrorCondition(err);
     setErrorMessage("Error Loading Data from Ebsd Data file.");
-    return;
-  }
-
-  // The GoodVoxels array was just created so rerun the dataCheck to update the pointers
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if(getErrorCondition() < 0)
-  {
     return;
   }
 
