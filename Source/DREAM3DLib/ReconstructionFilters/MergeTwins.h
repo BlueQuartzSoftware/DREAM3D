@@ -67,11 +67,11 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     virtual ~MergeTwins();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Merge Twins"; }
-
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance);
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance);
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Merge Twins"; }
 
     virtual void setupFilterOptions();
 

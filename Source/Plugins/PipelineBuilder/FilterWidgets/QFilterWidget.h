@@ -33,14 +33,23 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QFILTERWIDGET_H_
-#define QFILTERWIDGET_H_
+#ifndef _QFILTERWIDGET_H_
+#define _QFILTERWIDGET_H_
 
+#include <QtCore/QSettings>
 #include <QtGui/QFrame>
 #include <QtGui/QGroupBox>
+#include <QtGui/QSpinBox>
+#include <QtGui/QLabel>
+#include <QtGui/QCheckBox>
+#include <QtGui/QLineEdit>
+#include <QtGui/QIntValidator>
+#include <QtGui/QDoubleValidator>
+#include <QtGui/QComboBox>
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#include "QtSupport/QFSDropLineEdit.h"
 
 
 #define FILTER_PROPERTY_WRAPPER(type, name, filter_var)\
@@ -73,7 +82,10 @@ class QFilterWidget : public QGroupBox
 
     virtual AbstractFilter::Pointer getFilter();
 
-   public slots:
+    virtual void writeOptions(QSettings &prefs);
+    virtual void readOptions(QSettings &prefs);
+
+  public slots:
 
      virtual void updateFilterValues();
      virtual void updateQLineEditDoubleValue();
@@ -109,4 +121,4 @@ class QFilterWidget : public QGroupBox
 };
 
 
-#endif /* QFILTERWIDGET_H_ */
+#endif /* _QFILTERWIDGET_H_ */

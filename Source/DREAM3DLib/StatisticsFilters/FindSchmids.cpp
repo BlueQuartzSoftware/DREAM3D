@@ -75,6 +75,7 @@ void FindSchmids::setupFilterOptions()
     option->setPropertyName("XLoading");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   {
@@ -83,6 +84,7 @@ void FindSchmids::setupFilterOptions()
     option->setPropertyName("YLoading");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   {
@@ -91,6 +93,7 @@ void FindSchmids::setupFilterOptions()
     option->setPropertyName("ZLoading");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   setFilterOptions(options);

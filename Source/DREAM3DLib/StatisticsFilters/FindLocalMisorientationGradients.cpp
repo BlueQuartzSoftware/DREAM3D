@@ -46,6 +46,7 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindLocalMisorientationGradients::FindLocalMisorientationGradients() :
 AbstractFilter(),
+m_KernelSize(1),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_GrainMisorientations(NULL),
@@ -63,7 +64,7 @@ m_Quats(NULL)
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
-  m_KernelSize = 1;
+
   setupFilterOptions();
 }
 

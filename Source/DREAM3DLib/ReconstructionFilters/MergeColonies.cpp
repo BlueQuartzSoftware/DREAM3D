@@ -64,6 +64,8 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 MergeColonies::MergeColonies() :
 AbstractFilter(),
+m_AxisTolerance(1.0f),
+m_AngleTolerance(1.0f),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
@@ -99,6 +101,7 @@ void MergeColonies::setupFilterOptions()
     option->setPropertyName("AxisTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   {
@@ -107,6 +110,7 @@ void MergeColonies::setupFilterOptions()
     option->setPropertyName("AngleTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
 

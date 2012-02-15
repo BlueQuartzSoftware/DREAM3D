@@ -50,7 +50,10 @@
 //
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
-AbstractFilter()
+AbstractFilter(),
+m_XRes(1.0f),
+m_YRes(1.0f),
+m_ZRes(1.0f)
 {
   setupFilterOptions();
 }

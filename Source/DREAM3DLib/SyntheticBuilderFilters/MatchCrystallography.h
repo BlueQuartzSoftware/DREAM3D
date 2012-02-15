@@ -75,6 +75,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile);
+    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+
     virtual const std::string getGroupName()
     {
       return DREAM3D::FilterGroups::SyntheticBuilderFilters;
@@ -84,8 +87,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
       return "Match Crystallography";
     }
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile);
-    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+
 
     virtual void setupFilterOptions();
 

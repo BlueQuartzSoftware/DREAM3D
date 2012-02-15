@@ -58,6 +58,8 @@
 // -----------------------------------------------------------------------------
 PlacePrecipitates::PlacePrecipitates() :
 AbstractFilter(),
+m_H5StatsInputFile(""),
+m_PeriodicBoundaries(false),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_SurfaceVoxels(NULL),
