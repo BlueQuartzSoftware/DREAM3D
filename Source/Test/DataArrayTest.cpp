@@ -74,7 +74,7 @@ template<typename T>
 void __TestCopyTuples()
 {
   int err = 0;
-  typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
+  typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "TestCopyTuples");
   array->SetNumberOfComponents(NUM_COMPONENTS_2);
   for(size_t i = 0; i < NUM_TUPLES_2; ++i)
   {
@@ -129,7 +129,7 @@ void __TestEraseElements()
 {
   // Test dropping of front elements only
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS, "Test1");
     for(size_t i = 0; i < NUM_ELEMENTS; ++i)
     {
       array->SetComponent(i, 0, static_cast<T>(i) );
@@ -148,7 +148,7 @@ void __TestEraseElements()
 
   // Test Dropping of internal elements
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test2");
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -173,7 +173,7 @@ void __TestEraseElements()
 
   // Test Dropping of internal elements
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test3");
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -197,7 +197,7 @@ void __TestEraseElements()
 
   // Test Dropping of internal continuous elements
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test4");
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -221,7 +221,7 @@ void __TestEraseElements()
 
   // Test Dropping of Front and Back Elements
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test5");
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -243,7 +243,7 @@ void __TestEraseElements()
 
   // Test Dropping of Back Elements
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test6");
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -291,7 +291,7 @@ void TestDataArray()
   int32_t* ptr = NULL;
   {
 
-    Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0);
+    Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0, "Test7");
     DREAM3D_REQUIRE_EQUAL(0, d->GetSize());
     DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples());
     ptr = d->GetPointer(0);
@@ -299,7 +299,7 @@ void TestDataArray()
 
   {
 
-    Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS);
+    Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS, "Test8");
     ptr = int32Array->GetPointer(0);
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetSize());

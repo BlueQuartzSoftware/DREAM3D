@@ -223,7 +223,7 @@ int DxReader::readFile()
   finished_data = false;
   size_t index = 0;
 
-  Int32ArrayType::Pointer m_Data = Int32ArrayType::CreateArray(nx * ny * nz);
+  Int32ArrayType::Pointer m_Data = Int32ArrayType::CreateArray(nx * ny * nz, DREAM3D::CellData::GrainIds);
   while (getline(inFile, line, '\n') != NULL)
   {
 

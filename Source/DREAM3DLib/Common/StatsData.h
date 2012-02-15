@@ -88,6 +88,18 @@ class DREAM3DLib_EXPORT StatsData
 
     virtual ~StatsData();
 
+    /**
+     * @brief Creates the Vector of FloatArrayType for a give distribution type
+     * and sized according to numBins
+     * @param distributionType The type of distribution as laid out in the DREAM3D::DistributionType
+     * namespace which should be found in Constants.h.
+     * @param numBins The number of bins that the array should be sized to
+     * @return a VectorOfFloatArray object which could be empty if an unrecognized
+     * distribution type is passed in.
+     */
+    static VectorOfFloatArray CreateDistributionArrays(uint32_t distributionType, size_t numBins);
+
+
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
     /**
      * @brief The values are encoded into 3 floats: Average, Max, Min

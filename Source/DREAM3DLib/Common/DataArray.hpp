@@ -42,8 +42,7 @@
   type* pubVar;
 
 #define INIT_DataArray(var, type)\
-  var = DataArray<type>::CreateArray(0);\
-  var->SetName(#var);
+  var = DataArray<type>::CreateArray(0, #var);
 
 /**
  * @class DataArray DataArray.hpp DREAM3DLib/Common/DataArray.hpp
@@ -67,7 +66,7 @@ class DataArray : public IDataArray
      * @param numElements The number of elements in the internal array.
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements = 0)
+    static Pointer CreateArray(size_t numElements, const std::string &name)
     {
       DataArray<T>* d = new DataArray<T> (numElements, true);
       if (d->Allocate() < 0)
@@ -75,13 +74,14 @@ class DataArray : public IDataArray
         delete d;
         return DataArray<T>::NullPointer();
       }
-      Pointer ptr((d));
+      d->SetName(name);
+      Pointer ptr(d);
       return ptr;
     }
 
-    static Pointer FromStdVector(std::vector<T> &vec)
+    static Pointer FromStdVector(std::vector<T> &vec, const std::string &name)
      {
-       Pointer p = CreateArray(vec.size());
+       Pointer p = CreateArray(vec.size(), name);
        ::memcpy(p->GetPointer(0), &(vec.front()), vec.size() * sizeof(T));
        return p;
      }

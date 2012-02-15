@@ -68,7 +68,7 @@ void RemoveTestFiles()
 int TestPhWriter()
 {
   int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size, DREAM3D::CellData::GrainIds);
   for (int i = 0; i < size; ++i)
   {
     grainIds->SetValue(i, i + UnitTest::PhIOTest::Offset);

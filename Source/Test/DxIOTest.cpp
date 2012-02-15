@@ -64,7 +64,7 @@ void RemoveTestFiles()
 int TestDxWriter()
 {
   int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size, DREAM3D::CellData::GrainIds);
   for (int i = 0; i < size; ++i)
   {
     grainIds->SetValue(i, i + UnitTest::DxIOTest::Offset);

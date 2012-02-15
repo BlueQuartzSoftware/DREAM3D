@@ -242,8 +242,7 @@ int main(int argc, char **argv)
     // Create a FilterPipeline Object to hold all the filters. Later on we will execute all the filters
     FilterPipeline::Pointer m_FilterPipeline = FilterPipeline::New();
 
-    DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(1);
-    phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
+    DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(1, DREAM3D::EnsembleData::PhaseTypes);
     phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
     if(parseUnknownArray<unsigned int>(phaseTypeStr.getValue(), "%d", phaseTypes) < 0)
     {

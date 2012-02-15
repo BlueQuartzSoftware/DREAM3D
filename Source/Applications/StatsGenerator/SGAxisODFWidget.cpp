@@ -158,22 +158,16 @@ int SGAxisODFWidget::getOrientationData(StatsData::Pointer statsData)
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
   if (aodf.size() > 0)
   {
-    FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf);
-    aodfData->SetName(DREAM3D::HDF5::AxisOrientation);
+    FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf, DREAM3D::HDF5::AxisOrientation);
     statsData->setAxisOrientation(aodfData);
 
     if(e1s.size() > 0)
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s);
-      euler1->SetName(DREAM3D::HDF5::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s);
-      euler2->SetName(DREAM3D::HDF5::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s);
-      euler3->SetName(DREAM3D::HDF5::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas);
-      sigma->SetName(DREAM3D::HDF5::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights);
-      weight->SetName(DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s, DREAM3D::HDF5::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s, DREAM3D::HDF5::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s, DREAM3D::HDF5::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas, DREAM3D::HDF5::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights, DREAM3D::HDF5::Weight);
 
       VectorOfFloatArray aodfWeights;
       aodfWeights.push_back(euler1);
