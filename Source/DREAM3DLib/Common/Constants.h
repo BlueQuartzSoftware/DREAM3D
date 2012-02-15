@@ -284,7 +284,8 @@ namespace DREAM3D
     const unsigned int Beta = 0;         //!<
     const unsigned int LogNormal = 1;    //!<
     const unsigned int Power = 2;        //!<
-    const unsigned int UnknownDistributionType = 999;    //!<
+    const unsigned int UnknownDistributionType = 3;    //!<
+    const unsigned int Count = 3; //!<
   }
 
 
