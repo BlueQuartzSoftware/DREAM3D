@@ -93,8 +93,8 @@ class DREAM3DLib_EXPORT StatsData
      * @brief The values are encoded into 3 floats: Average, Max, Min
      */
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, GrainDiameterInfo);
-    void setAverageGrainDiameter(float v) { m_GrainDiameterInfo[0] = v;}
-    float getAverageGrainDiameter() { return m_GrainDiameterInfo[0]; }
+    void setBinStepSize(float v) { m_GrainDiameterInfo[0] = v;}
+    float getBinStepSize() { return m_GrainDiameterInfo[0]; }
 
     void setMaxGrainDiameter(float v) { m_GrainDiameterInfo[1] = v;}
     float getMaxGrainDiameter() { return m_GrainDiameterInfo[1]; }

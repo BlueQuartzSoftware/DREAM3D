@@ -61,6 +61,7 @@
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -217,7 +218,7 @@ void TestFindNeighbors()
   if(m_WriteVtkFile)
   {
     vtkWriter->setOutputFile(UnitTest::FindNeighborTest::VtkOutputFile);
-    vtkWriter->setWriteGrainIds(false);
+    vtkWriter->setWriteGrainIds(true);
     vtkWriter->setWritePhaseIds(m_WritePhaseId);
     vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
     vtkWriter->setWriteIPFColors(m_WriteIPFColor);
@@ -266,6 +267,9 @@ void TestDataContainerReader()
 
   FindSizes::Pointer find_sizes = FindSizes::New();
   pipeline->pushBack(find_sizes);
+
+//  FindShapes::Pointer find_shapes = FindShapes::New();
+//  pipeline->pushBack(find_shapes);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);

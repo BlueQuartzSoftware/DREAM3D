@@ -264,15 +264,15 @@ void FindShapes::find_moments()
   float u110 = 0;
   float u011 = 0;
   float u101 = 0;
-  std::vector<float> avgomega3;
-  std::vector<float> sdomega3;
+  std::vector<std::vector<float> > alphaomega3;
+  std::vector<std::vector<float> > betaomega3;
   std::vector<size_t> unbiasedcount;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
-  avgomega3.resize(numensembles,0);
-  sdomega3.resize(numensembles,0);
+  alphaomega3.resize(numensembles);
+  betaomega3.resize(numensembles);
   unbiasedcount.resize(numensembles,0);
 
   float xRes = m->getXRes();
@@ -375,25 +375,25 @@ void FindShapes::find_moments()
 	if(m_BiasedFields[i] == false)
 	{
 		unbiasedcount[m_Phases[i]]++;
-		avgomega3[m_Phases[i]] = avgomega3[m_Phases[i]] + m_Omega3s[i];
+//		avgomega3[m_Phases[i]] = avgomega3[m_Phases[i]] + m_Omega3s[i];
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  avgomega3[i] = avgomega3[i]/float(unbiasedcount[i]);
+//	  avgomega3[i] = avgomega3[i]/float(unbiasedcount[i]);
 //	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
   }
   for (size_t i = 1; i < numgrains; i++)
   {
 	if(m_BiasedFields[i] == false)
 	{
-		sdomega3[m_Phases[i]] = sdomega3[m_Phases[i]] + ((m_Omega3s[i]-avgomega3[m_Phases[i]])*(m_Omega3s[i]-avgomega3[m_Phases[i]]));
+//		sdomega3[m_Phases[i]] = sdomega3[m_Phases[i]] + ((m_Omega3s[i]-avgomega3[m_Phases[i]])*(m_Omega3s[i]-avgomega3[m_Phases[i]]));
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  sdomega3[i] = sdomega3[i]/float(unbiasedcount[i]);
-	  sdomega3[i] = sqrt(sdomega3[i]);
+//	  sdomega3[i] = sdomega3[i]/float(unbiasedcount[i]);
+//	  sdomega3[i] = sqrt(sdomega3[i]);
 //	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
   }
 }
