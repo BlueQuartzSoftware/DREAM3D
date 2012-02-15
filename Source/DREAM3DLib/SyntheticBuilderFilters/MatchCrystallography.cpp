@@ -61,8 +61,23 @@
 // -----------------------------------------------------------------------------
 
 MatchCrystallography::MatchCrystallography() :
-    AbstractFilter(), m_GrainIds(NULL), m_EulerAnglesC(NULL), m_SurfaceFields(NULL), m_PhasesF(NULL), m_NumCells(NULL), m_EulerAnglesF(NULL), m_AvgQuats(NULL), m_NeighborList(NULL), m_SharedSurfaceAreaList(NULL), m_TotalSurfaceAreas(NULL),
-    m_CrystalStructures(NULL), m_PrecipitateFractions(NULL), m_PhaseTypes(NULL), m_PhaseFractions(NULL)
+    AbstractFilter(),
+    m_H5StatsInputFile(""),
+    m_MaxIterations(1),
+    m_GrainIds(NULL),
+    m_EulerAnglesC(NULL),
+    m_SurfaceFields(NULL),
+    m_PhasesF(NULL),
+    m_NumCells(NULL),
+    m_EulerAnglesF(NULL),
+    m_AvgQuats(NULL),
+    m_NeighborList(NULL),
+    m_SharedSurfaceAreaList(NULL),
+    m_TotalSurfaceAreas(NULL),
+    m_CrystalStructures(NULL),
+    m_PrecipitateFractions(NULL),
+    m_PhaseTypes(NULL),
+    m_PhaseFractions(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());

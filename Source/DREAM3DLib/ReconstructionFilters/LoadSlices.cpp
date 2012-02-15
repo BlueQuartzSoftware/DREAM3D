@@ -161,6 +161,7 @@ void LoadSlices::setupFilterOptions()
     option->setPropertyName("MisorientationTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   // Some how need to get the custom GUIs for the Phase Types and QualityMetric Filters

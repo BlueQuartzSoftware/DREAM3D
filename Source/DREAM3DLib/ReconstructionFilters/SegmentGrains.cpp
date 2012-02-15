@@ -61,6 +61,7 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 SegmentGrains::SegmentGrains() :
 AbstractFilter(),
+m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_PhasesC(NULL),
@@ -73,8 +74,6 @@ m_Active(NULL)
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
-
-  m_MisorientationTolerance = 0.0f;
 
   setupFilterOptions();
 }
@@ -99,6 +98,7 @@ void SegmentGrains::setupFilterOptions()
     option->setHumanLabel("Misorientation Tolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     options.push_back(option);
   }
   setFilterOptions(options);
