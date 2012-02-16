@@ -72,7 +72,7 @@
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   if (NULL ==  m_##Name ) {\
     setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
+    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), NameSpace::DType::Name);\
     if (NULL == p.get()) {\
       ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
       #NameSpace << "::" << #DType << "::" <<  #Name << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
@@ -95,7 +95,7 @@
   m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   if (NULL ==  m_##Name##Post ) {\
     setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp));\
+    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), NameSpace::DType::Name);\
     if (NULL == p.get()) {\
       ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
       #NameSpace << "::" << #DType << "::" <<  #Name << "' with size of " << (size*NumComp) << " but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
@@ -157,10 +157,9 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   PtrType* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
   if (iDataArray.get() == NULL) { \
-    iDataArray = DataArrayType::CreateArray(size * numComp);\
+    iDataArray = DataArrayType::CreateArray(size * numComp, arrayName);\
     iDataArray->initializeWithZeros();\
     iDataArray->SetNumberOfComponents(numComp);\
-    iDataArray->SetName(arrayName);\
     if (NULL == iDataArray.get()) { \
       std::stringstream s;\
       s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\

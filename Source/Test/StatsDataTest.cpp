@@ -78,10 +78,8 @@ void initializeOmega3(StatsData::Pointer statsData, int count, uint32_t distType
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
   VectorOfFloatArray data;
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count);
-  alphas->SetName(DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count);
-  betas->SetName(DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
   {
@@ -103,10 +101,8 @@ void initializeBOverA(StatsData::Pointer statsData, int count, uint32_t distType
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
   VectorOfFloatArray data;
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count);
-  alphas->SetName(DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count);
-  betas->SetName(DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
   {
@@ -128,10 +124,8 @@ void initializeCOverA(StatsData::Pointer statsData, int count, uint32_t distType
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
   VectorOfFloatArray data;
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count);
-  alphas->SetName(DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count);
-  betas->SetName(DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
   {
@@ -153,10 +147,8 @@ void initializeCOverB(StatsData::Pointer statsData, int count, uint32_t distType
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
   VectorOfFloatArray data;
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count);
-  alphas->SetName(DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count);
-  betas->SetName(DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
 
   for (qint32 i = 0; i < count; ++i)
   {
@@ -180,12 +172,9 @@ void initializeNeighbors(StatsData::Pointer statsData, std::vector<float> binNum
 
   DREAM3D_RANDOMNG_NEW()
   VectorOfFloatArray data;
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count);
-  alphas->SetName(DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count);
-  betas->SetName(DREAM3D::HDF5::Beta);
-  FloatArrayType::Pointer ks = FloatArrayType::CreateArray(count);
-  ks->SetName(DREAM3D::HDF5::Exp_k);
+  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
+  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
+  FloatArrayType::Pointer ks = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Exp_k);
 
   int middlebin = count / 2;
 
@@ -224,8 +213,7 @@ void initializeODF_MDF(StatsData::Pointer statsData)
   Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
-  FloatArrayType::Pointer odfData = FloatArrayType::CreateArray(odf.size());
-  odfData->SetName(DREAM3D::HDF5::ODF);
+  FloatArrayType::Pointer odfData = FloatArrayType::CreateArray(odf.size(), DREAM3D::HDF5::ODF);
   for (size_t i = 0; i < odf.size(); ++i)
   {
     odfData->SetValue(i, odf[i]);
@@ -235,20 +223,15 @@ void initializeODF_MDF(StatsData::Pointer statsData)
   statsData->setODF(odfData);
 
   {
-    FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(1);
-    euler1->SetName(DREAM3D::HDF5::Euler1);
+    FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Euler1);
     euler1->SetValue(0, 10.0f);
-    FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(1);
-    euler2->SetName(DREAM3D::HDF5::Euler2);
+    FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Euler2);
     euler2->SetValue(0, 10.0f);
-    FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(1);
-    euler3->SetName(DREAM3D::HDF5::Euler3);
+    FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Euler3);
     euler3->SetValue(0, 10.0f);
-    FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(1);
-    sigma->SetName(DREAM3D::HDF5::Sigma);
+    FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Sigma);
     sigma->SetValue(0, 0.99f);
-    FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1);
-    weight->SetName(DREAM3D::HDF5::Weight);
+    FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Weight);
     weight->SetValue(0, 2.0f);
 
     VectorOfFloatArray odfWeights;
@@ -264,24 +247,20 @@ void initializeODF_MDF(StatsData::Pointer statsData)
   Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
-  FloatArrayType::Pointer mdfData = FloatArrayType::CreateArray(mdf.size());
-  mdfData->SetName(DREAM3D::HDF5::MisorientationBins);
+  FloatArrayType::Pointer mdfData = FloatArrayType::CreateArray(mdf.size(), DREAM3D::HDF5::MisorientationBins);
   for (size_t i = 0; i < mdf.size(); ++i)
   {
     mdfData->SetValue(i, mdf[i]);
   }
   {
-    FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1);
-    angles->SetName(DREAM3D::HDF5::Angle);
+    FloatArrayType::Pointer angles = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Angle);
     angles->SetValue(0, 45.0f);
-    FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3);
-    axis->SetName(DREAM3D::HDF5::Axis);
+    FloatArrayType::Pointer axis = FloatArrayType::CreateArray(3, DREAM3D::HDF5::Axis);
     axis->SetNumberOfComponents(3);
     axis->SetComponent(0, 0, 1.0f);
     axis->SetComponent(0, 1, 2.0f);
     axis->SetComponent(0, 2, 3.0f);
-    FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1);
-    weight->SetName(DREAM3D::HDF5::Weight);
+    FloatArrayType::Pointer weight = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Weight);
     weight->SetValue(0, 2.1254f);
     VectorOfFloatArray mdfWeights;
     mdfWeights.push_back(angles);
@@ -311,8 +290,7 @@ void initializeAxisODF(StatsData::Pointer statsData)
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
-  FloatArrayType::Pointer aodfData = FloatArrayType::CreateArray(aodf.size());
-  aodfData->SetName(DREAM3D::HDF5::AxisOrientation);
+  FloatArrayType::Pointer aodfData = FloatArrayType::CreateArray(aodf.size(), DREAM3D::HDF5::AxisOrientation);
   for (size_t i = 0; i < aodf.size(); ++i)
   {
     aodfData->SetValue(i, aodf[i]);
@@ -415,8 +393,7 @@ StatsDataArray::Pointer createStatsDataArray()
 
   size_t nBins = binsizes.size();
   // Copy this into the DataArray<float>
-  FloatArrayType::Pointer binNumbers = FloatArrayType::CreateArray(nBins);
-  binNumbers->SetName(DREAM3D::HDF5::BinNumber);
+  FloatArrayType::Pointer binNumbers = FloatArrayType::CreateArray(nBins, DREAM3D::HDF5::BinNumber);
   ::memcpy(binNumbers->GetVoidPointer(0), &(binsizes.front()), binsizes.size() * sizeof(float));
 
 
@@ -504,22 +481,19 @@ void TestWriteData()
   DataContainer::Pointer m = DataContainer::New();
   m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsArray);
 
-  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(3);
-  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
+  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(3, DREAM3D::EnsembleData::CrystalStructures);
   crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   crystalStructures->SetValue(1, Ebsd::CrystalStructure::Cubic);
   crystalStructures->SetValue(2, Ebsd::CrystalStructure::Cubic);
   m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
-  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(3);
-  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(3, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   phaseTypes->SetValue(1, DREAM3D::PhaseType::PrimaryPhase);
   phaseTypes->SetValue(2, DREAM3D::PhaseType::PrimaryPhase);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
-  DataArray<unsigned int>::Pointer shapeTypes = DataArray<unsigned int>::CreateArray(3);
-  shapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
+  DataArray<unsigned int>::Pointer shapeTypes = DataArray<unsigned int>::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
   shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
   shapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
   shapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);

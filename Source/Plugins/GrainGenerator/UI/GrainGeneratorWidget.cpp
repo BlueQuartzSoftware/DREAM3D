@@ -579,7 +579,7 @@ void GrainGeneratorWidget::on_m_GoBtn_clicked()
 
   int count = m_ShapeTypeCombos.count();
   DataArray<unsigned int>::Pointer shapeTypes =
-                   DataArray<unsigned int>::CreateArray(count+1);
+                   DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
   shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
   bool ok = false;
   for (int i = 0; i < count; ++i)

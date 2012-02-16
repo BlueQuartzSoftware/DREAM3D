@@ -217,8 +217,7 @@ void TestSyntheticBuilder()
   m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
   m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
 
-  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3);
-  m_ShapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
+  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
   m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
   m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
   m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);

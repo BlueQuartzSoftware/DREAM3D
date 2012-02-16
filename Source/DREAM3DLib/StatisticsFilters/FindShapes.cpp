@@ -39,7 +39,9 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
-
+#include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
+#include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
+#include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -64,6 +66,15 @@ m_AspectRatios(NULL)
 
   INIT_DataArray(m_GrainCenters,float);
   INIT_DataArray(m_GrainMoments,float);
+
+  m_DistributionAnalysis.resize(DREAM3D::DistributionType::Count);
+
+//    m_HexOps = HexagonalOps::New();
+  m_DistributionAnalysis.push_back(BetaOps::New());
+//     m_CubicOps = CubicOps::New();
+  m_DistributionAnalysis.push_back(PowerLawOps::New());
+//     m_OrthoOps = OrthoRhombicOps::New();
+  m_DistributionAnalysis.push_back(LogNormalOps::New());
 }
 
 // -----------------------------------------------------------------------------
@@ -195,8 +206,8 @@ void FindShapes::find_centroids()
     graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
     graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
   }
-  float res_scalar = xRes * yRes * zRes;
-  float vol_term = (4.0f / 3.0f) * m_pi;
+ // float res_scalar = xRes * yRes * zRes;
+//  float vol_term = (4.0f / 3.0f) * m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
     graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
@@ -220,11 +231,11 @@ void FindShapes::find_centroids2D()
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
-  int zPoints = static_cast<int>(m->getZPoints());
+//  int zPoints = static_cast<int>(m->getZPoints());
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  float zRes = m->getZRes();
+//  float zRes = m->getZRes();
 
   for (size_t i = 0; i < numgrains*5; i++)
   {

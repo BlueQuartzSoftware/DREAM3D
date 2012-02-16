@@ -202,7 +202,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
 #endif
 
   // Allocate an Array for the Euler Data with is nRows X 3 Columns
-  DataArray<float>::Pointer fData = DataArray<float>::CreateArray(0);
+  DataArray<float>::Pointer fData = DataArray<float>::CreateArray(0, DREAM3D::CellData::EulerAngles);
   fData->WritePointer(0, totalpoints*3);
   fData->SetNumberOfComponents(3);
   err = readScalarData(DREAM3D::CellData::EulerAngles, eulerangles);

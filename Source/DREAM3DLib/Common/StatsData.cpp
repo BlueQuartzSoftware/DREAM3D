@@ -62,6 +62,41 @@ StatsData::~StatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+VectorOfFloatArray StatsData::CreateDistributionArrays(uint32_t distributionType, size_t numBins)
+{
+  VectorOfFloatArray v;
+  if(distributionType == DREAM3D::DistributionType::Beta)
+  {
+    v.resize(DREAM3D::HDF5::BetaColumnCount);
+    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Alpha);
+    v[0]->initializeWithZeros();
+    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Beta);
+    v[1]->initializeWithZeros();
+  }
+  else if(distributionType == DREAM3D::DistributionType::Power)
+  {
+    v.resize(DREAM3D::HDF5::PowerLawColumnCount);
+    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Average);
+    v[0]->initializeWithZeros();
+    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::StandardDeviation);
+    v[1]->initializeWithZeros();
+  }
+  else if(distributionType == DREAM3D::DistributionType::Power)
+  {
+    v.resize(DREAM3D::HDF5::LogNormalColumnCount);
+    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Alpha);
+    v[0]->initializeWithZeros();
+    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Exp_k);
+    v[1]->initializeWithZeros();
+    v[2] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Beta);
+    v[2]->initializeWithZeros();
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsData::initialize()
 {
   m_BOverA_DistType = DREAM3D::DistributionType::Beta;
@@ -93,8 +128,7 @@ FloatArrayType::Pointer StatsData::generateBinNumbers()
     d = d + grainDiameterInfo[0];
   }
   // Copy this into the DataArray<float>
-  m_BinNumbers = FloatArrayType::CreateArray(bins.size() );
-  m_BinNumbers->SetName(DREAM3D::HDF5::BinNumber);
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size(),DREAM3D::HDF5::BinNumber );
   ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
   return m_BinNumbers;
 }

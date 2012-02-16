@@ -58,7 +58,8 @@ Macro(D3DCompileDir DirName)
 endMacro()
 
 # Add in our NON-Filter classes
-D3DCompileDir(Common )
+D3DCompileDir(Common)
+D3DCompileDir(DistributionAnalysisOps)
 D3DCompileDir(HDF5)
 D3DCompileDir(OrientationOps )
 D3DCompileDir(ShapeOps )

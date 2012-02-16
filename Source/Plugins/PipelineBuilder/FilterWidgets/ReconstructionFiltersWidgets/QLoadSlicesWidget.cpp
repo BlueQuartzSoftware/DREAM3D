@@ -89,8 +89,7 @@ AbstractFilter::Pointer QLoadSlicesWidget::getFilter()
 {
   int count = phaseTypeList->count();
 
-  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(count + 1);
-  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(count + 1, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
 
   bool ok = false;
