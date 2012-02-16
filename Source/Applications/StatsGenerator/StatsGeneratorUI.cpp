@@ -493,13 +493,11 @@ void StatsGeneratorUI::on_actionSave_triggered()
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
-  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1);
-  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
+  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::CrystalStructures);
   crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
-  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1);
-  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
+  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 

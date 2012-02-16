@@ -63,8 +63,7 @@
 
 
 #define MAKE_ARRAY(type, name)\
-IDataArray::Pointer type##Ptr = DataArray<type>::CreateArray(5);\
-type##Ptr->SetName( name );\
+IDataArray::Pointer type##Ptr = DataArray<type>::CreateArray(5, name);\
 dataContainer->addCellData(name, type##Ptr);
 
 
@@ -104,17 +103,16 @@ void TestDataContainerWriter()
 
   MXADir::mkdir(UnitTest::DataContainerIOTest::TestDir, true);
 
-  Int32ArrayType::Pointer grainIds = Int32ArrayType::CreateArray(size);
+  Int32ArrayType::Pointer grainIds = Int32ArrayType::CreateArray(size, DREAM3D::CellData::GrainIds);
   for (int i = 0; i < size; ++i)
   {
     grainIds->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
   }
-  grainIds->SetName(DREAM3D::CellData::GrainIds);
   m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
 
 
 
-  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(12);
+  FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(12, DREAM3D::FieldData::AxisEulerAngles);
   avgEuler->SetNumberOfComponents(3);
   for(size_t i = 0; i < 4; ++i)
   {
@@ -122,16 +120,14 @@ void TestDataContainerWriter()
     avgEuler->SetComponent(i, 1, i*0.665f);
     avgEuler->SetComponent(i, 2, i*0.665f);
   }
-  avgEuler->SetName(DREAM3D::FieldData::AxisEulerAngles);
   m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, avgEuler);
 
 
-  FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4);
+  FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4, DREAM3D::EnsembleData::TotalSurfaceAreas);
   for (int i = 0; i < 4; ++i)
   {
     surfArea->SetValue(i, i + 41.2f);
   }
-  surfArea->SetName(DREAM3D::EnsembleData::TotalSurfaceAreas);
   m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
 
 
@@ -210,8 +206,7 @@ template<typename T>
 void insertDeleteArray(DataContainer::Pointer m)
 {
 
-  IDataArray::Pointer p = T::CreateArray(5);
-  p->SetName( "Test" );
+  IDataArray::Pointer p = T::CreateArray(5, "Test");
   m->addCellData("Test", p);
   IDataArray::Pointer t = m->getCellData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);

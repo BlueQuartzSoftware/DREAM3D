@@ -351,7 +351,7 @@ int VtkGrainIdReader::readFile()
   getDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
   getDataContainer()->getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels);
+  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
   grainIds->SetName("GrainIds");
   readLine(instream, buf, kBufferSize);
 

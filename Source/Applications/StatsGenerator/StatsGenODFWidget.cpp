@@ -169,21 +169,15 @@ int StatsGenODFWidget::getOrientationData(StatsData::Pointer statsData)
   }
   if (odf.size() > 0)
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(odf);
-    p->SetName(DREAM3D::HDF5::ODF);
+    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(odf, DREAM3D::HDF5::ODF);
     statsData->setODF(p);
     if (e1s.size() > 0)
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s);
-      euler1->SetName(DREAM3D::HDF5::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s);
-      euler2->SetName(DREAM3D::HDF5::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s);
-      euler3->SetName(DREAM3D::HDF5::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas);
-      sigma->SetName(DREAM3D::HDF5::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights);
-      weight->SetName(DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s, DREAM3D::HDF5::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromStdVector(e2s, DREAM3D::HDF5::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromStdVector(e3s, DREAM3D::HDF5::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromStdVector(sigmas, DREAM3D::HDF5::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromStdVector(weights, DREAM3D::HDF5::Weight);
 
       VectorOfFloatArray odfWeights;
       odfWeights.push_back(euler1);

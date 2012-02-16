@@ -49,6 +49,8 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
+
 
 /**
  * @class FindShapes FindShapes.h DREAM3DLib/GenericFilters/FindShapes.h
@@ -96,10 +98,10 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float find_zcoord(size_t index);
 
   private:
-	int32_t* m_GrainIds;
+    int32_t* m_GrainIds;
 
-	bool* m_BiasedFields;
-	int32_t* m_Phases;
+    bool* m_BiasedFields;
+    int32_t* m_Phases;
     float* m_AxisEulerAngles;
     float* m_Centroids;
     float* m_AxisLengths;
@@ -107,7 +109,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_EquivalentDiameters;
     float* m_AspectRatios;
 
-	StatsDataArray* m_StatsDataArray;
+    StatsDataArray* m_StatsDataArray;
+
+    std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

@@ -250,8 +250,7 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
-    DataArray<unsigned int>::Pointer shapeTypes = DataArray<unsigned int>::CreateArray(1);
-    shapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
+    DataArray<unsigned int>::Pointer shapeTypes = DataArray<unsigned int>::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
     shapeTypes->SetValue(0, DREAM3D::ShapeType::EllipsoidShape);
 
     if(parseUnknownArray<unsigned int>(shapeTypeStr.getValue(), "%d", shapeTypes) < 0)

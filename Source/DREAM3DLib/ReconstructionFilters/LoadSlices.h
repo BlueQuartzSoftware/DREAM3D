@@ -145,8 +145,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
         return -1;
       }
 
-      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1);
-      crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
+      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, DREAM3D::EnsembleData::CrystalStructures);
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file

@@ -108,6 +108,7 @@ void QFilterWidget::changeStyle(bool selected)
   style.append("\nQGroupBox::indicator:checked:pressed { image: url(:/delete-corner-pressed.png);}");
 
   setStyleSheet(style);
+//  std::cout << style.toStdString() << std::endl;
 }
 
 // -----------------------------------------------------------------------------

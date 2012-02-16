@@ -284,25 +284,21 @@ void MatchCrystallography::initializeArrays(std::vector<unsigned int> structures
   size_t nElements = 0;
   size_t size = structures.size();
 
-  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(size + 1);
-  crystalStructures->SetName(DREAM3D::EnsembleData::CrystalStructures);
+  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(size + 1, DREAM3D::EnsembleData::CrystalStructures);
   m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
   m_CrystalStructures = crystalStructures->GetPointer(0);
 
 
-  FloatArrayType::Pointer pptFractions = FloatArrayType::CreateArray(size + 1);
-  pptFractions->SetName(DREAM3D::EnsembleData::PrecipitateFractions);
+  FloatArrayType::Pointer pptFractions = FloatArrayType::CreateArray(size + 1, DREAM3D::EnsembleData::PrecipitateFractions);
   m->addEnsembleData(DREAM3D::EnsembleData::PrecipitateFractions, pptFractions);
   m_PrecipitateFractions = pptFractions->GetPointer(0);
 
 
-  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(size + 1);
-  phaseTypes->SetName(DREAM3D::EnsembleData::PhaseTypes);
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(size + 1, DREAM3D::EnsembleData::PhaseTypes);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
   m_PhaseTypes = phaseTypes->GetPointer(0);
 
-  FloatArrayType::Pointer phaseFractions = FloatArrayType::CreateArray(size + 1);
-  phaseFractions->SetName(DREAM3D::EnsembleData::PhaseFractions);
+  FloatArrayType::Pointer phaseFractions = FloatArrayType::CreateArray(size + 1, DREAM3D::EnsembleData::PhaseFractions);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseFractions, phaseFractions);
   m_PhaseFractions = phaseFractions->GetPointer(0);
 
