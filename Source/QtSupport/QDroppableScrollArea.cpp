@@ -38,7 +38,11 @@
 #include <string>
 #include <iostream>
 
+#include <QtGui/QMouseEvent>
+#include <QtGui/QDropEvent>
 #include <QtGui/QDragEnterEvent>
+#include <QtGui/QDragLeaveEvent>
+#include <QtGui/QDragMoveEvent>
 
 
 // -----------------------------------------------------------------------------
@@ -82,8 +86,20 @@ void QDroppableScrollArea::dropEvent(QDropEvent *event)
   }
 
 
-  event->acceptProposedAction();
-  event->setAccepted(true);
+//  event->acceptProposedAction();
+//  event->setAccepted(true);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDroppableScrollArea::dragMoveEvent( QDragMoveEvent* event)
+{
+ // std::cout << "QScrollContentsWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+ // QObject* w = qobject_cast<QObject*>(childAt(event->pos()));
+ // if (w != NULL)
+  {
+ //   std::cout << "--- Child at Pos: " << w->objectName().toStdString() << std::endl;
+  }
+}
 

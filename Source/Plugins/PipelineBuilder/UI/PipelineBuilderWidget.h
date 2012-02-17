@@ -99,12 +99,10 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
 
 
     void on_toggleDocs_clicked();
-
+#if 0
     void on_filterUp_clicked();
     void on_filterDown_clicked();
-
-    void addFilter(QString filterName);
-
+#endif
 
   private slots:
     // slots for our worker thread to communicate
@@ -117,15 +115,11 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
     virtual void pipelineProgress(int value);
 
 
-    void removeFilterWidget();
-    void setSelectedFilterWidget(QFilterWidget* w);
-
   private:
     QList<QWidget*>           m_WidgetList;
     QFilterPipeline*          m_FilterPipeline;
     QThread*                  m_WorkerThread;
-    QFilterWidget*            m_SelectedFilterWidget;
-    QVBoxLayout*              m_FilterWidgetLayout;
+
     QString                   m_OpenDialogLastDirectory;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented

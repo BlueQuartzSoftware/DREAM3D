@@ -38,6 +38,8 @@
 
 
 #include "DREAM3DLib/Common/FilterOption.h"
+
+#include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QFormLayout>
@@ -50,13 +52,22 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 
+
+#define PADDING 5
+#define BORDER 2
+#define IMAGE_WIDTH 17
+#define IMAGE_HEIGHT 17
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QFilterWidget::QFilterWidget(QWidget* parent) :
       QGroupBox(parent)
 {
-
+  m_DeleteRect.setX(PADDING + BORDER);
+  m_DeleteRect.setY(PADDING + BORDER);
+  m_DeleteRect.setWidth(IMAGE_WIDTH);
+  m_DeleteRect.setHeight(IMAGE_HEIGHT);
 }
 
 // -----------------------------------------------------------------------------
@@ -479,12 +490,88 @@ void QFilterWidget::updateQCheckBoxValue(int v)
 // -----------------------------------------------------------------------------
 void  QFilterWidget::mousePressEvent ( QMouseEvent* event )
 {
-  // Pass up the chain to the QGroupBox so if the click was on the checkbox it gets registered
-  QGroupBox::mousePressEvent(event);
-  emit widgetSelected(this);
-  changeStyle(true);
-  event->setAccepted(true);
+  if(event->button() != Qt::LeftButton)
+  {
+    event->ignore();
+    return;
+  }
+  // Only if we are inside the delete checkbox/image then pass up to the superclass
+  if(m_DeleteRect.contains(event->pos()))
+  {
+    QGroupBox::mousePressEvent(event);
+  }
+  else
+  {
+    dragStartPosition = event->pos();
+  }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+  if(event->button() != Qt::LeftButton)
+  {
+    event->ignore();
+    return;
+  }
+  // Only if we are inside the delete checkbox/image then pass up to the superclass
+  if(m_DeleteRect.contains(event->pos()))
+  {
+    QGroupBox::mouseReleaseEvent(event);
+  }
+  else
+  {
+    emit widgetSelected(this);
+    changeStyle(true);
+    event->setAccepted(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
+{
+  if(!(event->buttons() & Qt::LeftButton))
+  {
+    return;
+  }
+  if((event->pos() - dragStartPosition).manhattanLength() < QApplication::startDragDistance())
+  {
+    return;
+  }
+
+  QPixmap pixmap = QPixmap::grabWidget(this);
+
+  QByteArray itemData;
+  QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+  dataStream << pixmap << QPoint(event->pos());
+
+  QMimeData *mimeData = new QMimeData;
+  mimeData->setData("application/x-dnditemdata", itemData);
+
+  QDrag *drag = new QDrag(this);
+  drag->setMimeData(mimeData);
+  drag->setPixmap(pixmap);
+  drag->setHotSpot(event->pos());
+
+  emit dragStarted(this);
+
+//  if(drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
+//  {
+//    std::cout << "Drag should close the widget because it was MOVE" << std::endl;
+//  }
+//  else
+//  {
+//    std::cout << "Drag should leave Widget alone because it was COPY" << std::endl;
+//  }
+  Qt::DropAction dropAction = drag->exec(Qt::MoveAction);
+
+
+}
+
 
 // -----------------------------------------------------------------------------
 //

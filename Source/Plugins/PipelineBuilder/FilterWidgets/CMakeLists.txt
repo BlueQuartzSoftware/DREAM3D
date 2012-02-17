@@ -125,6 +125,14 @@ target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
 add_custom_command(TARGET FilterWidgetCodeGen POST_BUILD 
                     COMMAND $<TARGET_FILE:FilterWidgetCodeGen> )
 
+
+# --------------------------------------------------------------------
+# Set some Include directories
+include_directories(${FilterWidgets_SOURCE_DIR}/..)
+include_directories(${FilterWidgets_SOURCE_DIR})
+include_directories(${FilterWidgets_BINARY_DIR})
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
+
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
 QT4_WRAP_UI( FilterWidgets_Generated_UI_HDRS 
@@ -161,12 +169,6 @@ set (Project_SRCS
         ${FilterWidgets_Generated_UI_HDRS}
 )
 
-# --------------------------------------------------------------------
-# Set some Include directories
-include_directories(${FilterWidgets_SOURCE_DIR}/..)
-include_directories(${FilterWidgets_SOURCE_DIR})
-include_directories(${FilterWidgets_BINARY_DIR})
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 
 
 if (UNIX AND NOT APPLE)
