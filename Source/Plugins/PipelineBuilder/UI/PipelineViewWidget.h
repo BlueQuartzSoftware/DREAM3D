@@ -37,13 +37,17 @@
 #ifndef QSCROLLCONTENTSWIDGET_H_
 #define QSCROLLCONTENTSWIDGET_H_
 
-#include <QtGui/QWidget>
+#include <QtGui/QFrame>
 #include <QtGui/QLabel>
+#include <QtGui/QVBoxLayout>
+
+
+#include "PipelineBuilder/FilterWidgets/QFilterWidget.h"
 
 /*
  *
  */
-class PipelineViewWidget : public QWidget
+class PipelineViewWidget : public QFrame
 {
     Q_OBJECT;
 
@@ -51,18 +55,34 @@ class PipelineViewWidget : public QWidget
     PipelineViewWidget(QWidget* parent = 0);
     virtual ~PipelineViewWidget();
 
+    int filterCount();
+    QFilterWidget* filterWidgetAt(int index);
+    void clearWidgets();
+    QFilterWidget* addFilter(QString name);
+
+  public slots:
+    void addDroppedFilter(QString name);
+    void removeFilterWidget();
+    void setSelectedFilterWidget(QFilterWidget* w);
+    void filterBeingDragged(QFilterWidget* w);
+
+
   signals:
      void addPlaceHolderFilter(QPoint p);
      void removePlaceHolderFilter();
 
   protected:
+     void setupGui();
       void dragEnterEvent(QDragEnterEvent *event);
       void dragMoveEvent(QDragMoveEvent *event);
       void dropEvent(QDropEvent *event);
    //   void mousePressEvent(QMouseEvent *event);
 
   private:
-    QLabel          m_InsertedLabel;
+    QLabel                    m_InsertedLabel;
+    QFilterWidget*            m_SelectedFilterWidget;
+    QVBoxLayout*              m_FilterWidgetLayout;
+    QFilterWidget*            m_FilterBeingDragged;
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented

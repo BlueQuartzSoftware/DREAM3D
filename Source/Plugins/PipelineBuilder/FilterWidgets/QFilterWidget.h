@@ -85,6 +85,9 @@ class QFilterWidget : public QGroupBox
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
 
+  signals:
+    void dragStarted(QFilterWidget* widget);
+
   public slots:
 
      virtual void updateFilterValues();
