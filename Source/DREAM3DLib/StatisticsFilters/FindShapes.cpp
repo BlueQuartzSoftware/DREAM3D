@@ -286,8 +286,8 @@ void FindShapes::find_moments()
   values.resize(numensembles);
   for(size_t i = 1; i < numensembles; i++)
   {
-	  omega3[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->generateBinNumbers()->GetSize());
-	  values[i].resize(statsDataArray[i]->generateBinNumbers()->GetSize());
+	  omega3[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  values[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
   }
 
   float xRes = m->getXRes();
