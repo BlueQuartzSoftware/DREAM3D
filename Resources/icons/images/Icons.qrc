@@ -1,6 +1,7 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
+  <file>add.png</file>
   <file>zoomIn.png</file>
   <file>zoomOut.png</file>
   <file>fitToWindow.png</file>
@@ -17,5 +18,10 @@
   <file>MaxCutOff_Eqn.png</file>
   <file>MinCutOff_Eqn.png</file>
   <file>filterWidgetBorder.png</file>
+  <file>open_pipeline.png</file>
+  <file>disk_blue.png</file>
+  <file>information.png</file>
+  <file>delete.png</file>
+  <file>bullet_ball_blue.png</file>
  </qresource>
  </RCC>

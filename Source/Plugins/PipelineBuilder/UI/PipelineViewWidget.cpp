@@ -332,29 +332,6 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
     m_FilterBeingDragged = NULL;
   }
   event->acceptProposedAction();
-
-//  QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
-//  if(o == NULL)
-//  {
-//
-//    int count = m_FilterWidgetLayout->count();
-//    for (int i = 0; i < count; ++i)
-//    {
-//      QFilterWidget* w = qobject_cast<QFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-//      if(w)
-//      {
-//        if(event->pos().y() < w->geometry().y())
-//        {
-//        //  m_FilterWidgetLayout->insertWidget(i, m_FilterBeingDragged);
-//          setSelectedFilterWidget(m_FilterBeingDragged);
-//          m_FilterBeingDragged = NULL;
-//          break;
-//        }
-//      }
-//
-//    }
-//
-//  }
 }
 
 #if 0

@@ -23,21 +23,12 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centerWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="">
     <property name="spacing">
-     <number>4</number>
+     <number>0</number>
     </property>
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>6</number>
+    <property name="margin">
+     <number>0</number>
     </property>
    </layout>
   </widget>
