@@ -33,30 +33,39 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QDROPPABLEWIDGET_H_
-#define _QDROPPABLEWIDGET_H_
 
-#include <QtGui/QScrollArea>
+#ifndef QSCROLLCONTENTSWIDGET_H_
+#define QSCROLLCONTENTSWIDGET_H_
+
+#include <QtGui/QWidget>
+#include <QtGui/QLabel>
 
 /*
  *
  */
-class QDroppableScrollArea : public QScrollArea
+class QScrollContentsWidget : public QWidget
 {
-    Q_OBJECT
+    Q_OBJECT;
 
   public:
-    QDroppableScrollArea(QWidget *parent = NULL);
-
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
-    void dragMoveEvent( QDragMoveEvent* event);
+    QScrollContentsWidget(QWidget* parent = 0);
+    virtual ~QScrollContentsWidget();
 
   signals:
-     void filterDropped(QString filter);
+     void addPlaceHolderFilter(QPoint p);
+     void removePlaceHolderFilter();
+
+  protected:
+      void dragEnterEvent(QDragEnterEvent *event);
+      void dragMoveEvent(QDragMoveEvent *event);
+      void dropEvent(QDropEvent *event);
+   //   void mousePressEvent(QMouseEvent *event);
 
   private:
+    QLabel          m_InsertedLabel;
 
+    QScrollContentsWidget(const QScrollContentsWidget&); // Copy Constructor Not Implemented
+    void operator=(const QScrollContentsWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* _QDROPPABLEWIDGET_H_ */
+#endif /* QSCROLLCONTENTSWIDGET_H_ */
