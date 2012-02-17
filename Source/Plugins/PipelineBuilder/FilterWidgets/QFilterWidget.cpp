@@ -557,6 +557,8 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
   drag->setPixmap(pixmap);
   drag->setHotSpot(event->pos());
 
+  emit dragStarted(this);
+
 //  if(drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
 //  {
 //    std::cout << "Drag should close the widget because it was MOVE" << std::endl;

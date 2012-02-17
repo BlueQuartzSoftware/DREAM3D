@@ -155,6 +155,6 @@ IF ( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 
-add_subdirectory( ${PipelineBuilderPlugin_SOURCE_DIR}/Test ${DREAM3DProj_BINARY_DIR}/PipelineBuilderPlugin)
+add_subdirectory( ${PipelineBuilderPlugin_SOURCE_DIR}/Test ${PipelineBuilderPlugin_BINARY_DIR}/Test)
 
 
