@@ -235,7 +235,7 @@ p, li { white-space: pre-wrap; }
      <property name="alignment">
       <set>Qt::AlignHCenter|Qt::AlignTop</set>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
+     <widget class="PipelineViewWidget" name="scrollAreaWidgetContents">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -265,6 +265,12 @@ p, li { white-space: pre-wrap; }
    <class>QDroppableScrollArea</class>
    <extends>QScrollArea</extends>
    <header location="global">QDroppableScrollArea.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PipelineViewWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">PipelineViewWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

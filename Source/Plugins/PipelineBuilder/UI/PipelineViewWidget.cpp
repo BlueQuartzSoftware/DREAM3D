@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "QScrollContentsWidget.h"
+#include "PipelineViewWidget.h"
 
 #include <iostream>
 
@@ -51,7 +51,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QScrollContentsWidget::QScrollContentsWidget(QWidget* parent) :
+PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
 QWidget(parent)
 {
   m_InsertedLabel.setText("Temp Label");
@@ -61,7 +61,7 @@ QWidget(parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QScrollContentsWidget::~QScrollContentsWidget()
+PipelineViewWidget::~PipelineViewWidget()
 {
 
 }
@@ -70,10 +70,10 @@ QScrollContentsWidget::~QScrollContentsWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QScrollContentsWidget::dragEnterEvent( QDragEnterEvent* event)
+void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 {
   event->acceptProposedAction();
-  std::cout << "QScrollContentsWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
   if (w != NULL)
   {
@@ -82,12 +82,12 @@ void QScrollContentsWidget::dragEnterEvent( QDragEnterEvent* event)
   QVBoxLayout* l = qobject_cast<QVBoxLayout*>(childAt(event->pos()));
   if (l != NULL)
   {
-    std::cout << "QScrollContentsWidget::dragEnterEvent: Found the QVBoxLayout" << std::endl;
+    std::cout << "PipelineViewWidget::dragEnterEvent: Found the QVBoxLayout" << std::endl;
   }
-  QScrollContentsWidget* o = qobject_cast<QScrollContentsWidget*>(childAt(event->pos()));
+  PipelineViewWidget* o = qobject_cast<PipelineViewWidget*>(childAt(event->pos()));
   if (o != NULL)
   {
-    std::cout << "QScrollContentsWidget::dragEnterEvent: " << o->objectName().toStdString() << std::endl;
+    std::cout << "PipelineViewWidget::dragEnterEvent: " << o->objectName().toStdString() << std::endl;
 
   }
 }
@@ -95,23 +95,23 @@ void QScrollContentsWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QScrollContentsWidget::dragMoveEvent( QDragMoveEvent* event)
+void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 {
-  std::cout << "QScrollContentsWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
   if (w != NULL)
   {
-    std::cout << "QScrollContentsWidget::dragMoveEvent: QFilterWidget Found: " << w->getFilter()->getNameOfClass() << std::endl;
+    std::cout << "PipelineViewWidget::dragMoveEvent: QFilterWidget Found: " << w->getFilter()->getNameOfClass() << std::endl;
   }
   QVBoxLayout* l = qobject_cast<QVBoxLayout*>(childAt(event->pos()));
   if (l != NULL)
   {
-    std::cout << "QScrollContentsWidget::dragMoveEvent: Found the QVBoxLayout" << std::endl;
+    std::cout << "PipelineViewWidget::dragMoveEvent: Found the QVBoxLayout" << std::endl;
   }
   QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
   if (o == NULL)
   {
-    std::cout << "QScrollContentsWidget::dragMoveEvent: No Child deteected" << std::endl;
+    std::cout << "PipelineViewWidget::dragMoveEvent: No Child deteected" << std::endl;
     QVBoxLayout* l = qobject_cast<QVBoxLayout*>(layout());
     if (l) {
       int count = l->count();
@@ -125,9 +125,9 @@ void QScrollContentsWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QScrollContentsWidget::dropEvent(QDropEvent *event)
+void PipelineViewWidget::dropEvent(QDropEvent *event)
 {
-  std::cout << "QScrollContentsWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
 
 }
 
@@ -135,9 +135,9 @@ void QScrollContentsWidget::dropEvent(QDropEvent *event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QScrollContentsWidget::mousePressEvent(QMouseEvent *event)
+void PipelineViewWidget::mousePressEvent(QMouseEvent *event)
 {
-  std::cout << "QScrollContentsWidget::mousePressEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  std::cout << "PipelineViewWidget::mousePressEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
     QFilterWidget* w = static_cast<QFilterWidget*>(childAt(event->pos()));
     if (!w)
         return;

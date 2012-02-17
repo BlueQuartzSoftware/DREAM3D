@@ -43,13 +43,13 @@
 /*
  *
  */
-class QScrollContentsWidget : public QWidget
+class PipelineViewWidget : public QWidget
 {
     Q_OBJECT;
 
   public:
-    QScrollContentsWidget(QWidget* parent = 0);
-    virtual ~QScrollContentsWidget();
+    PipelineViewWidget(QWidget* parent = 0);
+    virtual ~PipelineViewWidget();
 
   signals:
      void addPlaceHolderFilter(QPoint p);
@@ -64,8 +64,8 @@ class QScrollContentsWidget : public QWidget
   private:
     QLabel          m_InsertedLabel;
 
-    QScrollContentsWidget(const QScrollContentsWidget&); // Copy Constructor Not Implemented
-    void operator=(const QScrollContentsWidget&); // Operator '=' Not Implemented
+    PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
+    void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* QSCROLLCONTENTSWIDGET_H_ */
