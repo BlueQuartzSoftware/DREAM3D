@@ -224,7 +224,10 @@ p, li { white-space: pre-wrap; }
       <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
      <property name="widgetResizable">
       <bool>true</bool>
@@ -237,7 +240,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>422</width>
+        <width>420</width>
         <height>16</height>
        </rect>
       </property>
@@ -254,15 +257,15 @@ p, li { white-space: pre-wrap; }
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QFilterListWidget</class>
+   <extends>QListWidget</extends>
+   <header location="global">QFilterListWidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>QDroppableScrollArea</class>
    <extends>QScrollArea</extends>
    <header location="global">QDroppableScrollArea.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QFilterListWidget</class>
-   <extends>QListWidget</extends>
-   <header location="global">QFilterListWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>
