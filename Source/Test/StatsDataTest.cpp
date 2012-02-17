@@ -401,7 +401,7 @@ StatsDataArray::Pointer createStatsDataArray()
   StatsData::Pointer data1 = StatsData::New();
   data1->setPhaseFraction(calcPhaseFraction);
   data1->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
-  data1->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+//  data1->setGrainSizeDistribution(avglogdiam, sdlogdiam);
   data1->setBinNumbers(binNumbers);
   initializeOmega3(data1, nBins);
   initializeBOverA(data1, nBins);
@@ -417,7 +417,7 @@ StatsDataArray::Pointer createStatsDataArray()
   calcPhaseFraction = 0.75f;
   data2->setPhaseFraction(calcPhaseFraction);
   data2->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
-  data2->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+//  data2->setGrainSizeDistribution(avglogdiam, sdlogdiam);
   data2->setBinNumbers(binNumbers);
   initializeOmega3(data2, nBins);
   initializeBOverA(data2, nBins);

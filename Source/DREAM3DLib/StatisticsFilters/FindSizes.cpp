@@ -38,6 +38,9 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
+#include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
+#include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 #include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
 #include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 
@@ -53,7 +56,9 @@ m_Volumes(NULL),
 m_EquivalentDiameters(NULL),
 m_NumCells(NULL)
 {
-
+  m_DistributionAnalysis.push_back(BetaOps::New());
+  m_DistributionAnalysis.push_back(PowerLawOps::New());
+  m_DistributionAnalysis.push_back(LogNormalOps::New());
 }
 
 // -----------------------------------------------------------------------------
@@ -159,23 +164,13 @@ void FindSizes::find_sizes()
 
   float radcubed;
   float diameter;
-  std::vector<float> avgdiam;
-  std::vector<float> sddiam;
-  std::vector<float> maxdiam;
-  std::vector<float> mindiam;
-  std::vector<float> binstepsize;
-  std::vector<FloatArrayType::Pointer> binnumbers;
-  std::vector<size_t> unbiasedcount;
+  std::vector<VectorOfFloatArray> sizedist;
+  std::vector<std::vector<std::vector<float > > > values;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
-  avgdiam.resize(numensembles,0);
-  sddiam.resize(numensembles,0);
-  maxdiam.resize(numensembles,0);
-  mindiam.resize(numensembles,1000000);
-  binstepsize.resize(numensembles,0);
-  binnumbers.resize(numensembles);
-  unbiasedcount.resize(numensembles,0);
+  sizedist.resize(numensembles);
+  values.resize(numensembles);
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains, "GrainCounts");
   float* graincounts = m_GrainCounts->GetPointer(0);
@@ -202,44 +197,13 @@ void FindSizes::find_sizes()
     m_EquivalentDiameters[i] = diameter;
 	if(m_BiasedFields[i] == false)
 	{
-		unbiasedcount[m_Phases[i]]++;
-		avgdiam[m_Phases[i]] = avgdiam[m_Phases[i]] + logf(m_EquivalentDiameters[i]);
-		if(m_EquivalentDiameters[i] > maxdiam[m_Phases[i]]) maxdiam[m_Phases[i]] = m_EquivalentDiameters[i];
-		if(m_EquivalentDiameters[i] < mindiam[m_Phases[i]]) mindiam[m_Phases[i]] = m_EquivalentDiameters[i];
+		values[m_Phases[i]][0].push_back(m_EquivalentDiameters[i]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
-	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
-  }
-  for (size_t i = 1; i < numgrains; i++)
-  {
-	if(m_BiasedFields[i] == false)
-	{
-		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((logf(m_EquivalentDiameters[i])-avgdiam[m_Phases[i]])*(logf(m_EquivalentDiameters[i])-avgdiam[m_Phases[i]]));
-	}
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
-	  sddiam[i] = sqrt(sddiam[i]);
-	  statsDataArray[i]->setGrainSizeStdDev(sddiam[i]);
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-	  binnumbers[i] = FloatArrayType::CreateArray(10);
-	  binnumbers[i]->SetName(DREAM3D::HDF5::BinNumber);
-	  float stepsize = (maxdiam[i]-mindiam[i])/10.0;
-	  statsDataArray[i]->setBinStepSize(stepsize);
-	  statsDataArray[i]->setMaxGrainDiameter(maxdiam[i]);
-	  statsDataArray[i]->setMinGrainDiameter(mindiam[i]);
-	  for (size_t j = 0; j < 10; j++)
-	  {
-		  float value = mindiam[i] + (float(j)*stepsize);
-		  binnumbers[i]->SetValue(j,value);
-	  }
-	  statsDataArray[i]->setBinNumbers(binnumbers[i]);
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
+	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
   }
 }
 void FindSizes::find_sizes2D()
@@ -296,39 +260,6 @@ void FindSizes::find_sizes2D()
 		if(m_EquivalentDiameters[i] > maxdiam[m_Phases[i]]) maxdiam[m_Phases[i]] = m_EquivalentDiameters[i];
 		if(m_EquivalentDiameters[i] < mindiam[m_Phases[i]]) mindiam[m_Phases[i]] = m_EquivalentDiameters[i];
 	}
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-	  avgdiam[i] = avgdiam[i]/float(unbiasedcount[i]);
-	  statsDataArray[i]->setGrainSizeAverage(avgdiam[i]);
-  }
-  for (size_t i = 1; i < numgrains; i++)
-  {
-	if(m_BiasedFields[i] == false)
-	{
-		sddiam[m_Phases[i]] = sddiam[m_Phases[i]] + ((logf(m_EquivalentDiameters[i])-avgdiam[m_Phases[i]])*(logf(m_EquivalentDiameters[i])-avgdiam[m_Phases[i]]));
-	}
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-	  sddiam[i] = sddiam[i]/float(unbiasedcount[i]);
-	  sddiam[i] = sqrt(sddiam[i]);
-	  statsDataArray[i]->setGrainSizeStdDev(sddiam[i]);
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-	  binnumbers[i] = FloatArrayType::CreateArray(10);
-	  binnumbers[i]->SetName(DREAM3D::HDF5::BinNumber);
-	  float stepsize = (maxdiam[i]-mindiam[i])/10.0;
-	  statsDataArray[i]->setBinStepSize(stepsize);
-	  statsDataArray[i]->setMaxGrainDiameter(maxdiam[i]);
-	  statsDataArray[i]->setMinGrainDiameter(mindiam[i]);
-	  for (size_t j = 0; j < 10; j++)
-	  {
-		  float value = mindiam[i] + (float(j)*stepsize);
-		  binnumbers[i]->SetValue(j,value);
-	  }
-	  statsDataArray[i]->setBinNumbers(binnumbers[i]);
   }
 }
 

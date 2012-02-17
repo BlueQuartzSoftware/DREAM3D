@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
@@ -67,13 +68,8 @@ m_AspectRatios(NULL)
   INIT_DataArray(m_GrainCenters,float);
   INIT_DataArray(m_GrainMoments,float);
 
-  m_DistributionAnalysis.resize(DREAM3D::DistributionType::Count);
-
-//    m_HexOps = HexagonalOps::New();
   m_DistributionAnalysis.push_back(BetaOps::New());
-//     m_CubicOps = CubicOps::New();
   m_DistributionAnalysis.push_back(PowerLawOps::New());
-//     m_OrthoOps = OrthoRhombicOps::New();
   m_DistributionAnalysis.push_back(LogNormalOps::New());
 }
 
@@ -266,8 +262,13 @@ void FindShapes::find_moments()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
+  StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  setDistributionType(DREAM3D::DistributionType::Beta);
+
+  size_t bin;
 
   float u200 = 0;
   float u020 = 0;
@@ -275,18 +276,19 @@ void FindShapes::find_moments()
   float u110 = 0;
   float u011 = 0;
   float u101 = 0;
-  std::vector<VectorOfFloatArray> alphaomega3;
-  alphaomega3.resize(3);
-  alphaomega3[1].resize(DREAM3D::HDF5::BetaColumnCount);
-  std::vector<FloatArrayType::Pointer> betaomega3;
-  std::vector<size_t> unbiasedcount;
+  std::vector<VectorOfFloatArray> omega3;
+  std::vector<std::vector<std::vector<float> > > values;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
-  alphaomega3.resize(numensembles);
-  betaomega3.resize(numensembles);
-  unbiasedcount.resize(numensembles,0);
+  omega3.resize(numensembles);
+  values.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  omega3[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->generateBinNumbers()->GetSize());
+	  values[i].resize(statsDataArray[i]->generateBinNumbers()->GetSize());
+  }
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -387,27 +389,14 @@ void FindShapes::find_moments()
     m_Omega3s[i] = omega3;
 	if(m_BiasedFields[i] == false)
 	{
-		unbiasedcount[m_Phases[i]]++;
-//		avgomega3[m_Phases[i]] = avgomega3[m_Phases[i]] + m_Omega3s[i];
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
+		values[m_Phases[i]][bin].push_back(m_Omega3s[i]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-//	  avgomega3[i] = avgomega3[i]/float(unbiasedcount[i]);
-//	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
-  }
-  for (size_t i = 1; i < numgrains; i++)
-  {
-	if(m_BiasedFields[i] == false)
-	{
-//		sdomega3[m_Phases[i]] = sdomega3[m_Phases[i]] + ((m_Omega3s[i]-avgomega3[m_Phases[i]])*(m_Omega3s[i]-avgomega3[m_Phases[i]]));
-	}
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-//	  sdomega3[i] = sdomega3[i]/float(unbiasedcount[i]);
-//	  sdomega3[i] = sqrt(sdomega3[i]);
-//	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], omega3[i]);
+	  statsDataArray[i]->setGrainSize_Omegas(omega3[i]);
   }
 }
 void FindShapes::find_moments2D()

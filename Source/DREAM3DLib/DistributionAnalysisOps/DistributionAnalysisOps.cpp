@@ -50,15 +50,5 @@ DistributionAnalysisOps::~DistributionAnalysisOps()
 
 }
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DistributionAnalysisOps::calculateParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
-{
-  assert(false);
-  return -1;
-}
-#endif
 
 

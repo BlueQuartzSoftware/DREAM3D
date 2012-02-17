@@ -53,7 +53,18 @@ LogNormalOps::LogNormalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LogNormalOps::calculateParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
+{
+  int err = 0;
+  // Put all the analysis code her
+
+  // Return a Negative value if some sort of error occurs
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
   // Put all the analysis code her
