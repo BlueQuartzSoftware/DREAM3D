@@ -97,7 +97,8 @@ class DREAM3DLib_EXPORT StatsData
      * @return a VectorOfFloatArray object which could be empty if an unrecognized
      * distribution type is passed in.
      */
-    static VectorOfFloatArray CreateDistributionArrays(uint32_t distributionType, size_t numBins);
+    static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
+	static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
 
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
@@ -117,13 +118,8 @@ class DREAM3DLib_EXPORT StatsData
     /**
       * @brief The values are encoded into 2 floats: Average, Standard Deviation
       */
-    DREAM3D_INSTANCE_VEC2_PROPERTY(float, GrainSizeDistribution);
-    void setGrainSizeAverage(float v) { m_GrainSizeDistribution[0] = v;}
-    float getGrainSizeAverage() { return m_GrainSizeDistribution[0]; }
-
-    void setGrainSizeStdDev(float v) { m_GrainSizeDistribution[1] = v;}
-    float getGrainSizeStdDev() { return m_GrainSizeDistribution[1]; }
-
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSizeDistribution);
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, GrainSize_DistType);
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers);
     /**

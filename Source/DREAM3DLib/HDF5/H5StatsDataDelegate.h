@@ -70,9 +70,6 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
     int writeGrainDiameterInfo(StatsData* data, hid_t groupId);
     int readGrainDiameterInfo(StatsData* data, hid_t groupId);
 
-    int writeGrainSizeDistribution(StatsData* data, hid_t groupId);
-    int readGrainSizeDistribution(StatsData* data, hid_t groupId);
-
     int writeBinNumbers(StatsData* data, hid_t groupId);
     int readBinNumbers(StatsData* data, hid_t groupId);
 

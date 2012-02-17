@@ -127,7 +127,11 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
   err |= readGrainDiameterInfo(data, groupId);
 
   // Read the Grain Size Distribution
-   err |= readGrainSizeDistribution(data, groupId);
+  data->setGrainSizeDistribution(createDistributionVector(data->getGrainSize_DistType()));
+  err |= readDistributionData(groupId,
+							    DREAM3D::HDF5::LogNormalDistribution,
+								DREAM3D::HDF5::Grain_Size_Distribution,
+								data->getGrainSizeDistribution());
 
    // Read the Bin Numbers
    err |= readBinNumbers(data, groupId);
@@ -228,7 +232,10 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
   err |= writeGrainDiameterInfo(data, groupId);
 
   // Write the Grain Size Distribution
-  err |= writeGrainSizeDistribution(data, groupId);
+  err |= writeDistributionData(groupId,
+							   DREAM3D::HDF5::LogNormalDistribution,
+							   DREAM3D::HDF5::Grain_Size_Distribution,
+							   data->getGrainSizeDistribution());
 
   // Write the Bin Numbers
   err |= writeBinNumbers(data, groupId);
@@ -564,41 +571,6 @@ int H5StatsDataDelegate::readGrainDiameterInfo(StatsData* data, hid_t groupId)
 
   err = H5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Diameter_Info, grainDiameterInfo);
   data->setGrainDiameterInfo(grainDiameterInfo);
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeGrainSizeDistribution(StatsData* data, hid_t pid)
-{
-  hsize_t dims[1];
-  dims[0] = 2;
-  int32_t rank = 1;
-
-  /*
-   * Grain Size Distribution Info is encode as 2 floats: Average and Standard Deviation
-   */
-  float grainSizeDistribution[2];
-  data->getGrainSizeDistribution(grainSizeDistribution);
-
-  return H5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Size_Distribution, rank, dims, grainSizeDistribution);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readGrainSizeDistribution(StatsData* data, hid_t groupId)
-{
-  int err = 0;
-  /*
-   * Grain Size Distribution Info is encode as 2 floats: Average and Std Dev.
-   */
-  float grainSizeDist[2] =
-  { 0.0f, 0.0f };
-
-  err = H5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Size_Distribution, grainSizeDist);
-  data->setGrainSizeDistribution(grainSizeDist);
   return err;
 }
 

@@ -48,6 +48,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 /**
  * @class FindSizes FindSizes.h DREAM3DLib/GenericFilters/FindSizes.h
@@ -64,6 +65,8 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter);
 
     virtual ~FindSizes();
+
+	DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Sizes"; }
@@ -91,6 +94,8 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     int32_t* m_NumCells;
 
 	StatsDataArray* m_StatsDataArray;
+
+	std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

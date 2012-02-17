@@ -791,9 +791,17 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
   statsData->setMaxGrainDiameter(maxdiameter);
   statsData->setMinGrainDiameter(mindiameter);
   // Grain Size Distribution
-  statsData->setGrainSizeAverage(avglogdiam);
-  statsData->setGrainSizeStdDev(sdlogdiam);
-
+  {
+    VectorOfFloatArray data;
+	FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Average);
+	FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::StandardDeviation);
+	data.push_back(d1);
+	data.push_back(d2);
+	d1->SetValue(0, avglogdiam);
+	d2->SetValue(0, sdlogdiam);
+    statsData->setGrainSizeDistribution(data);
+	statsData->setGrainSize_DistType(DREAM3D::DistributionType::LogNormal);
+  }
 //  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction, m_PptFraction);
 //  CHECK_ERROR_ON_WRITE(err, "PhaseInformation")
 //  err = writer->writeSizeDistribution(m_PhaseIndex, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
