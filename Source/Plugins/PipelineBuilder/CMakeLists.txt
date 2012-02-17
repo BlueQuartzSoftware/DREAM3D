@@ -55,14 +55,14 @@ set (PipelineBuilderPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderPlugin.h
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.h  
-    ${PROJECT_SOURCE_DIR}/UI/QScrollContentsWidget.h   
+    ${PROJECT_SOURCE_DIR}/UI/PipelineViewWidget.h   
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
 set (PipelineBuilderPlugin_UI_SRCS 
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.cpp
-    ${PROJECT_SOURCE_DIR}/UI/QScrollContentsWidget.cpp
+    ${PROJECT_SOURCE_DIR}/UI/PipelineViewWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
 
