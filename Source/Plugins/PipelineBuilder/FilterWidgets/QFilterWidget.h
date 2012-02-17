@@ -85,6 +85,9 @@ class QFilterWidget : public QGroupBox
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
 
+  signals:
+    void dragStarted(QFilterWidget* widget);
+
   public slots:
 
      virtual void updateFilterValues();
@@ -110,11 +113,14 @@ class QFilterWidget : public QGroupBox
 
   protected:
      virtual void mousePressEvent( QMouseEvent* event );
-//     virtual void mouseReleaseEvent( QMouseEvent* event );
+     virtual void mouseReleaseEvent( QMouseEvent* event );
 //     virtual void mouseDoubleClickEvent( QMouseEvent* event );
-//     virtual void mouseMoveEvent( QMouseEvent* event );
+     virtual void mouseMoveEvent( QMouseEvent* event );
 
   private:
+     QRect      m_DeleteRect;
+     QPoint      dragStartPosition;
+
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented
 

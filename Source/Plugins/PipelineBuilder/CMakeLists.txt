@@ -6,12 +6,12 @@ set(PLUGIN_NAME PipelineBuilder)
 # Get the Directory where the plugin lives
 get_filename_component(PluginPath ${PROJECT_SOURCE_DIR} PATH)
 include_directories(${PROJECT_CODE_DIR}/QtSupport
-                    ${PROJECT_CODE_DIR}/FilterWidgets
+                    ${PROJECT_CODE_DIR}/UI
                     ${DREAM3DProj_BINARY_DIR}
                     ${DREAM3DProj_BINARY_DIR}/QtSupport
-                    ${DREAM3DProj_BINARY_DIR}/FilterWidgets
                     ${PluginPath} 
-                    ${PROJECT_BINARY_DIR} )
+                    ${PROJECT_BINARY_DIR} 
+                    ${PipelineBuilderPlugin_SOURCE_DIR}/UI)
 
 # --------------------------------------------------------------------
 # Build the FilterWidgets Static Library which is ONLY needed by this plugin
@@ -54,14 +54,15 @@ set(CLASS_NAME "PipelineBuilder")
 set (PipelineBuilderPlugin_UI_HDRS
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderPlugin.h
-    ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.h
+    ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.h  
+    ${PROJECT_SOURCE_DIR}/UI/PipelineViewWidget.h   
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.h
     )
     
 set (PipelineBuilderPlugin_UI_SRCS 
-#    ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.cpp
+    ${PROJECT_SOURCE_DIR}/UI/PipelineViewWidget.cpp
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginFrame.cpp
     )
 
@@ -154,6 +155,6 @@ IF ( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 
-add_subdirectory( ${PipelineBuilderPlugin_SOURCE_DIR}/Test ${DREAM3DProj_BINARY_DIR}/PipelineBuilderPlugin)
+add_subdirectory( ${PipelineBuilderPlugin_SOURCE_DIR}/Test ${PipelineBuilderPlugin_BINARY_DIR}/Test)
 
 
