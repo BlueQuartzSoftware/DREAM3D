@@ -162,10 +162,6 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
-
-
-
-
   // Get the QFilterWidget Mangager Instance
   QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
 
@@ -177,8 +173,10 @@ void PipelineBuilderWidget::setupGui()
 
   for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
+    QIcon icon(":/bullet_ball_blue.png");
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
+    filterGroup->setIcon(0, icon);
     groupToItem.insert(QString::fromStdString(*iter), filterGroup);
   }
   library->setExpanded(true);
