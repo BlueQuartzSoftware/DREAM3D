@@ -264,6 +264,7 @@ void TestDataContainerReader()
   pipeline->pushBack(h5Reader);
 
   FindSizes::Pointer find_sizes = FindSizes::New();
+  find_sizes->setDistributionType(DREAM3D::DistributionType::LogNormal);
   pipeline->pushBack(find_sizes);
 
 //  FindShapes::Pointer find_shapes = FindShapes::New();

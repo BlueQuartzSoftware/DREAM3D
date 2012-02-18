@@ -165,8 +165,11 @@ void FindSizes::find_sizes()
 
   float radcubed;
   float diameter;
+  float maxdiam;
+  float mindiam;
   std::vector<VectorOfFloatArray> sizedist;
   std::vector<std::vector<std::vector<float > > > values;
+  FloatArrayType::Pointer binnumbers;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
@@ -210,6 +213,12 @@ void FindSizes::find_sizes()
   {
 	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
+	  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+	  float stepsize = (maxdiam-mindiam)/10.0;
+	  statsDataArray[i]->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+	  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+	  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+	  statsDataArray[i]->setBinNumbers(binnumbers);
   }
 }
 void FindSizes::find_sizes2D()
@@ -222,8 +231,11 @@ void FindSizes::find_sizes2D()
 
   float radsquared;
   float diameter;
+  float maxdiam;
+  float mindiam;
   std::vector<VectorOfFloatArray> sizedist;
   std::vector<std::vector<std::vector<float > > > values;
+  FloatArrayType::Pointer binnumbers;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
@@ -264,6 +276,12 @@ void FindSizes::find_sizes2D()
   {
 	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
+	  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+	  float stepsize = (maxdiam-mindiam)/10.0;
+	  statsDataArray[i]->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+	  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+	  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+	  statsDataArray[i]->setBinNumbers(binnumbers);
   }
 }
 

@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT DistributionAnalysisOps
     virtual int calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs) = 0;
 
 	static void determinemaxandminvalues(std::vector<float> &data, float &max, float &min);
+	static void determinebinnumbers(float &max, float &min, float &stepsize, FloatArrayType::Pointer binnumbers);
 
   protected:
     DistributionAnalysisOps();
