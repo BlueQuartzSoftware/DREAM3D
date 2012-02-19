@@ -176,7 +176,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
     ShapeOps::Pointer m_EllipsoidOps;
-    ShapeOps::Pointer m_SuprtEllipsoidOps;
+    ShapeOps::Pointer m_SuperEllipsoidOps;
 
     std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;

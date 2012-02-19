@@ -90,6 +90,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  setErrorCondition(0);
 
   bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
   if (false == exists)
@@ -266,8 +267,6 @@ void FindShapes::find_moments()
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
-  setDistributionType(DREAM3D::DistributionType::Beta);
-
   size_t bin;
 
   float u200 = 0;
@@ -376,9 +375,9 @@ void FindShapes::find_moments()
     u200 = (grainmoments[i*6 + 1] + grainmoments[i*6 + 2] - grainmoments[i*6 + 0]) / 2.0f;
     u020 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 2] - grainmoments[i*6 + 1]) / 2.0f;
     u002 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 1] - grainmoments[i*6 + 2]) / 2.0f;
-    u110 = -grainmoments[i*6 + 3];
-    u011 = -grainmoments[i*6 + 4];
-    u101 = -grainmoments[i*6 + 5];
+    u110 = grainmoments[i*6 + 3];
+    u011 = grainmoments[i*6 + 4];
+    u101 = grainmoments[i*6 + 5];
     float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     float vol5 = graincenters[i*5 + 0]*konst2;
     vol5 = powf(vol5, 5);

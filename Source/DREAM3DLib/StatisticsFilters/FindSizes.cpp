@@ -57,8 +57,8 @@ m_EquivalentDiameters(NULL),
 m_NumCells(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
-  m_DistributionAnalysis.push_back(PowerLawOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
+  m_DistributionAnalysis.push_back(PowerLawOps::New());
 }
 
 // -----------------------------------------------------------------------------
@@ -214,7 +214,7 @@ void FindSizes::find_sizes()
 	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
 	  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-	  float stepsize = (maxdiam-mindiam)/10.0;
+	  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
 	  statsDataArray[i]->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 	  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 	  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
@@ -277,7 +277,7 @@ void FindSizes::find_sizes2D()
 	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
 	  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-	  float stepsize = (maxdiam-mindiam)/10.0;
+	  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
 	  statsDataArray[i]->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 	  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 	  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);

@@ -53,7 +53,7 @@ DistributionAnalysisOps::~DistributionAnalysisOps()
 }
 void DistributionAnalysisOps::determinemaxandminvalues(std::vector<float> &data, float &max, float &min)
 {
-	int value;
+	float value;
     min = std::numeric_limits<float>::max();
     max = std::numeric_limits<float>::min();
 	for (size_t i = 0; i < data.size(); i++)
