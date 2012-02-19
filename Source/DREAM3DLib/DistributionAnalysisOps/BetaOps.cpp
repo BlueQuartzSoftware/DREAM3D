@@ -36,6 +36,8 @@
 
 #include "BetaOps.h"
 
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -56,9 +58,24 @@ BetaOps::BetaOps()
 int BetaOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
-  // Put all the analysis code her
-
-  // Return a Negative value if some sort of error occurs
+  float avg = 0;
+  float stddev = 0;
+  float alpha = 0;
+  float beta = 0;
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	avg = avg + data[i];		
+  }
+  avg = avg/float(data.size());
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	stddev = stddev + ((avg - data[i])*(avg - data[i]));		
+  }
+  stddev = stddev/float(data.size());
+  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
+  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
+  outputs->SetValue(0, alpha);
+  outputs->SetValue(1, beta);
   return err;
 }
 // -----------------------------------------------------------------------------
@@ -67,8 +84,30 @@ int BetaOps::calculateParameters(std::vector<float> &data, FloatArrayType::Point
 int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
-  // Put all the analysis code her
-
-  // Return a Negative value if some sort of error occurs
+  float avg = 0;
+  float stddev = 0;
+  float alpha = 0;
+  float beta = 0;
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	  avg = 0;
+	  stddev = 0;
+	  alpha = 0;
+	  beta = 0;
+	  for(size_t j = 0; j < data[i].size(); j++)
+	  {
+		avg = avg + data[i][j];		
+	  }
+	  avg = avg/float(data[i].size());
+	  for(size_t j = 0; j < data[i].size(); j++)
+	  {
+		stddev = stddev + ((avg - data[i][j])*(avg - data[i][j]));		
+	  }
+	  stddev = stddev/float(data[i].size());
+	  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
+	  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
+	  outputs[0]->SetValue(i, alpha);
+	  outputs[1]->SetValue(i, beta);
+  }
   return err;
 }

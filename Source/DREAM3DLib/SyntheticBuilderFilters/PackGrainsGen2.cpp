@@ -176,8 +176,8 @@ m_ShapeTypes(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
   m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuprtEllipsoidOps = SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_SuperEllipsoidOps = SuperEllipsoidOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuperEllipsoidOps.get();
   m_CubicOctohedronOps = CubeOctohedronOps::New();
   m_ShapeOps[DREAM3D::ShapeType::CubeOctahedronShape] = m_CubicOctohedronOps.get();
   m_CylinderOps = CylinderOps::New();

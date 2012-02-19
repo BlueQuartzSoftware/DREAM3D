@@ -73,9 +73,9 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
     v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Beta);
     v[1]->initializeWithZeros();
   }
-  else if(distributionType == DREAM3D::DistributionType::Power)
+  else if(distributionType == DREAM3D::DistributionType::LogNormal)
   {
-    v.resize(DREAM3D::HDF5::PowerLawColumnCount);
+	v.resize(DREAM3D::HDF5::LogNormalColumnCount);
     v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Average);
     v[0]->initializeWithZeros();
     v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::StandardDeviation);

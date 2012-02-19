@@ -100,7 +100,7 @@ std::string getH5EbsdFile()
 }
 
 int getZStartIndex() { return 1; }
-int getZEndIndex() { return 117; }
+int getZEndIndex() { return 25; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -267,8 +267,9 @@ void TestDataContainerReader()
   find_sizes->setDistributionType(DREAM3D::DistributionType::LogNormal);
   pipeline->pushBack(find_sizes);
 
-//  FindShapes::Pointer find_shapes = FindShapes::New();
-//  pipeline->pushBack(find_shapes);
+  FindShapes::Pointer find_shapes = FindShapes::New();
+  find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
+  pipeline->pushBack(find_shapes);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
