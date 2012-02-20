@@ -61,8 +61,6 @@
 #include "DREAM3DLib/Common/ShapeType.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-//#include "DREAM3DLib/HDF5/H5StatsReader.h"
-//#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
@@ -369,6 +367,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     m_OutputDir->setText(outPath);
   }
 
+#if 0
   QFileInfo fi(m_H5InputStatisticsFile->text());
   if (fi.exists() && fi.isFile())
   {
@@ -444,7 +443,7 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     estimateNumGrainsSetup();
 
   }
-
+#endif
 
 
 }
@@ -621,7 +620,6 @@ void GrainGeneratorWidget::setupPipeline()
   if(m_AlreadyFormed->isChecked() == false)
   {
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
-    pack_grains->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundaryConditions->isChecked());
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight->value());
 #if PACK_GRAINS_ERROR_TXT_OUT
@@ -688,13 +686,11 @@ void GrainGeneratorWidget::setupPipeline()
   if(m_AlreadyFormed->isChecked() == false)
   {
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
-    place_precipitates->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
     place_precipitates->setPeriodicBoundaries(m_PeriodicBoundaryConditions->isChecked());
     m_FilterPipeline->pushBack(place_precipitates);
   }
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
-  match_crystallography->setH5StatsInputFile(QDir::toNativeSeparators(m_H5InputStatisticsFile->text()).toStdString() );
   m_FilterPipeline->pushBack(match_crystallography);
 
   MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile, outDir, prefix)
@@ -796,7 +792,7 @@ void GrainGeneratorWidget::estimateNumGrainsSetup()
 int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
 {
   //TODO: We should read the file once and cache the results instead of reading every time
-
+#if 0
   float totalvol;
   int phase;
   std::vector<int> phases;
@@ -909,6 +905,9 @@ int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoin
     gid++;
   }
   return gid;
+#else
+  return -1;
+#endif
 }
 
 

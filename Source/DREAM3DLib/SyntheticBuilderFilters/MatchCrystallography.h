@@ -48,12 +48,13 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
 
 /**
  * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h
@@ -75,7 +76,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile);
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
     virtual const std::string getGroupName()
@@ -100,9 +100,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
   protected:
     MatchCrystallography();
 
-    void initializeArrays(std::vector<unsigned int> structures);
-    int readODFData(H5StatsReader::Pointer h5io);
-    int readMisorientationData(H5StatsReader::Pointer h5io);
+    void initializeArrays();
 
     void assign_eulers();
     void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
@@ -131,6 +129,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     float* m_PrecipitateFractions;
     unsigned int* m_PhaseTypes;
     float* m_PhaseFractions;
+	StatsDataArray* m_StatsDataArray;
 
     // All other private instance variables
 	  float mdfchange;

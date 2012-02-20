@@ -36,6 +36,8 @@
 
 #include "LogNormalOps.h"
 
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -53,11 +55,51 @@ LogNormalOps::LogNormalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LogNormalOps::calculateParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
-  // Put all the analysis code her
-
-  // Return a Negative value if some sort of error occurs
+  float avg = 0;
+  float stddev = 0;
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	avg = avg + log(data[i]);		
+  }
+  avg = avg/float(data.size());
+  outputs->SetValue(0, avg);
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	stddev = stddev + ((avg - log(data[i]))*(avg - log(data[i])));		
+  }
+  stddev = stddev/float(data.size());
+  stddev = sqrt(stddev);
+  outputs->SetValue(1, stddev);
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+{
+  int err = 0;
+  float avg = 0;
+  float stddev = 0;
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	  avg = 0;
+	  stddev = 0;
+	  for(size_t j = 0; j < data[i].size(); j++)
+	  {
+		avg = avg + log(data[i][j]);		
+	  }
+	  avg = avg/float(data[i].size());
+	  outputs[0]->SetValue(i, avg);
+	  for(size_t j = 0; j < data[i].size(); j++)
+	  {
+		stddev = stddev + ((avg - log(data[i][j]))*(avg - log(data[i][j])));		
+	  }
+	  stddev = stddev/float(data[i].size());
+	  stddev = sqrt(stddev);
+	  outputs[1]->SetValue(i, stddev);
+  }
   return err;
 }

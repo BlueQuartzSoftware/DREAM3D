@@ -46,7 +46,6 @@
 // -----------------------------------------------------------------------------
 FindMDF::FindMDF()  :
 AbstractFilter(),
-m_CreateNewStatsFile(true),
 m_AvgQuats(NULL),
 m_SurfaceFields(NULL),
 m_PhasesF(NULL),
@@ -72,25 +71,6 @@ m_SharedSurfaceAreaList(NULL)
 FindMDF::~FindMDF()
 {
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindMDF::setupFilterOptions()
-{
-  std::vector<FilterOption::Pointer> options;
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Output Statistics File");
-    option->setPropertyName("H5StatsFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }
-  setFilterOptions(options);
-
-}
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -123,7 +103,12 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
    }
 
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -303,  float, FloatArrayType, ensembles, 1);
-
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-308);
+  }
 
   setErrorMessage(ss.str());
 }
@@ -151,8 +136,7 @@ void FindMDF::execute()
   }
   setErrorCondition(0);
 
-
-  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -176,7 +160,7 @@ void FindMDF::execute()
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
-  float **misobin;
+  std::vector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
 
   typedef DataArray<unsigned int> XTalType;
@@ -185,23 +169,23 @@ void FindMDF::execute()
   unsigned int* crystruct = crystructPtr->GetPointer(0);
   size_t numXTals = crystructPtr->GetNumberOfTuples();
 
-  misobin = new float *[numXTals];
+  misobin.resize(numXTals);
   for(size_t i=1;i<numXTals;i++)
   {
     if (crystruct[i] == Ebsd::CrystalStructure::Hexagonal)
     {
       numbins = 36 * 36 * 12;
-      misobin[i] = new float[numbins];
+	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
     }
     else if (crystruct[i] == Ebsd::CrystalStructure::Cubic)
     {
       numbins = 18 * 18 * 18;
-      misobin[i] = new float[numbins];
+	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
     }
     // Now initialize all bins to 0.0
     for (int j = 0; j < numbins; j++)
     {
-      misobin[i][j] = 0.0;
+		misobin[i]->SetValue(j, 0.0);
     }
   }
   size_t nname;
@@ -247,17 +231,15 @@ void FindMDF::execute()
 		  if ((nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
 		  {
 			nsa = neighborsurfacearealist[i][j];
-			misobin[m_PhasesF[i]][mbin] = misobin[m_PhasesF[i]][mbin] + (nsa / m_TotalSurfaceAreas[m_PhasesF[i]]);
+			misobin[m_PhasesF[i]]->SetValue(mbin, (misobin[m_PhasesF[i]]->GetValue(mbin) + (nsa / m_TotalSurfaceAreas[m_PhasesF[i]])));
 		  }
 		}
   }
   unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numXTals; i++)
   {
-	  h5io->writeMisorientationBinsData(i, &dims, misobin[i]);
-	  delete[] misobin[i];
+	  statsDataArray[i]->setMisorientationBins(misobin[i]);
   }
-  delete[] misobin;
 
   notify("FindMDF Completed", 0, Observable::UpdateProgressMessage);
 }

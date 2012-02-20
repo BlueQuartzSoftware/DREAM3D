@@ -62,7 +62,7 @@ StatsData::~StatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorOfFloatArray StatsData::CreateDistributionArrays(uint32_t distributionType, size_t numBins)
+VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins)
 {
   VectorOfFloatArray v;
   if(distributionType == DREAM3D::DistributionType::Beta)
@@ -73,9 +73,9 @@ VectorOfFloatArray StatsData::CreateDistributionArrays(uint32_t distributionType
     v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Beta);
     v[1]->initializeWithZeros();
   }
-  else if(distributionType == DREAM3D::DistributionType::Power)
+  else if(distributionType == DREAM3D::DistributionType::LogNormal)
   {
-    v.resize(DREAM3D::HDF5::PowerLawColumnCount);
+	v.resize(DREAM3D::HDF5::LogNormalColumnCount);
     v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Average);
     v[0]->initializeWithZeros();
     v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::StandardDeviation);
@@ -93,22 +93,44 @@ VectorOfFloatArray StatsData::CreateDistributionArrays(uint32_t distributionType
   }
   return v;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributionType)
+{
+	FloatArrayType::Pointer v;
+  if(distributionType == DREAM3D::DistributionType::Beta)
+  {
+	v = FloatArrayType::CreateArray(DREAM3D::HDF5::BetaColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+    v->initializeWithZeros();
+  }
+  else if(distributionType == DREAM3D::DistributionType::LogNormal)
+  {
+	v = FloatArrayType::CreateArray(DREAM3D::HDF5::LogNormalColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+    v->initializeWithZeros();
+  }
+  else if(distributionType == DREAM3D::DistributionType::Power)
+  {
+	v = FloatArrayType::CreateArray(DREAM3D::HDF5::PowerLawColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+    v->initializeWithZeros();
+  }
+  return v;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsData::initialize()
 {
+  m_GrainSize_DistType = DREAM3D::DistributionType::LogNormal;
   m_BOverA_DistType = DREAM3D::DistributionType::Beta;
   m_COverA_DistType = DREAM3D::DistributionType::Beta;
-  m_COverB_DistType = DREAM3D::DistributionType::Beta;
   m_Neighbors_DistType = DREAM3D::DistributionType::Power;
   m_Omegas_DistType = DREAM3D::DistributionType::Beta;
   m_GrainDiameterInfo[0] = 0.25f;
   m_GrainDiameterInfo[1] = 1.0f;
   m_GrainDiameterInfo[2] = 0.0f;
-  m_GrainSizeDistribution[0] = 0.0f;
-  m_GrainSizeDistribution[1] = 0.0f;
+
   m_PrecipBoundaryFraction = 0.0f;
 }
 

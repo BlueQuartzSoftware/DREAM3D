@@ -43,9 +43,10 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -68,13 +69,8 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 
     virtual ~FindAxisODF();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, CreateNewStatsFile)
-
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Axis ODF"; }
-
-    virtual void setupFilterOptions();
 
 	 /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -90,7 +86,9 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     int32_t* m_PhasesF;
     float* m_AxisEulerAngles;
 
-    std::vector<OrientationMath*> m_OrientationOps;
+	StatsDataArray* m_StatsDataArray;
+
+	std::vector<OrientationMath*> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

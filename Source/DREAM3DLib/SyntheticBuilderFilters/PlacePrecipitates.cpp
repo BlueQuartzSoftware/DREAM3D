@@ -58,7 +58,6 @@
 // -----------------------------------------------------------------------------
 PlacePrecipitates::PlacePrecipitates() :
 AbstractFilter(),
-m_H5StatsInputFile(""),
 m_PeriodicBoundaries(false),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
@@ -108,14 +107,6 @@ void PlacePrecipitates::setupFilterOptions()
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Input Statistics File");
-    option->setPropertyName("H5StatsInputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }
-  {
-    FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Periodic Boundary");
     option->setPropertyName("PeriodicBoundaries");
     option->setWidgetType(FilterOption::BooleanWidget);
@@ -157,10 +148,16 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -302, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -303, float, FloatArrayType, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-308);
+  }
 
   setErrorMessage(ss.str());
 }
@@ -568,9 +565,6 @@ void  PlacePrecipitates::place_precipitates()
   PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
   packGrains->setDataContainer(getDataContainer());
 
-  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
-  int err = packGrains->readReconStatsData(h5reader);
-  err = packGrains->readAxisOrientationData(h5reader);
   while (totalprecipvol < totalvol * totalprecipitatefractions)
   {
     Seed++;

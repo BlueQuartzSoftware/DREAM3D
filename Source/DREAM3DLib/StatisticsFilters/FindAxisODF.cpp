@@ -47,8 +47,6 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
 AbstractFilter(),
-m_H5StatsFile(""),
-m_CreateNewStatsFile(true),
 m_SurfaceFields(NULL),
 m_PhasesF(NULL),
 m_AxisEulerAngles(NULL)
@@ -72,24 +70,6 @@ FindAxisODF::~FindAxisODF()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAxisODF::setupFilterOptions()
-{
-  std::vector<FilterOption::Pointer> options;
-  {
-//    FilterOption::Pointer option = FilterOption::New();
-//    option->setHumanLabel("Output Statistics File");
-//    option->setPropertyName("H5StatsFile");
-//    option->setWidgetType(FilterOption::OutputFileWidget);
-//    option->setValueType("string");
-//    options.push_back(option);
-  }
-  setFilterOptions(options);
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
@@ -99,6 +79,13 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-308);
+  }
 
   setErrorMessage(ss.str());
 }
@@ -127,6 +114,8 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -138,26 +127,30 @@ void FindAxisODF::execute()
   XTalType* crystruct
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
-  H5StatsWriter::Pointer h5io = H5StatsWriter::New(getH5StatsFile(), m_CreateNewStatsFile);
-
   float r1, r2, r3;
   int bin;
-  float **axisodf;
-  int *totalaxes;
+  std::vector<FloatArrayType::Pointer> axisodf;
+  std::vector<float> totalaxes;
   size_t numXTals = crystruct->GetNumberOfTuples();
-  axisodf = new float *[numXTals];
-  totalaxes = new int [numXTals];
-  axisodf[0] = NULL;
+  axisodf.resize(numXTals);
+  totalaxes.resize(numXTals);
   for(size_t i=1;i<numXTals;i++)
   {
     totalaxes[i] = 0.0;
-    axisodf[i] = new float[36 * 36 * 36];
+	axisodf[i] = FloatArrayType::CreateArray((36*36*36), DREAM3D::HDF5::AxisOrientation);
     for (int j = 0; j < (36 * 36 * 36); j++)
     {
-      axisodf[i][j] = 0.0;
+		axisodf[i]->SetValue(j, 0.0);
     }
   }
   size_t numgrains = m->getNumFieldTuples();
+  for (int i = 0; i < numgrains; i++)
+  {
+    if (m_SurfaceFields[i] == false)
+    {
+      totalaxes[m_PhasesF[i]]++;
+	}
+  }
   for (size_t i = 1; i < numgrains; i++)
   {
     float ea1 = m_AxisEulerAngles[3 * i];
@@ -168,22 +161,14 @@ void FindAxisODF::execute()
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
-      axisodf[m_PhasesF[i]][bin] = axisodf[m_PhasesF[i]][bin]++;
-      totalaxes[m_PhasesF[i]]++;
+	  axisodf[m_PhasesF[i]]->SetValue(bin, (axisodf[m_PhasesF[i]]->GetValue(bin) + (1.0/totalaxes[m_PhasesF[i]])));
     }
   }
   int err;
   for(size_t i=1;i<numXTals;i++)
   {
-	  err = h5io->writeAxisOrientationData(static_cast<int>(i), axisodf[i], totalaxes[i]);
-	  if (err < 0)
-	  {
-		  //FIXME: Error Trap correctly
-	  }
-	  delete[] axisodf[i];
+	  statsDataArray[i]->setAxisOrientation(axisodf[i]);
   }
-  delete[] axisodf;
-  delete[] totalaxes;
 
   notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
 }

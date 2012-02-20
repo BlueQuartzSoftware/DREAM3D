@@ -97,7 +97,8 @@ class DREAM3DLib_EXPORT StatsData
      * @return a VectorOfFloatArray object which could be empty if an unrecognized
      * distribution type is passed in.
      */
-    static VectorOfFloatArray CreateDistributionArrays(uint32_t distributionType, size_t numBins);
+    static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
+    static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
 
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
@@ -107,8 +108,8 @@ class DREAM3DLib_EXPORT StatsData
      * @brief The values are encoded into 3 floats: Average, Max, Min
      */
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, GrainDiameterInfo);
-    void setAverageGrainDiameter(float v) { m_GrainDiameterInfo[0] = v;}
-    float getAverageGrainDiameter() { return m_GrainDiameterInfo[0]; }
+    void setBinStepSize(float v) { m_GrainDiameterInfo[0] = v;}
+    float getBinStepSize() { return m_GrainDiameterInfo[0]; }
 
     void setMaxGrainDiameter(float v) { m_GrainDiameterInfo[1] = v;}
     float getMaxGrainDiameter() { return m_GrainDiameterInfo[1]; }
@@ -117,15 +118,10 @@ class DREAM3DLib_EXPORT StatsData
     float getMinGrainDiameter() { return m_GrainDiameterInfo[2]; }
 
     /**
-      * @brief The values are encoded into 2 floats: Average, Standard Deviation
+      * @brief The values are encoded into float arrays
       */
-    DREAM3D_INSTANCE_VEC2_PROPERTY(float, GrainSizeDistribution);
-    void setGrainSizeAverage(float v) { m_GrainSizeDistribution[0] = v;}
-    float getGrainSizeAverage() { return m_GrainSizeDistribution[0]; }
-
-    void setGrainSizeStdDev(float v) { m_GrainSizeDistribution[1] = v;}
-    float getGrainSizeStdDev() { return m_GrainSizeDistribution[1]; }
-
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSizeDistribution);
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, GrainSize_DistType);
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers);
     /**
@@ -143,9 +139,6 @@ class DREAM3DLib_EXPORT StatsData
 
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverA);
     DREAM3D_INSTANCE_PROPERTY(uint32_t, COverA_DistType);
-
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverB);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, COverB_DistType);
 
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Neighbors);
     DREAM3D_INSTANCE_PROPERTY(uint32_t, Neighbors_DistType);

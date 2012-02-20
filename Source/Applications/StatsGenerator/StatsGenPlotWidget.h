@@ -41,11 +41,12 @@
 
 #include "ui_StatsGenPlotWidget.h"
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
+
 
 class SGAbstractTableModel;
 class QwtPlotZoomer;
@@ -98,15 +99,14 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 //    void setBins(QVector<float> &binValues);
     bool userUpdatedData();
 
-    MXA_INSTANCE_PROPERTY(float, Mu);
-    MXA_INSTANCE_PROPERTY(float, Sigma);
-    MXA_INSTANCE_PROPERTY(float, MinCutOff);
-    MXA_INSTANCE_PROPERTY(float, MaxCutOff);
-    MXA_INSTANCE_PROPERTY(float, BinStep);
+    DREAM3D_INSTANCE_PROPERTY(float, Mu);
+    DREAM3D_INSTANCE_PROPERTY(float, Sigma);
+    DREAM3D_INSTANCE_PROPERTY(float, MinCutOff);
+    DREAM3D_INSTANCE_PROPERTY(float, MaxCutOff);
+    DREAM3D_INSTANCE_PROPERTY(float, BinStep);
 
-    MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-    MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
-    //MXA_INSTANCE_PROPERTY(unsigned int, DistributionType);
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex);
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
 
 
     void setSizeDistributionValues(float mu, float sigma,

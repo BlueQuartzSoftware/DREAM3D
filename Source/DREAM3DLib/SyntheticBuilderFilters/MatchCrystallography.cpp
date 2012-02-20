@@ -62,7 +62,6 @@
 
 MatchCrystallography::MatchCrystallography() :
     AbstractFilter(),
-    m_H5StatsInputFile(""),
     m_MaxIterations(1),
     m_GrainIds(NULL),
     m_EulerAnglesC(NULL),
@@ -101,14 +100,6 @@ MatchCrystallography::~MatchCrystallography()
 void MatchCrystallography::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Input Statistics File");
-    option->setPropertyName("H5StatsInputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Max Iterations");
@@ -161,10 +152,15 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -301, unsigned int, XTalStructArrayType, ensembles, 1);
+//  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
+//  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-308);
+  }
 
   setErrorMessage(ss.str());
 }
@@ -244,18 +240,6 @@ void MatchCrystallography::execute()
     return;
   }
 
-  H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5StatsInputFile);
-  err = readODFData(h5reader);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-  err = readMisorientationData(h5reader);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumFieldTuples();
   int numEnsembleTuples = m->getNumEnsembleTuples();
@@ -277,38 +261,21 @@ void MatchCrystallography::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::initializeArrays(std::vector<unsigned int> structures)
+void MatchCrystallography::initializeArrays()
 {
   DataContainer* m = getDataContainer();
-  //------------------
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   size_t nElements = 0;
-  size_t size = structures.size();
+  size_t size = m->getNumEnsembleTuples();
 
-  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(size + 1, DREAM3D::EnsembleData::CrystalStructures);
-  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-  m_CrystalStructures = crystalStructures->GetPointer(0);
-
-
-  FloatArrayType::Pointer pptFractions = FloatArrayType::CreateArray(size + 1, DREAM3D::EnsembleData::PrecipitateFractions);
-  m->addEnsembleData(DREAM3D::EnsembleData::PrecipitateFractions, pptFractions);
-  m_PrecipitateFractions = pptFractions->GetPointer(0);
-
-
-  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(size + 1, DREAM3D::EnsembleData::PhaseTypes);
-  m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
-  m_PhaseTypes = phaseTypes->GetPointer(0);
-
-  FloatArrayType::Pointer phaseFractions = FloatArrayType::CreateArray(size + 1, DREAM3D::EnsembleData::PhaseFractions);
-  m->addEnsembleData(DREAM3D::EnsembleData::PhaseFractions, phaseFractions);
-  m_PhaseFractions = phaseFractions->GetPointer(0);
-
-  actualodf.resize(size + 1);
-  simodf.resize(size + 1);
-  actualmdf.resize(size + 1);
-  simmdf.resize(size + 1);
-  for (size_t i = 1; i < size + 1; ++i)
+  actualodf.resize(size);
+  simodf.resize(size);
+  actualmdf.resize(size);
+  simmdf.resize(size);
+  for (size_t i = 1; i < size; ++i)
   {
-    m_CrystalStructures[i] = structures[i-1];
     if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal) nElements = 36 * 36 * 12;
     if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic) nElements = 18 * 18 * 18;
 
@@ -324,101 +291,6 @@ void MatchCrystallography::initializeArrays(std::vector<unsigned int> structures
     GG_INIT_DOUBLE_ARRAY(simmdf[i], 0.0, nElements);
 
   }
-}
-
-int MatchCrystallography::readODFData(H5StatsReader::Pointer h5io)
-{
-  DataContainer* m = getDataContainer();
-  std::vector<float> density;
-  int err = 0;
-  // Read the Phase and Crystal Structure information from the Stats File
-  std::vector<int> phases;
-  std::vector<unsigned int> structures;
-  err = h5io->getPhaseAndCrystalStructures(phases, structures);
-  if(err < 0)
-  {
-    return err;
-  }
-  // Now that we have that information - initialize the arrays
-  initializeArrays(structures);
-
-  int phase = -1;
-  size_t size = phases.size();
-  for (size_t i = 0; i < size; i++)
-  {
-    phase = phases[i];
-    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::ODF, density);
-    if(err < 0)
-    {
-      //FIXME: This should probably return an ERROR because nothing was read
-      return 10;
-    }
-    size_t numbins = 0;
-    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal) numbins = 15552;
-    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic) numbins = 5832;
-
-    if(numbins != density.size())
-    {
-      std::stringstream ss;
-      ss << getNameOfClass() << "::readODFData Error: Mismatch in number of elements in the 'ODF' "
-          << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size() << " elements and we need " << numbins << " Elements. ";
-      setErrorCondition(-800);
-      setErrorMessage(ss.str());
-      return -1;
-    }
-    for (size_t j = 0; j < numbins; j++)
-    {
-      actualodf[phase][j] = density[j];
-    }
-  }
-  return err;
-}
-
-int MatchCrystallography::readMisorientationData(H5StatsReader::Pointer h5io)
-{
-  DataContainer* m = getDataContainer();
-  std::vector<float> density;
-  int err = 0;
-  // Read the Phase and Crystal Structure information from the Stats File
-  std::vector<int> phases;
-  std::vector<unsigned int> structures;
-  err = h5io->getPhaseAndCrystalStructures(phases, structures);
-  if(err < 0)
-  {
-    return err;
-  }
-  int phase = -1;
-  size_t size = phases.size();
-  for (size_t i = 0; i < size; i++)
-  {
-    phase = phases[i];
-    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::MisorientationBins, density);
-    if(err < 0)
-    {
-      //FIXME: This should probably return an ERROR because nothing was read
-      return 10;
-    }
-    size_t numbins = 0;
-    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal) numbins = 36 * 36 * 12;
-    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic) numbins = 18 * 18 * 18;
-
-    if(numbins != density.size())
-    {
-      std::stringstream ss;
-      ss << getNameOfClass() << "::readMisorientationData Error: Mismatch in number of elements in the 'ODF' "
-          << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size()
-          << " elements and we need " << numbins << " Elements. ";
-      setErrorCondition(-800);
-      setErrorMessage(ss.str());
-      return -1;
-    }
-
-    for (size_t k = 0; k < numbins; k++)
-    {
-      actualmdf[phase][k] = density[k];
-    }
-  }
-  return err;
 }
 
 void MatchCrystallography::assign_eulers()
