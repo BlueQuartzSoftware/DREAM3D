@@ -45,6 +45,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -102,8 +104,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     virtual void execute();
 
     float check_sizedisterror(Field* field);
-    int getReconStatsData();
-    int getAxisOrientationData();
     void generate_grain(int phase, int Seed, Field* grain);
 
     void transfer_attributes(int gnum, Field* field);
@@ -111,10 +111,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
   protected:
     PackGrainsGen2();
-
-
-    void initializeAttributes();
-    void initializeArrays();
 
     void initialize_packinggrid();
 

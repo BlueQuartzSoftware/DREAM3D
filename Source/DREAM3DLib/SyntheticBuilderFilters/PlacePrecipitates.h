@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -66,7 +68,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
 
     virtual ~PlacePrecipitates();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
@@ -133,6 +134,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     float* m_PhaseFractions;
     float* m_PrecipitateFractions;
     unsigned int* m_ShapeTypes;
+	StatsDataArray* m_StatsDataArray;
 
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

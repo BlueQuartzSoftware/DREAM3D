@@ -265,7 +265,6 @@ int main(int argc, char **argv)
     if(m_AlreadyFormed == false)
     {
       PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
-      pack_grains->setH5StatsInputFile(h5StatsFile.getValue());
       pack_grains->setPeriodicBoundaries(m_PeriodicBoundaryConditions.getValue());
       pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight.getValue());
 #if PACK_GRAINS_ERROR_TXT_OUT
@@ -289,13 +288,11 @@ int main(int argc, char **argv)
     if(m_AlreadyFormed == false)
     {
       PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
-      place_precipitates->setH5StatsInputFile(h5StatsFile.getValue());
       place_precipitates->setPeriodicBoundaries(m_PeriodicBoundaryConditions.getValue());
       m_FilterPipeline->pushBack(place_precipitates);
     }
 
     MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
-    match_crystallography->setH5StatsInputFile(h5StatsFile.getValue());
     m_FilterPipeline->pushBack(match_crystallography);
 
     MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile,  outputDir.getValue(), outputPrefix.getValue())

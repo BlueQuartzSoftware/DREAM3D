@@ -147,7 +147,6 @@ void TestSyntheticBuilder()
   if(m_AlreadyFormed == false)
   {
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
-    pack_grains->setH5StatsInputFile(getH5StatsFile());
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
 #if PACK_GRAINS_ERROR_TXT_OUT
@@ -171,13 +170,11 @@ void TestSyntheticBuilder()
   if(m_AlreadyFormed == false)
   {
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
-    place_precipitates->setH5StatsInputFile(getH5StatsFile());
     place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
     pipeline->pushBack(place_precipitates);
   }
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
-  match_crystallography->setH5StatsInputFile(getH5StatsFile());
   pipeline->pushBack(match_crystallography);
 
   FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();

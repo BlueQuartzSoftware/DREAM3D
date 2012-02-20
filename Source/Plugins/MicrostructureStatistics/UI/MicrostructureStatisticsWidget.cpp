@@ -49,11 +49,12 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QListWidgetItem>
 
-#include "DREAM3DLib/Common/Constants.h"
 
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QCheckboxDialog.h"
+
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -523,25 +524,13 @@ void MicrostructureStatisticsWidget::setupPipeline()
   {
     // Create a new Writer for the Stats Data.
     FindAxisODF::Pointer find_axisodf = FindAxisODF::New();
-    find_axisodf->setH5StatsFile(hdf5ResultsFile);
-    find_axisodf->setCreateNewStatsFile(true);
     m_FilterPipeline->pushBack(find_axisodf);
 
     FindODF::Pointer find_odf = FindODF::New();
-    find_odf->setH5StatsFile(hdf5ResultsFile);
-    find_odf->setCreateNewStatsFile(false);
     m_FilterPipeline->pushBack(find_odf);
 
     FindMDF::Pointer find_mdf = FindMDF::New();
-    find_mdf->setH5StatsFile(hdf5ResultsFile);
-    find_mdf->setCreateNewStatsFile(false);
     m_FilterPipeline->pushBack(find_mdf);
-
-    WriteH5StatsFile::Pointer write_h5statsfile = WriteH5StatsFile::New();
-    write_h5statsfile->setBinStepSize(m_BinStepSize->value());
-    write_h5statsfile->setH5StatsFile(hdf5ResultsFile);
-    write_h5statsfile->setCreateNewStatsFile(false);
-    m_FilterPipeline->pushBack(write_h5statsfile);
   }
 
   if(m_WriteKernelMisorientationsScalars == true)
