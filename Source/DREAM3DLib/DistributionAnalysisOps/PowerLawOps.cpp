@@ -53,7 +53,7 @@ PowerLawOps::PowerLawOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   // Put all the analysis code her
@@ -61,3 +61,15 @@ int PowerLawOps::calculateParameters(std::vector<std::vector<float> > &data, Vec
   // Return a Negative value if some sort of error occurs
   return err;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+{
+  int err = 0;
+  // Put all the analysis code her
+
+  // Return a Negative value if some sort of error occurs
+  return err;
+}
+

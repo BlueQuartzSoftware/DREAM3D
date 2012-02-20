@@ -142,29 +142,6 @@ void initializeCOverA(StatsData::Pointer statsData, int count, uint32_t distType
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void initializeCOverB(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
-{
-  float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
-  VectorOfFloatArray data;
-  FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
-  FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
-
-  for (qint32 i = 0; i < count; ++i)
-  {
-    alpha = (0 * i) + 13.0 + rg.genrand_res53();
-    beta = (0 * i) + 1.05 + (0.5 * rg.genrand_res53());
-    alphas->SetValue(i, alpha);
-    betas->SetValue(i, beta);
-  }
-  data.push_back(alphas);
-  data.push_back(betas);
-  statsData->setGrainSize_COverB(data);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void initializeNeighbors(StatsData::Pointer statsData, std::vector<float> binNumbers, uint32_t distType = DREAM3D::DistributionType::Power)
 {
   float alpha, k, beta;
@@ -401,12 +378,11 @@ StatsDataArray::Pointer createStatsDataArray()
   StatsData::Pointer data1 = StatsData::New();
   data1->setPhaseFraction(calcPhaseFraction);
   data1->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
-  data1->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+//  data1->setGrainSizeDistribution(avglogdiam, sdlogdiam);
   data1->setBinNumbers(binNumbers);
   initializeOmega3(data1, nBins);
   initializeBOverA(data1, nBins);
   initializeCOverA(data1, nBins);
-  initializeCOverB(data1, nBins);
   initializeNeighbors(data1, binsizes);
   initializeODF_MDF(data1);
   initializeAxisODF(data1);
@@ -417,12 +393,11 @@ StatsDataArray::Pointer createStatsDataArray()
   calcPhaseFraction = 0.75f;
   data2->setPhaseFraction(calcPhaseFraction);
   data2->setGrainDiameterInfo(binStep, maxdiameter, mindiameter);
-  data2->setGrainSizeDistribution(avglogdiam, sdlogdiam);
+//  data2->setGrainSizeDistribution(avglogdiam, sdlogdiam);
   data2->setBinNumbers(binNumbers);
   initializeOmega3(data2, nBins);
   initializeBOverA(data2, nBins);
   initializeCOverA(data2, nBins);
-  initializeCOverB(data2, nBins);
   initializeNeighbors(data2, binsizes);
   initializeODF_MDF(data2);
   initializeAxisODF(data2);

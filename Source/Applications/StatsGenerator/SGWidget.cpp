@@ -66,7 +66,6 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/DefaultStatsPreset.h"
@@ -236,22 +235,6 @@ void SGWidget::setupGui()
    connect(m_COverAPlot, SIGNAL(userEditedData()),
            this, SLOT(dataWasEdited()));
 
-   w = m_COverBPlot;
-   w->setPlotTitle(QString("C/B Shape Distribution"));
-   w->setXAxisName(QString("C/B"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverB);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_COverBPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
-
    w = m_NeighborPlot;
    w->setPlotTitle(QString("Neighbors Distributions"));
    w->setXAxisName(QString("Distance (Multiples of Diameter)"));
@@ -300,7 +283,6 @@ void SGWidget::setPhaseIndex(int index)
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
   m_BOverAPlot->setPhaseIndex(m_PhaseIndex);
   m_COverAPlot->setPhaseIndex(m_PhaseIndex);
-  m_COverBPlot->setPhaseIndex(m_PhaseIndex);
   m_NeighborPlot->setPhaseIndex(m_PhaseIndex);
   m_ODFWidget->setPhaseIndex(m_PhaseIndex);
   m_AxisODFWidget->setPhaseIndex(m_PhaseIndex);
@@ -323,7 +305,6 @@ void SGWidget::setCrystalStructure(unsigned int xtal)
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);
-  m_COverBPlot->setCrystalStructure(xtal);
   m_NeighborPlot->setCrystalStructure(xtal);
   m_ODFWidget->setCrystalStructure(xtal);
   /* Note that we do NOT want to set the crystal structure for the AxisODF widget
@@ -696,9 +677,6 @@ void SGWidget::plotSizeDistribution()
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
-  m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeCOverBTableModel(m_COverBPlot, binsizes);
-
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeNeighborTableModel(m_NeighborPlot, binsizes);
 
@@ -787,13 +765,21 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
 
   statsData->setPhaseFraction(calcPhaseFraction);
   // Grain Diameter Info
-  statsData->setAverageGrainDiameter(stepSize);
+  statsData->setBinStepSize(stepSize);
   statsData->setMaxGrainDiameter(maxdiameter);
   statsData->setMinGrainDiameter(mindiameter);
   // Grain Size Distribution
-  statsData->setGrainSizeAverage(avglogdiam);
-  statsData->setGrainSizeStdDev(sdlogdiam);
-
+  {
+    VectorOfFloatArray data;
+	FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Average);
+	FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::StandardDeviation);
+	data.push_back(d1);
+	data.push_back(d2);
+	d1->SetValue(0, avglogdiam);
+	d2->SetValue(0, sdlogdiam);
+    statsData->setGrainSizeDistribution(data);
+	statsData->setGrainSize_DistType(DREAM3D::DistributionType::LogNormal);
+  }
 //  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction, m_PptFraction);
 //  CHECK_ERROR_ON_WRITE(err, "PhaseInformation")
 //  err = writer->writeSizeDistribution(m_PhaseIndex, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
@@ -820,13 +806,6 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
     VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
     statsData->setGrainSize_COverA(data);
     statsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
-  }
-
-  //err = m_COverBPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
-  {
-    VectorOfFloatArray data = m_COverBPlot->getStatisticsData();
-    statsData->setGrainSize_COverB(data);
-    statsData->setCOverB_DistType(m_COverBPlot->getDistributionType());
   }
 
  // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
@@ -889,7 +868,6 @@ void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
-  m_COverBPlot->setCrystalStructure(m_CrystalStructure);
   m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
  // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
@@ -901,7 +879,7 @@ void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
 
   /* Set the Grain_Diameter_Info Data */
 
-  binStepSize = statsData->getAverageGrainDiameter();
+  binStepSize = statsData->getBinStepSize();
   m_BinStepSize->blockSignals(true);
   m_BinStepSize->setValue(binStepSize);
   m_BinStepSize->blockSignals(false);
@@ -909,8 +887,9 @@ void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
   minGrainSize = statsData->getMinGrainDiameter();
 
   /* Set the Grain_Size_Distribution Data */
-  mu = statsData->getGrainSizeAverage();
-  sigma = statsData->getGrainSizeStdDev();
+  VectorOfFloatArray distData = statsData->getGrainSizeDistribution();
+  mu = distData[0]->GetValue(0);
+  sigma = distData[1]->GetValue(0);
   m_Mu_SizeDistribution->blockSignals(true);
   m_Sigma_SizeDistribution->blockSignals(true);
 
@@ -953,10 +932,6 @@ void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
   m_COverAPlot->setDistributionType(statsData->getCOverA_DistType(), false);
   m_COverAPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-
-  m_COverBPlot->setDistributionType(statsData->getCOverB_DistType(), false);
-  m_COverBPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_COverB());
-  m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_NeighborPlot->setDistributionType(statsData->getNeighbors_DistType(), false);
   m_NeighborPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_Neighbors());

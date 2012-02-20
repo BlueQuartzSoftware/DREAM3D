@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
@@ -67,13 +68,8 @@ m_AspectRatios(NULL)
   INIT_DataArray(m_GrainCenters,float);
   INIT_DataArray(m_GrainMoments,float);
 
-  m_DistributionAnalysis.resize(DREAM3D::DistributionType::Count);
-
-//    m_HexOps = HexagonalOps::New();
   m_DistributionAnalysis.push_back(BetaOps::New());
-//     m_CubicOps = CubicOps::New();
   m_DistributionAnalysis.push_back(PowerLawOps::New());
-//     m_OrthoOps = OrthoRhombicOps::New();
   m_DistributionAnalysis.push_back(LogNormalOps::New());
 }
 
@@ -94,6 +90,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  setErrorCondition(0);
 
   bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
   if (false == exists)
@@ -116,9 +113,9 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-308);
   }
-
 
   setErrorMessage(ss.str());
 }
@@ -161,6 +158,9 @@ void FindShapes::execute()
 
   if(m->getZPoints() > 1) find_axes();
   if(m->getZPoints() == 1) find_axes2D();
+
+  if(m->getZPoints() > 1) find_axiseulers();
+  if(m->getZPoints() == 1) find_axiseulers2D();
 
   notify("FindShapes Completed", 0, Observable::UpdateProgressMessage);
 }
@@ -266,8 +266,11 @@ void FindShapes::find_moments()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
+  StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  size_t bin;
 
   float u200 = 0;
   float u020 = 0;
@@ -275,16 +278,19 @@ void FindShapes::find_moments()
   float u110 = 0;
   float u011 = 0;
   float u101 = 0;
-  std::vector<float> avgomega3;
-  std::vector<float> sdomega3;
-  std::vector<size_t> unbiasedcount;
+  std::vector<VectorOfFloatArray> omega3s;
+  std::vector<std::vector<std::vector<float> > > values;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
-  avgomega3.resize(numensembles,0);
-  sdomega3.resize(numensembles,0);
-  unbiasedcount.resize(numensembles,0);
+  omega3s.resize(numensembles);
+  values.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  omega3s[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  values[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+  }
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -372,9 +378,9 @@ void FindShapes::find_moments()
     u200 = (grainmoments[i*6 + 1] + grainmoments[i*6 + 2] - grainmoments[i*6 + 0]) / 2.0f;
     u020 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 2] - grainmoments[i*6 + 1]) / 2.0f;
     u002 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 1] - grainmoments[i*6 + 2]) / 2.0f;
-    u110 = -grainmoments[i*6 + 3];
-    u011 = -grainmoments[i*6 + 4];
-    u101 = -grainmoments[i*6 + 5];
+    u110 = grainmoments[i*6 + 3];
+    u011 = grainmoments[i*6 + 4];
+    u101 = grainmoments[i*6 + 5];
     float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     float vol5 = graincenters[i*5 + 0]*konst2;
     vol5 = powf(vol5, 5);
@@ -385,27 +391,14 @@ void FindShapes::find_moments()
     m_Omega3s[i] = omega3;
 	if(m_BiasedFields[i] == false)
 	{
-		unbiasedcount[m_Phases[i]]++;
-		avgomega3[m_Phases[i]] = avgomega3[m_Phases[i]] + m_Omega3s[i];
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
+		values[m_Phases[i]][bin].push_back(m_Omega3s[i]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  avgomega3[i] = avgomega3[i]/float(unbiasedcount[i]);
-//	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
-  }
-  for (size_t i = 1; i < numgrains; i++)
-  {
-	if(m_BiasedFields[i] == false)
-	{
-		sdomega3[m_Phases[i]] = sdomega3[m_Phases[i]] + ((m_Omega3s[i]-avgomega3[m_Phases[i]])*(m_Omega3s[i]-avgomega3[m_Phases[i]]));
-	}
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-	  sdomega3[i] = sdomega3[i]/float(unbiasedcount[i]);
-	  sdomega3[i] = sqrt(sdomega3[i]);
-//	  statsDataArray[i]->setGrainSizeAverage(avgomega3[i]);
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], omega3s[i]);
+	  statsDataArray[i]->setGrainSize_Omegas(omega3s[i]);
   }
 }
 void FindShapes::find_moments2D()
@@ -465,9 +458,11 @@ void FindShapes::find_moments2D()
 void FindShapes::find_axes()
 {
   DataContainer* m = getDataContainer();
+  StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
+  size_t bin;
   float I1, I2, I3;
   float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
   float a, b, c, d, f, g, h;
@@ -476,15 +471,34 @@ void FindShapes::find_axes()
   float r1, r2, r3;
   float bovera, covera;
   float value;
+
+  std::vector<VectorOfFloatArray> boveras;
+  std::vector<VectorOfFloatArray> coveras;
+  std::vector<std::vector<std::vector<float> > > bvalues;
+  std::vector<std::vector<std::vector<float> > > cvalues;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+  boveras.resize(numensembles);
+  coveras.resize(numensembles);
+  bvalues.resize(numensembles);
+  cvalues.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  boveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  coveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  bvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+	  cvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+  }
   for (size_t i = 1; i < numgrains; i++)
   {
     Ixx = grainmoments[i*6+0];
     Iyy = grainmoments[i*6+1];
     Izz = grainmoments[i*6+2];
-    Ixy = grainmoments[i*6+3];
-    Iyz = grainmoments[i*6+4];
-    Ixz = grainmoments[i*6+5];
+    Ixy = -grainmoments[i*6+3];
+    Iyz = -grainmoments[i*6+4];
+    Ixz = -grainmoments[i*6+5];
     a = 1;
     b = -Ixx - Iyy - Izz;
     c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
@@ -534,16 +548,51 @@ void FindShapes::find_axes()
 	if(A == 0 || B == 0 || C == 0) bovera = 0, covera = 0;
     m_AspectRatios[2*i] = bovera;
     m_AspectRatios[2*i+1] = covera;
+	if(m_BiasedFields[i] == false)
+	{
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
+		bvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i]);
+		cvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i+1]);
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
+	  statsDataArray[i]->setGrainSize_BOverA(boveras[i]);
+	  statsDataArray[i]->setGrainSize_COverA(coveras[i]);
   }
 }
 void FindShapes::find_axes2D()
 {
   DataContainer* m = getDataContainer();
+  StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
+  size_t bin;
+
   float Ixx, Iyy, Ixy;
+
+  std::vector<VectorOfFloatArray> boveras;
+  std::vector<VectorOfFloatArray> coveras;
+  std::vector<std::vector<std::vector<float> > > bvalues;
+  std::vector<std::vector<std::vector<float> > > cvalues;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+  boveras.resize(numensembles);
+  coveras.resize(numensembles);
+  bvalues.resize(numensembles);
+  cvalues.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  boveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  coveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  bvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+	  cvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+  }
   for (size_t i = 1; i < numgrains; i++)
   {
     Ixx = grainmoments[i*6+0];
@@ -562,6 +611,20 @@ void FindShapes::find_axes2D()
     m_AxisLengths[3*i] = r1;
     m_AxisLengths[3*i+1] = r2;
 	m_AspectRatios[2*i] = r2/r1;
+	m_AspectRatios[2*i+1] = 0;
+	if(m_BiasedFields[i] == false)
+	{
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
+		bvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i]);
+		cvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i+1]);
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
+	  statsDataArray[i]->setGrainSize_BOverA(boveras[i]);
+	  statsDataArray[i]->setGrainSize_COverA(coveras[i]);
   }
 }
 float FindShapes::find_xcoord(size_t index)

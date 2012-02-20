@@ -45,12 +45,13 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
 
 typedef struct {
     float m_Volumes;
@@ -86,7 +87,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Pack Grains"; }
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(H5StatsInputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
@@ -104,8 +104,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     virtual void execute();
 
     float check_sizedisterror(Field* field);
-    int readReconStatsData(H5StatsReader::Pointer h5io);
-    int readAxisOrientationData(H5StatsReader::Pointer h5io);
     void generate_grain(int phase, int Seed, Field* grain);
 
     void transfer_attributes(int gnum, Field* field);
@@ -113,11 +111,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
   protected:
     PackGrainsGen2();
-
-
-    void initializeAttributes();
-    void initializeArrays(std::vector<unsigned int> structures);
-
 
     void initialize_packinggrid();
 
@@ -168,7 +161,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float* m_PhaseFractions;
     float* m_PrecipitateFractions;
     unsigned int* m_ShapeTypes;
-
+	StatsDataArray* m_StatsDataArray;
 
     // All other private variables
     std::map<unsigned int, ShapeOps*> m_ShapeOps;
@@ -176,7 +169,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
     ShapeOps::Pointer m_EllipsoidOps;
-    ShapeOps::Pointer m_SuprtEllipsoidOps;
+    ShapeOps::Pointer m_SuperEllipsoidOps;
 
     std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;
@@ -211,7 +204,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
     std::vector<std::vector<std::vector<float> > > bovera;
     std::vector<std::vector<std::vector<float> > > covera;
-    std::vector<std::vector<std::vector<float> > > coverb;
     std::vector<std::vector<std::vector<float> > > omega3;
     std::vector<std::vector<std::vector<float> > > neighborparams;
 

@@ -481,9 +481,6 @@ font-size: 12px;
            <item>
             <widget class="StatsGenPlotWidget" name="m_COverAPlot" native="true"/>
            </item>
-           <item>
-            <widget class="StatsGenPlotWidget" name="m_COverBPlot" native="true"/>
-           </item>
           </layout>
          </widget>
         </widget>

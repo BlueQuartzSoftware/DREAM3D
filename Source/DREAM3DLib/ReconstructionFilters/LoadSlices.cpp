@@ -338,13 +338,6 @@ void LoadSlices::execute()
     return;
   }
 
-  // The GoodVoxels array was just created so rerun the dataCheck to update the pointers
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
   float* euler1Ptr = NULL;
   float* euler2Ptr = NULL;
   float* euler3Ptr = NULL;

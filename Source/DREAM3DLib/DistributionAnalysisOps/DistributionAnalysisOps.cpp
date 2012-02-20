@@ -34,6 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DistributionAnalysisOps.h"
+#include <limits>
+#include <numeric>
 
 // -----------------------------------------------------------------------------
 //
@@ -49,16 +51,26 @@ DistributionAnalysisOps::~DistributionAnalysisOps()
 {
 
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DistributionAnalysisOps::calculateParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+void DistributionAnalysisOps::determinemaxandminvalues(std::vector<float> &data, float &max, float &min)
 {
-  assert(false);
-  return -1;
+	float value;
+    min = std::numeric_limits<float>::max();
+    max = std::numeric_limits<float>::min();
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		value = data[i];
+		if(value > max) max = value;				
+		if(value < min) min = value;				
+	}	
 }
-#endif
-
-
+void DistributionAnalysisOps::determinebinnumbers(float &max, float &min, float &stepsize, FloatArrayType::Pointer binnumbers)
+{
+	size_t iter = 0;
+	float current = (float(iter)*stepsize) + min;
+	while(current < max)
+	{
+		binnumbers->SetValue(iter, current);
+		iter++;
+		current = (float(iter)*stepsize) + min;
+	}
+}

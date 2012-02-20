@@ -57,8 +57,11 @@ class DREAM3DLib_EXPORT DistributionAnalysisOps
  //   DREAM3D_STATIC_NEW_MACRO(DistributionAnalysisOps)
     virtual ~DistributionAnalysisOps();
 
-    virtual int calculateParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs) = 0;
+	virtual int calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs) = 0;
+    virtual int calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs) = 0;
 
+	static void determinemaxandminvalues(std::vector<float> &data, float &max, float &min);
+	static void determinebinnumbers(float &max, float &min, float &stepsize, FloatArrayType::Pointer binnumbers);
 
   protected:
     DistributionAnalysisOps();

@@ -61,6 +61,7 @@
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -99,7 +100,7 @@ std::string getH5EbsdFile()
 }
 
 int getZStartIndex() { return 1; }
-int getZEndIndex() { return 117; }
+int getZEndIndex() { return 25; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -215,7 +216,7 @@ void TestFindNeighbors()
   if(m_WriteVtkFile)
   {
     vtkWriter->setOutputFile(UnitTest::FindNeighborTest::VtkOutputFile);
-    vtkWriter->setWriteGrainIds(false);
+    vtkWriter->setWriteGrainIds(true);
     vtkWriter->setWritePhaseIds(m_WritePhaseId);
     vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
     vtkWriter->setWriteIPFColors(m_WriteIPFColor);
@@ -262,7 +263,12 @@ void TestDataContainerReader()
   pipeline->pushBack(h5Reader);
 
   FindSizes::Pointer find_sizes = FindSizes::New();
+  find_sizes->setDistributionType(DREAM3D::DistributionType::LogNormal);
   pipeline->pushBack(find_sizes);
+
+  FindShapes::Pointer find_shapes = FindShapes::New();
+  find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
+  pipeline->pushBack(find_shapes);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
