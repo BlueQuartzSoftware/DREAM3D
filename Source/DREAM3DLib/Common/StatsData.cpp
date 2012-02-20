@@ -109,6 +109,7 @@ void StatsData::initialize()
   m_GrainDiameterInfo[2] = 0.0f;
   m_GrainSizeDistribution[0] = 0.0f;
   m_GrainSizeDistribution[1] = 0.0f;
+  m_PrecipBoundaryFraction = 0.0f;
 }
 
 

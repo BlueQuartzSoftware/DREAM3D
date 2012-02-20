@@ -43,6 +43,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/HDF5/H5StatsReader.h"
 
@@ -73,9 +74,9 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     VectorOfFloatArray getStatisticsData();
 
-    int readDataFromHDF5(H5StatsReader::Pointer reader,
-                         QVector<float>  &bins,
-                         const std::string &hdf5GroupName);
+    int extractStatsData(DataContainer::Pointer m, int index,
+                         QVector<float>  &binNumbers,
+                         VectorOfFloatArray arrays);
 
     void setStatisticsType(unsigned int statsType);
     void setDistributionType(unsigned int distributionType, bool updatePlots = true);
@@ -112,10 +113,6 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
                                    float minCutOff, float maxCutOff,
                                    float binStepSize);
 
-    void loadTableData(H5StatsReader::Pointer reader,
-                       QVector<float> bins,
-                       std::vector<std::string> names,
-                       const std::string &hdf5GroupName);
 
   signals:
     void userEditedData();

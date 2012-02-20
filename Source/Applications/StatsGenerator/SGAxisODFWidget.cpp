@@ -87,43 +87,33 @@ SGAxisODFWidget::~SGAxisODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGAxisODFWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
+void SGAxisODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
 {
-  int err = -1;
-  std::string index = StringUtils::numToString(phase);
-  std::string path = "/" + DREAM3D::HDF5::Statistics + "/" + index  + "/" + DREAM3D::HDF5::AxisODFWeights;
 
-  //FIXME: Do we load the ODF data array at all or generate a new one?
+  VectorOfFloatArray arrays = statsData->getAxisODF_Weights();
 
+  QVector<float> e1(arrays[0]->GetNumberOfTuples());
+  ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
 
-  // Load the ODF Weights and Spreads Table data
-  HDF_ERROR_HANDLER_OFF;
-  std::vector<float> e1;
-  err = reader->readVectorDataset(path, DREAM3D::HDF5::Euler1, e1);
-  if (e1.size() > 0)
+  QVector<float> e2(arrays[0]->GetNumberOfTuples());
+  ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
+
+  QVector<float> e3(arrays[0]->GetNumberOfTuples());
+  ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
+
+  QVector<float> weights(arrays[0]->GetNumberOfTuples());
+  ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
+
+  QVector<float> sigmas(arrays[0]->GetNumberOfTuples());
+  ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+
+  if(e1.size() > 0)
   {
-    std::vector<float> e2;
-    err = reader->readVectorDataset(path, DREAM3D::HDF5::Euler2, e2);
-    std::vector<float> e3;
-    err = reader->readVectorDataset(path, DREAM3D::HDF5::Euler3, e3);
-    std::vector<float> weights;
-    err = reader->readVectorDataset(path, DREAM3D::HDF5::Weight, weights);
-    std::vector<float> sigmas;
-    err = reader->readVectorDataset(path, DREAM3D::HDF5::Sigma, sigmas);
-
     // Load the data into the table model
-    m_ODFTableModel->setTableData(QVector<float>::fromStdVector(e1),
-                                  QVector<float>::fromStdVector(e2),
-                                  QVector<float>::fromStdVector(e3),
-                                  QVector<float>::fromStdVector(weights),
-                                  QVector<float>::fromStdVector(sigmas));
+    m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
   }
 
-  HDF_ERROR_HANDLER_ON
-
   updatePlots();
-
-  return err;
 }
 
 // -----------------------------------------------------------------------------

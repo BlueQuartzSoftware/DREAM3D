@@ -120,8 +120,10 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 {
   int err = 0;
   //Read the PhaseFraction
-
   err |= readPhaseFraction(data, groupId);
+
+  // Read the Precip Boundary Fraction
+  err |= readPrecipBoundaryFraction(data, groupId);
 
   // Read the Grain Diameter Info
   err |= readGrainDiameterInfo(data, groupId);
@@ -223,6 +225,8 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
   {
     return err;
   }
+  // Write the Precip Boundary Fraction
+  err |= writePrecipBoundaryFraction(data, groupId);
 
   // Write the Grain Diameter Info
   err |= writeGrainDiameterInfo(data, groupId);
@@ -529,6 +533,26 @@ int H5StatsDataDelegate::readPhaseFraction(StatsData* data, hid_t pid)
   float phaseFraction = 0.0f;
   int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::writePrecipBoundaryFraction(StatsData* data, hid_t pid)
+{
+  float var = data->getPrecipBoundaryFraction();
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, var);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::readPrecipBoundaryFraction(StatsData* data, hid_t pid)
+{
+  float precipBoundaryFraction = 0.0f;
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, precipBoundaryFraction);
+  data->setPrecipBoundaryFraction(precipBoundaryFraction);
   return err;
 }
 

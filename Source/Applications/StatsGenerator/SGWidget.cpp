@@ -849,7 +849,7 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
+void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
 {
   setWidgetListEnabled(true);
   float mu = 1.0f;
@@ -857,31 +857,33 @@ int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
   float minCutOff = 5.0f;
   float maxCutOff = 5.0f;
   float binStepSize, maxGrainSize, minGrainSize;
-  std::vector<float> grainDiamInfo;
-  std::vector<float> double_data;
-  int err = 0;
 
-  setPhaseIndex(phase);
+  setPhaseIndex(index);
 
-  std::vector<unsigned int> xtal;
-  err = reader->readStatsDataset(phase, DREAM3D::HDF5::CrystalStructure, xtal);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::CrystalStructure)
-  m_CrystalStructure = static_cast<unsigned int>(xtal[0]);
+  IDataArray* iDataPtr = NULL;
 
-  std::vector<unsigned int> pt;
-  err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, pt);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PhaseType)
-  m_PhaseType = static_cast<unsigned int>(pt[0]);
+  iDataPtr = m->getFieldData(DREAM3D::EnsembleData::CrystalStructures).get();
+  UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
+  m_CrystalStructure = data->GetValue(index);
 
-  std::vector<float> phaseFraction;
-  err = reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, phaseFraction);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PhaseFraction)
-  m_PhaseFraction = phaseFraction[0];
+  iDataPtr = m->getFieldData(DREAM3D::EnsembleData::PhaseTypes).get();
+  m_PhaseType = data->GetValue(index);
+
+
+
+  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataPtr);
+  if (statsDataArray == NULL)
+  {
+    return;
+  }
+  StatsData::Pointer statsData = statsDataArray->getStatsData(index);
+  m_PhaseFraction = statsData->getPhaseFraction();
 
   m_PptFraction = -1.0;
-  if (DREAM3D::PhaseType::PrecipitatePhase == m_PhaseType) {
-    err = reader->readScalarAttribute<float>(phase, DREAM3D::HDF5::PhaseType, DREAM3D::HDF5::PrecipitateBoundaryFraction, m_PptFraction);
-    CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::PrecipitateBoundaryFraction)
+  if(DREAM3D::PhaseType::PrecipitatePhase == m_PhaseType)
+  {
+    m_PptFraction = statsData->getPrecipBoundaryFraction();
   }
 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
@@ -893,28 +895,22 @@ int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
  // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
 
-  /* Read the BinNumbers data set */
-  std::vector<float> bins;
-  err = reader->readStatsDataset(phase, DREAM3D::HDF5::BinNumber, bins);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::BinNumber)
+  /* SEt the BinNumbers data set */
+  FloatArrayType::Pointer bins = statsData->getBinNumbers();
 
-  /* Read the Grain_Diameter_Info Data */
-  err = reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::Grain_Diameter_Info)
 
-  binStepSize = grainDiamInfo[0];
+  /* Set the Grain_Diameter_Info Data */
+
+  binStepSize = statsData->getAverageGrainDiameter();
   m_BinStepSize->blockSignals(true);
-  m_BinStepSize->setValue(grainDiamInfo[0]);
+  m_BinStepSize->setValue(binStepSize);
   m_BinStepSize->blockSignals(false);
-  maxGrainSize = grainDiamInfo[1];
-  minGrainSize = grainDiamInfo[2];
+  maxGrainSize = statsData->getMaxGrainDiameter();
+  minGrainSize = statsData->getMinGrainDiameter();
 
-  /* Read the Grain_Size_Distribution Data */
-  err = reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
-  CHECK_STATS_READ_ERROR(err, DREAM3D::HDF5::Statistics, DREAM3D::HDF5::Grain_Size_Distribution)
-
-  mu = double_data[0];
-  sigma = double_data[1];
+  /* Set the Grain_Size_Distribution Data */
+  mu = statsData->getGrainSizeAverage();
+  sigma = statsData->getGrainSizeStdDev();
   m_Mu_SizeDistribution->blockSignals(true);
   m_Sigma_SizeDistribution->blockSignals(true);
 
@@ -937,36 +933,46 @@ int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
 
   // Update the Size/Weights Plot
   updateSizeDistributionPlot();
-  m_NumberBinsGenerated->setText(QString::number(bins.size()));
+  m_NumberBinsGenerated->setText(QString::number(bins->GetNumberOfTuples()));
 
-  // Now have each of the plots read it's own data
-  QVector<float> qbins = QVector<float>::fromStdVector(bins);
-  m_Omega3Plot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
+  // Now have each of the plots set it's own data
+  QVector<float> qbins (bins->GetNumberOfTuples());
+  for(int i = 0; i < qbins.size(); ++i)
+  {
+    qbins[i] = bins->GetValue(i);
+  }
+
+  m_Omega3Plot->setDistributionType(statsData->getOmegas_DistType(), false);
+  m_Omega3Plot->extractStatsData(m, index, qbins, statsData->getGrainSize_Omegas());
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_BOverAPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
+  m_BOverAPlot->setDistributionType(statsData->getBOverA_DistType(), false);
+  m_BOverAPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_BOverA());
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_COverAPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
+  m_COverAPlot->setDistributionType(statsData->getCOverA_DistType(), false);
+  m_COverAPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_COverBPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
+  m_COverBPlot->setDistributionType(statsData->getCOverB_DistType(), false);
+  m_COverBPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_COverB());
   m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_NeighborPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+  m_NeighborPlot->setDistributionType(statsData->getNeighbors_DistType(), false);
+  m_NeighborPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_Neighbors());
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 
-  // Read the ODF Data
-  err = m_ODFWidget->readDataFromHDF5(reader, m_PhaseIndex);
+  // Set the ODF Data
+  m_ODFWidget->extractStatsData(m, index, statsData.get());
 
-  // Read the Axis ODF Data
-  err = m_AxisODFWidget->readDataFromHDF5(reader, m_PhaseIndex);
+  // Set the Axis ODF Data
+  m_AxisODFWidget->extractStatsData(m, index, statsData.get());
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
   m_DataHasBeenGenerated = true;
-  return err;
+
 }
 
 

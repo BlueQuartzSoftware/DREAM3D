@@ -51,6 +51,7 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
@@ -589,7 +590,7 @@ void StatsGeneratorUI::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::openFile(QString h5file)
 {
-
+  int err = 0;
   if (true == h5file.isEmpty()) // User cancelled the operation
   {
     return;
@@ -618,28 +619,31 @@ void StatsGeneratorUI::openFile(QString h5file)
   }
 
   // Instantiate a Reader object
-  H5StatsReader::Pointer reader = H5StatsReader::New(m_FilePath.toStdString());
-
-  // Get the list of Phases from the HDF5 file
-  std::vector<int> phases;
-  std::vector<unsigned int> xtals;
-  int err = reader->getPhaseAndCrystalStructures(phases, xtals);
+  DataContainer::Pointer m = DataContainer::New();
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(m_FilePath.toStdString());
+  reader->setDataContainer(m.get());
+  reader->execute();
+  err = reader->getErrorCondition();
   if (err < 0)
   {
-	  this->statusBar()->showMessage("Error Getting the Phase and Crystal Structure from File");
-  	  return;
+    this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
+    return;
   }
-  nPhases = phases.size();
+
+  // Get the number of Phases
+  nPhases = m->getNumFieldTuples();
+
 
   SGWidget* sgwidget = NULL;
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
-  for (size_t i = 0; i < nPhases; ++i)
+  for (size_t i = 1; i < nPhases; ++i)
   {
     // Create a new Default SGPhase
     sgwidget = createNewSGWidget();
     m_SGWidgets.push_back(sgwidget);
-    sgwidget->readDataFromHDF5(reader, phases[i]);
+    sgwidget->extractStatsData(m, i);
     phaseCombo->addItem(sgwidget->getComboString());
   }
 
