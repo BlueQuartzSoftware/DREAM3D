@@ -66,7 +66,6 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/DefaultStatsPreset.h"

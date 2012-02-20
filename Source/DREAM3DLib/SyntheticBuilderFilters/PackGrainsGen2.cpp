@@ -71,7 +71,6 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 PackGrainsGen2::PackGrainsGen2() :
 AbstractFilter(),
-m_H5StatsInputFile(""),
 m_ErrorOutputFile(""),
 m_VtkOutputFile(""),
 m_MaxIterations(1),
@@ -130,7 +129,8 @@ PackGrainsGen2::~PackGrainsGen2()
 // -----------------------------------------------------------------------------
 void PackGrainsGen2::setupFilterOptions()
 {
-  {
+ std::vector<FilterOption::Pointer> options;
+ {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Max Iterations");
     option->setPropertyName("MaxIterations");
@@ -188,10 +188,10 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -301, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -303, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -304, float, FloatArrayType, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -238,27 +238,7 @@ void PackGrainsGen2::execute()
     return;
   }
 
-  notify("Packing Grains - Reading Statistics", 0, Observable::UpdateProgressMessage);
-  err = getReconStatsData();
-  if(err < 0)
-  {
-    setErrorCondition(-1);
-    setErrorMessage("Error Getting the Stats Data Needed");
-    notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
-    return;
-  }
-
-  err = getAxisOrientationData();
-  if(err < 0)
-  {
-    setErrorCondition(-1);
-    setErrorMessage("Error Getting the Stats Data Needed");
-    notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
-    return;
-  }
-
   notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
-  initializeAttributes();
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
 
@@ -702,10 +682,12 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   {
     return;
   }
-//  int good = 0;
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float r1 = 1;
-  float a1 = 0, a3 = 0;
-  float b1 = 0, b3 = 0;
+  float a2 = 0, a3 = 0;
+  float b2 = 0, b3 = 0;
   float diam = 0;
   float vol = 0;
   int volgood = 0;
@@ -716,41 +698,45 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
     volgood = 1;
     diam = static_cast<float>(rg.genrand_norm(avgdiam[phase], sddiam[phase]));
     diam = exp(diam);
-    if(diam >= maxdiameter[phase]) volgood = 0;
-    if(diam < mindiameter[phase]) volgood = 0;
+    if(diam >= statsDataArray[phase]->getMaxGrainDiameter()) volgood = 0;
+    if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
     vol = fourThirdsPi * ((diam / 2.0f) * (diam / 2.0f) * (diam / 2.0f));
   }
-  int diameter = int((diam - mindiameter[phase]) / binstepsize[phase]);
+  int diameter = int((diam - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
   float r2 = 0, r3 = 1;
+  VectorOfFloatArray bovera = statsDataArray[phase]->getGrainSize_BOverA();
+  VectorOfFloatArray covera = statsDataArray[phase]->getGrainSize_COverA();
   while (r2 < r3)
   {
 	  r2 = 0, r3 = 0;
-	  a1 = bovera[phase][diameter][0];
-	  b1 = bovera[phase][diameter][1];
-	  if(a1 == 0)
+	  a2 = bovera[0]->GetValue(diameter);
+	  b2 = bovera[1]->GetValue(diameter);
+	  if(a2 == 0)
 	  {
-		a1 = bovera[phase][diameter - 1][0];
-		b1 = bovera[phase][diameter - 1][1];
+		  a2 = bovera[0]->GetValue(diameter-1);
+		  b2 = bovera[1]->GetValue(diameter-1);
 	  }
-	  r2 = static_cast<float>(rg.genrand_beta(a1, b1));
-	  a3 = covera[phase][diameter][0];
-	  b3 = covera[phase][diameter][1];
+	  r2 = static_cast<float>(rg.genrand_beta(a2, b2));
+	  a3 = covera[0]->GetValue(diameter);
+	  b3 = covera[1]->GetValue(diameter);
 	  if(a3 == 0)
 	  {
-		a3 = covera[phase][diameter - 1][0];
-		b3 = covera[phase][diameter - 1][1];
+		  a3 = covera[0]->GetValue(diameter-1);
+		  b3 = covera[1]->GetValue(diameter-1);
 	  }
 	  r3 = rg.genrand_beta(a3, b3);
   }
   float random = rg.genrand_res53();
   int bin = 0;
-  while (random > axisodf[phase][bin])
+  FloatArrayType::Pointer axisodf = statsDataArray[phase]->getAxisOrientation();
+  while (random > axisodf->GetValue(bin))
   {
     bin++;
   }
   m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
-  float mf = omega3[phase][diameter][0];
-  float s = omega3[phase][diameter][1];
+  VectorOfFloatArray omega3 = statsDataArray[phase]->getGrainSize_Omegas();
+  float mf = omega3[0]->GetValue(diameter);
+  float s = omega3[1]->GetValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
   unsigned int shapeclass = m_ShapeTypes[phase];
   if(shapeclass == DREAM3D::ShapeType::EllipsoidShape) omega3f = 1;
@@ -785,155 +771,6 @@ void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
   m_Neighborhoods[3*gnum+0] = field->m_Neighborhoods[0];
   m_Neighborhoods[3*gnum+1] = field->m_Neighborhoods[1];
   m_Neighborhoods[3*gnum+2] = field->m_Neighborhoods[2];
-}
-
-void PackGrainsGen2::initializeAttributes()
-{
-  DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
-
-  size_t udims[3] = {0,0,0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2])
-  };
-
-  sizex = dims[0] * m->getXRes();
-  sizey = dims[1] * m->getYRes();
-  sizez = dims[2] * m->getZRes();
-  totalvol = sizex*sizey*sizez;
-
-	for(int i=0;i<totalPoints;i++)
-	{
-		m_GrainIds[i] = 0;
-		m_PhasesC[i] = 0;
-		m_EulerAngles[3*i] = -1.0f;
-		m_EulerAngles[3*i + 1] = -1.0f;
-		m_EulerAngles[3*i + 2] = -1.0f;
-	}
-}
-
-
-void PackGrainsGen2::initializeArrays()
-{
-  DataContainer* m = getDataContainer();
-  //------------------
-  size_t nElements = 0;
-  size_t size = m->getNumEnsembleTuples();
-
-  mindiameter.resize(size);
-  maxdiameter.resize(size);
-  binstepsize.resize(size);
-  numdiameterbins.resize(size);
-  avgdiam.resize(size);
-  sddiam.resize(size);
-  bovera.resize(size);
-  covera.resize(size);
-  omega3.resize(size);
-  neighborparams.resize(size);
-  axisodf.resize(size);
-
-  for(size_t i= 1; i < size; ++i)
-  {
-    nElements = 36*36*36;
-    float initValue = (1.0f/float(nElements));
-    axisodf[i] = SharedFloatArray(new float [nElements]);
-    GG_INIT_DOUBLE_ARRAY(axisodf[i], initValue, nElements);
-  }
-}
-
-int PackGrainsGen2::getReconStatsData()
-{
-  DataContainer* m = getDataContainer();
-  int err = -1;
-  std::vector<float> grainDiamInfo;
-  std::vector<float> double_data;
-  std::string path;
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
-  // Now that we have that information - initialize the arrays
-  initializeArrays();
-  int size = m->getNumEnsembleTuples();
-
-  int phase = -1;
-
-  for (int i = 1; i < size; i++)
-  {
-    numdiameterbins[i] = statsDataArray[i]->getBinNumbers()->GetSize();
-
-    binstepsize[i] = statsDataArray[i]->getBinStepSize();
-    maxdiameter[i]  = statsDataArray[i]->getMaxGrainDiameter();
-    mindiameter[i] = statsDataArray[i]->getMinGrainDiameter();
-
-    avgdiam[i] = statsDataArray[i]->getGrainSizeDistribution()->GetValue(0,0);
-    sddiam[i] = statsDataArray[i]->getGrainSizeDistribution()->GetValue(1,0);
-
-    unsigned int dt;
-    std::string disType;
-
-    /* Read the Shape Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions, bovera, DREAM3D::DistributionType::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions, covera, DREAM3D::DistributionType::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
-
-    /* Read the Omega3 Data */
-    READ_2_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions, omega3, DREAM3D::DistributionType::Beta, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::BetaColumnCount);
-
-    /* Read the Neighbor Data - This MUST be the last one because of how variables are assigned bvalues and used in the next section */
-    READ_3_COLUMN_STATS_DATA(err, phase, phase, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions, neighborparams, DREAM3D::DistributionType::Power, DREAM3D::HDF5::Alpha, DREAM3D::HDF5::Beta, DREAM3D::HDF5::Exp_k, DREAM3D::HDF5::PowerLawColumnCount);
-  }
-  return err;
-}
-
-int PackGrainsGen2::readAxisOrientationData(H5StatsReader::Pointer h5io)
-{
-  std::vector<float> density;
-  int err = 0;
-  float totaldensity = 0.0;
-  size_t size = 0;
-  // Read the Phase and Crystal Structure information from the Stats File
-  std::vector<int> phases;
-  std::vector<unsigned int> structures;
-  err = h5io->getPhaseAndCrystalStructures(phases, structures);
-  if(err < 0)
-  {
-    return err;
-  }
-  int phase = -1;
-  size_t count = phases.size();
-  for (size_t i = 0; i < count; i++)
-  {
-    totaldensity = 0.0;
-      phase = phases[i];
-    err = h5io->readStatsDataset(phase, DREAM3D::HDF5::AxisOrientation, density);
-    if(err < 0)
-    {
-      GGF_CHECK_READ_ERROR(readAxisOrientationData, DREAM3D::HDF5::AxisOrientation)
-      //FIXME: This should probably return an ERROR because nothing was read
-      return 10;
-    }
-    size = 36 * 36 * 36;
-    if(size != density.size())
-    {
-      std::cout << "GrainGeneratorFunc::readAxisOrientationData Error: Mismatch in number of elements in the 'AxisOrientation' "
-          << " Arrays. The Array stored in the Reconstruction HDF5 file has " << density.size() << " elements and we need " << size << " Elements. "
-          << std::endl;
-      return -1;
-    }
-    for (size_t k = 0; k < size; k++)
-    {
-      totaldensity = totaldensity + density[k];
-      axisodf[phase][k] = totaldensity;
-    }
-  }
-  return err;
 }
 
 void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
