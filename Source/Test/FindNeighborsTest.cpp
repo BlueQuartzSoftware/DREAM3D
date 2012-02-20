@@ -251,8 +251,7 @@ void TestFindNeighbors()
 // -----------------------------------------------------------------------------
 void TestDataContainerReader()
 {
-  // Create the DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
+  int err = 0;
 
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
@@ -269,14 +268,13 @@ void TestDataContainerReader()
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
   pipeline->pushBack(writer);
 
-  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
-  int err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-  m = DataContainer::New();
-
+//  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
+//  int err = pipeline->preflightPipeline();
+//  DREAM3D_REQUIRE_EQUAL(err, 0);
 
 
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+  DataContainer::Pointer m = DataContainer::New();
   pipeline->run();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
