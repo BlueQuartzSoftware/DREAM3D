@@ -72,12 +72,27 @@ void VtkGrainIdWriter::setupFilterOptions()
   setFilterOptions(options);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VtkGrainIdWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  setErrorMessage(ss.str());
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void VtkGrainIdWriter::preflight()
 {
-
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -112,6 +127,13 @@ int VtkGrainIdWriter::writeFile()
     setErrorMessage(ss.str());
     setErrorCondition(-1);
     return -1;
+  }
+
+  int64_t totalPoints = m->getTotalPoints();
+  dataCheck(false, totalPoints, 1, 1);
+  if (getErrorCondition() < 0)
+  {
+    return -40;
   }
 
   VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m));

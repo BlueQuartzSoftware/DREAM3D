@@ -110,7 +110,12 @@ void TestDataContainerWriter()
   }
   m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
 
-
+  BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::SurfaceVoxels);
+  for (int i = 0; i < size; ++i)
+  {
+    boolArray->SetValue(i, i + UnitTest::DataContainerIOTest::Offset);
+  }
+  m->addCellData(DREAM3D::CellData::SurfaceVoxels, boolArray);
 
   FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(12, DREAM3D::FieldData::AxisEulerAngles);
   avgEuler->SetNumberOfComponents(3);
@@ -168,9 +173,10 @@ void TestDataContainerReader()
   reader->setDataContainer(m.get());
   reader->execute();
   int err = reader->getErrorCondition();
+  DREAM3D_REQUIRE(err >= 0)
   m->getDimensions(nx, ny, nz);
 
-  DREAM3D_REQUIRE_EQUAL(m->getNumCellArrays(), 1);
+  DREAM3D_REQUIRE_EQUAL(m->getNumCellArrays(), 2);
   DREAM3D_REQUIRE_EQUAL(m->getNumFieldArrays(), 3);
   DREAM3D_REQUIRE_EQUAL(m->getNumEnsembleArrays(), 1);
 
@@ -197,6 +203,12 @@ void TestDataContainerReader()
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::DataContainerIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::DataContainerIOTest::ZSize);
 
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::DataContainerIOTest::TestFile2);
+  writer->setDataContainer(m.get());
+  writer->execute();
+  err = writer->getErrorCondition();
+  DREAM3D_REQUIRE(err >= 0)
 }
 
 // -----------------------------------------------------------------------------

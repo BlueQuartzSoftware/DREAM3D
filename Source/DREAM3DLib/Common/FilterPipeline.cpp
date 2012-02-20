@@ -305,6 +305,14 @@ int FilterPipeline::preflightPipeline()
       pipelineErrorMessage((*filter)->getErrorMessage().c_str());
     }
   }
+
+#if 0
+  std::list<std::string> cellNames = m->getCellArrayNameList();
+  for (std::list<std::string>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
+  {
+    std::cout << *name << std::endl;
+  }
+#endif
   return preflightError;
 }
 
@@ -317,6 +325,8 @@ void FilterPipeline::execute()
   int err = 0;
 
   // Run the preflight first to make sure we can run this combination of filters
+  // Inside the function we create a new DataContainer object so we don't mess
+  // with any currently set DataContainer
   err = preflightPipeline();
   if (err < 0)
   {
