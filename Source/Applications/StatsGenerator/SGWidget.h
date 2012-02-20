@@ -75,6 +75,8 @@ class SGWidget : public QWidget, private Ui::SGWidget
     MXA_INSTANCE_PROPERTY(float, PptFraction);
     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
+    void extractStatsData(DataContainer::Pointer m, int index);
+
     void setCrystalStructure(unsigned int xtal);
     unsigned int getCrystalStructure();
 
@@ -97,7 +99,6 @@ class SGWidget : public QWidget, private Ui::SGWidget
     int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
     int gatherStatsData(DataContainer::Pointer m);
-    int readDataFromHDF5(H5StatsReader::Pointer reader, int phase);
 
   public slots:
     void on_m_GenerateDefaultData_clicked();

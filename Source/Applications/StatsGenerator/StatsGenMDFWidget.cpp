@@ -263,36 +263,25 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::readDataFromHDF5(H5StatsReader::Pointer reader,int phase)
+void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
 {
-  int err = -1;
-  std::string index = StringUtils::numToString(phase);
-  std::string path = "/" + DREAM3D::HDF5::Statistics + "/" + index  + "/" + DREAM3D::HDF5::MDFWeights;
+  VectorOfFloatArray arrays = statsData->getMDF_Weights();
 
-  //FIXME: Do we load the ODF data array at all or generate a new one?
+  QVector<float> angle(arrays[0]->GetNumberOfTuples());
+  ::memcpy( &(angle.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*angle.size() );
 
+  QVector<float> weights(arrays[0]->GetNumberOfTuples());
+  ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
 
-  // Load the ODF Weights and Spreads Table data
-  HDF_ERROR_HANDLER_OFF;
-  std::vector<float> angle;
-  err = reader->readVectorDataset(path, DREAM3D::HDF5::Angle, angle);
+  QVector<float> axis(arrays[0]->GetSize()); // This one is 3xn in size
+  ::memcpy( &(axis.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*axis.size() );
+
   if (angle.size() > 0)
   {
-    std::vector<float> weights;
-    err = reader->readVectorDataset(path, DREAM3D::HDF5::Weight, weights);
-    std::vector<float> axis;
-    err = reader->readVectorDataset(path, DREAM3D::HDF5::Axis, axis);
-
     // Load the data into the table model
-    m_MDFTableModel->setTableData(QVector<float>::fromStdVector(angle),
-                                  QVector<float>::fromStdVector(axis),
-                                  QVector<float>::fromStdVector(weights) );
+    m_MDFTableModel->setTableData(angle, axis, weights);
   }
-
-  HDF_ERROR_HANDLER_ON
-
   on_m_MDFUpdateBtn_clicked();
-  return err;
 }
 
 // -----------------------------------------------------------------------------

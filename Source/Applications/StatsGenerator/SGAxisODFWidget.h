@@ -55,8 +55,8 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
 
 
 #include "PoleFigureMaker.h"
@@ -93,7 +93,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     unsigned int getCrystalStructure();
 
     int getOrientationData(StatsData::Pointer statsData);
-    int readDataFromHDF5(H5StatsReader::Pointer reader, int phase);
+    void extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 

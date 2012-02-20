@@ -106,7 +106,6 @@ void StatsGenPlotWidget::setStatisticsType(unsigned int distributionType)
   m_StatsType = distributionType;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -132,9 +131,9 @@ void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
+int StatsGenPlotWidget::extractStatsData(DataContainer::Pointer m, int index,
                                          QVector<float>  &binNumbers,
-                                         const std::string &hdf5GroupName)
+                                         VectorOfFloatArray arrays)
 {
   int err = 0;
   if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
@@ -146,12 +145,10 @@ int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
     return -1;
   }
 
-  unsigned int dt;
-  std::string disType = reader->getDistributionType(m_PhaseIndex, hdf5GroupName, dt);
-  if (dt == DREAM3D::DistributionType::UnknownDistributionType)
+  if (m_DistributionType == DREAM3D::DistributionType::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-    tr("The 'Distribution Type' attribute was either not found on the HDF5 Group or it was of an unknown type. Please verify your HDF5 file has been written correctly"),
+    tr("The 'Distribution Type' was of an unknown type."),
     QMessageBox::Ok,
     QMessageBox::Ok);
     return -1;
@@ -162,32 +159,26 @@ int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
   m_TableModel->removeRows(0, m_TableModel->rowCount());
 
   // This will force a reset of the table model creating a new table model
-  setDistributionType(dt); // This makes sure the combo box is set correctly
+  setDistributionType(m_DistributionType); // This makes sure the combo box is set correctly
 
-  // Now we load up all the other column data into the Table Model
-  std::vector<std::string> names;
-  switch(m_DistributionType)
+  QVector<QString> colors;
+  qint32 count = binNumbers.count();
+  QStringList colorNames = QColor::colorNames();
+  qint32 colorOffset = 21;
+  for (qint32 i = 0; i < count; ++i)
   {
-    case DREAM3D::DistributionType::Beta:
-      names.push_back(DREAM3D::HDF5::Alpha);
-      names.push_back(DREAM3D::HDF5::Beta);
-      loadTableData(reader, binNumbers, names, hdf5GroupName);
-      break;
-    case DREAM3D::DistributionType::LogNormal:
-      names.push_back(DREAM3D::HDF5::Average);
-      names.push_back(DREAM3D::HDF5::StandardDeviation);
-      loadTableData(reader, binNumbers, names, hdf5GroupName);
-      break;
-    case DREAM3D::DistributionType::Power:
-      names.push_back(DREAM3D::HDF5::Alpha);
-      names.push_back(DREAM3D::HDF5::Exp_k);
-      names.push_back(DREAM3D::HDF5::Beta);
-      loadTableData(reader, binNumbers, names, hdf5GroupName);
-      break;
-
-    default:
-      return -1;
+    colors.push_back(colorNames[colorOffset++]);
   }
+  QVector<QVector<float> > data;
+
+  for(VectorOfFloatArray::size_type i = 0; i < arrays.size(); ++i)
+  {
+    QVector<float> col(arrays[i]->GetNumberOfTuples());
+    ::memcpy( &(col.front()), arrays[i]->GetVoidPointer(0), sizeof(float)*col.size() );
+    data.push_back(col);
+  }
+
+  m_TableModel->setTableData(binNumbers, data, colors);
 
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
@@ -198,37 +189,6 @@ int StatsGenPlotWidget::readDataFromHDF5(H5StatsReader::Pointer reader,
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenPlotWidget::loadTableData(H5StatsReader::Pointer reader,
-                                       QVector<float> binNumbers,
-                                       std::vector<std::string> names,
-                                       const std::string &hdf5GroupName)
-{
-  int err = 0;
-  QVector<QString> colors;
-  qint32 count = binNumbers.count();
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-  for (qint32 i = 0; i < count; ++i)
-  {
-    colors.push_back(colorNames[colorOffset++]);
-  }
-
-  QVector<QVector<float> > data;
-  // Now load each of the columns of data into the table model
-  std::string datasetName;
-  for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); ++name )
-  {
-    std::vector<float> col0;
-    datasetName = hdf5GroupName + "/" + *(name);
-    err = reader->readStatsDataset(m_PhaseIndex, datasetName, col0);
-    data.push_back( QVector<float>::fromStdVector(col0) );
-    if (err < 0) { SG_ERROR_CHECK(hdf5GroupName) }
-  }
-  m_TableModel->setTableData(binNumbers, data, colors);
-}
 
 // -----------------------------------------------------------------------------
 //

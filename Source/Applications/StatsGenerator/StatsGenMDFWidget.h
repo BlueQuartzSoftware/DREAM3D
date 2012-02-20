@@ -40,10 +40,11 @@
 #include <QtGui/QWidget>
 #include "ui_StatsGenMDFWidget.h"
 
+#include "DREAm3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsData.h"
-//#include "DREAM3DLib/HDF5/H5StatsWriter.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 
@@ -69,12 +70,12 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-    MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-    MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
-    MXA_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex);
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
+    DREAM3D_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
 
     int getMisrientationData(StatsData::Pointer statsData);
-    int readDataFromHDF5(H5StatsReader::Pointer reader,int phase);
+    void extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData);
 
     std::vector<float> generateODFData();
 
