@@ -44,12 +44,88 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/PhWriter.h"
 #include "DREAM3DLib/IOFilters/PhReader.h"
+
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
+
+
+class GenerateGrainIds : public AbstractFilter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(GenerateGrainIds)
+    DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
+
+
+    virtual ~GenerateGrainIds(){};
+    virtual const std::string getGroupName()
+    {
+      return "UnitTest";
+    }
+    virtual const std::string getHumanLabel()
+    {
+      return "Generate Grain Ids";
+    }
+    virtual void execute()
+    {
+      setErrorCondition(0);
+      DataContainer* m = getDataContainer();
+      if(NULL == m)
+      {
+        setErrorCondition(-1);
+        std::stringstream ss;
+        ss << getNameOfClass() << " DataContainer was NULL";
+        setErrorMessage(ss.str());
+        return;
+      }
+      int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
+
+      int64_t nx = UnitTest::PhIOTest::XSize;
+      int64_t ny = UnitTest::PhIOTest::YSize;
+      int64_t nz = UnitTest::PhIOTest::ZSize;
+      m->setDimensions(nx, ny, nz);
+
+      int64_t totalPoints = m->getTotalPoints();
+      dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+      // Set the default data into the GrainIds
+      for (int i = 0; i < size; ++i)
+      {
+        m_GrainIds[i] = i + UnitTest::PhIOTest::Offset;
+      }
+
+    }
+    virtual void preflight()
+    {
+      dataCheck(true, 1, 1, 1);
+    }
+
+  protected:
+    GenerateGrainIds() :
+        AbstractFilter(), m_GrainIds(NULL)
+    {
+    }
+
+  private:
+    int32_t* m_GrainIds;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+    {
+      setErrorCondition(0);
+      std::stringstream ss;
+      DataContainer* m = getDataContainer();
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
+
+      setErrorMessage(ss.str());
+    }
+
+    GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented
+    void operator=(const GenerateGrainIds&); // Operator '=' Not Implemented
+};
 
 
 // -----------------------------------------------------------------------------
@@ -67,28 +143,32 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestPhWriter()
 {
-  int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(size, DREAM3D::CellData::GrainIds);
-  for (int i = 0; i < size; ++i)
-  {
-    grainIds->SetValue(i, i + UnitTest::PhIOTest::Offset);
-  }
-  int64_t nx = UnitTest::PhIOTest::XSize;
-  int64_t ny = UnitTest::PhIOTest::YSize;
-  int64_t nz = UnitTest::PhIOTest::ZSize;
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  DataContainer::Pointer m = DataContainer::New();
-  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
-  m->setDimensions(nx, ny, nz);
-
+  // This should FAIL because there are no GrainIds anywhere to write. It should
+  // fail in the preflight
   PhWriter::Pointer writer = PhWriter::New();
-  writer->setDataContainer(m.get());
   writer->setOutputFile(UnitTest::PhIOTest::TestFile);
+  pipeline->pushBack(writer);
+  pipeline->execute();
+  int err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRE(err < 0);
+
+  // Now create some GrainIds and lets setup a real pipeline that should work
+  pipeline->clear(); // Remove any filters from the pipeline first
 
 
-  writer->execute();
-  int err = writer->getErrorCondition();
+  GenerateGrainIds::Pointer generateGrainIds = GenerateGrainIds::New();
+  pipeline->pushBack(generateGrainIds);
+
+  writer = PhWriter::New();
+  writer->setOutputFile(UnitTest::PhIOTest::TestFile);
+  pipeline->pushBack(writer);
+
+  pipeline->execute();
+  err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
+
   return EXIT_SUCCESS;
 }
 

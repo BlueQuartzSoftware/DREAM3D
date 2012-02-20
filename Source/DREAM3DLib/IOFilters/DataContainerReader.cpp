@@ -92,6 +92,8 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1);
   }
 
+  gatherData(preflight);
+
   setErrorMessage(ss.str());
 }
 
@@ -138,36 +140,7 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
     return -1;
   }
 
-  err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
-  if(err < 0)
-  {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Dimensions");
-    setErrorCondition(-151);
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
-    return -1;
-  }
-
-  err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
-  if(err < 0)
-  {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Spacing (Resolution)");
-    setErrorCondition(-152);
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
-    return -1;
-  }
-
-  err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
-  if(err < 0)
-  {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Origin");
-    setErrorCondition(-153);
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
-    return -1;
-  }
-
+  err |= gatherMetaData(dcGid, volDims, spacing, origin);
 
   err = H5Gclose(dcGid);
   err = H5Fclose(fileId);
@@ -208,6 +181,56 @@ void DataContainerReader::execute()
   m->clearFieldData();
   m->clearEnsembleData();
 
+  // We are actually wanting to read the file so set preflight to false
+  err = gatherData(false);
+
+  setErrorCondition(err);
+  notify("DataContainerReader Complete", 0, Observable::UpdateProgressMessage);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float spacing[3], float origin[3])
+{
+  int err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+   if(err < 0)
+   {
+     setErrorMessage("DataContainerReader Error Reading the Dimensions");
+     setErrorCondition(-151);
+     return -1;
+   }
+
+   err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+   if(err < 0)
+   {
+     setErrorMessage("DataContainerReader Error Reading the Spacing (Resolution)");
+     setErrorCondition(-152);
+     return -1;
+   }
+
+   err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+   if(err < 0)
+   {
+     setErrorMessage("DataContainerReader Error Reading the Origin");
+     setErrorCondition(-153);
+     return -1;
+   }
+   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::gatherData(bool preflight)
+{
+  int err = 0;
+  std::stringstream ss;
+  int64_t volDims[3] =  { 0, 0, 0 };
+  float spacing[3] =  { 1.0f, 1.0f, 1.0f };
+  float origin[3] = { 0.0f, 0.0f, 0.0f };
+  DataContainer* m = getDataContainer();
+
   hid_t fileId = H5Utilities::openFile(m_InputFile, false);
   if(fileId < 0)
   {
@@ -215,7 +238,7 @@ void DataContainerReader::execute()
     ss << getNameOfClass() << ": Error opening input file '" << m_InputFile << "'";
     setErrorCondition(-150);
     setErrorMessage(ss.str());
-    return;
+    return -1;
   }
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
   if(dcGid < 0)
@@ -225,80 +248,63 @@ void DataContainerReader::execute()
     ss << getNameOfClass() << ": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
     setErrorCondition(-150);
     setErrorMessage(ss.str());
-    return;
+    return -1;
   }
 
-  err |= H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
-  if(err < 0)
+
+  if (false == preflight)
   {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Dimensions");
-    setErrorCondition(-151);
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
-    return;
+    err = gatherMetaData(dcGid, volDims, spacing, origin);
+    if (err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      err |= H5Fclose(fileId);
+      setErrorCondition(err);
+      return -1;
+    }
+    m->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
+    m->setResolution(spacing);
+    m->setOrigin(origin);
   }
-  m->setDimensions(volDims[0], volDims[1], volDims[2]);
 
-  err |= H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
-  if(err < 0)
-  {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Spacing (Resolution)");
-    setErrorCondition(-152);
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
-    return;
-  }
-  m->setResolution(spacing);
-
-  err |= H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
-  if(err < 0)
-  {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Origin");
-    setErrorCondition(-153);
-    err = H5Gclose(dcGid);
-    err = H5Fclose(fileId);
-    return;
-  }
-  m->setOrigin(origin);
-
-  err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight);
   if(err < 0)
   {
     err |= H5Gclose(dcGid);
     err |= H5Fclose(fileId);
     setErrorCondition(err);
-    return;
+    return -1;
   }
 
-  err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight);
   if(err < 0)
   {
     err |= H5Gclose(dcGid);
     err |= H5Fclose(fileId);
     setErrorCondition(err);
-    return;
+    return -1;
   }
 
-  err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
+  err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight);
   if(err < 0)
   {
     err |= H5Gclose(dcGid);
     err |= H5Fclose(fileId);
     setErrorCondition(err);
-    return;
+    return -1;
   }
 
   err |= H5Gclose(dcGid);
   err |= H5Fclose(fileId);
+
+  return err;
 }
-
-
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName)
+int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight)
 {
   std::stringstream ss;
   int err = 0;
@@ -324,9 +330,9 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
  //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
-    if(classType.compare("DataArray<T>") == 0)
+    if(classType.find("DataArray") == 0)
     {
-      dPtr = H5DataArrayReader::readIDataArray(gid, *iter);
+      dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
     }
     else if(classType.compare("vector") == 0)
     {
@@ -334,7 +340,7 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
     }
     else if(classType.compare("NeighborList<T>") == 0)
     {
-      dPtr = H5DataArrayReader::readNeighborListData(gid, *iter);
+      dPtr = H5DataArrayReader::readNeighborListData(gid, *iter, preflight);
     }
     else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
     {

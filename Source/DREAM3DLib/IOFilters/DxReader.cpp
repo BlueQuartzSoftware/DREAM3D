@@ -168,10 +168,10 @@ int DxReader::readFile()
     nz--;
   }
 
-  std::cout << "INFO: DX data dimensions: " << std::endl;
-  std::cout << "nz= " << nz << std::endl;
-  std::cout << "ny= " << ny << std::endl;
-  std::cout << "nx= " << nx << std::endl;
+//  std::cout << "INFO: DX data dimensions: " << std::endl;
+//  std::cout << "nz= " << nz << std::endl;
+//  std::cout << "ny= " << ny << std::endl;
+//  std::cout << "nx= " << nx << std::endl;
 
   //The DX file has a unique format of 20 entries on each line. I have
   //no idea who initiated this insanity but I am about to perpetuate

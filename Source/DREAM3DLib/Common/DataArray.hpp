@@ -498,6 +498,75 @@ class DataArray : public IDataArray
         out << Array[i*NumberOfComponents + j];
     }
 
+    /**
+    * @brief Returns the HDF Type for a given primitive value.
+     * @param value A value to use. Can be anything. Just used to get the type info
+     * from
+     * @return The HDF5 native type for the value
+     */
+    std::string getFullNameOfClass()
+    {
+      T value = static_cast<T>(0);
+      if (typeid(value) == typeid(float)) return "DataArray<float>";
+      if (typeid(value) == typeid(double)) return "DataArray<double>";
+
+      if (typeid(value) == typeid(int8_t)) return "DataArray<int8_t>";
+      if (typeid(value) == typeid(uint8_t)) return "DataArray<uint8_t>";
+    # if CMP_TYPE_CHAR_IS_SIGNED
+      if (typeid(value) == typeid(char)) return "DataArray<char>";
+    #else
+      if (typeid(value) == typeid(char)) return "DataArray<char>";
+    #endif
+      if (typeid(value) == typeid(signed char)) return "DataArray<signed char>";
+      if (typeid(value) == typeid(unsigned char)) return "DataArray<unsigned char>";
+
+
+      if (typeid(value) == typeid(int16_t)) return "DataArray<int16_t>";
+      if (typeid(value) == typeid(short)) return "DataArray<short>";
+      if (typeid(value) == typeid(signed short)) return "DataArray<signed short>";
+      if (typeid(value) == typeid(uint16_t)) return "DataArray<uint16_t>";
+      if (typeid(value) == typeid(unsigned short)) return "DataArray<unsigned short>";
+
+
+      if (typeid(value) == typeid(int32_t)) return "DataArray<int32_t>";
+      if (typeid(value) == typeid(uint32_t)) return "DataArray<uint32_t>";
+    #if (CMP_SIZEOF_INT == 4)
+      if (typeid(value) == typeid(int)) return "DataArray<int>";
+      if (typeid(value) == typeid(signed int)) return "DataArray<signed int>";
+      if (typeid(value) == typeid(unsigned int)) return "DataArray<unsigned int>";
+    #endif
+
+
+    #if (CMP_SIZEOF_LONG == 4)
+      if (typeid(value) == typeid(long int)) return "DataArray<long int>";
+      if (typeid(value) == typeid(signed long int)) return "DataArray<signed long int>";
+      if (typeid(value) == typeid(unsigned long int)) return "DataArray<unsigned long int>";
+    #elif (CMP_SIZEOF_LONG == 8)
+      if (typeid(value) == typeid(long int)) return "DataArray<long int>";
+      if (typeid(value) == typeid(signed long int)) return "DataArray<signed long int>";
+      if (typeid(value) == typeid(unsigned long int)) return "DataArray<unsigned long int>";
+    #endif
+
+
+    #if (CMP_SIZEOF_LONG_LONG == 8)
+      if (typeid(value) == typeid(long long int)) return "DataArray<long long int>";
+      if (typeid(value) == typeid(signed long long int)) return "DataArray<signed long long int>";
+      if (typeid(value) == typeid(unsigned long long int)) return "DataArray<unsigned long long int>";
+    #endif
+      if (typeid(value) == typeid(int64_t)) return "DataArray<int64_t>";
+      if (typeid(value) == typeid(uint64_t)) return "DataArray<uint64_t>";
+
+      if (typeid(value) == typeid(bool)) return "DataArray<bool>";
+
+     // std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
+      const char* name = typeid(value).name();
+      if (NULL != name && name[0] == 'l' ) {
+        std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << std::endl;
+      }
+      return "DataArray<UnknownType>";
+    }
+
+
 
     /**
      *
@@ -506,7 +575,8 @@ class DataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getNameOfClass());
+
+      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
     /**

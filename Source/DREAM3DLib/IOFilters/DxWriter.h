@@ -70,6 +70,10 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     virtual int writeFile();
 
   private:
+    int32_t* m_GrainIds;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
     DxWriter(const DxWriter&); // Copy Constructor Not Implemented
     void operator=(const DxWriter&); // Operator '=' Not Implemented
 };

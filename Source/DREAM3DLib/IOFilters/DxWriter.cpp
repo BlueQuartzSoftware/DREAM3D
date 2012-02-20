@@ -44,7 +44,8 @@
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
 FileWriter(),
-m_AddSurfaceLayer(false)
+m_AddSurfaceLayer(false),
+m_GrainIds(NULL)
 {
   setupFilterOptions();
 }
@@ -82,13 +83,26 @@ void DxWriter::setupFilterOptions()
   setFilterOptions(options);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  setErrorMessage(ss.str());
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DxWriter::preflight()
 {
-
+  dataCheck(true, 1, 1, 1);
 }
 
 
@@ -116,7 +130,13 @@ int DxWriter::writeFile()
     return -1;
   }
   int64_t totalPoints = m->getTotalPoints();
-  GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
+  dataCheck(false, totalPoints, 1, 1);
+  if (getErrorCondition() < 0)
+  {
+    return -40;
+  }
+
+  //GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
 
   int err = 0;
   size_t udims[3] = {0,0,0};
@@ -204,13 +224,13 @@ int DxWriter::writeFile()
       // Write the actual voxel data
       for (DimType x = 0; x < dims[0]; ++x)
       {
-        if(grain_indicies[index] == 0)
+        if(m_GrainIds[index] == 0)
         {
           out << "0" << " ";
         }
         else
         {
-          out << grain_indicies[index] << " ";
+          out << m_GrainIds[index] << " ";
         }
         ++index;
       }
@@ -272,9 +292,11 @@ int DxWriter::writeFile()
 
   out.close();
 #endif
+
+  // If there is an error set this to something negative and also set a message
+  notify("Writing Dx File Complete", 0, Observable::UpdateProgressMessage);
   return err;
 }
-
 
 // -----------------------------------------------------------------------------
 //
