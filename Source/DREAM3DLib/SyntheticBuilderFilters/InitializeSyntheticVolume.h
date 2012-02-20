@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,57 +34,71 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CHANGERESOLUTION_H_
-#define CHANGERESOLUTION_H_
-
-#include <string>
+#ifndef _INITIALIZESYNTHETICVOLUME_H_
+#define _INITIALIZESYNTHETICVOLUME_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
-/**
- * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+/*
+ *
  */
-class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
+class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ChangeResolution);
-    DREAM3D_STATIC_NEW_MACRO(ChangeResolution);
-    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(InitializeSyntheticVolume)
+    DREAM3D_STATIC_NEW_MACRO(InitializeSyntheticVolume)
+    DREAM3D_TYPE_MACRO_SUPER(InitializeSyntheticVolume, AbstractFilter)
 
-    virtual ~ChangeResolution();
 
+    virtual ~InitializeSyntheticVolume();
+
+    virtual const std::string getGroupName()
+    {
+      return DREAM3D::FilterGroups::SyntheticBuilderFilters;
+    }
+    virtual const std::string getHumanLabel()
+    {
+      return "Initialize Synthetic Volume";
+    }
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
+    DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight)
+    DREAM3D_INSTANCE_PROPERTY(int, XVoxels)
+    DREAM3D_INSTANCE_PROPERTY(int, YVoxels)
+    DREAM3D_INSTANCE_PROPERTY(int, ZVoxels)
     DREAM3D_INSTANCE_PROPERTY(float, XRes)
     DREAM3D_INSTANCE_PROPERTY(float, YRes)
     DREAM3D_INSTANCE_PROPERTY(float, ZRes)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ManipulationFilters; }
-    virtual const std::string getHumanLabel() { return "Change Resolution"; }
 
     virtual void setupFilterOptions();
+
+    virtual void preflight();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
-    virtual void preflight();
 
   protected:
-    ChangeResolution();
-
+    InitializeSyntheticVolume();
 
   private:
+    // Cell Data - make sure these are all initialized to NULL in the constructor
+    int32_t* m_GrainIds;
+    int32_t* m_PhasesC;
+    float*   m_EulerAngles;
 
-    ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
-    void operator=(const ChangeResolution&); // Operator '=' Not Implemented
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    InitializeSyntheticVolume(const InitializeSyntheticVolume&); // Copy Constructor Not Implemented
+    void operator=(const InitializeSyntheticVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* CHANGERESOLUTION_H_ */
+#endif /* _INITIALIZESYNTHETICVOLUME_H_ */
