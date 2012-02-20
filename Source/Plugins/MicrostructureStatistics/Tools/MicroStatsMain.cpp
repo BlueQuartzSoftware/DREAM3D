@@ -66,7 +66,6 @@
 #include "DREAM3DLib/StatisticsFilters/FindODF.h"
 #include "DREAM3DLib/StatisticsFilters/FindMDF.h"
 #include "DREAM3DLib/StatisticsFilters/FindEuclideanDistMap.h"
-#include "DREAM3DLib/StatisticsFilters/WriteH5StatsFile.h"
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename, outdir, prefix)\
     std::string outpath = outdir + MXADir::Separator + prefix + filename;

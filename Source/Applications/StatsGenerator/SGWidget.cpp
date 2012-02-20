@@ -236,22 +236,6 @@ void SGWidget::setupGui()
    connect(m_COverAPlot, SIGNAL(userEditedData()),
            this, SLOT(dataWasEdited()));
 
-   w = m_COverBPlot;
-   w->setPlotTitle(QString("C/B Shape Distribution"));
-   w->setXAxisName(QString("C/B"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverB);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_COverBPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
-
    w = m_NeighborPlot;
    w->setPlotTitle(QString("Neighbors Distributions"));
    w->setXAxisName(QString("Distance (Multiples of Diameter)"));
@@ -300,7 +284,6 @@ void SGWidget::setPhaseIndex(int index)
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
   m_BOverAPlot->setPhaseIndex(m_PhaseIndex);
   m_COverAPlot->setPhaseIndex(m_PhaseIndex);
-  m_COverBPlot->setPhaseIndex(m_PhaseIndex);
   m_NeighborPlot->setPhaseIndex(m_PhaseIndex);
   m_ODFWidget->setPhaseIndex(m_PhaseIndex);
   m_AxisODFWidget->setPhaseIndex(m_PhaseIndex);
@@ -323,7 +306,6 @@ void SGWidget::setCrystalStructure(unsigned int xtal)
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);
-  m_COverBPlot->setCrystalStructure(xtal);
   m_NeighborPlot->setCrystalStructure(xtal);
   m_ODFWidget->setCrystalStructure(xtal);
   /* Note that we do NOT want to set the crystal structure for the AxisODF widget
@@ -696,9 +678,6 @@ void SGWidget::plotSizeDistribution()
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
-  m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeCOverBTableModel(m_COverBPlot, binsizes);
-
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeNeighborTableModel(m_NeighborPlot, binsizes);
 
@@ -830,13 +809,6 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
     statsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
   }
 
-  //err = m_COverBPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
-  {
-    VectorOfFloatArray data = m_COverBPlot->getStatisticsData();
-    statsData->setGrainSize_COverB(data);
-    statsData->setCOverB_DistType(m_COverBPlot->getDistributionType());
-  }
-
  // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
   {
     VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
@@ -895,7 +867,6 @@ int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
-  m_COverBPlot->setCrystalStructure(m_CrystalStructure);
   m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
  // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
@@ -957,9 +928,6 @@ int SGWidget::readDataFromHDF5(H5StatsReader::Pointer reader, int phase)
 
   m_COverAPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-
-  m_COverBPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVCoverB_Distributions);
-  m_COverBPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_NeighborPlot->readDataFromHDF5(reader, qbins, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);

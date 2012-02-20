@@ -58,7 +58,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/StatsData.h"
 //#include "DREAM3DLib/HDF5/H5StatsWriter.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
 
 #include "PoleFigureMaker.h"
 

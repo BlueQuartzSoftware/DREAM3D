@@ -47,6 +47,8 @@
 #include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
 
+#include "EBSDLib/EbsdConstants.h"
+
 #include "DREAM3DLib/Common/Texture.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"

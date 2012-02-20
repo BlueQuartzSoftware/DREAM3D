@@ -125,7 +125,6 @@ void StatsData::initialize()
   m_GrainSize_DistType = DREAM3D::DistributionType::LogNormal;
   m_BOverA_DistType = DREAM3D::DistributionType::Beta;
   m_COverA_DistType = DREAM3D::DistributionType::Beta;
-  m_COverB_DistType = DREAM3D::DistributionType::Beta;
   m_Neighbors_DistType = DREAM3D::DistributionType::Power;
   m_Omegas_DistType = DREAM3D::DistributionType::Beta;
   m_GrainDiameterInfo[0] = 0.25f;

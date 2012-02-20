@@ -66,7 +66,6 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
     void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
 

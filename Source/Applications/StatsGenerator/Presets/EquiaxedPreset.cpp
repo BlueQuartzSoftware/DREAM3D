@@ -192,48 +192,6 @@ void EquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVecto
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EquiaxedPreset::initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
-{
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (NULL == model)
-  {
-    return;
-  }
-  qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
-
-  float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
-
-  QVector<float> alphas;
-  QVector<float> betas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-  for (qint32 i = 0; i < count; ++i)
-   {
-		alpha = (0*i) + 15.0 + rg.genrand_res53();
-		beta = (0*i) + 1.25 + (0.5*rg.genrand_res53());
-		alphas.push_back(alpha);
-		betas.push_back(beta);
-		colors.push_back(colorNames[colorOffset++]);
-   }
-
-  QVector<QVector<float> > data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void EquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
