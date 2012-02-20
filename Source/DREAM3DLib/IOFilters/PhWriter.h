@@ -77,6 +77,10 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
 
 
   private:
+    int32_t* m_GrainIds;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
     PhWriter(const PhWriter&); // Copy Constructor Not Implemented
     void operator=(const PhWriter&); // Operator '=' Not Implemented
 };

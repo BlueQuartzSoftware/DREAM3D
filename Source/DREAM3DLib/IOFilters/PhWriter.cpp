@@ -46,7 +46,8 @@
 //
 // -----------------------------------------------------------------------------
 PhWriter::PhWriter() :
-FileWriter()
+FileWriter(),
+m_GrainIds(NULL)
 {
   setupFilterOptions();
 }
@@ -79,9 +80,23 @@ void PhWriter::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  setErrorMessage(ss.str());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PhWriter::preflight()
 {
-
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -108,20 +123,27 @@ int PhWriter::writeFile()
     return -1;
   }
 
-  int32_t* grain_indicies = 0;
+//  int32_t* grain_indicies = 0;
+//  {
+//    IDataArray::Pointer iDataArray = m->getCellData(DREAM3D::CellData::GrainIds);
+//    if (iDataArray.get() == 0) {
+//      return -10;
+//    }
+//    if (static_cast<size_t>(m->getTotalPoints()) != iDataArray->GetNumberOfTuples()) {
+//      return -20;
+//    }
+//    grain_indicies =
+//    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getCellData(DREAM3D::CellData::GrainIds).get());
+//    if (0 == grain_indicies) {
+//      return -30;
+//    }
+//  }
+
+  int64_t totalPoints = m->getTotalPoints();
+  dataCheck(false, totalPoints, 1, 1);
+  if (getErrorCondition() < 0)
   {
-    IDataArray::Pointer iDataArray = m->getCellData(DREAM3D::CellData::GrainIds);
-    if (iDataArray.get() == 0) {
-      return -10;
-    }
-    if (static_cast<size_t>(m->getTotalPoints()) != iDataArray->GetNumberOfTuples()) {
-      return -20;
-    }
-    grain_indicies =
-    IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t* >(m->getCellData(DREAM3D::CellData::GrainIds).get());
-    if (0 == grain_indicies) {
-      return -30;
-    }
+    return -40;
   }
 
   size_t udims[3] = {0,0,0};
@@ -156,7 +178,7 @@ int PhWriter::writeFile()
   std::map<int, bool> used;
   for (int i = 0; i < totalpoints; ++i)
   {
-    used[grain_indicies[i]] = true;
+    used[m_GrainIds[i]] = true;
   }
 
   int grains = 0;
@@ -177,7 +199,7 @@ int PhWriter::writeFile()
   int count = 0;
   for (int k = 0; k < totalpoints; k++)
   {
-    outfile << std::setw(6) << grain_indicies[k];
+    outfile << std::setw(6) << m_GrainIds[k];
     count++;
     if(count == 20)
     {
@@ -188,6 +210,9 @@ int PhWriter::writeFile()
   }
   outfile << "\n";
   outfile.close();
+
+  // If there is an error set this to something negative and also set a message
+  notify("Writing Ph File Complete", 0, Observable::UpdateProgressMessage);
   return 0;
 }
 

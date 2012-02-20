@@ -94,7 +94,8 @@ namespace UnitTest {
       static const size_t ZSize = 3;
       const std::string TestDir("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest");
       const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest/DataContainerIOTest.h5");
-    }
+      const std::string TestFile2("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest/DataContainerIOTest_Rewrite.h5");
+}
  
     namespace StatsDataTest
     {
