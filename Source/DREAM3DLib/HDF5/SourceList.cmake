@@ -10,8 +10,6 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (DREAM3DLib_HDF5_HDRS
-# ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataWriter.h
-#  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5GrainWriter.hpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/VTKH5Constants.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.h
@@ -21,12 +19,11 @@ SET (DREAM3DLib_HDF5_HDRS
 )
 
 SET (DREAM3DLib_HDF5_SRCS
-#  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelGrainIdReader.cpp
-  )
+)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/HDF5" "${DREAM3DLib_HDF5_HDRS}" "${DREAM3DLib_HDF5_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_HDF5_HDRS}
