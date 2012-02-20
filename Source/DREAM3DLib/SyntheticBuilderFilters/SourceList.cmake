@@ -14,6 +14,7 @@ SET (SyntheticBuilderFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackGrainsGen2.h
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.h
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PlacePrecipitates.h
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InitializeSyntheticVolume.h
 )
 
 SET (DREAM3DLib_SyntheticBuilderFilters_HDRS
@@ -24,7 +25,7 @@ SET (DREAM3DLib_SyntheticBuilderFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackGrainsGen2.cpp
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.cpp
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PlacePrecipitates.cpp
-
+    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InitializeSyntheticVolume.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SyntheticBuilderFilters" "${DREAM3DLib_SyntheticBuilderFilters_HDRS}" "${DREAM3DLib_SyntheticBuilderFilters_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

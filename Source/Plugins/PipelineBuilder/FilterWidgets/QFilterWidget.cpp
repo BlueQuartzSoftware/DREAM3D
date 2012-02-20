@@ -131,8 +131,15 @@ void QFilterWidget::setupGui()
 
   delete layout();
 
+
+  QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Maximum);
+  sizePolicy2.setHorizontalStretch(0);
+  sizePolicy2.setVerticalStretch(0);
+  setSizePolicy(sizePolicy2);
+
+
   setTitle(QString::fromStdString(getFilter()->getNameOfClass()));
-  //setMouseTracking(true);
+
 
   QVBoxLayout* vertLayout = new QVBoxLayout(this);
 

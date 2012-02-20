@@ -47,11 +47,11 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/ShapeOps/ShapeOps.h"
+
 
 typedef struct {
     float m_Volumes;
@@ -81,7 +81,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
-
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
@@ -161,7 +160,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float* m_PhaseFractions;
     float* m_PrecipitateFractions;
     unsigned int* m_ShapeTypes;
-	StatsDataArray* m_StatsDataArray;
+    StatsDataArray* m_StatsDataArray;
 
     // All other private variables
     std::map<unsigned int, ShapeOps*> m_ShapeOps;

@@ -24,12 +24,14 @@ set (FilterWidget_HDRS
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.h
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.h
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricItemDelegate.h
+    ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
 )
 
 set(FilterWidget_SRCS
     ${FilterWidgets_SOURCE_DIR}/QFilterWidget.cpp
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.cpp
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.cpp
+    ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
 )
 
 
@@ -136,7 +138,8 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
 QT4_WRAP_UI( FilterWidgets_Generated_UI_HDRS 
-            ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui )
+            ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui 
+            ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui)
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
