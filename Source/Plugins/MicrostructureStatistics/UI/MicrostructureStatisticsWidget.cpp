@@ -50,8 +50,6 @@
 #include <QtGui/QListWidgetItem>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/QR3DFileCompleter.h"
@@ -77,7 +75,6 @@
 #include "DREAM3DLib/StatisticsFilters/FindODF.h"
 #include "DREAM3DLib/StatisticsFilters/FindMDF.h"
 #include "DREAM3DLib/StatisticsFilters/FindEuclideanDistMap.h"
-#include "DREAM3DLib/StatisticsFilters/WriteH5StatsFile.h"
 
 #include "MicrostructureStatisticsPlugin.h"
 

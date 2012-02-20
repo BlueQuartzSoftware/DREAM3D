@@ -667,9 +667,6 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
       case DREAM3D::Reconstruction::Grain_SizeVCoverA:
         msg.append(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions.c_str());
         break;
-      case DREAM3D::Reconstruction::Grain_SizeVCoverB:
-        msg.append(DREAM3D::HDF5::Grain_SizeVCoverB_Distributions.c_str());
-          break;
       case DREAM3D::Reconstruction::Grain_SizeVNeighbors:
         msg.append(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions.c_str());
         break;

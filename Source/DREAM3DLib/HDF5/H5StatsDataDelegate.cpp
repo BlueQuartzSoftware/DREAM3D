@@ -137,9 +137,6 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
    err |= readBinNumbers(data, groupId);
 
    // Read the B Over A
-
-
-
    data->setGrainSize_BOverA( createDistributionVector(data->getBOverA_DistType()));
    err |= readDistributionData(groupId,
                                 DREAM3D::HDF5::BetaDistribution,
@@ -152,15 +149,6 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
                                 DREAM3D::HDF5::BetaDistribution,
                                 DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
                                 data->getGrainSize_COverA());
-
-
-   // Read the C Over B
-   data->setGrainSize_COverB( createDistributionVector(data->getCOverB_DistType()));
-   err |= readDistributionData(groupId,
-                                DREAM3D::HDF5::BetaDistribution,
-                                DREAM3D::HDF5::Grain_SizeVCoverB_Distributions,
-                                data->getGrainSize_COverB());
-
 
    // Read the Neighbors
    data->setGrainSize_Neighbors( createDistributionVector(data->getNeighbors_DistType()));
@@ -251,21 +239,19 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
                                DREAM3D::HDF5::BetaDistribution,
                                DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
                                data->getGrainSize_COverA());
-  // Write the C Over B
-  err |= writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
-                               DREAM3D::HDF5::Grain_SizeVCoverB_Distributions,
-                               data->getGrainSize_COverB());
+
   // Write the Neighbors
   err |= writeDistributionData(groupId,
                                DREAM3D::HDF5::PowerLawDistribution,
                                DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
                                data->getGrainSize_Neighbors());
+
   // Write the Omegas
   err |= writeDistributionData(groupId,
                                DREAM3D::HDF5::BetaDistribution,
                                DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
                                data->getGrainSize_Omegas());
+
   // Write the Misorientation Bins
   if (NULL != data->getMisorientationBins().get())
   {

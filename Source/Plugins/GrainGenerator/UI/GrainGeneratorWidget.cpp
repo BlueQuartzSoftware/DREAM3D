@@ -61,8 +61,6 @@
 #include "DREAM3DLib/Common/ShapeType.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
-#include "DREAM3DLib/HDF5/H5StatsWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"

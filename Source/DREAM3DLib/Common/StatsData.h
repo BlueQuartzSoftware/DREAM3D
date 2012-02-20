@@ -138,9 +138,6 @@ class DREAM3DLib_EXPORT StatsData
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverA);
     DREAM3D_INSTANCE_PROPERTY(uint32_t, COverA_DistType);
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverB);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, COverB_DistType);
-
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Neighbors);
     DREAM3D_INSTANCE_PROPERTY(uint32_t, Neighbors_DistType);
 

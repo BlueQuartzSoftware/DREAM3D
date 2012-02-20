@@ -53,7 +53,6 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
-#include "DREAM3DLib/HDF5/H5StatsReader.h"
 
 /**
  * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h

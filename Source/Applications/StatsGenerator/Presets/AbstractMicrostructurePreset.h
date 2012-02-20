@@ -95,13 +95,6 @@ class AbstractMicrostructurePreset
     virtual void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
 
     /**
-     * @brief Initializes the C Over B preset table values
-     * @param tableModel The TableModel that will receive the preset values
-     * @param binNumbers The array of Bin values which are needed for the table model
-     */
-    virtual void initializeCOverBTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
-
-    /**
      * @brief Initializes the Neighbor preset table values
      * @param tableModel The TableModel that will receive the preset values
      * @param binNumbers The array of Bin values which are needed for the table model
