@@ -40,6 +40,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
+#include <QtCore/QPropertyAnimation>
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
@@ -48,6 +49,7 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -67,6 +69,7 @@ PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
 m_WorkerThread(NULL),
+m_isClosed(true),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -173,7 +176,11 @@ void PipelineBuilderWidget::setupGui()
 
   for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
-    QIcon icon(":/bullet_ball_blue.png");
+    std::cout << *iter << std::endl;
+    QString iconName(":/");
+    iconName.append( QString::fromStdString(*iter));
+    iconName.append("_Icon.png");
+    QIcon icon(iconName);
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
     filterGroup->setIcon(0, icon);
@@ -181,7 +188,7 @@ void PipelineBuilderWidget::setupGui()
   }
   library->setExpanded(true);
 
-  toggleDocs->setChecked(false);
+  toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
 
   connect(scrollArea, SIGNAL(filterDropped(QString)),
@@ -352,62 +359,36 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 }
 
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::on_filterDown_clicked()
-{
-  std::cout << "on_filterDown_clicked" << std::endl;
-  if (NULL != m_SelectedFilterWidget)
-  {
-    qint32 selectedIndex = m_FilterWidgetLayout->indexOf(m_SelectedFilterWidget);
-    qint32 count = m_FilterWidgetLayout->count();
-    if (selectedIndex >= 0 && selectedIndex < count - 1)
-    {
-      m_FilterWidgetLayout->removeWidget(m_SelectedFilterWidget);
-      m_FilterWidgetLayout->insertWidget(selectedIndex + 1, m_SelectedFilterWidget);
-      setSelectedFilterWidget(m_SelectedFilterWidget);
-    }
-
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::on_filterUp_clicked()
-{
-  std::cout << "on_filterUp_clicked" << std::endl;
-  if(NULL != m_SelectedFilterWidget)
-  {
-    qint32 selectedIndex = m_FilterWidgetLayout->indexOf(m_SelectedFilterWidget);
-    if(selectedIndex > 0)
-    {
-      //  qint32  count = m_FilterWidgetLayout->count();
-      m_FilterWidgetLayout->removeWidget(m_SelectedFilterWidget);
-      m_FilterWidgetLayout->insertWidget(selectedIndex - 1, m_SelectedFilterWidget);
-      setSelectedFilterWidget(m_SelectedFilterWidget);
-    }
-  }
-}
-#endif
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
-  if (toggleDocs->isChecked())
+  QPropertyAnimation *animation1 = new QPropertyAnimation(helpTextEdit, "maximumHeight");
+  m_isClosed = !m_isClosed;
+  int deltaX;
+  if(m_isClosed)
   {
-    helpTextEdit->hide();
-  }
-  else
-  {
-    helpTextEdit->show();
-  }
 
+    int start = 0;
+    int end = 350;
+    helpTextEdit->setMaximumHeight(end);
+    deltaX = start;
+
+    animation1->setDuration(250);
+    animation1->setStartValue(start);
+    animation1->setEndValue(end);
+  }
+  else //open
+  {
+    int start = helpTextEdit->maximumHeight();
+    int end = 0;
+    animation1->setDuration(250);
+    animation1->setStartValue(start);
+    animation1->setEndValue(end);
+  }
+  animation1->start();
 }
 
 // -----------------------------------------------------------------------------
