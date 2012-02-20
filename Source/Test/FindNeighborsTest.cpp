@@ -100,7 +100,7 @@ std::string getH5EbsdFile()
 }
 
 int getZStartIndex() { return 1; }
-int getZEndIndex() { return 25; }
+int getZEndIndex() { return 117; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
