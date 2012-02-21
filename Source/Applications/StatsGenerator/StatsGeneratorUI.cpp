@@ -623,6 +623,9 @@ void StatsGeneratorUI::openFile(QString h5file)
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(m_FilePath.toStdString());
   reader->setDataContainer(m.get());
+  reader->setReadCellData(false);
+  reader->setReadFieldData(false);
+  reader->setReadEnsembleData(true);
   reader->execute();
   err = reader->getErrorCondition();
   if (err < 0)
