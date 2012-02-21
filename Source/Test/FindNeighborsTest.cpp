@@ -62,6 +62,9 @@
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+#include "DREAM3DLib/StatisticsFilters/FindODF.h"
+#include "DREAM3DLib/StatisticsFilters/FindMDF.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -269,6 +272,15 @@ void TestDataContainerReader()
   FindShapes::Pointer find_shapes = FindShapes::New();
   find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
   pipeline->pushBack(find_shapes);
+
+  FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+  pipeline->pushBack(find_avgorients);
+
+  FindODF::Pointer find_odf = FindODF::New();
+  pipeline->pushBack(find_odf);
+
+  FindMDF::Pointer find_mdf = FindMDF::New();
+  pipeline->pushBack(find_mdf);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
