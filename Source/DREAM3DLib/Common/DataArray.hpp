@@ -64,6 +64,7 @@ class DataArray : public IDataArray
     /**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
+     * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numElements, const std::string &name)
@@ -79,6 +80,33 @@ class DataArray : public IDataArray
       return ptr;
     }
 
+     /**
+     * @brief Static constructor
+     * @param numTuples The number of elements in the internal array.
+     * @param numComponents The number of Components in each Tuple
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    static Pointer CreateArray(size_t numTuples, int numComponents, const std::string &name)
+    {
+      DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
+      if (d->Allocate() < 0)
+      { // Could not allocate enough memory, reset the pointer to null and return
+        delete d;
+        return DataArray<T>::NullPointer();
+      }
+      d->SetName(name);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+     /**
+     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * contained in the vector. The number of components will be set to 1.
+     * @param vec The vector to copy the data from
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
     static Pointer FromStdVector(std::vector<T> &vec, const std::string &name)
      {
        Pointer p = CreateArray(vec.size(), name);
@@ -653,6 +681,21 @@ class DataArray : public IDataArray
     //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
+    /**
+     * @brief Protected Constructor
+     * @param numTuples The number of elements in the internal array.
+     * @param numComponents The number of values each Tuple has. Size = NumTuples * NumComponents
+     * @param takeOwnership Will the class clean up the memory. Default=true
+     */
+    DataArray(size_t numTuples, int numComponents, bool ownsData = true) :
+      Array(NULL),
+      _ownsData(ownsData)
+    {
+      NumberOfComponents = numComponents;
+      Size = numTuples * numComponents;
+      MaxId = (Size > 0) ? Size - 1: Size;
+    //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+    }
     /**
      * @brief deallocates the memory block
      */

@@ -190,7 +190,7 @@ namespace DREAM3D
 
     const std::string DataContainerName("DataContainer");
     const std::string ObjectType("ObjectType");
-
+    const std::string NumComponents("NumComponents");
 
   //  const std::string Grain_ID("Grain_ID");
    // const std::string SchmidFactor ("SchmidFactor");
