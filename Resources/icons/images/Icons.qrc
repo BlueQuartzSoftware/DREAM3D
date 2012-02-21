@@ -1,7 +1,7 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
-  <file>add.png</file>
+  <file>add2.png</file>
   <file>zoomIn.png</file>
   <file>zoomOut.png</file>
   <file>fitToWindow.png</file>
@@ -21,7 +21,7 @@
   <file>open_pipeline.png</file>
   <file>disk_blue.png</file>
   <file>information.png</file>
-  <file>delete.png</file>
+  <file>delete2.png</file>
   <file>IO_Icon.png</file>
   <file>Manipulation_Icon.png</file>
   <file>Reconstruction_Icon.png</file>
