@@ -75,25 +75,46 @@ PipelineViewWidget::~PipelineViewWidget()
 
 }
 
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLayout* PipelineViewWidget::layout() const
+{
+  return QFrame::layout();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setLayout(QLayout* l)
+{
+  QFrame::setLayout(l);
+  m_FilterWidgetLayout = qobject_cast<QVBoxLayout*>(l);
+}
+#endif
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setupGui()
 {
-  setAcceptDrops(true);
+ // setAcceptDrops(true);
 
 //  setFrameShape(QFrame::Box);
 //  setFrameShadow(QFrame::Plain);
 //  setLineWidth(2);
 
-
-  m_InsertedLabel.setText("Temp Label");
-
   m_FilterWidgetLayout = new QVBoxLayout(this);
+  m_FilterWidgetLayout->setObjectName(QString::fromUtf8("m_FilterWidgetLayout"));
   m_FilterWidgetLayout->setContentsMargins(5, 15, 5, 15);
   m_FilterWidgetLayout->setSpacing(15);
-  m_FilterWidgetLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-  setLayout(m_FilterWidgetLayout);
+  QSpacerItem* verticalSpacer = new QSpacerItem(20, 361, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+  m_FilterWidgetLayout->addItem(verticalSpacer);
+
+//  setLayout(m_FilterWidgetLayout);
 }
 
 // -----------------------------------------------------------------------------
@@ -101,7 +122,11 @@ void PipelineViewWidget::setupGui()
 // -----------------------------------------------------------------------------
 int PipelineViewWidget::filterCount()
 {
-  return m_FilterWidgetLayout->count();
+  int count = 0;
+  if (NULL != m_FilterWidgetLayout) {
+    count = m_FilterWidgetLayout->count() - 1;
+  }
+  return count;
 }
 
 // -----------------------------------------------------------------------------
@@ -109,8 +134,11 @@ int PipelineViewWidget::filterCount()
 // -----------------------------------------------------------------------------
 QFilterWidget* PipelineViewWidget::filterWidgetAt(int index)
 {
-  QWidget* w = m_FilterWidgetLayout->itemAt(index)->widget();
-  QFilterWidget* fw = qobject_cast<QFilterWidget*>(w);
+  QFilterWidget* fw = NULL;
+  if (m_FilterWidgetLayout != NULL) {
+    QWidget* w = m_FilterWidgetLayout->itemAt(index)->widget();
+    fw = qobject_cast<QFilterWidget*>(w);
+  }
   return fw;
 }
 
@@ -119,12 +147,14 @@ QFilterWidget* PipelineViewWidget::filterWidgetAt(int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::clearWidgets()
 {
-  qint32 count = m_FilterWidgetLayout->count();
+  qint32 count = filterCount();
   for(qint32 i = count - 1; i >= 0; --i)
   {
     QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
-    m_FilterWidgetLayout->removeWidget(w);
-    w->deleteLater();
+    if (NULL != w) {
+      m_FilterWidgetLayout->removeWidget(w);
+      w->deleteLater();
+    }
   }
 }
 
@@ -137,7 +167,9 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName)
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
   QFilterWidget* w = wf->createWidget();
 
-  m_FilterWidgetLayout->addWidget(w);
+  int count = filterCount();
+  m_FilterWidgetLayout->insertWidget(count, w);
+//  m_FilterWidgetLayout->addWidget(w);
   w->setParent(this);
   connect(w, SIGNAL(clicked(bool)),
           this, SLOT(removeFilterWidget()) );
