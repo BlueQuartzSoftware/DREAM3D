@@ -218,8 +218,13 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 
   for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    QListWidgetItem* fitlerItem = new QListWidgetItem(filterList);
-    fitlerItem->setText(QString::fromStdString((*factory).first));
+    QListWidgetItem* filterItem = new QListWidgetItem(filterList);
+    filterItem->setText(QString::fromStdString((*factory).first));
+    QString iconName(":/");
+    iconName.append( QString::fromStdString((*factory).second->getFilterGroup()));
+    iconName.append("_Icon.png");
+    QIcon icon(iconName);
+    filterItem->setIcon(icon);
   }
 }
 

@@ -207,10 +207,14 @@ void QFilterWidget::setupGui()
       theSlot.append("set");
       theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
+     // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
       QObject::connect( com, SIGNAL(activated(const QString &)),
                       this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
                         this, theSlot.toAscii());
+//      connect(fp, SIGNAL(textChanged(const QString &)),
+//              this, SLOT(updateLineEdit(const QString &)));
+
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select...");
@@ -606,4 +610,14 @@ void QFilterWidget::readOptions(QSettings &prefs)
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateLineEdit(const QString &v)
+{
+  // This is just here to test
+  std::cout << "LineEdit Values being updaeted: " << v.toStdString() << std::endl;
+}
+
 
