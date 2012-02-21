@@ -76,7 +76,7 @@ const static float m_pi = M_PI;
 LoadSlices::LoadSlices() :
 AbstractFilter(),
 m_H5EbsdFile(""),
-//m_MisorientationTolerance(0.0f),
+m_MisorientationTolerance(5.0f),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
