@@ -112,7 +112,7 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
     ShapeOps::Pointer m_EllipsoidOps;
-    ShapeOps::Pointer m_SuprtEllipsoidOps;
+    ShapeOps::Pointer m_SuperEllipsoidOps;
 
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
@@ -131,7 +131,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int32_t* m_Neighborhoods;
 
     unsigned int* m_PhaseTypes;
-    float* m_PhaseFractions;
     float* m_PrecipitateFractions;
     unsigned int* m_ShapeTypes;
 	StatsDataArray* m_StatsDataArray;

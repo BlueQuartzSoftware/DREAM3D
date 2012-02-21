@@ -78,7 +78,6 @@ m_PeriodicBoundaries(false),
 m_NeighborhoodErrorWeight(1.0f),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
-m_EulerAngles(NULL),
 m_SurfaceVoxels(NULL),
 m_Active(NULL),
 m_PhasesF(NULL),
@@ -91,7 +90,6 @@ m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_CrystalStructures(NULL),
 m_PhaseTypes(NULL),
-m_PhaseFractions(NULL),
 m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
 {
@@ -171,7 +169,6 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   //Cell Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, float, FloatArrayType, voxels, 3);
 
   //Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
@@ -190,7 +187,6 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -301, unsigned int, XTalStructArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -303, float, FloatArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -304, float, FloatArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
@@ -217,6 +213,9 @@ void PackGrainsGen2::preflight()
 void PackGrainsGen2::execute()
 {
   DataContainer* m = getDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  
   bool writeErrorFile = true;
   std::ofstream outFile;
   if(m_ErrorOutputFile.empty() == false)
@@ -286,8 +285,8 @@ void PackGrainsGen2::execute()
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
       primaryphases.push_back(i);
-      primaryphasefractions.push_back(m_PhaseFractions[i]);
-      totalprimaryfractions = totalprimaryfractions + m_PhaseFractions[i];
+	  primaryphasefractions.push_back(statsDataArray[i]->getPhaseFraction());
+      totalprimaryfractions = totalprimaryfractions + statsDataArray[i]->getPhaseFraction();
     }
   }
   // scale the primary phase fractions to total to 1
@@ -564,7 +563,7 @@ void PackGrainsGen2::execute()
 
   if(m_VtkOutputFile.empty() == false)
   {
-    err = writeVtkFile();
+//    err = writeVtkFile();
     if(err < 0)
     {
       return;
@@ -775,8 +774,6 @@ void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
 
 void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
 {
- // DataContainer* m = getDataContainer();
- // int column, row, plane;
   int occolumn, ocrow, ocplane;
   int nccolumn, ncrow, ncplane;
   int shiftcolumn, shiftrow, shiftplane;

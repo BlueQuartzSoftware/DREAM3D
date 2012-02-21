@@ -66,31 +66,6 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 void InitializeSyntheticVolume::setupFilterOptions()
 {
  std::vector<FilterOption::Pointer> options;
- {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Max Iterations");
-    option->setPropertyName("MaxIterations");
-    option->setWidgetType(FilterOption::IntWidget);
-    option->setValueType("int");
-    options.push_back(option);
-  }
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Neighborhood Error Weight");
-    option->setPropertyName("NeighborhoodErrorWeight");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
-  }
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Periodic Boundary");
-    option->setPropertyName("PeriodicBoundaries");
-    option->setWidgetType(FilterOption::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
-  }
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Statistics File");

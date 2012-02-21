@@ -140,7 +140,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     // Cell Data - make sure these are all initialized to NULL in the constructor
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
-    float*   m_EulerAngles;
     int8_t*  m_SurfaceVoxels;
 
     // Field Data - make sure these are all initialized to NULL in the constructor
@@ -157,7 +156,6 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
-    float* m_PhaseFractions;
     float* m_PrecipitateFractions;
     unsigned int* m_ShapeTypes;
     StatsDataArray* m_StatsDataArray;
