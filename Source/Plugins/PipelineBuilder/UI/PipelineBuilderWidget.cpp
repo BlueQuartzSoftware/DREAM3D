@@ -191,8 +191,8 @@ void PipelineBuilderWidget::setupGui()
   toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
 
-  connect(m_QDroppableScrollArea, SIGNAL(filterDropped(QString)),
-          m_PipelineViewWidget, SLOT(addDroppedFilter(QString)));
+//  connect(m_QDroppableScrollArea, SIGNAL(filterDropped(QString)),
+//          m_PipelineViewWidget, SLOT(addDroppedFilter(QString)));
 }
 
 

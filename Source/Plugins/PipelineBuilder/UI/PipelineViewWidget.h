@@ -58,16 +58,15 @@ class PipelineViewWidget : public QFrame
     int filterCount();
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
-    QFilterWidget* addFilter(QString name);
+    QFilterWidget* addFilter(QString filterName, int index =-1);
 
 //    virtual QLayout* layout () const;
 //    virtual void setLayout(QLayout* l);
 
   public slots:
-    void addDroppedFilter(QString name);
     void removeFilterWidget();
     void setSelectedFilterWidget(QFilterWidget* w);
-    void filterBeingDragged(QFilterWidget* w);
+    void setFilterBeingDragged(QFilterWidget* w);
 
 
   signals:
@@ -85,6 +84,7 @@ class PipelineViewWidget : public QFrame
     QFilterWidget*            m_SelectedFilterWidget;
     QVBoxLayout*              m_FilterWidgetLayout;
     QFilterWidget*            m_FilterBeingDragged;
+    int                       m_DropIndex;
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented

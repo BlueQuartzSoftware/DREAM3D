@@ -242,7 +242,7 @@ void QInitializeSyntheticVolumeWidget::readOptions(QSettings &prefs)
   READ_SETTING(prefs, m_, XResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, m_, YResolution, ok, d, 0.25 , Double);
   READ_SETTING(prefs, m_, ZResolution, ok, d, 0.25 , Double);
-  READ_SETTING(prefs, m_, NeighborhoodErrorWeight, ok, d, 1.0 , Double);
+
   m_XPoints->blockSignals(true);
   READ_SETTING(prefs, m_, XPoints, ok, i, 100 , Int);
   m_XPoints->blockSignals(false);
@@ -250,9 +250,6 @@ void QInitializeSyntheticVolumeWidget::readOptions(QSettings &prefs)
   READ_SETTING(prefs, m_, YPoints, ok, i, 100 , Int);
   m_YPoints->blockSignals(false);
   READ_SETTING(prefs, m_, ZPoints, ok, i, 100 , Int);
-
-  READ_CHECKBOX_SETTING(prefs, m_, PeriodicBoundaryConditions, false);
-
 
 }
 
@@ -268,11 +265,8 @@ void QInitializeSyntheticVolumeWidget::writeOptions(QSettings &prefs)
   WRITE_SETTING(prefs, m_, XResolution )
   WRITE_SETTING(prefs, m_, YResolution )
   WRITE_SETTING(prefs, m_, ZResolution )
-  WRITE_SETTING(prefs, m_, NeighborhoodErrorWeight )
   WRITE_SETTING(prefs, m_, XPoints )
   WRITE_SETTING(prefs, m_, YPoints )
   WRITE_SETTING(prefs, m_, ZPoints )
-
-  WRITE_BOOL_SETTING(prefs, m_, PeriodicBoundaryConditions, m_PeriodicBoundaryConditions->isChecked())
 
 }

@@ -62,7 +62,8 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
 QFrame(parent),
 m_SelectedFilterWidget(NULL),
 m_FilterWidgetLayout(NULL),
-m_FilterBeingDragged(NULL)
+m_FilterBeingDragged(NULL),
+m_DropIndex(-1)
 {
   setupGui();
 }
@@ -161,33 +162,26 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidget* PipelineViewWidget::addFilter(QString filterName)
+QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
   QFilterWidgetManager::Pointer wm = QFilterWidgetManager::Instance();
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
   QFilterWidget* w = wf->createWidget();
-
-  int count = filterCount();
-  m_FilterWidgetLayout->insertWidget(count, w);
-//  m_FilterWidgetLayout->addWidget(w);
+  if (index < 0) // If the programmer wants to add it to the end of the list
+  {
+    index = filterCount();
+  }
+  m_FilterWidgetLayout->insertWidget(index, w);
   w->setParent(this);
   connect(w, SIGNAL(clicked(bool)),
           this, SLOT(removeFilterWidget()) );
   connect(w, SIGNAL(widgetSelected(QFilterWidget*)),
           this, SLOT(setSelectedFilterWidget(QFilterWidget*)) );
   connect(w, SIGNAL(dragStarted(QFilterWidget*)),
-          this, SLOT(filterBeingDragged(QFilterWidget*)) );
+          this, SLOT(setFilterBeingDragged(QFilterWidget*)) );
 
   setSelectedFilterWidget(w);
   return w;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::addDroppedFilter(QString name)
-{
-  addFilter(name);
 }
 
 // -----------------------------------------------------------------------------
@@ -214,7 +208,7 @@ void PipelineViewWidget::removeFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::filterBeingDragged(QFilterWidget* w)
+void PipelineViewWidget::setFilterBeingDragged(QFilterWidget* w)
 {
  // std::cout << "PipelineViewWidget::filterBeingDragged: " << w->getFilter()->getNameOfClass() << std::endl;
  // m_FilterWidgetLayout->removeWidget(w);
@@ -236,29 +230,6 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
   if(NULL != m_SelectedFilterWidget)
   {
     m_SelectedFilterWidget->changeStyle(true);
-#if 0
-    qint32 selectedIndex = m_FilterWidgetLayout->indexOf(m_SelectedFilterWidget);
-    qint32 count = m_FilterWidgetLayout->count();
-    if(count > 1)
-    {
-      filterUp->setEnabled(true);
-      filterDown->setEnabled(true);
-    }
-    else
-    {
-      filterUp->setEnabled(false);
-      filterDown->setEnabled(false);
-    }
-
-    if(selectedIndex == 0)
-    {
-      filterUp->setEnabled(false);
-    }
-    else if(selectedIndex == count - 1)
-    {
-      filterDown->setEnabled(false);
-    }
-#endif
   }
 }
 
@@ -307,11 +278,11 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
   QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
   if(o == NULL)
   {
-    int count = m_FilterWidgetLayout->count();
+    int count = filterCount();
     for (int i = 0; i < count; ++i)
     {
       QFilterWidget* w = qobject_cast<QFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-      if(w != NULL && w != m_FilterBeingDragged)
+      if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
       {
         if(event->pos().y() < w->geometry().y())
         {
@@ -321,11 +292,11 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
       }
     }
     bool didInsert = false;
-    count = m_FilterWidgetLayout->count();
+    count = filterCount();
     for (int i = 0; i < count; ++i)
     {
       QFilterWidget* w = qobject_cast<QFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-      if(w != NULL && w != m_FilterBeingDragged)
+      if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
       {
         if(event->pos().y() < w->geometry().y())
         {
@@ -340,7 +311,7 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
     if (false == didInsert)
     {
       QFilterWidget* w = qobject_cast<QFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 1)->widget());
-      if(w != NULL && w != m_FilterBeingDragged)
+      if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
       {
         if(event->pos().y() > w->geometry().y() + w->geometry().height())
         {
@@ -358,30 +329,36 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent *event)
 {
-//  std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
-  if (m_FilterBeingDragged != NULL) {
+ // std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  if(m_FilterBeingDragged != NULL)
+  {
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
+  }
+  else
+  {  // This path is taken if a filter is dropped from the list of filters
+    if(event->mimeData()->hasText())
+    {
+      QByteArray dropData = event->mimeData()->data("text/plain");
+      QString name(dropData);
+      // We need to figure out where it was dropped relative to other filters
+      int count = filterCount();
+      for (int i = 0; i < count; ++i)
+      {
+        QFilterWidget* w = qobject_cast<QFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+        if(w != NULL)
+        {
+          if(event->pos().y() < w->geometry().y())
+          {
+            count = i;
+            break;
+          }
+        }
+      }
+      // Now that we have an index, insert the filter.
+      addFilter(name, count);
+    }
   }
   event->acceptProposedAction();
 }
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::mousePressEvent(QMouseEvent *event)
-{
-  std::cout << "PipelineViewWidget::mousePressEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
-    QFilterWidget* w = static_cast<QFilterWidget*>(childAt(event->pos()));
-    if (!w)
-        return;
-
-    QPixmap pixmap = QPixmap::grabWidget(w);
-    if (pixmap.isNull() == false)
-    {
-      std::cout << "We got an image of the widget." << std::endl;
-    }
-
-}
-#endif
