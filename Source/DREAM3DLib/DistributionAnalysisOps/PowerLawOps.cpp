@@ -35,6 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PowerLawOps.h"
+#include <limits>
+#include <numeric>
+
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -56,9 +60,20 @@ PowerLawOps::PowerLawOps()
 int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
-  // Put all the analysis code her
-
-  // Return a Negative value if some sort of error occurs
+  float alpha = 0;
+  float min = std::numeric_limits<float>::max();
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	if (data[i] < min) min = data[i];		
+  }
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	alpha = alpha + log(data[i]/min);		
+  }
+  alpha = 1.0/alpha;
+  alpha = 1 + (alpha*data.size());
+  outputs->SetValue(0, alpha);
+  outputs->SetValue(1, min);
   return err;
 }
 // -----------------------------------------------------------------------------
@@ -67,9 +82,24 @@ int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::P
 int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
-  // Put all the analysis code her
-
-  // Return a Negative value if some sort of error occurs
+  float alpha = 0;
+  float min = std::numeric_limits<float>::max();
+  for(size_t i = 0; i < data.size(); i++)
+  {
+	  min = std::numeric_limits<float>::max();
+	  for(size_t j = 0; j < data[i].size(); j++)
+	  {
+		if (data[i][j] < min) min = data[i][j];		
+	  }
+	  for(size_t j = 0; j < data[i].size(); j++)
+	  {
+		alpha = alpha + log(data[i][j]/min);		
+	  }
+	  alpha = 1.0/alpha;
+	  alpha = 1 + (alpha*data[i].size());
+	  outputs[i]->SetValue(0, alpha);
+	  outputs[i]->SetValue(1, min);
+  }
   return err;
 }
 

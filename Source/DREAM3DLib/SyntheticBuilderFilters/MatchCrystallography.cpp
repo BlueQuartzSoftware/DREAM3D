@@ -153,8 +153,6 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -301, unsigned int, XTalStructArrayType, ensembles, 1);
-//  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, float, FloatArrayType, ensembles, 1);
-//  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, float, FloatArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {

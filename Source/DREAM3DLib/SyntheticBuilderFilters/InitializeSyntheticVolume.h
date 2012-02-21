@@ -65,9 +65,6 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
-    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
-    DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight)
     DREAM3D_INSTANCE_PROPERTY(int, XVoxels)
     DREAM3D_INSTANCE_PROPERTY(int, YVoxels)
     DREAM3D_INSTANCE_PROPERTY(int, ZVoxels)
@@ -92,8 +89,6 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     // Cell Data - make sure these are all initialized to NULL in the constructor
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
-    float*   m_EulerAngles;
-
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

@@ -41,9 +41,6 @@
 InitializeSyntheticVolume::InitializeSyntheticVolume() :
 AbstractFilter(),
 m_InputFile(""),
-m_MaxIterations(1),
-m_PeriodicBoundaries(false),
-m_NeighborhoodErrorWeight(1.0f),
 m_XVoxels(0),
 m_YVoxels(0),
 m_ZVoxels(0),
@@ -51,8 +48,7 @@ m_XRes(1.0f),
 m_YRes(1.0f),
 m_ZRes(1.0f),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_EulerAngles(NULL)
+m_PhasesC(NULL)
 {
   setupFilterOptions();
 }
@@ -166,7 +162,6 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   //Cell Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, float, FloatArrayType, voxels, 3);
 
   if(m_InputFile.empty() == true)
   {
