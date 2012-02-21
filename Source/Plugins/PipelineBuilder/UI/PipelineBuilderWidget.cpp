@@ -95,7 +95,7 @@ PipelineBuilderWidget::~PipelineBuilderWidget()
 void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
   // Clear Any Existing Pipeline
-  scrollAreaWidgetContents->clearWidgets();
+  m_PipelineViewWidget->clearWidgets();
 
   prefs.beginGroup("PipelineBuilder");
 
@@ -112,7 +112,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
 
     QString filterName = prefs.value("Filter_Name", "").toString();
 
-    QFilterWidget* w = scrollAreaWidgetContents->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+    QFilterWidget* w = m_PipelineViewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
     if(w) {
       w->readOptions(prefs);
     }
@@ -129,13 +129,13 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("PipelineBuilder");
 
-  qint32 count = scrollAreaWidgetContents->filterCount();
+  qint32 count = m_PipelineViewWidget->filterCount();
   prefs.setValue("Number_Filters", count);
   prefs.endGroup();
 
   for(qint32 i = 0; i < count; ++i)
   {
-    QFilterWidget* fw = scrollAreaWidgetContents->filterWidgetAt(i);
+    QFilterWidget* fw = m_PipelineViewWidget->filterWidgetAt(i);
     if (fw)
     {
       //QString name = QString::fromStdString(fw->getFilter()->getNameOfClass() );
@@ -176,7 +176,7 @@ void PipelineBuilderWidget::setupGui()
 
   for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
-    std::cout << *iter << std::endl;
+  //  std::cout << *iter << std::endl;
     QString iconName(":/");
     iconName.append( QString::fromStdString(*iter));
     iconName.append("_Icon.png");
@@ -191,8 +191,8 @@ void PipelineBuilderWidget::setupGui()
   toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
 
-  connect(scrollArea, SIGNAL(filterDropped(QString)),
-          scrollAreaWidgetContents, SLOT(addDroppedFilter(QString)));
+  connect(m_QDroppableScrollArea, SIGNAL(filterDropped(QString)),
+          m_PipelineViewWidget, SLOT(addDroppedFilter(QString)));
 }
 
 
@@ -355,7 +355,7 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
-  scrollAreaWidgetContents->addFilter(item->text());
+  m_PipelineViewWidget->addFilter(item->text());
 }
 
 
@@ -479,10 +479,10 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
   m_FilterPipeline->moveToThread(m_WorkerThread);
 
   //
-  qint32 count = scrollAreaWidgetContents->filterCount();
+  qint32 count = m_PipelineViewWidget->filterCount();
   for(qint32 i = 0; i < count; ++i)
   {
-    QFilterWidget* fw = scrollAreaWidgetContents->filterWidgetAt(i);
+    QFilterWidget* fw = m_PipelineViewWidget->filterWidgetAt(i);
     if (fw)
     {
       m_FilterPipeline->pushBack(fw->getFilter());

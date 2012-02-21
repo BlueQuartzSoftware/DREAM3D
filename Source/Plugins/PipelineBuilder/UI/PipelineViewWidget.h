@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QSCROLLCONTENTSWIDGET_H_
-#define QSCROLLCONTENTSWIDGET_H_
+#ifndef _PipelineViewWidget_H
+#define _PipelineViewWidget_H
 
 #include <QtGui/QFrame>
 #include <QtGui/QLabel>
@@ -60,6 +60,9 @@ class PipelineViewWidget : public QFrame
     void clearWidgets();
     QFilterWidget* addFilter(QString name);
 
+//    virtual QLayout* layout () const;
+//    virtual void setLayout(QLayout* l);
+
   public slots:
     void addDroppedFilter(QString name);
     void removeFilterWidget();
@@ -79,7 +82,6 @@ class PipelineViewWidget : public QFrame
    //   void mousePressEvent(QMouseEvent *event);
 
   private:
-    QLabel                    m_InsertedLabel;
     QFilterWidget*            m_SelectedFilterWidget;
     QVBoxLayout*              m_FilterWidgetLayout;
     QFilterWidget*            m_FilterBeingDragged;
@@ -88,4 +90,4 @@ class PipelineViewWidget : public QFrame
     void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* QSCROLLCONTENTSWIDGET_H_ */
+#endif /* _PipelineViewWidget_H */

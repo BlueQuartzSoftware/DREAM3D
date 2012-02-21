@@ -124,7 +124,7 @@ p, li { white-space: pre-wrap; }
     </layout>
    </item>
    <item row="0" column="1" rowspan="2">
-    <widget class="QDroppableScrollArea" name="scrollArea">
+    <widget class="QDroppableScrollArea" name="m_QDroppableScrollArea">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -155,7 +155,7 @@ p, li { white-space: pre-wrap; }
      <property name="alignment">
       <set>Qt::AlignHCenter|Qt::AlignTop</set>
      </property>
-     <widget class="PipelineViewWidget" name="scrollAreaWidgetContents">
+     <widget class="PipelineViewWidget" name="m_PipelineViewWidget">
       <property name="geometry">
        <rect>
         <x>0</x>
