@@ -25,7 +25,9 @@ SET (MESHING_HDRS
   ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/Meshing/Segment.cpp
 
 )
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshFilters/Meshing" "${MESHING_HDRS}" "${MESHING_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+if (NOT DEFINED ONLY_FILTERS)
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshingFilters/Meshing" "${MESHING_HDRS}" "${MESHING_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+endif()
 
 SET (SMOOTHING_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/Smoothing/Smoothing.cpp
@@ -36,8 +38,9 @@ SET (SMOOTHING_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/Smoothing/Triangle.hpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/Smoothing/Node.hpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshFilters/Smoothing" "${SMOOTHING_HDRS}" "${SMOOTHING_SRCS}" "${PROJECT_INSTALL_HEADERS}")
-
+if (NOT DEFINED ONLY_FILTERS)
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshingFilters/Smoothing" "${SMOOTHING_HDRS}" "${SMOOTHING_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+endif()
 
 SET (SurfaceMeshingFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SurfaceMeshFilter.h
@@ -54,8 +57,9 @@ set (DREAM3DLib_SurfaceMeshingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMVtkPolyDataWriter.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshFilters" "${DREAM3DLib_SurfaceMeshingFilters_HDRS}" "${DREAM3DLib_SurfaceMeshingFilters_SRCS}" "${PROJECT_INSTALL_HEADERS}")
-
+if (NOT DEFINED ONLY_FILTERS)
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SurfaceMeshingFilters" "${DREAM3DLib_SurfaceMeshingFilters_HDRS}" "${DREAM3DLib_SurfaceMeshingFilters_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+endif()
 
 
 #-- Gather all the Surface Meshing Sources together

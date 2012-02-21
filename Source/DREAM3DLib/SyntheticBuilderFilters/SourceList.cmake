@@ -27,7 +27,9 @@ SET (DREAM3DLib_SyntheticBuilderFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PlacePrecipitates.cpp
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InitializeSyntheticVolume.cpp
 )
+if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SyntheticBuilderFilters" "${DREAM3DLib_SyntheticBuilderFilters_HDRS}" "${DREAM3DLib_SyntheticBuilderFilters_SRCS}" "0")
+endif()
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_SyntheticBuilderFilters_HDRS}
             DESTINATION include/DREAM3D/SyntheticBuilderFilters
