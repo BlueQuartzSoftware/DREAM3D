@@ -23,8 +23,10 @@ SET (DREAM3DLib_GenericFilters_SRCS
 )
 
 
-
+if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/GenericFilters" "${DREAM3DLib_GenericFilters_HDRS}" "${DREAM3DLib_GenericFilters_SRCS}" "0")
+endif()
+
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_GenericFilters_HDRS}
             DESTINATION include/DREAM3D/GenericFilters

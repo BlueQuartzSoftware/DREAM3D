@@ -22,7 +22,9 @@ SET (DREAM3DLib_ManipulationFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/ChangeResolution.cpp
     ${DREAM3DLib_SOURCE_DIR}/ManipulationFilters/CropVolume.cpp
 )
+if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ManipulationFilters" "${DREAM3DLib_ManipulationFilters_HDRS}" "${DREAM3DLib_ManipulationFilters_SRCS}" "0")
+endif()
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_ManipulationFilters_HDRS}
             DESTINATION include/DREAM3D/ManipulationFilters

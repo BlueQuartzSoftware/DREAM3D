@@ -75,14 +75,15 @@ file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"FilterWidgetHeaders.h\
 #file(APPEND ${RegisterKnownFilterWidgetsFile} "\n\nnamespace DREAM3D { \nnamespace QFilterFactory {\n")
 file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid QFilterWidgetManager::RegisterKnownQFilterWidgets()\n{\n")
 
-
+set(ONLY_FILTERS 1)
 WidgetGeneration(GenericFilters)
 WidgetGeneration(IOFilters)
 WidgetGeneration(ManipulationFilters)
 WidgetGeneration(ReconstructionFilters)
 WidgetGeneration(StatisticsFilters)
-WidgetGeneration(SyntheticBuilderFilters)
 WidgetGeneration(SurfaceMeshingFilters)
+WidgetGeneration(SyntheticBuilderFilters)
+
 
 file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
 
