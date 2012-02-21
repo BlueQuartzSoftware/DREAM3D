@@ -275,13 +275,14 @@ endfunction()
 # These are the core plugins
 set (DREAM3D_PLUGIN_LIST
     EbsdImport 
-    Reconstruction 
-    GrainGenerator 
-    SurfaceMesh 
-    MicrostructureStatistics 
+    PipelineBuilder
+#    Reconstruction 
+#    GrainGenerator 
+#    SurfaceMesh 
+#    MicrostructureStatistics 
 #    Extrapolation2Dto3D
-    FileConversion
-    VolumeOps
+#    FileConversion
+#    VolumeOps
 )
 
  # Build the DREAM3D Application  
