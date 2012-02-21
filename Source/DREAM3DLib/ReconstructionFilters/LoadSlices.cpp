@@ -186,6 +186,9 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, voxels, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, voxels, 1);
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
+
   setErrorMessage(ss.str());
 }
 
@@ -264,7 +267,6 @@ void LoadSlices::execute()
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
-  std::vector<unsigned int> crystalStructures;
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     ebsdReader = H5AngVolumeReader::New();
@@ -429,16 +431,12 @@ void LoadSlices::initializeQuats()
   int64_t totalPoints = m->getTotalPoints();
 
   float qr[5];
-  unsigned int xtal = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  DataArray<unsigned int>* crystruct
-      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {
     OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
     phase = m_PhasesC[i];
-    xtal = crystruct->GetValue(phase);
-    if (xtal == Ebsd::CrystalStructure::UnknownCrystalStructure)
+    if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       qr[1] = 0.0;
       qr[2] = 0.0;
@@ -447,7 +445,7 @@ void LoadSlices::initializeQuats()
     }
     else
     {
-      m_OrientationOps[xtal]->getFZQuat(qr);
+      m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
     }
 
     m_Quats[i*5 + 0] = 1.0f;
@@ -501,9 +499,6 @@ void LoadSlices::threshold_points()
 
 //  int noborder = 0;
 
-  DataArray<unsigned int>* crystruct
-      = DataArray<unsigned int>::SafeObjectDownCast<IDataArray*, DataArray<unsigned int>*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-
   unsigned int phase1, phase2;
   int initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
@@ -531,7 +526,7 @@ void LoadSlices::threshold_points()
     q1[2] = m_Quats[currentpoint * 5 + 2];
     q1[3] = m_Quats[currentpoint * 5 + 3];
     q1[4] = m_Quats[currentpoint * 5 + 4];
-    phase1 = crystruct->GetValue(m_PhasesC[currentpoint]);
+    phase1 = m_CrystalStructures[m_PhasesC[currentpoint]];
     for (DimType i = 0; i < 6; i++)
     {
       good = 1;
@@ -550,7 +545,7 @@ void LoadSlices::threshold_points()
         q2[2] = m_Quats[neighbor * 5 + 2];
         q2[3] = m_Quats[neighbor * 5 + 3];
         q2[4] = m_Quats[neighbor * 5 + 4];
-        phase2 = crystruct->GetValue(m_PhasesC[neighbor]);
+        phase2 = m_CrystalStructures[m_PhasesC[neighbor]];
         if(phase1 == phase2)
         {
           w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
