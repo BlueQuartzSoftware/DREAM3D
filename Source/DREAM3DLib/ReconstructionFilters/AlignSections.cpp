@@ -138,6 +138,13 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -303,  int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
 
+  if (m_AlignmentMethod >= DREAM3D::AlignmentMethod::Count)
+  {
+    ss << "Filter " << getNameOfClass() << " requires the Alignment Method to be set correctly and it is not." << std::endl;
+    ss << "The allowable values fall between 0 and " << DREAM3D::AlignmentMethod::Count-1 << " (inclusive). The current value is "
+        << m_AlignmentMethod << std::endl;
+     setErrorCondition(-366);
+  }
   setErrorMessage(ss.str());
 }
 
