@@ -152,7 +152,6 @@ namespace DREAM3D
     const std::string CrystalStructures("CrystalStructures");
     const std::string PhaseTypes("PhaseTypes");
     const std::string PrecipitateFractions("PrecipitateFractions");
-    const std::string PhaseFractions("PhaseFractions");
     const std::string ShapeTypes("ShapeTypes");
     const std::string Statistics("Statistics");
   }

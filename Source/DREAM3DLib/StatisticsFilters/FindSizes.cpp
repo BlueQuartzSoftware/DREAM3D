@@ -167,14 +167,17 @@ void FindSizes::find_sizes()
   float diameter;
   float maxdiam;
   float mindiam;
+  float totalUnbiasedVolume = 0.0;
   std::vector<VectorOfFloatArray> sizedist;
   std::vector<std::vector<std::vector<float > > > values;
+  std::vector<float> fractions;
   FloatArrayType::Pointer binnumbers;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
   sizedist.resize(numensembles);
   values.resize(numensembles);
+  fractions.resize(numensembles,0.0);
   for(size_t i = 1; i < numensembles; i++)
   {
 	  sizedist[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), 1);
@@ -207,10 +210,13 @@ void FindSizes::find_sizes()
 	if(m_BiasedFields[i] == false)
 	{
 		values[m_Phases[i]][0].push_back(m_EquivalentDiameters[i]);
+		fractions[m_Phases[i]] = fractions[m_Phases[i]] + m_Volumes[i];
+		totalUnbiasedVolume = totalUnbiasedVolume + m_Volumes[i];
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
+	  statsDataArray[i]->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
 	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
 	  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);

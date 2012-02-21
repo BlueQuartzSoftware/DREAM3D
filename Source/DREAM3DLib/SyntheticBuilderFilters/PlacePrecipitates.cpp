@@ -73,14 +73,13 @@ m_Active(NULL),
 m_PhasesF(NULL),
 m_NumCells(NULL),
 m_PhaseTypes(NULL),
-m_PhaseFractions(NULL),
 m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
   m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuprtEllipsoidOps = SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuprtEllipsoidOps.get();
+  m_SuperEllipsoidOps = SuperEllipsoidOps::New();
+  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuperEllipsoidOps.get();
   m_CubicOctohedronOps = CubeOctohedronOps::New();
   m_ShapeOps[DREAM3D::ShapeType::CubeOctahedronShape] = m_CubicOctohedronOps.get();
   m_CylinderOps = CylinderOps::New();
@@ -149,7 +148,6 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -302, float, FloatArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -303, float, FloatArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
@@ -531,7 +529,11 @@ void  PlacePrecipitates::place_precipitates()
 {
   notify("Placing Precipitates", 0, Observable::UpdateProgressMessage);
   DREAM3D_RANDOMNG_NEW()
+
   DataContainer* m = getDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   int64_t totalPoints = m->getTotalPoints();
   totalprecipvol = 0;
   size_t precipvoxelcounter = 0;
@@ -553,8 +555,8 @@ void  PlacePrecipitates::place_precipitates()
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       precipitatephases.push_back(i);
-      precipitatephasefractions.push_back(m_PhaseFractions[i]);
-      totalprecipitatefractions = totalprecipitatefractions + m_PhaseFractions[i];
+      precipitatephasefractions.push_back(statsDataArray[i]->getPhaseFraction());
+      totalprecipitatefractions = totalprecipitatefractions + statsDataArray[i]->getPhaseFraction();
     }
   }
   for (size_t i = 0; i < precipitatephases.size(); i++)
