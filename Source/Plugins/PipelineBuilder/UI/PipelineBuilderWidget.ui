@@ -124,7 +124,7 @@ p, li { white-space: pre-wrap; }
     </layout>
    </item>
    <item row="0" column="1" rowspan="2">
-    <widget class="QDroppableScrollArea" name="m_QDroppableScrollArea">
+    <widget class="QScrollArea" name="m_QDroppableScrollArea">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -382,12 +382,6 @@ border-left:  2px solid gray;
    <class>QFilterListWidget</class>
    <extends>QListWidget</extends>
    <header location="global">QFilterListWidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QDroppableScrollArea</class>
-   <extends>QScrollArea</extends>
-   <header location="global">QDroppableScrollArea.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>PipelineViewWidget</class>
