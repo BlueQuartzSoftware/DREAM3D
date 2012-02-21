@@ -16,25 +16,9 @@ cmake_minimum_required(VERSION 2.8.4)
 
 set(Project_SRCS "")
 
-# --------------------------------------------------------------------
-# Add in ONLY those headers and sources that need to have various Qt related
-# utilities run against them
-set (FilterWidget_HDRS
-    ${FilterWidgets_SOURCE_DIR}/QFilterWidget.h
-    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.h
-    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.h
-    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricItemDelegate.h
-    ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
-)
 
-set(FilterWidget_SRCS
-    ${FilterWidgets_SOURCE_DIR}/QFilterWidget.cpp
-    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.cpp
-    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.cpp
-    ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
-)
-
-
+set(FilterWidget_GEN_SRCS "")
+set(FilterWidget_GEN_HDRS "")
 # --------------------------------------------------------------------
 #
 # --------------------------------------------------------------------
@@ -49,8 +33,8 @@ Macro(WidgetGeneration DirName)
         get_filename_component(name ${file} NAME_WE)
         message(STATUS "  ${name}")
         if (NOT EXISTS ${FilterWidgets_SOURCE_DIR}/${DirName}Widgets/Q${name}Widget.h )
-            set(FilterWidget_HDRS ${FilterWidget_HDRS} ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
-            set(FilterWidget_SRCS ${FilterWidget_SRCS} ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.cpp)
+            set(FilterWidget_GEN_HDRS ${FilterWidget_GEN_HDRS} ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
+            set(FilterWidget_GEN_SRCS ${FilterWidget_GEN_SRCS} ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.cpp)
             if ( NOT EXISTS ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
                 configure_file(${FilterWidgets_SOURCE_DIR}/QFilterWidget.h.in
                               ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.h)
@@ -91,16 +75,15 @@ file(APPEND ${RegisterKnownFilterWidgetsFile} "#include \"FilterWidgetHeaders.h\
 #file(APPEND ${RegisterKnownFilterWidgetsFile} "\n\nnamespace DREAM3D { \nnamespace QFilterFactory {\n")
 file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid QFilterWidgetManager::RegisterKnownQFilterWidgets()\n{\n")
 
-    
-
-
+set(ONLY_FILTERS 1)
 WidgetGeneration(GenericFilters)
 WidgetGeneration(IOFilters)
 WidgetGeneration(ManipulationFilters)
 WidgetGeneration(ReconstructionFilters)
 WidgetGeneration(StatisticsFilters)
-WidgetGeneration(SyntheticBuilderFilters)
 WidgetGeneration(SurfaceMeshingFilters)
+WidgetGeneration(SyntheticBuilderFilters)
+
 
 file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
 
@@ -142,32 +125,57 @@ QT4_WRAP_UI( FilterWidgets_Generated_UI_HDRS
             ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui)
 
 # --------------------------------------------------------------------
-# and finally this will run moc:
-QT4_WRAP_CPP( FilterWidgets_Generated_MOC_SRCS ${FilterWidget_HDRS} )   
+# Add in ONLY those headers and sources that need to have various Qt related
+# utilities run against them
+set (QFilterWidget_HDRS
+    ${FilterWidgets_SOURCE_DIR}/QFilterWidget.h
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.h
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.h
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricItemDelegate.h
+    ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
+)
+
+set(QFilterWidget_SRCS
+    ${FilterWidgets_SOURCE_DIR}/QFilterWidget.cpp
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.cpp
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.cpp
+    ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${QFilterWidget_HDRS}" "${QFilterWidget_SRCS}" "0")
 
 # --------------------------------------------------------------------
-#-- Put the generated files into their own group for IDEs
-cmp_IDE_SOURCE_PROPERTIES( "Generated" "${FilterWidgets_Generated_UI_HDRS}" "${FilterWidgets_Generated_MOC_SRCS}" "0")
+# and finally this will run moc:
+QT4_WRAP_CPP( FilterWidgets_Generated_MOC_SRCS ${QFilterWidget_HDRS} ${FilterWidget_GEN_HDRS})   
+
+# --------------------------------------------------------------------
+#-- Put the Qt generated files into their own group for IDEs
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt" "${FilterWidgets_Generated_UI_HDRS}" "${FilterWidgets_Generated_MOC_SRCS}" "0")
+
+# --------------------------------------------------------------------
+# These files are generated by our custom command
+cmp_IDE_SOURCE_PROPERTIES( "Generated/FilterWidgetCodeGen" "${FilterWidget_GEN_HDRS}" "${FilterWidget_GEN_SRCS}" "0")
 
 # --------------------------------------------------------------------
 # Now add in any other headers or sources
 set (FilterWidget_HDRS
-    ${FilterWidget_HDRS}
     ${FilterWidgets_SOURCE_DIR}/IFilterWidgetFactory.h
     ${FilterWidgets_SOURCE_DIR}/QFilterWidgetFactory.hpp
     ${FilterWidgets_SOURCE_DIR}/QFilterWidgetManager.h
 )
 
 set(FilterWidget_SRCS
-    ${FilterWidget_SRCS}
     ${FilterWidgets_SOURCE_DIR}/QFilterWidgetManager.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${FilterWidget_HDRS}" "${FilterWidget_SRCS}" "0")
 
 
 set (Project_SRCS 
+        ${QFilterWidget_HDRS} 
+        ${QFilterWidget_SRCS}
         ${FilterWidget_HDRS} 
         ${FilterWidget_SRCS}
+        ${FilterWidget_GEN_HDRS}
+        ${FilterWidget_GEN_SRCS}
         ${FilterWidgets_Generated_MOC_SRCS}
         ${FilterWidgets_Generated_UI_HDRS}
 )

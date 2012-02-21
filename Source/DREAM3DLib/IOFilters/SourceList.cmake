@@ -40,7 +40,11 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.cpp
 )
+
+if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/IOFilters" "${DREAM3DLib_IOFilters_HDRS}" "${DREAM3DLib_IOFilters_SRCS}" "0")
+endif()
+
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_IO_HDRS}
             DESTINATION include/DREAM3D/IO

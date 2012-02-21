@@ -100,7 +100,13 @@ void QFilterWidget::changeStyle(bool selected)
   }
   style.append("border-radius: 10px;");
   style.append("padding: 30 0 0 0px;");
+#if defined(Q_WS_WIN)
+  style.append("font: 85 italic 10pt \"Arial\";");
+#elif defined(Q_WS_MAC)
   style.append("font: 85 italic 12pt \"Arial\";");
+#else
+  style.append("font: 85 italic 9pt \"Arial\";");
+#endif
   style.append("font-weight: bold;");
   style.append("}\n");
   style.append(" QGroupBox::title {");

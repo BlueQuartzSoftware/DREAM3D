@@ -33,8 +33,10 @@ SET (DREAM3DLib_PrivateFilters_SRCS
 )
 
 
-
+if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/PrivateFilters" "${DREAM3DLib_PrivateFilters_HDRS}" "${DREAM3DLib_PrivateFilters_SRCS}" "0")
+endif()
+
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_PrivateFilters_HDRS}
             DESTINATION include/DREAM3D/PrivateFilters

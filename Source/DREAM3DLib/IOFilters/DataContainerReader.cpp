@@ -50,7 +50,11 @@ typedef std::list<std::string> NameListType;
 //
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
-    AbstractFilter()
+AbstractFilter(),
+m_InputFile(""),
+m_ReadCellData(true),
+m_ReadFieldData(true),
+m_ReadEnsembleData(true)
 {
   setupFilterOptions();
 }
@@ -74,6 +78,30 @@ void DataContainerReader::setupFilterOptions()
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterOption::InputFileWidget);
     option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Read Cell Data");
+    option->setPropertyName("ReadCellData");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Read Field Data");
+    option->setPropertyName("ReadFieldData");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Read Ensemble Data");
+    option->setPropertyName("ReadEnsembleData");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
     options.push_back(option);
   }
   setFilterOptions(options);
@@ -267,6 +295,7 @@ int DataContainerReader::gatherData(bool preflight)
     m->setOrigin(origin);
   }
 
+  if (m_ReadCellData == true) {
   err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight);
   if(err < 0)
   {
@@ -275,7 +304,9 @@ int DataContainerReader::gatherData(bool preflight)
     setErrorCondition(err);
     return -1;
   }
+  }
 
+  if (m_ReadFieldData == true) {
   err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight);
   if(err < 0)
   {
@@ -284,7 +315,9 @@ int DataContainerReader::gatherData(bool preflight)
     setErrorCondition(err);
     return -1;
   }
+  }
 
+  if (m_ReadEnsembleData == true) {
   err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight);
   if(err < 0)
   {
@@ -292,6 +325,7 @@ int DataContainerReader::gatherData(bool preflight)
     err |= H5Fclose(fileId);
     setErrorCondition(err);
     return -1;
+  }
   }
 
   err |= H5Gclose(dcGid);

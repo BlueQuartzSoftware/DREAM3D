@@ -40,7 +40,10 @@ SET (DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindLocalMisorientationGradients.cpp
 )
+if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/StatisticsFilters" "${DREAM3DLib_StatisticsFilters_HDRS}" "${DREAM3DLib_StatisticsFilters_SRCS}" "0")
+endif()
+
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_StatisticsFilters_HDRS}
             DESTINATION include/DREAM3D/StatisticsFilters

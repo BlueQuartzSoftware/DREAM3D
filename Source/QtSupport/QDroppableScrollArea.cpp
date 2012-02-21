@@ -51,13 +51,13 @@
 QDroppableScrollArea::QDroppableScrollArea(QWidget *parent)
 : QScrollArea(parent)
 {
-  setAcceptDrops(true);
-  setFrameShape(QFrame::Box);
-  setFrameShadow(QFrame::Plain);
-  QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sizePolicy2.setHorizontalStretch(0);
-  sizePolicy2.setVerticalStretch(0);
-  setSizePolicy(sizePolicy2);
+//  setAcceptDrops(true);
+//  setFrameShape(QFrame::Box);
+//  setFrameShadow(QFrame::Plain);
+//  QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//  sizePolicy2.setHorizontalStretch(0);
+//  sizePolicy2.setVerticalStretch(0);
+//  setSizePolicy(sizePolicy2);
 }
 
 // -----------------------------------------------------------------------------
@@ -77,6 +77,7 @@ void QDroppableScrollArea::dragEnterEvent(QDragEnterEvent *event)
 // -----------------------------------------------------------------------------
 void QDroppableScrollArea::dropEvent(QDropEvent *event)
 {
+  std::cout << "QDroppableScrollArea::dropEvent" << std::endl;
   if (event->mimeData()->hasText())
   {
     QByteArray dropData =  event->mimeData()->data("text/plain");
