@@ -58,11 +58,14 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual ~DataContainerReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData);
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData);
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData);
 
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Read Data Container"; }
+    virtual const std::string getHumanLabel() { return "Read DREAM3D Data File"; }
 
     virtual void setupFilterOptions();
 
