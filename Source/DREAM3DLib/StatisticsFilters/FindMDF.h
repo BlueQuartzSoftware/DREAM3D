@@ -95,6 +95,7 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 
+    unsigned int* m_CrystalStructures;
 	StatsDataArray* m_StatsDataArray;
 
 	std::vector<std::vector<float> > misorientationlists;
