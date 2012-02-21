@@ -38,7 +38,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -76,10 +77,30 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -301,  int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -301)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -301, int32_t, Int32ArrayType, fields, 1);
+  }  
+  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -302, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1);
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+	find_surfacefields->setObservers(this->getObservers());
+	find_surfacefields->setDataContainer(getDataContainer());
+	if(preflight == true) find_surfacefields->preflight();
+	if(preflight == false) find_surfacefields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1);
 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
