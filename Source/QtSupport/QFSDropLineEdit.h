@@ -51,9 +51,6 @@ public:
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);
 
-	signals:
-	  void textChanged(const QString &s);
-
 private:
 
 };
