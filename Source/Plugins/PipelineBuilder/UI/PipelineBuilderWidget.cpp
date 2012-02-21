@@ -188,11 +188,11 @@ void PipelineBuilderWidget::setupGui()
   }
   library->setExpanded(true);
 
+//  QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
+//  presets->setText(0, "Preset Pipelines");
+
   toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
-
-//  connect(m_QDroppableScrollArea, SIGNAL(filterDropped(QString)),
-//          m_PipelineViewWidget, SLOT(addDroppedFilter(QString)));
 }
 
 
