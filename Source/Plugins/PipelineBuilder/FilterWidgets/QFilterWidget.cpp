@@ -309,8 +309,13 @@ void QFilterWidget::setupGui()
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
       connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
       QVariant v = property(option->getPropertyName().c_str());
-      if (v.toInt(&ok) < cb->count()) {
-        cb->setCurrentIndex(v.toInt());
+      if (v.toInt(&ok) < cb->count())
+      {
+        // What ever the default from the class was it does not work with the combo box
+        // so set the combo box to the zeroth value and set the same value back
+        // to the filter
+        cb->setCurrentIndex(0);
+        setProperty(option->getPropertyName().c_str(), 0);
       }
     }
     ++optIndex;
@@ -461,7 +466,7 @@ void QFilterWidget::updateComboBoxValue(int v)
     ok = setProperty(whoSent->objectName().toStdString().c_str(), v);
     if(false == ok)
     {
-  //    std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
+      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
     }
   }
 
