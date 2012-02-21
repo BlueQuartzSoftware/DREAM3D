@@ -102,6 +102,8 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1);
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -151,19 +153,15 @@ void FindODF::execute()
   std::vector<float> totalvol;
   std::vector<FloatArrayType::Pointer> eulerodf;
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-  unsigned int* crystruct = crystructPtr->GetPointer(0);
-  size_t numXTals = crystructPtr->GetNumberOfTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
 
-  totalvol.resize(numXTals);
-  eulerodf.resize(numXTals);
+  totalvol.resize(numensembles);
+  eulerodf.resize(numensembles);
   unsigned long long dims = 0;
-  for(unsigned long long i=1;i<numXTals;i++)
+  for(unsigned long long i=1;i<numensembles;i++)
   {
 	  totalvol[i] = 0;
-	  if (crystruct[i] == Ebsd::CrystalStructure::Hexagonal)
+	  if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
 	  {
 	    dims = 36 * 36 * 12;
 		eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
@@ -172,7 +170,7 @@ void FindODF::execute()
 			eulerodf[i]->SetValue(j, 0.0);
 	    }
 	  }
-	  else if (crystruct[i] == Ebsd::CrystalStructure::Cubic)
+	  else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
 	  {
 	    dims = 18 * 18 * 18;
 		eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
@@ -191,7 +189,7 @@ void FindODF::execute()
 	  totalvol[m_PhasesF[i]] = totalvol[m_PhasesF[i]] + m_Volumes[i];
 	}
   }
-  for (size_t i = 1; i < numXTals; i++)
+  for (size_t i = 1; i < numensembles; i++)
   {
 	  totalvol[i] = totalvol[i]*float(m->getXRes()*m->getYRes()*m->getZRes());
   }
@@ -202,7 +200,7 @@ void FindODF::execute()
       ea1 = m_EulerAngles[3*i];
       ea2 = m_EulerAngles[3*i+1];
       ea3 = m_EulerAngles[3*i+2];
-      phase = crystruct[m_PhasesF[i]];
+      phase = m_CrystalStructures[m_PhasesF[i]];
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
 	  eulerodf[m_PhasesF[i]]->SetValue(bin, (eulerodf[m_PhasesF[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_PhasesF[i]])));
@@ -210,7 +208,7 @@ void FindODF::execute()
   }
   int err;
 
-  for(size_t i = 1;i < numXTals;i++)
+  for(size_t i = 1;i < numensembles;i++)
   {
 	  statsDataArray[i]->setODF(eulerodf[i]);
   }

@@ -40,7 +40,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
-
+#include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,9 +82,28 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
+  if(getErrorCondition() == -302)
+  {
+	setErrorCondition(0);
+	FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+	find_surfacefields->setObservers(this->getObservers());
+	find_surfacefields->setDataContainer(getDataContainer());
+	if(preflight == true) find_surfacefields->preflight();
+	if(preflight == false) find_surfacefields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
+  }  
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
+  }  
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                            (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -102,6 +122,8 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
      setErrorCondition(-309);
    }
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -303,  float, FloatArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -163,21 +185,17 @@ void FindMDF::execute()
   std::vector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-  unsigned int* crystruct = crystructPtr->GetPointer(0);
-  size_t numXTals = crystructPtr->GetNumberOfTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
 
-  misobin.resize(numXTals);
-  for(size_t i=1;i<numXTals;i++)
+  misobin.resize(numensembles);
+  for(size_t i=1;i<numensembles;i++)
   {
-    if (crystruct[i] == Ebsd::CrystalStructure::Hexagonal)
+    if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
     {
       numbins = 36 * 36 * 12;
 	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
     }
-    else if (crystruct[i] == Ebsd::CrystalStructure::Cubic)
+    else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
     {
       numbins = 18 * 18 * 18;
 	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
@@ -198,7 +216,7 @@ void FindMDF::execute()
 		q1[2] = m_AvgQuats[3*i+2] / m_AvgQuats[3*i+2];
 		q1[3] = m_AvgQuats[3*i+3] / m_AvgQuats[3*i+3];
 		q1[4] = m_AvgQuats[3*i+4] / m_AvgQuats[3*i+4];
-		phase1 = crystruct[m_PhasesF[i]];
+		phase1 = m_CrystalStructures[m_PhasesF[i]];
 		misorientationlists[i].resize(neighborlist[i].size() * 3, -1.0);
 		for (size_t j = 0; j < neighborlist[i].size(); j++)
 		{
@@ -209,7 +227,7 @@ void FindMDF::execute()
 		  q2[2] = m_AvgQuats[3*nname+2] / m_AvgQuats[3*nname+2];
 		  q2[3] = m_AvgQuats[3*nname+3] / m_AvgQuats[3*nname+3];
 		  q2[4] = m_AvgQuats[3*nname+4] / m_AvgQuats[3*nname+4];
-		  phase2 = crystruct[m_PhasesF[nname]];
+		  phase2 = m_CrystalStructures[m_PhasesF[nname]];
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
@@ -236,7 +254,7 @@ void FindMDF::execute()
 		}
   }
   unsigned long long int dims = static_cast<unsigned long long int>(numbins);
-  for (size_t i = 1; i < numXTals; i++)
+  for (size_t i = 1; i < numensembles; i++)
   {
 	  statsDataArray[i]->setMisorientationBins(misobin[i]);
   }
