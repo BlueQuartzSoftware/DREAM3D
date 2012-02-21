@@ -66,9 +66,6 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Neighborhoods"; }
 
-    virtual void setupFilterOptions();
-
-
 	/**
      * @brief Reimplemented from @see AbstractFilter class
      */
@@ -87,9 +84,10 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 private:
 
     int32_t* m_GrainIds;
-    int32_t* m_NumCells;
+
+    bool* m_BiasedFields;
+    int32_t* m_Phases;
     float* m_Centroids;
-    float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
 

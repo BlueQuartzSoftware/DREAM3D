@@ -151,7 +151,7 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseFractions, ss, -302, float, FloatArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -303, float, FloatArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -646,9 +646,6 @@ void  PlacePrecipitates::place_precipitates()
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PlacePrecipitates::transfer_attributes(int gnum, Field* field)
 {
   m_Volumes[gnum] = field->m_Volumes;

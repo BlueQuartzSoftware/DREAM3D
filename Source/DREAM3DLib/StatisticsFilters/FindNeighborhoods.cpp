@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -47,14 +48,13 @@ const static float m_pi = static_cast<float>(M_PI);
 FindNeighborhoods::FindNeighborhoods() :
 AbstractFilter(),
 m_GrainIds(NULL),
-m_NumCells(NULL),
+m_BiasedFields(NULL),
+m_Phases(NULL),
 m_Centroids(NULL),
-m_Volumes(NULL),
 m_EquivalentDiameters(NULL),
 m_Neighborhoods(NULL)
 {
 
-  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -66,25 +66,6 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::setupFilterOptions()
-{
-#if 0
-  std::vector<FilterOption::Pointer> options;
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Output Statistics File");
-    option->setPropertyName("H5StatsFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }
-  setFilterOptions(options);
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
@@ -93,10 +74,20 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
+  bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
+  if (false == exists)
+  {
+	FindSizes::Pointer find_sizes = FindSizes::New();
+	find_sizes->setObservers(this->getObservers());
+	find_sizes->setDataContainer(getDataContainer());
+	if(preflight == true) find_sizes->preflight();
+	if(preflight == false) find_sizes->execute();
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -300, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -300, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -300, int32_t, Int32ArrayType, fields, 1);
+
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
 
 
@@ -154,8 +145,6 @@ void FindNeighborhoods::find_centroids()
 
   float x, y, z;
   int col, row, plane;
-  float radcubed;
-  float diameter;
 
   size_t xPoints = m->getXPoints();
   size_t yPoints = m->getYPoints();
@@ -189,8 +178,6 @@ void FindNeighborhoods::find_centroids()
     graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
     graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
   }
-  float res_scalar = xRes * yRes * zRes;
-  float vol_term = (4.0 / 3.0) * m_pi;
   for (size_t i = 1; i < numgrains; i++)
   {
     graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
@@ -199,11 +186,6 @@ void FindNeighborhoods::find_centroids()
     m_Centroids[3 * i] = graincenters[i * 5 + 1];
     m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
     m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
-    m_NumCells[i] = graincenters[i * 5 + 0];
-    m_Volumes[i] = (graincenters[i * 5 + 0] * res_scalar);
-    radcubed = m_Volumes[i] / vol_term;
-    diameter = 2.0f * powf(radcubed, 0.3333333333f);
-    m_EquivalentDiameters[i] = diameter;
   }
 }
 void FindNeighborhoods::find_centroids2D()
@@ -216,8 +198,6 @@ void FindNeighborhoods::find_centroids2D()
 
   float x, y;
   int col, row;
-  float radsquared;
-  float diameter;
   
   size_t xPoints = m->getXPoints();
   size_t yPoints = m->getYPoints();
@@ -252,18 +232,12 @@ void FindNeighborhoods::find_centroids2D()
     graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
     m_Centroids[3*i] = graincenters[i*5 + 1];
     m_Centroids[3*i+1] = graincenters[i*5 + 2];
-    m_NumCells[i] = graincenters[i*5 + 0];
-    m_Volumes[i] = (graincenters[i*5 + 0] * xRes * yRes);
-    radsquared = m_Volumes[i] / m_pi;
-    diameter = (2 * sqrt(radsquared));
-    m_EquivalentDiameters[i] = diameter;
   }
 }
 
 void FindNeighborhoods::find_neighborhoods()
 {
   DataContainer* m = getDataContainer();
-
 
   float x, y, z;
   float xn, yn, zn;
@@ -280,10 +254,10 @@ void FindNeighborhoods::find_neighborhoods()
       diam = m_EquivalentDiameters[i];
       for (size_t j = i; j < numgrains; j++)
       {
-		    xn = m_Centroids[3*j];
-		    yn = m_Centroids[3*j+1];
-		    zn = m_Centroids[3*j+2];
-		    diam2 = m_EquivalentDiameters[j];
+	    xn = m_Centroids[3*j];
+	    yn = m_Centroids[3*j+1];
+	    zn = m_Centroids[3*j+2];
+	    diam2 = m_EquivalentDiameters[j];
         xdist = fabs(x - xn);
         ydist = fabs(y - yn);
         zdist = fabs(z - zn);
@@ -309,4 +283,3 @@ void FindNeighborhoods::find_neighborhoods()
     }
   }
 }
-
