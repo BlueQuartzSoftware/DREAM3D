@@ -174,7 +174,9 @@ int StatsGenPlotWidget::extractStatsData(DataContainer::Pointer m, int index,
   for(VectorOfFloatArray::size_type i = 0; i < arrays.size(); ++i)
   {
     QVector<float> col(arrays[i]->GetNumberOfTuples());
-    ::memcpy( &(col.front()), arrays[i]->GetVoidPointer(0), sizeof(float)*col.size() );
+    if (arrays[i]->GetNumberOfTuples() > 0) {
+      ::memcpy( &(col.front()), arrays[i]->GetVoidPointer(0), sizeof(float)*col.size() );
+    }
     data.push_back(col);
   }
 

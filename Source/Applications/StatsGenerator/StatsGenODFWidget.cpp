@@ -89,28 +89,29 @@ StatsGenODFWidget::~StatsGenODFWidget()
 void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
 {
   VectorOfFloatArray arrays = statsData->getODF_Weights();
-
-  QVector<float> e1(arrays[0]->GetNumberOfTuples());
-  ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
-
-  QVector<float> e2(arrays[0]->GetNumberOfTuples());
-  ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
-
-  QVector<float> e3(arrays[0]->GetNumberOfTuples());
-  ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
-
-  QVector<float> weights(arrays[0]->GetNumberOfTuples());
-  ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
-
-  QVector<float> sigmas(arrays[0]->GetNumberOfTuples());
-  ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
-
-  if(e1.size() > 0)
+  if (arrays.size() > 0) 
   {
-    // Load the data into the table model
-    m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
-  }
+    QVector<float> e1(arrays[0]->GetNumberOfTuples());
+    ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
 
+    QVector<float> e2(arrays[0]->GetNumberOfTuples());
+    ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
+
+    QVector<float> e3(arrays[0]->GetNumberOfTuples());
+    ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
+
+    QVector<float> weights(arrays[0]->GetNumberOfTuples());
+    ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
+
+    QVector<float> sigmas(arrays[0]->GetNumberOfTuples());
+    ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+ 
+    if(e1.size() > 0)
+    {
+      // Load the data into the table model
+      m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
+    }
+  }
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {

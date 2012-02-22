@@ -268,7 +268,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
 {
   VectorOfFloatArray arrays = statsData->getMDF_Weights();
-
+  if (arrays.size() > 0 ) { 
   QVector<float> angle(arrays[0]->GetNumberOfTuples());
   ::memcpy( &(angle.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*angle.size() );
 
@@ -282,6 +282,7 @@ void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, St
   {
     // Load the data into the table model
     m_MDFTableModel->setTableData(angle, axis, weights);
+  }
   }
   on_m_MDFUpdateBtn_clicked();
 }

@@ -621,8 +621,8 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Instantiate a Reader object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
-  DataContainer::Pointer m = DataContainer::New();
-  pipeline->setDataContainer(m);
+ // DataContainer::Pointer m = DataContainer::New();
+ // pipeline->setDataContainer(m);
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(m_FilePath.toStdString());
   //reader->setDataContainer(m.get());
@@ -639,6 +639,8 @@ void StatsGeneratorUI::openFile(QString h5file)
     return;
   }
 
+  DataContainer::Pointer m = pipeline->getDataContainer();
+
   // Get the number of Phases
   nPhases = m->getNumEnsembleTuples();
 
@@ -646,7 +648,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   SGWidget* sgwidget = NULL;
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
-  for (size_t i = 1; i < nPhases; ++i)
+  for (int i = 1; i < nPhases; ++i)
   {
     // Create a new Default SGPhase
     sgwidget = createNewSGWidget();
