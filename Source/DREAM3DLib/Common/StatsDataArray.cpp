@@ -276,7 +276,7 @@ int StatsDataArray::readH5Data(hid_t parentId)
   for (std::list<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter )
   {
     int index = 0;
-    bool ok = StringUtils::stringToNum(index, *iter);
+    StringUtils::stringToNum(index, *iter);
     StatsData::Pointer data = StatsData::New();
     hid_t statId = H5Utilities::openHDF5Object(gid, *iter);
     if (statId < 0)

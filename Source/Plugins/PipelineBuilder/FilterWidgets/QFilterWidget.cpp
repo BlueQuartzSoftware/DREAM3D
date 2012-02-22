@@ -589,7 +589,7 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 //  {
 //    std::cout << "Drag should leave Widget alone because it was COPY" << std::endl;
 //  }
-  Qt::DropAction dropAction = drag->exec(Qt::MoveAction);
+  drag->exec(Qt::MoveAction);
 
 
 }

@@ -742,7 +742,7 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
   float sdlogdiam = sigma;
   float stepSize = binStep;
 
-  size_t nBins = 0;
+ // size_t nBins = 0;
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;

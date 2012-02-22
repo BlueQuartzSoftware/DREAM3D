@@ -148,7 +148,7 @@ void FindNeighborhoods::find_centroids()
 
   size_t xPoints = m->getXPoints();
   size_t yPoints = m->getYPoints();
-  size_t zPoints = m->getZPoints();
+//  size_t zPoints = m->getZPoints();
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -198,14 +198,14 @@ void FindNeighborhoods::find_centroids2D()
 
   float x, y;
   int col, row;
-  
+
   size_t xPoints = m->getXPoints();
   size_t yPoints = m->getYPoints();
-  size_t zPoints = m->getZPoints();
-  
+ // size_t zPoints = m->getZPoints();
+
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  float zRes = m->getZRes();
+//  float zRes = m->getZRes();
 
   size_t numgrains = m->getNumFieldTuples();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);

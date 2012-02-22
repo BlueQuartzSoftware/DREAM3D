@@ -235,7 +235,7 @@ void FindMDF::execute()
 		  }
 		}
   }
-  unsigned long long int dims = static_cast<unsigned long long int>(numbins);
+ // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numXTals; i++)
   {
 	  statsDataArray[i]->setMisorientationBins(misobin[i]);

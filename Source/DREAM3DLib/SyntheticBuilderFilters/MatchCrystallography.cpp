@@ -263,7 +263,7 @@ void MatchCrystallography::initializeArrays()
 {
   DataContainer* m = getDataContainer();
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+//  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   size_t nElements = 0;
   size_t size = m->getNumEnsembleTuples();
