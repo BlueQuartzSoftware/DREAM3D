@@ -81,7 +81,7 @@ void initializeOmega3(StatsData::Pointer statsData, int count, uint32_t distType
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
 
-  for (qint32 i = 0; i < count; ++i)
+  for (int32_t i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 10.0 + rg.genrand_res53();
     beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
@@ -104,7 +104,7 @@ void initializeBOverA(StatsData::Pointer statsData, int count, uint32_t distType
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
 
-  for (qint32 i = 0; i < count; ++i)
+  for (int32_t i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 15.0 + rg.genrand_res53();
     beta = (0 * i) + 1.25 + (0.5 * rg.genrand_res53());
@@ -127,7 +127,7 @@ void initializeCOverA(StatsData::Pointer statsData, int count, uint32_t distType
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::HDF5::Beta);
 
-  for (qint32 i = 0; i < count; ++i)
+  for (int32_t i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 14.0 + rg.genrand_res53();
     beta = (0 * i) + 1.15 + (0.5 * rg.genrand_res53());
@@ -155,7 +155,7 @@ void initializeNeighbors(StatsData::Pointer statsData, std::vector<float> binNum
 
   int middlebin = count / 2;
 
-  for (qint32 i = 0; i < count; ++i)
+  for (int32_t i = 0; i < count; ++i)
   {
     alpha = (4 * (binNumbers[i] / binNumbers[middlebin])) + rg.genrand_res53();
     k = 2 + (0.2 * (binNumbers[i] / binNumbers[middlebin])) + (0.05 * rg.genrand_res53());
