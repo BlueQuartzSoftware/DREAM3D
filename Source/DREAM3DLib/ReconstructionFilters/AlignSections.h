@@ -77,7 +77,6 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(unsigned int, AlignmentMethod)
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);
- //   DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, CrystalStructures);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections"; }
@@ -104,7 +103,7 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     bool* m_GoodVoxels;
 
     unsigned int* m_CrystalStructures;
-	
+
 	OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;

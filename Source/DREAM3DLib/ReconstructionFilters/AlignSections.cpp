@@ -160,7 +160,6 @@ void AlignSections::preflight()
   DataContainer* m = getDataContainer();
   m->clearFieldData();
  // m->clearEnsembleData();
-//  m->addEnsembleData(m_CrystalStructures);
 
   dataCheck(true, 1, 1, 1);
 }
@@ -182,7 +181,7 @@ void AlignSections::execute()
   }
   m->clearFieldData();
 //  m->clearEnsembleData();
-//  m->addEnsembleData(m_CrystalStructures);
+
   int64_t totalPoints = m->getNumCellTuples();
   size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
@@ -216,7 +215,6 @@ void AlignSections::execute()
 void AlignSections::align_sections()
 {
   DataContainer* m = getDataContainer();
-  //int64_t totalPoints = m->totalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
