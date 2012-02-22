@@ -188,11 +188,11 @@ void PipelineBuilderWidget::setupGui()
   }
   library->setExpanded(true);
 
+//  QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
+//  presets->setText(0, "Preset Pipelines");
+
   toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
-
-//  connect(m_QDroppableScrollArea, SIGNAL(filterDropped(QString)),
-//          m_PipelineViewWidget, SLOT(addDroppedFilter(QString)));
 }
 
 
@@ -218,8 +218,13 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 
   for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    QListWidgetItem* fitlerItem = new QListWidgetItem(filterList);
-    fitlerItem->setText(QString::fromStdString((*factory).first));
+    QListWidgetItem* filterItem = new QListWidgetItem(filterList);
+    filterItem->setText(QString::fromStdString((*factory).first));
+    QString iconName(":/");
+    iconName.append( QString::fromStdString((*factory).second->getFilterGroup()));
+    iconName.append("_Icon.png");
+    QIcon icon(iconName);
+    filterItem->setIcon(icon);
   }
 }
 

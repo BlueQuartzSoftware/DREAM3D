@@ -100,6 +100,8 @@ class QFilterWidget : public QGroupBox
      virtual void updateQDoubleSpinBoxValue(double v);
      virtual void updateQCheckBoxValue(int v);
 
+     virtual void updateLineEdit(const QString &v);
+
      /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
       * state
@@ -107,8 +109,8 @@ class QFilterWidget : public QGroupBox
       */
      void changeStyle(bool selected);
 
-     signals:
-       void widgetSelected(QFilterWidget* w);
+  signals:
+    void widgetSelected(QFilterWidget* w);
 
 
   protected:

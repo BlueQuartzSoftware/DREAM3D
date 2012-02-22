@@ -77,7 +77,13 @@ void DxReader::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void DxReader::preflight()
 {
-
+  if (getInputFile().empty() == true)
+  {
+    std::stringstream ss;
+    ss << ClassName() << " needs the Input File Set and it was not.";
+    setErrorMessage(ss.str());
+    setErrorCondition(-387);
+  }
 }
 
 
@@ -93,15 +99,21 @@ int DxReader::readHeader()
 // -----------------------------------------------------------------------------
 int DxReader::readFile()
 {
+  std::stringstream ss;
   if (NULL == getDataContainer())
   {
-    std::stringstream ss;
+    ss.clear();
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     setErrorMessage(ss.str());
     setErrorCondition(-1);
     return -1;
   }
 
+  preflight();
+  if (getErrorCondition() < 0)
+  {
+    return getErrorCondition();
+  }
   std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
   std::vector<std::string> tokens; /* vector to store the split data */
@@ -114,8 +126,12 @@ int DxReader::readFile()
   inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
-    std::cout << "Failed to open: " << getInputFile() << std::endl;
-    exit(0);
+    ss.clear();
+    ss << ClassName() << " Runtime Error. The input file '" << getInputFile() << "' could not be"
+        << " opened for reading. Do you have access to this file?";
+    setErrorMessage(ss.str());
+    setErrorCondition(-498);
+    return -498;
   }
 
   getline(inFile, line, '\n');
@@ -142,9 +158,12 @@ int DxReader::readFile()
       tokenize(line, tokens, delimeters);
       if(tokens.size() == 20)
       {
-        std::cout << "ERROR: Unable to read data dimensions from the header" << std::endl;
+        ss.clear();
+        ss << "ERROR: Unable to read data dimensions from the header" << std::endl;
+        setErrorMessage(ss.str());
+        setErrorCondition(-499);
         inFile.close();
-        return -1;
+        return -499;
       }
     }
 
@@ -202,9 +221,12 @@ int DxReader::readFile()
       tokenize(line, tokens, delimeters);
       if(tokens.size() == 20)
       {
-        std::cout << "ERROR: Unable to locate the last header line" << std::endl;
+        ss.clear();
+        ss << "ERROR: Unable to locate the last header line" << std::endl;
+        setErrorMessage(ss.str());
+        setErrorCondition(-496);
         inFile.close();
-        return -1;
+        return -496;
       }
     }
   } // when we get here, we are looking at data
@@ -215,7 +237,7 @@ int DxReader::readFile()
     error += sscanf(tokens[pos1 + 1].c_str(), "%d", &points);
     tokens.clear();
   }
-  std::cout << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz << std::endl;
+//  std::cout << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz << std::endl;
 
   bool finished_header, finished_data;
   finished_header = true;
@@ -254,10 +276,13 @@ int DxReader::readFile()
 
   if(index != static_cast<size_t>(nz * ny * nx))
   {
-    std::cout << "ERROR: data size does not match header dimensions" << std::endl;
-    std::cout << "\t" << index << "\t" << nz * nx * ny << std::endl;
-    return -1;
+    ss.clear();
+    ss << "ERROR: data size does not match header dimensions" << std::endl;
+    ss << "\t" << index << "\t" << nz * nx * ny << std::endl;
+    setErrorMessage(ss.str());
+    setErrorCondition(-495);
     inFile.close();
+    return -495;
   }
 
   getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
@@ -271,6 +296,8 @@ int DxReader::readFile()
 
   tokens.clear();
   inFile.close();
+
+  notify("DxReader Complete", 0, Observable::UpdateProgressMessage);
   return 0;
 }
 

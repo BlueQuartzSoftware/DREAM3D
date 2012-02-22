@@ -100,8 +100,9 @@ file(REMOVE ${CodeGeneratorFile})
 # Create our custom executable that will generate most of our QFilterWidget
 # classes from information stored in the Filters themselves.           
 configure_file( ${FilterWidgets_SOURCE_DIR}/CodeGen.cpp.in
-                ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.cpp)
-add_executable(FilterWidgetCodeGen ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.cpp)
+                ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.h)
+add_executable(FilterWidgetCodeGen  ${FilterWidgets_SOURCE_DIR}/FilterWidgetCodeGen.cpp
+                                    ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.h)
 target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
 
 
