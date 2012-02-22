@@ -190,7 +190,7 @@ void DataContainerReader::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, 1, 1, 1);
+  //dataCheck(false, 1, 1, 1);
   int err = 0;
   std::stringstream ss;
 
