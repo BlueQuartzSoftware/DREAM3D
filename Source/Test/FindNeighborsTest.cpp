@@ -60,6 +60,7 @@
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
@@ -208,23 +209,6 @@ void TestFindNeighbors()
   cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline->pushBack(cleanup_grains);
 
-  FindSizes::Pointer find_sizes = FindSizes::New();
-  find_sizes->setDistributionType(DREAM3D::DistributionType::LogNormal);
-  pipeline->pushBack(find_sizes);
-
-  FindShapes::Pointer find_shapes = FindShapes::New();
-  find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
-  pipeline->pushBack(find_shapes);
-
-  FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
-  pipeline->pushBack(find_avgorients);
-
-  FindODF::Pointer find_odf = FindODF::New();
-  pipeline->pushBack(find_odf);
-
-  FindMDF::Pointer find_mdf = FindMDF::New();
-  pipeline->pushBack(find_mdf);
-
   bool m_WriteVtkFile(true);
   bool m_WriteBinaryVTKFiles(true);
   bool m_WritePhaseId(true);
@@ -281,7 +265,25 @@ void TestDataContainerReader()
   h5Reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
   pipeline->pushBack(h5Reader);
 
+  FindSizes::Pointer find_sizes = FindSizes::New();
+  find_sizes->setDistributionType(DREAM3D::DistributionType::LogNormal);
+  pipeline->pushBack(find_sizes);
 
+  FindShapes::Pointer find_shapes = FindShapes::New();
+  find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
+  pipeline->pushBack(find_shapes);
+
+  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+  pipeline->pushBack(find_neighbors);
+
+  FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+  pipeline->pushBack(find_avgorients);
+
+  FindODF::Pointer find_odf = FindODF::New();
+  pipeline->pushBack(find_odf);
+
+  FindMDF::Pointer find_mdf = FindMDF::New();
+  pipeline->pushBack(find_mdf);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);

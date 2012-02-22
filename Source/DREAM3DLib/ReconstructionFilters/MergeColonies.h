@@ -93,6 +93,8 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     int32_t* m_PhasesF;
     NeighborList<int>* m_NeighborList;
 
+    unsigned int* m_CrystalStructures;
+
     std::vector<int> colonynewnumbers;
 
 

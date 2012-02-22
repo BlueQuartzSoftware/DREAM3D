@@ -134,22 +134,31 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   DataContainer* m = getDataContainer();
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -350, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
-    setErrorCondition(-350);
+	setErrorCondition(0);
+	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+	find_neighbors->setObservers(this->getObservers());
+	find_neighbors->setDataContainer(getDataContainer());
+	if(preflight == true) find_neighbors->preflight();
+	if(preflight == false) find_neighbors->execute();
+	m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+	if(m_NeighborList == NULL)
+	{
+		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+		setErrorCondition(-305);
+	}
   }
 
   setErrorMessage(ss.str());
@@ -161,24 +170,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void CleanupGrains::preflight()
 {
-//  DataContainer* m = getDataContainer();
-//  m->clearFieldData();
-//  m->clearEnsembleData();
-
-  // Find Neighbors would be run first so run its PreFlight first before ours
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->setDataContainer(getDataContainer());
-  find_neighbors->preflight();
-  if (find_neighbors->getErrorCondition() < 0)
-  {
-    setErrorCondition(find_neighbors->getErrorCondition());
-    setErrorMessage(find_neighbors->getErrorMessage());
-    return;
-  }
-
   dataCheck(true, 1, 1, 1);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -209,7 +201,6 @@ void CleanupGrains::execute()
   setErrorCondition(0);
 
   remove_smallgrains();
-
   assign_badpoints();
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
@@ -226,10 +217,7 @@ void CleanupGrains::execute()
 
   // FindNeighbors may have messed with the pointers so revalidate our internal pointers
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+  if (getErrorCondition() < 0) return;
 
   merge_containedgrains();
 

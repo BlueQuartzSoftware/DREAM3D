@@ -158,14 +158,13 @@ void FindMDF::execute()
   }
   setErrorCondition(0);
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows

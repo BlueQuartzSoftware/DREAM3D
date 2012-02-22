@@ -138,14 +138,14 @@ void FindODF::execute()
   }
   setErrorCondition(0);
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
   //int64_t totalPoints = m->totalPoints();
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   size_t bin;
   size_t numgrains = m->getNumFieldTuples();
