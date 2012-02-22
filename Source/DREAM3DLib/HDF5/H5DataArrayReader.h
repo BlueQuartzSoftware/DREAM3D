@@ -39,7 +39,13 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
-
+/**
+ * @class H5DataArrayReader H5DataArrayReader.h DREAM3DLib/HDF5/H5DataArrayReader.h
+ * @brief This class handles reading DataArray<T> objects from an HDF5 file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Feb 22, 2012
+ * @version 1.0
+ */
 class DREAM3DLib_EXPORT H5DataArrayReader
 {
   public:
