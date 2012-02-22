@@ -88,9 +88,7 @@ m_AxisLengths(NULL),
 m_AxisEulerAngles(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
-m_CrystalStructures(NULL),
 m_PhaseTypes(NULL),
-m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
@@ -185,9 +183,7 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -301, unsigned int, XTalStructArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -304, float, FloatArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -258,11 +254,7 @@ void PackGrainsGen2::execute()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-  m_CrystalStructures = crystructPtr->GetPointer(0);
-  size_t numXTals = crystructPtr->GetNumberOfTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
   std::stringstream ss;
 
   // float change1, change2;
@@ -280,7 +272,7 @@ void PackGrainsGen2::execute()
   int acceptedmoves = 0;
   float totalprimaryfractions = 0.0;
   // find which phases are primary phases
-  for (size_t i = 1; i < numXTals; ++i)
+  for (size_t i = 1; i < numensembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {

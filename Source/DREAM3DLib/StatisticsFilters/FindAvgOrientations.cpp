@@ -79,16 +79,15 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, -300, float, FloatArrayType,  voxels, 3);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, fields, 5);
-
-
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, voxels, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -125,11 +124,6 @@ void FindAvgOrientations::execute()
   int phase;
   float voxquat[5];
   float curavgquat[5];
-  unsigned int xtal;
-
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
 
   for (size_t i = 1; i < numgrains; i++)
@@ -147,8 +141,7 @@ void FindAvgOrientations::execute()
     {
       OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
       phase = m_PhasesC[i];
-      xtal = crystruct->GetValue(phase);
-      m_OrientationOps[xtal]->getFZQuat(qr);
+      m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
       m_Quats[i*5 + 0] = 1.0;
       m_Quats[i*5 + 1] = qr[1];
       m_Quats[i*5 + 2] = qr[2];
@@ -160,11 +153,11 @@ void FindAvgOrientations::execute()
       voxquat[3] = m_Quats[i*5 + 3];
       voxquat[4] = m_Quats[i*5 + 4];
           curavgquat[0] = 1;
-      curavgquat[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
-          curavgquat[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
-          curavgquat[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
-          curavgquat[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
-      m_OrientationOps[xtal]->getNearestQuat(curavgquat, voxquat);
+      curavgquat[1] = m_AvgQuats[5*m_GrainIds[i]+1]/m_AvgQuats[5*m_GrainIds[i]];
+          curavgquat[2] = m_AvgQuats[5*m_GrainIds[i]+2]/m_AvgQuats[5*m_GrainIds[i]];
+          curavgquat[3] = m_AvgQuats[5*m_GrainIds[i]+3]/m_AvgQuats[5*m_GrainIds[i]];
+          curavgquat[4] = m_AvgQuats[5*m_GrainIds[i]+4]/m_AvgQuats[5*m_GrainIds[i]];
+      m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
       for (int k = 0; k < 5; k++)
       {
         m_AvgQuats[5*m_GrainIds[i]+k] = m_AvgQuats[5*m_GrainIds[i]+k] + voxquat[k];

@@ -92,6 +92,7 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     int32_t* m_PhasesF;
     bool* m_SurfaceFields;
 
+    unsigned int* m_CrystalStructures;
 	StatsDataArray* m_StatsDataArray;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

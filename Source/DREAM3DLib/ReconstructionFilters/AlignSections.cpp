@@ -66,6 +66,7 @@ m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_PhasesC(NULL),
+m_CrystalStructures(NULL),
 m_GoodVoxels(NULL)
 {
   Seed = MXA::getMilliSeconds();
@@ -132,11 +133,13 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
   DataContainer* m = getDataContainer();
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
-  //TODO: Initialize the array to something known - like 0
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -303,  int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
 
   if (m_AlignmentMethod >= DREAM3D::AlignmentMethod::Count)
   {
@@ -223,10 +226,6 @@ void AlignSections::align_sections()
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
   };
-
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   float disorientation = 0;
   float mindisorientation = 100000000;
@@ -354,12 +353,12 @@ void AlignSections::align_sections()
                         q1[2] = m_Quats[refposition * 5 + 2];
                         q1[3] = m_Quats[refposition * 5 + 3];
                         q1[4] = m_Quats[refposition * 5 + 4];
-                        phase1 = crystruct->GetValue(m_PhasesC[refposition]);
+                        phase1 = m_CrystalStructures[m_PhasesC[refposition]];
                         q2[1] = m_Quats[curposition * 5 + 1];
                         q2[2] = m_Quats[curposition * 5 + 2];
                         q2[3] = m_Quats[curposition * 5 + 3];
                         q2[4] = m_Quats[curposition * 5 + 4];
-                        phase2 = crystruct->GetValue(m_PhasesC[curposition]);
+                        phase2 = m_CrystalStructures[m_PhasesC[curposition]];
                         if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                       if(w > m_MisorientationTolerance) disorientation++;
@@ -554,11 +553,6 @@ void AlignSections::form_grains_sections()
 
   graincounts = m_GrainCounts->WritePointer(0, dims[2]);
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-
-
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[8];
   neighpoints[0] = -dims[0] - 1;
@@ -622,7 +616,7 @@ void AlignSections::form_grains_sections()
           q1[2] = m_Quats[currentpoint * 5 + 2];
           q1[3] = m_Quats[currentpoint * 5 + 3];
           q1[4] = m_Quats[currentpoint * 5 + 4];
-          phase1 = crystruct->GetValue(m_PhasesC[currentpoint]);
+          phase1 = m_CrystalStructures[m_PhasesC[currentpoint]];
           for (int i = 0; i < 8; i++)
           {
             good = 1;
@@ -639,7 +633,7 @@ void AlignSections::form_grains_sections()
               q2[2] = m_Quats[neighbor * 5 + 2];
               q2[3] = m_Quats[neighbor * 5 + 3];
               q2[4] = m_Quats[neighbor * 5 + 4];
-              phase2 = crystruct->GetValue(m_PhasesC[neighbor]);
+              phase2 = m_CrystalStructures[m_PhasesC[neighbor]];
               if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               if(w < m_MisorientationTolerance)
               {
@@ -660,4 +654,3 @@ void AlignSections::form_grains_sections()
     graincounts[slice] = graincount;
   }
 }
-

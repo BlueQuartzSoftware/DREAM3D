@@ -48,6 +48,7 @@
 
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -121,38 +122,62 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
+  if(getErrorCondition() == -302)
+  {
+	setErrorCondition(0);
+	FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+	find_surfacefields->setObservers(this->getObservers());
+	find_surfacefields->setDataContainer(getDataContainer());
+	if(preflight == true) find_surfacefields->preflight();
+	if(preflight == false) find_surfacefields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
+  }
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -303, int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
+  }  
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -304, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
-
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-    setErrorCondition(-308);
-  }
-
-  // And we do the same for the SharedSurfaceArea list
-  m_SharedSurfaceAreaList =
-      NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-  if(m_SharedSurfaceAreaList == NULL)
-  {
-    ss << "SurfaceAreaLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-    setErrorCondition(-309);
+	setErrorCondition(0);
+	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+	find_neighbors->setObservers(this->getObservers());
+	find_neighbors->setDataContainer(getDataContainer());
+	if(preflight == true) find_neighbors->preflight();
+	if(preflight == false) find_neighbors->execute();
+	m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+	if(m_NeighborList == NULL)
+	{
+		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+		setErrorCondition(-305);
+	}
+	m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+	if(m_SharedSurfaceAreaList == NULL)
+	{
+		ss << "SurfaceAreaLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+		setErrorCondition(-306);
+	}
   }
 
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -301, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -168,28 +193,6 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 // -----------------------------------------------------------------------------
 void MatchCrystallography::preflight()
 {
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->setDataContainer(getDataContainer());
-  find_neighbors->preflight();
-  if(find_neighbors->getErrorCondition() < 0)
-  {
-    setErrorCondition(find_neighbors->getErrorCondition());
-    setErrorMessage(find_neighbors->getErrorMessage());
-    return;
-  }
-
-  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-  find_surfacefields->setObservers(this->getObservers());
-  find_surfacefields->setDataContainer(getDataContainer());
-  find_surfacefields->preflight();
-  if(find_surfacefields->getErrorCondition() < 0)
-  {
-    setErrorCondition(find_surfacefields->getErrorCondition());
-    setErrorMessage(find_surfacefields->getErrorMessage());
-    return;
-  }
-
   dataCheck(true, 1, 1, 1);
 }
 
@@ -210,34 +213,6 @@ void MatchCrystallography::execute()
     return;
   }
 
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->setDataContainer(m);
-  find_neighbors->execute();
-  if(find_neighbors->getErrorCondition() < 0)
-  {
-    // We need to percolate the error condition from this "internal" filter into
-    // this filter so we get the internal filter's error condition and error
-    // message and make them our own then return.
-    setErrorCondition(find_neighbors->getErrorCondition());
-    setErrorMessage(find_neighbors->getErrorMessage());
-    return;
-  }
-
-  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-  find_surfacefields->setObservers(this->getObservers());
-  find_surfacefields->setDataContainer(m);
-  find_surfacefields->execute();
-  if(find_surfacefields->getErrorCondition() < 0)
-  {
-    // We need to percolate the error condition from this "internal" filter into
-    // this filter so we get the internal filter's error condition and error
-    // message and make them our own then return.
-    setErrorCondition(find_surfacefields->getErrorCondition());
-    setErrorMessage(find_surfacefields->getErrorMessage());
-    return;
-  }
-
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumFieldTuples();
   int numEnsembleTuples = m->getNumEnsembleTuples();
@@ -246,7 +221,6 @@ void MatchCrystallography::execute()
   {
     return;
   }
-
 
   assign_eulers();
   measure_misorientations();

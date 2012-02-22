@@ -73,7 +73,6 @@ m_Active(NULL),
 m_PhasesF(NULL),
 m_NumCells(NULL),
 m_PhaseTypes(NULL),
-m_PrecipitateFractions(NULL),
 m_ShapeTypes(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
@@ -148,7 +147,6 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PrecipitateFractions, ss, -303, float, FloatArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -548,9 +546,9 @@ void  PlacePrecipitates::place_precipitates()
   float xc, yc, zc;
   double totalprecipitatefractions = 0.0;
 
-  size_t numXTals = m->getNumEnsembleTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
 
-  for (size_t i = 1; i < numXTals; ++i)
+  for (size_t i = 1; i < numensembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
@@ -587,7 +585,7 @@ void  PlacePrecipitates::place_precipitates()
     dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
     transfer_attributes(currentnumgrains, &field);
-    precipboundaryfraction = m_PrecipitateFractions[phase];
+	precipboundaryfraction = statsDataArray[phase]->getPrecipBoundaryFraction();
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)
     {

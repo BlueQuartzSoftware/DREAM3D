@@ -66,6 +66,7 @@ m_GrainIds(NULL),
 m_Quats(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
+m_CrystalStructures(NULL),
 m_Active(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -113,13 +114,16 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType,  voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType,  voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
 
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -204,10 +208,6 @@ void SegmentGrains::execute()
   neighpoints[5] = (dims[0] * dims[1]);
   unsigned int phase1, phase2;
 
-  typedef DataArray<unsigned int> XTalType;
-   XTalType* crystruct
-       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-
   // Precalculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
   for(int64_t i = 0; i < totalPoints; i++)
@@ -242,7 +242,7 @@ void SegmentGrains::execute()
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
-        phase1 = crystruct->GetValue(m_PhasesC[currentpoint]);
+        phase1 = m_CrystalStructures[m_PhasesC[currentpoint]];
         for (int i = 0; i < 6; i++)
         {
           q1[0] = 1;
@@ -267,7 +267,7 @@ void SegmentGrains::execute()
             q2[2] = m_Quats[neighbor*5 + 2];
             q2[3] = m_Quats[neighbor*5 + 3];
             q2[4] = m_Quats[neighbor*5 + 4];
-            phase2 = crystruct->GetValue(m_PhasesC[neighbor]);
+            phase2 = m_CrystalStructures[m_PhasesC[neighbor]];
             if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
             if (w < m_MisorientationTolerance)
             {
