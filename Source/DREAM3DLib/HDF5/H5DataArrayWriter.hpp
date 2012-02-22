@@ -74,7 +74,7 @@ class H5DataArrayWriter
           return err;
         }
       }
-      err |= H5Lite::writeScalarAttribute(gid, name, std::string(H5_NUMCOMPONENTS), numComp);
+      err |= H5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
       if(err < 0)
       {
         return err;

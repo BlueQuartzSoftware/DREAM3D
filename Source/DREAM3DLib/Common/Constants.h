@@ -190,7 +190,7 @@ namespace DREAM3D
 
     const std::string DataContainerName("DataContainer");
     const std::string ObjectType("ObjectType");
-
+    const std::string NumComponents("NumComponents");
 
   //  const std::string Grain_ID("Grain_ID");
    // const std::string SchmidFactor ("SchmidFactor");
@@ -264,6 +264,7 @@ namespace DREAM3D
     const unsigned int OuterBoundary = 0;        //!<
     const unsigned int Misorientation = 1;       //!<
     const unsigned int MutualInformation = 2;    //!<
+    const unsigned int Count = 3;                //!<
     const unsigned int UnknownAlignmentMethod = 999;    //!<
   }
 
