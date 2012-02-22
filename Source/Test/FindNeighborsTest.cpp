@@ -100,7 +100,7 @@ std::string getH5EbsdFile()
 }
 
 int getZStartIndex() { return 1; }
-int getZEndIndex() { return 117; }
+int getZEndIndex() { return 25; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -262,6 +262,13 @@ void TestDataContainerReader()
   h5Reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
   pipeline->pushBack(h5Reader);
 
+#if 0
+  IDataArray* iDataPtr = NULL;
+  iDataPtr = m->getFieldData(DREAM3D::EnsembleData::CrystalStructures).get();
+  UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
+  m_CrystalStructure = data->GetValue(index);
+#endif
+
   FindSizes::Pointer find_sizes = FindSizes::New();
   find_sizes->setDistributionType(DREAM3D::DistributionType::LogNormal);
   pipeline->pushBack(find_sizes);
@@ -273,6 +280,12 @@ void TestDataContainerReader()
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
   pipeline->pushBack(writer);
+
+#if 0
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(UnitTest::FindNeighborTest::OutputFile2);
+  pipeline->pushBack(reader);
+#endif
 
 //  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
 //  int err = pipeline->preflightPipeline();
@@ -289,19 +302,44 @@ void TestDataContainerReader()
 }
 
 
+void OtherTest()
+{
+
+  int err = 0;
+
+  // Create a Vector to hold all the filters. Later on we will execute all the filter
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile("C:\\Users\\mjackson\\Desktop\\FindNeighborTest_Rewrite.h5");
+  reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
+  pipeline->pushBack(reader);
+//  reader->setReadCellData(false);
+//  reader->setReadFieldData(false);
+//  reader->setReadEnsembleData(true);
+  
+  DataArray<uint32_t>::Pointer grainIds = DataArray<uint32_t>::CreateArray(2, DREAM3D::EnsembleData::PhaseTypes);
+  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+  pipeline->run();
+  err = pipeline->getErrorCondition();
+  DataContainer::Pointer m = pipeline->getDataContainer();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+
+}
+
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+ // DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
-  DREAM3D_REGISTER_TEST( TestFindNeighbors() );
-  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
-
+//  DREAM3D_REGISTER_TEST( TestFindNeighbors() );
+//  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
+  DREAM3D_REGISTER_TEST( OtherTest() );
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+ // DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
   PRINT_TEST_SUMMARY();
   return err;

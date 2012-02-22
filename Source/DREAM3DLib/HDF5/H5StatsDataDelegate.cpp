@@ -120,81 +120,81 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 {
   int err = 0;
   //Read the PhaseFraction
-  err |= readPhaseFraction(data, groupId);
+  err = readPhaseFraction(data, groupId);
 
   // Read the Precip Boundary Fraction
-  err |= readPrecipBoundaryFraction(data, groupId);
+  err = readPrecipBoundaryFraction(data, groupId);
 
   // Read the Grain Diameter Info
-  err |= readGrainDiameterInfo(data, groupId);
+  err = readGrainDiameterInfo(data, groupId);
 
   // Read the Grain Size Distribution
   data->setGrainSizeDistribution(createDistributionVector(data->getGrainSize_DistType()));
-  err |= readDistributionData(groupId,
+  err = readDistributionData(groupId,
 							    DREAM3D::HDF5::LogNormalDistribution,
 								DREAM3D::HDF5::Grain_Size_Distribution,
 								data->getGrainSizeDistribution());
 
    // Read the Bin Numbers
-   err |= readBinNumbers(data, groupId);
+   err = readBinNumbers(data, groupId);
 
    // Read the B Over A
    data->setGrainSize_BOverA( createDistributionVector(data->getBOverA_DistType()));
-   err |= readDistributionData(groupId,
+   err = readDistributionData(groupId,
                                 DREAM3D::HDF5::BetaDistribution,
                                 DREAM3D::HDF5::Grain_SizeVBoverA_Distributions,
                                 data->getGrainSize_BOverA());
 
    // Read the C Over A
    data->setGrainSize_COverA( createDistributionVector(data->getCOverA_DistType()));
-   err |= readDistributionData(groupId,
+   err = readDistributionData(groupId,
                                 DREAM3D::HDF5::BetaDistribution,
                                 DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
                                 data->getGrainSize_COverA());
 
    // Read the Neighbors
    data->setGrainSize_Neighbors( createDistributionVector(data->getNeighbors_DistType()));
-   err |= readDistributionData(groupId,
+   err = readDistributionData(groupId,
                                 DREAM3D::HDF5::PowerLawDistribution,
                                 DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
                                 data->getGrainSize_Neighbors());
 
    // Read the Omegas
    data->setGrainSize_Omegas( createDistributionVector(data->getOmegas_DistType()));
-   err |= readDistributionData(groupId,
+   err = readDistributionData(groupId,
                                 DREAM3D::HDF5::BetaDistribution,
                                 DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
                                 data->getGrainSize_Omegas());
 
    // Read the Misorientation Bins
    FloatArrayType::Pointer misoBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::MisorientationBins);
-   err |= misoBins->readH5Data(groupId);
+   err = misoBins->readH5Data(groupId);
    if (err < 0)
    {
      misoBins = FloatArrayType::NullPointer();
    }
    data->setMisorientationBins(misoBins);
-   err |= readMDFWeights(groupId, data);
+   err = readMDFWeights(groupId, data);
 
    // Read the ODF Data
    FloatArrayType::Pointer odfBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::ODF);
-   err |= odfBins->readH5Data(groupId);
+   err = odfBins->readH5Data(groupId);
    if (err < 0)
    {
      odfBins = FloatArrayType::NullPointer();
    }
    data->setODF(odfBins);
-   err |= readODFWeights(groupId, data);
+   err = readODFWeights(groupId, data);
 
    // Read the Axis ODF Data
    FloatArrayType::Pointer axisOdfBins = FloatArrayType::CreateArray(0, DREAM3D::HDF5::AxisOrientation);
-   err |= axisOdfBins->readH5Data(groupId);
+   err = axisOdfBins->readH5Data(groupId);
    if (err < 0)
    {
      axisOdfBins = FloatArrayType::NullPointer();
    }
    data->setAxisOrientation(axisOdfBins);
-   err |= readAxisODFWeights(groupId, data);
+   err = readAxisODFWeights(groupId, data);
 
   return err;
 }
@@ -212,46 +212,46 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
   int err = 0;
 
   // Write the PhaseFraction
-  err |= writePhaseFraction(data, groupId);
+  err = writePhaseFraction(data, groupId);
   if (err < 0)
   {
     return err;
   }
   // Write the Precip Boundary Fraction
-  err |= writePrecipBoundaryFraction(data, groupId);
+  err = writePrecipBoundaryFraction(data, groupId);
 
   // Write the Grain Diameter Info
-  err |= writeGrainDiameterInfo(data, groupId);
+  err = writeGrainDiameterInfo(data, groupId);
 
   // Write the Grain Size Distribution
-  err |= writeDistributionData(groupId,
+  err = writeDistributionData(groupId,
 							   DREAM3D::HDF5::LogNormalDistribution,
 							   DREAM3D::HDF5::Grain_Size_Distribution,
 							   data->getGrainSizeDistribution());
 
   // Write the Bin Numbers
-  err |= writeBinNumbers(data, groupId);
+  err = writeBinNumbers(data, groupId);
 
   // Write the B Over A
-  err |= writeDistributionData(groupId,
+  err = writeDistributionData(groupId,
                                DREAM3D::HDF5::BetaDistribution,
                                DREAM3D::HDF5::Grain_SizeVBoverA_Distributions,
                                data->getGrainSize_BOverA());
 
   // Write the C Over A
-  err |= writeDistributionData(groupId,
+  err = writeDistributionData(groupId,
                                DREAM3D::HDF5::BetaDistribution,
                                DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
                                data->getGrainSize_COverA());
 
   // Write the Neighbors
-  err |= writeDistributionData(groupId,
+  err = writeDistributionData(groupId,
                                DREAM3D::HDF5::PowerLawDistribution,
                                DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
                                data->getGrainSize_Neighbors());
 
   // Write the Omegas
-  err |= writeDistributionData(groupId,
+  err = writeDistributionData(groupId,
                                DREAM3D::HDF5::BetaDistribution,
                                DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
                                data->getGrainSize_Omegas());
@@ -259,26 +259,26 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
   // Write the Misorientation Bins
   if (NULL != data->getMisorientationBins().get())
   {
-    err |= data->getMisorientationBins()->writeH5Data(groupId);
+    err = data->getMisorientationBins()->writeH5Data(groupId);
   }
 
-  err |= writeWeightsData(groupId, DREAM3D::HDF5::MDFWeights, data->getMDF_Weights());
+  err = writeWeightsData(groupId, DREAM3D::HDF5::MDFWeights, data->getMDF_Weights());
 
 
   // Write the ODF
   if (NULL != data->getODF().get())
   {
-    err |= data->getODF()->writeH5Data(groupId);
+    err = data->getODF()->writeH5Data(groupId);
   }
-  err |= writeWeightsData(groupId, DREAM3D::HDF5::ODFWeights, data->getODF_Weights());
+  err = writeWeightsData(groupId, DREAM3D::HDF5::ODFWeights, data->getODF_Weights());
 
 
   // Write the Axis ODF
   if (NULL != data->getAxisOrientation().get())
   {
-    err |= data->getAxisOrientation()->writeH5Data(groupId);
+    err = data->getAxisOrientation()->writeH5Data(groupId);
   }
-  err |= writeWeightsData(groupId, DREAM3D::HDF5::AxisODFWeights, data->getAxisODF_Weights());
+  err = writeWeightsData(groupId, DREAM3D::HDF5::AxisODFWeights, data->getAxisODF_Weights());
 
   return err;
 }
@@ -329,7 +329,8 @@ int H5StatsDataDelegate::readVectorOfArrays(hid_t pid, VectorOfFloatArray colDat
   for (VectorOfFloatArray::iterator iter = colData.begin(); iter != colData.end(); ++iter )
   {
     FloatArrayType::Pointer d = *iter;
-    err |= d->readH5Data(pid);
+    err = d->readH5Data(pid);
+    if (err < 0) { return err; }
   }
 
   return err;
@@ -355,12 +356,12 @@ int H5StatsDataDelegate::readMDFWeights(hid_t pid, StatsData* data)
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::MDFWeights);
 
-  err |= readVectorOfArrays(groupId, mdfWeights);
+  err = readVectorOfArrays(groupId, mdfWeights);
   if (err >= 0) {
     data->setMDF_Weights(mdfWeights);
   }
 
-  err |= H5Utilities::closeHDF5Object(groupId);
+  err = H5Utilities::closeHDF5Object(groupId);
   return err;
 }
 
@@ -387,7 +388,7 @@ int H5StatsDataDelegate::readODFWeights(hid_t pid, StatsData* data)
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
 
-  err |= readVectorOfArrays(groupId, odfWeights);
+  err = readVectorOfArrays(groupId, odfWeights);
   if(err >= 0)
   {
     data->setODF_Weights(odfWeights);
@@ -422,7 +423,7 @@ int H5StatsDataDelegate::readAxisODFWeights(hid_t pid, StatsData* data)
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::AxisODFWeights);
 
-  err |= readVectorOfArrays(groupId, odfWeights);
+  err = readVectorOfArrays(groupId, odfWeights);
   if(err >= 0)
   {
     data->setAxisODF_Weights(odfWeights);
@@ -445,7 +446,7 @@ int H5StatsDataDelegate::writeWeightsData(hid_t pid, const std::string &hdf5Grou
   hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
-    err |= writeVectorOfArrays(disId, colData);
+    err = writeVectorOfArrays(disId, colData);
   }
   // Close the HDF5 Group
   err |= H5Gclose(disId);
@@ -502,7 +503,7 @@ int H5StatsDataDelegate::readDistributionData(hid_t pid, const std::string &disT
   for (VectorOfFloatArray::iterator iter = colData.begin(); iter != colData.end(); ++iter )
   {
     FloatArrayType::Pointer d = *iter;
-    d->readH5Data(disId);
+    err |= d->readH5Data(disId);
   }
 
   err |= H5Utilities::closeHDF5Object(disId);
