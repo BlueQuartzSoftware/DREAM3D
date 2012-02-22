@@ -45,7 +45,13 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 
-
+/**
+ * @class H5DataArrayWriter H5DataArrayWriter.h DREAM3DLib/HDF5/H5DataArrayWriter.h
+ * @brief This class handles writing of DataArray<T> objects to an HDF5 file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 22, 2012
+ * @version 1.0
+ */
 template<typename T>
 class H5DataArrayWriter
 {
