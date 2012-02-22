@@ -841,14 +841,12 @@ void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
 
   IDataArray* iDataPtr = NULL;
 
-  iDataPtr = m->getFieldData(DREAM3D::EnsembleData::CrystalStructures).get();
+  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
   UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_CrystalStructure = data->GetValue(index);
 
-  iDataPtr = m->getFieldData(DREAM3D::EnsembleData::PhaseTypes).get();
+  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
   m_PhaseType = data->GetValue(index);
-
-
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataPtr);

@@ -176,6 +176,11 @@ void TestFindNeighbors()
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  XTalStructArrayType::Pointer xtal = XTalStructArrayType::CreateArray(2, DREAM3D::EnsembleData::CrystalStructures);
+  xtal->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  xtal->SetValue(1, Ebsd::CrystalStructure::Cubic);
+
   std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
   MXADir::mkdir(m_OutputDirectory, true);
 
@@ -191,6 +196,7 @@ void TestFindNeighbors()
   pipeline->pushBack(load_slices);
 
   AlignSections::Pointer align_sections = AlignSections::New();
+ // align_sections->setCrystalStructures(xtal);
   align_sections->setMisorientationTolerance(m_MisorientationTolerance);
   align_sections->setAlignmentMethod(DREAM3D::AlignmentMethod::OuterBoundary);
   pipeline->pushBack(align_sections);
@@ -293,14 +299,9 @@ void TestDataContainerReader()
   pipeline->pushBack(find_mdf);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
+  writer->setOutputFile(UnitTest::FindNeighborTest::StatsFile);
   pipeline->pushBack(writer);
 
-#if 0
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(UnitTest::FindNeighborTest::OutputFile2);
-  pipeline->pushBack(reader);
-#endif
 
 //  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
 //  int err = pipeline->preflightPipeline();
@@ -329,18 +330,22 @@ void OtherTest()
   reader->setInputFile("C:\\Users\\mjackson\\Desktop\\FindNeighborTest_Rewrite.h5");
   reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
   reader->setDataContainer(m.get());
-//  reader->setReadCellData(false);
-//  reader->setReadFieldData(false);
-//  reader->setReadEnsembleData(true);
+  reader->setReadCellData(true);
+  reader->setReadFieldData(true);
+  reader->setReadEnsembleData(true);
 
-  DataArray<uint32_t>::Pointer grainIds = DataArray<uint32_t>::CreateArray(2, DREAM3D::EnsembleData::PhaseTypes);
-  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
   reader->execute();
   err = reader->getErrorCondition();
 
   IDataArray::Pointer iPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures);
   DREAM3D_REQUIRE_NE(NULL, iPtr.get());
 
+  
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
+  writer->setDataContainer(m.get());
+  writer->execute();
+  err = writer->getErrorCondition();
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
@@ -352,13 +357,13 @@ void OtherTest()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
- // DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
-//  DREAM3D_REGISTER_TEST( TestFindNeighbors() );
-//  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
+  DREAM3D_REGISTER_TEST( TestFindNeighbors() );
+  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
   DREAM3D_REGISTER_TEST( OtherTest() );
 #if REMOVE_TEST_FILES
-//  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
   PRINT_TEST_SUMMARY();
   return err;
