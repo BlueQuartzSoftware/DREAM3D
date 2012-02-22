@@ -365,8 +365,8 @@ StatsDataArray::Pointer createStatsDataArray()
   // We need to compute the Max and Min Diameter Bin Values
   float mindiameter = xCo[0];
   float maxdiameter = xCo[1];
-  float avglogdiam = mu;
-  float sdlogdiam = sigma;
+//  float avglogdiam = mu;
+//  float sdlogdiam = sigma;
 
   size_t nBins = binsizes.size();
   // Copy this into the DataArray<float>
