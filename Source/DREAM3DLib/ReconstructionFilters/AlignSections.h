@@ -103,7 +103,9 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     int32_t* m_PhasesC;
     bool* m_GoodVoxels;
 
-    OrientationMath::Pointer m_CubicOps;
+    unsigned int* m_CrystalStructures;
+	
+	OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;

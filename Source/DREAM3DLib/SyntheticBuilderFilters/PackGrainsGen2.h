@@ -154,9 +154,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     float* m_EquivalentDiameters;
 
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
-    unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
-    float* m_PrecipitateFractions;
     unsigned int* m_ShapeTypes;
     StatsDataArray* m_StatsDataArray;
 
