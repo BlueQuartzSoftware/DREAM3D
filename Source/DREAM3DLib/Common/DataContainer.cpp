@@ -55,6 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainer::DataContainer() :
+m_NumCellTuples(0),
 m_NumFieldTuples(0),
 m_NumEnsembleTuples(0)
 {

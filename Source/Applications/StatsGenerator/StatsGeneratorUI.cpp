@@ -50,6 +50,7 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
@@ -619,15 +620,19 @@ void StatsGeneratorUI::openFile(QString h5file)
   }
 
   // Instantiate a Reader object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
   DataContainer::Pointer m = DataContainer::New();
+  pipeline->setDataContainer(m);
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(m_FilePath.toStdString());
-  reader->setDataContainer(m.get());
+  //reader->setDataContainer(m.get());
   reader->setReadCellData(false);
   reader->setReadFieldData(false);
   reader->setReadEnsembleData(true);
-  reader->execute();
-  err = reader->getErrorCondition();
+//  reader->execute();
+  pipeline->pushBack(reader);
+  pipeline->run();
+  err = pipeline->getErrorCondition();
   if (err < 0)
   {
     this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
