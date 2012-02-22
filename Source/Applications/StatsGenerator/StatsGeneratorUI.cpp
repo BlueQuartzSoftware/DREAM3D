@@ -635,7 +635,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   }
 
   // Get the number of Phases
-  nPhases = m->getNumFieldTuples();
+  nPhases = m->getNumEnsembleTuples();
 
 
   SGWidget* sgwidget = NULL;
