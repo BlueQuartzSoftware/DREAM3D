@@ -92,6 +92,8 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
     float* m_Quats;
     float* m_AvgQuats;
 
+	unsigned int* m_CrystalStructures;
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 

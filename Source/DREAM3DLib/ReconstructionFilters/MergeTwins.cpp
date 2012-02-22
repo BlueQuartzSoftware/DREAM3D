@@ -70,6 +70,7 @@ m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_PhasesF(NULL),
+m_CrystalStructures(NULL),
 m_NeighborList(NULL)
 {
 
@@ -129,20 +130,32 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
-    setErrorCondition(-308);
+	setErrorCondition(0);
+	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+	find_neighbors->setObservers(this->getObservers());
+	find_neighbors->setDataContainer(getDataContainer());
+	if(preflight == true) find_neighbors->preflight();
+	if(preflight == false) find_neighbors->execute();
+	m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+	if(m_NeighborList == NULL)
+	{
+		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+		setErrorCondition(-304);
+	}
   }
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -152,10 +165,6 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 // -----------------------------------------------------------------------------
 void MergeTwins::preflight()
 {
-  DataContainer* m = getDataContainer();
-  m->clearFieldData();
-  m->clearEnsembleData();
-
   dataCheck(true, 1, 1, 1);
 }
 
@@ -174,7 +183,7 @@ void MergeTwins::execute()
     return;
   }
   m->clearFieldData();
-  m->clearEnsembleData();
+//  m->clearEnsembleData();
 
   setErrorCondition(0);
 
@@ -219,11 +228,6 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-
-
  // float angcur = 180.0f;
   std::vector<int> twinlist;
   float w;
@@ -258,12 +262,12 @@ void MergeTwins::merge_twins()
             q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
             q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
             q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
-            phase1 = crystruct->GetValue(m_PhasesF[firstgrain]);
+            phase1 = m_CrystalStructures[m_PhasesF[firstgrain]];
             q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];
             q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
             q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
             q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
-            phase2 = crystruct->GetValue(m_PhasesF[neigh]);
+            phase2 = m_CrystalStructures[m_PhasesF[neigh]];
             if (phase1 == phase2 && phase1 > 0) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
             float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
