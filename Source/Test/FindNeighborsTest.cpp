@@ -308,21 +308,25 @@ void OtherTest()
   int err = 0;
 
   // Create a Vector to hold all the filters. Later on we will execute all the filter
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  DataContainer::Pointer m = DataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile("C:\\Users\\mjackson\\Desktop\\FindNeighborTest_Rewrite.h5");
   reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
-  pipeline->pushBack(reader);
+  reader->setDataContainer(m.get());
 //  reader->setReadCellData(false);
 //  reader->setReadFieldData(false);
 //  reader->setReadEnsembleData(true);
-  
+
   DataArray<uint32_t>::Pointer grainIds = DataArray<uint32_t>::CreateArray(2, DREAM3D::EnsembleData::PhaseTypes);
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
-  pipeline->run();
-  err = pipeline->getErrorCondition();
-  DataContainer::Pointer m = pipeline->getDataContainer();
+  reader->execute();
+  err = reader->getErrorCondition();
+
+  IDataArray::Pointer iPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures);
+  DREAM3D_REQUIRE_NE(NULL, iPtr.get());
+
+
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
 }
@@ -339,7 +343,7 @@ int main(int argc, char **argv) {
 //  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
   DREAM3D_REGISTER_TEST( OtherTest() );
 #if REMOVE_TEST_FILES
- // DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
   PRINT_TEST_SUMMARY();
   return err;
