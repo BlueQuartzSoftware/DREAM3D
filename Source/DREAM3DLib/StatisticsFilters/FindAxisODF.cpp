@@ -164,7 +164,7 @@ void FindAxisODF::execute()
 	  axisodf[m_PhasesF[i]]->SetValue(bin, (axisodf[m_PhasesF[i]]->GetValue(bin) + (1.0/totalaxes[m_PhasesF[i]])));
     }
   }
-  int err;
+ // int err;
   for(size_t i=1;i<numXTals;i++)
   {
 	  statsDataArray[i]->setAxisOrientation(axisodf[i]);

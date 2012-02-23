@@ -206,7 +206,7 @@ void FindODF::execute()
 	  eulerodf[m_PhasesF[i]]->SetValue(bin, (eulerodf[m_PhasesF[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_PhasesF[i]])));
     }
   }
-  int err;
+//  int err;
 
   for(size_t i = 1;i < numensembles;i++)
   {

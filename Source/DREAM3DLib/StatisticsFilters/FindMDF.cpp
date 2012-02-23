@@ -92,7 +92,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	if(preflight == true) find_surfacefields->preflight();
 	if(preflight == false) find_surfacefields->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
-  }  
+  }
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
@@ -103,7 +103,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
 	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
-  }  
+  }
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                            (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -187,7 +187,7 @@ void FindMDF::execute()
   size_t numensembles = m->getNumEnsembleTuples();
 
   misobin.resize(numensembles);
-  for(size_t i=1;i<numensembles;i++)
+  for(size_t i=1;i<numensembles;++i)
   {
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
     {
@@ -252,7 +252,8 @@ void FindMDF::execute()
 		  }
 		}
   }
-  unsigned long long int dims = static_cast<unsigned long long int>(numbins);
+
+ // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numensembles; i++)
   {
 	  statsDataArray[i]->setMisorientationBins(misobin[i]);
