@@ -183,7 +183,7 @@ void FindLocalMisorientationGradients::execute()
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
   unsigned int* crystruct = crystructPtr->GetPointer(0);
-  size_t numXTals = crystructPtr->GetNumberOfTuples();
+ // size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   float w, totalmisorientation;
   float n1, n2, n3;

@@ -389,6 +389,7 @@ void SGMDFTableModel::setColumnData(int col, QVector<float> &data)
 void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, QVector<float> weights)
 {
   qint32 count = angles.count();
+
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());

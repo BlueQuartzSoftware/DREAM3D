@@ -91,7 +91,7 @@ void SGAxisODFWidget::extractStatsData(DataContainer::Pointer m, int index, Stat
 {
 
   VectorOfFloatArray arrays = statsData->getAxisODF_Weights();
-
+  if (arrays.size() > 0 ) {
   QVector<float> e1(arrays[0]->GetNumberOfTuples());
   ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
 
@@ -112,7 +112,7 @@ void SGAxisODFWidget::extractStatsData(DataContainer::Pointer m, int index, Stat
     // Load the data into the table model
     m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
   }
-
+  }
   updatePlots();
 }
 

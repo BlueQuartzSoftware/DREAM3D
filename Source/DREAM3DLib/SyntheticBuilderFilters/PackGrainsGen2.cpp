@@ -211,7 +211,7 @@ void PackGrainsGen2::execute()
   DataContainer* m = getDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
-  
+
   bool writeErrorFile = true;
   std::ofstream outFile;
   if(m_ErrorOutputFile.empty() == false)
@@ -573,10 +573,10 @@ void PackGrainsGen2::execute()
 
   for(int i=0;i<totalPoints;i++)
   {
-	if(m_GrainIds[i] == -1)
-	{
-		int stop = 0;
-	}
+//	if(m_GrainIds[i] == -1)
+//	{
+//		int stop = 0;
+//	}
   }
 
   notify("Packing Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
@@ -1100,7 +1100,7 @@ float PackGrainsGen2::check_fillingerror(int gadd, int gremove)
 void PackGrainsGen2::insert_grain(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
-    DataContainer* m = getDataContainer();
+ //   DataContainer* m = getDataContainer();
 //  float dist;
   float inside = -1;
   int column, row, plane;

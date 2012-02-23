@@ -405,6 +405,7 @@ void SGODFTableModel::setInitialValues()
 void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas)
 {
   qint32 count = e1.count();
+
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());

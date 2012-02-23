@@ -379,12 +379,21 @@ QAbstractItemDelegate* SGBetaTableModel::getItemDelegate()
 void SGBetaTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
 {
   qint32 count = bins.count();
+  // Now make sure we _really_ have the correct count because the number of 
+  // bins may NOT really reflect what is in the 'data' vectors. This discrepency
+  // can happen if not all of the data was written to the stats file
+  for(int i = 0; i < data.count(); ++i)
+  {
+    if (data[i].count() < count) { count = data[i].count(); }
+  }
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
+  int offset = row + count -1; 
+  if (offset < 0) { offset = 0;}
   // Now mass insert the data to the table then emit that the data has changed
-  beginInsertRows(QModelIndex(), row, row + count - 1);
+  beginInsertRows(QModelIndex(), row, offset);
   m_BinNumbers = bins;
   m_Alpha = data[0];
   m_Beta = data[1];
@@ -392,7 +401,9 @@ void SGBetaTableModel::setTableData(QVector<float> bins, QVector<QVector<float> 
   m_RowCount = count;
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);
-  QModelIndex botRight = createIndex(count-1, ColumnCount);
+  offset = count - 1;
+  if (offset < 0) { offset = 0;}
+  QModelIndex botRight = createIndex(offset, ColumnCount);
   emit dataChanged(topLeft, botRight);
 }
 

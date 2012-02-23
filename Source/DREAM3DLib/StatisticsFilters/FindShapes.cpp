@@ -181,7 +181,7 @@ void FindShapes::find_centroids()
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
-  int zPoints = static_cast<int>(m->getZPoints());
+//  int zPoints = static_cast<int>(m->getZPoints());
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -414,7 +414,7 @@ void FindShapes::find_moments2D()
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  float zRes = m->getZRes();
+//  float zRes = m->getZRes();
 
   for (size_t i = 0; i < numgrains; i++)
   {
