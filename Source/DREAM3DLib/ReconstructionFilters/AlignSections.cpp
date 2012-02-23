@@ -183,7 +183,9 @@ void AlignSections::execute()
 //  m->clearEnsembleData();
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 0, 0);
+  size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+  dataCheck(false, totalPoints, numgrains, numensembles);
   if (getErrorCondition() < 0)
   {
     return;
