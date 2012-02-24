@@ -41,9 +41,12 @@
 #include "StatsGenerator/StatsGenODFWidget.h"
 #include "StatsGenerator/SGAxisODFWidget.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
+#include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
+
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -193,9 +196,9 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
 void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::Power, false);
+	plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGPowerLawTableModel* model = qobject_cast<SGPowerLawTableModel*>(plot->tableModel());
+  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
   if (NULL == model)
   {
     return;
@@ -206,35 +209,27 @@ void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, 
   // Remove all the current rows in the table model
   model->removeRows(0, model->rowCount());
 
-  float alpha = 14.0;
-  float k = 1.0;
-  float beta = 1.0;
+  float mu, sigma;
+  DREAM3D_RANDOMNG_NEW()
 
-  float alphaStep = 2.0 / (float)(count);
-  float kStep = 0.25 / (float)(count);
-  float betaStep = 20.0 / (float)(count);
-
-  QVector<float> alphas;
-  QVector<float> ks;
-  QVector<float> betas;
+  QVector<float> mus;
+  QVector<float> sigmas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
+  int middlebin = count / 2;
   for (qint32 i = 0; i < count; ++i)
-   {
-    alphas.push_back(alpha);
-    ks.push_back(k);
-    betas.push_back(beta);
+  {
+    mu = log(14.0 + (2.0*float(i - middlebin)));
+    sigma = 0.3 + (float(middlebin - i)/float(middlebin*10));
+    mus.push_back(mu);
+    sigmas.push_back(sigma);
     colors.push_back(colorNames[colorOffset++]);
-    alpha += alphaStep;
-    k += kStep;
-    beta += betaStep;
-   }
+  }
 
   QVector<QVector<float> > data;
-  data.push_back(alphas);
-  data.push_back(ks);
-  data.push_back(betas);
+  data.push_back(mus);
+  data.push_back(sigmas);
   model->setTableData(binNumbers, data, colors);
 
 }

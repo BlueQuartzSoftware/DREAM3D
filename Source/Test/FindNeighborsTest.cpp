@@ -64,6 +64,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighborhoods.h"
 #include "DREAM3DLib/StatisticsFilters/FindODF.h"
 #include "DREAM3DLib/StatisticsFilters/FindMDF.h"
 
@@ -285,6 +286,10 @@ void TestDataContainerReader()
   FindShapes::Pointer find_shapes = FindShapes::New();
   find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
   pipeline->pushBack(find_shapes);
+
+  FindNeighborhoods::Pointer find_neighborhoods = FindNeighborhoods::New();
+  find_neighborhoods->setDistributionType(DREAM3D::DistributionType::LogNormal);
+  pipeline->pushBack(find_neighborhoods);
 
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   pipeline->pushBack(find_neighbors);

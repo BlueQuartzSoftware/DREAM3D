@@ -237,9 +237,9 @@ void SGWidget::setupGui()
 
    w = m_NeighborPlot;
    w->setPlotTitle(QString("Neighbors Distributions"));
-   w->setXAxisName(QString("Distance (Multiples of Diameter)"));
-   w->setYAxisName(QString("Number of Grains"));
-   w->setDistributionType(DREAM3D::DistributionType::Power);
+   w->setXAxisName(QString("Number of Grains (within 1 diameter)"));
+   w->setYAxisName(QString("Frequency"));
+   w->setDistributionType(DREAM3D::DistributionType::LogNormal);
    w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVNeighbors);
    w->blockDistributionTypeChanges(true);
    w->setRowOperationEnabled(false);

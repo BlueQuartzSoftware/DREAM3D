@@ -52,6 +52,7 @@ const static float m_pi = M_PI;
 FindSizes::FindSizes() :
 AbstractFilter(),
 m_GrainIds(NULL),
+m_Phases(NULL),
 m_Volumes(NULL),
 m_EquivalentDiameters(NULL),
 m_NumCells(NULL)
@@ -98,7 +99,7 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -301, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
