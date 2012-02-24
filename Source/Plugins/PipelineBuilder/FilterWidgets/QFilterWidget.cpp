@@ -44,6 +44,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QFormLayout>
 #include <QtGui/QGridLayout>
+#include <QtGui/QPainter>
 
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
@@ -567,16 +568,38 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 
   QPixmap pixmap = QPixmap::grabWidget(this);
 
+  // Create new picture for transparent
+  QPixmap transparent(pixmap.size());
+  // Do transparency
+  transparent.fill(Qt::transparent);
+#if 1
+  QPainter p;
+
+  p.begin(&transparent);
+  p.setOpacity(0.70);
+ // p.setCompositionMode(QPainter::CompositionMode_Plus);
+  p.drawPixmap(0, 0, pixmap);
+ // p.setCompositionMode(QPainter::CompositionMode_Plus);
+
+  // Set transparency level to 150 (possible values are 0-255)
+  // The alpha channel of a color specifies the transparency effect,
+  // 0 represents a fully transparent color, while 255 represents
+  // a fully opaque color.
+//  p.fillRect(transparent.rect(), QColor(0, 0, 0, 150));
+  p.end();
+#endif
+
+
   QByteArray itemData;
   QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-  dataStream << pixmap << QPoint(event->pos());
+  dataStream << transparent << QPoint(event->pos());
 
   QMimeData *mimeData = new QMimeData;
   mimeData->setData("application/x-dnditemdata", itemData);
 
   QDrag *drag = new QDrag(this);
   drag->setMimeData(mimeData);
-  drag->setPixmap(pixmap);
+  drag->setPixmap(transparent);
   drag->setHotSpot(event->pos());
 
   emit dragStarted(this);

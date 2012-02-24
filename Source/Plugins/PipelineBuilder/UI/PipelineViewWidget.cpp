@@ -308,7 +308,7 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
       }
     }
     // Check to see if we are trying to move it to the end
-    if (false == didInsert)
+    if (false == didInsert && count > 0)
     {
       QFilterWidget* w = qobject_cast<QFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 1)->widget());
       if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
