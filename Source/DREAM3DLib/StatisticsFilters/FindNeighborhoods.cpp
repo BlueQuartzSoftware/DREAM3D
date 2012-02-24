@@ -38,7 +38,13 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
+#include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
+#include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainCentroids.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -54,7 +60,9 @@ m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
 m_Neighborhoods(NULL)
 {
-
+  m_DistributionAnalysis.push_back(BetaOps::New());
+  m_DistributionAnalysis.push_back(LogNormalOps::New());
+  m_DistributionAnalysis.push_back(PowerLawOps::New());
 }
 
 // -----------------------------------------------------------------------------
@@ -72,24 +80,60 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
-  bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
-  if (false == exists)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
+  if(getErrorCondition() == -302)
   {
+	setErrorCondition(0);
 	FindSizes::Pointer find_sizes = FindSizes::New();
 	find_sizes->setObservers(this->getObservers());
 	find_sizes->setDataContainer(getDataContainer());
 	if(preflight == true) find_sizes->preflight();
 	if(preflight == false) find_sizes->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -300, float, FloatArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -300, bool, BoolArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -300, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindBoundingBoxGrains::Pointer find_biasedfields = FindBoundingBoxGrains::New();
+	find_biasedfields->setObservers(this->getObservers());
+	find_biasedfields->setDataContainer(getDataContainer());
+	if(preflight == true) find_biasedfields->preflight();
+	if(preflight == false) find_biasedfields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -304)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  }  
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+  if(getErrorCondition() == -305)
+  {
+	setErrorCondition(0);
+	FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
+	find_graincentroids->setObservers(this->getObservers());
+	find_graincentroids->setDataContainer(getDataContainer());
+	if(preflight == true) find_graincentroids->preflight();
+	if(preflight == false) find_graincentroids->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+  }  
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
-
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  if(m_StatsDataArray == NULL)
+  {
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-306);
+  }
 
   setErrorMessage(ss.str());
 }
@@ -124,8 +168,6 @@ void FindNeighborhoods::execute()
     return;
   }
 
-  if(m->getZPoints() > 1) find_centroids();
-  if(m->getZPoints() == 1) find_centroids2D();
   find_neighborhoods();
   notify("FindNeighborhoods Completed", 0, Observable::UpdateProgressMessage);
 }
@@ -133,153 +175,67 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::find_centroids()
-{
-  DataContainer* m = getDataContainer();
-
-  int64_t totalPoints = m->getTotalPoints();
-  DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float);
-  // N x 5 Array
-  graincenters = NULL;
-  INIT_DataArray(m_GrainCenters, float);
-
-  float x, y, z;
-  int col, row, plane;
-
-  size_t xPoints = m->getXPoints();
-  size_t yPoints = m->getYPoints();
-//  size_t zPoints = m->getZPoints();
-
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-
-//  float allvol = 0.0;
-  size_t numgrains = m->getNumFieldTuples();
-  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
-  m_GrainCenters->SetNumberOfComponents(5);
-
-  // Initialize every element to 0.0
-  for (size_t i = 0; i < numgrains * 5; i++)
-  {
-    graincenters[i] = 0.0f;
-  }
-  for (int j = 0; j < totalPoints; j++)
-  {
-    int gnum = m_GrainIds[j];
-    graincenters[gnum * 5 + 0]++;
-    col = j % xPoints;
-    row = (j / xPoints) % yPoints;
-    plane = j / (xPoints * yPoints);
-    x = float(col) * xRes;
-    y = float(row) *yRes;
-    z = float(plane) * zRes;
-    graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
-    graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
-    graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
-  }
-  for (size_t i = 1; i < numgrains; i++)
-  {
-    graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
-    graincenters[i * 5 + 2] = graincenters[i * 5 + 2] / graincenters[i * 5 + 0];
-    graincenters[i * 5 + 3] = graincenters[i * 5 + 3] / graincenters[i * 5 + 0];
-    m_Centroids[3 * i] = graincenters[i * 5 + 1];
-    m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
-    m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
-  }
-}
-void FindNeighborhoods::find_centroids2D()
-{
-  DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
-  DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
-  graincenters = NULL;
-  INIT_DataArray(m_GrainCenters,float);
-
-  float x, y;
-  int col, row;
-
-  size_t xPoints = m->getXPoints();
-  size_t yPoints = m->getYPoints();
- // size_t zPoints = m->getZPoints();
-
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-//  float zRes = m->getZRes();
-
-  size_t numgrains = m->getNumFieldTuples();
-  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
-  m_GrainCenters->SetNumberOfComponents(5);
-
-  for (size_t i = 0; i < numgrains*5; i++)
-  {
-      graincenters[i] = 0.0f;
-  }
-  for (int j = 0; j < totalPoints; j++)
-  {
-    int gnum = m_GrainIds[j];
-    graincenters[gnum*5 + 0]++;
-    col = j % xPoints;
-    row = (j / xPoints) % yPoints;
-	  x = float(col)*xRes;
-	  y = float(row)*yRes;
-    graincenters[gnum*5 + 1] = graincenters[gnum*5 + 1] + x;
-    graincenters[gnum*5 + 2] = graincenters[gnum*5 + 2] + y;
-  }
-  for (size_t i = 1; i < numgrains; i++)
-  {
-    graincenters[i*5 + 1] = graincenters[i*5 + 1] / graincenters[i*5 + 0];
-    graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
-    m_Centroids[3*i] = graincenters[i*5 + 1];
-    m_Centroids[3*i+1] = graincenters[i*5 + 2];
-  }
-}
-
 void FindNeighborhoods::find_neighborhoods()
 {
   DataContainer* m = getDataContainer();
+  StatsData::Pointer stats_data = StatsData::New();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   float x, y, z;
   float xn, yn, zn;
-  float xdist, ydist, zdist;
-  float dist, dist2, diam, diam2;
-  unsigned int dist_int, dist2_int;
+  float dx, dy, dz;
+  size_t bin;
+  std::vector<VectorOfFloatArray> neighborhoods;
+  std::vector<std::vector<std::vector<float > > > values;
   size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
 
+  neighborhoods.resize(numensembles);
+  values.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  neighborhoods[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  values[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+  }
+
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	  m_Neighborhoods[i] = 0;
+  }
   for (size_t i = 1; i < numgrains; i++)
   {
       x = m_Centroids[3*i];
       y = m_Centroids[3*i+1];
       z = m_Centroids[3*i+2];
-      diam = m_EquivalentDiameters[i];
+	  if(m->getZPoints() == 1) z = 0;
       for (size_t j = i; j < numgrains; j++)
       {
 	    xn = m_Centroids[3*j];
 	    yn = m_Centroids[3*j+1];
 	    zn = m_Centroids[3*j+2];
-	    diam2 = m_EquivalentDiameters[j];
-        xdist = fabs(x - xn);
-        ydist = fabs(y - yn);
-        zdist = fabs(z - zn);
-        dist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-        dist = sqrt(dist);
-        dist2 = dist;
-        dist_int = int(dist / (diam / 2.0f));
-        dist2_int = int(dist2 / (diam2 / 2.0f));
-        if (dist_int < 3)
+	    if(m->getZPoints() == 1) zn = 0;
+        dx = fabs(x - xn);
+        dy = fabs(y - yn);
+        dz = fabs(z - zn);
+        if (dx < m_EquivalentDiameters[i] && dy < m_EquivalentDiameters[i] && dz < m_EquivalentDiameters[i])
         {
-          for (int iter = dist_int; iter < 3; iter++)
-          {
-            m_Neighborhoods[3*i+dist_int]++;
-          }
+            m_Neighborhoods[i]++;
         }
-        if (dist2_int < 3)
+        if (dx < m_EquivalentDiameters[j] && dy < m_EquivalentDiameters[j] && dz < m_EquivalentDiameters[j])
         {
-          for (int iter = dist2_int; iter < 3; iter++)
-          {
-            m_Neighborhoods[3*j+dist2_int]++;
-          }
+            m_Neighborhoods[j]++;
         }
-    }
+      }
+	  if(m_BiasedFields[i] == false)
+	  {
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
+		values[m_Phases[i]][bin].push_back(m_Neighborhoods[i]);
+	  }
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
+	  statsDataArray[i]->setGrainSize_Neighbors(neighborhoods[i]);
   }
 }

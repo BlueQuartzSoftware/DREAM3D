@@ -40,6 +40,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
+#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainCentroids.h"
 #include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
@@ -60,12 +63,11 @@ m_Centroids(NULL),
 m_AxisLengths(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
+m_Volumes(NULL),
 m_AspectRatios(NULL)
 {
-  graincenters = NULL;
   grainmoments = NULL;
 
-  INIT_DataArray(m_GrainCenters,float);
   INIT_DataArray(m_GrainMoments,float);
 
   m_DistributionAnalysis.push_back(BetaOps::New());
@@ -90,21 +92,53 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  setErrorCondition(0);
 
-  bool exists = doesPipelineContainFilterBeforeThis(FindSizes::ClassName());
-  if (false == exists)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1);
+  if(getErrorCondition() == -302)
   {
+	setErrorCondition(0);
 	FindSizes::Pointer find_sizes = FindSizes::New();
 	find_sizes->setObservers(this->getObservers());
 	find_sizes->setDataContainer(getDataContainer());
 	if(preflight == true) find_sizes->preflight();
 	if(preflight == false) find_sizes->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1);
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -300, float, FloatArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -300, bool, BoolArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -300, int32_t, Int32ArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindBoundingBoxGrains::Pointer find_biasedfields = FindBoundingBoxGrains::New();
+	find_biasedfields->setObservers(this->getObservers());
+	find_biasedfields->setDataContainer(getDataContainer());
+	if(preflight == true) find_biasedfields->preflight();
+	if(preflight == false) find_biasedfields->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -304)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  }  
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+  if(getErrorCondition() == -305)
+  {
+	setErrorCondition(0);
+	FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
+	find_graincentroids->setObservers(this->getObservers());
+	find_graincentroids->setDataContainer(getDataContainer());
+	if(preflight == true) find_graincentroids->preflight();
+	if(preflight == false) find_graincentroids->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+  }  
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, fields, 1);
@@ -150,9 +184,6 @@ void FindShapes::execute()
     return;
   }
 
-  if(m->getZPoints() > 1) find_centroids();
-  if(m->getZPoints() == 1) find_centroids2D();
-
   if(m->getZPoints() > 1) find_moments();
   if(m->getZPoints() == 1) find_moments2D();
 
@@ -168,100 +199,6 @@ void FindShapes::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindShapes::find_centroids()
-{
-  DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
-  float x, y, z;
-  int col, row, plane;
-//  float allvol = 0.0;
-  size_t numgrains = m->getNumFieldTuples();
-  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
-  m_GrainCenters->SetNumberOfComponents(5);
-
-  int xPoints = static_cast<int>(m->getXPoints());
-  int yPoints = static_cast<int>(m->getYPoints());
-//  int zPoints = static_cast<int>(m->getZPoints());
-
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-
-  // Initialize every element to 0.0
-  for (size_t i = 0; i < numgrains * 5; i++)
-  {
-    graincenters[i] = 0.0f;
-  }
-  for (int j = 0; j < totalPoints; j++)
-  {
-    int gnum = m_GrainIds[j];
-    graincenters[gnum * 5 + 0]++;
-    col = j % xPoints;
-    row = (j / xPoints) % yPoints;
-    plane = j / (xPoints * yPoints);
-    x = float(col) * xRes;
-    y = float(row) * yRes;
-    z = float(plane) *zRes;
-    graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
-    graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
-    graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
-  }
- // float res_scalar = xRes * yRes * zRes;
-//  float vol_term = (4.0f / 3.0f) * m_pi;
-  for (size_t i = 1; i < numgrains; i++)
-  {
-    graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
-    graincenters[i * 5 + 2] = graincenters[i * 5 + 2] / graincenters[i * 5 + 0];
-    graincenters[i * 5 + 3] = graincenters[i * 5 + 3] / graincenters[i * 5 + 0];
-    m_Centroids[3 * i] = graincenters[i * 5 + 1];
-    m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
-    m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
-  }
-}
-void FindShapes::find_centroids2D()
-{
-  DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
-
-  float x, y;
-  int col, row;
-  size_t numgrains = m->getNumFieldTuples();
-  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
-  m_GrainCenters->SetNumberOfComponents(5);
-
-  int xPoints = static_cast<int>(m->getXPoints());
-  int yPoints = static_cast<int>(m->getYPoints());
-//  int zPoints = static_cast<int>(m->getZPoints());
-
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-//  float zRes = m->getZRes();
-
-  for (size_t i = 0; i < numgrains*5; i++)
-  {
-      graincenters[i] = 0.0f;
-  }
-  for (int j = 0; j < totalPoints; j++)
-  {
-    int gnum = m_GrainIds[j];
-    graincenters[gnum*5 + 0]++;
-    col = j % xPoints;
-    row = (j / xPoints) % yPoints;
-	  x = float(col)*xRes;
-	  y = float(row)*yRes;
-    graincenters[gnum*5 + 1] = graincenters[gnum*5 + 1] + x;
-    graincenters[gnum*5 + 2] = graincenters[gnum*5 + 2] + y;
-  }
-  for (size_t i = 1; i < numgrains; i++)
-  {
-    graincenters[i*5 + 1] = graincenters[i*5 + 1] / graincenters[i*5 + 0];
-    graincenters[i*5 + 2] = graincenters[i*5 + 2] / graincenters[i*5 + 0];
-    m_Centroids[3*i] = graincenters[i*5 + 1];
-    m_Centroids[3*i+1] = graincenters[i*5 + 2];
-
-  }
-}
-
 void FindShapes::find_moments()
 {
   DataContainer* m = getDataContainer();
@@ -318,30 +255,30 @@ void FindShapes::find_moments()
     float y2 = y - (yRes / 4);
     float z1 = z + (zRes / 4);
     float z2 = z - (zRes / 4);
-    float xdist1 = (x1 - graincenters[gnum*5 + 1]);
-    float ydist1 = (y1 - graincenters[gnum*5 + 2]);
-    float zdist1 = (z1 - graincenters[gnum*5 + 3]);
-    float xdist2 = (x1 - graincenters[gnum*5 + 1]);
-    float ydist2 = (y1 - graincenters[gnum*5 + 2]);
-    float zdist2 = (z2 - graincenters[gnum*5 + 3]);
-    float xdist3 = (x1 - graincenters[gnum*5 + 1]);
-    float ydist3 = (y2 - graincenters[gnum*5 + 2]);
-    float zdist3 = (z1 - graincenters[gnum*5 + 3]);
-    float xdist4 = (x1 - graincenters[gnum*5 + 1]);
-    float ydist4 = (y2 - graincenters[gnum*5 + 2]);
-    float zdist4 = (z2 - graincenters[gnum*5 + 3]);
-    float xdist5 = (x2 - graincenters[gnum*5 + 1]);
-    float ydist5 = (y1 - graincenters[gnum*5 + 2]);
-    float zdist5 = (z1 - graincenters[gnum*5 + 3]);
-    float xdist6 = (x2 - graincenters[gnum*5 + 1]);
-    float ydist6 = (y1 - graincenters[gnum*5 + 2]);
-    float zdist6 = (z2 - graincenters[gnum*5 + 3]);
-    float xdist7 = (x2 - graincenters[gnum*5 + 1]);
-    float ydist7 = (y2 - graincenters[gnum*5 + 2]);
-    float zdist7 = (z1 - graincenters[gnum*5 + 3]);
-    float xdist8 = (x2 - graincenters[gnum*5 + 1]);
-    float ydist8 = (y2 - graincenters[gnum*5 + 2]);
-    float zdist8 = (z2 - graincenters[gnum*5 + 3]);
+    float xdist1 = (x1 - m_Centroids[gnum*3 + 0]);
+    float ydist1 = (y1 - m_Centroids[gnum*3 + 1]);
+    float zdist1 = (z1 - m_Centroids[gnum*3 + 2]);
+    float xdist2 = (x1 - m_Centroids[gnum*3 + 0]);
+    float ydist2 = (y1 - m_Centroids[gnum*3 + 1]);
+    float zdist2 = (z2 - m_Centroids[gnum*3 + 2]);
+    float xdist3 = (x1 - m_Centroids[gnum*3 + 0]);
+    float ydist3 = (y2 - m_Centroids[gnum*3 + 1]);
+    float zdist3 = (z1 - m_Centroids[gnum*3 + 2]);
+    float xdist4 = (x1 - m_Centroids[gnum*3 + 0]);
+    float ydist4 = (y2 - m_Centroids[gnum*3 + 1]);
+    float zdist4 = (z2 - m_Centroids[gnum*3 + 2]);
+    float xdist5 = (x2 - m_Centroids[gnum*3 + 0]);
+    float ydist5 = (y1 - m_Centroids[gnum*3 + 1]);
+    float zdist5 = (z1 - m_Centroids[gnum*3 + 2]);
+    float xdist6 = (x2 - m_Centroids[gnum*3 + 0]);
+    float ydist6 = (y1 - m_Centroids[gnum*3 + 1]);
+    float zdist6 = (z2 - m_Centroids[gnum*3 + 2]);
+    float xdist7 = (x2 - m_Centroids[gnum*3 + 0]);
+    float ydist7 = (y2 - m_Centroids[gnum*3 + 1]);
+    float zdist7 = (z1 - m_Centroids[gnum*3 + 2]);
+    float xdist8 = (x2 - m_Centroids[gnum*3 + 0]);
+    float ydist8 = (y2 - m_Centroids[gnum*3 + 1]);
+    float zdist8 = (z2 - m_Centroids[gnum*3 + 2]);
     u200 = u200 + ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
         + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
         + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
@@ -382,8 +319,7 @@ void FindShapes::find_moments()
     u011 = grainmoments[i*6 + 4];
     u101 = grainmoments[i*6 + 5];
     float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
-    float vol5 = graincenters[i*5 + 0]*konst2;
-    vol5 = powf(vol5, 5);
+    float vol5 = powf(m_Volumes[i],5);
     float omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
     if (omega3 > 1) omega3 = 1;
@@ -432,14 +368,14 @@ void FindShapes::find_moments2D()
     float x2 = x - (xRes / 2);
     float y1 = y + (yRes / 2);
     float y2 = y - (yRes / 2);
-    float xdist1 = (x1 - graincenters[gnum*5 + 1]);
-    float ydist1 = (y1 - graincenters[gnum*5 + 2]);
-    float xdist2 = (x1 - graincenters[gnum*5 + 1]);
-    float ydist2 = (y2 - graincenters[gnum*5 + 2]);
-    float xdist3 = (x2 - graincenters[gnum*5 + 1]);
-    float ydist3 = (y1 - graincenters[gnum*5 + 2]);
-    float xdist4 = (x2 - graincenters[gnum*5 + 1]);
-    float ydist4 = (y2 - graincenters[gnum*5 + 2]);
+    float xdist1 = (x1 - m_Centroids[gnum*3 + 0]);
+    float ydist1 = (y1 - m_Centroids[gnum*3 + 1]);
+    float xdist2 = (x1 - m_Centroids[gnum*3 + 0]);
+    float ydist2 = (y2 - m_Centroids[gnum*3 + 1]);
+    float xdist3 = (x2 - m_Centroids[gnum*3 + 0]);
+    float ydist3 = (y1 - m_Centroids[gnum*3 + 1]);
+    float xdist4 = (x2 - m_Centroids[gnum*3 + 0]);
+    float ydist4 = (y2 - m_Centroids[gnum*3 + 1]);
     u200 = u200 + ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
     u020 = u020 + ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
     u110 = u110 + ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));

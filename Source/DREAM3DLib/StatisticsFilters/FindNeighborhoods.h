@@ -43,9 +43,12 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 /**
  * @class FindNeighborhoods FindNeighborhoods.h DREAM3DLib/GenericFilters/FindNeighborhoods.h
@@ -63,7 +66,9 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual ~FindNeighborhoods();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
+
+	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Neighborhoods"; }
 
 	/**
@@ -72,14 +77,12 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-
   protected:
     FindNeighborhoods();
 
     void find_centroids();
     void find_centroids2D();
     void find_neighborhoods();
-
 
 private:
 
@@ -91,8 +94,11 @@ private:
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
 
+	StatsDataArray* m_StatsDataArray;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+	std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
+
+	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

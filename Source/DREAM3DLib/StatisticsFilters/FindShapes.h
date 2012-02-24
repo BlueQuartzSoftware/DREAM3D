@@ -70,7 +70,6 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
-	DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 5 Array
     DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float); // N x 6 Array
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -87,8 +86,6 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
   protected:
     FindShapes();
 
-    void find_centroids();
-    void find_centroids2D();
     void find_moments();
     void find_moments2D();
     void find_axes();
@@ -109,6 +106,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_AxisLengths;
     float* m_Omega3s;
     float* m_EquivalentDiameters;
+    float* m_Volumes;
     float* m_AspectRatios;
 
     StatsDataArray* m_StatsDataArray;

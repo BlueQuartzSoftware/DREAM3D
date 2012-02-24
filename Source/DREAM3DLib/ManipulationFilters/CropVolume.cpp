@@ -130,7 +130,7 @@ void CropVolume::preflight()
 {
   DataContainer* m = getDataContainer();
   m->clearFieldData();
-  m->clearEnsembleData();
+//  m->clearEnsembleData();
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +150,7 @@ void CropVolume::execute()
     return;
   }
   m->clearFieldData();
-  m->clearEnsembleData();
+//  m->clearEnsembleData();
 
   setErrorCondition(0);
 
