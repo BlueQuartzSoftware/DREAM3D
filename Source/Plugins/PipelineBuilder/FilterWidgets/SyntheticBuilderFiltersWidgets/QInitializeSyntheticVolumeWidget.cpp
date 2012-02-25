@@ -35,6 +35,24 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "QInitializeSyntheticVolumeWidget.h"
 
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtGui/QMessageBox>
+#include <QtGui/QListWidget>
+#include <QtGui/QListWidgetItem>
+#include <QtGui/QComboBox>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/ShapeType.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+
+
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 
@@ -136,13 +154,87 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString &text)
 {
-
   if(verifyPathExists(m_InputFile->text(), m_InputFile))
   {
-
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
+      m_DataContainer = DataContainer::New();
+      DataContainerReader::Pointer reader = DataContainerReader::New();
+      reader->setInputFile(m_InputFile->text().toStdString());
+      reader->setDataContainer(m_DataContainer.get());
+      reader->setReadCellData(false);
+      reader->setReadFieldData(false);
+      reader->setReadEnsembleData(true);
+      reader->execute();
+      int err = reader->getErrorCondition();
+      if(err < 0)
+      {
+        m_DataContainer = DataContainer::NullPointer();
+        QMessageBox::critical(this, tr("DREAM.3D"), tr("The DREAM3D Data File could not be read."), QMessageBox::Ok, QMessageBox::Ok);
+        return;
+      }
+
+      IDataArray::Pointer iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+      // Get the Phases
+      DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
+
+    //  iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures);
+    //  DataArray<uint32_t>* xtals = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
+
+      int size = static_cast<int>(phases->GetNumberOfTuples());
+      std::vector<std::string> shapeTypeStrings;
+      ShapeType::getShapeTypeStrings(shapeTypeStrings);
+      std::vector<unsigned int> shapeTypeEnums;
+      ShapeType::getShapeTypeEnums(shapeTypeEnums);
+
+      // Remove all the items from the GUI and from the internal tracking Lists
+      QLayoutItem *child;
+      while ((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != 0)
+      {
+        delete child;
+      }
+      m_ShapeTypeLabels.clear();
+      m_ShapeTypeCombos.clear();
+
+      // Create a whole new QWidget to hold everything
+      m_ShapeTypeScrollContents = new QWidget();
+      m_ShapeTypeScrollContents->setObjectName(QString::fromUtf8("m_ShapeTypeScrollContents"));
+      formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
+      formLayout_2->setContentsMargins(4, 4, 4, 4);
+      formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+      formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+      formLayout_2->setHorizontalSpacing(6);
+      formLayout_2->setVerticalSpacing(6);
+      m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
+
+      // We skip the first Ensemble as it is always a dummy
+      for (int i = 0; i < size-1; i++)
+      {
+        QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
+        QString str("Phase ");
+        str.append(QString::number(i + 1, 10));
+        str.append(":");
+        shapeTypeLabel->setText(str);
+        shapeTypeLabel->setObjectName(str);
+        m_ShapeTypeLabels << shapeTypeLabel;
+
+        formLayout_2->setWidget(i, QFormLayout::LabelRole, shapeTypeLabel);
+
+        QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
+        str.append(" ComboBox");
+        cb->setObjectName(str);
+        for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
+        {
+          cb->addItem(QString::fromStdString(shapeTypeStrings[s]), shapeTypeEnums[s]);
+          cb->setItemData(s, shapeTypeEnums[s], Qt::UserRole);
+        }
+        m_ShapeTypeCombos << cb;
+        formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
+      }
+
+      // Estimate the number of grains
+      estimateNumGrainsSetup();
 
     }
   }
@@ -204,10 +296,116 @@ void QInitializeSyntheticVolumeWidget::on_m_XResolution_valueChanged(double v)
 // -----------------------------------------------------------------------------
 int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
 {
-  int err = -1;
+//  int err = -1;
 
+  float totalvol;
+  int phase;
+//  std::vector<int> phases;
+//  std::vector<unsigned int> structures;
+//  std::vector<unsigned int> phaseType;
+//  std::vector<float> phasefraction;
+//  std::vector<float> double_data;
+//  std::vector<float> avgdiam;
+//  std::vector<float> sddiam;
+//  std::vector<float> grainDiamInfo;
+//  std::vector<float> maxdiameter;
+//  std::vector<float> mindiameter;
 
-  return err;
+  totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
+  if (m_DataContainer.get() == NULL)
+  {
+    // This will force a read of the DataContainer from the data file
+    on_m_InputFile_textChanged(QString(""));
+    if(m_DataContainer.get() == NULL)
+    {
+      return -1;
+    }
+  }
+
+  IDataArray::Pointer iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
+  DataArray<uint32_t>* phaseType = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
+
+  iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::Statistics);
+  StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
+  if (NULL == statsDataArrayPtr) { return -1; }
+
+  // Create a Reference Variable so we can use the [] syntax
+  StatsDataArray& statsDataArray = *statsDataArrayPtr;
+
+#if 1
+  DREAM3D_RANDOMNG_NEW()
+
+  std::vector<int> primaryphases;
+  std::vector<double> primaryphasefractions;
+  double totalprimaryfractions = 0.0;
+  StatsData::Pointer statsData = StatsData::NullPointer();
+  // find which phases are primary phases
+  for (size_t i = 1; i < phaseType->GetNumberOfTuples(); ++i)
+  {
+    if (phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      primaryphases.push_back(i);
+      statsData = statsDataArray[i];
+      if (NULL != statsData.get()) {
+        primaryphasefractions.push_back(statsData->getPhaseFraction());
+        totalprimaryfractions = totalprimaryfractions + statsData->getPhaseFraction();
+      }
+    }
+  }
+  // scale the primary phase fractions to total to 1
+  for (size_t i = 0; i < primaryphasefractions.size(); i++)
+  {
+    primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
+    if(i > 0)
+    {
+      primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
+    }
+  }
+  // generate the grains
+  int gid = 1;
+
+  float currentvol = 0.0;
+  float vol, random;
+  float diam;
+  int volgood = 0;
+  while (currentvol < totalvol)
+  {
+    volgood = 0;
+    random = rg.genrand_res53();
+    for (size_t j = 0; j < primaryphases.size(); ++j)
+    {
+      if(random < primaryphasefractions[j])
+      {
+        phase = primaryphases[j];
+        break;
+      }
+    }
+    if (phase >= 0 && phase < statsDataArray.GetNumberOfTuples())
+    {statsData = statsDataArray[phase];}
+    else
+    {statsData = StatsData::NullPointer();}
+    while (volgood == 0)
+    {
+      volgood = 1;
+     // u = rg.genrand_res53();
+      if (statsDataArray[phase]->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
+      {
+        float avgdiam = statsDataArray[phase]->getGrainSizeDistribution().at(0)->GetValue(0);
+        float sddiam = statsDataArray[phase]->getGrainSizeDistribution().at(1)->GetValue(0);
+        diam = rg.genrand_norm(avgdiam, sddiam);
+        diam = exp(diam);
+        if(diam >= statsDataArray[phase]->getMaxGrainDiameter()) volgood = 0;
+        if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
+        vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
+      }
+    }
+    currentvol = currentvol + vol;
+    gid++;
+  }
+#endif
+  return gid;
+
 }
 
 
@@ -251,6 +449,7 @@ void QInitializeSyntheticVolumeWidget::readOptions(QSettings &prefs)
   m_YPoints->blockSignals(false);
   READ_SETTING(prefs, m_, ZPoints, ok, i, 100 , Int);
 
+  on_m_InputFile_textChanged(QString(""));
 }
 
 // -----------------------------------------------------------------------------
