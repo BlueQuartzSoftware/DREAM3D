@@ -66,8 +66,8 @@ m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_PhasesC(NULL),
-m_CrystalStructures(NULL),
-m_GoodVoxels(NULL)
+m_GoodVoxels(NULL),
+m_CrystalStructures(NULL)
 {
   Seed = MXA::getMilliSeconds();
 
