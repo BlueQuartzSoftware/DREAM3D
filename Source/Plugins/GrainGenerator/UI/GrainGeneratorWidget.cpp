@@ -62,6 +62,7 @@
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
@@ -367,27 +368,34 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     m_OutputDir->setText(outPath);
   }
 
-#if 0
+
   QFileInfo fi(m_H5InputStatisticsFile->text());
   if (fi.exists() && fi.isFile())
   {
     // Set the output file Prefix based on the name of the input file
     m_OutputFilePrefix->setText(fi.baseName() + QString("_"));
 
-    // Open the HDF5 Stats file
-    H5StatsReader::Pointer h5reader = H5StatsReader::New(m_H5InputStatisticsFile->text().toStdString());
-    if(h5reader.get() == NULL)
-    {
-      return;
-    }
-    // Read the Phase and Crystal Structure information from the Stats File
-    std::vector<int> phases;
-    std::vector<unsigned int> structures;
-    int err = h5reader->getPhaseAndCrystalStructures(phases, structures);
+    m_DataContainer->clearCellData();
+    m_DataContainer->clearFieldData();
+    m_DataContainer->clearEnsembleData();
+    DataContainerReader::Pointer reader = DataContainerReader::New();
+    reader->setInputFile(m_H5InputStatisticsFile->text().toStdString());
+    reader->setDataContainer(m_DataContainer.get());
+    reader->setReadCellData(false);
+    reader->setReadFieldData(false);
+    reader->setReadEnsembleData(true);
+    reader->execute();
+    int err = reader->getErrorCondition();
     if(err < 0)
     {
-      return;
+     QMessageBox::critical(this, tr("DREAM.3D"), tr("The DREAM3D Data File could not be read."), QMessageBox::Ok, QMessageBox::Ok);
+     return;
     }
+
+    IDataArray::Pointer iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+    // Get the Phases
+    DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
+
 
     int size = static_cast<int>(phases.size());
     std::vector<std::string> shapeTypeStrings;
@@ -443,9 +451,131 @@ void GrainGeneratorWidget::on_m_H5InputStatisticsFile_textChanged(const QString 
     estimateNumGrainsSetup();
 
   }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
+{
+  //TODO: We should read the file once and cache the results instead of reading every time
+#if 0
+  float totalvol;
+  int phase;
+  std::vector<int> phases;
+  std::vector<unsigned int> structures;
+  std::vector<unsigned int> phaseType;
+  std::vector<float> phasefraction;
+  std::vector<float> double_data;
+  std::vector<float> avgdiam;
+  std::vector<float> sddiam;
+  std::vector<float> grainDiamInfo;
+  std::vector<float> maxdiameter;
+  std::vector<float> mindiameter;
+
+  totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
+  H5StatsReader::Pointer h5Reader = H5StatsReader::New();
+  h5Reader->setFileName(m_H5InputStatisticsFile->text().toStdString());
+  int err = h5Reader->getPhaseAndCrystalStructures(phases, structures);
+  if (err < 0 || phases.size() == 0)
+  {
+    return -1;
+  }
+
+  phasefraction.resize(phases.size()+1);
+  phaseType.resize(phases.size()+1);
+  avgdiam.resize(phases.size()+1);
+  sddiam.resize(phases.size()+1);
+  maxdiameter.resize(phases.size()+1);
+  mindiameter.resize(phases.size()+1);
+  for (size_t i = 0; i < phases.size(); i++)
+  {
+    phase = phases[i];
+
+    std::vector<float> pFraction;
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
+    if (err < 0) {break;}
+    phasefraction[phase] = pFraction.front();
+
+    std::vector<unsigned int> phasetypes;
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
+    if (err < 0) {break;}
+    phaseType[phase] = static_cast<unsigned int> (phasetypes[0]);
+
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
+    if (err < 0) {break;}
+    avgdiam[phase] = double_data[0];
+    sddiam[phase] = double_data[1];
+
+    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
+    if (err < 0) {break;}
+    maxdiameter[phase]  = grainDiamInfo[1];
+    mindiameter[phase] = grainDiamInfo[2];
+  }
+  // If we errored out trying to read the data from teh HDF5 file then bail out now with a Zero Grains found
+  if (err < 0)
+  {
+    return 0;
+  }
+  DREAM3D_RANDOMNG_NEW()
+
+  std::vector<int> primaryphases;
+  std::vector<double> primaryphasefractions;
+  double totalprimaryfractions = 0.0;
+  // find which phases are primary phases
+  for (size_t i = 1; i < phaseType.size(); ++i)
+  {
+    if (phaseType[i] == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      primaryphases.push_back(i);
+      primaryphasefractions.push_back(phasefraction[i]);
+      totalprimaryfractions = totalprimaryfractions + phasefraction[i];
+    }
+  }
+  // scale the primary phase fractions to total to 1
+  for (size_t i = 0; i < primaryphasefractions.size(); i++)
+  {
+    primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
+    if (i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
+   // if (i == 0) primaryphasefractions[i] = primaryphasefractions[i];
+  }
+  // generate the grains
+  int gid = 1;
+
+  float currentvol = 0.0;
+  float vol, random;
+  float diam;
+  int volgood = 0;
+  while (currentvol < totalvol)
+  {
+    volgood = 0;
+    random = rg.genrand_res53();
+    for (size_t j = 0; j < primaryphases.size(); ++j)
+    {
+      if(random < primaryphasefractions[j])
+      {
+        phase = primaryphases[j];
+        break;
+      }
+    }
+    while (volgood == 0)
+    {
+      volgood = 1;
+     // u = rg.genrand_res53();
+      diam = rg.genrand_norm(avgdiam[phase], sddiam[phase]);
+      diam = exp(diam);
+      if(diam >= maxdiameter[phase]) volgood = 0;
+      if(diam < mindiameter[phase]) volgood = 0;
+      vol = (4.0 / 3.0) * (m_pi) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
+    }
+    currentvol = currentvol + vol;
+    gid++;
+  }
+  return gid;
+#else
+  return -1;
 #endif
-
-
 }
 
 
@@ -785,131 +915,6 @@ void GrainGeneratorWidget::estimateNumGrainsSetup()
   int est_ngrains = estimate_numgrains(xpoints, ypoints, zpoints, xres, yres, zres);
   m_EstimatedGrains->setText(QString::number(est_ngrains));
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int GrainGeneratorWidget::estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
-{
-  //TODO: We should read the file once and cache the results instead of reading every time
-#if 0
-  float totalvol;
-  int phase;
-  std::vector<int> phases;
-  std::vector<unsigned int> structures;
-  std::vector<unsigned int> phaseType;
-  std::vector<float> phasefraction;
-  std::vector<float> double_data;
-  std::vector<float> avgdiam;
-  std::vector<float> sddiam;
-  std::vector<float> grainDiamInfo;
-  std::vector<float> maxdiameter;
-  std::vector<float> mindiameter;
-
-  totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
-  H5StatsReader::Pointer h5Reader = H5StatsReader::New();
-  h5Reader->setFileName(m_H5InputStatisticsFile->text().toStdString());
-  int err = h5Reader->getPhaseAndCrystalStructures(phases, structures);
-  if (err < 0 || phases.size() == 0)
-  {
-    return -1;
-  }
-
-  phasefraction.resize(phases.size()+1);
-  phaseType.resize(phases.size()+1);
-  avgdiam.resize(phases.size()+1);
-  sddiam.resize(phases.size()+1);
-  maxdiameter.resize(phases.size()+1);
-  mindiameter.resize(phases.size()+1);
-  for (size_t i = 0; i < phases.size(); i++)
-  {
-    phase = phases[i];
-
-    std::vector<float> pFraction;
-    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseFraction, pFraction);
-    if (err < 0) {break;}
-    phasefraction[phase] = pFraction.front();
-
-    std::vector<unsigned int> phasetypes;
-    err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::PhaseType, phasetypes);
-    if (err < 0) {break;}
-    phaseType[phase] = static_cast<unsigned int> (phasetypes[0]);
-
-	  err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Size_Distribution, double_data);
-    if (err < 0) {break;}
-	  avgdiam[phase] = double_data[0];
-	  sddiam[phase] = double_data[1];
-
-	  err = h5Reader->readStatsDataset(phase, DREAM3D::HDF5::Grain_Diameter_Info, grainDiamInfo);
-    if (err < 0) {break;}
-	  maxdiameter[phase]  = grainDiamInfo[1];
-	  mindiameter[phase] = grainDiamInfo[2];
-  }
-  // If we errored out trying to read the data from teh HDF5 file then bail out now with a Zero Grains found
-  if (err < 0)
-  {
-    return 0;
-  }
-  DREAM3D_RANDOMNG_NEW()
-
-  std::vector<int> primaryphases;
-  std::vector<double> primaryphasefractions;
-  double totalprimaryfractions = 0.0;
-  // find which phases are primary phases
-  for (size_t i = 1; i < phaseType.size(); ++i)
-  {
-    if (phaseType[i] == DREAM3D::PhaseType::PrimaryPhase)
-    {
-      primaryphases.push_back(i);
-      primaryphasefractions.push_back(phasefraction[i]);
-      totalprimaryfractions = totalprimaryfractions + phasefraction[i];
-    }
-  }
-  // scale the primary phase fractions to total to 1
-  for (size_t i = 0; i < primaryphasefractions.size(); i++)
-  {
-    primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
-    if (i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
-   // if (i == 0) primaryphasefractions[i] = primaryphasefractions[i];
-  }
-  // generate the grains
-  int gid = 1;
-
-  float currentvol = 0.0;
-  float vol, random;
-  float diam;
-  int volgood = 0;
-  while (currentvol < totalvol)
-  {
-    volgood = 0;
-    random = rg.genrand_res53();
-    for (size_t j = 0; j < primaryphases.size(); ++j)
-    {
-      if(random < primaryphasefractions[j])
-      {
-        phase = primaryphases[j];
-        break;
-      }
-    }
-    while (volgood == 0)
-    {
-      volgood = 1;
-     // u = rg.genrand_res53();
-      diam = rg.genrand_norm(avgdiam[phase], sddiam[phase]);
-      diam = exp(diam);
-      if(diam >= maxdiameter[phase]) volgood = 0;
-      if(diam < mindiameter[phase]) volgood = 0;
-      vol = (4.0 / 3.0) * (m_pi) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
-    }
-    currentvol = currentvol + vol;
-    gid++;
-  }
-  return gid;
-#else
-  return -1;
-#endif
-}
-
 
 // -----------------------------------------------------------------------------
 //

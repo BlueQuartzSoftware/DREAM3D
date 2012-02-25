@@ -44,10 +44,10 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
 
 #include "FilterWidgets/QFilterWidget.h"
-
 #include "FilterWidgets/ui_QInitializeSyntheticVolumeWidget.h"
 
 /*
@@ -97,6 +97,9 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
     QString                     m_OpenDialogLastDirectory;
+    DataContainer::Pointer      m_DataContainer;
+    QList<QLabel*>              m_ShapeTypeLabels;
+    QList<QComboBox*>           m_ShapeTypeCombos;
 
 
     QInitializeSyntheticVolumeWidget(const QInitializeSyntheticVolumeWidget&); // Copy Constructor Not Implemented
