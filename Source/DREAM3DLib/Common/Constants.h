@@ -104,9 +104,7 @@ namespace DREAM3D
     const std::string Phases("Phases");
     const std::string EulerAngles("EulerAngles");
     const std::string SurfaceVoxels("SurfaceVoxels");
-    const std::string Neighbors("Neighbors");
     const std::string Quats("Quats");
-    const std::string AlreadyChecked("AlreadyChecked");
     const std::string GoodVoxels("GoodVoxels");
     const std::string NearestNeighbors("NearestNeighbors");
     const std::string NearestNeighborDistances("NearestNeighborDistances");

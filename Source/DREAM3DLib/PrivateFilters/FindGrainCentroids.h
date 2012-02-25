@@ -33,13 +33,11 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef CLEANUPGRAINS_H_
-#define CLEANUPGRAINS_H_
+#ifndef FindGrainCentroids_H_
+#define FindGrainCentroids_H_
 
 #include <vector>
 #include <string>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -47,71 +45,44 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
 
-
-/**
- * @class CleanupGrains CleanupGrains.h DREAM3DLib/ReconstructionFilters/CleanupGrains.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+/*
+ *
  */
-class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
+class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(CleanupGrains);
-    DREAM3D_STATIC_NEW_MACRO(CleanupGrains);
-    DREAM3D_TYPE_MACRO_SUPER(CleanupGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindGrainCentroids);
+     DREAM3D_STATIC_NEW_MACRO(FindGrainCentroids);
+     DREAM3D_TYPE_MACRO_SUPER(FindGrainCentroids, AbstractFilter);
 
-    virtual ~CleanupGrains();
+     virtual ~FindGrainCentroids();
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
-    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
+     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
+     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 6 Array
 
-    virtual void setupFilterOptions();
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+     virtual const std::string getHumanLabel() { return "Renumber Grains"; }
 
+     virtual void execute();
+     virtual void preflight();
 
-    virtual void execute();
-    virtual void preflight();
+   protected:
+     FindGrainCentroids();
 
-  protected:
-    CleanupGrains();
+    void find_centroids();
+    void find_centroids2D();
 
-    void remove_smallgrains();
-    void assign_badpoints();
-    void merge_containedgrains();
-
-
-  private:
-    bool* alreadyChecked;
-    int32_t* neighbors;
-	  
-	int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
-    int32_t* m_NumNeighbors;
-    bool* m_Active;
-    NeighborList<int>* m_NeighborList;
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
-
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+private:
+    int32_t* m_GrainIds;
+    float* m_Centroids;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    FindGrainCentroids(const FindGrainCentroids&); // Copy Constructor Not Implemented
+    void operator=(const FindGrainCentroids&); // Operator '=' Not Implemented
 
-    CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
-    void operator=(const CleanupGrains&); // Operator '=' Not Implemented
 };
 
-#endif /* CLEANUPGRAINS_H_ */
+#endif /* FindGrainCentroids_H_ */

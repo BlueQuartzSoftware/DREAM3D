@@ -62,7 +62,6 @@ m_PeriodicBoundaries(false),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_SurfaceVoxels(NULL),
-m_Neighbors(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
 m_AxisLengths(NULL),
@@ -128,7 +127,6 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType,  voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
@@ -501,7 +499,7 @@ void  PlacePrecipitates::fillin_precipitates()
     for (int64_t j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
+      int neighbor = neighbors[j];
       if(grainname <= 0 && neighbor > 0 && (neighbor >= numprimarygrains || flag == true))
       {
         m_GrainIds[j] = neighbor;

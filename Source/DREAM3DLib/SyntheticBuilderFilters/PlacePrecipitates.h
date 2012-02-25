@@ -101,13 +101,14 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     std::vector<int> currentprecipvoxellist;
 	  std::vector<int> currentcoatingvoxellist;
 
-	  int numprimarygrains;
+	int numprimarygrains;
     unsigned long long int Seed;
     float sizex;
     float sizey;
     float sizez;
     float totalvol;
-    std::map<unsigned int, ShapeOps*> m_ShapeOps;
+
+	std::map<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
@@ -117,7 +118,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
     int8_t* m_SurfaceVoxels;
-    int32_t* m_Neighbors;
 
     float* m_AxisEulerAngles;
     float* m_Centroids;
