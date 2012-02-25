@@ -60,16 +60,16 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 CleanupGrains::CleanupGrains() :
 AbstractFilter(),
+alreadyChecked(NULL),
+neighbors(NULL),
 m_MinAllowedGrainSize(1),
 m_MinNumNeighbors(1),
 m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
-m_Neighbors(NULL),
 m_NumNeighbors(NULL),
 m_Active(NULL),
-m_AlreadyChecked(NULL),
 m_NeighborList(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -136,8 +136,6 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
 
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
@@ -199,6 +197,9 @@ void CleanupGrains::execute()
     return;
   }
   setErrorCondition(0);
+
+  alreadyChecked = new bool[totalPoints];
+  neighbors = new int32_t[totalPoints];
 
   remove_smallgrains();
   assign_badpoints();
@@ -281,15 +282,15 @@ void CleanupGrains::assign_badpoints()
 
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
-    m_AlreadyChecked[iter] = false;
-    if(m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
+    alreadyChecked[iter] = false;
+    if(m_GrainIds[iter] > 0) alreadyChecked[iter] = true;
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
 		std::stringstream ss;
 	//	ss << "Cleaning Up Grains - Identifying Bad Points - " << ((float)i/totalPoints)*100 << " Percent Complete";
 	//	notify(ss.str(), 0, Observable::UpdateProgressMessage);
-		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
+		if(alreadyChecked[i] == false && m_GrainIds[i] == 0)
 		{
 			currentvlist.push_back(i);
 			count = 0;
@@ -309,10 +310,10 @@ void CleanupGrains::assign_badpoints()
 					if (j == 4 && row == (dims[1] - 1)) good = 0;
 					if (j == 2 && column == 0) good = 0;
 					if (j == 3 && column == (dims[0] - 1)) good = 0;
-					if (good == 1 && m_GrainIds[neighbor] <= 0 && m_AlreadyChecked[neighbor] == false)
+					if (good == 1 && m_GrainIds[neighbor] <= 0 && alreadyChecked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
-						m_AlreadyChecked[neighbor] = true;
+						alreadyChecked[neighbor] = true;
 					}
 				}
 				count++;
@@ -394,7 +395,7 @@ void CleanupGrains::assign_badpoints()
         }
         if (size > 0)
         {
-          m_Neighbors[i] = curgrain;
+          neighbors[i] = curgrain;
           neighs.clear();
         }
       }
@@ -402,7 +403,7 @@ void CleanupGrains::assign_badpoints()
     for (int j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
+      int neighbor = neighbors[j];
       if (grainname < 0 && neighbor > 0)
       {
         m_GrainIds[j] = neighbor;
@@ -483,7 +484,7 @@ void CleanupGrains::remove_smallgrains()
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    m_AlreadyChecked[i] = false;
+    alreadyChecked[i] = false;
     gnum = m_GrainIds[i];
     if(gnum >= 0) nuclei[gnum] = static_cast<int>(i);
   }
@@ -496,7 +497,7 @@ void CleanupGrains::remove_smallgrains()
       size = 0;
       int nucleus = nuclei[i];
       voxellists[i].push_back(nucleus);
-      m_AlreadyChecked[nucleus] = true;
+      alreadyChecked[nucleus] = true;
       size++;
       for (size_t j = 0; j < size; j++)
       {
@@ -514,13 +515,13 @@ void CleanupGrains::remove_smallgrains()
           if (k == 4 && row == (dims[1] - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
           if (k == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && m_AlreadyChecked[neighbor] == false)
+          if (good == 1 && alreadyChecked[neighbor] == false)
           {
             size_t grainname = static_cast<size_t>(m_GrainIds[neighbor]);
             if (grainname == i)
             {
               voxellists[i].push_back(neighbor);
-              m_AlreadyChecked[neighbor] = true;
+              alreadyChecked[neighbor] = true;
               size++;
             }
           }
@@ -541,5 +542,3 @@ void CleanupGrains::remove_smallgrains()
       }
   }
 }
-
-
