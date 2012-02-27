@@ -46,7 +46,7 @@
 //#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-//#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
@@ -145,20 +145,21 @@ void TestSyntheticBuilder()
   DataContainer::Pointer m = DataContainer::New();
   pipeline->setDataContainer(m);
 
-  InitializeSyntheticVolume::Pointer init_vol = InitializeSyntheticVolume::New();
-  init_vol->setXVoxels(m_XPoints);
-  init_vol->setYVoxels(m_YPoints);
-  init_vol->setZVoxels(m_ZPoints);
-  init_vol->setXRes(m_XResolution);
-  init_vol->setYRes(m_YResolution);
-  init_vol->setZRes(m_ZResolution);
-  init_vol->setInputFile(getH5StatsFile());
-  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(2, DREAM3D::EnsembleData::ShapeTypes);
-  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
-  init_vol->setShapeTypes(m_ShapeTypes);
-  pipeline->pushBack(init_vol);
-  
+    ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(2, DREAM3D::EnsembleData::ShapeTypes);
+    m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+    m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
+
+    InitializeSyntheticVolume::Pointer init_volume = InitializeSyntheticVolume::New();
+    init_volume->setShapeTypes(m_ShapeTypes);
+    init_volume->setInputFile(getH5StatsFile());
+    init_volume->setXVoxels(m_XPoints);
+    init_volume->setYVoxels(m_YPoints);
+    init_volume->setZVoxels(m_ZPoints);
+    init_volume->setXRes(m_XResolution);
+    init_volume->setYRes(m_YResolution);
+    init_volume->setZRes(m_ZResolution);
+	pipeline->pushBack(init_volume);
+
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
@@ -211,9 +212,6 @@ void TestSyntheticBuilder()
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
 
   m = DataContainer::New();
-  m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-  m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
-
 
   pipeline->setDataContainer(m);
   pipeline->run();

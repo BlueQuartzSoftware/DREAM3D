@@ -232,10 +232,6 @@ void PackGrainsGen2::execute()
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
-  notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
-  // this initializes the arrays to hold the details of the locations of all of the grains during packing
-  initialize_packinggrid();
-
   size_t udims[3] =
   { 0, 0, 0 };
   m->getDimensions(udims);
@@ -252,6 +248,9 @@ void PackGrainsGen2::execute()
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   float zRes = m->getZRes();
+  sizex = dims[0] * m->getXRes();
+  sizey = dims[1] * m->getYRes();
+  sizez = dims[2] * m->getZRes();
 
   size_t numensembles = m->getNumEnsembleTuples();
   std::stringstream ss;
@@ -286,6 +285,11 @@ void PackGrainsGen2::execute()
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
     if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
+
+  notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
+  // this initializes the arrays to hold the details of the locations of all of the grains during packing
+  initialize_packinggrid();
+
   // initialize the sim and goal size distributions for the primary phases
   grainsizedist.resize(primaryphases.size());
   simgrainsizedist.resize(primaryphases.size());

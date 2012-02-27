@@ -60,11 +60,11 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 CleanupGrains::CleanupGrains() :
 AbstractFilter(),
-alreadyChecked(NULL),
-neighbors(NULL),
 m_MinAllowedGrainSize(1),
 m_MinNumNeighbors(1),
 m_MisorientationTolerance(5.0f),
+m_AlreadyChecked(NULL),
+m_Neighbors(NULL),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
@@ -198,8 +198,13 @@ void CleanupGrains::execute()
   }
   setErrorCondition(0);
 
-  alreadyChecked = new bool[totalPoints];
-  neighbors = new int32_t[totalPoints];
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
+  m_Neighbors = neighborsPtr->GetPointer(0);
+  neighborsPtr->initializeWithZeros();
+
+  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
+  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
+  alreadCheckedPtr->initializeWithZeros();
 
   remove_smallgrains();
   assign_badpoints();
@@ -282,15 +287,15 @@ void CleanupGrains::assign_badpoints()
 
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
-    alreadyChecked[iter] = false;
-    if(m_GrainIds[iter] > 0) alreadyChecked[iter] = true;
+    m_AlreadyChecked[iter] = false;
+    if(m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
 		std::stringstream ss;
 	//	ss << "Cleaning Up Grains - Identifying Bad Points - " << ((float)i/totalPoints)*100 << " Percent Complete";
 	//	notify(ss.str(), 0, Observable::UpdateProgressMessage);
-		if(alreadyChecked[i] == false && m_GrainIds[i] == 0)
+		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
 		{
 			currentvlist.push_back(i);
 			count = 0;
@@ -310,10 +315,10 @@ void CleanupGrains::assign_badpoints()
 					if (j == 4 && row == (dims[1] - 1)) good = 0;
 					if (j == 2 && column == 0) good = 0;
 					if (j == 3 && column == (dims[0] - 1)) good = 0;
-					if (good == 1 && m_GrainIds[neighbor] <= 0 && alreadyChecked[neighbor] == false)
+					if (good == 1 && m_GrainIds[neighbor] <= 0 && m_AlreadyChecked[neighbor] == false)
 					{
 						currentvlist.push_back(neighbor);
-						alreadyChecked[neighbor] = true;
+						m_AlreadyChecked[neighbor] = true;
 					}
 				}
 				count++;
@@ -395,7 +400,7 @@ void CleanupGrains::assign_badpoints()
         }
         if (size > 0)
         {
-          neighbors[i] = curgrain;
+          m_Neighbors[i] = curgrain;
           neighs.clear();
         }
       }
@@ -403,11 +408,11 @@ void CleanupGrains::assign_badpoints()
     for (int j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
-      int neighbor = neighbors[j];
+      int neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor > 0)
       {
         m_GrainIds[j] = neighbor;
-		m_PhasesC[j] = m_PhasesF[neighbor];
+		    m_PhasesC[j] = m_PhasesF[neighbor];
       }
     }
 //    std::stringstream ss;
@@ -484,7 +489,7 @@ void CleanupGrains::remove_smallgrains()
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    alreadyChecked[i] = false;
+    m_AlreadyChecked[i] = false;
     gnum = m_GrainIds[i];
     if(gnum >= 0) nuclei[gnum] = static_cast<int>(i);
   }
@@ -497,7 +502,7 @@ void CleanupGrains::remove_smallgrains()
       size = 0;
       int nucleus = nuclei[i];
       voxellists[i].push_back(nucleus);
-      alreadyChecked[nucleus] = true;
+      m_AlreadyChecked[nucleus] = true;
       size++;
       for (size_t j = 0; j < size; j++)
       {
@@ -515,13 +520,13 @@ void CleanupGrains::remove_smallgrains()
           if (k == 4 && row == (dims[1] - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
           if (k == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && alreadyChecked[neighbor] == false)
+          if (good == 1 && m_AlreadyChecked[neighbor] == false)
           {
             size_t grainname = static_cast<size_t>(m_GrainIds[neighbor]);
             if (grainname == i)
             {
               voxellists[i].push_back(neighbor);
-              alreadyChecked[neighbor] = true;
+              m_AlreadyChecked[neighbor] = true;
               size++;
             }
           }

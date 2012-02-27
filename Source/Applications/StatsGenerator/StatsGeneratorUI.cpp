@@ -563,10 +563,11 @@ void StatsGeneratorUI::on_actionNew_triggered()
 void StatsGeneratorUI::on_actionOpen_triggered()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
-  QString h5file = QFileDialog::getOpenFileName(this, tr("Open HDF5 Statistics File"),
-    proposedFile,
-    tr("HDF5 Files (*.h5stats *.h5 )") );
-  if ( true == h5file.isEmpty() ){ return;  }
+  QString h5file = QFileDialog::getOpenFileName(this, tr("Open HDF5 Statistics File"), proposedFile, tr("HDF5 Files (*.h5stats *.h5 )"));
+  if(true == h5file.isEmpty())
+  {
+    return;
+  }
 
   SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
   // Create a new Window
