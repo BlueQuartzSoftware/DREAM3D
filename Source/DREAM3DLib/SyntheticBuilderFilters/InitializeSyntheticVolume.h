@@ -74,6 +74,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, XRes)
     DREAM3D_INSTANCE_PROPERTY(float, YRes)
     DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+    DREAM3D_INSTANCE_PROPERTY(UInt32ArrayType::Pointer, ShapeTypes);
 
 
     virtual void setupFilterOptions();

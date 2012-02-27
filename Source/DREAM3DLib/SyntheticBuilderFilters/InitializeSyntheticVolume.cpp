@@ -157,7 +157,11 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(-800);
   }
 
-
+  if (m_ShapeTypes->GetNumberOfTuples() == 0)
+  {
+    ss << getNameOfClass() << ": No ShapeTypes have been set and a shape type for each phase.";
+    setErrorCondition(-801);
+  }
   setErrorMessage(ss.str());
 }
 
@@ -166,6 +170,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
+  getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
   dataCheck(true, 1, 1, 1);
 }
 
@@ -187,6 +192,7 @@ void InitializeSyntheticVolume::execute()
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
 
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumFieldTuples();

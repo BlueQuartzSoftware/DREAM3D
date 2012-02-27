@@ -141,7 +141,7 @@ class GrainGeneratorWidget : public DREAM3DPluginFrame, private Ui::GrainGenerat
     QThread*                    m_WorkerThread;
     QList<QLabel*>              m_ShapeTypeLabels;
     QList<QComboBox*>           m_ShapeTypeCombos;
-
+    DataContainer::Pointer      m_DataContainer;
     bool                        m_WriteSurfaceVoxelScalars;
     bool                        m_WritePhaseIdScalars;
     bool                        m_WriteIPFColorScalars;
