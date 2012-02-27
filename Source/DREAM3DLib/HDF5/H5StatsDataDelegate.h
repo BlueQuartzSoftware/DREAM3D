@@ -90,13 +90,15 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
                                               VectorOfFloatArray colData);
 
     int writeDistributionData(hid_t pid,
-                              uint32 disType,
+                              uint32_t disType,
                               const std::string &hdf5GroupName,
                               VectorOfFloatArray colData);
 
-    int readDistributionData(hid_t pid, const std::string &disType,
-                                          const std::string &hdf5GroupName,
-                                          VectorOfFloatArray colData);
+    uint32_t readDistributionType(hid_t pid, const std::string &hdf5GroupName);
+
+    int readDistributionData(hid_t pid,
+                              const std::string &hdf5GroupName,
+                              VectorOfFloatArray colData);
 
 
     int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
