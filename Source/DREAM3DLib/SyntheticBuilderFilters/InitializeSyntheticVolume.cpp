@@ -169,7 +169,7 @@ void InitializeSyntheticVolume::preflight()
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
   read_data->setDataContainer(getDataContainer());
-  read_data->gatherData(true);
+  read_data->preflight();
 }
 
 // -----------------------------------------------------------------------------
@@ -188,6 +188,14 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
+  DataContainerReader::Pointer read_data = DataContainerReader::New();
+  read_data->setInputFile(m_InputFile);
+  read_data->setReadCellData(false);
+  read_data->setReadFieldData(false);
+  read_data->setReadEnsembleData(true);
+  read_data->setDataContainer(m);
+  read_data->execute();
+
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
   m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
@@ -202,14 +210,6 @@ void InitializeSyntheticVolume::execute()
   {
     return;
   }
-
-  DataContainerReader::Pointer read_data = DataContainerReader::New();
-  read_data->setInputFile(m_InputFile);
-  read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
-  read_data->setDataContainer(m);
-  read_data->gatherData(false);
 
   // If there is an error set this to something negative and also set a message
   notify("InitializeSyntheticVolume Complete", 0, Observable::UpdateProgressMessage);
