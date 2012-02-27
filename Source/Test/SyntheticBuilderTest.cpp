@@ -43,12 +43,13 @@
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
-#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+//#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 //#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
@@ -98,7 +99,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "2PhaseBulk.h5";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed.h5";
   return s;
 }
 
@@ -144,8 +145,21 @@ void TestSyntheticBuilder()
   DataContainer::Pointer m = DataContainer::New();
   pipeline->setDataContainer(m);
 
-  if(m_AlreadyFormed == false)
-  {
+  InitializeSyntheticVolume::Pointer init_vol = InitializeSyntheticVolume::New();
+  init_vol->setXVoxels(m_XPoints);
+  init_vol->setYVoxels(m_YPoints);
+  init_vol->setZVoxels(m_ZPoints);
+  init_vol->setXRes(m_XResolution);
+  init_vol->setYRes(m_YResolution);
+  init_vol->setZRes(m_ZResolution);
+  init_vol->setInputFile(getH5StatsFile());
+  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
+  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
+  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
+  init_vol->setshapeTypes(m_ShapeTypes);
+  pipeline->pushBack(init_vol);
+  
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
@@ -161,18 +175,10 @@ void TestSyntheticBuilder()
 
     AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
     pipeline->pushBack(adjust_grains);
-  }
-  else if(m_AlreadyFormed == true)
-  {
-    assert(false);
-  }
 
-  if(m_AlreadyFormed == false)
-  {
     PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
     place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
     pipeline->pushBack(place_precipitates);
-  }
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
   pipeline->pushBack(match_crystallography);
@@ -214,7 +220,7 @@ void TestSyntheticBuilder()
   m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
   m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
 
-  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
+//  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
   m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
   m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
   m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);

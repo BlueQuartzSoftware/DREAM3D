@@ -60,7 +60,7 @@ typedef struct {
     float m_AxisEulerAngles[3];
     float m_Omega3s;
     int m_PhasesF;
-    int m_Neighborhoods[3];
+    int m_Neighborhoods;
 } Field;
 
 /**
@@ -197,20 +197,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     std::vector<std::vector<std::vector<float> > > neighbordist;
     std::vector<std::vector<std::vector<float> > > simneighbordist;
 
-    std::vector<std::vector<std::vector<float> > > bovera;
-    std::vector<std::vector<std::vector<float> > > covera;
-    std::vector<std::vector<std::vector<float> > > omega3;
-    std::vector<std::vector<std::vector<float> > > neighborparams;
-
-    std::vector<SharedFloatArray> axisodf;
-
-    std::vector<float> binstepsize;
     std::vector<float> grainsizediststep;
-    std::vector<float> maxdiameter;
-    std::vector<float> mindiameter;
-    std::vector<float> avgdiam;
-    std::vector<float> sddiam;
-    std::vector<int> numdiameterbins;
 
     std::vector<int> newnames;
     std::vector<int> packqualities;

@@ -35,6 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "InitializeSyntheticVolume.h"
 
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -48,6 +49,7 @@ m_XRes(1.0f),
 m_YRes(1.0f),
 m_ZRes(1.0f),
 m_GrainIds(NULL),
+m_ShapeTypes(NULL),
 m_PhasesC(NULL)
 {
   setupFilterOptions();
@@ -138,6 +140,17 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
 
+  typedef DataArray<unsigned int> ShapeTypeArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
+
+  DataContainerReader::Pointer read_data = DataContainerReader::New();
+  read_data->setInputFile(m_InputFile);
+  read_data->setReadCellData(false);
+  read_data->setReadFieldData(false);
+  read_data->setReadEnsembleData(true);
+  read_data->setDataContainer(m);
+  read_data->gatherData(true);
+
   if(m_InputFile.empty() == true)
   {
     ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
@@ -177,13 +190,27 @@ void InitializeSyntheticVolume::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumFieldTuples();
+  int totalEnsembles = m_shapeTypes->GetSize();
 
   // Check to make sure we have all of our data arrays available or make them available.
-  dataCheck(false, totalPoints, totalFields, 1);
+  dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
   }
+
+  for (size_t i = 0; i < totalEnsembles; i++)
+  {
+	  m_ShapeTypes[i] = m_shapeTypes->GetValue(i);
+  }
+
+  DataContainerReader::Pointer read_data = DataContainerReader::New();
+  read_data->setInputFile(m_InputFile);
+  read_data->setReadCellData(false);
+  read_data->setReadFieldData(false);
+  read_data->setReadEnsembleData(true);
+  read_data->setDataContainer(m);
+  read_data->gatherData(false);
 
   // If there is an error set this to something negative and also set a message
   notify("InitializeSyntheticVolume Complete", 0, Observable::UpdateProgressMessage);
