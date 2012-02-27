@@ -251,6 +251,7 @@ void PackGrainsGen2::execute()
   sizex = dims[0] * m->getXRes();
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
+  totalvol = sizex*sizey*sizez;
 
   size_t numensembles = m->getNumEnsembleTuples();
   std::stringstream ss;
@@ -735,10 +736,12 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
 	  r3 = rg.genrand_beta(a3, b3);
   }
   float random = rg.genrand_res53();
+  float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = statsDataArray[phase]->getAxisOrientation();
-  while (random > axisodf->GetValue(bin))
+  while (random > totaldensity)
   {
+    totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
   }
   m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
@@ -866,6 +869,7 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
     count.resize(simneighbordist[iter].size(), 0);
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
+	  simneighbordist[iter][i].resize(40);
 	  for (size_t j = 0; j < 40; j++)
 	  {
 	      simneighbordist[iter][i][j] = 0;

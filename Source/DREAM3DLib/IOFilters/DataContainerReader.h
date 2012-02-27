@@ -73,13 +73,13 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
-    int gatherData(bool preflight);
 
     int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 
   protected:
     DataContainerReader();
 
+    int gatherData(bool preflight);
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
     int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight);
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
