@@ -153,11 +153,10 @@ void TestSyntheticBuilder()
   init_vol->setYRes(m_YResolution);
   init_vol->setZRes(m_ZResolution);
   init_vol->setInputFile(getH5StatsFile());
-  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
+  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(2, DREAM3D::EnsembleData::ShapeTypes);
   m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
   m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
-  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
-  init_vol->setshapeTypes(m_ShapeTypes);
+  init_vol->setShapeTypes(m_ShapeTypes);
   pipeline->pushBack(init_vol);
   
     PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
@@ -209,22 +208,13 @@ void TestSyntheticBuilder()
     pipeline->pushBack(vtkWriter);
   }
 
-  std::cout << "********* RUNNING PREFLIGHT **********************" << std::endl;
-  err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-
-
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
 
   m = DataContainer::New();
   m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
   m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
 
-//  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
-  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
-  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
-  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
+
   pipeline->setDataContainer(m);
   pipeline->run();
   err = pipeline->getErrorCondition();

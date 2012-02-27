@@ -49,7 +49,6 @@ m_XRes(1.0f),
 m_YRes(1.0f),
 m_ZRes(1.0f),
 m_GrainIds(NULL),
-m_ShapeTypes(NULL),
 m_PhasesC(NULL)
 {
   setupFilterOptions();
@@ -140,17 +139,6 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
 
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, unsigned int, ShapeTypeArrayType, ensembles, 1);
-
-  DataContainerReader::Pointer read_data = DataContainerReader::New();
-  read_data->setInputFile(m_InputFile);
-  read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
-  read_data->setDataContainer(m);
-  read_data->gatherData(true);
-
   if(m_InputFile.empty() == true)
   {
     ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
@@ -170,8 +158,18 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
+  getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+
   dataCheck(true, 1, 1, 1);
+
+  DataContainerReader::Pointer read_data = DataContainerReader::New();
+  read_data->setInputFile(m_InputFile);
+  read_data->setReadCellData(false);
+  read_data->setReadFieldData(false);
+  read_data->setReadEnsembleData(true);
+  read_data->setDataContainer(getDataContainer());
+  read_data->gatherData(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -196,18 +194,13 @@ void InitializeSyntheticVolume::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumFieldTuples();
-  int totalEnsembles = m_shapeTypes->GetSize();
+  int totalEnsembles = m_ShapeTypes->GetNumberOfTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)
   {
     return;
-  }
-
-  for (size_t i = 0; i < totalEnsembles; i++)
-  {
-	  m_ShapeTypes[i] = m_shapeTypes->GetValue(i);
   }
 
   DataContainerReader::Pointer read_data = DataContainerReader::New();
