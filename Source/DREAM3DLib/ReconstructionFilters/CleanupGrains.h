@@ -89,10 +89,10 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 
 
   private:
-    bool* alreadyChecked;
-    int32_t* neighbors;
-	  
-	int32_t* m_GrainIds;
+    bool* m_AlreadyChecked;
+    int32_t* m_Neighbors;
+
+    int32_t* m_GrainIds;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
     int32_t* m_NumNeighbors;
