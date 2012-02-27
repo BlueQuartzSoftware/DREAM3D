@@ -105,6 +105,10 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const std::stri
   IDataArray::Pointer ptr = IDataArray::NullPointer();
   //std::cout << "Reading Attribute " << *iter << std::endl;
   typeId = H5Lite::getDatasetType(gid, name);
+  if (typeId < 0)
+  {
+    return ptr;
+  }
   err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)
   {
