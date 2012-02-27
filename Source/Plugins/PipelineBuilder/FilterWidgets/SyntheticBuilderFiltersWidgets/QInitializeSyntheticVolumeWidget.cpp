@@ -88,6 +88,27 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
 {
   // Update the filter with the latest values from the GUI
 
+  m_Filter->setInputFile(m_InputFile->text().toStdString());
+  m_Filter->setXVoxels(m_XPoints->value());
+  m_Filter->setYVoxels(m_YPoints->value());
+  m_Filter->setZVoxels(m_ZPoints->value());
+  m_Filter->setXRes(m_XResolution->value());
+  m_Filter->setYRes(m_YResolution->value());
+  m_Filter->setZRes(m_ZResolution->value());
+
+  int count = m_ShapeTypeCombos.count();
+  DataArray<unsigned int>::Pointer shapeTypes =
+                  DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
+  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  bool ok = false;
+  for (int i = 0; i < count; ++i)
+  {
+   QComboBox* cb = m_ShapeTypeCombos.at(i);
+   unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+   shapeTypes->SetValue(i+1, sType);
+  }
+  m_Filter->setShapeTypes(shapeTypes);
+
   return m_Filter;
 }
 
