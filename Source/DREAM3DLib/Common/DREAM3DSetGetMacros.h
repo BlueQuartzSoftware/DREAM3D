@@ -192,7 +192,11 @@ static Pointer New args \
         return NULL;\
       }\
       return static_cast<Target>(x);\
+  }\
+  static thisClass* SafePointerDownCast(superclass* s) {\
+    return SafeObjectDownCast<superclass*, thisClass*>(s);\
   }
+
 
 
 //------------------------------------------------------------------------------

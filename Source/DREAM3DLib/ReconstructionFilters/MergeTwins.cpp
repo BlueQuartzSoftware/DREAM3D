@@ -70,8 +70,8 @@ m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_PhasesF(NULL),
-m_CrystalStructures(NULL),
-m_NeighborList(NULL)
+m_NeighborList(NULL),
+m_CrystalStructures(NULL)
 {
 
   m_HexOps = HexagonalOps::New();
