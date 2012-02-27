@@ -89,9 +89,11 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
     int writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
                                               VectorOfFloatArray colData);
 
-    int writeDistributionData(hid_t pid, const std::string &disType,
-                                          const std::string &hdf5GroupName,
-                                          VectorOfFloatArray colData);
+    int writeDistributionData(hid_t pid,
+                              uint32 disType,
+                              const std::string &hdf5GroupName,
+                              VectorOfFloatArray colData);
+
     int readDistributionData(hid_t pid, const std::string &disType,
                                           const std::string &hdf5GroupName,
                                           VectorOfFloatArray colData);
