@@ -138,7 +138,7 @@ void PlacePrecipitates::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -311, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 1);
 
   //Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -656,9 +656,7 @@ void PlacePrecipitates::transfer_attributes(int gnum, Field* field)
   m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
   m_Omega3s[gnum] = field->m_Omega3s;
   m_PhasesF[gnum] = field->m_PhasesF;
-  m_Neighborhoods[3*gnum+0] = field->m_Neighborhoods[0];
-  m_Neighborhoods[3*gnum+1] = field->m_Neighborhoods[1];
-  m_Neighborhoods[3*gnum+2] = field->m_Neighborhoods[2];
+  m_Neighborhoods[gnum] = field->m_Neighborhoods;
 }
 
 float PlacePrecipitates::find_xcoord(long long int index)

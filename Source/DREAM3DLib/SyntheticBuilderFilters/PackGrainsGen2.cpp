@@ -171,7 +171,7 @@ void PackGrainsGen2::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   //Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
@@ -210,8 +210,6 @@ void PackGrainsGen2::execute()
 {
   DataContainer* m = getDataContainer();
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
   bool writeErrorFile = true;
   std::ofstream outFile;
   if(m_ErrorOutputFile.empty() == false)
@@ -232,6 +230,8 @@ void PackGrainsGen2::execute()
   {
     return;
   }
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
@@ -296,19 +296,22 @@ void PackGrainsGen2::execute()
     phase = primaryphases[i];
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-    grainsizediststep[i] = ((2 * maxdiameter[phase]) - (mindiameter[phase] / 2.0)) / grainsizedist[i].size();
+	grainsizediststep[i] = ((2 * statsDataArray[phase]->getMaxGrainDiameter()) - (statsDataArray[phase]->getMinGrainDiameter() / 2.0)) / grainsizedist[i].size();
     float input = 0;
     float previoustotal = 0;
-    float denominatorConst = sqrtf(2.0f * sddiam[phase] * sddiam[phase]); // Calculate it here rather than calculating the same thing multiple times below
+	VectorOfFloatArray GSdist = statsDataArray[phase]->getGrainSizeDistribution();
+	float avg = GSdist[0]->GetValue(0);
+	float stdev = GSdist[1]->GetValue(0);
+	float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
     for (size_t j = 0; j < grainsizedist[i].size(); j++)
     {
-      input = (float(j + 1) * grainsizediststep[i]) + (mindiameter[phase] / 2.0f);
+      input = (float(j + 1) * grainsizediststep[i]) + (statsDataArray[phase]->getMinGrainDiameter() / 2.0f);
       float logInput = logf(input);
-      if(logInput <= avgdiam[phase]) {
-        grainsizedist[i][j] = 0.5f - 0.5f * (DREAM3DMath::erf((avgdiam[phase] - logInput) / denominatorConst )) - previoustotal;
+      if(logInput <= avg) {
+        grainsizedist[i][j] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst )) - previoustotal;
       }
-      if(logInput > avgdiam[phase]) {
-        grainsizedist[i][j] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avgdiam[phase]) / denominatorConst)) - previoustotal;
+      if(logInput > avg) {
+        grainsizedist[i][j] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
       }
       previoustotal = previoustotal + grainsizedist[i][j];
     }
@@ -390,7 +393,7 @@ void PackGrainsGen2::execute()
         m->resizeFieldDataArrays(gid + 1);
         dataCheck(false, totalPoints, gid+1, m->getNumEnsembleTuples());
         m_Active[gid] = 1;
-	      transfer_attributes(gid, &field);
+	    transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
         currentvol = currentvol + m_Volumes[gid];
         //FIXME: Initialize the new grain with default data
@@ -408,15 +411,31 @@ void PackGrainsGen2::execute()
   for (size_t i = 0; i < primaryphases.size(); i++)
   {
     phase = primaryphases[i];
-    neighbordist[i].resize(numdiameterbins[phase]);
-    simneighbordist[i].resize(numdiameterbins[phase]);
+	neighbordist[i].resize(statsDataArray[phase]->getBinNumbers()->GetSize());
+    simneighbordist[i].resize(statsDataArray[phase]->getBinNumbers()->GetSize());
+	VectorOfFloatArray Neighdist = statsDataArray[phase]->getGrainSize_Neighbors();
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
-      neighbordist[i][j].resize(3);
-      simneighbordist[i][j].resize(3);
-      neighbordist[i][j][0] = neighborparams[phase][j][0] * powf(0.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
-      neighbordist[i][j][1] = neighborparams[phase][j][0] * powf(1.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
-      neighbordist[i][j][2] = neighborparams[phase][j][0] * powf(2.5f, neighborparams[phase][j][2]) + neighborparams[phase][j][1];
+		neighbordist[i][j].resize(40);
+		float input = 0;
+		float previoustotal = 0;
+		float avg = Neighdist[0]->GetValue(j);
+		float stdev = Neighdist[1]->GetValue(j);
+		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+		{
+		  input = (float(k + 1) * grainsizediststep[i]) + (statsDataArray[phase]->getMinGrainDiameter() / 2.0f);
+		  float logInput = logf(input);
+		  if(logInput <= avg)
+		  {
+			neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst )) - previoustotal;
+		  }
+		  if(logInput > avg)
+		  {
+			neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
+		  }
+		  previoustotal = previoustotal + neighbordist[i][j][k];
+		}
     }
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
@@ -571,14 +590,6 @@ void PackGrainsGen2::execute()
   notify("Packing Grains - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
   cleanup_grains();
 
-  for(int i=0;i<totalPoints;i++)
-  {
-//	if(m_GrainIds[i] == -1)
-//	{
-//		int stop = 0;
-//	}
-  }
-
   notify("Packing Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
@@ -684,10 +695,13 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   int volgood = 0;
   float phi1, PHI, phi2;
   float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (m_pi));
+  VectorOfFloatArray GSdist = statsDataArray[phase]->getGrainSizeDistribution();
+  float avg = GSdist[0]->GetValue(0);
+  float stdev = GSdist[1]->GetValue(0);
   while (volgood == 0)
   {
     volgood = 1;
-    diam = static_cast<float>(rg.genrand_norm(avgdiam[phase], sddiam[phase]));
+    diam = static_cast<float>(rg.genrand_norm(avg, stdev));
     diam = exp(diam);
     if(diam >= statsDataArray[phase]->getMaxGrainDiameter()) volgood = 0;
     if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
@@ -742,9 +756,7 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
   field->m_AxisEulerAngles[2] = phi2;
   field->m_Omega3s = omega3f;
   field->m_PhasesF = phase;
-  field->m_Neighborhoods[0] = 0;
-  field->m_Neighborhoods[1] = 0;
-  field->m_Neighborhoods[2] = 0;
+  field->m_Neighborhoods = 0;
 }
 
 void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
@@ -759,9 +771,7 @@ void PackGrainsGen2::transfer_attributes(int gnum, Field* field)
   m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
   m_Omega3s[gnum] = field->m_Omega3s;
   m_PhasesF[gnum] = field->m_PhasesF;
-  m_Neighborhoods[3*gnum+0] = field->m_Neighborhoods[0];
-  m_Neighborhoods[3*gnum+1] = field->m_Neighborhoods[1];
-  m_Neighborhoods[3*gnum+2] = field->m_Neighborhoods[2];
+  m_Neighborhoods[gnum] = field->m_Neighborhoods;
 }
 
 void PackGrainsGen2::move_grain(size_t gnum, float xc, float yc, float zc)
@@ -804,8 +814,7 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
   float x, y, z;
   float xn, yn, zn;
   float dia, dia2;
-  int DoverR;
-  float xdist, ydist, zdist, totdist;
+  float dx, dy, dz;
 //  int nnum = 0;
 //  nnum = 0;
   x = m_Centroids[3*gnum];
@@ -818,28 +827,18 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
     yn = m_Centroids[3*n+1];
     zn = m_Centroids[3*n+2];
     dia2 = m_EquivalentDiameters[n];
-    xdist = fabs(x - xn);
-    ydist = fabs(y - yn);
-    zdist = fabs(z - zn);
-    totdist = (xdist * xdist) + (ydist * ydist) + (zdist * zdist);
-    totdist = sqrt(totdist);
-    if(totdist < (3 * (dia / 2.0)))
+    dx = fabs(x - xn);
+    dy = fabs(y - yn);
+    dz = fabs(z - zn);
+    if(dx < dia && dy < dia && dz < dia)
     {
-      DoverR = int(totdist / (dia / 2.0));
-      for (int iter = DoverR; iter < 3; iter++)
-      {
-        if(add > 0) m_Neighborhoods[3*n + iter]++;
-        if(add < 0) m_Neighborhoods[3*n + iter] = m_Neighborhoods[3*n + iter] - 1;
-      }
+        if(add > 0) m_Neighborhoods[gnum]++;
+        if(add < 0) m_Neighborhoods[gnum] = m_Neighborhoods[gnum] - 1;
     }
-    if(totdist < (3 * (dia2 / 2.0)))
+    if(dx < dia2 && dy < dia2 && dz < dia2)
     {
-      DoverR = int(totdist / (dia2 / 2.0));
-      for (int iter = DoverR; iter < 3; iter++)
-      {
-        if(add > 0) m_Neighborhoods[3*gnum + iter]++;
-        if(add < 0) m_Neighborhoods[3*gnum + iter] = m_Neighborhoods[3*gnum + iter] - 1;
-      }
+        if(add > 0) m_Neighborhoods[n]++;
+        if(add < 0) m_Neighborhoods[n] = m_Neighborhoods[n] - 1;
     }
   }
 }
@@ -847,22 +846,27 @@ void PackGrainsGen2::determine_neighbors(size_t gnum, int add)
 float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
 {
   DataContainer* m = getDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float neighborerror;
   float bhattdist;
   float dia;
   int nnum;
+  size_t bin;
   int index;
   std::vector<int> count;
   int phase;
-  for (size_t iter = 0; iter < neighbordist.size(); ++iter)
+  for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
   {
     phase = primaryphases[iter];
     count.resize(simneighbordist[iter].size(), 0);
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
-      simneighbordist[iter][i][0] = 0;
-      simneighbordist[iter][i][1] = 0;
-      simneighbordist[iter][i][2] = 0;
+	  for (size_t j = 0; j < 40; j++)
+	  {
+	      simneighbordist[iter][i][j] = 0;
+	  }
     }
     if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
@@ -879,39 +883,31 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
       if(index != gremove && m_PhasesF[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
-        if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
-        if(dia < mindiameter[phase]) dia = mindiameter[phase];
-        dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
-        for (int j = 0; j < 3; j++)
-        {
-          nnum = m_Neighborhoods[3*index + j];
-          if(nnum > 0)
-          {
-            simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + nnum;
-          }
-        }
+        if(dia > statsDataArray[phase]->getMaxGrainDiameter()) dia = statsDataArray[phase]->getMaxGrainDiameter();
+        if(dia < statsDataArray[phase]->getMinGrainDiameter()) dia = statsDataArray[phase]->getMinGrainDiameter();
+		dia = int((dia - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
+        nnum = m_Neighborhoods[index];
+		bin = nnum/2;
+		if(bin >= 40) bin = 39;
+        simneighbordist[iter][dia][bin]++;
         count[dia]++;
       }
     }
     if(gadd > 0 && m_PhasesF[gadd] == phase)
     {
       dia = m_EquivalentDiameters[index];
-      if(dia > maxdiameter[phase]) dia = maxdiameter[phase];
-      if(dia < mindiameter[phase]) dia = mindiameter[phase];
-      dia = int((dia - mindiameter[phase]) / binstepsize[phase]);
-      for (int j = 0; j < 3; j++)
-      {
-        nnum = m_Neighborhoods[3*index + j];
-        if(nnum > 0)
-        {
-          simneighbordist[iter][dia][j] = simneighbordist[iter][dia][j] + static_cast<float>(nnum);
-        }
-      }
+      if(dia > statsDataArray[phase]->getMaxGrainDiameter()) dia = statsDataArray[phase]->getMaxGrainDiameter();
+      if(dia < statsDataArray[phase]->getMinGrainDiameter()) dia = statsDataArray[phase]->getMinGrainDiameter();
+	  dia = int((dia - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
+      nnum = m_Neighborhoods[index];
+	  bin = nnum/2;
+	  if(bin >= 40) bin = 39;
+      simneighbordist[iter][dia][bin]++;
       count[dia]++;
     }
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
-      for (size_t j = 0; j < 3; j++)
+      for (size_t j = 0; j < 40; j++)
       {
         simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
         if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
@@ -969,6 +965,9 @@ void PackGrainsGen2::compare_3Ddistributions(std::vector<std::vector<std::vector
 float PackGrainsGen2::check_sizedisterror(Field* field)
 {
   DataContainer* m = getDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   float dia;
   float sizedisterror = 0;
   float bhattdist;
@@ -989,7 +988,7 @@ float PackGrainsGen2::check_sizedisterror(Field* field)
       if(m_PhasesF[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
-        dia = (dia - (mindiameter[phase] / 2.0f)) / grainsizediststep[iter];
+        dia = (dia - (statsDataArray[phase]->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
         if(dia < 0) dia = 0;
         if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
         simgrainsizedist[iter][int(dia)]++;
@@ -999,7 +998,7 @@ float PackGrainsGen2::check_sizedisterror(Field* field)
     if(field->m_PhasesF == phase)
     {
       dia = field->m_EquivalentDiameters;
-      dia = (dia - (mindiameter[phase] / 2.0f)) / grainsizediststep[iter];
+      dia = (dia - (statsDataArray[phase]->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
       if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
       simgrainsizedist[iter][int(dia)]++;
@@ -1575,6 +1574,9 @@ void PackGrainsGen2::cleanup_grains()
   notify("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
 
   DataContainer* m = getDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
   int64_t totpoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1593,8 +1595,6 @@ void PackGrainsGen2::cleanup_grains()
   DimType xp = dims[0];
   DimType yp = dims[1];
   DimType zp = dims[2];
-
-
 
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
@@ -1626,7 +1626,7 @@ void PackGrainsGen2::cleanup_grains()
     touchessurface = 0;
     if(checked[i] == false && m_GrainIds[i] > 0)
     {
-      minsize = mindiameter[m_PhasesC[i]] * mindiameter[m_PhasesC[i]] * mindiameter[m_PhasesC[i]] * M_PI / 6.0f;
+	  minsize = statsDataArray[m_PhasesC[i]]->getMinGrainDiameter() * statsDataArray[m_PhasesC[i]]->getMinGrainDiameter() * statsDataArray[m_PhasesC[i]]->getMinGrainDiameter() * M_PI / 6.0f;
       minsize = int(minsize / (resConst));
       currentvlist.push_back(i);
       count = 0;
