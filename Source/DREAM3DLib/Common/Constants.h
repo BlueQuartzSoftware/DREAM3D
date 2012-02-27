@@ -235,6 +235,7 @@ namespace DREAM3D
     const std::string Beta("Beta");
     const std::string Exp_k("Exponent K");
 
+    const std::string UnknownDistribution("Unknown Distribution");
     const std::string DistributionType("Distribution Type");
     const std::string BetaDistribution("Beta Distribution");
     const std::string LogNormalDistribution("Log Normal Distribution");

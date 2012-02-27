@@ -225,7 +225,7 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
 
   // Write the Grain Size Distribution
   err = writeDistributionData(groupId,
-							   DREAM3D::HDF5::LogNormalDistribution,
+							   data->getGrainSize_DistType(),
 							   DREAM3D::HDF5::Grain_Size_Distribution,
 							   data->getGrainSizeDistribution());
 
@@ -234,25 +234,25 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
 
   // Write the B Over A
   err = writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
+                               data->getBOverA_DistType(),
                                DREAM3D::HDF5::Grain_SizeVBoverA_Distributions,
                                data->getGrainSize_BOverA());
 
   // Write the C Over A
   err = writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
+                               data->getCOverA_DistType(),
                                DREAM3D::HDF5::Grain_SizeVCoverA_Distributions,
                                data->getGrainSize_COverA());
 
   // Write the Neighbors
   err = writeDistributionData(groupId,
-                               DREAM3D::HDF5::PowerLawDistribution,
+                               data->getNeighbors_DistType(),
                                DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions,
                                data->getGrainSize_Neighbors());
 
   // Write the Omegas
   err = writeDistributionData(groupId,
-                               DREAM3D::HDF5::BetaDistribution,
+                               data->getOmegas_DistType(),
                                DREAM3D::HDF5::Grain_SizeVOmega3_Distributions,
                                data->getGrainSize_Omegas());
 
@@ -457,18 +457,39 @@ int H5StatsDataDelegate::writeWeightsData(hid_t pid, const std::string &hdf5Grou
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeDistributionData(hid_t pid, const std::string &disType,
-                                              const std::string &hdf5GroupName,
-                                              VectorOfFloatArray colData)
+int H5StatsDataDelegate::writeDistributionData(hid_t pid,
+                                               uint32 disType,
+                                               const std::string &hdf5GroupName,
+                                               VectorOfFloatArray colData)
 {
   herr_t err = 0;
   herr_t retErr = 0;
+
+  std::string disTypeStr;
+  switch(disType)
+  {
+    case DREAM3D::DistributionType::Beta:
+      disTypeStr = DREAM3D::HDF5::BetaDistribution;
+      break;
+    case DREAM3D::DistributionType::LogNormal:
+      disTypeStr = DREAM3D::HDF5::LogNormalDistribution;
+      break;
+    case DREAM3D::DistributionType::Power:
+      disTypeStr = DREAM3D::HDF5::PowerLawDistribution;
+      break;
+    case DREAM3D::DistributionType::UnknownDistributionType:
+      disTypeStr = DREAM3D::HDF5::UnknownDistribution;
+      break;
+    default:
+      disTypeStr = DREAM3D::HDF5::UnknownDistribution;
+  }
+
 
   // Create the Group Folder
   hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
-    err = H5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disType);
+    err = H5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
     if(err >= 0)
     {
       err |= writeVectorOfArrays(disId, colData);
@@ -491,9 +512,10 @@ int H5StatsDataDelegate::writeDistributionData(hid_t pid, const std::string &dis
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readDistributionData(hid_t pid, const std::string &disType,
-                                      const std::string &hdf5GroupName,
-                                      VectorOfFloatArray colData)
+int H5StatsDataDelegate::readDistributionData(hid_t pid,
+                                              const std::string &disType,
+                                              const std::string &hdf5GroupName,
+                                              VectorOfFloatArray colData)
 {
   int err = 0;
   hid_t disId = H5Utilities::openHDF5Object(pid, hdf5GroupName);
