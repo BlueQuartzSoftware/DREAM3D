@@ -1,23 +1,41 @@
 #!/bin/bash
-# For users of this script you will need to adjust the following variables:
 
-# This is where all the projects are going to be checked out and built
-workspace=`pwd`
-workspace=`dirname $workspace`
+# This script will download and install the following projects and compile and install them into
+# the location determined by the current working directory.
+# The packages downloaded are:
+# CMake - in order to build other projects
+# MXABoost - subset of Boost 1.44
+# ITK 3.20.0 - Image Processing Toolkit
+# Qwt - 2D Plotting Widgets for the Qt toolkit
+# You need to have the following programs already on your system:
+#  curl or wget
+#  git version 1.7 or greater
+#  Qt version 4.5 or greater
+# The script will create 2 directories as subdirectories of the current working dir: sources and Toolkits
+# All projects are downloaded and compiled into sources and then installed into Toolkits.
+# A bash style shell file can be called from your .bashrc or .bash_profile called 'initvars.sh' which
+# will export a number of paths so that building projects from the IPHelper project goes smoother.
+# You can simply 'source "initvars.sh" any time to get the exports.
 
-# Set this to where you want to install all the libraries and executables. Each 
-# project will be installed into its own sub-directory under that directory
-CMAKE_INSTALL_PREFIX="/tmp/Toolkits"
+# If you want to force another directory then change where "SDK_ROOT" points to.
 
-# The number of concurrent compiles:
-parallel=16
+SDK_SOURCE=/tmp/Workspace
+SDK_INSTALL=/tmp/Toolkits
 
-# to make this work with your own setup. You will need the following projects in your path:
-#
-# CMake
-# Git
-# Qt
-# If any of those are missing then this script will fail horribly.
+# If you are on a Multicore system and want to build faster set the variable to the number
+# of cores/CPUs available to you.
+PARALLEL_BUILD=16
+
+HOST_SYSTEM=`uname`
+echo "Host System: $HOST_SYSTEM"
+# Adjust these to "0" if you want to skip those compilations. The default is to build
+# everything.
+BUILD_CMAKE="0"
+BUILD_HDF5="1"
+BUILD_MXABOOST="1"
+BUILD_QWT="1"
+
+
 
 GIT=`type -P git`
 if [ $GIT == "" ]
@@ -33,95 +51,130 @@ if [ $QMAKE == "" ]
   exit 1
 fi
 
-CMAKE=`type -P cmake`
-if [ $CMAKE == "" ]
-  then
-  echo "An installation of CMake is required. Please install a version of CMake of at least 2.8.3 or greater."
-  exit 1
+WGET=`type -P wget`
+CURL=`type -P curl`
+
+if [ "$WGET" == "" ]
+   then
+  if [ "$CURL" == "" ]
+     then
+    echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
+    exit 1
+  fi
 fi
 
-# Export the location of CMake into our path.
-CMAKE_BIN_DIR=`dirname $CMAKE`
-export PATH=$PATH:$CMAKE_BIN_DIR
+# Create some directories for our use
+mkdir -p $SDK_SOURCE
+mkdir -p $SDK_INSTALL
+cd $SDK_SOURCE
+
+DOWNLOAD_PROG=""
+DOWNLOAD_ARGS=""
+
+if [ "$WGET" != "" ]; then
+  DOWNLOAD_PROG=$WGET
+fi
+
+if [ "$CURL" != "" ]; then
+  DOWNLOAD_PROG=$CURL
+  DOWNLOAD_ARGS="-o cmake-2.8.6.tar.gz"
+fi
+
+if [ "$BUILD_CMAKE" == "1" ]
+then
+#Download and Compile CMake
+$DOWNLOAD_PROG "http://www.cmake.org/files/v2.8/cmake-2.8.6.tar.gz" $DOWNLOAD_ARGS
+tar -xvzf cmake-2.8.6.tar.gz
+cd cmake-2.8.6
+./configure --prefix=$SDK_INSTALL/cmake-2.8.6 --parallel $PARALLEL_BUILD
+gmake -j $PARALLEL_BUILD install
+
+# Export these variables for our use and then echo them into a file that people can use
+# to setup their environment
+export CMAKE_INSTALL=$SDK_INSTALL/cmake-2.8.6
+export PATH=$CMAKE_INSTALL/bin:$PATH
+
+echo "export CMAKE_INSTALL=$SDK_INSTALL/cmake-2.8.6" >  $SDK_INSTALL/initvars.sh
+echo "export PATH=\$CMAKE_INSTALL/bin:\$PATH" >>  $SDK_INSTALL/initvars.sh
+fi
+
+if [ "$BUILD_MXABOOST" == "1" ]
+then
+#------------------------------------------------------------------------------
+# We now need MXABoost on the system
+cd $SDK_SOURCE
+# Remove any previous MXABoost
+#rm -rf MXABoost
+git clone git://scm.bluequartz.net/MXABoost.git MXABoost
+cd MXABoost
+git checkout master
+mkdir Build
+cd Build
+cmake -DBOOST_INCLUDE_INSTALL_DIR=include/boost-1_44 -DBOOST_LIB_INSTALL_DIR=lib -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/MXABoost-1.44 -DENABLE_SHARED=OFF -DWINMANGLE_LIBNAMES=ON ../
+gmake -j $PARALLEL_BUILD install
+export BOOST_ROOT=$SDK_INSTALL/MXABoost-1.44
+echo "export BOOST_ROOT=$SDK_INSTALL/MXABoost-1.44" >> $SDK_INSTALL/initvars.sh
+fi
 
 
-# Move up a directory in order to build everything here
+
+if [ "$BUILD_QWT" = "1" ]
+then
+#------------------------------------------------------------------------------
+cd $SDK_SOURCE
+# Remove any previous Qwt
+#rm -rf Qwt
+git clone --recursive git://scm.bluequartz.net/Qwt.git Qwt
+cd Qwt
+mkdir Build
+cd Build
+# On OS X we need to set the "install_name" correctly on Libraries that will get used which is
+# what the variable will do.
+if [ "$HOST_SYSTEM" = "Darwin" ];
+  then
+  ADDITIONAL_ARGS="-DCMP_BUILD_WITH_INSTALL_NAME=ON"
+fi
+echo "Additional Args: $ADDITIONAL_ARGS"
+cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/Qwt -DBUILD_SHARED_LIBS=ON ../
+gmake -j $PARALLEL_BUILD
+gmake install
 cd ../
+mkdir zRel
+cd zRel
+cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/Qwt -DBUILD_SHARED_LIBS=ON ../
+gmake -j $PARALLEL_BUILD
+gmake install
+export QWT_INSTALL=$SDK_INSTALL/Qwt
+echo "export QWT_INSTALL=$SDK_INSTALL/Qwt" >> $SDK_INSTALL/initvars.sh
+fi
 
-# We are building from the command line so Makefiles work best. I have not tried it 
-# with any other CMake generator
-CMAKE_GENERATOR="Unix Makefiles"
+if [ "$BUILD_EMMPM" == "1" ]
+then
+#------------------------------------------------------------------------------
+# Compile the emmpm Library
+cd $SDK_SOURCE
+# Remove any previous emmpm
+rm -rf EMMPMGui
+git clone --recursive git://scm.bluequartz.net/DREAM3D.git
+cd DREAM3D
+mkdir Build
+cd Build
+# On OS X we need to set the "install_name" correctly on Libraries that will get used which is
+# what the variable will do.
+if [ "$HOST_SYSTEM" = "Darwin" ];
+  then
+  ADDITIONAL_ARGS="-DCMP_BUILD_WITH_INSTALL_NAME=ON"
+fi
+cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=ON ../
+gmake -j $PARALLEL_BUILD
+gmake install
+cd ../
+mkdir zRel
+cd zRel
+cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=ON ../
+gmake -j $PARALLEL_BUILD
+gmake install
+
+fi
 
 
-# clone all the projects
-git clone --recursive git://scm.bluequartz.net/support-libraries/hdf5-v1-6.git hdf5-169
-git clone --recursive git://scm.bluequartz.net/support-libraries/mxaboost.git MXABoost
-git clone --recursive git://scm.bluequartz.net/support-libraries/qwt.git Qwt
-
-
-# $1 Name of Project Directory
-# $2 CMake Buld Type
-# $3 Build Directory
-# $4 CMake Install Prefix
-# $5 UPPER Case version of Project Abbreviation (MXA, HDF5)
-# $6 CMake Generator Type
-function CompileAndInstallProject()
-{
-  cd $workspace/$1
-  git pull origin master
-  CMAKE_BUILD_TYPE=$2
-  echo "CompileAndInstallProject() - Creating $2 version of $1"
-  # rm -rf $3
-  mkdir $3
-  cd $workspace/$1/$3
-  cmake -DCMP_BUILD_WITH_INSTALL_NAME=ON -DCMAKE_INSTALL_PREFIX=$4 -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -G "$6" ../
-  cmake -DCMAKE_OSX_ARCHITECTURES="i386;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5 -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.5.sdk ../
-  make -j$parallel install 
-}
-
-function CompileAndInstallBoostCMake()
-{
-  cd $workspace/$1
-  git pull origin master
-  echo "Compiling Boost..... "
-  # rm -rf $3
-  mkdir $3
-  cd $workspace/$1/$3
-  cmake_args="-DCMAKE_INSTALL_PREFIX=$4"
-  cmake_args="${cmake_args} -DENABLE_DEBUG=ON -DENABLE_RELEASE=ON"
-  cmake_args="${cmake_args} -DENABLE_MULTI_THREADED=ON -DENABLE_SINGLE_THREADED=OFF"
-  cmake_args="${cmake_args} -DENABLE_SHARED=OFF -DENABLE_STATIC=ON"
-  cmake_args="${cmake_args} -DINSTALL_VERSIONED=ON"
-  
-  echo ${cmake_args}
-
-  cmake $cmake_args -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -G "$6" ../
-  cmake -DCMAKE_OSX_ARCHITECTURES="i386;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5 -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.5.sdk ../
-  make -j$parallel install
-}
-
-CompileAndInstallProject "Qwt" Release Build "$CMAKE_INSTALL_PREFIX/Qwt-5.2.2" Qwt "$CMAKE_GENERATOR"
-CompileAndInstallProject "Qwt" Debug zRel "$CMAKE_INSTALL_PREFIX/Qwt-5.2.2" Qwt "$CMAKE_GENERATOR"
-
-CompileAndInstallProject "hdf5-169" Debug Build "$CMAKE_INSTALL_PREFIX/hdf5-169" HDF5 "$CMAKE_GENERATOR"
-CompileAndInstallProject "hdf5-169" Release zRel "$CMAKE_INSTALL_PREFIX/hdf5-169" HDF5 "$CMAKE_GENERATOR"
-
-CompileAndInstallBoostCMake "MXABoost" Release Build "$CMAKE_INSTALL_PREFIX/MXABoost-1.44" MXABoost "$CMAKE_GENERATOR"
-
-export DEV_INSTALL="$CMAKE_INSTALL_PREFIX"
-export HDF5_INSTALL="$DEV_INSTALL/hdf5-169"
-export QWT_INSTALL="$DEV_INSTALL/Qwt-5.2.2"
-export BOOST_ROOT="$DEV_INSTALL/MXABoost-1.44"
-echo "PATH=$PATH:$HDF5_INSTALL/bin"
-
-CompileAndInstallProject  "AIMRepresentation" Release Build "$CMAKE_INSTALL_PREFIX/AIMRepresentation" AIMRepresentation "$CMAKE_GENERATOR"
-
-echo "****************************************************************************"
-echo " You may want to add the following to your .bash_profile in order to have all"
-echo " libraries and executables available"
-
-echo "export DEV_INSTALL=\"$CMAKE_INSTALL_PREFIX\""
-echo "export HDF5_INSTALL=\"\$DEV_INSTALL/hdf5-169\""
-echo "export QWT_INSTALL=\"\$DEV_INSTALL/Qwt-5.2.2\""
-echo "export BOOST_ROOT=\"\$DEV_INSTALL/MXABoost-1.44\""
-echo "PATH=\$PATH:\$HDF5_INSTALL/bin"
