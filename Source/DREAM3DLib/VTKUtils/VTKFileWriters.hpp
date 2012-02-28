@@ -455,7 +455,7 @@ class VTKStructuredPointsFileWriter
         WRITE_STRUCTURED_POINTS_HEADER("ASCII", r)
       }
 
-      size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
+      //size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
       // Now loop on all of our Scalars and write those arrays as CELL_DATA
       for (typename std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
       {
@@ -529,7 +529,7 @@ class VtkMiscFileWriter
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::GrainMisorientations, FloatArrayType, float, (totalPoints), grainmisorientation);
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradient);
 
-      size_t total = m->getXPoints() * m->getYPoints() * m->getZPoints();
+      //size_t total = m->getXPoints() * m->getYPoints() * m->getZPoints();
       if (true == m_WriteBinaryFiles)
       {
         WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::GrainIds);

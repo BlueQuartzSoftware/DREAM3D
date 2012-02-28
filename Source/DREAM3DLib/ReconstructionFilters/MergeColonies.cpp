@@ -70,8 +70,8 @@ m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_PhasesF(NULL),
-m_CrystalStructures(NULL),
-m_NeighborList(NULL)
+m_NeighborList(NULL),
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -225,8 +225,8 @@ void MergeColonies::merge_colonies()
   float angcur = 180.0f;
   std::vector<int> colonylist;
   float w;
-  float n1, n2, n3;
-  float r1, r2, r3;
+  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   float q1[5];
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();

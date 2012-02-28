@@ -2472,10 +2472,11 @@ void SurfaceMeshFilter::get_caseM_triangles(int site, int *ae, int nedge, int *a
 
 void SurfaceMeshFilter::arrange_grainnames(int numT, int zID)
 {
-  int i, j;
+  //int i, j;
   int cnode;
   int csite, kind;
-  int tsite1[3], tsite2[3];
+    int tsite1[3] = { -1, -1, -1};
+    int tsite2[3] = { -1, -1, -1};
 //  int ngrainname1, ngrainname2;
   int tgrainname1[3], tgrainname2[3];
   float cx, cy, cz;
@@ -2487,7 +2488,7 @@ void SurfaceMeshFilter::arrange_grainnames(int numT, int zID)
   float sidecheck;
   int shift = (zID * NSP);
   int locale;
-  for (i = 0; i < numT; i++)
+  for (int i = 0; i < numT; i++)
   { // for each triangle...
     xSum = 0.0;
     ySum = 0.0;
@@ -2496,7 +2497,7 @@ void SurfaceMeshFilter::arrange_grainnames(int numT, int zID)
   //  ngrainname2 = cTriangle[i]->ngrainname[1];
     cTriangle[i]->ngrainname[0] = -1;
     cTriangle[i]->ngrainname[1] = -1;
-    for (j = 0; j < 3; j++)
+    for (int j = 0; j < 3; j++)
     { // for each node inside the triangle...
       tsite1[j] = -1;
       tsite2[j] = -1;

@@ -80,7 +80,7 @@ float CylinderOps::inside(float axis1comp, float axis2comp, float axis3comp)
   float inside = -1.0;
   if (fabs(axis1comp) <= 1.0)
   {
-    inside = 1.0;
+   // inside = 1.0;
     axis2comp = fabs(axis2comp);
     axis3comp = fabs(axis3comp);
     axis2comp = axis2comp*axis2comp;
