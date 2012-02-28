@@ -323,6 +323,9 @@ void PackGrainsGen2::execute()
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   Field field;
   int gid = 0;
+  m->resizeFieldDataArrays(gid + 1);
+  dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+  m_Active[gid] = true;
   float currentvol = 0.0;
   float factor = 1.0;
   float iter = 0;
@@ -352,7 +355,7 @@ void PackGrainsGen2::execute()
 
       m->resizeFieldDataArrays(gid + 1);
       dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
-      m_Active[gid] = 1;
+      m_Active[gid] = true;
       transfer_attributes(gid, &field);
       oldsizedisterror = currentsizedisterror;
       currentvol = currentvol + m_Volumes[gid];
@@ -606,6 +609,11 @@ void PackGrainsGen2::execute()
     setErrorMessage(renumber_grains->getErrorMessage());
     return;
   }
+
+  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
+  notify("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
+  assign_gaps();
 
   // If there is an error set this to something negative and also set a message
   notify("Packing Grains Complete", 0, Observable::UpdateProgressMessage);

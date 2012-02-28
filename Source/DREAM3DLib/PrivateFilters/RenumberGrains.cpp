@@ -178,10 +178,6 @@ void RenumberGrains::execute()
     ss << "Renumbering Grains - Updating Cell Grain Ids - " << ((float)i/totalPoints)*100 << " Percent Complete";
   //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
     if(m_GrainIds[i] > 0) m_GrainIds[i] = NewNames[m_GrainIds[i]];
-	if(m_GrainIds[i] == -1)
-	{
-		int stop = 0;
-	}
   }
 
   ss.str("");
