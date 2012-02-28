@@ -303,7 +303,7 @@ void FindShapes::find_moments()
   }
   float sphere = (2000.0f*m_pi*m_pi)/9.0f;
   float konst1 =  (xRes / 2.0f) * (yRes / 2.0f) * (zRes / 2.0f);
-  float konst2 =  (xRes) * (yRes) * (zRes);
+  //float konst2 =  (xRes) * (yRes) * (zRes);
   for (size_t i = 1; i < numgrains; i++)
   {
     grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * konst1;

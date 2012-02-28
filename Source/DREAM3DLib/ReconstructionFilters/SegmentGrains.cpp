@@ -66,8 +66,8 @@ m_GrainIds(NULL),
 m_Quats(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
-m_CrystalStructures(NULL),
-m_Active(NULL)
+m_Active(NULL),
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());

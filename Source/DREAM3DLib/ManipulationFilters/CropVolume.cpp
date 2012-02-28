@@ -154,7 +154,6 @@ void CropVolume::execute()
 
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
   if(getErrorCondition() < 0)
   {
     return;
@@ -216,6 +215,7 @@ void CropVolume::execute()
     }
   }
   m->setDimensions(m_XP, m_YP, m_ZP);
+  int64_t totalPoints = m->getTotalPoints();  
   totalPoints = m_XP * m_YP * m_ZP;
 
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
