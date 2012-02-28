@@ -66,9 +66,9 @@
 std::string m_H5StatsFile("");
 std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
 std::string m_OutputFilePrefix("");
-size_t m_XPoints = 128;
-size_t m_YPoints = 128;
-size_t m_ZPoints = 128;
+size_t m_XPoints = 64;
+size_t m_YPoints = 64;
+size_t m_ZPoints = 64;
 
 typedef DataArray<unsigned int> ShapeTypeArrayType;
 
@@ -181,7 +181,7 @@ void TestSyntheticBuilder()
     pipeline->pushBack(place_precipitates);
 
   MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
-  pipeline->pushBack(match_crystallography);
+//  pipeline->pushBack(match_crystallography);
 
   FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
   write_fielddata->setFieldDataFile(UnitTest::SyntheticBuilderTest::CsvFile);
@@ -194,8 +194,7 @@ void TestSyntheticBuilder()
   bool m_WriteVtkFile(true);
   bool m_WriteBinaryVTKFiles(true);
   bool m_WritePhaseId(true);
-  bool m_WriteIPFColor(true);
- // bool m_WriteGoodVoxels(false);
+  bool m_WriteIPFColor(false);
 
   if(m_WriteVtkFile)
   {

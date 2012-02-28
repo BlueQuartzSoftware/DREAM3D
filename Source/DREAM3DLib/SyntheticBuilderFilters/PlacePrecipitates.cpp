@@ -468,7 +468,7 @@ void  PlacePrecipitates::fillin_precipitates()
           if(good == 1)
           {
             int grain = m_GrainIds[neighpoint];
-            if(grain > 0 && grain >= numprimarygrains)
+            if(grain > 0 && (grain >= numprimarygrains || flag == true))
             {
               neighs.push_back(grain);
             }
