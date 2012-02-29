@@ -704,12 +704,12 @@ void MatchCrystallography::measure_misorientations()
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
   float w;
-  float n1, n2, n3;
-  float r1, r2, r3;
+  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   float q1[5];
   float q2[5];
   unsigned int phase1, phase2;
-  int mbin;
+  int mbin = 0;
   int totalFields = m->getNumFieldTuples();
   float threshold = 0.0f;
 
@@ -717,12 +717,14 @@ void MatchCrystallography::measure_misorientations()
   std::stringstream ss;
   for (int i = 1; i < totalFields; i++)
   {
-    if (((float)i / totalFields) * 100.0f > threshold) {
+    if (((float)i / totalFields) * 100.0f > threshold) 
+    {
       ss.str("");
       ss << "Matching Crystallography - Measuring Misorientations - " << ((float)i / totalFields) * 100 << "% Complete";
       notify(ss.str(), 0, Observable::UpdateProgressMessage);
       threshold = threshold + 5.0f;
-      if (threshold < ((float)i / totalFields) * 100.0f) {
+      if (threshold < ((float)i / totalFields) * 100.0f) 
+      {
         threshold = ((float)i / totalFields) * 100.0f;
       }
     }

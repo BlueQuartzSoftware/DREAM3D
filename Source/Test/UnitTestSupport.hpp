@@ -93,12 +93,13 @@ class TestException : public std::exception
      /**
      * @brief Over ride from base class
      */
-     std::string what() {
+     virtual const char* what() const throw()
+    {
        std::stringstream ss;
        ss << "    Reason: " << m_Message << std::endl;
        ss << "    File:   " << m_FileName << std::endl;
        ss << "    Line:   " << m_LineNumber;
-       return ss.str();
+       return ss.str().c_str();
      }
 
      DREAM3D_INSTANCE_STRING_PROPERTY(Message)

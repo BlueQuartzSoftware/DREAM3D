@@ -226,7 +226,7 @@ int FileReader::readLine(std::istream &in, char* buf, int bufSize)
 {
 
   bool readAnotherLine = true;
-  size_t gcount = in.gcount();
+    size_t gcount = 0;
   while ( readAnotherLine == true && in.gcount() != 0) {
     // Zero out the buffer
     ::memset(buf, 0, bufSize);

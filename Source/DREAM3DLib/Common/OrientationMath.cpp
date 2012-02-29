@@ -100,7 +100,9 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
-  float n1min, n2min, n3min;
+    float n1min = 0.0f;
+    float n2min = 0.0f;
+    float n3min = 0.0f;
   float qr[5];
   float qc[5];
   float temp;
@@ -185,8 +187,8 @@ void OrientationMath::_calcFZRod(const float rodsym[24][3], int numsym, float &r
   float denom, dist;
 //  int index;
   float smallestdist = 100000000.0f;
-  float rc1, rc2, rc3;
-  float r1min, r2min, r3min;
+  float rc1 = 0.0f, rc2 = 0.0f, rc3 = 0.0f;
+  float r1min = 0.0f, r2min = 0.0f, r3min = 0.0f;
   for(int i=0;i<numsym;i++)
   {
     denom = 1-(r1*rodsym[i][0]+r2*rodsym[i][1]+r3*rodsym[i][2]);

@@ -115,8 +115,58 @@ static Pointer New args \
 /** Macro used to add standard methods to all classes, mainly type
  * information. */
 #define MXA_TYPE_MACRO(thisClass) \
-    virtual const char* getNameOfClass() const \
-        {return #thisClass;}
+public: \
+virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
+static int IsTypeOf(const char *type) \
+{ \
+if ( !strcmp(#thisClass,type) ) \
+{ \
+return 1; \
+} \
+return 0; \
+} \
+virtual int IsA(const char *type) \
+{ \
+return this->thisClass::IsTypeOf(type); \
+} \
+template <class Source, class Target>\
+inline Target SafeObjectDownCast(Source x) { \
+if( dynamic_cast<Target>(x) != x ) { \
+return NULL;\
+}\
+return static_cast<Target>(x);\
+}
+
+
+#define MXA_TYPE_MACRO_SUPER(thisClass,superclass) \
+public: \
+virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
+static std::string ClassName() {return std::string(#thisClass);}\
+static int IsTypeOf(const char *type) \
+{ \
+if ( !strcmp(#thisClass,type) ) \
+{ \
+return 1; \
+} \
+return superclass::IsTypeOf(type); \
+} \
+virtual int IsA(const char *type) \
+{ \
+return this->thisClass::IsTypeOf(type); \
+} \
+template <class Source, class Target>\
+static Target SafeObjectDownCast(Source x) { \
+if( dynamic_cast<Target>(x) != x ) { \
+return NULL;\
+}\
+return static_cast<Target>(x);\
+}\
+static thisClass* SafePointerDownCast(superclass* s) {\
+return SafeObjectDownCast<superclass*, thisClass*>(s);\
+}
+
+
+
 
 //------------------------------------------------------------------------------
 // Macros for Properties
