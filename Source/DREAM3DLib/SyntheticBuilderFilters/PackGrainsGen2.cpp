@@ -737,7 +737,7 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field, StatsData
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = statsDataArray[phase]->getAxisOrientation();
-  while (random > totaldensity)
+  while (random > totaldensity && bin < axisodf->GetSize())
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
