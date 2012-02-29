@@ -45,6 +45,7 @@ Macro(WidgetGeneration DirName)
           
         file(APPEND ${CodeGeneratorFile} "createHeaderFile<${name}>(\"${DirName}\", \"${name}\");\n")
         file(APPEND ${CodeGeneratorFile} "createSourceFile<${name}>(\"${DirName}\", \"${name}\");\n")
+        file(APPEND ${CodeGeneratorFile} "createHTMLFile<${name}>(\"${DirName}\", \"${name}\");\n")
     
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${name}Widget>::Pointer q${name}WidgetFactory = QFilterWidgetFactory<Q${name}Widget>::New(); \n")
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetManager::Instance()->addFilterWidgetFactory(\"${name}\",q${name}WidgetFactory); \n\n")

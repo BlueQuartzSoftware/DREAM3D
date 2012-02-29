@@ -83,7 +83,7 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > 
 {
   int err = 0;
   float alpha = 0;
-  float min = std::numeric_limits<float>::max();
+  float min;
   for(size_t i = 0; i < data.size(); i++)
   {
 	  min = std::numeric_limits<float>::max();

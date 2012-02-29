@@ -92,8 +92,8 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &dat
   {
 	  avg = 0;
 	  stddev = 0;
-	  alpha = 0;
-	  beta = 0;
+	//  alpha = 0;
+	//  beta = 0;
 	  for(size_t j = 0; j < data[i].size(); j++)
 	  {
 		avg = avg + data[i][j];		

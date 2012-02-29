@@ -129,7 +129,7 @@ void ChangeResolution::execute()
 
   setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
+  
   if (getErrorCondition() < 0)
   {
     return;
@@ -184,7 +184,7 @@ void ChangeResolution::execute()
       }
     }
   }
-
+  int64_t totalPoints = m->getTotalPoints();
   m->setResolution(m_XRes, m_YRes, m_ZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);
   totalPoints = m_XP*m_YP*m_ZP;

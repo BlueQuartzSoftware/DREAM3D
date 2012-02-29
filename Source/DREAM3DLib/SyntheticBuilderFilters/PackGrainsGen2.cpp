@@ -252,10 +252,10 @@ void PackGrainsGen2::execute()
   std::stringstream ss;
 
   // float change1, change2;
-  float change;
-  int phase;
+  float change = 0.0f;
+  int phase = 0;
   size_t randomgrain;
-  float random;
+    float random = 0.0f;
 //  int newgrain;
   // float check;
   float xc, yc, zc;
@@ -856,8 +856,8 @@ float PackGrainsGen2::check_neighborhooderror(int gadd, int gremove)
   float bhattdist;
   float dia;
   int nnum;
-  size_t bin;
-  int index;
+  size_t bin = 0;
+  int index = 0;
   std::vector<int> count;
   int phase;
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)

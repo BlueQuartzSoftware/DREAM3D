@@ -145,7 +145,8 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(-800);
   }
 
-  if (m_ShapeTypes->GetNumberOfTuples() == 0)
+  addRequiredEnsembleData(DREAM3D::EnsembleData::ShapeTypes);
+  if (m_ShapeTypes.get() ==  NULL || m_ShapeTypes->GetNumberOfTuples() == 0)
   {
     ss << getNameOfClass() << ": No ShapeTypes have been set and a shape type for each phase.";
     setErrorCondition(-801);

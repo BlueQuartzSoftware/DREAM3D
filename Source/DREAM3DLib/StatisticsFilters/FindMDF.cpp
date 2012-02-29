@@ -173,9 +173,9 @@ void FindMDF::execute()
   // And we do the same for the SharedSurfaceArea list
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
-  float n1, n2, n3;
-  float r1, r2, r3;
-  int mbin;
+  float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
+  float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
+  int mbin = 0;
   float w;
   float q1[5];
   float q2[5];

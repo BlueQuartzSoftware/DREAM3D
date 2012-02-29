@@ -721,15 +721,17 @@ herr_t H5Lite::getAttributeNDims(hid_t loc_id,
       }
       CloseH5A(attr_id, err, retErr);
     }
+    else
+    {
+          retErr = attr_id;
+    }
     err = H5Lite::closeId( obj_id, statbuf.type );
     if (err<0) {
       std::cout << "Error Closing Object ID" << std::endl;
       retErr = err;
     }
  }
- if (attr_id < 0) {
-   retErr = attr_id;
- }
+
  return retErr;
 }
 

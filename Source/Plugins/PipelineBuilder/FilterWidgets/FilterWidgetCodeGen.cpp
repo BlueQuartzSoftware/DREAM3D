@@ -308,6 +308,199 @@ void createSourceFile( const std::string &group, const std::string &filter)
   fclose(f);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void createHTMLFile( const std::string &group, const std::string &filter)
+{
+
+  typename T::Pointer t = T::New();
+  std::vector<FilterOption::Pointer> options = t->getFilterOptions();
+
+  std::stringstream ss;
+  ss << FILTER_WIDGETS_DIR() << "/" << group << "/" << filter << ".html";
+
+  std::string completePath = MXADir::toNativeSeparators(ss.str());
+  if(MXADir::exists(completePath) == true)
+  {
+    std::cout << filter << ": HTML already exists NOT creating a generic one." << std::endl;
+    return;
+  }
+
+  ss.str("");
+  ss << OUTPUT_DIR() << "/Documentation/" << group;
+  MXADir::mkdir(ss.str(), true);
+  ss << "/" << filter << ".html";
+
+  completePath = MXADir::toNativeSeparators(ss.str());
+
+  ss.str("");
+
+  std::cout << "Creating Header File: " << completePath << std::endl;
+
+  FILE* f = fopen(completePath.c_str(), "wb");
+
+  fprintf(f, "<html>\n");
+  fprintf(f, "<head></head>\n");
+  fprintf(f, "<title>%s</title>\n", filter.c_str());
+  fprintf(f, "<body></body>\n");
+  fprintf(f, "<h1>%s Filter</h1>\n", filter.c_str());
+  fprintf(f, "<h4>Summary</h4> This filter does ....\n");
+  if (options.size() > 0) {
+  fprintf(f, "<h4>Properties</h4>\n");
+  fprintf(f, "<table>\n<tr><th>Property Name</th><th>Property Type</th></tr>\n");
+  }
+  for (size_t i = 0; i < options.size(); ++i)
+  {
+    fprintf(f, "<tr>");
+    FilterOption::Pointer opt = options[i];
+    std::string prop = opt->getPropertyName();
+    std::string typ = opt->getValueType();
+    std::string hl = opt->getHumanLabel();
+    fprintf(f, "<td>%s</td>", hl.c_str());
+
+    if(opt->getWidgetType() == FilterOption::IntWidget)
+    {
+      fprintf(f, "<td>Integer</td>");
+    }
+    else if(opt->getWidgetType() == FilterOption::DoubleWidget)
+    {
+      fprintf(f, "<td>Double</td>");
+    }
+    else if(opt->getWidgetType() == FilterOption::InputFileWidget)
+    {
+      fprintf(f, "<td>Input File</td>");
+    }
+    else if(opt->getWidgetType() == FilterOption::OutputFileWidget)
+    {
+      fprintf(f, "<td>Output File</td>");
+    }
+    else if(opt->getWidgetType() == FilterOption::BooleanWidget)
+    {
+      fprintf(f, "<td>Boolean (On or Off)</td>");
+    }
+    else if(opt->getWidgetType() == FilterOption::IntConstrainedWidget)
+    {
+      fprintf(f, "<td>Bounded Integer</td>");
+    }
+    else if(opt->getWidgetType() == FilterOption::DoubleContrainedWidget)
+    {
+      fprintf(f, "<td>Bounded Double</td>");
+    }
+    else if(opt->getWidgetType() == FilterOption::ChoiceWidget)
+    {
+      fprintf(f, "<td>Choices</td>");
+    }
+    else
+    {
+      fprintf(f, "<td>Unknown Type</td>");
+    }
+    fprintf(f, "</tr>\n");
+
+  }
+  if (options.size() > 0) {
+  fprintf(f, "</table>\n");
+  }
+  DataContainer::Pointer m = DataContainer::New();
+  t->setDataContainer(m.get());
+  t->preflight();
+
+  {
+    std::set<std::string> list = t->getRequiredCellData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "<h4>Required Cell Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<li>");
+        fprintf(f, "%s", (*iter).c_str());
+        fprintf(f, "</li>");
+      }
+      fprintf(f, "</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedCellData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "<h4>Created Cell Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<li>");
+        fprintf(f, "%s", (*iter).c_str());
+        fprintf(f, "</li>");
+      }
+      fprintf(f, "</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = t->getRequiredFieldData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "<h4>Required Field Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<li>");
+        fprintf(f, "%s", (*iter).c_str());
+        fprintf(f, "</li>");
+      }
+      fprintf(f, "</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedFieldData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "<h4>Created Field Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<li>");
+        fprintf(f, "%s", (*iter).c_str());
+        fprintf(f, "</li>");
+      }
+      fprintf(f, "</ul>");
+    }
+  }
+
+  {
+    std::set<std::string> list = t->getRequiredEnsembleData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "<h4>Required Ensemble Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<li>");
+        fprintf(f, "%s", (*iter).c_str());
+        fprintf(f, "</li>");
+      }
+      fprintf(f, "</ul>");
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedEnsembleData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "<h4>Created Ensemble Data</h4><ul>");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<li>");
+        fprintf(f, "%s", (*iter).c_str());
+        fprintf(f, "</li>");
+      }
+      fprintf(f, "</ul>");
+    }
+  }
+
+  t->setDataContainer(NULL);
+
+  fprintf(f, "</html>\n");
+
+  fclose(f);
+}
+
+
+
 #include "FilterWidgetCodeGen.h"
 
 // -----------------------------------------------------------------------------
