@@ -390,39 +390,35 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   float vol, random;
   float diam;
   int volgood = 0;
-  while (currentvol < totalvol)
+  for (size_t j = 0; j < primaryphases.size(); ++j)
   {
-    volgood = 0;
-    random = rg.genrand_res53();
-    for (size_t j = 0; j < primaryphases.size(); ++j)
-    {
-      if(random < primaryphasefractions[j])
-      {
-        phase = primaryphases[j];
-        break;
-      }
-    }
-    if (phase >= 0 && phase < statsDataArray.GetNumberOfTuples())
-    {statsData = statsDataArray[phase];}
-    else
-    {statsData = StatsData::NullPointer();}
-    while (volgood == 0)
-    {
-      volgood = 1;
-     // u = rg.genrand_res53();
-      if (statsDataArray[phase]->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
-      {
-        float avgdiam = statsDataArray[phase]->getGrainSizeDistribution().at(0)->GetValue(0);
-        float sddiam = statsDataArray[phase]->getGrainSizeDistribution().at(1)->GetValue(0);
-        diam = rg.genrand_norm(avgdiam, sddiam);
-        diam = exp(diam);
-        if(diam >= statsDataArray[phase]->getMaxGrainDiameter()) volgood = 0;
-        if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
-        vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
-      }
-    }
-    currentvol = currentvol + vol;
-    gid++;
+	float curphasetotalvol = totalvol*primaryphasefractions[j];
+	while (currentvol < (curphasetotalvol))
+	{
+	    volgood = 0;
+	    phase = primaryphases[j];
+	    if (phase >= 0 && phase < statsDataArray.GetNumberOfTuples())
+	    {statsData = statsDataArray[phase];}
+	    else
+	    {statsData = StatsData::NullPointer();}
+	    while (volgood == 0)
+	    {
+	      volgood = 1;
+	     // u = rg.genrand_res53();
+	      if (statsDataArray[phase]->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
+	      {
+	        float avgdiam = statsDataArray[phase]->getGrainSizeDistribution().at(0)->GetValue(0);
+	        float sddiam = statsDataArray[phase]->getGrainSizeDistribution().at(1)->GetValue(0);
+	        diam = rg.genrand_norm(avgdiam, sddiam);
+	        diam = exp(diam);
+	        if(diam >= statsDataArray[phase]->getMaxGrainDiameter()) volgood = 0;
+	        if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
+	        vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
+	      }
+	    }
+	    currentvol = currentvol + vol;
+	    gid++;
+	}
   }
 #endif
   return gid;

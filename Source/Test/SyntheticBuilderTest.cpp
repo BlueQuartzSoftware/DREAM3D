@@ -66,9 +66,9 @@
 std::string m_H5StatsFile("");
 std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
 std::string m_OutputFilePrefix("");
-size_t m_XPoints = 250;
-size_t m_YPoints = 250;
-size_t m_ZPoints = 250;
+size_t m_XPoints = 150;
+size_t m_YPoints = 150;
+size_t m_ZPoints = 150;
 
 typedef DataArray<unsigned int> ShapeTypeArrayType;
 
