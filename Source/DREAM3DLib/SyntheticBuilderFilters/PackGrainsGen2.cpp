@@ -321,88 +321,78 @@ void PackGrainsGen2::execute()
   m->resizeFieldDataArrays(gid + 1);
   dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
   m_Active[gid] = true;
-  float currentvol = 0.0;
+  std::vector<float> curphasevol;
+  curphasevol.resize(primaryphases.size());
   float factor = 1.0;
   float iter = 0;
-  while (currentvol < (factor * totalvol))
+  for (size_t j = 0; j < primaryphases.size(); ++j)
   {
-    iter++;
-    Seed++;
-    random = static_cast<float>(rg.genrand_res53());
-    for (size_t j = 0; j < primaryphases.size(); ++j)
-    {
-      if(random < primaryphasefractions[j])
-      {
-        phase = primaryphases[j];
-        break;
-      }
-    }
+	  curphasevol[j] = 0;
+	  float curphasetotalvol = totalvol*primaryphasefractions[j];
+	  while (curphasevol[j] < (factor * curphasetotalvol))
+	  {
+	    iter++;
+	    Seed++;
+	    phase = primaryphases[j];
+		generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
+		currentsizedisterror = check_sizedisterror(&field);
+		change = (currentsizedisterror) - (oldsizedisterror);
+		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
+		{
+	      gid++;
+	      std::stringstream ss;
+	      ss << "Packing Grains - Generating Grain #" << gid;
+	      notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
-    generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
-    currentsizedisterror = check_sizedisterror(&field);
-    change = (currentsizedisterror) - (oldsizedisterror);
-    if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
-    {
-      gid++;
-      std::stringstream ss;
-      ss << "Packing Grains - Generating Grain #" << gid;
-      notify(ss.str(), 0, Observable::UpdateProgressMessage);
-
-      m->resizeFieldDataArrays(gid + 1);
-      dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
-      m_Active[gid] = true;
-      transfer_attributes(gid, &field);
-      oldsizedisterror = currentsizedisterror;
-      currentvol = currentvol + m_Volumes[gid];
-      //FIXME: Initialize the Grain with some sort of default data
-      iter = 0;
-    }
+	      m->resizeFieldDataArrays(gid + 1);
+	      dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+	      m_Active[gid] = true;
+	      transfer_attributes(gid, &field);
+	      oldsizedisterror = currentsizedisterror;
+	      curphasevol[j] = curphasevol[j] + m_Volumes[gid];
+	      //FIXME: Initialize the Grain with some sort of default data
+	      iter = 0;
+		}
+	  }
   }
 
   if(m_PeriodicBoundaries == false)
   {
     iter = 0;
     int xgrains, ygrains, zgrains;
-
     xgrains = int(powf((m->getNumFieldTuples()*(sizex/sizey)*(sizex/sizez)),(1.0f/3.0f))+1);
     ygrains = int(xgrains*(sizey/sizex)+1);
     zgrains = int(xgrains*(sizez/sizex)+1);
     factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
-    while (currentvol < ((1+factor) * totalvol))
-    {
-      iter++;
-      Seed++;
-      random = static_cast<float>(rg.genrand_res53());
-      for (size_t j = 0; j < primaryphases.size(); ++j)
-      {
-        if(random < primaryphasefractions[j])
-        {
-          phase = primaryphases[j];
-          break;
-        }
-      }
+	for (size_t j = 0; j < primaryphases.size(); ++j)
+	{
+	  float curphasetotalvol = totalvol*primaryphasefractions[j];
+	  while (curphasevol[j] < ((1+factor) * curphasetotalvol))
+	  {
+		iter++;
+		Seed++;
+		phase = primaryphases[j];
+		generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
+		currentsizedisterror = check_sizedisterror(&field);
+		change = (currentsizedisterror) - (oldsizedisterror);
+		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
+		{
+		  gid++;
+		  std::stringstream ss;
+		  ss << "Packing Grains - Generating Grain #" << gid;
+		  notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
-      generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
-      currentsizedisterror = check_sizedisterror(&field);
-      change = (currentsizedisterror) - (oldsizedisterror);
-      if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001f)))
-      {
-        gid++;
-        std::stringstream ss;
-        ss << "Packing Grains - Generating Grain #" << gid;
-        notify(ss.str(), 0, Observable::UpdateProgressMessage);
-
-        m->resizeFieldDataArrays(gid + 1);
-        dataCheck(false, totalPoints, gid+1, m->getNumEnsembleTuples());
-        m_Active[gid] = 1;
-	    transfer_attributes(gid, &field);
-        oldsizedisterror = currentsizedisterror;
-        currentvol = currentvol + m_Volumes[gid];
-        //FIXME: Initialize the new grain with default data
-        iter = 0;
-      }
-
-    }
+		  m->resizeFieldDataArrays(gid + 1);
+		  dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+		  m_Active[gid] = true;
+		  transfer_attributes(gid, &field);
+		  oldsizedisterror = currentsizedisterror;
+		  curphasevol[j] = curphasevol[j] + m_Volumes[gid];
+		  //FIXME: Initialize the Grain with some sort of default data
+		  iter = 0;
+		}
+	  }
+	}
   }
 
   notify("Packing Grains - Grain Generation Complete", 0, Observable::UpdateProgressMessage);

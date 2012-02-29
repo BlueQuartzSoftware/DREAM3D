@@ -96,7 +96,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
 
-    float totalprecipvol;
     std::vector<int> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
