@@ -40,12 +40,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
@@ -343,7 +338,7 @@ void PackGrainsGen2::execute()
       }
     }
 
-    generate_grain(phase, static_cast<int>(Seed), &field);
+    generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
     currentsizedisterror = check_sizedisterror(&field);
     change = (currentsizedisterror) - (oldsizedisterror);
     if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
@@ -387,7 +382,7 @@ void PackGrainsGen2::execute()
         }
       }
 
-      generate_grain(phase, static_cast<int>(Seed), &field);
+      generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
       currentsizedisterror = check_sizedisterror(&field);
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001f)))
@@ -688,14 +683,9 @@ void PackGrainsGen2::initialize_packinggrid()
 }
 
 
-void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
+void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
-  DataContainer* m = getDataContainer();
-  if (NULL == m)
-  {
-    return;
-  }
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -752,12 +742,11 @@ void PackGrainsGen2::generate_grain(int phase, int Seed, Field* field)
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
   }
-  m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->determineEulerAngles(bin, phi1, PHI, phi2);
+  OrthoOps->determineEulerAngles(bin, phi1, PHI, phi2);
   VectorOfFloatArray omega3 = statsDataArray[phase]->getGrainSize_Omegas();
   float mf = omega3[0]->GetValue(diameter);
   float s = omega3[1]->GetValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  unsigned int shapeclass = m_ShapeTypes[phase];
   if(shapeclass == DREAM3D::ShapeType::EllipsoidShape) omega3f = 1;
 
   field->m_Volumes = vol;

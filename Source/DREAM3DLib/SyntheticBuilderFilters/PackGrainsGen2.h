@@ -51,7 +51,10 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 typedef struct {
     float m_Volumes;
@@ -103,7 +106,7 @@ class DREAM3DLib_EXPORT PackGrainsGen2 : public AbstractFilter
     virtual void execute();
 
     float check_sizedisterror(Field* field);
-    void generate_grain(int phase, int Seed, Field* grain);
+	static void generate_grain(int phase, int Seed, Field* grain, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
 
     void transfer_attributes(int gnum, Field* field);
 

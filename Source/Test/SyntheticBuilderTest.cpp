@@ -66,9 +66,9 @@
 std::string m_H5StatsFile("");
 std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
 std::string m_OutputFilePrefix("");
-size_t m_XPoints = 64;
-size_t m_YPoints = 64;
-size_t m_ZPoints = 64;
+size_t m_XPoints = 250;
+size_t m_YPoints = 250;
+size_t m_ZPoints = 250;
 
 typedef DataArray<unsigned int> ShapeTypeArrayType;
 
@@ -99,7 +99,7 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 std::string getH5StatsFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed.h5";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "3Phase.h5";
   return s;
 }
 
@@ -145,9 +145,11 @@ void TestSyntheticBuilder()
   DataContainer::Pointer m = DataContainer::New();
   pipeline->setDataContainer(m);
 
-    ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(2, DREAM3D::EnsembleData::ShapeTypes);
+    ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(4, DREAM3D::EnsembleData::ShapeTypes);
     m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
     m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::EllipsoidShape);
+    m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::EllipsoidShape);
+    m_ShapeTypes->SetValue(3, DREAM3D::ShapeType::EllipsoidShape);
 
     InitializeSyntheticVolume::Pointer init_volume = InitializeSyntheticVolume::New();
     init_volume->setShapeTypes(m_ShapeTypes);
