@@ -95,12 +95,12 @@
 
 
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/SMVtkPolyDataWriter.h"
 
 using namespace meshing;
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+    std::string outpath = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + filename;
 
 
 
@@ -280,13 +280,13 @@ SurfaceMeshFilter::SurfaceMeshFilter() :
 AbstractFilter(),
 m_DeleteTempFiles(true),
 m_WriteSTLFile(true),
-m_OutputDirectory(""),
-m_OutputFilePrefix(""),
+m_StlOutputDirectory(""),
+m_StlFilePrefix(""),
 neigh(NULL),
 voxels(NULL),
 cSquare(NULL)
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -297,6 +297,97 @@ SurfaceMeshFilter::~SurfaceMeshFilter()
   delete[] neigh;
   delete[] voxels;
   delete[] cSquare;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshFilter::setupFilterOptions()
+{
+
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("DREAM3D Input Data File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+#if 0
+   This should be read from the file so we are NOT going to expose it to the user
+  {
+    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    option->setHumanLabel("Reference Frame");
+    option->setPropertyName("RefFrameZDir");
+    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setValueType("Ebsd::RefFrameZDir");
+    option->setCastableValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Low To High");
+    choices.push_back("High To Low");
+    option->setChoices(choices);
+    options.push_back(option);
+  }
+#endif
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Vtk PolyData Output File");
+     option->setPropertyName("VtkOutputFile");
+     option->setWidgetType(FilterOption::OutputFileWidget);
+     option->setValueType("string");
+     options.push_back(option);
+   }
+
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Write STL Files");
+     option->setPropertyName("WriteSTLFile");
+     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setValueType("bool");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("STL Output Directory");
+     option->setPropertyName("StlOutputDirectory");
+     option->setWidgetType(FilterOption::OutputFileWidget);
+     option->setValueType("string");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("STL Output Prefix");
+     option->setPropertyName("StlFilePrefix");
+     option->setWidgetType(FilterOption::StringWidget);
+     option->setValueType("string");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Delete Temp Files");
+     option->setPropertyName("DeleteTempFiles");
+     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setValueType("bool");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Write Binary Vtk File");
+     option->setPropertyName("WriteBinaryVTKFiles");
+     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setValueType("bool");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Write Conformal Mesh");
+     option->setPropertyName("WriteConformalMesh");
+     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setValueType("bool");
+     options.push_back(option);
+   }
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -342,28 +433,28 @@ void SurfaceMeshFilter::execute()
     return;
   }
 
-  std::string NodesFile = m_OutputDirectory + MXADir::Separator
-      + m_OutputFilePrefix + DREAM3D::SurfaceMesh::NodesFileBin;
+  std::string NodesFile = m_StlOutputDirectory + MXADir::Separator
+      + m_StlFilePrefix + DREAM3D::SurfaceMesh::NodesFileBin;
   m_NodesFile = SMTempFile::New();
   m_NodesFile->setFilePath(NodesFile);
   m_NodesFile->setAutoDelete(this->m_DeleteTempFiles);
 
 
-  std::string TrianglesFile = m_OutputDirectory + MXADir::Separator
-      + m_OutputFilePrefix + DREAM3D::SurfaceMesh::TrianglesFileBin;
+  std::string TrianglesFile = m_StlOutputDirectory + MXADir::Separator
+      + m_StlFilePrefix + DREAM3D::SurfaceMesh::TrianglesFileBin;
   m_TrianglesFile = SMTempFile::New();
   m_TrianglesFile->setFilePath(TrianglesFile);
   m_TrianglesFile->setAutoDelete(this->m_DeleteTempFiles);
 
-  MAKE_OUTPUT_FILE_PATH( VisualizationFile, DREAM3D::SurfaceMesh::VisualizationVizFile)
+//  MAKE_OUTPUT_FILE_PATH( VisualizationFile, DREAM3D::SurfaceMesh::VisualizationVizFile)
 
   // Initialize some benchmark timers
   START_CLOCK()
 
   // Create the output directory if needed
-  if (MXADir::exists(m_OutputDirectory) == false)
+  if (MXADir::exists(m_StlOutputDirectory) == false)
   {
-    if (MXADir::mkdir(m_OutputDirectory, true) == false)
+    if (MXADir::mkdir(m_StlOutputDirectory, true) == false)
     {
       CHECK_FOR_ERROR(SurfaceMeshFilter, "SurfaceMesh could not create the output directory", -1)
     }
@@ -607,7 +698,6 @@ void SurfaceMeshFilter::execute()
       err |= (*iter).second->writeNumTrianglesToFile();
     }
     CHECK_FOR_ERROR(SurfaceMeshFilter, "Error writing STL file", err)
-
   }
 
   m_GrainChecker->analyzeGrains();
@@ -621,6 +711,21 @@ void SurfaceMeshFilter::execute()
   {
     cTriangle.clear();
   }
+
+  meshing::SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
+  writer->setVisualizationFile(m_VtkOutputFile);
+  writer->setNodesFile(NodesFile);
+  writer->setTrianglesFile(TrianglesFile);
+  writer->setWriteBinaryFile(m_WriteBinaryVTKFiles);
+  writer->setWriteConformalMesh(m_WriteConformalMesh);
+  writer->execute();
+  setErrorCondition(writer->getErrorCondition());
+
+
+  // This will possibly delete the triangles and Nodes file depending on the
+  // DeleteTempFiles setting
+  m_TrianglesFile = SMTempFile::NullPointer();
+  m_NodesFile = SMTempFile::NullPointer();
 
 
   setErrorCondition(0);
@@ -645,16 +750,16 @@ int SurfaceMeshFilter::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::P
     if (gidToSTLWriter[g0].get() == NULL)
     {
       std::string stlFile;
-      stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
+      stlFile = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
-      stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
+      stlFile.append(m_StlFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
       gidToSTLWriter[g0] = SMStlWriter::CreateNewSTLWriter(g0, stlFile);
     }
     if (gidToSTLWriter[g1].get() == NULL)
     {
-      std::string stlFile = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + "STL_Files/";
+      std::string stlFile = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
-      stlFile.append(m_OutputFilePrefix).append(StringUtils::numToString(g1)).append(".stl");
+      stlFile.append(m_StlFilePrefix).append(StringUtils::numToString(g1)).append(".stl");
       gidToSTLWriter[g1] = SMStlWriter::CreateNewSTLWriter(g1, stlFile);
     }
     grainIdMap[cTriangle[i]->ngrainname[0]]++;

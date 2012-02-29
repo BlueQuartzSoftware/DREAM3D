@@ -114,14 +114,19 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile);
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteSTLFile);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix);
+    DREAM3D_INSTANCE_STRING_PROPERTY(StlOutputDirectory);
+    DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix);
+    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile);
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles);
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
 
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, NodesFile);
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const std::string getHumanLabel() { return "Surface Mesh"; }
+
+    virtual void setupFilterOptions();
 
     virtual void preflight();
 
