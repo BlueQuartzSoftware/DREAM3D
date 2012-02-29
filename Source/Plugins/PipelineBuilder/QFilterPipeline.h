@@ -134,7 +134,12 @@ class QFilterPipeline : public QObject, public FilterPipeline
       setCancel(true);
     }
 
-    void run() { FilterPipeline::run(); }
+    void run()
+    {
+      FilterPipeline::run(); // Execute the pipeline
+      setDataContainer(DataContainer::NullPointer()); // This _should_ clean up the memory as nothing else should have
+      // a reference to the DataContainer
+    }
 
   protected:
 
