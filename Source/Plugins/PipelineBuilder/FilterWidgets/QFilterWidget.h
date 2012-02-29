@@ -99,6 +99,7 @@ class QFilterWidget : public QGroupBox
      virtual void updateQSpinBoxValue(int v);
      virtual void updateQDoubleSpinBoxValue(double v);
      virtual void updateQCheckBoxValue(int v);
+     virtual void updateQLineEditStringValue(const QString &v);
 
      virtual void updateLineEdit(const QString &v);
 
