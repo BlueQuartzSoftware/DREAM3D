@@ -85,6 +85,13 @@ m_ShapeTypes(NULL)
   m_UnknownShapeOps = ShapeOps::New();
   m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
 
+  m_HexOps = HexagonalOps::New();
+  m_OrientationOps.push_back(m_HexOps.get());
+  m_CubicOps = CubicOps::New();
+  m_OrientationOps.push_back(m_CubicOps.get());
+  m_OrthoOps = OrthoRhombicOps::New();
+  m_OrientationOps.push_back(m_OrthoOps.get());
+
   setupFilterOptions();
 }
 
@@ -560,8 +567,6 @@ void  PlacePrecipitates::place_precipitates()
     precipitatephasefractions[i] = precipitatephasefractions[i] / totalprecipitatefractions;
     if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i - 1];
   }
-  PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setDataContainer(getDataContainer());
 
   while (totalprecipvol < totalvol * totalprecipitatefractions)
   {
@@ -578,7 +583,7 @@ void  PlacePrecipitates::place_precipitates()
 
     Field field;
 
-    packGrains->generate_grain(phase, Seed, &field);
+	PackGrainsGen2::generate_grain(phase, Seed, &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
     m->resizeFieldDataArrays(currentnumgrains + 1);
     dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
