@@ -166,7 +166,13 @@ void QFilterWidget::setupGui()
 
     if (wType == FilterOption::StringWidget)
     {
-
+      QLineEdit* le = new QLineEdit(this);
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
+      connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditStringValue(const QString &)));
+      QVariant v = property(option->getPropertyName().c_str());
+      le->setText(v.toString());
     }
     else if (wType == FilterOption::IntWidget)
     {
@@ -475,6 +481,20 @@ void QFilterWidget::updateComboBoxValue(int v)
     }
   }
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateQLineEditStringValue(const QString &v)
+{
+  QObject* whoSent = sender();
+//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+//      << whoSent->objectName().toStdString() << std::endl;
+  QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
+  if(le) {
+    setProperty(whoSent->objectName().toStdString().c_str(), le->text());
+  }
 }
 
 // -----------------------------------------------------------------------------

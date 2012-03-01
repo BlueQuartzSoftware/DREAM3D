@@ -252,7 +252,12 @@ void createSourceFile( const std::string &group, const std::string &filter)
     std::string hl = opt->getHumanLabel();
     fprintf(f, "  {\n   QVariant p_%s = prefs.value(\"%s\");\n", prop.c_str(), prop.c_str());
 
-    if (opt->getWidgetType() == FilterOption::IntWidget)
+    if (opt->getWidgetType() == FilterOption::StringWidget)
+    {
+      fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
+      fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
+    }
+    else if (opt->getWidgetType() == FilterOption::IntWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
