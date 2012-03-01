@@ -596,7 +596,7 @@ void  PlacePrecipitates::place_precipitates()
   for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
 	  curphasevol[j] = 0;
-	  float curphasetotalvol = totalvol*precipitatephasefractions[j];
+	  float curphasetotalvol = (totalvol*totalprecipitatefractions)*precipitatephasefractions[j];
 	  while (curphasevol[j] < (factor * curphasetotalvol))
 	  {
 	    iter++;
