@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     float* m_Quats;
     float* m_EulerAnglesC;
 
-	unsigned int* m_CrystalStructures;
+	  unsigned int* m_CrystalStructures;
 
     unsigned long long int Seed;
 

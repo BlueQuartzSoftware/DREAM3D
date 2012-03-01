@@ -361,6 +361,7 @@ void FilterPipeline::execute()
      setCurrentFilter(*iter);
      (*iter)->execute();
      (*iter)->removeObserver(static_cast<Observer*>(this));
+     (*iter)->setDataContainer(NULL);
      err = (*iter)->getErrorCondition();
      if(err < 0)
      {
