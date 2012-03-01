@@ -50,7 +50,10 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
-
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 /**
  * @class PlacePrecipitates PlacePrecipitates.h DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h
@@ -93,7 +96,6 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
 
-    float totalprecipvol;
     std::vector<int> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
@@ -134,6 +136,10 @@ class DREAM3DLib_EXPORT PlacePrecipitates : public AbstractFilter
     unsigned int* m_ShapeTypes;
 	StatsDataArray* m_StatsDataArray;
 
+    std::vector<OrientationMath*> m_OrientationOps;
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
     void transfer_attributes(int gnum, Field* field);

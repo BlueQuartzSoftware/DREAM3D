@@ -85,6 +85,13 @@ m_ShapeTypes(NULL)
   m_UnknownShapeOps = ShapeOps::New();
   m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
 
+  m_HexOps = HexagonalOps::New();
+  m_OrientationOps.push_back(m_HexOps.get());
+  m_CubicOps = CubicOps::New();
+  m_OrientationOps.push_back(m_CubicOps.get());
+  m_OrthoOps = OrthoRhombicOps::New();
+  m_OrientationOps.push_back(m_OrthoOps.get());
+
   setupFilterOptions();
 }
 
@@ -530,8 +537,28 @@ void  PlacePrecipitates::place_precipitates()
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
+  size_t udims[3] =
+  { 0, 0, 0 };
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] =
+  { static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[1]),
+      static_cast<DimType>(udims[2]), };
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+  sizex = dims[0] * m->getXRes();
+  sizey = dims[1] * m->getYRes();
+  sizez = dims[2] * m->getZRes();
+  totalvol = sizex*sizey*sizez;
+
   int64_t totalPoints = m->getTotalPoints();
-  totalprecipvol = 0;
   size_t precipvoxelcounter = 0;
 //  float thickness = 0.25;
   size_t currentnumgrains = m->getNumFieldTuples();
@@ -560,87 +587,84 @@ void  PlacePrecipitates::place_precipitates()
     precipitatephasefractions[i] = precipitatephasefractions[i] / totalprecipitatefractions;
     if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i - 1];
   }
-  PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
-  packGrains->setDataContainer(getDataContainer());
 
-  while (totalprecipvol < totalvol * totalprecipitatefractions)
+  Field field;
+  std::vector<float> curphasevol;
+  curphasevol.resize(precipitatephases.size());
+  float factor = 1.0;
+  float iter = 0;
+  for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
-    Seed++;
-    random = rg.genrand_res53();
-    for (size_t j = 0; j < precipitatephases.size(); ++j)
-    {
-      if(random < precipitatephasefractions[j])
-      {
-        phase = precipitatephases[j];
-        break;
-      }
-    }
+	  curphasevol[j] = 0;
+	  float curphasetotalvol = totalvol*precipitatephasefractions[j];
+	  while (curphasevol[j] < (factor * curphasetotalvol))
+	  {
+	    iter++;
+	    Seed++;
+	    phase = precipitatephases[j];
+		PackGrainsGen2::generate_grain(phase, Seed, &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
+		m->resizeFieldDataArrays(currentnumgrains + 1);
+		dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
-    Field field;
-
-    packGrains->generate_grain(phase, Seed, &field);
-    m->resizeFieldDataArrays(currentnumgrains + 1);
-    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-
-    transfer_attributes(currentnumgrains, &field);
-	precipboundaryfraction = statsDataArray[phase]->getPrecipBoundaryFraction();
-    random = rg.genrand_res53();
-    if(random <= precipboundaryfraction)
-    {
-      random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-      while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] > numprimarygrains)
-      {
-        random2++;
-        if(random2 >= totalPoints) random2 = random2 - totalPoints;
-      }
-    }
-    else if(random > precipboundaryfraction)
-    {
-      random2 = rg.genrand_res53() * (totalPoints - 1);
-      while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] > numprimarygrains)
-      {
-        random2++;
-        if(random2 >= totalPoints) random2 = random2 - totalPoints;
-      }
-    }
-    xc = find_xcoord(random2);
-    yc = find_ycoord(random2);
-    zc = find_zcoord(random2);
-    m_Centroids[3 * currentnumgrains] = xc;
-    m_Centroids[3 * currentnumgrains + 1] = yc;
-    m_Centroids[3 * currentnumgrains + 2] = zc;
+		transfer_attributes(currentnumgrains, &field);
+		precipboundaryfraction = statsDataArray[phase]->getPrecipBoundaryFraction();
+		random = rg.genrand_res53();
+		if(random <= precipboundaryfraction)
+		{
+	      random2 = int(rg.genrand_res53() * double(totalPoints - 1));
+	      while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] > numprimarygrains)
+	      {
+	        random2++;
+	        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+	      }
+	    }
+	    else if(random > precipboundaryfraction)
+	    {
+	      random2 = rg.genrand_res53() * (totalPoints - 1);
+	      while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] > numprimarygrains)
+	      {
+	        random2++;
+	        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+	      }
+	    }
+	    xc = find_xcoord(random2);
+	    yc = find_ycoord(random2);
+	    zc = find_zcoord(random2);
+	    m_Centroids[3 * currentnumgrains] = xc;
+	    m_Centroids[3 * currentnumgrains + 1] = yc;
+	    m_Centroids[3 * currentnumgrains + 2] = zc;
 //    insert_precipitate(currentnumgrains, thickness);
-    insert_precipitate(currentnumgrains);
+	    insert_precipitate(currentnumgrains);
 
-    m_Active[currentnumgrains] = true;
-    precipvoxelcounter = 0;
-    for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
-    {
-
-      if(m_GrainIds[currentprecipvoxellist[j]] > 0 && m_GrainIds[currentprecipvoxellist[j]] < numprimarygrains)
-      {
-        precipvoxelcounter++;
-      }
-    }
-    if(precipvoxelcounter == currentprecipvoxellist.size())
-    {
-      precipvoxelcounter = 0;
-      for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
-      {
-        m_GrainIds[currentprecipvoxellist[j]] = currentnumgrains;
-        m_PhasesC[currentprecipvoxellist[j]] = m_PhasesF[currentnumgrains];
-        precipvoxelcounter++;
-      }
-      for (size_t j = 0; j < currentcoatingvoxellist.size(); j++)
-      {
-        if(m_GrainIds[currentcoatingvoxellist[j]] < numprimarygrains)
-        {
-          m_PhasesC[currentcoatingvoxellist[j]] = 3;
-        }
-      }
-      totalprecipvol = totalprecipvol + (precipvoxelcounter * m->getXRes() * m->getYRes() * m->getZRes());
-      currentnumgrains++;
-    }
+	    m_Active[currentnumgrains] = true;
+	    precipvoxelcounter = 0;
+	    for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
+	    {
+	      if(m_GrainIds[currentprecipvoxellist[j]] > 0 && m_GrainIds[currentprecipvoxellist[j]] < numprimarygrains)
+	      {
+	        precipvoxelcounter++;
+	      }
+	    }
+	    if(precipvoxelcounter == currentprecipvoxellist.size())
+	    {
+	      precipvoxelcounter = 0;
+	      for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
+	      {
+	        m_GrainIds[currentprecipvoxellist[j]] = currentnumgrains;
+	        m_PhasesC[currentprecipvoxellist[j]] = m_PhasesF[currentnumgrains];
+	        precipvoxelcounter++;
+	      }
+//	      for (size_t j = 0; j < currentcoatingvoxellist.size(); j++)
+//	      {
+//	        if(m_GrainIds[currentcoatingvoxellist[j]] < numprimarygrains)
+//	        {
+//	          m_PhasesC[currentcoatingvoxellist[j]] = 3;
+//	        }
+//	      }
+	      curphasevol[j] = curphasevol[j] + (precipvoxelcounter * m->getXRes() * m->getYRes() * m->getZRes());
+	      currentnumgrains++;
+	    }
+	  }
   }
 }
 
