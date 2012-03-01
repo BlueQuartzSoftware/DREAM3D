@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -135,7 +136,7 @@ void SyntheticBuilder_PreFlight()
     m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
     m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
 
-    PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
+    PackPrimaryPhases::Pointer pack_grains = PackPrimaryPhases::New();
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
     pipeline.push_back(pack_grains);
@@ -150,7 +151,7 @@ void SyntheticBuilder_PreFlight()
 
   if(m_AlreadyFormed == false)
   {
-    PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
+    InsertPrecipitatePhases::Pointer place_precipitates = InsertPrecipitatePhases::New();
     place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
     pipeline.push_back(place_precipitates);
   }
@@ -240,9 +241,9 @@ MAKE_FILTER_TEST(  FindSizes, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindLocalMisorientationGradients, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindSurfaceGrains, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  AdjustVolume, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  PackGrainsGen2, PASS)
+MAKE_FILTER_TEST(  PackPrimaryPhases, PASS)
 MAKE_FILTER_TEST(  MatchCrystallography, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  PlacePrecipitates, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  InsertPrecipitatePhases, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  SurfaceMeshFilter, FAIL_IS_PASS)
 
 
@@ -278,9 +279,9 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( FindLocalMisorientationGradients_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindSurfaceGrains_PreFlightTest() );
   DREAM3D_REGISTER_TEST( AdjustVolume_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( PackGrainsGen2_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( PackPrimaryPhases_PreFlightTest() );
   DREAM3D_REGISTER_TEST( MatchCrystallography_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( PlacePrecipitates_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( InsertPrecipitatePhases_PreFlightTest() );
   DREAM3D_REGISTER_TEST( SurfaceMeshFilter_PreFlightTest() );
 
 

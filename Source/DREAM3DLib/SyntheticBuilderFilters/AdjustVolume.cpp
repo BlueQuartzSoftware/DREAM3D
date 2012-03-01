@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\
@@ -186,7 +186,7 @@ void AdjustVolume::execute()
     reassigned[i] = 0;
     gsizes[m_GrainIds[i]]++;
   }
-  PackGrainsGen2::Pointer packGrains = PackGrainsGen2::New();
+  PackPrimaryPhases::Pointer packGrains = PackPrimaryPhases::New();
   packGrains->setDataContainer(getDataContainer());
   packGrains->setObservers(this->getObservers());
   Field field;

@@ -48,9 +48,9 @@
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PlacePrecipitates.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/InsertPrecipitatePhases.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackGrainsGen2.h"
+#include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/AdjustVolume.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 
@@ -162,7 +162,7 @@ void TestSyntheticBuilder()
     init_volume->setZRes(m_ZResolution);
 	pipeline->pushBack(init_volume);
 
-    PackGrainsGen2::Pointer pack_grains = PackGrainsGen2::New();
+    PackPrimaryPhases::Pointer pack_grains = PackPrimaryPhases::New();
     pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
 #if PACK_GRAINS_ERROR_TXT_OUT
@@ -178,7 +178,7 @@ void TestSyntheticBuilder()
     AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
     pipeline->pushBack(adjust_grains);
 
-    PlacePrecipitates::Pointer place_precipitates = PlacePrecipitates::New();
+    InsertPrecipitatePhases::Pointer place_precipitates = InsertPrecipitatePhases::New();
     place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
     pipeline->pushBack(place_precipitates);
 
