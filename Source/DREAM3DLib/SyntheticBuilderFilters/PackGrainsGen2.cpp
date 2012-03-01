@@ -146,6 +146,14 @@ void PackGrainsGen2::setupFilterOptions()
     option->setValueType("bool");
     options.push_back(option);
   }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write Intended Grain Attributes");
+    option->setPropertyName("WriteIntendedAttributes");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
 
   setFilterOptions(options);
 }
@@ -515,7 +523,7 @@ void PackGrainsGen2::execute()
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain)  );
       move_grain(randomgrain, xc, yc, zc);
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
-//      currentneighborhooderror = check_neighborhooderror(-1000, random);
+      currentneighborhooderror = check_neighborhooderror(-1000, random);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       if(fillingerror <= oldfillingerror)
       {
@@ -546,7 +554,7 @@ void PackGrainsGen2::execute()
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_grain(randomgrain, xc, yc, zc);
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
-//      currentneighborhooderror = check_neighborhooderror(-1000, random);
+      currentneighborhooderror = check_neighborhooderror(-1000, random);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       if(fillingerror <= oldfillingerror)
       {
@@ -1409,15 +1417,10 @@ void PackGrainsGen2::assign_gaps()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  int *newowners;
-  newowners = new int [totpoints];
-  float *ellipfuncs;
-  ellipfuncs = new float [totpoints];
-  for(int i = 0; i < totpoints; i++)
-  {
-	  newowners[i] = -1;
-	  ellipfuncs[i] = -1.0;
-  }
+  std::vector<int> newowners;
+  newowners.resize(totpoints, -1);
+  std::vector<float> ellipfuncs;
+  ellipfuncs.resize(totpoints, -1.0);
 
   while (unassignedcount != 0)
   {
@@ -1560,8 +1563,6 @@ void PackGrainsGen2::assign_gaps()
   {
 	  if(m_GrainIds[i] > 0) m_PhasesC[i] = m_PhasesF[m_GrainIds[i]];
   }
-  delete [] ellipfuncs;
-  delete [] newowners;
 }
 void PackGrainsGen2::cleanup_grains()
 {
