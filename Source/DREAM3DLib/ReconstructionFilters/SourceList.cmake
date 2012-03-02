@@ -15,6 +15,7 @@ SET (ReconstructionFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CleanupGrains.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.h
+    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.h
 )
 #-- Add in any addition NON Filter classes here
 SET (DREAM3DLib_ReconstructionFilters_HDRS
@@ -27,6 +28,7 @@ SET (DREAM3DLib_ReconstructionFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CleanupGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.cpp
 
 
 )
