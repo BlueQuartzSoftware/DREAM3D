@@ -133,7 +133,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
@@ -268,7 +268,7 @@ void MergeTwins::merge_twins()
             q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
             q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
             phase2 = m_CrystalStructures[m_PhasesF[neigh]];
-            if (phase1 == phase2 && phase1 > 0) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
+			if (phase1 == phase2 && phase1 > Ebsd::CrystalStructure::Cubic) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
             float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
             float angdiff60 = fabs(w-60.0f);

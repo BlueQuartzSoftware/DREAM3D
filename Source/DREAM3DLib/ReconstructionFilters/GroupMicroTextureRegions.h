@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MERGECOLONIES_H_
-#define MERGECOLONIES_H_
+#ifndef GroupMicroTextureRegions_H_
+#define GroupMicroTextureRegions_H_
 
 #include <vector>
 #include <string>
@@ -50,27 +50,26 @@
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
- * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
+ * @class GroupMicroTextureRegions GroupMicroTextureRegions.h DREAM3DLib/ReconstructionFilters/GroupMicroTextureRegions.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
+class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MergeColonies)
-    DREAM3D_STATIC_NEW_MACRO(MergeColonies)
-    DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GroupMicroTextureRegions)
+    DREAM3D_STATIC_NEW_MACRO(GroupMicroTextureRegions)
+    DREAM3D_TYPE_MACRO_SUPER(GroupMicroTextureRegions, AbstractFilter)
 
 
-    virtual ~MergeColonies();
+    virtual ~GroupMicroTextureRegions();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Merge Colonies"; }
+    virtual const std::string getHumanLabel() { return "Group MicroTexture Regions"; }
 
-    DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance);
-    DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance);
+    DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance);
 
     virtual void setupFilterOptions();
 
@@ -81,10 +80,10 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     virtual void preflight();
 
   protected:
-    MergeColonies();
+    GroupMicroTextureRegions();
 
-    void merge_colonies();
-    void characterize_colonies();
+    void merge_micro_texture_regions();
+    void characterize_micro_texture_regions();
 
   private:
     int32_t* m_GrainIds;
@@ -95,7 +94,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<int> colonynewnumbers;
+    std::vector<int> newnumbers;
 
 
     OrientationMath::Pointer m_CubicOps;
@@ -106,8 +105,8 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented
-    void operator=(const MergeColonies&); // Operator '=' Not Implemented
+    GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
+    void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented
 };
 
-#endif /* MERGECOLONIES_H_ */
+#endif /* GroupMicroTextureRegions_H_ */
