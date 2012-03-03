@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "MergeColonies.h"
+#include "GroupMicroTextureRegions.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -62,10 +62,9 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeColonies::MergeColonies() :
+GroupMicroTextureRegions::GroupMicroTextureRegions() :
 AbstractFilter(),
-m_AxisTolerance(1.0f),
-m_AngleTolerance(1.0f),
+m_CAxisTolerance(1.0f),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
@@ -86,29 +85,20 @@ m_CrystalStructures(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeColonies::~MergeColonies()
+GroupMicroTextureRegions::~GroupMicroTextureRegions()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::setupFilterOptions()
+void GroupMicroTextureRegions::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Axis Tolerance");
-    option->setPropertyName("AxisTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
-  }
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Angle Tolerance");
-    option->setPropertyName("AngleTolerance");
+    option->setHumanLabel("C-Axis Alignment Tolerance");
+    option->setPropertyName("CAxisTolerance");
     option->setWidgetType(FilterOption::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
@@ -121,7 +111,7 @@ void MergeColonies::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -131,7 +121,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
@@ -161,7 +151,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::preflight()
+void GroupMicroTextureRegions::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -169,7 +159,7 @@ void MergeColonies::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::execute()
+void GroupMicroTextureRegions::execute()
 {
   DataContainer* m = getDataContainer();
   if (NULL == m)
@@ -180,7 +170,7 @@ void MergeColonies::execute()
     setErrorMessage(ss.str());
     return;
   }
-  m->clearFieldData();
+//  m->clearFieldData();
 //  m->clearEnsembleData();
 
   setErrorCondition(0);
@@ -190,13 +180,13 @@ void MergeColonies::execute()
     return;
   }
 
-  notify("Merge Colonies - Merging Colonies", 0, Observable::UpdateProgressMessage);
-  merge_colonies();
+  notify("Grouping MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+  merge_micro_texture_regions();
 
-  notify("Merge Colonies - Characterizing Colonies", 0, Observable::UpdateProgressMessage);
-  characterize_colonies();
+  notify("Characterizing MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+  characterize_micro_texture_regions();
 
-  notify("Merge Colonies - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  notify("Renumbering Fields", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -208,13 +198,13 @@ void MergeColonies::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("MergeColonies Completed", 0, Observable::UpdateProgressMessage);
+  notify("GroupMicroTextureRegions Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::merge_colonies()
+void GroupMicroTextureRegions::merge_micro_texture_regions()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
@@ -223,83 +213,78 @@ void MergeColonies::merge_colonies()
   NeighborList<int>& neighborlist = *m_NeighborList;
 
   float angcur = 180.0f;
-  std::vector<int> colonylist;
+  std::vector<int> microtexturelist;
   float w;
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
+  float cx1, cy1, cz1, denom1;
+  float cx2, cy2, cz2, denom2;
   float q1[5];
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
-  colonynewnumbers.resize(numgrains, -1);
+  newnumbers.resize(numgrains, -1);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (colonynewnumbers[i] == -1 && m_PhasesF[i] > 0)
+    if (newnumbers[i] == -1 && m_PhasesF[i] > 0)
     {
 	  m_Active[i] = true;
-      colonylist.push_back(i);
-      int csize = int(colonylist.size());
+      microtexturelist.push_back(i);
+      int csize = int(microtexturelist.size());
       for (int j = 0; j < csize; j++)
       {
-        csize = int(colonylist.size());
-        int firstgrain = colonylist[j];
+        csize = int(microtexturelist.size());
+        int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
+        q1[1] = m_AvgQuats[5*firstgrain+1]/m_AvgQuats[5*firstgrain];
+        q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
+        q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
+        q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
+        phase1 = m_CrystalStructures[m_PhasesF[firstgrain]];
+	    cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
+	    cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
+	    cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
+		denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
         for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
-          int colony = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && colonynewnumbers[neigh] != -1 && m_PhasesF[neigh] > 0)
+          if (neigh != i && newnumbers[neigh] == -1 && m_PhasesF[neigh] > 0)
           {
-		    w = 10000.0f;
-            q1[1] = m_AvgQuats[5*firstgrain+1]/m_AvgQuats[5*firstgrain];
-            q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
-            q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
-            q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
-            phase1 = m_CrystalStructures[m_PhasesF[firstgrain]];
-            q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];
-            q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
-            q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
-            q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
             phase2 = m_CrystalStructures[m_PhasesF[neigh]];
-			if (phase1 == phase2 && phase1 > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-			float vecttol = 0.03f;
-            if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.289f) < vecttol && fabs(fabs(r2) - 0.5f) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.57735f) < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.33f) < vecttol && fabs(fabs(r2) - 0.473f) < vecttol && fabs(fabs(r3) - 0.093f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.577f) < vecttol && fabs(fabs(r2) - 0.053f) < vecttol && fabs(fabs(r3) - 0.093f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.293f) < vecttol && fabs(fabs(r2) - 0.508f) < vecttol && fabs(fabs(r3) - 0.188f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.5866f) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.188) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.5769f) < vecttol && fabs(fabs(r2) - 0.8168f) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.9958f) < vecttol && fabs(fabs(r2) - 0.0912f) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (w < angcur)
-            {
-              angcur = w;
-            }
-            if (colony == 1)
-            {
-              colonynewnumbers[neigh] = i;
-              colonylist.push_back(neigh);
-			  m_Active[neigh] = false;
+			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal) 
+			{
+              q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];
+              q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
+              q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
+              q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
+			  cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
+			  cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
+			  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
+			  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
+			  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
+			  w = 180.0*acosf(w)/m_pi;
+              if (w <= m_CAxisTolerance)
+              {
+                newnumbers[neigh] = i;
+                microtexturelist.push_back(neigh);
+			    m_Active[neigh] = false;
+			  }
             }
           }
         }
       }
     }
-    colonylist.clear();
+    microtexturelist.clear();
   }
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	if (colonynewnumbers[grainname] != -1) { m_GrainIds[k] = colonynewnumbers[grainname];}
+	if (newnumbers[grainname] != -1) { m_GrainIds[k] = newnumbers[grainname];}
   }
 }
 
-void MergeColonies::characterize_colonies()
+void GroupMicroTextureRegions::characterize_micro_texture_regions()
 {
   DataContainer* m = getDataContainer();
   size_t numgrains = m->getNumFieldTuples();
