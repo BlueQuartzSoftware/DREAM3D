@@ -79,7 +79,10 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+
+    virtual void setupFilterOptions();
+	
+	virtual void execute();
     virtual void preflight();
 
 
