@@ -164,8 +164,9 @@ void RenumberGrains::execute()
 	    ss << getNameOfClass() << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
 	    ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
 	    //notify(ss.str(), 0, Observable::UpdateProgressMessage);
-
-		p->EraseTuples(RemoveList);
+		if((*iter).compare(DREAM3D::FieldData::NeighborList) == 0) m->removeFieldData(*iter);
+		else if((*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) == 0) m->removeFieldData(*iter);
+		else p->EraseTuples(RemoveList);
 		//std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
 	  }
 	  m->setNumFieldTuples(m->getNumFieldTuples()-RemoveList.size());
