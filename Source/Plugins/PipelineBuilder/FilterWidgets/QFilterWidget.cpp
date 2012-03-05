@@ -320,7 +320,7 @@ void QFilterWidget::setupGui()
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
       connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
       QVariant v = property(option->getPropertyName().c_str());
-      if (v.toInt(&ok) < cb->count())
+      if (v.toInt(&ok) >= cb->count())
       {
         // What ever the default from the class was it does not work with the combo box
         // so set the combo box to the zeroth value and set the same value back
