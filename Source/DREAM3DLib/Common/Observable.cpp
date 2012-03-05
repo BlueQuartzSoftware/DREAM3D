@@ -52,6 +52,10 @@ void Observable::addObserver(Observer* observer)
 {
   m_Observers.push_back(observer);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Observable::removeObserver(Observer* observer)
 {
   for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
@@ -67,19 +71,30 @@ void Observable::removeObserver(Observer* observer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notify(const std::string msg, int progress, ObserverAspect a)
+void Observable::setMessagePrefix(const std::string &str)
 {
-  notify(msg.c_str(), progress, a);
+  m_Prefix = str;
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notify(const char* msg, int progress, ObserverAspect a)
+std::string Observable::getMessagePrefix()
 {
-  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
+  return m_Prefix;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notify(const std::string msg, int progress, ObserverAspect a)
+{
+  std::string s = msg;
+  if(m_Prefix.empty() == false)
+  {
+    s = m_Prefix + msg;
+  }
+  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
   {
     switch(a)
     {
@@ -87,21 +102,32 @@ void Observable::notify(const char* msg, int progress, ObserverAspect a)
         (*iter)->pipelineProgress(progress);
         break;
       case UpdateProgressMessage:
-        (*iter)->pipelineProgressMessage(msg);
+        (*iter)->pipelineProgressMessage(s);
         break;
       case UpdateWarningMessage:
-        (*iter)->pipelineWarningMessage(msg);
+        (*iter)->pipelineWarningMessage(s);
         break;
       case UpdateErrorMessage:
-        (*iter)->pipelineErrorMessage(msg);
+        (*iter)->pipelineErrorMessage(s);
         break;
       case UpdateProgressValueAndMessage:
-        (*iter)->updateProgressAndMessage(msg, progress);
+        (*iter)->updateProgressAndMessage(s, progress);
         break;
       default:
         break;
     }
   }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notify(const char* msg, int progress, ObserverAspect a)
+{
+  std::string m(msg);
+  notify(m, progress, a);
 }
 
 // -----------------------------------------------------------------------------

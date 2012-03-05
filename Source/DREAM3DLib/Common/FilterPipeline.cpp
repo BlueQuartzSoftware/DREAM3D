@@ -354,8 +354,9 @@ void FilterPipeline::execute()
      progress = progress + 1.0f;
      pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);
      ss.str("");
-     ss << "Executing Filter [" << progress << "/" << m_Pipeline.size() << "] - " << (*iter)->getNameOfClass();
+     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
      pipelineProgressMessage(ss.str());
+     (*iter)->setMessagePrefix(ss.str());
      (*iter)->addObserver(static_cast<Observer*>(this));
      (*iter)->setDataContainer(m_DataContainer.get());
      setCurrentFilter(*iter);

@@ -294,7 +294,7 @@ int DxWriter::writeFile()
 #endif
 
   // If there is an error set this to something negative and also set a message
-  notify("Writing Dx File Complete", 0, Observable::UpdateProgressMessage);
+  notify("Complete", 0, Observable::UpdateProgressMessage);
   return err;
 }
 
