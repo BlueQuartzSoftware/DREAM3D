@@ -43,6 +43,7 @@
 #include <sstream>
 
 #include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterOption.h"
@@ -57,6 +58,34 @@ std::string OUTPUT_DIR();
 std::string FILTER_WIDGETS_DIR();
 std::string FILTER_WIDGETS_TEMP_DIR();
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void copyFile(const std::string &src, const std::string &dest)
+{
+  // Now compare the file just generated with any possible existing file
+  size_t tempFileSize = MXAFileInfo::fileSize(src);
+
+  unsigned char* contents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
+  FILE* f = fopen(src.c_str(), "rb");
+  size_t itemsRead = fread(contents, tempFileSize, 1, f);
+  if(itemsRead != 1)
+  {
+
+  }
+  fclose(f);
+  f = NULL;
+
+  f = fopen(dest.c_str(), "wb");
+  fwrite(contents, tempFileSize, 1, f);
+  fclose(f);
+
+  free(contents);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 void createHeaderFile( const std::string &group, const std::string &filter)
 {
@@ -77,13 +106,12 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   ss << OUTPUT_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
 
   completePath = MXADir::toNativeSeparators(ss.str());
-  std::cout << "Creating Header File: " <<completePath << std::endl;
 
   ss.str("");
-  ss << FILTER_WIDGETS_TEMP_DIR() << "/Q" << filter << "Widget.h";
+  ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.h";
   std::string tempPath = ss.str();
 
-  FILE* f = fopen(completePath.c_str(), "wb");
+  FILE* f = fopen(tempPath.c_str(), "wb");
 
   fprintf(f, "/*\n");
   fprintf(f, "  This file was auto-generated from the program CodeGen.cpp which is itself generated during cmake time\n");
@@ -98,10 +126,10 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "#include \"FilterWidgets/QFilterWidget.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/%s/%s.h\"\n", group.c_str(), filter.c_str());
 
-  fprintf(f, " class Q%sWidget : public QFilterWidget  {\n", filter.c_str());
+  fprintf(f, " class Q%sWidget : public QFilterWidget \n{\n", filter.c_str());
   fprintf(f, "   Q_OBJECT;\n");
   fprintf(f, " public:\n");
-  fprintf(f, "   Q%sWidget(QWidget* parent = NULL);\n", filter.c_str());
+  fprintf(f, "    Q%sWidget(QWidget* parent = NULL);\n", filter.c_str());
   fprintf(f, "    virtual ~Q%sWidget();\n", filter.c_str());
   fprintf(f, "    virtual AbstractFilter::Pointer getFilter();\n");
   fprintf(f, "    void writeOptions(QSettings &prefs);\n");
@@ -150,9 +178,43 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 
   fclose(f);
 
-
-
   // Now compare the file just generated with any possible existing file
+  size_t currentFileSize = MXAFileInfo::fileSize(completePath);
+  size_t tempFileSize = MXAFileInfo::fileSize(tempPath);
+  // If the file sizes are different then copy the file
+  if (currentFileSize != tempFileSize)
+  {
+    std::cout << "0-Creating Header File: " <<completePath << std::endl;
+    copyFile(tempPath, completePath);
+  }
+  else // Just because the files are the same size does not mean they are the same.
+  {
+    FILE* c = fopen(completePath.c_str(), "rb");
+    unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
+    size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
+    if (itemsRead != 1)
+    {
+
+    }
+    fclose(c);
+
+    FILE* t = fopen(tempPath.c_str(), "rb");
+    unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
+    itemsRead = fread(tempContents, tempFileSize, 1, t);
+    if (itemsRead != 1)
+    {
+
+    }
+    fclose(t);
+
+    int result = ::memcmp(currentContents, tempContents, tempFileSize);
+    if (result != 0)
+    {
+      std::cout << "1-Creating Header File: " <<completePath << std::endl;
+      copyFile(tempPath, completePath);
+    }
+  }
+
 }
 
 
@@ -182,12 +244,15 @@ void createSourceFile( const std::string &group, const std::string &filter)
    completePath = MXADir::toNativeSeparators(ss.str());
 
    ss.str("");
+   ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.cpp";
+   std::string tempPath = ss.str();
+
+   ss.str("");
    ss << "Q" << filter << "Widget.h";
 
    std::string headerFile = ss.str();
-   std::cout << "Creating Header File: " <<completePath << std::endl;
 
-   FILE* f = fopen(completePath.c_str(), "wb");
+   FILE* f = fopen(tempPath.c_str(), "wb");
 
    fprintf(f, "/*\n");
    fprintf(f, "  This file was auto-generated from the program CodeGen.cpp which is itself generated during cmake time\n");
@@ -320,6 +385,45 @@ void createSourceFile( const std::string &group, const std::string &filter)
   fprintf(f, "\n}\n");
 
   fclose(f);
+
+
+  // Now compare the file just generated with any possible existing file
+  size_t currentFileSize = MXAFileInfo::fileSize(completePath);
+  size_t tempFileSize = MXAFileInfo::fileSize(tempPath);
+  // If the file sizes are different then copy the file
+  if (currentFileSize != tempFileSize)
+  {
+    std::cout << "0-Creating Source File: " <<completePath << std::endl;
+    copyFile(tempPath, completePath);
+  }
+  else // Just because the files are the same size does not mean they are the same.
+  {
+    FILE* c = fopen(completePath.c_str(), "rb");
+    unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
+    size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
+    if (itemsRead != 1)
+    {
+
+    }
+    fclose(c);
+
+    FILE* t = fopen(tempPath.c_str(), "rb");
+    unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
+    itemsRead = fread(tempContents, tempFileSize, 1, t);
+    if (itemsRead != 1)
+    {
+
+    }
+    fclose(t);
+
+    int result = ::memcmp(currentContents, tempContents, tempFileSize);
+    if (result != 0)
+    {
+      std::cout << "1-Creating Source File: " <<completePath << std::endl;
+      copyFile(tempPath, completePath);
+    }
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -351,7 +455,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 
   ss.str("");
 
-  std::cout << "Creating Header File: " << completePath << std::endl;
+  std::cout << "Creating HTML File: " << completePath << std::endl;
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
