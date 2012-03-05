@@ -241,12 +241,9 @@ void FindMDF::execute()
 			misorientationlists[i][3 * j + 1] = -100;
 			misorientationlists[i][3 * j + 2] = -100;
 		  }
-		  if (phase1 == phase2) mbin = m_OrientationOps[phase1]->getMisoBin(
-																   misorientationlists[i][3*j],
-																   misorientationlists[i][3 * j + 1],
-																   misorientationlists[i][3 * j + 2]);
 		  if ((nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
 		  {
+			mbin = m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3*j], misorientationlists[i][3 * j + 1], misorientationlists[i][3 * j + 2]);
 			nsa = neighborsurfacearealist[i][j];
 			misobin[m_PhasesF[i]]->SetValue(mbin, (misobin[m_PhasesF[i]]->GetValue(mbin) + (nsa / m_TotalSurfaceAreas[m_PhasesF[i]])));
 		  }

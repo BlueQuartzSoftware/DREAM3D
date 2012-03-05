@@ -158,7 +158,7 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 void AlignSections::preflight()
 {
   DataContainer* m = getDataContainer();
-  m->clearFieldData();
+//  m->clearFieldData();
  // m->clearEnsembleData();
 
   dataCheck(true, 1, 1, 1);

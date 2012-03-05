@@ -63,6 +63,7 @@ m_Neighborhoods(NULL)
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,12 +79,11 @@ void FindNeighborhoods::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
     option->setHumanLabel("Distribution Type");
     option->setPropertyName("DistributionType");
     option->setWidgetType(FilterOption::ChoiceWidget);
-	option->setValueType("DREAM3D::DistributionType");
-    option->setCastableValueType("unsigned int");
+	option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
