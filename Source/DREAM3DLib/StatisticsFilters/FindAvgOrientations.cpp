@@ -152,11 +152,19 @@ void FindAvgOrientations::execute()
       voxquat[2] = m_Quats[i*5 + 2];
       voxquat[3] = m_Quats[i*5 + 3];
       voxquat[4] = m_Quats[i*5 + 4];
-          curavgquat[0] = 1;
+      curavgquat[0] = 1;
       curavgquat[1] = m_AvgQuats[5*m_GrainIds[i]+1]/m_AvgQuats[5*m_GrainIds[i]];
-          curavgquat[2] = m_AvgQuats[5*m_GrainIds[i]+2]/m_AvgQuats[5*m_GrainIds[i]];
-          curavgquat[3] = m_AvgQuats[5*m_GrainIds[i]+3]/m_AvgQuats[5*m_GrainIds[i]];
-          curavgquat[4] = m_AvgQuats[5*m_GrainIds[i]+4]/m_AvgQuats[5*m_GrainIds[i]];
+      curavgquat[2] = m_AvgQuats[5*m_GrainIds[i]+2]/m_AvgQuats[5*m_GrainIds[i]];
+      curavgquat[3] = m_AvgQuats[5*m_GrainIds[i]+3]/m_AvgQuats[5*m_GrainIds[i]];
+      curavgquat[4] = m_AvgQuats[5*m_GrainIds[i]+4]/m_AvgQuats[5*m_GrainIds[i]];
+	  if(m_AvgQuats[5*m_GrainIds[i]] == 0)
+	  {
+		  curavgquat[0] = 1;
+		  curavgquat[1] = 0;
+		  curavgquat[2] = 0;
+		  curavgquat[3] = 0;
+		  curavgquat[4] = 1;
+	  }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
       for (int k = 0; k < 5; k++)
       {

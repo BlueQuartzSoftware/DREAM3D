@@ -129,7 +129,7 @@ void CropVolume::setupFilterOptions()
 void CropVolume::preflight()
 {
   DataContainer* m = getDataContainer();
-  m->clearFieldData();
+//  m->clearFieldData();
 //  m->clearEnsembleData();
 }
 
@@ -149,7 +149,7 @@ void CropVolume::execute()
     setErrorMessage(ss.str());
     return;
   }
-  m->clearFieldData();
+//  m->clearFieldData();
 //  m->clearEnsembleData();
 
   setErrorCondition(0);
@@ -176,9 +176,9 @@ void CropVolume::execute()
     return;
   }
 
-  float m_XP = (m_XMax - m_XMin);
-  float m_YP = (m_YMax - m_YMin);
-  float m_ZP = (m_ZMax - m_ZMin);
+  float m_XP = (m_XMax - m_XMin)+1;
+  float m_YP = (m_YMax - m_YMin)+1;
+  float m_ZP = (m_ZMax - m_ZMin)+1;
   float m_XStart = m_XMin * m->getXRes();
   float m_YStart = m_YMin * m->getYRes();
   float m_ZStart = m_ZMin * m->getZRes();
