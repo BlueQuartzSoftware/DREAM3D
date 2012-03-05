@@ -50,9 +50,16 @@ m_ZLoading(1.0f),
 m_Schmids(NULL),
 m_AvgQuats(NULL),
 m_SlipSystems(NULL)
-
-
 {
+  m_HexOps = HexagonalOps::New();
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
+
+  m_CubicOps = CubicOps::New();
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+
+  m_OrthoOps = OrthoRhombicOps::New();
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+
   setupFilterOptions();
 }
 
@@ -113,6 +120,9 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1);
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
+
   setErrorMessage(ss.str());
 }
 
@@ -151,9 +161,7 @@ void FindSchmids::execute()
   float q1[5];
   float schmid = 0;
   float loadx, loady, loadz;
-  float theta1, theta2, theta3, theta4;
-  float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
-  float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
+
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -166,53 +174,9 @@ void FindSchmids::execute()
       loadx = ((1 - 2*q1[2]*q1[2] - 2*q1[3]*q1[3]) * m_XLoading) + ((2*q1[1]*q1[2] + 2*q1[3]*q1[4]) * m_YLoading) + ((2*q1[1]*q1[3] - 2*q1[2]*q1[4]) * m_ZLoading);
       loady = ((2*q1[1]*q1[2] - 2*q1[3]*q1[4]) * m_XLoading) + ((1 - 2*q1[1]*q1[1] - 2*q1[3]*q1[3]) * m_YLoading) + ((2*q1[2]*q1[3] + 2*q1[1]*q1[4]) * m_ZLoading);
       loadz = ((2*q1[1]*q1[3] + 2*q1[2]*q1[4]) * m_XLoading) + ((2*q1[2]*q1[3] - 2*q1[1]*q1[4]) * m_YLoading) + ((1 - 2*q1[1]*q1[1] - 2*q1[2]*q1[2]) * m_ZLoading);
-      float mag = loadx * loadx + loady * loady + loadz * loadz;
-      mag = sqrt(mag);
-      theta1 = (loadx + loady + loadz) / (mag * 1.732f);
-      theta1 = fabs(theta1);
-      theta2 = (loadx + loady - loadz) / (mag * 1.732f);
-      theta2 = fabs(theta2);
-      theta3 = (loadx - loady + loadz) / (mag * 1.732f);
-      theta3 = fabs(theta3);
-      theta4 = (-loadx + loady + loadz) / (mag * 1.732f);
-      theta4 = fabs(theta4);
-      lambda1 = (loadx + loady) / (mag * 1.414f);
-      lambda1 = fabs(lambda1);
-      lambda2 = (loadx + loadz) / (mag * 1.414f);
-      lambda2 = fabs(lambda2);
-      lambda3 = (loadx - loady) / (mag * 1.414f);
-      lambda3 = fabs(lambda3);
-      lambda4 = (loadx - loadz) / (mag * 1.414f);
-      lambda4 = fabs(lambda4);
-      lambda5 = (loady + loadz) / (mag * 1.414f);
-      lambda5 = fabs(lambda5);
-      lambda6 = (loady - loadz) / (mag * 1.414f);
-      lambda6 = fabs(lambda6);
-      schmid1 = theta1 * lambda6;
-      schmid2 = theta1 * lambda4;
-      schmid3 = theta1 * lambda3;
-      schmid4 = theta2 * lambda3;
-      schmid5 = theta2 * lambda2;
-      schmid6 = theta2 * lambda5;
-      schmid7 = theta3 * lambda1;
-      schmid8 = theta3 * lambda5;
-      schmid9 = theta3 * lambda4;
-      schmid10 = theta4 * lambda1;
-      schmid11 = theta4 * lambda2;
-      schmid12 = theta4 * lambda6;
-      schmid = schmid1, ss = 0;
 
-      if (schmid2 > schmid) schmid = schmid2, ss = 1;
-      if (schmid3 > schmid) schmid = schmid3, ss = 2;
-      if (schmid4 > schmid) schmid = schmid4, ss = 3;
-      if (schmid5 > schmid) schmid = schmid5, ss = 4;
-      if (schmid6 > schmid) schmid = schmid6, ss = 5;
-      if (schmid7 > schmid) schmid = schmid7, ss = 6;
-      if (schmid8 > schmid) schmid = schmid8, ss = 7;
-      if (schmid9 > schmid) schmid = schmid9, ss = 8;
-      if (schmid10 > schmid) schmid = schmid10, ss = 9;
-      if (schmid11 > schmid) schmid = schmid11, ss = 10;
-      if (schmid12 > schmid) schmid = schmid12, ss = 11;
+	  m_OrientationOps[m_CrystalStructures[i]]->getSchmidFactorAndSS(loadx, loady, loadz, schmid, ss);
+
       m_Schmids[i] = schmid;
 	  m_SlipSystems[i] = ss;
   }
