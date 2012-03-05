@@ -85,6 +85,28 @@ FindShapes::~FindShapes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindShapes::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Distribution Type");
+    option->setPropertyName("DistributionType");
+    option->setWidgetType(FilterOption::ChoiceWidget);
+	option->setValueType("DREAM3D::DistributionType");
+    option->setCastableValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Beta");
+    choices.push_back("LogNormal");
+    choices.push_back("Power");
+    option->setChoices(choices);
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
