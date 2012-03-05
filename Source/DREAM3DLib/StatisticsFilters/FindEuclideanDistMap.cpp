@@ -251,7 +251,7 @@ void FindEuclideanDistMap::execute()
   }
 
   find_euclideandistmap();
-  notify("FindEuclideanDistMap Completed", 0, Observable::UpdateProgressMessage);
+  notify("Completed", 0, Observable::UpdateProgressMessage);
 }
 
 

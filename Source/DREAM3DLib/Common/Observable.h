@@ -103,8 +103,12 @@ class DREAM3DLib_EXPORT Observable
 
     void setObservers(std::vector<Observer*> obs);
 
+    virtual void setMessagePrefix(const std::string &str);
+    virtual std::string getMessagePrefix();
+
   private:
     std::vector<Observer*> m_Observers;
+    std::string m_Prefix;
 
     Observable(const Observable&); // Copy Constructor Not Implemented
     void operator=(const Observable&); // Operator '=' Not Implemented

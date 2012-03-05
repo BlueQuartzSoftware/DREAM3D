@@ -170,5 +170,5 @@ void FindAxisODF::execute()
 	  statsDataArray[i]->setAxisOrientation(axisodf[i]);
   }
 
-  notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
+  notify("Completed", 0, Observable::UpdateProgressMessage);
 }

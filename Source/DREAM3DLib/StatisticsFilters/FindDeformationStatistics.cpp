@@ -713,5 +713,5 @@ void FindDeformationStatistics::execute()
   }
   fclose(vtkFile);
 
-  notify("FindDeformationStatistics Completed", 0, Observable::UpdateProgressMessage);
+  notify("Completed", 0, Observable::UpdateProgressMessage);
 }

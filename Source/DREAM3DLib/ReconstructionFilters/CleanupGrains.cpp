@@ -212,6 +212,7 @@ void CleanupGrains::execute()
   FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
   find_neighbors->setObservers(this->getObservers());
   find_neighbors->setDataContainer(m);
+  find_neighbors->setMessagePrefix(getMessagePrefix());
   find_neighbors->execute();
   int err = find_neighbors->getErrorCondition();
   if (err < 0)
@@ -230,6 +231,7 @@ void CleanupGrains::execute()
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
+  renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->execute();
   err = renumber_grains->getErrorCondition();
   if (err < 0)

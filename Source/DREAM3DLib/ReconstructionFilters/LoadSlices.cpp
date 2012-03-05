@@ -384,6 +384,7 @@ void LoadSlices::execute()
   DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();
   filter->setQualityMetricFilters(m_QualityMetricFilters);
   filter->setObservers(getObservers());
+  filter->setMessagePrefix(getMessagePrefix());
   filter->setEbsdVolumeReader(ebsdReader);
   filter->setDataContainer(m);
   filter->execute();

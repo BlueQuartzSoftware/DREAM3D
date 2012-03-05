@@ -297,7 +297,7 @@ int DxReader::readFile()
   tokens.clear();
   inFile.close();
 
-  notify("DxReader Complete", 0, Observable::UpdateProgressMessage);
+  notify("Complete", 0, Observable::UpdateProgressMessage);
   return 0;
 }
 

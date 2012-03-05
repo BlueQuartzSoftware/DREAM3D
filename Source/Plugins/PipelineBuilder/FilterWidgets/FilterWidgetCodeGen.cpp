@@ -55,6 +55,7 @@ typedef std::set<std::string>  StringSetType;
 // These will be defined in an include header file below.
 std::string OUTPUT_DIR();
 std::string FILTER_WIDGETS_DIR();
+std::string FILTER_WIDGETS_TEMP_DIR();
 
 template<typename T>
 void createHeaderFile( const std::string &group, const std::string &filter)
@@ -77,6 +78,10 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 
   completePath = MXADir::toNativeSeparators(ss.str());
   std::cout << "Creating Header File: " <<completePath << std::endl;
+
+  ss.str("");
+  ss << FILTER_WIDGETS_TEMP_DIR() << "/Q" << filter << "Widget.h";
+  std::string tempPath = ss.str();
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
@@ -144,6 +149,10 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "#endif /* Q%s_H_ */\n", filter.c_str());
 
   fclose(f);
+
+
+
+  // Now compare the file just generated with any possible existing file
 }
 
 
