@@ -129,18 +129,8 @@ float CubicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &
 {
 
   int numsym = 24;
-  //float quatsym[24][5];
 
-
-//  for (int i = 0; i < 24; i++)
-//  {
-//    for (int j = 0; j < 5; j++)
-//    {
-//      quatsym[i][j] = CubicQuatSym[i][j];
-//    }
-//  }
   return _calcMisoQuat(CubicQuatSym, numsym, q1, q2, n1, n2, n3);
- // return _calcMisoQuat(quatsym, numsym, q1, q2, n1, n2, n3);
 }
 
 // -----------------------------------------------------------------------------
@@ -412,7 +402,6 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
 
 void CubicOps::determineHomochoricValues(int choose, float &r1, float &r2, float &r3)
 {
-  //float init1, init2, init3;
   float step[3];
   float phi[3];
 
@@ -441,3 +430,57 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, r1, r2, r3);
 }
 
+void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+{
+  float theta1, theta2, theta3, theta4;
+  float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
+  float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
+
+  float mag = loadx * loadx + loady * loady + loadz * loadz;
+  mag = sqrt(mag);
+  theta1 = (loadx + loady + loadz) / (mag * 1.732f);
+  theta1 = fabs(theta1);
+  theta2 = (loadx + loady - loadz) / (mag * 1.732f);
+  theta2 = fabs(theta2);
+  theta3 = (loadx - loady + loadz) / (mag * 1.732f);
+  theta3 = fabs(theta3);
+  theta4 = (-loadx + loady + loadz) / (mag * 1.732f);
+  theta4 = fabs(theta4);
+  lambda1 = (loadx + loady) / (mag * 1.414f);
+  lambda1 = fabs(lambda1);
+  lambda2 = (loadx + loadz) / (mag * 1.414f);
+  lambda2 = fabs(lambda2);
+  lambda3 = (loadx - loady) / (mag * 1.414f);
+  lambda3 = fabs(lambda3);
+  lambda4 = (loadx - loadz) / (mag * 1.414f);
+  lambda4 = fabs(lambda4);
+  lambda5 = (loady + loadz) / (mag * 1.414f);
+  lambda5 = fabs(lambda5);
+  lambda6 = (loady - loadz) / (mag * 1.414f);
+  lambda6 = fabs(lambda6);
+  schmid1 = theta1 * lambda6;
+  schmid2 = theta1 * lambda4;
+  schmid3 = theta1 * lambda3;
+  schmid4 = theta2 * lambda3;
+  schmid5 = theta2 * lambda2;
+  schmid6 = theta2 * lambda5;
+  schmid7 = theta3 * lambda1;
+  schmid8 = theta3 * lambda5;
+  schmid9 = theta3 * lambda4;
+  schmid10 = theta4 * lambda1;
+  schmid11 = theta4 * lambda2;
+  schmid12 = theta4 * lambda6;
+  schmidfactor = schmid1, slipsys = 0;
+
+  if (schmid2 > schmidfactor) schmidfactor = schmid2, slipsys = 1;
+  if (schmid3 > schmidfactor) schmidfactor = schmid3, slipsys = 2;
+  if (schmid4 > schmidfactor) schmidfactor = schmid4, slipsys = 3;
+  if (schmid5 > schmidfactor) schmidfactor = schmid5, slipsys = 4;
+  if (schmid6 > schmidfactor) schmidfactor = schmid6, slipsys = 5;
+  if (schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 6;
+  if (schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 7;
+  if (schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 8;
+  if (schmid10 > schmidfactor) schmidfactor = schmid10, slipsys = 9;
+  if (schmid11 > schmidfactor) schmidfactor = schmid11, slipsys = 10;
+  if (schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 11;
+}

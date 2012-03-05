@@ -105,9 +105,9 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationMath
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineHomochoricValues(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
+	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
 
   protected:
-
 
   private:
     HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented

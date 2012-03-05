@@ -86,6 +86,8 @@ class DREAM3DLib_EXPORT OrientationMath
 
     virtual int getOdfBin(float r1, float r2, float r3) = 0;
 
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys) = 0;
+
 
     static void axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
