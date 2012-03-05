@@ -103,7 +103,7 @@ void ChangeResolution::setupFilterOptions()
 void ChangeResolution::preflight()
 {
   DataContainer* m = getDataContainer();
-  m->clearFieldData();
+//  m->clearFieldData();
 //  m->clearEnsembleData();
 }
 
@@ -124,7 +124,7 @@ void ChangeResolution::execute()
     setErrorMessage(ss.str());
     return;
   }
-  m->clearFieldData();
+//  m->clearFieldData();
 //  m->clearEnsembleData();
 
   setErrorCondition(0);
