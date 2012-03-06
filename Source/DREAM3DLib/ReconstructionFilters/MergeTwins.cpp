@@ -71,7 +71,8 @@ m_AvgQuats(NULL),
 m_Active(NULL),
 m_PhasesF(NULL),
 m_NeighborList(NULL),
-m_CrystalStructures(NULL)
+m_CrystalStructures(NULL),
+m_NumFields(NULL)
 {
 
   m_HexOps = HexagonalOps::New();
@@ -156,6 +157,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -208,6 +210,15 @@ void MergeTwins::execute()
   if (err < 0)
   {
     return;
+  }
+
+  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
+  {
+	m_NumFields[i] = 0;
+  }
+  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
+  {
+	m_NumFields[m_PhasesF[i]]++;
   }
 
   notify("Completed", 0, Observable::UpdateProgressMessage);

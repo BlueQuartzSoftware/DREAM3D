@@ -96,6 +96,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;
+	int32_t* m_NumFields;
 
     std::vector<int> twinnewnumbers;
 

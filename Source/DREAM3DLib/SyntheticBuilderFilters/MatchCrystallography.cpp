@@ -75,9 +75,7 @@ MatchCrystallography::MatchCrystallography() :
     m_SharedSurfaceAreaList(NULL),
     m_TotalSurfaceAreas(NULL),
     m_CrystalStructures(NULL),
-    m_PrecipitateFractions(NULL),
-    m_PhaseTypes(NULL),
-    m_PhaseFractions(NULL)
+	m_NumFields(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -160,11 +158,13 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -309, float, FloatArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-    setErrorCondition(-308);
+    setErrorCondition(-310);
   }
 
   setErrorMessage(ss.str());
@@ -394,14 +394,15 @@ void MatchCrystallography::matchCrystallography()
   float totaldensity = 0, deltaerror = 0;
   float currentodferror = 0, currentmdferror = 0;
   size_t selectedgrain1 = 0, selectedgrain2 = 0;
-  size_t xtalSize = m->getNumEnsembleTuples();
-  for (size_t iter = 1; iter < xtalSize; ++iter)
+  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numfields = m->getNumFieldTuples();
+  for (size_t iter = 1; iter < numensembles; ++iter)
   {
     iterations = 0;
     badtrycount = 0;
     if(m_CrystalStructures[iter] == Ebsd::CrystalStructure::Cubic) numbins = 18 * 18 * 18;
     if(m_CrystalStructures[iter] == Ebsd::CrystalStructure::Hexagonal) numbins = 36 * 36 * 12;
-    while (badtrycount < 10*totalFields && iterations < 1000*totalFields)
+    while (badtrycount < 10*m_NumFields[iter] && iterations < 1000*m_NumFields[iter])
     {
       std::stringstream ss;
       ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/float(1000*totalFields))*100 << "% Complete";
@@ -423,16 +424,16 @@ void MatchCrystallography::matchCrystallography()
       if(random < 0.5) // SwapOutOrientation
       {
         counter = 0;
-        selectedgrain1 = int(rg.genrand_res53() * totalFields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < totalFields)
+        selectedgrain1 = int(rg.genrand_res53() * numfields);
+        while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < numfields)
         {
-          if(selectedgrain1 >= totalFields) selectedgrain1 = selectedgrain1 - totalFields;
+          if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
           counter++;
         }
-        if(counter == totalFields)
+        if(counter == numfields)
         {
-          badtrycount = 10*totalFields;
+          badtrycount = 10*m_NumFields[iter];
         }
 		else
 		{
@@ -508,30 +509,30 @@ void MatchCrystallography::matchCrystallography()
       else if(random > 0.5) // SwitchOrientation
       {
         counter = 0;
-        selectedgrain1 = int(rg.genrand_res53() * totalFields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < totalFields)
+        selectedgrain1 = int(rg.genrand_res53() * numfields);
+        while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < numfields)
         {
-          if(selectedgrain1 >= totalFields) selectedgrain1 = selectedgrain1 - totalFields;
+          if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
           counter++;
         }
-        if(counter == totalFields)
+        if(counter == numfields)
 		{
-			badtrycount = 10*totalFields;
+			badtrycount = 10*m_NumFields[iter];
 		}
 		else
 		{
 			counter = 0;
-			selectedgrain2 = int(rg.genrand_res53() * totalFields);
-			while ((m_SurfaceFields[selectedgrain2] == true || m_PhasesF[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < totalFields)
+			selectedgrain2 = int(rg.genrand_res53() * numfields);
+			while ((m_SurfaceFields[selectedgrain2] == true || m_PhasesF[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < numfields)
 			{
-			  if(selectedgrain2 >= totalFields) selectedgrain2 = selectedgrain2 - totalFields;
+			  if(selectedgrain2 >= numfields) selectedgrain2 = selectedgrain2 - numfields;
 			  selectedgrain2++;
 			  counter++;
 			}
-	        if(counter == totalFields)
+	        if(counter == numfields)
 			{
-				badtrycount = 10*totalFields;
+				badtrycount = 10*m_NumFields[iter];
 			}
 			else
 			{
