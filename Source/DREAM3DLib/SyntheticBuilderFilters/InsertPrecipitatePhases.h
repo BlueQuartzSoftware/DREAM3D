@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     std::vector<int> currentprecipvoxellist;
 	  std::vector<int> currentcoatingvoxellist;
 
-	int numprimarygrains;
+	int firstPrecipitateField;
     unsigned long long int Seed;
     float sizex;
     float sizey;
@@ -134,6 +134,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     unsigned int* m_PhaseTypes;
     unsigned int* m_ShapeTypes;
+	int32_t* m_NumFields;
 	StatsDataArray* m_StatsDataArray;
 
     std::vector<OrientationMath*> m_OrientationOps;

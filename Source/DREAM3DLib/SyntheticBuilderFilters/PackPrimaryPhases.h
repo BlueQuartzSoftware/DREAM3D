@@ -159,6 +159,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
     unsigned int* m_PhaseTypes;
     unsigned int* m_ShapeTypes;
+	int32_t* m_NumFields;
     StatsDataArray* m_StatsDataArray;
 
     // All other private variables
@@ -179,6 +180,8 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     std::vector<std::vector<int> > planelist;
 
     unsigned long long int Seed;
+
+	int32_t firstPrimaryField;
 
     float sizex;
     float sizey;

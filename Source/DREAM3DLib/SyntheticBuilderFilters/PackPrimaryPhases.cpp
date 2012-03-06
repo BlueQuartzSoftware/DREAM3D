@@ -84,7 +84,8 @@ m_AxisEulerAngles(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_PhaseTypes(NULL),
-m_ShapeTypes(NULL)
+m_ShapeTypes(NULL),
+m_NumFields(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
   m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
@@ -179,6 +180,7 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -270,6 +272,7 @@ void PackPrimaryPhases::execute()
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
+	  m_NumFields[i] = 0;
       primaryphases.push_back(i);
 	  primaryphasefractions.push_back(statsDataArray[i]->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + statsDataArray[i]->getPhaseFraction();
@@ -317,7 +320,8 @@ void PackPrimaryPhases::execute()
   }
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   Field field;
-  int gid = 0;
+  int gid = m->getNumFieldTuples();
+  int firstPrimaryField = gid;
   m->resizeFieldDataArrays(gid + 1);
   dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
   m_Active[gid] = true;
@@ -596,6 +600,12 @@ void PackPrimaryPhases::execute()
   }
 
   dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  
+  int numfields = m->getNumFieldTuples();
+  for(size_t i = firstPrimaryField; i < numfields; i++)
+  {
+	m_NumFields[m_PhasesF[i]]++;
+  }
 
   notify("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
   assign_gaps();
@@ -818,7 +828,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
   y = m_Centroids[3*gnum+1];
   z = m_Centroids[3*gnum+2];
   dia = m_EquivalentDiameters[gnum];
-  for (size_t n = 1; n < m->getNumFieldTuples(); n++)
+  for (size_t n = firstPrimaryField; n < m->getNumFieldTuples(); n++)
   {
     xn = m_Centroids[3*n];
     yn = m_Centroids[3*n+1];
@@ -874,7 +884,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     {
       determine_neighbors(gremove, -1);
     }
-    for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+    for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
     {
       nnum = 0;
       index = i;
@@ -980,7 +990,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
     {
       simgrainsizedist[iter][i] = 0.0f;
     }
-    for (size_t b = 1; b < m->getNumFieldTuples(); b++)
+    for (size_t b = firstPrimaryField; b < m->getNumFieldTuples(); b++)
     {
       index = b;
       if(m_PhasesF[index] == phase)
@@ -1236,11 +1246,11 @@ void PackPrimaryPhases::assign_voxels()
  // int64_t totpoints = m->totalPoints();
   gsizes.resize(m->getNumFieldTuples());
 
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
     gsizes[i] = 0;
   }
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3*i+1];
@@ -1370,7 +1380,7 @@ void PackPrimaryPhases::assign_voxels()
       }
     }
   }
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
     if (gsizes[i] == 0) m_Active[i] = false;
   }
@@ -1422,7 +1432,7 @@ void PackPrimaryPhases::assign_gaps()
   {
  	  unassignedcount = 0;
 	  timestep = timestep + 50;
-	  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+	  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
 	  {
 		float volcur = m_Volumes[i];
 		float bovera = m_AxisLengths[3*i+1];
@@ -1606,7 +1616,7 @@ void PackPrimaryPhases::cleanup_grains()
   int index;
   float minsize = 0;
   gsizes.resize(m->getNumFieldTuples());
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
     gsizes[i] = 0;
   }
@@ -1706,7 +1716,7 @@ void PackPrimaryPhases::cleanup_grains()
   {
 	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
      if(gsizes[i] == 0) m_Active[i] = false;
   }
