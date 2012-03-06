@@ -13,6 +13,8 @@ SET (PrivateFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/DetermineGoodVoxels.h
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNeighbors.h
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainPhases.h
+    ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindSurfaceCells.h
+    ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNumFields.h
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainCentroids.h
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/RenumberGrains.h
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindSurfaceGrains.h
@@ -28,6 +30,8 @@ SET (DREAM3DLib_PrivateFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/DetermineGoodVoxels.cpp
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNeighbors.cpp    
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainPhases.cpp
+    ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindSurfaceCells.cpp
+    ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindNumFields.cpp
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindGrainCentroids.cpp
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/RenumberGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/PrivateFilters/FindSurfaceGrains.cpp
