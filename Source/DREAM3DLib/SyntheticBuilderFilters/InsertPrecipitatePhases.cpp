@@ -72,7 +72,8 @@ m_Active(NULL),
 m_PhasesF(NULL),
 m_NumCells(NULL),
 m_PhaseTypes(NULL),
-m_ShapeTypes(NULL)
+m_ShapeTypes(NULL),
+m_NumFields(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
   m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
@@ -148,11 +149,11 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 1);
 
   //Ensemble Data
-  typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -168,18 +169,6 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::preflight()
 {
-  // Find Neighbors would be run first so run its PreFlight first before ours
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->setDataContainer(getDataContainer());
-  find_neighbors->preflight();
-  if (find_neighbors->getErrorCondition() < 0)
-  {
-    setErrorCondition(find_neighbors->getErrorCondition());
-    setErrorMessage(find_neighbors->getErrorMessage());
-    return;
-  }
-
   dataCheck(true, 1, 1, 1);
 }
 
@@ -205,17 +194,6 @@ void InsertPrecipitatePhases::execute()
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumFieldTuples();
 
-  //Make sure we find neighbors first before we validate all the pointers
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->setDataContainer(m);
-  find_neighbors->execute();
-  err = find_neighbors->getErrorCondition();
-  if (err < 0)
-  {
-    return;
-  }
-
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -230,6 +208,12 @@ void InsertPrecipitatePhases::execute()
 
   place_precipitates();
   fillin_precipitates();
+
+  int numfields = m->getNumFieldTuples();
+  for(size_t i = firstPrecipitateField; i < numfields; i++)
+  {
+	m_NumFields[m_PhasesF[i]]++;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("InsertPrecipitatePhases Completed", 0, Observable::UpdateProgressMessage);
@@ -475,7 +459,7 @@ void  InsertPrecipitatePhases::fillin_precipitates()
           if(good == 1)
           {
             int grain = m_GrainIds[neighpoint];
-            if(grain > 0 && (grain >= numprimarygrains || flag == true))
+            if(grain > 0 && (grain >= firstPrecipitateField || flag == true))
             {
               neighs.push_back(grain);
             }
@@ -507,7 +491,7 @@ void  InsertPrecipitatePhases::fillin_precipitates()
     {
       int grainname = m_GrainIds[j];
       int neighbor = neighbors[j];
-      if(grainname <= 0 && neighbor > 0 && (neighbor >= numprimarygrains || flag == true))
+      if(grainname <= 0 && neighbor > 0 && (neighbor >= firstPrecipitateField || flag == true))
       {
         m_GrainIds[j] = neighbor;
         m_PhasesC[j] = m_PhasesF[neighbor];
@@ -562,7 +546,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   size_t precipvoxelcounter = 0;
 //  float thickness = 0.25;
   size_t currentnumgrains = m->getNumFieldTuples();
-  numprimarygrains = m->getNumFieldTuples();
+  firstPrecipitateField = currentnumgrains;
   // size_t index;
   int phase;
   float precipboundaryfraction = 0.0;
@@ -577,6 +561,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
+	  m_NumFields[i] = 0;
       precipitatephases.push_back(i);
       precipitatephasefractions.push_back(statsDataArray[i]->getPhaseFraction());
       totalprecipitatefractions = totalprecipitatefractions + statsDataArray[i]->getPhaseFraction();
@@ -612,7 +597,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 		if(random <= precipboundaryfraction)
 		{
 	      random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-	      while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] > numprimarygrains)
+	      while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] > firstPrecipitateField)
 	      {
 	        random2++;
 	        if(random2 >= totalPoints) random2 = random2 - totalPoints;
@@ -621,7 +606,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 	    else if(random > precipboundaryfraction)
 	    {
 	      random2 = rg.genrand_res53() * (totalPoints - 1);
-	      while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] > numprimarygrains)
+	      while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] > firstPrecipitateField)
 	      {
 	        random2++;
 	        if(random2 >= totalPoints) random2 = random2 - totalPoints;
@@ -640,7 +625,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 	    precipvoxelcounter = 0;
 	    for (size_t jj = 0; jj < currentprecipvoxellist.size(); jj++)
 	    {
-	      if(m_GrainIds[currentprecipvoxellist[jj]] > 0 && m_GrainIds[currentprecipvoxellist[jj]] < numprimarygrains)
+	      if(m_GrainIds[currentprecipvoxellist[jj]] > 0 && m_GrainIds[currentprecipvoxellist[jj]] < firstPrecipitateField)
 	      {
 	        precipvoxelcounter++;
 	      }
