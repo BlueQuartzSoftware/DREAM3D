@@ -99,8 +99,10 @@ file(REMOVE ${CodeGeneratorFile})
 
 # --------------------------------------------------------------------            
 # Create our custom executable that will generate most of our QFilterWidget
-# classes from information stored in the Filters themselves.           
-configure_file( ${FilterWidgets_SOURCE_DIR}/CodeGen.cpp.in
+# classes from information stored in the Filters themselves. 
+set(FilterWidgets_TEMP_DIR ${FilterWidgets_BINARY_DIR}/Temp)
+file(MAKE_DIRECTORY ${FilterWidgets_BINARY_DIR}/Temp)
+configure_file( ${FilterWidgets_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
                 ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.h)
 add_executable(FilterWidgetCodeGen  ${FilterWidgets_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                     ${FilterWidgets_BINARY_DIR}/FilterWidgetCodeGen.h)

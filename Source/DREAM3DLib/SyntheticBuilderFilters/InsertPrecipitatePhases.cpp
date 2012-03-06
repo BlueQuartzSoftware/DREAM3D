@@ -550,9 +550,9 @@ void  InsertPrecipitatePhases::place_precipitates()
       static_cast<DimType>(udims[1]),
       static_cast<DimType>(udims[2]), };
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  // float xRes = m->getXRes();
+  // float yRes = m->getYRes();
+  // float zRes = m->getZRes();
   sizex = dims[0] * m->getXRes();
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
@@ -638,9 +638,9 @@ void  InsertPrecipitatePhases::place_precipitates()
 
 	    m_Active[currentnumgrains] = true;
 	    precipvoxelcounter = 0;
-	    for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
+	    for (size_t jj = 0; jj < currentprecipvoxellist.size(); jj++)
 	    {
-	      if(m_GrainIds[currentprecipvoxellist[j]] > 0 && m_GrainIds[currentprecipvoxellist[j]] < numprimarygrains)
+	      if(m_GrainIds[currentprecipvoxellist[jj]] > 0 && m_GrainIds[currentprecipvoxellist[jj]] < numprimarygrains)
 	      {
 	        precipvoxelcounter++;
 	      }
@@ -648,10 +648,10 @@ void  InsertPrecipitatePhases::place_precipitates()
 	    if(precipvoxelcounter == currentprecipvoxellist.size())
 	    {
 	      precipvoxelcounter = 0;
-	      for (size_t j = 0; j < currentprecipvoxellist.size(); j++)
+	      for (size_t jj = 0; jj < currentprecipvoxellist.size(); jj++)
 	      {
-	        m_GrainIds[currentprecipvoxellist[j]] = currentnumgrains;
-	        m_PhasesC[currentprecipvoxellist[j]] = m_PhasesF[currentnumgrains];
+	        m_GrainIds[currentprecipvoxellist[jj]] = currentnumgrains;
+	        m_PhasesC[currentprecipvoxellist[jj]] = m_PhasesF[currentnumgrains];
 	        precipvoxelcounter++;
 	      }
 //	      for (size_t j = 0; j < currentcoatingvoxellist.size(); j++)

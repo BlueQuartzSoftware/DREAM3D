@@ -203,7 +203,7 @@ void DataContainerWriter::execute()
 
   H5Gclose(dcGid); // Close the Data Container Group
   closeFile();
-  notify("DataContainerWriter Complete", 0, Observable::UpdateProgressMessage);
+  notify("Complete", 0, Observable::UpdateProgressMessage);
 }
 
 
