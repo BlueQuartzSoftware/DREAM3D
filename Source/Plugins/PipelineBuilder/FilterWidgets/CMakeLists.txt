@@ -146,12 +146,10 @@ set(QFilterWidget_SRCS
     ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${QFilterWidget_HDRS}" "${QFilterWidget_SRCS}" "0")
-QT4_WRAP_CPP( FilterWidgets_MOC_SRCS ${QFilterWidget_HDRS} )
-
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT4_WRAP_CPP( FilterWidgets_Generated_MOC_SRCS ${FilterWidget_GEN_HDRS})   
+QT4_WRAP_CPP( FilterWidgets_Generated_MOC_SRCS ${QFilterWidget_HDRS} ${FilterWidget_GEN_HDRS})   
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs
@@ -182,8 +180,7 @@ set (Project_SRCS
         ${FilterWidget_SRCS}
         ${FilterWidget_GEN_HDRS}
         ${FilterWidget_GEN_SRCS}
-        ${FilterWidgets_MOC_SRCS}
-#        ${FilterWidgets_Generated_MOC_SRCS}
+        ${FilterWidgets_Generated_MOC_SRCS}
         ${FilterWidgets_Generated_UI_HDRS}
 )
 
