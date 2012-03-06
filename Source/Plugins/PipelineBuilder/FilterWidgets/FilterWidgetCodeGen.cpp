@@ -384,7 +384,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   }
   fprintf(f, "\n}\n");
 
-  fprintf(f, "#include \"moc_Q%sWidget.cxx\"\n", filter.c_str());
+ // fprintf(f, "#include \"moc_Q%sWidget.cxx\"\n", filter.c_str());
 
   fclose(f);
 
