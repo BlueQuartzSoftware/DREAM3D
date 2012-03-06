@@ -101,6 +101,7 @@ class DREAM3DLib_EXPORT StatsData
     static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
 
+    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
     DREAM3D_INSTANCE_PROPERTY(float, PrecipBoundaryFraction);
 

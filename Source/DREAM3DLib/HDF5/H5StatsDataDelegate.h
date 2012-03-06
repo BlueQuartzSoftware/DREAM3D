@@ -69,18 +69,20 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
   protected:
     H5StatsDataDelegate();
 
-    int writePhaseFraction(StatsData* data, hid_t groupId);
-    int readPhaseFraction(StatsData* data, hid_t pid);
+    int writeBoundaryArea(StatsData* data, hid_t groupId);
+    int readBoundaryArea(StatsData* data, hid_t groupId);
 
-    int writePrecipBoundaryFraction(StatsData* data, hid_t pid);
-    int readPrecipBoundaryFraction(StatsData* data, hid_t);
+	int writePhaseFraction(StatsData* data, hid_t groupId);
+    int readPhaseFraction(StatsData* data, hid_t groupId);
+
+    int writePrecipBoundaryFraction(StatsData* data, hid_t groupId);
+    int readPrecipBoundaryFraction(StatsData* data, hid_t groupId);
 
     int writeGrainDiameterInfo(StatsData* data, hid_t groupId);
     int readGrainDiameterInfo(StatsData* data, hid_t groupId);
 
     int writeBinNumbers(StatsData* data, hid_t groupId);
     int readBinNumbers(StatsData* data, hid_t groupId);
-
 
     int readMDFWeights(hid_t pid, StatsData* data);
     int readODFWeights(hid_t pid, StatsData* data);

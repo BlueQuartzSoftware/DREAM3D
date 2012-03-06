@@ -127,11 +127,6 @@ void StatsData::initialize()
   m_COverA_DistType = DREAM3D::DistributionType::Beta;
   m_Neighbors_DistType = DREAM3D::DistributionType::LogNormal;
   m_Omegas_DistType = DREAM3D::DistributionType::Beta;
-  m_GrainDiameterInfo[0] = 0.25f;
-  m_GrainDiameterInfo[1] = 1.0f;
-  m_GrainDiameterInfo[2] = 0.0f;
-
-  m_PrecipBoundaryFraction = 0.0f;
 }
 
 

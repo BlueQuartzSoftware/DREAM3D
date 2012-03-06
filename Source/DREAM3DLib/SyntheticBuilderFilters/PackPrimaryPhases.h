@@ -91,7 +91,6 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
-    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteIntendedAttributes);
     DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight);
