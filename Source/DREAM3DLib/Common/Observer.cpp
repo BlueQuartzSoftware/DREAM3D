@@ -45,6 +45,13 @@ Observer::~Observer()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observer::updateProgressAndMessage(const std::string &msg, int progress)
+{
+  std::cout << progress << "% " << msg << std::endl;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -89,7 +96,23 @@ void Observer::pipelineWarningMessage(const char* message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void Observer::pipelineWarningMessage(const std::string &msg)
+{
+  std::cout << "Warning Message: " << msg << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Observer::pipelineErrorMessage(const char* message)
 {
   std::cout << "Error Message: " << message << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observer::pipelineErrorMessage(const std::string &msg)
+{
+  std::cout << "Error Message: " << msg << std::endl;
 }

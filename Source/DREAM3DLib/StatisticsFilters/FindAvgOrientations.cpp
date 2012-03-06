@@ -187,7 +187,7 @@ void FindAvgOrientations::execute()
       m_EulerAnglesF[3*i+2] = ea3;
   }
 
-  notify("FindAvgOrientations Completed", 0, Observable::UpdateProgressMessage);
+  notify("Completed", 0, Observable::UpdateProgressMessage);
 }
 
 
