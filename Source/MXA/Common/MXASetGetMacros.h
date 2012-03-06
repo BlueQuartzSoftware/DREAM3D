@@ -9,6 +9,8 @@
 #ifndef _MXASetGetMacros_h_
 #define _MXASetGetMacros_h_
 
+#include <string.h>
+
 #include <string>
 #include <iostream>
 #include <sstream>
