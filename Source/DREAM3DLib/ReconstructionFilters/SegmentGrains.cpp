@@ -124,6 +124,7 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -155,7 +156,7 @@ void SegmentGrains::execute()
     setErrorMessage(ss.str());
     return;
   }
-  m->clearFieldData();
+//  m->clearFieldData();
 //  m->clearEnsembleData();
 
   int64_t totalPoints = m->getTotalPoints();
@@ -300,6 +301,16 @@ void SegmentGrains::execute()
 
   m->resizeFieldDataArrays(graincount);
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
+
+  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
+  {
+	m_NumFields[i] = 0;
+  }
+  for(size_t i = 1; i < graincount; i++)
+  {
+	m_NumFields[m_PhasesF[i]]++;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);

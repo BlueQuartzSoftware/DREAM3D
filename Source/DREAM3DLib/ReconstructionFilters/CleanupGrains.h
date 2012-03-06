@@ -99,6 +99,8 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     bool* m_Active;
     NeighborList<int>* m_NeighborList;
 
+	int32_t* m_NumFields;
+
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;

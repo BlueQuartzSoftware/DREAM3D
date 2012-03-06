@@ -70,7 +70,8 @@ m_PhasesC(NULL),
 m_PhasesF(NULL),
 m_NumNeighbors(NULL),
 m_Active(NULL),
-m_NeighborList(NULL)
+m_NeighborList(NULL),
+m_NumFields(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -159,6 +160,8 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 	}
   }
 
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, ensembles, 1);
+
   setErrorMessage(ss.str());
 }
 
@@ -241,6 +244,14 @@ void CleanupGrains::execute()
     return;
   }
 
+  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
+  {
+	m_NumFields[i] = 0;
+  }
+  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
+  {
+	m_NumFields[m_PhasesF[i]]++;
+  }
 
   // If there is an error set this to something negative and also set a message
   notify("Cleaning Up Grains Complete", 0, Observable::UpdateProgressMessage);

@@ -124,9 +124,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     //Ensemble Data
     float* m_TotalSurfaceAreas;
     unsigned int* m_CrystalStructures;
-    float* m_PrecipitateFractions;
-    unsigned int* m_PhaseTypes;
-    float* m_PhaseFractions;
+	int32_t* m_NumFields;
 	StatsDataArray* m_StatsDataArray;
 
     // All other private instance variables
