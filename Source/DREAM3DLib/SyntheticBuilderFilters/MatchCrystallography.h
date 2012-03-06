@@ -89,8 +89,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
 
 
-    virtual void setupFilterOptions();
-
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
@@ -117,7 +115,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     // Field Data
     bool* m_SurfaceFields;
     int32_t* m_PhasesF;
-    int32_t* m_NumCells;
+    int32_t* m_Volumes;
     float* m_EulerAnglesF;
     float* m_AvgQuats;
     NeighborList<int>* m_NeighborList;

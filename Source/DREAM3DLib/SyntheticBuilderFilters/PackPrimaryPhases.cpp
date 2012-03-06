@@ -68,7 +68,6 @@ PackPrimaryPhases::PackPrimaryPhases() :
 AbstractFilter(),
 m_ErrorOutputFile(""),
 m_VtkOutputFile(""),
-m_MaxIterations(1),
 m_PeriodicBoundaries(false),
 m_WriteIntendedAttributes(false),
 m_NeighborhoodErrorWeight(1.0f),
@@ -121,15 +120,7 @@ PackPrimaryPhases::~PackPrimaryPhases()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::setupFilterOptions()
 {
- std::vector<FilterOption::Pointer> options;
- {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Max Iterations");
-    option->setPropertyName("MaxIterations");
-    option->setWidgetType(FilterOption::IntWidget);
-    option->setValueType("int");
-    options.push_back(option);
-  }
+  std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Neighborhood Error Weight");

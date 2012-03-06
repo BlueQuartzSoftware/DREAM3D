@@ -119,6 +119,9 @@ VectorOfFloatArray H5StatsDataDelegate::createDistributionVector(unsigned int di
 int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 {
   int err = 0;
+  //Read the NumFields
+  err = readBoundaryArea(data, groupId);
+
   //Read the PhaseFraction
   err = readPhaseFraction(data, groupId);
 
@@ -216,12 +219,20 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
   }
   int err = 0;
 
+  // Write the NumFields
+  err = writeBoundaryArea(data, groupId);
+  if (err < 0)
+  {
+    return err;
+  }
+
   // Write the PhaseFraction
   err = writePhaseFraction(data, groupId);
   if (err < 0)
   {
     return err;
   }
+
   // Write the Precip Boundary Fraction
   err = writePrecipBoundaryFraction(data, groupId);
 
@@ -567,6 +578,25 @@ int H5StatsDataDelegate::readDistributionData(hid_t pid,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5StatsDataDelegate::writeBoundaryArea(StatsData* data, hid_t pid)
+{
+  float BoundaryArea = data->getBoundaryArea();
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::readBoundaryArea(StatsData* data, hid_t pid)
+{
+  float BoundaryArea = 0.0f;
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  data->setBoundaryArea(BoundaryArea);
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5StatsDataDelegate::writePhaseFraction(StatsData* data, hid_t pid)
 {
   float phaseFraction = data->getPhaseFraction();
@@ -583,7 +613,6 @@ int H5StatsDataDelegate::readPhaseFraction(StatsData* data, hid_t pid)
   data->setPhaseFraction(phaseFraction);
   return err;
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
