@@ -40,7 +40,7 @@
 #include <QtGui/QWidget>
 #include "ui_StatsGenMDFWidget.h"
 
-#include "DREAm3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
