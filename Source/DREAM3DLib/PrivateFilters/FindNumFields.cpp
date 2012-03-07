@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindGrainPhases.h"
+#include "FindNumFields.h"
 
 #include <sstream>
 
@@ -44,10 +44,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGrainPhases::FindGrainPhases() :
+FindNumFields::FindNumFields() :
 AbstractFilter(),
-m_GrainIds(NULL),
-m_PhasesC(NULL),
+m_NumFields(NULL),
 m_PhasesF(NULL)
 {
 
@@ -56,24 +55,23 @@ m_PhasesF(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGrainPhases::~FindGrainPhases()
+FindNumFields::~FindNumFields()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
 
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -301, int32_t, Int32ArrayType, fields, 1);
 
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -83,7 +81,7 @@ void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainPhases::preflight()
+void FindNumFields::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -91,7 +89,7 @@ void FindGrainPhases::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainPhases::execute()
+void FindNumFields::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
@@ -114,11 +112,13 @@ void FindGrainPhases::execute()
     return;
   }
 
-  int gnum = 0;
-  for(int64_t i = 1; i < totalPoints; i++)
+  for(int64_t i = 1; i < totalEnsembles; i++)
   {
-    gnum = m_GrainIds[i];
-    m_PhasesF[gnum] = m_PhasesC[i];
+    m_NumFields[i] = 0;
+  }
+  for(int64_t i = 1; i < totalFields; i++)
+  {
+    m_NumFields[m_PhasesF[i]]++;
   }
 
   std::stringstream ss;
@@ -126,5 +126,3 @@ void FindGrainPhases::execute()
   ss << getNameOfClass() << " - Complete";
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
 }
-
-

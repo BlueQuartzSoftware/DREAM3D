@@ -49,7 +49,7 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindSurfaceCells.h"
 
 
 
@@ -134,6 +134,16 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1);
+  if(getErrorCondition() == -301)
+  {
+	setErrorCondition(0);
+	FindSurfaceCells::Pointer find_surfacecells = FindSurfaceCells::New();
+	find_surfacecells->setObservers(this->getObservers());
+	find_surfacecells->setDataContainer(getDataContainer());
+	if(preflight == true) find_surfacecells->preflight();
+	if(preflight == false) find_surfacecells->execute();
+    GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1);
+  }
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType,  voxels, 1);
 
   // Field Data
@@ -546,6 +556,12 @@ void  InsertPrecipitatePhases::place_precipitates()
   size_t precipvoxelcounter = 0;
 //  float thickness = 0.25;
   size_t currentnumgrains = m->getNumFieldTuples();
+  if(currentnumgrains == 0)
+  {
+	  m->resizeFieldDataArrays(1);
+	  dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
+	  currentnumgrains = 1;
+  }
   firstPrecipitateField = currentnumgrains;
   // size_t index;
   int phase;

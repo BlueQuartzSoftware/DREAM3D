@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindGrainPhases.h"
+#include "FindSurfaceCells.h"
 
 #include <sstream>
 
@@ -44,11 +44,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGrainPhases::FindGrainPhases() :
+FindSurfaceCells::FindSurfaceCells() :
 AbstractFilter(),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_PhasesF(NULL)
+m_SurfaceVoxels(NULL)
 {
 
 }
@@ -56,14 +55,14 @@ m_PhasesF(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGrainPhases::~FindGrainPhases()
+FindSurfaceCells::~FindSurfaceCells()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindSurfaceCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -71,9 +70,8 @@ void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, si
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, bool, BoolArrayType, voxels, 1);
 
   setErrorMessage(ss.str());
 }
@@ -83,7 +81,7 @@ void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainPhases::preflight()
+void FindSurfaceCells::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -91,7 +89,7 @@ void FindGrainPhases::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainPhases::execute()
+void FindSurfaceCells::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
@@ -114,11 +112,59 @@ void FindGrainPhases::execute()
     return;
   }
 
-  int gnum = 0;
-  for(int64_t i = 1; i < totalPoints; i++)
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+  DimType neighpoints[6];
+  neighpoints[0] = -dims[0]*dims[1];
+  neighpoints[1] = -dims[0];
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0]*dims[1];
+
+  float column, row, plane;
+  int grain;
+  int onsurf = 0;
+  int good = 0;
+  int neighbor = 0;
+
+  for (size_t j = 0; j < totalPoints; j++)
   {
-    gnum = m_GrainIds[i];
-    m_PhasesF[gnum] = m_PhasesC[i];
+    onsurf = 0;
+    grain = m_GrainIds[j];
+    if(grain > 0)
+    {
+      column = j % dims[0];
+      row = (j / dims[0]) % dims[1];
+      plane = j / (dims[0] * dims[1]);
+      for (int k = 0; k < 6; k++)
+      {
+        good = 1;
+        neighbor = j + neighpoints[k];
+        if(k == 0 && plane == 0) good = 0;
+        if(k == 5 && plane == (dims[2] - 1)) good = 0;
+        if(k == 1 && row == 0) good = 0;
+        if(k == 4 && row == (dims[1] - 1)) good = 0;
+        if(k == 2 && column == 0) good = 0;
+        if(k == 3 && column == (dims[0] - 1)) good = 0;
+        if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
+        {
+          onsurf++;
+        }
+      }
+    }
+    m_SurfaceVoxels[j] = onsurf;
   }
 
   std::stringstream ss;
