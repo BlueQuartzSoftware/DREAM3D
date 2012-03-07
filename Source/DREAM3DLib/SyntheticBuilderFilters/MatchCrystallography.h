@@ -100,6 +100,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     void initializeArrays();
 
+    void determine_volumes();
     void assign_eulers();
     void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
     void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
@@ -115,7 +116,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     // Field Data
     bool* m_SurfaceFields;
     int32_t* m_PhasesF;
-    int32_t* m_Volumes;
+    float* m_Volumes;
     float* m_EulerAnglesF;
     float* m_AvgQuats;
     NeighborList<int>* m_NeighborList;
@@ -134,13 +135,13 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<float> unbiasedvol;
 
 
-    std::vector<SharedFloatArray> actualodf;
-    std::vector<SharedFloatArray> simodf;
-    std::vector<SharedFloatArray> actualmdf;
-    std::vector<SharedFloatArray> simmdf;
+    std::vector<FloatArrayType::Pointer> actualodf;
+    std::vector<FloatArrayType::Pointer> simodf;
+    std::vector<FloatArrayType::Pointer> actualmdf;
+	std::vector<FloatArrayType::Pointer> simmdf;
 
 
-	  std::vector<std::vector<float> > misorientationlists;
+	std::vector<std::vector<float> > misorientationlists;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
