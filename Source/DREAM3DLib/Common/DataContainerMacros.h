@@ -64,7 +64,7 @@
     setErrorCondition(err);\
   }}
 
-#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
+#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, value, size, NumComp)\
   {\
   std::string _s(#Name); addCreated##DType(_s);\
   int preFlightError = getErrorCondition();\
@@ -79,7 +79,7 @@
       ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
       setErrorCondition(-500);\
     } else {\
-    p->initializeWithZeros();\
+    p->initializeWithValues(value);\
     p->SetNumberOfComponents(NumComp);\
     p->SetName(NameSpace::DType::Name);\
     dc->add##DType(NameSpace::DType::Name, p);\
@@ -87,7 +87,7 @@
   }\
   } }
 
-#define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
+#define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, value, size, NumComp)\
   {\
   std::string _s(#Name); addCreated##DType(_s);\
   int preFlightError = getErrorCondition();\
@@ -102,7 +102,7 @@
       ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
       setErrorCondition(-500);\
     } else {\
-      p->initializeWithZeros();\
+      p->initializeWithValues(value);\
       p->SetNumberOfComponents(NumComp);\
       p->SetName(NameSpace::DType::Name);\
       dc->add##DType(NameSpace::DType::Name, p);\

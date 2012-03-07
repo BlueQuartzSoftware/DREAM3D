@@ -161,10 +161,10 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	if(preflight == false) find_graincentroids->execute();
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
   }  
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float, FloatArrayType, fields, 2);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float, FloatArrayType, 0, fields, 2);
 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
