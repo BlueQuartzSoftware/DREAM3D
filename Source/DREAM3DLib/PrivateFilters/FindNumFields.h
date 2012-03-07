@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindGrainPhases_H_
-#define FindGrainPhases_H_
+#ifndef FindNumFields_H_
+#define FindNumFields_H_
 
 #include <vector>
 #include <string>
@@ -49,36 +49,36 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
+class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindGrainPhases);
-     DREAM3D_STATIC_NEW_MACRO(FindGrainPhases);
-     DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindNumFields);
+     DREAM3D_STATIC_NEW_MACRO(FindNumFields);
+     DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter);
 
-     virtual ~FindGrainPhases();
+     virtual ~FindNumFields();
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-     virtual const std::string getHumanLabel() { return "Renumber Grains"; }
+	 virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+     virtual const std::string getHumanLabel() { return "Find Number of Fields"; }
 
      virtual void execute();
      virtual void preflight();
 
    protected:
-     FindGrainPhases();
+     FindNumFields();
 
    private:
-    int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
     int32_t* m_PhasesF;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int32_t* m_NumFields;
 
-    FindGrainPhases(const FindGrainPhases&); // Copy Constructor Not Implemented
-    void operator=(const FindGrainPhases&); // Operator '=' Not Implemented
+	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindNumFields(const FindNumFields&); // Copy Constructor Not Implemented
+    void operator=(const FindNumFields&); // Operator '=' Not Implemented
 
 };
 
-#endif /* FindGrainPhases_H_ */
+#endif /* FindNumFields_H_ */

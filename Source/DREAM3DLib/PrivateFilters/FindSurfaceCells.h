@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindGrainPhases_H_
-#define FindGrainPhases_H_
+#ifndef FindSurfaceCells_H_
+#define FindSurfaceCells_H_
 
 #include <vector>
 #include <string>
@@ -49,14 +49,14 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
+class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindGrainPhases);
-     DREAM3D_STATIC_NEW_MACRO(FindGrainPhases);
-     DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindSurfaceCells);
+     DREAM3D_STATIC_NEW_MACRO(FindSurfaceCells);
+     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceCells, AbstractFilter);
 
-     virtual ~FindGrainPhases();
+     virtual ~FindSurfaceCells();
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
@@ -67,18 +67,17 @@ class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
      virtual void preflight();
 
    protected:
-     FindGrainPhases();
+     FindSurfaceCells();
 
    private:
     int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
+    bool* m_SurfaceVoxels;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindGrainPhases(const FindGrainPhases&); // Copy Constructor Not Implemented
-    void operator=(const FindGrainPhases&); // Operator '=' Not Implemented
+    FindSurfaceCells(const FindSurfaceCells&); // Copy Constructor Not Implemented
+    void operator=(const FindSurfaceCells&); // Operator '=' Not Implemented
 
 };
 
-#endif /* FindGrainPhases_H_ */
+#endif /* FindSurfaceCells_H_ */

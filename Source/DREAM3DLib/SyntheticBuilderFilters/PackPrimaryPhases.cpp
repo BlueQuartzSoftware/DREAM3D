@@ -321,9 +321,13 @@ void PackPrimaryPhases::execute()
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   Field field;
   int gid = m->getNumFieldTuples();
-  int firstPrimaryField = gid;
-  m->resizeFieldDataArrays(gid + 1);
-  dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+  if(gid == 0)
+  {
+	  m->resizeFieldDataArrays(1);
+	  dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
+	  gid = 1;
+  }
+  firstPrimaryField = gid;
   m_Active[gid] = true;
   std::vector<float> curphasevol;
   curphasevol.resize(primaryphases.size());
@@ -343,7 +347,6 @@ void PackPrimaryPhases::execute()
 		change = (currentsizedisterror) - (oldsizedisterror);
 		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
 		{
-	      gid++;
 	      std::stringstream ss;
 	      ss << "Packing Grains - Generating Grain #" << gid;
 	      notify(ss.str(), 0, Observable::UpdateProgressMessage);
@@ -356,6 +359,7 @@ void PackPrimaryPhases::execute()
 	      curphasevol[j] = curphasevol[j] + m_Volumes[gid];
 	      //FIXME: Initialize the Grain with some sort of default data
 	      iter = 0;
+		  gid++;
 		}
 	  }
   }
@@ -381,7 +385,6 @@ void PackPrimaryPhases::execute()
 		change = (currentsizedisterror) - (oldsizedisterror);
 		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
 		{
-		  gid++;
 		  std::stringstream ss;
 		  ss << "Packing Grains - Generating Grain #" << gid;
 		  notify(ss.str(), 0, Observable::UpdateProgressMessage);
@@ -394,6 +397,7 @@ void PackPrimaryPhases::execute()
 		  curphasevol[j] = curphasevol[j] + m_Volumes[gid];
 		  //FIXME: Initialize the Grain with some sort of default data
 		  iter = 0;
+		  gid++;
 		}
 	  }
 	}
@@ -444,7 +448,7 @@ void PackPrimaryPhases::execute()
   planelist.resize(numgrains);
   packqualities.resize(numgrains);
   fillingerror = 1;
-  for (int i = 1; i < numgrains; i++)
+  for (size_t i = firstPrimaryField; i < numgrains; i++)
   {
     std::stringstream ss;
     ss << "Packing Grains - Placing Grain #" << i;
@@ -504,9 +508,9 @@ void PackPrimaryPhases::execute()
     // JUMP - this option moves one grain to a random spot in the volume
     if(option == 0)
     {
-      randomgrain = int(rg.genrand_res53() * numgrains);
-      if(randomgrain == 0) randomgrain = 1;
-      if(randomgrain == numgrains) randomgrain = numgrains - 1;
+      randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
+      if(randomgrain < firstPrimaryField) randomgrain = firstPrimaryField;
+      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
       Seed++;
 
       xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
@@ -536,9 +540,9 @@ void PackPrimaryPhases::execute()
     // NUDGE - this option moves one grain to a spot close to its current centroid
     if(option == 1)
     {
-      randomgrain = int(rg.genrand_res53() * numgrains);
-      if(randomgrain == 0) randomgrain = 1;
-      if(randomgrain == numgrains) randomgrain = numgrains - 1;
+      randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
+      if(randomgrain < firstPrimaryField) randomgrain = firstPrimaryField;
+      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
