@@ -193,8 +193,8 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @brief Sets all the values to zero.
      */
     virtual void initializeWithZeros();
-
-    /**
+	
+	/**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure

@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 
    private:
     int32_t* m_GrainIds;
-    bool* m_SurfaceVoxels;
+    int8_t* m_SurfaceVoxels;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
