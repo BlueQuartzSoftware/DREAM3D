@@ -51,6 +51,7 @@
 
 #include "PipelineBuilder/FilterWidgets/ReconstructionFiltersWidgets/QualityMetricTableModel.h"
 
+#include "ReconstructionFiltersWidgets/moc_QLoadSlicesWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
