@@ -254,6 +254,18 @@ class DataArray : public IDataArray
     }
 
     /**
+     * @brief
+     * @param v
+     */
+    void initializeWithValue(T v)
+    {
+      for(size_t i = 0; i < this->Size; ++i)
+      {
+        this->Array[i] = v;
+      }
+    }
+
+    /**
      * @brief Removes Tuples from the Array
      * @param idxs The indices to remove
      * @return
