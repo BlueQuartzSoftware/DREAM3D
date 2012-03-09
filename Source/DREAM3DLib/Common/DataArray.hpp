@@ -260,7 +260,7 @@ class DataArray : public IDataArray
     {
 		for (size_t i = 0; i < this->Size; i++)
 		{
-			Array[i] = value;
+			this->Array[i] = value;
 		}
     }
 	
