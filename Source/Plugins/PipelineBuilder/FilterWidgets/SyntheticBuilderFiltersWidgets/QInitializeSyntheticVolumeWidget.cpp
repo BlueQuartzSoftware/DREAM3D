@@ -56,6 +56,9 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 
+#include "SyntheticBuilderFiltersWidgets/moc_QInitializeSyntheticVolumeWidget.cxx"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -486,3 +489,5 @@ void QInitializeSyntheticVolumeWidget::writeOptions(QSettings &prefs)
   WRITE_SETTING(prefs, m_, ZPoints )
 
 }
+
+

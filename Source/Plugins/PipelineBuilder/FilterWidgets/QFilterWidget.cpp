@@ -53,6 +53,7 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 
+#include "moc_QFilterWidget.cxx"
 
 #define PADDING 5
 #define BORDER 2

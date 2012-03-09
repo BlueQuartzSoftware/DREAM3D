@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ADJUSTVOLUME_H_
-#define ADJUSTVOLUME_H_
+#ifndef _ADJUSTVOLUME_H_
+#define _ADJUSTVOLUME_H_
 
 #include <vector>
 #include <string>
@@ -94,4 +94,4 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     void operator=(const AdjustVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* ADJUSTVOLUME_H_ */
+#endif /* _ADJUSTVOLUME_H_ */
