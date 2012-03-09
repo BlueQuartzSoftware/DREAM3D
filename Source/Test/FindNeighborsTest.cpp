@@ -213,7 +213,6 @@ void TestFindNeighbors()
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
   cleanup_grains->setMinNumNeighbors(m_MinNumNeighbors);
-  cleanup_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline->pushBack(cleanup_grains);
 
   bool m_WriteVtkFile(true);

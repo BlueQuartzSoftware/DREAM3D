@@ -69,7 +69,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
@@ -97,14 +96,8 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     int32_t* m_PhasesF;
     int32_t* m_NumNeighbors;
     bool* m_Active;
-    NeighborList<int>* m_NeighborList;
 
 	int32_t* m_NumFields;
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;

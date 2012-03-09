@@ -39,14 +39,10 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 #include "DREAM3DLib/PrivateFilters/RenumberGrains.h"
 
 const static float m_pi = static_cast<float>(M_PI);
@@ -62,7 +58,6 @@ CleanupGrains::CleanupGrains() :
 AbstractFilter(),
 m_MinAllowedGrainSize(1),
 m_MinNumNeighbors(1),
-m_MisorientationTolerance(5.0f),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
@@ -70,16 +65,8 @@ m_PhasesC(NULL),
 m_PhasesF(NULL),
 m_NumNeighbors(NULL),
 m_Active(NULL),
-m_NeighborList(NULL),
 m_NumFields(NULL)
 {
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(m_HexOps.get());
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(m_CubicOps.get());
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(m_OrthoOps.get());
-
   setupFilterOptions();
 }
 
@@ -112,15 +99,6 @@ void CleanupGrains::setupFilterOptions()
     option->setValueType("int");
     options.push_back(option);
   }
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setPropertyName("MisorientationTolerance");
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
-  }
 
   setFilterOptions(options);
 }
@@ -138,13 +116,20 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -302)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-  if(m_NeighborList == NULL)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -304)
   {
 	setErrorCondition(0);
 	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
@@ -152,12 +137,7 @@ void CleanupGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 	find_neighbors->setDataContainer(getDataContainer());
 	if(preflight == true) find_neighbors->preflight();
 	if(preflight == false) find_neighbors->execute();
-	m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-	if(m_NeighborList == NULL)
-	{
-		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-		setErrorCondition(-305);
-	}
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
@@ -190,12 +170,11 @@ void CleanupGrains::execute()
     setErrorMessage(ss.str());
     return;
   }
-//  m->clearFieldData();
-//  m->clearEnsembleData();
+
 
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0 && getErrorCondition() != -350)
+  if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
   }
