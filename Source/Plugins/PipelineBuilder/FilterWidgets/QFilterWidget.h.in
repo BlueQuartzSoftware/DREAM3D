@@ -1,6 +1,7 @@
 
 #include "DREAM3Dlib/@DirName@/@name@.h"
-
+#error This file should be over written during the build process by a file that\
+fully describes the needed widget functionality.
 class Q@name@Widget : public QFilterWidget
 {
 Q_OBJECT
