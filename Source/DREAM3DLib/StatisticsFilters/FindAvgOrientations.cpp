@@ -39,6 +39,8 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
+#include "DREAM3DLib/PrivateFilters/FindCellQuats.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -46,17 +48,14 @@ FindAvgOrientations::FindAvgOrientations() :
 AbstractFilter(),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
-m_EulerAnglesC(NULL),
 m_EulerAnglesF(NULL),
 m_Quats(NULL),
 m_AvgQuats(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
-
   m_CubicOps = CubicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
-
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
 }
@@ -77,9 +76,18 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   std::stringstream ss;
   DataContainer* m = getDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, -300, float, FloatArrayType,  voxels, 3);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
+	find_cellquats->setObservers(this->getObservers());
+	find_cellquats->setDataContainer(getDataContainer());
+	if(preflight == true) find_cellquats->preflight();
+	if(preflight == false) find_cellquats->execute();
+	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, 0, fields, 3);
 
@@ -139,14 +147,7 @@ void FindAvgOrientations::execute()
   {
     if(m_GrainIds[i] > 0 && m_PhasesC[i] > 0)
     {
-      OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
       phase = m_PhasesC[i];
-      m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-      m_Quats[i*5 + 0] = 1.0;
-      m_Quats[i*5 + 1] = qr[1];
-      m_Quats[i*5 + 2] = qr[2];
-      m_Quats[i*5 + 3] = qr[3];
-      m_Quats[i*5 + 4] = qr[4];
       voxquat[0] = m_Quats[i*5 + 0];
       voxquat[1] = m_Quats[i*5 + 1];
       voxquat[2] = m_Quats[i*5 + 2];
