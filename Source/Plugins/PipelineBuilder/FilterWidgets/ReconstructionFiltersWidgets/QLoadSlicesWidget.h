@@ -56,8 +56,8 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     void setH5EbsdFile(QString v) { m_Filter->setH5EbsdFile(v.toStdString()); }
     QString  getH5EbsdFile() { return QString::fromStdString(m_Filter->getH5EbsdFile()); }
 
-    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
-    FILTER_PROPERTY_WRAPPER(float, MisorientationTolerance, m_Filter) ;
+//    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+//    FILTER_PROPERTY_WRAPPER(float, MisorientationTolerance, m_Filter) ;
 
     Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
     FILTER_PROPERTY_WRAPPER(int, ZStartIndex, m_Filter) ;

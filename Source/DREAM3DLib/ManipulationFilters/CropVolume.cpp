@@ -128,9 +128,7 @@ void CropVolume::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void CropVolume::preflight()
 {
-  DataContainer* m = getDataContainer();
-//  m->clearFieldData();
-//  m->clearEnsembleData();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -149,8 +147,6 @@ void CropVolume::execute()
     setErrorMessage(ss.str());
     return;
   }
-//  m->clearFieldData();
-//  m->clearEnsembleData();
 
   setErrorCondition(0);
 

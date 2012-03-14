@@ -814,36 +814,7 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_2">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Misorientation Tolerance</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QDoubleSpinBox" name="m_MisorientationTolerance">
-       <property name="suffix">
-        <string> Deg</string>
-       </property>
-       <property name="decimals">
-        <number>4</number>
-       </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="value">
-        <double>5.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4" rowspan="2">
+     <item row="0" column="2" rowspan="2">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -911,6 +882,12 @@ font-size: 11px;
      </attribute>
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>120</number>
      </attribute>
     </widget>
    </item>

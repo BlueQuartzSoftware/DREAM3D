@@ -1427,10 +1427,13 @@ void PackPrimaryPhases::assign_gaps()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  std::vector<int> newowners;
-  newowners.resize(totpoints, -1);
-  std::vector<float> ellipfuncs;
-  ellipfuncs.resize(totpoints, -1.0);
+  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totpoints, "newowners");
+  int32_t* newowners = newownersPtr->GetPointer(0);
+  newownersPtr->initializeWithZeros();
+
+  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totpoints, "ellipfuncs");
+  float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
+  ellipfuncsPtr->initializeWithValues(-1);
 
   while (unassignedcount != 0)
   {

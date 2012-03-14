@@ -118,7 +118,7 @@ AbstractFilter::Pointer QLoadSlicesWidget::getFilter()
   m_Filter->setZEndIndex(m_ZEndIndex->value());
 
   m_Filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
-  m_Filter->setMisorientationTolerance(m_MisorientationTolerance->value());
+//  m_Filter->setMisorientationTolerance(m_MisorientationTolerance->value());
   return m_Filter;
 }
 
@@ -449,7 +449,7 @@ void QLoadSlicesWidget::readOptions(QSettings &prefs)
   on_m_H5EbsdFile_textChanged(QString(""));
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, MisorientationTolerance, ok, d, 5.0 , Double);
+//  READ_SETTING(prefs, m_, MisorientationTolerance, ok, d, 5.0 , Double);
 
   ok = false;
   int filterCount = prefs.value("NumQualityFilters").toInt(&ok);
@@ -504,7 +504,7 @@ void QLoadSlicesWidget::writeOptions(QSettings &prefs)
   prefs.setValue("H5EbsdFile", m_H5EbsdFile->text());
   prefs.setValue("ZStartIndex", m_ZStartIndex->value());
   prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
-  prefs.setValue("MisorientationTolerance", m_MisorientationTolerance->value() );
+//  prefs.setValue("MisorientationTolerance", m_MisorientationTolerance->value() );
 
 
   if (NULL != m_QualityMetricTableView->model())

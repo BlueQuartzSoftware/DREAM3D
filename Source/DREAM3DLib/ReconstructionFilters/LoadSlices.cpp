@@ -49,12 +49,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/PrivateFilters/DetermineGoodVoxels.h"
 
@@ -76,25 +71,14 @@ const static float m_pi = M_PI;
 LoadSlices::LoadSlices() :
 AbstractFilter(),
 m_H5EbsdFile(""),
-m_MisorientationTolerance(5.0f),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_PhasesC(NULL),
-//m_GoodVoxels(NULL),
-m_Quats(NULL),
+m_GoodVoxels(NULL),
 m_EulerAnglesC(NULL)
 {
   Seed = MXA::getMilliSeconds();
-
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(m_HexOps.get());
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(m_CubicOps.get());
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(m_OrthoOps.get());
-  setupFilterOptions();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -102,74 +86,6 @@ m_EulerAnglesC(NULL)
 // -----------------------------------------------------------------------------
 LoadSlices::~LoadSlices()
 {
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void LoadSlices::setupFilterOptions()
-{
-
-  std::vector<FilterOption::Pointer> options;
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("EBSD Input File (HDF5)");
-    option->setPropertyName("H5EbsdFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }
-#if 0
-   This should be read from the file so we are NOT going to expose it to the user
-  {
-    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
-    option->setHumanLabel("Reference Frame");
-    option->setPropertyName("RefFrameZDir");
-    option->setWidgetType(FilterOption::ChoiceWidget);
-    option->setValueType("Ebsd::RefFrameZDir");
-    option->setCastableValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Low To High");
-    choices.push_back("High To Low");
-    option->setChoices(choices);
-    options.push_back(option);
-  }
-#endif
-  {
-    ConstrainedFilterOption<int>::Pointer option = ConstrainedFilterOption<int>::New();
-    option->setHumanLabel("Z Start Index");
-    option->setPropertyName("ZStartIndex");
-    option->setWidgetType(FilterOption::IntConstrainedWidget);
-    option->setValueType("int");
-    option->setMinimum(0);
-    option->setMaximum(0);
-    options.push_back(option);
-  }
-  {
-    ConstrainedFilterOption<int>::Pointer option = ConstrainedFilterOption<int>::New();
-    option->setHumanLabel("Z End Index");
-    option->setPropertyName("ZEndIndex");
-    option->setWidgetType(FilterOption::IntConstrainedWidget);
-    option->setValueType("int");
-    option->setMinimum(0);
-    option->setMaximum(0);
-    options.push_back(option);
-  }
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
-  }
-  // Some how need to get the custom GUIs for the Phase Types and QualityMetric Filters
-  // into a Filter Option also.
-
-
-
-  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -183,7 +99,6 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, 0, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, 0, voxels, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -325,7 +240,6 @@ void LoadSlices::execute()
   ss.str("");
   ss << getHumanLabel() << " - Initializing " << totalPoints << " voxels";
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
-  initializeArrays(totalPoints);
 
   ss.str("");
   ss << getHumanLabel() << " - Reading Ebsd Data from file";
@@ -378,8 +292,6 @@ void LoadSlices::execute()
     m_PhasesC[i] = phasePtr[i];
   }
 
-  initializeQuats();
-
   // Run the filter to determine the good Voxels
   DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();
   filter->setQualityMetricFilters(m_QualityMetricFilters);
@@ -399,169 +311,8 @@ void LoadSlices::execute()
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
-  threshold_points();
-
   // If there is an error set this to something negative and also set a message
   ss.str("");
   ss << getHumanLabel() << " Completed";
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void LoadSlices::initializeArrays(int64_t totalPoints)
-{
-
-  for(int i = 0;i < totalPoints;i++)
-  {
-    m_PhasesC[i] = 0;
-    m_EulerAnglesC[3*i] = 0.0f;
-    m_EulerAnglesC[3*i + 1] = 0.0f;
-    m_EulerAnglesC[3*i + 2] = 0.0f;
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void LoadSlices::initializeQuats()
-{
-  DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
-
-  float qr[5];
-  int phase = -1;
-  for (int i = 0; i < totalPoints; i++)
-  {
-    OrientationMath::eulertoQuat(qr, m_EulerAnglesC[3*i], m_EulerAnglesC[3*i + 1], m_EulerAnglesC[3*i + 2]);
-    phase = m_PhasesC[i];
-    if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
-    {
-      qr[1] = 0.0;
-      qr[2] = 0.0;
-      qr[3] = 0.0;
-      qr[4] = 1.0;
-    }
-    else
-    {
-      m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-    }
-
-    m_Quats[i*5 + 0] = 1.0f;
-    m_Quats[i*5 + 1] = qr[1];
-    m_Quats[i*5 + 2] = qr[2];
-    m_Quats[i*5 + 3] = qr[3];
-    m_Quats[i*5 + 4] = qr[4];
-  }
-}
-
-#if 1
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void LoadSlices::threshold_points()
-{
-  DataContainer* m = getDataContainer();
-  int64_t getTotalPoints = m->getTotalPoints();
-
-  size_t udims[3] = {0,0,0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
-
-  DimType neighpoints[6];
-  neighpoints[0] = -dims[0]*dims[1];
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = dims[0]*dims[1];
-
-  std::vector<bool> AlreadyChecked;
-  float w, n1, n2, n3;
-  float q1[5];
-  float q2[5];
-//  int index;
-  int good = 0;
-  size_t count = 0;
-  int currentpoint = 0;
-  int neighbor = 0;
-  DimType col, row, plane;
-
-//  int noborder = 0;
-
-  unsigned int phase1, phase2;
-  int initialVoxelsListSize = 10000;
-  std::vector<int> voxelslist(initialVoxelsListSize, -1);
-
-  AlreadyChecked.resize(getTotalPoints);
-  for (int iter = 0; iter < getTotalPoints; iter++)
-  {
-    AlreadyChecked[iter] = false;
-    if(m_GoodVoxels[iter] == true && m_PhasesC[iter] > 0)
-    {
-      voxelslist[count] = iter;
-      AlreadyChecked[iter] = true;
-      count++;
-      if(count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-    }
-  }
-  for (size_t j = 0; j < count; j++)
-  {
-    currentpoint = voxelslist[j];
-    col = currentpoint % m->getXPoints();
-    row = (currentpoint / m->getXPoints()) % m->getYPoints();
-    plane = currentpoint / (m->getXPoints() * m->getYPoints());
-    q1[0] = 0;
-    q1[1] = m_Quats[currentpoint * 5 + 1];
-    q1[2] = m_Quats[currentpoint * 5 + 2];
-    q1[3] = m_Quats[currentpoint * 5 + 3];
-    q1[4] = m_Quats[currentpoint * 5 + 4];
-    phase1 = m_CrystalStructures[m_PhasesC[currentpoint]];
-    for (DimType i = 0; i < 6; i++)
-    {
-      good = 1;
-      neighbor = currentpoint + neighpoints[i];
-      if(i == 0 && plane == 0) good = 0;
-      if(i == 5 && plane == (dims[2] - 1)) good = 0;
-      if(i == 1 && row == 0) good = 0;
-      if(i == 4 && row == (dims[1] - 1)) good = 0;
-      if(i == 2 && col == 0) good = 0;
-      if(i == 3 && col == (dims[0] - 1)) good = 0;
-      if(good == 1 && m_GoodVoxels[neighbor] == false && m_PhasesC[neighbor] > 0)
-      {
-        w = 10000.0;
-        q2[0] = 0;
-        q2[1] = m_Quats[neighbor * 5 + 1];
-        q2[2] = m_Quats[neighbor * 5 + 2];
-        q2[3] = m_Quats[neighbor * 5 + 3];
-        q2[4] = m_Quats[neighbor * 5 + 4];
-        phase2 = m_CrystalStructures[m_PhasesC[neighbor]];
-        if(phase1 == phase2)
-        {
-          w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
-        }
-        if(w < m_MisorientationTolerance)
-        {
-          m_GoodVoxels[neighbor] = true;
-          AlreadyChecked[neighbor] = true;
-          voxelslist[count] = neighbor;
-          count++;
-          if(count >= voxelslist.size()) voxelslist.resize(count + initialVoxelsListSize, -1);
-        }
-      }
-    }
-  }
-  voxelslist.clear();
-}
-#endif
