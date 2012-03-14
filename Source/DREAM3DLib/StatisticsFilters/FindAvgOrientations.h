@@ -87,7 +87,6 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
 
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
-    float* m_EulerAnglesC;
     float* m_EulerAnglesF;
     float* m_Quats;
     float* m_AvgQuats;
@@ -95,7 +94,6 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
 	unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
 
     FindAvgOrientations(const FindAvgOrientations&); // Copy Constructor Not Implemented
     void operator=(const FindAvgOrientations&); // Operator '=' Not Implemented
