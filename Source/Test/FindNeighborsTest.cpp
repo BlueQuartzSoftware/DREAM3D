@@ -193,7 +193,6 @@ void TestFindNeighbors()
   load_slices->setZEndIndex(getZEndIndex());
   load_slices->setPhaseTypes(getPhaseTypes());
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
-  load_slices->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline->pushBack(load_slices);
 
   AlignSections::Pointer align_sections = AlignSections::New();

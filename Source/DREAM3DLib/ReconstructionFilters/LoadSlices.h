@@ -72,7 +72,6 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
@@ -83,9 +82,6 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Load EBSD Slices"; }
 
-    virtual void setupFilterOptions();
-
-
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
@@ -95,33 +91,20 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
   protected:
     LoadSlices();
 
-    void initializeArrays(int64_t totalPoints);
-
-    void initializeQuats();
-
-    void threshold_points();
-
   private:
     int32_t* m_PhasesC;
     bool* m_GoodVoxels;
-    float* m_Quats;
     float* m_EulerAnglesC;
 
-	  unsigned int* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
 
     unsigned long long int Seed;
 
     int tempxpoints;
     int tempypoints;
     int totaltemppoints;
-    std::vector<OrientationMath*> m_OrientationOps;
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
 
     LoadSlices(const LoadSlices&); // Copy Constructor Not Implemented
     void operator=(const LoadSlices&); // Operator '=' Not Implemented

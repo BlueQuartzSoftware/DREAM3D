@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
+#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
 #include "DREAM3DLib/PrivateFilters/RenumberGrains.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -134,6 +135,16 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5);
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
