@@ -36,6 +36,10 @@
 
 #include "AlignSections.h"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
@@ -51,6 +55,8 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
+using namespace std;
+
 const static float m_pi = M_PI;
 
 #define NEW_SHARED_ARRAY(var, type, size)\
@@ -62,6 +68,7 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_AlignmentMethod(DREAM3D::AlignmentMethod::UnknownAlignmentMethod),
 m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
@@ -133,7 +140,8 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1);
+//  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1);
+  CREATE_NON_PREREQ_DATA_TEST(m, m_GrainIdsArrayName, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   if(getErrorCondition() == -301)
@@ -220,6 +228,10 @@ void AlignSections::align_sections()
 {
   DataContainer* m = getDataContainer();
   //int64_t totalPoints = m->totalPoints();
+
+  ofstream outFile;
+  string filename = "aligntest.txt";
+  outFile.open(filename.c_str());
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -439,8 +451,9 @@ void AlignSections::align_sections()
         }
       }
     }
-    shifts[iter][0] = shifts[iter-1][0] - newxshift;
-    shifts[iter][1] = shifts[iter-1][1] - newyshift;
+    shifts[iter][0] = shifts[iter-1][0] + newxshift;
+    shifts[iter][1] = shifts[iter-1][1] + newyshift;
+	outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << shifts[iter][0] << "	" << shifts[iter][1] << endl;
     if(m_AlignmentMethod == DREAM3D::AlignmentMethod::MutualInformation)
     {
       AlignSections::Deallocate2DArray<float>(graincount1, graincount2, mutualinfo12);
@@ -511,6 +524,7 @@ void AlignSections::align_sections()
   delete[] shifts;
   delete[] misorients;
 #endif
+  outFile.close();
 }
 
 // -----------------------------------------------------------------------------

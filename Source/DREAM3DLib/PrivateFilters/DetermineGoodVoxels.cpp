@@ -98,7 +98,7 @@ void DetermineGoodVoxels::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), 1, 1);
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   //int err = 0;
   std::stringstream ss;
 
