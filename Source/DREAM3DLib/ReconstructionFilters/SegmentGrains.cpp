@@ -128,14 +128,13 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 	if(preflight == false) find_cellquats->execute();
 	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -216,10 +215,6 @@ void SegmentGrains::execute()
 
   // Precalculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
-  for(int64_t i = 0; i < totalPoints; i++)
-  {
-    m_GrainIds[i] = 0;
-  }
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (noseeds == 0)
@@ -300,17 +295,6 @@ void SegmentGrains::execute()
   }
 
   m->resizeFieldDataArrays(graincount);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-
-
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[i] = 0;
-  }
-  for(size_t i = 1; i < graincount; i++)
-  {
-	m_NumFields[m_PhasesF[i]]++;
-  }
 
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
