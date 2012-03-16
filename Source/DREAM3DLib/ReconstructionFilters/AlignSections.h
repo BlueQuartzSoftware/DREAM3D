@@ -74,6 +74,8 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 
     virtual ~AlignSections();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(unsigned int, AlignmentMethod)
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);

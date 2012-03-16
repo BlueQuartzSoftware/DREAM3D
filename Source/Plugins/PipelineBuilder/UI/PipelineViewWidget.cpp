@@ -166,6 +166,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
   QFilterWidgetManager::Pointer wm = QFilterWidgetManager::Instance();
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
+  if (NULL == wf) { return NULL;}
   QFilterWidget* w = wf->createWidget();
   if (index < 0) // If the programmer wants to add it to the end of the list
   {

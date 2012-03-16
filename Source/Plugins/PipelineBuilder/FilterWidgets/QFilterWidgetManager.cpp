@@ -98,7 +98,7 @@ QFilterWidgetManager::Collection QFilterWidgetManager::getFactories(const std::s
   for (QFilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
-    if ( (*factory).second->getFilterGroup().compare(groupName) == 0)
+    if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0)
     {
       groupFactories[(*factory).first] = (*factory).second;
     }
