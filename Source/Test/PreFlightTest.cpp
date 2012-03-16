@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
+#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
