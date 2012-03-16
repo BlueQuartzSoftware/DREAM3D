@@ -54,6 +54,7 @@
     setErrorCondition(err);\
   }}
 
+
 #define GET_PREREQ_DATA_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size, NumComp)\
   {std::string _s(#Name); addRequired##DType(_s);\
   m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
@@ -86,6 +87,30 @@
     m_##Name = p->GetPointer(0);\
   }\
   } }
+
+#define CREATE_NON_PREREQ_DATA_1(dc, UserName, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
+  {\
+  std::string _s(#Name); addCreated##DType(_s);\
+  int preFlightError = getErrorCondition();\
+  std::string errorMsg = getErrorMessage();\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(UserName, size*NumComp, this);\
+  if (NULL ==  m_##Name ) {\
+    setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
+    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), UserName);\
+    if (NULL == p.get()) {\
+      ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
+      UserName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
+      ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
+      setErrorCondition(-500);\
+    } else {\
+    p->initializeWithZeros();\
+    p->SetNumberOfComponents(NumComp);\
+    p->SetName(UserName);\
+    dc->add##DType(UserName, p);\
+    m_##Name = p->GetPointer(0);\
+  }\
+  } }
+
 
 #define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, size, NumComp)\
   {\

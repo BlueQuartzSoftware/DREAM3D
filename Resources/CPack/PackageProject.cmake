@@ -91,7 +91,7 @@ configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in
 
 # Create an NSIS based installer for Windows Systems
 IF(WIN32 AND NOT UNIX)
-  # There is a bug in NSI that does not handle full unix paths properly. Make
+  # There is a bug in NSIS that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
   SET(CPACK_NSIS_DISPLAY_NAME "DREAM.3D Software Tools")
   SET(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.bluequartz.net")
