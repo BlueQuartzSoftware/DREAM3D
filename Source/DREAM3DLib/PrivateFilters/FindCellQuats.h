@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
      virtual const std::string getHumanLabel() { return "Find Cell Quats"; }
 
      virtual void execute();

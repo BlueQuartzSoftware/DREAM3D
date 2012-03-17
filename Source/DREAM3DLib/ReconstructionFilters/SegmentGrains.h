@@ -66,12 +66,10 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 
     virtual ~SegmentGrains();
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Segment Grains"; }
 
-    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -79,26 +77,15 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+	virtual int getSeed(size_t gnum);
+	virtual bool determineGrouping(int referencepoint, int neighborpoint, size_t gnum);
+
   protected:
     SegmentGrains();
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-
-    int32_t* m_GrainIds;
-    float* m_Quats;
-    int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
-    bool* m_Active;
-    bool* m_GoodVoxels;
-
-	unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
 
     SegmentGrains(const SegmentGrains&); // Copy Constructor Not Implemented
     void operator=(const SegmentGrains&); // Operator '=' Not Implemented
