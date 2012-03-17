@@ -54,6 +54,7 @@
     setErrorCondition(err);\
   }}
 
+
 #define GET_PREREQ_DATA_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size, NumComp)\
   {std::string _s(#Name); addRequired##DType(_s);\
   m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
