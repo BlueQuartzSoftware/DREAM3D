@@ -11,8 +11,8 @@
 SET (ReconstructionFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/LoadSlices.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CleanupGrains.h
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.h
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CleanupGrains.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.h
@@ -31,8 +31,6 @@ SET (DREAM3DLib_ReconstructionFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.cpp
-
-
 )
 if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ReconstructionFilters" "${DREAM3DLib_ReconstructionFilters_HDRS}" "${DREAM3DLib_ReconstructionFilters_SRCS}" "0")
