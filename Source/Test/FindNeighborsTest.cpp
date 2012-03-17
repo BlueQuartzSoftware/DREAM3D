@@ -58,7 +58,7 @@
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
-#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
+#include "DREAM3DLib/ReconstructionFilters/EBSDSegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
@@ -201,13 +201,13 @@ void TestFindNeighbors()
   align_sections->setAlignmentMethod(DREAM3D::AlignmentMethod::OuterBoundary);
   pipeline->pushBack(align_sections);
 
-  SegmentGrains::Pointer segment_grains = SegmentGrains::New();
-  segment_grains->setMisorientationTolerance(m_MisorientationTolerance);
-  pipeline->pushBack(segment_grains);
+  EBSDSegmentGrains::Pointer ebsdsegment_grains = EBSDSegmentGrains::New();
+  ebsdsegment_grains->setMisorientationTolerance(m_MisorientationTolerance);
+  pipeline->pushBack(ebsdsegment_grains);
 
-  DREAM3D_REQUIRE_EQUAL(true, segment_grains->doesPipelineContainFilterBeforeThis(LoadSlices::ClassName()));
-  DREAM3D_REQUIRE_EQUAL(true, segment_grains->doesPipelineContainFilterBeforeThis(AlignSections::ClassName()));
-  DREAM3D_REQUIRE_EQUAL(false, segment_grains->doesPipelineContainFilterBeforeThis(CleanupGrains::ClassName()));
+  DREAM3D_REQUIRE_EQUAL(true, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(LoadSlices::ClassName()));
+  DREAM3D_REQUIRE_EQUAL(true, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(AlignSections::ClassName()));
+  DREAM3D_REQUIRE_EQUAL(false, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(CleanupGrains::ClassName()));
 
   CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
   cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);

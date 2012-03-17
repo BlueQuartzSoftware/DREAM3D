@@ -61,23 +61,9 @@ const static float m_pi = M_PI;
 //
 // -----------------------------------------------------------------------------
 SegmentGrains::SegmentGrains() :
-AbstractFilter(),
-m_MisorientationTolerance(5.0f),
-m_GrainIds(NULL),
-m_Quats(NULL),
-m_PhasesC(NULL),
-m_PhasesF(NULL),
-m_Active(NULL),
-m_CrystalStructures(NULL)
+AbstractFilter()
 {
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(m_HexOps.get());
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(m_CubicOps.get());
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -86,26 +72,6 @@ m_CrystalStructures(NULL)
 SegmentGrains::~SegmentGrains()
 {
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-void SegmentGrains::setupFilterOptions()
-{
-  std::vector<FilterOption::Pointer> options;
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setPropertyName("MisorientationTolerance");
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
-  }
-  setFilterOptions(options);
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -113,28 +79,6 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType,  voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
-  if(getErrorCondition() == -303)
-  {
-	setErrorCondition(0);
-	FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-	find_cellquats->setObservers(this->getObservers());
-	find_cellquats->setDataContainer(getDataContainer());
-	if(preflight == true) find_cellquats->preflight();
-	if(preflight == false) find_cellquats->execute();
-	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
-  }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
-
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -165,15 +109,6 @@ void SegmentGrains::execute()
 
   int64_t totalPoints = m->getTotalPoints();
 
-  // Create at least 2 grains:
-  m->resizeFieldDataArrays(2);
-  // Update our pointers
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -187,23 +122,14 @@ void SegmentGrains::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  DREAM3D_RANDOMNG_NEW()
+  size_t gnum = 1;
   int seed = 0;
-  int noseeds = 0;
-  size_t graincount = 1;
   int neighbor;
-  float q1[5];
-  float q2[5];
-  float w;
-  float n1, n2, n3;
-  int randpoint = 0;
-  int good = 0;
+  bool good = 0;
   DimType col, row, plane;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
-  size_t initialMergeListSize = 10;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
-  std::vector<int> mergelist(initialMergeListSize, -1);
   DimType neighpoints[6];
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];
@@ -211,68 +137,37 @@ void SegmentGrains::execute()
   neighpoints[3] = 1;
   neighpoints[4] = dims[0];
   neighpoints[5] = (dims[0] * dims[1]);
-  unsigned int phase1, phase2;
-
-  // Precalculate some constants
-  int64_t totalPMinus1 = totalPoints - 1;
 
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
-  while (noseeds == 0)
+  while (seed >= 0)
   {
-    seed = -1;
-    int counter = 0;
-    randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
-    while (seed == -1 && counter < totalPoints)
-    {
-      if (randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
-      if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_PhasesC[randpoint] > 0) seed = randpoint;
-
-      randpoint++;
-      counter++;
-    }
-    if(seed == -1) noseeds = 1;
-    if(seed >= 0)
+	seed = getSeed(gnum);
+	if(seed >= 0)
     {
       size = 0;
-      m_GrainIds[seed] = graincount;
       voxelslist[size] = seed;
       size++;
       for (size_t j = 0; j < size; ++j)
       {
-        int currentpoint = voxelslist[j];
+        size_t currentpoint = voxelslist[j];
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
-        phase1 = m_CrystalStructures[m_PhasesC[currentpoint]];
         for (int i = 0; i < 6; i++)
         {
-          q1[0] = 1;
-          q1[1] = m_Quats[currentpoint * 5 + 1];
-          q1[2] = m_Quats[currentpoint * 5 + 2];
-          q1[3] = m_Quats[currentpoint * 5 + 3];
-          q1[4] = m_Quats[currentpoint * 5 + 4];
-          good = 1;
+          good = true;
           neighbor = currentpoint + neighpoints[i];
 
-          if (i == 0 && plane == 0) good = 0;
-          if (i == 5 && plane == (dims[2] - 1)) good = 0;
-          if (i == 1 && row == 0) good = 0;
-          if (i == 4 && row == (dims[1] - 1)) good = 0;
-          if (i == 2 && col == 0) good = 0;
-          if (i == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && m_GrainIds[neighbor] == 0 && m_PhasesC[neighbor] > 0)
+          if (i == 0 && plane == 0) good = false;
+          if (i == 5 && plane == (dims[2] - 1)) good = false;
+          if (i == 1 && row == 0) good = false;
+          if (i == 4 && row == (dims[1] - 1)) good = false;
+          if (i == 2 && col == 0) good = false;
+          if (i == 3 && col == (dims[0] - 1)) good = false;
+          if (good == true)
           {
-            w = 10000.0;
-            q2[0] = 1;
-            q2[1] = m_Quats[neighbor*5 + 1];
-            q2[2] = m_Quats[neighbor*5 + 2];
-            q2[3] = m_Quats[neighbor*5 + 3];
-            q2[4] = m_Quats[neighbor*5 + 4];
-            phase2 = m_CrystalStructures[m_PhasesC[neighbor]];
-            if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-            if (w < m_MisorientationTolerance)
+            if (determineGrouping(currentpoint, neighbor, gnum) == true)
             {
-              m_GrainIds[neighbor] = graincount;
               voxelslist[size] = neighbor;
               size++;
               if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
@@ -280,22 +175,20 @@ void SegmentGrains::execute()
           }
         }
       }
-      m_Active[graincount] = true;
-      m_PhasesF[graincount] = m_PhasesC[seed];
-      graincount++;
-      if(graincount >= m->getNumFieldTuples())
-      {
-        size_t oldSize = m->getNumFieldTuples();
-        m->resizeFieldDataArrays(m->getNumFieldTuples() + 100);
-        dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-      }
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
+	  gnum++;
     }
   }
 
-  m->resizeFieldDataArrays(graincount);
-
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+}
+int SegmentGrains::getSeed(size_t gnum)
+{
+	return -1;
+}
+bool SegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
+{
+	return false;
 }
