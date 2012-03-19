@@ -48,15 +48,6 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
-#define     DREAM3D_DECLARE_ARRAY(type, ptr, prpty )\
-    private:\
-      DataArray<type>::Pointer m_##prpty;\
-      type* ptr;\
-  public:\
-    public:\
-    DREAM3D_SET_PROPERTY(DataArray<type>::Pointer, prpty)\
-    DREAM3D_GET_PROPERTY(DataArray<type>::Pointer, prpty)
-
 
 /**
  * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h
@@ -74,73 +65,27 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 
     virtual ~AlignSections();
 
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, AlignmentMethod)
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);
-
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections"; }
-
-    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	  virtual void execute();
+	virtual void execute();
     virtual void preflight();
+
+	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
 
   protected:
     AlignSections();
 
-    void align_sections();
-    void form_grains_sections();
-
   private:
-    int32_t* m_GrainIds;
-    float* m_Quats;
-    int32_t* m_PhasesC;
-    bool* m_GoodVoxels;
-
-    unsigned int* m_CrystalStructures;
-
-	OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
-
-    unsigned long long int Seed;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
     AlignSections(const AlignSections&); // Copy Constructor Not Implemented
     void operator=(const AlignSections&); // Operator '=' Not Implemented
-
-
-    template<typename T>
-    T** Allocate2DArray(size_t rows, size_t cols)
-    {
-      T** var = new T*[rows];
-      for(size_t i = 0; i < rows; ++i)
-      {
-        var[i] = new T[cols];
-      }
-      return var;
-    }
-
-    template<typename T>
-    void Deallocate2DArray(size_t rows, size_t cols, T** array)
-    {
-      for(size_t i = 0; i < rows; ++i)
-      {
-        delete array[i];
-      }
-      delete [] array;
-    }
-
 };
 
 #endif /* ALIGNSECTIONS_H_ */

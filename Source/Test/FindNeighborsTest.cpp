@@ -57,7 +57,7 @@
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
-#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
+#include "DREAM3DLib/ReconstructionFilters/AlignSectionsFeature.h"
 #include "DREAM3DLib/ReconstructionFilters/EBSDSegmentGrains.h"
 #include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
 #include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
@@ -195,10 +195,8 @@ void TestFindNeighbors()
   load_slices->setQualityMetricFilters(getQualityMetricFilters());
   pipeline->pushBack(load_slices);
 
-  AlignSections::Pointer align_sections = AlignSections::New();
+  AlignSectionsFeature::Pointer align_sections = AlignSectionsFeature::New();
  // align_sections->setCrystalStructures(xtal);
-  align_sections->setMisorientationTolerance(m_MisorientationTolerance);
-  align_sections->setAlignmentMethod(DREAM3D::AlignmentMethod::OuterBoundary);
   pipeline->pushBack(align_sections);
 
   EBSDSegmentGrains::Pointer ebsdsegment_grains = EBSDSegmentGrains::New();
