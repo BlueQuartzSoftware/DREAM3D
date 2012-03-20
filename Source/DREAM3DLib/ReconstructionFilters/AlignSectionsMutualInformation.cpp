@@ -378,6 +378,8 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
     mutualinfo12 = NULL;
   }
 
+  m->removeCellData(DREAM3D::CellData::GrainIds);
+
   outFile.close();
 }
 
@@ -429,15 +431,12 @@ void AlignSectionsMutualInformation::form_grains_sections()
   graincounts = m_GrainCounts->WritePointer(0, dims[2]);
 
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
-  DimType neighpoints[8];
-  neighpoints[0] = -dims[0] - 1;
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -dims[0] + 1;
-  neighpoints[3] = -1;
-  neighpoints[4] = 1;
-  neighpoints[5] = dims[0] - 1;
-  neighpoints[6] = dims[0];
-  neighpoints[7] = dims[0] + 1;
+  DimType neighpoints[4];
+  neighpoints[0] = -dims[0];
+  neighpoints[1] = -1;
+  neighpoints[2] = 1;
+  neighpoints[3] = dims[0];
+
   unsigned int phase1, phase2;
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
@@ -476,34 +475,29 @@ void AlignSectionsMutualInformation::form_grains_sections()
         m_GrainIds[seed] = graincount;
         voxelslist[size] = seed;
         size++;
-//        qs[0] = 0;
-//        qs[1] = m_Quats[seed * 5 + 1];
-//        qs[2] = m_Quats[seed * 5 + 2];
-//        qs[3] = m_Quats[seed * 5 + 3];
-//        qs[4] = m_Quats[seed * 5 + 4];
         for (size_t j = 0; j < size; ++j)
         {
           int currentpoint = voxelslist[j];
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
-          q1[0] = 0;
+          q1[0] = 1;
           q1[1] = m_Quats[currentpoint * 5 + 1];
           q1[2] = m_Quats[currentpoint * 5 + 2];
           q1[3] = m_Quats[currentpoint * 5 + 3];
           q1[4] = m_Quats[currentpoint * 5 + 4];
           phase1 = m_CrystalStructures[m_PhasesC[currentpoint]];
-          for (int i = 0; i < 8; i++)
+          for (int i = 0; i < 4; i++)
           {
             good = 1;
             neighbor = currentpoint + neighpoints[i];
-            if((i == 0 || i == 1 || i == 2) && row == 0) good = 0;
-            if((i == 5 || i == 6 || i == 7) && row == (dims[1] - 1)) good = 0;
-            if((i == 0 || i == 3 || i == 5) && col == 0) good = 0;
-            if((i == 2 || i == 4 || i == 7) && col == (dims[0] - 1)) good = 0;
+            if((i == 0) && row == 0) good = 0;
+            if((i == 3) && row == (dims[1] - 1)) good = 0;
+            if((i == 1) && col == 0) good = 0;
+            if((i == 2) && col == (dims[0] - 1)) good = 0;
             if(good == 1 && m_GrainIds[neighbor] <= 0 && m_PhasesC[neighbor] > 0)
             {
               w = 10000.0;
-              q2[0] = 0;
+              q2[0] = 1;
               q2[1] = m_Quats[neighbor * 5 + 1];
               q2[2] = m_Quats[neighbor * 5 + 2];
               q2[3] = m_Quats[neighbor * 5 + 3];
