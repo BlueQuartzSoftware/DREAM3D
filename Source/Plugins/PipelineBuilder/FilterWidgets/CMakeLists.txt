@@ -79,9 +79,9 @@ file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid QFilterWidgetManager::Regi
 
 set(ONLY_FILTERS 1)
 WidgetGeneration(GenericFilters)
-WidgetGeneration(PrivateFilters)
 WidgetGeneration(IOFilters)
-WidgetGeneration(ManipulationFilters)
+WidgetGeneration(SamplingFilters)
+WidgetGeneration(ProcessingFilters)
 WidgetGeneration(ReconstructionFilters)
 WidgetGeneration(StatisticsFilters)
 WidgetGeneration(SurfaceMeshingFilters)

@@ -90,10 +90,10 @@ namespace DREAM3D
   namespace FilterGroups
   {
     const std::string GenericFilters("Generic");
-    const std::string PrivateFilters("Private");
     const std::string IOFilters("IO");
     const std::string ReconstructionFilters("Reconstruction");
-    const std::string ManipulationFilters("Manipulation");
+    const std::string SamplingFilters("Sampling");
+    const std::string ProcessingFilters("Processing");
     const std::string StatisticsFilters("Statistics");
     const std::string SyntheticBuilderFilters("Synthetic_Builder");
     const std::string SurfaceMeshingFilters("Surface_Meshing");

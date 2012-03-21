@@ -44,7 +44,7 @@
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
-#include "DREAM3DLib/ReconstructionFilters/CleanupGrains.h"
+#include "DREAM3DLib/ProcessingFilters/CleanupGrains.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
