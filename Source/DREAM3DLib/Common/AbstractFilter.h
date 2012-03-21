@@ -34,6 +34,7 @@
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -65,6 +66,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     // These should be implemented by the subclass
     virtual const std::string getGroupName() { assert(false); return "";}
     virtual const std::string getHumanLabel() { assert(false); return "";}
+
+    virtual const std::string getFilterVersion() { return DREAM3DLib::Version::Complete(); }
 
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
 

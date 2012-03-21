@@ -38,6 +38,7 @@ set (CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
 set (CMP_CONFIGURATION_FILE_NAME "DREAM3DConfiguration.h")
 set (CMP_TYPES_FILE_NAME "DREAM3DLibTypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "DREAM3DVersion.h")
+set (CMP_VERSION_SOURCE_FILE_NAME "DREAM3DVersion.cpp")
 set (CMP_TOP_HEADER_FILE "DREAM3DLib.h")
 set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
 set (CMP_PROJECT_NAME "${PROJECT_NAME}")
@@ -51,7 +52,7 @@ configure_file(${DREAM3DLib_SOURCE_DIR}/DREAM3DConfiguration.h.in
                ${DREAM3DProj_BINARY_DIR}/DREAM3DLib/${CMP_TOP_HEADER_FILE})
 
 
-set(Project_SRCS "")
+set(Project_SRCS ${DREAM3DLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME})
 Macro(D3DCompileDir DirName)
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
     set (Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})

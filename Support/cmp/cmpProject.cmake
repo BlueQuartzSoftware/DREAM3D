@@ -36,6 +36,10 @@ if (NOT DEFINED CMP_VERSION_HEADER_FILE_NAME)
     set (CMP_VERSION_HEADER_FILE_NAME "cmpVersion.h")
 endif()
 
+if (NOT DEFINED CMP_VERSION_SOURCE_FILE_NAME)
+    set (CMP_VERSION_HEADER_FILE_NAME "cmpVersion.cpp")
+endif()
+
 if (NOT DEFINED CMP_TOP_HEADER_FILE)
     set (CMP_TOP_HEADER_FILE "")
 endif()
@@ -80,7 +84,8 @@ configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpPrimitiveTypes.h.in
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
 if( ${CMP_GENERATE_VERSION_STRING} )
-    cmpVersionStringsFromGit( GENERATED_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}" 
+    cmpVersionStringsFromGit( GENERATED_HEADER_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}" 
+                              GENERATED_SOURCE_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}"
                           NAMESPACE "${CMP_PROJECT_NAMESPACE}" 
                           cmpProjectName "${CMP_PROJECT_NAME}")
 endif()
@@ -88,7 +93,7 @@ endif()
 cmp_IDE_GENERATED_PROPERTIES( "Generated" 
 "${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}" 
 "${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}" 
-"${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}")
+"${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME};${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}")
 
 # --------------------------------------------------------------------
 # Enable the use of plugins that will get generated as part of the project

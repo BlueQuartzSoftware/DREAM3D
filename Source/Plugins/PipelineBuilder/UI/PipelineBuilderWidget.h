@@ -93,6 +93,7 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
     void on_m_LoadSettingsBtn_clicked();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
+    void on_presetPipelineTree_itemDoubleClicked( QTreeWidgetItem* item, int column);
 
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
     void on_filterList_currentItemChanged( QListWidgetItem * item, QListWidgetItem * previous );
