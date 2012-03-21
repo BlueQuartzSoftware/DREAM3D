@@ -60,6 +60,7 @@ set (CMP_HEADER_DIR ${EbsdLib_BINARY_DIR})
 set (CMP_CONFIGURATION_FILE_NAME "EbsdLibConfiguration.h")
 set (CMP_TYPES_FILE_NAME "EbsdLibTypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "EbsdLibVersion.h")
+set (CMP_VERSION_SOURCE_FILE_NAME "EbsdLibVersion.cpp")
 set (CMP_TOP_HEADER_FILE "EbsdLib.h")
 set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
 set (CMP_PROJECT_NAME "${PROJECT_NAME}")
@@ -117,6 +118,7 @@ set(EbsdLib_PROJECT_SRCS
     ${HKL_HDRS}
     ${EbsdLib_Utilities_SRCS}
     ${EbsdLib_Utilities_HDRS}
+    ${EbsdLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
 #-- We ONLY want to add the actual library for the DREAM3D project. With the

@@ -811,7 +811,7 @@ endmacro()
 #
 function(cmpVersionStringsFromGit)
     set(options)
-    set(oneValueArgs GENERATED_FILE_PATH NAMESPACE cmpProjectName)
+    set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH NAMESPACE cmpProjectName)
     cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     
    # message(STATUS "--------------------------------------------")
@@ -855,7 +855,8 @@ function(cmpVersionStringsFromGit)
          
         mark_as_advanced( ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
         set (PROJECT_PREFIX "${GVS_cmpProjectName}")
-        configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_FILE_PATH}  )
+        configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}  )
+        configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GVS_GENERATED_SOURCE_FILE_PATH}  )
     #    MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
     else()
        cmpGenerateVersionString( ${GVS_GENERATED_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )

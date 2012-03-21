@@ -188,13 +188,20 @@ void PipelineBuilderWidget::setupGui()
   }
   library->setExpanded(true);
 
-//  QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
-//  presets->setText(0, "Preset Pipelines");
+  QTreeWidgetItem* presets = new QTreeWidgetItem(presetPipelineTree);
+  presets->setText(0, "Preset Pipelines");
 
   toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_presetPipelineTree_itemDoubleClicked( QTreeWidgetItem* item, int column)
+{
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -207,7 +214,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   // Get the QFilterWidget Mangager Instance
   QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
   QFilterWidgetManager::Collection factories;
-  if (item->parent() == NULL)
+  if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
   }

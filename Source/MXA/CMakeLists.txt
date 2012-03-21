@@ -31,6 +31,7 @@ set (CMP_HEADER_DIR ${MXA_BINARY_DIR})
 set (CMP_CONFIGURATION_FILE_NAME "MXAConfiguration.h")
 set (CMP_TYPES_FILE_NAME "MXATypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
+set (CMP_VERSION_SOURCE_FILE_NAME "MXAVersion.cpp")
 set (CMP_TOP_HEADER_FILE "MXA.h")
 set (CMP_PROJECT_NAMESPACE "MXA")
 set (CMP_PROJECT_NAME "MXA")
@@ -49,9 +50,6 @@ MXACompileDir(Utilities)
 set (MXA_HDF5_SUPPORT "1")
 #MXACompileDir(HDF5)
 
-set (Project_SRCS 
-    ${Project_SRCS} 
-    )
 
 include_directories(${MXA_SOURCE_DIR}/..)
 include_directories(${MXA_BINARY_DIR})
@@ -65,7 +63,8 @@ set (HDF5_VTK_BRIDGE "0")
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
-cmpVersionStringsFromGit(GENERATED_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.h 
+cmpVersionStringsFromGit(GENERATED_HEADER_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.h 
+                         GENERATED_SOURCE_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.cpp
                          NAMESPACE "MXA"
                          cmpProjectName "MXA" )
                          
@@ -73,7 +72,12 @@ cmpVersionStringsFromGit(GENERATED_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion.h
 configure_file(${MXA_SOURCE_DIR}/MXAConfiguration.h.in
                ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE})
                
-# add_definitions(-DQT_CORE_LIB)
+set (Project_SRCS 
+    ${Project_SRCS} 
+    ${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+)
+
+
 
 add_library(${PROJECT_NAME} ${LIB_TYPE}  ${Project_SRCS})
 target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} MXA)
