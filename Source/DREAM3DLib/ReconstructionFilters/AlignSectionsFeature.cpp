@@ -50,7 +50,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-#include "DREAM3DLib/PrivateFilters/FindCellQuats.h"
+#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1

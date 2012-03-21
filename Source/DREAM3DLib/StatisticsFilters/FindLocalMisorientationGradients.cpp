@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/PrivateFilters/FindCellQuats.h"
+#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 

@@ -51,7 +51,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#include "DREAM3DLib/PrivateFilters/DetermineGoodVoxels.h"
+#include "DREAM3DLib/GenericFilters/DetermineGoodVoxels.h"
 
 
 #define ERROR_TXT_OUT 1

@@ -14,8 +14,8 @@ SET (ReconstructionFilters_FILTERS_HDRS
 ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.h
 ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.h
 ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.h
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsList.h
 ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.h
-${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CleanupGrains.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.h
@@ -27,10 +27,17 @@ SET (DREAM3DLib_ReconstructionFilters_HDRS
 ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.h
 )
 SET (DREAM3DLib_ReconstructionFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/LoadSlices.cpp    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/LoadSlices.cpp    
+    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.cpp
 ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.cpp
 ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.cpp
-${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.cpp    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SegmentGrains.cpp    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.cpp    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CleanupGrains.cpp    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.cpp ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.cpp  ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.cpp
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.cpp    
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsList.cpp    
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SegmentGrains.cpp    
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.cpp     
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.cpp 
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.cpp  
+${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.cpp
 )
 if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ReconstructionFilters" "${DREAM3DLib_ReconstructionFilters_HDRS}" "${DREAM3DLib_ReconstructionFilters_SRCS}" "0")

@@ -38,8 +38,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
