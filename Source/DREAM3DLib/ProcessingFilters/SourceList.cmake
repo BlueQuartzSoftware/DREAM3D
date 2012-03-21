@@ -10,6 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 SET (ProcessingFilters_FILTERS_HDRS
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/CleanupGrains.h
+${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/GrainDilation.h
 
 )
 #-- Add in any addition NON Filter classes here
@@ -19,6 +20,7 @@ SET (DREAM3DLib_ProcessingFilters_HDRS
 )
 SET (DREAM3DLib_ProcessingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/CleanupGrains.cpp    
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/GrainDilation.cpp    
 
 )
 if (NOT DEFINED ONLY_FILTERS)
