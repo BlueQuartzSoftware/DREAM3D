@@ -59,7 +59,7 @@ H5FilterOptionsWriter::~H5FilterOptionsWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterOptionsWriter::makeGroup(int index)
+int H5FilterOptionsWriter::openOptionsGroup(int index)
 {
   int err = 0;
   if (m_GroupId <= 0)
@@ -67,9 +67,7 @@ int H5FilterOptionsWriter::makeGroup(int index)
     return -1;
   }
   std::string name = StringUtils::numToString(index);
-  hid_t gid = H5Utilities::createGroup(m_GroupId, name);
-
-
+  m_CurrentGroupId = H5Utilities::createGroup(m_GroupId, name);
 
   return err;
 }
@@ -77,9 +75,20 @@ int H5FilterOptionsWriter::makeGroup(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterOptionsWriter::writeStringOption(const std::string name, const std::string value)
+int H5FilterOptionsWriter::closeOptionsGroup()
+{
+  H5Gclose(m_CurrentGroupId);
+  m_CurrentGroupId = -1;
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterOptionsWriter::writeValue(const std::string name, const std::string value)
 {
   int err = 0;
+  err = H5Lite::writeStringDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -90,6 +99,7 @@ int H5FilterOptionsWriter::writeStringOption(const std::string name, const std::
 int H5FilterOptionsWriter::writeValue(const std::string name, int8_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -99,6 +109,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, int8_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, int16_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -108,6 +119,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, int16_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, int32_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -117,6 +129,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, int32_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, int64_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -126,6 +139,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, int64_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, uint8_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -135,6 +149,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, uint8_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, uint16_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -144,6 +159,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, uint16_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, uint32_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -153,6 +169,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, uint32_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, uint64_t value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -162,6 +179,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, uint64_t value)
 int H5FilterOptionsWriter::writeValue(const std::string name, float value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 
@@ -171,6 +189,7 @@ int H5FilterOptionsWriter::writeValue(const std::string name, float value)
 int H5FilterOptionsWriter::writeValue(const std::string name, double value)
 {
   int err = 0;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
 

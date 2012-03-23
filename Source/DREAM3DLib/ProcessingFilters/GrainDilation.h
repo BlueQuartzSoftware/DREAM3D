@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT GrainDilation : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
+    virtual const std::string getHumanLabel() { return "Grain Dilation"; }
 
     virtual void setupFilterOptions();
 

@@ -57,9 +57,9 @@ class DREAM3DLib_EXPORT TextFilterOptionsWriter : public AbstractFilterOptionsWr
 
     virtual ~TextFilterOptionsWriter();
 
-    virtual int makeGroup(int index);
-
-    virtual int writeStringOption(const std::string name, const std::string value);
+    virtual int openOptionsGroup(int index);
+    virtual int closeOptionsGroup();
+    virtual int writeValue(const std::string name, const std::string value);
 
     virtual int writeValue(const std::string name, int8_t value);
     virtual int writeValue(const std::string name, int16_t value);

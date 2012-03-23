@@ -61,9 +61,10 @@ class DREAM3DLib_EXPORT H5FilterOptionsWriter : public AbstractFilterOptionsWrit
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId);
 
-    virtual int makeGroup(int index);
+    virtual int openOptionsGroup(int index);
+    virtual int closeOptionsGroup();
 
-    virtual int writeStringOption(const std::string name, const std::string value);
+    virtual int writeValue(const std::string name, const std::string value);
 
     virtual int writeValue(const std::string name, int8_t value);
     virtual int writeValue(const std::string name, int16_t value);
@@ -80,6 +81,9 @@ class DREAM3DLib_EXPORT H5FilterOptionsWriter : public AbstractFilterOptionsWrit
     H5FilterOptionsWriter();
 
   private:
+    hid_t m_CurrentGroupId;
+
+
     H5FilterOptionsWriter(const H5FilterOptionsWriter&); // Copy Constructor Not Implemented
     void operator=(const H5FilterOptionsWriter&); // Operator '=' Not Implemented
 };

@@ -53,15 +53,24 @@ TextFilterOptionsWriter::~TextFilterOptionsWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::makeGroup(int index)
+int TextFilterOptionsWriter::openOptionsGroup(int index)
 {
-
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeStringOption(const std::string name, const std::string value)
+int TextFilterOptionsWriter::closeOptionsGroup()
+{
+  return 0;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, const std::string value)
 {
   int err = 0;
   return err;
