@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, PipelineIndex);
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
 
@@ -97,6 +98,10 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
 
     virtual void setupFilterOptions();
+
+    virtual int writeFilterOptions();
+
+
 
     /**
      * @brief This method should be fully implemented in subclasses.
