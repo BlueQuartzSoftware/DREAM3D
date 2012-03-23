@@ -173,5 +173,5 @@ target_link_libraries(RNGTest DREAM3DLib)
 
 # --------
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
-target_link_libraries(ResFixer EbsdLib MXA)
+target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
 

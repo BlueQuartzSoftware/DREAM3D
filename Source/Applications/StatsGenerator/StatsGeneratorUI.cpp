@@ -649,7 +649,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   SGWidget* sgwidget = NULL;
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
-  for (int i = 1; i < nPhases; ++i)
+  for (size_t i = 1; i < nPhases; ++i)
   {
     // Create a new Default SGPhase
     sgwidget = createNewSGWidget();
@@ -700,7 +700,7 @@ void StatsGeneratorUI::adjustWindowTitle()
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
   QString msg ("StatsGenerator Version ");
-  msg.append(DREAM3DLib::Version::Complete.c_str());
+  msg.append(DREAM3DLib::Version::Complete().c_str());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -717,7 +717,7 @@ void StatsGeneratorUI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete.c_str());
+  version.append(DREAM3DLib::Version::PackageComplete().c_str());
   about.setApplicationInfo(an, version);
   about.exec();
 }

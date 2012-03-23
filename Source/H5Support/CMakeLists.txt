@@ -42,6 +42,7 @@ set (CMP_HEADER_DIR ${H5Support_BINARY_DIR})
 set (CMP_CONFIGURATION_FILE_NAME "H5SupportConfiguration.h")
 set (CMP_TYPES_FILE_NAME "H5SupportTypes.h")
 set (CMP_VERSION_HEADER_FILE_NAME "H5SupportVersion.h")
+set (CMP_VERSION_SOURCE_FILE_NAME "H5SupportVersion.cpp")
 set (CMP_TOP_HEADER_FILE "H5Support.h")
 set (CMP_PROJECT_NAMESPACE "H5Support")
 set (CMP_PROJECT_NAME "H5Support")
@@ -73,7 +74,9 @@ set (VERSION_GEN_VER_PATCH "0")
 
 configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
                ${H5Support_BINARY_DIR}/H5SupportVersion.h  )
-
+configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   
+               ${H5Support_BINARY_DIR}/H5SupportVersion.cpp  )
+               
 configure_file(${H5Support_SOURCE_DIR}/H5SupportConfiguration.h.in
                ${H5Support_BINARY_DIR}/${CMP_TOP_HEADER_FILE})   
 
@@ -84,6 +87,7 @@ include_directories(${H5Support_BINARY_DIR})
 set(PROJECT_SRCS
     ${H5Support_SRCS} 
     ${H5Support_HDRS}
+    ${H5Support_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
 add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})
