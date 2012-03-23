@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindSurfaceCells_H_
-#define FindSurfaceCells_H_
+#ifndef FindNumFields_H_
+#define FindNumFields_H_
 
 #include <vector>
 #include <string>
@@ -49,35 +49,36 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
+class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSurfaceCells);
-     DREAM3D_STATIC_NEW_MACRO(FindSurfaceCells);
-     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceCells, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindNumFields);
+     DREAM3D_STATIC_NEW_MACRO(FindNumFields);
+     DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter);
 
-     virtual ~FindSurfaceCells();
+     virtual ~FindNumFields();
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-     virtual const std::string getHumanLabel() { return "Find Surface Cells"; }
+	 virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+     virtual const std::string getHumanLabel() { return "Find Number of Fields"; }
 
      virtual void execute();
      virtual void preflight();
 
    protected:
-     FindSurfaceCells();
+     FindNumFields();
 
    private:
-    int32_t* m_GrainIds;
-    int8_t* m_SurfaceVoxels;
+    int32_t* m_PhasesF;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int32_t* m_NumFields;
 
-    FindSurfaceCells(const FindSurfaceCells&); // Copy Constructor Not Implemented
-    void operator=(const FindSurfaceCells&); // Operator '=' Not Implemented
+	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindNumFields(const FindNumFields&); // Copy Constructor Not Implemented
+    void operator=(const FindNumFields&); // Operator '=' Not Implemented
 
 };
 
-#endif /* FindSurfaceCells_H_ */
+#endif /* FindNumFields_H_ */

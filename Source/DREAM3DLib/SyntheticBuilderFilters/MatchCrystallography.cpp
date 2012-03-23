@@ -46,9 +46,9 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
-#include "DREAM3DLib/PrivateFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
 // -----------------------------------------------------------------------------
 //

@@ -33,13 +33,11 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef CLEANUPGRAINS_H_
-#define CLEANUPGRAINS_H_
+#ifndef FindCellQuats_H_
+#define FindCellQuats_H_
 
 #include <vector>
 #include <string>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -48,65 +46,46 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
 
-
-/**
- * @class CleanupGrains CleanupGrains.h DREAM3DLib/ReconstructionFilters/CleanupGrains.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+/*
+ *
  */
-class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
+class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(CleanupGrains);
-    DREAM3D_STATIC_NEW_MACRO(CleanupGrains);
-    DREAM3D_TYPE_MACRO_SUPER(CleanupGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindCellQuats);
+     DREAM3D_STATIC_NEW_MACRO(FindCellQuats);
+     DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter);
 
-    virtual ~CleanupGrains();
+     virtual ~FindCellQuats();
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
-    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
+     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+     virtual const std::string getHumanLabel() { return "Find Cell Quats"; }
 
-    virtual void setupFilterOptions();
+     virtual void execute();
+     virtual void preflight();
 
+   protected:
+     FindCellQuats();
 
-    virtual void execute();
-    virtual void preflight();
-
-  protected:
-    CleanupGrains();
-
-    void remove_smallgrains();
-    void assign_badpoints();
-    void merge_containedgrains();
-
-
-  private:
-    bool* m_AlreadyChecked;
-    int32_t* m_Neighbors;
-
-    int32_t* m_GrainIds;
+   private:
     int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
-    int32_t* m_NumNeighbors;
-    bool* m_Active;
+    float* m_Quats;
+    float* m_EulerAnglesC;
+	unsigned int* m_CrystalStructures;
 
-	int32_t* m_NumFields;
+    std::vector<OrientationMath*> m_OrientationOps;
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
 
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    FindCellQuats(const FindCellQuats&); // Copy Constructor Not Implemented
+    void operator=(const FindCellQuats&); // Operator '=' Not Implemented
 
-
-    CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
-    void operator=(const CleanupGrains&); // Operator '=' Not Implemented
 };
 
-#endif /* CLEANUPGRAINS_H_ */
+#endif /* FindCellQuats_H_ */

@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef RENUMBERGRAINS_H_
-#define RENUMBERGRAINS_H_
+#ifndef FindGrainPhases_H_
+#define FindGrainPhases_H_
 
 #include <vector>
 #include <string>
@@ -49,36 +49,36 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
+class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(RenumberGrains);
-     DREAM3D_STATIC_NEW_MACRO(RenumberGrains);
-     DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindGrainPhases);
+     DREAM3D_STATIC_NEW_MACRO(FindGrainPhases);
+     DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter);
 
-     virtual ~RenumberGrains();
+     virtual ~FindGrainPhases();
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-     virtual const std::string getHumanLabel() { return "Renumber Grains"; }
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+     virtual const std::string getHumanLabel() { return "Find Grain Phases"; }
 
      virtual void execute();
      virtual void preflight();
-     virtual void setupFilterOptions();
 
    protected:
-     RenumberGrains();
+     FindGrainPhases();
 
    private:
     int32_t* m_GrainIds;
-    bool* m_Active;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    RenumberGrains(const RenumberGrains&); // Copy Constructor Not Implemented
-    void operator=(const RenumberGrains&); // Operator '=' Not Implemented
+    FindGrainPhases(const FindGrainPhases&); // Copy Constructor Not Implemented
+    void operator=(const FindGrainPhases&); // Operator '=' Not Implemented
 
 };
 
-#endif /* RENUMBERGRAINS_H_ */
+#endif /* FindGrainPhases_H_ */

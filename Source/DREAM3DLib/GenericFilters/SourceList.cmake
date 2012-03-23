@@ -10,7 +10,16 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (GenericFilters_FILTERS_HDRS
-
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainPhases.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceCells.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindCellQuats.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNumFields.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainCentroids.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.h
 )
 
 #-- Add in any addition NON Filter classes here
@@ -19,7 +28,16 @@ SET (DREAM3DLib_GenericFilters_HDRS
 )
 
 SET (DREAM3DLib_GenericFilters_SRCS
-
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.cpp    
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainPhases.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindCellQuats.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceCells.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNumFields.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainCentroids.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.cpp
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.cpp
 )
 
 

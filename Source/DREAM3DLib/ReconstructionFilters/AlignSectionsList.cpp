@@ -34,12 +34,17 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SegmentGrains.h"
+#include "AlignSectionsList.h"
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -50,32 +55,48 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
+using namespace std;
+
 const static float m_pi = M_PI;
 
-
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentGrains::SegmentGrains() :
-AbstractFilter()
+AlignSectionsList::AlignSectionsList() :
+AlignSections(),
+m_GoodVoxels(NULL)
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentGrains::~SegmentGrains()
+AlignSectionsList::~AlignSectionsList()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AlignSectionsList::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -83,10 +104,11 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   setErrorMessage(ss.str());
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentGrains::preflight()
+void AlignSectionsList::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -94,7 +116,7 @@ void SegmentGrains::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentGrains::execute()
+void AlignSectionsList::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
@@ -108,6 +130,31 @@ void SegmentGrains::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
+  size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+  dataCheck(false, totalPoints, numgrains, numensembles);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
+  AlignSections::execute();
+
+  // If there is an error set this to something negative and also set a message
+  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+{
+  DataContainer* m = getDataContainer();
+  //int64_t totalPoints = m->totalPoints();
+
+  ifstream inFile;
+  inFile.open(m_InputFile.c_str());
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -122,73 +169,14 @@ void SegmentGrains::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  size_t gnum = 1;
-  int seed = 0;
-  int neighbor;
-  bool good = 0;
-  DimType col, row, plane;
-  size_t size = 0;
-  size_t initialVoxelsListSize = 1000;
-  std::vector<int> voxelslist(initialVoxelsListSize, -1);
-  DimType neighpoints[6];
-  neighpoints[0] = -(dims[0] * dims[1]);
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = (dims[0] * dims[1]);
-
-  // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
-  while (seed >= 0)
+  int slice;
+  int newxshift, newyshift;
+  for (DimType iter = 1; iter < dims[2]; iter++)
   {
-	seed = getSeed(gnum);
-	if(seed >= 0)
-    {
-      size = 0;
-      voxelslist[size] = seed;
-      size++;
-      for (size_t j = 0; j < size; ++j)
-      {
-        size_t currentpoint = voxelslist[j];
-        col = currentpoint % dims[0];
-        row = (currentpoint / dims[0]) % dims[1];
-        plane = currentpoint / (dims[0] * dims[1]);
-        for (int i = 0; i < 6; i++)
-        {
-          good = true;
-          neighbor = currentpoint + neighpoints[i];
-
-          if (i == 0 && plane == 0) good = false;
-          if (i == 5 && plane == (dims[2] - 1)) good = false;
-          if (i == 1 && row == 0) good = false;
-          if (i == 4 && row == (dims[1] - 1)) good = false;
-          if (i == 2 && col == 0) good = false;
-          if (i == 3 && col == (dims[0] - 1)) good = false;
-          if (good == true)
-          {
-            if (determineGrouping(currentpoint, neighbor, gnum) == true)
-            {
-              voxelslist[size] = neighbor;
-              size++;
-              if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
-            }
-          }
-        }
-      }
-      voxelslist.clear();
-      voxelslist.resize(initialVoxelsListSize, -1);
-	  gnum++;
-    }
+	inFile >> slice >> newxshift >> newyshift;
+    xshifts[iter] = xshifts[iter-1] + newxshift;
+    yshifts[iter] = yshifts[iter-1] + newyshift;
   }
 
-  // If there is an error set this to something negative and also set a message
-  notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
-}
-int SegmentGrains::getSeed(size_t gnum)
-{
-	return -1;
-}
-bool SegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
-{
-	return false;
+  inFile.close();
 }

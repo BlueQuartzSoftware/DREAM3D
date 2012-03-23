@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindNumFields_H_
-#define FindNumFields_H_
+#ifndef FindGrainCentroids_H_
+#define FindGrainCentroids_H_
 
 #include <vector>
 #include <string>
@@ -49,36 +49,40 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
+class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindNumFields);
-     DREAM3D_STATIC_NEW_MACRO(FindNumFields);
-     DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindGrainCentroids);
+     DREAM3D_STATIC_NEW_MACRO(FindGrainCentroids);
+     DREAM3D_TYPE_MACRO_SUPER(FindGrainCentroids, AbstractFilter);
 
-     virtual ~FindNumFields();
+     virtual ~FindGrainCentroids();
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-	 virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-     virtual const std::string getHumanLabel() { return "Find Number of Fields"; }
+     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 6 Array
+
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+     virtual const std::string getHumanLabel() { return "Find Grain Centroids"; }
 
      virtual void execute();
      virtual void preflight();
 
    protected:
-     FindNumFields();
+     FindGrainCentroids();
 
-   private:
-    int32_t* m_PhasesF;
+    void find_centroids();
+    void find_centroids2D();
 
-    int32_t* m_NumFields;
+private:
+    int32_t* m_GrainIds;
+    float* m_Centroids;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindNumFields(const FindNumFields&); // Copy Constructor Not Implemented
-    void operator=(const FindNumFields&); // Operator '=' Not Implemented
+    FindGrainCentroids(const FindGrainCentroids&); // Copy Constructor Not Implemented
+    void operator=(const FindGrainCentroids&); // Operator '=' Not Implemented
 
 };
 
-#endif /* FindNumFields_H_ */
+#endif /* FindGrainCentroids_H_ */

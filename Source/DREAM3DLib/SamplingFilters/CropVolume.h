@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,58 +34,61 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DETERMINEGOODVOXELS_H_
-#define DETERMINEGOODVOXELS_H_
+#ifndef CROPVOLUME_H_
+#define CROPVOLUME_H_
 
 #include <string>
 
-#include "EbsdLib/H5EbsdVolumeReader.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/QualityMetricFilter.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
-/*
- *
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DataContainer.h"
+
+/**
+ * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
+class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DetermineGoodVoxels);
-    DREAM3D_STATIC_NEW_MACRO(DetermineGoodVoxels);
-    DREAM3D_TYPE_MACRO_SUPER(DetermineGoodVoxels, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(CropVolume);
+    DREAM3D_STATIC_NEW_MACRO(CropVolume);
+    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter);
 
-    virtual ~DetermineGoodVoxels();
+    virtual ~CropVolume();
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
-    DREAM3D_INSTANCE_PROPERTY(H5EbsdVolumeReader::Pointer, EbsdVolumeReader);
+    DREAM3D_INSTANCE_PROPERTY(int, XMin)
+    DREAM3D_INSTANCE_PROPERTY(int, YMin)
+    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
 
+    DREAM3D_INSTANCE_PROPERTY(int, XMax)
+    DREAM3D_INSTANCE_PROPERTY(int, YMax)
+    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+
+	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+  virtual const std::string getHumanLabel() { return "Crop Volume"; }
+
+  virtual void setupFilterOptions();
+
+	/**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-    virtual const std::string getHumanLabel() { return "Determine Good Voxels"; }
-
-    virtual void setupFilterOptions();
-
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
-    virtual void execute();
-
-
   protected:
-      DetermineGoodVoxels();
+    CropVolume();
 
-      void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    bool* m_GoodVoxels;
 
-
-    DetermineGoodVoxels(const DetermineGoodVoxels&); // Copy Constructor Not Implemented
-    void operator=(const DetermineGoodVoxels&); // Operator '=' Not Implemented
-
+    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
+    void operator=(const CropVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* DETERMINEGOODVOXELS_H_ */
+#endif /* CROPVOLUME_H_ */

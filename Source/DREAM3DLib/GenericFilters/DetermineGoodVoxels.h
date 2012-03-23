@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,58 +34,58 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ALIGNSECTIONS_H_
-#define ALIGNSECTIONS_H_
+#ifndef DETERMINEGOODVOXELS_H_
+#define DETERMINEGOODVOXELS_H_
 
-#include <vector>
 #include <string>
+
+#include "EbsdLib/H5EbsdVolumeReader.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 
-
-/**
- * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+/*
+ *
  */
-class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
+class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AlignSections)
-    DREAM3D_STATIC_NEW_MACRO(AlignSections)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(DetermineGoodVoxels);
+    DREAM3D_STATIC_NEW_MACRO(DetermineGoodVoxels);
+    DREAM3D_TYPE_MACRO_SUPER(DetermineGoodVoxels, AbstractFilter);
 
-    virtual ~AlignSections();
+    virtual ~DetermineGoodVoxels();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Align Sections"; }
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
+    DREAM3D_INSTANCE_PROPERTY(H5EbsdVolumeReader::Pointer, EbsdVolumeReader);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-	virtual void execute();
     virtual void preflight();
 
-	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Determine Good Voxels"; }
+
+    virtual void setupFilterOptions();
+
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+    virtual void execute();
 
 
   protected:
-    AlignSections();
+      DetermineGoodVoxels();
+
+      void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    bool* m_GoodVoxels;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    AlignSections(const AlignSections&); // Copy Constructor Not Implemented
-    void operator=(const AlignSections&); // Operator '=' Not Implemented
+    DetermineGoodVoxels(const DetermineGoodVoxels&); // Copy Constructor Not Implemented
+    void operator=(const DetermineGoodVoxels&); // Operator '=' Not Implemented
+
 };
 
-#endif /* ALIGNSECTIONS_H_ */
+#endif /* DETERMINEGOODVOXELS_H_ */

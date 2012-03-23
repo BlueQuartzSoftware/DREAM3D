@@ -33,11 +33,13 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindCellQuats_H_
-#define FindCellQuats_H_
+
+#ifndef GrainDilation_H_
+#define GrainDilation_H_
 
 #include <vector>
 #include <string>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -46,46 +48,65 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
-/*
- *
+
+/**
+ * @class GrainDilation GrainDilation.h DREAM3DLib/ReconstructionFilters/GrainDilation.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
+class DREAM3DLib_EXPORT GrainDilation : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindCellQuats);
-     DREAM3D_STATIC_NEW_MACRO(FindCellQuats);
-     DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GrainDilation);
+    DREAM3D_STATIC_NEW_MACRO(GrainDilation);
+    DREAM3D_TYPE_MACRO_SUPER(GrainDilation, AbstractFilter);
 
-     virtual ~FindCellQuats();
+    virtual ~GrainDilation();
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
+    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-     virtual const std::string getHumanLabel() { return "Find Cell Quats"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
 
-     virtual void execute();
-     virtual void preflight();
+    virtual void setupFilterOptions();
 
-   protected:
-     FindCellQuats();
 
-   private:
+    virtual void execute();
+    virtual void preflight();
+
+  protected:
+    GrainDilation();
+
+    void remove_smallgrains();
+    void assign_badpoints();
+    void merge_containedgrains();
+
+
+  private:
+    bool* m_AlreadyChecked;
+    int32_t* m_Neighbors;
+
+    int32_t* m_GrainIds;
     int32_t* m_PhasesC;
-    float* m_Quats;
-    float* m_EulerAnglesC;
-	unsigned int* m_CrystalStructures;
+    int32_t* m_PhasesF;
+    int32_t* m_NumNeighbors;
+    bool* m_Active;
 
-    std::vector<OrientationMath*> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
+	int32_t* m_NumFields;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    std::vector<std::vector<int> > voxellists;
+    std::vector<int> nuclei;
 
-    FindCellQuats(const FindCellQuats&); // Copy Constructor Not Implemented
-    void operator=(const FindCellQuats&); // Operator '=' Not Implemented
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+
+    GrainDilation(const GrainDilation&); // Copy Constructor Not Implemented
+    void operator=(const GrainDilation&); // Operator '=' Not Implemented
 };
 
-#endif /* FindCellQuats_H_ */
+#endif /* GrainDilation_H_ */

@@ -33,9 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef FINDNEIGHBORS_H_
-#define FINDNEIGHBORS_H_
+#ifndef RENUMBERGRAINS_H_
+#define RENUMBERGRAINS_H_
 
 #include <vector>
 #include <string>
@@ -46,48 +45,40 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
 
-/**
- * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+/*
+ *
  */
-class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
+class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindNeighbors);
-    DREAM3D_STATIC_NEW_MACRO(FindNeighbors);
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(RenumberGrains);
+     DREAM3D_STATIC_NEW_MACRO(RenumberGrains);
+     DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);
 
-    virtual ~FindNeighbors();
+     virtual ~RenumberGrains();
 
-    virtual void execute();
-    virtual void preflight();
+     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-    virtual const std::string getHumanLabel() { return "Find Neighbors"; }
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+     virtual const std::string getHumanLabel() { return "Renumber Grains"; }
 
+     virtual void execute();
+     virtual void preflight();
+     virtual void setupFilterOptions();
 
-  protected:
-    FindNeighbors();
+   protected:
+     RenumberGrains();
 
-  private:
+   private:
     int32_t* m_GrainIds;
-    int8_t* m_SurfaceVoxels;
-    bool* m_SurfaceFields;
-    int32_t* m_PhasesF;
-    int32_t* m_NumNeighbors;
-    float* m_TotalSurfaceAreas;
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
+    bool* m_Active;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindNeighbors(const FindNeighbors&); // Copy Constructor Not Implemented
-    void operator=(const FindNeighbors&); // Operator '=' Not Implemented
+    RenumberGrains(const RenumberGrains&); // Copy Constructor Not Implemented
+    void operator=(const RenumberGrains&); // Operator '=' Not Implemented
+
 };
 
-#endif /* FINDNEIGHBORS_H_ */
+#endif /* RENUMBERGRAINS_H_ */
