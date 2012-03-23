@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     virtual ~DataContainerWriter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+	DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
 
     virtual void preflight();
 
