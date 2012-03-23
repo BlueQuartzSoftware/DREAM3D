@@ -275,6 +275,11 @@ void FilterPipeline::updatePrevNextFilters()
       if(next != m_Pipeline.end()) { (*iter)->setNextFilter(*next); }
     }
   }
+  int index = 0;
+  for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
+  {
+    (*filter)->setPipelineIndex(index++);
+  }
 }
 
 // -----------------------------------------------------------------------------

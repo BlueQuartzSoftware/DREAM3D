@@ -201,6 +201,13 @@ void DataContainerWriter::execute()
     return;
   }
 
+  AbstractFilter::Pointer prevFilter = getPreviousFilter();
+  while(prevFilter.get() != NULL)
+  {
+//	prevFilter->writeFilterOptions();
+	prevFilter = prevFilter->getPreviousFilter();
+  }
+
   H5Gclose(dcGid); // Close the Data Container Group
   closeFile();
   notify("Complete", 0, Observable::UpdateProgressMessage);
