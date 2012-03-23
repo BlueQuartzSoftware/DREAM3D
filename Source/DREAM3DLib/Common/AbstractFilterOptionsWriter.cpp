@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,62 +33,23 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "AbstractFilterOptionsWriter.h"
 
-#ifndef CROPVOLUME_H_
-#define CROPVOLUME_H_
 
-#include <string>
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
-
-/**
- * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
- */
-class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilterOptionsWriter::AbstractFilterOptionsWriter()
 {
-  public:
-    DREAM3D_SHARED_POINTERS(CropVolume);
-    DREAM3D_STATIC_NEW_MACRO(CropVolume);
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter);
+  // TODO Auto-generated constructor stub
 
-    virtual ~CropVolume();
+}
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
-    DREAM3D_INSTANCE_PROPERTY(int, YMin)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilterOptionsWriter::~AbstractFilterOptionsWriter()
+{
+  // TODO Auto-generated destructor stub
+}
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMax)
-    DREAM3D_INSTANCE_PROPERTY(int, YMax)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
-
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getHumanLabel() { return "Crop Volume"; }
-
-    virtual void setupFilterOptions();
-
-	/**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
-    virtual void preflight();
-
-  protected:
-    CropVolume();
-
-
-  private:
-
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
-};
-
-#endif /* CROPVOLUME_H_ */

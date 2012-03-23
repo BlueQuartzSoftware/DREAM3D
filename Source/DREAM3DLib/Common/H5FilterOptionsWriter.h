@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,62 +33,55 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef H5FILTEROPTIONSWRITER_H_
+#define H5FILTEROPTIONSWRITER_H_
 
-#ifndef CROPVOLUME_H_
-#define CROPVOLUME_H_
+#include "hdf5.h"
 
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "AbstractFilterOptionsWriter.h"
 
-/**
- * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+
+/*
+ *
  */
-class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
+class DREAM3DLib_EXPORT H5FilterOptionsWriter : public AbstractFilterOptionsWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(CropVolume);
-    DREAM3D_STATIC_NEW_MACRO(CropVolume);
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(H5FilterOptionsWriter)
+    DREAM3D_STATIC_NEW_MACRO(H5FilterOptionsWriter)
+    DREAM3D_TYPE_MACRO_SUPER(H5FilterOptionsWriter, AbstractFilterOptionsWriter)
 
-    virtual ~CropVolume();
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
-    DREAM3D_INSTANCE_PROPERTY(int, YMin)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+    virtual ~H5FilterOptionsWriter();
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMax)
-    DREAM3D_INSTANCE_PROPERTY(int, YMax)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+    DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId);
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getHumanLabel() { return "Crop Volume"; }
+    virtual int makeGroup(int index);
 
-    virtual void setupFilterOptions();
+    virtual int writeStringOption(const std::string name, const std::string value);
 
-	/**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
-    virtual void preflight();
+    virtual int writeValue(const std::string name, int8_t value);
+    virtual int writeValue(const std::string name, int16_t value);
+    virtual int writeValue(const std::string name, int32_t value);
+    virtual int writeValue(const std::string name, int64_t value);
+    virtual int writeValue(const std::string name, uint8_t value);
+    virtual int writeValue(const std::string name, uint16_t value);
+    virtual int writeValue(const std::string name, uint32_t value);
+    virtual int writeValue(const std::string name, uint64_t value);
+    virtual int writeValue(const std::string name, float value);
+    virtual int writeValue(const std::string name, double value);
 
   protected:
-    CropVolume();
-
+    H5FilterOptionsWriter();
 
   private:
-
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
+    H5FilterOptionsWriter(const H5FilterOptionsWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5FilterOptionsWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* CROPVOLUME_H_ */
+#endif /* H5FILTEROPTIONSWRITER_H_ */
