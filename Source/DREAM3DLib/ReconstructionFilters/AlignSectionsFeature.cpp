@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AlignSections.h"
+#include "AlignSectionsFeature.h"
 
 #include <iostream>
 #include <fstream>
@@ -59,30 +59,43 @@ using namespace std;
 
 const static float m_pi = M_PI;
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSections::AlignSections() :
-AbstractFilter()
+AlignSectionsFeature::AlignSectionsFeature() :
+AlignSections(),
+m_GoodVoxels(NULL)
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSections::~AlignSections()
+AlignSectionsFeature::~AlignSectionsFeature()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AlignSectionsFeature::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+
+  setFilterOptions(options);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
 
   setErrorMessage(ss.str());
 }
@@ -91,7 +104,7 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::preflight()
+void AlignSectionsFeature::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -99,7 +112,7 @@ void AlignSections::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::execute()
+void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
@@ -121,6 +134,25 @@ void AlignSections::execute()
     return;
   }
 
+  AlignSections::execute();
+
+  // If there is an error set this to something negative and also set a message
+  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+{
+  DataContainer* m = getDataContainer();
+  //int64_t totalPoints = m->totalPoints();
+
+  ofstream outFile;
+  string filename = "aligntest.txt";
+  outFile.open(filename.c_str());
+
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -134,66 +166,88 @@ void AlignSections::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  int slice;
+  float disorientation = 0;
+  float mindisorientation = 100000000;
+  int newxshift = 0;
+  int newyshift = 0;
+  int oldxshift = 0;
+  int oldyshift = 0;
+  float count = 0;
+  int slice = 0;
   int xspot, yspot;
-  DimType newPosition;
-  DimType currentPosition;
-  unsigned int phase1, phase2;
+  int refposition = 0;
+  int curposition = 0;
 
-  std::vector<int> xshifts;
-  std::vector<int> yshifts;
-  xshifts.resize(dims[2],0);
-  yshifts.resize(dims[2],0);
-
-  find_shifts(xshifts, yshifts);
-
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  std::vector<std::vector<float> >  misorients;
+  misorients.resize(dims[0]);
+  for (DimType a = 0; a < dims[0]; a++)
+  {
+	  misorients[a].resize(dims[1], 0.0);
+  }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
-    ss << "Aligning Sections - Transferring Cell Data - " << ((float)iter/dims[2])*100 << " Percent Complete";
-   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    mindisorientation = 100000000;
     slice = (dims[2] - 1) - iter;
-    for (DimType l = 0; l < dims[1]; l++)
+    oldxshift = -1;
+    oldyshift = -1;
+    newxshift = 0;
+    newyshift = 0;
+    for (DimType a = 0; a < dims[0]; a++)
     {
-      for (DimType n = 0; n < dims[0]; n++)
+      for (DimType b = 0; b < dims[1]; b++)
       {
-        if(yshifts[iter] >= 0) yspot = l;
-        if(xshifts[iter] >= 0) xspot = n;
-        if(yshifts[iter] < 0) yspot = dims[1] - 1 - l;
-        if(xshifts[iter] < 0) xspot = dims[0] - 1 - n;
-        newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
-        currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[iter]) * dims[0]) + (xspot + xshifts[iter]);
-        if((yspot + yshifts[iter]) >= 0 && (yspot + yshifts[iter]) <= dims[1] - 1 && (xspot + xshifts[iter]) >= 0
-            && (xspot + xshifts[iter]) <= dims[0] - 1)
+        misorients[a][b] = 0;
+      }
+    }
+    while (newxshift != oldxshift || newyshift != oldyshift)
+    {
+      oldxshift = newxshift;
+      oldyshift = newyshift;
+      for (int j = -3; j < 4; j++)
+      {
+        for (int k = -3; k < 4; k++)
         {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          disorientation = 0;
+          count = 0;
+          if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
+              && (j + oldyshift) < (dims[1] / 2))
           {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-        	  p->CopyTuple(currentPosition, newPosition);
+            for (DimType l = 0; l < dims[1]; l = l + 4)
+            {
+              for (DimType n = 0; n < dims[0]; n = n + 4)
+              {
+                if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
+                {
+                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
+                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
+                  if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
+	              count++;
+                }
+                else
+                {
+
+				}
+              }
+            }
+            disorientation = disorientation/count;
+            misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
+            if(disorientation < mindisorientation)
+            {
+              newxshift = k + oldxshift;
+              newyshift = j + oldyshift;
+              mindisorientation = disorientation;
+            }
           }
-        }
-        if((yspot + yshifts[iter]) < 0 || (yspot + yshifts[iter]) > dims[1] - 1 || (xspot + xshifts[iter]) < 0
-            || (xspot + xshifts[iter]) > dims[0] - 1)
-        {
-
-
         }
       }
     }
+    xshifts[iter] = xshifts[iter-1] + newxshift;
+    yshifts[iter] = yshifts[iter-1] + newyshift;
+	outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
   }
 
-  // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+  outFile.close();
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSections::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
-{
-
-}
-

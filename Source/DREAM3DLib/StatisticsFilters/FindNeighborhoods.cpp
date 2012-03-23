@@ -42,9 +42,9 @@
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
-#include "DREAM3DLib/PrivateFilters/FindBoundingBoxGrains.h"
-#include "DREAM3DLib/PrivateFilters/FindGrainPhases.h"
-#include "DREAM3DLib/PrivateFilters/FindGrainCentroids.h"
+#include "DREAM3DLib/GenericFilters/FindBoundingBoxGrains.h"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 

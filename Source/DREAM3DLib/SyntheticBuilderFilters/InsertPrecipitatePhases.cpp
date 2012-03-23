@@ -49,7 +49,7 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-#include "DREAM3DLib/PrivateFilters/FindSurfaceCells.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceCells.h"
 
 
 

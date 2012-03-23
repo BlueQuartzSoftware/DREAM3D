@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
 
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const std::string getHumanLabel() { return "Find Bounding Box Grains"; }
 
 

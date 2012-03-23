@@ -47,8 +47,8 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
-#include "DREAM3DLib/PrivateFilters/FindNeighbors.h"
-#include "DREAM3DLib/PrivateFilters/RenumberGrains.h"
+#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 

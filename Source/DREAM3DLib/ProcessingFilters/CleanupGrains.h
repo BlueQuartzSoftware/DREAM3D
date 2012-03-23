@@ -34,11 +34,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSURFACEGRAINS_H_
-#define FINDSURFACEGRAINS_H_
+#ifndef CLEANUPGRAINS_H_
+#define CLEANUPGRAINS_H_
 
 #include <vector>
 #include <string>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -46,47 +47,66 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
+
 
 /**
- * @class FindSurfaceGrains FindSurfaceGrains.h DREAM3DLib/StatisticsFilters/FindSurfaceGrains.h
+ * @class CleanupGrains CleanupGrains.h DREAM3DLib/ReconstructionFilters/CleanupGrains.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindSurfaceGrains : public AbstractFilter
+class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSurfaceGrains);
-    DREAM3D_STATIC_NEW_MACRO(FindSurfaceGrains);
-    DREAM3D_TYPE_MACRO_SUPER(FindSurfaceGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(CleanupGrains);
+    DREAM3D_STATIC_NEW_MACRO(CleanupGrains);
+    DREAM3D_TYPE_MACRO_SUPER(CleanupGrains, AbstractFilter);
 
-    virtual ~FindSurfaceGrains();
+    virtual ~CleanupGrains();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-    virtual const std::string getHumanLabel() { return "Find Surface Grains"; }
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
+    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
+
+    virtual void setupFilterOptions();
+
+
     virtual void execute();
     virtual void preflight();
 
-    void find_surfacegrains();
-    void find_surfacegrains2D();
-
-
   protected:
-    FindSurfaceGrains();
+    CleanupGrains();
+
+    void remove_smallgrains();
+    void assign_badpoints();
+    void merge_containedgrains();
+
 
   private:
+    bool* m_AlreadyChecked;
+    int32_t* m_Neighbors;
+
     int32_t* m_GrainIds;
-    bool* m_SurfaceFields;
+    int32_t* m_PhasesC;
+    int32_t* m_PhasesF;
+    int32_t* m_NumNeighbors;
+    bool* m_Active;
+
+	int32_t* m_NumFields;
+
+    std::vector<std::vector<int> > voxellists;
+    std::vector<int> nuclei;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindSurfaceGrains(const FindSurfaceGrains&); // Copy Constructor Not Implemented
-    void operator=(const FindSurfaceGrains&); // Operator '=' Not Implemented
+
+    CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
+    void operator=(const CleanupGrains&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDSURFACEGRAINS_H_ */
+#endif /* CLEANUPGRAINS_H_ */

@@ -34,9 +34,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CHANGERESOLUTION_H_
-#define CHANGERESOLUTION_H_
+#ifndef AlignSectionsMisorientation_H_
+#define AlignSectionsMisorientation_H_
 
+#include <vector>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -45,46 +46,64 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+
+#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
+
 
 /**
- * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
+ * @class AlignSectionsMisorientation AlignSectionsMisorientation.h DREAM3DLib/ReconstructionFilters/AlignSectionsMisorientation.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
+class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 {
   public:
-    DREAM3D_SHARED_POINTERS(ChangeResolution);
-    DREAM3D_STATIC_NEW_MACRO(ChangeResolution);
-    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(AlignSectionsMisorientation)
+    DREAM3D_STATIC_NEW_MACRO(AlignSectionsMisorientation)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMisorientation, AbstractFilter)
 
-    virtual ~ChangeResolution();
+    virtual ~AlignSectionsMisorientation();
 
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ManipulationFilters; }
-    virtual const std::string getHumanLabel() { return "Change Resolution"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Align Sections (Misorientation)"; }
 
     virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+	virtual void execute();
     virtual void preflight();
 
-  protected:
-    ChangeResolution();
+	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
+  protected:
+    AlignSectionsMisorientation();
 
   private:
+    float* m_Quats;
+    int32_t* m_PhasesC;
+    bool* m_GoodVoxels;
 
-    ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
-    void operator=(const ChangeResolution&); // Operator '=' Not Implemented
+    unsigned int* m_CrystalStructures;
+
+	OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath*> m_OrientationOps;
+
+    unsigned long long int Seed;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+
+    AlignSectionsMisorientation(const AlignSectionsMisorientation&); // Copy Constructor Not Implemented
+    void operator=(const AlignSectionsMisorientation&); // Operator '=' Not Implemented
 };
 
-#endif /* CHANGERESOLUTION_H_ */
+#endif /* AlignSectionsMisorientation_H_ */

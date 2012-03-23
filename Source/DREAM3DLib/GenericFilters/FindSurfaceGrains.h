@@ -33,8 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindGrainCentroids_H_
-#define FindGrainCentroids_H_
+
+#ifndef FINDSURFACEGRAINS_H_
+#define FINDSURFACEGRAINS_H_
 
 #include <vector>
 #include <string>
@@ -46,43 +47,46 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
-/*
- *
+/**
+ * @class FindSurfaceGrains FindSurfaceGrains.h DREAM3DLib/StatisticsFilters/FindSurfaceGrains.h
+ * @brief
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
+class DREAM3DLib_EXPORT FindSurfaceGrains : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindGrainCentroids);
-     DREAM3D_STATIC_NEW_MACRO(FindGrainCentroids);
-     DREAM3D_TYPE_MACRO_SUPER(FindGrainCentroids, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindSurfaceGrains);
+    DREAM3D_STATIC_NEW_MACRO(FindSurfaceGrains);
+    DREAM3D_TYPE_MACRO_SUPER(FindSurfaceGrains, AbstractFilter);
 
-     virtual ~FindGrainCentroids();
+    virtual ~FindSurfaceGrains();
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Find Surface Grains"; }
 
-     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 6 Array
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
+    virtual void preflight();
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::PrivateFilters; }
-     virtual const std::string getHumanLabel() { return "Find Grain Centroids"; }
+    void find_surfacegrains();
+    void find_surfacegrains2D();
 
-     virtual void execute();
-     virtual void preflight();
 
-   protected:
-     FindGrainCentroids();
+  protected:
+    FindSurfaceGrains();
 
-    void find_centroids();
-    void find_centroids2D();
-
-private:
+  private:
     int32_t* m_GrainIds;
-    float* m_Centroids;
+    bool* m_SurfaceFields;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindGrainCentroids(const FindGrainCentroids&); // Copy Constructor Not Implemented
-    void operator=(const FindGrainCentroids&); // Operator '=' Not Implemented
-
+    FindSurfaceGrains(const FindSurfaceGrains&); // Copy Constructor Not Implemented
+    void operator=(const FindSurfaceGrains&); // Operator '=' Not Implemented
 };
 
-#endif /* FindGrainCentroids_H_ */
+#endif /* FINDSURFACEGRAINS_H_ */

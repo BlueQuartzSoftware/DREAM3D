@@ -34,10 +34,9 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ALIGNSECTIONS_H_
-#define ALIGNSECTIONS_H_
+#ifndef CHANGERESOLUTION_H_
+#define CHANGERESOLUTION_H_
 
-#include <vector>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -46,46 +45,46 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-
 
 /**
- * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h
+ * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
+class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AlignSections)
-    DREAM3D_STATIC_NEW_MACRO(AlignSections)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ChangeResolution);
+    DREAM3D_STATIC_NEW_MACRO(ChangeResolution);
+    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter);
 
-    virtual ~AlignSections();
+    virtual ~ChangeResolution();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Align Sections"; }
+    DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    DREAM3D_INSTANCE_PROPERTY(float, YRes)
+    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const std::string getHumanLabel() { return "Change Resolution"; }
+
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	virtual void execute();
+    virtual void execute();
     virtual void preflight();
 
-	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
-
-
   protected:
-    AlignSections();
+    ChangeResolution();
+
 
   private:
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
-    AlignSections(const AlignSections&); // Copy Constructor Not Implemented
-    void operator=(const AlignSections&); // Operator '=' Not Implemented
+    ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
+    void operator=(const ChangeResolution&); // Operator '=' Not Implemented
 };
 
-#endif /* ALIGNSECTIONS_H_ */
+#endif /* CHANGERESOLUTION_H_ */

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ALIGNSECTIONS_H_
-#define ALIGNSECTIONS_H_
+#ifndef AlignSectionsFeature_H_
+#define AlignSectionsFeature_H_
 
 #include <vector>
 #include <string>
@@ -48,25 +48,29 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
+#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
+
 
 /**
- * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h
+ * @class AlignSectionsFeature AlignSectionsFeature.h DREAM3DLib/ReconstructionFilters/AlignSectionsFeature.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
+class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
 {
   public:
-    DREAM3D_SHARED_POINTERS(AlignSections)
-    DREAM3D_STATIC_NEW_MACRO(AlignSections)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AlignSectionsFeature)
+    DREAM3D_STATIC_NEW_MACRO(AlignSectionsFeature)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeature, AbstractFilter)
 
-    virtual ~AlignSections();
+    virtual ~AlignSectionsFeature();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Align Sections"; }
+    virtual const std::string getHumanLabel() { return "Align Sections (Feature)"; }
+
+    virtual void setupFilterOptions();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -76,16 +80,16 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 
 	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
-
   protected:
-    AlignSections();
+    AlignSectionsFeature();
 
   private:
+    bool* m_GoodVoxels;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    AlignSections(const AlignSections&); // Copy Constructor Not Implemented
-    void operator=(const AlignSections&); // Operator '=' Not Implemented
+    AlignSectionsFeature(const AlignSectionsFeature&); // Copy Constructor Not Implemented
+    void operator=(const AlignSectionsFeature&); // Operator '=' Not Implemented
 };
 
-#endif /* ALIGNSECTIONS_H_ */
+#endif /* AlignSectionsFeature_H_ */

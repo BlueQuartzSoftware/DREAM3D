@@ -34,9 +34,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CROPVOLUME_H_
-#define CROPVOLUME_H_
+#ifndef AlignSectionsMutualInformation_H_
+#define AlignSectionsMutualInformation_H_
 
+#include <vector>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -45,50 +46,78 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+
+#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
+
+#define     DREAM3D_DECLARE_ARRAY(type, ptr, prpty )\
+    private:\
+      DataArray<type>::Pointer m_##prpty;\
+      type* ptr;\
+  public:\
+    public:\
+    DREAM3D_SET_PROPERTY(DataArray<type>::Pointer, prpty)\
+    DREAM3D_GET_PROPERTY(DataArray<type>::Pointer, prpty)
+
 
 /**
- * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
+ * @class AlignSectionsMutualInformation AlignSectionsMutualInformation.h DREAM3DLib/ReconstructionFilters/AlignSectionsMutualInformation.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
+class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 {
   public:
-    DREAM3D_SHARED_POINTERS(CropVolume);
-    DREAM3D_STATIC_NEW_MACRO(CropVolume);
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(AlignSectionsMutualInformation)
+    DREAM3D_STATIC_NEW_MACRO(AlignSectionsMutualInformation)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMutualInformation, AbstractFilter)
 
-    virtual ~CropVolume();
+    virtual ~AlignSectionsMutualInformation();
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMin)
-    DREAM3D_INSTANCE_PROPERTY(int, YMin)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMin)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, XMax)
-    DREAM3D_INSTANCE_PROPERTY(int, YMax)
-    DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);
 
-	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ManipulationFilters; }
-  virtual const std::string getHumanLabel() { return "Crop Volume"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }
 
-  virtual void setupFilterOptions();
+    virtual void setupFilterOptions();
 
-	/**
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+	virtual void execute();
     virtual void preflight();
 
-  protected:
-    CropVolume();
+	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
+  protected:
+    AlignSectionsMutualInformation();
+
+	void form_grains_sections();
 
   private:
+    int32_t* m_GrainIds;
+    float* m_Quats;
+    int32_t* m_PhasesC;
+    bool* m_GoodVoxels;
 
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
+    unsigned int* m_CrystalStructures;
+
+	OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath*> m_OrientationOps;
+
+    unsigned long long int Seed;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    AlignSectionsMutualInformation(const AlignSectionsMutualInformation&); // Copy Constructor Not Implemented
+    void operator=(const AlignSectionsMutualInformation&); // Operator '=' Not Implemented
 };
 
-#endif /* CROPVOLUME_H_ */
+#endif /* AlignSectionsMutualInformation_H_ */
