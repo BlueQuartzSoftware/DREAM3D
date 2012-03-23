@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,26 +28,23 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "H5FilterOptionsWriter.h"
 
-#include "AbstractFilter.h"
+#include "MXA/Utilities/StringUtils.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::AbstractFilter() :
-m_DataContainer(NULL),
-m_ErrorMessage(""),
-m_ErrorCondition(0),
-m_Cancel(false)
-{
-  setupFilterOptions();
-}
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::~AbstractFilter()
+H5FilterOptionsWriter::H5FilterOptionsWriter()
 {
 
 }
@@ -53,125 +52,125 @@ AbstractFilter::~AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::setupFilterOptions()
+H5FilterOptionsWriter::~H5FilterOptionsWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::execute()
+int H5FilterOptionsWriter::makeGroup(int index)
 {
-  setErrorCondition(-1);
-  setErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.");
-  notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::preflight()
-{
-	std::cout << "AbstractFilter::Preflight needs to be added in some class";
-	assert(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name)
-{
-  bool contains = false;
-  // Check the previous filter
-  AbstractFilter::Pointer prev = getPreviousFilter();
-  while(prev.get() != NULL)
+  int err = 0;
+  if (m_GroupId <= 0)
   {
-    if (prev->getNameOfClass().compare(name) == 0)
-    {
-      contains = true;
-      break;
-    }
-    prev = prev->getPreviousFilter();
+    return -1;
   }
-  return contains;
+  std::string name = StringUtils::numToString(index);
+  hid_t gid = H5Utilities::createGroup(m_GroupId, name);
+
+
+
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
+int H5FilterOptionsWriter::writeStringOption(const std::string name, const std::string value)
 {
-  bool contains = false;
-  // Check the previous filter
-  AbstractFilter::Pointer next = getNextFilter();
-  while(next.get() != NULL)
-  {
-    if (next->getNameOfClass().compare(name) == 0)
-    {
-      contains = true;
-      break;
-    }
-    next = next->getNextFilter();
-  }
-  return contains;
+  int err = 0;
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterOptionsWriter::writeValue(const std::string name, int8_t value)
+{
+  int err = 0;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredCellData(const std::string &name)
+int H5FilterOptionsWriter::writeValue(const std::string name, int16_t value)
 {
-  m_RequiredCellData.insert(name);
+  int err = 0;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedCellData(const std::string &name)
+int H5FilterOptionsWriter::writeValue(const std::string name, int32_t value)
 {
-  m_CreatedCellData.insert(name);
+  int err = 0;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredFieldData(const std::string &name)
+int H5FilterOptionsWriter::writeValue(const std::string name, int64_t value)
 {
-  m_RequiredFieldData.insert(name);
+  int err = 0;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedFieldData(const std::string &name)
+int H5FilterOptionsWriter::writeValue(const std::string name, uint8_t value)
 {
-  m_CreatedFieldData.insert(name);
+  int err = 0;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredEnsembleData(const std::string &name)
+int H5FilterOptionsWriter::writeValue(const std::string name, uint16_t value)
 {
-  m_RequiredEnsembleData.insert(name);
+  int err = 0;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedEnsembleData(const std::string &name)
+int H5FilterOptionsWriter::writeValue(const std::string name, uint32_t value)
 {
-  m_CreatedEnsembleData.insert(name);
+  int err = 0;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+int H5FilterOptionsWriter::writeValue(const std::string name, uint64_t value)
 {
-  assert(writer != NULL);
-  std::cout << "AbstractFilter::writeFilterOptions() -> Writing Filter Options" << std::endl;
-
-
-  return 0;
+  int err = 0;
+  return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterOptionsWriter::writeValue(const std::string name, float value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterOptionsWriter::writeValue(const std::string name, double value)
+{
+  int err = 0;
+  return err;
+}
+

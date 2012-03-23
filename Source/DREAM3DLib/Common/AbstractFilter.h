@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/FilterOption.h"
+#include "DREAM3DLib/Common/AbstractFilterOptionsWriter.h"
 
 
 
@@ -99,7 +100,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual void setupFilterOptions();
 
-    virtual int writeFilterOptions();
+    virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 
 

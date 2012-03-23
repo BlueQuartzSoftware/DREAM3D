@@ -42,6 +42,8 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+#include "DREAM3DLib/Common/H5FilterOptionsWriter.h"
+
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
 
@@ -201,18 +203,24 @@ void DataContainerWriter::execute()
     return;
   }
 
-  H5Gclose(dcGid); // Close the Data Container Group
-  closeFile();
 
+
+  H5FilterOptionsWriter::Pointer optionsWriter = H5FilterOptionsWriter::New();
+  optionsWriter->setGroupId(dcGid);
 
   AbstractFilter::Pointer preFilter = getPreviousFilter();
   while (preFilter.get() != NULL)
   {
-    preFilter->writeFilterOptions();
+    preFilter->writeFilterOptions(optionsWriter.get());
     preFilter = preFilter->getPreviousFilter();
   }
-  writeFilterOptions();
+  writeFilterOptions(optionsWriter.get());
 
+
+
+
+  H5Gclose(dcGid); // Close the Data Container Group
+  closeFile();
 
   notify("Complete", 0, Observable::UpdateProgressMessage);
 }

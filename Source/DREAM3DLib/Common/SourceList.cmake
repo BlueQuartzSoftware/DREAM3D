@@ -39,7 +39,9 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
-  
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterOptionsWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterOptionsWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterOptionsWriter.h
 )
 
 SET (DREAM3DLib_Common_SRCS
@@ -63,8 +65,9 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.cpp
-  
-
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterOptionsWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterOptionsWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterOptionsWriter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
