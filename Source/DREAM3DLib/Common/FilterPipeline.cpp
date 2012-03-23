@@ -275,7 +275,6 @@ void FilterPipeline::updatePrevNextFilters()
       if(next != m_Pipeline.end()) { (*iter)->setNextFilter(*next); }
     }
   }
-  // Start looping through the Pipeline and preflight everything
   int index = 0;
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {

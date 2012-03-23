@@ -123,6 +123,22 @@ void CropVolume::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CropVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+
+  writer->writeValue("XMin", getXMin() );
+  writer->writeValue("YMin", getYMin() );
+  writer->writeValue("ZMin", getZMin() );
+  writer->writeValue("XMax", getXMax() );
+  writer->writeValue("YMax", getYMax() );
+  writer->writeValue("ZMax", getZMax() );
+  return 1;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -211,7 +227,7 @@ void CropVolume::execute()
     }
   }
   m->setDimensions(m_XP, m_YP, m_ZP);
-  int64_t totalPoints = m->getTotalPoints();  
+  int64_t totalPoints = m->getTotalPoints();
   totalPoints = m_XP * m_YP * m_ZP;
 
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)

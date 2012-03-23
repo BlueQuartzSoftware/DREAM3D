@@ -203,22 +203,24 @@ void DataContainerWriter::execute()
     return;
   }
 
-
-
   H5FilterOptionsWriter::Pointer optionsWriter = H5FilterOptionsWriter::New();
-  optionsWriter->setGroupId(dcGid);
+  hid_t pipelineGroupId = H5Utilities::createGroup(dcGid, DREAM3D::HDF5::PipelineGroupName);
+  optionsWriter->setGroupId(pipelineGroupId);
 
   AbstractFilter::Pointer preFilter = getPreviousFilter();
   while (preFilter.get() != NULL)
   {
+    optionsWriter->openOptionsGroup(preFilter->getPipelineIndex());
     preFilter->writeFilterOptions(optionsWriter.get());
+    optionsWriter->closeOptionsGroup();
     preFilter = preFilter->getPreviousFilter();
   }
+  optionsWriter->openOptionsGroup(getPipelineIndex());
   writeFilterOptions(optionsWriter.get());
+  optionsWriter->closeOptionsGroup();
 
-
-
-
+  H5Gclose(pipelineGroupId);
+  // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
   closeFile();
 
