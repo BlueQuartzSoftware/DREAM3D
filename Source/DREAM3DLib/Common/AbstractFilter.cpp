@@ -173,3 +173,12 @@ void AbstractFilter::addCreatedEnsembleData(const std::string &name)
   m_CreatedEnsembleData.insert(name);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AbstractFilter::writeFilterOptions()
+{
+  assert(false);
+  return 1;
+
+}

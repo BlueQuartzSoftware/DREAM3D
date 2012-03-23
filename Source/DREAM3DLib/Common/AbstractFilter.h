@@ -100,6 +100,10 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual void setupFilterOptions();
 	virtual int writeFilterOptions();
 
+    virtual int writeFilterOptions();
+
+
+
     /**
      * @brief This method should be fully implemented in subclasses.
      */
