@@ -724,7 +724,7 @@ void DREAM3D_UI::setInputUI()
 void DREAM3D_UI::on_actionAbout_triggered()
 {
   QString msg ("DREAM3D Version ");
-  msg.append(DREAM3DLib::Version::Complete.c_str());
+  msg.append(DREAM3DLib::Version::Complete().c_str());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -741,7 +741,7 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(DREAM3D::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete.c_str());
+  version.append(DREAM3DLib::Version::PackageComplete().c_str());
   about.setApplicationInfo(an, version);
   about.exec();
 }
