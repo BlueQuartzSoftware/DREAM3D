@@ -169,7 +169,7 @@ void PipelineBuilderWidget::setupGui()
   QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
 
   std::set<std::string> groupNames = fm->getGroupNames();
-  QMap<QString, QTreeWidgetItem*> groupToItem;
+ // QMap<QString, QTreeWidgetItem*> groupToItem;
 
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, "Library");
@@ -184,12 +184,19 @@ void PipelineBuilderWidget::setupGui()
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
     filterGroup->setIcon(0, icon);
-    groupToItem.insert(QString::fromStdString(*iter), filterGroup);
+  //  groupToItem.insert(QString::fromStdString(*iter), filterGroup);
   }
   library->setExpanded(true);
 
+  /*
   QTreeWidgetItem* presets = new QTreeWidgetItem(presetPipelineTree);
   presets->setText(0, "Preset Pipelines");
+  QTreeWidgetItem* reconPreset = new QTreeWidgetItem(presets);
+  reconPreset->setText(0, "EBSD Reconstruction");
+
+  QTreeWidgetItem* surfaceMesh = new QTreeWidgetItem(presets);
+  surfaceMesh->setText(0, "Surface Meshing");
+*/
 
   toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
@@ -468,13 +475,6 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
     return;
   }
 
-#if 0
-  if (false == sanityCheckOutputDirectory(m_OutputDir, QString("PipelineBuilder")) )
-  {
-    return;
-  }
-  SANITY_CHECK_INPUT(m_, OutputDir)
-#endif
 
 
   if (m_WorkerThread != NULL)
