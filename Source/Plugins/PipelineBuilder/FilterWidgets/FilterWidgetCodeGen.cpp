@@ -220,6 +220,49 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 }
 
 
+template<typename T>
+void createOptionsWriterCode( const std::string &group, const std::string &filter)
+{
+  typename T::Pointer t = T::New();
+  std::vector<FilterOption::Pointer> options = t->getFilterOptions();
+
+
+  std::stringstream ss;
+  ss << FILTER_WIDGETS_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
+  std::string completePath = MXADir::toNativeSeparators(ss.str());
+  if (MXADir::exists(completePath) == true)
+  {
+   std::cout << filter << ": FilterOptions file already exists in source directory. NOT generating FilterOptionsWriter." << std::endl;
+   return;
+  }
+  std::string origHeaderFile = completePath;
+  ss.str("");
+  ss << OUTPUT_DIR() << "/FilterWriters/" << group << "/";
+
+  MXADir::mkdir(ss.str(), true);
+
+  ss << filter << "OptionsWriter.cpp";
+
+  completePath = MXADir::toNativeSeparators(ss.str());
+
+  FILE* f = fopen(completePath.c_str(), "wb");
+
+
+  fprintf(f, "// -----------------------------------------------------------------------------\n");
+  fprintf(f, "void %s::writeFilterOptions(AbstractFilterOptionsWriter* writer)\n{\n", filter.c_str());
+  for(size_t i = 0; i < options.size(); ++i)
+  {
+    FilterOption::Pointer opt = options[i];
+    std::string prop = opt->getPropertyName();
+    std::string typ = opt->getValueType();
+
+    fprintf(f, "  writer->writeValue(\"%s\", get%s() );\n", prop.c_str(), prop.c_str());
+  }
+  fprintf(f, "}\n");
+
+
+  fclose(f);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -227,8 +270,9 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 template<typename T>
 void createSourceFile( const std::string &group, const std::string &filter)
 {
+//  createOptionsWriterCode<T>(group, filter);
   typename T::Pointer t = T::New();
-   std::vector<FilterOption::Pointer> options = t->getFilterOptions();
+  std::vector<FilterOption::Pointer> options = t->getFilterOptions();
 
 
    std::stringstream ss;

@@ -189,6 +189,7 @@ namespace DREAM3D
   {
 
     const std::string DataContainerName("DataContainer");
+    const std::string PipelineGroupName("Pipeline");
     const std::string ObjectType("ObjectType");
     const std::string NumComponents("NumComponents");
 
