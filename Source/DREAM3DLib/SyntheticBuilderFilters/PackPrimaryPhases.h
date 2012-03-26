@@ -97,8 +97,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
-    virtual void preflight();
+	virtual void preflight();
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

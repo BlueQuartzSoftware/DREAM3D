@@ -74,6 +74,7 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
 
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

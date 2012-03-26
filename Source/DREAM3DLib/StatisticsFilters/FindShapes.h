@@ -81,6 +81,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
      */
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 	
 	virtual void execute();
     virtual void preflight();

@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     virtual const std::string getHumanLabel() { return "Write Grain Ids as Ph File"; }
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void preflight();
 
