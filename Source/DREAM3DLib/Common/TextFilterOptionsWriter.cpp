@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,26 +28,17 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include "AbstractFilter.h"
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::AbstractFilter() :
-m_DataContainer(NULL),
-m_ErrorMessage(""),
-m_ErrorCondition(0),
-m_Cancel(false)
-{
-  setupFilterOptions();
-}
+#include "TextFilterOptionsWriter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::~AbstractFilter()
+TextFilterOptionsWriter::TextFilterOptionsWriter()
 {
 
 }
@@ -53,124 +46,124 @@ AbstractFilter::~AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::setupFilterOptions()
+TextFilterOptionsWriter::~TextFilterOptionsWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::execute()
+int TextFilterOptionsWriter::openOptionsGroup(int index)
 {
-  setErrorCondition(-1);
-  setErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.");
-  notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::preflight()
-{
-	std::cout << "AbstractFilter::Preflight needs to be added in some class";
-	assert(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name)
-{
-  bool contains = false;
-  // Check the previous filter
-  AbstractFilter::Pointer prev = getPreviousFilter();
-  while(prev.get() != NULL)
-  {
-    if (prev->getNameOfClass().compare(name) == 0)
-    {
-      contains = true;
-      break;
-    }
-    prev = prev->getPreviousFilter();
-  }
-  return contains;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
-{
-  bool contains = false;
-  // Check the previous filter
-  AbstractFilter::Pointer next = getNextFilter();
-  while(next.get() != NULL)
-  {
-    if (next->getNameOfClass().compare(name) == 0)
-    {
-      contains = true;
-      break;
-    }
-    next = next->getNextFilter();
-  }
-  return contains;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredCellData(const std::string &name)
-{
-  m_RequiredCellData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedCellData(const std::string &name)
-{
-  m_CreatedCellData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredFieldData(const std::string &name)
-{
-  m_RequiredFieldData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedFieldData(const std::string &name)
-{
-  m_CreatedFieldData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredEnsembleData(const std::string &name)
-{
-  m_RequiredEnsembleData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedEnsembleData(const std::string &name)
-{
-  m_CreatedEnsembleData.insert(name);
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
-{
-  assert(writer != NULL);
-  std::cout << "AbstractFilter::writeFilterOptions() -> Writing Filter Options" << std::endl;
-
-
   return 0;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::closeOptionsGroup()
+{
+  return 0;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, const std::string value)
+{
+  int err = 0;
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, int8_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, int16_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, int32_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, int64_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, uint8_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, uint16_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, uint32_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, uint64_t value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, float value)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, double value)
+{
+  int err = 0;
+  return err;
+}
+

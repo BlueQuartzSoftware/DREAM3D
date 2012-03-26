@@ -70,10 +70,10 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, YMax)
     DREAM3D_INSTANCE_PROPERTY(int, ZMax)
 
-	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-  virtual const std::string getHumanLabel() { return "Crop Volume"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const std::string getHumanLabel() { return "Crop Volume"; }
 
-  virtual void setupFilterOptions();
+	virtual void setupFilterOptions();
 	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 	/**

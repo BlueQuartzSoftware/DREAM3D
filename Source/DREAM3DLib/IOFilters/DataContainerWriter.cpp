@@ -42,6 +42,8 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+#include "DREAM3DLib/Common/H5FilterOptionsWriter.h"
+
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
 
@@ -201,25 +203,26 @@ void DataContainerWriter::execute()
     return;
   }
 
-  AbstractFilter::Pointer prevFilter = getPreviousFilter();
-  while(prevFilter.get() != NULL)
-  {
-//	prevFilter->writeFilterOptions();
-	prevFilter = prevFilter->getPreviousFilter();
-  }
-
-  H5Gclose(dcGid); // Close the Data Container Group
-  closeFile();
-
+  H5FilterOptionsWriter::Pointer optionsWriter = H5FilterOptionsWriter::New();
+  hid_t pipelineGroupId = H5Utilities::createGroup(dcGid, DREAM3D::HDF5::PipelineGroupName);
+  optionsWriter->setGroupId(pipelineGroupId);
 
   AbstractFilter::Pointer preFilter = getPreviousFilter();
   while (preFilter.get() != NULL)
   {
-    preFilter->writeFilterOptions();
+    optionsWriter->openOptionsGroup(preFilter->getPipelineIndex());
+    preFilter->writeFilterOptions(optionsWriter.get());
+    optionsWriter->closeOptionsGroup();
     preFilter = preFilter->getPreviousFilter();
   }
-  writeFilterOptions();
+  optionsWriter->openOptionsGroup(getPipelineIndex());
+  writeFilterOptions(optionsWriter.get());
+  optionsWriter->closeOptionsGroup();
 
+  H5Gclose(pipelineGroupId);
+  // Now finally close the group and the HDf5 File
+  H5Gclose(dcGid); // Close the Data Container Group
+  closeFile();
 
   notify("Complete", 0, Observable::UpdateProgressMessage);
 }
