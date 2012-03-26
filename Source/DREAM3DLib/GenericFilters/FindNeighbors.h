@@ -64,7 +64,9 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 
     virtual ~FindNeighbors();
 
-    virtual void execute();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+
+	virtual void execute();
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

@@ -59,6 +59,8 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Grain Ids from Vtk File"; }
 
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+
     virtual void preflight();
 
   protected:

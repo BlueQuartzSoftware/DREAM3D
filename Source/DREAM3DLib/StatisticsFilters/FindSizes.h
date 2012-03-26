@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
      */
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void execute();
     virtual void preflight();

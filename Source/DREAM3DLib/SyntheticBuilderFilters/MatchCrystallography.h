@@ -87,6 +87,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
       return "Match Crystallography";
     }
 
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 
     /**

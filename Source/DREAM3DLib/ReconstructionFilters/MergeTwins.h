@@ -74,6 +74,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Merge Twins"; }
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

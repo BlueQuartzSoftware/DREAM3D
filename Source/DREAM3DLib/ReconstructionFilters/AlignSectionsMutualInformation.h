@@ -85,6 +85,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

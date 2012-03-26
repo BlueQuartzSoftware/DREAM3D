@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Segment Grains"; }
 
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

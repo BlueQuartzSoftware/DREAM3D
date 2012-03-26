@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

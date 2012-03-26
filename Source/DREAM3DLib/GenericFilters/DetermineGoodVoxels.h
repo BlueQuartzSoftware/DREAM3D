@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Determine Good Voxels"; }
 
     virtual void setupFilterOptions();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class

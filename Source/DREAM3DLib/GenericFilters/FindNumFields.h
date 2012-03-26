@@ -63,7 +63,9 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
 	 virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
      virtual const std::string getHumanLabel() { return "Find Number of Fields"; }
 
-     virtual void execute();
+	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+
+	virtual void execute();
      virtual void preflight();
 
    protected:
