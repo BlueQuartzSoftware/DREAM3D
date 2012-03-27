@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
 
     virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 
     virtual void execute();

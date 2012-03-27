@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
     virtual const std::string getHumanLabel() { return "Align Sections (List)"; }
 
     virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

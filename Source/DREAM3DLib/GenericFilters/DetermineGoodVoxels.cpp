@@ -63,6 +63,10 @@ void DetermineGoodVoxels::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
+void DetermineGoodVoxels::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DetermineGoodVoxels::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

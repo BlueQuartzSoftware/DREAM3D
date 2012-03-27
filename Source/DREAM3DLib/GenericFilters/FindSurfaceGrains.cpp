@@ -55,7 +55,10 @@ m_SurfaceFields(NULL)
 FindSurfaceGrains::~FindSurfaceGrains()
 {
 }
-
+// -----------------------------------------------------------------------------
+void FindSurfaceGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

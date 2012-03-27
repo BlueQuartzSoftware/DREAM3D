@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
      virtual const std::string getHumanLabel() { return "Find Surface Cells"; }
 
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 	virtual void execute();
      virtual void preflight();

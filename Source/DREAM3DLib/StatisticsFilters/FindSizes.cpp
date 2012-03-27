@@ -92,6 +92,11 @@ void FindSizes::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
+void FindSizes::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("DistributionType", getDistributionType() );
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

@@ -102,7 +102,12 @@ void FindDeformationStatistics::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void FindDeformationStatistics::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("DeformationStatisticsFile", getDeformationStatisticsFile() );
+  writer->writeValue("VtkOutputFile", getVtkOutputFile() );
+}
 
 // -----------------------------------------------------------------------------
 //

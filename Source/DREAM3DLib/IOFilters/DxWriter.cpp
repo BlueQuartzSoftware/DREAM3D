@@ -82,7 +82,12 @@ void DxWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void DxWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("OutputFile", getOutputFile() );
+  writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -75,7 +75,11 @@ void FieldDataCSVWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void FieldDataCSVWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("FieldDataFile", getFieldDataFile() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

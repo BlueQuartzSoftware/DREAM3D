@@ -58,7 +58,10 @@ m_GrainIdScalarName(DREAM3D::CellData::GrainIds)
 VtkGrainIdReader::~VtkGrainIdReader()
 {
 }
-
+// -----------------------------------------------------------------------------
+void VtkGrainIdReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

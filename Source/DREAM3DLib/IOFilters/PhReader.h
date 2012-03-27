@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual const std::string getHumanLabel() { return "Read Grain Ids from Ph File"; }
 
     virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void preflight();
 

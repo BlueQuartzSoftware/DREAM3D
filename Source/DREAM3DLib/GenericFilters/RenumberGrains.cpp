@@ -75,6 +75,10 @@ void RenumberGrains::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+// -----------------------------------------------------------------------------
+void RenumberGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 
 // -----------------------------------------------------------------------------
 //

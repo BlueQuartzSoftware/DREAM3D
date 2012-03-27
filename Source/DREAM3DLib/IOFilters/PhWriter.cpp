@@ -76,7 +76,11 @@ void PhWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void PhWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("OutputFile", getOutputFile() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

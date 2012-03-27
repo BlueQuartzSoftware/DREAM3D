@@ -114,7 +114,11 @@ void AlignSectionsMutualInformation::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

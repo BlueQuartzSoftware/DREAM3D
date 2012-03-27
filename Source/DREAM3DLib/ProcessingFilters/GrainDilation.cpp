@@ -102,7 +102,12 @@ void GrainDilation::setupFilterOptions()
 
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void GrainDilation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
+  writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

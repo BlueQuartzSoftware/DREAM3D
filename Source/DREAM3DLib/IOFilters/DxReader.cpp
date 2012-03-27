@@ -70,7 +70,11 @@ void DxReader::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void DxReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("InputFile", getInputFile() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

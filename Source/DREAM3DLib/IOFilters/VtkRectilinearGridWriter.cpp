@@ -118,6 +118,17 @@ void VtkRectilinearGridWriter::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
+void VtkRectilinearGridWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("OutputFile", getOutputFile() );
+  writer->writeValue("WriteGrainIds", getWriteGrainIds() );
+  writer->writeValue("WritePhaseIds", getWritePhaseIds() );
+  writer->writeValue("WriteGoodVoxels", getWriteGoodVoxels() );
+  writer->writeValue("WriteIPFColors", getWriteIPFColors() );
+  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
+}
+
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

@@ -121,7 +121,12 @@ void MergeTwins::setupFilterOptions()
 
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void MergeTwins::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("AxisTolerance", getAxisTolerance() );
+  writer->writeValue("AngleTolerance", getAngleTolerance() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

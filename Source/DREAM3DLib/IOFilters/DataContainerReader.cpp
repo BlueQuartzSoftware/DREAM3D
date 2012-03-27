@@ -107,6 +107,14 @@ void DataContainerReader::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
+void DataContainerReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("ReadCellData", getReadCellData() );
+  writer->writeValue("ReadFieldData", getReadFieldData() );
+  writer->writeValue("ReadEnsembleData", getReadEnsembleData() );
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

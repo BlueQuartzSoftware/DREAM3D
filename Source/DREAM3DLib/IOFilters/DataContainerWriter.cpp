@@ -85,6 +85,11 @@ void DataContainerWriter::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
+void DataContainerWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("OutputFile", getOutputFile() );
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

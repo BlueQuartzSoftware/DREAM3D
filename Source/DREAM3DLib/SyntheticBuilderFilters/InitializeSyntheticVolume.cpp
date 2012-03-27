@@ -125,7 +125,17 @@ void InitializeSyntheticVolume::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("X Voxels", getXVoxels() );
+  writer->writeValue("Y Voxels", getYVoxels() );
+  writer->writeValue("Z Voxels", getZVoxels() );
+  writer->writeValue("X Res", getXRes() );
+  writer->writeValue("Y Res", getYRes() );
+  writer->writeValue("Z Res", getZRes() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

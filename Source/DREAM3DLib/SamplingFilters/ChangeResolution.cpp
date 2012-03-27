@@ -98,6 +98,13 @@ void ChangeResolution::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
+void ChangeResolution::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("XRes", getXRes() );
+  writer->writeValue("YRes", getYRes() );
+  writer->writeValue("ZRes", getZRes() );
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ChangeResolution::preflight()

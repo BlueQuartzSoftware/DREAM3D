@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
      virtual void preflight();
 
 	 virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
    protected:
      RenumberGrains();

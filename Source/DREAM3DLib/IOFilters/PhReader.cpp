@@ -76,7 +76,11 @@ void PhReader::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void PhReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("InputFile", getInputFile() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

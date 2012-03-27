@@ -150,7 +150,13 @@ void PackPrimaryPhases::setupFilterOptions()
 
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("NeighborhoodErrorWeight", getNeighborhoodErrorWeight() );
+  writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
+  writer->writeValue("WriteIntendedAttributes", getWriteIntendedAttributes() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

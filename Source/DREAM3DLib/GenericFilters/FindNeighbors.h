@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 
     virtual ~FindNeighbors();
 
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 	virtual void execute();
     virtual void preflight();

@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance);
 
     virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
