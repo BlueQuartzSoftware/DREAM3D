@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT GrainDilation : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Grain Dilation"; }
 
     virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 
     virtual void execute();

@@ -69,6 +69,10 @@ FindODF::~FindODF()
 {
 }
 // -----------------------------------------------------------------------------
+void FindODF::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

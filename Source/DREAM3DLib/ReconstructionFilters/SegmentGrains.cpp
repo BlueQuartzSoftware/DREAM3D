@@ -73,6 +73,10 @@ SegmentGrains::~SegmentGrains()
 {
 }
 // -----------------------------------------------------------------------------
+void SegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

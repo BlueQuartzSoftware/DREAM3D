@@ -107,7 +107,11 @@ void AlignSectionsMisorientation::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

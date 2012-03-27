@@ -58,7 +58,10 @@ m_SurfaceVoxels(NULL)
 FindSurfaceCells::~FindSurfaceCells()
 {
 }
-
+// -----------------------------------------------------------------------------
+void FindSurfaceCells::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

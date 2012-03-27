@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Crop Volume"; }
 
 	virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 	/**
      * @brief Reimplemented from @see AbstractFilter class

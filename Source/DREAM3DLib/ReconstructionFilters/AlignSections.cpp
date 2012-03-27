@@ -75,6 +75,10 @@ AbstractFilter()
 AlignSections::~AlignSections()
 {
 }
+// -----------------------------------------------------------------------------
+void AlignSections::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 
 // -----------------------------------------------------------------------------
 //

@@ -105,7 +105,13 @@ void FindSchmids::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void FindSchmids::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("XLoading", getXLoading() );
+  writer->writeValue("YLoading", getYLoading() );
+  writer->writeValue("ZLoading", getZLoading() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -60,7 +60,10 @@ m_Centroids(NULL)
 FindGrainCentroids::~FindGrainCentroids()
 {
 }
-
+// -----------------------------------------------------------------------------
+void FindGrainCentroids::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

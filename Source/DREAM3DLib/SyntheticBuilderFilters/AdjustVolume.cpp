@@ -84,7 +84,11 @@ void AdjustVolume::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void AdjustVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("MaxIterations", getMaxIterations() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

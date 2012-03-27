@@ -66,6 +66,10 @@ m_AvgQuats(NULL)
 FindAvgOrientations::~FindAvgOrientations()
 {
 }
+// -----------------------------------------------------------------------------
+void FindAvgOrientations::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 
 // -----------------------------------------------------------------------------
 //

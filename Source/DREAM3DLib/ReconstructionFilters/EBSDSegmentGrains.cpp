@@ -105,7 +105,11 @@ void EBSDSegmentGrains::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void EBSDSegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

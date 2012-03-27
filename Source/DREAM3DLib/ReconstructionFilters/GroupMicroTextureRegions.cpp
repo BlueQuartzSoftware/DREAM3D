@@ -109,7 +109,11 @@ void GroupMicroTextureRegions::setupFilterOptions()
 
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("CAxisTolerance", getCAxisTolerance() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -56,7 +56,10 @@ m_BiasedFields(NULL)
 FindBoundingBoxGrains::~FindBoundingBoxGrains()
 {
 }
-
+// -----------------------------------------------------------------------------
+void FindBoundingBoxGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

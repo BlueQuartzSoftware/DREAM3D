@@ -166,11 +166,8 @@ void AbstractFilter::addCreatedEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   assert(writer != NULL);
   std::cout << "AbstractFilter::writeFilterOptions() -> Writing Filter Options" << std::endl;
-
-
-  return 0;
 }

@@ -68,6 +68,10 @@ FindAxisODF::~FindAxisODF()
 {
 }
 // -----------------------------------------------------------------------------
+void FindAxisODF::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

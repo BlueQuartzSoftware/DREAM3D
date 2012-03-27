@@ -65,7 +65,10 @@ m_SharedSurfaceAreaList(NULL)
 FindNeighbors::~FindNeighbors()
 {
 }
-
+// -----------------------------------------------------------------------------
+void FindNeighbors::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

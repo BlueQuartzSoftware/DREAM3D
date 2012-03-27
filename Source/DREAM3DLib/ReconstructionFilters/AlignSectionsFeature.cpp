@@ -85,7 +85,10 @@ void AlignSectionsFeature::setupFilterOptions()
 
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void AlignSectionsFeature::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

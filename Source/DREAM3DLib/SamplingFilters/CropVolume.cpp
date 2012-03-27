@@ -123,22 +123,16 @@ void CropVolume::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int CropVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void CropVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
-
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
   writer->writeValue("ZMin", getZMin() );
   writer->writeValue("XMax", getXMax() );
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
-  return 1;
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

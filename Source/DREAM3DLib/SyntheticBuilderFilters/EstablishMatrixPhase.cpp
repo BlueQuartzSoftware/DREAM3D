@@ -68,7 +68,10 @@ m_NumFields(NULL)
 EstablishMatrixPhase::~EstablishMatrixPhase()
 {
 }
-
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

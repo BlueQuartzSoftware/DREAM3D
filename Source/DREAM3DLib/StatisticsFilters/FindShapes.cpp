@@ -105,6 +105,11 @@ void FindShapes::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
+void FindShapes::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("DistributionType", getDistributionType() );
+}
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)

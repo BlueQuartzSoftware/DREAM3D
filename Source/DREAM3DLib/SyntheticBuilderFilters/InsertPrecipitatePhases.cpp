@@ -121,6 +121,11 @@ void InsertPrecipitatePhases::setupFilterOptions()
 
   setFilterOptions(options);
 }
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
+}
 
 // -----------------------------------------------------------------------------
 //

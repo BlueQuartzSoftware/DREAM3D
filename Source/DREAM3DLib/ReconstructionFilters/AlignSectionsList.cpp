@@ -92,7 +92,11 @@ void AlignSectionsList::setupFilterOptions()
   }
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void AlignSectionsList::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("InputFile", getInputFile() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

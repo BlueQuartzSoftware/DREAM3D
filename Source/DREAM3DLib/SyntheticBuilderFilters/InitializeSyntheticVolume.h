@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
 
     virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void preflight();
 

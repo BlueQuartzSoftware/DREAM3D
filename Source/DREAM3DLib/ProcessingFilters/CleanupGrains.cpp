@@ -102,7 +102,12 @@ void CleanupGrains::setupFilterOptions()
 
   setFilterOptions(options);
 }
-
+// -----------------------------------------------------------------------------
+void CleanupGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
+  writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

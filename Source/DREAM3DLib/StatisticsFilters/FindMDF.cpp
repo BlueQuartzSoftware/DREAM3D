@@ -62,14 +62,16 @@ m_SharedSurfaceAreaList(NULL)
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
-  setupFilterOptions();
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FindMDF::~FindMDF()
+{
+}
+// -----------------------------------------------------------------------------
+void FindMDF::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

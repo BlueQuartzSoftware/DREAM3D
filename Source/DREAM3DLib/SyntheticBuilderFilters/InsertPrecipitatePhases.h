@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Insert Precipitate Phases"; }
 
     virtual void setupFilterOptions();
-	virtual int writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

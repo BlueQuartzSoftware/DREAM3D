@@ -94,6 +94,11 @@ void FindLocalMisorientationGradients::setupFilterOptions()
   setFilterOptions(options);
 }
 
+// -----------------------------------------------------------------------------
+void FindLocalMisorientationGradients::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("KernelSize", getKernelSize() );
+}
 
 // -----------------------------------------------------------------------------
 //
