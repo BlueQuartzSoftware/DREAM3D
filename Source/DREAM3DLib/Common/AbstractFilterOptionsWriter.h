@@ -39,6 +39,8 @@
 
 #include <string>
 
+class AbstractFilter;
+class QualityMetricFilter;
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -57,7 +59,7 @@ class DREAM3DLib_EXPORT AbstractFilterOptionsWriter
 
     virtual ~AbstractFilterOptionsWriter();
 
-    virtual int openOptionsGroup(int index) = 0;
+    virtual int openOptionsGroup(AbstractFilter* filter) = 0;
     virtual int closeOptionsGroup() = 0;
 
     virtual int writeValue(const std::string name, const std::string value) = 0;
@@ -73,7 +75,7 @@ class DREAM3DLib_EXPORT AbstractFilterOptionsWriter
     virtual int writeValue(const std::string name, float value) = 0;
     virtual int writeValue(const std::string name, double value) = 0;
 
-
+    virtual int writeValue(const std::string name, QualityMetricFilter* f) = 0;
 
   protected:
     AbstractFilterOptionsWriter();

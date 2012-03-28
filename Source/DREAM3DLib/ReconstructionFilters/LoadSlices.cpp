@@ -90,6 +90,17 @@ LoadSlices::~LoadSlices()
 // -----------------------------------------------------------------------------
 void LoadSlices::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
+  writer->writeValue("H5EbsdFile", getH5EbsdFile() );
+  writer->writeValue("ZStartIndex", getZStartIndex() );
+  writer->writeValue("ZEndIndex", getZEndIndex() );
+  writer->writeValue("NumQualityMetricFilters", getQualityMetricFilters().size() );
+  std::stringstream ss;
+  for(size_t i = 0; i < getQualityMetricFilters().size(); i++)
+  {
+	ss << "QualityMetricFilter-" << i;
+	writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
+	ss.str("");
+  }
 }
 // -----------------------------------------------------------------------------
 //
