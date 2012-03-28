@@ -53,7 +53,7 @@ TextFilterOptionsWriter::~TextFilterOptionsWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::openOptionsGroup(int index)
+int TextFilterOptionsWriter::openOptionsGroup(AbstractFilter* filter)
 {
   return 0;
 }
@@ -167,3 +167,11 @@ int TextFilterOptionsWriter::writeValue(const std::string name, double value)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterOptionsWriter::writeValue(const std::string name, QualityMetricFilter* f)
+{
+  int err = 0;
+  return err;
+}
