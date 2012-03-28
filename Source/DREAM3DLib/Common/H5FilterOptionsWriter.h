@@ -40,6 +40,9 @@
 
 #include <string>
 
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"

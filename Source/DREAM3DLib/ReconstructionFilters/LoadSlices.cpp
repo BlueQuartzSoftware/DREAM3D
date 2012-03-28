@@ -93,17 +93,18 @@ LoadSlices::~LoadSlices()
 void LoadSlices::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
 
-
-  int numFilters = m_QualityMetricFilters.size();
-  writer->writeValue("NumQualityFilters", numFilters);
+  writer->writeValue("H5EbsdFile", getH5EbsdFile() );
+  writer->writeValue("ZStartIndex", getZStartIndex() );
+  writer->writeValue("ZEndIndex", getZEndIndex() );
+  int numQFilters = getQualityMetricFilters().size();
+  writer->writeValue("NumQualityFilters",  numQFilters);
   std::stringstream ss;
-  for(int i = 0; i < numFilters; ++i)
+  for(size_t i = 0; i < getQualityMetricFilters().size(); i++)
   {
-    ss << "QualityFilter-" << i;
-    writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
-    ss.str("");
+	ss << "QualityMetricFilter-" << i;
+	writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
+	ss.str("");
   }
-
   int numPhaseType = m_PhaseTypes->GetNumberOfTuples();
   writer->writeValue("NumPhaseTypes", numPhaseType);
   for(int i = 0; i < numPhaseType; ++i)
@@ -112,7 +113,6 @@ void LoadSlices::writeFilterOptions(AbstractFilterOptionsWriter* writer)
     writer->writeValue(ss.str(), m_PhaseTypes->GetValue(i));
     ss.str("");
   }
-
 }
 
 // -----------------------------------------------------------------------------

@@ -175,3 +175,5 @@ int TextFilterOptionsWriter::writeValue(const std::string name, QualityMetricFil
   int err = 0;
   return err;
 }
+
+
