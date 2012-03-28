@@ -59,15 +59,17 @@ H5FilterOptionsWriter::~H5FilterOptionsWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterOptionsWriter::openOptionsGroup(int index)
+int H5FilterOptionsWriter::openOptionsGroup(AbstractFilter* filter)
 {
   int err = 0;
   if (m_GroupId <= 0)
   {
     return -1;
   }
-  std::string name = StringUtils::numToString(index);
+  std::string name = StringUtils::numToString(filter->getPipelineIndex());
   m_CurrentGroupId = H5Utilities::createGroup(m_GroupId, name);
+  err = H5Lite::writeStringAttribute(m_GroupId, name, "ClassName", filter->getNameOfClass());
+  err = H5Lite::writeStringAttribute(m_GroupId, name, "HumanLabel", filter->getHumanLabel());
 
   return err;
 }
@@ -192,4 +194,20 @@ int H5FilterOptionsWriter::writeValue(const std::string name, double value)
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterOptionsWriter::writeValue(const std::string name, QualityMetricFilter* f)
+{
+  int err = 0;
+  float  value = f->getFieldValue();
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
+
+  err = H5Lite::writeStringAttribute(m_GroupId, name, "FieldName", f->getFieldName());
+  err = H5Lite::writeStringAttribute(m_GroupId, name, "FieldOperator", f->getFieldOperator());
+
+  return err;
+}
+
 

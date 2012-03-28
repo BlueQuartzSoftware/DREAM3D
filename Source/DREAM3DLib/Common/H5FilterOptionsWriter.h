@@ -42,9 +42,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "AbstractFilterOptionsWriter.h"
-
+#include "QualityMetricFilter.h"
 
 /*
  *
@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT H5FilterOptionsWriter : public AbstractFilterOptionsWrit
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId);
 
-    virtual int openOptionsGroup(int index);
+    virtual int openOptionsGroup(AbstractFilter* filter);
     virtual int closeOptionsGroup();
 
     virtual int writeValue(const std::string name, const std::string value);
@@ -76,6 +76,8 @@ class DREAM3DLib_EXPORT H5FilterOptionsWriter : public AbstractFilterOptionsWrit
     virtual int writeValue(const std::string name, uint64_t value);
     virtual int writeValue(const std::string name, float value);
     virtual int writeValue(const std::string name, double value);
+
+    virtual int writeValue(const std::string name, QualityMetricFilter* f);
 
   protected:
     H5FilterOptionsWriter();

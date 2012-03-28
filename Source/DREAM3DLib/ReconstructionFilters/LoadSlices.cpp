@@ -36,6 +36,7 @@
 
 #include <limits>
 #include <vector>
+#include <sstream>
 #include "LoadSlices.h"
 
 
@@ -87,10 +88,33 @@ m_EulerAnglesC(NULL)
 LoadSlices::~LoadSlices()
 {
 }
+
 // -----------------------------------------------------------------------------
 void LoadSlices::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
+
+
+  int numFilters = m_QualityMetricFilters.size();
+  writer->writeValue("NumQualityFilters", numFilters);
+  std::stringstream ss;
+  for(int i = 0; i < numFilters; ++i)
+  {
+    ss << "QualityFilter-" << i;
+    writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
+    ss.str("");
+  }
+
+  int numPhaseType = m_PhaseTypes->GetNumberOfTuples();
+  writer->writeValue("NumPhaseTypes", numPhaseType);
+  for(int i = 0; i < numPhaseType; ++i)
+  {
+    ss << "PhaseType-" << i;
+    writer->writeValue(ss.str(), m_PhaseTypes->GetValue(i));
+    ss.str("");
+  }
+
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

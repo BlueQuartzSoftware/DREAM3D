@@ -215,12 +215,12 @@ void DataContainerWriter::execute()
   AbstractFilter::Pointer preFilter = getPreviousFilter();
   while (preFilter.get() != NULL)
   {
-    optionsWriter->openOptionsGroup(preFilter->getPipelineIndex());
+    optionsWriter->openOptionsGroup(preFilter.get());
     preFilter->writeFilterOptions(optionsWriter.get());
     optionsWriter->closeOptionsGroup();
     preFilter = preFilter->getPreviousFilter();
   }
-  optionsWriter->openOptionsGroup(getPipelineIndex());
+  optionsWriter->openOptionsGroup(this);
   writeFilterOptions(optionsWriter.get());
   optionsWriter->closeOptionsGroup();
 
