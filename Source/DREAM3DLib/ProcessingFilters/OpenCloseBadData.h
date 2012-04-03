@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MinSize_H_
-#define MinSize_H_
+#ifndef OpenCloseBadData_H_
+#define OpenCloseBadData_H_
 
 #include <vector>
 #include <string>
@@ -52,25 +52,26 @@
 
 
 /**
- * @class MinSize MinSize.h DREAM3DLib/ReconstructionFilters/MinSize.h
+ * @class OpenCloseBadData OpenCloseBadData.h DREAM3DLib/ReconstructionFilters/OpenCloseBadData.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MinSize : public AbstractFilter
+class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MinSize);
-    DREAM3D_STATIC_NEW_MACRO(MinSize);
-    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(OpenCloseBadData);
+    DREAM3D_STATIC_NEW_MACRO(OpenCloseBadData);
+    DREAM3D_TYPE_MACRO_SUPER(OpenCloseBadData, AbstractFilter);
 
-    virtual ~MinSize();
+    virtual ~OpenCloseBadData();
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction);
+    DREAM3D_INSTANCE_PROPERTY(int, NumIterations);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }
+    virtual const std::string getHumanLabel() { return "Open/Close Bad Data"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
@@ -80,10 +81,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     virtual void preflight();
 
   protected:
-    MinSize();
-
-    void remove_smallgrains();
-    void assign_badpoints();
+    OpenCloseBadData();
 
 
   private:
@@ -93,16 +91,14 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
-    bool* m_Active;
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
-    MinSize(const MinSize&); // Copy Constructor Not Implemented
-    void operator=(const MinSize&); // Operator '=' Not Implemented
+    OpenCloseBadData(const OpenCloseBadData&); // Copy Constructor Not Implemented
+    void operator=(const OpenCloseBadData&); // Operator '=' Not Implemented
 };
 
-#endif /* MinSize_H_ */
+#endif /* OpenCloseBadData_H_ */

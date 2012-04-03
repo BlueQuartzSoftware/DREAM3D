@@ -338,12 +338,6 @@ void LoadSlices::execute()
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
-  // THIS IS JUST A TEST------REMOVE!!!!!!!!!!!!!!!!!!!!!!!!!
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-    if(m_PhasesC[i] == 2) m_GoodVoxels[i] = true;
-  }
-
   // If there is an error set this to something negative and also set a message
   ss.str("");
   ss << getHumanLabel() << " Completed";
