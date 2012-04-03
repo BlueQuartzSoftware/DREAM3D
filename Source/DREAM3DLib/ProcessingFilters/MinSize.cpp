@@ -61,8 +61,7 @@ m_Neighbors(NULL),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
-m_Active(NULL),
-m_NumFields(NULL)
+m_Active(NULL)
 {
   setupFilterOptions();
 }
@@ -121,8 +120,6 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -187,7 +184,7 @@ void MinSize::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Grain Dilation Complete", 0, Observable::UpdateProgressMessage);
+  notify("Minimum Size Filter Complete", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -230,65 +227,6 @@ void MinSize::assign_badpoints()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
 
-
-  for (int64_t iter = 0; iter < totalPoints; iter++)
-  {
-    m_AlreadyChecked[iter] = false;
-    if(m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
-  }
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-		std::stringstream ss;
-	//	ss << "Cleaning Up Grains - Identifying Bad Points - " << ((float)i/totalPoints)*100 << " Percent Complete";
-	//	notify(ss.str(), 0, Observable::UpdateProgressMessage);
-		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
-		{
-			currentvlist.push_back(i);
-			count = 0;
-			while(count < currentvlist.size())
-			{
-				index = currentvlist[count];
-				column = index % dims[0];
-				row = (index / dims[0]) % dims[1];
-				plane = index / (dims[0] * dims[1]);
-				for (DimType j = 0; j < 6; j++)
-				{
-					good = 1;
-					neighbor = index + neighpoints[j];
-					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (dims[2] - 1)) good = 0;
-					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (dims[1] - 1)) good = 0;
-					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (dims[0] - 1)) good = 0;
-					if (good == 1 && m_GrainIds[neighbor] <= 0 && m_AlreadyChecked[neighbor] == false)
-					{
-						currentvlist.push_back(neighbor);
-						m_AlreadyChecked[neighbor] = true;
-					}
-				}
-				count++;
-			}
-			if((int)currentvlist.size() >= m_MinAllowedGrainSize*100)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = 0;
-					m_PhasesC[currentvlist[k]] = 0;
-				}
-				m_PhasesF[0] = 0;
-			}
-			if((int)currentvlist.size() < m_MinAllowedGrainSize*100)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = -1;
-					m_PhasesC[currentvlist[k]] = 0;
-				}
-			}
-			currentvlist.clear();
-		}
-  }
 
   std::vector<int > n(numgrains + 1);
   while (count != 0)
@@ -355,7 +293,7 @@ void MinSize::assign_badpoints()
     {
       int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor > 0)
+      if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
 		    m_PhasesC[j] = m_PhasesF[neighbor];

@@ -34,16 +34,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "MinNeighbors.h"
+#include "FillBadData.h"
 
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -54,16 +52,14 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MinNeighbors::MinNeighbors() :
+FillBadData::FillBadData() :
 AbstractFilter(),
-m_MinNumNeighbors(1),
+m_MinAllowedDefectSize(1),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
 m_PhasesC(NULL),
-m_PhasesF(NULL),
-m_NumNeighbors(NULL),
-m_Active(NULL)
+m_PhasesF(NULL)
 {
   setupFilterOptions();
 }
@@ -71,20 +67,20 @@ m_Active(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MinNeighbors::~MinNeighbors()
+FillBadData::~FillBadData()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::setupFilterOptions()
+void FillBadData::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
     FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Minimum Number Neighbors");
-    option->setPropertyName("MinNumNeighbors");
+    option->setHumanLabel("Minimum Allowed Defect Size");
+    option->setPropertyName("MinAllowedDefectSize");
     option->setWidgetType(FilterOption::IntWidget);
     option->setValueType("int");
     options.push_back(option);
@@ -93,14 +89,14 @@ void MinNeighbors::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
-void MinNeighbors::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FillBadData::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
-  writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
+  writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -121,18 +117,6 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 	if(preflight == false) find_grainphases->execute();
 	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
-  if(getErrorCondition() == -304)
-  {
-	setErrorCondition(0);
-	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-	find_neighbors->setObservers(this->getObservers());
-	find_neighbors->setDataContainer(getDataContainer());
-	if(preflight == true) find_neighbors->preflight();
-	if(preflight == false) find_neighbors->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
-  }
 
   setErrorMessage(ss.str());
 }
@@ -141,7 +125,7 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::preflight()
+void FillBadData::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -149,7 +133,7 @@ void MinNeighbors::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::execute()
+void FillBadData::execute()
 {
   setErrorCondition(0);
  // int err = 0;
@@ -166,7 +150,7 @@ void MinNeighbors::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
+  if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
   }
@@ -180,33 +164,6 @@ void MinNeighbors::execute()
   m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
   alreadCheckedPtr->initializeWithZeros();
 
-  merge_containedgrains();
-  assign_badpoints();
-
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
-  renumber_grains->setMessagePrefix(getMessagePrefix());
-  renumber_grains->execute();
-  int err = renumber_grains->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_grains->getErrorCondition());
-    setErrorMessage(renumber_grains->getErrorMessage());
-    return;
-  }
-
-  // If there is an error set this to something negative and also set a message
-  notify("Minimum Number of Neighbors Filter Complete", 0, Observable::UpdateProgressMessage);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MinNeighbors::assign_badpoints()
-{
-  DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -239,6 +196,62 @@ void MinNeighbors::assign_badpoints()
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
+
+  for (int64_t iter = 0; iter < totalPoints; iter++)
+  {
+    m_AlreadyChecked[iter] = false;
+	if (m_GrainIds[iter] != 0) m_AlreadyChecked[iter] = true;
+  }
+  for (int64_t i = 0; i < totalPoints; i++)
+  {
+		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
+		{
+			currentvlist.push_back(i);
+			count = 0;
+			while(count < currentvlist.size())
+			{
+				index = currentvlist[count];
+				column = index % dims[0];
+				row = (index / dims[0]) % dims[1];
+				plane = index / (dims[0] * dims[1]);
+				for (DimType j = 0; j < 6; j++)
+				{
+					good = 1;
+					neighbor = index + neighpoints[j];
+					if (j == 0 && plane == 0) good = 0;
+					if (j == 5 && plane == (dims[2] - 1)) good = 0;
+					if (j == 1 && row == 0) good = 0;
+					if (j == 4 && row == (dims[1] - 1)) good = 0;
+					if (j == 2 && column == 0) good = 0;
+					if (j == 3 && column == (dims[0] - 1)) good = 0;
+					if (good == 1 && m_GrainIds[neighbor] == 0 && m_AlreadyChecked[neighbor] == false)
+					{
+						currentvlist.push_back(neighbor);
+						m_AlreadyChecked[neighbor] = true;
+					}
+				}
+				count++;
+			}
+			if((int)currentvlist.size() >= m_MinAllowedDefectSize)
+			{
+				for (size_t k = 0; k < currentvlist.size(); k++)
+				{
+					m_GrainIds[currentvlist[k]] = 0;
+					m_PhasesC[currentvlist[k]] = 0;
+				}
+				m_PhasesF[0] = 0;
+			}
+			if((int)currentvlist.size() < m_MinAllowedDefectSize)
+			{
+				for (size_t k = 0; k < currentvlist.size(); k++)
+				{
+					m_GrainIds[currentvlist[k]] = -1;
+					m_PhasesC[currentvlist[k]] = 0;
+				}
+			}
+			currentvlist.clear();
+		}
+  }
 
   std::vector<int > n(numgrains + 1);
   while (count != 0)
@@ -305,7 +318,7 @@ void MinNeighbors::assign_badpoints()
     {
       int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor >= 0)
+      if (grainname < 0 && neighbor > 0)
       {
         m_GrainIds[j] = neighbor;
 		    m_PhasesC[j] = m_PhasesF[neighbor];
@@ -315,26 +328,7 @@ void MinNeighbors::assign_badpoints()
 //     ss << "Assigning Bad Voxels count = " << count;
 //    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
-}
 
-
-void MinNeighbors::merge_containedgrains()
-{
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
-  DataContainer* m = getDataContainer();
-
-  size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
-  for (size_t i = 0; i < totalPoints; i++)
-  {
-	std::stringstream ss;
-//	ss << "Cleaning Up Grains - Removing Contained Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	notify(ss.str(), 0, Observable::UpdateProgressMessage);
-    int grainname = m_GrainIds[i];
-    if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_PhasesF[grainname] > 0)
-    {
-      m_Active[grainname] = false;
-      m_GrainIds[i] = -1;
-    }
-  }
+  // If there is an error set this to something negative and also set a message
+  notify("Filling Bad Data Complete", 0, Observable::UpdateProgressMessage);
 }

@@ -67,11 +67,10 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 
     virtual ~MinNeighbors();
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
+    virtual const std::string getHumanLabel() { return "Minimum Number of Neighbors Filter"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
@@ -83,7 +82,6 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
   protected:
     MinNeighbors();
 
-    void remove_smallgrains();
     void assign_badpoints();
     void merge_containedgrains();
 
@@ -98,13 +96,7 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
     int32_t* m_NumNeighbors;
     bool* m_Active;
 
-	int32_t* m_NumFields;
-
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
-
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
 
     MinNeighbors(const MinNeighbors&); // Copy Constructor Not Implemented
     void operator=(const MinNeighbors&); // Operator '=' Not Implemented

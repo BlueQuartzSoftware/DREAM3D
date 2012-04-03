@@ -11,6 +11,8 @@
 SET (ProcessingFilters_FILTERS_HDRS
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
+${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
+${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.h
 
 )
 #-- Add in any addition NON Filter classes here
@@ -21,6 +23,8 @@ SET (DREAM3DLib_ProcessingFilters_HDRS
 SET (DREAM3DLib_ProcessingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.cpp    
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.cpp    
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.cpp    
 
 )
 if (NOT DEFINED ONLY_FILTERS)

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MinSize_H_
-#define MinSize_H_
+#ifndef FillBadData_H_
+#define FillBadData_H_
 
 #include <vector>
 #include <string>
@@ -52,25 +52,25 @@
 
 
 /**
- * @class MinSize MinSize.h DREAM3DLib/ReconstructionFilters/MinSize.h
+ * @class FillBadData FillBadData.h DREAM3DLib/ReconstructionFilters/FillBadData.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MinSize : public AbstractFilter
+class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MinSize);
-    DREAM3D_STATIC_NEW_MACRO(MinSize);
-    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FillBadData);
+    DREAM3D_STATIC_NEW_MACRO(FillBadData);
+    DREAM3D_TYPE_MACRO_SUPER(FillBadData, AbstractFilter);
 
-    virtual ~MinSize();
+    virtual ~FillBadData();
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }
+    virtual const std::string getHumanLabel() { return "Fill Bad Data"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
@@ -80,10 +80,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     virtual void preflight();
 
   protected:
-    MinSize();
-
-    void remove_smallgrains();
-    void assign_badpoints();
+    FillBadData();
 
 
   private:
@@ -93,7 +90,6 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
-    bool* m_Active;
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
@@ -101,8 +97,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    MinSize(const MinSize&); // Copy Constructor Not Implemented
-    void operator=(const MinSize&); // Operator '=' Not Implemented
+    FillBadData(const FillBadData&); // Copy Constructor Not Implemented
+    void operator=(const FillBadData&); // Operator '=' Not Implemented
 };
 
-#endif /* MinSize_H_ */
+#endif /* FillBadData_H_ */
