@@ -94,6 +94,7 @@ class DREAM3DLib_EXPORT OrientationMath
     static void HomochorictoRod(float &r1, float &r2, float &r3);
     static void RodtoHomochoric(float &r1, float &r2, float &r3);
     static void RodtoAxisAngle(float r1, float r2, float r3, float &w, float &n1, float &n2, float &n3);
+    static void QuattoAxisAngle(float *q, float &w, float &n1, float &n2, float &n3);
     static void RodtoQuat(float *q, float r1, float r2, float r3);
     static void QuattoRod(float *q, float &r1, float &r2, float &r3);
     static void QuattoEuler(float *q, float &ea1, float &ea2, float &ea3);
@@ -113,10 +114,10 @@ class DREAM3DLib_EXPORT OrientationMath
     void _calcNearestQuat(const float quatsym[24][5], int numsym, float *q1, float *q2);
     void _calcFZQuat(const float quatsym[24][5], int numsym, float *qr);
 
-    int _calcMisoBin(float dim[3], float bins[3], float n1, float n2, float n3);
+    int _calcMisoBin(float dim[3], float bins[3], float step[3], float n1, float n2, float n3);
     void _calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
                                    int choose, float &synea1, float &synea2, float &synea3);
-    void _calcDetermineHomochoricValues(float step[3], float phi[3], int choose, float &r1, float &r2, float &r3);
+    void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3);
     int _calcODFBin(float dim[3], float bins[3], float r1, float r2, float r3);
 
   private:

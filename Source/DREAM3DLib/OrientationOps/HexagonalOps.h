@@ -47,8 +47,8 @@ namespace HexagonalMath {
     static const float HexDim2InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
     static const float HexDim3InitValue = powf((0.75f*((float(M_PI)/6.0f)-sinf((float(M_PI)/6.0f)))),(1.0f/3.0f));
     static const float HexDim1StepValue = HexDim1InitValue/18.0f;
-    static const float HexDim2StepValue = HexDim1InitValue/18.0f;
-    static const float HexDim3StepValue = HexDim1InitValue/6.0f;
+    static const float HexDim2StepValue = HexDim2InitValue/18.0f;
+    static const float HexDim3StepValue = HexDim3InitValue/6.0f;
     static const float HexQuatSym[12][5] = {{0.000000000f, 0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f},
                          {0.000000000f, 0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f},
                          {0.000000000f, 0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f},

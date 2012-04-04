@@ -437,6 +437,7 @@ class DREAM3DLib_EXPORT Texture
       for (int i = 0; i < aSize; i++)
       {
         OrientationMath::axisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
+		orientationOps.getFZRod(r1, r2, r3);
         OrientationMath::RodtoHomochoric(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         mdf[mbin] = -int((weights[i] / float(mdfsize)) * 10000.0);
@@ -466,7 +467,9 @@ class DREAM3DLib_EXPORT Texture
         orientationOps.determineEulerAngles(choose2, ea1, ea2, ea3);
         O::eulertoQuat(q2, ea1, ea2, ea3);
         w = orientationOps.getMisoQuat( q1, q2, n1, n2, n3);
-		OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
+		OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+		orientationOps.getFZRod(r1, r2, r3);
+		OrientationMath::RodtoHomochoric(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         if (mdf[mbin] >= 0) mdf[mbin]++;
         if (mdf[mbin] < 0) i = i - 1;

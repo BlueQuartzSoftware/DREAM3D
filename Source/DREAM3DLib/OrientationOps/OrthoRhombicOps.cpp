@@ -44,8 +44,8 @@ static const float OrthoDim1InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f
 static const float OrthoDim2InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
 static const float OrthoDim3InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
 static const float OrthoDim1StepValue = OrthoDim1InitValue/18.0f;
-static const float OrthoDim2StepValue = OrthoDim1InitValue/18.0f;
-static const float OrthoDim3StepValue = OrthoDim1InitValue/18.0f;
+static const float OrthoDim2StepValue = OrthoDim2InitValue/18.0f;
+static const float OrthoDim3StepValue = OrthoDim3InitValue/18.0f;
 
 
 static const float OrthoQuatSym[4][5] = {{0.000000000f,0.000000000f,0.000000000f,0.000000000f,1.000000000f},
@@ -106,15 +106,19 @@ int OrthoRhombicOps::getMisoBin(float n1, float n2, float n3)
 {
   float dim[3];
   float bins[3];
+  float step[3];
 
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
   dim[2] = OrthoDim3InitValue;
+  step[0] = OrthoDim1StepValue;
+  step[1] = OrthoDim2StepValue;
+  step[2] = OrthoDim3StepValue;
   bins[0] = 36.0;
   bins[1] = 36.0;
   bins[2] = 36.0;
 
-  return _calcMisoBin(dim, bins, n1, n2, n3);
+  return _calcMisoBin(dim, bins, step, n1, n2, n3);
 }
 
 void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
@@ -139,17 +143,21 @@ void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &syn
 
 void OrthoRhombicOps::determineHomochoricValues( int choose, float &r1, float &r2, float &r3)
 {
+  float init[3];
   float step[3];
   float phi[3];
 
-  step[0] = OrthoDim1StepValue/2.0f;
-  step[1] = OrthoDim2StepValue/2.0f;
-  step[2] = OrthoDim3StepValue/2.0f;
+  init[0] = OrthoDim1InitValue;
+  init[1] = OrthoDim2InitValue;
+  init[2] = OrthoDim3InitValue;
+  step[0] = OrthoDim1StepValue;
+  step[1] = OrthoDim2StepValue;
+  step[2] = OrthoDim3StepValue;
   phi[0] = static_cast<float>(choose % 36);
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
 
-  return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
+  return _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
 }
 
 int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)

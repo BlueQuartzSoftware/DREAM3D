@@ -297,15 +297,15 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    }
    if(type == 2)
    {
-	   n1 = (fabs(-qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n2 = (fabs(qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n3 = (fabs(-qco[3] + qco[4]) / (sqrt_two)) / sin_wmin_over_2;
+	   n1 = ((-qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n2 = ((qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n3 = ((-qco[3] + qco[4]) / (sqrt_two)) / sin_wmin_over_2;
    }
    if(type == 3)
    {
-	   n1 = (fabs(qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n2 = (fabs(-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n3 = (fabs(qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n1 = ((qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n2 = ((-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n3 = ((qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
    }
    float denom = sqrt((n1*n1+n2*n2+n3*n3));
    n1 = n1/denom;
@@ -370,15 +370,19 @@ int CubicOps::getMisoBin(float n1, float n2, float n3)
 {
   float dim[3];
   float bins[3];
+  float step[3];
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
   dim[2] = CubicDim3InitValue;
+  step[0] = CubicDim1StepValue;
+  step[1] = CubicDim2StepValue;
+  step[2] = CubicDim3StepValue;
   bins[0] = 18.0f;
   bins[1] = 18.0f;
   bins[2] = 18.0f;
 
-  return _calcMisoBin(dim, bins, n1, n2, n3);
+  return _calcMisoBin(dim, bins, step, n1, n2, n3);
 }
 
 void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
@@ -402,17 +406,21 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
 
 void CubicOps::determineHomochoricValues(int choose, float &r1, float &r2, float &r3)
 {
+  float init[3];
   float step[3];
   float phi[3];
 
-  step[0] = CubicDim1StepValue/2.0f;
-  step[1] = CubicDim2StepValue/2.0f;
-  step[2] = CubicDim3StepValue/2.0f;
+  init[0] = CubicDim1InitValue;
+  init[1] = CubicDim2InitValue;
+  init[2] = CubicDim3InitValue;
+  step[0] = CubicDim1StepValue;
+  step[1] = CubicDim2StepValue;
+  step[2] = CubicDim3StepValue;
   phi[0] = static_cast<float>(choose % 18);
   phi[1] = static_cast<float>((choose / 18) % 18);
   phi[2] = static_cast<float>(choose / (18 * 18));
 
-  return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
+  return _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
 
 }
 int CubicOps::getOdfBin(float r1, float r2, float r3)

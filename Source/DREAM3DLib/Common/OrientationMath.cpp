@@ -117,29 +117,14 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
 	  MULT_QUAT(qr, quatsym[i], qc)
     if (qc[4] < -1) {
       qc[4] = -1;
-      w = acos_neg_one;
-      temp = recip_sin_of_acos_neg_1;
     }
     else if (qc[4] > 1) {
       qc[4] = 1;
-      w = acos_pos_one;
-      temp = recip_sin_of_acos_pos_1;
-    }
-    else {
-      /* ***************************************************
-       * THIS SECTION IS TAKING A LOT OF TIME DURING THE RUNS. If this is truly
-       * the code path that needs to happen we might consider a lookup table at
-       * the expense of some memory but it would avoid the acos and sin functions
-       */
-      w = acos(qc[4]);
-      temp = 1.0/sinf(w);
     }
 
-    n1 = qc[1] * temp;
-    n2 = qc[2] * temp;
-    n3 = qc[3] * temp;
-    w = 2 * w;
-    if (w > m_pi) {
+	QuattoAxisAngle(qc, w, n1, n2, n3);
+
+	if (w > m_pi) {
       w = two_pi - w;
     }
     if (w < wmin)
@@ -150,33 +135,10 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
       n3min = n3;
     }
   }
-  n1 = fabs(n1min);
-  n2 = fabs(n2min);
-  n3 = fabs(n3min);
   float denom = sqrt((n1*n1+n2*n2+n3*n3));
   n1 = n1/denom;
   n2 = n2/denom;
   n3 = n3/denom;
-  float newangle = 0;
-  float angle = 180*atanf(n2/n1) * recip_pi;
-  if(angle > 30.0)
-  {
-  if(int(angle/30)%2 == 0)
-  {
-    newangle = angle - (30*int(angle/30));
-    newangle = newangle* pi_over_180;
-    n1 = cosf(newangle);
-    n2 = sinf(newangle);
-  }
-  if(int(angle/30)%2 == 1)
-  {
-    newangle = angle - (30*int(angle/30));
-    newangle = 30 - newangle;
-    newangle = newangle* pi_over_180;
-    n1 = cosf(newangle);
-    n2 = sinf(newangle);
-  }
-  }
   wmin = oneeighty_over_pi * wmin;
   return wmin;
 }
@@ -293,15 +255,15 @@ void OrientationMath::_calcFZQuat(const float quatsym[24][5], int numsym, float 
 }
 
 
-int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float n1, float n2, float n3)
+int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float step[3], float n1, float n2, float n3)
 {
-  size_t miso1bin = size_t(n1*bins[0]/dim[0]);
-  size_t miso2bin = size_t(n2*bins[1]/dim[1]);
-  size_t miso3bin = size_t(n3*bins[2]/dim[2]);
+  size_t miso1bin = size_t((n1+dim[0])/step[0]);
+  size_t miso2bin = size_t((n2+dim[1])/step[1]);
+  size_t miso3bin = size_t((n3+dim[2])/step[2]);
   if(miso1bin >= bins[0]) miso1bin = bins[0]-1;
   if(miso2bin >= bins[1]) miso2bin = bins[1]-1;
   if(miso3bin >= bins[2]) miso3bin = bins[2]-1;
-  return ((18*18*miso3bin)+(18*miso2bin)+miso1bin);
+  return ((bins[0]*bins[1]*miso3bin)+(bins[0]*miso2bin)+miso1bin);
 }
 
 
@@ -329,17 +291,17 @@ void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], fl
   synea3 = sum - diff;
 }
 
-void OrientationMath::_calcDetermineHomochoricValues( float step[3], float phi[3], int choose, float &r1, float &r2, float &r3)
+void OrientationMath::_calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3)
 {
   float random;
 
   DREAM3D_RANDOMNG_NEW()
   random = rg.genrand_res53();
-  r1 = (step[0] * phi[0]) + (step[0] * random);
+  r1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
   random = rg.genrand_res53();
-  r2 = (step[1] * phi[1]) + (step[1] * random);
+  r2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
   random = rg.genrand_res53();
-  r3 = (step[2] * phi[2]) + (step[2] * random);
+  r3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
 }
 
 int OrientationMath::_calcODFBin(float dim[3], float bins[3], float r1, float r2, float r3)
@@ -443,6 +405,15 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
   n2 = r2 / rmag;
   n3 = r3 / rmag;
   if(rmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+}
+
+void OrientationMath::QuattoAxisAngle(float *q, float &w, float &n1, float &n2, float &n3)
+{
+  w = 2.0*acos(q[4]);
+  n1 = q[1] / sqrt(1-(q[4]*q[4]));
+  n2 = q[2] / sqrt(1-(q[4]*q[4]));
+  n3 = q[3] / sqrt(1-(q[4]*q[4]));
+  if(q[4] == 1.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
 }
 
 void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
