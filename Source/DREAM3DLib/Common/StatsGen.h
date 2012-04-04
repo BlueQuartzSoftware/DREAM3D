@@ -903,10 +903,12 @@ class DREAM3DLib_EXPORT StatsGen
       float w;
       float n1, n2, n3;
       float r1, r2, r3;
+      float ra1, ra2, ra3;
+      float rb1, rb2, rb3;
       HexagonalOps ops;
-      xval.resize(22);
-      yval.resize(22);
-      for (int i = 0; i < 22; i++)
+      xval.resize(20);
+      yval.resize(20);
+      for (int i = 0; i < 20; i++)
       {
         yval[i] = 0;
       }
@@ -926,14 +928,20 @@ class DREAM3DLib_EXPORT StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineHomochoricValues(choose, r1, r2, r3);
+		ra1 = r1;
+		ra2 = r2;
+		ra3 = r3;
         OrientationMath::HomochorictoRod(r1, r2, r3);
+		rb1 = r1;
+		rb2 = r2;
+		rb3 = r3;
         ops.getFZRod(r1, r2, r3);
         OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
         w = w * radtodeg;
         size_t index = static_cast<size_t>(w / 5.0f);
         yval[index]++;
       }
-      for (int i = 0; i < 22; i++)
+      for (int i = 0; i < 20; i++)
       {
         xval[i] = i * 5.0 + 2.5;
         yval[i] = yval[i] / float(npoints);

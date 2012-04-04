@@ -85,15 +85,19 @@ int HexagonalOps::getMisoBin(float n1, float n2, float n3)
 {
   float dim[3];
   float bins[3];
+  float step[3];
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
   dim[2] = HexDim3InitValue;
+  step[0] = HexDim1StepValue;
+  step[1] = HexDim2StepValue;
+  step[2] = HexDim3StepValue;
   bins[0] = 36.0f;
   bins[1] = 36.0f;
   bins[2] = 12.0f;
 
-  return _calcMisoBin(dim, bins, n1, n2, n3);
+  return _calcMisoBin(dim, bins, step, n1, n2, n3);
 }
 
 
@@ -119,17 +123,21 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
 
 void HexagonalOps::determineHomochoricValues( int choose, float &r1, float &r2, float &r3)
 {
+  float init[3];
   float step[3];
   float phi[3];
 
-  step[0] = HexDim1StepValue/2.0f;
-  step[1] = HexDim2StepValue/2.0f;
-  step[2] = HexDim3StepValue/2.0f;
+  init[0] = HexDim1InitValue;
+  init[1] = HexDim2InitValue;
+  init[2] = HexDim3InitValue;
+  step[0] = HexDim1StepValue;
+  step[1] = HexDim2StepValue;
+  step[2] = HexDim3StepValue;
   phi[0] = static_cast<float>(choose % 36);
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
 
-  return _calcDetermineHomochoricValues(step, phi, choose, r1, r2, r3);
+  return _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
 }
 
 int HexagonalOps::getOdfBin(float r1, float r2, float r3)

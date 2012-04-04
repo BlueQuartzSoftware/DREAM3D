@@ -170,7 +170,7 @@ void OpenCloseBadData::execute()
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
   m_Neighbors = neighborsPtr->GetPointer(0);
-  neighborsPtr->initializeWithZeros();
+  neighborsPtr->initializeWithValues(-1);
 
   BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
   m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
