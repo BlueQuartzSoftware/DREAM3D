@@ -164,15 +164,19 @@ int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
+  float step[3];
 
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
   dim[2] = OrthoDim3InitValue;
+  step[0] = OrthoDim1StepValue;
+  step[1] = OrthoDim2StepValue;
+  step[2] = OrthoDim3StepValue;
   bins[0] = 36.0f;
   bins[1] = 36.0f;
   bins[2] = 36.0f;
 
-  return _calcODFBin(dim, bins, r1, r2, r3);
+  return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
 void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)

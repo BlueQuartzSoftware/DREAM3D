@@ -118,7 +118,7 @@ class DREAM3DLib_EXPORT OrientationMath
     void _calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
                                    int choose, float &synea1, float &synea2, float &synea3);
     void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3);
-    int _calcODFBin(float dim[3], float bins[3], float r1, float r2, float r3);
+    int _calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
 
   private:
     OrientationMath(const OrientationMath&); // Copy Constructor Not Implemented

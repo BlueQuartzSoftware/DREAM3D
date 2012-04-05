@@ -291,21 +291,21 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
 
    if(type == 1)
    {
-	   n1 = qco[1] / sin_wmin_over_2;
+	   n3 = qco[1] / sin_wmin_over_2;
 	   n2 = qco[2] / sin_wmin_over_2;
-	   n3 = qco[3] / sin_wmin_over_2;
+	   n1 = qco[3] / sin_wmin_over_2;
    }
    if(type == 2)
    {
-	   n1 = ((-qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n2 = ((qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n3 = ((-qco[3] + qco[4]) / (sqrt_two)) / sin_wmin_over_2;
+	   n3 = (fabs(qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n2 = (fabs(qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n1 = (fabs(qco[3] - qco[4]) / (sqrt_two)) / sin_wmin_over_2;
    }
    if(type == 3)
    {
-	   n1 = ((qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n2 = ((-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n3 = ((qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n3 = (fabs(qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n2 = (fabs(qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n1 = (fabs(-qco[1] + qco[2] + qco[3] + qco[4]) / (2.0f)) / sin_wmin_over_2;
    }
    float denom = sqrt((n1*n1+n2*n2+n3*n3));
    n1 = n1/denom;
@@ -427,15 +427,19 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
+  float step[3];
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
   dim[2] = CubicDim3InitValue;
+  step[0] = CubicDim1StepValue;
+  step[1] = CubicDim2StepValue;
+  step[2] = CubicDim3StepValue;
   bins[0] = 18.0f;
   bins[1] = 18.0f;
   bins[2] = 18.0f;
 
-  return _calcODFBin(dim, bins, r1, r2, r3);
+  return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
 void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
