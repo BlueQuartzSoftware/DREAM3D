@@ -134,7 +134,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 {
   int err = 0;
   StatsGen sg;
-  int size = 1000;
+  int size = 100000;
 
   // These are the output vectors
   std::vector<float> x;
@@ -290,7 +290,7 @@ void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, St
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::getMisrientationData(StatsData::Pointer statsData)
+int StatsGenMDFWidget::getMisorientationData(StatsData::Pointer statsData)
 {
   int retErr = 0;
   std::vector<float> x;

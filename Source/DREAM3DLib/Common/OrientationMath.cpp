@@ -263,6 +263,9 @@ int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float step[3], fl
   if(miso1bin >= bins[0]) miso1bin = bins[0]-1;
   if(miso2bin >= bins[1]) miso2bin = bins[1]-1;
   if(miso3bin >= bins[2]) miso3bin = bins[2]-1;
+  if(miso1bin < 0) miso1bin = 0;
+  if(miso2bin < 0) miso2bin = 0;
+  if(miso3bin < 0) miso3bin = 0;
   return ((bins[0]*bins[1]*miso3bin)+(bins[0]*miso2bin)+miso1bin);
 }
 
@@ -304,19 +307,22 @@ void OrientationMath::_calcDetermineHomochoricValues(float init[3], float step[3
   r3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
 }
 
-int OrientationMath::_calcODFBin(float dim[3], float bins[3], float r1, float r2, float r3)
+int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3)
 {
   OrientationMath::RodtoHomochoric(r1,r2,r3);
   size_t g1euler1bin;
   size_t g1euler2bin;
   size_t g1euler3bin;
   size_t g1odfbin;
-  g1euler1bin = size_t(fabs(r1+dim[0])*bins[0]/(2.0*dim[0]));
-  g1euler2bin = size_t(fabs(r2+dim[1])*bins[1]/(2.0*dim[1]));
-  g1euler3bin = size_t(fabs(r3+dim[2])*bins[2]/(2.0*dim[2]));
+  g1euler1bin = size_t((r1+dim[0])/step[0]);
+  g1euler2bin = size_t((r2+dim[1])/step[1]);
+  g1euler3bin = size_t((r3+dim[2])/step[2]);
   if(g1euler1bin >= bins[0]) g1euler1bin = bins[0]-1;
   if(g1euler2bin >= bins[1]) g1euler2bin = bins[1]-1;
   if(g1euler3bin >= bins[2]) g1euler3bin = bins[2]-1;
+  if(g1euler1bin < 0) g1euler1bin = 0;
+  if(g1euler2bin < 0) g1euler2bin = 0;
+  if(g1euler3bin < 0) g1euler3bin = 0;
   g1odfbin = (g1euler3bin*bins[0]*bins[1])+(g1euler2bin*bins[0])+(g1euler1bin);
   return g1odfbin;
 }

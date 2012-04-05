@@ -144,15 +144,19 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
+  float step[3];
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
   dim[2] = HexDim3InitValue;
+  step[0] = HexDim1StepValue;
+  step[1] = HexDim2StepValue;
+  step[2] = HexDim3StepValue;
   bins[0] = 36.0f;
   bins[1] = 36.0f;
   bins[2] = 12.0f;
 
-  return _calcODFBin(dim, bins, r1, r2, r3);
+  return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
 void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)

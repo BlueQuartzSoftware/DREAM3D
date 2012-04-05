@@ -181,7 +181,7 @@ int StatsGenODFWidget::getOrientationData(StatsData::Pointer statsData)
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {
-    m_MDFWidget->getMisrientationData(statsData);
+    m_MDFWidget->getMisorientationData(statsData);
   }
   return retErr;
 }
@@ -495,7 +495,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
 
   StatsGen sg;
-  int size = 2500;
+  int size = 10000;
 
   if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
