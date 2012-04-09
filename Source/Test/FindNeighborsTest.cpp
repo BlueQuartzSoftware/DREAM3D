@@ -59,7 +59,8 @@
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSectionsFeature.h"
 #include "DREAM3DLib/ReconstructionFilters/EBSDSegmentGrains.h"
-#include "DREAM3DLib/ProcessingFilters/CleanupGrains.h"
+#include "DREAM3DLib/ProcessingFilters/MinSize.h"
+#include "DREAM3DLib/ProcessingFilters/MinNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
@@ -205,12 +206,15 @@ void TestFindNeighbors()
 
   DREAM3D_REQUIRE_EQUAL(true, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(LoadSlices::ClassName()));
   DREAM3D_REQUIRE_EQUAL(true, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(AlignSections::ClassName()));
-  DREAM3D_REQUIRE_EQUAL(false, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(CleanupGrains::ClassName()));
 
-  CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
-  cleanup_grains->setMinAllowedGrainSize(m_MinAllowedGrainSize);
-  cleanup_grains->setMinNumNeighbors(m_MinNumNeighbors);
-  pipeline->pushBack(cleanup_grains);
+  MinSize::Pointer min_size = MinSize::New();
+  min_size->setMinAllowedGrainSize(m_MinAllowedGrainSize);
+  pipeline->pushBack(min_size);
+
+  MinNeighbors::Pointer min_neighbors = MinNeighbors::New();
+  min_neighbors->setMinNumNeighbors(m_MinNumNeighbors);
+  pipeline->pushBack(min_neighbors);
+
 
   bool m_WriteVtkFile(true);
   bool m_WriteBinaryVTKFiles(true);

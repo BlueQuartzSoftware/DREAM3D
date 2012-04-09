@@ -221,7 +221,8 @@ void name##_PreFlightTest() {\
 MAKE_FILTER_TEST(  LoadSlices, PASS)
 MAKE_FILTER_TEST(  AlignSections, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  SegmentGrains, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  CleanupGrains, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  MinSize, FAIL_IS_PASS)
+MAKE_FILTER_TEST(  MinNeighbors, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  MergeTwins, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  MergeColonies, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindNeighbors, FAIL_IS_PASS)
@@ -259,7 +260,8 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( LoadSlices_PreFlightTest() );
   DREAM3D_REGISTER_TEST( AlignSections_PreFlightTest() );
   DREAM3D_REGISTER_TEST( SegmentGrains_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( CleanupGrains_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( MinSize_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( MinNeighbors_PreFlightTest() );
   DREAM3D_REGISTER_TEST( MergeTwins_PreFlightTest() );
   DREAM3D_REGISTER_TEST( MergeColonies_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindNeighbors_PreFlightTest() );

@@ -253,6 +253,7 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
 	  q2[3] = m_Quats[neighborpoint*5 + 3];
 	  q2[4] = m_Quats[neighborpoint*5 + 4];
 
+//	  if (phase1 == phase2 && m_GoodVoxels[referencepoint] == true && m_GoodVoxels[neighborpoint] == true) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 	  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 	  if (w < m_MisorientationTolerance)
 	  {
