@@ -47,7 +47,7 @@
 
 
 /*
- * @class OrientationMath OrientationMath.h AIM/Common/OrientationMath.h
+ * @class OrientationMath OrientationMath.h DREAM3DLib/Common/OrientationMath.h
  * @brief This class performs Crystallographic Misorientation Calculations
  * @author Michael A. Jackson (BlueQuartz Software)
  * @author Michael A. Groeber (US Air Force Research Laboratory)
