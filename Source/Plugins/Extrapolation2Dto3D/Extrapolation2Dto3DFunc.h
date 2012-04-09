@@ -26,7 +26,7 @@
 #include "DREAM3DLib/Common/Observable.h"
 
 /**
- * @class Extrapolation2Dto3DFunc Extrapolation2Dto3DFunc.h AIM/Common/Extrapolation2Dto3DFunc.h
+ * @class Extrapolation2Dto3DFunc Extrapolation2Dto3DFunc.h DREAM3DLib/Common/Extrapolation2Dto3DFunc.h
  * @brief
  * @author
  * @date

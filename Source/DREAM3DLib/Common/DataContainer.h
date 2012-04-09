@@ -60,7 +60,7 @@
 
 
 /**
- * @class GrainGeneratorFunc GrainGeneratorFunc.h AIM/Common/GrainGeneratorFunc.h
+ * @class GrainGeneratorFunc GrainGeneratorFunc.h DREAM3DLib/Common/GrainGeneratorFunc.h
  * @brief
  * @author
  * @date

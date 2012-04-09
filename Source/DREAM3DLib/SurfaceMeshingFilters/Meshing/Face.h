@@ -79,7 +79,7 @@
 namespace meshing {
 
 /**
-* @class Face Face.h AIM/Common/Face.h
+* @class Face Face.h DREAM3DLib/Common/Face.h
 * @brief Support class for the MicroGen3D class
 * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
 * @date Nov 4, 2009

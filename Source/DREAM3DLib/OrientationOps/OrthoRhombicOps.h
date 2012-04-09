@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 
 /**
- * @class OrthoRhombicOps OrthoRhombicOps.h AIM/Common/OrientationOps/OrthoRhombicOps.h
+ * @class OrthoRhombicOps OrthoRhombicOps.h DREAM3DLib/Common/OrientationOps/OrthoRhombicOps.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab
