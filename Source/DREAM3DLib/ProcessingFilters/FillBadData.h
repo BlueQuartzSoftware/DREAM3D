@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CLEANUPGRAINS_H_
-#define CLEANUPGRAINS_H_
+#ifndef FillBadData_H_
+#define FillBadData_H_
 
 #include <vector>
 #include <string>
@@ -52,26 +52,25 @@
 
 
 /**
- * @class CleanupGrains CleanupGrains.h DREAM3DLib/ReconstructionFilters/CleanupGrains.h
+ * @class FillBadData FillBadData.h DREAM3DLib/ReconstructionFilters/FillBadData.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
+class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(CleanupGrains);
-    DREAM3D_STATIC_NEW_MACRO(CleanupGrains);
-    DREAM3D_TYPE_MACRO_SUPER(CleanupGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FillBadData);
+    DREAM3D_STATIC_NEW_MACRO(FillBadData);
+    DREAM3D_TYPE_MACRO_SUPER(FillBadData, AbstractFilter);
 
-    virtual ~CleanupGrains();
+    virtual ~FillBadData();
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
-    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Cleanup Grains"; }
+    virtual const std::string getHumanLabel() { return "Fill Bad Data"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
@@ -81,11 +80,7 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     virtual void preflight();
 
   protected:
-    CleanupGrains();
-
-    void remove_smallgrains();
-    void assign_badpoints();
-    void merge_containedgrains();
+    FillBadData();
 
 
   private:
@@ -95,10 +90,6 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
-    int32_t* m_NumNeighbors;
-    bool* m_Active;
-
-	int32_t* m_NumFields;
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
@@ -106,8 +97,8 @@ class DREAM3DLib_EXPORT CleanupGrains : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    CleanupGrains(const CleanupGrains&); // Copy Constructor Not Implemented
-    void operator=(const CleanupGrains&); // Operator '=' Not Implemented
+    FillBadData(const FillBadData&); // Copy Constructor Not Implemented
+    void operator=(const FillBadData&); // Operator '=' Not Implemented
 };
 
-#endif /* CLEANUPGRAINS_H_ */
+#endif /* FillBadData_H_ */

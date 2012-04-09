@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GrainDilation.h"
+#include "MinNeighbors.h"
 
 
 #include "DREAM3DLib/Common/Constants.h"
@@ -54,9 +54,8 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainDilation::GrainDilation() :
+MinNeighbors::MinNeighbors() :
 AbstractFilter(),
-m_MinAllowedGrainSize(1),
 m_MinNumNeighbors(1),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
@@ -64,8 +63,7 @@ m_GrainIds(NULL),
 m_PhasesC(NULL),
 m_PhasesF(NULL),
 m_NumNeighbors(NULL),
-m_Active(NULL),
-m_NumFields(NULL)
+m_Active(NULL)
 {
   setupFilterOptions();
 }
@@ -73,24 +71,16 @@ m_NumFields(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainDilation::~GrainDilation()
+MinNeighbors::~MinNeighbors()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainDilation::setupFilterOptions()
+void MinNeighbors::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Minimum Allowed Grain Size");
-    option->setPropertyName("MinAllowedGrainSize");
-    option->setWidgetType(FilterOption::IntWidget);
-    option->setValueType("int");
-    options.push_back(option);
-  }
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Minimum Number Neighbors");
@@ -103,15 +93,14 @@ void GrainDilation::setupFilterOptions()
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
-void GrainDilation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MinNeighbors::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
-  writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
   writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainDilation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -145,8 +134,6 @@ void GrainDilation::dataCheck(bool preflight, size_t voxels, size_t fields, size
     GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
-
   setErrorMessage(ss.str());
 }
 
@@ -154,7 +141,7 @@ void GrainDilation::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainDilation::preflight()
+void MinNeighbors::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -162,7 +149,7 @@ void GrainDilation::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainDilation::execute()
+void MinNeighbors::execute()
 {
   setErrorCondition(0);
  // int err = 0;
@@ -179,7 +166,7 @@ void GrainDilation::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0 && getErrorCondition() != -305)
+  if (getErrorCondition() < 0)
   {
     return;
   }
@@ -193,34 +180,15 @@ void GrainDilation::execute()
   m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
   alreadCheckedPtr->initializeWithZeros();
 
-  remove_smallgrains();
-  assign_badpoints();
-
-  FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-  find_neighbors->setObservers(this->getObservers());
-  find_neighbors->setDataContainer(m);
-  find_neighbors->setMessagePrefix(getMessagePrefix());
-  find_neighbors->execute();
-  int err = find_neighbors->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(find_neighbors->getErrorCondition());
-    setErrorMessage(find_neighbors->getErrorMessage());
-    return;
-  }
-
-  // FindNeighbors may have messed with the pointers so revalidate our internal pointers
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0) return;
-
   merge_containedgrains();
+  assign_badpoints();
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->execute();
-  err = renumber_grains->getErrorCondition();
+  int err = renumber_grains->getErrorCondition();
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
@@ -228,23 +196,14 @@ void GrainDilation::execute()
     return;
   }
 
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[i] = 0;
-  }
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[m_PhasesF[i]]++;
-  }
-
   // If there is an error set this to something negative and also set a message
-  notify("Cleaning Up Grains Complete", 0, Observable::UpdateProgressMessage);
+  notify("Minimum Number of Neighbors Filter Complete", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainDilation::assign_badpoints()
+void MinNeighbors::assign_badpoints()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
@@ -280,66 +239,6 @@ void GrainDilation::assign_badpoints()
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
-
-
-  for (int64_t iter = 0; iter < totalPoints; iter++)
-  {
-    m_AlreadyChecked[iter] = false;
-    if(m_GrainIds[iter] > 0) m_AlreadyChecked[iter] = true;
-  }
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-		std::stringstream ss;
-	//	ss << "Cleaning Up Grains - Identifying Bad Points - " << ((float)i/totalPoints)*100 << " Percent Complete";
-	//	notify(ss.str(), 0, Observable::UpdateProgressMessage);
-		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
-		{
-			currentvlist.push_back(i);
-			count = 0;
-			while(count < currentvlist.size())
-			{
-				index = currentvlist[count];
-				column = index % dims[0];
-				row = (index / dims[0]) % dims[1];
-				plane = index / (dims[0] * dims[1]);
-				for (DimType j = 0; j < 6; j++)
-				{
-					good = 1;
-					neighbor = index + neighpoints[j];
-					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (dims[2] - 1)) good = 0;
-					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (dims[1] - 1)) good = 0;
-					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (dims[0] - 1)) good = 0;
-					if (good == 1 && m_GrainIds[neighbor] <= 0 && m_AlreadyChecked[neighbor] == false)
-					{
-						currentvlist.push_back(neighbor);
-						m_AlreadyChecked[neighbor] = true;
-					}
-				}
-				count++;
-			}
-			if((int)currentvlist.size() >= m_MinAllowedGrainSize*100)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = 0;
-					m_PhasesC[currentvlist[k]] = 0;
-				}
-				m_PhasesF[0] = 0;
-			}
-			if((int)currentvlist.size() < m_MinAllowedGrainSize*100)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = -1;
-					m_PhasesC[currentvlist[k]] = 0;
-				}
-			}
-			currentvlist.clear();
-		}
-  }
 
   std::vector<int > n(numgrains + 1);
   while (count != 0)
@@ -406,7 +305,7 @@ void GrainDilation::assign_badpoints()
     {
       int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor > 0)
+      if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
 		    m_PhasesC[j] = m_PhasesF[neighbor];
@@ -419,7 +318,7 @@ void GrainDilation::assign_badpoints()
 }
 
 
-void GrainDilation::merge_containedgrains()
+void MinNeighbors::merge_containedgrains()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
@@ -435,112 +334,7 @@ void GrainDilation::merge_containedgrains()
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_PhasesF[grainname] > 0)
     {
       m_Active[grainname] = false;
-      m_GrainIds[i] = 0;
+      m_GrainIds[i] = -1;
     }
-  }
-  assign_badpoints();
-}
-
-void GrainDilation::remove_smallgrains()
-{
-  DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
-  size_t udims[3] = {0,0,0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
-
-  size_t size = 0;
-  int good = 0;
-  int neighbor = 0;
-  DimType col, row, plane;
-  int gnum;
- // DimType currentgrain = 1;
-
-  int neighpoints[6];
-  neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<int>(-dims[0]);
-  neighpoints[2] = static_cast<int>(-1);
-  neighpoints[3] = static_cast<int>(1);
-  neighpoints[4] = static_cast<int>(dims[0]);
-  neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-
-
-  DimType numgrains = m->getNumFieldTuples();
-
-  nuclei.resize(numgrains, -1);
-
- // size_t maxGrain = 0;
-  // Reset all the Grain nucleus values to -1;
-  for (DimType i = 1; i < numgrains; i++)
-  {
-    nuclei[i] = -1;
-  }
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-    m_AlreadyChecked[i] = false;
-    gnum = m_GrainIds[i];
-    if(gnum >= 0) nuclei[gnum] = static_cast<int>(i);
-  }
-  voxellists.resize(numgrains);
-  for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
-  {
-	  std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-      size = 0;
-      int nucleus = nuclei[i];
-      voxellists[i].push_back(nucleus);
-      m_AlreadyChecked[nucleus] = true;
-      size++;
-      for (size_t j = 0; j < size; j++)
-      {
-        int currentpoint = voxellists[i][j];
-        col = currentpoint % dims[0];
-        row = (currentpoint / dims[0]) % dims[1];
-        plane = currentpoint / (dims[0] * dims[1]);
-        for (size_t k = 0; k < 6; k++)
-        {
-          good = 1;
-          neighbor = currentpoint + neighpoints[k];
-          if (k == 0 && plane == 0) good = 0;
-          if (k == 5 && plane == (dims[2] - 1)) good = 0;
-          if (k == 1 && row == 0) good = 0;
-          if (k == 4 && row == (dims[1] - 1)) good = 0;
-          if (k == 2 && col == 0) good = 0;
-          if (k == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && m_AlreadyChecked[neighbor] == false)
-          {
-            size_t grainname = static_cast<size_t>(m_GrainIds[neighbor]);
-            if (grainname == i)
-            {
-              voxellists[i].push_back(neighbor);
-              m_AlreadyChecked[neighbor] = true;
-              size++;
-            }
-          }
-        }
-      }
-      if(voxellists[i].size() >= static_cast<size_t>(m_MinAllowedGrainSize) )
-      {
-		m_Active[i] = true;
-      }
-      if(voxellists[i].size() < static_cast<size_t>(m_MinAllowedGrainSize) )
-      {
-		m_Active[i] = false;
-        for (size_t b = 0; b < voxellists[i].size(); b++)
-        {
-          int index = voxellists[i][b];
-          m_GrainIds[index] = 0;
-        }
-      }
   }
 }

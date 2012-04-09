@@ -44,7 +44,7 @@
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
-#include "DREAM3DLib/ProcessingFilters/CleanupGrains.h"
+#include "DREAM3DLib/ProcessingFilters/MinSize.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -77,8 +77,8 @@ void TestFilterPipeline()
   SegmentGrains::Pointer segment_grains = SegmentGrains::New();
   pipeline->pushBack(segment_grains);
 
-  CleanupGrains::Pointer cleanup_grains = CleanupGrains::New();
-  pipeline->pushBack(cleanup_grains);
+  MinSize::Pointer min_size = MinSize::New();
+  pipeline->pushBack(min_size);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   pipeline->pushBack(writer);

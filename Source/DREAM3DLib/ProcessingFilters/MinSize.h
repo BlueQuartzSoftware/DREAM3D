@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef GrainDilation_H_
-#define GrainDilation_H_
+#ifndef MinSize_H_
+#define MinSize_H_
 
 #include <vector>
 #include <string>
@@ -52,26 +52,25 @@
 
 
 /**
- * @class GrainDilation GrainDilation.h DREAM3DLib/ReconstructionFilters/GrainDilation.h
+ * @class MinSize MinSize.h DREAM3DLib/ReconstructionFilters/MinSize.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GrainDilation : public AbstractFilter
+class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainDilation);
-    DREAM3D_STATIC_NEW_MACRO(GrainDilation);
-    DREAM3D_TYPE_MACRO_SUPER(GrainDilation, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MinSize);
+    DREAM3D_STATIC_NEW_MACRO(MinSize);
+    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter);
 
-    virtual ~GrainDilation();
+    virtual ~MinSize();
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
-    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Grain Dilation"; }
+    virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
@@ -81,11 +80,10 @@ class DREAM3DLib_EXPORT GrainDilation : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GrainDilation();
+    MinSize();
 
     void remove_smallgrains();
     void assign_badpoints();
-    void merge_containedgrains();
 
 
   private:
@@ -95,10 +93,7 @@ class DREAM3DLib_EXPORT GrainDilation : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_PhasesC;
     int32_t* m_PhasesF;
-    int32_t* m_NumNeighbors;
     bool* m_Active;
-
-	int32_t* m_NumFields;
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
@@ -106,8 +101,8 @@ class DREAM3DLib_EXPORT GrainDilation : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    GrainDilation(const GrainDilation&); // Copy Constructor Not Implemented
-    void operator=(const GrainDilation&); // Operator '=' Not Implemented
+    MinSize(const MinSize&); // Copy Constructor Not Implemented
+    void operator=(const MinSize&); // Operator '=' Not Implemented
 };
 
-#endif /* GrainDilation_H_ */
+#endif /* MinSize_H_ */
