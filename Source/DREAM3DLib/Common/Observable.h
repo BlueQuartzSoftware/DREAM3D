@@ -31,14 +31,18 @@
 #ifndef OBSERVABLE_H_
 #define OBSERVABLE_H_
 
-
+#include <string>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
+
 class Observer;
+
+//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::vector<Observer*>;
+//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::string;
 
 /**
  * @class Observable Observable.h DREAM3D/Common/Observable.h
@@ -75,13 +79,13 @@ class DREAM3DLib_EXPORT Observable
      * @brief Adds an observer to notify when changes occur
      * @param observer The observer to notify
      */
-    void addObserver(Observer* observer);
+    virtual void addObserver(Observer* observer);
 
     /**
      * @brief Removes a specific observer from the list of observers
      * @param observer The Observer to remove
      */
-    void removeObserver(Observer* observer);
+    virtual void removeObserver(Observer* observer);
 
     /**
      * @brief Sends the notification to all observers
@@ -89,7 +93,7 @@ class DREAM3DLib_EXPORT Observable
      * @param progress A progress to indicate how much pipeline has been accomplished
      * @param a The type of notification to send.
      */
-    void notify(const char* msg, int progress, ObserverAspect a);
+    virtual void notify(const char* msg, int progress, ObserverAspect a);
 
     /**
      * @brief Sends the notification to all observers. Conveneince function.
@@ -97,11 +101,11 @@ class DREAM3DLib_EXPORT Observable
      * @param progress A progress to indicate how much pipeline has been accomplished
      * @param a The type of notification to send.
      */
-    void notify(const std::string msg, int progress, ObserverAspect a);
+    virtual void notify(const std::string msg, int progress, ObserverAspect a);
 
-    std::vector<Observer*> getObservers();
+    virtual std::vector<Observer*> getObservers();
 
-    void setObservers(std::vector<Observer*> obs);
+    virtual void setObservers(std::vector<Observer*> obs);
 
     virtual void setMessagePrefix(const std::string &str);
     virtual std::string getMessagePrefix();
@@ -113,5 +117,8 @@ class DREAM3DLib_EXPORT Observable
     Observable(const Observable&); // Copy Constructor Not Implemented
     void operator=(const Observable&); // Operator '=' Not Implemented
 };
+
+//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::vector<Observer*>;
+
 
 #endif /* OBSERVABLE_H_ */
