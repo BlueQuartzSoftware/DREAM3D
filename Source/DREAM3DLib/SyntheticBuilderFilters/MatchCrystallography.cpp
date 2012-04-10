@@ -711,7 +711,7 @@ void MatchCrystallography::measure_misorientations()
   float q2[5];
   unsigned int phase1, phase2;
   int mbin = 0;
-  int totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumFieldTuples();
   float threshold = 0.0f;
 
   misorientationlists.resize(totalFields);
