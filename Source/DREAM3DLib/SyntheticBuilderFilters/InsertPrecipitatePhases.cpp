@@ -207,7 +207,7 @@ void InsertPrecipitatePhases::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumFieldTuples();
 
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -224,7 +224,7 @@ void InsertPrecipitatePhases::execute()
   place_precipitates();
   fillin_precipitates();
 
-  int numfields = m->getNumFieldTuples();
+  size_t numfields = m->getNumFieldTuples();
   for(size_t i = firstPrecipitateField; i < numfields; i++)
   {
 	m_NumFields[m_PhasesF[i]]++;
