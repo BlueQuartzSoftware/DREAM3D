@@ -69,7 +69,8 @@ PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
 m_WorkerThread(NULL),
-m_isClosed(true),
+m_HelpIsClosed(true),
+m_ErrorsIsClosed(true),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -200,10 +201,10 @@ void PipelineBuilderWidget::setupGui()
 
   m_PipelineViewWidget->setErrorsTextArea(errorsTextEdit);
 
-  toggleDocs->setChecked(true);
+  toggleDocs->setChecked(false);
   on_toggleDocs_clicked();
 
-  showErrors->setChecked(true);
+  showErrors->setChecked(false);
   on_showErrors_clicked();
 
 }
@@ -391,9 +392,9 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
   QPropertyAnimation *animation1 = new QPropertyAnimation(helpTextEdit, "maximumHeight");
-  m_isClosed = !m_isClosed;
+  m_HelpIsClosed = !m_HelpIsClosed;
   int deltaX;
-  if(m_isClosed)
+  if(m_HelpIsClosed)
   {
     int start = 0;
     int end = 350;
@@ -421,9 +422,9 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
 void PipelineBuilderWidget::on_showErrors_clicked()
 {
   QPropertyAnimation *animation1 = new QPropertyAnimation(errorsTextEdit, "maximumHeight");
-  m_isClosed = !m_isClosed;
+  m_ErrorsIsClosed = !m_ErrorsIsClosed;
   int deltaX;
-  if(m_isClosed)
+  if(m_ErrorsIsClosed)
   {
     int start = 0;
     int end = 350;

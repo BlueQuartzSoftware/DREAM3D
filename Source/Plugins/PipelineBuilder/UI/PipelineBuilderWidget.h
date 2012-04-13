@@ -122,7 +122,8 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
     QList<QWidget*>           m_WidgetList;
     QFilterPipeline*          m_FilterPipeline;
     QThread*                  m_WorkerThread;
-    bool                      m_isClosed;
+    bool                      m_HelpIsClosed;
+    bool                      m_ErrorsIsClosed;
     QString                   m_OpenDialogLastDirectory;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
