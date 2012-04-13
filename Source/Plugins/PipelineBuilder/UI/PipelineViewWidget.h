@@ -65,6 +65,7 @@ class PipelineViewWidget : public QFrame
     void removeFilterWidget();
     void setSelectedFilterWidget(QFilterWidget* w);
     void setFilterBeingDragged(QFilterWidget* w);
+    void preflightPipeline();
 
     // Slots for the pipeline to communicate back to us
   public slots:

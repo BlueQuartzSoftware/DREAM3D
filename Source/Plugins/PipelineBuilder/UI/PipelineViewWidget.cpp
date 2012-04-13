@@ -192,6 +192,16 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 
   setSelectedFilterWidget(w);
 
+  preflightPipeline();
+
+  return w;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::preflightPipeline()
+{
   QFilterPipeline* m_FilterPipeline = new QFilterPipeline(NULL);
 
   // Build up the pipeline
@@ -213,16 +223,13 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 
   m_FilterPipeline->preflightPipeline();
 
-  std::cout << "Errors Running Preflight Pipeline" << std::endl;
-  for(int i = 0; i < m_PipelineErrorList.count(); ++i)
-  {
-    std::cout << m_PipelineErrorList.at(i).toStdString() << std::endl;
-  }
-  std::cout << "---------------------------------" << std::endl;
+//  std::cout << "Errors Running Preflight Pipeline" << std::endl;
+//  for(int i = 0; i < m_PipelineErrorList.count(); ++i)
+//  {
+//    std::cout << m_PipelineErrorList.at(i).toStdString() << std::endl;
+//  }
+//  std::cout << "---------------------------------" << std::endl;
   delete m_FilterPipeline;
-
-
-  return w;
 }
 
 // -----------------------------------------------------------------------------
@@ -256,6 +263,7 @@ void PipelineViewWidget::removeFilterWidget()
       w->deleteLater();
     }
   }
+  preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
@@ -387,6 +395,7 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
   {
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
+    preflightPipeline();
   }
   else
   {  // This path is taken if a filter is dropped from the list of filters

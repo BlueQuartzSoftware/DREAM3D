@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1093</width>
-    <height>740</height>
+    <width>913</width>
+    <height>604</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -203,7 +203,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>687</width>
+           <width>507</width>
            <height>76</height>
           </rect>
          </property>
@@ -534,12 +534,6 @@ p, li { white-space: pre-wrap; }
      </item>
      <item>
       <widget class="QPushButton" name="m_GoBtn">
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>26</height>
-        </size>
-       </property>
        <property name="text">
         <string>Go</string>
        </property>
