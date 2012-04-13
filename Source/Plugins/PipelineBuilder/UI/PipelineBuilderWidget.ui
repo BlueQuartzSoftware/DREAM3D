@@ -302,10 +302,10 @@ border-left:  2px solid gray;
            </size>
           </property>
           <property name="toolTip">
-           <string>Save Pipeline File</string>
+           <string>Show Pipeline Errors</string>
           </property>
           <property name="statusTip">
-           <string>Save Pipeline File</string>
+           <string/>
           </property>
           <property name="text">
            <string/>
@@ -319,6 +319,9 @@ border-left:  2px solid gray;
             <width>24</width>
             <height>24</height>
            </size>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
           </property>
           <property name="flat">
            <bool>true</bool>
@@ -395,7 +398,7 @@ p, li { white-space: pre-wrap; }
         <string>Display Help for Filter</string>
        </property>
        <property name="statusTip">
-        <string>Display Help for Filter</string>
+        <string/>
        </property>
        <property name="text">
         <string/>
@@ -448,7 +451,7 @@ p, li { white-space: pre-wrap; }
         <string>Open Pipeline File</string>
        </property>
        <property name="statusTip">
-        <string>Open Pipeline File</string>
+        <string/>
        </property>
        <property name="text">
         <string/>
@@ -492,7 +495,7 @@ p, li { white-space: pre-wrap; }
         <string>Save Pipeline File</string>
        </property>
        <property name="statusTip">
-        <string>Save Pipeline File</string>
+        <string/>
        </property>
        <property name="text">
         <string/>
