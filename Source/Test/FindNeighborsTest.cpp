@@ -124,6 +124,7 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
     filter->setFieldName(Ebsd::Ang::ImageQuality);
     filter->setFieldValue(120);
     filter->setFieldOperator(">");
+    filter->setFieldPhaseNumber(0);
     filters.push_back(filter);
   }
   {
@@ -131,6 +132,7 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
     filter->setFieldName(Ebsd::Ang::ConfidenceIndex);
     filter->setFieldValue(0.1f);
     filter->setFieldOperator(">");
+    filter->setFieldPhaseNumber(0);
     filters.push_back(filter);
   }
 
@@ -345,7 +347,7 @@ void OtherTest()
   IDataArray::Pointer iPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures);
   DREAM3D_REQUIRE_NE(NULL, iPtr.get());
 
-  
+
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
   writer->setDataContainer(m.get());

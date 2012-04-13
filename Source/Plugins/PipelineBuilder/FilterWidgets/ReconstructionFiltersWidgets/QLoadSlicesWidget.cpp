@@ -196,7 +196,7 @@ void QLoadSlicesWidget::on_m_H5EbsdFile_textChanged(const QString &text)
       h5Reader->setFileName(m_H5EbsdFile->text().toStdString());
       h5Reader->setSliceStart(m_ZStartIndex->value());
 
-      int size = h5Reader->getNumPhases();
+      int numPhases = h5Reader->getNumPhases();
 
       std::vector<std::string> phaseTypeStrings;
       PhaseType::getPhaseTypeStrings(phaseTypeStrings);
@@ -206,7 +206,7 @@ void QLoadSlicesWidget::on_m_H5EbsdFile_textChanged(const QString &text)
       // Remove all the items
       phaseTypeList->clear();
       // Now iterate over all the phases creating the proper UI elements
-      for (int i = 0; i < size; i++)
+      for (int i = 0; i < numPhases; i++)
       {
 
         phaseTypeList->addItem(PhaseType::PrimaryStr().c_str());
@@ -258,6 +258,8 @@ void QLoadSlicesWidget::on_m_H5EbsdFile_textChanged(const QString &text)
       // simple swap with our own Table Model object. Multiple times through the model will be the same
       // so we do NOT need to delete the model
       m_QualityMetricTableView->setModel(m_QualityMetricTableModel);
+      // Update the number of phases in the Table Model
+      m_QualityMetricTableModel->setNumberOfPhases(numPhases);
       if(model != m_QualityMetricTableModel && model == NULL)
       {
         delete model; // Clean up this memory
@@ -420,7 +422,8 @@ void QLoadSlicesWidget::setupQualityMetricFilters()
   QVector<QString> fieldNames;
   QVector<float> fieldValues;
   QVector<QString> fieldOperators;
-  m_QualityMetricTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
+  QVector<int>  fieldPhaseValues;
+  m_QualityMetricTableModel->getTableData(fieldNames, fieldValues, fieldOperators, fieldPhaseValues);
 
   for(int i = 0; i < filterCount; ++i)
   {
@@ -428,6 +431,7 @@ void QLoadSlicesWidget::setupQualityMetricFilters()
     filter->setFieldName(fieldNames[i].toStdString());
     filter->setFieldValue(fieldValues[i]);
     filter->setFieldOperator(fieldOperators[i].toStdString());
+    filter->setFieldPhaseNumber(fieldPhaseValues[i]);
     filters.push_back(filter);
   }
 
@@ -443,7 +447,7 @@ void QLoadSlicesWidget::readOptions(QSettings &prefs)
   QString val;
   bool ok;
   qint32 i;
-  double d;
+  //double d;
 
   READ_FILEPATH_SETTING(prefs, m_, H5EbsdFile, "");
   on_m_H5EbsdFile_textChanged(QString(""));
@@ -472,6 +476,7 @@ void QLoadSlicesWidget::readOptions(QSettings &prefs)
     QVector<QString> fieldNames;
     QVector<float> fieldValues;
     QVector<QString> fieldOperators;
+    QVector<int> fieldPhaseValues;
 
     // Add the proper amount of rows and get the values
     for (int r = 0; r < filterCount; ++r)
@@ -485,10 +490,11 @@ void QLoadSlicesWidget::readOptions(QSettings &prefs)
       if (false == ok) {fieldValue = 0.0f;}
       fieldValues.push_back(fieldValue);
       fieldOperators.push_back(prefs.value("Operator").toString());
+      fieldPhaseValues.push_back(prefs.value("PhaseValue").toInt(&ok));
       prefs.endGroup();
     }
 
-    m_QualityMetricTableModel->setTableData(fieldNames, fieldValues, fieldOperators);
+    m_QualityMetricTableModel->setTableData(fieldNames, fieldValues, fieldOperators, fieldPhaseValues);
 
   }
 
@@ -514,7 +520,8 @@ void QLoadSlicesWidget::writeOptions(QSettings &prefs)
     QVector<QString> fieldNames;
     QVector<float> fieldValues;
     QVector<QString> fieldOperators;
-    m_QualityMetricTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
+    QVector<int>     fieldPhaseValues;
+    m_QualityMetricTableModel->getTableData(fieldNames, fieldValues, fieldOperators, fieldPhaseValues);
 
     for(int i = 0; i < filterCount; ++i)
     {
@@ -523,6 +530,7 @@ void QLoadSlicesWidget::writeOptions(QSettings &prefs)
       prefs.setValue("Field", fieldNames[i]);
       prefs.setValue("Value", fieldValues[i]);
       prefs.setValue("Operator", fieldOperators[i]);
+      prefs.setValue("PhaseValue", fieldPhaseValues[i]);
       prefs.endGroup();
     }
   }

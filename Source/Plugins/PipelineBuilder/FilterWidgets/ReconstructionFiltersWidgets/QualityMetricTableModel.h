@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -57,6 +57,7 @@ class QualityMetricTableModel : public QAbstractTableModel
       FieldName = 0,
       FieldOperator,
       FieldValue,
+      FieldPhaseValue,
       ColumnCount
     };
 
@@ -150,19 +151,23 @@ class QualityMetricTableModel : public QAbstractTableModel
 
     QStringList getPossibleFields();
 
-    virtual void setTableData( QVector<QString> bins, QVector<float> data,  QVector<QString> colors) ;
+    virtual void setTableData( QVector<QString> fieldNames, QVector<float> fieldValues,  QVector<QString> fieldOperators, QVector<int> fieldPhaseValues) ;
 
-    void getTableData( QVector<QString> &fieldNames, QVector<float> &fieldValues,  QVector<QString> &fieldOperators);
+    void getTableData( QVector<QString> &fieldNames, QVector<float> &fieldValues,  QVector<QString> &fieldOperators, QVector<int> &fieldPhaseValues);
+
+    void setNumberOfPhases(int n);
 
 
   private:
     int m_ColumnCount;
     int m_RowCount;
+    int m_NumberOfPhases;
 
     QStringList   m_PossibleFields;
     QVector<QString>   m_FieldNames;
     QVector<float>     m_FieldValues;
     QVector<QString> m_FieldOperators;
+    QVector<int>     m_FieldPhaseValues;
 
 
     QualityMetricTableModel(const QualityMetricTableModel&); // Copy Constructor Not Implemented

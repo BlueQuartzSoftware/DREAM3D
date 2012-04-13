@@ -30,7 +30,9 @@
 /* The ISO C99 standard specifies that in C++ implementations the Min/Max value
    macros should only be defined if explicitly requested, so lets request them.  */ 
 #if __cplusplus
+#if !defined(__STDC_LIMIT_MACROS)
 #define __STDC_LIMIT_MACROS 1
+#endif
 #endif
 #include <stdint.h>
 #endif

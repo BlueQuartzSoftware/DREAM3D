@@ -82,6 +82,7 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 
   private:
     bool* m_GoodVoxels;
+    int32_t* m_PhasesC;
 
 
     DetermineGoodVoxels(const DetermineGoodVoxels&); // Copy Constructor Not Implemented

@@ -48,7 +48,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 /**
- * @class Texture Texture.h AIM/Common/Texture.h
+ * @class Texture Texture.h DREAM3DLib/Common/Texture.h
  * @brief This class holds default data for Orientation Distribution Function
  * calculations that the DREAM3D package will perform.
  * @author Michael A. Jackson for BlueQuartz Software
