@@ -122,7 +122,6 @@ void SGAxisODFWidget::extractStatsData(DataContainer::Pointer m, int index, Stat
 int SGAxisODFWidget::getOrientationData(StatsData::Pointer statsData)
 {
   int retErr = 0;
-  float totalWeight = 0.0;
 
   std::vector<float> e1s;
   std::vector<float> e2s;
@@ -145,7 +144,7 @@ int SGAxisODFWidget::getOrientationData(StatsData::Pointer statsData)
     e3s[i] = e3s[i]*M_PI/180.0;
   }
 
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf);
   if (aodf.size() > 0)
   {
     FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf, DREAM3D::HDF5::AxisOrientation);
@@ -440,9 +439,8 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   int size = 2500;
 
   static const size_t odfsize = 46656;
-  float totalweight = 0;
   odf.resize(odfsize);
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
   err = sg.GenAxisODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)

@@ -38,6 +38,14 @@
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
+const static float m_pi = static_cast<float>(M_PI);
+const static float two_pi = 2.0f * m_pi;
+const static float recip_pi = 1.0f/m_pi;
+const static float pi_over_180 = m_pi/180.0f;
+const static float m_OnePointThree = 1.33333333333f;
+const float threesixty_over_pi = 360.0f/m_pi;
+const float oneeighty_over_pi = 180.0f/m_pi;
+const float sqrt_two = powf(2.0f, 0.5f);
 
 using namespace HexagonalMath::Detail;
 
@@ -50,6 +58,55 @@ HexagonalOps::~HexagonalOps()
 {
 }
 
+float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
+                                      float q1[5], float q2[5],
+                                      float &n1, float &n2, float &n3)
+{
+  float wmin = 9999999.0f; //,na,nb,nc;
+  float w = 0;
+    float n1min = 0.0f;
+    float n2min = 0.0f;
+    float n3min = 0.0f;
+  float qr[5];
+  float qc[5];
+  float temp;
+
+  qr[1] = -q1[1] * q2[4] + q1[4] * q2[1] - q1[2] * q2[3] + q1[3] * q2[2];
+  qr[2] = -q1[2] * q2[4] + q1[4] * q2[2] - q1[3] * q2[1] + q1[1] * q2[3];
+  qr[3] = -q1[3] * q2[4] + q1[4] * q2[3] - q1[1] * q2[2] + q1[2] * q2[1];
+  qr[4] = -q1[4] * q2[4] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
+  for (int i = 0; i < numsym; i++)
+  {
+	//  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
+	  MULT_QUAT(qr, quatsym[i], qc)
+    if (qc[4] < -1) {
+      qc[4] = -1;
+    }
+    else if (qc[4] > 1) {
+      qc[4] = 1;
+    }
+
+	QuattoAxisAngle(qc, w, n1, n2, n3);
+
+	if (w > m_pi) {
+      w = two_pi - w;
+    }
+    if (w < wmin)
+    {
+      wmin = w;
+      n1min = n1;
+      n2min = n2;
+      n3min = n3;
+    }
+  }
+  float denom = sqrt((n1*n1+n2*n2+n3*n3));
+  n1 = n1/denom;
+  n2 = n2/denom;
+  n3 = n3/denom;
+  wmin = oneeighty_over_pi * wmin;
+  return wmin;
+}
+
 float HexagonalOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
 {
   int numsym = 12;
@@ -58,13 +115,56 @@ float HexagonalOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,flo
 }
 
 
-void HexagonalOps::getFZRod(float &r1,float &r2, float &r3)
+void HexagonalOps::getODFFZRod(float &r1,float &r2, float &r3)
 {
   int numsym = 12;
 
-  _calcFZRod(HexRodSym, numsym,r1, r2, r3);
+  _calcRodNearestOrigin(HexRodSym, numsym, r1, r2, r3);
 }
 
+void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
+{
+	float w, n1, n2, n3;
+	float FZn1, FZn2, FZn3;
+	float n1n2mag;
+
+	_calcRodNearestOrigin(HexRodSym, 12, r1, r2, r3);
+	RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+
+	w = w * oneeighty_over_pi;
+	float denom = sqrt((n1*n1+n2*n2+n3*n3));
+	n1 = n1/denom;
+	n2 = n2/denom;
+	n3 = n3/denom;
+	if(n3 < 0) n1 = -n1, n2 = -n2, n3 = -n3;
+	float newangle = 0;
+	float angle = 180.0*atan2(n2, n1) * recip_pi;
+	if(angle < 0) angle = angle + 360;
+	FZn1 = n1;
+	FZn2 = n2;
+	FZn3 = n3;
+	if(angle > 30.0)
+	{
+		n1n2mag = sqrt(n1*n1+n2*n2);
+		if (int(angle/30)%2 == 0)
+		{
+			newangle = angle - (30.0*int(angle/30));
+			newangle = newangle* pi_over_180;
+			FZn1 = n1n2mag*cosf(newangle);
+			FZn2 = n1n2mag*sinf(newangle);
+		}
+		else
+		{
+			newangle = angle - (30.0*int(angle/30));
+			newangle = 30.0 - newangle;
+			newangle = newangle* pi_over_180;
+			FZn1 = n1n2mag*cosf(newangle);
+			FZn2 = n1n2mag*sinf(newangle);
+		}
+	}
+	
+	axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
+}
 void HexagonalOps::getNearestQuat( float *q1, float *q2)
 {
   int numsym = 12;
@@ -76,16 +176,16 @@ void HexagonalOps::getFZQuat(float *qr)
 {
   int numsym = 12;
 
-    _calcFZQuat(HexQuatSym, numsym, qr);
-
+    _calcQuatNearestOrigin(HexQuatSym, numsym, qr);
 }
 
-
-int HexagonalOps::getMisoBin(float n1, float n2, float n3)
+int HexagonalOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
   float step[3];
+
+  RodtoHomochoric(r1, r2, r3);
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
@@ -97,7 +197,7 @@ int HexagonalOps::getMisoBin(float n1, float n2, float n3)
   bins[1] = 36.0f;
   bins[2] = 12.0f;
 
-  return _calcMisoBin(dim, bins, step, n1, n2, n3);
+  return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
 
@@ -106,6 +206,7 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
   float init[3];
   float step[3];
   float phi[3];
+  float r1, r2, r3;
 
   init[0] = HexDim1InitValue;
   init[1] = HexDim2InitValue;
@@ -117,11 +218,14 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
 
-  _calcDetermineEulerAngles(init, step, phi, choose, synea1, synea2, synea3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
+  HomochorictoRod(r1, r2, r3);
+  getODFFZRod(r1, r2, r3);
+  RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
 
-void HexagonalOps::determineHomochoricValues( int choose, float &r1, float &r2, float &r3)
+void HexagonalOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
 {
   float init[3];
   float step[3];
@@ -137,7 +241,9 @@ void HexagonalOps::determineHomochoricValues( int choose, float &r1, float &r2, 
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
 
-  return _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
+  HomochorictoRod(r1, r2, r3);
+  getMDFFZRod(r1, r2, r3);
 }
 
 int HexagonalOps::getOdfBin(float r1, float r2, float r3)
@@ -145,6 +251,8 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
   float dim[3];
   float bins[3];
   float step[3];
+
+  RodtoHomochoric(r1, r2, r3);
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;

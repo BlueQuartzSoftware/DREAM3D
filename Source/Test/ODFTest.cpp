@@ -59,7 +59,6 @@
 
 int main(int argc, char **argv)
 {
-  float totalweight = 0.0;
   std::vector<float> odf;
   std::vector<float> e1s(2);
   std::vector<float> e2s(2);
@@ -73,7 +72,7 @@ int main(int argc, char **argv)
   odf.resize(5832);
 
   // Calculate the ODF Data
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
 
   std::vector<float > x001;

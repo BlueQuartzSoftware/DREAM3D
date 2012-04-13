@@ -71,23 +71,15 @@ class DREAM3DLib_EXPORT OrientationMath
      * @param n3
      */
     virtual float getMisoQuat(float q1[5], float q2[5], float &n1, float &n2, float &n3) = 0;
-
-    virtual void getFZRod(float &r1, float &r2, float &r3) = 0;
-
+    virtual void getODFFZRod(float &r1, float &r2, float &r3) = 0;
+    virtual void getMDFFZRod(float &r1, float &r2, float &r3) = 0;
     virtual void getNearestQuat(float *q1, float *q2) = 0;
-
     virtual void getFZQuat(float *qr) = 0;
-
-    virtual int getMisoBin(float n1, float n2, float n3) = 0;
-
+    virtual int getMisoBin(float r1, float r2, float r3) = 0;
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3) = 0;
-
-    virtual void determineHomochoricValues(int choose, float &r1, float &r2, float &r3) = 0;
-
+    virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3) = 0;
     virtual int getOdfBin(float r1, float r2, float r3) = 0;
-
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys) = 0;
-
 
     static void axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
@@ -102,6 +94,7 @@ class DREAM3DLib_EXPORT OrientationMath
     static void multiplyQuaternions(float inQuat[5], float multQuat[5], float outQuat[5]);
     static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
     static void eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
+    static void RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3);
 
   protected:
     OrientationMath();
@@ -110,13 +103,11 @@ class DREAM3DLib_EXPORT OrientationMath
                   float q1[5], float q2[5],
                   float &n1, float &n2, float &n3);
 
-    void _calcFZRod(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3);
+    void _calcRodNearestOrigin(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3);
     void _calcNearestQuat(const float quatsym[24][5], int numsym, float *q1, float *q2);
-    void _calcFZQuat(const float quatsym[24][5], int numsym, float *qr);
+    void _calcQuatNearestOrigin(const float quatsym[24][5], int numsym, float *qr);
 
-    int _calcMisoBin(float dim[3], float bins[3], float step[3], float n1, float n2, float n3);
-    void _calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
-                                   int choose, float &synea1, float &synea2, float &synea3);
+    int _calcMisoBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
     void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3);
     int _calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
 

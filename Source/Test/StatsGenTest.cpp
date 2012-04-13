@@ -57,9 +57,8 @@ void GenHexMDFPlotData()
   std::vector<float> sigmas;
   std::vector<float> odf;
   static const size_t odfsize = 15552;
-  float totalweight = 0;
   odf.resize(odfsize);
-  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
 
   // These are the output vectors

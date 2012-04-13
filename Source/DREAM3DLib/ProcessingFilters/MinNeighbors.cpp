@@ -220,13 +220,15 @@ void MinNeighbors::assign_badpoints()
     static_cast<DimType>(udims[2]),
   };
 
-  std::vector<int > neighs;
   std::vector<int > remove;
   size_t count = 1;
   int good = 1;
   int neighbor;
   int index = 0;
   float x, y, z;
+  int current = 0;
+  int most = 0;
+  int curgrain = 0;
   DimType column, row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
@@ -240,15 +242,13 @@ void MinNeighbors::assign_badpoints()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
 
+  int iter = 0;
   std::vector<int > n(numgrains + 1);
   while (count != 0)
   {
     count = 0;
     for (int i = 0; i < totalPoints; i++)
     {
-	  std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       int grainname = m_GrainIds[i];
       if (grainname < 0)
       {
@@ -260,7 +260,10 @@ void MinNeighbors::assign_badpoints()
         x = static_cast<float>(i % dims[0]);
         y = static_cast<float>((i / dims[0]) % dims[1]);
         z = static_cast<float>(i / (dims[0] * dims[1]));
-        for (int j = 0; j < 6; j++)
+		current = 0;
+		most = 0;
+		curgrain = -1;
+		for (int j = 0; j < 6; j++)
         {
           good = 1;
           neighpoint = i + neighpoints[j];
@@ -275,30 +278,17 @@ void MinNeighbors::assign_badpoints()
             int grain = m_GrainIds[neighpoint];
 			if (grain >= 0)
             {
-              neighs.push_back(grain);
+	          n[grain]++;
+	          current = n[grain];
+	          if (current > most)
+	          {
+	            most = current;
+	            curgrain = grain;
+	          }
             }
           }
         }
-        int current = 0;
-        int most = 0;
-        int curgrain = 0;
-        int size = int(neighs.size());
-        for (int k = 0; k < size; k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-          if (current > most)
-          {
-            most = current;
-            curgrain = neighbor;
-          }
-        }
-        if (size > 0)
-        {
-          m_Neighbors[i] = curgrain;
-          neighs.clear();
-        }
+        m_Neighbors[i] = curgrain;
       }
     }
     for (int j = 0; j < totalPoints; j++)
@@ -324,6 +314,7 @@ void MinNeighbors::merge_containedgrains()
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   DataContainer* m = getDataContainer();
 
+  int tot = 0;
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t i = 0; i < totalPoints; i++)
   {
@@ -335,6 +326,8 @@ void MinNeighbors::merge_containedgrains()
     {
       m_Active[grainname] = false;
       m_GrainIds[i] = -1;
+	  tot++;
+	  std::stringstream ss;
     }
   }
 }

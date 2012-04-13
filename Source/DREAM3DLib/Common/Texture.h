@@ -38,6 +38,11 @@
 #define TEXTURE_H_
 
 #include <vector>
+#include <string>
+#include <fstream>
+
+#include <boost/shared_array.hpp>
+
 #include "MXA/MXA.h"
 #include "MXA/Common/LogTime.h"
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -48,6 +53,8 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 const static float m_pi = M_PI;
+
+using namespace std;
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -83,7 +90,7 @@ class DREAM3DLib_EXPORT Texture
    */
   template<typename T>
   static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf, float &totalweight)
+      bool normalize, T &odf)
   {
     DREAM3D_RANDOMNG_NEW()
     CubicOps ops;
@@ -93,6 +100,7 @@ class DREAM3DLib_EXPORT Texture
   //  float degtorad = M_PI/180.0;
     float addweight = 0;
     float totaladdweight = 0;
+    float totalweight = float(3*odfsize);
     odf.resize(odfsize);
     int bin, addbin;
     int bin1, bin2, bin3;
@@ -103,8 +111,7 @@ class DREAM3DLib_EXPORT Texture
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
         OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
-        ops.getFZRod(r1, r2, r3);
-		OrientationMath::RodtoHomochoric(r1, r2, r3);
+        ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
       }
@@ -151,16 +158,15 @@ class DREAM3DLib_EXPORT Texture
           }
         }
     }
-	if(totaladdweight > odfsize)
+	if(totaladdweight > totalweight)
 	{
-		float scale = (totaladdweight/odfsize);
+		float scale = (totaladdweight/totalweight);
 	    for (size_t i = 0; i < odfsize; i++)
 	    {
 	      odf[i] = odf[i]/scale;
 	    }
 	}
-    float remainingweight = float(odfsize);
-    float remainingcount = 0;
+    float remainingweight = totalweight;
     for (size_t i = 0; i < odfsize; i++)
     {
       remainingweight = remainingweight-odf[i];
@@ -173,11 +179,10 @@ class DREAM3DLib_EXPORT Texture
       random2 = rg.genrand_res53();
       random3 = rg.genrand_res53();
 	  ea1 = 2.0*m_pi*random1;
-	  ea2 = 2.0*m_pi*random2;
+	  ea2 = acos(2.0*(random2-0.5));
 	  ea3 = 2.0*m_pi*random3;
 	  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      ops.getFZRod(r1, r2, r3);
-	  OrientationMath::RodtoHomochoric(r1, r2, r3);
+      ops.getODFFZRod(r1, r2, r3);
       bin = ops.getOdfBin(r1, r2, r3);
 	  odf[bin]++;
     }
@@ -187,10 +192,9 @@ class DREAM3DLib_EXPORT Texture
       for (size_t i = 0; i < odfsize; i++)
       {
 	    float check = odf[i];
-        odf[i] = odf[i] / float(odfsize);
+        odf[i] = odf[i] / totalweight;
       }
     }
-
   }
 
   /**
@@ -211,7 +215,7 @@ class DREAM3DLib_EXPORT Texture
    */
   template<typename T>
   static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf, float &totalweight)
+      bool normalize, T &odf)
   {
     DREAM3D_RANDOMNG_NEW()
     int *TextureBins;
@@ -220,6 +224,7 @@ class DREAM3DLib_EXPORT Texture
  //   float degtorad = M_PI/180.0;
     float addweight = 0;
     float totaladdweight = 0;
+    float totalweight = 3*odfsize;
     odf.resize(odfsize);
     int bin, addbin;
     int bin1, bin2, bin3;
@@ -231,8 +236,7 @@ class DREAM3DLib_EXPORT Texture
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
 		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
-	    ops.getFZRod( r1, r2, r3);
-		OrientationMath::RodtoHomochoric(r1, r2, r3);
+	    ops.getODFFZRod( r1, r2, r3);
 		bin = ops.getOdfBin(r1, r2, r3);
 		TextureBins[i] = static_cast<int>(bin);
     }
@@ -279,16 +283,15 @@ class DREAM3DLib_EXPORT Texture
         }
       }
     }
-	if(totaladdweight > odfsize)
+	if(totaladdweight > totalweight)
 	{
-		float scale = (totaladdweight/odfsize);
+		float scale = (totaladdweight/totalweight);
 	    for (size_t i = 0; i < odfsize; i++)
 	    {
 	      odf[i] = odf[i]/scale;
 	    }
 	}
-    float remainingweight = float(odfsize);
-    float remainingcount = 0;
+    float remainingweight = totalweight;
     for (size_t i = 0; i < odfsize; i++)
     {
       remainingweight = remainingweight-odf[i];
@@ -301,23 +304,21 @@ class DREAM3DLib_EXPORT Texture
       random2 = rg.genrand_res53();
       random3 = rg.genrand_res53();
 	  ea1 = 2.0*m_pi*random1;
-	  ea2 = 2.0*m_pi*random2;
+	  ea2 = acos(2.0*(random2-0.5));
 	  ea3 = 2.0*m_pi*random3;
 	  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      ops.getFZRod(r1, r2, r3);
-	  OrientationMath::RodtoHomochoric(r1, r2, r3);
+      ops.getODFFZRod(r1, r2, r3);
       bin = ops.getOdfBin(r1, r2, r3);
-	  odf[bin]++;
+ 	  odf[bin]++;
     }
     if (normalize == true)
     {
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / float(odfsize);
+        odf[i] = odf[i] / totalweight;
       }
     }
-
   }
 
   /**
@@ -338,7 +339,7 @@ class DREAM3DLib_EXPORT Texture
    */
   template<typename T>
   static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf, float &totalweight)
+      bool normalize, T &odf)
   {
     DREAM3D_RANDOMNG_NEW()
 	int *TextureBins;
@@ -346,6 +347,7 @@ class DREAM3DLib_EXPORT Texture
     static const size_t odfsize = 46656;
     float addweight = 0;
     float totaladdweight = 0;
+    float totalweight = 3*odfsize;
     odf.resize(odfsize);
     int bin, addbin;
     int bin1, bin2, bin3;
@@ -356,8 +358,7 @@ class DREAM3DLib_EXPORT Texture
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
         OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
-        ops.getFZRod(r1, r2, r3);
-		OrientationMath::RodtoHomochoric(r1, r2, r3);
+        ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
       }
@@ -404,16 +405,15 @@ class DREAM3DLib_EXPORT Texture
         }
       }
     }
-	if(totaladdweight > odfsize)
+	if(totaladdweight > totalweight)
 	{
-		float scale = (totaladdweight/odfsize);
+		float scale = (totaladdweight/totalweight);
 	    for (size_t i = 0; i < odfsize; i++)
 	    {
 	      odf[i] = odf[i]/scale;
 	    }
 	}
-    float remainingweight = float(odfsize);
-    float remainingcount = 0;
+    float remainingweight = totalweight;
     for (size_t i = 0; i < odfsize; i++)
     {
       remainingweight = remainingweight-odf[i];
@@ -426,11 +426,10 @@ class DREAM3DLib_EXPORT Texture
       random2 = rg.genrand_res53();
       random3 = rg.genrand_res53();
 	  ea1 = 2.0*m_pi*random1;
-	  ea2 = 2.0*m_pi*random2;
+	  ea2 = acos(2.0*(random2-0.5));
 	  ea3 = 2.0*m_pi*random3;
 	  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      ops.getFZRod(r1, r2, r3);
-	  OrientationMath::RodtoHomochoric(r1, r2, r3);
+      ops.getODFFZRod(r1, r2, r3);
       bin = ops.getOdfBin(r1, r2, r3);
 	  odf[bin]++;
     }
@@ -439,7 +438,7 @@ class DREAM3DLib_EXPORT Texture
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / float(odfsize);
+        odf[i] = odf[i] / totalweight;
       }
     }
 
@@ -480,8 +479,7 @@ class DREAM3DLib_EXPORT Texture
       for (int i = 0; i < aSize; i++)
       {
         OrientationMath::axisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
-		orientationOps.getFZRod(r1, r2, r3);
-        OrientationMath::RodtoHomochoric(r1, r2, r3);
+		orientationOps.getMDFFZRod(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         mdf[mbin] = -int((weights[i] / float(mdfsize)) * 10000.0);
         remainingcount = remainingcount + mdf[mbin];
@@ -511,8 +509,7 @@ class DREAM3DLib_EXPORT Texture
         O::eulertoQuat(q2, ea21, ea22, ea23);
         w = orientationOps.getMisoQuat( q1, q2, n1, n2, n3);
 		OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-		orientationOps.getFZRod(r1, r2, r3);
-		OrientationMath::RodtoHomochoric(r1, r2, r3);
+		orientationOps.getMDFFZRod(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         if (mdf[mbin] >= 0) mdf[mbin]++;
         if (mdf[mbin] < 0) i = i - 1;
@@ -522,7 +519,6 @@ class DREAM3DLib_EXPORT Texture
         if (mdf[i] < 0) mdf[i] = -mdf[i];
         mdf[i] = mdf[i] / 10000.0;
       }
-
 
   }
 

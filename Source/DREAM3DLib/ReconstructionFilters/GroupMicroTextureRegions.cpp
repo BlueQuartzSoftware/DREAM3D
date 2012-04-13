@@ -187,8 +187,6 @@ void GroupMicroTextureRegions::execute()
     setErrorMessage(ss.str());
     return;
   }
-//  m->clearFieldData();
-//  m->clearEnsembleData();
 
   setErrorCondition(0);
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());

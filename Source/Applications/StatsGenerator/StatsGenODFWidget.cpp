@@ -126,7 +126,6 @@ void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, St
 int StatsGenODFWidget::getOrientationData(StatsData::Pointer statsData)
 {
   int retErr = 0;
-  float totalWeight = 0.0;
 
   std::vector<float> e1s;
   std::vector<float> e2s;
@@ -151,11 +150,11 @@ int StatsGenODFWidget::getOrientationData(StatsData::Pointer statsData)
 
   if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
   {
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   if (odf.size() > 0)
   {
@@ -495,21 +494,21 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
 
   StatsGen sg;
-  int size = 10000;
+  int size = 5000;
 
   if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
-    static const size_t eighteenCubed = 5832;
+    static const size_t odfsize = 5832;
     float totalweight = 0;
-    odf.resize(eighteenCubed);
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+    odf.resize(odfsize);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
     err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal) {
     static const size_t odfsize = 15552;
     float totalweight = 0;
     odf.resize(odfsize);
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
     err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)

@@ -207,13 +207,15 @@ void MinSize::assign_badpoints()
     static_cast<DimType>(udims[2]),
   };
 
-  std::vector<int > neighs;
   std::vector<int > remove;
   size_t count = 1;
   int good = 1;
   int neighbor;
   int index = 0;
   float x, y, z;
+  int current = 0;
+  int most = 0;
+  int curgrain = 0;
   DimType column, row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
@@ -248,6 +250,9 @@ void MinSize::assign_badpoints()
         x = static_cast<float>(i % dims[0]);
         y = static_cast<float>((i / dims[0]) % dims[1]);
         z = static_cast<float>(i / (dims[0] * dims[1]));
+		current = 0;
+		most = 0;
+		curgrain = -1;
         for (int j = 0; j < 6; j++)
         {
           good = 1;
@@ -263,30 +268,17 @@ void MinSize::assign_badpoints()
             int grain = m_GrainIds[neighpoint];
 			if (grain >= 0)
             {
-              neighs.push_back(grain);
+	          n[grain]++;
+	          current = n[grain];
+	          if (current > most)
+	          {
+	            most = current;
+	            curgrain = grain;
+	          }
             }
           }
         }
-        int current = 0;
-        int most = 0;
-        int curgrain = 0;
-        int size = int(neighs.size());
-        for (int k = 0; k < size; k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-          if (current > most)
-          {
-            most = current;
-            curgrain = neighbor;
-          }
-        }
-        if (size > 0)
-        {
-          m_Neighbors[i] = curgrain;
-          neighs.clear();
-        }
+        m_Neighbors[i] = curgrain;
       }
     }
     for (int j = 0; j < totalPoints; j++)
@@ -296,7 +288,7 @@ void MinSize::assign_badpoints()
       if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
-		    m_PhasesC[j] = m_PhasesF[neighbor];
+		m_PhasesC[j] = m_PhasesF[neighbor];
       }
     }
 //    std::stringstream ss;
