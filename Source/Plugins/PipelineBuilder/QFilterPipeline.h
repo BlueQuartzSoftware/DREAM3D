@@ -119,9 +119,9 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * Qt Signals for connections
      */
      signals:
-       void progressMessage(QString message);
-       void warningMessage(QString message);
-       void errorMessage(QString message);
+       void progressMessage(const QString &message);
+       void warningMessage(const QString &message);
+       void errorMessage(const QString &message);
        void updateProgress(int value);
        void finished();
 
