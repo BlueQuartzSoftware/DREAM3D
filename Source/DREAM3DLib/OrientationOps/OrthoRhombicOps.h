@@ -61,21 +61,25 @@ class DREAM3DLib_EXPORT OrthoRhombicOps : public OrientationMath
     virtual ~OrthoRhombicOps();
 
     //FIXME: These need actual values assigned to them.
-    int getODFSize() { return 0; }
-    int getMDFSize() { return 0; }
+    int getODFSize() { return 46656; }
+    int getMDFSize() { return 46656; }
 
     virtual float getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3);
-    virtual void getFZRod(float &r1,float &r2, float &r3);
+    virtual void getODFFZRod(float &r1,float &r2, float &r3);
+    virtual void getMDFFZRod(float &r1,float &r2, float &r3);
     virtual void getNearestQuat( float *q1, float *q2);
     virtual void getFZQuat(float *qr);
-    virtual int getMisoBin(float n1, float n2, float n3);
+    virtual int getMisoBin(float r1, float r2, float r3);
     virtual void determineEulerAngles( int choose, float &synea1, float &synea2, float &synea3);
-	virtual void determineHomochoricValues(int choose, float &r1, float &r2, float &r3);
+	virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
 	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
 
 
   protected:
+    float _calcMisoQuat(const float quatsym[24][5], int numsym,
+                  float q1[5], float q2[5],
+                  float &n1, float &n2, float &n3);
 
   private:
     OrthoRhombicOps(const OrthoRhombicOps&); // Copy Constructor Not Implemented

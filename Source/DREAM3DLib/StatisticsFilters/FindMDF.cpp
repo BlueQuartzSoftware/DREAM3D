@@ -238,7 +238,7 @@ void FindMDF::execute()
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
-			OrientationMath::axisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
+			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			misorientationlists[i][3 * j] = r1;
 			misorientationlists[i][3 * j + 1] = r2;
 			misorientationlists[i][3 * j + 2] = r3;

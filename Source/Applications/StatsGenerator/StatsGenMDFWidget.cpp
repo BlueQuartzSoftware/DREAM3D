@@ -199,8 +199,6 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 // -----------------------------------------------------------------------------
 std::vector<float> StatsGenMDFWidget::generateODFData()
 {
-  float totalWeight = 0.0;
-
   std::vector<float> e1s;
   std::vector<float> e2s;
   std::vector<float> e3s;
@@ -224,11 +222,11 @@ std::vector<float> StatsGenMDFWidget::generateODFData()
 
   if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
   {
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   return odf;
 }

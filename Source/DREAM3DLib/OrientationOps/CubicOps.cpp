@@ -47,8 +47,6 @@
 
   const float acos_neg_one = acosf(-1.0f);
   const float acos_pos_one = acosf(1.0f);
-  const float sin_wmin_neg_1_over_2 = sinf(acos_neg_one/2.0f);
-  const float sin_wmin_pos_1_over_2 = sinf(acos_pos_one/2.0f);
 
   static const float CubicDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
   static const float CubicDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
@@ -275,13 +273,13 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    {
    //  wmin = -1.0;
      wmin = acos_neg_one;
-     sin_wmin_over_2 = sin_wmin_neg_1_over_2;
+     sin_wmin_over_2 = sinf(wmin);
    }
    else if (wmin > 1.0)
    {
   //   wmin = 1.0;
      wmin = acos_pos_one;
-     sin_wmin_over_2 = sin_wmin_pos_1_over_2;
+     sin_wmin_over_2 = sinf(wmin);
    }
    else
    {
@@ -291,21 +289,21 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
 
    if(type == 1)
    {
-	   n3 = qco[1] / sin_wmin_over_2;
+	   n1 = qco[1] / sin_wmin_over_2;
 	   n2 = qco[2] / sin_wmin_over_2;
-	   n1 = qco[3] / sin_wmin_over_2;
+	   n3 = qco[3] / sin_wmin_over_2;
    }
    if(type == 2)
    {
-	   n3 = (fabs(qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n2 = (fabs(qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n1 = (fabs(qco[3] - qco[4]) / (sqrt_two)) / sin_wmin_over_2;
+	   n1 = ((qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n2 = ((qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
+	   n3 = ((qco[3] - qco[4]) / (sqrt_two)) / sin_wmin_over_2;
    }
    if(type == 3)
    {
-	   n3 = (fabs(qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n2 = (fabs(qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n1 = (fabs(-qco[1] + qco[2] + qco[3] + qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n1 = ((qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n2 = ((qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
+	   n3 = ((-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
    }
    float denom = sqrt((n1*n1+n2*n2+n3*n3));
    n1 = n1/denom;
@@ -317,60 +315,70 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
 
 }
 
-void CubicOps::getFZRod(float &r1,float &r2, float &r3)
+void CubicOps::getODFFZRod(float &r1,float &r2, float &r3)
 {
-  float rodsym[24][3];
-  int numsym;
-  numsym = 24;
-  for(int i=0;i<24;i++)
-  {
-    for(int j=0;j<3;j++)
-    {
-      rodsym[i][j] = CubicRodSym[i][j];
-    }
-  }
-  _calcFZRod(rodsym, numsym, r1, r2, r3);
+  int numsym = 24;
+
+  _calcRodNearestOrigin(CubicRodSym, numsym, r1, r2, r3);
+}
+
+void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
+{
+	float w, n1, n2, n3;
+	float FZw, FZn1, FZn2, FZn3;
+
+	OrientationMath::_calcRodNearestOrigin(CubicRodSym, 24, r1, r2, r3);
+	OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+
+	FZw = w * oneeighty_over_pi;
+	n1 = fabs(n1);
+	n2 = fabs(n2);
+	n3 = fabs(n3);
+	if(n1 > n2)
+	{
+		if(n1 > n3)
+		{
+			FZn1 = n1;
+			if (n2 > n3) FZn2 = n2, FZn3 = n3;
+			else FZn2 = n3, FZn3 = n2;
+		}
+		else FZn1 = n3, FZn2 = n1, FZn3 = n2;
+	}
+	else
+	{
+		if(n2 > n3)
+		{
+			FZn1 = n2;
+			if (n1 > n3) FZn2 = n1, FZn3 = n3;
+			else FZn2 = n3, FZn3 = n1;
+		}
+		else FZn1 = n3, FZn2 = n2, FZn3 = n1;
+	}
+	
+	OrientationMath::axisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
 void CubicOps::getNearestQuat( float *q1, float *q2)
 {
-  int numsym = 0;
-  float quatsym[24][5];
-
-    numsym = 24;
-    for (int i = 0; i < 24; i++)
-    {
-      for (int j = 0; j < 5; j++)
-      {
-        quatsym[i][j] = CubicQuatSym[i][j];
-      }
-    }
-
-    _calcNearestQuat(quatsym, numsym, q1, q2);
+  int numsym = 24;
+ 
+  _calcNearestQuat(CubicQuatSym, numsym, q1, q2);
 }
 
 void CubicOps::getFZQuat(float *qr)
 {
-  int numsym = 0;
-  float quatsym[24][5];
+  int numsym = 24;
 
-    numsym = 24;
-    for(int i=0;i<24;i++)
-    {
-    for(int j=0;j<5;j++)
-    {
-      quatsym[i][j] = CubicQuatSym[i][j];
-    }
-    }
-    _calcFZQuat(quatsym, numsym, qr);
-
+    _calcQuatNearestOrigin(CubicQuatSym, numsym, qr);
 }
 
-int CubicOps::getMisoBin(float n1, float n2, float n3)
+int CubicOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
   float step[3];
+
+  RodtoHomochoric(r1, r2, r3);
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
@@ -382,7 +390,7 @@ int CubicOps::getMisoBin(float n1, float n2, float n3)
   bins[1] = 18.0f;
   bins[2] = 18.0f;
 
-  return _calcMisoBin(dim, bins, step, n1, n2, n3);
+  return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
 void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
@@ -390,6 +398,7 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
   float init[3];
   float step[3];
   float phi[3];
+  float r1, r2, r3;
 
   init[0] = CubicDim1InitValue;
   init[1] = CubicDim2InitValue;
@@ -401,10 +410,13 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
   phi[1] = static_cast<float>((choose / 18) % 18);
   phi[2] = static_cast<float>(choose / (18 * 18));
 
-  _calcDetermineEulerAngles(init, step, phi, choose, synea1, synea2, synea3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
+  HomochorictoRod(r1, r2, r3);
+  getODFFZRod(r1, r2, r3);
+  RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
-void CubicOps::determineHomochoricValues(int choose, float &r1, float &r2, float &r3)
+void CubicOps::determineRodriguesVector(int choose, float &r1, float &r2, float &r3)
 {
   float init[3];
   float step[3];
@@ -420,14 +432,17 @@ void CubicOps::determineHomochoricValues(int choose, float &r1, float &r2, float
   phi[1] = static_cast<float>((choose / 18) % 18);
   phi[2] = static_cast<float>(choose / (18 * 18));
 
-  return _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-
+  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
+  HomochorictoRod(r1, r2, r3);
+  getMDFFZRod(r1, r2, r3);
 }
 int CubicOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
   float step[3];
+
+  RodtoHomochoric(r1, r2, r3);
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;

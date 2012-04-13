@@ -144,7 +144,7 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
 }
 
 
-void OrientationMath::_calcFZRod(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3)
+void OrientationMath::_calcRodNearestOrigin(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3)
 {
   float denom, dist;
 //  int index;
@@ -213,7 +213,7 @@ void OrientationMath::_calcNearestQuat(const float quatsym[24][5], int numsym, f
   }
 }
 
-void OrientationMath::_calcFZQuat(const float quatsym[24][5], int numsym, float *qr)
+void OrientationMath::_calcQuatNearestOrigin(const float quatsym[24][5], int numsym, float *qr)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
@@ -255,11 +255,11 @@ void OrientationMath::_calcFZQuat(const float quatsym[24][5], int numsym, float 
 }
 
 
-int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float step[3], float n1, float n2, float n3)
+int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3)
 {
-  size_t miso1bin = size_t((n1+dim[0])/step[0]);
-  size_t miso2bin = size_t((n2+dim[1])/step[1]);
-  size_t miso3bin = size_t((n3+dim[2])/step[2]);
+  size_t miso1bin = size_t((r1+dim[0])/step[0]);
+  size_t miso2bin = size_t((r2+dim[1])/step[1]);
+  size_t miso3bin = size_t((r3+dim[2])/step[2]);
   if(miso1bin >= bins[0]) miso1bin = bins[0]-1;
   if(miso2bin >= bins[1]) miso2bin = bins[1]-1;
   if(miso3bin >= bins[2]) miso3bin = bins[2]-1;
@@ -267,31 +267,6 @@ int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float step[3], fl
   if(miso2bin < 0) miso2bin = 0;
   if(miso3bin < 0) miso3bin = 0;
   return ((bins[0]*bins[1]*miso3bin)+(bins[0]*miso2bin)+miso1bin);
-}
-
-
-
-void OrientationMath::_calcDetermineEulerAngles(float init[3], float step[3], float phi[3],
-                                                int choose, float &synea1, float &synea2, float &synea3)
-{
-  DREAM3D_RANDOMNG_NEW()
-  float random = rg.genrand_res53();
-  float synh1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
-  random = (float)(rg.genrand_res53());
-  float synh2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
-  random = (float)(rg.genrand_res53());
-  float synh3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
-  float hmag = sqrt((synh1 * synh1 + synh2 * synh2 + synh3 * synh3));
-  float angle = powf((8.0f * hmag * hmag * hmag), (1.0f / 3.0f));
-  float synr1 = tanf(angle / 2.0f) * (synh1 / hmag);
-  float synr2 = tanf(angle / 2.0f) * (synh2 / hmag);
-  float synr3 = tanf(angle / 2.0f) * (synh3 / hmag);
-  if (hmag == 0.0f) synr1 = 0.0f, synr2 = 0.0f, synr3 = 0.0f;
-  float sum = atan(synr3);
-  float diff = atan(synr2 / synr1);
-  synea1 = sum + diff;
-  synea2 = 2. * atan(synr1 * cosf(sum) / cosf(diff));
-  synea3 = sum - diff;
 }
 
 void OrientationMath::_calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3)
@@ -309,7 +284,6 @@ void OrientationMath::_calcDetermineHomochoricValues(float init[3], float step[3
 
 int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3)
 {
-  OrientationMath::RodtoHomochoric(r1,r2,r3);
   size_t g1euler1bin;
   size_t g1euler2bin;
   size_t g1euler3bin;
@@ -384,7 +358,7 @@ void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
 
 void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
 {
-  float hmag, w;
+  float hmag, x, w, w_new;
 
   hmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   hmag = sqrt(hmag);
@@ -393,12 +367,17 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   r3 = r3 / hmag;
   if(hmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
   w = powf((8*hmag*hmag*hmag),(1.0/3.0));
+  x = m_OnePointThree*hmag*hmag*hmag;
+  for(size_t i = 1; i < 10; i++)
+  {
+	w_new = w - ((x-w+sin(w))/(-1+cos(w)));
+	w = w_new;
+  }	
   float const1 = tanf(w/2.0f);
   r1 = r1 * const1;
   r2 = r2 * const1;
   r3 = r3 * const1;
 }
-
 
 void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, float &n1, float &n2, float &n3)
 {
@@ -485,9 +464,6 @@ void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
   q[4] = c*c2;
 }
 
-
-
-
 void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
 {
 	float sum, diff, csum, cdiff, sdiff, t2;
@@ -502,14 +478,18 @@ void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, flo
 	r3 = tanf(sum);
 }
 
+void OrientationMath::RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3)
+{
+  float sum = atan(r3);
+  float diff = atan(r2 / r1);
+  ea1 = sum + diff;
+  ea2 = 2. * atan(r1 * cosf(sum) / cosf(diff));
+  ea3 = sum - diff;
+}
+
 void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float* outQuat)
 {
   MULT_QUAT(inQuat, multQuat, outQuat);
-
-//  outQuat[1] = multQuat[4] * inQuat[1] + multQuat[1] * inQuat[4] + multQuat[3] * inQuat[2] - multQuat[2] * inQuat[3];
-//  outQuat[2] = multQuat[4] * inQuat[2] + multQuat[2] * inQuat[4] + multQuat[1] * inQuat[3] - multQuat[3] * inQuat[1];
-//  outQuat[3] = multQuat[4] * inQuat[3] + multQuat[3] * inQuat[4] + multQuat[2] * inQuat[1] - multQuat[1] * inQuat[2];
-//  outQuat[4] = multQuat[4] * inQuat[4] - multQuat[1] * inQuat[1] - multQuat[2] * inQuat[2] - multQuat[3] * inQuat[3];
 }
 
 void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], float &ssap)

@@ -64,15 +64,15 @@ namespace HexagonalMath {
     static const float HexRodSym[12][3] = {{0.0f, 0.0f, 0.0f},
                       {0.0f, 0.0f, 0.57735f},
                       {0.0f, 0.0f, 1.73205f},
-                      {0.0f, 0.0f, 10000000000.0f},
+                      {0.0f, 0.0f, 1000000000000.0f},
                       {0.0f, 0.0f, -1.73205f},
                       {0.0f, 0.0f, -0.57735f},
-                      {0.0f, 10000000000.0f, 10000000000.0f},
-                      {10000000000.0f, 0.0f, 0.0f},
-                      {0.0f, 10000000000.0f, 10000000000.0f},
-                      {0.0f, 10000000000.0f, 10000000000.0f},
-                      {0.0f, 10000000000.0f, 0.0f},
-                      {0.0f, 10000000000.0f, 10000000000.0f}};
+                      {1000000000000.0f, 0.0f, 0.0f},
+                      {8660254000000.0f, 5000000000000.0f, 0.0f},
+                      {5000000000000.0f, 8660254000000.0f, 0.0f},
+                      {0.0f, 1000000000000.0f, 0.0f},
+					  {-5000000000000.0f, 8660254000000.0f, 0.0f},
+                      {-8660254000000.0f, 5000000000000.0f, 0.0f}};
   }
 }
 
@@ -98,16 +98,20 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationMath
     int getMDFSize() { return 15552; }
 
     virtual float getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3);
-    virtual void getFZRod(float &r1,float &r2, float &r3);
+    virtual void getODFFZRod(float &r1,float &r2, float &r3);
+    virtual void getMDFFZRod(float &r1,float &r2, float &r3);
     virtual void getNearestQuat(float *q1, float *q2);
     virtual void getFZQuat(float *qr);
-    virtual int getMisoBin(float n1, float n2, float n3);
+    virtual int getMisoBin(float r1, float r2, float r3);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
-    virtual void determineHomochoricValues(int choose, float &r1, float &r2, float &r3);
+    virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
 	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
 
   protected:
+    float _calcMisoQuat(const float quatsym[24][5], int numsym,
+                  float q1[5], float q2[5],
+                  float &n1, float &n2, float &n3);
 
   private:
     HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented

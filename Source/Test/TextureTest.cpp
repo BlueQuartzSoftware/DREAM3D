@@ -58,11 +58,10 @@ int main(int argc, char **argv)
   std::vector<float> weights;
   std::vector<float> sigmas;
   std::vector<float> odf;
-  float totalweight;
 
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
-  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
+  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
   Texture::calculateMDFData<std::vector<float>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
 

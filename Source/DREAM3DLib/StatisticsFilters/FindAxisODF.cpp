@@ -163,7 +163,7 @@ void FindAxisODF::execute()
     if(m_SurfaceFields[i] == 0)
     {
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getFZRod(r1, r2, r3);
+      m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
 	  axisodf[m_PhasesF[i]]->SetValue(bin, (axisodf[m_PhasesF[i]]->GetValue(bin) + (1.0/totalaxes[m_PhasesF[i]])));
     }

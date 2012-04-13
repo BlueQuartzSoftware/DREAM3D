@@ -175,8 +175,6 @@ void initializeNeighbors(StatsData::Pointer statsData, std::vector<float> binNum
 // -----------------------------------------------------------------------------
 void initializeODF_MDF(StatsData::Pointer statsData)
 {
-  float totalWeight = 0.0;
-
   std::vector<float> e1s;
   std::vector<float> e2s;
   std::vector<float> e3s;
@@ -187,7 +185,7 @@ void initializeODF_MDF(StatsData::Pointer statsData)
   std::vector<float> angles;
   std::vector<float> axes;
 
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalWeight);
+  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
   FloatArrayType::Pointer odfData = FloatArrayType::CreateArray(odf.size(), DREAM3D::HDF5::ODF);
@@ -255,8 +253,6 @@ void initializeODF_MDF(StatsData::Pointer statsData)
 // -----------------------------------------------------------------------------
 void initializeAxisODF(StatsData::Pointer statsData)
 {
-  float totalWeight = 0.0;
-
   std::vector<float> e1s;
   std::vector<float> e2s;
   std::vector<float> e3s;
@@ -264,7 +260,7 @@ void initializeAxisODF(StatsData::Pointer statsData)
   std::vector<float> sigmas;
   std::vector<float> aodf;
 
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf, totalWeight);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf);
 
   // Stupid, but copy the data from the vector to the DataArray<float> instance
   FloatArrayType::Pointer aodfData = FloatArrayType::CreateArray(aodf.size(), DREAM3D::HDF5::AxisOrientation);
