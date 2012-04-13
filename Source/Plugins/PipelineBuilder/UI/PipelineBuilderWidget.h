@@ -100,6 +100,8 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
 
 
     void on_toggleDocs_clicked();
+    void on_showErrors_clicked();
+
 #if 0
     void on_filterUp_clicked();
     void on_filterDown_clicked();

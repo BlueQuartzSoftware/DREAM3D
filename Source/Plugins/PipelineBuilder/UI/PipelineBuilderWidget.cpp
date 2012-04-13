@@ -198,8 +198,14 @@ void PipelineBuilderWidget::setupGui()
   surfaceMesh->setText(0, "Surface Meshing");
 */
 
+  m_PipelineViewWidget->setErrorsTextArea(errorsTextEdit);
+
   toggleDocs->setChecked(true);
   on_toggleDocs_clicked();
+
+  showErrors->setChecked(true);
+  on_showErrors_clicked();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -389,7 +395,6 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
   int deltaX;
   if(m_isClosed)
   {
-
     int start = 0;
     int end = 350;
     helpTextEdit->setMaximumHeight(end);
@@ -409,6 +414,38 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
   }
   animation1->start();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_showErrors_clicked()
+{
+  QPropertyAnimation *animation1 = new QPropertyAnimation(errorsTextEdit, "maximumHeight");
+  m_isClosed = !m_isClosed;
+  int deltaX;
+  if(m_isClosed)
+  {
+    int start = 0;
+    int end = 350;
+    errorsTextEdit->setMaximumHeight(end);
+    deltaX = start;
+
+    animation1->setDuration(250);
+    animation1->setStartValue(start);
+    animation1->setEndValue(end);
+  }
+  else //open
+  {
+    int start = errorsTextEdit->maximumHeight();
+    int end = 0;
+    animation1->setDuration(250);
+    animation1->setStartValue(start);
+    animation1->setEndValue(end);
+  }
+  animation1->start();
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

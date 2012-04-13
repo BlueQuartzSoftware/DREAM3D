@@ -52,7 +52,7 @@
 
 
 #include "PipelineBuilder/FilterWidgets/QFilterWidgetManager.h"
-
+#include "PipelineBuilder/QFilterPipeline.h"
 
 
 // -----------------------------------------------------------------------------
@@ -63,7 +63,8 @@ QFrame(parent),
 m_SelectedFilterWidget(NULL),
 m_FilterWidgetLayout(NULL),
 m_FilterBeingDragged(NULL),
-m_DropIndex(-1)
+m_DropIndex(-1),
+m_ErrorsArea(NULL)
 {
   setupGui();
 }
@@ -116,6 +117,14 @@ void PipelineViewWidget::setupGui()
   m_FilterWidgetLayout->addItem(verticalSpacer);
 
 //  setLayout(m_FilterWidgetLayout);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setErrorsTextArea(QTextEdit* t)
+{
+  this->m_ErrorsArea = t;
 }
 
 // -----------------------------------------------------------------------------
@@ -182,7 +191,50 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
           this, SLOT(setFilterBeingDragged(QFilterWidget*)) );
 
   setSelectedFilterWidget(w);
+
+  QFilterPipeline* m_FilterPipeline = new QFilterPipeline(NULL);
+
+  // Build up the pipeline
+  qint32 count = filterCount();
+  for(qint32 i = 0; i < count; ++i)
+  {
+    QFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      m_FilterPipeline->pushBack(fw->getFilter());
+    }
+  }
+
+  connect(m_FilterPipeline, SIGNAL(errorMessage(const QString &)),
+          this, SLOT(preflightErrorMessage(const QString &)));
+  // clear all the error messages
+  m_PipelineErrorList.clear();
+  m_ErrorsArea->clear();
+
+  m_FilterPipeline->preflightPipeline();
+
+  std::cout << "Errors Running Preflight Pipeline" << std::endl;
+  for(int i = 0; i < m_PipelineErrorList.count(); ++i)
+  {
+    std::cout << m_PipelineErrorList.at(i).toStdString() << std::endl;
+  }
+  std::cout << "---------------------------------" << std::endl;
+  delete m_FilterPipeline;
+
+
   return w;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::preflightErrorMessage(const QString &str)
+{
+  m_PipelineErrorList << str;
+  if (NULL != m_ErrorsArea)
+  {
+    m_ErrorsArea->append(str);
+  }
 }
 
 // -----------------------------------------------------------------------------
