@@ -101,12 +101,12 @@ void updateProgressAndMessage(const std::string &msg, int prog)
 
 std::string getH5EbsdFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "Small_IN100.h5ebsd";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "AdjTi6246MicroTensile.h5ebsd";
   return s;
 }
 
-int getZStartIndex() { return 1; }
-int getZEndIndex() { return 30; }
+int getZStartIndex() { return 50; }
+int getZEndIndex() { return 250; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -122,8 +122,9 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
     filter->setFieldName(Ebsd::Ang::ImageQuality);
-    filter->setFieldValue(120);
+    filter->setFieldValue(450);
     filter->setFieldOperator(">");
+    filter->setFieldPhaseNumber(1);
     filters.push_back(filter);
   }
   {
@@ -131,6 +132,23 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
     filter->setFieldName(Ebsd::Ang::ConfidenceIndex);
     filter->setFieldValue(0.1f);
     filter->setFieldOperator(">");
+    filter->setFieldPhaseNumber(1);
+    filters.push_back(filter);
+  }
+  {
+    QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
+    filter->setFieldName(Ebsd::Ang::ImageQuality);
+    filter->setFieldValue(350);
+    filter->setFieldOperator(">");
+    filter->setFieldPhaseNumber(2);
+    filters.push_back(filter);
+  }
+  {
+    QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
+    filter->setFieldName(Ebsd::Ang::ConfidenceIndex);
+    filter->setFieldValue(0.025f);
+    filter->setFieldOperator(">");
+    filter->setFieldPhaseNumber(2);
     filters.push_back(filter);
   }
 
@@ -204,16 +222,13 @@ void TestFindNeighbors()
   ebsdsegment_grains->setMisorientationTolerance(m_MisorientationTolerance);
   pipeline->pushBack(ebsdsegment_grains);
 
-  DREAM3D_REQUIRE_EQUAL(true, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(LoadSlices::ClassName()));
-  DREAM3D_REQUIRE_EQUAL(true, ebsdsegment_grains->doesPipelineContainFilterBeforeThis(AlignSections::ClassName()));
-
   MinSize::Pointer min_size = MinSize::New();
   min_size->setMinAllowedGrainSize(m_MinAllowedGrainSize);
   pipeline->pushBack(min_size);
 
   MinNeighbors::Pointer min_neighbors = MinNeighbors::New();
   min_neighbors->setMinNumNeighbors(m_MinNumNeighbors);
-  pipeline->pushBack(min_neighbors);
+//  pipeline->pushBack(min_neighbors);
 
 
   bool m_WriteVtkFile(true);
@@ -362,11 +377,11 @@ void OtherTest()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif
   DREAM3D_REGISTER_TEST( TestFindNeighbors() );
-  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
-  DREAM3D_REGISTER_TEST( OtherTest() );
+//  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
+//  DREAM3D_REGISTER_TEST( OtherTest() );
 #if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() );
 #endif

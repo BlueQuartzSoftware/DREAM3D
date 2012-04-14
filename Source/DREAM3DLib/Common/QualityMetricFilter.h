@@ -76,8 +76,10 @@ class DREAM3DLib_EXPORT QualityMetricFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldName)
     DREAM3D_INSTANCE_PROPERTY(float, FieldValue)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldOperator)
+    DREAM3D_INSTANCE_PROPERTY(int, FieldPhaseNumber)
 
     DREAM3D_INSTANCE_PROPERTY(void*, Input)
+    DREAM3D_INSTANCE_PROPERTY(int32_t*, InputPhaseData)
     DREAM3D_INSTANCE_PROPERTY(size_t, NumValues)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::NumType, DataType);
     DREAM3D_INSTANCE_PROPERTY(DataArray<bool>::Pointer, Output)
@@ -95,7 +97,7 @@ class DREAM3DLib_EXPORT QualityMetricFilter
       T* data = static_cast<T*>(m_Input);
       for (size_t i = 0; i < m_NumValues; ++i)
       {
-        bool b = (data[i] < m_FieldValue);
+        bool b = ((data[i] < m_FieldValue || m_InputPhaseData[i] != m_FieldPhaseNumber) && m_InputPhaseData[i] != 0);
         m_Output->SetValue(i, b);
       }
     }
@@ -106,7 +108,7 @@ class DREAM3DLib_EXPORT QualityMetricFilter
       T* data = static_cast<T*>(m_Input);
       for (size_t i = 0; i < m_NumValues; ++i)
       {
-        bool b = (data[i] > m_FieldValue);
+        bool b = ((data[i] > m_FieldValue || m_InputPhaseData[i] != m_FieldPhaseNumber) && m_InputPhaseData[i] != 0);
         m_Output->SetValue(i, b);
       }
     }
@@ -117,7 +119,7 @@ class DREAM3DLib_EXPORT QualityMetricFilter
       T* data = static_cast<T*>(m_Input);
       for (size_t i = 0; i < m_NumValues; ++i)
       {
-        bool b = (data[i] == m_FieldValue);
+        bool b = ((data[i] == m_FieldValue || m_InputPhaseData[i] != m_FieldPhaseNumber) && m_InputPhaseData[i] != 0);
         m_Output->SetValue(i, b);
       }
     }
