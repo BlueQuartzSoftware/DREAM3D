@@ -63,12 +63,14 @@ building the MXADatModel DLL on windows.
   #if defined (DREAM3DLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
       #define  DREAM3DLib_EXPORT __declspec(dllexport)
+      #define EXPIMP_TEMPLATE
     #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
       #define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
     #endif
   #else  /* Importing the DLL into another project */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
       #define  DREAM3DLib_EXPORT __declspec(dllimport)
+      #define EXPIMP_TEMPLATE extern
     #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
       #define DREAM3DLib_EXPORT __attribute__ ((visibility("default")))
     #endif
@@ -78,6 +80,7 @@ building the MXADatModel DLL on windows.
 /* If DREAM3DLib_EXPORT was never defined, define it here */
 #ifndef DREAM3DLib_EXPORT
   #define DREAM3DLib_EXPORT
+  #define EXPIMP_TEMPLATE
 #endif
 
 #if 0

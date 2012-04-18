@@ -48,9 +48,9 @@
   {std::string _s(#Name); addRequired##DType(_s);\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   if (NULL == m_##Name ) {\
-    ss << "Filter " << getNameOfClass() << " requires the data array '" << \
+    ss << "Filter " << getNameOfClass() << " requires " << #DType << " array '" << \
     #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
-    ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
+    /* ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
     setErrorCondition(err);\
   }}
 
@@ -59,9 +59,9 @@
   {std::string _s(#Name); addRequired##DType(_s);\
   m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
   if (NULL == m_##Name##Post ) {\
-    ss << "Filter " << getNameOfClass() << " requires the data array '" << \
+    ss << "Filter " << getNameOfClass() << " requires " << #DType << " array '" << \
     #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
-    ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
+    /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
     setErrorCondition(err);\
   }}
 
@@ -77,7 +77,7 @@
     if (NULL == p.get()) {\
       ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
       #NameSpace << "::" << #DType << "::" <<  #Name << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
-      ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
+      /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;*/ \
       setErrorCondition(-500);\
     } else {\
     p->initializeWithValues(value);\

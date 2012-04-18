@@ -28,19 +28,21 @@ namespace @VERSION_GEN_NAMESPACE@
   }
   */
   
-  class @VERSION_GEN_NAMESPACE@_EXPORT Version
+  class Version
   {
     public:
-      static std::string Complete();
-      static std::string Major   ();
-      static std::string Minor   ();
-      static std::string Patch   ();
-      static std::string Package ();
-      static std::string PackageComplete ();
+      virtual ~Version();
+    
+      static @VERSION_GEN_NAMESPACE@_EXPORT std::string Complete();
+      static @VERSION_GEN_NAMESPACE@_EXPORT std::string Major   ();
+      static @VERSION_GEN_NAMESPACE@_EXPORT std::string Minor   ();
+      static @VERSION_GEN_NAMESPACE@_EXPORT std::string Patch   ();
+      static @VERSION_GEN_NAMESPACE@_EXPORT std::string Package ();
+      static @VERSION_GEN_NAMESPACE@_EXPORT std::string PackageComplete ();
       
     protected:
       Version();
-      virtual ~Version();
+      
   };
 }
 

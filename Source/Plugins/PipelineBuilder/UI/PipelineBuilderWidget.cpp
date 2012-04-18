@@ -69,7 +69,8 @@ PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
 m_WorkerThread(NULL),
-m_isClosed(true),
+m_HelpIsClosed(true),
+m_ErrorsIsClosed(true),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -198,8 +199,14 @@ void PipelineBuilderWidget::setupGui()
   surfaceMesh->setText(0, "Surface Meshing");
 */
 
-  toggleDocs->setChecked(true);
+  m_PipelineViewWidget->setErrorsTextArea(errorsTextEdit);
+
+  toggleDocs->setChecked(false);
   on_toggleDocs_clicked();
+
+  showErrors->setChecked(false);
+  on_showErrors_clicked();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -385,11 +392,10 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
   QPropertyAnimation *animation1 = new QPropertyAnimation(helpTextEdit, "maximumHeight");
-  m_isClosed = !m_isClosed;
+  m_HelpIsClosed = !m_HelpIsClosed;
   int deltaX;
-  if(m_isClosed)
+  if(m_HelpIsClosed)
   {
-
     int start = 0;
     int end = 350;
     helpTextEdit->setMaximumHeight(end);
@@ -409,6 +415,38 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
   }
   animation1->start();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_showErrors_clicked()
+{
+  QPropertyAnimation *animation1 = new QPropertyAnimation(errorsTextEdit, "maximumHeight");
+  m_ErrorsIsClosed = !m_ErrorsIsClosed;
+  int deltaX;
+  if(m_ErrorsIsClosed)
+  {
+    int start = 0;
+    int end = 350;
+    errorsTextEdit->setMaximumHeight(end);
+    deltaX = start;
+
+    animation1->setDuration(250);
+    animation1->setStartValue(start);
+    animation1->setEndValue(end);
+  }
+  else //open
+  {
+    int start = errorsTextEdit->maximumHeight();
+    int end = 0;
+    animation1->setDuration(250);
+    animation1->setStartValue(start);
+    animation1->setEndValue(end);
+  }
+  animation1->start();
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

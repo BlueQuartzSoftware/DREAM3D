@@ -56,12 +56,17 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
   Q_OBJECT;
 
   public:
-    explicit QualityMetricItemDelegate(QStringList possibleFields, QObject *parent = 0) :
+    explicit QualityMetricItemDelegate(QStringList possibleFields, int numPhases, QObject *parent = 0) :
       QStyledItemDelegate(parent),
-      m_FieldList(possibleFields)
+      m_FieldList(possibleFields),
+      m_NumberOfPhases(numPhases)
     {
-     // std::cout << "Here" << std::endl;
     }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void setNumberOfPhases(int n) { m_NumberOfPhases = n; }
 
     // -----------------------------------------------------------------------------
     //
@@ -71,6 +76,9 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
       QStyledItemDelegate::paint(painter, option, index);
     }
 
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
     void setFieldList(QStringList fields) {
       m_FieldList = fields;
     }
@@ -80,32 +88,43 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* alpha;
-      QDoubleValidator* alphaValidator;
-      QComboBox* colorCombo;
+      QLineEdit* fieldValue;
+      QDoubleValidator* fieldValueValidator;
+      QComboBox* operatorCombo;
 
       QStringList operators;
       operators << ">" << "<" << "=";
+
+      QComboBox* phaseCombo;
+      QStringList phases;
+      for(int i = 0; i < m_NumberOfPhases; ++i)
+      {
+        phases << QString::number(i + 1);
+      }
 
       qint32 col = index.column();
       switch(col)
       {
         case QualityMetricTableModel::FieldName:
-          colorCombo = new QComboBox(parent);
-          colorCombo->addItems(m_FieldList);
-          return colorCombo;
+          operatorCombo = new QComboBox(parent);
+          operatorCombo->addItems(m_FieldList);
+          return operatorCombo;
           break;
         case QualityMetricTableModel::FieldValue:
-          alpha = new QLineEdit(parent);
-          alpha->setFrame(false);
-          alphaValidator = new QDoubleValidator(alpha);
-          alphaValidator->setDecimals(6);
-          alpha->setValidator(alphaValidator);
-          return alpha;
+          fieldValue = new QLineEdit(parent);
+          fieldValue->setFrame(false);
+          fieldValueValidator = new QDoubleValidator(fieldValue);
+          fieldValueValidator->setDecimals(6);
+          fieldValue->setValidator(fieldValueValidator);
+          return fieldValue;
         case QualityMetricTableModel::FieldOperator:
-          colorCombo = new QComboBox(parent);
-          colorCombo->addItems(operators);
-          return colorCombo;
+          operatorCombo = new QComboBox(parent);
+          operatorCombo->addItems(operators);
+          return operatorCombo;
+        case QualityMetricTableModel::FieldPhaseValue:
+          phaseCombo = new QComboBox(parent);
+          phaseCombo->addItems(phases);
+          return phaseCombo;
         default:
           break;
       }
@@ -141,6 +160,14 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
         Q_ASSERT(comboBox);
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
+      else if (col == QualityMetricTableModel::FieldPhaseValue)
+      {
+        QString state = index.model()->data(index).toString();
+        QComboBox* comboBox = qobject_cast<QComboBox* > (editor);
+        Q_ASSERT(comboBox);
+        comboBox->setCurrentIndex(comboBox->findText(state));
+      }
+
       else QStyledItemDelegate::setEditorData(editor, index);
     }
 
@@ -172,6 +199,12 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
+      else if (col == QualityMetricTableModel::FieldPhaseValue)
+      {
+        QComboBox *comboBox = qobject_cast<QComboBox* > (editor);
+        Q_ASSERT(comboBox);
+        model->setData(index, comboBox->currentText());
+      }
       else QStyledItemDelegate::setModelData(editor, model, index);
     }
 
@@ -180,6 +213,7 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
     QWidget* m_Widget;
     QAbstractItemModel* m_Model;
     QStringList m_FieldList;
+    int m_NumberOfPhases;
 
 };
 

@@ -77,7 +77,7 @@ namespace HexagonalMath {
 }
 
 /**
- * @class HexagonalOps HexagonalOps.h AIM/Common/OrientationOps/HexagonalOps.h
+ * @class HexagonalOps HexagonalOps.h DREAM3DLib/Common/OrientationOps/HexagonalOps.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab

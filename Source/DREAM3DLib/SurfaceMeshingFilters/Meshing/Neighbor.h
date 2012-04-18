@@ -78,7 +78,7 @@
 
 namespace meshing {
 /**
-* @class Neighbor Neighbor.h AIM/Common/Neighbor.h
+* @class Neighbor Neighbor.h DREAM3DLib/Common/Neighbor.h
 * @brief Support class for the MicroGen3D class
 * @author Michael A. Jackson for BlueQuartz Software
 * @author Dr. Michael Groeber for USAFRL

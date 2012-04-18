@@ -80,7 +80,7 @@
 
 namespace meshing {
 /**
- * @class Patch Patch.h AIM/Common/Patch.h
+ * @class Patch Patch.h DREAM3DLib/Common/Patch.h
  * @brief Support class for the MicroGen3D class
  * @author Michael A. Jackson for BlueQuartz Software,
  * @author Dr. Michael Groeber for USAFRL
