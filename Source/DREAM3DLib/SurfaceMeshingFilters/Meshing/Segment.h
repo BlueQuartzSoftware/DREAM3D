@@ -80,7 +80,7 @@ namespace meshing {
 
 
 /**
-* @class Segment Segment.h AIM/Common/Segment.h
+* @class Segment Segment.h DREAM3DLib/Common/Segment.h
 * @brief Support class for the MicroGen3D class
 * @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
 * @date Nov 4, 2009

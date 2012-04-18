@@ -40,7 +40,7 @@
 #include <QtGui/QFrame>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
-
+#include <QtGui/QTextEdit>
 
 #include "PipelineBuilder/FilterWidgets/QFilterWidget.h"
 
@@ -59,14 +59,17 @@ class PipelineViewWidget : public QFrame
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
     QFilterWidget* addFilter(QString filterName, int index =-1);
-
-//    virtual QLayout* layout () const;
-//    virtual void setLayout(QLayout* l);
+    void setErrorsTextArea(QTextEdit* t);
 
   public slots:
     void removeFilterWidget();
     void setSelectedFilterWidget(QFilterWidget* w);
     void setFilterBeingDragged(QFilterWidget* w);
+    void preflightPipeline();
+
+    // Slots for the pipeline to communicate back to us
+  public slots:
+    void preflightErrorMessage(const QString &str);
 
 
   signals:
@@ -85,6 +88,8 @@ class PipelineViewWidget : public QFrame
     QVBoxLayout*              m_FilterWidgetLayout;
     QFilterWidget*            m_FilterBeingDragged;
     int                       m_DropIndex;
+    QStringList               m_PipelineErrorList;
+    QTextEdit*                m_ErrorsArea;
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented

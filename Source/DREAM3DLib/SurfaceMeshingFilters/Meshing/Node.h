@@ -78,7 +78,7 @@
 
 namespace meshing {
 /**
-* @class Node Node.h AIM/Common/Node.h
+* @class Node Node.h DREAM3DLib/Common/Node.h
 * @brief Class that holds the X,Y,Z Position of a vertex in the Surface Meshing. This
 * class was originally a struct in the original surface meshing code developed at
 * Carnegie-Mellon University by Sukbin Lee.

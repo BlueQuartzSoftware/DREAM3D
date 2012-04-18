@@ -71,10 +71,20 @@ cmpVersionStringsFromGit(GENERATED_HEADER_FILE_PATH ${CMP_HEADER_DIR}/MXAVersion
 
 configure_file(${MXA_SOURCE_DIR}/MXAConfiguration.h.in
                ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE})
-               
+
+cmp_IDE_GENERATED_PROPERTIES("Generated" 
+                             "${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE};${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME};${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME};${CMP_HEADER_DIR}/MXAVersion.h"
+                             "${CMP_HEADER_DIR}/MXAVersion.cpp")
+
+
+            
 set (Project_SRCS 
     ${Project_SRCS} 
-    ${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+    ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE}
+    ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
+    ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
+    ${CMP_HEADER_DIR}/MXAVersion.h
+    ${CMP_HEADER_DIR}/MXAVersion.cpp
 )
 
 

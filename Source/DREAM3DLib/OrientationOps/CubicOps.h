@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 
 /**
- * @class CubicOps CubicOps.h AIM/Common/OrientationOps/CubicOps.h
+ * @class CubicOps CubicOps.h DREAM3DLib/Common/OrientationOps/CubicOps.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab

@@ -51,8 +51,18 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 configure_file(${DREAM3DLib_SOURCE_DIR}/DREAM3DConfiguration.h.in
                ${DREAM3DProj_BINARY_DIR}/DREAM3DLib/${CMP_TOP_HEADER_FILE})
 
+cmp_IDE_GENERATED_PROPERTIES("Generated" 
+                             "${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE};${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME};${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME};${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}"
+                             "${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}")
+                             
+set(Project_SRCS 
+    ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE}
+    ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
+    ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
+    ${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
+    ${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+)
 
-set(Project_SRCS ${DREAM3DLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME})
 Macro(D3DCompileDir DirName)
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
     set (Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})

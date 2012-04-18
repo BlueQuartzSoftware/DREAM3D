@@ -360,7 +360,7 @@ void OtherTest()
   IDataArray::Pointer iPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures);
   DREAM3D_REQUIRE_NE(NULL, iPtr.get());
 
-  
+
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
   writer->setDataContainer(m.get());

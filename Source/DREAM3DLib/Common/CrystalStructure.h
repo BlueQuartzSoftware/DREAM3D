@@ -46,7 +46,7 @@
 
 
 /**
- * @class CrystalStructure CrystalStructure.h AIM/Common/CrystalStructure.h
+ * @class CrystalStructure CrystalStructure.h DREAM3DLib/Common/CrystalStructure.h
  * @brief  This class has some utility methods relating to CrystalStructure and
  * how they are used in the DREAM3D package.
  * @author Michael A. Jackson for BlueQuartz Software
