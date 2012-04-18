@@ -63,15 +63,15 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
 
     virtual AbstractFilter::Pointer getFilter();
 
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-    void setInputFile(QString v)
-    {
-      m_Filter->setInputFile(v.toStdString());
-    }
-    QString getInputFile()
-    {
-      return QString::fromStdString(m_Filter->getInputFile());
-    }
+//    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+//    void setInputFile(QString v)
+//    {
+//      m_Filter->setInputFile(v.toStdString());
+//    }
+//    QString getInputFile()
+//    {
+//      return QString::fromStdString(m_Filter->getInputFile());
+//    }
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
@@ -93,7 +93,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     void on_m_ZResolution_valueChanged(double v);
 
   private:
-    InitializeSyntheticVolume::Pointer m_Filter;
+  //  InitializeSyntheticVolume::Pointer m_Filter;
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
     QString                     m_OpenDialogLastDirectory;

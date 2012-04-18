@@ -117,6 +117,7 @@ void VtkRectilinearGridWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
