@@ -71,9 +71,9 @@ QFilterWidget(parent),
 #endif
 {
   setupUi(this);
-  m_Filter = InitializeSyntheticVolume::New();
+  InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   setupGui();
-  setTitle(QString::fromStdString(m_Filter->getHumanLabel()));
+  setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
 // -----------------------------------------------------------------------------
@@ -90,14 +90,15 @@ QInitializeSyntheticVolumeWidget::~QInitializeSyntheticVolumeWidget()
 AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
 {
   // Update the filter with the latest values from the GUI
+  InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
 
-  m_Filter->setInputFile(m_InputFile->text().toStdString());
-  m_Filter->setXVoxels(m_XPoints->value());
-  m_Filter->setYVoxels(m_YPoints->value());
-  m_Filter->setZVoxels(m_ZPoints->value());
-  m_Filter->setXRes(m_XResolution->value());
-  m_Filter->setYRes(m_YResolution->value());
-  m_Filter->setZRes(m_ZResolution->value());
+  filter->setInputFile(m_InputFile->text().toStdString());
+  filter->setXVoxels(m_XPoints->value());
+  filter->setYVoxels(m_YPoints->value());
+  filter->setZVoxels(m_ZPoints->value());
+  filter->setXRes(m_XResolution->value());
+  filter->setYRes(m_YResolution->value());
+  filter->setZRes(m_ZResolution->value());
 
   int count = m_ShapeTypeCombos.count();
   DataArray<unsigned int>::Pointer shapeTypes =
@@ -110,9 +111,9 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
    unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
    shapeTypes->SetValue(i+1, sType);
   }
-  m_Filter->setShapeTypes(shapeTypes);
+  filter->setShapeTypes(shapeTypes);
 
-  return m_Filter;
+  return filter;
 }
 
 
