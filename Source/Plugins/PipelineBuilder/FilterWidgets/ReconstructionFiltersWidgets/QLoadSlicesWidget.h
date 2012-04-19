@@ -35,6 +35,7 @@
 #include <QtGui/QFileDialog>
 
 #include "FilterWidgets/QFilterWidget.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
 
 #include "FilterWidgets/ui_QLoadSlicesWidget.h"
@@ -52,18 +53,15 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     virtual AbstractFilter::Pointer getFilter();
 
 
-    Q_PROPERTY(QString H5EbsdFile READ getH5EbsdFile WRITE setH5EbsdFile)
-    void setH5EbsdFile(QString v) { m_Filter->setH5EbsdFile(v.toStdString()); }
-    QString  getH5EbsdFile() { return QString::fromStdString(m_Filter->getH5EbsdFile()); }
+//    Q_PROPERTY(QString H5EbsdFile READ getH5EbsdFile WRITE setH5EbsdFile)
+//    void setH5EbsdFile(QString v) { m_H5EbsdFile = v; }
+//    QString  getH5EbsdFile() { return m_H5EbsdFile; }
 
-//    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
-//    FILTER_PROPERTY_WRAPPER(float, MisorientationTolerance, m_Filter) ;
-
-    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
-    FILTER_PROPERTY_WRAPPER(int, ZStartIndex, m_Filter) ;
-
-    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
-    FILTER_PROPERTY_WRAPPER(int, ZEndIndex, m_Filter) ;
+//    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
+//    DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex) ;
+//
+//    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
+//    DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex) ;
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
@@ -85,13 +83,13 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     void phaseTypeEdited(int i);
 
   private:
-    LoadSlices::Pointer m_Filter;
     QualityMetricTableModel*    m_QualityMetricTableModel;
     bool                        m_phaseTypeEdited;
     bool                        rotateslice;
     bool                        reorderarray;
     bool                        aligneulers;
     QString                     m_OpenDialogLastDirectory;
+ //   QString                     m_H5EbsdFile;
 
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
@@ -106,7 +104,7 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
      * @brief
      * @param r
      */
-    void setupQualityMetricFilters();
+    void setupQualityMetricFilters(LoadSlices::Pointer filter);
 
     QLoadSlicesWidget(const QLoadSlicesWidget&); // Copy Constructor Not Implemented
     void operator=(const QLoadSlicesWidget&); // Operator '=' Not Implemented
