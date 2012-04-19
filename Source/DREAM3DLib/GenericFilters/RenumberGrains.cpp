@@ -190,6 +190,8 @@ void RenumberGrains::execute()
   ss.str("");
   ss << getNameOfClass() << " - Complete";
   notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  m_GrainIds = NULL;
+  m_Active = NULL;
 }
 
 
