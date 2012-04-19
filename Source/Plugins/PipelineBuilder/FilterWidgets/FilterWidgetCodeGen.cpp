@@ -126,6 +126,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "#include <QtCore/QSettings>\n\n");
 
   fprintf(f, "#include \"FilterWidgets/QFilterWidget.h\"\n");
+  fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/%s/%s.h\"\n", group.c_str(), filter.c_str());
 
   fprintf(f, "class Q%sWidget : public QFilterWidget \n{\n", filter.c_str());
@@ -149,6 +150,9 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     if (opt->getCastableValueType().empty() == false)
     {
       std::string cType = opt->getCastableValueType();
+      fprintf(f, " private:\n");
+      fprintf(f, "    %s m_%s;\n", cType.c_str(), prop.c_str());
+      fprintf(f, " public:\n");
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
       fprintf(f, " public slots:\n");
       fprintf(f, "    void set%s(%s v);\n", prop.c_str(), cType.c_str());
@@ -158,6 +162,9 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     else if (opt->getValueType().compare("string") == 0)
     {
       std::string cType = "QString";
+      fprintf(f, " private:\n");
+      fprintf(f, "    QString m_%s;\n", prop.c_str());
+      fprintf(f, " public:\n");
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
       fprintf(f, " public slots:\n");
       fprintf(f, "    void set%s(const %s &v);\n", prop.c_str(), cType.c_str());
@@ -167,12 +174,12 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     else
     {
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, "    FILTER_PROPERTY_WRAPPER(%s, %s, m_Filter);\n", typ.c_str(), prop.c_str());
+      fprintf(f, "    DREAM3D_INSTANCE_PROPERTY(%s, %s);\n", typ.c_str(), prop.c_str());
     }
   }
 
   fprintf(f, "  private:\n");
-  fprintf(f, "    %s::Pointer m_Filter;\n\n", filter.c_str());
+ // fprintf(f, "    %s::Pointer m_Filter;\n\n", filter.c_str());
   fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filter.c_str(), filter.c_str());
   fprintf(f, "    void operator=(const Q%sWidget&);\n", filter.c_str());
   fprintf(f, "};\n");
@@ -316,16 +323,36 @@ void createSourceFile( const std::string &group, const std::string &filter)
    fprintf(f, "// -----------------------------------------------------------------------------\n");
    fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):  QFilterWidget(parent)\n", filter.c_str(), filter.c_str());
    fprintf(f, "{\n");
-   fprintf(f, "     m_Filter = %s::New();\n", filter.c_str());
+  // fprintf(f, "     m_Filter = %s::New();\n", filter.c_str());
+   fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
    fprintf(f, "     setupGui();\n");
-   fprintf(f, "     setTitle(QString::fromStdString(m_Filter->getHumanLabel()));\n");
+   fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
    fprintf(f, "}\n\n");
 
    fprintf(f, "// -----------------------------------------------------------------------------\n");
    fprintf(f, "Q%sWidget::~Q%sWidget(){}\n\n", filter.c_str(), filter.c_str());
 
    fprintf(f, "// -----------------------------------------------------------------------------\n");
-   fprintf(f, "AbstractFilter::Pointer Q%sWidget::getFilter() { return m_Filter;}\n\n", filter.c_str());
+   fprintf(f, "AbstractFilter::Pointer Q%sWidget::getFilter() \n{\n", filter.c_str());
+   fprintf(f, "  %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
+   for(size_t i = 0; i < options.size(); ++i)
+   {
+     FilterOption::Pointer opt = options[i];
+     std::string prop = opt->getPropertyName();
+     std::string typ = opt->getValueType();
+     if (opt->getValueType().compare("string") == 0)
+     {
+       fprintf(f, "  filter->set%s( get%s().toStdString() );\n", prop.c_str(), prop.c_str());
+     }
+     else
+     {
+       fprintf(f, "  filter->set%s( get%s() );\n", prop.c_str(), prop.c_str());
+     }
+   }
+   fprintf(f, "  return filter;\n");
+   fprintf(f, "}\n");
+
+
 
   // Loop on all the filter options
    for(size_t i = 0; i < options.size(); ++i)
@@ -339,24 +366,23 @@ void createSourceFile( const std::string &group, const std::string &filter)
        std::string cType = opt->getCastableValueType();
 
        fprintf(f, "// -----------------------------------------------------------------------------\n");
-       fprintf(f, "void Q%sWidget::set%s(%s v) { \n  m_Filter->set%s(static_cast<%s>(v) ); \n}\n",
+       fprintf(f, "void Q%sWidget::set%s(%s v) { \n  m_%s = static_cast<%s>(v); \n}\n",
                              filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str(), typ.c_str());
 
        fprintf(f, "// -----------------------------------------------------------------------------\n");
-       fprintf(f, "%s  Q%sWidget::get%s() { \n  return static_cast<%s>(m_Filter->get%s()); \n}\n",
+       fprintf(f, "%s  Q%sWidget::get%s() { \n  return static_cast<%s>(m_%s); \n}\n",
                              cType.c_str(), filter.c_str(), prop.c_str(), typ.c_str(), prop.c_str());
      }
      else if (opt->getValueType().compare("string") == 0)
      {
        std::string cType = "QString";
-//       fprintf(f, "Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
 
        fprintf(f, "// -----------------------------------------------------------------------------\n");
-       fprintf(f, "void Q%sWidget::set%s(const %s &v) { \n  m_Filter->set%s(v.toStdString() ); \n}\n",
+       fprintf(f, "void Q%sWidget::set%s(const %s &v) { \n  m_%s = v; \n}\n",
                filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str());
 
        fprintf(f, "// -----------------------------------------------------------------------------\n");
-       fprintf(f, "%s  Q%sWidget::get%s() { \n  return QString::fromStdString(m_Filter->get%s()); \n}\n",
+       fprintf(f, "%s  Q%sWidget::get%s() { \n  return m_%s; \n}\n",
                cType.c_str(), filter.c_str(), prop.c_str(), prop.c_str());
      }
      else

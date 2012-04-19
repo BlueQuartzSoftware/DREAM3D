@@ -70,9 +70,9 @@ QLoadSlicesWidget::QLoadSlicesWidget(QWidget* parent) :
 #endif
 {
   setupUi(this);
-  m_Filter = LoadSlices::New();
+  LoadSlices::Pointer filter = LoadSlices::New();
   setupGui();
-  setTitle(QString::fromStdString(m_Filter->getHumanLabel()));
+  setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
 // -----------------------------------------------------------------------------
@@ -109,17 +109,17 @@ AbstractFilter::Pointer QLoadSlicesWidget::getFilter()
     phaseTypes->SetValue(i + 1, enPtValue);
   }
 
-  m_Filter->setPhaseTypes(phaseTypes);
-  setupQualityMetricFilters();
+  LoadSlices::Pointer filter =  LoadSlices::New();
+  filter->setPhaseTypes(phaseTypes);
+  setupQualityMetricFilters(filter);
 
   // Update the Filter with all of these values;
-  m_Filter->setH5EbsdFile(m_H5EbsdFile->text().toStdString());
-  m_Filter->setZStartIndex(m_ZStartIndex->value());
-  m_Filter->setZEndIndex(m_ZEndIndex->value());
+  filter->setH5EbsdFile(m_H5EbsdFile->text().toStdString());
+  filter->setZStartIndex(m_ZStartIndex->value());
+  filter->setZEndIndex(m_ZEndIndex->value());
 
-  m_Filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
-//  m_Filter->setMisorientationTolerance(m_MisorientationTolerance->value());
-  return m_Filter;
+  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -415,7 +415,7 @@ bool QLoadSlicesWidget::checkPhaseTypes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::setupQualityMetricFilters()
+void QLoadSlicesWidget::setupQualityMetricFilters(LoadSlices::Pointer filter)
 {
   int filterCount = m_QualityMetricTableModel->rowCount();
   std::vector<QualityMetricFilter::Pointer> filters;
@@ -427,15 +427,15 @@ void QLoadSlicesWidget::setupQualityMetricFilters()
 
   for(int i = 0; i < filterCount; ++i)
   {
-    QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
-    filter->setFieldName(fieldNames[i].toStdString());
-    filter->setFieldValue(fieldValues[i]);
-    filter->setFieldOperator(fieldOperators[i].toStdString());
-    filter->setFieldPhaseNumber(fieldPhaseValues[i]);
-    filters.push_back(filter);
+    QualityMetricFilter::Pointer qmFilter = QualityMetricFilter::New();
+    qmFilter->setFieldName(fieldNames[i].toStdString());
+    qmFilter->setFieldValue(fieldValues[i]);
+    qmFilter->setFieldOperator(fieldOperators[i].toStdString());
+    qmFilter->setFieldPhaseNumber(fieldPhaseValues[i]);
+    filters.push_back(qmFilter);
   }
 
-  m_Filter->setQualityMetricFilters(filters);
+  filter->setQualityMetricFilters(filters);
 
 }
 

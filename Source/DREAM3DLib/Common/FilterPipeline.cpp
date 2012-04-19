@@ -333,7 +333,7 @@ void FilterPipeline::execute()
   // Inside the function we create a new DataContainer object so we don't mess
   // with any currently set DataContainer
   err = preflightPipeline();
-  if (err < 0)
+  if(err < 0)
   {
     return;
   }
@@ -350,44 +350,42 @@ void FilterPipeline::execute()
   float progress = 0.0f;
   std::stringstream ss;
 
-
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   START_CLOCK()
 
-   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
-   {
-     progress = progress + 1.0f;
-     pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);
-     ss.str("");
-     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-     pipelineProgressMessage(ss.str());
-     (*iter)->setMessagePrefix(ss.str());
-     (*iter)->addObserver(static_cast<Observer*>(this));
-     (*iter)->setDataContainer(m_DataContainer.get());
-     setCurrentFilter(*iter);
-     (*iter)->execute();
-     (*iter)->removeObserver(static_cast<Observer*>(this));
-     (*iter)->setDataContainer(NULL);
-     err = (*iter)->getErrorCondition();
-     if(err < 0)
-     {
-       setErrorCondition(err);
-       pipelineErrorMessage((*iter)->getErrorMessage().c_str());
-       pipelineProgress(100);
-       pipelineFinished();
-       return;
-     }
-     CHECK_FOR_CANCELED(DataContainer, "Pipeline was canceled", write_fielddata)
+  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
+  {
+    progress = progress + 1.0f;
+    pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);
+    ss.str("");
+    ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
+    pipelineProgressMessage(ss.str());
+    (*iter)->setMessagePrefix(ss.str());
+    (*iter)->addObserver(static_cast<Observer*>(this));
+    (*iter)->setDataContainer(m_DataContainer.get());
+    setCurrentFilter(*iter);
+    (*iter)->execute();
+    (*iter)->removeObserver(static_cast<Observer*>(this));
+    (*iter)->setDataContainer(NULL);
+    err = (*iter)->getErrorCondition();
+    if(err < 0)
+    {
+      setErrorCondition(err);
+      pipelineErrorMessage((*iter)->getErrorMessage().c_str());
+      pipelineProgress(100);
+      pipelineFinished();
+      return;
+    }CHECK_FOR_CANCELED(DataContainer, "Pipeline was canceled", write_fielddata)
 
-     if(DREAM3D_BENCHMARKS)
-     {
-       std::cout << (*iter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
-       millis = MXA::getMilliSeconds();
-     }
-   }
-   ss.str("");
-   ss << "Pipeline Complete";
-   pipelineProgressMessage(ss.str());
+    if(DREAM3D_BENCHMARKS)
+    {
+      std::cout << (*iter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+      millis = MXA::getMilliSeconds();
+    }
+  }
+  ss.str("");
+  ss << "Pipeline Complete";
+  pipelineProgressMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
