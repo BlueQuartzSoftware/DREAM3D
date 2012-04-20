@@ -76,7 +76,14 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 
     virtual ~AlignSectionsMutualInformation();
 
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);
@@ -85,12 +92,12 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	  virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	virtual void execute();
+	  virtual void execute();
     virtual void preflight();
 
 	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
