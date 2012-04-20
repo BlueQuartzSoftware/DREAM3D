@@ -68,7 +68,11 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
 AlignSections(),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_PhasesArrayName(DREAM3D::CellData::Phases),
+m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_Quats(NULL),
@@ -128,19 +132,19 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-//  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1);
-  CREATE_NON_PREREQ_DATA_TEST(m, m_GrainIdsArrayName, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+  CREATE_NON_PREREQ_DATA   (m, DREAM3D,             CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+//  CREATE_NON_PREREQ_DATA_TEST(m, m_GrainIdsArrayName, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   if(getErrorCondition() == -301)
   {
-	setErrorCondition(0);
-	FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-	find_cellquats->setObservers(this->getObservers());
-	find_cellquats->setDataContainer(getDataContainer());
-	if(preflight == true) find_cellquats->preflight();
-	if(preflight == false) find_cellquats->execute();
-	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
+    setErrorCondition(0);
+    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
+    find_cellquats->setObservers(this->getObservers());
+    find_cellquats->setDataContainer(getDataContainer());
+    if(preflight == true) find_cellquats->preflight();
+    if(preflight == false) find_cellquats->execute();
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   }
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);

@@ -124,13 +124,13 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   if(getErrorCondition() == -301)
   {
-	setErrorCondition(0);
-	FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-	find_cellquats->setObservers(this->getObservers());
-	find_cellquats->setDataContainer(getDataContainer());
-	if(preflight == true) find_cellquats->preflight();
-	if(preflight == false) find_cellquats->execute();
-	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
+    setErrorCondition(0);
+    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
+    find_cellquats->setObservers(this->getObservers());
+    find_cellquats->setDataContainer(getDataContainer());
+    if(preflight == true) find_cellquats->preflight();
+    if(preflight == false) find_cellquats->execute();
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   }
   GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
@@ -295,7 +295,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                 }
                 else
                 {
- 
+
                 }
               }
             }

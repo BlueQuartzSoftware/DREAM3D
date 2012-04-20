@@ -45,11 +45,13 @@
 
 
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
-  {std::string _s(#Name); addRequired##DType(_s);\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(100#err);\
+  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
+  std::string _s(#Name); addRequired##DType(_s);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
   if (NULL == m_##Name ) {\
     ss << "Filter " << getNameOfClass() << " requires " << #DType << " array '" << \
-    #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
+    m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
     /* ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
     setErrorCondition(err);\
   }}
@@ -57,79 +59,59 @@
 
 #define GET_PREREQ_DATA_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size, NumComp)\
   {std::string _s(#Name); addRequired##DType(_s);\
-  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
   if (NULL == m_##Name##Post ) {\
     ss << "Filter " << getNameOfClass() << " requires " << #DType << " array '" << \
-    #NameSpace << "::" << #DType << "::" <<  #Name << "' to already be created prior to execution." << std::endl;\
+    m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
     /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
     setErrorCondition(err);\
   }}
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, value, size, NumComp)\
-  {\
+  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10000);\
+  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
   std::string _s(#Name); addCreated##DType(_s);\
   int preFlightError = getErrorCondition();\
   std::string errorMsg = getErrorMessage();\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
   if (NULL ==  m_##Name ) {\
     setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), NameSpace::DType::Name);\
+    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
     if (NULL == p.get()) {\
       ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
-      #NameSpace << "::" << #DType << "::" <<  #Name << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
-      /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;*/ \
+      m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
+    /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
       setErrorCondition(-500);\
     } else {\
     p->initializeWithValues(value);\
     p->SetNumberOfComponents(NumComp);\
-    p->SetName(NameSpace::DType::Name);\
-    dc->add##DType(NameSpace::DType::Name, p);\
+    p->SetName(m_##Name##ArrayName);\
+    dc->add##DType(m_##Name##ArrayName, p);\
     m_##Name = p->GetPointer(0);\
   }\
   } }
 
-#define CREATE_NON_PREREQ_DATA_TEST(dc, UserName, DType, Name, ss, ptrType, ArrayType, value, size, NumComp)\
-  {\
-  std::string _s(#Name); addCreated##DType(_s);\
-  int preFlightError = getErrorCondition();\
-  std::string errorMsg = getErrorMessage();\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(UserName, size*NumComp, this);\
-  if (NULL ==  m_##Name ) {\
-    setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), UserName);\
-    if (NULL == p.get()) {\
-      ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
-      UserName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
-      ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
-      setErrorCondition(-500);\
-    } else {\
-    p->initializeWithValues(value);\
-    p->SetNumberOfComponents(NumComp);\
-    p->SetName(UserName);\
-    dc->add##DType(UserName, p);\
-    m_##Name = p->GetPointer(0);\
-  }\
-  } }
 
 #define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, value, size, NumComp)\
-  {\
+  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10001);\
+  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
   std::string _s(#Name); addCreated##DType(_s);\
   int preFlightError = getErrorCondition();\
   std::string errorMsg = getErrorMessage();\
-  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(NameSpace::DType::Name, size*NumComp, this);\
+  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
   if (NULL ==  m_##Name##Post ) {\
     setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), NameSpace::DType::Name);\
+    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
     if (NULL == p.get()) {\
       ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
-      #NameSpace << "::" << #DType << "::" <<  #Name << "' with size of " << (size*NumComp) << " but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
+      m_##Name##ArrayName << "' with size of " << (size*NumComp) << " but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
       ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
       setErrorCondition(-500);\
     } else {\
       p->initializeWithValues(value);\
       p->SetNumberOfComponents(NumComp);\
-      p->SetName(NameSpace::DType::Name);\
-      dc->add##DType(NameSpace::DType::Name, p);\
+      p->SetName(m_##Name##ArrayName);\
+      dc->add##DType(m_##Name##ArrayName, p);\
       m_##Name##Post = p->GetPointer(0);\
     }\
   } }

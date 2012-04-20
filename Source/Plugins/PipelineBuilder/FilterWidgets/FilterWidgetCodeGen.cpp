@@ -231,42 +231,174 @@ template<typename T>
 void createOptionsWriterCode( const std::string &group, const std::string &filter)
 {
   typename T::Pointer t = T::New();
-  std::vector<FilterOption::Pointer> options = t->getFilterOptions();
 
 
   std::stringstream ss;
   ss << FILTER_WIDGETS_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
   std::string completePath = MXADir::toNativeSeparators(ss.str());
-  if (MXADir::exists(completePath) == true)
-  {
-   std::cout << filter << ": FilterOptions file already exists in source directory. NOT generating FilterOptionsWriter." << std::endl;
-   return;
-  }
+//  if (MXADir::exists(completePath) == true)
+//  {
+//   std::cout << filter << ": FilterOptions file already exists in source directory. NOT generating FilterOptionsWriter." << std::endl;
+//   return;
+//  }
   std::string origHeaderFile = completePath;
   ss.str("");
-  ss << OUTPUT_DIR() << "/FilterWriters/" << group << "/";
+  ss << OUTPUT_DIR() << "/NameMapping/" << group << "/";
 
   MXADir::mkdir(ss.str(), true);
 
-  ss << filter << "OptionsWriter.cpp";
+  ss << filter << "_NameMapping.h";
 
   completePath = MXADir::toNativeSeparators(ss.str());
 
   FILE* f = fopen(completePath.c_str(), "wb");
-
-
-  fprintf(f, "// -----------------------------------------------------------------------------\n");
-  fprintf(f, "void %s::writeFilterOptions(AbstractFilterOptionsWriter* writer)\n{\n", filter.c_str());
-  for(size_t i = 0; i < options.size(); ++i)
+  if (NULL == f)
   {
-    FilterOption::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
-
-    fprintf(f, "  writer->writeValue(\"%s\", get%s() );\n", prop.c_str(), prop.c_str());
+    return;
   }
-  fprintf(f, "}\n");
 
+
+  DataContainer::Pointer m = DataContainer::New();
+  t->setDataContainer(m.get());
+  t->preflight();
+
+  {
+    std::set<std::string> list = t->getRequiredCellData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "//------ Required Cell Data\n");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedCellData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "//------ Created Cell Data\n");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getRequiredFieldData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "//------ Required Field Data\n");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedFieldData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "//------ Created Field Data\n");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+      }
+    }
+  }
+
+  {
+    std::set<std::string> list = t->getRequiredEnsembleData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "//------ Required Ensemble Data\n");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedEnsembleData();
+    if(list.size() > 0)
+    {
+      fprintf(f, "//------ Created Ensemble Data\n");
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+      }
+    }
+  }
+
+  // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+  // BUild up the initializer List
+  fprintf(f, "\n\n// These go in the constructors initializer list\n" );
+  fprintf(f, "// They should be placed just under the call to the superclass\n" );
+  fprintf(f, "// which in most cases is 'AbstractFilter()'\n");
+
+  {
+    std::set<std::string> list = t->getRequiredCellData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "m_%sArrayName(DREAM3D::CellData::%s),\n", (*iter).c_str(), (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedCellData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "m_%sArrayName(DREAM3D::CellData::%s),\n", (*iter).c_str(), (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getRequiredFieldData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "m_%sArrayName(DREAM3D::FieldData::%s),\n", (*iter).c_str(), (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedFieldData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "m_%sArrayName(DREAM3D::FieldData::%s),\n", (*iter).c_str(), (*iter).c_str() );
+      }
+    }
+  }
+
+  {
+    std::set<std::string> list = t->getRequiredEnsembleData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "m_%sArrayName(DREAM3D::EnsembleData::%s),\n", (*iter).c_str(), (*iter).c_str() );
+      }
+    }
+  }
+  {
+    std::set<std::string> list = t->getCreatedEnsembleData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "m_%sArrayName(DREAM3D::EnsembleData::%s),\n", (*iter).c_str(), (*iter).c_str() );
+      }
+    }
+  }
 
   fclose(f);
 }
@@ -277,7 +409,7 @@ void createOptionsWriterCode( const std::string &group, const std::string &filte
 template<typename T>
 void createSourceFile( const std::string &group, const std::string &filter)
 {
-//  createOptionsWriterCode<T>(group, filter);
+  createOptionsWriterCode<T>(group, filter);
   typename T::Pointer t = T::New();
   std::vector<FilterOption::Pointer> options = t->getFilterOptions();
 
