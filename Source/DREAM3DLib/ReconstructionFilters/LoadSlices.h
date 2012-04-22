@@ -70,6 +70,12 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
     virtual ~LoadSlices();
 
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	//------ Created Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
@@ -94,7 +100,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     LoadSlices();
 
   private:
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
     bool* m_GoodVoxels;
     float* m_EulerAnglesC;
 

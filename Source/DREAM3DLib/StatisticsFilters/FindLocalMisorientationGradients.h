@@ -67,6 +67,19 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
 
     virtual ~FindLocalMisorientationGradients();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainMisorientationsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationGradientsArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Local Misorientation Gradients"; }
 
@@ -93,7 +106,7 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
     float* m_GrainMisorientations;
     float* m_MisorientationGradients;
     float* m_KernelAverageMisorientations;

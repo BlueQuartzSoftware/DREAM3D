@@ -58,9 +58,25 @@
 // -----------------------------------------------------------------------------
 InsertPrecipitatePhases::InsertPrecipitatePhases() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
+m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
+m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
+m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
+m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
+m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_PeriodicBoundaries(false),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
+m_CellPhases(NULL),
 m_SurfaceVoxels(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
@@ -69,7 +85,7 @@ m_Volumes(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_Active(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_NumCells(NULL),
 m_PhaseTypes(NULL),
 m_ShapeTypes(NULL),
@@ -149,10 +165,10 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
 	if(preflight == false) find_surfacecells->execute();
     GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1);
   }
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
@@ -227,7 +243,7 @@ void InsertPrecipitatePhases::execute()
   size_t numfields = m->getNumFieldTuples();
   for(size_t i = firstPrecipitateField; i < numfields; i++)
   {
-	m_NumFields[m_PhasesF[i]]++;
+	m_NumFields[m_FieldPhases[i]]++;
   }
 
   // If there is an error set this to something negative and also set a message
@@ -276,7 +292,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 //  currentcoatingvoxellist.resize(0);
 
 
-  unsigned int shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
+  unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[gnum]];
   // init any values for each of the Shape Ops
   for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
@@ -509,7 +525,7 @@ void  InsertPrecipitatePhases::fillin_precipitates()
       if(grainname <= 0 && neighbor > 0 && (neighbor >= firstPrecipitateField || flag == true))
       {
         m_GrainIds[j] = neighbor;
-        m_PhasesC[j] = m_PhasesF[neighbor];
+        m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
   }
@@ -657,14 +673,14 @@ void  InsertPrecipitatePhases::place_precipitates()
 	      for (size_t jj = 0; jj < currentprecipvoxellist.size(); jj++)
 	      {
 	        m_GrainIds[currentprecipvoxellist[jj]] = currentnumgrains;
-	        m_PhasesC[currentprecipvoxellist[jj]] = m_PhasesF[currentnumgrains];
+	        m_CellPhases[currentprecipvoxellist[jj]] = m_FieldPhases[currentnumgrains];
 	        precipvoxelcounter++;
 	      }
 //	      for (size_t j = 0; j < currentcoatingvoxellist.size(); j++)
 //	      {
 //	        if(m_GrainIds[currentcoatingvoxellist[j]] < numprimarygrains)
 //	        {
-//	          m_PhasesC[currentcoatingvoxellist[j]] = 3;
+//	          m_CellPhases[currentcoatingvoxellist[j]] = 3;
 //	        }
 //	      }
 	      curphasevol[j] = curphasevol[j] + (precipvoxelcounter * m->getXRes() * m->getYRes() * m->getZRes());
@@ -685,7 +701,7 @@ void InsertPrecipitatePhases::transfer_attributes(int gnum, Field* field)
   m_AxisEulerAngles[3*gnum+1] = field->m_AxisEulerAngles[1];
   m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
   m_Omega3s[gnum] = field->m_Omega3s;
-  m_PhasesF[gnum] = field->m_PhasesF;
+  m_FieldPhases[gnum] = field->m_FieldPhases;
   m_Neighborhoods[gnum] = field->m_Neighborhoods;
 }
 

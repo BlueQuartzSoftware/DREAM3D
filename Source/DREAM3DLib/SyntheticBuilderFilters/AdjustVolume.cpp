@@ -53,6 +53,8 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 AdjustVolume::AdjustVolume() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_MaxIterations(1),
 m_GrainIds(NULL),
 m_EquivalentDiameters(NULL)

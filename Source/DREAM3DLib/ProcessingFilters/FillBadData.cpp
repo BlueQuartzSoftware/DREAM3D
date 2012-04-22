@@ -54,12 +54,15 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FillBadData::FillBadData() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_MinAllowedDefectSize(1),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_PhasesF(NULL)
+m_CellPhases(NULL),
+m_FieldPhases(NULL)
 {
   setupFilterOptions();
 }
@@ -104,9 +107,9 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -115,7 +118,7 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
 
   setErrorMessage(ss.str());
@@ -237,16 +240,16 @@ void FillBadData::execute()
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = 0;
-					m_PhasesC[currentvlist[k]] = 0;
+					m_CellPhases[currentvlist[k]] = 0;
 				}
-				m_PhasesF[0] = 0;
+				m_FieldPhases[0] = 0;
 			}
 			if((int)currentvlist.size() < m_MinAllowedDefectSize)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = -1;
-					m_PhasesC[currentvlist[k]] = 0;
+					m_CellPhases[currentvlist[k]] = 0;
 				}
 			}
 			currentvlist.clear();
@@ -321,7 +324,7 @@ void FillBadData::execute()
       if (grainname < 0 && neighbor > 0)
       {
         m_GrainIds[j] = neighbor;
-		    m_PhasesC[j] = m_PhasesF[neighbor];
+		    m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;

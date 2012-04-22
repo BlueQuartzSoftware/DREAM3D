@@ -47,7 +47,8 @@
 //
 // -----------------------------------------------------------------------------
 PhReader::PhReader() :
-FileReader()
+FileReader(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds)
 {
   setupFilterOptions();
 }

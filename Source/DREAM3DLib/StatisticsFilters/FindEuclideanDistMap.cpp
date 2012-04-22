@@ -189,6 +189,9 @@ class FindEuclideanMap : public AbstractFilter
 // -----------------------------------------------------------------------------
 FindEuclideanDistMap::FindEuclideanDistMap() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_NearestNeighborDistancesArrayName(DREAM3D::CellData::NearestNeighborDistances),
+m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
 m_GrainIds(NULL),
 m_NearestNeighbors(NULL),
 m_NearestNeighborDistances(NULL)

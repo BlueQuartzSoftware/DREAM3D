@@ -73,6 +73,22 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     virtual ~MatchCrystallography();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
+
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
@@ -116,7 +132,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     // Field Data
     bool* m_SurfaceFields;
-    int32_t* m_PhasesF;
+    int32_t* m_FieldPhases;
     float* m_Volumes;
     float* m_EulerAnglesF;
     float* m_AvgQuats;

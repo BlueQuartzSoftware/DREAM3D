@@ -65,6 +65,11 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     virtual ~AdjustVolume();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }

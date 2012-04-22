@@ -47,8 +47,11 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
 AbstractFilter(),
+m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_SurfaceFields(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_AxisEulerAngles(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -82,7 +85,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -152,7 +155,7 @@ void FindAxisODF::execute()
   {
     if (m_SurfaceFields[i] == false)
     {
-      totalaxes[m_PhasesF[i]]++;
+      totalaxes[m_FieldPhases[i]]++;
 	}
   }
   for (size_t i = 1; i < numgrains; i++)
@@ -165,7 +168,7 @@ void FindAxisODF::execute()
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
-	  axisodf[m_PhasesF[i]]->SetValue(bin, (axisodf[m_PhasesF[i]]->GetValue(bin) + (1.0/totalaxes[m_PhasesF[i]])));
+	  axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + (1.0/totalaxes[m_FieldPhases[i]])));
     }
   }
  // int err;

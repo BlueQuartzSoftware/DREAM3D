@@ -55,20 +55,30 @@
 // -----------------------------------------------------------------------------
 
 MatchCrystallography::MatchCrystallography() :
-    AbstractFilter(),
-    m_MaxIterations(1),
-    m_GrainIds(NULL),
-    m_EulerAnglesC(NULL),
-    m_SurfaceFields(NULL),
-    m_PhasesF(NULL),
-    m_Volumes(NULL),
-    m_EulerAnglesF(NULL),
-    m_AvgQuats(NULL),
-    m_NeighborList(NULL),
-    m_SharedSurfaceAreaList(NULL),
-    m_TotalSurfaceAreas(NULL),
-    m_CrystalStructures(NULL),
-	m_NumFields(NULL)
+AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_EulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+m_EulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
+m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
+m_MaxIterations(1),
+m_GrainIds(NULL),
+m_EulerAnglesC(NULL),
+m_SurfaceFields(NULL),
+m_FieldPhases(NULL),
+m_Volumes(NULL),
+m_EulerAnglesF(NULL),
+m_AvgQuats(NULL),
+m_NeighborList(NULL),
+m_SharedSurfaceAreaList(NULL),
+m_TotalSurfaceAreas(NULL),
+m_CrystalStructures(NULL),
+m_NumFields(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -114,7 +124,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 	if(preflight == false) find_surfacefields->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
   }
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
 	setErrorCondition(0);
@@ -123,7 +133,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   }  
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, 0, fields, 3);
@@ -301,7 +311,7 @@ void MatchCrystallography::assign_eulers()
     random = rg.genrand_res53();
     choose = 0;
     totaldensity = 0;
-    phase = m_PhasesF[i];
+    phase = m_FieldPhases[i];
     if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic) numbins = 5832;
     if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal) numbins = 15552;
     for (int j = 0; j < numbins; j++)
@@ -443,7 +453,7 @@ void MatchCrystallography::matchCrystallography()
       {
         counter = 0;
         selectedgrain1 = int(rg.genrand_res53() * numfields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < numfields)
+        while ((m_SurfaceFields[selectedgrain1] == true || m_FieldPhases[selectedgrain1] != iter) && counter < numfields)
         {
           if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
@@ -459,7 +469,7 @@ void MatchCrystallography::matchCrystallography()
 			ea2 = m_EulerAnglesF[3 * selectedgrain1 + 1];
 			ea3 = m_EulerAnglesF[3 * selectedgrain1 + 2];
 			OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-			int phase = m_PhasesF[selectedgrain1];
+			int phase = m_FieldPhases[selectedgrain1];
 			g1odfbin = m_OrientationOps[m_CrystalStructures[phase]]->getOdfBin(r1, r2, r3);
 			random = rg.genrand_res53();
 			int choose = 0;
@@ -528,7 +538,7 @@ void MatchCrystallography::matchCrystallography()
       {
         counter = 0;
         selectedgrain1 = int(rg.genrand_res53() * numfields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_PhasesF[selectedgrain1] != iter) && counter < numfields)
+        while ((m_SurfaceFields[selectedgrain1] == true || m_FieldPhases[selectedgrain1] != iter) && counter < numfields)
         {
           if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
@@ -542,7 +552,7 @@ void MatchCrystallography::matchCrystallography()
 		{
 			counter = 0;
 			selectedgrain2 = int(rg.genrand_res53() * numfields);
-			while ((m_SurfaceFields[selectedgrain2] == true || m_PhasesF[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < numfields)
+			while ((m_SurfaceFields[selectedgrain2] == true || m_FieldPhases[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < numfields)
 			{
 			  if(selectedgrain2 >= numfields) selectedgrain2 = selectedgrain2 - numfields;
 			  selectedgrain2++;
@@ -564,7 +574,7 @@ void MatchCrystallography::matchCrystallography()
 				q1[2] = m_AvgQuats[5 * selectedgrain1 + 2];
 				q1[3] = m_AvgQuats[5 * selectedgrain1 + 3];
 				q1[4] = m_AvgQuats[5 * selectedgrain1 + 4];
-				int phase = m_PhasesF[selectedgrain1];
+				int phase = m_FieldPhases[selectedgrain1];
 				OrientationMath::eulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
 				g1odfbin = m_OrientationOps[m_CrystalStructures[phase]]->getOdfBin(r1, r2, r3);
 				q1[1] = m_AvgQuats[5 * selectedgrain2 + 1];
@@ -744,7 +754,7 @@ void MatchCrystallography::measure_misorientations()
     q1[2] = m_AvgQuats[5 * i + 2];
     q1[3] = m_AvgQuats[5 * i + 3];
     q1[4] = m_AvgQuats[5 * i + 4];
-    phase1 = m_CrystalStructures[m_PhasesF[i]];
+    phase1 = m_CrystalStructures[m_FieldPhases[i]];
     size_t size = 0;
     if(neighborlist[i].size() != 0 && neighborsurfacearealist[i].size() != 0 && neighborsurfacearealist[i].size() == neighborlist[i].size())
     {
@@ -760,7 +770,7 @@ void MatchCrystallography::measure_misorientations()
       q2[2] = m_AvgQuats[5 * nname + 2];
       q2[3] = m_AvgQuats[5 * nname + 3];
       q2[4] = m_AvgQuats[5 * nname + 4];
-      phase2 = m_CrystalStructures[m_PhasesF[nname]];
+      phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
       OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
       if(phase1 == phase2)
@@ -782,7 +792,7 @@ void MatchCrystallography::measure_misorientations()
 
       if(m_SurfaceFields[i] == false && (nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
       {
-		  simmdf[m_PhasesF[i]]->SetValue(mbin, (simmdf[m_PhasesF[i]]->GetValue(mbin)+(neighsurfarea/m_TotalSurfaceAreas[m_PhasesF[i]])));
+		  simmdf[m_FieldPhases[i]]->SetValue(mbin, (simmdf[m_FieldPhases[i]]->GetValue(mbin)+(neighsurfarea/m_TotalSurfaceAreas[m_FieldPhases[i]])));
       }
     }
   }

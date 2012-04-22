@@ -66,16 +66,30 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 PackPrimaryPhases::PackPrimaryPhases() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
+m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
+m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
+m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
+m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_ErrorOutputFile(""),
 m_VtkOutputFile(""),
 m_PeriodicBoundaries(false),
 m_WriteIntendedAttributes(false),
 m_NeighborhoodErrorWeight(1.0f),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
+m_CellPhases(NULL),
 m_SurfaceVoxels(NULL),
 m_Active(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_Neighborhoods(NULL),
 m_Centroids(NULL),
 m_Volumes(NULL),
@@ -168,11 +182,11 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
   //Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
@@ -614,7 +628,7 @@ void PackPrimaryPhases::execute()
   int numfields = m->getNumFieldTuples();
   for(size_t i = firstPrimaryField; i < numfields; i++)
   {
-	m_NumFields[m_PhasesF[i]]++;
+	m_NumFields[m_FieldPhases[i]]++;
   }
 
   notify("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
@@ -772,7 +786,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, StatsD
   field->m_AxisEulerAngles[1] = PHI;
   field->m_AxisEulerAngles[2] = phi2;
   field->m_Omega3s = omega3f;
-  field->m_PhasesF = phase;
+  field->m_FieldPhases = phase;
   field->m_Neighborhoods = 0;
 }
 
@@ -787,7 +801,7 @@ void PackPrimaryPhases::transfer_attributes(int gnum, Field* field)
   m_AxisEulerAngles[3*gnum+1] = field->m_AxisEulerAngles[1];
   m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
   m_Omega3s[gnum] = field->m_Omega3s;
-  m_PhasesF[gnum] = field->m_PhasesF;
+  m_FieldPhases[gnum] = field->m_FieldPhases;
   m_Neighborhoods[gnum] = field->m_Neighborhoods;
 }
 
@@ -886,11 +900,11 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 	      simneighbordist[iter][i][j] = 0;
 	  }
     }
-    if(gadd > 0 && m_PhasesF[gadd] == phase)
+    if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
       determine_neighbors(gadd, 1);
     }
-    if(gremove > 0 && m_PhasesF[gremove] == phase)
+    if(gremove > 0 && m_FieldPhases[gremove] == phase)
     {
       determine_neighbors(gremove, -1);
     }
@@ -898,7 +912,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     {
       nnum = 0;
       index = i;
-      if(index != gremove && m_PhasesF[index] == phase)
+      if(index != gremove && m_FieldPhases[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
         if(dia > statsDataArray[phase]->getMaxGrainDiameter()) dia = statsDataArray[phase]->getMaxGrainDiameter();
@@ -911,7 +925,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         count[dia]++;
       }
     }
-    if(gadd > 0 && m_PhasesF[gadd] == phase)
+    if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
       dia = m_EquivalentDiameters[index];
       if(dia > statsDataArray[phase]->getMaxGrainDiameter()) dia = statsDataArray[phase]->getMaxGrainDiameter();
@@ -931,11 +945,11 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
-    if(gadd > 0 && m_PhasesF[gadd] == phase)
+    if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
       determine_neighbors(gadd, -1);
     }
-    if(gremove > 0 && m_PhasesF[gremove] == phase)
+    if(gremove > 0 && m_FieldPhases[gremove] == phase)
     {
       determine_neighbors(gremove, 1);
     }
@@ -1003,7 +1017,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
     for (size_t b = firstPrimaryField; b < m->getNumFieldTuples(); b++)
     {
       index = b;
-      if(m_PhasesF[index] == phase)
+      if(m_FieldPhases[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
         dia = (dia - (statsDataArray[phase]->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
@@ -1013,7 +1027,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
         count++;
       }
     }
-    if(field->m_PhasesF == phase)
+    if(field->m_FieldPhases == phase)
     {
       dia = field->m_EquivalentDiameters;
       dia = (dia - (statsDataArray[phase]->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
@@ -1131,7 +1145,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   float covera = m_AxisLengths[3*gnum+2];
   float omega3 = m_Omega3s[gnum];
   float radcur1 = 1;
-  unsigned int shapeclass = m_ShapeTypes[m_PhasesF[gnum]];
+  unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[gnum]];
 
   // init any values for each of the Shape Ops
   for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
@@ -1271,7 +1285,7 @@ void PackPrimaryPhases::assign_voxels()
 	zc = m_Centroids[3*i+2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    unsigned int shapeclass = m_ShapeTypes[m_PhasesF[i]];
+    unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
     // init any values for each of the Shape Ops
     for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -1456,7 +1470,7 @@ void PackPrimaryPhases::assign_gaps()
 		zc = m_Centroids[3*i+2];
 		float radcur1 = 0.0f;
 		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-		unsigned int shapeclass = m_ShapeTypes[m_PhasesF[i]];
+		unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
 		// init any values for each of the Shape Ops
 		for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
@@ -1580,7 +1594,7 @@ void PackPrimaryPhases::assign_gaps()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	  if(m_GrainIds[i] > 0) m_PhasesC[i] = m_PhasesF[m_GrainIds[i]];
+	  if(m_GrainIds[i] > 0) m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]];
   }
 }
 void PackPrimaryPhases::cleanup_grains()
@@ -1640,7 +1654,7 @@ void PackPrimaryPhases::cleanup_grains()
     touchessurface = 0;
     if(checked[i] == false && m_GrainIds[i] > 0)
     {
-	  minsize = statsDataArray[m_PhasesC[i]]->getMinGrainDiameter() * statsDataArray[m_PhasesC[i]]->getMinGrainDiameter() * statsDataArray[m_PhasesC[i]]->getMinGrainDiameter() * M_PI / 6.0f;
+	  minsize = statsDataArray[m_CellPhases[i]]->getMinGrainDiameter() * statsDataArray[m_CellPhases[i]]->getMinGrainDiameter() * statsDataArray[m_CellPhases[i]]->getMinGrainDiameter() * M_PI / 6.0f;
       minsize = int(minsize / (resConst));
       currentvlist.push_back(i);
       count = 0;
@@ -1735,6 +1749,6 @@ void PackPrimaryPhases::cleanup_grains()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	  if(m_GrainIds[i] > 0) { m_PhasesC[i] = m_PhasesF[m_GrainIds[i]]; }
+	  if(m_GrainIds[i] > 0) { m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]]; }
   }
 }

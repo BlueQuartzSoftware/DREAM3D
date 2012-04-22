@@ -48,10 +48,16 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_GrainIds(NULL),
 m_SurfaceVoxels(NULL),
 m_SurfaceFields(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_NumNeighbors(NULL),
 m_TotalSurfaceAreas(NULL),
 m_NeighborList(NULL),
@@ -83,7 +89,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, 0, voxels, 1);
 
   // Field Data
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
@@ -266,7 +272,7 @@ void FindNeighbors::execute()
     std::stringstream ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
   //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-    int phase = m_PhasesF[i];
+    int phase = m_FieldPhases[i];
 
     std::map<int, int> neighToCount;
     int numneighs = int(neighborlist[i].size());

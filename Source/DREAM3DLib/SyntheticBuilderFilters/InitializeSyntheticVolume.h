@@ -55,6 +55,12 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
     virtual ~InitializeSyntheticVolume();
 
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+
     virtual const std::string getGroupName()
     {
       return DREAM3D::FilterGroups::SyntheticBuilderFilters;
@@ -91,7 +97,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
   private:
     // Cell Data - make sure these are all initialized to NULL in the constructor
     int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

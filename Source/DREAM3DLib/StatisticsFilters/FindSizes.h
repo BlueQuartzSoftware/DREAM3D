@@ -66,6 +66,16 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 
     virtual ~FindSizes();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+
 	DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -91,7 +101,7 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
     int32_t* m_GrainIds;
 
 	bool* m_BiasedFields;
-	int32_t* m_Phases;
+	int32_t* m_FieldPhases;
 	float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_NumCells;

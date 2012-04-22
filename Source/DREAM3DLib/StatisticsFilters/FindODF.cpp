@@ -45,9 +45,14 @@
 // -----------------------------------------------------------------------------
 FindODF::FindODF()  :
 AbstractFilter(),
+m_EulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_Volumes(NULL),
 m_EulerAngles(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_SurfaceFields(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -81,7 +86,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -301,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301,  int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -301)
   {
 	setErrorCondition(0);
@@ -90,7 +95,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -301, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
   }  
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EulerAngles, ss, -302, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
@@ -190,7 +195,7 @@ void FindODF::execute()
   {
     if (m_SurfaceFields[i] == false)
     {
-	  totalvol[m_PhasesF[i]] = totalvol[m_PhasesF[i]] + m_Volumes[i];
+	  totalvol[m_FieldPhases[i]] = totalvol[m_FieldPhases[i]] + m_Volumes[i];
 	}
   }
   for (size_t i = 1; i < numgrains; i++)
@@ -200,10 +205,10 @@ void FindODF::execute()
       ea1 = m_EulerAngles[3*i];
       ea2 = m_EulerAngles[3*i+1];
       ea3 = m_EulerAngles[3*i+2];
-      phase = m_CrystalStructures[m_PhasesF[i]];
+      phase = m_CrystalStructures[m_FieldPhases[i]];
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
-	  eulerodf[m_PhasesF[i]]->SetValue(bin, (eulerodf[m_PhasesF[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_PhasesF[i]])));
+	  eulerodf[m_FieldPhases[i]]->SetValue(bin, (eulerodf[m_FieldPhases[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_FieldPhases[i]])));
     }
   }
 //  int err;

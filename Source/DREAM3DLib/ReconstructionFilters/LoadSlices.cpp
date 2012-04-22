@@ -71,11 +71,15 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 LoadSlices::LoadSlices() :
 AbstractFilter(),
+m_EulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
-m_PhasesC(NULL),
+m_CellPhases(NULL),
 m_GoodVoxels(NULL),
 m_EulerAnglesC(NULL)
 {
@@ -124,7 +128,7 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
   CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, 0, voxels, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
 
@@ -316,7 +320,7 @@ void LoadSlices::execute()
     m_EulerAnglesC[3 * i] = euler1Ptr[i] * radianconversion;
     m_EulerAnglesC[3 * i + 1] = euler2Ptr[i] * radianconversion;
     m_EulerAnglesC[3 * i + 2] = euler3Ptr[i] * radianconversion;
-    m_PhasesC[i] = phasePtr[i];
+    m_CellPhases[i] = phasePtr[i];
   }
 
   // Run the filter to determine the good Voxels

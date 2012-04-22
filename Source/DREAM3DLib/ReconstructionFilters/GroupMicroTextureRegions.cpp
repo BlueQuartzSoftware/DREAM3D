@@ -65,11 +65,17 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_CAxisTolerance(1.0f),
 m_GrainIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_NeighborList(NULL),
 m_CrystalStructures(NULL),
 m_NumFields(NULL)
@@ -128,7 +134,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
 	setErrorCondition(0);
@@ -137,7 +143,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
@@ -218,7 +224,7 @@ void GroupMicroTextureRegions::execute()
   }
   for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
   {
-	m_NumFields[m_PhasesF[i]]++;
+	m_NumFields[m_FieldPhases[i]]++;
   }
 
   // If there is an error set this to something negative and also set a message
@@ -249,7 +255,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (newnumbers[i] == -1 && m_PhasesF[i] > 0)
+    if (newnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
 	  m_Active[i] = true;
       microtexturelist.push_back(i);
@@ -263,7 +269,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
         q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
         q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
-        phase1 = m_CrystalStructures[m_PhasesF[firstgrain]];
+        phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
 	    cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
 	    cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
 	    cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
@@ -272,9 +278,9 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         {
           angcur = 180.0f;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && newnumbers[neigh] == -1 && m_PhasesF[neigh] > 0)
+          if (neigh != i && newnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
-            phase2 = m_CrystalStructures[m_PhasesF[neigh]];
+            phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
 			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal) 
 			{
               q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];

@@ -58,6 +58,12 @@ class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
 
      virtual ~FindGrainPhases();
 
+	 //------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -73,8 +79,8 @@ class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
 
    private:
     int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
+    int32_t* m_CellPhases;
+    int32_t* m_FieldPhases;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

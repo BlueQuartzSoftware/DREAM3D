@@ -79,6 +79,21 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 
     virtual ~FindDeformationStatistics();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainMisorientationsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)	
+	DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationGradientsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborDistancesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(DeformationStatisticsFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
 
@@ -105,7 +120,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     int32_t* m_GrainIds;
-    int32_t* m_PhasesF;
+    int32_t* m_FieldPhases;
     int32_t* m_NearestNeighbors;
     int32_t* m_SlipSystems;
     float* m_GrainMisorientations;

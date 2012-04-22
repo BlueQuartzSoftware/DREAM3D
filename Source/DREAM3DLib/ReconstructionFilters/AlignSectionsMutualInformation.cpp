@@ -69,14 +69,14 @@ const static float m_pi = M_PI;
 AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
 AlignSections(),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_PhasesArrayName(DREAM3D::CellData::Phases),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_PhasesC(NULL),
+m_CellPhases(NULL),
 m_GoodVoxels(NULL),
 m_CrystalStructures(NULL)
 {
@@ -132,8 +132,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  CREATE_NON_PREREQ_DATA   (m, DREAM3D,             CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
-//  CREATE_NON_PREREQ_DATA_TEST(m, m_GrainIdsArrayName, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   if(getErrorCondition() == -301)
@@ -146,7 +145,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
     if(preflight == false) find_cellquats->execute();
     GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   }
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -468,7 +467,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
           if(x > dims[0] - 1) x = x - dims[0];
           if(y > dims[1] - 1) y = y - dims[1];
           point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
-          if(m_GoodVoxels[point] == true && m_GrainIds[point] == 0 && m_PhasesC[point] > 0)
+          if(m_GoodVoxels[point] == true && m_GrainIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
           }
@@ -493,7 +492,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
           q1[2] = m_Quats[currentpoint * 5 + 2];
           q1[3] = m_Quats[currentpoint * 5 + 3];
           q1[4] = m_Quats[currentpoint * 5 + 4];
-          phase1 = m_CrystalStructures[m_PhasesC[currentpoint]];
+          phase1 = m_CrystalStructures[m_CellPhases[currentpoint]];
           for (int i = 0; i < 4; i++)
           {
             good = 1;
@@ -502,7 +501,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
             if((i == 3) && row == (dims[1] - 1)) good = 0;
             if((i == 1) && col == 0) good = 0;
             if((i == 2) && col == (dims[0] - 1)) good = 0;
-            if(good == 1 && m_GrainIds[neighbor] <= 0 && m_PhasesC[neighbor] > 0)
+            if(good == 1 && m_GrainIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = 10000.0;
               q2[0] = 1;
@@ -510,7 +509,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
               q2[2] = m_Quats[neighbor * 5 + 2];
               q2[3] = m_Quats[neighbor * 5 + 3];
               q2[4] = m_Quats[neighbor * 5 + 4];
-              phase2 = m_CrystalStructures[m_PhasesC[neighbor]];
+              phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
               if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               if(w < m_MisorientationTolerance)
               {

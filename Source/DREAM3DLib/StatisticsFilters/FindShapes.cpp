@@ -55,9 +55,19 @@ const static float m_pi = static_cast<float>(M_PI);
 
 FindShapes::FindShapes()  :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
+m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
+m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
+m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
+m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
-m_Phases(NULL),
+m_FieldPhases(NULL),
 m_AxisEulerAngles(NULL),
 m_Centroids(NULL),
 m_AxisLengths(NULL),
@@ -144,7 +154,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	if(preflight == false) find_biasedfields->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -304)
   {
 	setErrorCondition(0);
@@ -153,7 +163,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
   }  
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
   if(getErrorCondition() == -305)
@@ -354,8 +364,8 @@ void FindShapes::find_moments()
     m_Omega3s[i] = omega3;
 	if(m_BiasedFields[i] == false)
 	{
-		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
-		values[m_Phases[i]][bin].push_back(m_Omega3s[i]);
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_FieldPhases[i]]->getMinGrainDiameter())/statsDataArray[m_FieldPhases[i]]->getBinStepSize());
+		values[m_FieldPhases[i]][bin].push_back(m_Omega3s[i]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -513,9 +523,9 @@ void FindShapes::find_axes()
     m_AspectRatios[2*i+1] = covera;
 	if(m_BiasedFields[i] == false)
 	{
-		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
-		bvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i]);
-		cvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i+1]);
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_FieldPhases[i]]->getMinGrainDiameter())/statsDataArray[m_FieldPhases[i]]->getBinStepSize());
+		bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
+		cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -577,9 +587,9 @@ void FindShapes::find_axes2D()
 	m_AspectRatios[2*i+1] = 0;
 	if(m_BiasedFields[i] == false)
 	{
-		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
-		bvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i]);
-		cvalues[m_Phases[i]][bin].push_back(m_AspectRatios[2*i+1]);
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_FieldPhases[i]]->getMinGrainDiameter())/statsDataArray[m_FieldPhases[i]]->getBinStepSize());
+		bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
+		cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)

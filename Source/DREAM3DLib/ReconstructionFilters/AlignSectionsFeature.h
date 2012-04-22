@@ -67,6 +67,9 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
 
     virtual ~AlignSectionsFeature();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections (Feature)"; }
 

@@ -47,9 +47,14 @@
 // -----------------------------------------------------------------------------
 FindMDF::FindMDF()  :
 AbstractFilter(),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_AvgQuats(NULL),
 m_SurfaceFields(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_TotalSurfaceAreas(NULL),
 m_NeighborList(NULL),
 m_SharedSurfaceAreaList(NULL)
@@ -95,7 +100,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	if(preflight == false) find_surfacefields->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
   }
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
 	setErrorCondition(0);
@@ -104,7 +109,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   }
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -223,7 +228,7 @@ void FindMDF::execute()
 		q1[2] = m_AvgQuats[5*i+2] / m_AvgQuats[5*i];
 		q1[3] = m_AvgQuats[5*i+3] / m_AvgQuats[5*i];
 		q1[4] = m_AvgQuats[5*i+4] / m_AvgQuats[5*i];
-		phase1 = m_CrystalStructures[m_PhasesF[i]];
+		phase1 = m_CrystalStructures[m_FieldPhases[i]];
 		misorientationlists[i].resize(neighborlist[i].size() * 3, -1.0);
 		for (size_t j = 0; j < neighborlist[i].size(); j++)
 		{
@@ -234,7 +239,7 @@ void FindMDF::execute()
 		  q2[2] = m_AvgQuats[5*nname+2] / m_AvgQuats[5*nname];
 		  q2[3] = m_AvgQuats[5*nname+3] / m_AvgQuats[5*nname];
 		  q2[4] = m_AvgQuats[5*nname+4] / m_AvgQuats[5*nname];
-		  phase2 = m_CrystalStructures[m_PhasesF[nname]];
+		  phase2 = m_CrystalStructures[m_FieldPhases[nname]];
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
@@ -253,7 +258,7 @@ void FindMDF::execute()
 		  {
 			mbin = m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3*j], misorientationlists[i][3 * j + 1], misorientationlists[i][3 * j + 2]);
 			nsa = neighborsurfacearealist[i][j];
-			misobin[m_PhasesF[i]]->SetValue(mbin, (misobin[m_PhasesF[i]]->GetValue(mbin) + (nsa / m_TotalSurfaceAreas[m_PhasesF[i]])));
+			misobin[m_FieldPhases[i]]->SetValue(mbin, (misobin[m_FieldPhases[i]]->GetValue(mbin) + (nsa / m_TotalSurfaceAreas[m_FieldPhases[i]])));
 		  }
 		}
   }

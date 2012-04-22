@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -110,7 +110,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
   private:
     int32_t* m_GrainIds;
     float* m_Quats;
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
     bool* m_GoodVoxels;
 
     unsigned int* m_CrystalStructures;

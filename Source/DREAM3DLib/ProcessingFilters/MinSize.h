@@ -67,6 +67,14 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 
     virtual ~MinSize();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -91,8 +99,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     int32_t* m_Neighbors;
 
     int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
+    int32_t* m_CellPhases;
+    int32_t* m_FieldPhases;
     bool* m_Active;
 
     std::vector<std::vector<int> > voxellists;

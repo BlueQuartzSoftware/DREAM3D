@@ -46,8 +46,14 @@
 // -----------------------------------------------------------------------------
 FindAvgOrientations::FindAvgOrientations() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_QuatsArrayName(DREAM3D::CellData::Quats),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+m_EulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
+m_CellPhases(NULL),
 m_EulerAnglesF(NULL),
 m_Quats(NULL),
 m_AvgQuats(NULL)
@@ -80,7 +86,7 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   std::stringstream ss;
   DataContainer* m = getDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
   if(getErrorCondition() == -303)
   {
@@ -149,9 +155,9 @@ void FindAvgOrientations::execute()
   float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
-    if(m_GrainIds[i] > 0 && m_PhasesC[i] > 0)
+    if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)
     {
-      phase = m_PhasesC[i];
+      phase = m_CellPhases[i];
       voxquat[0] = m_Quats[i*5 + 0];
       voxquat[1] = m_Quats[i*5 + 1];
       voxquat[2] = m_Quats[i*5 + 2];

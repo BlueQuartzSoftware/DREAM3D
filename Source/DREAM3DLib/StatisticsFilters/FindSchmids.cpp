@@ -44,6 +44,10 @@
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids() :
 AbstractFilter(),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
+m_SlipSystemsArrayName(DREAM3D::FieldData::SlipSystems),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_XLoading(1.0f),
 m_YLoading(1.0f),
 m_ZLoading(1.0f),

@@ -58,7 +58,12 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 
     virtual ~DetermineGoodVoxels();
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+
+	DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
     DREAM3D_INSTANCE_PROPERTY(H5EbsdVolumeReader::Pointer, EbsdVolumeReader);
 
     virtual void preflight();
@@ -82,7 +87,7 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 
   private:
     bool* m_GoodVoxels;
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
 
 
     DetermineGoodVoxels(const DetermineGoodVoxels&); // Copy Constructor Not Implemented

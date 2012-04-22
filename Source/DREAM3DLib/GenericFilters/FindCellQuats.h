@@ -59,6 +59,14 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 
      virtual ~FindCellQuats();
 
+	 //------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -73,7 +81,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
      FindCellQuats();
 
    private:
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
     float* m_Quats;
     float* m_EulerAnglesC;
 	unsigned int* m_CrystalStructures;

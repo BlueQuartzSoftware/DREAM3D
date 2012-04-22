@@ -63,6 +63,12 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
 
     virtual ~FindBoundingBoxGrains();
 
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

@@ -66,6 +66,18 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     virtual ~MergeColonies();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+	//------ Created Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Merge Colonies"; }
 
@@ -91,7 +103,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     int32_t* m_GrainIds;
     float* m_AvgQuats;
     bool* m_Active;
-    int32_t* m_PhasesF;
+    int32_t* m_FieldPhases;
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;

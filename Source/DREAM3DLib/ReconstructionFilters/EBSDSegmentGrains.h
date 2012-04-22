@@ -67,6 +67,18 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
 
     virtual ~EBSDSegmentGrains();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -95,8 +107,8 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
 
     int32_t* m_GrainIds;
     float* m_Quats;
-    int32_t* m_PhasesC;
-    int32_t* m_PhasesF;
+    int32_t* m_CellPhases;
+    int32_t* m_FieldPhases;
     bool* m_Active;
     bool* m_GoodVoxels;
 

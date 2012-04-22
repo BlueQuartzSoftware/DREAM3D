@@ -56,12 +56,17 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 MinNeighbors::MinNeighbors() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_MinNumNeighbors(1),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_PhasesF(NULL),
+m_CellPhases(NULL),
+m_FieldPhases(NULL),
 m_NumNeighbors(NULL),
 m_Active(NULL)
 {
@@ -108,9 +113,9 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -119,7 +124,7 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1);
@@ -298,7 +303,7 @@ void MinNeighbors::assign_badpoints()
       if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
-		    m_PhasesC[j] = m_PhasesF[neighbor];
+		    m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;
@@ -322,7 +327,7 @@ void MinNeighbors::merge_containedgrains()
 //	ss << "Cleaning Up Grains - Removing Contained Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
 //	notify(ss.str(), 0, Observable::UpdateProgressMessage);
     int grainname = m_GrainIds[i];
-    if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_PhasesF[grainname] > 0)
+    if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_FieldPhases[grainname] > 0)
     {
       m_Active[grainname] = false;
       m_GrainIds[i] = -1;

@@ -55,6 +55,9 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
 
     virtual ~DxWriter();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }

@@ -54,13 +54,16 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 OpenCloseBadData::OpenCloseBadData() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NumIterations(1),
 m_Direction(0),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_PhasesF(NULL)
+m_CellPhases(NULL),
+m_FieldPhases(NULL)
 {
   setupFilterOptions();
 }
@@ -116,9 +119,9 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -127,7 +130,7 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
 
   setErrorMessage(ss.str());
@@ -276,7 +279,7 @@ void OpenCloseBadData::execute()
       if ((grainname == 0 && neighbor > 0 && m_Direction == 1) || (grainname > 0 && neighbor == 0 && m_Direction == 0))
       {
         m_GrainIds[j] = neighbor;
-		    m_PhasesC[j] = m_PhasesF[neighbor];
+		    m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;
