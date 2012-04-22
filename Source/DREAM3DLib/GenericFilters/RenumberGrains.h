@@ -63,8 +63,6 @@ class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
      virtual const std::string getHumanLabel() { return "Renumber Grains"; }
 
