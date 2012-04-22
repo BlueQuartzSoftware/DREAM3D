@@ -71,6 +71,27 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     virtual ~InsertPrecipitatePhases();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+	//------ Created Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
@@ -119,7 +140,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     ShapeOps::Pointer m_SuperEllipsoidOps;
 
     int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
     int8_t* m_SurfaceVoxels;
 
     float* m_AxisEulerAngles;
@@ -129,7 +150,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float* m_Omega3s;
     float* m_EquivalentDiameters;
     bool* m_Active;
-    int32_t* m_PhasesF;
+    int32_t* m_FieldPhases;
     int32_t* m_NumCells;
     int32_t* m_Neighborhoods;
 

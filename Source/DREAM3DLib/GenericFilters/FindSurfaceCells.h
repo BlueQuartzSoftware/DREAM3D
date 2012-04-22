@@ -58,6 +58,11 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 
      virtual ~FindSurfaceCells();
 
+	 //------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
+
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

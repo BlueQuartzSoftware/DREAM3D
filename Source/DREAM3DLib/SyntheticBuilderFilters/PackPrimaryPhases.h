@@ -62,7 +62,7 @@ typedef struct {
     float m_AxisLengths[3];
     float m_AxisEulerAngles[3];
     float m_Omega3s;
-    int m_PhasesF;
+    int m_FieldPhases;
     int m_Neighborhoods;
 } Field;
 
@@ -81,6 +81,25 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(PackPrimaryPhases, AbstractFilter);
 
     virtual ~PackPrimaryPhases();
+
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+	//------ Created Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
@@ -143,12 +162,12 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
   private:
     // Cell Data - make sure these are all initialized to NULL in the constructor
     int32_t* m_GrainIds;
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
     int8_t*  m_SurfaceVoxels;
 
     // Field Data - make sure these are all initialized to NULL in the constructor
     bool* m_Active;
-    int32_t* m_PhasesF;
+    int32_t* m_FieldPhases;
     int32_t* m_Neighborhoods;
     float* m_Centroids;
     float* m_Volumes;

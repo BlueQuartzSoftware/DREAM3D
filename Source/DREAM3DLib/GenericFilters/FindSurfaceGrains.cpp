@@ -44,6 +44,8 @@
 // -----------------------------------------------------------------------------
 FindSurfaceGrains::FindSurfaceGrains() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_GrainIds(NULL),
 m_SurfaceFields(NULL)
 {

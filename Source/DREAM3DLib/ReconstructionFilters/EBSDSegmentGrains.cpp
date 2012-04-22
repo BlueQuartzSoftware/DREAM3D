@@ -62,11 +62,18 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 EBSDSegmentGrains::EBSDSegmentGrains() :
 SegmentGrains(),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_QuatsArrayName(DREAM3D::CellData::Quats),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_PhasesC(NULL),
-m_PhasesF(NULL),
+m_CellPhases(NULL),
+m_FieldPhases(NULL),
 m_Active(NULL),
 m_CrystalStructures(NULL)
 {
@@ -121,7 +128,7 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType,  voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
   if(getErrorCondition() == -303)
   {
@@ -135,7 +142,7 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -212,7 +219,7 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
   while (seed == -1 && counter < totalPoints)
   {
       if (randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
-      if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_PhasesC[randpoint] > 0) seed = randpoint;
+      if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) seed = randpoint;
       randpoint++;
       counter++;
   }
@@ -222,7 +229,7 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
 	  m->resizeFieldDataArrays(gnum+1);
 	  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
 	  m_Active[gnum] = true;
-	  m_PhasesF[gnum] = m_PhasesC[seed];
+	  m_FieldPhases[gnum] = m_CellPhases[seed];
   }
   return seed;
 }
@@ -240,14 +247,14 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
 
   if(m_GrainIds[neighborpoint] == 0)
   {
-	  phase1 = m_CrystalStructures[m_PhasesC[referencepoint]];
+	  phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
 	  q1[0] = 1;
 	  q1[1] = m_Quats[referencepoint * 5 + 1];
 	  q1[2] = m_Quats[referencepoint * 5 + 2];
 	  q1[3] = m_Quats[referencepoint * 5 + 3];
 	  q1[4] = m_Quats[referencepoint * 5 + 4];
 	  
-	  phase2 = m_CrystalStructures[m_PhasesC[neighborpoint]];
+	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
 	  q2[0] = 1;
 	  q2[1] = m_Quats[neighborpoint*5 + 1];
 	  q2[2] = m_Quats[neighborpoint*5 + 2];

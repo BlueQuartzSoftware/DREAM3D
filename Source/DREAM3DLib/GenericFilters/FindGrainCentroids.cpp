@@ -46,6 +46,8 @@
 // -----------------------------------------------------------------------------
 FindGrainCentroids::FindGrainCentroids() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_GrainIds(NULL),
 m_Centroids(NULL)
 {

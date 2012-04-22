@@ -46,9 +46,12 @@
 // -----------------------------------------------------------------------------
 FindGrainPhases::FindGrainPhases() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
-m_PhasesF(NULL)
+m_CellPhases(NULL),
+m_FieldPhases(NULL)
 {
 
 }
@@ -74,9 +77,9 @@ void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, si
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
 
   setErrorMessage(ss.str());
 }
@@ -121,7 +124,7 @@ void FindGrainPhases::execute()
   for(int64_t i = 1; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
-    m_PhasesF[gnum] = m_PhasesC[i];
+    m_FieldPhases[gnum] = m_CellPhases[i];
   }
 
   std::stringstream ss;

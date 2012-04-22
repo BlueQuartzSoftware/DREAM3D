@@ -63,6 +63,12 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 
     virtual ~FindEuclideanDistMap();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborDistancesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Euclidean Distance Map"; }
 

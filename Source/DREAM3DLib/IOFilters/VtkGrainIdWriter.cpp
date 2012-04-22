@@ -42,6 +42,7 @@
 // -----------------------------------------------------------------------------
 VtkGrainIdWriter::VtkGrainIdWriter() :
 FileWriter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_WriteBinaryFiles(true)
 {
   setupFilterOptions();

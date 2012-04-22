@@ -51,8 +51,14 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 FindSizes::FindSizes() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_GrainIds(NULL),
-m_Phases(NULL),
+m_FieldPhases(NULL),
 m_Volumes(NULL),
 m_EquivalentDiameters(NULL),
 m_NumCells(NULL)
@@ -117,7 +123,7 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 	if(preflight == false) find_boundingboxfields->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -126,7 +132,7 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, 0, fields, 1);
@@ -237,8 +243,8 @@ void FindSizes::find_sizes()
     m_EquivalentDiameters[i] = diameter;
 	if(m_BiasedFields[i] == false)
 	{
-		values[m_Phases[i]][0].push_back(m_EquivalentDiameters[i]);
-		fractions[m_Phases[i]] = fractions[m_Phases[i]] + m_Volumes[i];
+		values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
+		fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + m_Volumes[i];
 		totalUnbiasedVolume = totalUnbiasedVolume + m_Volumes[i];
 	}
   }
@@ -303,7 +309,7 @@ void FindSizes::find_sizes2D()
     m_EquivalentDiameters[i] = diameter;
 	if(m_BiasedFields[i] == false)
 	{
-		values[m_Phases[i]][0].push_back(m_EquivalentDiameters[i]);
+		values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)

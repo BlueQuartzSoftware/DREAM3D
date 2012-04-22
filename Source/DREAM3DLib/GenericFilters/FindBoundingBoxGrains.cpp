@@ -44,6 +44,9 @@
 // -----------------------------------------------------------------------------
 FindBoundingBoxGrains::FindBoundingBoxGrains() :
 AbstractFilter(),
+m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
 m_Centroids(NULL),
 m_SurfaceFields(NULL),
 m_BiasedFields(NULL)

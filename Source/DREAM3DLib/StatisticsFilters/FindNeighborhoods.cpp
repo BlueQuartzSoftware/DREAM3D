@@ -53,9 +53,15 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindNeighborhoods::FindNeighborhoods() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
+m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
-m_Phases(NULL),
+m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
 m_Neighborhoods(NULL)
@@ -131,7 +137,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 	if(preflight == false) find_biasedfields->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -304)
   {
 	setErrorCondition(0);
@@ -140,7 +146,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
   }  
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
   if(getErrorCondition() == -305)
@@ -256,8 +262,8 @@ void FindNeighborhoods::find_neighborhoods()
       }
 	  if(m_BiasedFields[i] == false)
 	  {
-		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_Phases[i]]->getMinGrainDiameter())/statsDataArray[m_Phases[i]]->getBinStepSize());
-		values[m_Phases[i]][bin].push_back(m_Neighborhoods[i]);
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_FieldPhases[i]]->getMinGrainDiameter())/statsDataArray[m_FieldPhases[i]]->getBinStepSize());
+		values[m_FieldPhases[i]][bin].push_back(m_Neighborhoods[i]);
 	  }
   }
   for (size_t i = 1; i < numensembles; i++)

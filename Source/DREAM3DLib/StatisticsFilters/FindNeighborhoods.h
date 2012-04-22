@@ -66,6 +66,16 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual ~FindNeighborhoods();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+
 	DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
 	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -93,7 +103,7 @@ private:
     int32_t* m_GrainIds;
 
     bool* m_BiasedFields;
-    int32_t* m_Phases;
+    int32_t* m_FieldPhases;
     float* m_Centroids;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;

@@ -46,8 +46,10 @@
 // -----------------------------------------------------------------------------
 FindNumFields::FindNumFields() :
 AbstractFilter(),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_NumFields(NULL),
-m_PhasesF(NULL)
+m_FieldPhases(NULL)
 {
 
 }
@@ -72,7 +74,7 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -301, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
 
@@ -121,7 +123,7 @@ void FindNumFields::execute()
   }
   for(int64_t i = 1; i < totalFields; i++)
   {
-    m_NumFields[m_PhasesF[i]]++;
+    m_NumFields[m_FieldPhases[i]]++;
   }
 
   std::stringstream ss;

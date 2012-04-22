@@ -47,8 +47,20 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_GrainMisorientationsArrayName(DREAM3D::CellData::GrainMisorientations),
+m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
+m_MisorientationGradientsArrayName(DREAM3D::CellData::MisorientationGradients),
+m_NearestNeighborDistancesArrayName(DREAM3D::CellData::NearestNeighborDistances),
+m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_PolesArrayName(DREAM3D::FieldData::Poles),
+m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
+m_SlipSystemsArrayName(DREAM3D::FieldData::SlipSystems),
 m_GrainIds(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_NearestNeighbors(NULL),
 m_SlipSystems(NULL),
 m_GrainMisorientations(NULL),
@@ -129,7 +141,7 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, float, FloatArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1);
 
@@ -307,10 +319,10 @@ void FindDeformationStatistics::execute()
         q2[j] = m_AvgQuats[5 * gname2 + j] / m_AvgQuats[gname2];
       }
       OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
-      if(crystruct->GetValue(m_PhasesF[gname]) == crystruct->GetValue(m_PhasesF[gname2])
-          && m_PhasesF[gname] > 0)
+      if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2])
+          && m_FieldPhases[gname] > 0)
       {
-        w = m_OrientationOps[crystruct->GetValue(m_PhasesF[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
       }
       else
       {

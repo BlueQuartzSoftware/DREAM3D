@@ -51,10 +51,17 @@
 // -----------------------------------------------------------------------------
 EstablishMatrixPhase::EstablishMatrixPhase() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
+m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
+m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_GrainIds(NULL),
-m_PhasesC(NULL),
+m_CellPhases(NULL),
 m_Active(NULL),
-m_PhasesF(NULL),
+m_FieldPhases(NULL),
 m_NumCells(NULL),
 m_PhaseTypes(NULL),
 m_NumFields(NULL)
@@ -83,10 +90,10 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss,  int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss,  int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1);
 
@@ -151,7 +158,7 @@ void EstablishMatrixPhase::execute()
   int numfields = m->getNumFieldTuples();
   for(size_t i = firstMatrixField; i < numfields; i++)
   {
-	m_NumFields[m_PhasesF[i]]++;
+	m_NumFields[m_FieldPhases[i]]++;
   }
 
   // If there is an error set this to something negative and also set a message
@@ -239,9 +246,9 @@ void  EstablishMatrixPhase::establish_matrix()
 	      dataCheck(false, totalPoints, (firstMatrixField+j) + 1, m->getNumEnsembleTuples());
 		}
 		m_GrainIds[i] = (firstMatrixField+j);
-		m_PhasesC[i] = matrixphases[j];
+		m_CellPhases[i] = matrixphases[j];
 	    m_Active[(firstMatrixField+j)] = true;
-	    m_PhasesF[(firstMatrixField+j)] = matrixphases[j];
+	    m_FieldPhases[(firstMatrixField+j)] = matrixphases[j];
 	  }
   }
 }

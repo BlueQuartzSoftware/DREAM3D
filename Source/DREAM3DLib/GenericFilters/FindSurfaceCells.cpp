@@ -46,6 +46,8 @@
 // -----------------------------------------------------------------------------
 FindSurfaceCells::FindSurfaceCells() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
 m_GrainIds(NULL),
 m_SurfaceVoxels(NULL)
 {

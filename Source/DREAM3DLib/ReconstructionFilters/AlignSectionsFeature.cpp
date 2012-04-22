@@ -64,6 +64,7 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 AlignSectionsFeature::AlignSectionsFeature() :
 AlignSections(),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_GoodVoxels(NULL)
 {
   setupFilterOptions();

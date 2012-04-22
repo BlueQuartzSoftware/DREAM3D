@@ -58,6 +58,11 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
 
      virtual ~FindNumFields();
 
+	 //------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	//------ Created Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
 	 virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -72,7 +77,7 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
      FindNumFields();
 
    private:
-    int32_t* m_PhasesF;
+    int32_t* m_FieldPhases;
 
     int32_t* m_NumFields;
 

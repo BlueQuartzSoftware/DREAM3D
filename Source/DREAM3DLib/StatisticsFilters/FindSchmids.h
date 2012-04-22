@@ -67,6 +67,14 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 
     virtual ~FindSchmids();
 
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Schmid Factors"; }
 

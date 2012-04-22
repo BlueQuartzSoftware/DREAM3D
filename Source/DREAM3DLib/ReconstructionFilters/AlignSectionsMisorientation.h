@@ -67,6 +67,13 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 
     virtual ~AlignSectionsMisorientation();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -88,7 +95,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 
   private:
     float* m_Quats;
-    int32_t* m_PhasesC;
+    int32_t* m_CellPhases;
     bool* m_GoodVoxels;
 
     unsigned int* m_CrystalStructures;

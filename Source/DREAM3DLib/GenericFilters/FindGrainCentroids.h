@@ -58,6 +58,11 @@ class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
 
      virtual ~FindGrainCentroids();
 
+	 //------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
      DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 6 Array

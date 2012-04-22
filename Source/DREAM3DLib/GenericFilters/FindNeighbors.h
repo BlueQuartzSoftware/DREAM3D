@@ -64,6 +64,18 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 
     virtual ~FindNeighbors();
 
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
+	//------ Required Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+	//------ Created Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
+
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 	virtual void execute();
@@ -80,7 +92,7 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     int32_t* m_GrainIds;
     int8_t* m_SurfaceVoxels;
     bool* m_SurfaceFields;
-    int32_t* m_PhasesF;
+    int32_t* m_FieldPhases;
     int32_t* m_NumNeighbors;
     float* m_TotalSurfaceAreas;
     NeighborList<int>* m_NeighborList;

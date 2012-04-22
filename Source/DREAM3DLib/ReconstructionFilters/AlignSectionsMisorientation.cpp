@@ -64,9 +64,13 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 AlignSectionsMisorientation::AlignSectionsMisorientation() :
 AlignSections(),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_QuatsArrayName(DREAM3D::CellData::Quats),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_Quats(NULL),
-m_PhasesC(NULL),
+m_CellPhases(NULL),
 m_GoodVoxels(NULL),
 m_CrystalStructures(NULL)
 {
@@ -132,7 +136,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
     if(preflight == false) find_cellquats->execute();
     GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
   }
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -274,18 +278,18 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                   {
                       w = 10000.0;
 	                  count++;
-                      if(m_PhasesC[refposition] > 0 && m_PhasesC[curposition] > 0)
+                      if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                       {
                         q1[1] = m_Quats[refposition * 5 + 1];
                         q1[2] = m_Quats[refposition * 5 + 2];
                         q1[3] = m_Quats[refposition * 5 + 3];
                         q1[4] = m_Quats[refposition * 5 + 4];
-                        phase1 = m_CrystalStructures[m_PhasesC[refposition]];
+                        phase1 = m_CrystalStructures[m_CellPhases[refposition]];
                         q2[1] = m_Quats[curposition * 5 + 1];
                         q2[2] = m_Quats[curposition * 5 + 2];
                         q2[3] = m_Quats[curposition * 5 + 3];
                         q2[4] = m_Quats[curposition * 5 + 4];
-                        phase2 = m_CrystalStructures[m_PhasesC[curposition]];
+                        phase2 = m_CrystalStructures[m_CellPhases[curposition]];
                         if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                       if(w > m_MisorientationTolerance) disorientation++;

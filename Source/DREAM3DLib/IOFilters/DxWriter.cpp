@@ -44,6 +44,7 @@
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
 FileWriter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_AddSurfaceLayer(false),
 m_GrainIds(NULL)
 {
