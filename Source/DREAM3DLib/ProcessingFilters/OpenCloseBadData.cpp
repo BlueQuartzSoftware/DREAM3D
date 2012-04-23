@@ -196,10 +196,10 @@ void OpenCloseBadData::execute()
   std::vector<int > remove;
   size_t count = 1;
   int good = 1;
-  int neighbor;
+//  int neighbor;
   int index = 0;
   float x, y, z;
-  DimType column, row, plane;
+  DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
 
