@@ -57,6 +57,8 @@ class GenerateGrainIds : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
     DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
 
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual ~GenerateGrainIds(){};
     virtual const std::string getGroupName()

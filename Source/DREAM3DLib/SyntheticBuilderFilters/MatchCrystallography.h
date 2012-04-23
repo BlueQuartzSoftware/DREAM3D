@@ -76,13 +76,13 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -128,13 +128,13 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     // Cell Data
     int32_t* m_GrainIds;
-    float*   m_EulerAnglesC;
+    float*   m_CellEulerAngles;
 
     // Field Data
     bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
     float* m_Volumes;
-    float* m_EulerAnglesF;
+    float* m_FieldEulerAngles;
     float* m_AvgQuats;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;

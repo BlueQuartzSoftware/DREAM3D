@@ -71,7 +71,7 @@ const static float m_pi = M_PI;
 // -----------------------------------------------------------------------------
 LoadSlices::LoadSlices() :
 AbstractFilter(),
-m_EulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -81,7 +81,7 @@ m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_CellPhases(NULL),
 m_GoodVoxels(NULL),
-m_EulerAnglesC(NULL)
+m_CellEulerAngles(NULL)
 {
   Seed = MXA::getMilliSeconds();
 }
@@ -129,7 +129,7 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   DataContainer* m = getDataContainer();
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, 0, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -317,9 +317,9 @@ void LoadSlices::execute()
   // Copy Euler Angles and Phases and possibly convert from degrees to radians
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    m_EulerAnglesC[3 * i] = euler1Ptr[i] * radianconversion;
-    m_EulerAnglesC[3 * i + 1] = euler2Ptr[i] * radianconversion;
-    m_EulerAnglesC[3 * i + 2] = euler3Ptr[i] * radianconversion;
+    m_CellEulerAngles[3 * i] = euler1Ptr[i] * radianconversion;
+    m_CellEulerAngles[3 * i + 1] = euler2Ptr[i] * radianconversion;
+    m_CellEulerAngles[3 * i + 2] = euler3Ptr[i] * radianconversion;
     m_CellPhases[i] = phasePtr[i];
   }
 

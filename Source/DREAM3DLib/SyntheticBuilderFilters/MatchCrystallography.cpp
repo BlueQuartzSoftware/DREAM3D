@@ -57,22 +57,22 @@
 MatchCrystallography::MatchCrystallography() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_EulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_EulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_MaxIterations(1),
 m_GrainIds(NULL),
-m_EulerAnglesC(NULL),
+m_CellEulerAngles(NULL),
 m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
 m_Volumes(NULL),
-m_EulerAnglesF(NULL),
+m_FieldEulerAngles(NULL),
 m_AvgQuats(NULL),
 m_NeighborList(NULL),
 m_SharedSurfaceAreaList(NULL),
@@ -110,7 +110,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, 0, voxels, 3);
+  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
@@ -136,7 +136,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   }  
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, 0, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -321,9 +321,9 @@ void MatchCrystallography::assign_eulers()
       if(random >= totaldensity) choose = j;
     }
     m_OrientationOps[m_CrystalStructures[phase]]->determineEulerAngles(choose, synea1, synea2, synea3);
-    m_EulerAnglesF[3 * i] = synea1;
-    m_EulerAnglesF[3 * i + 1] = synea2;
-    m_EulerAnglesF[3 * i + 2] = synea3;
+    m_FieldEulerAngles[3 * i] = synea1;
+    m_FieldEulerAngles[3 * i + 1] = synea2;
+    m_FieldEulerAngles[3 * i + 2] = synea3;
     OrientationMath::eulertoQuat(q, synea1, synea2, synea3);
     m_AvgQuats[5 * i] = q[0];
     m_AvgQuats[5 * i + 1] = q[1];
@@ -465,9 +465,9 @@ void MatchCrystallography::matchCrystallography()
         }
 		else
 		{
-			ea1 = m_EulerAnglesF[3 * selectedgrain1];
-			ea2 = m_EulerAnglesF[3 * selectedgrain1 + 1];
-			ea3 = m_EulerAnglesF[3 * selectedgrain1 + 2];
+			ea1 = m_FieldEulerAngles[3 * selectedgrain1];
+			ea2 = m_FieldEulerAngles[3 * selectedgrain1 + 1];
+			ea3 = m_FieldEulerAngles[3 * selectedgrain1 + 2];
 			OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
 			int phase = m_FieldPhases[selectedgrain1];
 			g1odfbin = m_OrientationOps[m_CrystalStructures[phase]]->getOdfBin(r1, r2, r3);
@@ -498,9 +498,9 @@ void MatchCrystallography::matchCrystallography()
 			for (size_t j = 0; j < size; j++)
 			{
 			  int neighbor = neighborlist[selectedgrain1][j];
-			  ea1 = m_EulerAnglesF[3 * neighbor];
-			  ea2 = m_EulerAnglesF[3 * neighbor + 1];
-			  ea3 = m_EulerAnglesF[3 * neighbor + 2];
+			  ea1 = m_FieldEulerAngles[3 * neighbor];
+			  ea2 = m_FieldEulerAngles[3 * neighbor + 1];
+			  ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 			  OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 			  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
 			  MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m_CrystalStructures[phase], q1, q2);
@@ -510,9 +510,9 @@ void MatchCrystallography::matchCrystallography()
 			if(deltaerror > 0)
 			{
 			  badtrycount = 0;
-			  m_EulerAnglesF[3 * selectedgrain1] = g1ea1;
-			  m_EulerAnglesF[3 * selectedgrain1 + 1] = g1ea2;
-			  m_EulerAnglesF[3 * selectedgrain1 + 2] = g1ea3;
+			  m_FieldEulerAngles[3 * selectedgrain1] = g1ea1;
+			  m_FieldEulerAngles[3 * selectedgrain1 + 1] = g1ea2;
+			  m_FieldEulerAngles[3 * selectedgrain1 + 2] = g1ea3;
 			  m_AvgQuats[5 * selectedgrain1 + 1] = q1[1];
 			  m_AvgQuats[5 * selectedgrain1 + 2] = q1[2];
 			  m_AvgQuats[5 * selectedgrain1 + 3] = q1[3];
@@ -524,9 +524,9 @@ void MatchCrystallography::matchCrystallography()
 			  for (size_t j = 0; j < size; j++)
 			  {
 				int neighbor = neighborlist[selectedgrain1][j];
-				ea1 = m_EulerAnglesF[3 * neighbor];
-				ea2 = m_EulerAnglesF[3 * neighbor + 1];
-				ea3 = m_EulerAnglesF[3 * neighbor + 2];
+				ea1 = m_FieldEulerAngles[3 * neighbor];
+				ea2 = m_FieldEulerAngles[3 * neighbor + 1];
+				ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 				OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 				float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
 				MC_LoopBody2(selectedgrain1, phase, j, neighsurfarea, m_CrystalStructures[phase], q1, q2);
@@ -564,12 +564,12 @@ void MatchCrystallography::matchCrystallography()
 			}
 			else
 			{
-				g1ea1 = m_EulerAnglesF[3 * selectedgrain1];
-				g1ea2 = m_EulerAnglesF[3 * selectedgrain1 + 1];
-				g1ea3 = m_EulerAnglesF[3 * selectedgrain1 + 2];
-				g2ea1 = m_EulerAnglesF[3 * selectedgrain2];
-				g2ea2 = m_EulerAnglesF[3 * selectedgrain2 + 1];
-				g2ea3 = m_EulerAnglesF[3 * selectedgrain2 + 2];
+				g1ea1 = m_FieldEulerAngles[3 * selectedgrain1];
+				g1ea2 = m_FieldEulerAngles[3 * selectedgrain1 + 1];
+				g1ea3 = m_FieldEulerAngles[3 * selectedgrain1 + 2];
+				g2ea1 = m_FieldEulerAngles[3 * selectedgrain2];
+				g2ea2 = m_FieldEulerAngles[3 * selectedgrain2 + 1];
+				g2ea3 = m_FieldEulerAngles[3 * selectedgrain2 + 2];
 				q1[1] = m_AvgQuats[5 * selectedgrain1 + 1];
 				q1[2] = m_AvgQuats[5 * selectedgrain1 + 2];
 				q1[3] = m_AvgQuats[5 * selectedgrain1 + 3];
@@ -607,9 +607,9 @@ void MatchCrystallography::matchCrystallography()
 				for (size_t j = 0; j < size; j++)
 				{
 				  int neighbor = neighborlist[selectedgrain1][j];
-				  ea1 = m_EulerAnglesF[3 * neighbor];
-				  ea2 = m_EulerAnglesF[3 * neighbor + 1];
-				  ea3 = m_EulerAnglesF[3 * neighbor + 2];
+				  ea1 = m_FieldEulerAngles[3 * neighbor];
+				  ea2 = m_FieldEulerAngles[3 * neighbor + 1];
+				  ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 				  OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 				  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
 				  if(neighbor != selectedgrain2)
@@ -624,9 +624,9 @@ void MatchCrystallography::matchCrystallography()
 				for (size_t j = 0; j < size; j++)
 				{
 				  size_t neighbor = neighborlist[selectedgrain2][j];
-				  ea1 = m_EulerAnglesF[3 * neighbor];
-				  ea2 = m_EulerAnglesF[3 * neighbor + 1];
-				  ea3 = m_EulerAnglesF[3 * neighbor + 2];
+				  ea1 = m_FieldEulerAngles[3 * neighbor];
+				  ea2 = m_FieldEulerAngles[3 * neighbor + 1];
+				  ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 				  OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 				  float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
 				  if(neighbor != selectedgrain1)
@@ -639,12 +639,12 @@ void MatchCrystallography::matchCrystallography()
 				if(deltaerror > 0)
 				{
 				  badtrycount = 0;
-				  m_EulerAnglesF[3 * selectedgrain1] = g2ea1;
-				  m_EulerAnglesF[3 * selectedgrain1 + 1] = g2ea2;
-				  m_EulerAnglesF[3 * selectedgrain1 + 2] = g2ea3;
-				  m_EulerAnglesF[3 * selectedgrain2] = g1ea1;
-				  m_EulerAnglesF[3 * selectedgrain2 + 1] = g1ea2;
-				  m_EulerAnglesF[3 * selectedgrain2 + 2] = g1ea3;
+				  m_FieldEulerAngles[3 * selectedgrain1] = g2ea1;
+				  m_FieldEulerAngles[3 * selectedgrain1 + 1] = g2ea2;
+				  m_FieldEulerAngles[3 * selectedgrain1 + 2] = g2ea3;
+				  m_FieldEulerAngles[3 * selectedgrain2] = g1ea1;
+				  m_FieldEulerAngles[3 * selectedgrain2 + 1] = g1ea2;
+				  m_FieldEulerAngles[3 * selectedgrain2 + 2] = g1ea3;
 				  simodf[phase]->SetValue(g1odfbin, (simodf[phase]->GetValue(g1odfbin) + (m_Volumes[selectedgrain2] / unbiasedvol[phase])
 					  - (m_Volumes[selectedgrain1] / unbiasedvol[phase])));
 				  simodf[phase]->SetValue(g2odfbin, (simodf[phase]->GetValue(g2odfbin) + (m_Volumes[selectedgrain1] / unbiasedvol[phase])
@@ -660,9 +660,9 @@ void MatchCrystallography::matchCrystallography()
 				  for (size_t j = 0; j < size; j++)
 				  {
 					size_t neighbor = neighborlist[selectedgrain1][j];
-					ea1 = m_EulerAnglesF[3 * neighbor];
-					ea2 = m_EulerAnglesF[3 * neighbor + 1];
-					ea3 = m_EulerAnglesF[3 * neighbor + 2];
+					ea1 = m_FieldEulerAngles[3 * neighbor];
+					ea2 = m_FieldEulerAngles[3 * neighbor + 1];
+					ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 					OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 					float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
 					if(neighbor != selectedgrain2)
@@ -681,9 +681,9 @@ void MatchCrystallography::matchCrystallography()
 				  for (size_t j = 0; j < size; j++)
 				  {
 					size_t neighbor = neighborlist[selectedgrain2][j];
-					ea1 = m_EulerAnglesF[3 * neighbor];
-					ea2 = m_EulerAnglesF[3 * neighbor + 1];
-					ea3 = m_EulerAnglesF[3 * neighbor + 2];
+					ea1 = m_FieldEulerAngles[3 * neighbor];
+					ea2 = m_FieldEulerAngles[3 * neighbor + 1];
+					ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 					OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 					float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
 					if(neighbor != selectedgrain1)
@@ -699,9 +699,9 @@ void MatchCrystallography::matchCrystallography()
   }
   for (int i = 0; i < totalPoints; i++)
   {
-    m_EulerAnglesC[3 * i] = m_EulerAnglesF[3 * m_GrainIds[i]];
-    m_EulerAnglesC[3 * i + 1] = m_EulerAnglesF[3 * m_GrainIds[i] + 1];
-    m_EulerAnglesC[3 * i + 2] = m_EulerAnglesF[3 * m_GrainIds[i] + 2];
+    m_CellEulerAngles[3 * i] = m_FieldEulerAngles[3 * m_GrainIds[i]];
+    m_CellEulerAngles[3 * i + 1] = m_FieldEulerAngles[3 * m_GrainIds[i] + 1];
+    m_CellEulerAngles[3 * i + 2] = m_FieldEulerAngles[3 * m_GrainIds[i] + 2];
   }
 }
 

@@ -45,13 +45,13 @@
 // -----------------------------------------------------------------------------
 FindODF::FindODF()  :
 AbstractFilter(),
-m_EulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_Volumes(NULL),
-m_EulerAngles(NULL),
+m_FieldEulerAngles(NULL),
 m_FieldPhases(NULL),
 m_SurfaceFields(NULL)
 {
@@ -97,7 +97,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	if(preflight == false) find_grainphases->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
   }  
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EulerAngles, ss, -302, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
@@ -202,9 +202,9 @@ void FindODF::execute()
   {
     if (m_SurfaceFields[i] == false)
     {
-      ea1 = m_EulerAngles[3*i];
-      ea2 = m_EulerAngles[3*i+1];
-      ea3 = m_EulerAngles[3*i+2];
+      ea1 = m_FieldEulerAngles[3*i];
+      ea2 = m_FieldEulerAngles[3*i+1];
+      ea3 = m_FieldEulerAngles[3*i+2];
       phase = m_CrystalStructures[m_FieldPhases[i]];
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);

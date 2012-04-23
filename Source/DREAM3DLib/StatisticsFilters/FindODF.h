@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     virtual ~FindODF();
 
 	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_Volumes;
-    float* m_EulerAngles;
+    float* m_FieldEulerAngles;
     int32_t* m_FieldPhases;
     bool* m_SurfaceFields;
 
