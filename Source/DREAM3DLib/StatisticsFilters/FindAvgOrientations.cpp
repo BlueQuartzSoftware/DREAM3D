@@ -50,11 +50,11 @@ m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_EulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
-m_EulerAnglesF(NULL),
+m_FieldEulerAngles(NULL),
 m_Quats(NULL),
 m_AvgQuats(NULL)
 {
@@ -99,7 +99,7 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
 	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, 0, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
@@ -193,9 +193,9 @@ void FindAvgOrientations::execute()
       q[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
 	  if(m_AvgQuats[5*i] == 0) q[1] = 0, q[2] = 0, q[3] = 0, q[4] = 1;
 	  OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-	  m_EulerAnglesF[3*i] = ea1;
-      m_EulerAnglesF[3*i+1] = ea2;
-      m_EulerAnglesF[3*i+2] = ea3;
+	  m_FieldEulerAngles[3*i] = ea1;
+      m_FieldEulerAngles[3*i+1] = ea2;
+      m_FieldEulerAngles[3*i+2] = ea3;
   }
 
   notify("Completed", 0, Observable::UpdateProgressMessage);

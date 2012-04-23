@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
 
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
-    float* m_EulerAnglesF;
+    float* m_FieldEulerAngles;
     float* m_Quats;
     float* m_AvgQuats;
 

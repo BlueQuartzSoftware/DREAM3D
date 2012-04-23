@@ -56,17 +56,6 @@
     setErrorCondition(err);\
   }}
 
-
-#define GET_PREREQ_DATA_SUFFIX( dc, NameSpace, DType, Name, Post, ss, err, ptrType, ArrayType, size, NumComp)\
-  {std::string _s(#Name); addRequired##DType(_s);\
-  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
-  if (NULL == m_##Name##Post ) {\
-    ss << "Filter " << getNameOfClass() << " requires " << #DType << " array '" << \
-    m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
-    /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
-    setErrorCondition(err);\
-  }}
-
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, value, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10000);\
   ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
@@ -89,32 +78,9 @@
     dc->add##DType(m_##Name##ArrayName, p);\
     m_##Name = p->GetPointer(0);\
   }\
-  } }
-
-
-#define CREATE_NON_PREREQ_DATA_SUFFIX(dc, NameSpace, DType, Name, Post, ss, ptrType, ArrayType, value, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10001);\
-  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
-  std::string _s(#Name); addCreated##DType(_s);\
-  int preFlightError = getErrorCondition();\
-  std::string errorMsg = getErrorMessage();\
-  m_##Name##Post = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
-  if (NULL ==  m_##Name##Post ) {\
-    setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
-    if (NULL == p.get()) {\
-      ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
-      m_##Name##ArrayName << "' with size of " << (size*NumComp) << " but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
-      ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl;\
-      setErrorCondition(-500);\
-    } else {\
-      p->initializeWithValues(value);\
-      p->SetNumberOfComponents(NumComp);\
-      p->SetName(m_##Name##ArrayName);\
-      dc->add##DType(m_##Name##ArrayName, p);\
-      m_##Name##Post = p->GetPointer(0);\
-    }\
-  } }
+  } else {\
+   }\
+}
 
 
 /**
@@ -271,8 +237,8 @@ type* valuePtr = NULL;\
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, EulerAngles, C, ss, -300, float, FloatArrayType,  voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType,  voxels, 3);
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
@@ -281,13 +247,13 @@ type* valuePtr = NULL;\
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX( m, DREAM3D, CellData, EulerAngles, C, ss, float, FloatArrayType, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
+  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, voxels, 3);
 
 
   // Field Data
 
-  GET_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
   GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
@@ -320,8 +286,8 @@ type* valuePtr = NULL;\
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, EulerAngles, F, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA_SUFFIX(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float,FloatArrayType, fields, 2);
 

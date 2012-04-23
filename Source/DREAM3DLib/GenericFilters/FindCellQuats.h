@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
      virtual ~FindCellQuats();
 
 	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
 	//------ Created Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
    private:
     int32_t* m_CellPhases;
     float* m_Quats;
-    float* m_EulerAnglesC;
+    float* m_CellEulerAngles;
 	unsigned int* m_CrystalStructures;
 
     std::vector<OrientationMath*> m_OrientationOps;
