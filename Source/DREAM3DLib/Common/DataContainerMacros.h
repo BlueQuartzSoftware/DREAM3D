@@ -72,14 +72,17 @@
     /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
       setErrorCondition(-500);\
     } else {\
-    p->initializeWithValues(value);\
-    p->SetNumberOfComponents(NumComp);\
-    p->SetName(m_##Name##ArrayName);\
-    dc->add##DType(m_##Name##ArrayName, p);\
-    m_##Name = p->GetPointer(0);\
-  }\
+      p->initializeWithValues(value);\
+      p->SetNumberOfComponents(NumComp);\
+      p->SetName(m_##Name##ArrayName);\
+      dc->add##DType(m_##Name##ArrayName, p);\
+      m_##Name = p->GetPointer(0);\
+    }\
   } else {\
-   }\
+    IDataArray::Pointer ptr = dc->get##DType(m_##Name##ArrayName);\
+    ArrayType* p = ArrayType::SafeObjectDownCast<IDataArray*, ArrayType*>(ptr.get());\
+    p->initializeWithValues(value);\
+  }\
 }
 
 
