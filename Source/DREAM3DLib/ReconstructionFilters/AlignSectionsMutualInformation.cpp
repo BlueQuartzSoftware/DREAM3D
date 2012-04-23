@@ -232,17 +232,17 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   int oldyshift = 0;
   float count = 0;
   int slice = 0;
-  int xspot, yspot;
-  float w;
-  float n1, n2, n3;
-  float q1[5];
-  float q2[5];
+//  int xspot, yspot;
+//  float w;
+
+//  float q1[5];
+//  float q2[5];
   int refgnum, curgnum;
   int refposition = 0;
   int curposition = 0;
-  DimType newPosition;
-  DimType currentPosition;
-  unsigned int phase1, phase2;
+//  DimType newPosition;
+
+//  unsigned int  phase2;
 
   form_grains_sections();
 
