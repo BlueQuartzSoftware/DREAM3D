@@ -80,16 +80,26 @@ class SGODFItemDelegate : public QStyledItemDelegate
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
       QLineEdit* editor;
-      QDoubleValidator* weightValidator;
+      QDoubleValidator* validator;
 
       qint32 col = index.column();
-      if (col < SGODFTableModel::ColumnCount)
+      if (col == SGODFTableModel::Sigma)
       {
         editor = new QLineEdit(parent);
         editor->setFrame(false);
-        weightValidator = new QDoubleValidator(editor);
-        weightValidator->setDecimals(4);
-        editor->setValidator(weightValidator);
+        validator = new QDoubleValidator(editor);
+        validator->setDecimals(4);
+        validator->setBottom(1.0);
+        editor->setValidator(validator);
+        return editor;
+      }
+      else if (col < SGODFTableModel::ColumnCount)
+      {
+        editor = new QLineEdit(parent);
+        editor->setFrame(false);
+        validator = new QDoubleValidator(editor);
+        validator->setDecimals(4);
+        editor->setValidator(validator);
         return editor;
       }
       return QStyledItemDelegate::createEditor(parent, option, index);
