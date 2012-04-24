@@ -152,7 +152,7 @@ void FindAvgOrientations::execute()
 	  m_AvgQuats[5*i+3] = 0.0;
 	  m_AvgQuats[5*i+4] = 0.0;
   }
-  float qr[5];
+//  float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)

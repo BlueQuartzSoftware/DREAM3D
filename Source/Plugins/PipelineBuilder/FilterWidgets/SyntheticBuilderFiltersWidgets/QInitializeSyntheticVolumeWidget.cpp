@@ -391,7 +391,7 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   int gid = 1;
 
   float currentvol = 0.0;
-  float vol, random;
+  float vol;
   float diam;
   int volgood = 0;
   for (size_t j = 0; j < primaryphases.size(); ++j)

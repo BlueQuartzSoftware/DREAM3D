@@ -57,7 +57,7 @@
 
 using namespace std;
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 // -----------------------------------------------------------------------------
@@ -142,7 +142,7 @@ void AlignSections::execute()
   int xspot, yspot;
   DimType newPosition;
   DimType currentPosition;
-  unsigned int phase1, phase2;
+//  unsigned int  phase2;
 
   std::vector<int> xshifts;
   std::vector<int> yshifts;
