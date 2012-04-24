@@ -185,15 +185,15 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
   //Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -365,7 +365,7 @@ void PackPrimaryPhases::execute()
 		generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
 		currentsizedisterror = check_sizedisterror(&field);
 		change = (currentsizedisterror) - (oldsizedisterror);
-		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
+		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
 		{
 	      std::stringstream ss;
 	      ss << "Packing Grains - Generating Grain #" << gid;
@@ -403,7 +403,7 @@ void PackPrimaryPhases::execute()
 		generate_grain(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
 		currentsizedisterror = check_sizedisterror(&field);
 		change = (currentsizedisterror) - (oldsizedisterror);
-		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)))
+		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
 		{
 		  std::stringstream ss;
 		  ss << "Packing Grains - Generating Grain #" << gid;
@@ -737,7 +737,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, StatsD
     if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
     vol = fourThirdsPi * ((diam / 2.0f) * (diam / 2.0f) * (diam / 2.0f));
   }
-  int diameter = int((diam - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
+   int diameter = int((diam - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
   float r2 = 0, r3 = 1;
   VectorOfFloatArray bovera = statsDataArray[phase]->getGrainSize_BOverA();
   VectorOfFloatArray covera = statsDataArray[phase]->getGrainSize_COverA();
@@ -1066,13 +1066,13 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
 
       if(m_PeriodicBoundaries == true)
       {
-        int& currentGrainOwner = grainowners[col][row][plane];
         if(col < 0) col = col + packingxpoints;
         if(col > packingxpoints - 1) col = col - packingxpoints;
         if(row < 0) row = row + packingypoints;
         if(row > packingypoints - 1) row = row - packingypoints;
         if(plane < 0) plane = plane + packingzpoints;
         if(plane > packingzpoints - 1) plane = plane - packingzpoints;
+        int& currentGrainOwner = grainowners[col][row][plane];
         fillingerror = fillingerror + (2 * currentGrainOwner - 1);
         packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
         ++currentGrainOwner;
@@ -1103,14 +1103,14 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
       plane = pl_gremove[i];
       if(m_PeriodicBoundaries == true)
       {
-        int& currentGrainOwner = grainowners[col][row][plane];
         if(col < 0) col = col + packingxpoints;
         if(col > packingxpoints - 1) col = col - packingxpoints;
         if(row < 0) row = row + packingypoints;
         if(row > packingypoints - 1) row = row - packingypoints;
         if(plane < 0) plane = plane + packingzpoints;
         if(plane > packingzpoints - 1) plane = plane - packingzpoints;
-        fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
+        int& currentGrainOwner = grainowners[col][row][plane];
+		fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
         currentGrainOwner = currentGrainOwner - 1;
       }
       else

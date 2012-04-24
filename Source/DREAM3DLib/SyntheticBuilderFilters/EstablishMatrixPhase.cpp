@@ -93,9 +93,9 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss,  int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, FieldPhases, ss,  int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
