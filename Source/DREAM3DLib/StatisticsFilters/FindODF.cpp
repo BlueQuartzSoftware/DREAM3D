@@ -191,7 +191,7 @@ void FindODF::execute()
   }
   float ea1, ea2, ea3;
   float r1, r2, r3;
-  for (int i = 0; i < numgrains; i++)
+  for (int i = 1; i < numgrains; i++)
   {
     if (m_SurfaceFields[i] == false)
     {
