@@ -168,16 +168,16 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 1);
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;

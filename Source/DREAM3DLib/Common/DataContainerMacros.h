@@ -56,7 +56,14 @@
     setErrorCondition(err);\
   }}
 
-#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, value, size, NumComp)\
+#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
+    CREATE_NON_PREREQ_DATA_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, true, initValue, size, NumComp)
+
+
+#define CREATE_NON_PREREQ_DATA_NO_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
+    CREATE_NON_PREREQ_DATA_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, false, 0, size, NumComp)
+
+#define CREATE_NON_PREREQ_DATA_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initializeArray, initValue, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10000);\
   ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
   std::string _s(#Name); addCreated##DType(_s);\
@@ -72,19 +79,18 @@
     /*ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
       setErrorCondition(-500);\
     } else {\
-      p->initializeWithValues(value);\
+      p->initializeWithValues(initValue);\
       p->SetNumberOfComponents(NumComp);\
       p->SetName(m_##Name##ArrayName);\
       dc->add##DType(m_##Name##ArrayName, p);\
       m_##Name = p->GetPointer(0);\
     }\
-  } else {\
+  } else if (initializeArray) {\
     IDataArray::Pointer ptr = dc->get##DType(m_##Name##ArrayName);\
     ArrayType* p = ArrayType::SafeObjectDownCast<IDataArray*, ArrayType*>(ptr.get());\
-    p->initializeWithValues(value);\
+    p->initializeWithValues(initValue);\
   }\
 }
-
 
 
 /**
