@@ -57,7 +57,7 @@
 
 using namespace std;
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -219,7 +219,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   int oldyshift = 0;
   float count = 0;
   int slice = 0;
-  int xspot, yspot;
+//  int xspot, yspot;
   float w;
   float n1, n2, n3;
   float q1[5];

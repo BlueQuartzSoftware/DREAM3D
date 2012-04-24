@@ -139,7 +139,7 @@ void EstablishMatrixPhase::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumFieldTuples();
 
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -155,10 +155,10 @@ void EstablishMatrixPhase::execute()
 
   establish_matrix();
 
-  int numfields = m->getNumFieldTuples();
+  size_t numfields = m->getNumFieldTuples();
   for(size_t i = firstMatrixField; i < numfields; i++)
   {
-	m_NumFields[m_FieldPhases[i]]++;
+	  m_NumFields[m_FieldPhases[i]]++;
   }
 
   // If there is an error set this to something negative and also set a message
@@ -206,11 +206,11 @@ void  EstablishMatrixPhase::establish_matrix()
   }
   firstMatrixField = currentnumgrains;
   // size_t index;
-  int phase;
+//  int phase;
   float random;
-  int random2;
-  float xc, yc, zc;
-  double totalmatrixfractions = 0.0;
+//  int random2;
+//  float xc, yc, zc;
+  float totalmatrixfractions = 0.0f;
 
   size_t numensembles = m->getNumEnsembleTuples();
 
@@ -218,7 +218,7 @@ void  EstablishMatrixPhase::establish_matrix()
   {
 	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
     {
-	  m_NumFields[i] = 0;
+	    m_NumFields[i] = 0;
       matrixphases.push_back(i);
       matrixphasefractions.push_back(statsDataArray[i]->getPhaseFraction());
       totalmatrixfractions = totalmatrixfractions + statsDataArray[i]->getPhaseFraction();

@@ -178,7 +178,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
   int oldyshift = 0;
   float count = 0;
   int slice = 0;
-  int xspot, yspot;
+//  int xspot, yspot;
   int refposition = 0;
   int curposition = 0;
 

@@ -327,7 +327,3 @@ type* valuePtr = NULL;\
 
 
  */
-
-
-
-
