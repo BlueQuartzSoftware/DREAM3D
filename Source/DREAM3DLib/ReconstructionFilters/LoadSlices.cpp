@@ -130,7 +130,7 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
