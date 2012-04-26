@@ -58,9 +58,40 @@ int TestCtfReader()
 {
   CtfReader reader;
   reader.setFileName(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::EuropeanInputFile1);
-
+ // reader.setFileName("/Users/Shared/Data/HKL_Data/Oxford_Standard_Ni0.ctf");
   int err =  reader.readFile();
   DREAM3D_REQUIRE(err >= 0);
+
+//  size_t nRows = reader.getNumberOfElements();
+
+#if 0
+  size_t x = reader.getXCells();
+  size_t y = reader.getYCells();
+  size_t z = reader.getZCells();
+  if (z < 0) { z = 1; }
+
+  float* xPtr = reader.getXPointer();
+
+  for (size_t k = 0; k < z; ++k)
+  {
+    for (size_t j = 0; j < y; ++j)
+    {
+      for (size_t i = 0; i < x; ++i)
+      {
+//        if ( *xPtr < 0.1)
+//        {
+//          std::cout << i << "," << j << "," << k << std::endl;
+//        }
+        ++xPtr;
+      }
+
+    }
+ //   std::cout << "Z Slice Done" << std::endl;
+  }
+#endif
+
+#if 1
+
   float xstep = reader.getXStep();
   DREAM3D_REQUIRE(xstep == 0.5f);
   float ystep = reader.getYStep();
@@ -70,7 +101,7 @@ int TestCtfReader()
   std::vector<float> dimensions = phase->getLatticeDimensions();
   DREAM3D_REQUIRE(dimensions[0] >= 3.230f && dimensions[0] <= 3.232f)
   DREAM3D_REQUIRE(dimensions[1] >= 3.230f && dimensions[1] <= 3.232f)
-
+#endif
 
   return 1;
 }
