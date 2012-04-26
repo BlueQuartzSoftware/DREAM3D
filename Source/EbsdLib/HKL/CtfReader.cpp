@@ -48,6 +48,8 @@
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/EbsdMath.h"
 
+
+
 //#define PI_OVER_2f       90.0f
 //#define THREE_PI_OVER_2f 270.0f
 //#define TWO_PIf          360.0f
@@ -57,22 +59,9 @@
 //
 // -----------------------------------------------------------------------------
 CtfReader::CtfReader() :
-EbsdReader()
+EbsdReader(),
+m_SingleSliceRead(-1)
 {
-  m_Phase = NULL;
-  m_X = NULL;
-  m_Y = NULL;
-  m_BandCount = NULL;
-  m_Error = NULL;
-  m_Euler1 = NULL;
-  m_Euler2 = NULL;
-  m_Euler3 = NULL;
-  m_MAD = NULL;
-  m_BC = NULL;
-  m_BS = NULL;
-
-  setNumFields(11);
-
 
   // Initialize the map of header key to header value
   m_Headermap[Ebsd::Ctf::ChannelTextFile] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::ChannelTextFile);
@@ -81,8 +70,10 @@ EbsdReader()
   m_Headermap[Ebsd::Ctf::JobMode] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::JobMode);
   m_Headermap[Ebsd::Ctf::XCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::XCells);
   m_Headermap[Ebsd::Ctf::YCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::YCells);
+  m_Headermap[Ebsd::Ctf::ZCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::ZCells);
   m_Headermap[Ebsd::Ctf::XStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::XStep);
   m_Headermap[Ebsd::Ctf::YStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::YStep);
+  m_Headermap[Ebsd::Ctf::ZStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::ZStep);
   m_Headermap[Ebsd::Ctf::AcqE1] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE1);
   m_Headermap[Ebsd::Ctf::AcqE2] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE2);
   m_Headermap[Ebsd::Ctf::AcqE3] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE3);
@@ -95,8 +86,9 @@ EbsdReader()
   m_Headermap[Ebsd::Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
   m_Headermap[Ebsd::Ctf::NumPhases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::NumPhases);
 
-  setXCells(-1);
-  setYCells(-1);
+  setXCells(0);
+  setYCells(0);
+  setZCells(1);
 
 }
 
@@ -114,32 +106,7 @@ CtfReader::~CtfReader()
 // -----------------------------------------------------------------------------
 void CtfReader::initPointers(size_t numElements)
 {
-  setNumberOfElements(numElements);
-  if (numElements == 0) { return; }
-  size_t numBytes = numElements * sizeof(float);
-  m_Phase = allocateArray<int > (numElements);
-  m_X = allocateArray<float > (numElements);
-  m_Y = allocateArray<float > (numElements);
-  m_BandCount = allocateArray<int > (numElements);
-  m_Error = allocateArray<int > (numElements);
-  m_Euler1 = allocateArray<float> (numElements);
-  m_Euler2 = allocateArray<float > (numElements);
-  m_Euler3 = allocateArray<float > (numElements);
-  m_MAD = allocateArray<float > (numElements);
-  m_BC = allocateArray<int > (numElements);
-  m_BS = allocateArray<int > (numElements);
 
-  ::memset(m_Phase, 0, numBytes);
-  ::memset(m_X, 0, numBytes);
-  ::memset(m_Y, 0, numBytes);
-  ::memset(m_BandCount, 0, numBytes);
-  ::memset(m_Error, 0, numBytes);
-  ::memset(m_Euler1, 0, numBytes);
-  ::memset(m_Euler2, 0, numBytes);
-  ::memset(m_Euler3, 0, numBytes);
-  ::memset(m_MAD, 0, numBytes);
-  ::memset(m_BC, 0, numBytes);
-  ::memset(m_BS, 0, numBytes);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,56 +114,152 @@ void CtfReader::initPointers(size_t numElements)
 // -----------------------------------------------------------------------------
 void CtfReader::deletePointers()
 {
-  this->deallocateArrayData<int > (m_Phase);
-  this->deallocateArrayData<float > (m_X);
-  this->deallocateArrayData<float > (m_Y);
-  this->deallocateArrayData<int > (m_BandCount);
-  this->deallocateArrayData<int > (m_Error);
-  this->deallocateArrayData<float > (m_Euler1);
-  this->deallocateArrayData<float > (m_Euler2);
-  this->deallocateArrayData<float > (m_Euler3);
-  this->deallocateArrayData<float > (m_MAD);
-  this->deallocateArrayData<int > (m_BC);
-  this->deallocateArrayData<int > (m_BS);
+  typedef std::map<std::string, void*> NamePointerMapType;
+
+  for (NamePointerMapType::iterator iter = m_NamePointerMap.begin(); iter != m_NamePointerMap.end(); ++iter )
+  {
+    Ebsd::NumType pType = getPointerType( (*iter).first );
+    if (Ebsd::Int32 == pType)
+    {
+      int32_t* ptr = static_cast<int32_t*>((*iter).second);
+      this->deallocateArrayData<int32_t>(ptr);
+    }
+    else if (Ebsd::Float == pType)
+    {
+      float* ptr = static_cast<float*>((*iter).second);
+      this->deallocateArrayData<float>(ptr);
+    }
+  }
+
+  // Clear out all the maps and vectors
+  m_NamePointerMap.clear();
+  m_NameIndexMap.clear();
+  m_ColumnData.clear();
+  m_DataParsers.clear();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CtfReader::setPointerByName(const std::string &name, void* p)
+{
+  // First we need to see if the pointer already exists
+  std::map<std::string, int>::iterator iter = m_NameIndexMap.find(name);
+  if (iter == m_NameIndexMap.end())
+  {
+    // Data does not exist in Map
+    size_t i = m_ColumnData.size();
+    m_ColumnData.push_back(p);
+    m_NameIndexMap[name] = i;
+    m_NamePointerMap[name] = m_ColumnData[i];
+    if (m_DataParsers.size() <= i)
+    {
+      m_DataParsers.resize(i+1);
+    }
+    m_DataParsers[i] = getParser(name, m_ColumnData[i], getXCells()*getYCells());
+  }
+  else
+  {
+    void* ptr = m_NamePointerMap[name];
+    deallocateArrayData(ptr);
+    m_NamePointerMap[name] = p;
+    int index = m_NameIndexMap[name];
+    m_ColumnData[index] = p;
+    m_DataParsers[index] = getParser(name, m_ColumnData[index], getXCells()*getYCells());
+  }
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void* CtfReader::getPointerByName(const std::string &fieldName)
 {
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return static_cast<void*>(m_Y);}
-  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return static_cast<void*>(m_BandCount);}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return static_cast<void*>(m_Error);}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return static_cast<void*>(m_Euler3);}
-  if (fieldName.compare(Ebsd::Ctf::MeanAngularDeviation) == 0) { return static_cast<void*>(m_MAD);}
-  if (fieldName.compare(Ebsd::Ctf::BandContrast) == 0) { return static_cast<void*>(m_BC);}
-  if (fieldName.compare(Ebsd::Ctf::BandSlope) == 0) { return static_cast<void*>(m_BS);}
-  return NULL;
+  void* ptr = NULL;
+  std::map<std::string, void*>::iterator iter = m_NamePointerMap.find(fieldName);
+  if(iter != m_NamePointerMap.end())
+  {
+    ptr = (*iter).second;
+    return ptr;
+  }
+  return ptr;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
-  {
+{
+ // std::cout << "fieldName: " << fieldName << std::endl;
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::MeanAngularDeviation) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::BandContrast) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::BandSlope) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return Ebsd::Float;}
+  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Ebsd::Int32;}
+  std::cout << "THIS IS NOT GOOD. Fieldname: " << fieldName << " was not found in the list" << std::endl;
   return Ebsd::UnknownNumType;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::getTypeSize(const std::string &fieldName)
+{
+  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return 4;}
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataParser::Pointer CtfReader::getParser(const std::string &fieldName, void* ptr, size_t size)
+{
+  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  return DataParser::NullPointer();
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -209,7 +272,7 @@ int CtfReader::readHeaderOnly()
 
   if (!in.is_open())
   {
-    std::cout << "Ang file could not be opened: " << getFileName() << std::endl;
+    std::cout << "ctf file could not be opened: " << getFileName() << std::endl;
     return -100;
   }
 
@@ -265,52 +328,116 @@ int CtfReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CtfReader::readOnlySliceIndex(int slice)
+{
+  m_SingleSliceRead = slice;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int CtfReader::readData(std::ifstream &in)
 {
   // Delete any currently existing pointers
-   deletePointers();
+  deletePointers();
 
-   // Initialize new pointers
-   size_t yCells = getYCells();
-   size_t xCells = getXCells();
-   size_t totalDataRows = yCells * xCells;
+  // Initialize new pointers
+  size_t yCells = getYCells();
+  size_t xCells = getXCells();
+  int zCells = getZCells();
+  int zStart = 0;
+  int zEnd = zCells;
+  if(zCells < 0 || m_SingleSliceRead >= 0)
+  {
+    zCells = 1;
+  }
+  size_t totalDataRows = yCells * xCells * zCells;
 
+  setNumberOfElements(totalDataRows);
 
-   initPointers(totalDataRows);
-   if (NULL == getPhasePointer() || NULL == getXPointer() || NULL == getYPointer()
-       || NULL == getBandCountPointer()  || NULL == getErrorPointer()
-       || NULL == getEuler1Pointer() || getEuler2Pointer() == NULL || getEuler3Pointer() == NULL
-       || NULL == getMeanAngularDeviationPointer() || NULL == getBandContrastPointer() || NULL == getBandSlopePointer())
-   {
-     return -1;
-   }
+  char buf[kBufferSize];
+  ::memset(buf, 0, kBufferSize);
+  in.getline(buf, kBufferSize);
+  // over write the newline at the end of the line with a NULL character
+  int i = 0;
+  while (buf[i] != 0 && i < kBufferSize) { ++i; }
+  if(buf[i - 1] < 32) { buf[i - 1] = 0; }
 
+  std::vector<std::string> tokens = tokenize(buf, '\t');
 
-   size_t counter = 0;
-   char buf[kBufferSize];
+  m_ColumnData.resize(tokens.size());
+  m_DataParsers.resize(tokens.size());
 
-   for (size_t row = 0; row < yCells ; ++row)
-   {
-     for (size_t col = 0; col < xCells; ++col)
-     {
-       in.getline(buf, kBufferSize);
-       if (in.eof() == true) break;
-       parseDataLine(buf, row, col, counter, xCells, yCells);
-       ++counter;
-     }
-     if (in.eof() == true) break;
-   }
+  Ebsd::NumType pType = Ebsd::UnknownNumType;
+  size_t size = tokens.size();
+  for (size_t i = 0; i < size; ++i)
+  {
+    pType = getPointerType(tokens[i]);
+    if(Ebsd::Int32 == pType)
+    {
+      m_ColumnData[i] = static_cast<void*>(allocateArray<int>(totalDataRows));
+      ::memset(m_ColumnData[i], 0xAB, sizeof(int) * totalDataRows);
+    }
+    else if(Ebsd::Float == pType)
+    {
+      m_ColumnData[i] = static_cast<void*>(allocateArray<float>(totalDataRows));
+      ::memset(m_ColumnData[i], 0xFF, sizeof(float) * totalDataRows);
+    }
+    else
+    {
+      assert(0);
+    }
 
+    if(m_ColumnData[i] == NULL)
+    {
+      return -1; // Could not allocate the memory
+    }
+    m_NameIndexMap[tokens[i]] = i;
+    m_NamePointerMap[tokens[i]] = m_ColumnData[i];
+    m_DataParsers[i] = getParser(tokens[i], m_ColumnData[i], totalDataRows);
+  }
 
-   if (counter != getNumberOfElements() && in.eof() == true)
-   {
-     std::cout << "Premature End Of File reached.\n"
-         << getFileName()
-         << "\nNumRows=" << getNumberOfElements()
-         << "\ncounter=" << counter
-         << "\nTotal Data Points Read=" << counter << std::endl;
-   }
-   return 0;
+  size_t counter = 0;
+  for (int slice = zStart; slice < zEnd; ++slice)
+  {
+    for (size_t row = 0; row < yCells; ++row)
+    {
+      for (size_t col = 0; col < xCells; ++col)
+      {
+        ::memset(buf, 0, kBufferSize);
+        in.getline(buf, kBufferSize);
+
+        if ( (m_SingleSliceRead < 0) || (m_SingleSliceRead >= 0 && slice == m_SingleSliceRead) )
+        {
+          i = 0;
+          while (buf[i] != 0 && i < kBufferSize) { ++i; }
+          if(buf[i - 1] < 32) { buf[i - 1] = 0; }
+          if(in.eof() == true) {
+            break;
+          }
+          parseDataLine(buf, row, col, counter, xCells, yCells);
+          ++counter;
+        }
+
+      }
+      if(in.eof() == true)
+      {
+        break;
+      }
+    }
+ //   std::cout << ".ctf Z Slice " << slice << " Reading complete." << std::endl;
+    if(m_SingleSliceRead >= 0 && slice == m_SingleSliceRead)
+    {
+      break;
+    }
+  }
+
+  if(counter != getNumberOfElements() && in.eof() == true)
+  {
+    std::cout << "Premature End Of File reached.\n" << getFileName() << "\nNumRows=" << getNumberOfElements() << "\ncounter=" << counter
+        << "\nTotal Data Points Read=" << counter << std::endl;
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -364,10 +491,9 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       EbsdHeaderEntry::Pointer p5 = m_Headermap[line[11]];
       p5->parseValue(const_cast<char*>(line[12].c_str()), 0, line[12].length());
     }
-    else if(line[0].compare("Channel Text File") == 0)
+    else if(line[0].compare("Channel Text File") == 0 || line[0].compare(":Channel Text File") == 0)
     {
       // We do not really do anything with this entry
-      //  EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
     }
     else // This is the generic Catch all
     {
@@ -393,43 +519,37 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
   return err;
 }
 
+
+
 // -----------------------------------------------------------------------------
 //  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells )
+void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */
-  float x, y,  p1, p, p2, mad;
-  int phase, bCount, error, bc, bs;
-  size_t offset = i;
+//  float x, y,  p1, p, p2, mad;
+//  int phase, bCount, error, bc, bs;
+//  size_t offset = i;
 
   // Filter the line to convert European command style decimals to US/UK style points
   std::vector<char> cLine(line.size()+1);
   ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
   for (size_t c = 0; c < cLine.size(); ++c)
   {
-    if (cLine[c] == ',') { cLine[c] = '.';}
+    if(cLine[c] == ',')
+    {
+      cLine[c] = '.';
+    }
   }
 
+  std::vector<std::string> tokens = tokenize( &(cLine.front()), '\t');
+  assert(tokens.size() == m_DataParsers.size());
 
-  int fields = sscanf( &(cLine.front()), "%d\t%f\t%f\t%d\t%d\t%f\t%f\t%f\t%f\t%d\t%d",
-                       &phase, &x,&y, &bCount, &error, &p1, &p, &p2, &mad, &bc, &bs);
-  assert(fields == getNumFields());
-
-  offset = i;
-
-  m_Phase[offset] = phase;
-  m_X[offset] = x;
-  m_Y[offset] = y;
-  m_BandCount[offset] = bCount;
-  m_Error[offset] = error;
-  m_Euler1[offset] = p1;
-  m_Euler2[offset] = p;
-  m_Euler3[offset] = p2;
-  m_MAD[offset] = mad;
-  m_BC[offset] = bc;
-  m_BS[offset] = bs;
+  for (unsigned int i = 0; i < m_DataParsers.size(); ++i)
+  {
+    m_DataParsers[i]->parse(tokens[i], offset);
+  }
 
 }
 
@@ -464,6 +584,9 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 {
   int err = 0;
   char buf[kBufferSize];
+  int index = 0;
+  int phaseLineIndex = 0;
+  int numPhases = 0;
   while (!reader.eof() && false == getHeaderIsComplete())
   {
     ::memset(buf, 0, kBufferSize);
@@ -473,18 +596,41 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 
     // Replace the newline at the end of the line with a NULL character
     int i = 0;
-    while(buf[i] != 0 ) {++i;}
-    if (buf[i-1] < 32) {
-      buf[i-1] = 0;
-    }
+    while (buf[i] != 0 && i < kBufferSize) { ++i; }
+    if(buf[i - 1] < 32) { buf[i - 1] = 0; }
 
     std::vector<std::string> tokens = tokenize(buf, '\t');
+
+    // Once we hit the "Phases" header line we know exactly how many lines we have left to read
+    if (tokens[0].compare("Phases") == 0)
+    {
+      phaseLineIndex = index;
+      numPhases = atoi(tokens[1].c_str());
+      headerLines.push_back(tokens);
+      for(int n = 0; n < numPhases; ++n)
+      {
+        ::memset(buf, 0, kBufferSize);
+        reader.getline(buf, kBufferSize);
+        appendOriginalHeader(std::string(buf));
+        i = 0;
+        while (buf[i] != 0 && i < kBufferSize) { ++i; }
+        if(buf[i - 1] < 32) { buf[i - 1] = 0; }
+        tokens = tokenize(buf, '\t');
+        headerLines.push_back(tokens);
+      }
+      setHeaderIsComplete(true);
+      break;
+    }
+
+
+    ++index;
 
     // Remove empty lines
     if (buf[0] == 0) continue;
 
     // End when column header line is read
-    if (isDataHeaderLine(tokens)) {
+    if (isDataHeaderLine(tokens))
+    {
       setHeaderIsComplete(true);
       break;
     }
@@ -541,62 +687,104 @@ void CtfReader::setYDimension(int ydim)
   setYCells(ydim);
 }
 
+#define CTF_SHUFFLE_ARRAY(tempPtr, var, type, numRows)\
+  for (size_t i = 0; i < numRows; ++i) {\
+    size_t nIdx = shuffleTable[i];\
+    tempPtr[nIdx] = var[i];\
+  }\
+  /* Copy the values back into the array over writing the original values*/\
+  ::memcpy(var, tempPtr, numRows * sizeof(type));
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void CtfReader::transformData()
 {
   float* p1 = getEuler1Pointer();
-  float* p = getEuler2Pointer();
-  float* p2 = getEuler3Pointer();
-
-  int* ph = getPhasePointer();
-  int* bCount = getBandCountPointer();
-  int* error = getErrorPointer();
-  float* mad = getMeanAngularDeviationPointer();
-  int* bc = getBandContrastPointer();
-  int* bs = getBandSlopePointer();
-
   size_t offset = 0;
-
   size_t yCells = getYCells();
   size_t xCells = getXCells();
-  size_t totalDataRows = yCells * xCells;
+  size_t zCells = getZCells();
+  if (zCells < 0 || m_SingleSliceRead >= 0)
+  {
+    zCells = 1;
+  }
+  size_t rowsPerSlice = yCells * xCells;
 
-  std::vector<size_t> shuffleTable(totalDataRows, 0);
+  std::vector<size_t> shuffleTable(rowsPerSlice, 0);
 
   size_t i = 0;
   size_t adjustedcol, adjustedrow;
-  for(size_t row = 0; row < yCells; ++row)
-   {
 
-     for(size_t col = 0; col < xCells; ++col)
-     {
-	   adjustedcol = col;
-	   adjustedrow = row;
-	   if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
-	   if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
-       offset = (adjustedrow*xCells)+(adjustedcol);
-       if(getAlignEulers() == true)
-	   {
-		  p1[i] = p1[i];
-	   }
-       shuffleTable[(row*xCells)+col] = offset;
-       ++i;
-     }
-   }
+  int* intPtr = allocateArray<int>(rowsPerSlice);
+  float* floatPtr = allocateArray<float>(rowsPerSlice);
 
+  for (size_t slice = 0; slice < zCells; ++slice)
+  {
+    for (size_t row = 0; row < yCells; ++row)
+    {
+      for (size_t col = 0; col < xCells; ++col)
+      {
+        adjustedcol = col;
+        adjustedrow = row;
+        if(getRotateSlice() == true) adjustedcol = (xCells - 1) - adjustedcol, adjustedrow = (yCells - 1) - adjustedrow;
+        if(getReorderArray() == true) adjustedrow = (yCells - 1) - adjustedrow;
+        offset = (slice*xCells*yCells) + (adjustedrow * xCells) + (adjustedcol);
+        if(getAlignEulers() == true)
+        {
+          p1[i] = p1[i];
+        }
+        shuffleTable[(row * xCells) + col] = offset;
+        ++i;
+      }
+    }
 
-  SHUFFLE_ARRAY(Phase, ph, int)
-  SHUFFLE_ARRAY(BandCount, bCount, int)
-  SHUFFLE_ARRAY(Error, error, int)
-  SHUFFLE_ARRAY(Euler1, p1, float)
-  SHUFFLE_ARRAY(Euler2, p, float)
-  SHUFFLE_ARRAY(Euler3, p2, float)
-  SHUFFLE_ARRAY(MeanAngularDeviation, mad, float)
-  SHUFFLE_ARRAY(BandContrast, bc, int)
-  SHUFFLE_ARRAY(BandSlope, bs, int)
+    Ebsd::NumType numType = Ebsd::UnknownNumType;
+    std::string colName;
+    for (std::map<std::string, int>::iterator iter = m_NameIndexMap.begin(); iter != m_NameIndexMap.end(); ++iter )
+    {
+      colName = (*iter).first;
+      numType = getPointerType(colName);
+      if(numType == Ebsd::Int32)
+      {
+        int32_t* ptr = static_cast<int32_t*>(getPointerByName(colName));
+        if (NULL == ptr) { assert(false); } // We are going to crash here. I would rather crash than have bad data
+        ptr = ptr + (slice * xCells * yCells); // Put the pointer at the proper offset into the larger array
+        CTF_SHUFFLE_ARRAY(intPtr, ptr, int, rowsPerSlice);
+      }
+      else if (numType == Ebsd::Float)
+      {
+        float* ptr = static_cast<float*>(getPointerByName(colName));
+        if (NULL == ptr) { assert(false); } // We are going to crash here. I would rather crash than have bad data
+        ptr = ptr + (slice * xCells * yCells); // Put the pointer at the proper offset into the larger array
+        CTF_SHUFFLE_ARRAY(floatPtr, ptr, float, rowsPerSlice);
+      }
+      else
+      {
+        assert(false); // We are going to crash here because I would rather crash than have bad data
+      }
+    }
 
+  } // End slice loop
+
+  delete [] intPtr;
+  delete [] floatPtr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::string> CtfReader::getColumnNames()
+{
+  std::vector<std::string> names;
+  for (std::map<std::string, int>::iterator iter = m_NameIndexMap.begin(); iter != m_NameIndexMap.end(); ++iter )
+  {
+    names.push_back((*iter).first);
+  }
+
+  return names;
 }
 
 #define CTF_PRINT_HEADER_VALUE(var, out)\

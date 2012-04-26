@@ -52,7 +52,7 @@
 #include "CtfConstants.h"
 #include "CtfHeaderEntry.h"
 #include "CtfPhase.h"
-
+#include "DataParser.hpp"
 
 
 /**
@@ -77,8 +77,10 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, ZCells, Ebsd::Ctf::ZCells)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
+    EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, ZStep, Ebsd::Ctf::ZStep)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
@@ -93,23 +95,27 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 
     EBSD_INSTANCE_PROPERTY(std::vector<CtfPhase::Pointer>, PhaseVector)
 
-    EBSD_POINTER_PROPERTY(Phase, Phase, int)
-    EBSD_POINTER_PROPERTY(X, X, float)
-    EBSD_POINTER_PROPERTY(Y, Y, float)
-    EBSD_POINTER_PROPERTY(BandCount, BandCount, int)
-    EBSD_POINTER_PROPERTY(Error, Error, int)
-    EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
-    EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
-    EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
-    EBSD_POINTER_PROPERTY(MeanAngularDeviation, MAD, float)
-    EBSD_POINTER_PROPERTY(BandContrast, BC, int)
-    EBSD_POINTER_PROPERTY(BandSlope, BS, int)
+    EBSD_POINTER_PROP(Phase, Phase, int)
+    EBSD_POINTER_PROP(X, X, float)
+    EBSD_POINTER_PROP(Y, Y, float)
+    EBSD_POINTER_PROP(Z, Z, float)
+    EBSD_POINTER_PROP(BandCount, Bands, int)
+    EBSD_POINTER_PROP(Error, Error, int)
+    EBSD_POINTER_PROP(Euler1, Euler1, float)
+    EBSD_POINTER_PROP(Euler2, Euler2, float)
+    EBSD_POINTER_PROP(Euler3, Euler3, float)
+    EBSD_POINTER_PROP(MeanAngularDeviation, MAD, float)
+    EBSD_POINTER_PROP(BandContrast, BC, int)
+    EBSD_POINTER_PROP(BandSlope, BS, int)
 
     /**
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.
      */
     void* getPointerByName(const std::string &fieldName);
+    void setPointerByName(const std::string &name, void* p);
+
+
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
@@ -117,6 +123,10 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @param fieldName The name of the field.
      */
     Ebsd::NumType getPointerType(const std::string &fieldName);
+    int getTypeSize(const std::string &fieldName);
+    DataParser::Pointer getParser(const std::string &fieldName, void* ptr, size_t size);
+
+    std::vector<std::string> getColumnNames();
 
     /**
     * @brief Reads the complete HKL .ctf file.
@@ -129,6 +139,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @return 1 on success
     */
     virtual int readHeaderOnly();
+
+    virtual void readOnlySliceIndex(int slice);
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation
@@ -146,46 +158,66 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     virtual void setYDimension(int ydim);
 
 
-    virtual void transformData();
+
 
     virtual void printHeader(std::ostream &out);
 
   protected:
-
+    virtual void transformData();
 
   private:
-     std::vector<std::string> tokenize(char* buf, char delimiter);
+    int m_SingleSliceRead;
+    std::vector<void*>  m_ColumnData;
+    std::map<std::string, int> m_NameIndexMap;
+    std::map<std::string, void*> m_NamePointerMap;
+    std::vector<DataParser::Pointer> m_DataParsers;
 
-     int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
+    /**
+     * @brief Breaks a string apart into string tokens using the delimiter
+     * @param buf
+     * @param delimiter
+     */
+    std::vector<std::string> tokenize(char* buf, char delimiter);
 
-     /**
-      * Checks that the line is the header of the columns for the data.
-      *
-      * @param columns
-      *            line values
-      * @return <code>true</code> if the line is the columns header line,
-      *         <code>false</code> otherwise
-      */
-     bool isDataHeaderLine(std::vector<std::string> &columns);
+    /**
+     * @brief
+     * @param reader
+     * @param headerLines
+     * @return
+     */
+    int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
 
-     /**
-      *
-      */
-     int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
+    /**
+    * Checks that the line is the header of the columns for the data.
+    *
+    * @param columns
+    *            line values
+    * @return <code>true</code> if the line is the columns header line,
+    *         <code>false</code> otherwise
+    */
+    bool isDataHeaderLine(std::vector<std::string> &columns);
 
+    /**
+    *
+    */
+    int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
 
-     int readData(std::ifstream &in);
+    /**
+     * @brief
+     * @param in The input file stream to read from
+     */
+    int readData(std::ifstream &in);
 
-     /**
-      * @brief Reads a line of Data from the ASCII based file
-      * @param line The current line of data
-      * @param row Current Row of Data
-      * @param i The current index into a flat array
-      * @param xCells Number of X Data Points
-      * @param yCells Number of Y Data Points
-      * @param col The current Column of Data
-      */
-     void parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
+    /**
+    * @brief Reads a line of Data from the ASCII based file
+    * @param line The current line of data
+    * @param row Current Row of Data
+    * @param i The current index into a flat array
+    * @param xCells Number of X Data Points
+    * @param yCells Number of Y Data Points
+    * @param col The current Column of Data
+    */
+    void parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

@@ -68,7 +68,9 @@ EbsdImporter(),
 xDim(0),
 yDim(0),
 xRes(0),
-yRes(0)
+yRes(0),
+zRes(0),
+m_NumSlicesImported(1)
 {
 }
 
@@ -105,9 +107,8 @@ H5CtfImporter::~H5CtfImporter()
     return -1; }\
 }
 
-#define WRITE_EBSD_DATA_ARRAY(reader, type, gid, prpty, key)\
+#define WRITE_EBSD_DATA_ARRAY(reader, type, gid, key)\
 {\
-  type* dataPtr = reader.get##prpty##Pointer();\
   if (NULL != dataPtr) {\
     err = H5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
     if (err < 0) {\
@@ -139,6 +140,13 @@ void H5CtfImporter::getResolution(float &x, float &y)
   y = yRes;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5CtfImporter::numberOfSlicesImported()
+{
+  return m_NumSlicesImported;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -179,33 +187,63 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     return -1;
   }
 
+  bool multiSliceFile = false;
+  // Now we have to figure out if this file is really a 3D file. We can do that
+  // by looking for the "Z" position array. Only 3D files will have this:
+  float* zPtr = reader.getZPointer();
+  if(NULL != zPtr)
+  {
+    multiSliceFile = true;
+  }
+  int zSlices = reader.getZCells();
+
+  // This scheme is going to fail if the user has multiple HKL 3D files where each
+  // file as multiple slices. We really need to keep track of what slice we are
+  // on at the next level up that this level.
+  m_NumSlicesImported = 0;
+  for(int slice = 0; slice < zSlices; ++slice)
+  {
+    writeSliceData(fileId, reader, z + slice, slice);
+    ++m_NumSlicesImported;
+  }
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int actualSlice)
+{
+//  std::cout << "Writing Slice " << actualSlice << " as " << z << std::endl;
+  int err = 0;
   // Start creating the HDF5 group structures for this file
   hid_t ctfGroup = H5Utilities::createGroup(fileId, StringUtils::numToString(z));
-  if (ctfGroup < 0)
+  if(ctfGroup < 0)
   {
     std::ostringstream ss;
     ss << "H5CtfImporter Error: A Group for Z index " << z << " could not be created."
-         << " Please check other error messages from the HDF5 library for possible reasons.";
+        << " Please check other error messages from the HDF5 library for possible reasons.";
     setErrorMessage(ss.str());
     setErrorCondition(-500);
     return -1;
   }
 
   hid_t gid = H5Utilities::createGroup(ctfGroup, Ebsd::H5::Header);
-  if (gid < 0)
+  if(gid < 0)
   {
     std::ostringstream ss;
     ss << "H5CtfImporter Error: The 'Header' Group for Z index " << z << " could not be created."
-         << " Please check other error messages from the HDF5 library for possible reasons.";
+        << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(ctfGroup);
     setErrorMessage(ss.str());
     setErrorCondition(-600);
     return -1;
   }
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Prj, Ebsd::Ctf::Prj)
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Author, Ebsd::Ctf::Author)
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, JobMode, Ebsd::Ctf::JobMode)
+
+  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Prj, Ebsd::Ctf::Prj);
+  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Author, Ebsd::Ctf::Author);
+  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, JobMode, Ebsd::Ctf::JobMode);
   WRITE_EBSD_HEADER_DATA(reader, int, XCells, Ebsd::Ctf::XCells)
   xDim = reader.getXCells();
   WRITE_EBSD_HEADER_DATA(reader, int, YCells, Ebsd::Ctf::YCells)
@@ -215,22 +253,32 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
   WRITE_EBSD_HEADER_DATA(reader, float, YStep, Ebsd::Ctf::YStep)
   yRes = reader.getYStep();
 
-  WRITE_EBSD_HEADER_DATA(reader, float, AcqE1, Ebsd::Ctf::AcqE1)
-  WRITE_EBSD_HEADER_DATA(reader, float, AcqE2, Ebsd::Ctf::AcqE2)
-  WRITE_EBSD_HEADER_DATA(reader, float, AcqE3, Ebsd::Ctf::AcqE3)
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Euler, Ebsd::Ctf::Euler)
-  WRITE_EBSD_HEADER_DATA(reader, int, Mag, Ebsd::Ctf::Mag)
-  WRITE_EBSD_HEADER_DATA(reader, int, Coverage, Ebsd::Ctf::Coverage)
-  WRITE_EBSD_HEADER_DATA(reader, int, Device, Ebsd::Ctf::Device)
-  WRITE_EBSD_HEADER_DATA(reader, int, KV, Ebsd::Ctf::KV)
-  WRITE_EBSD_HEADER_DATA(reader, float, TiltAngle, Ebsd::Ctf::TiltAngle)
+  float* zPtr = reader.getZPointer();
+  if(NULL != zPtr)
+  {
+    WRITE_EBSD_HEADER_DATA(reader, int, ZCells, Ebsd::Ctf::ZCells)
+    zDim = reader.getZCells();
+    WRITE_EBSD_HEADER_DATA(reader, float, ZStep, Ebsd::Ctf::ZStep)
+    zRes = reader.getZStep();
+  }
+
+  WRITE_EBSD_HEADER_DATA(reader, float, AcqE1, Ebsd::Ctf::AcqE1);
+  WRITE_EBSD_HEADER_DATA(reader, float, AcqE2, Ebsd::Ctf::AcqE2);
+  WRITE_EBSD_HEADER_DATA(reader, float, AcqE3, Ebsd::Ctf::AcqE3);
+  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Euler, Ebsd::Ctf::Euler);
+  WRITE_EBSD_HEADER_DATA(reader, int, Mag, Ebsd::Ctf::Mag);
+  WRITE_EBSD_HEADER_DATA(reader, int, Coverage, Ebsd::Ctf::Coverage);
+  WRITE_EBSD_HEADER_DATA(reader, int, Device, Ebsd::Ctf::Device);
+  WRITE_EBSD_HEADER_DATA(reader, int, KV, Ebsd::Ctf::KV);
+  WRITE_EBSD_HEADER_DATA(reader, float, TiltAngle, Ebsd::Ctf::TiltAngle);
   WRITE_EBSD_HEADER_DATA(reader, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
   hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::H5::Phases);
-  if (phasesGid < 0) {
+  if(phasesGid < 0)
+  {
     std::ostringstream ss;
     ss << "H5CtfImporter Error: The 'Header' Group for the Phases could not be created."
-         << " Please check other error messages from the HDF5 library for possible reasons.";
+        << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(gid);
     err = H5Gclose(ctfGroup);
@@ -242,21 +290,20 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
   // Close this group
   err = H5Gclose(phasesGid);
 
-
   std::string ctfCompleteHeader = reader.getOriginalHeader();
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, ctfCompleteHeader);
-  err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, ctfFile);
+  err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, reader.getFileName());
 
   // Close the "Header" group
   err = H5Gclose(gid);
 
   // Create the "Data" group
   gid = H5Utilities::createGroup(ctfGroup, Ebsd::H5::Data);
-  if (gid < 0)
+  if(gid < 0)
   {
     std::ostringstream ss;
     ss << "H5CtfImporter Error: The 'Data' Group for Z index " << z << " could not be created."
-         << " Please check other error messages from the HDF5 library for possible reasons."<< std::endl;
+        << " Please check other error messages from the HDF5 library for possible reasons." << std::endl;
     progressMessage(ss.str(), 100);
     err = H5Gclose(ctfGroup);
     setErrorMessage(ss.str());
@@ -265,31 +312,54 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
   }
 
   int32_t rank = 1;
-  hsize_t dims[1] = { reader.getXCells() * reader.getYCells() };
+  hsize_t dims[1] =
+  { reader.getXCells() * reader.getYCells() };
 
-  WRITE_EBSD_DATA_ARRAY(reader, int, gid, Phase, Ebsd::Ctf::Phase);
-  WRITE_EBSD_DATA_ARRAY(reader, float, gid, X, Ebsd::Ctf::X);
-  WRITE_EBSD_DATA_ARRAY(reader, float, gid, Y, Ebsd::Ctf::Y);
-  WRITE_EBSD_DATA_ARRAY(reader, int, gid, BandCount, Ebsd::Ctf::BandCount);
-  WRITE_EBSD_DATA_ARRAY(reader, int, gid, Error, Ebsd::Ctf::Error);
-  WRITE_EBSD_DATA_ARRAY(reader, float, gid, Euler1, Ebsd::Ctf::Euler1);
-  WRITE_EBSD_DATA_ARRAY(reader, float, gid, Euler2, Ebsd::Ctf::Euler2);
-  WRITE_EBSD_DATA_ARRAY(reader, float, gid, Euler3, Ebsd::Ctf::Euler3);
-  WRITE_EBSD_DATA_ARRAY(reader, float, gid, MeanAngularDeviation, Ebsd::Ctf::MeanAngularDeviation);
-  WRITE_EBSD_DATA_ARRAY(reader, int, gid, BandContrast, Ebsd::Ctf::BandContrast);
-  WRITE_EBSD_DATA_ARRAY(reader, int, gid, BandSlope, Ebsd::Ctf::BandSlope);
+  Ebsd::NumType numType = Ebsd::UnknownNumType;
+  std::vector<std::string> columnNames = reader.getColumnNames();
+  for (size_t i = 0; i < columnNames.size(); ++i)
+  {
+    numType = reader.getPointerType(columnNames[i]);
+    if(numType == Ebsd::Int32)
+    {
+      int32_t* dataPtr = static_cast<int32_t*>(reader.getPointerByName(columnNames[i]));
+      if(NULL == dataPtr)
+      {
+        assert(false);
+      } // We are going to crash here. I would rather crash than have bad data
+      dataPtr = dataPtr + (actualSlice * dims[0]); // Put the pointer at the proper offset into the larger array
+      WRITE_EBSD_DATA_ARRAY(reader, int, gid, columnNames[i]);
+    }
+    else if(numType == Ebsd::Float)
+    {
+      float* dataPtr = static_cast<float*>(reader.getPointerByName(columnNames[i]));
+      if(NULL == dataPtr)
+      {
+        assert(false);
+      } // We are going to crash here. I would rather crash than have bad data
+      dataPtr = dataPtr + (actualSlice * dims[0]); // Put the pointer at the proper offset into the larger array
+      WRITE_EBSD_DATA_ARRAY(reader, float, gid, columnNames[i]);
+    }
+    else
+    {
+      assert(false);
+      // We are going to crash here because I would rather crash than have bad data
+    }
+  }
 
   // Close the "Data" group
   err = H5Gclose(gid);
 
   // Close the group for this file
   err = H5Gclose(ctfGroup);
-
   return err;
 }
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 #define WRITE_PHASE_HEADER_DATA(reader, type, prpty, key)\
 {\
   type t = reader->get##prpty();\

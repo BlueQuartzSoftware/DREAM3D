@@ -108,8 +108,10 @@ namespace Ctf
   DECLARE_STRING_CONST(JobMode);
   DECLARE_STRING_CONST(XCells);
   DECLARE_STRING_CONST(YCells);
+  DECLARE_STRING_CONST(ZCells);
   DECLARE_STRING_CONST(XStep);
   DECLARE_STRING_CONST(YStep);
+  DECLARE_STRING_CONST(ZStep);
   DECLARE_STRING_CONST(AcqE1);
   DECLARE_STRING_CONST(AcqE2);
   DECLARE_STRING_CONST(AcqE3);
@@ -133,17 +135,22 @@ namespace Ctf
   DECLARE_STRING_CONST(Comment);
 
   // These are the names of the Data Columns
-  const std::string Phase("PhaseData");
-  const std::string X("X Position");
-  const std::string Y("Y Position");
-  DECLARE_STRING_CONST(BandCount);
+  const std::string Phase("Phase");
+  const std::string X("X");
+  const std::string Y("Y");
+  const std::string Z("Z");
+  DECLARE_STRING_CONST(Bands);
   DECLARE_STRING_CONST(Error);
-  const std::string Euler1("Phi1");
-  const std::string Euler2("Phi");
-  const std::string Euler3("Phi2");
-  DECLARE_STRING_CONST(MeanAngularDeviation);
-  DECLARE_STRING_CONST(BandContrast); // BC
-  DECLARE_STRING_CONST(BandSlope); // BS
+  const std::string Euler1("Euler1");
+  const std::string Euler2("Euler2");
+  const std::string Euler3("Euler3");
+  DECLARE_STRING_CONST(MAD);
+  DECLARE_STRING_CONST(BC); // BC
+  DECLARE_STRING_CONST(BS); // BS
+  DECLARE_STRING_CONST(GrainIndex); // GrainIndex
+  DECLARE_STRING_CONST(GrainRandomColourR);
+  DECLARE_STRING_CONST(GrainRandomColourG);
+  DECLARE_STRING_CONST(GrainRandomColourB);
 
 } // End namespace Ctf
 

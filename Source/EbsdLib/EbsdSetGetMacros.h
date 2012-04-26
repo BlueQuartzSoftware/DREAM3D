@@ -331,6 +331,15 @@ void set##name##Pointer(type* f)\
     m_##var = f;\
   }
 
+#define EBSD_POINTER_PROP(name, var, type)\
+public:\
+type* get##name##Pointer() { return static_cast<type*>(getPointerByName(#var)); }\
+void set##name##Pointer(type* p) { \
+  setPointerByName(#name,p);\
+}
+
+
+
 
 // -----------------------------------------------------------------------------
 //

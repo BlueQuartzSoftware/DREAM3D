@@ -69,12 +69,12 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
       T fields;
       fields.push_back(Ebsd::Ctf::Phase.c_str());
 
-      fields.push_back(Ebsd::Ctf::BandCount.c_str());
+      fields.push_back(Ebsd::Ctf::Bands.c_str());
       fields.push_back(Ebsd::Ctf::Error.c_str());
 
-      fields.push_back(Ebsd::Ctf::MeanAngularDeviation.c_str());
-      fields.push_back(Ebsd::Ctf::BandContrast.c_str());
-      fields.push_back(Ebsd::Ctf::BandSlope.c_str());
+      fields.push_back(Ebsd::Ctf::MAD.c_str());
+      fields.push_back(Ebsd::Ctf::BC.c_str());
+      fields.push_back(Ebsd::Ctf::BS.c_str());
 
       return fields;
     }
