@@ -89,7 +89,7 @@ StatsGenODFWidget::~StatsGenODFWidget()
 void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
 {
   VectorOfFloatArray arrays = statsData->getODF_Weights();
-  if (arrays.size() > 0) 
+  if (arrays.size() > 0)
   {
     QVector<float> e1(arrays[0]->GetNumberOfTuples());
     ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
@@ -105,7 +105,7 @@ void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, St
 
     QVector<float> sigmas(arrays[0]->GetNumberOfTuples());
     ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
- 
+
     if(e1.size() > 0)
     {
       // Load the data into the table model
@@ -419,15 +419,15 @@ void StatsGenODFWidget::showPoleFigure(int imageIndex)
   switch(imageIndex)
   {
     case 0:
-      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_001.tif");
+    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_001.tif");
       m_001PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     case 1:
-      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_011.tif");
+    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_011.tif");
       m_011PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     case 2:
-      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_111.tif");
+    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_111.tif");
       m_111PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     default:
