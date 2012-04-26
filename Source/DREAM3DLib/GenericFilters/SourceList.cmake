@@ -20,7 +20,7 @@ SET (GenericFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/ConvertEulerAngles.h
+
 )
 
 #-- Add in any addition NON Filter classes here
@@ -39,7 +39,7 @@ SET (DREAM3DLib_GenericFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/ConvertEulerAngles.cpp    
+  
 )
 
 
