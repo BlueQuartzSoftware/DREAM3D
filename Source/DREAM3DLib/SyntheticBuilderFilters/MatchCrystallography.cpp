@@ -134,7 +134,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
-  }  
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5);
@@ -237,7 +237,7 @@ void MatchCrystallography::initializeArrays()
   actualmdf.resize(size);
   simmdf.resize(size);
   for (size_t i = 1; i < size; ++i)
-  {	
+  {
 	actualodf[i] = statsDataArray[i]->getODF();
 	actualmdf[i] = statsDataArray[i]->getMisorientationBins();
 
@@ -405,10 +405,10 @@ void MatchCrystallography::matchCrystallography()
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-  float volResConst = xRes * yRes * zRes;
+//  float xRes = m->getXRes();
+//  float yRes = m->getYRes();
+//  float zRes = m->getZRes();
+//  float volResConst = xRes * yRes * zRes;
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
   int iterations = 0, badtrycount = 0;
@@ -728,13 +728,13 @@ void MatchCrystallography::measure_misorientations()
   std::stringstream ss;
   for (int i = 1; i < totalFields; i++)
   {
-    if (((float)i / totalFields) * 100.0f > threshold) 
+    if (((float)i / totalFields) * 100.0f > threshold)
     {
       ss.str("");
       ss << "Matching Crystallography - Measuring Misorientations - " << ((float)i / totalFields) * 100 << "% Complete";
       notify(ss.str(), 0, Observable::UpdateProgressMessage);
       threshold = threshold + 5.0f;
-      if (threshold < ((float)i / totalFields) * 100.0f) 
+      if (threshold < ((float)i / totalFields) * 100.0f)
       {
         threshold = ((float)i / totalFields) * 100.0f;
       }

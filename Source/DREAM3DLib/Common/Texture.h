@@ -92,42 +92,42 @@ class DREAM3DLib_EXPORT Texture
   static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
       bool normalize, T &odf)
   {
-    DREAM3D_RANDOMNG_NEW()
-    CubicOps ops;
-    int *TextureBins;
-    TextureBins = new int[weights.size()];
-    static const size_t odfsize = 5832;
-  //  float degtorad = M_PI/180.0;
-    float addweight = 0;
-    float totaladdweight = 0;
-    float totalweight = float(3*odfsize);
-    odf.resize(odfsize);
-    int bin, addbin;
-    int bin1, bin2, bin3;
-    int addbin1, addbin2, addbin3;
-    float dist, fraction;
-    float r1, r2, r3;
+      DREAM3D_RANDOMNG_NEW()
+      CubicOps ops;
+      int *TextureBins;
+      TextureBins = new int[weights.size()];
+      static const size_t odfsize = 5832;
+      //  float degtorad = M_PI/180.0;
+      float addweight = 0;
+      float totaladdweight = 0;
+      float totalweight = float(3 * odfsize);
+      odf.resize(odfsize);
+      int bin, addbin;
+      int bin1, bin2, bin3;
+      int addbin1, addbin2, addbin3;
+      float dist, fraction;
+      float r1, r2, r3;
 
-    for (typename T::size_type i = 0; i < e1s.size(); i++)
-    {
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      {
         OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
       }
 
-    for (size_t i = 0; i < odfsize; i++)
-    {
-      odf[i] = 0.0;
-    }
-    for (typename T::size_type i = 0; i < weights.size(); i++)
-    {
-      bin = TextureBins[i];
-      bin1 = bin % 18;
-      bin2 = (bin / 18) % 18;
-      bin3 = bin / (18 * 18);
-      for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+      for (size_t i = 0; i < odfsize; i++)
       {
+        odf[i] = 0.0;
+      }
+      for (typename T::size_type i = 0; i < weights.size(); i++)
+      {
+        bin = TextureBins[i];
+        bin1 = bin % 18;
+        bin2 = (bin / 18) % 18;
+        bin3 = bin / (18 * 18);
+        for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+        {
           int jsqrd = j * j;
           for (int k = -sigmas[i]; k <= sigmas[i]; k++)
           {
@@ -157,45 +157,44 @@ class DREAM3DLib_EXPORT Texture
             }
           }
         }
-    }
-	if(totaladdweight > totalweight)
-	{
-		float scale = (totaladdweight/totalweight);
-	    for (size_t i = 0; i < odfsize; i++)
-	    {
-	      odf[i] = odf[i]/scale;
-	    }
-	}
-    float remainingweight = totalweight;
-    for (size_t i = 0; i < odfsize; i++)
-    {
-      remainingweight = remainingweight-odf[i];
-    }
-	float random1, random2, random3;
-	float ea1, ea2, ea3;
-    for (size_t i = 0; i < int(remainingweight); i++)
-    {
-	  random1 = rg.genrand_res53();
-      random2 = rg.genrand_res53();
-      random3 = rg.genrand_res53();
-	  ea1 = 2.0*m_pi*random1;
-	  ea2 = acos(2.0*(random2-0.5));
-	  ea3 = 2.0*m_pi*random3;
-	  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      ops.getODFFZRod(r1, r2, r3);
-      bin = ops.getOdfBin(r1, r2, r3);
-	  odf[bin]++;
-    }
-    if (normalize == true)
-    {
-      // Normalize the odf
+      }
+      if(totaladdweight > totalweight)
+      {
+        float scale = (totaladdweight / totalweight);
+        for (size_t i = 0; i < odfsize; i++)
+        {
+          odf[i] = odf[i] / scale;
+        }
+      }
+      float remainingweight = totalweight;
       for (size_t i = 0; i < odfsize; i++)
       {
-	    float check = odf[i];
-        odf[i] = odf[i] / totalweight;
+        remainingweight = remainingweight - odf[i];
+      }
+      float random1, random2, random3;
+      float ea1, ea2, ea3;
+      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      {
+        random1 = rg.genrand_res53();
+        random2 = rg.genrand_res53();
+        random3 = rg.genrand_res53();
+        ea1 = 2.0 * m_pi * random1;
+        ea2 = acos(2.0 * (random2 - 0.5));
+        ea3 = 2.0 * m_pi * random3;
+        OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        ops.getODFFZRod(r1, r2, r3);
+        bin = ops.getOdfBin(r1, r2, r3);
+        odf[bin]++;
+      }
+      if(normalize == true)
+      {
+        // Normalize the odf
+        for (size_t i = 0; i < odfsize; i++)
+        {
+          odf[i] = odf[i] / totalweight;
+        }
       }
     }
-  }
 
   /**
    * @brief This will calculate ODF data based on an array of weights that are
@@ -217,109 +216,109 @@ class DREAM3DLib_EXPORT Texture
   static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
       bool normalize, T &odf)
   {
-    DREAM3D_RANDOMNG_NEW()
-    int *TextureBins;
-    TextureBins = new int[weights.size()];
-    static const size_t odfsize = 15552;
- //   float degtorad = M_PI/180.0;
-    float addweight = 0;
-    float totaladdweight = 0;
-    float totalweight = 3*odfsize;
-    odf.resize(odfsize);
-    int bin, addbin;
-    int bin1, bin2, bin3;
-    int addbin1, addbin2, addbin3;
-    float dist, fraction;
+      DREAM3D_RANDOMNG_NEW()
+      int *TextureBins;
+      TextureBins = new int[weights.size()];
+      static const size_t odfsize = 15552;
+      //   float degtorad = M_PI/180.0;
+      float addweight = 0;
+      float totaladdweight = 0;
+      float totalweight = 3 * odfsize;
+      odf.resize(odfsize);
+      int bin, addbin;
+      int bin1, bin2, bin3;
+      int addbin1, addbin2, addbin3;
+      float dist, fraction;
 //    float rmag, angle;
-    float r1, r2, r3;
-    HexagonalOps ops;
-    for (typename T::size_type i = 0; i < e1s.size(); i++)
-    {
-		OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
-	    ops.getODFFZRod( r1, r2, r3);
-		bin = ops.getOdfBin(r1, r2, r3);
-		TextureBins[i] = static_cast<int>(bin);
-    }
-
-    for (size_t i = 0; i < odfsize; i++)
-    {
-      odf[i] = 0.0;
-    }
-    for (typename T::size_type i = 0; i < e1s.size(); i++)
-    {
-      bin = TextureBins[i];
-      bin1 = bin % 36;
-      bin2 = (bin / 36) % 36;
-      bin3 = bin / (36 * 36);
-      for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+      float r1, r2, r3;
+      HexagonalOps ops;
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
-        int jsqrd = j*j;
-        for (int k = -sigmas[i]; k <= sigmas[i]; k++)
+        OrientationMath::eulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        ops.getODFFZRod(r1, r2, r3);
+        bin = ops.getOdfBin(r1, r2, r3);
+        TextureBins[i] = static_cast<int>(bin);
+      }
+
+      for (size_t i = 0; i < odfsize; i++)
+      {
+        odf[i] = 0.0;
+      }
+      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      {
+        bin = TextureBins[i];
+        bin1 = bin % 36;
+        bin2 = (bin / 36) % 36;
+        bin3 = bin / (36 * 36);
+        for (int j = -sigmas[i]; j <= sigmas[i]; j++)
         {
-          int ksqrd = k*k;
-          for (int l = -sigmas[i]; l <= sigmas[i]; l++)
+          int jsqrd = j * j;
+          for (int k = -sigmas[i]; k <= sigmas[i]; k++)
           {
-            int lsqrd = l*l;
-            addbin1 = bin1 + int(j);
-            addbin2 = bin2 + int(k);
-            addbin3 = bin3 + int(l);
-            if (addbin1 < 0) addbin1 = addbin1 + 36;
-            if (addbin1 >= 36) addbin1 = addbin1 - 36;
-            if (addbin2 < 0) addbin2 = addbin2 + 36;
-            if (addbin2 >= 36) addbin2 = addbin2 - 36;
-            if (addbin3 < 0) addbin3 = addbin3 + 12;
-            if (addbin3 >= 12) addbin3 = addbin3 - 12;
-            addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
-            dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
-            fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
-            if (dist <= int(sigmas[i]))
+            int ksqrd = k * k;
+            for (int l = -sigmas[i]; l <= sigmas[i]; l++)
             {
-              addweight = (weights[i] * fraction);
-			  if(sigmas[i] == 0.0) addweight = weights[i];
-              odf[addbin] = odf[addbin]+addweight;
-			  totaladdweight = totaladdweight + addweight;
+              int lsqrd = l * l;
+              addbin1 = bin1 + int(j);
+              addbin2 = bin2 + int(k);
+              addbin3 = bin3 + int(l);
+              if(addbin1 < 0) addbin1 = addbin1 + 36;
+              if(addbin1 >= 36) addbin1 = addbin1 - 36;
+              if(addbin2 < 0) addbin2 = addbin2 + 36;
+              if(addbin2 >= 36) addbin2 = addbin2 - 36;
+              if(addbin3 < 0) addbin3 = addbin3 + 12;
+              if(addbin3 >= 12) addbin3 = addbin3 - 12;
+              addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
+              dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
+              fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
+              if(dist <= int(sigmas[i]))
+              {
+                addweight = (weights[i] * fraction);
+                if(sigmas[i] == 0.0) addweight = weights[i];
+                odf[addbin] = odf[addbin] + addweight;
+                totaladdweight = totaladdweight + addweight;
+              }
             }
           }
         }
       }
-    }
-	if(totaladdweight > totalweight)
-	{
-		float scale = (totaladdweight/totalweight);
-	    for (size_t i = 0; i < odfsize; i++)
-	    {
-	      odf[i] = odf[i]/scale;
-	    }
-	}
-    float remainingweight = totalweight;
-    for (size_t i = 0; i < odfsize; i++)
-    {
-      remainingweight = remainingweight-odf[i];
-    }
-	float random1, random2, random3;
-	float ea1, ea2, ea3;
-    for (size_t i = 0; i < int(remainingweight); i++)
-    {
-	  random1 = rg.genrand_res53();
-      random2 = rg.genrand_res53();
-      random3 = rg.genrand_res53();
-	  ea1 = 2.0*m_pi*random1;
-	  ea2 = acos(2.0*(random2-0.5));
-	  ea3 = 2.0*m_pi*random3;
-	  OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      ops.getODFFZRod(r1, r2, r3);
-      bin = ops.getOdfBin(r1, r2, r3);
- 	  odf[bin]++;
-    }
-    if (normalize == true)
-    {
-      // Normalize the odf
+      if(totaladdweight > totalweight)
+      {
+        float scale = (totaladdweight / totalweight);
+        for (size_t i = 0; i < odfsize; i++)
+        {
+          odf[i] = odf[i] / scale;
+        }
+      }
+      float remainingweight = totalweight;
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / totalweight;
+        remainingweight = remainingweight - odf[i];
+      }
+      float random1, random2, random3;
+      float ea1, ea2, ea3;
+      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      {
+        random1 = rg.genrand_res53();
+        random2 = rg.genrand_res53();
+        random3 = rg.genrand_res53();
+        ea1 = 2.0 * m_pi * random1;
+        ea2 = acos(2.0 * (random2 - 0.5));
+        ea3 = 2.0 * m_pi * random3;
+        OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        ops.getODFFZRod(r1, r2, r3);
+        bin = ops.getOdfBin(r1, r2, r3);
+        odf[bin]++;
+      }
+      if(normalize == true)
+      {
+        // Normalize the odf
+        for (size_t i = 0; i < odfsize; i++)
+        {
+          odf[i] = odf[i] / totalweight;
+        }
       }
     }
-  }
 
   /**
    * @brief This will calculate ODF data based on an array of weights that are
@@ -420,7 +419,7 @@ class DREAM3DLib_EXPORT Texture
     }
 	float random1, random2, random3;
 	float ea1, ea2, ea3;
-    for (size_t i = 0; i < int(remainingweight); i++)
+    for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
     {
 	  random1 = rg.genrand_res53();
       random2 = rg.genrand_res53();

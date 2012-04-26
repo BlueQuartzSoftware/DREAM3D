@@ -201,7 +201,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     unsigned long long int Seed;
 
-	size_t firstPrimaryField;
+    size_t firstPrimaryField;
 
     float sizex;
     float sizey;

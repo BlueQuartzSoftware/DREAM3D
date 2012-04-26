@@ -817,7 +817,7 @@ class DREAM3DLib_EXPORT StatsGen
       float r1, r2, r3;
 //      float ra1, ra2, ra3;
 //      float rb1, rb2, rb3;
-      float rc1, rc2, rc3;
+//      float rc1, rc2, rc3;
       CubicOps ops;
       xval.resize(13);
       yval.resize(13);

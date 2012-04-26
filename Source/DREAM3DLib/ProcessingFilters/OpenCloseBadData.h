@@ -67,11 +67,11 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
 
     virtual ~OpenCloseBadData();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction);
     DREAM3D_INSTANCE_PROPERTY(int, NumIterations);
@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Open/Close Bad Data"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 
     virtual void execute();

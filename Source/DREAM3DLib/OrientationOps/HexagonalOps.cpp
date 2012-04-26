@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -162,7 +162,7 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 			FZn2 = n1n2mag*sinf(newangle);
 		}
 	}
-	
+
 	axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 void HexagonalOps::getNearestQuat( float *q1, float *q2)
@@ -315,22 +315,22 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
 	float ph1spnz4 = 0.0f;
 	float ph1spnx5 = 0.4082f;
 	float ph1spny5 = 0.8164f;
-	float ph1spnz5 = -0.4082f;
+//	float ph1spnz5 = -0.4082f;
 	float ph1spnx6 = 0.4082f;
 	float ph1spny6 = 0.8164f;
-	float ph1spnz6 = 0.4082f;
+//	float ph1spnz6 = 0.4082f;
 	float ph1spnx7 = 0.8164f;
 	float ph1spny7 = 0.4082f;
-	float ph1spnz7 = -0.4082f;
+//	float ph1spnz7 = -0.4082f;
 	float ph1spnx8 = 0.8164f;
 	float ph1spny8 = 0.4082f;
-	float ph1spnz8 = 0.4082f;
+//	float ph1spnz8 = 0.4082f;
 	float ph1spnx9 = -0.57735f;
 	float ph1spny9 = 0.57735f;
-	float ph1spnz9 = -0.57735f;
+//	float ph1spnz9 = -0.57735f;
 	float ph1spnx10 = -0.57735f;
 	float ph1spny10 = 0.57735f;
-	float ph1spnz10 = 0.57735f;
+//	float ph1spnz10 = 0.57735f;
 	float t1x = (0.866025f*ph1sdx1)+(0.0f*ph1sdy1)+(0.0f*ph1sdz1);
 	float t1y = (-0.5f*ph1sdx1)+(1.0f*ph1sdy1)+(0.0f*ph1sdz1);
 	float t1z = (0.0f*ph1sdx1)+(0.0f*ph1sdy1)+(caratio*ph1sdz1);

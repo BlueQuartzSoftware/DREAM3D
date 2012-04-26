@@ -229,7 +229,7 @@ void MinNeighbors::assign_badpoints()
   size_t count = 1;
   int good = 1;
 //  int neighbor;
-  int index = 0;
+//  int index = 0;
   float x, y, z;
   int current = 0;
   int most = 0;
@@ -247,7 +247,7 @@ void MinNeighbors::assign_badpoints()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
 
-  int iter = 0;
+//  int iter = 0;
   std::vector<int > n(numgrains + 1);
   while (count != 0)
   {

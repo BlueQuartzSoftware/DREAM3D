@@ -185,7 +185,7 @@ void EBSDSegmentGrains::execute()
   SegmentGrains::execute();
 
   // If there is an error set this to something negative and also set a message
-  notify("EBSDSegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+  notify("Completed", 0, Observable::UpdateProgressMessage);
 }
 
 
@@ -253,7 +253,7 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
 	  q1[2] = m_Quats[referencepoint * 5 + 2];
 	  q1[3] = m_Quats[referencepoint * 5 + 3];
 	  q1[4] = m_Quats[referencepoint * 5 + 4];
-	  
+
 	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
 	  q2[0] = 1;
 	  q2[1] = m_Quats[neighborpoint*5 + 1];

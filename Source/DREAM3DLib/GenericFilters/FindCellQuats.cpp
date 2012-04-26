@@ -54,9 +54,9 @@ m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_CellPhases(NULL),
 m_Quats(NULL),
 m_CellEulerAngles(NULL),
-m_CellPhases(NULL),
 m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();

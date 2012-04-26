@@ -58,25 +58,31 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 
     virtual ~DetermineGoodVoxels();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
     DREAM3D_INSTANCE_PROPERTY(H5EbsdVolumeReader::Pointer, EbsdVolumeReader);
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getHumanLabel() { return "Determine Good Voxels"; }
+    virtual const std::string getGroupName()
+    {
+      return DREAM3D::FilterGroups::GenericFilters;
+    }
+    virtual const std::string getHumanLabel()
+    {
+      return "Determine Good Voxels";
+    }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
 

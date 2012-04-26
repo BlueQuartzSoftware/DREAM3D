@@ -144,7 +144,7 @@ void FindSurfaceCells::execute()
   int good = 0;
   int neighbor = 0;
 
-  for (size_t j = 0; j < totalPoints; j++)
+  for (int64_t j = 0; j < totalPoints; j++)
   {
     onsurf = 0;
     grain = m_GrainIds[j];

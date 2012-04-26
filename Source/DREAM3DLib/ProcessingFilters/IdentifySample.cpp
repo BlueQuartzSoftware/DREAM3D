@@ -152,14 +152,14 @@ void IdentifySample::execute()
 
   std::vector<int > neighs;
   std::vector<int > remove;
-  size_t count = 1;
-  int good = 1;
-  int neighbor;
-  int index = 0;
-  float x, y, z;
-  DimType column, row, plane;
-  int neighpoint;
-  size_t numgrains = m->getNumFieldTuples();
+//  size_t count = 1;
+//  int good = 1;
+//  int neighbor;
+//  int index = 0;
+//  float x, y, z;
+//  DimType column, row, plane;
+//  int neighpoint;
+//  size_t numgrains = m->getNumFieldTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
