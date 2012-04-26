@@ -499,14 +499,15 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
   {
     static const size_t odfsize = 5832;
-    float totalweight = 0;
+   // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
     err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
-  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal) {
+  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
+  {
     static const size_t odfsize = 15552;
-    float totalweight = 0;
+   // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
     err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);

@@ -166,7 +166,7 @@ void FindSurfaceGrains::find_surfacegrains()
 void FindSurfaceGrains::find_surfacegrains2D()
 {
   DataContainer* m = getDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
 
   size_t dims[3] = {0,0,0};
 

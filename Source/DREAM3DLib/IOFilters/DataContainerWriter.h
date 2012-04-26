@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     virtual ~DataContainerWriter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-	DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
+    DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
 
     virtual void preflight();
 
@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Write DREAM3D Data File"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class

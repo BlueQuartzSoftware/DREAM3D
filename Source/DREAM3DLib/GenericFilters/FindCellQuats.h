@@ -54,28 +54,28 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(FindCellQuats);
-     DREAM3D_STATIC_NEW_MACRO(FindCellQuats);
-     DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter);
+    DREAM3D_STATIC_NEW_MACRO(FindCellQuats);
+    DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter);
 
-     virtual ~FindCellQuats();
+    virtual ~FindCellQuats();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-     virtual const std::string getHumanLabel() { return "Find Cell Quats"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Find Cell Quats"; }
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
-	virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
    protected:
      FindCellQuats();
@@ -84,7 +84,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     int32_t* m_CellPhases;
     float* m_Quats;
     float* m_CellEulerAngles;
-	unsigned int* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
 
     std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;

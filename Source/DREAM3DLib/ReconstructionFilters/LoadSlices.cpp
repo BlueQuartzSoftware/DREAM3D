@@ -297,7 +297,7 @@ void LoadSlices::execute()
   }
   else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
-    radianconversion = M_PI / 180.0;
+  //  radianconversion = M_PI / 180.0;
     euler1Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler1));
     euler2Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
     euler3Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));

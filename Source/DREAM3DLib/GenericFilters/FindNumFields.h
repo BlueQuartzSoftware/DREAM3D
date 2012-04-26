@@ -53,25 +53,25 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(FindNumFields);
-     DREAM3D_STATIC_NEW_MACRO(FindNumFields);
-     DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter);
+    DREAM3D_STATIC_NEW_MACRO(FindNumFields);
+    DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter);
 
-     virtual ~FindNumFields();
+    virtual ~FindNumFields();
 
-	 //------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	//------ Created Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-	 virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-     virtual const std::string getHumanLabel() { return "Find Number of Fields"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Find Number of Fields"; }
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
-	virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
    protected:
      FindNumFields();

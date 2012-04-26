@@ -111,7 +111,7 @@ void SegmentGrains::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+ // int64_t totalPoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

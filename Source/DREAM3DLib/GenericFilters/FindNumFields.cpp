@@ -48,8 +48,8 @@ FindNumFields::FindNumFields() :
 AbstractFilter(),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
-m_NumFields(NULL),
-m_FieldPhases(NULL)
+m_FieldPhases(NULL),
+m_NumFields(NULL)
 {
 
 }
@@ -117,11 +117,11 @@ void FindNumFields::execute()
     return;
   }
 
-  for(int64_t i = 1; i < totalEnsembles; i++)
+  for(size_t i = 1; i < totalEnsembles; i++)
   {
     m_NumFields[i] = 0;
   }
-  for(int64_t i = 1; i < totalFields; i++)
+  for(size_t i = 1; i < totalFields; i++)
   {
     m_NumFields[m_FieldPhases[i]]++;
   }

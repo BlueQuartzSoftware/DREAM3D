@@ -14,7 +14,7 @@ ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.h
-
+${DREAM3DLib_SOURCE_DIR}/GenericFilters/ConvertEulerAngles.h
 )
 #-- Add in any addition NON Filter classes here
 SET (DREAM3DLib_ProcessingFilters_HDRS
@@ -27,7 +27,7 @@ SET (DREAM3DLib_ProcessingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.cpp    
-
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/ConvertEulerAngles.cpp
 )
 if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ProcessingFilters" "${DREAM3DLib_ProcessingFilters_HDRS}" "${DREAM3DLib_ProcessingFilters_SRCS}" "0")

@@ -184,7 +184,7 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
-  //Field Data  
+  //Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
@@ -318,21 +318,24 @@ void PackPrimaryPhases::execute()
     phase = primaryphases[i];
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-	grainsizediststep[i] = ((2 * statsDataArray[phase]->getMaxGrainDiameter()) - (statsDataArray[phase]->getMinGrainDiameter() / 2.0)) / grainsizedist[i].size();
+    grainsizediststep[i] = ((2 * statsDataArray[phase]->getMaxGrainDiameter()) - (statsDataArray[phase]->getMinGrainDiameter() / 2.0))
+        / grainsizedist[i].size();
     float input = 0;
     float previoustotal = 0;
-	VectorOfFloatArray GSdist = statsDataArray[phase]->getGrainSizeDistribution();
-	float avg = GSdist[0]->GetValue(0);
-	float stdev = GSdist[1]->GetValue(0);
-	float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+    VectorOfFloatArray GSdist = statsDataArray[phase]->getGrainSizeDistribution();
+    float avg = GSdist[0]->GetValue(0);
+    float stdev = GSdist[1]->GetValue(0);
+    float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
     for (size_t j = 0; j < grainsizedist[i].size(); j++)
     {
       input = (float(j + 1) * grainsizediststep[i]) + (statsDataArray[phase]->getMinGrainDiameter() / 2.0f);
       float logInput = logf(input);
-      if(logInput <= avg) {
-        grainsizedist[i][j] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst )) - previoustotal;
+      if(logInput <= avg)
+      {
+        grainsizedist[i][j] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
       }
-      if(logInput > avg) {
+      if(logInput > avg)
+      {
         grainsizedist[i][j] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
       }
       previoustotal = previoustotal + grainsizedist[i][j];
@@ -461,7 +464,7 @@ void PackPrimaryPhases::execute()
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
 
-  int numgrains = static_cast<int>(m->getNumFieldTuples());
+  size_t numgrains = m->getNumFieldTuples();
 
   columnlist.resize(numgrains);
   rowlist.resize(numgrains);
@@ -624,8 +627,8 @@ void PackPrimaryPhases::execute()
   }
 
   dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  
-  int numfields = m->getNumFieldTuples();
+
+  size_t numfields = m->getNumFieldTuples();
   for(size_t i = firstPrimaryField; i < numfields; i++)
   {
 	m_NumFields[m_FieldPhases[i]]++;

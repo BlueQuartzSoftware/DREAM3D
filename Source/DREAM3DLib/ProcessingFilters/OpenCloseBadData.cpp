@@ -57,8 +57,8 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NumIterations(1),
 m_Direction(0),
+m_NumIterations(1),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
@@ -92,7 +92,7 @@ void OpenCloseBadData::setupFilterOptions()
     choices.push_back("Close");
     option->setChoices(choices);
     options.push_back(option);
-  } 
+  }
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Number of Iterations");
@@ -194,12 +194,12 @@ void OpenCloseBadData::execute()
 
   std::vector<int > neighs;
   std::vector<int > remove;
-  size_t count = 1;
+//  size_t count = 1;
   int good = 1;
 //  int neighbor;
-  int index = 0;
+//  int index = 0;
   float x, y, z;
-  DimType row, plane;
+//  DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
 
@@ -213,7 +213,7 @@ void OpenCloseBadData::execute()
   std::vector<int> currentvlist;
 
   std::vector<int > n(numgrains + 1);
-  for (size_t iteration = 0; iteration < m_NumIterations; iteration++)
+  for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
     for (int i = 0; i < totalPoints; i++)
     {
