@@ -361,15 +361,15 @@ void SGAxisODFWidget::showPoleFigure(int imageIndex)
   switch(imageIndex)
   {
     case 0:
-      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_001.tif");
+    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_001.tif");
       m_001PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     case 1:
-      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_011.tif");
+    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_011.tif");
       m_011PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     case 2:
-      m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_111.tif");
+    //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_111.tif");
       m_111PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
       break;
     default:

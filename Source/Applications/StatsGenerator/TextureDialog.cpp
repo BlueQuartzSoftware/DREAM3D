@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -62,11 +62,11 @@ TextureDialog::~TextureDialog()
 // -----------------------------------------------------------------------------
 void TextureDialog::setupGui()
 {
-  if (Ebsd::CrystalStructure::Cubic == m_CrystalStructure)
+  if(Ebsd::CrystalStructure::Cubic == m_CrystalStructure)
   {
     m_Presets = CubicTexturePresets::getTextures();
   }
-  else if (Ebsd::CrystalStructure::Hexagonal == m_CrystalStructure)
+  else if(Ebsd::CrystalStructure::Hexagonal == m_CrystalStructure)
   {
     m_Presets = HexTexturePresets::getTextures();
   }
@@ -75,30 +75,36 @@ void TextureDialog::setupGui()
   presetListWidget->clear();
 
   // Now push the list into the List View
-  for (TexturePreset::Container::iterator iter = m_Presets.begin(); iter != m_Presets.end(); ++iter )
+  for (TexturePreset::Container::iterator iter = m_Presets.begin(); iter != m_Presets.end(); ++iter)
   {
-    presetListWidget->addItem( QString::fromStdString((*iter)->getName() ) );
+    presetListWidget->addItem(QString::fromStdString((*iter)->getName()));
   }
 
   {
-  QDoubleValidator* weightValidator = new QDoubleValidator(euler1);
-    weightValidator->setDecimals(4);
+    QDoubleValidator* validator = new QDoubleValidator(euler1);
+    validator->setDecimals(4);
+    euler1->setValidator(validator);
   }
   {
-    QDoubleValidator* weightValidator = new QDoubleValidator(euler2);
-    weightValidator->setDecimals(4);
+    QDoubleValidator* validator = new QDoubleValidator(euler2);
+    validator->setDecimals(4);
+    euler2->setValidator(validator);
   }
   {
-    QDoubleValidator* weightValidator = new QDoubleValidator(euler3);
-    weightValidator->setDecimals(4);
+    QDoubleValidator* validator = new QDoubleValidator(euler3);
+    validator->setDecimals(4);
+    euler3->setValidator(validator);
   }
   {
-    QDoubleValidator* weightValidator = new QDoubleValidator(weight);
-    weightValidator->setDecimals(4);
+    QDoubleValidator* validator = new QDoubleValidator(weight);
+    validator->setDecimals(4);
+    weight->setValidator(validator);
   }
   {
-    QDoubleValidator* weightValidator = new QDoubleValidator(sigma);
-    weightValidator->setDecimals(4);
+//    QDoubleValidator* validator = new QDoubleValidator(sigma);
+//    validator->setBottom(1.0);
+//    validator->setDecimals(4);
+//    sigma->setValidator(validator);
   }
 }
 
@@ -118,7 +124,7 @@ void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem * it
   euler3->setText(QString::number(t->getEuler3()));
 
   weight->setText("1.0");
-  sigma->setText("1.0");
+  sigma->setValue(1.0);
 }
 
 
@@ -144,7 +150,7 @@ void TextureDialog::getODFEntry(float &e1, float &e2, float &e3, float &w, float
   e2 = euler2->text().toFloat(&ok);
   e3 = euler3->text().toFloat(&ok);
   w = weight->text().toFloat(&ok);
-  s = sigma->text().toFloat(&ok);
+  s = sigma->value();
 }
 
 
