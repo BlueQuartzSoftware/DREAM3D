@@ -108,6 +108,11 @@ class EbsdLib_EXPORT EbsdImporter
      */
     virtual void getResolution(float &x, float &y) = 0;
 
+    /**
+     * @brief Return the number of slices imported
+     * @return
+     */
+    virtual int numberOfSlicesImported() = 0;
 
   protected:
     EbsdImporter() :

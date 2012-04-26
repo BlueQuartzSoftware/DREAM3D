@@ -312,9 +312,9 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   size_t counter = 0;
   // The buf variable already has the first line of data in it
-  for(size_t row = 0; row < yCells; ++row)
+  for(int row = 0; row < yCells; ++row)
   {
-    for(size_t col = 0; col < nEvexCells; ++col)
+    for(int col = 0; col < nEvexCells; ++col)
     {
       this->parseDataLine(buf, nEvexCells, col, yCells, row, counter);
       ++counter;

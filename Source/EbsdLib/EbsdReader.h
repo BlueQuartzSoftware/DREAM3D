@@ -174,9 +174,9 @@ class EbsdLib_EXPORT EbsdReader
   #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
         T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
   #else
-        T*  m_buffer = new T[numberOfElements];
+        //T*  m_buffer = new T[numberOfElements];
+        T* m_buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
   #endif
-  //      m_NumberOfElements = numberOfElements;
         return m_buffer;
       }
 
@@ -193,7 +193,8 @@ class EbsdLib_EXPORT EbsdReader
   #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
           _mm_free(ptr );
   #else
-          delete[] ptr;
+          //delete[] ptr;
+          free(ptr);
   #endif
           ptr = NULL;
    //       m_NumberOfElements = 0;

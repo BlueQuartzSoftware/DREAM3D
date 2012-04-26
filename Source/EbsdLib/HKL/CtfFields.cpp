@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -62,14 +62,19 @@ std::vector<std::string> CtfFields::getFieldNames()
   fields.push_back(Ebsd::Ctf::Phase);
   fields.push_back(Ebsd::Ctf::X);
   fields.push_back(Ebsd::Ctf::Y);
-  fields.push_back(Ebsd::Ctf::BandCount);
+  fields.push_back(Ebsd::Ctf::Z);
+  fields.push_back(Ebsd::Ctf::Bands);
   fields.push_back(Ebsd::Ctf::Error);
   fields.push_back(Ebsd::Ctf::Euler1);
   fields.push_back(Ebsd::Ctf::Euler2);
   fields.push_back(Ebsd::Ctf::Euler3);
-  fields.push_back(Ebsd::Ctf::MeanAngularDeviation);
-  fields.push_back(Ebsd::Ctf::BandContrast);
-  fields.push_back(Ebsd::Ctf::BandSlope);
+  fields.push_back(Ebsd::Ctf::MAD);
+  fields.push_back(Ebsd::Ctf::BC);
+  fields.push_back(Ebsd::Ctf::BS);
+  fields.push_back(Ebsd::Ctf::GrainIndex);
+  fields.push_back(Ebsd::Ctf::GrainRandomColourR);
+  fields.push_back(Ebsd::Ctf::GrainRandomColourG);
+  fields.push_back(Ebsd::Ctf::GrainRandomColourB);
 
   return fields;
 }

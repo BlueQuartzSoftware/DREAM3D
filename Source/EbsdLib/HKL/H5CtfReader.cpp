@@ -242,15 +242,6 @@ int H5CtfReader::readData(hid_t parId)
   size_t xCells = getXCells();
   size_t totalDataRows = yCells * xCells;
 
-  // Initialize new pointers
-  initPointers(totalDataRows);
-  if (NULL == getPhasePointer() || NULL == getXPointer() || NULL == getYPointer()
-      || NULL == getBandCountPointer()  || NULL == getErrorPointer()
-      || NULL == getEuler1Pointer() || getEuler2Pointer() == NULL || getEuler3Pointer() == NULL
-      || NULL == getMeanAngularDeviationPointer() || NULL == getBandContrastPointer() || NULL == getBandSlopePointer())
-  {
-    return -1;
-  }
 
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
@@ -260,17 +251,51 @@ int H5CtfReader::readData(hid_t parId)
     return -1;
   }
 
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Phase, getPhasePointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::X, getXPointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Y, getYPointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BandCount, getBandCountPointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Error, getErrorPointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler1, getEuler1Pointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler2, getEuler2Pointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler3, getEuler3Pointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::MeanAngularDeviation, getMeanAngularDeviationPointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BandContrast, getBandContrastPointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BandSlope, getBandSlopePointer());
+  Ebsd::NumType numType = Ebsd::UnknownNumType;
+  std::list<std::string> columnNames;
+  err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
+  for (std::list<std::string>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
+  {
+    numType = getPointerType(*iter);
+    if(numType == Ebsd::Int32)
+    {
+      int32_t* dataPtr = allocateArray<int32_t>(totalDataRows);
+      if(NULL == dataPtr)
+      {
+        assert(false);
+      } // We are going to crash here. I would rather crash than have bad data
+      err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
+      setPointerByName(*iter, dataPtr);
+    }
+    else if(numType == Ebsd::Float)
+    {
+      float* dataPtr = allocateArray<float>(totalDataRows);
+      if(NULL == dataPtr)
+      {
+        assert(false);
+      } // We are going to crash here. I would rather crash than have bad data
+      err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
+      setPointerByName(*iter, dataPtr);
+    }
+    else
+    {
+      assert(false);
+      // We are going to crash here because I would rather crash than have bad data
+    }
+  }
+
+
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Phase, static_cast<int32_t*>(getPointerByName("Phase")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::X, static_cast<float*>(getPointerByName("X")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Y, static_cast<float*>(getPointerByName("Y")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Bands, static_cast<int32_t*>(getPointerByName("Bands")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Error, static_cast<int32_t*>(getPointerByName("Error")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler1, static_cast<float*>(getPointerByName("Euler1")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler2, static_cast<float*>(getPointerByName("Euler2")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler3, static_cast<float*>(getPointerByName("Euler3")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::MAD, static_cast<float*>(getPointerByName("MAD")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BC, static_cast<int32_t*>(getPointerByName("BC")));
+//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BS, static_cast<int32_t*>(getPointerByName("BS")));
 
   err = H5Gclose(gid);
 

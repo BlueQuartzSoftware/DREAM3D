@@ -111,6 +111,12 @@ class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
      */
     virtual void getResolution(float &x, float &y);
 
+    /**
+     * @brief Return the number of slices imported
+     * @return
+     */
+    virtual int numberOfSlicesImported();
+
   protected:
     H5AngImporter();
 

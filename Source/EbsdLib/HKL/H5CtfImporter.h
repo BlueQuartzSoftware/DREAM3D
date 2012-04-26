@@ -99,16 +99,25 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      */
     virtual void getResolution(float &x, float &y);
 
+    /**
+     * @brief Return the number of slices imported
+     * @return
+     */
+    virtual int numberOfSlicesImported();
 
   protected:
     H5CtfImporter();
 
+    int writeSliceData(hid_t fileId, CtfReader &reader, int z, int actualSlice);
 
   private:
     int64_t xDim;
     int64_t yDim;
+    int64_t zDim;
     float xRes;
     float yRes;
+    float zRes;
+    int m_NumSlicesImported;
 
     H5CtfImporter(const H5CtfImporter&); // Copy Constructor Not Implemented
     void operator=(const H5CtfImporter&); // Operator '=' Not Implemented
