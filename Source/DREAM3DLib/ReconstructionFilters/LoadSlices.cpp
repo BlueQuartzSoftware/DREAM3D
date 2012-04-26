@@ -72,7 +72,6 @@ const static float m_pi = M_PI;
 LoadSlices::LoadSlices() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_H5EbsdFile(""),
@@ -80,7 +79,6 @@ m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_CellPhases(NULL),
-m_GoodVoxels(NULL),
 m_CellEulerAngles(NULL)
 {
   Seed = MXA::getMilliSeconds();
@@ -130,10 +128,9 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1);
+  CREATE_NON_PREREQ_DATA_NO_INIT(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, ensembles, 1);
 
   setErrorMessage(ss.str());
 }
@@ -339,8 +336,6 @@ void LoadSlices::execute()
     return;
   }
   filter = DetermineGoodVoxels::NullPointer(); // Clean up some memory
-
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
   // If there is an error set this to something negative and also set a message
   ss.str("");
