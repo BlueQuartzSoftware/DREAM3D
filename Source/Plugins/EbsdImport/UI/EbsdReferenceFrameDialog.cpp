@@ -86,6 +86,8 @@ m_PixmapGraphicsItem(NULL)
           this, SLOT(originChanged(bool)));
   connect(buttonBox, SIGNAL(helpRequested ()),
           this, SLOT(toggleHelp()));
+  connect(degToRads, SIGNAL(stateChanged(int)),
+          this, SLOT(degToRagsChanged(int)));
 
   loadEbsdData();
   updateGraphicsView();
@@ -140,18 +142,27 @@ bool EbsdReferenceFrameDialog::alignEulers()
 void EbsdReferenceFrameDialog::loadEbsdData()
 {
   boost::shared_ptr<EbsdReader> ebsdReader(static_cast<EbsdReader*>(NULL));
-  bool degToRads = false;
+  //bool degToRads = false;
   std::string ext = EbsdFileInfo::extension(m_EbsdFileName.toStdString());
+  std::string arrayNames[3];
+  bool convertDegToRads = degToRads->isChecked();
   if (ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     AngReader* reader = new AngReader;
+    arrayNames[0] = Ebsd::Ang::Phi1;
+    arrayNames[1] = Ebsd::Ang::Phi;
+    arrayNames[2] = Ebsd::Ang::Phi2;
     ebsdReader.reset(static_cast<EbsdReader*>(reader));
   }
   else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
     CtfReader* reader = new CtfReader;
     ebsdReader.reset(static_cast<EbsdReader*>(reader));
-    degToRads = true;
+//    convertDegToRads = true;
+    arrayNames[0] = Ebsd::Ctf::Euler1;
+    arrayNames[1] = Ebsd::Ctf::Euler2;
+    arrayNames[2] = Ebsd::Ctf::Euler3;
+    reader->readOnlySliceIndex(0); // Some .ctf files may actually be 3D. We only need the first slice
   }
   if (NULL == ebsdReader.get())
   {
@@ -180,15 +191,21 @@ void EbsdReferenceFrameDialog::loadEbsdData()
   // Splat 0xFF across all the data
   ::memset(rgbArray->GetPointer(0), 255, total*sizeof(uint32_t));
 
-  float* e0 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi1"));
-  float* e1 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi"));
-  float* e2 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi2"));
+  float* e0 = reinterpret_cast<float*>(ebsdReader->getPointerByName(arrayNames[0]));
+  float* e1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(arrayNames[1]));
+  float* e2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(arrayNames[2]));
+
+  if (NULL == e0 || NULL == e1 || NULL == e2)
+  {
+    std::cout << "Could not get raw arrays from file" << std::endl;
+    return;
+  }
 
   for (uint32_t i = 0; i < total; ++i) {
     uint8_t* argb = reinterpret_cast<uint8_t*>(rgbArray->GetPointer(i)) + 1;
     EbsdColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
-                                  argb, hkl, degToRads);
+                                  argb, hkl, convertDegToRads);
   }
 
   QImage image(width, height, QImage::Format_ARGB32);
@@ -206,6 +223,15 @@ void EbsdReferenceFrameDialog::loadEbsdData()
     }
   }
   m_EbsdImage = image;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdReferenceFrameDialog::degToRagsChanged(int state)
+{
+  loadEbsdData();
+  originChanged(true);
 }
 
 // -----------------------------------------------------------------------------

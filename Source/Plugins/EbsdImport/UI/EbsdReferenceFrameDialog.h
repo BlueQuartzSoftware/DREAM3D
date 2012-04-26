@@ -82,6 +82,8 @@ class EbsdReferenceFrameDialog : public QDialog, private Ui::EbsdReferenceFrameD
 
     void toggleHelp();
 
+    void degToRagsChanged(int state);
+
 
 
   private:
