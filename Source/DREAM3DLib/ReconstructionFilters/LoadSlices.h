@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 	//------ Created Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 	//------ Created Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -100,6 +101,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
   private:
     int32_t* m_CellPhases;
+    bool* m_GoodVoxels;
     float* m_CellEulerAngles;
 
     unsigned int* m_CrystalStructures;
