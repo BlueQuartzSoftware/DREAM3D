@@ -88,14 +88,14 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
-      QLineEdit* fieldValue;
-      QDoubleValidator* fieldValueValidator;
-      QComboBox* operatorCombo;
+      QLineEdit* fieldValue = NULL;
+      QDoubleValidator* fieldValueValidator = NULL;
+      QComboBox* operatorCombo = NULL;
 
       QStringList operators;
       operators << ">" << "<" << "=";
 
-      QComboBox* phaseCombo;
+      QComboBox* phaseCombo = NULL;
       QStringList phases;
       for(int i = 0; i < m_NumberOfPhases; ++i)
       {
@@ -108,6 +108,7 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
         case QualityMetricTableModel::FieldName:
           operatorCombo = new QComboBox(parent);
           operatorCombo->addItems(m_FieldList);
+          operatorCombo->setAutoFillBackground(true);
           return operatorCombo;
           break;
         case QualityMetricTableModel::FieldValue:
@@ -120,10 +121,12 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
         case QualityMetricTableModel::FieldOperator:
           operatorCombo = new QComboBox(parent);
           operatorCombo->addItems(operators);
+          operatorCombo->setAutoFillBackground(true);
           return operatorCombo;
         case QualityMetricTableModel::FieldPhaseValue:
           phaseCombo = new QComboBox(parent);
           phaseCombo->addItems(phases);
+          phaseCombo->setAutoFillBackground(true);
           return phaseCombo;
         default:
           break;

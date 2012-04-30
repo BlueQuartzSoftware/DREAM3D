@@ -1028,7 +1028,7 @@ font-size: 11px;
       </size>
      </property>
      <property name="editTriggers">
-      <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+      <set>QAbstractItemView::AllEditTriggers</set>
      </property>
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
