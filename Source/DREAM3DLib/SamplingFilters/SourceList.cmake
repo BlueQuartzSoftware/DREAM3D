@@ -13,7 +13,7 @@ SET (SamplingFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.h
 )
-#-- Add in any addition NON Filter classes here
+#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 SET (DREAM3DLib_SamplingFilters_HDRS
     ${SamplingFilters_FILTERS_HDRS}
 )

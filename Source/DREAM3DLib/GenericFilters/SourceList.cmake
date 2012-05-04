@@ -17,15 +17,14 @@ SET (GenericFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindCellQuats.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNumFields.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainCentroids.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.h
-
 )
 
-#-- Add in any addition NON Filter classes here
+#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 SET (DREAM3DLib_GenericFilters_HDRS
     ${GenericFilters_FILTERS_HDRS}
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
 )
 
 SET (DREAM3DLib_GenericFilters_SRCS
@@ -39,7 +38,6 @@ SET (DREAM3DLib_GenericFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.cpp
-  
 )
 
 

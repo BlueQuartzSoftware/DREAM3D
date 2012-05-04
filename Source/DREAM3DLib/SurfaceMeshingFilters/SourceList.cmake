@@ -45,6 +45,8 @@ endif()
 SET (SurfaceMeshingFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SurfaceMeshFilter.h
 )
+
+#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 set (DREAM3DLib_SurfaceMeshingFilters_HDRS
     ${SurfaceMeshingFilters_FILTERS_HDRS}    
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SMStlWriter.h
@@ -69,7 +71,7 @@ set (DREAM3DLib_SurfaceMeshingFilters_SRCS
     ${SMOOTHING_SRCS}    
     )
 
-#-- Gather all teh Surface Meshing Headers together    
+#-- Gather all the Surface Meshing Headers together    
 set (DREAM3DLib_SurfaceMeshingFilters_HDRS
     ${DREAM3DLib_SurfaceMeshingFilters_HDRS}
     ${MESHING_HDRS}
