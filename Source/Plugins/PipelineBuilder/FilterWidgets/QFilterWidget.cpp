@@ -290,7 +290,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setValue(v.toInt());
     }
-    else if (wType == FilterOption::DoubleContrainedWidget)
+    else if (wType == FilterOption::DoubleConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QDoubleSpinBox* le = new QDoubleSpinBox(this);

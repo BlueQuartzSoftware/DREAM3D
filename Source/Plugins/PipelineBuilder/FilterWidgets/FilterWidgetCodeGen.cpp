@@ -587,7 +587,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     {
       fprintf(f, "assert(false);\n");
     }
-    else if (opt->getWidgetType() == FilterOption::DoubleContrainedWidget)
+    else if (opt->getWidgetType() == FilterOption::DoubleConstrainedWidget)
     {
       fprintf(f, "assert(false);\n");
     }
@@ -729,7 +729,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     {
       fprintf(f, "<td>Bounded Integer</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::DoubleContrainedWidget)
+    else if(opt->getWidgetType() == FilterOption::DoubleConstrainedWidget)
     {
       fprintf(f, "<td>Bounded Double</td>");
     }
