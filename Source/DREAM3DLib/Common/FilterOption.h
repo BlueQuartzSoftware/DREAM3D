@@ -29,7 +29,7 @@ class FilterOption
       OutputFileWidget,
       BooleanWidget,
       IntConstrainedWidget,
-      DoubleContrainedWidget,
+      DoubleConstrainedWidget,
       ChoiceWidget,
       CustomWidget
     };
