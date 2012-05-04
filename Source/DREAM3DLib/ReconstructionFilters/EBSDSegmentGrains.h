@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     virtual const std::string getHumanLabel() { return "EBSD Segment Grains"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -93,8 +93,8 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     virtual void execute();
     virtual void preflight();
 
-	virtual int getSeed(size_t gnum);
-	virtual bool determineGrouping(int referencepoint, int neighborpoint, size_t gnum);
+    virtual int getSeed(size_t gnum);
+    virtual bool determineGrouping(int referencepoint, int neighborpoint, size_t gnum);
 
   protected:
     EBSDSegmentGrains();

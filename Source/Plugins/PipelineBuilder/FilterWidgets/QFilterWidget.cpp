@@ -378,7 +378,8 @@ void QFilterWidget::updateQLineEditDoubleValue()
   if(le) {
     bool ok = false;
     ok = setProperty(whoSent->objectName().toStdString().c_str(), le->text().toDouble(&ok));
-    if (false == ok)
+    if (true == ok) { }
+    else
     {
   //    std::cout << "QLineEdit '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
     }
@@ -392,30 +393,32 @@ void QFilterWidget::selectInputFile()
 {
   QObject* whoSent = sender();
 
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
-                                                 "",
-                                                 tr("ALL Files (*.*)") );
-  if ( true == file.isEmpty() ){ return; }
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), "", tr("ALL Files (*.*)"));
+  if(true == file.isEmpty())
+  {
+    return;
+  }
   bool ok = false;
   ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
-  if (false == ok)
+  if (true == ok) { }
+  else
   {
-  //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
   // Now we need to find the specific filter that we are trying to set the value into
-   AbstractFilter::Pointer f = getFilter();
-   std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
-   for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter )
-   {
-     if ( (*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
-     {
-       QFSDropLineEdit* lb = qFindChild<QFSDropLineEdit*>(this, QString::fromStdString((*iter)->getHumanLabel()));
-       if (lb)
-       {
-         lb->setText(file);
-       }
-     }
-   }
+  AbstractFilter::Pointer f = getFilter();
+  std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
+  for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  {
+    if((*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
+    {
+      QFSDropLineEdit* lb = qFindChild<QFSDropLineEdit*>(this, QString::fromStdString((*iter)->getHumanLabel()));
+      if(lb)
+      {
+        lb->setText(file);
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -424,28 +427,36 @@ void QFilterWidget::selectInputFile()
 void QFilterWidget::selectOutputFile()
 {
   QObject* whoSent = sender();
-  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"),
-                                              "",
-                                              tr("ALL Files (*.*)") );
-  if (true == file.isEmpty()) { return;}
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), "", tr("ALL Files (*.*)"));
+  if(true == file.isEmpty())
+  {
+    return;
+  }
   bool ok = false;
   ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
-  if (false == ok)
+  if (true == ok) {}
+  else
   {
-  //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter();
+  // Get the options for that filter
   std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
-  for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter )
+  // Loop on all the filter options to find the filter option we want to set
+  for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
-    if ( (*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
+    if((*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
     {
       QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getHumanLabel()));
-      if (lb)
+      if(lb)
       {
         lb->setText(file);
+        // Setting the text into this QLineEdit will trigger the 'textChanged()' signal
+        // to be emitted by the QLineEdit which will cause the value to sent to
+        // the underlying filter instance which will trigger the SIGNAL parametersChanged()
+        // to be broadcast
       }
     }
   }
@@ -476,7 +487,8 @@ void QFilterWidget::updateComboBoxValue(int v)
   {
     bool ok = false;
     ok = setProperty(whoSent->objectName().toStdString().c_str(), v);
-    if(false == ok)
+    if (true == ok) { }
+    else
     {
       std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
     }
@@ -493,8 +505,10 @@ void QFilterWidget::updateQLineEditStringValue(const QString &v)
 //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
 //      << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
-  if(le) {
+  if(le)
+  {
     setProperty(whoSent->objectName().toStdString().c_str(), le->text());
+
   }
 }
 
@@ -521,12 +535,40 @@ void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 void QFilterWidget::updateQCheckBoxValue(int v)
 {
   QObject* whoSent = sender();
- // std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+//  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
+//      << " via QCheckBox." <<  std::endl;
   QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
   if(le)
   {
     setProperty(whoSent->objectName().toStdString().c_str(), le->isChecked());
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateLineEdit(const QString &v)
+{
+  QObject* whoSent = sender();
+  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
+      << " via QLineEdit." <<  std::endl;
+  assert(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::writeOptions(QSettings &prefs)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::readOptions(QSettings &prefs)
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -638,30 +680,5 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::writeOptions(QSettings &prefs)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::readOptions(QSettings &prefs)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::updateLineEdit(const QString &v)
-{
-  // This is just here to test
-  std::cout << "LineEdit Values being updaeted: " << v.toStdString() << std::endl;
-}
 
 

@@ -189,6 +189,8 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
           this, SLOT(setSelectedFilterWidget(QFilterWidget*)) );
   connect(w, SIGNAL(dragStarted(QFilterWidget*)),
           this, SLOT(setFilterBeingDragged(QFilterWidget*)) );
+  connect(w, SIGNAL(parametersChanged()),
+          this, SLOT(preflightPipeline()));
 
   setSelectedFilterWidget(w);
 
@@ -202,6 +204,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
+  std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
   QFilterPipeline* m_FilterPipeline = new QFilterPipeline(NULL);
 
   // Build up the pipeline
