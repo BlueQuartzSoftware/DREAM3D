@@ -67,6 +67,12 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     virtual ~VtkRectilinearGridWriter();
 
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseIds)
@@ -80,7 +86,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Vtk RectilinearGrid Writer"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -95,6 +101,12 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
 
   private:
+    int32_t* m_GrainIds;
+    int32_t* m_CellPhases;
+    bool*    m_GoodVoxels;
+    float*   m_CellEulerAngles;
+
+
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 

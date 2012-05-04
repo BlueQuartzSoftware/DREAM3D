@@ -102,6 +102,8 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
 
   bool ok = false;
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
+  splitter_1->restoreState(prefs.value("splitter_1").toByteArray());
+  splitter_2->restoreState(prefs.value("splitter_2").toByteArray());
   prefs.endGroup();
 
   if (false == ok) {filterCount = 0;}
@@ -121,6 +123,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
     prefs.endGroup();
   }
 
+
 }
 
 // -----------------------------------------------------------------------------
@@ -132,6 +135,8 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 
   qint32 count = m_PipelineViewWidget->filterCount();
   prefs.setValue("Number_Filters", count);
+  prefs.setValue("splitter_1", splitter_1->saveState());
+  prefs.setValue("splitter_2", splitter_2->saveState());
   prefs.endGroup();
 
   for(qint32 i = 0; i < count; ++i)
@@ -170,7 +175,6 @@ void PipelineBuilderWidget::setupGui()
   QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
 
   std::set<std::string> groupNames = fm->getGroupNames();
- // QMap<QString, QTreeWidgetItem*> groupToItem;
 
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, "Library");
@@ -185,19 +189,8 @@ void PipelineBuilderWidget::setupGui()
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
     filterGroup->setIcon(0, icon);
-  //  groupToItem.insert(QString::fromStdString(*iter), filterGroup);
   }
   library->setExpanded(true);
-
-  /*
-  QTreeWidgetItem* presets = new QTreeWidgetItem(presetPipelineTree);
-  presets->setText(0, "Preset Pipelines");
-  QTreeWidgetItem* reconPreset = new QTreeWidgetItem(presets);
-  reconPreset->setText(0, "EBSD Reconstruction");
-
-  QTreeWidgetItem* surfaceMesh = new QTreeWidgetItem(presets);
-  surfaceMesh->setText(0, "Surface Meshing");
-*/
 
   m_PipelineViewWidget->setErrorsTextArea(errorsTextEdit);
 
@@ -207,6 +200,7 @@ void PipelineBuilderWidget::setupGui()
   showErrors->setChecked(false);
   on_showErrors_clicked();
 
+  on_filterLibraryTree_itemClicked(library, 0);
 }
 
 // -----------------------------------------------------------------------------
