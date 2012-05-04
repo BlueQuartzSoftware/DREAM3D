@@ -51,10 +51,28 @@
 
 #include "QtSupport/QFSDropLineEdit.h"
 
+#if 1
+/**
+* @brief Creates a "setter" method to set the property.
+*/
+#define QFILTERWIDGET_SET_PROPERTY(type, prpty) \
+  void set##prpty(type value) { this->m_##prpty = value; emit parametersChanged(); }
 
-#define FILTER_PROPERTY_WRAPPER(type, name, filter_var)\
-void set##name(type v) { filter_var->set##name(v); }\
-type get##name() { return filter_var->get##name(); }\
+/**
+* @brief Creates a "getter" method to retrieve the value of the property.
+*/
+#define QFILTERWIDGET_GET_PROPERTY(type, prpty) \
+  type get##prpty() { return m_##prpty; }
+
+#define QFILTERWIDGET_INSTANCE_PROPERTY(type, prpty)\
+  private:\
+      type   m_##prpty;\
+  public:\
+    QFILTERWIDGET_SET_PROPERTY(type, prpty)\
+    QFILTERWIDGET_GET_PROPERTY(type, prpty)
+
+#endif
+
 
 
 // This needs to be defined
@@ -87,6 +105,7 @@ class QFilterWidget : public QGroupBox
 
   signals:
     void dragStarted(QFilterWidget* widget);
+    void parametersChanged();
 
   public slots:
 
