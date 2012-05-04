@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return " EBSD Segment Grains"; }
+    virtual const std::string getHumanLabel() { return "EBSD Segment Grains"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
