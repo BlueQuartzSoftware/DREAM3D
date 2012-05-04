@@ -146,7 +146,7 @@ void QFilterWidget::setupGui()
   setSizePolicy(sizePolicy2);
 
 
-  setTitle(QString::fromStdString(getFilter()->getNameOfClass()));
+  setTitle(QString::fromStdString(getFilter()->getHumanLabel()));
 
 
   QVBoxLayout* vertLayout = new QVBoxLayout(this);

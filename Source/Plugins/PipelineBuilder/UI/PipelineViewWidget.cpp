@@ -204,7 +204,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
-  std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
+ // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
   QFilterPipeline* m_FilterPipeline = new QFilterPipeline(NULL);
 
   // Build up the pipeline

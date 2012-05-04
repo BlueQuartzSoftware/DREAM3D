@@ -44,6 +44,10 @@
 // -----------------------------------------------------------------------------
 VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_WriteGrainIds(true),
 m_WritePhaseIds(false),
 m_WriteGoodVoxels(false),
@@ -136,6 +140,7 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   std::stringstream ss;
+  DataContainer* m = getDataContainer();
 
   if(m_OutputFile.empty() == true)
   {
@@ -143,6 +148,22 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
     setErrorCondition(-1);
   }
 
+  if(m_WriteGrainIds == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  }
+  if(m_WritePhaseIds == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  }
+  if(m_WriteGoodVoxels == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+  }
+  if(m_WriteIPFColors == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
+  }
   setErrorMessage(ss.str());
 }
 
