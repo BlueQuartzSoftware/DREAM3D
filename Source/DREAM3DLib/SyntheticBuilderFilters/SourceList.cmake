@@ -18,6 +18,7 @@ SET (SyntheticBuilderFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InitializeSyntheticVolume.h
 )
 
+#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 SET (DREAM3DLib_SyntheticBuilderFilters_HDRS
     ${SyntheticBuilderFilters_FILTERS_HDRS}
 )
