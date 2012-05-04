@@ -239,13 +239,19 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 
   for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    QListWidgetItem* filterItem = new QListWidgetItem(filterList);
-    filterItem->setText(QString::fromStdString((*factory).first));
+
+    QString humanName = QString::fromStdString((*factory).second->getFilterHumanLabel());
     QString iconName(":/");
     iconName.append( QString::fromStdString((*factory).second->getFilterGroup()));
     iconName.append("_Icon.png");
     QIcon icon(iconName);
-    filterItem->setIcon(icon);
+    // Create the QListWidgetItem and add it to the filterList
+    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
+    // Set an "internal" QString that is the name of the filter. We need this value
+    // when the item is clicked in order to retreive the Filter Widget from the
+    // filter widget manager.
+    QString filterName = QString::fromStdString((*factory).first);
+    filterItem->setData( Qt::UserRole, filterName);
   }
 }
 
@@ -256,9 +262,14 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem * item, QListWidgetItem * previous )
 {
   if (NULL == item) { return; }
-  QString filterName = item->text();
+  QString filterName = item->data(Qt::UserRole).toString();
   QFilterWidgetManager::Pointer wm = QFilterWidgetManager::Instance();
+  if (NULL == wm.get()) { return; }
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
+  if (NULL == wf.get())
+  {
+    return;
+  }
   AbstractFilter::Pointer filter = wf->getFilterInstance();
   if (NULL == filter.get())
   {
@@ -381,10 +392,8 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
-  m_PipelineViewWidget->addFilter(item->text());
+  m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
 }
-
-
 
 // -----------------------------------------------------------------------------
 //

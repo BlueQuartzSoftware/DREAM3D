@@ -698,7 +698,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   }
   for (size_t i = 0; i < options.size(); ++i)
   {
-    fprintf(f, "<tr>");
+    fprintf(f, "<tr>\n");
     FilterOption::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
@@ -762,7 +762,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
         fprintf(f, "%s", (*iter).c_str());
         fprintf(f, "</li>");
       }
-      fprintf(f, "</ul>");
+      fprintf(f, "</ul>\n");
     }
   }
   {
@@ -776,7 +776,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
         fprintf(f, "%s", (*iter).c_str());
         fprintf(f, "</li>");
       }
-      fprintf(f, "</ul>");
+      fprintf(f, "</ul>\n");
     }
   }
   {
@@ -790,7 +790,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
         fprintf(f, "%s", (*iter).c_str());
         fprintf(f, "</li>");
       }
-      fprintf(f, "</ul>");
+      fprintf(f, "</ul>\n");
     }
   }
   {
@@ -804,7 +804,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
         fprintf(f, "%s", (*iter).c_str());
         fprintf(f, "</li>");
       }
-      fprintf(f, "</ul>");
+      fprintf(f, "</ul>\n");
     }
   }
 
@@ -819,7 +819,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
         fprintf(f, "%s", (*iter).c_str());
         fprintf(f, "</li>");
       }
-      fprintf(f, "</ul>");
+      fprintf(f, "</ul>\n");
     }
   }
   {
@@ -833,7 +833,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
         fprintf(f, "%s", (*iter).c_str());
         fprintf(f, "</li>");
       }
-      fprintf(f, "</ul>");
+      fprintf(f, "</ul>\n");
     }
   }
 

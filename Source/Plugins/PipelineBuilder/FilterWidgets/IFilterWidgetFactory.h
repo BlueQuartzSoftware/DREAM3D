@@ -57,6 +57,7 @@ class IFilterWidgetFactory
      */
     virtual QFilterWidget* createWidget() { assert(false); return NULL;}
     virtual std::string getFilterGroup() { assert(false); return ""; }
+    virtual std::string getFilterHumanLabel() { assert(false); return ""; }
     virtual AbstractFilter::Pointer getFilterInstance() { assert(false); return AbstractFilter::NullPointer(); }
 
   protected:

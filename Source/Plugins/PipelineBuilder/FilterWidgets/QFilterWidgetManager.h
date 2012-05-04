@@ -80,11 +80,17 @@ class QFilterWidgetManager
 
 
     /**
-     * @brief Returns the mapping of names to Factory instances for all the factories that are registered.
+     * @brief Returns the mapping of names to Factory instances for all the
+     * factories that are registered.
      * @return
      */
     Collection getFactories();
 
+    /**
+     * @brief Returns the mapping of names to the Factory instances for a given filter group
+     * @param groupName The name of the group.
+     * @return
+     */
     Collection getFactories(const std::string &groupName);
 
     /**
@@ -97,7 +103,12 @@ class QFilterWidgetManager
     std::set<std::string> getGroupNames();
 
 
+
     IFilterWidgetFactory::Pointer getFactoryForFilter(const std::string &filterName);
+
+
+    IFilterWidgetFactory::Pointer getFactoryForFilterHumanName(const std::string &humanName);
+
 
   protected:
     QFilterWidgetManager();
