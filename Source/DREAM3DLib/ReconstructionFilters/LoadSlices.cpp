@@ -314,12 +314,12 @@ void LoadSlices::execute()
     setErrorMessage(msg);
     return;
   }
-  // Copy Euler Angles and Phases and possibly convert from degrees to radians
+  // Copy Euler Angles and Phases
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    m_CellEulerAngles[3 * i] = euler1Ptr[i] * radianconversion;
-    m_CellEulerAngles[3 * i + 1] = euler2Ptr[i] * radianconversion;
-    m_CellEulerAngles[3 * i + 2] = euler3Ptr[i] * radianconversion;
+    m_CellEulerAngles[3 * i] = euler1Ptr[i] ;
+    m_CellEulerAngles[3 * i + 1] = euler2Ptr[i];
+    m_CellEulerAngles[3 * i + 2] = euler3Ptr[i];
     m_CellPhases[i] = phasePtr[i];
   }
 
