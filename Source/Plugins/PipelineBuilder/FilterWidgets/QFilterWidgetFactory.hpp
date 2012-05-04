@@ -64,6 +64,12 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
       return w.getFilter()->getGroupName();
     }
 
+    std::string getFilterHumanLabel()
+    {
+      Widget w;
+      return w.getFilter()->getHumanLabel();
+    }
+
     AbstractFilter::Pointer getFilterInstance()
     {
       Widget w;

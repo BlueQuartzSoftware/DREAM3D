@@ -39,17 +39,25 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QApplication>
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QFilterListWidget::QFilterListWidget(QWidget *parent)
 : QListWidget(parent)
 {
   setAcceptDrops(false);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QFilterListWidget::~QFilterListWidget()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterListWidget::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
@@ -57,6 +65,9 @@ void QFilterListWidget::mousePressEvent(QMouseEvent *event)
     QListWidget::mousePressEvent(event);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterListWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton) {
@@ -67,21 +78,28 @@ void QFilterListWidget::mouseMoveEvent(QMouseEvent *event)
     QListWidget::mouseMoveEvent(event);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterListWidget::performDrag()
 {
-    QListWidgetItem *item = currentItem();
-    if (item) {
-        QMimeData *mimeData = new QMimeData;
-        mimeData->setText(item->text());
+  QListWidgetItem *item = currentItem();
+  if(item)
+  {
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setText(item->data(Qt::UserRole).toString());
 
-        QDrag *drag = new QDrag(this);
-        drag->setMimeData(mimeData);
-        drag->exec(Qt::CopyAction);
+    QDrag *drag = new QDrag(this);
+    drag->setMimeData(mimeData);
+    drag->exec(Qt::CopyAction);
 //        if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
 //            delete item;
-    }
+  }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
   QFilterListWidget *source =
@@ -93,6 +111,9 @@ void QFilterListWidget::dragEnterEvent(QDragEnterEvent *event)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterListWidget::dragMoveEvent(QDragMoveEvent *event)
 {
   QFilterListWidget *source =
@@ -103,6 +124,9 @@ void QFilterListWidget::dragMoveEvent(QDragMoveEvent *event)
     }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterListWidget::dropEvent(QDropEvent *event)
 {
   QFilterListWidget *source =

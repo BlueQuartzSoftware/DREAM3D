@@ -140,6 +140,24 @@ IFilterWidgetFactory::Pointer QFilterWidgetManager::getFactoryForFilter(const st
   return m_Factories[filterName];
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IFilterWidgetFactory::Pointer QFilterWidgetManager::getFactoryForFilterHumanName(const std::string &humanName)
+{
+  IFilterWidgetFactory::Pointer widgetFactory;
+
+  for (QFilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
+  {
+    IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
+    if ( NULL != filterFactory.get() && filterFactory->getFilterHumanLabel().compare(humanName) == 0)
+    {
+      widgetFactory = filterFactory;
+      break;
+    }
+  }
+  return widgetFactory;
+}
 
 
 
