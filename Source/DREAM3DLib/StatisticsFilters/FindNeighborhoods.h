@@ -66,27 +66,27 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual ~FindNeighborhoods();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
-	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Neighborhoods"; }
 
-	/**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void execute();
     virtual void preflight();
