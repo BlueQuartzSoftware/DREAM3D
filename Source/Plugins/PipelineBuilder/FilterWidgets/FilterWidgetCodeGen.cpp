@@ -701,7 +701,13 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "</head>\n");
   fprintf(f, "<body>\n");
   fprintf(f, "<h3>%s Filter</h3>\n", t->getHumanLabel().c_str());
-  fprintf(f, "<h4>Summary</h4> This filter does ....\n");
+  fprintf(f, "<h4>Summary</h4>\n");
+  fprintf(f, "<!-- Write all your documentation here -->\n");
+  fprintf(f, "This filter does ....\n");
+  fprintf(f, "<!-- Do NOT write documentation below this line -->\n\n");
+
+
+  fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->\n");
   if (options.size() > 0) {
   fprintf(f, "<h4>Options</h4>\n");
   fprintf(f, "<table>\n<tr><th>Option Name</th><th>Option Type</th></tr>\n");
@@ -848,6 +854,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   }
 
   t->setDataContainer(NULL);
+  fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->\n");
 
   fprintf(f, "</body>\n");
   fprintf(f, "</html>\n");
