@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>577</width>
-    <height>506</height>
+    <width>520</width>
+    <height>492</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -113,8 +113,8 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>545</width>
-        <height>272</height>
+        <width>488</width>
+        <height>304</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -161,10 +161,10 @@ p, li { white-space: pre-wrap; }
      </widget>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="5" column="0" colspan="2">
     <widget class="QCheckBox" name="degToRads">
      <property name="text">
-      <string>My Euler Angle Data is in Degrees</string>
+      <string>Convert Displayed Data to Radians (Imported Data will NOT be changed)</string>
      </property>
     </widget>
    </item>
