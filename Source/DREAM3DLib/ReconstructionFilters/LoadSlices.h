@@ -70,12 +70,12 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
     virtual ~LoadSlices();
 
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-	//------ Created Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
@@ -86,7 +86,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Load EBSD Slices"; }
+    virtual const std::string getHumanLabel() { return "Read H5 Ebsd File"; }
 
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
