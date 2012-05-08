@@ -86,7 +86,9 @@ SET( DREAM3D_UIS
 cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 
 # and finally any resource files
-SET( DREAM3D_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
+SET( DREAM3D_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
+     ${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Filters.qrc
+)
 
 # -- Run MOC and UIC on the necessary files   
 QT4_ADD_RESOURCES( Generated_RC_SRCS ${DREAM3D_RCS} ${QRC_LICENSE_FILES})

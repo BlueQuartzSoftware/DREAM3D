@@ -50,6 +50,8 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 
+#define GENERATE_HTML_FILE 0
+
 typedef std::map<std::string, std::set<std::string> >  FilterMapType;
 typedef std::set<std::string>  StringSetType;
 
@@ -57,6 +59,7 @@ typedef std::set<std::string>  StringSetType;
 std::string OUTPUT_DIR();
 std::string FILTER_WIDGETS_DIR();
 std::string FILTER_WIDGETS_TEMP_DIR();
+std::string DREAM3D_SOURCE_DIR();
 
 // -----------------------------------------------------------------------------
 //
@@ -658,7 +661,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
 template<typename T>
 void createHTMLFile( const std::string &group, const std::string &filter)
 {
-
+#if (GENERATE_HTML_FILE == 0)
+  return;
+#endif
   typename T::Pointer t = T::New();
   std::vector<FilterOption::Pointer> options = t->getFilterOptions();
 
@@ -673,7 +678,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   }
 
   ss.str("");
-  ss << OUTPUT_DIR() << "/Documentation/" << group;
+  ss << OUTPUT_DIR() << "/Documentation/Filters/" << group;
   MXADir::mkdir(ss.str(), true);
   ss << "/" << filter << ".html";
 
@@ -682,20 +687,24 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   ss.str("");
 
  // std::cout << "Creating HTML File: " << completePath << std::endl;
-  std::cout << "Creating HTML File: $BUILD_DIR/Plugins/PipelineBuilder/FilterWidgets/Documentation/"
+  std::cout << "Creating HTML File: " << OUTPUT_DIR() << "/Documentation/Filters"
       << group << "/" << filter << ".html" << std::endl;
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
+  fprintf(f, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">");
   fprintf(f, "<html>\n");
-  fprintf(f, "<head></head>\n");
-  fprintf(f, "<title>%s</title>\n", filter.c_str());
-  fprintf(f, "<body></body>\n");
-  fprintf(f, "<h1>%s Filter</h1>\n", filter.c_str());
+  fprintf(f, "<head>\n");
+  fprintf(f, "<meta name=\"qrichtext\" content=\"1\" />\n");
+  fprintf(f, "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>\n");
+  fprintf(f, "<title>%s</title>\n", t->getHumanLabel().c_str());
+  fprintf(f, "</head>\n");
+  fprintf(f, "<body>\n");
+  fprintf(f, "<h3>%s Filter</h3>\n", t->getHumanLabel().c_str());
   fprintf(f, "<h4>Summary</h4> This filter does ....\n");
   if (options.size() > 0) {
-  fprintf(f, "<h4>Properties</h4>\n");
-  fprintf(f, "<table>\n<tr><th>Property Name</th><th>Property Type</th></tr>\n");
+  fprintf(f, "<h4>Options</h4>\n");
+  fprintf(f, "<table>\n<tr><th>Option Name</th><th>Option Type</th></tr>\n");
   }
   for (size_t i = 0; i < options.size(); ++i)
   {
@@ -756,12 +765,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     std::set<std::string> list = t->getRequiredCellData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Required Cell Data</h4><ul>");
+      fprintf(f, "<h4>Required Cell Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
         fprintf(f, "<li>");
         fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>");
+        fprintf(f, "</li>\n");
       }
       fprintf(f, "</ul>\n");
     }
@@ -770,12 +779,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     std::set<std::string> list = t->getCreatedCellData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Created Cell Data</h4><ul>");
+      fprintf(f, "<h4>Created Cell Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
         fprintf(f, "<li>");
         fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>");
+        fprintf(f, "</li>\n");
       }
       fprintf(f, "</ul>\n");
     }
@@ -784,12 +793,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     std::set<std::string> list = t->getRequiredFieldData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Required Field Data</h4><ul>");
+      fprintf(f, "<h4>Required Field Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
         fprintf(f, "<li>");
         fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>");
+        fprintf(f, "</li>\n");
       }
       fprintf(f, "</ul>\n");
     }
@@ -798,12 +807,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     std::set<std::string> list = t->getCreatedFieldData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Created Field Data</h4><ul>");
+      fprintf(f, "<h4>Created Field Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
         fprintf(f, "<li>");
         fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>");
+        fprintf(f, "</li>\n");
       }
       fprintf(f, "</ul>\n");
     }
@@ -813,12 +822,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     std::set<std::string> list = t->getRequiredEnsembleData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Required Ensemble Data</h4><ul>");
+      fprintf(f, "<h4>Required Ensemble Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
         fprintf(f, "<li>");
         fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>");
+        fprintf(f, "</li>\n");
       }
       fprintf(f, "</ul>\n");
     }
@@ -827,12 +836,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     std::set<std::string> list = t->getCreatedEnsembleData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Created Ensemble Data</h4><ul>");
+      fprintf(f, "<h4>Created Ensemble Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
         fprintf(f, "<li>");
         fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>");
+        fprintf(f, "</li>\n");
       }
       fprintf(f, "</ul>\n");
     }
@@ -840,6 +849,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 
   t->setDataContainer(NULL);
 
+  fprintf(f, "</body>\n");
   fprintf(f, "</html>\n");
 
   fclose(f);
