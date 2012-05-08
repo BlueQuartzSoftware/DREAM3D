@@ -102,29 +102,27 @@ void SegmentGrains::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  std::stringstream ss;
+  if(NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+
     ss << getNameOfClass() << " DataContainer was NULL";
     setErrorMessage(ss.str());
     return;
   }
+  // int64_t totalPoints = m->getTotalPoints();
 
- // int64_t totalPoints = m->getTotalPoints();
-
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] =
+  { 0, 0, 0 };
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+  DimType dims[3] =
+  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
   size_t gnum = 1;
   int seed = 0;
@@ -145,8 +143,8 @@ void SegmentGrains::execute()
   // Burn volume with tight orientation tolerance to simulate simultaneous growth/aglomeration
   while (seed >= 0)
   {
-	seed = getSeed(gnum);
-	if(seed >= 0)
+    seed = getSeed(gnum);
+    if(seed >= 0)
     {
       size = 0;
       voxelslist[size] = seed;
@@ -162,15 +160,15 @@ void SegmentGrains::execute()
           good = true;
           neighbor = currentpoint + neighpoints[i];
 
-          if (i == 0 && plane == 0) good = false;
-          if (i == 5 && plane == (dims[2] - 1)) good = false;
-          if (i == 1 && row == 0) good = false;
-          if (i == 4 && row == (dims[1] - 1)) good = false;
-          if (i == 2 && col == 0) good = false;
-          if (i == 3 && col == (dims[0] - 1)) good = false;
-          if (good == true)
+          if(i == 0 && plane == 0) good = false;
+          if(i == 5 && plane == (dims[2] - 1)) good = false;
+          if(i == 1 && row == 0) good = false;
+          if(i == 4 && row == (dims[1] - 1)) good = false;
+          if(i == 2 && col == 0) good = false;
+          if(i == 3 && col == (dims[0] - 1)) good = false;
+          if(good == true)
           {
-            if (determineGrouping(currentpoint, neighbor, gnum) == true)
+            if(determineGrouping(currentpoint, neighbor, gnum) == true)
             {
               voxelslist[size] = neighbor;
               size++;
@@ -181,17 +179,28 @@ void SegmentGrains::execute()
       }
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
-	  gnum++;
+      gnum++;
+      ss.str("");
+      ss << "Total Grains: " << gnum;
+      notify(ss.str(), 0, Observable::UpdateProgressMessage);
     }
   }
 
   // If there is an error set this to something negative and also set a message
   notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int SegmentGrains::getSeed(size_t gnum)
 {
 	return -1;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool SegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
 {
 	return false;
