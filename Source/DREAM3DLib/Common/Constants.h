@@ -290,6 +290,11 @@ namespace DREAM3D
     const unsigned int Count = 3; //!<
   }
 
+  namespace EulerAngleConversionType
+  {
+    const unsigned int DegreesToRadians = 0; //!<
+    const unsigned int RadiansToDegrees = 1; //!<
+  }
 
   namespace Overlap
   {

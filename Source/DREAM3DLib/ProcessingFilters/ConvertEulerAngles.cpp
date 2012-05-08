@@ -82,7 +82,7 @@ class ConvertEulerAnglesImpl
 ConvertEulerAngles::ConvertEulerAngles() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_ConversionFactor(M_PI/180.0), // We convert from Degrees to Radians by Default
+m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians), // We convert from Degrees to Radians by Default
 m_CellEulerAngles(NULL)
 {
   setupFilterOptions();
@@ -103,12 +103,15 @@ void ConvertEulerAngles::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setPropertyName("ConversionFactor");
-    option->setHumanLabel("Conversion Factor");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
+    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    option->setHumanLabel("Conversion Type");
+    option->setPropertyName("ConversionType");
+    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Degrees To Radians");
+    choices.push_back("Radians To Degrees");
+    option->setChoices(choices);
     options.push_back(option);
   }
   setFilterOptions(options);
@@ -119,7 +122,7 @@ void ConvertEulerAngles::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
-  writer->writeValue("ConversionFactor", getConversionFactor() );
+  writer->writeValue("ConversionType", getConversionType() );
 }
 
 // -----------------------------------------------------------------------------
@@ -168,21 +171,25 @@ void ConvertEulerAngles::execute()
     return;
   }
 
-//  float convFactor = static_cast<float>(M_PI / 180.0);
-//  if (m_RadiansToDegrees)
-//  {
-//    convFactor = static_cast<float>(180.0 / M_PI);
-//  }
+  float conversionFactor = 1.0;
+  if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
+  {
+    conversionFactor = M_PI / 180.0f;
+  }
+  else if (conversionFactor == DREAM3D::EulerAngleConversionType::RadiansToDegrees)
+  {
+    conversionFactor = 180.0f / M_PI;
+  }
 
   totalPoints = totalPoints * 3;
-  std::cout << "ConvertEulerAngles: " << m_ConversionFactor << std::endl;
+//  std::cout << "ConvertEulerAngles: " << m_ConversionFactor << std::endl;
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
 //#if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    ConvertEulerAnglesImpl(m_CellEulerAngles, m_ConversionFactor), tbb::auto_partitioner());
+                    ConvertEulerAnglesImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
 
 #else
-  ConvertEulerAnglesImpl serial(m_CellEulerAngles, m_ConversionFactor);
+  ConvertEulerAnglesImpl serial(m_CellEulerAngles, conversionFactor);
   serial.convert(0, totalPoints);
 #endif
 

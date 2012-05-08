@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT ConvertEulerAngles : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
 
-    DREAM3D_INSTANCE_PROPERTY(float, ConversionFactor);
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, ConversionType);
 
     virtual void preflight();
 
