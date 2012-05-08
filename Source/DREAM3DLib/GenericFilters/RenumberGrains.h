@@ -46,31 +46,36 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 
-/*
- *
+/**
+ * @class RenumberGrains RenumberGrains.h DREAM3DLib/GenericFilters/RenumberGrains.h
+ * @brief This filter will renumber the grain id values so that the grain numbering
+ * is continuous from zero to n-1 number of grains.
+ * @author
+ * @date
+ * @version 1.0
  */
 class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(RenumberGrains);
-     DREAM3D_STATIC_NEW_MACRO(RenumberGrains);
-     DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);
+    DREAM3D_STATIC_NEW_MACRO(RenumberGrains);
+    DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);
 
-     virtual ~RenumberGrains();
+    virtual ~RenumberGrains();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-     virtual const std::string getHumanLabel() { return "Renumber Grains"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Renumber Grains"; }
 
-     virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
-	 virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterOptions();
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
    protected:
      RenumberGrains();
