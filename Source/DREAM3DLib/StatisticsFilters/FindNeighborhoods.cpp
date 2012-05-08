@@ -89,7 +89,7 @@ void FindNeighborhoods::setupFilterOptions()
     option->setHumanLabel("Distribution Type");
     option->setPropertyName("DistributionType");
     option->setWidgetType(FilterOption::ChoiceWidget);
-	option->setValueType("unsigned int");
+    option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
@@ -118,47 +118,47 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
-	setErrorCondition(0);
-	FindSizes::Pointer find_sizes = FindSizes::New();
-	find_sizes->setObservers(this->getObservers());
-	find_sizes->setDataContainer(getDataContainer());
-	if(preflight == true) find_sizes->preflight();
-	if(preflight == false) find_sizes->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
+    setErrorCondition(0);
+    FindSizes::Pointer find_sizes = FindSizes::New();
+    find_sizes->setObservers(this->getObservers());
+    find_sizes->setDataContainer(getDataContainer());
+    if(preflight == true) find_sizes->preflight();
+    if(preflight == false) find_sizes->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
-	setErrorCondition(0);
-	FindBoundingBoxGrains::Pointer find_biasedfields = FindBoundingBoxGrains::New();
-	find_biasedfields->setObservers(this->getObservers());
-	find_biasedfields->setDataContainer(getDataContainer());
-	if(preflight == true) find_biasedfields->preflight();
-	if(preflight == false) find_biasedfields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+    setErrorCondition(0);
+    FindBoundingBoxGrains::Pointer find_biasedfields = FindBoundingBoxGrains::New();
+    find_biasedfields->setObservers(this->getObservers());
+    find_biasedfields->setDataContainer(getDataContainer());
+    if(preflight == true) find_biasedfields->preflight();
+    if(preflight == false) find_biasedfields->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -304)
   {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
-  }  
+    setErrorCondition(0);
+    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+    find_grainphases->setObservers(this->getObservers());
+    find_grainphases->setDataContainer(getDataContainer());
+    if(preflight == true) find_grainphases->preflight();
+    if(preflight == false) find_grainphases->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
   if(getErrorCondition() == -305)
   {
-	setErrorCondition(0);
-	FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
-	find_graincentroids->setObservers(this->getObservers());
-	find_graincentroids->setDataContainer(getDataContainer());
-	if(preflight == true) find_graincentroids->preflight();
-	if(preflight == false) find_graincentroids->execute();
+    setErrorCondition(0);
+    FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
+    find_graincentroids->setObservers(this->getObservers());
+    find_graincentroids->setDataContainer(getDataContainer());
+    if(preflight == true) find_graincentroids->preflight();
+    if(preflight == false) find_graincentroids->execute();
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
-  }  
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
