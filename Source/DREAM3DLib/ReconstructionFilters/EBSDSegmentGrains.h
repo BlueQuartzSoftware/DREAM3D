@@ -80,6 +80,7 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "EBSD Segment Grains"; }
@@ -112,7 +113,7 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     bool* m_Active;
     bool* m_GoodVoxels;
 
-	unsigned int* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

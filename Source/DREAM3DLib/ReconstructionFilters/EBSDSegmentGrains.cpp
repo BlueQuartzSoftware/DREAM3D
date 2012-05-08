@@ -36,6 +36,10 @@
 
 #include "EBSDSegmentGrains.h"
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
@@ -57,6 +61,8 @@ const static float m_pi = M_PI;
   boost::shared_array<type> var##Array(new type[size]);\
   type* var = var##Array.get();
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -70,6 +76,7 @@ m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
+m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_CellPhases(NULL),
@@ -111,8 +118,21 @@ void EBSDSegmentGrains::setupFilterOptions()
     option->setCastableValueType("double");
     options.push_back(option);
   }
+#if 0
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Randomly Reorder Generated Grain Ids");
+    option->setPropertyName("RandomizeGrainIds");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+#endif
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void EBSDSegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
@@ -183,6 +203,58 @@ void EBSDSegmentGrains::execute()
   }
 
   SegmentGrains::execute();
+
+  if (true == m_RandomizeGrainIds)
+  {
+    totalPoints = m->getTotalPoints();
+    size_t totalFields = m->getNumFieldTuples();
+    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+    if (getErrorCondition() < 0)
+    {
+      return;
+    }
+
+    // Generate all the numbers up front
+    const int rangeMin = 1;
+    const int rangeMax = totalFields;
+    typedef boost::uniform_int<int> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&,
+                                     NumberDistribution> Generator;
+
+    NumberDistribution distribution(rangeMin, rangeMax);
+    RandomNumberGenerator generator;
+    Generator numberGenerator(generator, distribution);
+    generator.seed(MXA::getMilliSeconds()); // seed with the current time
+
+    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
+    int32_t* gid = rndNumbers->GetPointer(0);
+    gid[0] = 0;
+    std::set<int32_t> grainIdSet;
+    grainIdSet.insert(0);
+    for(size_t i = 1; i < totalFields; ++i)
+    {
+      gid[i] = i; //numberGenerator();
+      grainIdSet.insert(gid[i]);
+    }
+
+    size_t r;
+    size_t temp;
+    //--- Shuffle elements by randomly exchanging each with one other.
+    for (size_t i=1; i< totalFields; i++) {
+        r = numberGenerator(); // Random remaining position.
+        temp = gid[i];
+        gid[i] = gid[r];
+        gid[r] = temp;
+    }
+
+    // Now adjust all the Grain Id values for each Voxel
+    for(int64_t i = 0; i < totalPoints; ++i)
+    {
+       m_GrainIds[i] = gid[ m_GrainIds[i] ];
+    }
+  }
+
 
   // If there is an error set this to something negative and also set a message
   notify("Completed", 0, Observable::UpdateProgressMessage);

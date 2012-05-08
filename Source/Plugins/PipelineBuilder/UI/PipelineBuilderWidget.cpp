@@ -206,14 +206,6 @@ void PipelineBuilderWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::on_presetPipelineTree_itemDoubleClicked( QTreeWidgetItem* item, int column)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
   // Clear all the current items from the list
