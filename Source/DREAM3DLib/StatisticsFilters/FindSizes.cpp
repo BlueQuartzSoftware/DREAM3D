@@ -238,15 +238,15 @@ void FindSizes::find_sizes()
   {
     m_NumCells[i] = graincounts[i];
     m_Volumes[i] = (graincounts[i] * res_scalar);
-    radcubed = m_Volumes[i]/vol_term;
-    diameter = 2.0f*powf(radcubed, 0.3333333333f);
+    radcubed = m_Volumes[i] / vol_term;
+    diameter = 2.0f * powf(radcubed, 0.3333333333f);
     m_EquivalentDiameters[i] = diameter;
-	if(m_BiasedFields[i] == false)
-	{
-		values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
-		fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + m_Volumes[i];
-		totalUnbiasedVolume = totalUnbiasedVolume + m_Volumes[i];
-	}
+    if(m_BiasedFields[i] == false)
+    {
+      values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
+      fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + m_Volumes[i];
+      totalUnbiasedVolume = totalUnbiasedVolume + m_Volumes[i];
+    }
   }
   for (size_t i = 1; i < numensembles; i++)
   {

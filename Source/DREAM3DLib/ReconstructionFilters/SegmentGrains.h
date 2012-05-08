@@ -66,11 +66,16 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 
     virtual ~SegmentGrains();
 
+    virtual const std::string getGroupName()
+    {
+      return DREAM3D::FilterGroups::ReconstructionFilters;
+    }
+    virtual const std::string getHumanLabel()
+    {
+      return "Segment Grains";
+    }
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Segment Grains"; }
-
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -78,8 +83,8 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-	virtual int getSeed(size_t gnum);
-	virtual bool determineGrouping(int referencepoint, int neighborpoint, size_t gnum);
+    virtual int getSeed(size_t gnum);
+    virtual bool determineGrouping(int referencepoint, int neighborpoint, size_t gnum);
 
   protected:
     SegmentGrains();
