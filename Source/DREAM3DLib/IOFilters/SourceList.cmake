@@ -20,6 +20,7 @@ SET (IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdWriter.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.h
 )
 
 
@@ -29,16 +30,17 @@ SET (DREAM3DLib_IOFilters_HDRS
 )
 
 SET (DREAM3DLib_IOFilters_SRCS
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.cpp   
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.cpp
 )
 
 if (NOT DEFINED ONLY_FILTERS)

@@ -70,6 +70,7 @@ set (PipelineBuilderPlugin_UI_HDRS
     )
     
 set (PipelineBuilderPlugin_UI_SRCS 
+    ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderPlugin.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.cpp
     ${PROJECT_SOURCE_DIR}/UI/PipelineViewWidget.cpp
@@ -77,7 +78,10 @@ set (PipelineBuilderPlugin_UI_SRCS
     )
 
 # -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( PipelineBuilderPlugin_Generated_RC_SRCS ${PROJECT_SOURCE_DIR}/UI/Icons.qrc)    
+QT4_ADD_RESOURCES( PipelineBuilderPlugin_Generated_RC_SRCS 
+                    ${PROJECT_SOURCE_DIR}/UI/Icons.qrc
+                    ${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/FilterDocs.qrc
+                    )
     
 QT4_WRAP_UI( PipelineBuilderPlugin_Generated_UI_HDRS 
             ${PROJECT_SOURCE_DIR}/UI/PipelineBuilderWidget.ui)
