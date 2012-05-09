@@ -72,8 +72,8 @@ const static float m_pi = M_PI;
 LoadSlices::LoadSlices() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
@@ -127,6 +127,14 @@ void LoadSlices::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+
+  if(m_H5EbsdFile.empty() == true)
+  {
+    ss << getNameOfClass() << ": The input H5Ebsd file must be set before executing this filter.";
+    setErrorCondition(-1);
+    setErrorMessage(ss.str());
+    return;
+  }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);

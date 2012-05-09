@@ -205,7 +205,18 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 void PipelineViewWidget::preflightPipeline()
 {
  // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
-  QFilterPipeline* m_FilterPipeline = new QFilterPipeline(NULL);
+
+  // clear all the error messages
+  m_PipelineErrorList.clear();
+  m_ErrorsArea->clear();
+
+  // Create the DataContainer object
+  DataContainer::Pointer m = DataContainer::New();
+//  m->addObserver(static_cast<Observer*>(this));
+//  setErrorCondition(0);
+  int preflightError = 0;
+  std::stringstream ss;
+
 
   // Build up the pipeline
   qint32 count = filterCount();
@@ -214,25 +225,21 @@ void PipelineViewWidget::preflightPipeline()
     QFilterWidget* fw = filterWidgetAt(i);
     if (fw)
     {
-      m_FilterPipeline->pushBack(fw->getFilter());
+      fw->setHasPreflightErrors(false);
+      AbstractFilter::Pointer filter = fw->getFilter();
+
+      filter->setDataContainer(m.get());
+      filter->preflight();
+      int err = filter->getErrorCondition();
+      if(err < 0)
+      {
+        preflightError |= err;
+        preflightErrorMessage(filter->getErrorMessage().c_str());
+        fw->setHasPreflightErrors(true);
+      }
     }
   }
 
-  connect(m_FilterPipeline, SIGNAL(errorMessage(const QString &)),
-          this, SLOT(preflightErrorMessage(const QString &)));
-  // clear all the error messages
-  m_PipelineErrorList.clear();
-  m_ErrorsArea->clear();
-
-  m_FilterPipeline->preflightPipeline();
-
-//  std::cout << "Errors Running Preflight Pipeline" << std::endl;
-//  for(int i = 0; i < m_PipelineErrorList.count(); ++i)
-//  {
-//    std::cout << m_PipelineErrorList.at(i).toStdString() << std::endl;
-//  }
-//  std::cout << "---------------------------------" << std::endl;
-  delete m_FilterPipeline;
 }
 
 // -----------------------------------------------------------------------------
@@ -287,13 +294,13 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 {
   if(NULL != m_SelectedFilterWidget && w != m_SelectedFilterWidget)
   {
-    m_SelectedFilterWidget->changeStyle(false);
+    m_SelectedFilterWidget->setIsSelected(false);
   }
   m_SelectedFilterWidget = w;
 
   if(NULL != m_SelectedFilterWidget)
   {
-    m_SelectedFilterWidget->changeStyle(true);
+    m_SelectedFilterWidget->setIsSelected(true);
   }
 }
 

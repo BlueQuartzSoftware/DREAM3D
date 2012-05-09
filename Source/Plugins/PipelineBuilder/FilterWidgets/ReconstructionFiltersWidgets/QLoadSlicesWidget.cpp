@@ -146,8 +146,8 @@ bool QLoadSlicesWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdi
 void QLoadSlicesWidget::setupGui()
 {
   setCheckable(true);
+  setIsSelected(false);
 
-  changeStyle(false);
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_H5EbsdFile->setCompleter(com);
@@ -173,7 +173,6 @@ void QLoadSlicesWidget::on_m_H5EbsdBtn_clicked()
   m_H5EbsdFile->setText(p);
   on_m_H5EbsdFile_textChanged(m_H5EbsdFile->text() );
   m_H5EbsdFile->blockSignals(false);
-
 }
 
 
@@ -185,7 +184,6 @@ void QLoadSlicesWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 
   if(verifyPathExists(m_H5EbsdFile->text(), m_H5EbsdFile))
   {
-
     QFileInfo fi(m_H5EbsdFile->text());
     if(fi.exists() && fi.isFile())
     {
@@ -313,6 +311,23 @@ void QLoadSlicesWidget::on_m_H5EbsdFile_textChanged(const QString &text)
       }
     }
   }
+  else
+  {
+    m_XDim->setText("xxx");
+    m_YDim->setText("xxx");
+    m_ZDim->setText("xxx");
+    m_XRes->setText("xxx");
+    m_YRes->setText("xxx");
+    m_ZRes->setText("xxx");
+    m_EbsdManufacturer->setText("xxx");
+    m_ReorderArrayLabel->setText("xxx");
+    m_RotateSliceLabel->setText("xxx");
+    m_ZMin->setText("xxx");
+    m_ZMax->setText("xxx");
+    m_AlignEulersLabel->setText("xxx");
+    m_StackingOrder->setText("xxx");
+  }
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -325,6 +340,7 @@ void QLoadSlicesWidget::on_addQualityMetric_clicked()
   QModelIndex index = m_QualityMetricTableModel->index(m_QualityMetricTableModel->rowCount() - 1, 0);
   m_QualityMetricTableView->setCurrentIndex(index);
   m_QualityMetricTableView->resizeColumnsToContents();
+  emit parametersChanged();
 }
 
 
@@ -343,6 +359,7 @@ void QLoadSlicesWidget::on_removeQualityMetric_clicked()
   {
     m_QualityMetricTableView->resizeColumnsToContents();
   }
+  emit parametersChanged();
 }
 
 
@@ -382,6 +399,7 @@ void QLoadSlicesWidget::m_SetSliceInfo()
 void QLoadSlicesWidget::phaseTypeEdited(int i)
 {
   m_phaseTypeEdited = true;
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -389,15 +407,12 @@ void QLoadSlicesWidget::phaseTypeEdited(int i)
 // -----------------------------------------------------------------------------
 bool QLoadSlicesWidget::checkPhaseTypes()
 {
-
-
-  if (m_phaseTypeEdited == true)
+  if(m_phaseTypeEdited == true)
   {
-    int
-        ret =
-            QMessageBox::warning(this, QString("Reconstruction"), "The Phase Types were Edited. We need to save this data to the input file. Do you want to do that now. Canceling will leave all files untouched but NOT execute the Reconstruction", QMessageBox::Ok
-                | QMessageBox::Default, QMessageBox::No);
-    if (ret == QMessageBox::No)
+    int ret =
+        QMessageBox::warning(this, QString("Reconstruction"), "The Phase Types were Edited. We need to save this data to the input file. Do you want to do that now. Canceling will leave all files untouched but NOT execute the Reconstruction", QMessageBox::Ok
+                                 | QMessageBox::Default, QMessageBox::No);
+    if(ret == QMessageBox::No)
     {
       return false;
     }

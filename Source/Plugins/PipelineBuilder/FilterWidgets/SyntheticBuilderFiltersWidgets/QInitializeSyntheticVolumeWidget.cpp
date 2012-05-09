@@ -142,7 +142,7 @@ void QInitializeSyntheticVolumeWidget::setupGui()
 {
   setCheckable(true);
 
-  changeStyle(false);
+  setIsSelected(false);
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_InputFile->setCompleter(com);
