@@ -56,8 +56,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
-#include "PipelineBuilderPlugin.h"
-#include "PipelineBuilder/FilterWidgets/QFilterWidget.h"
+#include "QFilterWidget.h"
 
 
 
@@ -172,7 +171,7 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 void PipelineBuilderWidget::setupGui()
 {
   // Get the QFilterWidget Mangager Instance
-  QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
+  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
 
   std::set<std::string> groupNames = fm->getGroupNames();
 
@@ -211,8 +210,8 @@ void PipelineBuilderWidget::setupGui()
 void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
   // Get the QFilterWidget Mangager Instance
-  QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
-  QFilterWidgetManager::Collection factories;
+  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
+  FilterWidgetManager::Collection factories;
   if ( item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
@@ -231,8 +230,8 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
 void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
   // Get the QFilterWidget Mangager Instance
-  QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
-  QFilterWidgetManager::Collection factories;
+  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
+  FilterWidgetManager::Collection factories;
   if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
@@ -248,12 +247,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::updateFilterGroupList(QFilterWidgetManager::Collection &factories)
+void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collection &factories)
 {
   // Clear all the current items from the list
   filterList->clear();
 
-  for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
+  for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
 
     QString humanName = QString::fromStdString((*factory).second->getFilterHumanLabel());
@@ -279,7 +278,7 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
 {
   if (NULL == item) { return; }
   QString filterName = item->data(Qt::UserRole).toString();
-  QFilterWidgetManager::Pointer wm = QFilterWidgetManager::Instance();
+  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
   if (NULL == wm.get()) { return; }
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
   if (NULL == wf.get())
@@ -666,7 +665,7 @@ void PipelineBuilderWidget::pipelineProgress(int val)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::addErrorMessage(QString message)
 {
-  QString title = QString::fromStdString(DREAM3D::UIPlugins::PipelineBuilderDisplayName).append(" Error");
+  QString title = QString::fromStdString("PipelineBuilderWidget Error");
   displayDialogBox(title, message, QMessageBox::Critical);
 }
 
@@ -675,7 +674,7 @@ void PipelineBuilderWidget::addErrorMessage(QString message)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::addWarningMessage(QString message)
 {
-  QString title = QString::fromStdString(DREAM3D::UIPlugins::PipelineBuilderDisplayName).append(" Warning");
+  QString title = QString::fromStdString("PipelineBuilderWidget Warning");
   displayDialogBox(title, message, QMessageBox::Warning);
 }
 

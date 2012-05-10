@@ -34,58 +34,65 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PipelineBuilderPlugin_H_
-#define PipelineBuilderPlugin_H_
+#ifndef _PipelineViewWidget_H
+#define _PipelineViewWidget_H
 
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include <QtCore/QUrl>
-#include "QtSupport/DREAM3DPluginInterface.h"
+#include <QtGui/QFrame>
+#include <QtGui/QLabel>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QTextEdit>
 
-class PipelineBuilderWidget;
-class DREAM3DPluginFrame;
+#include "PipelineBuilder/QFilterWidget.h"
 
-DREAM3D_PLUGIN_CONSTANTS(PipelineBuilder, PipelineBuilder)
-/**
- * @class PipelineBuilderPlugin PipelineBuilderPlugin.h UIPlugins/PipelineBuilderPlugin.h
- * @brief
- * @author
- * @date
- * @version 1.0
+/*
+ *
  */
-class PipelineBuilderPlugin : public QObject, public DREAM3DPluginInterface
+class PipelineViewWidget : public QFrame
 {
     Q_OBJECT;
-    Q_INTERFACES(DREAM3DPluginInterface)
 
   public:
-    PipelineBuilderPlugin();
-    virtual ~PipelineBuilderPlugin();
+    PipelineViewWidget(QWidget* parent = 0);
+    virtual ~PipelineViewWidget();
 
-    QString getPluginName();
-
-    virtual QWidget* getInputWidget(QWidget* parent);
-    virtual DREAM3DPluginFrame* getPluginFrame(QWidget* parent);
-
-
-    virtual void writeSettings(QSettings &prefs);
-    virtual void readSettings(QSettings &prefs);
-
-    virtual QIcon icon();
-    virtual QUrl htmlHelpIndexFile();
+    int filterCount();
+    QFilterWidget* filterWidgetAt(int index);
+    void clearWidgets();
+    QFilterWidget* addFilter(QString filterName, int index =-1);
+    void setErrorsTextArea(QTextEdit* t);
 
   public slots:
-    virtual void displayHelp();
+    void removeFilterWidget();
+    void setSelectedFilterWidget(QFilterWidget* w);
+    void setFilterBeingDragged(QFilterWidget* w);
+    void preflightPipeline();
 
-    signals:
-      void showHelp(QUrl);
+    // Slots for the pipeline to communicate back to us
+  public slots:
+    void preflightErrorMessage(const QString &str);
+
+
+  signals:
+     void addPlaceHolderFilter(QPoint p);
+     void removePlaceHolderFilter();
 
   protected:
-    PipelineBuilderWidget* m_InputWidget;
+     void setupGui();
+      void dragEnterEvent(QDragEnterEvent *event);
+      void dragMoveEvent(QDragMoveEvent *event);
+      void dropEvent(QDropEvent *event);
+   //   void mousePressEvent(QMouseEvent *event);
 
   private:
-    PipelineBuilderPlugin(const PipelineBuilderPlugin&); // Copy Constructor Not Implemented
-    void operator=(const PipelineBuilderPlugin&); // Operator '=' Not Implemented
+    QFilterWidget*            m_SelectedFilterWidget;
+    QVBoxLayout*              m_FilterWidgetLayout;
+    QFilterWidget*            m_FilterBeingDragged;
+    int                       m_DropIndex;
+    QStringList               m_PipelineErrorList;
+    QTextEdit*                m_ErrorsArea;
+
+    PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
+    void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* PipelineBuilderPlugin_H_ */
+#endif /* _PipelineViewWidget_H */

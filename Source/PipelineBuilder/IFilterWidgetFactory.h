@@ -37,7 +37,7 @@
 #ifndef IFILTERWIDGETFACTOR_H_
 #define IFILTERWIDGETFACTOR_H_
 
-#include "QFilterWidget.h"
+#include "PipelineBuilder/QFilterWidget.h"
 
 /**
  * @brief This class serves as a base class to create Factory classes that can
