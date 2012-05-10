@@ -55,8 +55,6 @@
 
 #include "DREAM3DLib/Common/FilterOption.h"
 
-#include "moc_QFilterWidget.cxx"
-
 #define PADDING 5
 #define BORDER 2
 #define IMAGE_WIDTH 17
