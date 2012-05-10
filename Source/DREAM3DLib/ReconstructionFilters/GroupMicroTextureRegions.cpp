@@ -222,7 +222,7 @@ void GroupMicroTextureRegions::execute()
   {
 	m_NumFields[i] = 0;
   }
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
+  for(size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
 	m_NumFields[m_FieldPhases[i]]++;
   }
