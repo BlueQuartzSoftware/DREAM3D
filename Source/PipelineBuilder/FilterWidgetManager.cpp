@@ -33,12 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "QFilterWidgetManager.h"
+#include "FilterWidgetManager.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidgetManager::QFilterWidgetManager()
+FilterWidgetManager::FilterWidgetManager()
 {
 
 }
@@ -46,22 +46,22 @@ QFilterWidgetManager::QFilterWidgetManager()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidgetManager::~QFilterWidgetManager()
+FilterWidgetManager::~FilterWidgetManager()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidgetManager::Pointer QFilterWidgetManager::Instance()
+FilterWidgetManager::Pointer FilterWidgetManager::Instance()
 {
-  static QFilterWidgetManager::Pointer singleton;
+  static FilterWidgetManager::Pointer singleton;
 
   if (singleton.get() == NULL)
   {
-    singleton.reset (new QFilterWidgetManager() );
+    singleton.reset (new FilterWidgetManager() );
     // Register all the known filters
-    QFilterWidgetManager::RegisterKnownQFilterWidgets();
+    FilterWidgetManager::RegisterKnownQFilterWidgets();
   }
   return singleton;
 }
@@ -69,12 +69,12 @@ QFilterWidgetManager::Pointer QFilterWidgetManager::Instance()
 // -----------------------------------------------------------------------------
 //  Static Method
 // -----------------------------------------------------------------------------
-void QFilterWidgetManager::RegisterFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory)
+void FilterWidgetManager::RegisterFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory)
 {
   if (NULL != factory.get() )
   {
     // Instantiate the Instance Manager for IFilterWidgetFactory
-    QFilterWidgetManager::Pointer idManager = QFilterWidgetManager::Instance();
+    FilterWidgetManager::Pointer idManager = FilterWidgetManager::Instance();
     idManager->addFilterWidgetFactory( name, factory );
   }
 }
@@ -82,7 +82,7 @@ void QFilterWidgetManager::RegisterFilterWidgetFactory(const std::string &name, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidgetManager::Collection QFilterWidgetManager::getFactories()
+FilterWidgetManager::Collection FilterWidgetManager::getFactories()
 {
   return m_Factories;
 }
@@ -90,12 +90,12 @@ QFilterWidgetManager::Collection QFilterWidgetManager::getFactories()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidgetManager::Collection QFilterWidgetManager::getFactories(const std::string &groupName)
+FilterWidgetManager::Collection FilterWidgetManager::getFactories(const std::string &groupName)
 {
-  QFilterWidgetManager::Collection groupFactories;
+  FilterWidgetManager::Collection groupFactories;
 
 
-  for (QFilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
+  for (FilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
     if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0)
@@ -110,7 +110,7 @@ QFilterWidgetManager::Collection QFilterWidgetManager::getFactories(const std::s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidgetManager::addFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory)
+void FilterWidgetManager::addFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory)
 {
   m_Factories[name] = factory;
 }
@@ -118,13 +118,13 @@ void QFilterWidgetManager::addFilterWidgetFactory(const std::string &name, IFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<std::string> QFilterWidgetManager::getGroupNames()
+std::set<std::string> FilterWidgetManager::getGroupNames()
 {
   // Get all the Widget Factories and loop over each one we know about and instantiate a new one
-  QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
-  QFilterWidgetManager::Collection factories = fm->getFactories();
+  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
+  FilterWidgetManager::Collection factories = fm->getFactories();
   std::set<std::string> groupNames;
-  for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
+  for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
     groupNames.insert((*factory).second->getFilterGroup());
@@ -135,7 +135,7 @@ std::set<std::string> QFilterWidgetManager::getGroupNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IFilterWidgetFactory::Pointer QFilterWidgetManager::getFactoryForFilter(const std::string &filterName)
+IFilterWidgetFactory::Pointer FilterWidgetManager::getFactoryForFilter(const std::string &filterName)
 {
   return m_Factories[filterName];
 }
@@ -143,11 +143,11 @@ IFilterWidgetFactory::Pointer QFilterWidgetManager::getFactoryForFilter(const st
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IFilterWidgetFactory::Pointer QFilterWidgetManager::getFactoryForFilterHumanName(const std::string &humanName)
+IFilterWidgetFactory::Pointer FilterWidgetManager::getFactoryForFilterHumanName(const std::string &humanName)
 {
   IFilterWidgetFactory::Pointer widgetFactory;
 
-  for (QFilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
+  for (FilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
     if ( NULL != filterFactory.get() && filterFactory->getFilterHumanLabel().compare(humanName) == 0)
@@ -159,8 +159,10 @@ IFilterWidgetFactory::Pointer QFilterWidgetManager::getFactoryForFilterHumanName
   return widgetFactory;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterWidgetManager::RegisterKnownQFilterWidgets()
+{
 
-
-// This file is autogenerated by the build system
-#include "FilterWidgets/RegisterKnownFilterWidgets.cpp"
-
+}

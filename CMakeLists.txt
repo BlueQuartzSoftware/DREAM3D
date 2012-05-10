@@ -235,6 +235,12 @@ if (DREAM3D_BUILD_QT_APPS)
    # will not work due to signals/slots mechanism.
    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
    
+   add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
+   
+   # --------------------------------------------------------------------
+   # Build the FilterWidgets Static Library which is ONLY needed by this plugin
+   #add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+   
 endif()
 
 # Forcibly set some options to OFF if we are NOT building the GUI apps using the Qt frameworks
@@ -274,7 +280,7 @@ endfunction()
 # These are the core plugins
 set (DREAM3D_PLUGIN_LIST
 #    EbsdImport 
-    PipelineBuilder
+#    PipelineBuilder
 #    Reconstruction 
 #    GrainGenerator 
 #    SurfaceMesh 

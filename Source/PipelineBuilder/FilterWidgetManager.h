@@ -43,23 +43,23 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "IFilterWidgetFactory.h"
+#include "PipelineBuilder/IFilterWidgetFactory.h"
 
 /**
- * @class QFilterWidgetManager QFilterWidgetManager.h FilterWidgets/QFilterWidgetManager.h
+ * @class FilterWidgetManager FilterWidgetManager.h FilterWidgets/FilterWidgetManager.h
  * @brief This class is a singleton based manager for creating Qt based widgets
  * that expose the various options for each filter.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 6, 2012
  * @version 1.0
  */
-class QFilterWidgetManager
+class FilterWidgetManager
 {
   public:
-    DREAM3D_SHARED_POINTERS(QFilterWidgetManager);
-    DREAM3D_TYPE_MACRO(QFilterWidgetManager)
+    DREAM3D_SHARED_POINTERS(FilterWidgetManager);
+    DREAM3D_TYPE_MACRO(FilterWidgetManager)
 
-    virtual ~QFilterWidgetManager();
+    virtual ~FilterWidgetManager();
 
     typedef std::map<std::string, IFilterWidgetFactory::Pointer> Collection;
 
@@ -111,15 +111,15 @@ class QFilterWidgetManager
 
 
   protected:
-    QFilterWidgetManager();
+    FilterWidgetManager();
 
   private:
 
     Collection m_Factories;
 
 
-    QFilterWidgetManager(const QFilterWidgetManager&); // Copy Constructor Not Implemented
-    void operator=(const QFilterWidgetManager&); // Operator '=' Not Implemented
+    FilterWidgetManager(const FilterWidgetManager&); // Copy Constructor Not Implemented
+    void operator=(const FilterWidgetManager&); // Operator '=' Not Implemented
 };
 
 #endif /* QFILTERWIDGETMANAGER_H_ */

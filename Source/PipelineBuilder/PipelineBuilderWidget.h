@@ -37,11 +37,12 @@
 #include <QtGui/QDropEvent>
 
 
+
 #include "ui_PipelineBuilderWidget.h"
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "PipelineBuilder/QFilterPipeline.h"
-#include "PipelineBuilder/FilterWidgets/QFilterWidgetManager.h"
+#include "PipelineBuilder/FilterWidgetManager.h"
 
 
 class QListWidgetItem;
@@ -95,7 +96,7 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
      * @brief
      * @param factories
      */
-    virtual void updateFilterGroupList(QFilterWidgetManager::Collection &factories);
+    virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
 
   protected slots:
     void on_m_GoBtn_clicked();
