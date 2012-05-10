@@ -104,10 +104,10 @@ add_executable(CtfReaderTest ${DREAM3DTest_SOURCE_DIR}/CtfReaderTest.cpp)
 target_link_libraries(CtfReaderTest EbsdLib)
 add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
 
-add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp
-                              ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
-target_link_libraries(EbsdImportTest DREAM3DLib MXA EbsdLib H5Support)
-add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
+#add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp
+#                              ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
+#target_link_libraries(EbsdImportTest DREAM3DLib MXA EbsdLib H5Support)
+#add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
 
 
 
