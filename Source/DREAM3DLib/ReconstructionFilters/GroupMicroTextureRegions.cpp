@@ -262,7 +262,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       int csize = int(microtexturelist.size());
       for (int j = 0; j < csize; j++)
       {
-        csize = int(microtexturelist.size());
         int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
         q1[1] = m_AvgQuats[5*firstgrain+1]/m_AvgQuats[5*firstgrain];
@@ -298,6 +297,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 newnumbers[neigh] = i;
                 microtexturelist.push_back(neigh);
 			    m_Active[neigh] = false;
+				csize++;
 			  }
             }
           }
