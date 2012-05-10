@@ -102,6 +102,9 @@ class QFilterWidget : public QGroupBox
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
+    virtual void setBorderColorStyle(QString s);
+    virtual QString getBorderColorStyle();
+    virtual bool isSelected();
 
   signals:
     void dragStarted(QFilterWidget* widget);
@@ -122,12 +125,26 @@ class QFilterWidget : public QGroupBox
 
      virtual void updateLineEdit(const QString &v);
 
+     virtual void setIsSelected(bool b);
+
+
      /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
       * state
       * @param selected Is the widget selected or not.
       */
-     void changeStyle(bool selected);
+     void changeStyle();
+
+     /**
+      *@brief
+      */
+     void updateWidgetStyle();
+
+     /**
+      * @brief Slot for a QTime to call to update the border of the wiget in a
+      * pulsing fashing
+      */
+     void setHasPreflightErrors(bool hasErrors);
 
   signals:
     void widgetSelected(QFilterWidget* w);
@@ -141,7 +158,14 @@ class QFilterWidget : public QGroupBox
 
   private:
      QRect      m_DeleteRect;
-     QPoint      dragStartPosition;
+     QPoint     dragStartPosition;
+     QTimer*    m_timer;
+     unsigned char  m_CurrentBorderColorFactor;
+     unsigned char        m_BorderIncrement;
+     QString    m_BorderColorStyle;
+     bool       m_IsSelected;
+     bool       m_HasPreflightErrors;
+
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented

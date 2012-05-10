@@ -38,7 +38,7 @@
 
 
 #include "DREAM3DLib/Common/FilterOption.h"
-
+#include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
@@ -64,12 +64,18 @@
 //
 // -----------------------------------------------------------------------------
 QFilterWidget::QFilterWidget(QWidget* parent) :
-      QGroupBox(parent)
+      QGroupBox(parent),
+      m_CurrentBorderColorFactor(0),
+      m_BorderIncrement(16),
+      m_IsSelected(false),
+      m_HasPreflightErrors(false)
 {
   m_DeleteRect.setX(PADDING + BORDER);
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);
   m_DeleteRect.setHeight(IMAGE_HEIGHT);
+  m_timer = new QTimer(this);
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
 }
 
 // -----------------------------------------------------------------------------
@@ -79,11 +85,101 @@ QFilterWidget::~QFilterWidget()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setBorderColorStyle(QString s)
+{
+  m_BorderColorStyle = s;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::changeStyle(bool selected)
+QString QFilterWidget::getBorderColorStyle()
+{
+  return m_BorderColorStyle;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setHasPreflightErrors(bool hasErrors)
+{
+  m_HasPreflightErrors = hasErrors;
+  if (m_HasPreflightErrors == true)
+  {
+    m_timer->start(100);
+  }
+  else
+  {
+    m_timer->stop();
+  }
+  changeStyle();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setIsSelected(bool b)
+{
+  m_IsSelected = b;
+  changeStyle();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool QFilterWidget::isSelected()
+{
+  return m_IsSelected;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::changeStyle()
+{
+  QString style;
+  if (m_HasPreflightErrors == true)
+  {
+    m_CurrentBorderColorFactor += m_BorderIncrement;
+    if (m_CurrentBorderColorFactor > 127)
+    {
+      m_BorderIncrement = -16;
+    }
+    if (m_CurrentBorderColorFactor < 1)
+    {
+      m_BorderIncrement = 16;
+    }
+
+    style.append("border: 2px solid rgb(");
+    style.append(QString::number(255 - m_CurrentBorderColorFactor, 10));
+    style.append(", ");
+    style.append(QString::number(m_CurrentBorderColorFactor, 10));
+    style.append(", ");
+    style.append(QString::number(m_CurrentBorderColorFactor, 10));
+    style.append(");");
+  }
+  else if(m_IsSelected == true )
+  {
+    style.append("border: 2px solid purple;");
+    m_CurrentBorderColorFactor = 0;
+  }
+  else
+  {
+    style.append("border: 1px solid gray;");
+    style.append("margin: 1px;");
+    m_CurrentBorderColorFactor = 0;
+  }
+  setBorderColorStyle(style);
+  updateWidgetStyle();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateWidgetStyle()
 {
   QString style;
 
@@ -92,14 +188,9 @@ void QFilterWidget::changeStyle(bool selected)
   style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC);");
   style.append("background-image: url(:/filterWidgetBorder.png);");
   style.append("background-position: top ;\n background-repeat: repeat-x;");
-  if (selected)
-   {
-    style.append("border: 2px solid purple;");
-   }
-  else {
-    style.append("border: 1px solid gray;");
-    style.append("margin: 1px;");
-  }
+
+  style.append(getBorderColorStyle());
+
   style.append("border-radius: 10px;");
   style.append("padding: 30 0 0 0px;");
 #if defined(Q_WS_WIN)
@@ -127,8 +218,8 @@ void QFilterWidget::changeStyle(bool selected)
   style.append("\nQGroupBox::indicator:checked:pressed { image: url(:/delete-corner-pressed.png);}");
 
   setStyleSheet(style);
-//  std::cout << style.toStdString() << std::endl;
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -155,7 +246,7 @@ void QFilterWidget::setupGui()
   vertLayout->addLayout(frmLayout);
   frmLayout->setObjectName("QFilterWidget QFormLayout Layout");
 
-  changeStyle(false);
+  setIsSelected(false);
   bool ok = false;
 
   std::vector<FilterOption::Pointer> options = getFilter()->getFilterOptions();
@@ -610,7 +701,7 @@ void QFilterWidget::mouseReleaseEvent(QMouseEvent *event)
   else
   {
     emit widgetSelected(this);
-    changeStyle(true);
+    setIsSelected(true);
     event->setAccepted(true);
   }
 }

@@ -25,6 +25,7 @@ set(FilterWidget_GEN_HDRS "")
 Macro(WidgetGeneration DirName)
     set(group ${DirName})
     file(APPEND ${CodeGeneratorFile} "//----- ${DirName} --------------- \n")
+    file(APPEND ${HtmlDocQrcFile} "\n")
     # Make sure this directory is created.
     file(MAKE_DIRECTORY ${FilterWidgets_BINARY_DIR}/${DirName}Widgets)
     set(DirName ${DirName})
@@ -43,7 +44,8 @@ Macro(WidgetGeneration DirName)
                               ${FilterWidgets_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.cpp)
             endif()
         endif()
-          
+        
+        file(APPEND ${HtmlDocQrcFile} "<file>${DirName}/${name}.html</file>\n")
         file(APPEND ${CodeGeneratorFile} "createHeaderFile<${name}>(\"${DirName}\", \"${name}\");\n")
         file(APPEND ${CodeGeneratorFile} "createSourceFile<${name}>(\"${DirName}\", \"${name}\");\n")
         file(APPEND ${CodeGeneratorFile} "createHTMLFile<${name}>(\"${DirName}\", \"${name}\");\n")
@@ -61,6 +63,15 @@ endMacro()
 # filter options
 set (CodeGeneratorFile  ${FilterWidgets_BINARY_DIR}/CodeGenerator.h)
 file(WRITE ${CodeGeneratorFile} "")
+
+# --------------------------------------------------------------------
+# We are going to generate this file in the binary directory but not
+# really use it currently. If you need to update the FilterDocs.qrc file
+# then you can copy this generated file over the file that is in the source
+# directory
+set (HtmlDocQrcFile ${PipelineBuilderPlugin_BINARY_DIR}/FilterDocs.qrc)
+file(WRITE ${HtmlDocQrcFile} "<!DOCTYPE RCC>\n<RCC version=\"1.0\">\n<qresource>\n")
+
 
 # --------------------------------------------------------------------
 # Create a File that has all the headers for the various Filter Widgets
@@ -92,6 +103,8 @@ file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
 
 file(APPEND ${RegisterKnownFilterWidgetsFile} "\n }\n")
 #file(APPEND ${RegisterKnownFilterWidgetsFile} "\n}\n}\n #endif")
+
+file(APPEND ${HtmlDocQrcFile} "</qresource>\n</RCC>\n")
 
 # Read the file back into a string so we can configure our file
 file(READ ${RegisterKnownFilterWidgetsFile} QFILTERWIDGET_FACTORY_SOURCE)
@@ -127,8 +140,11 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
 QT4_WRAP_UI( FilterWidgets_Generated_UI_HDRS 
-            ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui 
-            ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui)
+    ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui 
+    ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
+    ${FilterWidgets_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
+    ${FilterWidgets_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
+)
 
 # --------------------------------------------------------------------
 # Add in ONLY those headers and sources that need to have various Qt related
@@ -139,6 +155,8 @@ set (QFilterWidget_HDRS
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.h
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricItemDelegate.h
     ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
+    ${FilterWidgets_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.h
+    ${FilterWidgets_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h
 )
 
 set(QFilterWidget_SRCS
@@ -146,6 +164,8 @@ set(QFilterWidget_SRCS
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.cpp
     ${FilterWidgets_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.cpp
     ${FilterWidgets_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
+    ${FilterWidgets_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.cpp
+    ${FilterWidgets_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${QFilterWidget_HDRS}" "${QFilterWidget_SRCS}" "0")
 

@@ -51,6 +51,7 @@
 
 
 #define GENERATE_HTML_FILE 0
+#define OVERWRITE_SOURCE_DOCS 0
 
 typedef std::map<std::string, std::set<std::string> >  FilterMapType;
 typedef std::set<std::string>  StringSetType;
@@ -678,7 +679,11 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   }
 
   ss.str("");
+#if (OVERWRITE_SOURCE_DOCS == 1)
+  ss << DREAM3D_SOURCE_DIR() << "/Documentation/Filters/" << group;
+#else
   ss << OUTPUT_DIR() << "/Documentation/Filters/" << group;
+#endif
   MXADir::mkdir(ss.str(), true);
   ss << "/" << filter << ".html";
 
@@ -687,8 +692,13 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   ss.str("");
 
  // std::cout << "Creating HTML File: " << completePath << std::endl;
-  std::cout << "Creating HTML File: " << OUTPUT_DIR() << "/Documentation/Filters"
-      << group << "/" << filter << ".html" << std::endl;
+  std::cout << "Creating HTML File: "
+#if (OVERWRITE_SOURCE_DOCS == 1)
+      << DREAM3D_SOURCE_DIR()
+#else
+      << OUTPUT_DIR()
+#endif
+      << "/Documentation/Filters" << group << "/" << filter << ".html" << std::endl;
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
@@ -700,7 +710,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "<title>%s</title>\n", t->getHumanLabel().c_str());
   fprintf(f, "</head>\n");
   fprintf(f, "<body>\n");
-  fprintf(f, "<h3>%s Filter</h3>\n", t->getHumanLabel().c_str());
+  fprintf(f, "<h3>%s Filter</h3><br>\n", t->getHumanLabel().c_str());
+  fprintf(f, "<b>Author:</b> Michael A. Groeber<br>\n");
+  fprintf(f, "<b>Author:</b> Michael A. Jackson<br>\n");
+  fprintf(f, "<b>Contact Info:</b> dream3d@bluequartz.net<br>\n");
+  fprintf(f, "<b>Version:</b> <br>\n");
+  fprintf(f, "<b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>\n");
   fprintf(f, "<h4>Summary</h4>\n");
   fprintf(f, "<!-- Write all your documentation here -->\n");
   fprintf(f, "This filter does ....\n");
@@ -710,7 +725,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->\n");
   if (options.size() > 0) {
   fprintf(f, "<h4>Options</h4>\n");
-  fprintf(f, "<table>\n<tr><th>Option Name</th><th>Option Type</th></tr>\n");
+  fprintf(f, "<table cellpadding=\"5px\">\n<tr><th>Option Name</th><th>Option Type</th></tr>\n");
   }
   for (size_t i = 0; i < options.size(); ++i)
   {

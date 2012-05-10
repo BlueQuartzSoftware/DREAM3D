@@ -86,7 +86,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Read H5 Ebsd File"; }
+    virtual const std::string getHumanLabel() { return "Read H5Ebsd File"; }
 
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
