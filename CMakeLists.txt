@@ -357,12 +357,12 @@ endif()
    
 # add the Command line utilities
 IF ( DREAM3D_BUILD_CLI_TOOLS )
-    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Tools ${PROJECT_BINARY_DIR}/Tools)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 if (DREAM3D_BUILD_TESTING)
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Test ${PROJECT_BINARY_DIR}/Test)
+    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 
 # Should we build the documentation using DOxygen
