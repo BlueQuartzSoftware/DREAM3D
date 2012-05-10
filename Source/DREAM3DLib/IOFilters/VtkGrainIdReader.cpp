@@ -67,7 +67,13 @@ void VtkGrainIdReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 // -----------------------------------------------------------------------------
 void VtkGrainIdReader::preflight()
 {
-
+  if (getInputFile().empty() == true)
+  {
+    std::stringstream ss;
+    ss << ClassName() << " needs the Input File Set and it was not.";
+    setErrorMessage(ss.str());
+    setErrorCondition(-387);
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -239,7 +239,7 @@ if (DREAM3D_BUILD_QT_APPS)
    
    # --------------------------------------------------------------------
    # Build the FilterWidgets Static Library which is ONLY needed by this plugin
-   #add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
    
 endif()
 

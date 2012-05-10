@@ -62,6 +62,7 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
 #include "PipelineBuilder/PipelineBuilderWidget.h"
+#include "FilterWidgets/FilterWidgetsLib.h"
 
 
 //#include "GrainGenerator/UI/GrainGeneratorPlugin.h"
@@ -95,10 +96,11 @@ m_OpenDialogLastDirectory("~/")
   // using the QDesigner program
   setupUi(this);
 
-  // Do our own widget initializations
-  setupGui();
   // Look for plugins
   // loadPlugins();
+
+  // Do our own widget initializations
+  setupGui();
 
   // Read the Preferences for each plugin and our own settings
   readSettings();
@@ -301,12 +303,16 @@ void DREAM3D_UI::setupGui()
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
+
+  // Register all of the Filters we know about - the rest will be loaded through plugins
+  //  which all should have been loaded by now.
+  FilterWidgetsLib::RegisterKnownQFilterWidgets();
+  Q_INIT_RESOURCE(FilterDocs);
+
+  // Now create our central widget
   m_PipelineBuilderWidget = new PipelineBuilderWidget(this);
   m_PipelineBuilderWidget->setStatusBar(this->statusBar());
-
   centerWidget->layout()->addWidget(m_PipelineBuilderWidget);
-
-
 }
 
 
