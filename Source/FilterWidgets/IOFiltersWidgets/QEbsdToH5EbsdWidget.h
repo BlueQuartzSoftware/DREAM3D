@@ -44,13 +44,19 @@
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
 
-#include "FilterWidgets/QFilterWidget.h"
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/IOFilters/EbsdToH5Ebsd.h"
 
-#include "ui_QEbsdToH5EbsdWidget.h"
 #include "QtSupport/DREAM3DPluginFrame.h"
-#include "EbsdLib/EbsdConstants.h"
+
+#include "PipelineBuilder/QFilterWidget.h"
+
+
+#include "ui_QEbsdToH5EbsdWidget.h"
+
+
 
 
 /**

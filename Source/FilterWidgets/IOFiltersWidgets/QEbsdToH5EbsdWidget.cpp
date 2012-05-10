@@ -56,8 +56,8 @@
 #include "QtSupport/QCheckboxDialog.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
-#include "QEbsdReferenceFrameDialog.h"
 
+#include "QEbsdReferenceFrameDialog.h"
 #include "IOFiltersWidgets/moc_QEbsdToH5EbsdWidget.cxx"
 
 // -----------------------------------------------------------------------------

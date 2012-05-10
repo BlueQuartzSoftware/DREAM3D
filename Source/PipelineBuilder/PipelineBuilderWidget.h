@@ -98,6 +98,8 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
 
+
+
   protected slots:
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();

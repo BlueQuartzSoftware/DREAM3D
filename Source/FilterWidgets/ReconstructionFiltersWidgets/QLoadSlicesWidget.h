@@ -34,9 +34,10 @@
 #include <QtCore/QObject>
 #include <QtGui/QFileDialog>
 
-#include "FilterWidgets/QFilterWidget.h"
+
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
+#include "PipelineBuilder/QFilterWidget.h"
 
 #include "FilterWidgets/ui_QLoadSlicesWidget.h"
 
