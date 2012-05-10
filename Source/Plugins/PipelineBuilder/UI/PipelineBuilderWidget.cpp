@@ -41,6 +41,7 @@
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
 #include <QtCore/QPropertyAnimation>
+#include <QtCore/QResource>
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
@@ -57,7 +58,7 @@
 
 #include "PipelineBuilderPlugin.h"
 #include "PipelineBuilder/FilterWidgets/QFilterWidget.h"
-#include "PipelineBuilder/FilterWidgets/QFilterWidgetManager.h"
+
 
 
 
@@ -69,8 +70,7 @@ PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
 m_WorkerThread(NULL),
-m_HelpIsClosed(true),
-m_ErrorsIsClosed(true),
+m_DocErrorTabsIsOpen(false),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -194,13 +194,35 @@ void PipelineBuilderWidget::setupGui()
 
   m_PipelineViewWidget->setErrorsTextArea(errorsTextEdit);
 
-  toggleDocs->setChecked(false);
-  on_toggleDocs_clicked();
+  m_DocErrorTabsIsOpen = false;
 
+  toggleDocs->setChecked(false);
   showErrors->setChecked(false);
-  on_showErrors_clicked();
+  on_toggleDocs_clicked();
+  //on_showErrors_clicked();
 
   on_filterLibraryTree_itemClicked(library, 0);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
+{
+  // Get the QFilterWidget Mangager Instance
+  QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
+  QFilterWidgetManager::Collection factories;
+  if ( item->text(0).compare("Library") == 0)
+  {
+    factories = fm->getFactories();
+  }
+  else
+  {
+    factories = fm->getFactories(item->text(0).toStdString());
+  }
+
+  updateFilterGroupList(factories);
 }
 
 // -----------------------------------------------------------------------------
@@ -208,9 +230,6 @@ void PipelineBuilderWidget::setupGui()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
-  // Clear all the current items from the list
-  filterList->clear();
-
   // Get the QFilterWidget Mangager Instance
   QFilterWidgetManager::Pointer fm = QFilterWidgetManager::Instance();
   QFilterWidgetManager::Collection factories;
@@ -222,6 +241,17 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   {
     factories = fm->getFactories(item->text(0).toStdString());
   }
+
+  updateFilterGroupList(factories);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::updateFilterGroupList(QFilterWidgetManager::Collection &factories)
+{
+  // Clear all the current items from the list
+  filterList->clear();
 
   for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
@@ -264,6 +294,17 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
   }
 
   QString html;
+
+#if 1
+  QString resName = QString(":/%1Filters/%2.html").arg(filter->getGroupName().c_str()).arg(filter->getNameOfClass().c_str());
+  QFile f(resName);
+  if ( f.open(QIODevice::ReadOnly) )
+  {
+    html = QLatin1String(f.readAll());
+  }
+
+#else
+
   html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">");
   html.append("<html>");
   html.append("<head>");
@@ -368,8 +409,10 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
 
 
   filter->setDataContainer(NULL);
-
   html.append("</body></html>\n");
+#endif
+
+
   helpTextEdit->setHtml(html);
 }
 
@@ -386,29 +429,38 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
-  QPropertyAnimation *animation1 = new QPropertyAnimation(helpTextEdit, "maximumHeight");
-  m_HelpIsClosed = !m_HelpIsClosed;
-  int deltaX;
-  if(m_HelpIsClosed)
+  if(docErrorTabs->currentIndex() == 0 || (m_DocErrorTabsIsOpen == false))
   {
-    int start = 0;
-    int end = 350;
-    helpTextEdit->setMaximumHeight(end);
-    deltaX = start;
+    docErrorTabs->setCurrentIndex(0);
+    m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
+    int deltaX;
 
-    animation1->setDuration(250);
-    animation1->setStartValue(start);
-    animation1->setEndValue(end);
+    QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
+    if(m_DocErrorTabsIsOpen)
+    {
+      int start = 0;
+      int end = 350;
+      docErrorTabs->setMaximumHeight(end);
+      deltaX = start;
+
+      animation1->setDuration(250);
+      animation1->setStartValue(start);
+      animation1->setEndValue(end);
+    }
+    else //open
+    {
+      int start = docErrorTabs->maximumHeight();
+      int end = 0;
+      animation1->setDuration(250);
+      animation1->setStartValue(start);
+      animation1->setEndValue(end);
+    }
+    animation1->start();
   }
-  else //open
+  else
   {
-    int start = helpTextEdit->maximumHeight();
-    int end = 0;
-    animation1->setDuration(250);
-    animation1->setStartValue(start);
-    animation1->setEndValue(end);
+    docErrorTabs->setCurrentIndex(0);
   }
-  animation1->start();
 }
 
 // -----------------------------------------------------------------------------
@@ -416,32 +468,39 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_showErrors_clicked()
 {
-  QPropertyAnimation *animation1 = new QPropertyAnimation(errorsTextEdit, "maximumHeight");
-  m_ErrorsIsClosed = !m_ErrorsIsClosed;
-  int deltaX;
-  if(m_ErrorsIsClosed)
+  if(docErrorTabs->currentIndex() == 1 || (m_DocErrorTabsIsOpen == false))
   {
-    int start = 0;
-    int end = 350;
-    errorsTextEdit->setMaximumHeight(end);
-    deltaX = start;
+    docErrorTabs->setCurrentIndex(1);
+    m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
+    int deltaX;
+    QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
 
-    animation1->setDuration(250);
-    animation1->setStartValue(start);
-    animation1->setEndValue(end);
+    if(m_DocErrorTabsIsOpen)
+    {
+      int start = 0;
+      int end = 350;
+      docErrorTabs->setMaximumHeight(end);
+      deltaX = start;
+
+      animation1->setDuration(250);
+      animation1->setStartValue(start);
+      animation1->setEndValue(end);
+    }
+    else //open
+    {
+      int start = docErrorTabs->maximumHeight();
+      int end = 0;
+      animation1->setDuration(250);
+      animation1->setStartValue(start);
+      animation1->setEndValue(end);
+    }
+    animation1->start();
   }
-  else //open
+  else
   {
-    int start = errorsTextEdit->maximumHeight();
-    int end = 0;
-    animation1->setDuration(250);
-    animation1->setStartValue(start);
-    animation1->setEndValue(end);
+    docErrorTabs->setCurrentIndex(1);
   }
-  animation1->start();
 }
-
-
 
 // -----------------------------------------------------------------------------
 //

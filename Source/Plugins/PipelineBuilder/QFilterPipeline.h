@@ -47,23 +47,16 @@ class QFilterPipeline : public QObject, public FilterPipeline
 {
   Q_OBJECT
   public:
-  QFilterPipeline(QObject* parent = 0) :
-    QObject(parent),
-    FilterPipeline()
-    {
-    }
-    virtual ~QFilterPipeline() {}
+
+    QFilterPipeline(QObject* parent = 0);
+    virtual ~QFilterPipeline();
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
      * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
      */
-    virtual void updateProgressAndMessage(const char* message, int value)
-    {
-      emit updateProgress(value);
-      emit progressMessage(QString(message));
-    }
+    virtual void updateProgressAndMessage(const char* message, int value);
 
     /**
      * @brief This method reports progress such that a user interface element such
@@ -71,49 +64,36 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * between 0 and 100.
      * @param value
      */
-    virtual void pipelineProgress(int value)
-    {
-      emit updateProgress(value);
-    }
+    virtual void pipelineProgress(int value);
 
     /**
      * @brief This message reports some human readable message suitable for display
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineProgressMessage(const char* message)
-    {
-      emit progressMessage(QString(message));
-    }
+    virtual void pipelineProgressMessage(const char* message);
 
     /**
      * @brief This message reports some human readable message suitable for display
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineWarningMessage(const char* message)
-    {
-      emit warningMessage(QString(message));
-    }
+    virtual void pipelineWarningMessage(const char* message);
 
     /**
      * @brief This message reports some human readable message suitable for display
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineErrorMessage(const char* message)
-    {
-      emit errorMessage(QString(message));
-    }
+    virtual void pipelineErrorMessage(const char* message);
 
     /**
      * @brief This method is called from the run() method just before exiting and
      * signals the end of the pipeline execution
      */
-    virtual void pipelineFinished()
-    {
-      emit finished();
-    }
+    virtual void pipelineFinished();
+
+
 
     /**
      * Qt Signals for connections
@@ -129,17 +109,9 @@ class QFilterPipeline : public QObject, public FilterPipeline
     /**
      * @brief Slot to receive a signal to cancel the operation
      */
-    void on_CancelWorker()
-    {
-      setCancel(true);
-    }
+    void on_CancelWorker();
 
-    void run()
-    {
-      FilterPipeline::run(); // Execute the pipeline
-      setDataContainer(DataContainer::NullPointer()); // This _should_ clean up the memory as nothing else should have
-      // a reference to the DataContainer
-    }
+    void run();
 
   protected:
 

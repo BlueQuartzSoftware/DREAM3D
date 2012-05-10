@@ -41,6 +41,8 @@
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "PipelineBuilder/QFilterPipeline.h"
+#include "PipelineBuilder/FilterWidgets/QFilterWidgetManager.h"
+
 
 class QListWidgetItem;
 class QTreeWidgetItem;
@@ -84,8 +86,16 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
      */
     virtual void setupGui();
 
-
+    /**
+     * @brief
+     */
     virtual void checkIOFiles();
+
+    /**
+     * @brief
+     * @param factories
+     */
+    virtual void updateFilterGroupList(QFilterWidgetManager::Collection &factories);
 
   protected slots:
     void on_m_GoBtn_clicked();
@@ -93,6 +103,8 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
     void on_m_LoadSettingsBtn_clicked();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem * current, QTreeWidgetItem * previous );
+
 
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
     void on_filterList_currentItemChanged( QListWidgetItem * item, QListWidgetItem * previous );
@@ -121,8 +133,7 @@ class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBui
     QList<QWidget*>           m_WidgetList;
     QFilterPipeline*          m_FilterPipeline;
     QThread*                  m_WorkerThread;
-    bool                      m_HelpIsClosed;
-    bool                      m_ErrorsIsClosed;
+    bool                      m_DocErrorTabsIsOpen;
     QString                   m_OpenDialogLastDirectory;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented

@@ -52,17 +52,6 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
 
     virtual AbstractFilter::Pointer getFilter();
 
-
-//    Q_PROPERTY(QString H5EbsdFile READ getH5EbsdFile WRITE setH5EbsdFile)
-//    void setH5EbsdFile(QString v) { m_H5EbsdFile = v; }
-//    QString  getH5EbsdFile() { return m_H5EbsdFile; }
-
-//    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
-//    DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex) ;
-//
-//    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
-//    DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex) ;
-
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
 
@@ -89,7 +78,6 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
     bool                        reorderarray;
     bool                        aligneulers;
     QString                     m_OpenDialogLastDirectory;
- //   QString                     m_H5EbsdFile;
 
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
