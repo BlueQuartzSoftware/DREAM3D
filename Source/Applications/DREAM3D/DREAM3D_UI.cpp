@@ -61,14 +61,14 @@
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
-#include "GrainGenerator/UI/GrainGeneratorPlugin.h"
-#include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
-#include "EbsdImport/UI/EbsdImportPlugin.h"
-#include "Reconstruction/UI/ReconstructionPlugin.h"
-#include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
-#include "Extrapolation2Dto3D/UI/Extrapolation2Dto3DPlugin.h"
-#include "FileConversion/UI/FileConversionPlugin.h"
-#include "VolumeOps/UI/VolumeOpsPlugin.h"
+//#include "GrainGenerator/UI/GrainGeneratorPlugin.h"
+//#include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
+//#include "EbsdImport/UI/EbsdImportPlugin.h"
+//#include "Reconstruction/UI/ReconstructionPlugin.h"
+//#include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
+//#include "Extrapolation2Dto3D/UI/Extrapolation2Dto3DPlugin.h"
+//#include "FileConversion/UI/FileConversionPlugin.h"
+//#include "VolumeOps/UI/VolumeOpsPlugin.h"
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
@@ -567,14 +567,14 @@ void DREAM3D_UI::loadPlugins()
   // Our list of Plugins that we want control over the order in which they appear
   // in the toolbar and menu
   QStringList pluginNames;
-  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::EbsdImportFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::Extrapolation2Dto3DFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::FileConversionFile)
-              << QString::fromStdString(DREAM3D::UIPlugins::VolumeOpsFile);
+//  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::EbsdImportFile)
+//              << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
+//              << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
+//              << QString::fromStdString(DREAM3D::UIPlugins::Extrapolation2Dto3DFile)
+//              << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
+//              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile)
+//              << QString::fromStdString(DREAM3D::UIPlugins::FileConversionFile)
+//              << QString::fromStdString(DREAM3D::UIPlugins::VolumeOpsFile);
 
   // Now try to sort the paths based on their names
   QVector<QString> sortedPaths;
