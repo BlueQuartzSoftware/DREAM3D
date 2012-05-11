@@ -55,7 +55,10 @@ include_directories(${PROJECT_CODE_DIR}
                     ${DREAM3D_SOURCE_DIR}
                     ${DREAM3D_BINARY_DIR}
                     ${PROJECT_CODE_DIR}/QtSupport
-                    ${DREAM3DProj_BINARY_DIR}/QtSupport)
+                    ${DREAM3DProj_BINARY_DIR}/QtSupport
+                    ${PROJECT_CODE_DIR}/PipelineBuilder
+                    ${DREAM3DProj_BINARY_DIR}/PipelineBuilder
+                    )
 
 # --------------------------------------------------------------------
 # Generate the License File Headers
@@ -91,26 +94,26 @@ SET( DREAM3D_RCS
 )
 
 # -- Run MOC and UIC on the necessary files   
-QT4_ADD_RESOURCES( Generated_RC_SRCS ${DREAM3D_RCS} ${QRC_LICENSE_FILES})
+QT4_ADD_RESOURCES( DREAM3D_Generated_RC_SRCS ${DREAM3D_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
-QT4_WRAP_UI( Generated_UI_HDRS ${DREAM3D_UIS} )
+QT4_WRAP_UI( DREAM3D_Generated_UI_HDRS ${DREAM3D_UIS} )
 
 # and finally this will run moc:
-QT4_WRAP_CPP( Generated_MOC_SRCS ${DREAM3D_MOC_HDRS} )
+QT4_WRAP_CPP( DREAM3D_Generated_MOC_SRCS ${DREAM3D_MOC_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
-cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${Generated_UI_HDRS}" "")
-cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${Generated_MOC_SRCS}" "")
-cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${Generated_RC_SRCS}")
+cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${DREAM3D_Generated_UI_HDRS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${DREAM3D_Generated_MOC_SRCS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${DREAM3D_Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
 SET (DREAM3D_PROJECT_SRCS 
     ${DREAM3D_SRCS}
     ${DREAM3D_HDRS}
-    ${Generated_RC_SRCS} 
-    ${Generated_UI_HDRS} 
-    ${Generated_MOC_SRCS}
+    ${DREAM3D_Generated_RC_SRCS} 
+    ${DREAM3D_Generated_UI_HDRS} 
+    ${DREAM3D_Generated_MOC_SRCS}
 )
 
 
@@ -133,7 +136,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES  MXA H5Support EbsdLib DREAM3DLib ${QT_LIBRARIES} QtSupport
+    LINK_LIBRARIES  MXA H5Support EbsdLib DREAM3DLib ${QT_LIBRARIES} QtSupport PipelineBuilderLib FilterWidgetsLib
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
     OTHER_PLUGINS ${DREAM3D_PLUGINS}

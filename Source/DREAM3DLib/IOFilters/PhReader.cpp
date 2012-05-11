@@ -77,17 +77,27 @@ void PhReader::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void PhReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PhReader::preflight()
 {
-
+  if (getInputFile().empty() == true)
+  {
+    std::stringstream ss;
+    ss << ClassName() << " needs the Input File Set and it was not.";
+    setErrorMessage(ss.str());
+    setErrorCondition(-387);
+  }
 }
 
 

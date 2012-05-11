@@ -52,13 +52,14 @@
 
 #define GENERATE_HTML_FILE 0
 #define OVERWRITE_SOURCE_DOCS 0
+#define GENERATE_OPTIONS_WRITER_CODE 0
 
 typedef std::map<std::string, std::set<std::string> >  FilterMapType;
 typedef std::set<std::string>  StringSetType;
 
 // These will be defined in an include header file below.
-std::string OUTPUT_DIR();
-std::string FILTER_WIDGETS_DIR();
+std::string FILTER_WIDGETS_BINARY_DIR();
+std::string FILTER_WIDGETS_SOURCE_DIR();
 std::string FILTER_WIDGETS_TEMP_DIR();
 std::string DREAM3D_SOURCE_DIR();
 
@@ -98,7 +99,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 
 
   std::stringstream ss;
-  ss << FILTER_WIDGETS_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
+  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
   std::string completePath = MXADir::toNativeSeparators(ss.str());
   if (MXADir::exists(completePath) == true)
   {
@@ -107,7 +108,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   }
 
   ss.str("");
-  ss << OUTPUT_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
+  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
 
   completePath = MXADir::toNativeSeparators(ss.str());
 
@@ -129,7 +130,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "#include <QtCore/QObject>\n");
   fprintf(f, "#include <QtCore/QSettings>\n\n");
 
-  fprintf(f, "#include \"FilterWidgets/QFilterWidget.h\"\n");
+  fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/%s/%s.h\"\n", group.c_str(), filter.c_str());
 
@@ -234,11 +235,15 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 template<typename T>
 void createOptionsWriterCode( const std::string &group, const std::string &filter)
 {
+
+#if (GENERATE_OPTIONS_WRITER_CODE == 0)
+  if (true) return;
+#endif
   typename T::Pointer t = T::New();
 
 
   std::stringstream ss;
-  ss << FILTER_WIDGETS_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
+  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
   std::string completePath = MXADir::toNativeSeparators(ss.str());
 //  if (MXADir::exists(completePath) == true)
 //  {
@@ -247,7 +252,7 @@ void createOptionsWriterCode( const std::string &group, const std::string &filte
 //  }
   std::string origHeaderFile = completePath;
   ss.str("");
-  ss << OUTPUT_DIR() << "/NameMapping/" << group << "/";
+  ss << FILTER_WIDGETS_BINARY_DIR() << "/NameMapping/" << group << "/";
 
   MXADir::mkdir(ss.str(), true);
 
@@ -419,7 +424,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
 
 
    std::stringstream ss;
-   ss << FILTER_WIDGETS_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
+   ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
    std::string completePath = MXADir::toNativeSeparators(ss.str());
    if (MXADir::exists(completePath) == true)
    {
@@ -428,7 +433,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
    }
    std::string origHeaderFile = completePath;
    ss.str("");
-   ss << OUTPUT_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.cpp";
+   ss << FILTER_WIDGETS_BINARY_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.cpp";
 
    completePath = MXADir::toNativeSeparators(ss.str());
 
@@ -623,7 +628,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   // If the file sizes are different then copy the file
   if (currentFileSize != tempFileSize)
   {
-    std::cout << "0-Creating Source File: $BUILD_DIR/Plugins/PipelineBuilder/FilterWidgets/" << group << "Widgets/Q" << filter << "Widget.cpp" << std::endl;
+    std::cout << "0-Creating Source File: " <<completePath << std::endl;
     copyFile(tempPath, completePath);
   }
   else // Just because the files are the same size does not mean they are the same.
@@ -649,7 +654,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     int result = ::memcmp(currentContents, tempContents, tempFileSize);
     if (result != 0)
     {
-      std::cout << "1-Creating Source File: $BUILD_DIR/Plugins/PipelineBuilder/FilterWidgets/" << group << "Widgets/Q" << filter << "Widget.cpp" << std::endl;
+      std::cout << "0-Creating Source File: " <<completePath << std::endl;
       copyFile(tempPath, completePath);
     }
   }
@@ -669,7 +674,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   std::vector<FilterOption::Pointer> options = t->getFilterOptions();
 
   std::stringstream ss;
-  ss << FILTER_WIDGETS_DIR() << "/" << group << "/" << filter << ".html";
+  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "/" << filter << ".html";
 
   std::string completePath = MXADir::toNativeSeparators(ss.str());
   if(MXADir::exists(completePath) == true)
@@ -682,7 +687,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 #if (OVERWRITE_SOURCE_DOCS == 1)
   ss << DREAM3D_SOURCE_DIR() << "/Documentation/Filters/" << group;
 #else
-  ss << OUTPUT_DIR() << "/Documentation/Filters/" << group;
+  ss << FILTER_WIDGETS_BINARY_DIR() << "/Documentation/Filters/" << group;
 #endif
   MXADir::mkdir(ss.str(), true);
   ss << "/" << filter << ".html";
@@ -696,7 +701,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 #if (OVERWRITE_SOURCE_DOCS == 1)
       << DREAM3D_SOURCE_DIR()
 #else
-      << OUTPUT_DIR()
+      << FILTER_WIDGETS_BINARY_DIR()
 #endif
       << "/Documentation/Filters" << group << "/" << filter << ".html" << std::endl;
 

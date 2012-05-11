@@ -34,37 +34,19 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef IFILTERWIDGETFACTOR_H_
-#define IFILTERWIDGETFACTOR_H_
+#ifndef FILTERWIDGETSLIB_H_
+#define FILTERWIDGETSLIB_H_
 
-#include "QFilterWidget.h"
-
-/**
- * @brief This class serves as a base class to create Factory classes that can
- * create QFilterWidgets for a GUI based on Qt.
+/*
+ *
  */
-class IFilterWidgetFactory
+class FilterWidgetsLib
 {
   public:
-    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory);
-    DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
+    FilterWidgetsLib();
+    virtual ~FilterWidgetsLib();
 
-
-    virtual ~IFilterWidgetFactory() {}
-
-    /** @brief This function should NEVER get called. The subclass should ALWAYS implement
-     * this method so we are going to crash the program.
-     */
-    virtual QFilterWidget* createWidget() { assert(false); return NULL;}
-    virtual std::string getFilterGroup() { assert(false); return ""; }
-    virtual std::string getFilterHumanLabel() { assert(false); return ""; }
-    virtual AbstractFilter::Pointer getFilterInstance() { assert(false); return AbstractFilter::NullPointer(); }
-
-  protected:
-    IFilterWidgetFactory(){}
-  private:
-    IFilterWidgetFactory(const IFilterWidgetFactory&); // Copy Constructor Not Implemented
-    void operator=(const IFilterWidgetFactory&); // Operator '=' Not Implemented
+    static void RegisterKnownQFilterWidgets();
 };
 
-#endif /* IFILTERWIDGETFACTOR_H_ */
+#endif /* FILTERWIDGETSLIB_H_ */

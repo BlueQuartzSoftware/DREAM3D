@@ -61,6 +61,10 @@
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
+#include "PipelineBuilder/PipelineBuilderWidget.h"
+#include "FilterWidgets/FilterWidgetsLib.h"
+
+
 //#include "GrainGenerator/UI/GrainGeneratorPlugin.h"
 //#include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
 //#include "EbsdImport/UI/EbsdImportPlugin.h"
@@ -81,6 +85,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_ActivePlugin(NULL),
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
+  m_PipelineBuilderWidget(NULL),
 #if defined(Q_WS_WIN)
 m_OpenDialogLastDirectory("C:\\")
 #else
@@ -91,10 +96,11 @@ m_OpenDialogLastDirectory("~/")
   // using the QDesigner program
   setupUi(this);
 
+  // Look for plugins
+  // loadPlugins();
+
   // Do our own widget initializations
   setupGui();
-  // Look for plugins
-  loadPlugins();
 
   // Read the Preferences for each plugin and our own settings
   readSettings();
@@ -175,6 +181,7 @@ void DREAM3D_UI::readSettings()
     plugin->readSettings(prefs);
   }
 
+#if 0
   bool loaded = false;
   QString pluginName = prefs.value("ActivePlugin").toString();
   for (int i = 0; i < m_LoadedPlugins.size(); ++i)
@@ -198,7 +205,7 @@ void DREAM3D_UI::readSettings()
       m_PluginActionGroup->actions().at(0)->activate(QAction::Trigger);
     }
   }
-
+#endif
   readWindowSettings(prefs);
 }
 
@@ -274,6 +281,7 @@ void DREAM3D_UI::setupGui()
   m_PluginActionGroup = new QActionGroup(this);
   m_PluginToolBar = new QToolBar(this);
   m_PluginToolBar->setObjectName(QString("PluginToolbar"));
+  m_PluginToolBar->setVisible(false);
 
   // This should be a preference setting somewhere.
   m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -294,6 +302,17 @@ void DREAM3D_UI::setupGui()
 
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
+
+
+  // Register all of the Filters we know about - the rest will be loaded through plugins
+  //  which all should have been loaded by now.
+  FilterWidgetsLib::RegisterKnownQFilterWidgets();
+  Q_INIT_RESOURCE(FilterDocs);
+
+  // Now create our central widget
+  m_PipelineBuilderWidget = new PipelineBuilderWidget(this);
+  m_PipelineBuilderWidget->setStatusBar(this->statusBar());
+  centerWidget->layout()->addWidget(m_PipelineBuilderWidget);
 }
 
 

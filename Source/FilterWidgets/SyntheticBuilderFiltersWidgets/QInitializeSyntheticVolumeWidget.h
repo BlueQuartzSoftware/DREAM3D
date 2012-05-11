@@ -47,7 +47,8 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
 
-#include "FilterWidgets/QFilterWidget.h"
+#include "PipelineBuilder/QFilterWidget.h"
+
 #include "FilterWidgets/ui_QInitializeSyntheticVolumeWidget.h"
 
 /*
