@@ -218,7 +218,7 @@ void name##_PreFlightTest() {\
 }
 
 
-MAKE_FILTER_TEST(  LoadSlices, PASS)
+MAKE_FILTER_TEST(  ReadH5Ebsd, PASS)
 MAKE_FILTER_TEST(  AlignSections, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  SegmentGrains, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  MinSize, FAIL_IS_PASS)
@@ -257,7 +257,7 @@ int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( SyntheticBuilder_PreFlight() );
-  DREAM3D_REGISTER_TEST( LoadSlices_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( ReadH5Ebsd_PreFlightTest() );
   DREAM3D_REGISTER_TEST( AlignSections_PreFlightTest() );
   DREAM3D_REGISTER_TEST( SegmentGrains_PreFlightTest() );
   DREAM3D_REGISTER_TEST( MinSize_PreFlightTest() );
