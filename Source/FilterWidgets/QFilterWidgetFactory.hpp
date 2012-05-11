@@ -37,7 +37,7 @@
 #ifndef QFILTERWIDGETFACTORY_H_
 #define QFILTERWIDGETFACTORY_H_
 
-#include "IFilterWidgetFactory.h"
+#include "PipelineBuilder/IFilterWidgetFactory.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 template <class Widget>

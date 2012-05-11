@@ -34,65 +34,37 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PipelineViewWidget_H
-#define _PipelineViewWidget_H
+#ifndef IFILTERWIDGETFACTOR_H_
+#define IFILTERWIDGETFACTOR_H_
 
-#include <QtGui/QFrame>
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QTextEdit>
+#include "PipelineBuilder/QFilterWidget.h"
 
-#include "PipelineBuilder/FilterWidgets/QFilterWidget.h"
-
-/*
- *
+/**
+ * @brief This class serves as a base class to create Factory classes that can
+ * create QFilterWidgets for a GUI based on Qt.
  */
-class PipelineViewWidget : public QFrame
+class IFilterWidgetFactory
 {
-    Q_OBJECT;
-
   public:
-    PipelineViewWidget(QWidget* parent = 0);
-    virtual ~PipelineViewWidget();
-
-    int filterCount();
-    QFilterWidget* filterWidgetAt(int index);
-    void clearWidgets();
-    QFilterWidget* addFilter(QString filterName, int index =-1);
-    void setErrorsTextArea(QTextEdit* t);
-
-  public slots:
-    void removeFilterWidget();
-    void setSelectedFilterWidget(QFilterWidget* w);
-    void setFilterBeingDragged(QFilterWidget* w);
-    void preflightPipeline();
-
-    // Slots for the pipeline to communicate back to us
-  public slots:
-    void preflightErrorMessage(const QString &str);
+    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory);
+    DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
 
 
-  signals:
-     void addPlaceHolderFilter(QPoint p);
-     void removePlaceHolderFilter();
+    virtual ~IFilterWidgetFactory() {}
+
+    /** @brief This function should NEVER get called. The subclass should ALWAYS implement
+     * this method so we are going to crash the program.
+     */
+    virtual QFilterWidget* createWidget() { assert(false); return NULL;}
+    virtual std::string getFilterGroup() { assert(false); return ""; }
+    virtual std::string getFilterHumanLabel() { assert(false); return ""; }
+    virtual AbstractFilter::Pointer getFilterInstance() { assert(false); return AbstractFilter::NullPointer(); }
 
   protected:
-     void setupGui();
-      void dragEnterEvent(QDragEnterEvent *event);
-      void dragMoveEvent(QDragMoveEvent *event);
-      void dropEvent(QDropEvent *event);
-   //   void mousePressEvent(QMouseEvent *event);
-
+    IFilterWidgetFactory(){}
   private:
-    QFilterWidget*            m_SelectedFilterWidget;
-    QVBoxLayout*              m_FilterWidgetLayout;
-    QFilterWidget*            m_FilterBeingDragged;
-    int                       m_DropIndex;
-    QStringList               m_PipelineErrorList;
-    QTextEdit*                m_ErrorsArea;
-
-    PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
-    void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented
+    IFilterWidgetFactory(const IFilterWidgetFactory&); // Copy Constructor Not Implemented
+    void operator=(const IFilterWidgetFactory&); // Operator '=' Not Implemented
 };
 
-#endif /* _PipelineViewWidget_H */
+#endif /* IFILTERWIDGETFACTOR_H_ */

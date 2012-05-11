@@ -75,17 +75,27 @@ void FieldDataCSVWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   writer->writeValue("FieldDataFile", getFieldDataFile() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::preflight()
 {
-
+  if (getFieldDataFile().empty() == true)
+  {
+    std::stringstream ss;
+    ss << ClassName() << " needs the Input File Set and it was not.";
+    setErrorMessage(ss.str());
+    setErrorCondition(-387);
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -37,7 +37,7 @@
 #include "QFilterWidget.h"
 
 
-#include "DREAM3DLib/Common/FilterOption.h"
+
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
@@ -53,7 +53,7 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 
-#include "moc_QFilterWidget.cxx"
+#include "DREAM3DLib/Common/FilterOption.h"
 
 #define PADDING 5
 #define BORDER 2

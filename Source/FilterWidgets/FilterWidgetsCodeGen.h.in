@@ -30,7 +30,7 @@
 
 /* ***************************************************************************
  * THIS FILE WAS AUTOMATICALLY GENERATED FROM THE FILE LOCATED AT
- * @FilterWidgets_SOURCE_DIR@/CodeGen.cpp.in
+ * @FilterWidgetsLib_SOURCE_DIR@/FilterWidgetsCodeGen.h.in
  *************************************************************************** */
 
 
@@ -41,17 +41,17 @@
 // -----------------------------------------------------------------------------
 //  
 // -----------------------------------------------------------------------------
-std::string OUTPUT_DIR()
+std::string FILTER_WIDGETS_BINARY_DIR()
 {
-  return "@FilterWidgets_BINARY_DIR@";
+  return "@FilterWidgetsLib_BINARY_DIR@";
 }
 
 // -----------------------------------------------------------------------------
 //  
 // -----------------------------------------------------------------------------
-std::string FILTER_WIDGETS_DIR()
+std::string FILTER_WIDGETS_SOURCE_DIR()
 {
-  return "@FilterWidgets_SOURCE_DIR@";
+  return "@FilterWidgetsLib_SOURCE_DIR@";
 }
 
 // -----------------------------------------------------------------------------
@@ -59,7 +59,7 @@ std::string FILTER_WIDGETS_DIR()
 // -----------------------------------------------------------------------------
 std::string FILTER_WIDGETS_TEMP_DIR()
 {
-  return "@FilterWidgets_TEMP_DIR@";
+  return "@FilterWidgetsLib_TEMP_DIR@";
 }
 
 // -----------------------------------------------------------------------------

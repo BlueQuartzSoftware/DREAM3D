@@ -58,6 +58,7 @@
 
 class DREAM3DPluginInterface;
 class HelpDialog;
+class PipelineBuilderWidget;
 
 /**
 * @class DREAM3D_UI DREAM3D_UI Applications/DREAM3D/DREAM3D_UI.h
@@ -198,6 +199,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
     QToolBar*                   m_PluginToolBar;
     HelpDialog*                 m_HelpDialog;
+    PipelineBuilderWidget*      m_PipelineBuilderWidget;
+
     QString                     m_OpenDialogLastDirectory;
 
 

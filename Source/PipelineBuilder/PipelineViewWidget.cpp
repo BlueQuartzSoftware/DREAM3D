@@ -51,8 +51,8 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 
-#include "PipelineBuilder/FilterWidgets/QFilterWidgetManager.h"
-#include "PipelineBuilder/QFilterPipeline.h"
+#include "FilterWidgetManager.h"
+#include "QFilterPipeline.h"
 
 
 // -----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
-  QFilterWidgetManager::Pointer wm = QFilterWidgetManager::Instance();
+  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
   if (NULL == wf) { return NULL;}
   QFilterWidget* w = wf->createWidget();
