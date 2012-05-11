@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-#include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
+#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"
@@ -68,8 +68,8 @@ void TestFilterPipeline()
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  LoadSlices::Pointer load_slices = LoadSlices::New();
-  //  pipeline->pushBack(load_slices);
+  ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
+  //  pipeline->pushBack(read_h5ebsd);
 
   AlignSections::Pointer align_sections = AlignSections::New();
   pipeline->pushBack(align_sections);
@@ -94,7 +94,7 @@ void TestFilterPipeline()
   //  pipeline->printFilterNames(std::cout);
   DREAM3D_REQUIRE_EQUAL(5, pipeline->size());
 
-  pipeline->pushFront(load_slices);
+  pipeline->pushFront(read_h5ebsd);
   //  pipeline->printFilterNames(std::cout);
   DREAM3D_REQUIRE_EQUAL(6, pipeline->size());
 

@@ -10,6 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (IOFilters_FILTERS_HDRS
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/ReadH5Ebsd.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.h
@@ -30,6 +31,7 @@ SET (DREAM3DLib_IOFilters_HDRS
 )
 
 SET (DREAM3DLib_IOFilters_SRCS
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/ReadH5Ebsd.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.cpp

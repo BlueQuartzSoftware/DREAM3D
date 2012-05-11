@@ -145,17 +145,17 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder)
 # Add in ONLY those headers and sources that need to have various Qt related
 # utilities run against them
 set (QFilterWidget_HDRS
-    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.h
-    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.h
-    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricItemDelegate.h
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.h
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.h
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricItemDelegate.h
     ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h
 )
 
 set(QFilterWidget_SRCS
-    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.cpp
-    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QualityMetricTableModel.cpp
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.cpp
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.cpp
@@ -177,7 +177,7 @@ QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
 QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS 
-    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui 
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui 
     ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
