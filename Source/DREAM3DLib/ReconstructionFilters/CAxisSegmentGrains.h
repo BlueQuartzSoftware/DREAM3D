@@ -34,43 +34,59 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FieldDataCSVWriter_H_
-#define FieldDataCSVWriter_H_
+#ifndef CAxisSegmentGrains_H_
+#define CAxisSegmentGrains_H_
 
 #include <vector>
 #include <string>
 
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
 
+#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
 /**
- * @class FieldDataCSVWriter FieldDataCSVWriter.h DREAM3DLib/GenericFilters/FieldDataCSVWriter.h
+ * @class CAxisSegmentGrains CAxisSegmentGrains.h DREAM3DLib/ReconstructionFilters/CAxisSegmentGrains.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
+class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
 {
   public:
-    DREAM3D_SHARED_POINTERS(FieldDataCSVWriter);
-    DREAM3D_STATIC_NEW_MACRO(FieldDataCSVWriter);
-    DREAM3D_TYPE_MACRO_SUPER(FieldDataCSVWriter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(CAxisSegmentGrains);
+    DREAM3D_STATIC_NEW_MACRO(CAxisSegmentGrains);
+    DREAM3D_TYPE_MACRO_SUPER(CAxisSegmentGrains, AbstractFilter);
 
-    virtual ~FieldDataCSVWriter();
+    virtual ~CAxisSegmentGrains();
 
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldDataFile)
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds);
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Write Field Data as CSV File"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Segment Grains (C-Axis Misorientation)"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -78,15 +94,32 @@ class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+    virtual int getSeed(size_t gnum);
+    virtual bool determineGrouping(int referencepoint, int neighborpoint, size_t gnum);
 
   protected:
-    FieldDataCSVWriter();
+    CAxisSegmentGrains();
 
   private:
+    std::vector<OrientationMath*> m_OrientationOps;
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+
+    int32_t* m_GrainIds;
+    float* m_Quats;
+    int32_t* m_CellPhases;
+    int32_t* m_FieldPhases;
+    bool* m_Active;
+    bool* m_GoodVoxels;
+
+    unsigned int* m_CrystalStructures;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    FieldDataCSVWriter(const FieldDataCSVWriter&); // Copy Constructor Not Implemented
-    void operator=(const FieldDataCSVWriter&); // Operator '=' Not Implemented
+    CAxisSegmentGrains(const CAxisSegmentGrains&); // Copy Constructor Not Implemented
+    void operator=(const CAxisSegmentGrains&); // Operator '=' Not Implemented
 };
 
-#endif /* FieldDataCSVWriter_H_ */
+#endif /* CAxisSegmentGrains_H_ */

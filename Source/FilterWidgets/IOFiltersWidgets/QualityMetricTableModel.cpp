@@ -43,7 +43,7 @@
 
 #include "QualityMetricItemDelegate.h"
 
-#include "ReconstructionFiltersWidgets/moc_QualityMetricTableModel.cxx"
+#include "IOFiltersWidgets/moc_QualityMetricTableModel.cxx"
 
 
 // -----------------------------------------------------------------------------

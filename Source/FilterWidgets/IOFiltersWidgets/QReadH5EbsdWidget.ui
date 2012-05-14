@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QLoadSlicesWidget</class>
- <widget class="QFilterWidget" name="QLoadSlicesWidget">
+ <class>QReadH5EbsdWidget</class>
+ <widget class="QFilterWidget" name="QReadH5EbsdWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -930,7 +930,7 @@ font-size: 11px;
         <string>Add</string>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+        <iconset>
          <normaloff>:/add2.png</normaloff>:/add2.png</iconset>
        </property>
        <property name="iconSize">
@@ -968,7 +968,7 @@ font-size: 11px;
         <string>Delete</string>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+        <iconset>
          <normaloff>:/delete2.png</normaloff>:/delete2.png</iconset>
        </property>
        <property name="iconSize">
@@ -1060,6 +1060,12 @@ font-size: 11px;
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>100</number>
+     </attribute>
     </widget>
    </item>
   </layout>
@@ -1077,8 +1083,6 @@ font-size: 11px;
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -218,11 +218,18 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
+  setErrorCondition(0);
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
   for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
   {
 	m_NumFields[i] = 0;
   }
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
+  for(size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
 	m_NumFields[m_FieldPhases[i]]++;
   }
@@ -247,6 +254,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float w;
   float cx1, cy1, cz1, denom1;
   float cx2, cy2, cz2, denom2;
+  float ea11, ea12, ea13;
+  float ea21, ea22, ea23;
   float q1[5];
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
@@ -262,13 +271,13 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       int csize = int(microtexturelist.size());
       for (int j = 0; j < csize; j++)
       {
-        csize = int(microtexturelist.size());
         int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
         q1[1] = m_AvgQuats[5*firstgrain+1]/m_AvgQuats[5*firstgrain];
         q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
         q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
         q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
+		OrientationMath::QuattoEuler(q1, ea11, ea12, ea13);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
 	    cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
 	    cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
@@ -287,6 +296,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
               q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
               q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
               q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
+			  OrientationMath::QuattoEuler(q2, ea21, ea22, ea23);
 			  cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
 			  cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
 			  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
@@ -298,6 +308,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 newnumbers[neigh] = i;
                 microtexturelist.push_back(neigh);
 			    m_Active[neigh] = false;
+				csize++;
 			  }
             }
           }

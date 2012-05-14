@@ -220,6 +220,6 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
 
 };
 
-#include "ReconstructionFiltersWidgets/moc_QualityMetricItemDelegate.cxx"
+#include "IOFiltersWidgets/moc_QualityMetricItemDelegate.cxx"
 #endif /*  */
 

@@ -56,7 +56,7 @@
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-#include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
+#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSectionsFeature.h"
 #include "DREAM3DLib/ReconstructionFilters/EBSDSegmentGrains.h"
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"
@@ -205,14 +205,14 @@ void TestFindNeighbors()
   MXADir::mkdir(m_OutputDirectory, true);
 
  // updateProgressAndMessage(("Loading Slices"), 10);
-  LoadSlices::Pointer load_slices = LoadSlices::New();
-  load_slices->setH5EbsdFile(getH5EbsdFile());
-  load_slices->setRefFrameZDir(Ebsd::LowtoHigh);
-  load_slices->setZStartIndex(getZStartIndex());
-  load_slices->setZEndIndex(getZEndIndex());
-  load_slices->setPhaseTypes(getPhaseTypes());
-  load_slices->setQualityMetricFilters(getQualityMetricFilters());
-  pipeline->pushBack(load_slices);
+  ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
+  read_h5ebsd->setH5EbsdFile(getH5EbsdFile());
+  read_h5ebsd->setRefFrameZDir(Ebsd::LowtoHigh);
+  read_h5ebsd->setZStartIndex(getZStartIndex());
+  read_h5ebsd->setZEndIndex(getZEndIndex());
+  read_h5ebsd->setPhaseTypes(getPhaseTypes());
+  read_h5ebsd->setQualityMetricFilters(getQualityMetricFilters());
+  pipeline->pushBack(read_h5ebsd);
 
   AlignSectionsFeature::Pointer align_sections = AlignSectionsFeature::New();
  // align_sections->setCrystalStructures(xtal);
