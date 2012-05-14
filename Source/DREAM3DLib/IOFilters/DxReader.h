@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     virtual ~DxReader();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Read Grain Ids from Dx File"; }
+    virtual const std::string getHumanLabel() { return "Read Dx File (Grain Ids)"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
