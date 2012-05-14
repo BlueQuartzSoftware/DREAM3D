@@ -246,7 +246,7 @@ MAKE_FILTER_TEST(  AdjustVolume, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  PackPrimaryPhases, PASS)
 MAKE_FILTER_TEST(  MatchCrystallography, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  InsertPrecipitatePhases, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  SurfaceMeshFilter, FAIL_IS_PASS)
+//MAKE_FILTER_TEST(  SurfaceMeshFilter, FAIL_IS_PASS)
 
 
 
@@ -285,7 +285,7 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( PackPrimaryPhases_PreFlightTest() );
   DREAM3D_REGISTER_TEST( MatchCrystallography_PreFlightTest() );
   DREAM3D_REGISTER_TEST( InsertPrecipitatePhases_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( SurfaceMeshFilter_PreFlightTest() );
+//  DREAM3D_REGISTER_TEST( SurfaceMeshFilter_PreFlightTest() );
 
 
   PRINT_TEST_SUMMARY();

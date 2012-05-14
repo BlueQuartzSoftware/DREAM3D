@@ -137,6 +137,16 @@ std::vector<Observer*> Observable::getObservers()
 {
   return this->m_Observers;
 }
+#if 0
+void Observable::getObservers(std::vector<Observer*> &observers)
+{
+  observers.resize(m_Observers.size());
+  for(size_t i = 0; i < m_Observers.size(); ++i)
+  {
+    observers[i] = m_Observers[i];
+  }
+}
+#endif
 
 // -----------------------------------------------------------------------------
 //

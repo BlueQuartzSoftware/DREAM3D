@@ -44,12 +44,10 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
 
-//#include "DREAM3DLib/Common/DataContainer.h"
 
-
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Node.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Face.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Neighbor.h"
+#include "SurfaceMeshing/Meshing/Node.h"
+#include "SurfaceMeshing/Meshing/Face.h"
+#include "SurfaceMeshing/Meshing/Neighbor.h"
 
 using namespace meshing;
 
@@ -109,7 +107,7 @@ int SMVtkPolyDataWriter::readZSlice(int xDim, int yDim, int zDim, int* voxels)
     {
       m_InputFile >> tmp;
       voxels[i] = tmp;
-	}
+        }
   }
   return 0;
 }
@@ -379,7 +377,7 @@ void SMVtkPolyDataWriter::execute()
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
     if (nread != 1)
     {
-    	break;
+        break;
     }
     if (m_WriteBinaryFile == true) {
       vec3f[0] = vec3d[0]; vec3f[1] = vec3d[1]; vec3f[2] = vec3d[2];
@@ -523,7 +521,7 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     if (nread != 1)
     {
-    	break;
+        break;
     }
     swapped = *nodeKind;
     MXA::Endian::FromSystemToBig::convert<int>( swapped );
@@ -560,7 +558,7 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     if (nread != 1){
-    	break;
+        break;
     }
     fprintf(vtkFile, "%d\n", *nodeKind); // Write the Node Kind to the output file
   }
@@ -601,7 +599,7 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   {
     nread = fread(tData, sizeof(int), 6, triFile);
     if (nread != 6) {
-    		return -1;
+                return -1;
     }
     MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
     tri_ids[i*offset] = tData[0];
@@ -642,7 +640,7 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
 // -----------------------------------------------------------------------------
 int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
-	int nread = 0;
+        int nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
   // Write the GrainId Data to the file
@@ -662,7 +660,7 @@ int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FI
     nread = fread(tData, sizeof(int), 6, triFile);
     if (nread != 6)
     {
-    	break;
+        break;
     }
     fprintf(vtkFile, "%d\n", tData[4]);
     if (false == conformalMesh)

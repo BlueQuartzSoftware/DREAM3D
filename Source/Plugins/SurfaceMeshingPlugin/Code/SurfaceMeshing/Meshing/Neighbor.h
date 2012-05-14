@@ -63,45 +63,43 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _Face_H_
-#define _Face_H_
+#ifndef _Neighbor_H_
+#define _Neighbor_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
+#define num_neigh 26
 
 
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 namespace meshing {
-
 /**
-* @class Face Face.h DREAM3DLib/Common/Face.h
+* @class Neighbor Neighbor.h DREAM3DLib/Common/Neighbor.h
 * @brief Support class for the MicroGen3D class
-* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
+* @author Michael A. Jackson for BlueQuartz Software
+* @author Dr. Michael Groeber for USAFRL
 * @date Nov 4, 2009
 * @version 1.0
 */
-class DREAM3DLib_EXPORT Face
+class Neighbor
 {
 public:
-    Face();
-    virtual ~Face();
+    Neighbor();
+    virtual ~Neighbor();
 
-    int site_id[4]; // stores 4 sites at the corners of each square...
-    int edge_id[4]; // stores edge id turned on...others will have dummy -1...
-    int nEdge; // number of edges on the square...
-    int turnFC; // if 1, face center is on..., else it's 0
-    int FCnode; // face center node...if not, it's -1...
-    int effect; // 0 if the square is useless; 1 is good...
+    int csiteid;
+
+    int neigh_id[num_neigh + 1];
 
   private:
 
-    Face(const Face&);    // Copy Constructor Not Implemented
-      void operator=(const Face&);  // Operator '=' Not Implemented
+    Neighbor(const Neighbor&);    // Copy Constructor Not Implemented
+    void operator=(const Neighbor&);  // Operator '=' Not Implemented
 };
+
 }
-#endif /* Face_H_ */
+#endif /* Neighbor_H_ */

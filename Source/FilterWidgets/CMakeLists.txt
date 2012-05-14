@@ -13,9 +13,7 @@
 project(FilterWidgetsLib)
 cmake_minimum_required(VERSION 2.8.4)
 
-
 set(Project_SRCS "")
-
 
 set(FilterWidget_GEN_SRCS "")
 set(FilterWidget_GEN_HDRS "")
@@ -44,16 +42,16 @@ Macro(WidgetGeneration DirName qrcGroupName)
                               ${FilterWidgetsLib_BINARY_DIR}/${DirName}Widgets/Q${name}Widget.cpp)
             endif()
         endif()
-        
+
         file(APPEND ${HtmlDocQrcFile} "<file>${qrcGroupName}/${name}.html</file>\n")
         file(APPEND ${CodeGeneratorFile} "createHeaderFile<${name}>(\"${DirName}\", \"${name}\");\n")
         file(APPEND ${CodeGeneratorFile} "createSourceFile<${name}>(\"${DirName}\", \"${name}\");\n")
         file(APPEND ${CodeGeneratorFile} "createHTMLFile<${name}>(\"${DirName}\", \"${name}\");\n")
-    
+
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${name}Widget>::Pointer q${name}WidgetFactory = QFilterWidgetFactory<Q${name}Widget>::New(); \n")
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${name}\",q${name}WidgetFactory); \n\n")
 
-        file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"FilterWidgets/${DirName}Widgets/Q${name}Widget.h\"\n")        
+        file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"FilterWidgets/${DirName}Widgets/Q${name}Widget.h\"\n")
     endforeach()
 endMacro()
 
@@ -97,7 +95,6 @@ WidgetGeneration(SamplingFilters SamplingFilters)
 WidgetGeneration(ProcessingFilters ProcessingFilters)
 WidgetGeneration(ReconstructionFilters ReconstructionFilters)
 WidgetGeneration(StatisticsFilters StatisticsFilters)
-WidgetGeneration(SurfaceMeshingFilters  Surface_MeshingFilters)
 WidgetGeneration(SyntheticBuilderFilters Synthetic_BuilderFilters)
 
 
@@ -114,10 +111,15 @@ file(READ ${CodeGeneratorFile} CODE_GEN_FILTER_FUNCTION)
 # Remove the temp files that we no longer need
 file(REMOVE ${CodeGeneratorFile})
 
-# --------------------------------------------------------------------            
+# --------------------------------------------------------------------
 # Create our custom executable that will generate most of our QFilterWidget
-# classes from information stored in the Filters themselves. 
-set(FilterWidgetsLib_TEMP_DIR ${FilterWidgetsLib_BINARY_DIR}/Temp)
+# classes from information stored in the Filters themselves.
+set(FILTER_HEADERS "#include \"DREAM3DLib/DREAM3DFilters.h\"")
+set(FILTER_WIDGETS_TEMP_DIR ${FilterWidgetsLib_BINARY_DIR}/Temp)
+set(FILTER_WIDGETS_BINARY_DIR ${FilterWidgetsLib_BINARY_DIR})
+set(FILTER_WIDGETS_SOURCE_DIR ${FilterWidgetsLib_SOURCE_DIR})
+set(FILTER_INCLUDE_PREFIX "DREAM3DLib")
+
 file(MAKE_DIRECTORY ${FilterWidgetsLib_BINARY_DIR}/Temp)
 configure_file( ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
                 ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
@@ -127,8 +129,8 @@ target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
 
 
 # Now run the code to generate the header files which will over write the place
-# holder files that were generated from above              
-add_custom_command(TARGET FilterWidgetCodeGen POST_BUILD 
+# holder files that were generated from above
+add_custom_command(TARGET FilterWidgetCodeGen POST_BUILD
                     COMMAND $<TARGET_FILE:FilterWidgetCodeGen> )
 
 
@@ -165,19 +167,19 @@ cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${QFilterWidget_HDRS}" "${QFilterWid
 # --------------------------------------------------------------------
 # and finally this will run moc:
 QT4_WRAP_CPP( FilterWidgetsLib_Generated_MOC_SRCS ${FilterWidget_GEN_HDRS})
-QT4_WRAP_CPP( FilterWidgetsLib_MOC_SRCS ${QFilterWidget_HDRS} )   
+QT4_WRAP_CPP( FilterWidgetsLib_MOC_SRCS ${QFilterWidget_HDRS} )
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
 set_source_files_properties( ${FilterWidgetsLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties( ${FilterWidgetsLib_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
-# -- Run MOC and UIC on the necessary files   
+# -- Run MOC and UIC on the necessary files
 QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/FilterDocs.qrc"  )
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
-QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS 
-    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui 
+QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS
+    ${FilterWidgetsLib_SOURCE_DIR}/ReconstructionFiltersWidgets/QLoadSlicesWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
@@ -203,10 +205,10 @@ set(FilterWidget_SRCS
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${FilterWidget_HDRS}" "${FilterWidget_SRCS}" "0")
 
-set (Project_SRCS 
-        ${QFilterWidget_HDRS} 
+set (Project_SRCS
+        ${QFilterWidget_HDRS}
         ${QFilterWidget_SRCS}
-        ${FilterWidget_HDRS} 
+        ${FilterWidget_HDRS}
         ${FilterWidget_SRCS}
         ${FilterWidget_GEN_HDRS}
         ${FilterWidget_GEN_SRCS}
@@ -219,16 +221,16 @@ set (Project_SRCS
 
 
 if (UNIX AND NOT APPLE)
-    set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC) 
+    set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
 add_library(FilterWidgetsLib STATIC ${Project_SRCS})
-target_link_libraries(FilterWidgetsLib 
+target_link_libraries(FilterWidgetsLib
                     MXA
                     H5Support
                     EbsdLib
                     DREAM3DLib
-                    ${QT_QTCORE_LIBRARY} 
+                    ${QT_QTCORE_LIBRARY}
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
                     PipelineBuilderLib
