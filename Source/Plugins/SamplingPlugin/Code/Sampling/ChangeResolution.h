@@ -53,7 +53,7 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
+class ChangeResolution : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(ChangeResolution);
