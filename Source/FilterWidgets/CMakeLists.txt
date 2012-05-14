@@ -91,7 +91,6 @@ file(APPEND ${RegisterKnownFilterWidgetsFile} "\nvoid FilterWidgetsLib::Register
 set(ONLY_FILTERS 1)
 WidgetGeneration(GenericFilters GenericFilters)
 WidgetGeneration(IOFilters IOFilters)
-WidgetGeneration(SamplingFilters SamplingFilters)
 WidgetGeneration(ProcessingFilters ProcessingFilters)
 WidgetGeneration(ReconstructionFilters ReconstructionFilters)
 WidgetGeneration(StatisticsFilters StatisticsFilters)

@@ -336,10 +336,9 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
             if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
                 #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
                 set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
-                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
-                                        PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
-                #add_subdirectory(${${userPlugin}_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${userPlugin}) 
                 message(STATUS "Plugin: ${userPlugin} Found")
+                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
+                                        PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})                
             endif()
         else()
             message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")

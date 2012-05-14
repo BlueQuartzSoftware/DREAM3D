@@ -17,7 +17,6 @@ if(NOT QT4_FOUND)
     message(FATAL_ERROR "Qt 4 is Needed for this project.")
 endif()
 include( ${QT_USE_FILE} )
-message(STATUS "Plugin: ${PLUGIN_NAME} Enabled")
 
 include( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/FilterWidgetMacros.cmake)
 
