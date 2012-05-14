@@ -13,7 +13,9 @@
 <b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>
 <h4>Summary</h4>
 <!-- Write all your documentation here -->
-This filter does ....
+This filter determines which grains are biased by the outer surfaces of the sample and thus excluded from any statistical analysis to be stored at the ensemble data level. </br>
+The largest box that does not include any of the centroids belonging to the fields that intersect an outer surface of the sample is first determined. Then each field's centroid is check to see whether it lies within the box.  If the a centroid lies within the box, then the field is said to be unbiased and if it lies outside the box, then the field is said to be biased. </br>
+It should be noted that fields that do not actually interest the outer surfaces may still be considered biased (generally small fields) due tot he higher probability of larger fields to interest the outer surfaces. </br>
 <!-- Do NOT write documentation below this line -->
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->

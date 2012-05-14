@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef LOADSLICES_H_
-#define LOADSLICES_H_
+#ifndef ReadH5Ebsd_H_
+#define ReadH5Ebsd_H_
 
 #include <vector>
 #include <string>
@@ -55,20 +55,20 @@
 
 
 /**
- * @class LoadSlices LoadSlices.h DREAM3DLib/ReconstructionFilters/LoadSlices.h
+ * @class ReadH5Ebsd ReadH5Ebsd.h DREAM3DLib/ReconstructionFilters/ReadH5Ebsd.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
+class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(LoadSlices);
-    DREAM3D_STATIC_NEW_MACRO(LoadSlices);
-    DREAM3D_TYPE_MACRO_SUPER(LoadSlices, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(ReadH5Ebsd);
+    DREAM3D_STATIC_NEW_MACRO(ReadH5Ebsd);
+    DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter);
 
-    virtual ~LoadSlices();
+    virtual ~ReadH5Ebsd();
 
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
 
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read H5Ebsd File"; }
 
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     virtual void preflight();
 
   protected:
-    LoadSlices();
+    ReadH5Ebsd();
 
   private:
     int32_t* m_CellPhases;
@@ -114,8 +114,8 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    LoadSlices(const LoadSlices&); // Copy Constructor Not Implemented
-    void operator=(const LoadSlices&); // Operator '=' Not Implemented
+    ReadH5Ebsd(const ReadH5Ebsd&); // Copy Constructor Not Implemented
+    void operator=(const ReadH5Ebsd&); // Operator '=' Not Implemented
 
     /**
      * @brief This method reads the values for the phase type, crystal structure
@@ -160,4 +160,4 @@ class DREAM3DLib_EXPORT LoadSlices : public AbstractFilter
     }
 };
 
-#endif /* LOADSLICES_H_ */
+#endif /* ReadH5Ebsd_H_ */

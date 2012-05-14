@@ -28,28 +28,28 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QLoadSlices_H_
-#define QLoadSlices_H_
+#ifndef QReadH5Ebsd_H_
+#define QReadH5Ebsd_H_
 
 #include <QtCore/QObject>
 #include <QtGui/QFileDialog>
 
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/ReconstructionFilters/LoadSlices.h"
+#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "PipelineBuilder/QFilterWidget.h"
 
-#include "FilterWidgets/ui_QLoadSlicesWidget.h"
+#include "FilterWidgets/ui_QReadH5EbsdWidget.h"
 
 class QualityMetricTableModel;
 
 
-class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
+class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 {
   Q_OBJECT;
   public:
-    QLoadSlicesWidget(QWidget* parent = NULL);
-    virtual ~QLoadSlicesWidget();
+    QReadH5EbsdWidget(QWidget* parent = NULL);
+    virtual ~QReadH5EbsdWidget();
 
     virtual AbstractFilter::Pointer getFilter();
 
@@ -93,11 +93,11 @@ class QLoadSlicesWidget : public QFilterWidget, private Ui::QLoadSlicesWidget
      * @brief
      * @param r
      */
-    void setupQualityMetricFilters(LoadSlices::Pointer filter);
+    void setupQualityMetricFilters(ReadH5Ebsd::Pointer filter);
 
-    QLoadSlicesWidget(const QLoadSlicesWidget&); // Copy Constructor Not Implemented
-    void operator=(const QLoadSlicesWidget&); // Operator '=' Not Implemented
+    QReadH5EbsdWidget(const QReadH5EbsdWidget&); // Copy Constructor Not Implemented
+    void operator=(const QReadH5EbsdWidget&); // Operator '=' Not Implemented
 };
 
 
-#endif /* QLoadSlices_H_ */
+#endif /* QReadH5Ebsd_H_ */

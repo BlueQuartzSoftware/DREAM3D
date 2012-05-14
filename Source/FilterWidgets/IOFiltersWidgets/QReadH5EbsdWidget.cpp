@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "QLoadSlicesWidget.h"
+#include "QReadH5EbsdWidget.h"
 
 #include <QtGui/QLabel>
 #include <QtGui/QMessageBox>
@@ -51,12 +51,12 @@
 
 #include "QualityMetricTableModel.h"
 
-#include "ReconstructionFiltersWidgets/moc_QLoadSlicesWidget.cxx"
+#include "IOFiltersWidgets/moc_QReadH5EbsdWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QLoadSlicesWidget::QLoadSlicesWidget(QWidget* parent) :
+QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
     QFilterWidget(parent),
     m_QualityMetricTableModel(NULL),
     m_phaseTypeEdited(false),
@@ -70,7 +70,7 @@ QLoadSlicesWidget::QLoadSlicesWidget(QWidget* parent) :
 #endif
 {
   setupUi(this);
-  LoadSlices::Pointer filter = LoadSlices::New();
+  ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
@@ -78,7 +78,7 @@ QLoadSlicesWidget::QLoadSlicesWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QLoadSlicesWidget::~QLoadSlicesWidget()
+QReadH5EbsdWidget::~QReadH5EbsdWidget()
 {
 
 }
@@ -86,7 +86,7 @@ QLoadSlicesWidget::~QLoadSlicesWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QLoadSlicesWidget::getFilter()
+AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
 {
   int count = phaseTypeList->count();
 
@@ -109,7 +109,7 @@ AbstractFilter::Pointer QLoadSlicesWidget::getFilter()
     phaseTypes->SetValue(i + 1, enPtValue);
   }
 
-  LoadSlices::Pointer filter =  LoadSlices::New();
+  ReadH5Ebsd::Pointer filter =  ReadH5Ebsd::New();
   filter->setPhaseTypes(phaseTypes);
   setupQualityMetricFilters(filter);
 
@@ -125,7 +125,7 @@ AbstractFilter::Pointer QLoadSlicesWidget::getFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool QLoadSlicesWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
+bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
 //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
@@ -143,7 +143,7 @@ bool QLoadSlicesWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::setupGui()
+void QReadH5EbsdWidget::setupGui()
 {
   setCheckable(true);
   setIsSelected(false);
@@ -161,7 +161,7 @@ void QLoadSlicesWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::on_m_H5EbsdBtn_clicked()
+void QReadH5EbsdWidget::on_m_H5EbsdBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
@@ -179,7 +179,7 @@ void QLoadSlicesWidget::on_m_H5EbsdBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::on_m_H5EbsdFile_textChanged(const QString &text)
+void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 {
 
   if(verifyPathExists(m_H5EbsdFile->text(), m_H5EbsdFile))
@@ -333,7 +333,7 @@ void QLoadSlicesWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::on_addQualityMetric_clicked()
+void QReadH5EbsdWidget::on_addQualityMetric_clicked()
 {
   if (!m_QualityMetricTableModel->insertRow(m_QualityMetricTableModel->rowCount())) return;
 
@@ -347,7 +347,7 @@ void QLoadSlicesWidget::on_addQualityMetric_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::on_removeQualityMetric_clicked()
+void QReadH5EbsdWidget::on_removeQualityMetric_clicked()
 {
   //std::cout << "on_removeQualityMetric_clicked" << std::endl;
   QItemSelectionModel *selectionModel = m_QualityMetricTableView->selectionModel();
@@ -367,7 +367,7 @@ void QLoadSlicesWidget::on_removeQualityMetric_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::m_SetSliceInfo()
+void QReadH5EbsdWidget::m_SetSliceInfo()
 {
   H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
 
@@ -396,7 +396,7 @@ void QLoadSlicesWidget::m_SetSliceInfo()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::phaseTypeEdited(int i)
+void QReadH5EbsdWidget::phaseTypeEdited(int i)
 {
   m_phaseTypeEdited = true;
   emit parametersChanged();
@@ -405,7 +405,7 @@ void QLoadSlicesWidget::phaseTypeEdited(int i)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool QLoadSlicesWidget::checkPhaseTypes()
+bool QReadH5EbsdWidget::checkPhaseTypes()
 {
   if(m_phaseTypeEdited == true)
   {
@@ -430,7 +430,7 @@ bool QLoadSlicesWidget::checkPhaseTypes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::setupQualityMetricFilters(LoadSlices::Pointer filter)
+void QReadH5EbsdWidget::setupQualityMetricFilters(ReadH5Ebsd::Pointer filter)
 {
   int filterCount = m_QualityMetricTableModel->rowCount();
   std::vector<QualityMetricFilter::Pointer> filters;
@@ -457,7 +457,7 @@ void QLoadSlicesWidget::setupQualityMetricFilters(LoadSlices::Pointer filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::readOptions(QSettings &prefs)
+void QReadH5EbsdWidget::readOptions(QSettings &prefs)
 {
   QString val;
   bool ok;
@@ -519,9 +519,9 @@ void QLoadSlicesWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QLoadSlicesWidget::writeOptions(QSettings &prefs)
+void QReadH5EbsdWidget::writeOptions(QSettings &prefs)
 {
-  prefs.setValue("Filter_Name", "LoadSlices" );
+  prefs.setValue("Filter_Name", "ReadH5Ebsd" );
   prefs.setValue("H5EbsdFile", m_H5EbsdFile->text());
   prefs.setValue("ZStartIndex", m_ZStartIndex->value());
   prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
