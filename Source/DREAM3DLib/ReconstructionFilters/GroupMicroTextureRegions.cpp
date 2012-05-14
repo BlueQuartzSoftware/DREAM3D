@@ -303,7 +303,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 			  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
 			  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
 			  w = 180.0*acosf(w)/m_pi;
-              if (w <= m_CAxisTolerance)
+              if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
               {
                 newnumbers[neigh] = i;
                 microtexturelist.push_back(neigh);
