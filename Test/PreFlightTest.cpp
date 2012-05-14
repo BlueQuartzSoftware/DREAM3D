@@ -227,8 +227,6 @@ MAKE_FILTER_TEST(  MergeTwins, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  MergeColonies, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindNeighbors, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FieldDataCSVWriter, PASS)
-MAKE_FILTER_TEST(  ChangeResolution, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  CropVolume, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindAvgOrientations, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindAxisODF, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindBoundingBoxGrains, FAIL_IS_PASS)
@@ -266,8 +264,6 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( MergeColonies_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindNeighbors_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FieldDataCSVWriter_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( ChangeResolution_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( CropVolume_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindAvgOrientations_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindAxisODF_PreFlightTest() );
   DREAM3D_REGISTER_TEST( FindBoundingBoxGrains_PreFlightTest() );

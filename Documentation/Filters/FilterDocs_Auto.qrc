@@ -14,6 +14,7 @@
 <file>GenericFilters/FindSurfaceGrains.html</file>
 <file>GenericFilters/FindBoundingBoxGrains.html</file>
 
+<file>IOFilters/ReadH5Ebsd.html</file>
 <file>IOFilters/DataContainerReader.html</file>
 <file>IOFilters/DataContainerWriter.html</file>
 <file>IOFilters/FieldDataCSVWriter.html</file>
@@ -26,9 +27,6 @@
 <file>IOFilters/VtkGrainIdWriter.html</file>
 <file>IOFilters/EbsdToH5Ebsd.html</file>
 
-<file>SamplingFilters/ChangeResolution.html</file>
-<file>SamplingFilters/CropVolume.html</file>
-
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
@@ -36,12 +34,12 @@
 <file>ProcessingFilters/IdentifySample.html</file>
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 
-<file>ReconstructionFilters/LoadSlices.html</file>
 <file>ReconstructionFilters/AlignSectionsMisorientation.html</file>
 <file>ReconstructionFilters/AlignSectionsMutualInformation.html</file>
 <file>ReconstructionFilters/AlignSectionsFeature.html</file>
 <file>ReconstructionFilters/AlignSectionsList.html</file>
 <file>ReconstructionFilters/EBSDSegmentGrains.html</file>
+<file>ReconstructionFilters/CAxisSegmentGrains.html</file>
 <file>ReconstructionFilters/MergeTwins.html</file>
 <file>ReconstructionFilters/MergeColonies.html</file>
 <file>ReconstructionFilters/GroupMicroTextureRegions.html</file>

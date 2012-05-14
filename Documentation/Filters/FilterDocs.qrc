@@ -26,9 +26,6 @@
 <file>IOFilters/VtkGrainIdWriter.html</file>
 <file>IOFilters/EbsdToH5Ebsd.html</file>
 
-<file>SamplingFilters/ChangeResolution.html</file>
-<file>SamplingFilters/CropVolume.html</file>
-
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
