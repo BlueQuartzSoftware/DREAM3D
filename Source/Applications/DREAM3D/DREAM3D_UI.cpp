@@ -277,7 +277,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
-  std::cout << "DREAM3D_UI::setupGui" << std::endl;
+//  std::cout << "DREAM3D_UI::setupGui" << std::endl;
   m_PluginActionGroup = new QActionGroup(this);
   m_PluginToolBar = new QToolBar(this);
   m_PluginToolBar->setObjectName(QString("PluginToolbar"));
@@ -515,7 +515,7 @@ void DREAM3D_UI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::loadPlugins()
 {
-  std::cout << "DREAM3D_UI::loadPlugins" << std::endl;
+ // std::cout << "DREAM3D_UI::loadPlugins" << std::endl;
 
   foreach (QObject *plugin, QPluginLoader::staticInstances())
     populateMenus(plugin);
