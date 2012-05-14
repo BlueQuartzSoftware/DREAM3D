@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,70 +34,55 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef STLWRITER_H_
-#define STLWRITER_H_
+#ifndef MeshSmoothingPlugin_H_
+#define MeshSmoothingPlugin_H_
 
-#include <stdio.h>
-
-#include "MXA/Utilities/StringUtils.h"
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Patch.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Node.h"
-
-class SurfaceMeshFunc;
+#include <QtCore/QObject>
+#include <QtCore/QSettings>
+#include "QtSupport/DREAM3DPluginInterface.h"
 
 
-namespace meshing {
-
-class DREAM3DLib_EXPORT SMStlWriter
+/**
+ * @class MeshSmoothingPlugin MeshSmoothingPlugin.h SurfaceMeshing/MeshSmoothingPlugin.h
+ * @brief
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date May 10, 2012
+ * @version 1.0
+ */
+class MeshSmoothingPlugin : public QObject, public DREAM3DPluginInterface
 {
+    Q_OBJECT;
+    Q_INTERFACES(DREAM3DPluginInterface)
+
   public:
-    DREAM3D_SHARED_POINTERS(SMStlWriter)
-    DREAM3D_STATIC_NEW_MACRO(SMStlWriter)
-    DREAM3D_TYPE_MACRO(SMStlWriter)
+    MeshSmoothingPlugin();
+    virtual ~MeshSmoothingPlugin();
+    /**
+     * @brief Returns the name of the plugin
+     */
+    virtual QString getPluginName();
 
-    static Pointer CreateNewSTLWriter(int gid, const std::string &filename)
-    {
-      Pointer stlWriter = SMStlWriter::New();
-      stlWriter->setGrainID(gid);
-      stlWriter->setFileName(filename);
-      int err = stlWriter->openFile("wb");
-      if (err < 0)
-      {
-        return NullPointer();
-      }
-      std::string stlHeader("DREAM.3D Surface Mesh for Grain ID ");
-      stlHeader.append(StringUtils::numToString(gid));
-      stlWriter->writeHeader(stlHeader);
-      stlWriter->closeFile();
-      return stlWriter;
-    }
-    virtual ~SMStlWriter();
+    /**
+     * @brief Register all the filters with the FilterWidgetFactory
+     */
+    virtual void registerFilterWidgets();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
-    DREAM3D_INSTANCE_PROPERTY(int, TriangleCount)
-    DREAM3D_INSTANCE_PROPERTY(int, GrainID)
+    /**
+     * @brief Writes the settings in the input gui to the Application's preference file
+     * @param prefs A valid QSettings pointer.
+     */
+    virtual void writeSettings(QSettings &prefs);
 
-    int openFile(const char* mode);
-    void closeFile();
-    void resetTriangleCount();
-
-    int writeHeader(const std::string &header);
-
-    int writeTriangleBlock(int numTriangles, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex);
-
-    int writeNumTrianglesToFile();
-
-  protected:
-    SMStlWriter();
+    /**
+     * @brief Reads the settings from the Application's preference file and sets
+     * the input GUI widgets accordingly.
+     * @param prefs
+     */
+    virtual void readSettings(QSettings &prefs);
 
   private:
-    FILE* m_File;
-
-    SMStlWriter(const SMStlWriter&); // Copy Constructor Not Implemented
-    void operator=(const SMStlWriter&); // Operator '=' Not Implemented
+    MeshSmoothingPlugin(const MeshSmoothingPlugin&); // Copy Constructor Not Implemented
+    void operator=(const MeshSmoothingPlugin&); // Operator '=' Not Implemented
 };
- }
-#endif /* STLWRITER_H_ */
+
+#endif /* MeshSmoothingPlugin_H_ */

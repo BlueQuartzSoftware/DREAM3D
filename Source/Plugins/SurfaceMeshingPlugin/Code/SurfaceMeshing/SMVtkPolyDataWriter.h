@@ -53,7 +53,7 @@
 
 
 
-namespace meshing {
+
 /**
  * @class VTKFileUtils VTKFileUtils.h application/VTKFileUtils.h
  * @brief This class contains some useful functions to read from and write to
@@ -62,7 +62,7 @@ namespace meshing {
  * @date Aug 13, 2010
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SMVtkPolyDataWriter : public AbstractFilter
+class  SMVtkPolyDataWriter : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(SMVtkPolyDataWriter)
@@ -134,6 +134,6 @@ class DREAM3DLib_EXPORT SMVtkPolyDataWriter : public AbstractFilter
     void operator=(const SMVtkPolyDataWriter&); // Operator '=' Not Implemented
 
 };
-}
+
 
 #endif /* _VTKFileUtils.h_  */

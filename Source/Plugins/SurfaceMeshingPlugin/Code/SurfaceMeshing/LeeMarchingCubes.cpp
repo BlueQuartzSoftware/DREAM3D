@@ -63,7 +63,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SurfaceMeshFilter.h"
+#include "LeeMarchingCubes.h"
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
@@ -95,7 +95,8 @@
 
 
 #include "DREAM3DLib/HDF5/H5VoxelReader.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/SMVtkPolyDataWriter.h"
+
+#include "SMVtkPolyDataWriter.h"
 
 using namespace meshing;
 
@@ -276,7 +277,7 @@ class GrainChecker
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshFilter::SurfaceMeshFilter() :
+LeeMarchingCubes::LeeMarchingCubes() :
 AbstractFilter(),
 m_DeleteTempFiles(true),
 m_WriteSTLFile(true),
@@ -292,7 +293,7 @@ cSquare(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshFilter::~SurfaceMeshFilter()
+LeeMarchingCubes::~LeeMarchingCubes()
 {
   delete[] neigh;
   delete[] voxels;
@@ -302,7 +303,7 @@ SurfaceMeshFilter::~SurfaceMeshFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshFilter::setupFilterOptions()
+void LeeMarchingCubes::setupFilterOptions()
 {
 
   std::vector<FilterOption::Pointer> options;
@@ -393,7 +394,7 @@ void SurfaceMeshFilter::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
  // std::stringstream ss;
@@ -412,7 +413,7 @@ void SurfaceMeshFilter::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshFilter::preflight()
+void LeeMarchingCubes::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -421,7 +422,7 @@ void SurfaceMeshFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshFilter::execute()
+void LeeMarchingCubes::execute()
 {
   notify(("Running Surface Meshing"), 0, UpdateProgressMessage);
   int err = 0;
@@ -456,7 +457,7 @@ void SurfaceMeshFilter::execute()
   {
     if (MXADir::mkdir(m_StlOutputDirectory, true) == false)
     {
-      CHECK_FOR_ERROR(SurfaceMeshFilter, "SurfaceMesh could not create the output directory", -1)
+      CHECK_FOR_ERROR(LeeMarchingCubes, "SurfaceMesh could not create the output directory", -1)
     }
   }
 
@@ -525,10 +526,10 @@ void SurfaceMeshFilter::execute()
   float scaling[3];
   float origin[3];
   err = reader->getSizeResolutionOrigin(dims, scaling, origin);
-  CHECK_FOR_ERROR(SurfaceMeshFilter, "Error reading the size and dimensions data from the input file", err);
-  CHECK_FOR_CANCELED(SurfaceMeshFilter, "Surface Mesh was canceled", getSizeResolutionOrigin);
+  CHECK_FOR_ERROR(LeeMarchingCubes, "Error reading the size and dimensions data from the input file", err);
+  CHECK_FOR_CANCELED(LeeMarchingCubes, "Surface Mesh was canceled", getSizeResolutionOrigin);
 
-  // Initialize our SurfaceMeshFilter Variable
+  // Initialize our LeeMarchingCubes Variable
   // Add a layer of padding around the volume which are going to be our boundary voxels
   xDim = dims[0] + 2;
   yDim = dims[1] + 2;
@@ -580,8 +581,8 @@ void SurfaceMeshFilter::execute()
     err = vtkreader->readZSlice(xFileDim, yFileDim, zFileDim, fileVoxelLayer);
 #endif
     err = reader->readHyperSlab(xFileDim, yFileDim, i, fileVoxelLayer);
-    CHECK_FOR_ERROR(SurfaceMeshFilter, "Error Loading Slice Data as a Hyperslab from HDF5 file", err)
-    CHECK_FOR_CANCELED(SurfaceMeshFilter, "Surface Mesh was canceled", readHyperSlab);
+    CHECK_FOR_ERROR(LeeMarchingCubes, "Error Loading Slice Data as a Hyperslab from HDF5 file", err)
+    CHECK_FOR_CANCELED(LeeMarchingCubes, "Surface Mesh was canceled", readHyperSlab);
 
     // Copy the Voxels from layer 2 to Layer 1;
     ::memcpy(&(voxels[1]), &(voxels[1 + NSP]), NSP * sizeof(int));
@@ -626,10 +627,10 @@ void SurfaceMeshFilter::execute()
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     err = writeNodesFile(i, cNodeID, NodesFile);
-    CHECK_FOR_ERROR(SurfaceMeshFilter, "Error writing nodes temp file", err)
+    CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing nodes temp file", err)
 
     err = writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
-    CHECK_FOR_ERROR(SurfaceMeshFilter, "Error writing triangle temp file", err)
+    CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing triangle temp file", err)
 
     if (m_WriteSTLFile == true)
     {
@@ -644,7 +645,7 @@ void SurfaceMeshFilter::execute()
     }
   }
 
-  //  CHECK_FOR_CANCELED(SurfaceMeshFilter, "Surface Mesh was canceled", readHyperSlab);
+  //  CHECK_FOR_CANCELED(LeeMarchingCubes, "Surface Mesh was canceled", readHyperSlab);
 
   ss.str("");
   ss << "Marching Cubes Between Layers " << zFileDim - 1 << " and " << zFileDim << " of " << zFileDim;
@@ -683,21 +684,21 @@ void SurfaceMeshFilter::execute()
   // std::cout << "nNodes: " << nNodes << std::endl;
   // Output nodes and triangles...
   err = writeNodesFile(i, cNodeID, NodesFile);
-  CHECK_FOR_ERROR(SurfaceMeshFilter, "Error writing nodes temp file", err)
+  CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing nodes temp file", err)
 
   err = writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
-  CHECK_FOR_ERROR(SurfaceMeshFilter, "Error writing triangle temp file", err)
+  CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing triangle temp file", err)
 
   // Write the last layers of the STL Files
   if (m_WriteSTLFile == true)
   {
     m_GrainChecker->addData(nTriangle, cTriID, cTriangle, cVertex);
     err |= writeSTLFiles(nTriangle, gidToSTLWriter);
-    for (std::map<int, meshing::SMStlWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
+    for (std::map<int, SMStlWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
     {
       err |= (*iter).second->writeNumTrianglesToFile();
     }
-    CHECK_FOR_ERROR(SurfaceMeshFilter, "Error writing STL file", err)
+    CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing STL file", err)
   }
 
   m_GrainChecker->analyzeGrains();
@@ -712,7 +713,7 @@ void SurfaceMeshFilter::execute()
     cTriangle.clear();
   }
 
-  meshing::SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
+  SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
   writer->setVisualizationFile(m_VtkOutputFile);
   writer->setNodesFile(NodesFile);
   writer->setTrianglesFile(TrianglesFile);
@@ -736,7 +737,7 @@ void SurfaceMeshFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshFilter::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::Pointer> &gidToSTLWriter)
+int LeeMarchingCubes::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::Pointer> &gidToSTLWriter)
 {
 // First loop through All the triangles adding up how many triangles are
 // in each grain and create STL Files for each Grain if needed
@@ -811,7 +812,7 @@ int SurfaceMeshFilter::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::P
 }
 
 
-void SurfaceMeshFilter::get_neighbor_list()
+void LeeMarchingCubes::get_neighbor_list()
 {
   // NSP = number of sites in a plane of xDim by yDim...
   // neigh[][] = 2 dimeNSional array storing its site number and neighbors...
@@ -870,7 +871,7 @@ void SurfaceMeshFilter::get_neighbor_list()
   }
 }
 
-void SurfaceMeshFilter::initialize_nodes(int zID)
+void LeeMarchingCubes::initialize_nodes(int zID)
 {
 
   // Finds the coordinates of nodes...
@@ -949,25 +950,25 @@ void SurfaceMeshFilter::initialize_nodes(int zID)
   }
 }
 
-float SurfaceMeshFilter::find_xcoord(int index)
+float LeeMarchingCubes::find_xcoord(int index)
 {
   index = index - 1;
   float x = xRes * float(index % xDim);
   return x;
 }
-float SurfaceMeshFilter::find_ycoord(int index)
+float LeeMarchingCubes::find_ycoord(int index)
 {
   index = index - 1;
   float y = yRes * float((index / xDim) % yDim);
   return y;
 }
-float SurfaceMeshFilter::find_zcoord(int index)
+float LeeMarchingCubes::find_zcoord(int index)
 {
   index = index - 1;
   float z = zRes * float(index / (xDim * yDim));
   return z;
 }
-void SurfaceMeshFilter::initialize_squares(int zID)
+void LeeMarchingCubes::initialize_squares(int zID)
 {
 
   // Gather initial information on each square...
@@ -1011,7 +1012,7 @@ void SurfaceMeshFilter::initialize_squares(int zID)
     }
   }
 }
-size_t SurfaceMeshFilter::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
+size_t LeeMarchingCubes::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
 {
   int j, k, m, ii;
   int tsite;
@@ -1082,7 +1083,7 @@ size_t SurfaceMeshFilter::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int
               if (pixgrainname[0] > 0 || pixgrainname[1] > 0)
               {
                 cEdge.resize(eid + 1);
-                cEdge[eid] = meshing::Segment::New();
+                cEdge[eid] = Segment::New();
                 cEdge[eid]->node_id[0] = nodeID[0]; // actual node ids for each edge...
                 cEdge[eid]->node_id[1] = nodeID[1];
                 cEdge[eid]->neigh_grainname[0] = pixgrainname[0];
@@ -1140,7 +1141,7 @@ size_t SurfaceMeshFilter::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int
   return (cEdge.size());
 }
 
-int SurfaceMeshFilter::get_square_index(int tNS[4])
+int LeeMarchingCubes::get_square_index(int tNS[4])
 {
   // identify each square configuration using binary bit...
   // returNS the unique decimal integer for each configuration...
@@ -1171,7 +1172,7 @@ int SurfaceMeshFilter::get_square_index(int tNS[4])
   return tempIndex;
 }
 
-int SurfaceMeshFilter::treat_anomaly(int tNSt[4], int zID1)
+int LeeMarchingCubes::treat_anomaly(int tNSt[4], int zID1)
 {
   int i, j, k, ii;
   int csite, cgrainname;
@@ -1221,7 +1222,7 @@ int SurfaceMeshFilter::treat_anomaly(int tNSt[4], int zID1)
   return tempFlag;
 }
 
-void SurfaceMeshFilter::get_nodes(int cst, int ord, int nidx[2], int *nid)
+void LeeMarchingCubes::get_nodes(int cst, int ord, int nidx[2], int *nid)
 {
   int ii;
   int tempIndex;
@@ -1294,7 +1295,7 @@ void SurfaceMeshFilter::get_nodes(int cst, int ord, int nidx[2], int *nid)
   }
 }
 
-void SurfaceMeshFilter::get_grainnames(int cst, int ord, int pID[2], int *pgrainname)
+void LeeMarchingCubes::get_grainnames(int cst, int ord, int pID[2], int *pgrainname)
 {
   int i;
   int pixTemp, tempgrainname;
@@ -1370,7 +1371,7 @@ void SurfaceMeshFilter::get_grainnames(int cst, int ord, int pID[2], int *pgrain
   }
 }
 
-int SurfaceMeshFilter::get_triangles()
+int LeeMarchingCubes::get_triangles()
 {
   int i, ii, i1, i2;
   int sqID[6];
@@ -1536,15 +1537,15 @@ int SurfaceMeshFilter::get_triangles()
   cTriangle[ctid]->ngrainname[0] = label0;\
   cTriangle[ctid]->ngrainname[1] = label1;\
   cTriangle[ctid]->tIndex = ctid;\
-  meshing::SharedEdge::Pointer e0 = meshing::SharedEdge::New(cTriangle[ctid]->node_id[0], cTriangle[ctid]->node_id[1]);\
-  meshing::SharedEdge::Pointer e = eMap[e0->getId()];\
+  SharedEdge::Pointer e0 = SharedEdge::New(cTriangle[ctid]->node_id[0], cTriangle[ctid]->node_id[1]);\
+  SharedEdge::Pointer e = eMap[e0->getId()];\
   if (NULL == e.get()) { eMap[e0->getId()] = e0; }else{ e0 = e; }\
   e0->triangles.insert(ctid);\
-  meshing::SharedEdge::Pointer e1 = meshing::SharedEdge::New(cTriangle[ctid]->node_id[1], cTriangle[ctid]->node_id[2]);\
+  SharedEdge::Pointer e1 = SharedEdge::New(cTriangle[ctid]->node_id[1], cTriangle[ctid]->node_id[2]);\
   e = eMap[e1->getId()];\
   if (NULL == e.get()) { eMap[e1->getId()] = e1; }else{ e1 = e;}\
   e1->triangles.insert(ctid);\
-  meshing::SharedEdge::Pointer e2 = meshing::SharedEdge::New(cTriangle[ctid]->node_id[2], cTriangle[ctid]->node_id[0]);\
+  SharedEdge::Pointer e2 = SharedEdge::New(cTriangle[ctid]->node_id[2], cTriangle[ctid]->node_id[0]);\
   e = eMap[e2->getId()]; \
   if (NULL == e.get()){ eMap[e2->getId()] = e2; }else{ e2 = e; }\
   e2->triangles.insert(ctid);\
@@ -1556,7 +1557,7 @@ int SurfaceMeshFilter::get_triangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshFilter::analyzeWinding()
+void LeeMarchingCubes::analyzeWinding()
 {
 //  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 //  std::cout << " Edge Count: " << eMap.size() << std::endl;
@@ -1639,10 +1640,10 @@ void SurfaceMeshFilter::analyzeWinding()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> SurfaceMeshFilter::findAdjacentTriangles(Patch::Pointer triangle, int label)
+std::vector<int> LeeMarchingCubes::findAdjacentTriangles(Patch::Pointer triangle, int label)
 {
   std::vector<int> adjacentTris;
-  typedef meshing::SharedEdge::Pointer EdgeType;
+  typedef SharedEdge::Pointer EdgeType;
   // Get the 3 edges from the triangle
 
 
@@ -1673,7 +1674,7 @@ std::vector<int> SurfaceMeshFilter::findAdjacentTriangles(Patch::Pointer triangl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshFilter::get_case0_triangles(int site, int *ae, int nedge, int tin, int *tout)
+void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin, int *tout)
 {
   int ii, i, j, jj, k, kk, k1, mm;
   int loopID;
@@ -1880,7 +1881,7 @@ void SurfaceMeshFilter::get_case0_triangles(int site, int *ae, int nedge, int ti
   delete[] count;
 }
 
-void SurfaceMeshFilter::get_case2_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout)
+void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout)
 {
   int ii, i, j, k, kk, k1, n, i1, j1;
   int loopID;
@@ -2249,7 +2250,7 @@ void SurfaceMeshFilter::get_case2_triangles(int site, int *ae, int nedge, int *a
   delete[] burnt_list;
   delete[] count;
 }
-void SurfaceMeshFilter::get_caseM_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout, int ccn)
+void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout, int ccn)
 {
   int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
   int loopID;
@@ -2575,7 +2576,7 @@ void SurfaceMeshFilter::get_caseM_triangles(int site, int *ae, int nedge, int *a
   delete[] count;
 }
 
-void SurfaceMeshFilter::arrange_grainnames(int numT, int zID)
+void LeeMarchingCubes::arrange_grainnames(int numT, int zID)
 {
   //int i, j;
   int cnode;
@@ -2722,7 +2723,7 @@ void SurfaceMeshFilter::arrange_grainnames(int numT, int zID)
     }
   }
 }
-int SurfaceMeshFilter::assign_nodeID(int nN)
+int LeeMarchingCubes::assign_nodeID(int nN)
 {
   int i;
   int nid;
@@ -2747,7 +2748,7 @@ int SurfaceMeshFilter::assign_nodeID(int nN)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshFilter::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
+int LeeMarchingCubes::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
 {
   static const size_t BYTE_COUNT = 20;
 //  int count;
@@ -2803,7 +2804,7 @@ int SurfaceMeshFilter::writeNodesFile(int zID, int cNodeID, const std::string &n
 // -----------------------------------------------------------------------------
 //  Write a BINARY file which is only TEMP during the surface meshing
 // -----------------------------------------------------------------------------
-int SurfaceMeshFilter::writeTrianglesFile(int zID, int ctid, const std::string &trianglesFile, int nt)
+int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &trianglesFile, int nt)
 {
   static const size_t DATA_COUNT = 6;
  // int tag;

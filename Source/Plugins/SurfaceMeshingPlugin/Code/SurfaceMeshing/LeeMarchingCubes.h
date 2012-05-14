@@ -62,8 +62,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshFilter_H
-#define _SurfaceMeshFilter_H
+#ifndef _LeeMarchingCubes_H
+#define _LeeMarchingCubes_H
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -89,27 +89,29 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/SMTempFile.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/SMStlWriter.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Patch.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Face.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Neighbor.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Node.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/Segment.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/Meshing/SharedEdge.h"
+
+
+#include "SurfaceMeshing/IO/SMTempFile.hpp"
+#include "SurfaceMeshing/IO/SMStlWriter.h"
+#include "SurfaceMeshing/Meshing/Patch.h"
+#include "SurfaceMeshing/Meshing/Face.h"
+#include "SurfaceMeshing/Meshing/Neighbor.h"
+#include "SurfaceMeshing/Meshing/Node.h"
+#include "SurfaceMeshing/Meshing/Segment.h"
+#include "SurfaceMeshing/Meshing/SharedEdge.h"
 
 
 
 
-class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
+class LeeMarchingCubes : public AbstractFilter
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshFilter);
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshFilter);
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(LeeMarchingCubes);
+    DREAM3D_STATIC_NEW_MACRO(LeeMarchingCubes);
+    DREAM3D_TYPE_MACRO_SUPER(LeeMarchingCubes, AbstractFilter);
 
-    virtual ~SurfaceMeshFilter();
+    virtual ~LeeMarchingCubes();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile);
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles);
@@ -124,7 +126,7 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-    virtual const std::string getHumanLabel() { return "Surface Mesh"; }
+    virtual const std::string getHumanLabel() { return "Marching Cubes (Lee)"; }
 
     virtual void setupFilterOptions();
 
@@ -133,7 +135,7 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     void execute();
 
   protected:
-    SurfaceMeshFilter();
+    LeeMarchingCubes();
 
     void get_neighbor_list();
     void initialize_nodes(int zID);
@@ -196,8 +198,8 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    SurfaceMeshFilter(const SurfaceMeshFilter&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshFilter&); // Operator '=' Not Implemented
+    LeeMarchingCubes(const LeeMarchingCubes&); // Copy Constructor Not Implemented
+    void operator=(const LeeMarchingCubes&); // Operator '=' Not Implemented
 };
 
 #endif

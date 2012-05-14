@@ -216,7 +216,7 @@ void EBSDSegmentGrains::execute()
 
     // Generate all the numbers up front
     const int rangeMin = 1;
-    const int rangeMax = totalFields;
+    const int rangeMax = totalFields - 1;
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator<RandomNumberGenerator&,
@@ -243,6 +243,9 @@ void EBSDSegmentGrains::execute()
     //--- Shuffle elements by randomly exchanging each with one other.
     for (size_t i=1; i< totalFields; i++) {
         r = numberGenerator(); // Random remaining position.
+        if (r >= totalFields) {
+          continue;
+        }
         temp = gid[i];
         gid[i] = gid[r];
         gid[r] = temp;

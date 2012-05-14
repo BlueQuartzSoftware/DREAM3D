@@ -63,88 +63,45 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _Patch_H_
-#define _Patch_H_
+#ifndef _Face_H_
+#define _Face_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-#include <vector>
 
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "SharedEdge.h"
-
 namespace meshing {
+
 /**
- * @class Patch Patch.h DREAM3DLib/Common/Patch.h
- * @brief Support class for the MicroGen3D class
- * @author Michael A. Jackson for BlueQuartz Software,
- * @author Dr. Michael Groeber for USAFRL
- * @date Nov 4, 2009
- * @version 1.0
- */
-class DREAM3DLib_EXPORT Patch
+* @class Face Face.h DREAM3DLib/Common/Face.h
+* @brief Support class for the MicroGen3D class
+* @author Michael A. Jackson for BlueQuartz Software, Dr. Michael Groeber for USAFRL
+* @date Nov 4, 2009
+* @version 1.0
+*/
+class Face
 {
-  public:
-    DREAM3D_SHARED_POINTERS(Patch);
-    DREAM3D_STATIC_NEW_MACRO(Patch);
-    virtual ~Patch();
+public:
+    Face();
+    virtual ~Face();
 
-    typedef std::vector<Pointer> ContainerType;
-
-    int node_id[3]; // stores three new node id for vertices of the triangles...
-    int ngrainname[2]; // neighboring two grainnames...
-    int edgePlace[3]; // if it's 0, face edges; if 1, inner edges...
-    float normal[3];
-    float area;
-    int tIndex;
-    SharedEdge::Pointer edges[3];
-    bool doFlip;
-
-    /**
-     * @brief
-     */
-    void flipWinding();
-
-    /**
-     * @brief
-     * @param label
-     */
-    int getintIndex(int label);
-
-    /**
-     * @brief
-     * @param label
-     * @return
-     */
-    std::vector<int> getNodeIndices(int label);
-
-    /**
-     * @brief
-     * @param ids
-     * @param label
-     */
-    void getWindingIndices(int ids[4], int label);
-
-    /**
-     * @brief
-     * @param tri
-     * @param label
-     */
-    void verifyWinding(Patch* tri, int label);
-
-  protected:
-    Patch();
+    int site_id[4]; // stores 4 sites at the corners of each square...
+    int edge_id[4]; // stores edge id turned on...others will have dummy -1...
+    int nEdge; // number of edges on the square...
+    int turnFC; // if 1, face center is on..., else it's 0
+    int FCnode; // face center node...if not, it's -1...
+    int effect; // 0 if the square is useless; 1 is good...
 
   private:
-     Patch(const Patch&);    // Copy Constructor Not Implemented
-     void operator=(const Patch&);  // Operator '=' Not Implemented
+
+    Face(const Face&);    // Copy Constructor Not Implemented
+      void operator=(const Face&);  // Operator '=' Not Implemented
 };
-
-} // End namespace
-
-#endif /* Patch_H_ */
+}
+#endif /* Face_H_ */
