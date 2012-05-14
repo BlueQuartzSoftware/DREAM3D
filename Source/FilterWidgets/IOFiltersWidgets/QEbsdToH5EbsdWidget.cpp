@@ -223,7 +223,7 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 {
-
+  emit parametersChanged();
 }
 
 
