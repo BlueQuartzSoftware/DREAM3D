@@ -266,7 +266,7 @@ function(DREAM3D_COMPILE_PLUGIN)
     set(oneValueArgs PLUGIN_NAME PLUGIN_SOURCE_DIR)
     cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     
-    option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME} Plugin" ON)
+    option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     if (DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
         #message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Adding Plugin")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})  
@@ -279,15 +279,8 @@ endfunction()
 #-----------------
 # These are the core plugins
 set (DREAM3D_PLUGIN_LIST
-#    EbsdImport 
-#    PipelineBuilder
-#    Reconstruction 
-#    GrainGenerator 
-#    SurfaceMesh 
-#    MicrostructureStatistics 
-#    Extrapolation2Dto3D
-#    FileConversion
-#    VolumeOps
+    SamplingPlugin
+    SurfaceMeshingPlugin
 )
 
  # Build the DREAM3D Application  
@@ -307,7 +300,7 @@ if (DREAM3D_BUILD_GUI AND DREAM3D_BUILD_QT_APPS)
     #- the DREAM3D application 
     foreach(p ${DREAM3D_PLUGIN_LIST})
         if (DREAM3D_BUILD_PLUGIN_${p})
-            add_dependencies(${p}Plugin DREAM3D)
+            add_dependencies(${p} DREAM3D)
         endif()
     endforeach()
 endif()  
@@ -336,10 +329,9 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
             if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
                 #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
                 set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
-                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
-                                        PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
-                #add_subdirectory(${${userPlugin}_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${userPlugin}) 
                 message(STATUS "Plugin: ${userPlugin} Found")
+                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
+                                        PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})                
             endif()
         else()
             message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")

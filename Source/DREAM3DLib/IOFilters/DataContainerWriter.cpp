@@ -84,11 +84,15 @@ void DataContainerWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void DataContainerWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

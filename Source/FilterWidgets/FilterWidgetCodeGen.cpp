@@ -47,7 +47,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterOption.h"
-#include "DREAM3DLib/DREAM3DFilters.h"
+
 
 
 #define GENERATE_HTML_FILE 0
@@ -62,6 +62,7 @@ std::string FILTER_WIDGETS_BINARY_DIR();
 std::string FILTER_WIDGETS_SOURCE_DIR();
 std::string FILTER_WIDGETS_TEMP_DIR();
 std::string DREAM3D_SOURCE_DIR();
+std::string FILTER_INCLUDE_PREFIX();
 
 // -----------------------------------------------------------------------------
 //
@@ -122,7 +123,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "  The code generated is based off values from the filter located at\n");
-  fprintf(f, "  DREAM3DLib/%s/%s.h\n*/\n", group.c_str(), filter.c_str());
+  fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
 
   fprintf(f, "#ifndef _Q%s_H_\n", filter.c_str());
   fprintf(f, "#define _Q%s_H_\n\n", filter.c_str());
@@ -131,9 +132,14 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "#include <QtCore/QSettings>\n\n");
 
   fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
-  fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
-  fprintf(f, "#include \"DREAM3DLib/%s/%s.h\"\n", group.c_str(), filter.c_str());
-
+  fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n\n");
+  if (FILTER_INCLUDE_PREFIX().empty() == true) {
+    fprintf(f, "#include \"%s/%s.h\"\n", group.c_str(), filter.c_str());
+  }
+  else
+  {
+    fprintf(f, "#include \"%s/%s/%s.h\"\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+  }
   fprintf(f, "class Q%sWidget : public QFilterWidget \n{\n", filter.c_str());
   fprintf(f, "   Q_OBJECT;\n");
   fprintf(f, " public:\n");
@@ -452,7 +458,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
    fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
    fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
    fprintf(f, "  The code generated is based off values from the filter located at\n");
-   fprintf(f, "  DREAM3DLib/%s/%s.h\n*/\n", group.c_str(), filter.c_str());
+   fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
 
    fprintf(f, "#include \"%s\"\n\n\n", headerFile.c_str());
 

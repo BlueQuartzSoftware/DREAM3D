@@ -11,6 +11,14 @@
 
 project(PipelineBuilderLib)
 
+SET (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB)
+IF (BUILD_SHARED_LIBS)
+    SET (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB 1)
+    IF (WIN32)
+        ADD_DEFINITIONS("-DPipelineBuilderLib_BUILT_AS_DYNAMIC_LIB")
+    ENDIF (WIN32)
+ENDIF (BUILD_SHARED_LIBS)
+
 # Get the Directory where the plugin lives
 #get_filename_component(PluginPath ${PROJECT_SOURCE_DIR} PATH)
 include_directories(${PROJECT_CODE_DIR}/QtSupport
@@ -45,18 +53,17 @@ set(CLASS_NAME "PipelineBuilder")
 #                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
 
 set (PipelineBuilderLib_HDRS
+    ${PROJECT_SOURCE_DIR}/QFilterWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.h  
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
-    ${PROJECT_SOURCE_DIR}/QFilterWidget.h
-
     )
     
 set (PipelineBuilderLib_SRCS 
+    ${PROJECT_SOURCE_DIR}/QFilterWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.cpp
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
-    ${PROJECT_SOURCE_DIR}/QFilterWidget.cpp
     )
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")
@@ -69,6 +76,7 @@ QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS
             ${PROJECT_SOURCE_DIR}/UI_Files/PipelineBuilderWidget.ui)
 
 QT4_WRAP_CPP( PipelineBuilderLib_Generated_MOC_SRCS ${PipelineBuilderLib_HDRS} )
+#set_source_files_properties( ${PipelineBuilderLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${PipelineBuilderLib_Generated_UI_HDRS};${PipelineBuilderLib_Generated_RC_SRCS}" "${PipelineBuilderLib_Generated_MOC_SRCS}" "0")
 
@@ -85,7 +93,9 @@ set (PipelineBuilderLib_PROJECT_SRCS
 
 
 # ---------- Setup output Directories -------------------------
-add_library(${PROJECT_NAME} STATIC ${PipelineBuilderLib_PROJECT_SRCS})
+# This library MUST be shared because there is a singleton instance
+# variable that ALL plugins should use.
+add_library(${PROJECT_NAME} SHARED ${PipelineBuilderLib_PROJECT_SRCS})
 target_link_libraries(${PROJECT_NAME}                     
                         MXA
                         DREAM3DLib

@@ -82,6 +82,8 @@
 DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
+  m_PluginActionGroup(NULL),
+  m_PluginPrefsActionGroup(NULL),
   m_ActivePlugin(NULL),
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
@@ -95,9 +97,6 @@ m_OpenDialogLastDirectory("~/")
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program
   setupUi(this);
-
-  // Look for plugins
-  // loadPlugins();
 
   // Do our own widget initializations
   setupGui();
@@ -278,6 +277,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
+//  std::cout << "DREAM3D_UI::setupGui" << std::endl;
   m_PluginActionGroup = new QActionGroup(this);
   m_PluginToolBar = new QToolBar(this);
   m_PluginToolBar->setObjectName(QString("PluginToolbar"));
@@ -302,6 +302,9 @@ void DREAM3D_UI::setupGui()
 
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
+
+  // Look for plugins
+  loadPlugins();
 
 
   // Register all of the Filters we know about - the rest will be loaded through plugins
@@ -347,10 +350,6 @@ void DREAM3D_UI::on_action_TextOnly_toggled(bool state)
 {
   m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
 }
-
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -515,7 +514,9 @@ void DREAM3D_UI::threadHasMessage(QString message)
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::loadPlugins()
- {
+{
+ // std::cout << "DREAM3D_UI::loadPlugins" << std::endl;
+
   foreach (QObject *plugin, QPluginLoader::staticInstances())
     populateMenus(plugin);
 
@@ -583,46 +584,10 @@ void DREAM3D_UI::loadPlugins()
 
   }
 
-  // Our list of Plugins that we want control over the order in which they appear
-  // in the toolbar and menu
-  QStringList pluginNames;
-//  pluginNames << QString::fromStdString(DREAM3D::UIPlugins::EbsdImportFile)
-//              << QString::fromStdString(DREAM3D::UIPlugins::ReconstructionFile)
-//              << QString::fromStdString(DREAM3D::UIPlugins::MicrostructureStatisticsFile)
-//              << QString::fromStdString(DREAM3D::UIPlugins::Extrapolation2Dto3DFile)
-//              << QString::fromStdString(DREAM3D::UIPlugins::GrainGeneratorFile)
-//              << QString::fromStdString(DREAM3D::UIPlugins::SurfaceMeshFile)
-//              << QString::fromStdString(DREAM3D::UIPlugins::FileConversionFile)
-//              << QString::fromStdString(DREAM3D::UIPlugins::VolumeOpsFile);
-
-  // Now try to sort the paths based on their names
-  QVector<QString> sortedPaths;
-  foreach(QString piName, pluginNames)
-  {
-    //std::cout << "Searching for the " << piName.toStdString() << " Plugin File" << std::endl;
-    QStringList possiblePlugins = pluginFilePaths.filter(piName);
-    //std::cout << "  Matches = " << possiblePlugins.size() << std::endl;
-    if(possiblePlugins.size() == 1)
-    {
-      sortedPaths.push_back(possiblePlugins.at(0));
-      // Remove it from the master List of plugins found on the file system
-      pluginFilePaths.removeAll(possiblePlugins.at(0));
-    //  std::cout << "Found plugin library: " << possiblePlugins.at(0).toStdString() << std::endl;
-    }
-
-  }
-
-  //Copy of the remaining plugins that are NOT on our master list
-  foreach(QString str, pluginFilePaths)
-  {
-    sortedPaths.push_back(str);
-  }
-  // Clear the String list just because we really shouldn't need it anymore
-  pluginFilePaths.clear();
 
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
-  foreach(QString path, sortedPaths)
+  foreach(QString path, pluginFilePaths)
   {
     //     std::cout << "File Extension matches.." << std::endl;
     QPluginLoader loader(path);
@@ -632,7 +597,14 @@ void DREAM3D_UI::loadPlugins()
     //  std::cout << "plugin Pointer: " << plugin << std::endl;
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
-      populateMenus(plugin);
+      //populateMenus(plugin);
+      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
+      if (ipPlugin)
+      {
+        m_LoadedPlugins.push_back(ipPlugin);
+        ipPlugin->registerFilterWidgets();
+      }
+
       m_PluginFileNames += fileName;
     }
     else
@@ -645,14 +617,23 @@ void DREAM3D_UI::loadPlugins()
       //std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
     }
   }
-  menuPlugins->setEnabled(!m_PluginActionGroup->actions().isEmpty());
+  if (NULL != m_PluginActionGroup)
+  {
+    QList<QAction*> actions = m_PluginActionGroup->actions();
+    if (actions.isEmpty() == false)
+    {
+      menuPlugins->setEnabled(true);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
  void DREAM3D_UI::populateMenus(QObject *plugin)
 {
+#if 0
 #ifdef QT_DEBUG
   std::cout << "Found Plugin..." << std::endl;
 #endif
@@ -676,6 +657,7 @@ void DREAM3D_UI::loadPlugins()
     menuHelp->addAction(action);
 
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -711,6 +693,7 @@ void DREAM3D_UI::addToPluginMenu(QObject *plugin, const QString &text,
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setInputUI()
 {
+#if 0
   // Get the current QWidget
   if (NULL != m_ActivePlugin)
   {
@@ -732,7 +715,7 @@ void DREAM3D_UI::setInputUI()
   {
     frame->setStatusBar(this->statusBar());
   }
-
+#endif
 }
 
 

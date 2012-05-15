@@ -290,15 +290,14 @@ void TestDataArray()
 {
   int32_t* ptr = NULL;
   {
-
     Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0, "Test7");
     DREAM3D_REQUIRE_EQUAL(0, d->GetSize());
     DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples());
     ptr = d->GetPointer(0);
+    DREAM3D_REQUIRE_EQUAL(ptr, 0);
   }
 
   {
-
     Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS, "Test8");
     ptr = int32Array->GetPointer(0);
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetNumberOfTuples());
@@ -372,7 +371,7 @@ void __TestNeighborList()
    for(int i = 0; i < 4; ++i)
    {
      v = n->getList(i);
-     DREAM3D_REQUIRE_NE(v.get(), NULL);
+     DREAM3D_REQUIRE_NE(v.get(), 0);
    }
 
    // Remove the front 2 elements and test
@@ -384,7 +383,7 @@ void __TestNeighborList()
    for(int i = 0; i < 2; ++i)
    {
      v = n->getList(i);
-     DREAM3D_REQUIRE_NE(v.get(), NULL);
+     DREAM3D_REQUIRE_NE(v.get(), 0);
      DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+2+4) );
      for(T j = 0; j < (T)(i+4+2); ++j) {
        DREAM3D_REQUIRE_EQUAL(v->at(j), j*(i+2)+3);
@@ -405,7 +404,7 @@ void __TestNeighborList()
   for(int i = 0; i < 2; ++i)
   {
    v = n->getList(i);
-   DREAM3D_REQUIRE_NE(v.get(), NULL);
+   DREAM3D_REQUIRE_NE(v.get(), 0);
    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
    for(T j = 0; j < (T)(i+4); ++j) {
      DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
@@ -425,14 +424,14 @@ void __TestNeighborList()
   n->EraseTuples(eraseElements);
   int i = 0;
   v = n->getList(i);
-  DREAM3D_REQUIRE_NE(v.get(), NULL);
+  DREAM3D_REQUIRE_NE(v.get(), 0);
   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
   for(T j = 0; j < (T)(i+4); ++j) {
     DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
   }
   i = 1;
   v = n->getList(i);
-  DREAM3D_REQUIRE_NE(v.get(), NULL);
+  DREAM3D_REQUIRE_NE(v.get(), 0);
   i=3;
   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
   for(T j = 0; j < (T)(i+4); ++j) {

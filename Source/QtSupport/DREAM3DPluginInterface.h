@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -99,9 +99,7 @@ class DREAM3DPluginFrame;
  * @section intro Introduction
  *  In order to develop a plugin for the IPHelper there are several classes that need to be
  *  implemented by the developer.
- *  @li [Plugin Name]Plugin
- *  @li [Plugin Name]InputUI
- *  @li [Plugin Name]Task
+
  *
  *  The developer should implement all three classes in their own plugin in order to
  *  have a fully functioning plugin that is able to display an input GUI and process
@@ -137,8 +135,6 @@ class DREAM3DPluginFrame;
  *   from. If that is the case then the developer can simply inherit from QImageProcessingInputFrame
  *   instead of another Qt class as is the norm for QtDesigner based widgets. See the
  *   Qt documentation if you are unfamiliar with how to use Qt Designer to create a GUI.
- *   The developer can also look at source codes for the CrossCorrelationPlugin, CrossCorrelationInputUI
- *   and CrossCorrelationTask source files.
  *
  * @subsection plugin_task PluginTask
  *  If the developer would like to take advantage of the ProcessQueueController and the
@@ -159,16 +155,9 @@ class DREAM3DPluginInterface
     virtual QString getPluginName() = 0;
 
     /**
-     * @brief Returns a pointer to the input QWidget that this plugin uses to gather input
-     * from the user
-     * @param parent The parent QObject to be assigned to the input widget. This will
-     * allow Qt's garbage collection scheme to work properly.
-     * @return The Input widget used in the GUI.
+     * @brief Register all the filters with the FilterWidgetFactory
      */
-    virtual QWidget* getInputWidget(QWidget* parent) = 0;
-
-
-    virtual DREAM3DPluginFrame* getPluginFrame(QWidget* parent) = 0;
+    virtual void registerFilterWidgets() = 0;
 
     /**
      * @brief Writes the settings in the input gui to the Application's preference file
@@ -183,15 +172,6 @@ class DREAM3DPluginInterface
      */
     virtual void readSettings(QSettings &prefs) = 0;
 
-    /**
-     *
-     * @return
-     */
-    virtual QIcon icon() = 0;
-
-    virtual void displayHelp() = 0;
-
-    virtual QUrl htmlHelpIndexFile() = 0;
 };
 
 

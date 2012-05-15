@@ -43,7 +43,7 @@
 #include "QtSupport/DREAM3DPluginFrame.h"
 #include "PipelineBuilder/QFilterPipeline.h"
 #include "PipelineBuilder/FilterWidgetManager.h"
-
+#include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
 class QListWidgetItem;
 class QTreeWidgetItem;
@@ -58,7 +58,7 @@ class QFilterWidget;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBuilderWidget
+class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBuilderWidget
 {
   Q_OBJECT
 
