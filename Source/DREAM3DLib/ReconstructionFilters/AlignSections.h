@@ -65,18 +65,23 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 
     virtual ~AlignSections();
 
+
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections"; }
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterOptions();
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
-	/**
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	virtual void execute();
+	  virtual void execute();
     virtual void preflight();
 
-	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
 
   protected:

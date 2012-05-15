@@ -64,7 +64,9 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
-AbstractFilter()
+AbstractFilter(),
+m_WriteAlignmentShifts(true),
+m_AlignmentShiftFileName("aligntest.txt")
 {
 
 }
@@ -75,9 +77,40 @@ AbstractFilter()
 AlignSections::~AlignSections()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write Alignment Shift File");
+    option->setPropertyName("WriteAlignmentShifts");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Alignment File");
+    option->setPropertyName("AlignmentShiftFileName");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+
+  setFilterOptions(options);
+}
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void AlignSections::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
+  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
+  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
 }
 
 // -----------------------------------------------------------------------------
@@ -87,6 +120,12 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   std::stringstream ss;
+
+  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
+  {
+    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    setErrorCondition(-1);
+  }
 
   setErrorMessage(ss.str());
 }
