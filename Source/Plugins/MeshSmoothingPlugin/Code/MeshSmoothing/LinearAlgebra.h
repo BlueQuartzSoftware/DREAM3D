@@ -206,10 +206,10 @@ public:
 	vtype value(size_t i) const {return data[i].value;}
 	itype index(size_t i) const {return data[i].index;}
 	size_t nonzero() const {return data.size();}
-	int dimension() const {return d;}
+	size_t dimension() const {return d;}
 private:
 	std::vector<Sitem> data;
-	int d;
+	size_t d;
 };
 
 template <typename vtype, typename itype>

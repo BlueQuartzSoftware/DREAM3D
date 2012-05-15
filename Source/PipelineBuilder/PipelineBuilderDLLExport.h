@@ -31,7 +31,7 @@ projects by hand you need to define PipelineBuilderLib_EXPORTS when
 building the MXADatModel DLL on windows.
 */
 
-//#if defined (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB)
+
 
   #if defined (PipelineBuilderLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
@@ -46,7 +46,7 @@ building the MXADatModel DLL on windows.
       #define PipelineBuilderLib_EXPORT __attribute__ ((visibility("default")))
     #endif
   #endif
-//#endif
+
 
 /* If PipelineBuilderLib_EXPORT was never defined, define it here */
 #ifndef PipelineBuilderLib_EXPORT
