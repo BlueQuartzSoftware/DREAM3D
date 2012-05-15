@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "PipelineBuilder/IFilterWidgetFactory.h"
+#include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
 /**
  * @class FilterWidgetManager FilterWidgetManager.h FilterWidgets/FilterWidgetManager.h
@@ -53,7 +54,7 @@
  * @date Jan 6, 2012
  * @version 1.0
  */
-class FilterWidgetManager
+class PipelineBuilderLib_EXPORT FilterWidgetManager
 {
   public:
     DREAM3D_SHARED_POINTERS(FilterWidgetManager);
