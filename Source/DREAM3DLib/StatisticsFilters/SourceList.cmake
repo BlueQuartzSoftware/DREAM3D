@@ -15,6 +15,7 @@ SET (StatisticsFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindMDF.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNeighborhoods.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindODF.h
+    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNumFields.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindDeformationStatistics.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.h
@@ -33,6 +34,7 @@ SET (DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindMDF.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNeighborhoods.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindODF.cpp
+    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNumFields.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindDeformationStatistics.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.cpp
