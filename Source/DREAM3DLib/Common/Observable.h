@@ -103,6 +103,7 @@ class DREAM3DLib_EXPORT Observable
      */
     virtual void notify(const std::string msg, int progress, ObserverAspect a);
 
+    //virtual void getObservers(std::vector<Observer*> &observers);
     virtual std::vector<Observer*> getObservers();
 
     virtual void setObservers(std::vector<Observer*> obs);

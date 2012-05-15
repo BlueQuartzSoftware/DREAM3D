@@ -51,6 +51,8 @@
 
 #include "QtSupport/QFSDropLineEdit.h"
 
+#include "PipelineBuilderDLLExport.h"
+
 #if 1
 /**
 * @brief Creates a "setter" method to set the property.
@@ -89,7 +91,7 @@ class QMouseEvent;
  * @date Jan 6, 2012
  * @version 1.0
  */
-class QFilterWidget : public QGroupBox
+class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 {
     Q_OBJECT;
   public:
@@ -171,6 +173,7 @@ class QFilterWidget : public QGroupBox
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented
 
 };
+
 
 
 #endif /* _QFILTERWIDGET_H_ */

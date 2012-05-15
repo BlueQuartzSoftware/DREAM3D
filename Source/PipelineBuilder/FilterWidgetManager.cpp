@@ -60,8 +60,7 @@ FilterWidgetManager::Pointer FilterWidgetManager::Instance()
   if (singleton.get() == NULL)
   {
     singleton.reset (new FilterWidgetManager() );
-    // Register all the known filters
-    FilterWidgetManager::RegisterKnownQFilterWidgets();
+   // std::cout << "singleton.get(): " << singleton.get() << std::endl;
   }
   return singleton;
 }
@@ -120,6 +119,7 @@ void FilterWidgetManager::addFilterWidgetFactory(const std::string &name, IFilte
 // -----------------------------------------------------------------------------
 std::set<std::string> FilterWidgetManager::getGroupNames()
 {
+ // std::cout << "FilterWidgetManager::getGroupNames" << std::endl;
   // Get all the Widget Factories and loop over each one we know about and instantiate a new one
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories = fm->getFactories();
@@ -128,6 +128,7 @@ std::set<std::string> FilterWidgetManager::getGroupNames()
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
     groupNames.insert((*factory).second->getFilterGroup());
+  //  std::cout << (*factory).second->getFilterGroup() << std::endl;
   }
   return groupNames;
 }

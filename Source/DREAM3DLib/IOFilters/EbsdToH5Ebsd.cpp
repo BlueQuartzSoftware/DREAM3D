@@ -129,6 +129,12 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     setErrorCondition(-1);
   }
 
+  if (m_EbsdFileList.size() == 0)
+  {
+    ss << getNameOfClass() << ": No files have been selected for import.";
+    setErrorCondition(-1);
+  }
+
   setErrorMessage(ss.str());
 }
 

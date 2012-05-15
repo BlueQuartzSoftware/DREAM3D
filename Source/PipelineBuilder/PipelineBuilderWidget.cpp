@@ -178,9 +178,10 @@ void PipelineBuilderWidget::setupGui()
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, "Library");
 
+//  std::cout << "Groups Found: " << std::endl;
   for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
-  //  std::cout << *iter << std::endl;
+ //   std::cout << *iter << std::endl;
     QString iconName(":/");
     iconName.append( QString::fromStdString(*iter));
     iconName.append("_Icon.png");
