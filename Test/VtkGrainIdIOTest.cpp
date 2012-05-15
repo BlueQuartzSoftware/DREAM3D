@@ -56,8 +56,8 @@ class GenerateGrainIds : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
     DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	  //------ Required Cell Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual ~GenerateGrainIds(){};
     virtual const std::string getGroupName()
@@ -105,7 +105,9 @@ class GenerateGrainIds : public AbstractFilter
 
   protected:
     GenerateGrainIds() :
-        AbstractFilter(), m_GrainIds(NULL)
+           AbstractFilter(),
+             m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+             m_GrainIds(NULL)
     {
     }
 
@@ -117,7 +119,7 @@ class GenerateGrainIds : public AbstractFilter
       setErrorCondition(0);
       std::stringstream ss;
       DataContainer* m = getDataContainer();
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1);
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
       setErrorMessage(ss.str());
     }

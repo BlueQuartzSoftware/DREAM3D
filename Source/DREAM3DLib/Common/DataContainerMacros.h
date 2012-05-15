@@ -40,10 +40,6 @@
  * @brief These are used in the filters to run checks on available arrays
  */
 
-#define TEST_MACRO(NameSpace, DType, Name)\
-  std::string t = NameSpace::DType::Name;
-
-
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){setErrorCondition(err##000);\
   ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
@@ -67,9 +63,14 @@
     setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
     if (NULL == p.get()) {\
-      ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
-      m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
-      setErrorCondition(-500);\
+      ss << "Filter " << getNameOfClass() << " attempted to create array "; \
+      if (m_##Name##ArrayName.empty() == true) {\
+          ss << " with an empty name and that is not allowed." << std::endl;;\
+          setErrorCondition(-501);\
+      } else {\
+        ss << "'" << m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
+        setErrorCondition(-500);\
+      }\
     } else {\
       p->initializeWithValues(initValue);\
       p->SetNumberOfComponents(NumComp);\
