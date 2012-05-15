@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Group MicroTexture Regions"; }
+    virtual const std::string getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance);
 

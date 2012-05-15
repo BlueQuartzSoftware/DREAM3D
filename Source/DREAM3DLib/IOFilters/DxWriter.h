@@ -61,7 +61,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Write Grain Ids as Dx File"; }
+    virtual const std::string getHumanLabel() { return "Write Dx File (Grain Ids)"; }
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);

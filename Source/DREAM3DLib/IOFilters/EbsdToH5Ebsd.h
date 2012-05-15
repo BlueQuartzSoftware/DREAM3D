@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Import Ebsd to H5Ebsd"; }
+    virtual const std::string getHumanLabel() { return "Import Ebsd File(s) to H5Ebsd"; }
 
     virtual void setupFilterOptions();
     virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);

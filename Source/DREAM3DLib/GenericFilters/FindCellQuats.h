@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getHumanLabel() { return "Find Cell Quats"; }
+    virtual const std::string getHumanLabel() { return "Find Cell Quaternions"; }
 
     virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
