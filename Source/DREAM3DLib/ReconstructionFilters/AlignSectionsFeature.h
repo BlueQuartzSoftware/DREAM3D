@@ -67,22 +67,22 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
 
     virtual ~AlignSectionsFeature();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections (Feature)"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+//    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	virtual void execute();
+    virtual void execute();
     virtual void preflight();
 
-	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
   protected:
     AlignSectionsFeature();

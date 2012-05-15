@@ -106,7 +106,10 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::setupFilterOptions()
 {
-  std::vector<FilterOption::Pointer> options;
+  // Run the superclass first.
+  //AlignSections::setupFilterOptions();
+  // Now append our options
+  std::vector<FilterOption::Pointer> options = getFilterOptions();
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Misorientation Tolerance");
@@ -121,6 +124,7 @@ void AlignSectionsMutualInformation::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
+  AlignSections::writeFilterOptions(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
 // -----------------------------------------------------------------------------
@@ -131,6 +135,13 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+
+
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
+  {
+    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    setErrorCondition(-1);
+  }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
@@ -204,8 +215,9 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;
-  string filename = "aligntest.txt";
-  outFile.open(filename.c_str());
+  if (getWriteAlignmentShifts() == true) {
+    outFile.open(getAlignmentShiftFileName().c_str());
+  }
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -372,14 +384,17 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
     }
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
-	outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
-    delete [] mutualinfo1;
-    delete [] mutualinfo2;
-	for(int i = 0; i < graincount1; i++)
-	{
-		delete mutualinfo12[i];
-	}
-	delete [] mutualinfo12;
+    if(getWriteAlignmentShifts() == true)
+    {
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
+    }
+    delete[] mutualinfo1;
+    delete[] mutualinfo2;
+    for (int i = 0; i < graincount1; i++)
+    {
+      delete mutualinfo12[i];
+    }
+    delete[] mutualinfo12;
     mutualinfo1 = NULL;
     mutualinfo2 = NULL;
     mutualinfo12 = NULL;
@@ -387,7 +402,10 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
 
   m->removeCellData(DREAM3D::CellData::GrainIds);
 
-  outFile.close();
+  if(getWriteAlignmentShifts() == true)
+  {
+    outFile.close();
+  }
 }
 
 // -----------------------------------------------------------------------------
