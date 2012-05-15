@@ -584,15 +584,20 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
     else if (opt->getWidgetType() == FilterOption::InputFileWidget)
     {
-      fprintf(f, "   QFSDropLineEdit* lb = qFindChild<QFSDropLineEdit*>(this, \"%s\");\n", hl.c_str());
+    //  fprintf(f, "   QObject* obj = qFindChild<QObject*>(this, \"%s\");\n", prop.c_str());
+
+      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(p_%s.toString()); }\n", prop.c_str());
-      fprintf(f, "   bool ok = false;\n   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
+   //   fprintf(f, "   bool ok = false;\n");
+      fprintf(f, "   set%s(p_%s.toString());\n", prop.c_str(), prop.c_str() );
+  //    fprintf(f, "   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
     }
     else if (opt->getWidgetType() == FilterOption::OutputFileWidget)
     {
-      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", hl.c_str());
+      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(p_%s.toString()); }\n", prop.c_str());
-      fprintf(f, "   bool ok = false;\n   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
+      fprintf(f, "   set%s(p_%s.toString());\n", prop.c_str(), prop.c_str() );
+//      fprintf(f, "   bool ok = false;\n   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
     }
     else if (opt->getWidgetType() == FilterOption::BooleanWidget)
     {

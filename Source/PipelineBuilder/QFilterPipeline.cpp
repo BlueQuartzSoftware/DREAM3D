@@ -67,6 +67,15 @@ void QFilterPipeline::updateProgressAndMessage(const char* message, int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QFilterPipeline::updateProgressAndMessage(const std::string &message, int value)
+{
+  emit updateProgress(value);
+  emit progressMessage(QString::fromStdString(message));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterPipeline::pipelineProgress(int value)
 {
   emit updateProgress(value);

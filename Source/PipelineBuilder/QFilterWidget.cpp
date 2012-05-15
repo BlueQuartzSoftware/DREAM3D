@@ -302,7 +302,7 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
-      fp->setObjectName(QString::fromStdString(option->getHumanLabel()));
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
       QString theSlot("1");
@@ -320,7 +320,7 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select...");
-      btn->setObjectName(QString::fromStdString(option->getPropertyName()));
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName() ));
       gridLayout->addWidget(btn, 0, 2, 1, 1);
 
       vertLayout->addLayout(gridLayout);
@@ -337,7 +337,7 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QLineEdit* fp = new QLineEdit(this);
-      fp->setObjectName(QString::fromStdString(option->getHumanLabel()));
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
       QString theSlot("1");
@@ -350,7 +350,7 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Save As...");
-      btn->setObjectName(QString::fromStdString(option->getPropertyName()));
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName()));
       gridLayout->addWidget(btn, 0, 2, 1, 1);
 
       vertLayout->addLayout(gridLayout);
@@ -493,7 +493,11 @@ void QFilterWidget::selectInputFile()
     return;
   }
   bool ok = false;
-  ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
+  // for QButtons we prepended "btn_" to the end of the property name so strip that off
+  QString propName = whoSent->objectName();
+  propName = propName.remove(0, 4);
+
+  ok = setProperty(propName.toStdString().c_str(), file);
   if (true == ok) { }
   else
   {
@@ -504,9 +508,9 @@ void QFilterWidget::selectInputFile()
   std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
   for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
-    if((*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
-      QFSDropLineEdit* lb = qFindChild<QFSDropLineEdit*>(this, QString::fromStdString((*iter)->getHumanLabel()));
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
       if(lb)
       {
         lb->setText(file);
@@ -527,7 +531,11 @@ void QFilterWidget::selectOutputFile()
     return;
   }
   bool ok = false;
-  ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
+  // for QButtons we prepended "btn_" to the end of the property name so strip that off
+  QString propName = whoSent->objectName();
+  propName = propName.remove(0, 4);
+
+  ok = setProperty(propName.toStdString().c_str(), file);
   if (true == ok) {}
   else
   {
@@ -541,9 +549,9 @@ void QFilterWidget::selectOutputFile()
   // Loop on all the filter options to find the filter option we want to set
   for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
-    if((*iter)->getPropertyName().compare(whoSent->objectName().toStdString()) == 0)
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
-      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getHumanLabel()));
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
       if(lb)
       {
         lb->setText(file);
@@ -647,6 +655,14 @@ void QFilterWidget::updateLineEdit(const QString &v)
   std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
       << " via QLineEdit." <<  std::endl;
   assert(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::emitParametersChanged()
+{
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
