@@ -83,6 +83,9 @@ void DxWriter::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void DxWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
@@ -97,6 +100,14 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+
+  if (getOutputFile().empty() == true)
+  {
+    std::stringstream ss;
+    ss << ClassName() << " needs the Output File Set and it was not.";
+    setErrorMessage(ss.str());
+    setErrorCondition(-387);
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
   setErrorMessage(ss.str());
