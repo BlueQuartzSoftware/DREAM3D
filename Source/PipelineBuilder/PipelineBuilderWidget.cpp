@@ -116,11 +116,15 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
 
     QFilterWidget* w = m_PipelineViewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
     if(w) {
+      w->blockSignals(true);
       w->readOptions(prefs);
+      w->blockSignals(false);
+      w->emitParametersChanged();
     }
 
     prefs.endGroup();
   }
+  m_PipelineViewWidget->preflightPipeline();
 
 
 }
@@ -422,6 +426,7 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
 void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
   m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
+  m_PipelineViewWidget->preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
