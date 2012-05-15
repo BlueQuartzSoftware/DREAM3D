@@ -113,11 +113,15 @@ class LeeMarchingCubes : public AbstractFilter
 
     virtual ~LeeMarchingCubes();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile);
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+
+    //DREAM3D_INSTANCE_STRING_PROPERTY(InputFile);
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteSTLFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(StlOutputDirectory);
     DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix);
+
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
@@ -125,12 +129,14 @@ class LeeMarchingCubes : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, NodesFile);
     DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile);
 
+    virtual void preflight();
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const std::string getHumanLabel() { return "Surface Mesh with Marching Cubes"; }
 
     virtual void setupFilterOptions();
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
-    virtual void preflight();
 
     void execute();
 
@@ -163,6 +169,8 @@ class LeeMarchingCubes : public AbstractFilter
     int writeSTLFiles(int nTriangle, std::map<int, meshing::SMStlWriter::Pointer> &gidToSTLWriter);
 
   private:
+    int32_t* m_GrainIds;
+
     std::ifstream in;
     int err;
     int NS; // The number of sites(voxels) in the simulation box...
