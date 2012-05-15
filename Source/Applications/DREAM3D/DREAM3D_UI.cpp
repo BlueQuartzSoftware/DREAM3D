@@ -172,39 +172,16 @@ void DREAM3D_UI::readSettings()
 #endif
   bool ok = false;
 
-  Qt::ToolButtonStyle tbstyle = static_cast<Qt::ToolButtonStyle>(prefs.value("PluginDisplay").toUInt(&ok));
-  m_PluginToolBar->setToolButtonStyle(tbstyle);
+//  Qt::ToolButtonStyle tbstyle = static_cast<Qt::ToolButtonStyle>(prefs.value("PluginDisplay").toUInt(&ok));
+//  m_PluginToolBar->setToolButtonStyle(tbstyle);
+//
+//  // Read the preference for each plugin
+//  foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
+//    plugin->readSettings(prefs);
+//  }
 
-  // Read the preference for each plugin
-  foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
-    plugin->readSettings(prefs);
-  }
-
-#if 0
-  bool loaded = false;
-  QString pluginName = prefs.value("ActivePlugin").toString();
-  for (int i = 0; i < m_LoadedPlugins.size(); ++i)
-  {
-    if (m_LoadedPlugins[i]->getPluginName().compare(pluginName) == 0)
-    {
-      if (m_PluginActionGroup->actions().size() > 0)
-      {
-        m_PluginActionGroup->actions().at(i)->activate(QAction::Trigger);
-        loaded = true;
-      }
-      break;
-    }
-  }
-
-  // If the proper plugin was not found, Load the first plugin found
-  if (loaded == false)
-  {
-    if (m_PluginActionGroup->actions().size() > 0)
-    {
-      m_PluginActionGroup->actions().at(0)->activate(QAction::Trigger);
-    }
-  }
-#endif
+  // Have the PipelineBuilder Widget read its settings
+  m_PipelineBuilderWidget->readSettings(prefs);
   readWindowSettings(prefs);
 }
 
@@ -245,17 +222,20 @@ void DREAM3D_UI::writeSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
 
-  if (m_ActivePlugin != NULL) {
-    prefs.setValue("ActivePlugin" , this->m_ActivePlugin->getPluginName());
-  }
+//  if (m_ActivePlugin != NULL) {
+//    prefs.setValue("ActivePlugin" , this->m_ActivePlugin->getPluginName());
+//  }
+//
+//
+//  foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
+//    plugin->writeSettings(prefs);
+//  }
 
-
-  foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
-    plugin->writeSettings(prefs);
-  }
+  // Have the pipeline builder write its settings to the prefs file
+  m_PipelineBuilderWidget->writeSettings(prefs);
 
   writeWindowSettings(prefs);
-  prefs.setValue("PluginDisplay", this->m_PluginToolBar->toolButtonStyle());
+//  prefs.setValue("PluginDisplay", this->m_PluginToolBar->toolButtonStyle());
 }
 
 // -----------------------------------------------------------------------------
