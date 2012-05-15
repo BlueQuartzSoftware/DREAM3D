@@ -188,7 +188,6 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
   READ_STRING_SETTING(prefs, m_, FileExt, "ang");
-//  READ_STRING_SETTING(prefs, m_, TotalSlices, "");
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
@@ -208,7 +207,6 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, FilePrefix)
   WRITE_STRING_SETTING(prefs, m_, FileSuffix)
   WRITE_STRING_SETTING(prefs, m_, FileExt)
-//  WRITE_STRING_SETTING(prefs, m_, TotalSlices)
   WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
   WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
   WRITE_STRING_SETTING(prefs, m_, zSpacing)
@@ -628,4 +626,6 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
   this->m_FilePrefix->setText(fPrefix);
   this->m_ZStartIndex->setValue(minSlice);
   this->m_ZEndIndex->setValue(maxSlice);
+  this->m_ZStartIndex->setRange(minSlice, maxSlice);
+  this->m_ZEndIndex->setRange(minSlice, maxSlice);
 }

@@ -184,48 +184,65 @@ void EbsdToH5Ebsd::execute()
   }
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
-  ss.str("");
-  ss << "Could not write the Z Resolution Scalar to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
-
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Z Resolution Scalar to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
   unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
-  ss.str("");
-  ss << "Could not write the Stacking Order Scalar to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Stacking Order Scalar to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   std::string s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
   err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
-  ss.str("");
-  ss << "Could not write the Stacking Order Name Attribute to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Stacking Order Name Attribute to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   unsigned int flag = 0;
   if(m_RotateSlice == true) flag = 1;
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::RotateSlice, flag);
-  ss.str("");
-  ss << "Could not write the Rotate Slice Bool to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Rotate Slice Bool to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   flag = 0;
   if(m_ReorderArray == true) flag = 1;
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReorderArray, flag);
-  ss.str("");
-  ss << "Could not write the Reorder Array Bool to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Reorder Array Bool to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   flag = 0;
   if(m_AlignEulers == true) flag = 1;
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::AlignEulers, flag);
-  ss.str("");
-  ss << "Could not write the Align Eulers Bool to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Align Eulers Bool to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   EbsdImporter::Pointer fileImporter;
 
@@ -235,19 +252,25 @@ void EbsdToH5Ebsd::execute()
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
-    ss.str("");
-    ss << "Could not write the Manufacturer Data to the HDF5 File";
-    setErrorMessage(ss.str());
-    setErrorCondition(-1);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Could not write the Manufacturer Data to the HDF5 File";
+      setErrorMessage(ss.str());
+      setErrorCondition(-1);
+    }
     fileImporter = H5AngImporter::New();
   }
   else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer);
-    ss.str("");
-    ss << "Could not write the Manufacturer Data to the HDF5 File";
-    setErrorMessage(ss.str());
-    setErrorCondition(-1);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Could not write the Manufacturer Data to the HDF5 File";
+      setErrorMessage(ss.str());
+      setErrorCondition(-1);
+    }
     fileImporter = H5CtfImporter::New();
   }
   else
@@ -303,11 +326,15 @@ void EbsdToH5Ebsd::execute()
 
     notify(msg.c_str(), 0, Observable::UpdateProgressMessage);
     err = fileImporter->importFile(fileId, z, ebsdFName);
+    if (err < 0)
+    {
+      ss.str("");
+      ss << "Could not read raw EBSD Data file";
+      setErrorMessage(ss.str());
+      setErrorCondition(-1);
+    }
     totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
-    ss.str("");
-    ss << "Could not read raw EBSD Data file";
-    setErrorMessage(ss.str());
-    setErrorCondition(-1);
+
     fileImporter->getDims(xDim, yDim);
     fileImporter->getResolution(xRes, yRes);
     if(xDim > biggestxDim) biggestxDim = xDim;
@@ -322,7 +349,7 @@ void EbsdToH5Ebsd::execute()
     }
     indices.push_back(z);
     ++z;
-    if (getCancel() == true)
+    if(getCancel() == true)
     {
       notify("Conversion was Canceled", 0, Observable::UpdateProgressMessage);
       return;
@@ -331,42 +358,59 @@ void EbsdToH5Ebsd::execute()
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
-  ss.str("");
-  ss << "Could not write the Z Start Index Scalar to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Z Start Index Scalar to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   m_ZEndIndex = m_ZStartIndex + totalSlicesImported - 1;
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
-  ss.str("");
-  ss << "Could not write the Z End Index Scalar to the HDF5 File";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Z End Index Scalar to the HDF5 File";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
-  ss.str("");
-  ss << "Could not write the XPoints Scalar to HDF5 file";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the XPoints Scalar to HDF5 file";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
-  ss.str("");
-  ss << "Could not write the YPoints Scalar to HDF5 file";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the YPoints Scalar to HDF5 file";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
-  ss.str("");
-  ss << "Could not write the XResolution Scalar to HDF5 file";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the XResolution Scalar to HDF5 file";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
-  ss.str("");
-  ss << "Could not write the YResolution Scalar to HDF5 file";
-  setErrorMessage(ss.str());
-  setErrorCondition(-1);
-
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the YResolution Scalar to HDF5 file";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
 
   if(false == getCancel())
   {
