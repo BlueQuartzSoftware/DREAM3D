@@ -129,14 +129,13 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
   if(m_InputFile.empty() == true)
   {
     ss << getNameOfClass() << ": The input file must be set before executing this filter.";
+    setErrorMessage(ss.str());
     setErrorCondition(-1);
   }
   else
   {
     gatherData(preflight);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
