@@ -106,6 +106,9 @@ void DataContainerReader::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void DataContainerReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
@@ -114,6 +117,7 @@ void DataContainerReader::writeFilterOptions(AbstractFilterOptionsWriter* writer
   writer->writeValue("ReadFieldData", getReadFieldData() );
   writer->writeValue("ReadEnsembleData", getReadEnsembleData() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -124,11 +128,13 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
 
   if(m_InputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
+    ss << getNameOfClass() << ": The input file must be set before executing this filter.";
     setErrorCondition(-1);
   }
-
-  gatherData(preflight);
+  else
+  {
+    gatherData(preflight);
+  }
 
   setErrorMessage(ss.str());
 }

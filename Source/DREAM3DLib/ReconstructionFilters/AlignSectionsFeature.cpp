@@ -82,14 +82,10 @@ AlignSectionsFeature::~AlignSectionsFeature()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::setupFilterOptions()
 {
-  std::vector<FilterOption::Pointer> options;
+  // Run the superclass first.
+  //AlignSections::setupFilterOptions();
+}
 
-  setFilterOptions(options);
-}
-// -----------------------------------------------------------------------------
-void AlignSectionsFeature::writeFilterOptions(AbstractFilterOptionsWriter* writer)
-{
-}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -98,6 +94,12 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
+  {
+    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    setErrorCondition(-1);
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
 
@@ -154,9 +156,9 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;
-  string filename = "aligntest.txt";
-  outFile.open(filename.c_str());
-
+  if (getWriteAlignmentShifts() == true) {
+    outFile.open(getAlignmentShiftFileName().c_str());
+  }
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -250,8 +252,11 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
     }
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
-	outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
+    if (getWriteAlignmentShifts() == true) {
+      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
+    }
   }
-
-  outFile.close();
+  if (getWriteAlignmentShifts() == true) {
+    outFile.close();
+  }
 }

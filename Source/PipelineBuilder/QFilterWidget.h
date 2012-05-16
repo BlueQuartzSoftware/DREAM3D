@@ -108,6 +108,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual QString getBorderColorStyle();
     virtual bool isSelected();
 
+    virtual void emitParametersChanged();
+
   signals:
     void dragStarted(QFilterWidget* widget);
     void parametersChanged();
