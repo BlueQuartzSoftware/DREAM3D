@@ -189,6 +189,13 @@ void PipelineBuilderWidget::setupGui()
     QString iconName(":/");
     iconName.append( QString::fromStdString(*iter));
     iconName.append("_Icon.png");
+    // Validate the icon is in the resource system
+    QFileInfo iconInfo(iconName);
+    if (iconInfo.exists() == false)
+    {
+      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+    }
+
     QIcon icon(iconName);
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
@@ -264,6 +271,14 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
     QString iconName(":/");
     iconName.append( QString::fromStdString((*factory).second->getFilterGroup()));
     iconName.append("_Icon.png");
+
+    // Validate the icon is in the resource system
+    QFileInfo iconInfo(iconName);
+    if (iconInfo.exists() == false)
+    {
+      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+    }
+
     QIcon icon(iconName);
     // Create the QListWidgetItem and add it to the filterList
     QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
@@ -298,124 +313,25 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
   }
 
   QString html;
-
-#if 1
   QString resName = QString(":/%1Filters/%2.html").arg(filter->getGroupName().c_str()).arg(filter->getNameOfClass().c_str());
   QFile f(resName);
   if ( f.open(QIODevice::ReadOnly) )
   {
     html = QLatin1String(f.readAll());
   }
-
-#else
-
-  html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">");
-  html.append("<html>");
-  html.append("<head>");
-  html.append("<meta name=\"qrichtext\" content=\"1\" />");
-  html.append("<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>");
-  html.append("</head>");
-  html.append("<body>\n");
-  html.append("<h3>");
-  html.append(filter->getHumanLabel().c_str());
-  html.append("</h3>");
-
-
-  DataContainer::Pointer m = DataContainer::New();
-  filter->setDataContainer(m.get());
-  filter->preflight();
-
+  else
   {
-    std::set<std::string> list = filter->getRequiredCellData();
-    if(list.size() > 0)
-    {
-      html.append("<h4>Required Cell Data</h4><ul>");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        html.append("<li>");
-        html.append(QString::fromStdString(*iter));
-        html.append("</li>");
-      }
-      html.append("</ul>");
-    }
+    html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">");
+    html.append("<html>");
+    html.append("<head>");
+    html.append("<meta name=\"qrichtext\" content=\"1\" />");
+    html.append("<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>");
+    html.append("</head>");
+    html.append("<body>\n");
+    html.append("Documentation file was not found. ");
+    html.append(resName);
+    html.append("</body></html>\n");
   }
-  {
-    std::set<std::string> list = filter->getCreatedCellData();
-    if(list.size() > 0)
-    {
-      html.append("<h4>Created Cell Data</h4><ul>");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        html.append("<li>");
-        html.append(QString::fromStdString(*iter));
-        html.append("</li>");
-      }
-      html.append("</ul>");
-    }
-  }
-  {
-    std::set<std::string> list = filter->getRequiredFieldData();
-    if(list.size() > 0)
-    {
-      html.append("<h4>Required Field Data</h4><ul>");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        html.append("<li>");
-        html.append(QString::fromStdString(*iter));
-        html.append("</li>");
-      }
-      html.append("</ul>");
-    }
-  }
-  {
-    std::set<std::string> list = filter->getCreatedFieldData();
-    if(list.size() > 0)
-    {
-      html.append("<h4>Created Field Data</h4><ul>");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        html.append("<li>");
-        html.append(QString::fromStdString(*iter));
-        html.append("</li>");
-      }
-      html.append("</ul>");
-    }
-  }
-
-  {
-    std::set<std::string> list = filter->getRequiredEnsembleData();
-    if(list.size() > 0)
-    {
-      html.append("<h4>Required Ensemble Data</h4><ul>");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        html.append("<li>");
-        html.append(QString::fromStdString(*iter));
-        html.append("</li>");
-      }
-      html.append("</ul>");
-    }
-  }
-  {
-    std::set<std::string> list = filter->getCreatedEnsembleData();
-    if(list.size() > 0)
-    {
-      html.append("<h4>Created Ensemble Data</h4><ul>");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        html.append("<li>");
-        html.append(QString::fromStdString(*iter));
-        html.append("</li>");
-      }
-      html.append("</ul>");
-    }
-  }
-
-
-  filter->setDataContainer(NULL);
-  html.append("</body></html>\n");
-#endif
-
 
   helpTextEdit->setHtml(html);
 }

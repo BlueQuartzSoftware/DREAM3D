@@ -3,5 +3,6 @@
 <qresource>
 <file>SamplingFilters/ChangeResolution.html</file>
 <file>SamplingFilters/CropVolume.html</file>
+<file>Sampling_Icon.png</file>
 </qresource>
 </RCC>
