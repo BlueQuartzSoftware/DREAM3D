@@ -268,7 +268,7 @@ function(DREAM3D_COMPILE_PLUGIN)
     
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     if (DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        #message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Adding Plugin")
+        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Adding Plugin")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})  
     else()
         message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")

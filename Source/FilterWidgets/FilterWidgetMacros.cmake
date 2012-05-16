@@ -24,7 +24,7 @@ function(GenerateFilterWidgets)
 
         foreach(file ${sources})
             get_filename_component(name ${file} NAME_WE)
-            message(STATUS "Generating Widget For ${name}")
+            message(STATUS "  Generating Widget For ${name}")
             if (NOT EXISTS ${FilterWidgetsLib_SOURCE_DIR}/${WIG_FILTER_GROUP}Widgets/Q${name}Widget.h )
                 set(WIDGET_GEN_HDRS ${WIDGET_GEN_HDRS} ${WIG_BINARY_DIR}/${WIG_FILTER_GROUP}Widgets/Q${name}Widget.h)
                 set(WIDGET_GEN_SRCS ${WIDGET_GEN_SRCS} ${WIG_BINARY_DIR}/${WIG_FILTER_GROUP}Widgets/Q${name}Widget.cpp)
