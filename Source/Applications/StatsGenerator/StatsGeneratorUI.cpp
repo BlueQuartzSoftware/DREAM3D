@@ -516,7 +516,10 @@ void StatsGeneratorUI::on_actionSave_triggered()
     SGWidget* sgwidget = m_SGWidgets[i];
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
     err = sgwidget->gatherStatsData(m);
+    if (err < 0)
+    {
 
+    }
   }
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
@@ -526,8 +529,6 @@ void StatsGeneratorUI::on_actionSave_triggered()
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
   writer = DataContainerWriter::NullPointer();
-
-
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);

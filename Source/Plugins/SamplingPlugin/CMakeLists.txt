@@ -83,7 +83,7 @@ set_source_files_properties( ${SamplingPlugin_Generated_MOC_SRCS} PROPERTIES HEA
 set_source_files_properties( ${SamplingPlugin_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # -- Run MOC and UIC on the necessary files
-QT4_ADD_RESOURCES( SamplingPlugin_Generated_RC_SRCS "${SamplingPlugin_SOURCE_DIR}/Documentation/FilterDocs.qrc"  )
+QT4_ADD_RESOURCES( SamplingPlugin_Generated_RC_SRCS "${SamplingPlugin_SOURCE_DIR}/Documentation/${PLUGIN_NAME}Docs.qrc"  )
 
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${SamplingPlugin_Generated_RC_SRCS};${SamplingPlugin_Generated_MOC_SRCS};${SamplingPlugin_MOC_SRCS}" "${SamplingPlugin_GEN_HDRS};${SamplingPlugin_GEN_SRCS}" "0")
 
@@ -98,7 +98,6 @@ set (SamplingPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${SamplingPlugin_Sampling_SRCS}
     ${SamplingPlugin_Sampling_HDRS}
-  
     ${SamplingPlugin_HDRS}
     ${SamplingPlugin_SRCS}
     ${SamplingPlugin_GEN_SRCS}
@@ -106,7 +105,6 @@ set (SamplingPlugin_PROJECT_SRCS
     ${SamplingPlugin_Generated_MOC_SRCS}
     ${SamplingPlugin_MOC_SRCS}
     ${SamplingPlugin_Generated_RC_SRCS}
-    
 )
 
 
