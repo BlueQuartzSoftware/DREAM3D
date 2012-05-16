@@ -196,7 +196,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 
   setSelectedFilterWidget(w);
 
-  preflightPipeline();
+  //preflightPipeline();
 
   return w;
 }
@@ -206,7 +206,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
- // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
+  //std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
 
   // clear all the error messages
   m_PipelineErrorList.clear();
@@ -431,6 +431,7 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
       }
       // Now that we have an index, insert the filter.
       addFilter(name, count);
+      preflightPipeline();
     }
   }
   event->acceptProposedAction();

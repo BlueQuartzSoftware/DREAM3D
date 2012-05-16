@@ -94,7 +94,7 @@
 #include "MXA/Utilities/StringUtils.h"
 
 
-#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+//#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
 #include "SMVtkPolyDataWriter.h"
 
@@ -279,6 +279,7 @@ class GrainChecker
 // -----------------------------------------------------------------------------
 LeeMarchingCubes::LeeMarchingCubes() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_DeleteTempFiles(true),
 m_WriteSTLFile(true),
 m_StlOutputDirectory(""),
@@ -307,6 +308,7 @@ void LeeMarchingCubes::setupFilterOptions()
 {
 
   std::vector<FilterOption::Pointer> options;
+#if 0
   {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("DREAM3D Input Data File");
@@ -315,7 +317,7 @@ void LeeMarchingCubes::setupFilterOptions()
     option->setValueType("string");
     options.push_back(option);
   }
-#if 0
+
    This should be read from the file so we are NOT going to expose it to the user
   {
     ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
@@ -394,20 +396,50 @@ void LeeMarchingCubes::setupFilterOptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void LeeMarchingCubes::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("DeleteTempFiles", getWriteBinaryVTKFiles() );
+  writer->writeValue("WriteSTLFile", getWriteSTLFile() );
+  writer->writeValue("StlOutputDirectory", getStlOutputDirectory() );
+  writer->writeValue("StlFilePrefix", getStlFilePrefix() );
+  writer->writeValue("VtkOutputFile", getVtkOutputFile() );
+  writer->writeValue("WriteBinaryVTKFiles", getWriteBinaryVTKFiles() );
+  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
- // std::stringstream ss;
-  //DataContainer* m = getDataContainer();
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
 
-  if (getInputFile().empty() == true)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+
+  if (true == m_WriteSTLFile )
   {
-    setErrorCondition(-1);
-    setErrorMessage("SurfaceMesh Filter needs an input file set. The current value is empty");
-    return;
+    if (true == m_StlOutputDirectory.empty())
+    {
+      ss << getHumanLabel() << " needs the STL Output directory set";
+      setErrorCondition(-387);
+    }
+    if (true == m_StlFilePrefix.empty())
+    {
+      ss << getHumanLabel() << " needs the STL File Prefix set";
+      setErrorCondition(-388);
+    }
+  }
+  if (true == m_VtkOutputFile.empty())
+  {
+    ss << getHumanLabel() << " needs the VTK output file set";
+    setErrorCondition(-387);
   }
 
- // setErrorMessage(ss.str());
+
+  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -424,15 +456,25 @@ void LeeMarchingCubes::preflight()
 // -----------------------------------------------------------------------------
 void LeeMarchingCubes::execute()
 {
-  notify(("Running Surface Meshing"), 0, UpdateProgressMessage);
-  int err = 0;
+  setErrorCondition(0);
+  DataContainer* m = getDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
 
-
-  dataCheck(false, 1, 1, 1);
+  int64_t totalPoints = m->getTotalPoints();
+  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
+
+  int err = 0;
 
   std::string NodesFile = m_StlOutputDirectory + MXADir::Separator
       + m_StlFilePrefix + DREAM3D::SurfaceMesh::NodesFileBin;
@@ -512,22 +554,16 @@ void LeeMarchingCubes::execute()
   { 0, 3, 2, 1, -1, -1, -1, -1 },
   { 0, 3, 2, 1, 1, 0, 3, 2 } };
 
-#if 0
-  SMVtkPolyDataWriter::Pointer vtkreader = SMVtkPolyDataWriter::New();
-  vtkreader->primeFileToScalarDataLocation(m_DataContainer.get(), m_InputFile, m_ScalarName);
-#endif
-
-  H5VoxelReader::Pointer reader = H5VoxelReader::New();
-  reader->setFileName(m_InputFile);
 
   GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
 
-  int64_t dims[3];
+  size_t dims[3];
   float scaling[3];
   float origin[3];
-  err = reader->getSizeResolutionOrigin(dims, scaling, origin);
-  CHECK_FOR_ERROR(LeeMarchingCubes, "Error reading the size and dimensions data from the input file", err);
-  CHECK_FOR_CANCELED(LeeMarchingCubes, "Surface Mesh was canceled", getSizeResolutionOrigin);
+
+  m->getDimensions(dims);
+  m->getResolution(scaling);
+  m->getOrigin(origin);
 
   // Initialize our LeeMarchingCubes Variable
   // Add a layer of padding around the volume which are going to be our boundary voxels
@@ -561,27 +597,26 @@ void LeeMarchingCubes::execute()
   std::map<int, SMStlWriter::Pointer> gidToSTLWriter;
 
   // Save the actual volume dimensions from the input file
-  int xFileDim = xDim - 2;
-  int yFileDim = yDim - 2;
-  int zFileDim = zDim - 2;
-  size_t totalBytes = xFileDim * yFileDim * sizeof(int);
+  int xFileDim = dims[0];
+  int yFileDim = dims[1];
+  int zFileDim = dims[2];
+//  size_t totalBytes = xFileDim * yFileDim * sizeof(int32_t);
 
-  DataArray<int>::Pointer m_FileVoxelLayer = DataArray<int>::CreateArray(0, "FileVoxelLayer");
-  int* fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
+//  DataArray<int>::Pointer m_FileVoxelLayer = DataArray<int>::CreateArray(0, "FileVoxelLayer");
+//  int* fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
   size_t offset = 0;
 
   std::stringstream ss;
   for (int i = 0; i < zFileDim; i++)
   {
     ss.str("");
-    ss << "Marching Cubes Between Layers " << i << " and " << i + 1 << " of " << zFileDim;
-    notify((ss.str().c_str()), (i * 90 / zFileDim), UpdateProgressValueAndMessage);
+    ss << " Layers " << i << " and " << i + 1 << " of " << zFileDim;
+    notify(ss.str(), (i * 90 / zFileDim), UpdateProgressValueAndMessage);
+    notify(ss.str(), (i * 90 / zFileDim), UpdateProgressMessage);
 
-#if 0
-    err = vtkreader->readZSlice(xFileDim, yFileDim, zFileDim, fileVoxelLayer);
-#endif
-    err = reader->readHyperSlab(xFileDim, yFileDim, i, fileVoxelLayer);
-    CHECK_FOR_ERROR(LeeMarchingCubes, "Error Loading Slice Data as a Hyperslab from HDF5 file", err)
+    // Get a pointer into the GrainIds Array at the appropriate offset
+    int32_t* fileVoxelLayer = m_GrainIds + (i * xFileDim * yFileDim);
+
     CHECK_FOR_CANCELED(LeeMarchingCubes, "Surface Mesh was canceled", readHyperSlab);
 
     // Copy the Voxels from layer 2 to Layer 1;

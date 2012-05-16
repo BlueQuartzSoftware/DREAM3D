@@ -59,6 +59,13 @@ class QFilterPipeline : public QObject, public FilterPipeline
     virtual void updateProgressAndMessage(const char* message, int value);
 
     /**
+     * @brief Either prints a message or sends the message to the User Interface
+     * @param message The message to print
+     * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
+     */
+    virtual void updateProgressAndMessage(const std::string &message, int progress);
+
+    /**
      * @brief This method reports progress such that a user interface element such
      * as a progress bar could be updated. It is assumed the value will fluctuate
      * between 0 and 100.
