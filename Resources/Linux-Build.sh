@@ -5,7 +5,6 @@
 # The packages downloaded are:
 # CMake - in order to build other projects
 # MXABoost - subset of Boost 1.44
-# ITK 3.20.0 - Image Processing Toolkit
 # Qwt - 2D Plotting Widgets for the Qt toolkit
 # You need to have the following programs already on your system:
 #  curl or wget
@@ -17,22 +16,22 @@
 # will export a number of paths so that building projects from the IPHelper project goes smoother.
 # You can simply 'source "initvars.sh" any time to get the exports.
 
-# If you want to force another directory then change where "SDK_ROOT" points to.
+# If you want to force another directory then change where "SDK_INSTALL" points to.
 
 SDK_SOURCE=/tmp/Workspace
 SDK_INSTALL=/tmp/DREAM3D_SDK
 
 # If you are on a Multicore system and want to build faster set the variable to the number
 # of cores/CPUs available to you.
-PARALLEL_BUILD=16
+PARALLEL_BUILD=8
 
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 # Adjust these to "0" if you want to skip those compilations. The default is to build
 # everything.
 BUILD_CMAKE="0"
-BUILD_MXABOOST="0"
-BUILD_QWT="0"
+BUILD_MXABOOST="1"
+BUILD_QWT="1"
 BUILD_HDF5="1"
 
 make_command=gmake
@@ -181,13 +180,13 @@ git clone --recursive ssh://code@scm.bluequartz.net/DREAM3D.git
 cd DREAM3D
 mkdir Build
 cd Build
-cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=ON ../
+cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=OFF ../
 $make_command -j $PARALLEL_BUILD
 $make_command install
 cd ../
 mkdir zRel
 cd zRel
-cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=ON ../
+cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=OFF ../
 $make_command -j $PARALLEL_BUILD
 $make_command install
 export DREAM3D_INSTALL=$SDK_INSTALL/DREAM3D

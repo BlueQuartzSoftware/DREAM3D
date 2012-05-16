@@ -89,7 +89,7 @@ set_source_files_properties( ${SurfaceMeshingPlugin_Generated_MOC_SRCS} PROPERTI
 set_source_files_properties( ${SurfaceMeshingPlugin_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # -- Run MOC and UIC on the necessary files
-QT4_ADD_RESOURCES( SurfaceMeshingPlugin_Generated_RC_SRCS "${SurfaceMeshingPlugin_SOURCE_DIR}/Documentation/FilterDocs.qrc"  )
+QT4_ADD_RESOURCES( SurfaceMeshingPlugin_Generated_RC_SRCS "${SurfaceMeshingPlugin_SOURCE_DIR}/Documentation/${PLUGIN_NAME}Docs.qrc"  )
 
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${SurfaceMeshingPlugin_Generated_RC_SRCS};${SurfaceMeshingPlugin_Generated_MOC_SRCS};${SurfaceMeshingPlugin_MOC_SRCS}" "${SurfaceMeshingPlugin_GEN_HDRS};${SurfaceMeshingPlugin_GEN_SRCS}" "0")
 
