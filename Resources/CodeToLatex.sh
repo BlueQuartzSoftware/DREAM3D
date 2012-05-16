@@ -1,10 +1,10 @@
 #!/bin/bash
 # This is a complete kludge of a shell script that basically generates a PDF file containing
 # as much of the source codes as possible when we want to release to US Air Force Public Affairs
-texFile=/tmp/AIMRepresentation_PublicAffairs_Release.tex
-# cd "/Users/mjackson/Contracts/AFRL-TO90/AIMRepresentation"
+texFile=/tmp/DREAM3D_PublicAffairs_V3.tex
+# cd "/Users/mjackson/Contracts/AFRL-TO90/DREAM3D"
 DATE=`date +%Y.%m.%d`
-git archive --format=tar HEAD | gzip > /tmp/AIMRepresentation_$DATE.tar.gz
+git archive --format=tar HEAD | gzip > /tmp/DREAM3D_$DATE.tar.gz
 
 
 echo "\documentclass[10pt,oneside]{book}" > $texFile
@@ -47,7 +47,7 @@ echo "\par\nobreak\vspace{2 pt}}}" >> $texFile
 echo "\makeatother" >> $texFile
 echo "\def\thechapter       {\arabic{chapter}}" >> $texFile
 echo "% ------------------- Title and Author -----------------------------" >> $texFile
-echo "\title{AIMRepresentation Software Tools Package}" >> $texFile
+echo "\title{DREAM3D Software Tools Package}" >> $texFile
 echo "\author{Michael Groeber (Air Force Research Laboratory) And Michael A. Jackson (BlueQuartz Software)}" >> $texFile
 echo "\begin{document}" >> $texFile
 echo "" >> $texFile
@@ -56,6 +56,7 @@ echo "\maketitle" >> $texFile
 echo "" >> $texFile
 echo "\tableofcontents" >> $texFile
 
+cd ../
 
 files=`find ./License -type f -name "*.license"`
 for file in $files;
@@ -70,7 +71,11 @@ do
   echo "% ----------------------------------------------------------------------------------------" >> $texFile
 done
 
-files=`find ./Source/DREAM3D -type f ! -name "itk*" -and \( -name "*.c*" -or -name "*.h*" -or -name "*.txx" \)`
+
+folders="DREAM3DLib EbsdLib FilterWidgets H5Support MXA PipelineBuilder Plugins QtSupport Applications"
+for folder in $folders;
+do
+files=`find ./Source/$folder -type f \( -name "*.c*" -or -name "*.h*" -or -name "*.txx" \)`
 for file in $files;
 do
   echo "$file"
@@ -81,6 +86,8 @@ do
   
   echo "\end{lstlisting}" >> $texFile
   echo "% ----------------------------------------------------------------------------------------" >> $texFile
+done
+
 done
 
 echo "\end{document}" >> $texFile
