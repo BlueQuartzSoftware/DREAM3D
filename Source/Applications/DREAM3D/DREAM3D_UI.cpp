@@ -64,16 +64,6 @@
 #include "PipelineBuilder/PipelineBuilderWidget.h"
 #include "FilterWidgets/FilterWidgetsLib.h"
 
-
-//#include "GrainGenerator/UI/GrainGeneratorPlugin.h"
-//#include "MicrostructureStatistics/UI/MicrostructureStatisticsPlugin.h"
-//#include "EbsdImport/UI/EbsdImportPlugin.h"
-//#include "Reconstruction/UI/ReconstructionPlugin.h"
-//#include "SurfaceMesh/UI/SurfaceMeshPlugin.h"
-//#include "Extrapolation2Dto3D/UI/Extrapolation2Dto3DPlugin.h"
-//#include "FileConversion/UI/FileConversionPlugin.h"
-//#include "VolumeOps/UI/VolumeOpsPlugin.h"
-
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
 // -----------------------------------------------------------------------------
@@ -258,6 +248,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 void DREAM3D_UI::setupGui()
 {
 //  std::cout << "DREAM3D_UI::setupGui" << std::endl;
+#if 0
   m_PluginActionGroup = new QActionGroup(this);
   m_PluginToolBar = new QToolBar(this);
   m_PluginToolBar->setObjectName(QString("PluginToolbar"));
@@ -279,7 +270,7 @@ void DREAM3D_UI::setupGui()
   m_PluginPrefsActionGroup->addAction(action_TextOnly);
 
   action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
-
+#endif
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
@@ -539,7 +530,7 @@ void DREAM3D_UI::loadPlugins()
   }
 #endif
 
-  this->setWindowTitle("DREAM3D - No Plugins Loaded");
+  this->setWindowTitle("DREAM3D");
 
   QStringList pluginFilePaths;
 
