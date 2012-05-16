@@ -277,7 +277,6 @@ void DREAM3D_UI::setupGui()
   // Look for plugins
   loadPlugins();
 
-
   // Register all of the Filters we know about - the rest will be loaded through plugins
   //  which all should have been loaded by now.
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
@@ -574,6 +573,7 @@ void DREAM3D_UI::loadPlugins()
       {
         m_LoadedPlugins.push_back(ipPlugin);
         ipPlugin->registerFilterWidgets();
+        ipPlugin->registerResources();
       }
 
       m_PluginFileNames += fileName;

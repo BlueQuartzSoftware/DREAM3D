@@ -438,7 +438,6 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
   {
     docErrorTabs->setCurrentIndex(0);
     m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
-    int deltaX;
 
     QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
     if(m_DocErrorTabsIsOpen)
@@ -446,8 +445,6 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
       int start = 0;
       int end = 350;
       docErrorTabs->setMaximumHeight(end);
-      deltaX = start;
-
       animation1->setDuration(250);
       animation1->setStartValue(start);
       animation1->setEndValue(end);
