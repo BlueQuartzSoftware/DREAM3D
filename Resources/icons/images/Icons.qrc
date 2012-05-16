@@ -23,12 +23,11 @@
   <file>information.png</file>
   <file>delete2.png</file>
   <file>IO_Icon.png</file>
-  <file>Sampling_Icon.png</file>
+  <file>Plugin_Icon.png</file>
   <file>Generic_Icon.png</file>
   <file>Processing_Icon.png</file>
   <file>Reconstruction_Icon.png</file>
   <file>Statistics_Icon.png</file>
-  <file>Surface_Meshing_Icon.png</file>
   <file>Synthetic_Builder_Icon.png</file>
   <file>debug_error.png</file>
  </qresource>
