@@ -12,7 +12,7 @@
 #  QWT_LIBRARY_RELEASE - Release Version of qwt library
 
 
-set (QWT_CMAKE_DEBUG 1)
+set (QWT_CMAKE_DEBUG 0)
 if (QWT_CMAKE_DEBUG)
     MESSAGE (STATUS "Finding Qwt library and headers..." )
 endif()
