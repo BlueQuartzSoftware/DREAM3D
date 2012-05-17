@@ -43,10 +43,10 @@
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/AngDirectoryPatterns.h"
-#include "EbsdLib/TSL/AngReader.h"
-#include "EbsdLib/TSL/AngPhase.h"
+#include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
+#include "EbsdLib/HKL/CtfFields.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -79,11 +79,12 @@ m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
+m_Manufacturer(Ebsd::UnknownManufacturer),
 m_CellPhases(NULL),
 m_GoodVoxels(NULL),
 m_CellEulerAngles(NULL)
 {
-  Seed = MXA::getMilliSeconds();
+ // Seed = MXA::getMilliSeconds();
 }
 
 // -----------------------------------------------------------------------------
@@ -122,28 +123,131 @@ void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer* m)
+{
+  int err = 0;
+  /* Sanity check what we are trying to load to make sure it can fit in our address space.
+   * Note that this does not guarantee the user has enough left, just that the
+   * size of the volume can fit in the address space of the program
+   */
+#if   (CMP_SIZEOF_SSIZE_T==4)
+  int64_t max = std::numeric_limits<size_t>::max();
+#else
+  int64_t max = std::numeric_limits<int64_t>::max();
+#endif
+  if(dims[0] * dims[1] * dims[2] > max)
+  {
+    err = -1;
+    std::stringstream s;
+    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return err;
+  }
+
+  if(dims[0] > max || dims[1] > max || dims[2] > max)
+  {
+    err = -1;
+    std::stringstream s;
+    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+    s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
+    setErrorCondition(err);
+    setErrorMessage(s.str());
+    return err;
+  }
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  if(m_H5EbsdFile.empty() == true)
+  if (m_H5EbsdFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
-    ss << getNameOfClass() << ": The input H5Ebsd file must be set before executing this filter.";
+    ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
+    setErrorCondition(-1);
+    setErrorMessage(ss.str());
+  }
+  else if (m_H5EbsdFile.empty() == false)
+  {
+    H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
+    reader->setFileName(m_H5EbsdFile);
+    int err = reader->readVolumeInfo();
+    if (err < 0)
+    {
+      ss << getHumanLabel() << ": Error reading VolumeInfo from H5Ebsd File";
+      setErrorCondition(-1);
+      setErrorMessage(ss.str());
+      return;
+    }
+
+    std::string manufacturer = reader->getManufacturer();
+    if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+    {
+      m_Manufacturer = Ebsd::TSL;
+    }
+    else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+    {
+      m_Manufacturer = Ebsd::HKL;
+    }
+    else
+    {
+      ss << getHumanLabel() << ": Original Data source could not be determined. It should be TSL or HKL";
+      setErrorCondition(-1);
+      setErrorMessage(ss.str());
+      return;
+    }
+  }
+
+  H5EbsdVolumeReader::Pointer reader;
+  std::vector<std::string> names;
+
+  if (m_Manufacturer == Ebsd::TSL)
+  {
+    AngFields fields;
+    reader = H5AngVolumeReader::New();
+    names = fields.getFieldNames();
+  }
+  else if (m_Manufacturer == Ebsd::HKL)
+  {
+    CtfFields fields;
+    reader = H5CtfVolumeReader::New();
+    names = fields.getFieldNames();
+  }
+  else
+  {
+    ss << getHumanLabel() << ": Original Data source could not be determined. It should be TSL or HKL";
     setErrorCondition(-1);
     setErrorMessage(ss.str());
     return;
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
+  for (size_t i = 0; i < names.size(); ++i)
+  {
+    if (reader->getPointerType(names[i]) == Ebsd::Int32)
+    {
+      Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(voxels, names[i]);
+      m->addCellData(names[i], array);
+    }
+    else if (reader->getPointerType(names[i]) == Ebsd::Float)
+    {
+      FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
+      m->addCellData(names[i], array);
+    }
+  }
 
+  if (preflight == true)
+  {
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+  }
   typedef DataArray<unsigned int> XTalStructArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1);
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -293,26 +397,99 @@ void ReadH5Ebsd::execute()
     return;
   }
 
-  float* euler1Ptr = NULL;
-  float* euler2Ptr = NULL;
-  float* euler3Ptr = NULL;
+  float* f1 = NULL;
+  float* f2 = NULL;
+  float* f3 = NULL;
   int* phasePtr = NULL;
 
-  float radianconversion = 1.0f;
+
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
-    euler1Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi1));
-    euler2Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
-    euler3Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
+    f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi1));
+    f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
+    f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
+    FloatArrayType::Pointer fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
+    float* cellEulerAngles = fArray->GetPointer(0);
+
+    for (int64_t i = 0; i < totalPoints; i++)
+    {
+      cellEulerAngles[3 * i] = f1[i] ;
+      cellEulerAngles[3 * i + 1] = f2[i];
+      cellEulerAngles[3 * i + 2] = f3[i];
+    }
+    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+
+    f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ImageQuality));
+    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
+    ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
+    m->addCellData(Ebsd::Ang::ImageQuality, fArray);
+
+    f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
+    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
+    ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
+    m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
+
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
+    Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ang::PhaseData);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(DREAM3D::CellData::Phases, iArray);
+
+    f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::SEMSignal));
+    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
+    ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
+    m->addCellData(Ebsd::Ang::SEMSignal, fArray);
+
+    f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Fit));
+    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
+    ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
+    m->addCellData(Ebsd::Ang::Fit, fArray);
   }
   else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
   //  radianconversion = M_PI / 180.0;
-    euler1Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler1));
-    euler2Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
-    euler3Ptr = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));
+    f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler1));
+    f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
+    f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));
+    FloatArrayType::Pointer fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
+    float* cellEulerAngles = fArray->GetPointer(0);
+
+    for (int64_t i = 0; i < totalPoints; i++)
+    {
+      cellEulerAngles[3 * i] = f1[i] ;
+      cellEulerAngles[3 * i + 1] = f2[i];
+      cellEulerAngles[3 * i + 2] = f3[i];
+    }
+    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
+    Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Phase);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(DREAM3D::CellData::Phases, iArray);
+
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
+    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Bands);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(Ebsd::Ctf::Bands, iArray);
+
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Error));
+    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Error);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(Ebsd::Ctf::Error, iArray);
+
+    f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::MAD));
+    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ctf::MAD);
+    ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
+    m->addCellData(Ebsd::Ctf::MAD, fArray);
+
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
+    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BC);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(Ebsd::Ctf::BC, iArray);
+
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
+    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BS);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(Ebsd::Ctf::BS, iArray);
   }
   else
   {
@@ -322,14 +499,11 @@ void ReadH5Ebsd::execute()
     setErrorMessage(msg);
     return;
   }
-  // Copy Euler Angles and Phases
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-    m_CellEulerAngles[3 * i] = euler1Ptr[i] ;
-    m_CellEulerAngles[3 * i + 1] = euler2Ptr[i];
-    m_CellEulerAngles[3 * i + 2] = euler3Ptr[i];
-    m_CellPhases[i] = phasePtr[i];
-  }
+
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, totalPoints, 1);
+
+
 
   // Run the filter to determine the good Voxels
   DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();

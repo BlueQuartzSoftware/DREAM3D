@@ -277,7 +277,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
     if (ZDir == 0) zval = slice;
     if (ZDir == 1) zval = (zpoints - 1) - slice;
 
-    // Copy the data from the current storage into the ReconstructionFunc Storage Location
+    // Copy the data from the current storage into the Storage Location
     for (int j = 0; j < ypointsslice; j++)
     {
       for (int i = 0; i < xpointsslice; i++)

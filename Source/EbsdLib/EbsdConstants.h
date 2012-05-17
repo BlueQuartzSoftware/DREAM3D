@@ -47,6 +47,14 @@
 
 namespace Ebsd
 {
+  enum Manufacturer
+  {
+    TSL = 0,
+    HKL = 1,
+    UnknownManufacturer
+  };
+
+
   namespace H5 {
     const std::string OriginalHeader("OriginalHeader");
     const std::string ZStartIndex("ZStartIndex");
