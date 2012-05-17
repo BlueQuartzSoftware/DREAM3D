@@ -12,7 +12,7 @@
 #  QWT_LIBRARY_RELEASE - Release Version of qwt library
 
 
-set (QWT_CMAKE_DEBUG 0)
+set (QWT_CMAKE_DEBUG 1)
 if (QWT_CMAKE_DEBUG)
     MESSAGE (STATUS "Finding Qwt library and headers..." )
 endif()
@@ -25,6 +25,7 @@ endif()
 # Look for the header file.
 SET(QWT_INCLUDE_SEARCH_DIRS
   ${QWT_INSTALL}/include/qwt
+  ${QWT_INSTALL}/include/qwt5
   ${QWT_INSTALL}/include
 )
 
