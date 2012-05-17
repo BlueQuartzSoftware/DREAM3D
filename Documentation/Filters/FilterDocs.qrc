@@ -9,7 +9,6 @@
 <file>GenericFilters/FindGrainPhases.html</file>
 <file>GenericFilters/FindSurfaceCells.html</file>
 <file>GenericFilters/FindCellQuats.html</file>
-<file>GenericFilters/FindNumFields.html</file>
 <file>GenericFilters/FindGrainCentroids.html</file>
 <file>GenericFilters/FindSurfaceGrains.html</file>
 <file>GenericFilters/FindBoundingBoxGrains.html</file>
@@ -49,6 +48,7 @@
 <file>StatisticsFilters/FindMDF.html</file>
 <file>StatisticsFilters/FindNeighborhoods.html</file>
 <file>StatisticsFilters/FindODF.html</file>
+<file>StatisticsFilters/FindNumFields.html</file>
 <file>StatisticsFilters/FindDeformationStatistics.html</file>
 <file>StatisticsFilters/FindSchmids.html</file>
 <file>StatisticsFilters/FindShapes.html</file>
