@@ -78,6 +78,9 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
     int writePrecipBoundaryFraction(StatsData* data, hid_t groupId);
     int readPrecipBoundaryFraction(StatsData* data, hid_t groupId);
 
+    int writeParentPhase(StatsData* data, hid_t groupId);
+    int readParentPhase(StatsData* data, hid_t groupId);
+
     int writeGrainDiameterInfo(StatsData* data, hid_t groupId);
     int readGrainDiameterInfo(StatsData* data, hid_t groupId);
 

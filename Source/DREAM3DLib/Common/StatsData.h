@@ -104,6 +104,7 @@ class DREAM3DLib_EXPORT StatsData
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
     DREAM3D_INSTANCE_PROPERTY(float, PrecipBoundaryFraction);
+    DREAM3D_INSTANCE_PROPERTY(float, ParentPhase);
 
     /**
      * @brief The values are encoded into 3 floats: Average, Max, Min

@@ -223,6 +223,7 @@ namespace DREAM3D
     const std::string CrystalStructure("CrystalStructure");
     const std::string PhaseType("PhaseType");
     const std::string PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
+    const std::string ParentPhase("Parent Phase");
     const std::string Grain_Diameter_Info("Grain_Diameter_Info");
     const std::string Grain_Size_Distribution("GrainSize Distribution");
     const std::string Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");

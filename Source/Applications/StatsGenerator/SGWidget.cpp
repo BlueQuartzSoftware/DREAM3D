@@ -101,6 +101,7 @@ m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
 m_PptFraction(-1.0f),
+m_ParentPhase(0),
 m_DataHasBeenGenerated(false),
 m_PhaseIndex(0),
 m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
@@ -764,6 +765,8 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
   //H5StatsWriter::Pointer writer = H5StatsWriter::New();
 
   statsData->setPhaseFraction(calcPhaseFraction);
+  statsData->setPrecipBoundaryFraction(m_PptFraction);
+  statsData->setParentPhase(m_ParentPhase);
   // Grain Diameter Info
   statsData->setBinStepSize(stepSize);
   statsData->setMaxGrainDiameter(maxdiameter);
@@ -861,6 +864,12 @@ void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
   if(DREAM3D::PhaseType::PrecipitatePhase == m_PhaseType)
   {
     m_PptFraction = statsData->getPrecipBoundaryFraction();
+  }
+
+  m_ParentPhase = 0;
+  if(DREAM3D::PhaseType::TransformationPhase == m_PhaseType)
+  {
+    m_ParentPhase = statsData->getParentPhase();
   }
 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);

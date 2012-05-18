@@ -128,6 +128,9 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
   // Read the Precip Boundary Fraction
   err = readPrecipBoundaryFraction(data, groupId);
 
+  // Read the Parent Phase
+  err = readParentPhase(data, groupId);
+
   // Read the Grain Diameter Info
   err = readGrainDiameterInfo(data, groupId);
 
@@ -235,6 +238,9 @@ int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
 
   // Write the Precip Boundary Fraction
   err = writePrecipBoundaryFraction(data, groupId);
+
+  // Write the Precip Boundary Fraction
+  err = writeParentPhase(data, groupId);
 
   // Write the Grain Diameter Info
   err = writeGrainDiameterInfo(data, groupId);
@@ -625,6 +631,15 @@ int H5StatsDataDelegate::writePrecipBoundaryFraction(StatsData* data, hid_t pid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5StatsDataDelegate::writeParentPhase(StatsData* data, hid_t pid)
+{
+  unsigned int var = data->getParentPhase();
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::ParentPhase, var);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5StatsDataDelegate::readPrecipBoundaryFraction(StatsData* data, hid_t pid)
 {
   float precipBoundaryFraction = 0.0f;
@@ -633,6 +648,16 @@ int H5StatsDataDelegate::readPrecipBoundaryFraction(StatsData* data, hid_t pid)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5StatsDataDelegate::readParentPhase(StatsData* data, hid_t pid)
+{
+  unsigned int parentPhase = 0.0f;
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::ParentPhase, parentPhase);
+  data->setParentPhase(parentPhase);
+  return err;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

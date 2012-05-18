@@ -45,6 +45,7 @@ EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
 QDialog(parent),
 m_OtherPhaseFractions(0.0),
 m_PhaseFractionValidator(NULL),
+m_ParentPhaseValidator(NULL),
 m_PptFractionValidator(NULL)
 {
   setupUi(this);
@@ -114,6 +115,24 @@ void EditPhaseDialog::setPptFraction(float d)
   pptFraction->setText(QString::number(d));
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int EditPhaseDialog::getParentPhase()
+{
+  bool ok = false;
+  unsigned int d = ParentPhase->text().toInt(&ok);
+  if (ok) return d;
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setParentPhase(unsigned int d)
+{
+  ParentPhase->setText(QString::number(d));
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -139,12 +158,15 @@ unsigned int EditPhaseDialog::getPhaseType()
 void EditPhaseDialog::setupGui()
 {
   m_PhaseFractionValidator = new QDoubleValidator(phaseFraction);
+  m_ParentPhaseValidator = new QDoubleValidator(ParentPhase);
   m_PptFractionValidator = new QDoubleValidator(pptFraction);
   m_PptFractionValidator->setBottom(0.0);
   m_PptFractionValidator->setTop(1.0);
   m_PptFractionValidator->setDecimals(6);
   pptFraction->setEnabled(false);
+  ParentPhase->setEnabled(false);
   pptFractionLabel->setEnabled(false);
+  ParentPhaseLabel->setEnabled(false);
   on_phaseFraction_textChanged(QString());
 }
 
@@ -184,6 +206,15 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
   }
   pptFraction->setEnabled(b);
   pptFractionLabel->setEnabled(b);
+
+  b = false;
+  if (phaseTypeCombo->currentIndex() == DREAM3D::PhaseType::TransformationPhase)
+  {
+    b = true;
+  }
+  ParentPhase->setEnabled(b);
+  ParentPhaseLabel->setEnabled(b);
+
 }
 
 
