@@ -4,5 +4,6 @@
 
 <file>Surface_MeshingFilters/LeeMarchingCubes.html</file>
 <file>Surface_MeshingFilters/SMVtkPolyDataWriter.html</file>
+<file>Surface_Meshing_Icon.png</file>
 </qresource>
 </RCC>

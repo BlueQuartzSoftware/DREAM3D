@@ -70,6 +70,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     virtual ~ReadH5Ebsd();
 
+
+
+
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
@@ -83,6 +86,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
     DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PhaseTypes)
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
+    DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer);
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -106,7 +110,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    unsigned long long int Seed;
+//    unsigned long long int Seed;
 
     int tempxpoints;
     int tempypoints;
@@ -114,8 +118,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    ReadH5Ebsd(const ReadH5Ebsd&); // Copy Constructor Not Implemented
-    void operator=(const ReadH5Ebsd&); // Operator '=' Not Implemented
+    int initDataContainerDimsRes(int64_t dims[3], DataContainer* m);
+
 
     /**
      * @brief This method reads the values for the phase type, crystal structure
@@ -158,6 +162,10 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       getDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }
+
+
+    ReadH5Ebsd(const ReadH5Ebsd&); // Copy Constructor Not Implemented
+    void operator=(const ReadH5Ebsd&); // Operator '=' Not Implemented
 };
 
 #endif /* ReadH5Ebsd_H_ */

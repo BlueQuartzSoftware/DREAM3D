@@ -23,7 +23,7 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centerWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="spacing">
      <number>0</number>
     </property>

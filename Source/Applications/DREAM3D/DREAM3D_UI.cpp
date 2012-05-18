@@ -271,6 +271,9 @@ void DREAM3D_UI::setupGui()
 
   action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
 #endif
+
+  menubar->removeAction(menuPlugins->menuAction());
+
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
