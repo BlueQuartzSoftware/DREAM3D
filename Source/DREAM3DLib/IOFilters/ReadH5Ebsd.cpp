@@ -210,13 +210,13 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   {
     AngFields fields;
     reader = H5AngVolumeReader::New();
-    names = fields.getFieldNames();
+    names = fields.getFilterFields();
   }
   else if (m_Manufacturer == Ebsd::HKL)
   {
     CtfFields fields;
     reader = H5CtfVolumeReader::New();
-    names = fields.getFieldNames();
+    names = fields.getFilterFields();
   }
   else
   {
@@ -238,6 +238,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
       FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
       m->addCellData(names[i], array);
     }
+
   }
 
   if (preflight == true)
