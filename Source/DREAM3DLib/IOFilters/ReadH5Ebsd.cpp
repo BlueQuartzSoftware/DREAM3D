@@ -210,13 +210,13 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   {
     AngFields fields;
     reader = H5AngVolumeReader::New();
-    names = fields.getFilterFields();
+    names = fields.getFilterFields<std::vector<std::string> > ();
   }
   else if (m_Manufacturer == Ebsd::HKL)
   {
     CtfFields fields;
     reader = H5CtfVolumeReader::New();
-    names = fields.getFilterFields();
+    names = fields.getFilterFields<std::vector<std::string> > ();
   }
   else
   {
