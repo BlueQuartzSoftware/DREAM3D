@@ -69,7 +69,6 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
 
       fields.push_back(Ebsd::Ang::ImageQuality.c_str());
       fields.push_back(Ebsd::Ang::ConfidenceIndex.c_str());
-      fields.push_back(Ebsd::Ang::PhaseData.c_str());
 
       fields.push_back(Ebsd::Ang::SEMSignal.c_str());
       fields.push_back(Ebsd::Ang::Fit.c_str());

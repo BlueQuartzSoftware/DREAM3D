@@ -210,13 +210,13 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   {
     AngFields fields;
     reader = H5AngVolumeReader::New();
-    names = fields.getFilterFields();
+	names = fields.getFilterFields<std::vector<std::string> >();
   }
   else if (m_Manufacturer == Ebsd::HKL)
   {
     CtfFields fields;
     reader = H5CtfVolumeReader::New();
-    names = fields.getFilterFields();
+    names = fields.getFilterFields<std::vector<std::string> >();
   }
   else
   {
@@ -238,15 +238,12 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
       FloatArrayType::Pointer array = FloatArrayType::CreateArray(voxels, names[i]);
       m->addCellData(names[i], array);
     }
-
   }
 
-  if (preflight == true)
-  {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
-  }
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+
   typedef DataArray<unsigned int> XTalStructArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1);
 }
@@ -373,7 +370,7 @@ void ReadH5Ebsd::execute()
   }
 
   // This will create the arrays with the correct sizes
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+//  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -483,14 +480,14 @@ void ReadH5Ebsd::execute()
     m->addCellData(Ebsd::Ctf::MAD, fArray);
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BC);
+	iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BC);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::BC, iArray);
+	m->addCellData(Ebsd::Ctf::BC, iArray);
 
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BS);
+	phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
+	iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BS);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::BS, iArray);
+	m->addCellData(Ebsd::Ctf::BS, iArray);
   }
   else
   {
@@ -501,10 +498,7 @@ void ReadH5Ebsd::execute()
     return;
   }
 
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, totalPoints, 1);
-
-
 
   // Run the filter to determine the good Voxels
   DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();

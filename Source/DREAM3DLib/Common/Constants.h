@@ -103,6 +103,7 @@ namespace DREAM3D
   {
     const std::string GrainIds("GrainIds");
     const std::string Phases("Phases");
+    const std::string BandContrast("BandContrast");
     const std::string EulerAngles("EulerAngles");
     const std::string SurfaceVoxels("SurfaceVoxels");
     const std::string Quats("Quats");

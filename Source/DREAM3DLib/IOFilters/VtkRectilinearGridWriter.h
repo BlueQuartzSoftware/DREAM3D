@@ -39,6 +39,10 @@
 
 #include <string>
 
+#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/HKL/CtfConstants.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -71,11 +75,13 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(BCArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseIds)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBandContrasts)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteIPFColors)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
@@ -103,6 +109,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
+	int32_t* m_BC;
     bool*    m_GoodVoxels;
     float*   m_CellEulerAngles;
 
