@@ -10,7 +10,6 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (GenericFilters_FILTERS_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainPhases.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceCells.h
@@ -24,6 +23,7 @@ SET (GenericFilters_FILTERS_HDRS
 SET (DREAM3DLib_GenericFilters_HDRS
     ${GenericFilters_FILTERS_HDRS}
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
+    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.h
 )
 
 SET (DREAM3DLib_GenericFilters_SRCS

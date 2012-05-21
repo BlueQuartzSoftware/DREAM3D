@@ -37,6 +37,8 @@
 
 #include "VtkRectilinearGridWriter.h"
 
+#include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/HKL/CtfFields.h"
 
 
 // -----------------------------------------------------------------------------
@@ -46,10 +48,12 @@ VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_BCArrayName(Ebsd::Ctf::BC),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_WriteGrainIds(true),
 m_WritePhaseIds(false),
+m_WriteBandContrasts(false),
 m_WriteGoodVoxels(false),
 m_WriteIPFColors(false),
 m_WriteBinaryFile(false)
@@ -97,6 +101,13 @@ void VtkRectilinearGridWriter::setupFilterOptions()
   }
   {
     FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write Band Contrasts");
+    option->setPropertyName("WriteBandContrasts");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }  {
+    FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Write Good Voxels");
     option->setPropertyName("WriteGoodVoxels");
     option->setWidgetType(FilterOption::BooleanWidget);
@@ -128,6 +139,7 @@ void VtkRectilinearGridWriter::writeFilterOptions(AbstractFilterOptionsWriter* w
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteGrainIds", getWriteGrainIds() );
   writer->writeValue("WritePhaseIds", getWritePhaseIds() );
+  writer->writeValue("WriteBandContrasts", getWriteBandContrasts() );
   writer->writeValue("WriteGoodVoxels", getWriteGoodVoxels() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
@@ -160,9 +172,13 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
   }
+  if(m_WriteBandContrasts == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1);
+  }
   if(m_WriteIPFColors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3);
   }
   setErrorMessage(ss.str());
 }
@@ -213,6 +229,13 @@ void VtkRectilinearGridWriter::execute()
   if(m_WritePhaseIds == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if(m_WriteBandContrasts == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelBCScalarWriter<DataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
