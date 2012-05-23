@@ -407,6 +407,7 @@ void ReadH5Ebsd::execute()
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
     FloatArrayType::Pointer fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
+	fArray->SetNumberOfComponents(3);
     float* cellEulerAngles = fArray->GetPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
@@ -419,26 +420,31 @@ void ReadH5Ebsd::execute()
 
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
+	fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::ImageQuality, fArray);
 
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
+	fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
     Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ang::PhaseData);
+	iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(DREAM3D::CellData::Phases, iArray);
 
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
+	fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::SEMSignal, fArray);
 
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Fit));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
+	fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::Fit, fArray);
   }
@@ -449,6 +455,7 @@ void ReadH5Ebsd::execute()
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));
     FloatArrayType::Pointer fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
+	fArray->SetNumberOfComponents(3);
     float* cellEulerAngles = fArray->GetPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
@@ -461,31 +468,37 @@ void ReadH5Ebsd::execute()
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
     Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Phase);
+	iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(DREAM3D::CellData::Phases, iArray);
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Bands);
+	iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(Ebsd::Ctf::Bands, iArray);
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Error));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Error);
+	iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(Ebsd::Ctf::Error, iArray);
 
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::MAD));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ctf::MAD);
+	fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ctf::MAD, fArray);
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
 	iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BC);
+	iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
 	m->addCellData(Ebsd::Ctf::BC, iArray);
 
 	phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
 	iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BS);
+	iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
 	m->addCellData(Ebsd::Ctf::BS, iArray);
   }
