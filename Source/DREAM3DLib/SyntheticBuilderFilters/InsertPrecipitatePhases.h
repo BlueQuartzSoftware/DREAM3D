@@ -110,22 +110,36 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
   protected:
     InsertPrecipitatePhases();
 
-    void insert_precipitate(size_t grainNum);
-//    void insert_precipitate(size_t grainNum, float coatingthickness);
     void place_precipitates();
-    void fillin_precipitates();
-    float find_xcoord(long long int index);
-    float find_ycoord(long long int index);
-    float find_zcoord(long long int index);
+    void initialize_packinggrid();
+
+	static void generate_precipitate(int phase, int Seed, Field* grain, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+
+    void transfer_attributes(int gnum, Field* field);
+    void insert_precipitate(size_t grainNum);
+
+    void move_precipitate(size_t grainNum, float xc, float yc, float zc);
+
+    float check_sizedisterror(Field* field);
+    void determine_neighbors(size_t grainNum, int add);
+    float check_neighborhooderror(int gadd, int gremove);
+
+    float check_fillingerror(int gadd, int gremove);
+    void assign_voxels();
+    void assign_gaps();
+    void cleanup_grains();
+
+	void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
+    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
+
+    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
     std::vector<int> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
   private:
-    std::vector<int> currentprecipvoxellist;
-	  std::vector<int> currentcoatingvoxellist;
 
-	size_t firstPrecipitateField;
+	int firstPrecipitateField;
     unsigned long long int Seed;
     float sizex;
     float sizey;
@@ -164,8 +178,36 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
 
+    std::vector<std::vector<int> > columnlist;
+    std::vector<std::vector<int> > rowlist;
+    std::vector<std::vector<int> > planelist;
+
+    float packingresx;
+    float packingresy;
+    float packingresz;
+    int packingxpoints;
+    int packingypoints;
+    int packingzpoints;
+    int packingtotalpoints;
+
+	std::vector<std::vector<std::vector<int> > > grainowners;
+
+    std::vector<std::vector<float> > grainsizedist;
+    std::vector<std::vector<float> > simgrainsizedist;
+    std::vector<std::vector<std::vector<float> > > neighbordist;
+    std::vector<std::vector<std::vector<float> > > simneighbordist;
+
+    std::vector<float> grainsizediststep;
+
+    std::vector<int> newnames;
+    std::vector<int> packqualities;
+    std::vector<int> gsizes;
+
+    float fillingerror, oldfillingerror;
+    float currentneighborhooderror, oldneighborhooderror;
+    float currentsizedisterror, oldsizedisterror;
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void transfer_attributes(int gnum, Field* field);
 
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
     void operator=(const InsertPrecipitatePhases&); // Operator '=' Not Implemented

@@ -125,24 +125,20 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
      */
     virtual void execute();
 
-    float check_sizedisterror(Field* field);
-	static void generate_grain(int phase, int Seed, Field* grain, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
-
-    void transfer_attributes(int gnum, Field* field);
-
 
   protected:
     PackPrimaryPhases();
 
     void initialize_packinggrid();
 
-    void pack_grains();
+	static void generate_grain(int phase, int Seed, Field* grain, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+
+    void transfer_attributes(int gnum, Field* field);
     void insert_grain(size_t grainNum);
 
-    void add_grain(size_t grainNum);
     void move_grain(size_t grainNum, float xc, float yc, float zc);
 
-    void remove_grain(size_t grainNum);
+    float check_sizedisterror(Field* field);
     void determine_neighbors(size_t grainNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
@@ -201,7 +197,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     unsigned long long int Seed;
 
-    size_t firstPrimaryField;
+    int firstPrimaryField;
 
     float sizex;
     float sizey;
