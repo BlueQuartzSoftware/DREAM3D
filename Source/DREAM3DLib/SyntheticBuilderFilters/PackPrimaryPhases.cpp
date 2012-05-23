@@ -351,7 +351,6 @@ void PackPrimaryPhases::execute()
 	  gid = 1;
   }
   firstPrimaryField = gid;
-  m_Active[gid] = true;
   std::vector<float> curphasevol;
   curphasevol.resize(primaryphases.size());
   float factor = 1.0;
@@ -516,7 +515,7 @@ void PackPrimaryPhases::execute()
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(iteration%100 == 0) notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
 //    change1 = 0;
 //    change2 = 0;
@@ -546,7 +545,7 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain)  );
       move_grain(randomgrain, xc, yc, zc);
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
-      currentneighborhooderror = check_neighborhooderror(-1000, random);
+      currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       if(fillingerror <= oldfillingerror)
       {
@@ -577,7 +576,7 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_grain(randomgrain, xc, yc, zc);
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
-      currentneighborhooderror = check_neighborhooderror(-1000, random);
+      currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       if(fillingerror <= oldfillingerror)
       {
@@ -627,12 +626,6 @@ void PackPrimaryPhases::execute()
   }
 
   dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-
-  size_t numfields = m->getNumFieldTuples();
-  for(size_t i = firstPrimaryField; i < numfields; i++)
-  {
-	m_NumFields[m_FieldPhases[i]]++;
-  }
 
   notify("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
   assign_gaps();
@@ -1550,6 +1543,10 @@ void PackPrimaryPhases::assign_gaps()
 			  if (iter3 < 0) plane = iter3 + dims[2];
 			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
 			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
+			  if(index < 0 || index > (totpoints-1))
+			  {
+					int stop = 0;
+			  }
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
