@@ -191,24 +191,24 @@ void AlignSections::execute()
   find_shifts(xshifts, yshifts);
 
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  for (DimType iter = 1; iter < dims[2]; iter++)
+  for (DimType i = 1; i < dims[2]; i++)
   {
     std::stringstream ss;
-    ss << "Aligning Sections - Transferring Cell Data - " << ((float)iter/dims[2])*100 << " Percent Complete";
+    ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
    // notify(ss.str(), 0, Observable::UpdateProgressMessage);
-    slice = (dims[2] - 1) - iter;
+    slice = (dims[2] - 1) - i;
     for (DimType l = 0; l < dims[1]; l++)
     {
       for (DimType n = 0; n < dims[0]; n++)
       {
-        if(yshifts[iter] >= 0) yspot = l;
-        if(xshifts[iter] >= 0) xspot = n;
-        if(yshifts[iter] < 0) yspot = dims[1] - 1 - l;
-        if(xshifts[iter] < 0) xspot = dims[0] - 1 - n;
+        if(yshifts[i] >= 0) yspot = l;
+        if(xshifts[i] >= 0) xspot = n;
+        if(yshifts[i] < 0) yspot = dims[1] - 1 - l;
+        if(xshifts[i] < 0) xspot = dims[0] - 1 - n;
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
-        currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[iter]) * dims[0]) + (xspot + xshifts[iter]);
-        if((yspot + yshifts[iter]) >= 0 && (yspot + yshifts[iter]) <= dims[1] - 1 && (xspot + xshifts[iter]) >= 0
-            && (xspot + xshifts[iter]) <= dims[0] - 1)
+        currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
+        if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
+            && (xspot + xshifts[i]) <= dims[0] - 1)
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
@@ -217,8 +217,8 @@ void AlignSections::execute()
         	  p->CopyTuple(currentPosition, newPosition);
           }
         }
-        if((yspot + yshifts[iter]) < 0 || (yspot + yshifts[iter]) > dims[1] - 1 || (xspot + xshifts[iter]) < 0
-            || (xspot + xshifts[iter]) > dims[0] - 1)
+        if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
+            || (xspot + xshifts[i]) > dims[0] - 1)
         {
 
 
