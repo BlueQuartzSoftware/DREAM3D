@@ -11,12 +11,10 @@ is a shortcut that has been written using the CMake build system.@n
 @n
  The developer needs to clone the git repository using the following command:
 @code
-  git clone ssh://code@scm.bluequartz.net/DREAM3DPluginTemplate.git
+  git clone git://scm.bluequartz.net/DREAM3DPluginTemplate.git
 @endcode
 or you can get a compressed archive from the following web site:
-@code
-  http://www.bluequartz.net/gitweb/
-@endcode
+
 @n
 Launch the CMake-Gui.exe or CMake-GUI.app (or ccmake on Linux). Click the "Configure" button
 or type the 'c' key if using ccmake. This will reveal another variable called <b>
@@ -43,52 +41,6 @@ CMake.
 @section filedescription File Descriptions
   For example, if you wanted to create a plugin called "GrainAnalyzer" then you
 would end up with the following files:
-
-
-@n<b>CMakeLists.txt</b>@n
-  This file holds all the CMake commands that are needed to compile the plugin when
-compiling the DREAM.3D application
-
-
-@n<b>GrainAnalyzer.{h|cpp}</b>@n
-  This file defines the C++ class that holds the input variables. It inherits from
-AbstractPipeline and the user needs to implement the execute() method. In the current
-architecture of DREAM.3D the execute() method handles the high level set of method
-calls to perform your algorithm.
-
-
-@n<b>GrainAnalyzerFunc.{h|cpp}</b>@n
-  This file contains all the internal data structures that you may need to execute
-your algorithm. This is an optional class and some plugins (EbsdImport) do not
-actually use it.
-
-
-@n<b>UI/GrainAnalyzerPlugin.{h|cpp}</b>@n
-  This C++ object inherits from QObject and DREAM3DPluginInterface and contains
-the needed code to allow the plugin to be loaded by DREAM.3D. The file that is generated
-should be sufficient as it stands and should not need anything implemented.
-
-
-@n<b>UI/GrainAnalyzerWidget.{h|cpp}</b>@n
-  This file implements the QWidget that will be presented to the user when the plugin
-is invoked by the user through the Graphical User Interface. The programmer is urged
-to use QDesigner to graphically design their user interface.
-
-
-@n<b>UI/GrainAnalyzerWidget.ui</b>@n
-  This is a base file that can be used as a starting point for writing the user interface
-for the plugin. The file can be opened with QDesigner and more widgets added to
-interface as the programmer sees fit.
-
-
-@n<b>UI/Icons.qrc</b>@n
-  This file defines possible image files that would be used as icons in your user interface.
-
-
-
-@n<b>UI/GrainAnalyzer.png</b>@n
-  This file is a default icon for the plugin. The programmer is urged to create a different
-icon in its place.
 
 
 @section comments1 Misc Comments
