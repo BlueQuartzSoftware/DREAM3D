@@ -194,7 +194,7 @@ void AdjustVolume::execute()
   PackPrimaryPhases::Pointer packGrains = PackPrimaryPhases::New();
   packGrains->setDataContainer(getDataContainer());
   packGrains->setObservers(this->getObservers());
-  Field field;
+//  Field field;
 //  oldsizedisterror = packGrains->check_sizedisterror(&field);
   while(iterations < m_MaxIterations)
   {
