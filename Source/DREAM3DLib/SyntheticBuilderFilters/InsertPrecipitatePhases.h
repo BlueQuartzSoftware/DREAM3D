@@ -129,6 +129,10 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     void assign_gaps();
     void cleanup_grains();
 
+	float find_xcoord(long long int index);
+	float find_ycoord(long long int index);
+	float find_zcoord(long long int index);
+
 	void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
 

@@ -240,6 +240,7 @@ void InsertPrecipitatePhases::execute()
   totalvol = sizex * sizey * sizez;
 
   notify("Packing Precipitates - Generating and Placing Precipitates", 0, Observable::UpdateProgressMessage);
+  initialize_packinggrid();
   place_precipitates();
 
   notify("Packing Precipitates - Assigning Voxels", 0, Observable::UpdateProgressMessage);
@@ -380,7 +381,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
 	  curphasevol[j] = 0;
-	  float curphasetotalvol = totalvol*precipitatephasefractions[j];
+	  float curphasetotalvol = totalvol*totalprecipitatefractions*precipitatephasefractions[j];
 	  while (curphasevol[j] < (factor * curphasetotalvol))
 	  {
 	    iter++;
@@ -458,9 +459,29 @@ void  InsertPrecipitatePhases::place_precipitates()
     ss << "Packing Grains - Placing Grain #" << i;
     notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
-    xc = sizex / 2.0f;
-    yc = sizey / 2.0f;
-    zc = sizez / 2.0f;
+	precipboundaryfraction = statsDataArray[m_FieldPhases[i]]->getPrecipBoundaryFraction();
+    random = rg.genrand_res53();
+    if(random <= precipboundaryfraction)
+    {
+      random2 = int(rg.genrand_res53() * double(totalPoints - 1));
+      while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
+      {
+        random2++;
+        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+      }
+    }
+    else if(random > precipboundaryfraction)
+    {
+      random2 = rg.genrand_res53() * (totalPoints - 1);
+      while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
+      {
+        random2++;
+        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+      }
+    }
+    xc = find_xcoord(random2);
+    yc = find_ycoord(random2);
+    zc = find_zcoord(random2);
     m_Centroids[3 * i] = xc;
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
@@ -468,10 +489,29 @@ void  InsertPrecipitatePhases::place_precipitates()
     fillingerror = check_fillingerror(i, -1000);
     for (int iter = 0; iter < 10; iter++)
     {
-	  xc = static_cast<float>(rg.genrand_res53() * (dims[0] * m->getXRes()));
-      yc = static_cast<float>(rg.genrand_res53() * (dims[1] * m->getYRes()));
-      zc = static_cast<float>(rg.genrand_res53() * (dims[2] * m->getZRes()));
-      oldxc = m_Centroids[3 * i];
+      random = rg.genrand_res53();
+      if(random <= precipboundaryfraction)
+      {
+        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
+        while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
+        {
+          random2++;
+          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+        }
+      }
+      else if(random > precipboundaryfraction)
+      {
+        random2 = rg.genrand_res53() * (totalPoints - 1);
+        while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
+        {
+          random2++;
+          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+        }
+      }
+      xc = find_xcoord(random2);
+      yc = find_ycoord(random2);
+      zc = find_zcoord(random2);
+	  oldxc = m_Centroids[3 * i];
       oldyc = m_Centroids[3 * i + 1];
       oldzc = m_Centroids[3 * i + 2];
       oldfillingerror = fillingerror;
@@ -492,7 +532,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * (numgrains-1));
+  int totalAdjustments = static_cast<int>(10 * (numgrains-1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     std::stringstream ss;
@@ -511,9 +551,29 @@ void  InsertPrecipitatePhases::place_precipitates()
       if(randomgrain >= numgrains) randomgrain = numgrains - 1;
       Seed++;
 
-	  xc = static_cast<float>(rg.genrand_res53() * (dims[0] * m->getXRes()));
-      yc = static_cast<float>(rg.genrand_res53() * (dims[1] * m->getYRes()));
-      zc = static_cast<float>(rg.genrand_res53() * (dims[2] * m->getZRes()));
+      precipboundaryfraction = statsDataArray[m_FieldPhases[randomgrain]]->getPrecipBoundaryFraction();
+	  random = rg.genrand_res53();
+      if(random <= precipboundaryfraction)
+      {
+        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
+        while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
+        {
+          random2++;
+          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+        }
+      }
+      else if(random > precipboundaryfraction)
+      {
+        random2 = rg.genrand_res53() * (totalPoints - 1);
+        while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
+        {
+          random2++;
+          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+        }
+      }
+      xc = find_xcoord(random2);
+      yc = find_ycoord(random2);
+      zc = find_zcoord(random2);
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
@@ -1245,7 +1305,6 @@ void InsertPrecipitatePhases::assign_voxels()
             if (inside >= 0)
             {
               int currentpoint = index;
-
               if (m_GrainIds[currentpoint] > firstPrecipitateField)
               {
                 oldname = m_GrainIds[currentpoint];
@@ -1636,4 +1695,22 @@ void InsertPrecipitatePhases::initialize_packinggrid()
       grainowners[i][j].resize(packingzpoints, 0);
     }
   }
+}
+float InsertPrecipitatePhases::find_xcoord(long long int index)
+{
+  DataContainer* m = getDataContainer();
+  float x = m->getXRes()*float(index%m->getXPoints());
+  return x;
+}
+float InsertPrecipitatePhases::find_ycoord(long long int index)
+{
+  DataContainer* m = getDataContainer();
+  float y = m->getYRes()*float((index/m->getXPoints())%m->getYPoints());
+  return y;
+}
+float InsertPrecipitatePhases::find_zcoord(long long int index)
+{
+  DataContainer* m = getDataContainer();
+  float z = m->getZRes()*float(index/(m->getXPoints()*m->getYPoints()));
+  return z;
 }
