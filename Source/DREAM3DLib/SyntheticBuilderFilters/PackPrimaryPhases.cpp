@@ -625,11 +625,6 @@ void PackPrimaryPhases::execute()
     return;
   }
 
-  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-
-  notify("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
-  assign_gaps();
-
   if(m_WriteIntendedAttributes == true)
   {
 
@@ -1264,12 +1259,7 @@ void PackPrimaryPhases::assign_voxels()
   float x, y, z;
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
  // int64_t totpoints = m->totalPoints();
-  gsizes.resize(m->getNumFieldTuples());
 
-  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
-  {
-    gsizes[i] = 0;
-  }
   for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
     float volcur = m_Volumes[i];
@@ -1386,23 +1376,17 @@ void PackPrimaryPhases::assign_voxels()
               if (m_GrainIds[currentpoint] > 0)
               {
                 oldname = m_GrainIds[currentpoint];
-                gsizes[oldname] = gsizes[oldname] - 1;
                 m_GrainIds[currentpoint] = -2;
               }
               if (m_GrainIds[currentpoint] == -1)
               {
                 m_GrainIds[currentpoint] = static_cast<int32_t>(i);
-                gsizes[i]++;
               }
             }
           }
         }
       }
     }
-  }
-  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
-  {
-    if (gsizes[i] == 0) m_Active[i] = false;
   }
 }
 
@@ -1639,9 +1623,10 @@ void PackPrimaryPhases::cleanup_grains()
   int index;
   float minsize = 0;
   gsizes.resize(m->getNumFieldTuples());
-  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     gsizes[i] = 0;
+	m_Active[i] = true;
   }
 
   float resConst = m->getXRes() * m->getYRes() * m->getZRes();
