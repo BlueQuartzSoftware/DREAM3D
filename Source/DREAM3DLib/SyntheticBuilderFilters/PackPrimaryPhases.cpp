@@ -277,7 +277,7 @@ void PackPrimaryPhases::execute()
   float change = 0.0f;
   int phase = 0;
   size_t randomgrain;
-    float random = 0.0f;
+ //   float random = 0.0f;
 //  int newgrain;
   // float check;
   float xc, yc, zc;
