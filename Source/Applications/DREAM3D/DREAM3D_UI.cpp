@@ -160,7 +160,7 @@ void DREAM3D_UI::readSettings()
 #else
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
-  bool ok = false;
+//  bool ok = false;
 
 //  Qt::ToolButtonStyle tbstyle = static_cast<Qt::ToolButtonStyle>(prefs.value("PluginDisplay").toUInt(&ok));
 //  m_PluginToolBar->setToolButtonStyle(tbstyle);
