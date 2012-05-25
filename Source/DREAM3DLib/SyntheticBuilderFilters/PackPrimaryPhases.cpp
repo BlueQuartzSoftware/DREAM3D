@@ -1543,10 +1543,6 @@ void PackPrimaryPhases::assign_gaps()
 			  if (iter3 < 0) plane = iter3 + dims[2];
 			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
 			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
-			  if(index < 0 || index > (totpoints-1))
-			  {
-					int stop = 0;
-			  }
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
@@ -1584,7 +1580,7 @@ void PackPrimaryPhases::assign_gaps()
 		  }
 		}
 	  }
-	  for (int i = 0; i < totpoints; i++)
+	  for (size_t i = 0; i < totpoints; i++)
 	  {
 	    if (ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
 		if (m_GrainIds[i] <= 0) unassignedcount++;
