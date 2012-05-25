@@ -125,6 +125,9 @@ void MergeColonies::setupFilterOptions()
 
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void MergeColonies::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
