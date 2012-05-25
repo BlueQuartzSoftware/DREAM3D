@@ -42,6 +42,7 @@
 #include "MXA/Common/MXAEndian.h"
 
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/HKL/CtfConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
