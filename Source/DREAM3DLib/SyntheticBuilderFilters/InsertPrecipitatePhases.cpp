@@ -297,7 +297,6 @@ void  InsertPrecipitatePhases::place_precipitates()
   totalvol = sizex*sizey*sizez;
 
   int64_t totalPoints = m->getTotalPoints();
-//  size_t precipvoxelcounter = 0;
   size_t currentnumgrains = m->getNumFieldTuples();
   if(currentnumgrains == 0)
   {
