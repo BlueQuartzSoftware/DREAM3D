@@ -53,142 +53,28 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
     DREAM3D_INSTANCE_STRING_PROPERTY(Comment);
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType);
-    DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary);
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Read Vtk File (Rectilinear Grid, Grain Ids Only)"; }
+    virtual const std::string getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
 
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void preflight();
+	virtual void execute();
 
   protected:
     YSChoiAbaqusReader();
 
-    /**
-     * @brief Reads the VTK header and sets the values that are described in the header
-     * @return Error Condition. Negative is Error.
-     */
-    int readHeader();
-
-    /**
-     * @brief
-     * @return Error Condition. Negative is Error.
-     */
-    virtual int readFile();
-
-    /**
-     *
-     * @param input
-     * @param value
-     * @return Error Condition. Negative is Error.
-     */
-    int parseCoordinateLine(const char* input, size_t &value);
-
-    /**
-      * @brief Parses the byte size from a data set declaration line
-      * @param text
-      * @return
-      */
-     size_t parseByteSize(char text[256]);
-
-     /**
-      *
-      */
-     int ignoreData(std::ifstream &in, int byteSize, char* type, size_t xDim, size_t yDim, size_t zDim);
-
-     /**
-      *
-      */
-     template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim, T &diff)
-     {
-       int err = 0;
-       int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
-       if (getFileIsBinary() == true)
-       {
-         T* buffer = new T[totalSize];
-         // Read all the xpoints in one shot into a buffer
-         inStream.read(reinterpret_cast<char* > (buffer), (totalSize * sizeof(T)));
-         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
-         {
-           std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
-               << " vs " << (totalSize * sizeof(T)) << std::endl;
-           return -1;
-         }
-         if (totalSize > 1) {
-           T t = buffer[totalSize-1];
-           T t1 = buffer[totalSize-2];
-           // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
-           MXA::Endian::FromBigToSystem::convert<T>(t);
-           MXA::Endian::FromBigToSystem::convert<T>(t1);
-           diff =t-t1;
-         }
-         else
-         {
-           diff = buffer[totalSize];
-         }
-         delete buffer;
-       }
-       else
-       {
-         T tmp;
-         T t2;
-         for (int64_t x = 0; x < totalSize; ++x)
-         {
-           if(x == 1)
-           {
-             t2 = tmp;
-           }
-           inStream >> tmp;
-           if(x == 1)
-           {
-             diff = tmp - t2;
-           }
-         }
-       }
-       return err;
-     }
-
-     template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim)
-     {
-       int err = 0;
-       if(getFileIsBinary() == true)
-       {
-         int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
-         T* buffer = new T[totalSize];
-         // Read all the xpoints in one shot into a buffer
-         inStream.read(reinterpret_cast<char*>(buffer), (totalSize * sizeof(T)));
-         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
-         {
-           std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
-               << (totalSize * sizeof(T)) << std::endl;
-           return -1;
-         }
-         delete buffer;
-       }
-       else
-       {
-         T tmp;
-         for (size_t z = 0; z < zDim; ++z)
-         {
-           for (size_t y = 0; y < yDim; ++y)
-           {
-             for (size_t x = 0; x < xDim; ++x)
-             {
-               inStream >> tmp;
-             }
-           }
-         }
-       }
-       return err;
-     }
-
-
 
   private:
+    int32_t* m_GrainIds;
+    bool* m_SurfaceFields;
+	float* m_CellEulerAngles;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     YSChoiAbaqusReader(const YSChoiAbaqusReader&); // Copy Constructor Not Implemented
     void operator=(const YSChoiAbaqusReader&); // Operator '=' Not Implemented

@@ -30,14 +30,26 @@
 
 #include "YSChoiAbaqusReader.h"
 
+
+// C Includes
+#include <stdio.h>
+
+// C++ Includes
+#include <iomanip>
+#include <iostream>
+#include <string>
+#include <sstream>
+
 #include <map>
 
 #include "MXA/Common/LogTime.h"
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
-
-#define kBufferSize 1024
+#define DIMS "DIMENSIONS"
+#define RES "SPACING"
+#define LOOKUP "LOOKUP_TABLE"
 
 // -----------------------------------------------------------------------------
 //
@@ -46,8 +58,12 @@ YSChoiAbaqusReader::YSChoiAbaqusReader() :
 FileReader(),
 m_Comment("DREAM3D Generated File"),
 m_DatasetType(""),
-m_FileIsBinary(true),
-m_GrainIdScalarName(DREAM3D::CellData::GrainIds)
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_GrainIds(NULL),
+m_CellEulerAngles(NULL),
+m_SurfaceFields(NULL)
 {
 
 }
@@ -65,8 +81,12 @@ void YSChoiAbaqusReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void YSChoiAbaqusReader::preflight()
+void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
   if (getInputFile().empty() == true)
   {
     std::stringstream ss;
@@ -74,364 +94,138 @@ void YSChoiAbaqusReader::preflight()
     setErrorMessage(ss.str());
     setErrorCondition(-387);
   }
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-size_t YSChoiAbaqusReader::parseByteSize(char text[256])
+void YSChoiAbaqusReader::preflight()
 {
-
-  char cunsigned_char [64] = "unsigned_char";
-  char cchar [64] = "char";
-  char cunsigned_short [64] = "unsigned_short";
-  char cshort [64] = "short";
-  char cunsigned_int [64] = "unsigned_int";
-  char cint [64] = "int";
-  char cunsigned_long [64] = " unsigned_long";
-  char clong [64] = "long";
-  char cfloat [64] = "float";
-  char cdouble [64] = " double";
-
-  if (strcmp(text, cunsigned_char) == 0 ) { return 1;}
-  if (strcmp(text, cchar) == 0 ) { return 1;}
-  if (strcmp(text, cunsigned_short) == 0 ) { return 2;}
-  if (strcmp(text, cshort) == 0 ) { return 2;}
-  if (strcmp(text, cunsigned_int) == 0 ) { return 4;}
-  if (strcmp(text, cint) == 0 ) { return 4;}
-  if (strcmp(text, cunsigned_long) == 0 ) { return 8;}
-  if (strcmp(text, clong) == 0 ) { return 8;}
-  if (strcmp(text, cfloat) == 0 ) { return 4;}
-  if (strcmp(text, cdouble) == 0 ) { return  8;}
-  return 0;
+  dataCheck(true, 1, 1, 1);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int YSChoiAbaqusReader::ignoreData(std::ifstream &in, int byteSize, char* text, size_t xDim, size_t yDim, size_t zDim)
+void YSChoiAbaqusReader::execute()
 {
-  char cunsigned_char [64] = "unsigned_char";
-  char cchar [64] = "char";
-  char cunsigned_short [64] = "unsigned_short";
-  char cshort [64] = "short";
-  char cunsigned_int [64] = "unsigned_int";
-  char cint [64] = "int";
-  char cunsigned_long [64] = " unsigned_long";
-  char clong [64] = "long";
-  char cfloat [64] = "float";
-  char cdouble [64] = " double";
-  int err = 0;
-  if (strcmp(text, cunsigned_char) == 0 ) {
-    err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
-  }
-  if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_short) == 0 ) { err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cshort) == 0 ) {err |= skipVolume<short>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_int) == 0 ) { err |= skipVolume<unsigned int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cint) == 0 ) { err |= skipVolume<int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_long) == 0 ) { err |= skipVolume<unsigned long long int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, clong) == 0 ) { err |= skipVolume<long long int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cfloat) == 0 ) { err |= skipVolume<float>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cdouble) == 0 ) { err |= skipVolume<double>(in, byteSize, xDim, yDim, zDim);}
-  return err;
-}
+    DataContainer* m = getDataContainer();
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int YSChoiAbaqusReader::readHeader()
-{
-
-  int err = 0;
-  if (getInputFile().empty() == true)
-  {
-    std::stringstream ss;
-    ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
-    setErrorCondition(-1);
-    return -1;
-  }
-
-  if (NULL == getDataContainer())
-  {
-    std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
-    setErrorCondition(-1);
-    return -1;
-  }
-
-  std::ifstream instream;
-  instream.open(getInputFile().c_str(), std::ios_base::binary);
-  if (!instream.is_open())
-  {
-    std::stringstream ss;
-    ss << "Vtk file could not be opened: " << getInputFile();
-    setErrorMessage(ss.str());
-    return -1;
-  }
-  char buf[kBufferSize];
-  instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
-  setComment(std::string(buf));
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
-  std::string fileType(buf);
-  if (fileType.find("BINARY", 0) == 0)
-  {
-    setFileIsBinary(true);
-  }
-  else if (fileType.find("ASCII", 0) == 0)
-  {
-    setFileIsBinary(false);
-  }
-  else
-  {
-    err = -1;
-    std::stringstream ss;
-    ss << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file.";
-    setErrorMessage(ss.str());
-    return err;
-  }
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
-  {
-    char text[256];
-    int n = sscanf(buf, "%s %s", text, &(text[16]) );
-    if (n < 2)
+	int xpoints, ypoints, zpoints, totalpoints;
+	int numgrains = 0;
+	float resx, resy, resz;
+    float **mat;
+    const unsigned int size(1024);
+    char buf[size];
+    std::ifstream in(getInputFile().c_str());
+    std::string word;
+    bool headerdone = false;
+    while (headerdone == false)
     {
-      std::stringstream ss;
-      ss << "Error Reading the type of data set. Was expecting 2 fields but got " << n;
-      setErrorMessage(ss.str());
-      return -1;
-    }
-    std::string dataset(&(text[16]));
-    setDatasetType(dataset);
-  }
-
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
-  size_t dims[3];
-  err = parseSizeT_3V(buf, dims, 0);
-  getDataContainer()->setDimensions(dims);
-
-#if 0
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
-  float origin[3];
-  err = parseFloat3V(buf, origin, 0.0f);
-  setOrigin(origin);
-
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize);// Read Line 7 which is the Scaling values
-  float resolution[3];
-  err = parseFloat3V(buf, resolution, 1.0f);
-  setResolution(resolution);
-
-  ::memset(buf, 0, kBufferSize);
-#endif
-
-  instream.close();
-  return err;
-
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int YSChoiAbaqusReader::parseCoordinateLine(const char* input, size_t &value)
-{
-  char text[256];
-  char text1[256];
-  int i = 0;
-  int n = sscanf(input, "%s %d %s", text, &i, text1);
-  if (n != 3)
-  {
-    value = -1;
-    return -1;
-  }
-  value = i;
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-// Called from the 'execute' method in the superclass
-// -----------------------------------------------------------------------------
-int YSChoiAbaqusReader::readFile()
-{
-  int err = 0;
-
-  std::string filename = getInputFile();
-  std::ifstream instream;
-  instream.open(filename.c_str(), std::ios_base::binary);
-  if (!instream.is_open())
-  {
-    std::stringstream ss;
-    ss << logTime() << " vtk file could not be opened: " << filename << std::endl;
-    setErrorMessage(ss.str());
-    return -1;
-  }
-
-  char buf[kBufferSize];
-  for (int i = 0; i < 5; ++i)
-  {
-    instream.getline(buf, kBufferSize);
-  }
-
-  // These should have been set from reading the header
-  size_t dims[3];
-  getDataContainer()->getDimensions(dims);
-
-
-  size_t dim = 0;
-  // Now parse the X, coordinates.
- // ::memset(buf, 0, kBufferSize);
-  err = readLine(instream, buf, kBufferSize);
-  err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[0])
-  {
-    std::stringstream ss;
-    ss << "x dimension does not match expected dimension: " << dim << " <--> " << dims[0];
-    setErrorMessage(ss.str());
-    return -1;
-  }
-  float xscale = 1.0f;
-  err = skipVolume<float>(instream, 4, dim, 1, 1, xscale);
-
-  // Now parse the Y coordinates.
- // ::memset(buf, 0, kBufferSize);
-  err = readLine(instream, buf, kBufferSize);
-  err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[1])
-  {
-    std::stringstream ss;
-    ss << "y dimension does not match expected dimension: " << dim << " <--> " << dims[1];
-    setErrorMessage(ss.str());
-    return -1;
-  }
-  float yscale = 1.0f;
-  err = skipVolume<float>(instream, 4, 1, dim, 1, yscale);
-
-  // Now parse the Z coordinates.
-//  ::memset(buf, 0, kBufferSize);
-  err = readLine(instream, buf, kBufferSize);
-  err = parseCoordinateLine(buf, dim);
-  if (err < 0 || dim != dims[2])
-  {
-    std::stringstream ss;
-    ss << "z dimension does not match expected dimension: " << dim << " <--> " << dims[2];
-    setErrorMessage(ss.str());
-    return -1;
-  }
-  float zscale = 1.0f;
-  err = skipVolume<float>(instream, 4, 1, 1, dim, zscale);
-  if (err < 0)
-  {
-    std::stringstream ss;
-    ss << "Error skipping Volume section of VTK file.";
-    return err;
-  }
-  // This makes a very bad assumption that the Rectilinear grid has even spacing
-  // along each axis which it does NOT have to have. Since this class is specific
-  // to the DREAM.3D package this is a safe assumption.
-  getDataContainer()->setResolution(xscale, yscale, zscale);
-
-
-  // Now we need to search for the 'GrainID' and
-  char text1[kBufferSize];
-  ::memset(text1, 0, kBufferSize);
-  char text2[kBufferSize];
-  ::memset(text2, 0, kBufferSize);
-  char text3[kBufferSize];
-  ::memset(text3, 0, kBufferSize);
-  int fieldNum = 0;
-  bool needGrainIds = true;
-
-  std::string scalarName;
-  int typeByteSize = 0;
-
-  //size_t index = 0;
-  //Cell Data is one less in each direction
-  getDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
-  getDataContainer()->getDimensions(dims);
-  size_t totalVoxels = dims[0] * dims[1] * dims[2];
-  DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
-  grainIds->SetName("GrainIds");
-  readLine(instream, buf, kBufferSize);
-
- // int i = 0;
-  while (needGrainIds == true)
-  {
-    readLine(instream, buf, kBufferSize);
-    ::memset(text1, 0, kBufferSize);
-    ::memset(text2, 0, kBufferSize);
-    ::memset(text3, 0, kBufferSize);
-    int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
-    if (n != 4)
-    {
-      std::stringstream ss;
-      ss << "Error reading SCALARS header section of VTK file.";
-      setErrorMessage(ss.str());
-      return -1;
-    }
-    scalarName = std::string(text2);
-    typeByteSize = parseByteSize(text3);
-    if (typeByteSize == 0)
-    {
-      return -1;
-    }
-
-    readLine(instream, buf, kBufferSize); // Read Line 11
-
-    // Check to make sure we are reading the correct set of scalars and if we are
-    // NOT then read all this particular Scalar Data and try again
-
-    if (m_GrainIdScalarName.compare(scalarName) == 0)
-    {
-    //  std::map<int, int> grainIdMap;
-      if (getFileIsBinary() == true)
+      in.getline(buf, size);
+      std::string line = buf;
+      in >> word;
+      if (DIMS == word)
       {
-        // Splat 0xAB across the entire array. that way if the read messes up we
-        //  can more easily diagnose the problem.
-        ::memset(grainIds->GetPointer(0), 0xAB, sizeof(int) * totalVoxels);
-        instream.read(reinterpret_cast<char*> (grainIds->GetPointer(0)), sizeof(int) * totalVoxels);
-        int t;
-        // We need to Byte Swap (Possibly) from the Big Endian format stored by
-        // the vtk binary file into what ever system we are running.
-        for (size_t i = 0; i < totalVoxels; ++i)
+        in >> xpoints >> ypoints >> zpoints;
+	    size_t dims[3] = {xpoints, ypoints, zpoints};
+	    m->setDimensions(dims);
+        totalpoints = xpoints * ypoints * zpoints;
+        mat = new float *[totalpoints];
+      }
+	  if (RES == word)
+      {
+        in >> resx >> resy >> resz;
+	    float res[3] = {resx, resy, resz};
+		m->setResolution(res);
+      }
+      if (LOOKUP == word)
+      {
+        headerdone = true;
+        in >> word;
+      }
+    }
+	dataCheck(false, totalpoints, 1, 1);
+    int gnum = 0;
+    bool onedge = false;
+    int col, row, plane;
+    float value;
+    for (int i = 0; i < totalpoints; i++)
+    {
+      mat[i] = new float[9];
+      onedge = false;
+      in >> gnum;
+      col = i % xpoints;
+      row = (i / xpoints) % ypoints;
+      plane = i / (xpoints * ypoints);
+      if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) onedge = true;
+      m_GrainIds[i] = gnum;
+      if (gnum >= numgrains)
+      {
+        numgrains = gnum + 1;
+	    m->resizeFieldDataArrays(numgrains);
+	    dataCheck(false, totalpoints, numgrains, 1);
+      }
+      m_SurfaceFields[gnum] = onedge;
+    }
+    for (int iter = 0; iter < 9; iter++)
+    {
+      headerdone = false;
+      while (headerdone == false)
+      {
+        in.getline(buf, size);
+        std::string line = buf;
+        in >> word;
+        if (LOOKUP == word)
         {
-          t = grainIds->GetValue(i);
-          MXA::Endian::FromBigToSystem::convert<int>(t);
-          grainIds->SetValue(i, t);
+          headerdone = true;
+          in >> word;
         }
       }
-      else // ASCII VTK File
+      for (int i = 0; i < totalpoints; i++)
       {
-        int grain_index = -1;
-        for (size_t i = 0; i < totalVoxels; ++i)
-        {
-          instream >> grain_index;
-          grainIds->SetValue(i, grain_index);
-       //   grainIdMap[grain_index]++;
-        }
+        onedge = 0;
+        in >> value;
+        mat[i][iter] = value;
       }
-      needGrainIds = false;
     }
-    else
-    {
-        ignoreData(instream, typeByteSize, text3, dims[0], dims[1], dims[2]);
+	float s, c, s1, c1, s2, c2;
+	float ea1, ea2, ea3;
+	float cosine1, cosine3, sine1, sine3;
+	float denom;
+	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+	{
+		denom = mat[i][0]*mat[i][0]+mat[i][1]*mat[i][1]+mat[i][2]*mat[i][2];
+		denom = sqrt(denom);
+		mat[i][0] = mat[i][0]/denom;
+		mat[i][3] = mat[i][3]/denom;
+		mat[i][6] = mat[i][6]/denom;
+		denom = mat[i][3]*mat[i][3]+mat[i][4]*mat[i][4]+mat[i][5]*mat[i][5];
+		denom = sqrt(denom);
+		mat[i][1] = mat[i][1]/denom;
+		mat[i][4] = mat[i][4]/denom;
+		mat[i][7] = mat[i][7]/denom;
+		denom = mat[i][6]*mat[i][6]+mat[i][7]*mat[i][7]+mat[i][8]*mat[i][8];
+		denom = sqrt(denom);
+		mat[i][2] = mat[i][2]/denom;
+		mat[i][5] = mat[i][5]/denom;
+		mat[i][8] = mat[i][8]/denom;
+		if(mat[i][8] > 1) mat[i][8] = 1;
+		if(mat[i][8] < -1) mat[i][8] = -1;
+		ea2 = acos(mat[i][8]);
+		cosine3 = (mat[i][5]/sin(ea2));
+		sine3 = (mat[i][2]/sin(ea2));
+		cosine1 = (-mat[i][7]/sin(ea2));
+		sine1 = (mat[i][6]/sin(ea2));
+		if(cosine3 > 1) cosine3 = 1;
+		if(cosine3 < -1) cosine3 = -1;
+		ea3 = acos(cosine3);
+		if(cosine1 > 1) cosine1 = 1;
+		if(cosine1 < -1) cosine1 = -1;
+		ea1 = acos(cosine1);
+		if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
+		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;
+		m_CellEulerAngles[3*i] = ea1;
+		m_CellEulerAngles[3*i + 1] = ea2;
+		m_CellEulerAngles[3*i + 2] = ea3;
+      delete[] mat[i];
     }
-
-  }
-
-  // push our grain id data into the DataContainer map
-  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
-
-  instream.close();
-  return err;
+    delete[] mat;
 }
