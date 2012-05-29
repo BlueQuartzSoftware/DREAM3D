@@ -626,6 +626,6 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
   this->m_FilePrefix->setText(fPrefix);
   this->m_ZStartIndex->setValue(minSlice);
   this->m_ZEndIndex->setValue(maxSlice);
-  this->m_ZStartIndex->setRange(minSlice, maxSlice);
-  this->m_ZEndIndex->setRange(minSlice, maxSlice);
+//  this->m_ZStartIndex->setRange(minSlice, maxSlice);
+//  this->m_ZEndIndex->setRange(minSlice, maxSlice);
 }

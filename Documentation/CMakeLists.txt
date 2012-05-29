@@ -8,7 +8,7 @@
 #
 # -----------------------------------------------------------------------------
 project (Docs)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.3)
 
 if (NOT DEFINED PROJECT_RESOURCES_DIR)
 set (PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)

@@ -13,7 +13,7 @@
 
 # set project's name
 PROJECT( DREAM3DLib )
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 2.8.3)
 
 SET (DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 IF (BUILD_SHARED_LIBS)

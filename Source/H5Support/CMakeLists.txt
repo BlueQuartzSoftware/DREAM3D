@@ -13,7 +13,7 @@
 
 # set project's name
 PROJECT( H5Support )
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.3)
 
 
 SET (H5Support_BUILT_AS_DYNAMIC_LIB)
