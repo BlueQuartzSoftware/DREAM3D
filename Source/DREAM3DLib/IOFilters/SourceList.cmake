@@ -20,6 +20,7 @@ SET (IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhWriter.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdReader.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdWriter.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.h
 )
@@ -41,6 +42,7 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdReader.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkGrainIdWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.cpp
 )
