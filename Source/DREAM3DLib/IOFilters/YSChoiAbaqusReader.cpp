@@ -56,8 +56,7 @@
 // -----------------------------------------------------------------------------
 YSChoiAbaqusReader::YSChoiAbaqusReader() :
 FileReader(),
-m_Comment("DREAM3D Generated File"),
-m_DatasetType(""),
+m_InputFile(""),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
@@ -65,7 +64,7 @@ m_GrainIds(NULL),
 m_CellEulerAngles(NULL),
 m_SurfaceFields(NULL)
 {
-
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -75,9 +74,30 @@ YSChoiAbaqusReader::~YSChoiAbaqusReader()
 {
 }
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
+  writer->writeValue("InputFile", getInputFile() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -186,7 +206,6 @@ void YSChoiAbaqusReader::execute()
         mat[i][iter] = value;
       }
     }
-	float s, c, s1, c1, s2, c2;
 	float ea1, ea2, ea3;
 	float cosine1, cosine3, sine1, sine3;
 	float denom;
