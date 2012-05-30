@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5VOXELGRAINIDREADER_H_
-#define H5VOXELGRAINIDREADER_H_
+#ifndef H5VOXELFILEREADER_H_
+#define H5VOXELFileREADER_H_
 
 #include <string>
 #include <vector>
@@ -49,37 +49,57 @@
 
 
 /**
- * @class H5VoxelGrainIdReader H5VoxelGrainIdReader.h DREAM3DLib/HDF5/H5VoxelGrainIdReader.h
+ * @class H5VoxelFileReader H5VoxelFileReader.h DREAM3DLib/HDF5/H5VoxelFileReader.h
  * @brief This class is meant to read the grain ids out of an h5voxel file and nothing
  * else.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Dec 21, 2011
  * @version 1.0
  */
- class H5VoxelGrainIdReader : public FileReader
+ class H5VoxelFileReader : public FileReader
   {
     public:
-      DREAM3D_SHARED_POINTERS(H5VoxelGrainIdReader);
-      DREAM3D_STATIC_NEW_MACRO(H5VoxelGrainIdReader);
-      DREAM3D_TYPE_MACRO_SUPER(H5VoxelGrainIdReader, FileReader);
+      DREAM3D_SHARED_POINTERS(H5VoxelFileReader);
+      DREAM3D_STATIC_NEW_MACRO(H5VoxelFileReader);
+      DREAM3D_TYPE_MACRO_SUPER(H5VoxelFileReader, FileReader);
 
 
-      virtual ~H5VoxelGrainIdReader();
+      virtual ~H5VoxelFileReader();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+
+	//------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Legacy DREAM.3D H5Voxel File"; }
+
+	  virtual void setupFilterOptions();
+	  virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+
+	  virtual void preflight();
+	  virtual void execute();
 
     protected:
-      H5VoxelGrainIdReader();
-
-      int readHeader();
-
-      int readFile();
-
+      H5VoxelFileReader();
 
     private:
-      H5VoxelGrainIdReader(const H5VoxelGrainIdReader&); // Copy Constructor Not Implemented
-      void operator=(const H5VoxelGrainIdReader&); // Operator '=' Not Implemented
+      int32_t* m_GrainIds;
+      int32_t* m_CellPhases;
+	  float* m_CellEulerAngles;
+
+	  unsigned int* m_CrystalStructures;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+	  H5VoxelFileReader(const H5VoxelFileReader&); // Copy Constructor Not Implemented
+      void operator=(const H5VoxelFileReader&); // Operator '=' Not Implemented
 
   };
 
 
-#endif /* H5VOXELGRAINIDREADER_H_ */
+#endif /* H5VoxelFileReader_H_ */
