@@ -265,11 +265,6 @@ void InsertPrecipitatePhases::execute()
     return;
   }
 
-  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-
-  notify("Packing Precipitates - Filling Gaps", 0, Observable::UpdateProgressMessage);
-  assign_gaps();
-
   // If there is an error set this to something negative and also set a message
   notify("InsertPrecipitatePhases Completed", 0, Observable::UpdateProgressMessage);
 }
@@ -302,7 +297,6 @@ void  InsertPrecipitatePhases::place_precipitates()
   totalvol = sizex*sizey*sizez;
 
   int64_t totalPoints = m->getTotalPoints();
-//  size_t precipvoxelcounter = 0;
   size_t currentnumgrains = m->getNumFieldTuples();
   if(currentnumgrains == 0)
   {
@@ -1308,23 +1302,17 @@ void InsertPrecipitatePhases::assign_voxels()
               if (m_GrainIds[currentpoint] > firstPrecipitateField)
               {
                 oldname = m_GrainIds[currentpoint];
-                gsizes[oldname] = gsizes[oldname] - 1;
                 m_GrainIds[currentpoint] = -2;
               }
               if (m_GrainIds[currentpoint] < firstPrecipitateField && m_GrainIds[currentpoint] != -2)
               {
                 m_GrainIds[currentpoint] = static_cast<int32_t>(i);
-                gsizes[i]++;
               }
             }
           }
         }
       }
     }
-  }
-  for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
-  {
-    if (gsizes[i] == 0) m_Active[i] = false;
   }
 }
 
@@ -1465,10 +1453,6 @@ void InsertPrecipitatePhases::assign_gaps()
 			  if (iter3 < 0) plane = iter3 + dims[2];
 			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
 			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
-			  if(index < 0 || index > (totpoints-1))
-			  {
-					int stop = 0;
-			  }
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
@@ -1565,9 +1549,10 @@ void InsertPrecipitatePhases::cleanup_grains()
   int index;
   float minsize = 0;
   gsizes.resize(m->getNumFieldTuples());
-  for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     gsizes[i] = 0;
+	m_Active[i] = true;
   }
 
   float resConst = m->getXRes() * m->getYRes() * m->getZRes();
