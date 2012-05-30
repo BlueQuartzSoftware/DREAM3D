@@ -303,6 +303,9 @@ if (DREAM3D_BUILD_GUI AND DREAM3D_BUILD_QT_APPS)
             add_dependencies(${p} DREAM3D)
         endif()
     endforeach()
+	
+	#- Add in the Main DREAM.3D Application 
+  #  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
 endif()  
 
 # --- Look for user defined external Plugins that the user has entered 
