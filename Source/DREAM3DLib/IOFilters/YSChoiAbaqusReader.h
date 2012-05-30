@@ -51,8 +51,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
     virtual ~YSChoiAbaqusReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(Comment);
-    DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType);
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName);
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName);
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
@@ -60,6 +59,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
 
+	virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void preflight();
