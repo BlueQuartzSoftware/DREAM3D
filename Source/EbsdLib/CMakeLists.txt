@@ -14,7 +14,7 @@
 if(DEFINED DREAM3DProj_BINARY_DIR)
     # set project's name
     PROJECT( EbsdLib )
-    cmake_minimum_required(VERSION 2.8)
+    cmake_minimum_required(VERSION 2.8.3)
     
     SET (EbsdLib_BUILT_AS_DYNAMIC_LIB)
     IF (BUILD_SHARED_LIBS)

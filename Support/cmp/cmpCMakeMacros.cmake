@@ -582,12 +582,12 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
             set(TYPE "d")
             FOREACH(qtlib ${QTLIBLIST})
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-                message(STATUS "Generating Copy Rule for Qt Debug DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
+             #   message(STATUS "Generating Copy Rule for Qt Debug DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
                 add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/ 
                             COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/")
-                message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
+             #   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
                 add_custom_target(ZZ_${qtlib}-Release-Copy ALL
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}4.dll
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/ 
@@ -609,12 +609,12 @@ macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
             FOREACH(qtlib ${QTLIBLIST})
                 
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-                message(STATUS "Generating Install Rule for Qt Debug DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
+           #     message(STATUS "Generating Install Rule for Qt Debug DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")  
                 INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}${type}d4.dll 
                     DESTINATION "${destination}"
                     CONFIGURATIONS Debug
                     COMPONENT Applications)
-                message(STATUS "Generating Install Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
+           #     message(STATUS "Generating Install Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
                 INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}4.dll 
                     DESTINATION "${destination}"
                     CONFIGURATIONS Release
@@ -666,7 +666,7 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
 
          # SET(${upperlib}_LIBRARY_DLL_${TYPE} "${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll" CACHE FILEPATH "The path to the DLL Portion of the library" FORCE)
          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-          message(STATUS "Generating Copy Rule for ${BTYPE} DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
+         # message(STATUS "Generating Copy Rule for ${BTYPE} DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL 
                       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${${upperlib}_LIBRARY_DLL_${TYPE}}
                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/ 
@@ -710,7 +710,7 @@ MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
           else()
              # set(${upperlib}_LIBRARY_DLL_${TYPE}  ${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll)
            #   message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-              message(STATUS "Generating Install Rule for DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
+           #   message(STATUS "Generating Install Rule for DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
               INSTALL(FILES ${${upperlib}_LIBRARY_DLL_${TYPE}}
                 DESTINATION ${destination} 
                 CONFIGURATIONS ${BTYPE} 
@@ -832,27 +832,28 @@ function(cmpVersionStringsFromGit)
        # message(STATUS "DVERS: ${DVERS}")
         string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
        # message(STATUS "VERSION_LIST: ${VERSION_LIST}")
-        list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
+       # list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
+        set(VERSION_GEN_VER_MAJOR ${CMP_VERSION_MAJOR})
         list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
         list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
     
         set (VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
         set (VERSION_GEN_NAME "${GVS_cmpProjectName}")
       #  message(STATUS "VERSION_GEN_VER_MAJOR: ${VERSION_GEN_VER_MAJOR}")
-       # message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
-       # message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
+      #  message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
+      #  message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
 
         set (${GVS_cmpProjectName}_VER_MAJOR ${CMP_VERSION_MAJOR} CACHE STRING "" FORCE)
         set (${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
         set (${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "" FORCE)
         set(VERSION_GEN_COMPLETE "${VERSION_GEN_VER_MAJOR}.${VERSION_GEN_VER_MINOR}.${VERSION_GEN_VER_PATCH}" )
        # message(STATUS "VERSION_GEN_COMPLETE: ${VERSION_GEN_COMPLETE}")
-       # message(STATUS "${GVS_cmpProjectName}_VER_MAJOR: ${${GVS_cmpProjectName}_VER_MAJOR}")
+      #  message(STATUS "${GVS_cmpProjectName}_VER_MAJOR: ${${GVS_cmpProjectName}_VER_MAJOR}")
        # message(STATUS "${GVS_cmpProjectName}_VER_MINOR: ${${GVS_cmpProjectName}_VER_MINOR}")
        # message(STATUS "${GVS_cmpProjectName}_VER_PATCH: ${${GVS_cmpProjectName}_VER_PATCH}")
         
         set(${GVS_cmpProjectName}_VERSION "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
-         
+       # message(STATUS "${GVS_cmpProjectName}_VERSION: ${${GVS_cmpProjectName}_VERSION}")
         mark_as_advanced( ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
         set (PROJECT_PREFIX "${GVS_cmpProjectName}")
         configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}  )
