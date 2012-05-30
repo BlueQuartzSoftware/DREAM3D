@@ -34,35 +34,84 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5VoxelGrainIdReader.h"
+#include "H5VoxelFileReader.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5VoxelGrainIdReader::H5VoxelGrainIdReader() :
-FileReader()
+H5VoxelFileReader::H5VoxelFileReader() :
+FileReader(),
+m_InputFile(""),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_GrainIds(NULL),
+m_CellPhases(NULL),
+m_CellEulerAngles(NULL)
 {
+	setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5VoxelGrainIdReader::~H5VoxelGrainIdReader()
+H5VoxelFileReader::~H5VoxelFileReader()
 {
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelGrainIdReader::readHeader()
+void H5VoxelFileReader::setupFilterOptions()
 {
-  return 0;
+  std::vector<FilterOption::Pointer> options;
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  setFilterOptions(options);
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5VoxelGrainIdReader::readFile()
+void H5VoxelFileReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("InputFile", getInputFile() );
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+  if (getInputFile().empty() == true)
+  {
+    std::stringstream ss;
+    ss << ClassName() << " needs the Input File Set and it was not.";
+    setErrorMessage(ss.str());
+    setErrorCondition(-387);
+  }
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 1, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic, ensembles, 1);
+}
+
+void H5VoxelFileReader::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
+void H5VoxelFileReader::execute()
 {
   if(NULL == getDataContainer())
   {
@@ -70,7 +119,6 @@ int H5VoxelGrainIdReader::readFile()
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     setErrorMessage(ss.str());
     setErrorCondition(-1);
-    return -1;
   }
 
   int err = 0;
@@ -83,7 +131,6 @@ int H5VoxelGrainIdReader::readFile()
   if(err < 0)
   {
     setErrorMessage("Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File");
-    return err;
   }
   size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
   getDataContainer()->setDimensions(dcDims);
@@ -93,6 +140,8 @@ int H5VoxelGrainIdReader::readFile()
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::GrainIds);
+  DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::Phases);
+  DataArray<int>::Pointer eulers = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::EulerAngles);
 
   err = reader->readScalarData<int>(DREAM3D::CellData::GrainIds, grainIds->GetPointer(0));
   if(err < 0)
@@ -101,7 +150,22 @@ int H5VoxelGrainIdReader::readFile()
     setErrorMessage("Error Reading the GrainIDs from the .h5voxel file.");
     grainIds = DataArray<int>::NullPointer();
   }
+  err = reader->readScalarData<int>(DREAM3D::CellData::Phases, phases->GetPointer(0));
+  if(err < 0)
+  {
+    setErrorCondition(err);
+    setErrorMessage("Error Reading the Phases from the .h5voxel file.");
+    grainIds = DataArray<int>::NullPointer();
+  }
+  err = reader->readScalarData<int>(DREAM3D::CellData::EulerAngles, eulers->GetPointer(0));
+  if(err < 0)
+  {
+    setErrorCondition(err);
+    setErrorMessage("Error Reading the Euler Angles from the .h5voxel file.");
+    grainIds = DataArray<int>::NullPointer();
+  }
 
   getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
-  return err;
+  getDataContainer()->addCellData(DREAM3D::CellData::Phases, phases);
+  getDataContainer()->addCellData(DREAM3D::CellData::EulerAngles, eulers);
 }
