@@ -107,7 +107,7 @@ void FindShapes::setupFilterOptions()
     option->setHumanLabel("Distribution Type");
     option->setPropertyName("DistributionType");
     option->setWidgetType(FilterOption::ChoiceWidget);
-	option->setValueType("unsigned int");
+	  option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");

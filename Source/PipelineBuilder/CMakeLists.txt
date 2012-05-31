@@ -38,7 +38,7 @@ SET (PipelineBuilder_HDRS
 SET (PipelineBuilder_SRCS
     ${PROJECT_SOURCE_DIR}/FilterWidgetManager.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "PipelineBuilder" "${PipelineBuilder_HDRS}" "${PipelineBuilder_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "PipelineBuilderLib" "${PipelineBuilder_HDRS}" "${PipelineBuilder_SRCS}" "0")
 
 
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
