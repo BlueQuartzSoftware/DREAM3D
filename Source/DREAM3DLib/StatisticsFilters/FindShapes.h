@@ -68,19 +68,19 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 
     virtual ~FindShapes();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
+	  //------ Required Cell Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	  //------ Required Field Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+	  //------ Created Field Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 

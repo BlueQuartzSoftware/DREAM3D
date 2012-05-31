@@ -65,6 +65,7 @@ m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
 m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
 m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
 m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
+m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
 m_FieldPhases(NULL),
@@ -104,7 +105,7 @@ void FindShapes::setupFilterOptions()
     option->setHumanLabel("Distribution Type");
     option->setPropertyName("DistributionType");
     option->setWidgetType(FilterOption::ChoiceWidget);
-	option->setValueType("unsigned int");
+	  option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
