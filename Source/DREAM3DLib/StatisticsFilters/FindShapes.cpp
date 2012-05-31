@@ -65,6 +65,7 @@ m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
 m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
 m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
 m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
+m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
 m_FieldPhases(NULL),
@@ -77,8 +78,10 @@ m_Volumes(NULL),
 m_AspectRatios(NULL)
 {
   grainmoments = NULL;
+  graineigenvals = NULL;
 
   INIT_DataArray(m_GrainMoments,float);
+  INIT_DataArray(m_GrainEigenVals,float);
 
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
@@ -184,8 +187,10 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-    setErrorCondition(-308);
+	StatsDataArray::Pointer p = StatsDataArray::New();
+	m_StatsDataArray = p.get();
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
   setErrorMessage(ss.str());
