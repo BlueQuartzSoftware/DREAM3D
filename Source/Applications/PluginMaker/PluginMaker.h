@@ -3,9 +3,9 @@
 
 #include "ui_PluginMaker.h"
 #include <QtGui/QFileDialog>
-#include <QtGui/QDialog>
+#include <QtGui/QMainWindow>
 
-class PluginMaker : public QFileDialog, public Ui::PluginMaker {
+class PluginMaker : public QMainWindow, public Ui::PluginMaker {
   Q_OBJECT
 
 public:
