@@ -415,14 +415,16 @@ void QFilterWidget::setupGui()
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
       connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
       QVariant v = property(option->getPropertyName().c_str());
-      if (v.toInt(&ok) >= cb->count())
+      quint32 uintValue = v.toUInt(&ok);
+      if (uintValue >= static_cast<quint32>(cb->count())  )
       {
         // What ever the default from the class was it does not work with the combo box
         // so set the combo box to the zeroth value and set the same value back
         // to the filter
-        cb->setCurrentIndex(0);
-        setProperty(option->getPropertyName().c_str(), 0);
+        uintValue = 0;
       }
+      cb->setCurrentIndex(uintValue);
+      setProperty(option->getPropertyName().c_str(), uintValue);
     }
     ++optIndex;
   }
