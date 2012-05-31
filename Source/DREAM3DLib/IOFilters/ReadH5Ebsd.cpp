@@ -513,23 +513,25 @@ void ReadH5Ebsd::execute()
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, false, totalPoints, 1);
 
-  // Run the filter to determine the good Voxels
-  DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();
-  filter->setQualityMetricFilters(m_QualityMetricFilters);
-  filter->setObservers(getObservers());
-  filter->setMessagePrefix(getMessagePrefix());
-  filter->setEbsdVolumeReader(ebsdReader);
-  filter->setDataContainer(m);
-  filter->execute();
-  err = filter->getErrorCondition();
-  if(err < 0)
+  // Run the filter to determine the good Voxels (if there are actual quality metric filterss)
+  if(m_QualityMetricFilters.size() > 0)
   {
-    setErrorCondition(err);
-    setErrorMessage("Error Filtering Ebsd Data.");
-    return;
+	  DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();
+	  filter->setQualityMetricFilters(m_QualityMetricFilters);
+	  filter->setObservers(getObservers());
+	  filter->setMessagePrefix(getMessagePrefix());
+	  filter->setEbsdVolumeReader(ebsdReader);
+	  filter->setDataContainer(m);
+	  filter->execute();
+	  err = filter->getErrorCondition();
+	  if(err < 0)
+	  {
+		setErrorCondition(err);
+		setErrorMessage("Error Filtering Ebsd Data.");
+		return;
+	  }
+	  filter = DetermineGoodVoxels::NullPointer(); // Clean up some memory
   }
-  filter = DetermineGoodVoxels::NullPointer(); // Clean up some memory
-
   // If there is an error set this to something negative and also set a message
   ss.str("");
   ss << getHumanLabel() << " Completed";

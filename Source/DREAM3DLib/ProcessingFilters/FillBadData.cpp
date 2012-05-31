@@ -257,14 +257,16 @@ void FillBadData::execute()
   }
 
   std::vector<int > n(numgrains + 1);
+  int cycle = 0;
   while (count != 0)
-  {
+  {    
     count = 0;
+	  std::stringstream ss;
+	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << cycle << " - Count - " << count;
+	  cycle++;
+	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
     for (int i = 0; i < totalPoints; i++)
     {
-	  std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       int grainname = m_GrainIds[i];
       if (grainname < 0)
       {
