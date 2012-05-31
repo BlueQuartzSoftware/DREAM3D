@@ -470,8 +470,24 @@ void createSourceFile( const std::string &group, const std::string &filter)
    fprintf(f, "// -----------------------------------------------------------------------------\n");
    fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):\nQFilterWidget(parent)\n", filter.c_str(), filter.c_str());
    fprintf(f, "{\n");
-  // fprintf(f, "     m_Filter = %s::New();\n", filter.c_str());
    fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
+  // Loop on all the options getting the defaults from a fresh instance of the filter class
+   for(size_t i = 0; i < options.size(); ++i)
+   {
+     FilterOption::Pointer opt = options[i];
+     std::string prop = opt->getPropertyName();
+     std::string typ = opt->getValueType();
+     if (opt->getValueType().compare("string") == 0)
+     {
+       fprintf(f, "     set%s( QString::fromStdString(filter->get%s() ) );\n", prop.c_str(), prop.c_str());
+     }
+     else
+     {
+       fprintf(f, "     set%s( filter->get%s() );\n", prop.c_str(), prop.c_str());
+     }
+   }
+
+
    fprintf(f, "     setupGui();\n");
    fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
    fprintf(f, "}\n\n");
