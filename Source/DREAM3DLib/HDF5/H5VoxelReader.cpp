@@ -218,7 +218,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   err |= H5Gclose(scalarGid);
 
 
-  err = readEnsembleDataWithCast<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
+  err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
   if(err < 0)
     {
       m_ErrorMessage = "H5VoxelReader Error Reading the Crystal Structure Field Data";
@@ -226,7 +226,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
       return err;
     }
 
-  err = readEnsembleDataWithCast<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
+  err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
   if(err < 0)
     {
       m_ErrorMessage = "H5VoxelReader Error Reading the Phase Type Data";
