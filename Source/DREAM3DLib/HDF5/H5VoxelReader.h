@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 
 	// Read in the Grain ID data
 	  err = H5Lite::readPointerDataset(scalarGid, dsetName, data);
-	  if(err < 0)
+ 	  if(err < 0)
 	  {
 	    std::stringstream ss;
 	    ss << getNameOfClass() << ": Error Reading the " << dsetName;
