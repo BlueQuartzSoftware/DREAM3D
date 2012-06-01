@@ -60,14 +60,12 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
 
     std::string getFilterGroup()
     {
-      Widget w;
-      return w.getFilter()->getGroupName();
+      return m_GroupName;
     }
 
     std::string getFilterHumanLabel()
     {
-      Widget w;
-      return w.getFilter()->getHumanLabel();
+      return m_HumanName;
     }
 
     AbstractFilter::Pointer getFilterInstance()
@@ -77,10 +75,17 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
     }
 
   protected:
-  QFilterWidgetFactory() {}
+    QFilterWidgetFactory() {
+      Widget w;
+      m_GroupName = w.getFilter()->getGroupName();
+      m_HumanName = w.getFilter()->getHumanLabel();
+    }
 
   private:
-QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
-void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
+    std::string m_GroupName;
+    std::string m_HumanName;
+    
+    QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
+    void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented
 };
 #endif /* QFILTERWIDGETFACTORY_H_ */

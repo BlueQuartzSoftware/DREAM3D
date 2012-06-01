@@ -24,6 +24,7 @@
 <file>IOFilters/VtkGrainIdReader.html</file>
 <file>IOFilters/VtkGrainIdWriter.html</file>
 <file>IOFilters/EbsdToH5Ebsd.html</file>
+<file>IOFilters/ReadH5Ebsd.html</file>
 
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
@@ -32,7 +33,7 @@
 <file>ProcessingFilters/IdentifySample.html</file>
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 
-<file>ReconstructionFilters/LoadSlices.html</file>
+
 <file>ReconstructionFilters/AlignSectionsMisorientation.html</file>
 <file>ReconstructionFilters/AlignSectionsMutualInformation.html</file>
 <file>ReconstructionFilters/AlignSectionsFeature.html</file>
