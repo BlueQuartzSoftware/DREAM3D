@@ -141,23 +141,26 @@ void H5VoxelFileReader::execute()
   // Create an DataArray to hold the data
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::GrainIds);
   DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::Phases);
-  DataArray<int>::Pointer eulers = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::EulerAngles);
+  DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints*3, DREAM3D::CellData::EulerAngles);
   
-  err = reader->readScalarData<int>(DREAM3D::CellData::GrainIds, grainIds->GetPointer(0));
+  std::string arrayname = "GrainID";
+  err = reader->readScalarData<int>(arrayname, grainIds->GetPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
     setErrorMessage("Error Reading the GrainIDs from the .h5voxel file.");
     grainIds = DataArray<int>::NullPointer();
   }
-  err = reader->readScalarData<int>(DREAM3D::CellData::Phases, phases->GetPointer(0));
+  arrayname = "PhaseID";
+  err = reader->readScalarData<int>(arrayname, phases->GetPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
     setErrorMessage("Error Reading the Phases from the .h5voxel file.");
     grainIds = DataArray<int>::NullPointer();
   }
-  err = reader->readScalarData<int>(DREAM3D::CellData::EulerAngles, eulers->GetPointer(0));
+  arrayname = "Euler Angles";
+  err = reader->readScalarData<float>(arrayname, eulers->GetPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
@@ -172,20 +175,21 @@ void H5VoxelFileReader::execute()
   std::vector<unsigned int> crystruct;
   std::vector<unsigned int> phaseType;
 
-  err = reader->readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
+  arrayname = "CrystalStructure";
+  err = reader->readFieldData<unsigned int, uint32_t>(arrayname, crystruct);
   if(err < 0)
-    {
+  {
       setErrorMessage("H5VoxelReader Error Reading the Crystal Structure Field Data");
-    }
-
-  err = reader->readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
+  }
+  arrayname = "PhaseType";
+  err = reader->readFieldData<unsigned int, uint32_t>(arrayname, phaseType);
   if(err < 0)
-    {
+  {
       setErrorMessage("H5VoxelReader Error Reading the Phase Type Data");
-    }
+  }
 
-  DataArray<int>::Pointer crystructs = DataArray<int>::CreateArray(crystruct.size(), DREAM3D::CellData::EulerAngles);
-  DataArray<int>::Pointer phaseTypes = DataArray<int>::CreateArray(phaseType.size(), DREAM3D::CellData::EulerAngles);
+  DataArray<int>::Pointer crystructs = DataArray<int>::CreateArray(crystruct.size(), DREAM3D::EnsembleData::CrystalStructures);
+  DataArray<int>::Pointer phaseTypes = DataArray<int>::CreateArray(phaseType.size(), DREAM3D::EnsembleData::PhaseTypes);
 
   for (size_t i = 0; i < crystruct.size(); i++)
   {
