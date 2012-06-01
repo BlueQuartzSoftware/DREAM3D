@@ -46,7 +46,7 @@
   std::string _s(#Name); addRequired##DType(_s);\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
   if (NULL == m_##Name ) {\
-    ss << "Filter " << getNameOfClass() << " requires " << #DType << " array '" << \
+    ss << getErrorMessage() << "\nFilter " << getNameOfClass() << " requires " << #DType << " array '" << \
     m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
     /* ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
     setErrorCondition(err);\
