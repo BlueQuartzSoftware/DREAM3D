@@ -71,6 +71,8 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -102,6 +104,8 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 	
 	float* m_Schmids;
+	int32_t* m_Poles;
+	int32_t* m_FieldPhases;
     float* m_AvgQuats;
     int32_t* m_SlipSystems;
 

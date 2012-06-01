@@ -247,10 +247,7 @@ void MinSize::assign_badpoints()
       if (grainname < 0)
       {
         count++;
-        for (size_t c = 1; c < numgrains; c++)
-        {
-          n[c] = 0;
-        }
+		n.resize(numgrains+1,0);
         x = static_cast<float>(i % dims[0]);
         y = static_cast<float>((i / dims[0]) % dims[1]);
         z = static_cast<float>(i / (dims[0] * dims[1]));
@@ -283,6 +280,7 @@ void MinSize::assign_badpoints()
           }
         }
         m_Neighbors[i] = curgrain;
+		n.clear();
       }
     }
     for (int j = 0; j < totalPoints; j++)

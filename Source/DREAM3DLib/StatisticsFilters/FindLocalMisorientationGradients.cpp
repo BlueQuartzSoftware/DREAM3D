@@ -135,7 +135,7 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, float, FloatArrayType, 0, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1);
 
 
   setErrorMessage(ss.str());

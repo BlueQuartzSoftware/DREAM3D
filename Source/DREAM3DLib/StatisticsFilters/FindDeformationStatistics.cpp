@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
 
 const static float m_pi = static_cast<float>(M_PI);
@@ -141,8 +142,18 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302,  int32_t, Int32ArrayType, fields, 1);
+  if(getErrorCondition() == -302)
+  {
+	setErrorCondition(0);
+	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	if(preflight == true) find_grainphases->preflight();
+	if(preflight == false) find_grainphases->execute();
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1);
 
   setErrorMessage(ss.str());
@@ -696,8 +707,8 @@ void FindDeformationStatistics::execute()
 
   for(size_t i=1;i<size;i++)
   {
-		float x = m_Poles[3*i] - (m_Poles[3*i] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1)));;
-		float y = m_Poles[3*i+1] - (m_Poles[3*i+1] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1)));;
+		float x = float(m_Poles[3*i]) - (float(m_Poles[3*i]) * (float(m_Poles[3*i+2]) / (float(m_Poles[3*i+2]) + 1.0)));;
+		float y = float(m_Poles[3*i+1]) - (float(m_Poles[3*i+1]) * (float(m_Poles[3*i+2]) / (float(m_Poles[3*i+2]) + 1.0)));;
 		float z = 0.0;
 		fprintf(vtkFile, "%f %f %f\n", x, y, z);
   }
