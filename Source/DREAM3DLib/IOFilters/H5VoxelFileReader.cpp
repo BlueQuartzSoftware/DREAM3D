@@ -188,8 +188,8 @@ void H5VoxelFileReader::execute()
       setErrorMessage("H5VoxelReader Error Reading the Phase Type Data");
   }
 
-  DataArray<int>::Pointer crystructs = DataArray<int>::CreateArray(crystruct.size(), DREAM3D::EnsembleData::CrystalStructures);
-  DataArray<int>::Pointer phaseTypes = DataArray<int>::CreateArray(phaseType.size(), DREAM3D::EnsembleData::PhaseTypes);
+  DataArray<unsigned int>::Pointer crystructs = DataArray<unsigned int>::CreateArray(crystruct.size(), DREAM3D::EnsembleData::CrystalStructures);
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(phaseType.size(), DREAM3D::EnsembleData::PhaseTypes);
 
   for (size_t i = 0; i < crystruct.size(); i++)
   {

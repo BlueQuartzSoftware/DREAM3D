@@ -117,6 +117,7 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
     m_CrystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(m_CrystalStructuresArrayName, ensembles * 1, this);
     if(0 == m_CrystalStructures)
     {
+		ss << getErrorMessage() << "  ";
       ss << "Filter " << getNameOfClass() << " requires " << "EnsembleData" << " array '" << m_CrystalStructuresArrayName
           << "' to already be created prior to execution." << std::endl;
       /* ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */
@@ -216,6 +217,11 @@ void FindAvgOrientations::execute()
 	  m_FieldEulerAngles[3*i] = ea1;
       m_FieldEulerAngles[3*i+1] = ea2;
       m_FieldEulerAngles[3*i+2] = ea3;
+      m_AvgQuats[5*i+1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
+      m_AvgQuats[5*i+2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
+      m_AvgQuats[5*i+3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
+      m_AvgQuats[5*i+4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
+	  m_AvgQuats[5*i] = 1;
   }
 
   notify("Completed", 0, Observable::UpdateProgressMessage);

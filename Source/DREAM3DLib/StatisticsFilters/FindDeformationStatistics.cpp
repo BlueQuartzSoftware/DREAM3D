@@ -326,8 +326,8 @@ void FindDeformationStatistics::execute()
       //	  ss2 = m_SlipSystems[gname2];
       for (int j = 0; j < 5; j++)
       {
-        q1[j] = m_AvgQuats[5 * gname + j] / m_AvgQuats[gname];
-        q2[j] = m_AvgQuats[5 * gname2 + j] / m_AvgQuats[gname2];
+        q1[j] = m_AvgQuats[5 * gname + j];
+        q2[j] = m_AvgQuats[5 * gname2 + j];
       }
       OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
       if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2])
