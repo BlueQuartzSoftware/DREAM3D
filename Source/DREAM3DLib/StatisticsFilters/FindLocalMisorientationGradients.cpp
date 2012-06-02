@@ -261,7 +261,7 @@ void FindLocalMisorientationGradients::execute()
                 else if(row + k > yPoints - 1) good = 0;
                 else if(col + l < 0) good = 0;
                 else if(col + l > xPoints - 1) good = 0;
-                if(good == 1)
+                if(good == 1 && m_GrainIds[point] == m_GrainIds[neighbor])
                 {
                   w = 10000.0;
                   q2[1] = m_Quats[neighbor*5 + 1];
@@ -269,37 +269,30 @@ void FindLocalMisorientationGradients::execute()
                   q2[3] = m_Quats[neighbor*5 + 3];
                   q2[4] = m_Quats[neighbor*5 + 4];
                   phase2 = crystruct[m_CellPhases[neighbor]];
-                  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-                  if (w < 5.0)
-
-                  {
-                    totalmisorientation = totalmisorientation + w;
-                    numVoxel++;
-                  }
+                  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                  totalmisorientation = totalmisorientation + w;
+                  numVoxel++;
                 }
               }
             }
           }
+          m_KernelAverageMisorientations[point] = totalmisorientation / (float)numVoxel;
           if(numVoxel == 0)
           {
             m_KernelAverageMisorientations[point] = 0;
           }
-          else if(neighbor < m_KernelMisorientations->GetNumberOfTuples())
-          {
-            m_KernelAverageMisorientations[point] = totalmisorientation / (float)numVoxel;
-          }
-          else
-          {
-            m_KernelAverageMisorientations[point] = 0;
-          }
 
-          q2[0] = 1;
-          q2[1] = m_AvgQuats[5*m_GrainIds[point]+1] / m_AvgQuats[5*m_GrainIds[point]];
-          q2[2] = m_AvgQuats[5*m_GrainIds[point]+2] / m_AvgQuats[5*m_GrainIds[point]];
-          q2[3] = m_AvgQuats[5*m_GrainIds[point]+3] / m_AvgQuats[5*m_GrainIds[point]];
-          q2[4] = m_AvgQuats[5*m_GrainIds[point]+4] / m_AvgQuats[5*m_GrainIds[point]];
+          q2[0] = m_AvgQuats[5*m_GrainIds[point]];
+          q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
+          q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
+          q2[3] = m_AvgQuats[5*m_GrainIds[point]+3];
+          q2[4] = m_AvgQuats[5*m_GrainIds[point]+4];
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
           m_GrainMisorientations[point] = w;
+		  if(w > 8)
+		  {
+			int stop = 0;
+		  }
 
           gam[point] = w;
           avgmiso[m_GrainIds[point]][0]++;

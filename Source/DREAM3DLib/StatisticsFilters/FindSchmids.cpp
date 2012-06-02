@@ -192,10 +192,11 @@ void FindSchmids::execute()
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
-      q1[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
-      q1[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
-      q1[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
-      q1[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
+	  q1[0] = 1;
+      q1[1] = m_AvgQuats[5*i+1];
+      q1[2] = m_AvgQuats[5*i+2];
+      q1[3] = m_AvgQuats[5*i+3];
+      q1[4] = m_AvgQuats[5*i+4];
 	  if(m_AvgQuats[5*i] == 0) q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
 
       loadx = ((1 - 2*q1[2]*q1[2] - 2*q1[3]*q1[3]) * m_XLoading) + ((2*q1[1]*q1[2] + 2*q1[3]*q1[4]) * m_YLoading) + ((2*q1[1]*q1[3] - 2*q1[2]*q1[4]) * m_ZLoading);
