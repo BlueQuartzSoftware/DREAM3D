@@ -172,6 +172,15 @@ void H5VoxelFileReader::execute()
   getDataContainer()->addCellData(DREAM3D::CellData::Phases, phases);
   getDataContainer()->addCellData(DREAM3D::CellData::EulerAngles, eulers);
 
+  size_t gnum = 0;
+  size_t maxId = 0;
+  for(size_t i= 0; i < totalpoints; i++)
+  {
+	  gnum = size_t(grainIds->GetValue(i));
+	  if(gnum > maxId) maxId = gnum;
+  }
+  getDataContainer()->resizeFieldDataArrays(maxId+1);
+
   std::vector<unsigned int> crystruct;
   std::vector<unsigned int> phaseType;
 
