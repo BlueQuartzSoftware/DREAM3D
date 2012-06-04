@@ -81,44 +81,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData);
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
-   // METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
-    template<typename PtrType, typename DataArrayType, typename AbstractFilter>
-    PtrType* getEnsembleDataSizeCheck(const std::string &arrayName, size_t size, AbstractFilter* obv)
-    {
-      PtrType* gi = 0;
-      IDataArray::Pointer iDataArray = getEnsembleData(arrayName);
-      if (iDataArray.get() == 0)
-      {
-        std::stringstream s;
-        s << getNameOfClass() << "::" << "getEnsembleData" << "(std::string name) where name = '" << arrayName
-        << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer";
-        if (0 != obv)
-        { obv->setErrorCondition(-500);
-          obv->setErrorMessage(s.str());}
-        return gi;
-      }
-      if (size != iDataArray->GetSize())
-      {
-        std::stringstream s;
-        s << getNameOfClass() << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";
-        s << " Required: " << size << " Contains: " << iDataArray->GetSize();
-        if (0 != obv)
-        { obv->setErrorCondition(-501);
-          obv->setErrorMessage(s.str());}
-        return gi;
-      }
-      gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());
-      if (0 == gi)
-      {
-        std::stringstream s;
-        s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";
-        if (0 != obv)
-        { obv->setErrorCondition(-502);
-          obv->setErrorMessage(s.str());}
-        return gi;
-      }
-      return gi;
-    }
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
 
 
    /**

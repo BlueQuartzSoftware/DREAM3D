@@ -102,28 +102,8 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  //GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
 
-  {
-    if(m_CrystalStructuresArrayName.empty() == true)
-    {
-      setErrorCondition(-305000);\
-      ss << "The name of the array for the " << "DREAM3D" << "EnsembleData" << "CrystalStructures" << " was empty. Please provide a name for this array/"
-          << std::endl;
-    }
-
-    std::string _s("CrystalStructures");
-    addRequiredEnsembleData(_s);
-    m_CrystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(m_CrystalStructuresArrayName, ensembles * 1, this);
-    if(0 == m_CrystalStructures)
-    {
-		ss << getErrorMessage() << "  ";
-      ss << "Filter " << getNameOfClass() << " requires " << "EnsembleData" << " array '" << m_CrystalStructuresArrayName
-          << "' to already be created prior to execution." << std::endl;
-      /* ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */
-      setErrorCondition(-305);
-    }
-  }
 
   setErrorMessage(ss.str());
 }
