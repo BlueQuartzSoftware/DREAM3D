@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>808</width>
-    <height>302</height>
+    <width>800</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <property name="minimumSize">
    <size>
     <width>800</width>
-    <height>275</height>
+    <height>800</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -62,34 +62,19 @@
     <item row="1" column="1">
      <widget class="QLineEdit" name="outputFileName"/>
     </item>
-    <item row="2" column="1" colspan="2">
-     <widget class="QPlainTextEdit" name="infoBox">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
+    <item row="2" column="0" colspan="3">
+     <widget class="QTreeWidget" name="treeWidget">
+      <property name="autoExpandDelay">
+       <number>0</number>
       </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="plainText">
-       <string>Plugin Names cannot have any spaces or special characters (!@#$%^&amp;:*{};'?).  These will be removed automatically.
-
-Do not include the word &quot;Plugin&quot; in your Plugin Name.  This will be included automatically.
-
-The Output Directory must contain a valid path.</string>
-      </property>
+      <column>
+       <property name="text">
+        <string>File Structure</string>
+       </property>
+      </column>
      </widget>
     </item>
-    <item row="3" column="1" colspan="2">
-     <widget class="QLabel" name="errorMessage">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="2">
+    <item row="3" column="2">
      <widget class="QPushButton" name="generateButton">
       <property name="text">
        <string>Generate</string>
@@ -98,8 +83,27 @@ The Output Directory must contain a valid path.</string>
     </item>
     <item row="1" column="2">
      <widget class="QPushButton" name="selectButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>344</width>
+        <height>28</height>
+       </size>
+      </property>
       <property name="text">
        <string>Select</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="helpButton">
+      <property name="text">
+       <string>Help</string>
       </property>
      </widget>
     </item>
@@ -110,7 +114,7 @@ The Output Directory must contain a valid path.</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>808</width>
+     <width>800</width>
      <height>26</height>
     </rect>
    </property>
