@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+<file>@PluginName@Filters/@PluginName@Filter.html</file>
+<!-- Add any more Documentation files that you need for each filter your plugin has -->
+</qresource>
+</RCC>

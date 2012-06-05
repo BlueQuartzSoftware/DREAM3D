@@ -123,7 +123,13 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "  The code generated is based off values from the filter located at\n");
-  fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+  if (FILTER_INCLUDE_PREFIX().empty() == true) {
+    fprintf(f, "  %s/%s.h\n*/\n", group.c_str(), filter.c_str());
+  }
+  else
+  {
+    fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+  }
 
   fprintf(f, "#ifndef _Q%s_H_\n", filter.c_str());
   fprintf(f, "#define _Q%s_H_\n\n", filter.c_str());
