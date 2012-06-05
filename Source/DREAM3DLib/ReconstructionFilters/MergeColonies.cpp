@@ -290,15 +290,17 @@ void MergeColonies::merge_colonies()
           if (neigh != i && colonynewnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
 		    w = 10000.0f;
-            q1[1] = m_AvgQuats[5*firstgrain+1]/m_AvgQuats[5*firstgrain];
-            q1[2] = m_AvgQuats[5*firstgrain+2]/m_AvgQuats[5*firstgrain];
-            q1[3] = m_AvgQuats[5*firstgrain+3]/m_AvgQuats[5*firstgrain];
-            q1[4] = m_AvgQuats[5*firstgrain+4]/m_AvgQuats[5*firstgrain];
+			q1[0] = 1;
+            q1[1] = m_AvgQuats[5*firstgrain+1];
+            q1[2] = m_AvgQuats[5*firstgrain+2];
+            q1[3] = m_AvgQuats[5*firstgrain+3];
+            q1[4] = m_AvgQuats[5*firstgrain+4];
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-            q2[1] = m_AvgQuats[5*neigh+1]/m_AvgQuats[5*neigh];
-            q2[2] = m_AvgQuats[5*neigh+2]/m_AvgQuats[5*neigh];
-            q2[3] = m_AvgQuats[5*neigh+3]/m_AvgQuats[5*neigh];
-            q2[4] = m_AvgQuats[5*neigh+4]/m_AvgQuats[5*neigh];
+			q2[0] = 1;
+            q2[1] = m_AvgQuats[5*neigh+1];
+            q2[2] = m_AvgQuats[5*neigh+2];
+            q2[3] = m_AvgQuats[5*neigh+3];
+            q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
 			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);

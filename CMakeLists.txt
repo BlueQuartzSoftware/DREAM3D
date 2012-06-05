@@ -304,9 +304,14 @@ if (DREAM3D_BUILD_GUI AND DREAM3D_BUILD_QT_APPS)
         endif()
     endforeach()
 	
-	#- Add in the Main DREAM.3D Application 
-  #  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
 endif()  
+
+#- Add in the Main DREAM.3D Application
+option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" OFF)
+if (DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
+endif()
+
 
 # --- Look for user defined external Plugins that the user has entered 
 # into CMake-GUI or through CCMake by the user.

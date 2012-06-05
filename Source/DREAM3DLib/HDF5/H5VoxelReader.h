@@ -112,12 +112,12 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	    OPEN_HDF5_FILE(fileId, m_FileName);
 	    m_FileId = fileId;
 	  }
-	  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
-	  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
+	  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
+	  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
 
 	// Read in the Grain ID data
 	  err = H5Lite::readPointerDataset(scalarGid, dsetName, data);
-	  if(err < 0)
+ 	  if(err < 0)
 	  {
 	    std::stringstream ss;
 	    ss << getNameOfClass() << ": Error Reading the " << dsetName;
@@ -136,7 +136,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	 *
 	 */
 	template<typename CastTo, typename NativeType>
-	int readEnsembleDataWithCast(const std::string &dsetName, std::vector<CastTo> &data)
+	int readFieldData(const std::string &dsetName, std::vector<CastTo> &data)
 	{
     int err = 0;
     if (m_FileId < 0)
@@ -149,8 +149,8 @@ class DREAM3DLib_EXPORT H5VoxelReader
       OPEN_HDF5_FILE(fileId, m_FileName);
       m_FileId = fileId;
     }
-    OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
-    OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_ENSEMBLE_DATA_GROUP_NAME, reconGid);
+	OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
+    OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
 
     std::vector<NativeType> nativeData;
     err = H5Lite::readVectorDataset(fieldGid, dsetName, nativeData);

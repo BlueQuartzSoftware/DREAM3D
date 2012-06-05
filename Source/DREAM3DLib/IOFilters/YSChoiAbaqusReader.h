@@ -52,9 +52,14 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     virtual ~YSChoiAbaqusReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+
+	//------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName);
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName);
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
@@ -71,8 +76,11 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
   private:
     int32_t* m_GrainIds;
+    int32_t* m_CellPhases;
     bool* m_SurfaceFields;
 	float* m_CellEulerAngles;
+
+	unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

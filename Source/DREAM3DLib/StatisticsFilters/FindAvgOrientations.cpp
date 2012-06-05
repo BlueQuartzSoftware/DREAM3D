@@ -104,6 +104,7 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
 
+
   setErrorMessage(ss.str());
 }
 
@@ -196,6 +197,11 @@ void FindAvgOrientations::execute()
 	  m_FieldEulerAngles[3*i] = ea1;
       m_FieldEulerAngles[3*i+1] = ea2;
       m_FieldEulerAngles[3*i+2] = ea3;
+      m_AvgQuats[5*i+1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
+      m_AvgQuats[5*i+2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
+      m_AvgQuats[5*i+3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
+      m_AvgQuats[5*i+4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
+	  m_AvgQuats[5*i] = 1;
   }
 
   notify("Completed", 0, Observable::UpdateProgressMessage);

@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     float* m_KernelAverageMisorientations;
     float* m_AvgQuats;
     float* m_GrainAvgMisorientations;
-    float* m_Poles;
+    int32_t* m_Poles;
     float* m_Schmids;
     float* m_NearestNeighborDistances;
 
