@@ -48,22 +48,22 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
 {
   Q_OBJECT
 
-public:
-  PluginMaker(QWidget* parent = 0);
- 
-protected:
-  void setupGui();
+  public:
+    PluginMaker(QWidget* parent = 0);
 
-protected slots:
-  void on_selectButton_clicked();
-  void on_generateButton_clicked();
-  void on_name_textChanged(const QString & text);
-  void on_outputFileName_textChanged(const QString & text);
+  protected:
+    void setupGui();
 
-private:
-  QString m_OpenDialogLastDirectory;
-  void processFile(QString path);
-  void cleanName(QString name);           //cleans the QString of all spaces and illegal characters
+    protected slots:
+    void on_selectButton_clicked();
+    void on_generateButton_clicked();
+    void on_name_textChanged(const QString & text);
+    void on_outputFileName_textChanged(const QString & text);
+
+  private:
+    QString m_OpenDialogLastDirectory;
+    void processFile(QString path);
+    void cleanName(QString name); //cleans the QString of all spaces and illegal characters
 };
 
 #endif

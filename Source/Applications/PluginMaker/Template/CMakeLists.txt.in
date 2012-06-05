@@ -85,7 +85,7 @@ cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/" "${@PluginName@Plugin_HDRS}" "${@Plug
 
 # --------------------------------------------------------------------
 # If you have additional NON-Qt, NON-Filter source code that you need to have
-# compiled then include thoes source files here.
+# compiled then include those source files here.
 set( @PluginName@_EXTRA_HDRS )
 set( @PluginName@_EXTRA_SRCS )
 cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/Extra" "${@PluginName@_EXTRA_HDRS}" "${@PluginName@_EXTRA_SRCS}" "0")
