@@ -62,10 +62,6 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
     void on_name_textChanged(const QString & text);
     void on_outputFileName_textChanged(const QString & text);
 
-  private:
-    QString m_OpenDialogLastDirectory;
-    void processFile(QString path);
-    void cleanName(QString name); //cleans the QString of all spaces and illegal characters
 
 private:
   QString m_OpenDialogLastDirectory;
