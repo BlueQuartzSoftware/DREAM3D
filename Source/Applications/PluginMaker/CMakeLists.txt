@@ -47,6 +47,9 @@ SET( PluginMaker_UIS
   
 cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
 
+# and finally any resource files
+SET( PluginMaker_RCS ${PluginMaker_SOURCE_DIR}/Templates.qrc)
+
 # -- Run MOC and UIC on the necessary files
 QT4_ADD_RESOURCES( PluginMaker_Generated_RC_SRCS ${PluginMaker_RCS} ${QRC_LICENSE_FILES})
 
@@ -57,9 +60,9 @@ QT4_WRAP_UI( PluginMaker_Generated_UI_HDRS ${PluginMaker_UIS} )
 QT4_WRAP_CPP( PluginMaker_Generated_MOC_SRCS ${PluginMaker_MOC_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
-cmp_IDE_GENERATED_PROPERTIES("PluginMaker/Generated/ui" "${PluginMaker_Generated_UI_HDRS}" "")
-cmp_IDE_GENERATED_PROPERTIES("PluginMaker/Generated/moc" "${PluginMaker_Generated_MOC_SRCS}" "")
-cmp_IDE_GENERATED_PROPERTIES("PluginMaker/Generated/qrc" "${QRC_LICENSE_FILES}" "${PluginMaker_Generated_RC_SRCS}")
+cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${PluginMaker_Generated_UI_HDRS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${PluginMaker_Generated_MOC_SRCS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${PluginMaker_Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
 SET (${PROJECT_NAME}_PROJECT_SRCS 
@@ -76,6 +79,14 @@ include_directories(${PluginMaker_SOURCE_DIR}/.. )
 include_directories(${PluginMaker_BINARY_DIR} )
 include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
+
+IF(APPLE)
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
+ENDIF (APPLE)
+
+IF(Q_WS_WIN)
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/${PROJECT_NAME}.ico)
+ENDIF(Q_WS_WIN)
 
 BuildQtAppBundle(
     TARGET ${PROJECT_NAME}
