@@ -138,7 +138,7 @@ void YSChoiAbaqusReader::execute()
 	int xpoints, ypoints, zpoints, totalpoints;
 	int numgrains = 0;
 	float resx, resy, resz;
-    float **mat;
+    double **mat;
     const unsigned int size(1024);
     char buf[size];
     std::ifstream in(getInputFile().c_str());
@@ -155,7 +155,7 @@ void YSChoiAbaqusReader::execute()
 	    size_t dims[3] = {xpoints, ypoints, zpoints};
 	    m->setDimensions(dims);
         totalpoints = xpoints * ypoints * zpoints;
-        mat = new float *[totalpoints];
+        mat = new double *[totalpoints];
       }
 	  if (RES == word)
       {
@@ -176,7 +176,7 @@ void YSChoiAbaqusReader::execute()
     float value;
     for (int i = 0; i < totalpoints; i++)
     {
-      mat[i] = new float[9];
+      mat[i] = new double[9];
       onedge = false;
       in >> gnum;
       col = i % xpoints;
@@ -213,22 +213,26 @@ void YSChoiAbaqusReader::execute()
         mat[i][iter] = value;
       }
     }
-	float ea1, ea2, ea3;
-	float cosine1, cosine3, sine1, sine3;
-	float denom;
+	double ea1, ea2, ea3;
+	double cosine1, cosine3, sine1, sine3;
+	double denom;
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
 	{
-		denom = mat[i][0]*mat[i][0]+mat[i][1]*mat[i][1]+mat[i][2]*mat[i][2];
+		if(i == 58430)
+		{
+			int stop = 0;
+		}
+		denom = mat[i][0]*mat[i][0]+mat[i][3]*mat[i][3]+mat[i][6]*mat[i][6];
 		denom = sqrt(denom);
 		mat[i][0] = mat[i][0]/denom;
 		mat[i][3] = mat[i][3]/denom;
 		mat[i][6] = mat[i][6]/denom;
-		denom = mat[i][3]*mat[i][3]+mat[i][4]*mat[i][4]+mat[i][5]*mat[i][5];
+		denom = mat[i][1]*mat[i][1]+mat[i][4]*mat[i][4]+mat[i][7]*mat[i][7];
 		denom = sqrt(denom);
 		mat[i][1] = mat[i][1]/denom;
 		mat[i][4] = mat[i][4]/denom;
 		mat[i][7] = mat[i][7]/denom;
-		denom = mat[i][6]*mat[i][6]+mat[i][7]*mat[i][7]+mat[i][8]*mat[i][8];
+		denom = mat[i][2]*mat[i][2]+mat[i][5]*mat[i][5]+mat[i][8]*mat[i][8];
 		denom = sqrt(denom);
 		mat[i][2] = mat[i][2]/denom;
 		mat[i][5] = mat[i][5]/denom;
@@ -236,10 +240,10 @@ void YSChoiAbaqusReader::execute()
 		if(mat[i][8] > 1) mat[i][8] = 1;
 		if(mat[i][8] < -1) mat[i][8] = -1;
 		ea2 = acos(mat[i][8]);
-		cosine3 = (mat[i][5]/sin(ea2));
-		sine3 = (mat[i][2]/sin(ea2));
-		cosine1 = (-mat[i][7]/sin(ea2));
-		sine1 = (mat[i][6]/sin(ea2));
+		cosine3 = (mat[i][2]/sin(ea2));
+		sine3 = (mat[i][5]/sin(ea2));
+		cosine1 = (-mat[i][6]/sin(ea2));
+		sine1 = (mat[i][7]/sin(ea2));
 		if(cosine3 > 1) cosine3 = 1;
 		if(cosine3 < -1) cosine3 = -1;
 		ea3 = acos(cosine3);
