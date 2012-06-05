@@ -142,7 +142,7 @@ void PluginMaker::processFile(QString path) {
   QString pluginName = name->text();
   QString pluginDir = outputFileName->text();
   
-  pluginName = cleanName(pluginName);
+   pluginName = cleanName(pluginName);
 
   //Open file
   QFile rfile(path);
