@@ -37,6 +37,14 @@
 
 #include "PluginMaker.h"
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
+#include <QtGui/QWidget>
+#include <QtGui/QFileDialog>
+
+
 PluginMaker::PluginMaker(QWidget* parent) :
  QMainWindow(parent) 
 {
@@ -162,5 +170,5 @@ void PluginMaker::on_name_textChanged(const QString & text) {
 }
 
 void PluginMaker::on_outputFileName_textChanged(const QString & text) {
-  
+
 }

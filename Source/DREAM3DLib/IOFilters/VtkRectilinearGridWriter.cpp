@@ -50,11 +50,17 @@ m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_BCArrayName(Ebsd::Ctf::BC),
+m_MisorientationGradientsArrayName(DREAM3D::CellData::MisorientationGradients),
+m_GrainMisorientationsArrayName(DREAM3D::CellData::GrainMisorientations),
+m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_WriteGrainIds(true),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
 m_WriteGoodVoxels(false),
+m_WriteLMGs(false),
+m_WriteGAMs(false),
+m_WriteKAMs(false),
 m_WriteIPFColors(false),
 m_WriteBinaryFile(false)
 {
@@ -106,7 +112,32 @@ void VtkRectilinearGridWriter::setupFilterOptions()
     option->setWidgetType(FilterOption::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
-  }  {
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write KAM Value");
+    option->setPropertyName("WriteKAMs");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write GAM Values");
+    option->setPropertyName("WriteGAMs");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write LMG Values");
+    option->setPropertyName("WriteLMGs");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
     FilterOption::Pointer option = FilterOption::New();
     option->setHumanLabel("Write Good Voxels");
     option->setPropertyName("WriteGoodVoxels");
@@ -141,6 +172,9 @@ void VtkRectilinearGridWriter::writeFilterOptions(AbstractFilterOptionsWriter* w
   writer->writeValue("WritePhaseIds", getWritePhaseIds() );
   writer->writeValue("WriteBandContrasts", getWriteBandContrasts() );
   writer->writeValue("WriteGoodVoxels", getWriteGoodVoxels() );
+  writer->writeValue("WriteLMGs", getWriteLMGs() );
+  writer->writeValue("WriteGAMs", getWriteGAMs() );
+  writer->writeValue("WriteKAMs", getWriteKAMs() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
 }
@@ -171,6 +205,18 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_WriteGoodVoxels == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+  }
+  if(m_WriteKAMs == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1);
+  }
+  if(m_WriteLMGs == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -303, float, FloatArrayType, voxels, 1);
+  }
+  if(m_WriteGAMs == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -303, float, FloatArrayType, voxels, 1);
   }
   if(m_WriteBandContrasts == true)
   {
@@ -243,6 +289,27 @@ void VtkRectilinearGridWriter::execute()
   if (m_WriteGoodVoxels == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<DataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteKAMs == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelKAMScalarWriter<DataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteGAMs == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGAMScalarWriter<DataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteLMGs == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelLMGScalarWriter<DataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }

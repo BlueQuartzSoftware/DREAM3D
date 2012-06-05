@@ -39,7 +39,8 @@
 #define _PLUGINMAKER_H_
 
 
-#include <QtGui>
+#include <QtCore/QString>
+#include <QtGui/QMainWindow>
 
 #include "ui_PluginMaker.h"
 

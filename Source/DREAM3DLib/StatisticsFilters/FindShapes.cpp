@@ -65,6 +65,7 @@ m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
 m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
 m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
 m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
+m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
 m_FieldPhases(NULL),
@@ -77,8 +78,10 @@ m_Volumes(NULL),
 m_AspectRatios(NULL)
 {
   grainmoments = NULL;
+  graineigenvals = NULL;
 
   INIT_DataArray(m_GrainMoments,float);
+  INIT_DataArray(m_GrainEigenVals,float);
 
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
@@ -104,7 +107,7 @@ void FindShapes::setupFilterOptions()
     option->setHumanLabel("Distribution Type");
     option->setPropertyName("DistributionType");
     option->setWidgetType(FilterOption::ChoiceWidget);
-	option->setValueType("unsigned int");
+	  option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
@@ -184,8 +187,10 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-    setErrorCondition(-308);
+	StatsDataArray::Pointer p = StatsDataArray::New();
+	m_StatsDataArray = p.get();
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
   setErrorMessage(ss.str());
@@ -453,6 +458,7 @@ void FindShapes::find_axes()
   size_t numensembles = m->getNumEnsembleTuples();
 
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+  graineigenvals = m_GrainEigenVals->WritePointer(0, numgrains * 3);
   boveras.resize(numensembles);
   coveras.resize(numensembles);
   bvalues.resize(numensembles);
@@ -502,9 +508,9 @@ void FindShapes::find_axes()
     r1 = 2 * const1 * const2 - (const3);
     r2 = -const1 * (const2 - (const4)) - const3;
     r3 = -const1 * (const2 + (const4)) - const3;
-    m_AxisLengths[3*i] = r1;
-    m_AxisLengths[3*i+1] = r2;
-    m_AxisLengths[3*i+2] = r3;
+	graineigenvals[3*i] = r1;
+	graineigenvals[3*i+1] = r2;
+	graineigenvals[3*i+2] = r3;
     I1 = (15 * r1) / (4 * m_pi);
     I2 = (15 * r2) / (4 * m_pi);
     I3 = (15 * r3) / (4 * m_pi);
@@ -516,6 +522,9 @@ void FindShapes::find_axes()
     b = B / A;
     b = sqrt(b) * a;
     c = A / (a * a * a * b);
+    m_AxisLengths[3*i] = a;
+    m_AxisLengths[3*i+1] = b;
+    m_AxisLengths[3*i+2] = c;
     bovera = b / a;
     covera = c / a;
 	if(A == 0 || B == 0 || C == 0) bovera = 0, covera = 0;
@@ -631,9 +640,9 @@ void FindShapes::find_axiseulers()
     float Ixy = grainmoments[i*6+3];
     float Iyz = grainmoments[i*6+4];
     float Ixz = grainmoments[i*6+5];
-    float radius1 = m_AxisLengths[3*i];
-    float radius2 = m_AxisLengths[3*i+1];
-    float radius3 = m_AxisLengths[3*i+2];
+    float radius1 = graineigenvals[3*i];
+    float radius2 = graineigenvals[3*i+1];
+    float radius3 = graineigenvals[3*i+2];
     float e[3][1];
     float uber[3][3];
     float bmat[3][1];

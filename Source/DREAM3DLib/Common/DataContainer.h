@@ -83,6 +83,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
 
+
    /**
    * @brief Adds/overwrites the data for a named array
    * @param name The name that the array will be known by
