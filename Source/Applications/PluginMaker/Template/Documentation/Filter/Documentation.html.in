@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"><html>
+<head>
+<meta name="qrichtext" content="1" />
+<style type="text/css">p, li { white-space: pre-wrap; }</style>
+<title>@PluginName@</title>
+</head>
+<body>
+<h3>@PluginName@ Filter</h3><br>
+<b>Author:</b>YOUR NAME HERE<br>
+<b>Contact Info:</b>YOUR EMAIL OR ADDRESS HERE<br>
+<b>Version:</b> <br>
+<b>CopyRight/License:</b>ANY COPYRIGHT OR LICENSE STATEMENT<br>
+<h4>Summary</h4>
+<!-- Write all your documentation here -->
+This filter does ....
+<!-- Do NOT write documentation below this line -->
+
+<!-- A TABLE OF INPUTS AND OUTPUTS FOR YOUR FILTER -->
+<h4>Options</h4>
+<table cellpadding="5px">
+<tr><th>Option Name</th><th>Option Type</th></tr>
+<tr>
+<td></td><td></td></tr>
+<tr>
+</table>
+<!--  -->
+</body>
+</html>
