@@ -43,6 +43,8 @@
 #include <QtCore/QTextStream>
 #include <QtGui/QWidget>
 #include <QtGui/QFileDialog>
+#include <QtGui/QTreeWidgetItem>
+#include <QtGui/QProgressBar>
 
 
 PluginMaker::PluginMaker(QWidget* parent) :
@@ -55,11 +57,50 @@ PluginMaker::PluginMaker(QWidget* parent) :
   
 }
 
-
-
 void PluginMaker::setupGui()
 {
+  F_main = new QTreeWidgetItem(treeWidget);
+  F_main->setText(0, "Unknown Plugin Name");
+  
+  F_code = new QTreeWidgetItem(F_main);
+  F_code->setText(0, tr("Code"));
+  
+  QTreeWidgetItem *F_doc = new QTreeWidgetItem(F_main);
+  F_doc->setText(0, tr("Documentation"));
 
+  QTreeWidgetItem *cmake = new QTreeWidgetItem(F_main);
+  cmake->setText(0, tr("CMakeLists.txt"));
+
+  F_name = new QTreeWidgetItem(F_code);
+  F_name->setText(0, "Unknown Plugin Name");
+
+  plugincpp = new QTreeWidgetItem(F_code);
+  plugincpp->setText(0, "Unknown Plugin Name");
+
+  pluginh = new QTreeWidgetItem(F_code);
+  pluginh->setText(0, "Unknown Plugin Name");
+
+  filtercpp = new QTreeWidgetItem(F_name);
+  filtercpp->setText(0, "Unknown Plugin Name");
+
+  filterh = new QTreeWidgetItem(F_name);
+  filterh->setText(0, "Unknown Plugin Name");
+  
+  sourceList = new QTreeWidgetItem(F_name);
+  sourceList->setText(0, tr("SourceList.cmake"));
+
+  F_namefilters = new QTreeWidgetItem(F_doc);
+  F_namefilters->setText(0, "Unknown Plugin Name");
+
+  pluginDocs = new QTreeWidgetItem(F_doc);
+  pluginDocs->setText(0, "Unknown Plugin Name");
+
+  htmlDoc = new QTreeWidgetItem(F_namefilters);
+  htmlDoc->setText(0, "Unknown Plugin Name");
+
+  treeWidget->expandAll();
+  statusbar->showMessage("Ready");
+  
 }
 
 void PluginMaker::on_selectButton_clicked() {
@@ -75,6 +116,16 @@ void PluginMaker::on_selectButton_clicked() {
 void PluginMaker::on_generateButton_clicked() {
   QString pluginName = name->text();
   QString pluginDir = outputFileName->text();
+
+  if (pluginName == "") {
+    statusbar->showMessage("Generation Failed --- Please provide a plugin name");
+    return;
+  }
+  else if (pluginDir == "") {
+    statusbar->showMessage("Generation Failed --- Please provide a plugin directory");
+    return;
+  }
+
   processFile(":/Template/CMakeLists.txt.in");
   processFile(":/Template/Code/Plugin.h.in");
   processFile(":/Template/Code/Plugin.cpp.in");
@@ -83,6 +134,7 @@ void PluginMaker::on_generateButton_clicked() {
   processFile(":/Template/Code/Filter/SourceList.cmake.in");
   processFile(":/Template/Documentation/FilterDocs.qrc.in");
   processFile(":/Template/Documentation/Filter/Documentation.html.in");
+  statusbar->showMessage("Generation Completed");
 }
 
 void PluginMaker::processFile(QString path) {
@@ -90,7 +142,7 @@ void PluginMaker::processFile(QString path) {
   QString pluginName = name->text();
   QString pluginDir = outputFileName->text();
   
-  cleanName(pluginName);
+  pluginName = cleanName(pluginName);
 
   //Open file
   QFile rfile(path);
@@ -146,29 +198,44 @@ void PluginMaker::processFile(QString path) {
   }
 }
 
-void PluginMaker::cleanName(QString name) {
+QString PluginMaker::cleanName(QString name) {
   //Remove all spaces and illegal characters from plugin name
   name = name.trimmed();
-  name.remove(" ");
-  name.remove( QRegExp("[" + QRegExp::escape("\\/:@#$%^&!(){}';`~.,+=*?\"<>-|") + "]") );
+  name = name.remove(" ");
+  return name;
 }
 
 void PluginMaker::on_name_textChanged(const QString & text) {
-  if ( name->text().isEmpty() ) {
-    errorMessage->setText("");
-    return;
-  }
-
-  //Get text field values from widget
+  statusbar->showMessage("Ready");
   QString pluginName = name->text();
   QString pluginDir = outputFileName->text();
 
-  //Remove all spaces and illegal characters from plugin name
-  cleanName(pluginName);
+  pluginName = cleanName(pluginName);
 
-  errorMessage->setText("Plugin Name: " + pluginName);
+  if (pluginName == "") {
+    F_main->setText(0, "Unknown Plugin Name");
+    F_name->setText(0, "Unknown Plugin Name");
+    plugincpp->setText(0, "Unknown Plugin Name");
+    pluginh->setText(0, "Unknown Plugin Name");
+    filtercpp->setText(0, "Unknown Plugin Name");
+    filterh->setText(0, "Unknown Plugin Name");
+    F_namefilters->setText(0, "Unknown Plugin Name");
+    pluginDocs->setText(0, "Unknown Plugin Name");
+    htmlDoc->setText(0, "Unknown Plugin Name");
+  }
+  else {
+  F_main->setText(0, pluginName);
+  F_name->setText(0, pluginName);
+  plugincpp->setText(0, pluginName + "Plugin.cpp");
+  pluginh->setText(0, pluginName + "Plugin.h");
+  filtercpp->setText(0, pluginName + "Filter.cpp");
+  filterh->setText(0, pluginName + "Filter.h");
+  F_namefilters->setText(0, pluginName + "Filters");
+  pluginDocs->setText(0, pluginName + "PluginDocs.qrc");
+  htmlDoc->setText(0, pluginName + "Filter.html");
+  }
 }
 
 void PluginMaker::on_outputFileName_textChanged(const QString & text) {
-
+  statusbar->showMessage("Ready");
 }
