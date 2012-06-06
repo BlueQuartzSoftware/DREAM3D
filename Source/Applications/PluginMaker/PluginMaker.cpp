@@ -49,6 +49,11 @@
 #include <QtGui/QProgressBar>
 #include <QtGui/QMessageBox>
 
+
+#include "DREAM3D/License/PluginMakerLicenseFiles.h"
+#include "QtSupport/ApplicationAboutBoxDialog.h"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -279,7 +284,13 @@ void PluginMaker::on_helpButton_clicked() {
   helpDialog->show();
 }
 
-void PluginMaker::on_aboutButton_clicked() {
-  AboutWidget* aboutDialog = new AboutWidget;
-  aboutDialog->show();
+void PluginMaker::on_aboutButton_clicked()
+
+{
+  ApplicationAboutBoxDialog about(PluginMakerProj::LicenseList, this);
+  QString an = QCoreApplication::applicationName();
+  QString version("");
+  version.append("1.0.0");
+  about.setApplicationInfo(an, version);
+  about.exec();
 }
