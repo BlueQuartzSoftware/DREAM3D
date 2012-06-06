@@ -35,53 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PLUGINMAKER_H_
-#define _PLUGINMAKER_H_
+#include "HelpWidget.h"
 
-
-#include <QtCore/QString>
-#include <QtGui/QMainWindow>
-#include <QtGui/QTreeWidgetItem>
-
-#include "ui_PluginMaker.h"
-
-class PluginMaker : public QMainWindow, public Ui::PluginMaker
-{
-  Q_OBJECT
-
-public:
-  PluginMaker(QWidget* parent = 0);
- 
-protected:
-  void setupGui();
-
-protected slots:
-  void on_selectButton_clicked();
-  void on_generateButton_clicked();
-  void on_helpButton_clicked();
-  void on_aboutButton_clicked();
-  void on_name_textChanged(const QString & text);
-  void on_outputFileName_textChanged(const QString & text);
-
-private:
-  QString m_OpenDialogLastDirectory;
-  void processFile(QString path);
-  QString cleanName(QString name);
-
-  QTreeWidgetItem *F_main;
-  QTreeWidgetItem *F_code;
-  QTreeWidgetItem *F_doc;
-  QTreeWidgetItem *cmake;
-  QTreeWidgetItem *F_name;
-  QTreeWidgetItem *plugincpp;
-  QTreeWidgetItem *pluginh;
-  QTreeWidgetItem *filtercpp;
-  QTreeWidgetItem *filterh;
-  QTreeWidgetItem *sourceList;
-  QTreeWidgetItem *F_namefilters;
-  QTreeWidgetItem *pluginDocs;
-  QTreeWidgetItem *htmlDoc;
-  
-};
-
-#endif
+HelpWidget::HelpWidget(QWidget *parent) {
+  setupUi(this);
+}
