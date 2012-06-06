@@ -36,6 +36,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PluginMaker.h"
+#include "HelpWidget.h"
+#include "AboutWidget.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -45,6 +47,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QProgressBar>
+#include <QtGui/QMessageBox>
 
 
 PluginMaker::PluginMaker(QWidget* parent) :
@@ -59,6 +62,14 @@ PluginMaker::PluginMaker(QWidget* parent) :
 
 void PluginMaker::setupGui()
 {
+  nameLabel->setToolTip("Plugin Name");
+  name->setToolTip("Enter Plugin Name Here");
+  outputFileNameLabel->setToolTip("Output Directory");
+  outputFileName->setToolTip("Enter Output Directory Here");
+  selectButton->setToolTip("Select Directory");
+  generateButton->setToolTip("Generate File Structure");
+  aboutButton->setToolTip("About PluginMaker©");
+
   F_main = new QTreeWidgetItem(treeWidget);
   F_main->setText(0, "Unknown Plugin Name");
   
@@ -119,10 +130,14 @@ void PluginMaker::on_generateButton_clicked() {
 
   if (pluginName == "") {
     statusbar->showMessage("Generation Failed --- Please provide a plugin name");
+    QMessageBox::critical(this, tr("PluginMaker"), tr("The file generation was unsuccessful.\n"
+      "Please enter a Plugin Name."));
     return;
   }
   else if (pluginDir == "") {
     statusbar->showMessage("Generation Failed --- Please provide a plugin directory");
+    QMessageBox::critical(this, tr("PluginMaker"), tr("The file generation was unsuccessful.\n"
+      "Please enter a Plugin Directory."));
     return;
   }
 
@@ -238,4 +253,14 @@ void PluginMaker::on_name_textChanged(const QString & text) {
 
 void PluginMaker::on_outputFileName_textChanged(const QString & text) {
   statusbar->showMessage("Ready");
+}
+
+void PluginMaker::on_helpButton_clicked() {
+  HelpWidget* helpDialog = new HelpWidget;
+  helpDialog->show();
+}
+
+void PluginMaker::on_aboutButton_clicked() {
+  AboutWidget* aboutDialog = new AboutWidget;
+  aboutDialog->show();
 }
