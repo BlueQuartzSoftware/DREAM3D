@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
- * used to endorse or promote products derived from this software without specific 
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
  * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -49,17 +49,22 @@
 #include <QtGui/QProgressBar>
 #include <QtGui/QMessageBox>
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 PluginMaker::PluginMaker(QWidget* parent) :
- QMainWindow(parent) 
+ QMainWindow(parent)
 {
   setupUi(this);
 
   setupGui();
 
-  
+
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PluginMaker::setupGui()
 {
   nameLabel->setToolTip("Plugin Name");
@@ -72,10 +77,10 @@ void PluginMaker::setupGui()
 
   F_main = new QTreeWidgetItem(treeWidget);
   F_main->setText(0, "Unknown Plugin Name");
-  
+
   F_code = new QTreeWidgetItem(F_main);
   F_code->setText(0, tr("Code"));
-  
+
   QTreeWidgetItem *F_doc = new QTreeWidgetItem(F_main);
   F_doc->setText(0, tr("Documentation"));
 
@@ -96,7 +101,7 @@ void PluginMaker::setupGui()
 
   filterh = new QTreeWidgetItem(F_name);
   filterh->setText(0, "Unknown Plugin Name");
-  
+
   sourceList = new QTreeWidgetItem(F_name);
   sourceList->setText(0, tr("SourceList.cmake"));
 
@@ -111,9 +116,12 @@ void PluginMaker::setupGui()
 
   treeWidget->expandAll();
   statusbar->showMessage("Ready");
-  
+
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PluginMaker::on_selectButton_clicked() {
   QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Directory"), outputFile);
@@ -124,7 +132,18 @@ void PluginMaker::on_selectButton_clicked() {
   }
 }
 
-void PluginMaker::on_generateButton_clicked() {
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PluginMaker::on_generateButton_clicked()
+{
+  /*
+  if (this->sourceDirectoryLE->text().isEmpty() == true)
+      {
+        QMessageBox::critical(this, tr("Input Parameter Error"), tr("Source Directory must be set."), QMessageBox::Ok);
+        return;
+      }
+  */
   QString pluginName = name->text();
   QString pluginDir = outputFileName->text();
 
@@ -156,8 +175,8 @@ void PluginMaker::processFile(QString path) {
   //Get text field values from widget
   QString pluginName = name->text();
   QString pluginDir = outputFileName->text();
-  
-  pluginName = cleanName(pluginName);
+
+   pluginName = cleanName(pluginName);
 
   //Open file
   QFile rfile(path);
@@ -175,7 +194,7 @@ void PluginMaker::processFile(QString path) {
     QFileInfo fInfo(pluginDir);
     QString parentPath = fInfo.path();
     QString file = fInfo.fileName();
-    
+
     //Various necessary methods to create the correct file names and paths.
     if (file == "Filter.cpp" || file == "Filter.h" || file == "SourceList.cmake") {
       parentPath.remove(parentPath.size()-6,6);
@@ -254,6 +273,7 @@ void PluginMaker::on_name_textChanged(const QString & text) {
 void PluginMaker::on_outputFileName_textChanged(const QString & text) {
   statusbar->showMessage("Ready");
 }
+<<<<<<< HEAD
 
 void PluginMaker::on_helpButton_clicked() {
   HelpWidget* helpDialog = new HelpWidget;
