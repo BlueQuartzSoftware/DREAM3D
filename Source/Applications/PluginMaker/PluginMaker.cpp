@@ -137,13 +137,6 @@ void PluginMaker::on_selectButton_clicked() {
 // -----------------------------------------------------------------------------
 void PluginMaker::on_generateButton_clicked()
 {
-  /*
-  if (this->sourceDirectoryLE->text().isEmpty() == true)
-      {
-        QMessageBox::critical(this, tr("Input Parameter Error"), tr("Source Directory must be set."), QMessageBox::Ok);
-        return;
-      }
-  */
   QString pluginName = name->text();
   QString pluginDir = outputFileName->text();
 
@@ -233,9 +226,13 @@ void PluginMaker::processFile(QString path) {
 }
 
 QString PluginMaker::cleanName(QString name) {
+  //Remove all uses of "Plugin", "plugin", "Filter", and "filter"
+  QRegExp rx("Plugin|plugin|Filter|filter");
+  name.replace(rx, "");
   //Remove all spaces and illegal characters from plugin name
-  name = name.trimmed();
-  name = name.remove(" ");
+  name.trimmed();
+  name.remove(" ");
+  name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
   return name;
 }
 
