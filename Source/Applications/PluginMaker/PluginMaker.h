@@ -49,12 +49,20 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
 {
   Q_OBJECT
 
-public:
-  PluginMaker(QWidget* parent = 0);
- 
-protected:
-  void setupGui();
+  public:
+    PluginMaker(QWidget* parent = 0);
 
+  protected:
+    void setupGui();
+
+
+    protected slots:
+    void on_selectButton_clicked();
+    void on_generateButton_clicked();
+    void on_name_textChanged(const QString & text);
+    void on_outputFileName_textChanged(const QString & text);
+
+<<<<<<< HEAD
 protected slots:
   void on_selectButton_clicked();
   void on_generateButton_clicked();
@@ -82,6 +90,7 @@ private:
   QTreeWidgetItem *pluginDocs;
   QTreeWidgetItem *htmlDoc;
   
+
 };
 
 #endif
