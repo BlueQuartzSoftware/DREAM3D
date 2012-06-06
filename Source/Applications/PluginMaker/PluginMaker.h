@@ -55,14 +55,6 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
   protected:
     void setupGui();
 
-
-    protected slots:
-    void on_selectButton_clicked();
-    void on_generateButton_clicked();
-    void on_name_textChanged(const QString & text);
-    void on_outputFileName_textChanged(const QString & text);
-
-<<<<<<< HEAD
 protected slots:
   void on_selectButton_clicked();
   void on_generateButton_clicked();

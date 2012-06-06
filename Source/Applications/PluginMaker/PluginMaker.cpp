@@ -273,7 +273,6 @@ void PluginMaker::on_name_textChanged(const QString & text) {
 void PluginMaker::on_outputFileName_textChanged(const QString & text) {
   statusbar->showMessage("Ready");
 }
-<<<<<<< HEAD
 
 void PluginMaker::on_helpButton_clicked() {
   HelpWidget* helpDialog = new HelpWidget;
