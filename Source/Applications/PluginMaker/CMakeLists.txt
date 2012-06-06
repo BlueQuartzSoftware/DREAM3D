@@ -23,14 +23,14 @@ add_definitions(-DDREAM3D_USE_QT)
 
 # --------------------------------------------------------------------
 # Generate the License File Headers
-#set(PROJECT_PREFIX "PluginMaker")
+set(PROJECT_PREFIX "PluginMakerProj")
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
 set (PluginMaker_SRCS 
     ${PluginMaker_SOURCE_DIR}/main.cpp
 	${PluginMaker_SOURCE_DIR}/PluginMaker.cpp
 	${PluginMaker_SOURCE_DIR}/HelpWidget.cpp
-	${PluginMaker_SOURCE_DIR}/AboutWidget.cpp
+    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.cpp
 	)
 
 SET(PluginMaker_HDRS
@@ -40,7 +40,7 @@ SET(PluginMaker_HDRS
 SET(PluginMaker_MOC_HDRS
     ${PluginMaker_SOURCE_DIR}/PluginMaker.h
 	${PluginMaker_SOURCE_DIR}/HelpWidget.h
-	${PluginMaker_SOURCE_DIR}/AboutWidget.h
+	${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
 	)
 cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS}" "${PluginMaker_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
@@ -48,7 +48,7 @@ cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_
 SET( PluginMaker_UIS
   ${PluginMaker_SOURCE_DIR}/UI_Files/PluginMaker.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/HelpWidget.ui
-  ${PluginMaker_SOURCE_DIR}/UI_Files/AboutWidget.ui
+    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/UI_Files/ApplicationAboutBoxDialog.ui
   )
   
 cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
@@ -103,7 +103,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES ${QT_LIBRARIES} 
+    LINK_LIBRARIES ${QT_LIBRARIES}
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}
