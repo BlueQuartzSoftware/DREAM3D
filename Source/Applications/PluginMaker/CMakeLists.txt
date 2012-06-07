@@ -33,6 +33,7 @@ set (PluginMaker_SRCS
 	${PluginMaker_SOURCE_DIR}/PMDirGenerator.cpp
 	${PluginMaker_SOURCE_DIR}/PMFileGenerator.cpp
 	${PluginMaker_SOURCE_DIR}/PMFilterGenerator.cpp
+	${PluginMaker_SOURCE_DIR}/AddFilterWidget.cpp
     ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.cpp
 	)
 
@@ -47,6 +48,8 @@ SET(PluginMaker_MOC_HDRS
     ${PluginMaker_SOURCE_DIR}/PMFileGenerator.h
     ${PluginMaker_SOURCE_DIR}/PMFilterGenerator.h
   	${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
+	${PluginMaker_SOURCE_DIR}/AddFilterWidget.h
+	${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
 	)
 cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS}" "${PluginMaker_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
@@ -54,6 +57,7 @@ cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_
 SET( PluginMaker_UIS
   ${PluginMaker_SOURCE_DIR}/UI_Files/PluginMaker.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/HelpWidget.ui
+  ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterWidget.ui
     ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/UI_Files/ApplicationAboutBoxDialog.ui
   )
   
