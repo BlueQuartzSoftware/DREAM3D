@@ -266,10 +266,13 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
 
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-
-    QString humanName = QString::fromStdString((*factory).second->getFilterHumanLabel());
+    IFilterWidgetFactory::Pointer wigFactory = (*factory).second;
+    if (NULL == wigFactory.get() ) {
+      continue;
+    }
+    QString humanName = QString::fromStdString(wigFactory->getFilterHumanLabel());
     QString iconName(":/");
-    iconName.append( QString::fromStdString((*factory).second->getFilterGroup()));
+    iconName.append( QString::fromStdString(wigFactory->getFilterGroup()));
     iconName.append("_Icon.png");
 
     // Validate the icon is in the resource system
