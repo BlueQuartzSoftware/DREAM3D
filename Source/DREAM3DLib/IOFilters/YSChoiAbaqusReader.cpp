@@ -60,11 +60,13 @@ m_InputFile(""),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_CellEulerAngles(NULL),
+m_Quats(NULL),
 m_SurfaceFields(NULL)
 {
   setupFilterOptions();
@@ -119,6 +121,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 1, voxels, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
@@ -213,15 +216,12 @@ void YSChoiAbaqusReader::execute()
         mat[i][iter] = value;
       }
     }
-	double ea1, ea2, ea3;
+	float ea1, ea2, ea3;
 	double cosine1, cosine3, sine1, sine3;
+	float q[5];
 	double denom;
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
 	{
-		if(i == 58430)
-		{
-			int stop = 0;
-		}
 		denom = mat[i][0]*mat[i][0]+mat[i][3]*mat[i][3]+mat[i][6]*mat[i][6];
 		denom = sqrt(denom);
 		mat[i][0] = mat[i][0]/denom;
@@ -239,11 +239,11 @@ void YSChoiAbaqusReader::execute()
 		mat[i][8] = mat[i][8]/denom;
 		if(mat[i][8] > 1) mat[i][8] = 1;
 		if(mat[i][8] < -1) mat[i][8] = -1;
-		ea2 = acos(mat[i][8]);
-		cosine3 = (mat[i][2]/sin(ea2));
-		sine3 = (mat[i][5]/sin(ea2));
-		cosine1 = (-mat[i][6]/sin(ea2));
-		sine1 = (mat[i][7]/sin(ea2));
+/*		ea2 = acos(mat[i][8]);
+		cosine3 = (mat[i][5]/sin(ea2));
+		sine3 = (mat[i][2]/sin(ea2));
+		cosine1 = (-mat[i][7]/sin(ea2));
+		sine1 = (mat[i][6]/sin(ea2));
 		if(cosine3 > 1) cosine3 = 1;
 		if(cosine3 < -1) cosine3 = -1;
 		ea3 = acos(cosine3);
@@ -251,7 +251,18 @@ void YSChoiAbaqusReader::execute()
 		if(cosine1 < -1) cosine1 = -1;
 		ea1 = acos(cosine1);
 		if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
-		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;
+		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;*/
+		q[0] = 1;
+		q[4] = sqrt((1.0+mat[i][0]+mat[i][4]+mat[i][8]))/2;
+		q[1] = (mat[i][5]-mat[i][7])/(4*q[4]);
+		q[2] = (mat[i][6]-mat[i][2])/(4*q[4]);
+		q[3] = (mat[i][1]-mat[i][3])/(4*q[4]);
+		m_Quats[5*i] = 1;
+		m_Quats[5*i+1] = q[1];
+		m_Quats[5*i+2] = q[2];
+		m_Quats[5*i+3] = q[3];
+		m_Quats[5*i+4] = q[4];
+		OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
 		m_CellEulerAngles[3*i] = ea1;
 		m_CellEulerAngles[3*i + 1] = ea2;
 		m_CellEulerAngles[3*i + 2] = ea3;

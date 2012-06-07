@@ -92,7 +92,8 @@ class DREAM3DLib_EXPORT OrientationMath
     static void QuattoEuler(float *q, float &ea1, float &ea2, float &ea3);
     static void getSlipMisalignment(int ss1, float q1[5], float q2[5], float &ssap);
     static void multiplyQuaternions(float inQuat[5], float multQuat[5], float outQuat[5]);
-    static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
+	static void normalizeQuat(float* qr);
+	static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
     static void eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
     static void RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3);
 
