@@ -137,8 +137,9 @@ void FindCellQuats::execute()
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {
+	phase = m_CellPhases[i];
     OrientationMath::eulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
-    phase = m_CellPhases[i];
+	OrientationMath::normalizeQuat(qr);
     if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       qr[1] = 0.0;
@@ -149,6 +150,7 @@ void FindCellQuats::execute()
     else
     {
       m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
+	  OrientationMath::normalizeQuat(qr);
     }
 
     m_Quats[i*5 + 0] = 1.0f;
