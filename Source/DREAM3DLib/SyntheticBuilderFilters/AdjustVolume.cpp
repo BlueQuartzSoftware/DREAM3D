@@ -168,13 +168,13 @@ void AdjustVolume::execute()
   int growth = 1;
   int nucleus;
   int bad = 0;
-  float random, oldsizedisterror, currentsizedisterror, diam;
+  float random, oldsizedisterror = 0.0f, currentsizedisterror = 0.0f, diam;
   DimType x, y, z;
   int neighpoint, index;
   DimType count, affectedcount;
   int vListSize = 1000;
 
-  float voxtovol = m->getXRes()*m->getYRes()*m->getZRes()*(3.0/4.0)*(1.0/m_pi);
+  float voxtovol = m->getXRes()*m->getYRes()*m->getZRes()*(0.75f)*(1.0f/m_pi);
 
   gsizes.resize(m->getNumFieldTuples());
 

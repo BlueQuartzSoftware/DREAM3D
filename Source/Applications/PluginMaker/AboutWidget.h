@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
- * used to endorse or promote products derived from this software without specific 
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
  * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -35,54 +35,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PLUGINMAKER_H_
-#define _PLUGINMAKER_H_
+#ifndef _ABOUTWIDGET_H_
+#define _ABOUTWIDGET_H_
 
+#include "ui_AboutWidget.h"
 
-#include <QtCore/QString>
-#include <QtGui/QMainWindow>
-#include <QtGui/QTreeWidgetItem>
-
-#include "ui_PluginMaker.h"
-
-class PluginMaker : public QMainWindow, public Ui::PluginMaker
+class AboutWidget : public QWidget, public Ui::AboutWidget
 {
-  Q_OBJECT
 
   public:
-    PluginMaker(QWidget* parent = 0);
-
-  protected:
-    void setupGui();
-
-protected slots:
-  void on_selectButton_clicked();
-  void on_generateButton_clicked();
-  void on_helpButton_clicked();
-  void on_aboutButton_clicked();
-  void on_name_textChanged(const QString & text);
-  void on_outputFileName_textChanged(const QString & text);
-
-private:
-  QString m_OpenDialogLastDirectory;
-  void processFile(QString path);
-  QString cleanName(QString name);
-
-  QTreeWidgetItem *F_main;
-  QTreeWidgetItem *F_code;
-  QTreeWidgetItem *F_doc;
-  QTreeWidgetItem *cmake;
-  QTreeWidgetItem *F_name;
-  QTreeWidgetItem *plugincpp;
-  QTreeWidgetItem *pluginh;
-  QTreeWidgetItem *filtercpp;
-  QTreeWidgetItem *filterh;
-  QTreeWidgetItem *sourceList;
-  QTreeWidgetItem *F_namefilters;
-  QTreeWidgetItem *pluginDocs;
-  QTreeWidgetItem *htmlDoc;
-  
-
+    AboutWidget(QWidget* parent = 0);
 };
 
 #endif
