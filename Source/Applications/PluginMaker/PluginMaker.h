@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
- * used to endorse or promote products derived from this software without specific 
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
  * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -38,7 +38,7 @@
 #ifndef _PLUGINMAKER_H_
 #define _PLUGINMAKER_H_
 
-
+#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtGui/QMainWindow>
 #include <QtGui/QTreeWidgetItem>
@@ -47,7 +47,7 @@
 
 class PluginMaker : public QMainWindow, public Ui::PluginMaker
 {
-  Q_OBJECT
+  Q_OBJECT;
 
   public:
     PluginMaker(QWidget* parent = 0);
@@ -81,7 +81,7 @@ private:
   QTreeWidgetItem *F_namefilters;
   QTreeWidgetItem *pluginDocs;
   QTreeWidgetItem *htmlDoc;
-  
+
 
 };
 
