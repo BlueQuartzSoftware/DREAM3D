@@ -56,5 +56,5 @@ void @PluginName@Plugin::readSettings(QSettings &prefs)
 
 }
 
-#include "@PluginName@/RegisterKnownFilterWidgets.cpp"
+#include "@PluginName@Filters/RegisterKnownFilterWidgets.cpp"
 
