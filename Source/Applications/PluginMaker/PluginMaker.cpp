@@ -37,7 +37,7 @@
 
 #include "PluginMaker.h"
 #include "HelpWidget.h"
-#include "AboutWidget.h"
+
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
