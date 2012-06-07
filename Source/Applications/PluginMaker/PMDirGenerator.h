@@ -1,7 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -14,10 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be
- * used to endorse or promote products derived from this software without specific
- * prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -35,47 +34,74 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PLUGINMAKER_H_
-#define _PLUGINMAKER_H_
+#ifndef PMDIRTWI_H_
+#define PMDIRTWI_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QVector>
-#include <QtGui/QMainWindow>
 #include <QtGui/QTreeWidgetItem>
 
-#include "ui_PluginMaker.h"
-
-class PMDirGenerator;
-class PMFileGenerator;
-
-class PluginMaker : public QMainWindow, public Ui::PluginMaker
+/*
+ *
+ */
+class PMDirGenerator : public QObject
 {
-  Q_OBJECT;
+    Q_OBJECT;
 
   public:
-    PluginMaker(QWidget* parent = 0);
 
-  protected:
-    void setupGui();
-
-protected slots:
-  void on_selectButton_clicked();
-  void on_generateButton_clicked();
-  void on_helpButton_clicked();
-  void on_aboutButton_clicked();
-  void on_m_PluginName_textChanged(const QString & text);
-  void on_m_OutputDir_textChanged(const QString & text);
-  void generationError(const QString& test);
-private:
-  QString m_OpenDialogLastDirectory;
-  void processFile(QString path);
-  QString cleanName(QString name);
+    PMDirGenerator(QString outputDir, QString pathTemplate,
+             QString dirName,
+             QString codeTemplateResourcePath,
+             QTreeWidgetItem* wi,
+             QObject* parent = 0);
 
 
-  QVector<PMDirGenerator*> m_GenObjects;
-  QVector<PMFileGenerator*> m_FilterClasses;
+    virtual ~PMDirGenerator();
 
+    void setNameChangeable(bool v);
+    bool isNameChangeable();
+
+    void setDoesGenerateOutput(bool v);
+    bool doesGenerateOutput();
+
+    void setOutputDir(QString v);
+    QString getOutputDir();
+
+    QString getPathTemplate();
+    QString getDirName();
+    QString getCodeTemplateResourcePath();
+
+    QTreeWidgetItem* getTreeWidgetItem();
+
+    QString getPluginName();
+    void setDisplaySuffix(QString v);
+    QString getDisplaySuffix();
+    void setPluginName(QString pluginName);
+
+    QString cleanName(QString name);
+
+
+  protected slots:
+   virtual void pluginNameChanged (const QString &plugname);
+   virtual void outputDirChanged (const QString &outputDir);
+   virtual void generateOutput();
+
+  signals:
+   void outputError(const QString &message);
+   void filterSourceError(const QString &message);
+
+
+  private:
+    QString m_OutputDir;
+    QString m_PathTemplate;
+    QString m_DirName;
+    QString m_CodeTemplateResourcePath;
+    bool m_NameChangeable;
+    bool m_DoesGenerateOutput;
+    QTreeWidgetItem* m_TreeWidgetItem;
+    QString     m_PluginName;
+    QString     m_DisplaySuffix;
 };
 
-#endif
+#endif /* PMDIRTWI_H_ */

@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef @PluginName@Filter_H_
-#define @PluginName@Filter_H_
+#ifndef @ClassName@_H_
+#define @ClassName@_H_
 
 #include <string>
 
@@ -15,20 +15,20 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 
 /**
- * @class @PluginName@Filter @PluginName@Filter.h DREAM3DLib/SyntheticBuilderFilters/@PluginName@Filter.h
+ * @class @ClassName@ @ClassName@.h @PluginName@/Code/@PluginName@Filters/@ClassName@.h
  * @brief
  * @author
- * @date Nov 19, 2011
+ * @date 
  * @version 1.0
  */
-class @PluginName@Filter : public AbstractFilter
+class @ClassName@ : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(@PluginName@Filter);
-    DREAM3D_STATIC_NEW_MACRO(@PluginName@Filter);
-    DREAM3D_TYPE_MACRO_SUPER(@PluginName@Filter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(@ClassName@);
+    DREAM3D_STATIC_NEW_MACRO(@ClassName@);
+    DREAM3D_TYPE_MACRO_SUPER(@ClassName@, AbstractFilter);
 
-    virtual ~@PluginName@Filter();
+    virtual ~@ClassName@();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to
     * DREAM3D_INSTANCE_PROPERTY(float, XRes)
@@ -73,7 +73,7 @@ class @PluginName@Filter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    @PluginName@Filter();
+    @ClassName@();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of 
@@ -87,8 +87,8 @@ class @PluginName@Filter : public AbstractFilter
 
   private:
 
-    @PluginName@Filter(const @PluginName@Filter&); // Copy Constructor Not Implemented
-    void operator=(const @PluginName@Filter&); // Operator '=' Not Implemented
+    @ClassName@(const @ClassName@&); // Copy Constructor Not Implemented
+    void operator=(const @ClassName@&); // Operator '=' Not Implemented
 };
 
-#endif /* @PluginName@Filter_H_ */
+#endif /* @ClassName@_H_ */
