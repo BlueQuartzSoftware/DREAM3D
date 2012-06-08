@@ -347,7 +347,8 @@ void TestDataArray()
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->GetNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->GetSize());
 
-    int32Array->InitializeTuple(0, 9999);
+    double temp = 9999;
+    int32Array->InitializeTuple(0, temp );
     for (int c = 0; c < NUM_COMPONENTS; ++c)
     {
       DREAM3D_REQUIRE_EQUAL( (int32Array->GetComponent(0, c)), (9999))

@@ -215,6 +215,7 @@ void AlignSections::execute()
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
         	  p->CopyTuple(currentPosition, newPosition);
+        	  p->InitializeTuple(currentPosition, 0.0);
           }
         }
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0

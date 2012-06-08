@@ -103,6 +103,18 @@ class NeighborList : public IDataArray
       return 0;
     }
 
+    /**
+     * @brief Splats the same value c across all values in the Tuple
+     * @param i The index of the Tuple
+     * @param c The value to splat across all components in the tuple
+     */
+    void InitializeTuple(size_t i, double p)
+    {
+      assert(false);
+    }
+
+
+
     size_t GetNumberOfTuples() {   return _data.size(); }
     size_t GetSize() { return _data.size(); }
 
