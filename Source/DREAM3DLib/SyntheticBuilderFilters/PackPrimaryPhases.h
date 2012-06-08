@@ -98,12 +98,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
-	//------ Created Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
-
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Pack Primary Phases"; }
@@ -111,7 +108,6 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteIntendedAttributes);
     DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight);
 
 
@@ -175,7 +171,6 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
     unsigned int* m_PhaseTypes;
     unsigned int* m_ShapeTypes;
-	int32_t* m_NumFields;
     StatsDataArray* m_StatsDataArray;
 
     // All other private variables

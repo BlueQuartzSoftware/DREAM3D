@@ -54,17 +54,13 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
-m_NumCells(NULL),
-m_PhaseTypes(NULL),
-m_NumFields(NULL)
+m_PhaseTypes(NULL)
 {
 
 }
@@ -95,12 +91,10 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
   // Field Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss,  int32_t, Int32ArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1);
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -147,19 +141,7 @@ void EstablishMatrixPhase::execute()
     return;
   }
 
-  sizex = m->getXPoints() * m->getXRes();
-  sizey = m->getYPoints() * m->getYRes();
-  sizez = m->getZPoints() * m->getZRes();
-
-  totalvol = sizex * sizey * sizez;
-
   establish_matrix();
-
-  size_t numfields = m->getNumFieldTuples();
-  for(size_t i = firstMatrixField; i < numfields; i++)
-  {
-	  m_NumFields[m_FieldPhases[i]]++;
-  }
 
   // If there is an error set this to something negative and also set a message
   notify("EstablishMatrixPhases Completed", 0, Observable::UpdateProgressMessage);
@@ -218,7 +200,6 @@ void  EstablishMatrixPhase::establish_matrix()
   {
 	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
     {
-	    m_NumFields[i] = 0;
       matrixphases.push_back(i);
       matrixphasefractions.push_back(statsDataArray[i]->getPhaseFraction());
       totalmatrixfractions = totalmatrixfractions + statsDataArray[i]->getPhaseFraction();
