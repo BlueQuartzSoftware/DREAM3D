@@ -70,19 +70,18 @@ protected slots:
   void on_actionPlugin_Maker_Help_triggered();
   void on_actionAbout_triggered();
 
-  void on_addFilter_clicked();
-
-
-
+  void on_addFilterBtn_clicked();
 
 private:
   QString m_OpenDialogLastDirectory;
-  void processFile(QString path);
   QString cleanName(QString name);
 
 
   QVector<PMDirGenerator*> m_GenObjects;
   QVector<PMFileGenerator*> m_FilterClasses;
+  QTreeWidgetItem* F_name;
+  QTreeWidgetItem* F_doc;
+  QTreeWidgetItem* F_namefilters;
 
 };
 
