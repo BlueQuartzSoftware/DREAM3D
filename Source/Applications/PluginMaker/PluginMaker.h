@@ -62,11 +62,15 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
 protected slots:
   void on_selectButton_clicked();
   void on_generateButton_clicked();
-  void on_helpButton_clicked();
-  void on_aboutButton_clicked();
+
   void on_m_PluginName_textChanged(const QString & text);
   void on_m_OutputDir_textChanged(const QString & text);
   void generationError(const QString& test);
+
+  void on_actionPlugin_Maker_Help_triggered();
+  void on_actionAbout_triggered();
+
+
 private:
   QString m_OpenDialogLastDirectory;
   void processFile(QString path);
