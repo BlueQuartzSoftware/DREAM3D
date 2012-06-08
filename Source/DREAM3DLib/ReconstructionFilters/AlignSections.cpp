@@ -220,8 +220,11 @@ void AlignSections::execute()
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
             || (xspot + xshifts[i]) > dims[0] - 1)
         {
-
-
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+          }
         }
       }
     }
