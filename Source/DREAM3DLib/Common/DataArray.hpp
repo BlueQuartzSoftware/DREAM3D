@@ -267,7 +267,7 @@ class DataArray : public IDataArray
 			this->Array[i] = value;
 		}
     }
-	
+
 	/**
      * @brief Removes Tuples from the Array
      * @param idxs The indices to remove
@@ -497,13 +497,33 @@ class DataArray : public IDataArray
       return Array[i*this->NumberOfComponents + j];
     }
 
-    //----------------------------------------------------------------------------
+    /**
+     * @brief Sets a specific component of the Tuple located at i
+     * @param i The index of the Tuple
+     * @param j The Component index into the Tuple
+     * @param c The value to set
+     */
     void SetComponent(size_t i, int j, T c)
     {
 #ifndef NDEBUG
       if (Size > 0) { assert(i*NumberOfComponents+j < Size);}
 #endif
       Array[i*this->NumberOfComponents + j] = c;
+    }
+
+    /**
+     * @brief Splats the same value c across all values in the Tuple
+     * @param i The index of the Tuple
+     * @param c The value to splat across all components in the tuple
+     */
+    void InitializeTuple(size_t i, T c)
+    {
+#ifndef NDEBUG
+      if (Size > 0) { assert(i*NumberOfComponents < Size);}
+#endif
+      for (size_t j = 0; j < this->NumberOfComponents; ++j) {
+        Array[i*this->NumberOfComponents + j] = c;
+      }
     }
 
     /**
