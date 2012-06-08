@@ -126,6 +126,14 @@ class DREAM3DLib_EXPORT IDataArray
      */
     virtual int CopyTuple(size_t currentPos, size_t newPos) = 0;
 
+
+    /**
+     * @brief Splats the same value c across all values in the Tuple
+     * @param pos The index of the Tuple
+     * @param value pointer to value
+     */
+    virtual void InitializeTuple(size_t pos, double value) = 0;
+
     /**
      * @brief Sets all the values to zero.
      */
