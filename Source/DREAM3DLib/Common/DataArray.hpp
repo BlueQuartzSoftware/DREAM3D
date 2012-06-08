@@ -516,12 +516,13 @@ class DataArray : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    void InitializeTuple(size_t i, T c)
+    void InitializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
       if (Size > 0) { assert(i*NumberOfComponents < Size);}
 #endif
-      for (size_t j = 0; j < this->NumberOfComponents; ++j) {
+      T c = static_cast<T>(p);
+      for (int j = 0; j < this->NumberOfComponents; ++j) {
         Array[i*this->NumberOfComponents + j] = c;
       }
     }
