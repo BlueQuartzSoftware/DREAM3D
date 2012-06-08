@@ -71,12 +71,9 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-	//------ Created Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Establish Matrix Phase"; }
@@ -114,10 +111,8 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
 
     bool* m_Active;
     int32_t* m_FieldPhases;
-    int32_t* m_NumCells;
 
     unsigned int* m_PhaseTypes;
-	int32_t* m_NumFields;
     StatsDataArray* m_StatsDataArray;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

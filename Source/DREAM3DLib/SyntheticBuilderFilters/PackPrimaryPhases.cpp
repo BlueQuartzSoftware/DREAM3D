@@ -50,6 +50,8 @@
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
+#include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
+
 const static float m_pi = static_cast<float>(M_PI);
 
 
@@ -79,11 +81,9 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_ErrorOutputFile(""),
 m_VtkOutputFile(""),
 m_PeriodicBoundaries(false),
-m_WriteIntendedAttributes(false),
 m_NeighborhoodErrorWeight(1.0f),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
@@ -98,8 +98,7 @@ m_AxisEulerAngles(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_PhaseTypes(NULL),
-m_ShapeTypes(NULL),
-m_NumFields(NULL)
+m_ShapeTypes(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
   m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
@@ -153,14 +152,6 @@ void PackPrimaryPhases::setupFilterOptions()
     option->setValueType("bool");
     options.push_back(option);
   }
-  {
-    FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Write Intended Grain Attributes");
-    option->setPropertyName("WriteIntendedAttributes");
-    option->setWidgetType(FilterOption::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
-  }
 
   setFilterOptions(options);
 }
@@ -169,7 +160,6 @@ void PackPrimaryPhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   writer->writeValue("NeighborhoodErrorWeight", getNeighborhoodErrorWeight() );
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
-  writer->writeValue("WriteIntendedAttributes", getWriteIntendedAttributes() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -192,7 +182,7 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
 
   //Ensemble Data
@@ -200,7 +190,6 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -292,7 +281,6 @@ void PackPrimaryPhases::execute()
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
-	  m_NumFields[i] = 0;
       primaryphases.push_back(i);
 	  primaryphasefractions.push_back(statsDataArray[i]->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + statsDataArray[i]->getPhaseFraction();
@@ -625,10 +613,6 @@ void PackPrimaryPhases::execute()
     return;
   }
 
-  if(m_WriteIntendedAttributes == true)
-  {
-
-  }
   // If there is an error set this to something negative and also set a message
   notify("Packing Grains Complete", 0, Observable::UpdateProgressMessage);
 }
