@@ -59,7 +59,6 @@
 #include "PMFilterGenerator.h"
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -87,7 +86,7 @@ void PluginMaker::setupGui()
   m_OutputDir->setToolTip("Enter Output Directory Here");
   selectButton->setToolTip("Select Directory");
   generateButton->setToolTip("Generate File Structure");
-  aboutButton->setToolTip("About PluginMaker©");
+
 
   QTreeWidgetItem* F_main = new QTreeWidgetItem(treeWidget);
   F_main->setText(0, "Unknown Plugin Name");
@@ -473,6 +472,9 @@ void PluginMaker::on_generateButton_clicked()
   statusbar->showMessage("Generation Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PluginMaker::processFile(QString path) {}
 
 QString PluginMaker::cleanName(QString name) {
@@ -486,23 +488,34 @@ QString PluginMaker::cleanName(QString name) {
   return name;
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PluginMaker::on_m_PluginName_textChanged(const QString & text) {
   statusbar->showMessage("Ready");
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PluginMaker::on_m_OutputDir_textChanged(const QString & text) {
   statusbar->showMessage("Ready");
 }
 
-void PluginMaker::on_helpButton_clicked() {
-  HelpWidget* helpDialog = new HelpWidget;
-  helpDialog->show();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PluginMaker::on_actionPlugin_Maker_Help_triggered()
+{
+    HelpWidget* helpDialog = new HelpWidget;
+    helpDialog->show();
 }
 
-void PluginMaker::on_aboutButton_clicked()
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PluginMaker::on_actionAbout_triggered()
 {
   ApplicationAboutBoxDialog about(PluginMakerProj::LicenseList, this);
   QString an = QCoreApplication::applicationName();
