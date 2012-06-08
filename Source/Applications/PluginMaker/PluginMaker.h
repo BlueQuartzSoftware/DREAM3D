@@ -70,6 +70,10 @@ protected slots:
   void on_actionPlugin_Maker_Help_triggered();
   void on_actionAbout_triggered();
 
+  void on_addFilter_clicked();
+
+
+
 
 private:
   QString m_OpenDialogLastDirectory;
