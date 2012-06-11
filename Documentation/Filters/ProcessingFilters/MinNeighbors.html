@@ -13,7 +13,9 @@
 <b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>
 <h4>Summary</h4>
 <!-- Write all your documentation here -->
-This filter does ....
+This filter sets the minimum number (integer) of neighbors a grain must have to remain in the structure. Entering 0 (zero) is valid because the grain may occupy the whole volume and would therefore have no neighbors. Also, entering zero results in nothing changing in other grains.<br>
+Entering a number larger than than the grain that has the maximum number of neighbors generates an error (all grains have been removed!).<br>
+For minimum number entries between 1 and a value less than the maxmimum number of neighbors associated with a grain results in removal of those grains that have the entered number of neighbors. After these grains are removed, the remaining grains are coarsened iteratively, one voxel per iteration, until the gaps left by the removed grains are filled.
 <!-- Do NOT write documentation below this line -->
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
