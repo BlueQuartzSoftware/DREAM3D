@@ -13,7 +13,11 @@
 <b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>
 <h4>Summary</h4>
 <!-- Write all your documentation here -->
-This filter does ....
+Bad data means a voxel has a grain id of 0, which means the voxel failed one of the quality metrics in the ReadH5Ebsd Filter. To remedy this situation, this filter opens or closes the bad data. <br>
+If the bad data is opened, the filter grows the bad data by one voxel in an iteration sequence. The grain id of any neighboring voxel will be changed to 0. The number of iterations to grow the voxel is limited to the situation in which only one grain remains or there is no place to grow.<br>
+For the close option, the grain id of the bad data voxel is changed to the grain id of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero grain id.<br>
+If there is a tie between two grain ids, then one of the grain ids, chosen randomly, will be assigned to the bad voxel. <br>
+The user is expected to use this filter based on a goal or reason for applying the filter.
 <!-- Do NOT write documentation below this line -->
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
