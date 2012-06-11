@@ -13,9 +13,9 @@
 <b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>
 <h4>Summary</h4>
 <!-- Write all your documentation here -->
-This filter determines the number of neighboring fields for each field.  This is accomplished by iterating through the cells and querying the field that owns each cell and its neighboring cells.  If two neighboring cells are owned by different fields, then those fields are said to be neighbors. </br>
-In determining the number of neighboring fields (and the list of neighbors) for each field, the cells that have neighboring cell(s) with a different field owner are flagged as surface cells and said to lie on the surface of the field (i.e. the grain/field boundary). </br>
-Additionally, the surface areas shared between two neighboring fields are calculated by tracking the number of times two neighoring cells correspond to a neighboring field pair. </br>
+This filter determines for each field the number of neighboring fields.  This is accomplished by iterating through the cells and querying the field that owns each cell and its neighboring cells.  If two neighboring cells are owned by different fields, then those fields are said to be neighbors. </br>
+In determining for each field the number of neighboring fields (and the list of neighbors), the cells that have neighboring cell(s) with a different field owner are flagged as surface cells and are said to lie on the surface of the field (i.e. the grain/field boundary). </br>
+Additionally, the surface areas shared between two neighboring fields are calculated by tracking the number of times two neighboring cells correspond to a neighboring field pair. </br>
 <!-- Do NOT write documentation below this line -->
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
