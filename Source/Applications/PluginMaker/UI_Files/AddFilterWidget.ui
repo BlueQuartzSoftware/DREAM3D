@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>489</width>
-    <height>95</height>
+    <height>106</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -85,22 +85,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>addfilterCancelButton</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>234</x>
-     <y>279</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>40</x>
-     <y>288</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

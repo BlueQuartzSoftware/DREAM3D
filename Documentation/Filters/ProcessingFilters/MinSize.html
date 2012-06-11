@@ -13,7 +13,8 @@
 <b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>
 <h4>Summary</h4>
 <!-- Write all your documentation here -->
-This filter does ....
+This filter removes grains that have a total of voxels below the minimum number input by the user. The minimum is 1. The maximum is the number of voxels in the largest grain. Entering 0 is not permitted because all grains would be eliminated. Entering the number of voxels associated with the largest grain, all grains will be removed.<br>
+After removing all the small grains, the remaining grains are coarsened to fill the gaps left by the small grains. The iteration coarsens the grains by one voxel each iteration.
 <!-- Do NOT write documentation below this line -->
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
