@@ -143,10 +143,8 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     void assign_gaps();
     void cleanup_grains();
 
-
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
-
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
     int writeVtkFile();
@@ -215,6 +213,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     std::vector<std::vector<std::vector<float> > > simneighbordist;
 
     std::vector<float> grainsizediststep;
+    std::vector<float> neighbordiststep;
 
     std::vector<int> newnames;
     std::vector<int> packqualities;

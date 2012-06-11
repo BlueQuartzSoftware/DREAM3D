@@ -81,8 +81,8 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
-m_ErrorOutputFile(""),
-m_VtkOutputFile(""),
+m_ErrorOutputFile("error.txt"),
+m_VtkOutputFile("filling.vtk"),
 m_PeriodicBoundaries(false),
 m_NeighborhoodErrorWeight(1.0f),
 m_GrainIds(NULL),
@@ -259,6 +259,13 @@ void PackPrimaryPhases::execute()
   sizez = dims[2] * m->getZRes();
   totalvol = sizex*sizey*sizez;
 
+  float totalprimaryvol = 0;
+  for(size_t i=0;i<(dims[0]*dims[1]*dims[2]);i++)
+  {
+	if(m_GrainIds[i] <= 0) totalprimaryvol++;
+  }
+  totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getXRes()*m->getXRes());
+
   size_t numensembles = m->getNumEnsembleTuples();
   std::stringstream ss;
 
@@ -346,7 +353,7 @@ void PackPrimaryPhases::execute()
   for (size_t j = 0; j < primaryphases.size(); ++j)
   {
 	  curphasevol[j] = 0;
-	  float curphasetotalvol = totalvol*primaryphasefractions[j];
+	  float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
 	  while (curphasevol[j] < (factor * curphasetotalvol))
 	  {
 	    iter++;
@@ -384,7 +391,7 @@ void PackPrimaryPhases::execute()
     factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
 	for (size_t j = 0; j < primaryphases.size(); ++j)
 	{
-	  float curphasetotalvol = totalvol*primaryphasefractions[j];
+	  float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
 	  while (curphasevol[j] < ((1+factor) * curphasetotalvol))
 	  {
 		iter++;
@@ -418,12 +425,14 @@ void PackPrimaryPhases::execute()
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
   simneighbordist.resize(primaryphases.size());
+  neighbordiststep.resize(primaryphases.size());
   for (size_t i = 0; i < primaryphases.size(); i++)
   {
     phase = primaryphases[i];
 	neighbordist[i].resize(statsDataArray[phase]->getBinNumbers()->GetSize());
     simneighbordist[i].resize(statsDataArray[phase]->getBinNumbers()->GetSize());
 	VectorOfFloatArray Neighdist = statsDataArray[phase]->getGrainSize_Neighbors();
+	float normalizer = 0;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
 		neighbordist[i][j].resize(40);
@@ -431,10 +440,11 @@ void PackPrimaryPhases::execute()
 		float previoustotal = 0;
 		float avg = Neighdist[0]->GetValue(j);
 		float stdev = Neighdist[1]->GetValue(j);
+		neighbordiststep[i] = 2;
 		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
 		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
 		{
-		  input = (float(k + 1) * grainsizediststep[i]) + (statsDataArray[phase]->getMinGrainDiameter() / 2.0f);
+		  input = (float(k + 1) * neighbordiststep[i]) + (statsDataArray[phase]->getMinGrainDiameter() / 2.0f);
 		  float logInput = logf(input);
 		  if(logInput <= avg)
 		  {
@@ -445,6 +455,14 @@ void PackPrimaryPhases::execute()
 			neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
 		  }
 		  previoustotal = previoustotal + neighbordist[i][j][k];
+		}
+		normalizer = normalizer + previoustotal;
+    }
+    for (size_t j = 0; j < neighbordist[i].size(); j++)
+    {
+		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+		{
+			neighbordist[i][j][k] = neighbordist[i][j][k]/normalizer;
 		}
     }
   }
@@ -495,7 +513,11 @@ void PackPrimaryPhases::execute()
 
   notify("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
 
-  // determine initial filling and neighbor distribution errors
+  // determine neighborhoods and initial neighbor distribution errors
+  for (size_t i = firstPrimaryField; i < numgrains; i++)
+  {
+	determine_neighbors(i, 1);
+  }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
   int totalAdjustments = static_cast<int>(100 * (numgrains-1));
@@ -537,7 +559,7 @@ void PackPrimaryPhases::execute()
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       if(fillingerror <= oldfillingerror)
       {
-//        oldneighborhooderror = currentneighborhooderror;
+        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
       else if(fillingerror > oldfillingerror)
@@ -568,7 +590,7 @@ void PackPrimaryPhases::execute()
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       if(fillingerror <= oldfillingerror)
       {
-//        oldneighborhooderror = currentneighborhooderror;
+        oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
       else if(fillingerror > oldfillingerror)
@@ -584,7 +606,7 @@ void PackPrimaryPhases::execute()
 
   if(m_VtkOutputFile.empty() == false)
   {
-//    err = writeVtkFile();
+    err = writeVtkFile();
     if(err < 0)
     {
       return;
@@ -862,6 +884,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
   size_t bin = 0;
   int index = 0;
   std::vector<int> count;
+  int counter = 0;
   int phase;
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
   {
@@ -894,10 +917,11 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         if(dia < statsDataArray[phase]->getMinGrainDiameter()) dia = statsDataArray[phase]->getMinGrainDiameter();
 		dia = int((dia - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
         nnum = m_Neighborhoods[index];
-		bin = nnum/2;
+		bin = nnum/neighbordiststep[iter];
 		if(bin >= 40) bin = 39;
         simneighbordist[iter][dia][bin]++;
         count[dia]++;
+		counter++;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
@@ -907,17 +931,20 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       if(dia < statsDataArray[phase]->getMinGrainDiameter()) dia = statsDataArray[phase]->getMinGrainDiameter();
 	  dia = int((dia - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
       nnum = m_Neighborhoods[index];
-	  bin = nnum/2;
+	  bin = nnum/neighbordiststep[iter];
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
       count[dia]++;
+	  counter++;
     }
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
       for (size_t j = 0; j < 40; j++)
       {
-        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
-        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
+//        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
+//        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
+        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(counter);
+        if(counter == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
