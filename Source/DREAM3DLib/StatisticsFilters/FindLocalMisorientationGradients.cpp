@@ -277,11 +277,14 @@ void FindLocalMisorientationGradients::execute()
             }
           }
           m_KernelAverageMisorientations[point] = totalmisorientation / (float)numVoxel;
-          if(numVoxel == 0)
+		  if(numVoxel == 0)
           {
             m_KernelAverageMisorientations[point] = 0;
           }
-
+		  if(m_GrainIds[point] == 191)
+		  {
+			int stop = 0;
+		  }
           q2[0] = m_AvgQuats[5*m_GrainIds[point]];
           q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
           q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
@@ -289,12 +292,7 @@ void FindLocalMisorientationGradients::execute()
           q2[4] = m_AvgQuats[5*m_GrainIds[point]+4];
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
           m_GrainMisorientations[point] = w;
-		  if(w > 8)
-		  {
-			int stop = 0;
-		  }
-
-          gam[point] = w;
+		  gam[point] = w;
           avgmiso[m_GrainIds[point]][0]++;
           avgmiso[m_GrainIds[point]][1] = avgmiso[m_GrainIds[point]][1] + w;
         }

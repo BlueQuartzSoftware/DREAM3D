@@ -1,0 +1,117 @@
+/*
+ * Your License or Copyright Information can go here
+ */
+
+#include "@ClassName@.h"
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+@ClassName@::@ClassName@() :
+AbstractFilter()
+{
+  setupFilterOptions();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+@ClassName@::~@ClassName@()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @ClassName@::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  /* Place all your option initialization code here
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output File");
+    option->setPropertyName("OutputFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+    {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("X Res");
+    option->setPropertyName("XRes");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    options.push_back(option);
+  }
+  
+  */
+  
+  setFilterOptions(options);
+}
+// -----------------------------------------------------------------------------
+void @ClassName@::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  /* Place code that will write the inputs values into a file. reference the 
+  * AbstractFilterOptionsWriter class for the proper API to use.
+  *  writer->writeValue("OutputFile", getOutputFile() );
+  */ 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @ClassName@::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  /* Example code for preflighting looking for a valid string for the output file
+   * but not necessarily the fact that the file exists: Example code to make sure
+   * we have something in a string before proceeding.
+
+  if (m_OutputFile.empty() == true)
+  {
+    ss << getNameOfClass() << ": The output file must be set before executing this filter.";
+    setErrorCondition(-1);
+  }
+  */
+  
+  setErrorMessage(ss.str());
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @ClassName@::preflight()
+{
+  /* Place code here that sanity checks input arrays and input values. Look at some
+  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  dataCheck(true, 1, 1, 1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @ClassName@::execute()
+{
+  int err = 0;
+  setErrorCondition(err);
+  DataContainer* m = getDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
+    return;
+  }
+  setErrorCondition(0);
+  
+  /* Place all your code to execute your filter here. */
+  
+  
+  notify("@PluginName@ Filter Complete", 0, Observable::UpdateProgressValueAndMessage);
+}

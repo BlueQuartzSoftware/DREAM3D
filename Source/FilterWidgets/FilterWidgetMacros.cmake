@@ -6,8 +6,8 @@ function(GenerateFilterWidgets)
     set(multiValueArgs FILTER_HEADERS FILTER_SOURCES WIDGET_GEN_HDRS WIDGET_GEN_SRCS)
     cmake_parse_arguments( WIG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     
-#    message(STATUS "WIG_WIDGET_GEN_HDRS: ${WIG_WIDGET_GEN_HDRS}")
-#    message(STATUS "${WIG_WIDGET_GEN_HDRS}: ${${WIG_WIDGET_GEN_HDRS}}")
+ #   message(STATUS "WIG_FILTER_GROUP: ${WIG_FILTER_GROUP}")
+
     set( FILTER_HEADERS "")
     # --------------------------------------------------------------------
     #
@@ -37,7 +37,7 @@ function(GenerateFilterWidgets)
                 endif()
             endif()
 
-            set (FILTER_HEADERS "${FILTER_HEADERS}#include \"${WIG_FILTER_GROUP}/${name}.h\"\n")
+            set (FILTER_HEADERS "${FILTER_HEADERS}#include \"${WIG_INCLUDE_PATH}/${name}.h\"\n")
             file(APPEND ${HtmlDocQrcFile} "<file>${qrcGroupName}/${name}.html</file>\n")
             file(APPEND ${CodeGeneratorFile} "  createHeaderFile<${name}>(\"${WIG_FILTER_GROUP}\", \"${name}\");\n")
             file(APPEND ${CodeGeneratorFile} "  createSourceFile<${name}>(\"${WIG_FILTER_GROUP}\", \"${name}\");\n")

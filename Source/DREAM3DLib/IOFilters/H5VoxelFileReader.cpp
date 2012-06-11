@@ -142,6 +142,7 @@ void H5VoxelFileReader::execute()
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::GrainIds);
   DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::Phases);
   DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints*3, DREAM3D::CellData::EulerAngles);
+  eulers->SetNumberOfComponents(3);
   
   std::string arrayname = "GrainID";
   err = reader->readScalarData<int>(arrayname, grainIds->GetPointer(0));

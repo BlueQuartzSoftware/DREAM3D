@@ -1,0 +1,178 @@
+#--////////////////////////////////////////////////////////////////////////////
+#-- Your License or copyright can go here
+#--////////////////////////////////////////////////////////////////////////////
+
+project(@PluginName@Plugin)
+
+set(PLUGIN_NAME @PluginName@Plugin)
+
+# --------------------------------------------------------------------
+# Look for Qt 4 as we need it for the plugin GUI to be generated
+if(NOT QT4_FOUND)
+    message(FATAL_ERROR "Qt 4 is Needed for this @PluginName@Plugin.")
+endif()
+include( ${QT_USE_FILE} )
+
+# --------------------------------------------------------------------
+# Include this file as it has a cmake function that will generate all the
+# needed source files and such that get compiled.
+include( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/FilterWidgetMacros.cmake)
+
+# --------------------------------------------------------------------
+# Include the source files for this plugin
+include( ${@PluginName@Plugin_SOURCE_DIR}/Code/@PluginName@Filters/SourceList.cmake)
+
+# --------------------------------------------------------------------
+# These directories are needed to compile filters and the GUI parts of 
+# the filters that are created with this cmake code
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source )
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport )
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
+
+# --------------------------------------------------------------------
+# In order for the build system to generate and compile we need certain
+# directories of our own in the include list. Add more if you need to for
+# your plugin
+include_directories(${@PluginName@Plugin_SOURCE_DIR}/Code)
+include_directories(${@PluginName@Plugin_BINARY_DIR})
+include_directories(${@PluginName@Plugin_BINARY_DIR}/@PluginName@Filters)
+include_directories(${@PluginName@Plugin_BINARY_DIR}/@PluginName@)
+include_directories(${@PluginName@Plugin_BINARY_DIR}/Code)
+
+# --------------------------------------------------------------------
+# This just makes a new reference to the filter sources that will get 
+# passed to the function "GenerateFilterWidgets" below
+set(FILTER_SRCS 
+  ${@PluginName@Plugin_@PluginName@_SRCS}
+)
+
+# --------------------------------------------------------------------
+# Clear out these variables as they are going to get populated with a 
+# list of source files that got generated and need to be compiled.
+set(@PluginName@Plugin_GEN_SRCS "")
+set(@PluginName@Plugin_GEN_HDRS "")
+
+# --------------------------------------------------------------------
+# Create an executable to autogenerate the Qt Widget sources for our filters.
+GenerateFilterWidgets( PLUGIN_NAME ${PLUGIN_NAME}
+                       FILTER_GROUP @PluginName@Filters
+                       INCLUDE_PATH @PluginName@Filters
+                       SOURCE_DIR ${@PluginName@Plugin_SOURCE_DIR}
+                       FILTER_SOURCES ${FILTER_SRCS}
+                       FILTER_HEADERS "${@PluginName@Plugin_@PluginName@_HDRS}"
+                       BINARY_DIR ${@PluginName@Plugin_BINARY_DIR}
+                       WIDGET_GEN_SRCS @PluginName@Plugin_GEN_SRCS
+                       WIDGET_GEN_HDRS @PluginName@Plugin_GEN_HDRS 
+                     )
+
+add_definitions(-DDREAM3D_USE_QT)
+if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")
+endif()
+
+
+# --------------------------------------------------------------------
+# These are the NON-Filter but Qt derived sources of the plugin. In case you have
+# additional Qt source files that you need compiled.
+set (@PluginName@Plugin_HDRS
+  ${PROJECT_SOURCE_DIR}/Code/@PluginName@Plugin.h
+)
+
+set (@PluginName@Plugin_SRCS
+ ${PROJECT_SOURCE_DIR}/Code/@PluginName@Plugin.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/" "${@PluginName@Plugin_HDRS}" "${@PluginName@Plugin_SRCS}" "0")
+
+
+# --------------------------------------------------------------------
+# If you have additional NON-Qt, NON-Filter source code that you need to have
+# compiled then include those source files here.
+set( @PluginName@_EXTRA_HDRS )
+set( @PluginName@_EXTRA_SRCS )
+cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/Extra" "${@PluginName@_EXTRA_HDRS}" "${@PluginName@_EXTRA_SRCS}" "0")
+
+
+# --------------------------------------------------------------------
+# We need to run Qt's moc system on our Qt based files (Anything deriving from QObject)
+# This cmake code sets up moc to be run.
+QT4_WRAP_CPP( @PluginName@Plugin_Generated_MOC_SRCS ${@PluginName@Plugin_GEN_HDRS})
+QT4_WRAP_CPP( @PluginName@Plugin_MOC_SRCS ${@PluginName@Plugin_HDRS} )
+
+# These generated moc files will be #include in the FilterWidget source file that
+# are generated so we need to tell the build system to NOT compile these files
+set_source_files_properties( ${@PluginName@Plugin_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties( ${@PluginName@Plugin_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+# --------------------------------------------------------------------
+# -- Create a Qt Resource header file of the documentation html files
+QT4_ADD_RESOURCES( @PluginName@Plugin_Generated_RC_SRCS "${@PluginName@Plugin_SOURCE_DIR}/Documentation/@PluginName@PluginDocs.qrc"  )
+
+# --------------------------------------------------------------------
+# Group all the generated source files in IDE's that support it. Makes it clear
+# to the user of the IDE what is generated and what is not.
+cmp_IDE_SOURCE_PROPERTIES("Generated" "${@PluginName@Plugin_Generated_RC_SRCS};${@PluginName@Plugin_Generated_MOC_SRCS};${@PluginName@Plugin_MOC_SRCS}" "${@PluginName@Plugin_GEN_HDRS};${@PluginName@Plugin_GEN_SRCS}" "0")
+
+# --------------------------------------------------------------------
+# Create an install rule for the headers. If you do NOT want your headers
+# installed for a deployment to other machines then change the PROJECT_INSTALL_HEADERS
+# to a Zero
+if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
+    INSTALL (FILES ${@PluginName@Plugin_HDRS}
+            DESTINATION include/${PLUGIN_NAME}/@PluginName@
+            COMPONENT Headers   )
+endif()
+
+
+# --------------------------------------------------------------------
+# Gather all the sources and headers into a single cmake variable
+set (@PluginName@Plugin_PROJECT_SRCS
+    ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
+    ${@PluginName@Plugin_@PluginName@_SRCS}
+    ${@PluginName@Plugin_@PluginName@_HDRS}
+    ${@PluginName@Plugin_HDRS}
+    ${@PluginName@Plugin_SRCS}
+    ${@PluginName@Plugin_GEN_SRCS}
+    ${@PluginName@Plugin_GEN_HDRS}
+    ${@PluginName@Plugin_Generated_MOC_SRCS}
+    ${@PluginName@Plugin_MOC_SRCS}
+    ${@PluginName@Plugin_Generated_RC_SRCS}
+    ${@PluginName@_EXTRA_HDRS}
+    ${@PluginName@_EXTRA_SRCS}
+    
+)
+
+# --------------------------------------------------------------------
+# Setup output Directory for the plugin
+if(NOT MSVC)
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
+endif()
+
+# --------------------------------------------------------------------
+# Add the plugin as a MODULE
+add_library(${PLUGIN_NAME} MODULE ${@PluginName@Plugin_PROJECT_SRCS})
+# --------------------------------------------------------------------
+# Link the plugin with other DREAM3D Libraries.
+target_link_libraries(${PLUGIN_NAME}
+                    MXA
+                    DREAM3DLib
+                    ${QT_QTCORE_LIBRARY}
+                    ${QT_QTGUI_LIBRARY}
+                    QtSupport
+                    PipelineBuilderLib
+                    )
+# --------------------------------------------------------------------
+# Add a dependency on the code generation step to make sure the code is
+# generated before we try to compile the plugin
+add_dependencies(${PLUGIN_NAME} ${PLUGIN_NAME}_CodeGen)
+
+# --------------------------------------------------------------------
+# Set some additional properties of the plugin like its output name
+PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
+
+# --------------------------------------------------------------------
+# Put back the output directory 
+if (NOT MSVC)
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
+endif()
+

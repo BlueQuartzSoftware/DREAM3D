@@ -35,15 +35,26 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QApplication>
+#ifndef _ADDFILTERWIDGET_H_
+#define _ADDFILTERWIDGET_H_
 
-#include "PluginMaker.h"
+#include "ui_AddFilterWidget.h"
 
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
+class AddFilterWidget : public QDialog, public Ui::Dialog
+{
+  Q_OBJECT;
 
-  PluginMaker* plugin = new PluginMaker;
-  plugin->show();
+  public:
+    AddFilterWidget(QWidget* parent = 0);
+    QString getFilterName();
+    bool getBtnClicked();
 
-  return app.exec();
-}
+  protected slots:
+    void on_addfilterOKButton_clicked();
+    void on_addfilterCancelButton_clicked();
+
+  private:
+    bool BtnClicked;
+};
+
+#endif

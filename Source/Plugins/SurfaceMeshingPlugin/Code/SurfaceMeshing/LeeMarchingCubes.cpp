@@ -137,6 +137,7 @@ using namespace meshing;
 //const static float m_pi = M_PI;
 //const static float m_OnepointThree = 1.33333333333f;
 
+#define WRITE_BINARY_TEMP_FILES 1
 
 
 class GrainChecker
@@ -2841,7 +2842,7 @@ int LeeMarchingCubes::writeNodesFile(int zID, int cNodeID, const std::string &no
 // -----------------------------------------------------------------------------
 int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &trianglesFile, int nt)
 {
-  static const size_t DATA_COUNT = 6;
+  static const size_t DATA_COUNT = 9;
  // int tag;
   int end;
   int n1, n2, n3;
@@ -2855,11 +2856,12 @@ int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &t
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(trianglesFile.c_str(), "wb");
+    f = fopen(trianglesFile.c_str(), "ab");
     if (NULL == f)
     {
       return -1;
     }
+    fprintf(f, "XXXXXXXXXXXX\n"); // This should get over written at some point with the actual number of triangles
   }
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
@@ -2874,25 +2876,46 @@ int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &t
   //  outFile << nt <<endl;
   for (int i = 0; i < end; i++)
   {
+
     n1 = cTriangle[i]->node_id[0];
     n2 = cTriangle[i]->node_id[1];
     n3 = cTriangle[i]->node_id[2];
+#if WRITE_BINARY_TEMP_FILES
     data[1] = cVertex[n1].NodeID;
     data[2] = cVertex[n2].NodeID;
     data[3] = cVertex[n3].NodeID;
-    data[4] = cTriangle[i]->ngrainname[0];
-    data[5] = cTriangle[i]->ngrainname[1];
+    data[4] = cTriangle[i]->edges[0]->getId();
+    data[5] = cTriangle[i]->edges[1]->getId();
+    data[6] = cTriangle[i]->edges[2]->getId();
+    data[7] = cTriangle[i]->ngrainname[0];
+    data[8] = cTriangle[i]->ngrainname[1];
+
     totalWritten = fwrite(data, sizeof(int), DATA_COUNT, f);
     if (totalWritten != DATA_COUNT)
     {
       std::cout << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << std::endl;
       return -1;
     }
+#else
 
+    fprintf(f, "%d    %d    %d    %d    %llu    %llu    %llu    %d    %d\n", data[0], cVertex[n1].NodeID,cVertex[n2].NodeID,cVertex[n3].NodeID,
+            cTriangle[i]->edges[0]->getId(), cTriangle[i]->edges[1]->getId(), cTriangle[i]->edges[2]->getId(),
+            cTriangle[i]->ngrainname[0], cTriangle[i]->ngrainname[1]);
+#endif
 //    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
     data[0] = data[0] + 1;
   }
+  // Go to beginning of file and update the number of triangles
+  //fseek(f, 0, SEEK_SET);
   fclose(f);
+
+#if (WRITE_BINARY_TEMP_FILES == 0)
+  f = fopen(trianglesFile.c_str(), "rb+");
+  std::cout << "data[0]: " << data[0] << std::endl;
+  fprintf(f, "%012d\n", data[0]);
+  fclose(f);
+#endif
+
   return 0;
 }
 

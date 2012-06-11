@@ -35,15 +35,38 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QApplication>
+#include "AddFilterWidget.h"
 
-#include "PluginMaker.h"
+AddFilterWidget::AddFilterWidget(QWidget *parent) {
+  setupUi(this);
+}
 
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AddFilterWidget::getFilterName() {
+  return ( filterName->text() );
+}
 
-  PluginMaker* plugin = new PluginMaker;
-  plugin->show();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterWidget::on_addfilterOKButton_clicked() {
+  BtnClicked = true;
+  this->close();
+}
 
-  return app.exec();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterWidget::on_addfilterCancelButton_clicked() {
+  BtnClicked = false;
+  this->close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AddFilterWidget::getBtnClicked() {
+  return BtnClicked;
 }

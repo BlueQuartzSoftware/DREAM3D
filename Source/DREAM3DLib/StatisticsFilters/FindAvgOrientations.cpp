@@ -158,6 +158,7 @@ void FindAvgOrientations::execute()
   {
     if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)
     {
+
       phase = m_CellPhases[i];
       voxquat[0] = m_Quats[i*5 + 0];
       voxquat[1] = m_Quats[i*5 + 1];
@@ -177,7 +178,7 @@ void FindAvgOrientations::execute()
 		  curavgquat[3] = 0;
 		  curavgquat[4] = 1;
 	  }
-      m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
+	  m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
       for (int k = 0; k < 5; k++)
       {
         m_AvgQuats[5*m_GrainIds[i]+k] = m_AvgQuats[5*m_GrainIds[i]+k] + voxquat[k];
@@ -188,19 +189,27 @@ void FindAvgOrientations::execute()
   float ea1, ea2, ea3;
   for (size_t i = 1; i < numgrains; i++)
   {
+	  if(m_AvgQuats[5*i] == 0)
+	  {
+		  m_AvgQuats[5*i] = 1;
+	      m_AvgQuats[5*i+1] = 0;
+	      m_AvgQuats[5*i+2] = 0;
+	      m_AvgQuats[5*i+3] = 0;
+	      m_AvgQuats[5*i+4] = 1;
+	  }
       q[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
       q[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
       q[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
       q[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
-	  if(m_AvgQuats[5*i] == 0) q[1] = 0, q[2] = 0, q[3] = 0, q[4] = 1;
+	  OrientationMath::normalizeQuat(q);
 	  OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
 	  m_FieldEulerAngles[3*i] = ea1;
       m_FieldEulerAngles[3*i+1] = ea2;
       m_FieldEulerAngles[3*i+2] = ea3;
-      m_AvgQuats[5*i+1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
-      m_AvgQuats[5*i+2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
-      m_AvgQuats[5*i+3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
-      m_AvgQuats[5*i+4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
+      m_AvgQuats[5*i+1] = q[1];
+      m_AvgQuats[5*i+2] = q[2];
+      m_AvgQuats[5*i+3] = q[3];
+      m_AvgQuats[5*i+4] = q[4];
 	  m_AvgQuats[5*i] = 1;
   }
 

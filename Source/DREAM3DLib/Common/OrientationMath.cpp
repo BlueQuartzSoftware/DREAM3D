@@ -463,6 +463,15 @@ void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
   q[3] = c*s2;
   q[4] = c*c2;
 }
+void OrientationMath::normalizeQuat(float* qr)
+{
+  double norm = qr[1]*qr[1]+qr[2]*qr[2]+qr[3]*qr[3]+qr[4]*qr[4];
+  norm = sqrt(norm);
+  qr[1] = qr[1]/norm;
+  qr[2] = qr[2]/norm;
+  qr[3] = qr[3]/norm;
+  qr[4] = qr[4]/norm;
+}
 
 void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
 {
