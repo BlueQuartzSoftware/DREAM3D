@@ -35,15 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QApplication>
+#include "HelpWidget.h"
 
-#include "PluginMaker.h"
-
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
-
-  PluginMaker* plugin = new PluginMaker;
-  plugin->show();
-
-  return app.exec();
+HelpWidget::HelpWidget(QWidget *parent) {
+  setupUi(this);
 }

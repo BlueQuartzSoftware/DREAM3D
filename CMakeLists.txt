@@ -307,7 +307,7 @@ if (DREAM3D_BUILD_GUI AND DREAM3D_BUILD_QT_APPS)
 endif()  
 
 #- Add in the Main DREAM.3D Application
-option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" OFF)
+option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
 if (DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
 endif()

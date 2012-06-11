@@ -35,15 +35,15 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QApplication>
+#ifndef _HELPWIDGET_H_
+#define _HELPWIDGET_H_
 
-#include "PluginMaker.h"
+#include "ui_HelpWidget.h"
 
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
+class HelpWidget : public QWidget, public Ui::helpWidget
+{
+  public:
+    HelpWidget(QWidget* parent = 0);
+};
 
-  PluginMaker* plugin = new PluginMaker;
-  plugin->show();
-
-  return app.exec();
-}
+#endif

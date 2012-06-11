@@ -190,10 +190,17 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     virtual int CopyTuple(size_t currentPos, size_t newPos);
 
     /**
+     * @brief Splats the same value c across all values in the Tuple
+     * @param i The index of the Tuple
+     * @param c The value to splat across all components in the tuple
+     */
+    virtual void InitializeTuple(size_t i, double p);
+
+    /**
      * @brief Sets all the values to zero.
      */
     virtual void initializeWithZeros();
-	
+
 	/**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array

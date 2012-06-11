@@ -37,6 +37,7 @@
 #include "MXA/Common/MXAEndian.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/FileReader.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -57,6 +58,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName);
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName);
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName);
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
@@ -78,6 +80,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     bool* m_SurfaceFields;
+	float* m_Quats;
 	float* m_CellEulerAngles;
 
 	unsigned int* m_CrystalStructures;
