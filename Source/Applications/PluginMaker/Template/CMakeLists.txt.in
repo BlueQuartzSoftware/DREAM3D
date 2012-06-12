@@ -105,7 +105,7 @@ set_source_files_properties( ${@PluginName@Plugin_MOC_SRCS} PROPERTIES HEADER_FI
 
 # --------------------------------------------------------------------
 # -- Create a Qt Resource header file of the documentation html files
-QT4_ADD_RESOURCES( @PluginName@Plugin_Generated_RC_SRCS "${@PluginName@Plugin_SOURCE_DIR}/Documentation/@PluginName@PluginDocs.qrc"  )
+QT4_ADD_RESOURCES( @PluginName@Plugin_Generated_RC_SRCS "${@PluginName@Plugin_SOURCE_DIR}/Documentation/PluginDocumentation.qrc"  )
 
 # --------------------------------------------------------------------
 # Group all the generated source files in IDE's that support it. Makes it clear
