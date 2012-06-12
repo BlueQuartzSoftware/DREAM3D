@@ -71,7 +71,6 @@ AlignSections(),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_GrainIds(NULL),
@@ -199,7 +198,7 @@ void AlignSectionsMutualInformation::execute()
     return;
   }
 
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), m_GrainIdsArrayName);
+  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), "MI GrainIds");
   m_GrainIds = p->GetPointer(0);
 
   AlignSections::execute();
