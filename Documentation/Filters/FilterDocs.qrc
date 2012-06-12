@@ -3,7 +3,8 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
 <qresource>
-
+<file>document.css</file>
+<file>catalog.css</file>
 <file>GenericFilters/DetermineGoodVoxels.html</file>
 <file>GenericFilters/FindNeighbors.html</file>
 <file>GenericFilters/FindGrainPhases.html</file>
