@@ -50,6 +50,9 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QProgressBar>
 #include <QtGui/QMessageBox>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QApplication>
+#include <QtCore/QSize>
 
 #include "HelpWidget.h"
 #include "AddFilterWidget.h"
@@ -71,7 +74,27 @@ PluginMaker::PluginMaker(QWidget* parent) :
 
   setupGui();
 
-
+  //Set window to open at the center of the screen
+  QDesktopWidget *desktop = QApplication::desktop();
+ 
+  int screenWidth, width; 
+  int screenHeight, height;
+  int x, y;
+  QSize windowSize;
+ 
+  screenWidth = desktop->width(); // get width of screen
+  screenHeight = desktop->height(); // get height of screen
+ 
+  windowSize = size(); // size of application window
+  width = windowSize.width(); 
+  height = windowSize.height();
+ 
+  x = (screenWidth - width) / 2;
+  y = (screenHeight - height) / 2;
+  y -= 50;
+ 
+  // move window to desired coordinates
+  move (x, y);
 }
 
 // -----------------------------------------------------------------------------
@@ -298,30 +321,8 @@ void PluginMaker::setupGui()
 
 
   QTreeWidgetItem* pluginDocs = new QTreeWidgetItem(F_doc);
-  pluginDocs->setText(0, "Unknown Plugin Name");
-  {
-    pathTemplate = "@PluginName@/Documentation/";
-    QString resourceTemplate(":/Template/Documentation/FilterDocs.qrc.in");
-    PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
-                                                    pathTemplate,
-                                                    QString(""),
-                                                    resourceTemplate,
-                                                    pluginDocs,
-                                                    this);
-    gen->setDisplaySuffix("PluginDocs.qrc");
-    gen->setDoesGenerateOutput(true);
-    gen->setNameChangeable(true);
-    m_GenObjects.push_back(gen);
-    connect(m_PluginName, SIGNAL(textChanged(const QString &)),
-            gen, SLOT(pluginNameChanged(const QString &)));
-    connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
-            gen, SLOT(outputDirChanged(const QString &)));
-    // For "Directories" this probably isn't needed
-    connect(generateButton, SIGNAL(clicked()),
-            gen, SLOT(generateOutput()));
-    connect(gen, SIGNAL(outputError(const QString &)),
-            this, SLOT(generationError(const QString &)));
-  }
+  pluginDocs->setText(0, "PluginDocumentation.qrc");
+
 
   QTreeWidgetItem* htmlDoc = new QTreeWidgetItem(F_namefilters);
   htmlDoc->setText(0, "Unknown Plugin Name");
@@ -350,6 +351,7 @@ void PluginMaker::setupGui()
     m_FilterBundles.push_back(fb);
 
   m_PluginName->setText("Unknown Plugin Name");
+  m_PluginName->selectAll();
   treeWidget->expandAll();
   statusbar->showMessage("Ready");
 
@@ -401,13 +403,13 @@ void PluginMaker::on_generateButton_clicked()
     PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
 
-      hdrContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");
-      srcContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
+      hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
+      srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");
   
     pluginName = m_GenObjects[i]->getPluginName();
   }
 
-  // Create File
+  // Create SourceList File
   QFile rfile(":/Template/Code/Filter/SourceList.cmake.in");
   if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) )
   {
@@ -431,11 +433,47 @@ void PluginMaker::on_generateButton_clicked()
       QTextStream out(&f);
       out << text;
     }
-
   }
 
+  // WE need to generate the QRC file here because we possibly have
+  // more than a single filter
+  QString htmlPathCode("@PluginName@Filters/");
+  htmlPathCode.replace("@PluginName@", m_PluginName->text());
 
+  QString htmlContents = "";
+  for (int i = 0; i < m_FilterBundles.count(); ++i)
+  {
+    PMFileGenerator* htmlGen = m_FilterBundles[i].getHTMLGenerator();
 
+    htmlContents.append("<file>").append(htmlPathCode).append(htmlGen->getFileName()).append("</file>\n");
+
+    pluginName = m_GenObjects[i]->getPluginName();
+  }
+
+  // Create QRC File
+  QFile rfile2(":/Template/Documentation/FilterDocs.qrc.in");
+  if ( rfile2.open(QIODevice::ReadOnly | QIODevice::Text) )
+  {
+    QTextStream in(&rfile2);
+    QString text = in.readAll();
+    text.replace("@PluginName@", pluginName);
+    text.replace("@GENERATED_HTML_FILTERS_CODE@", htmlContents);
+    QString pathTemplate = "@PluginName@/Documentation/";
+    QString parentPath = m_OutputDir->text() + QDir::separator()
+                        + pathTemplate.replace("@PluginName@", pluginName);
+    parentPath = QDir::toNativeSeparators(parentPath);
+
+    QDir dir(parentPath);
+    dir.mkpath(parentPath);
+
+    parentPath = parentPath + QDir::separator() + "PluginDocumentation.qrc";
+    //Write to file
+    QFile f(parentPath);
+    if ( f.open(QIODevice::WriteOnly | QIODevice::Text) ) {
+      QTextStream out(&f);
+      out << text;
+    }
+  }
 
   statusbar->showMessage("Generation Completed");
 }
@@ -641,6 +679,7 @@ void PluginMaker::on_removeFilterBtn_clicked() {
 //
 // -----------------------------------------------------------------------------
 void PluginMaker::on_treeWidget_itemSelectionChanged() {
+  #if 0
   QTreeWidgetItem* currentFile = treeWidget->currentItem();
 
   for (int i = 0; i < m_FilterBundles.count(); i++) {
@@ -659,6 +698,7 @@ void PluginMaker::on_treeWidget_itemSelectionChanged() {
       filePreview->setText("");
     }
   }
+  #endif
 }
 
 
@@ -666,6 +706,7 @@ void PluginMaker::on_treeWidget_itemSelectionChanged() {
 //
 // -----------------------------------------------------------------------------
 void PluginMaker::previewFile(QString rTemplate, QString fileName) {
+    #if 0
     QString pluginName = m_GenObjects[0]->getPluginName();
 
     //Open file
@@ -679,4 +720,5 @@ void PluginMaker::previewFile(QString rTemplate, QString fileName) {
       text.replace("@ClassName@", className);
       filePreview->setText(text);
     }
+    #endif
 }
