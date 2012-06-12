@@ -54,11 +54,14 @@
 #include <QtGui/QApplication>
 #include <QtCore/QSize>
 
+#include "DREAM3D/License/PluginMakerLicenseFiles.h"
+#include "QtSupport/ApplicationAboutBoxDialog.h"
+#include "QtSupport/QR3DFileCompleter.h"
+
+
 #include "HelpWidget.h"
 #include "AddFilterWidget.h"
 #include "FilterBundler.h"
-#include "DREAM3D/License/PluginMakerLicenseFiles.h"
-#include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "PMDirGenerator.h"
 #include "PMFileGenerator.h"
 #include "PMFilterGenerator.h"
@@ -76,23 +79,23 @@ PluginMaker::PluginMaker(QWidget* parent) :
 
   //Set window to open at the center of the screen
   QDesktopWidget *desktop = QApplication::desktop();
- 
-  int screenWidth, width; 
+
+  int screenWidth, width;
   int screenHeight, height;
   int x, y;
   QSize windowSize;
- 
+
   screenWidth = desktop->width(); // get width of screen
   screenHeight = desktop->height(); // get height of screen
- 
+
   windowSize = size(); // size of application window
-  width = windowSize.width(); 
+  width = windowSize.width();
   height = windowSize.height();
- 
+
   x = (screenWidth - width) / 2;
   y = (screenHeight - height) / 2;
   y -= 50;
- 
+
   // move window to desired coordinates
   move (x, y);
 }
@@ -102,6 +105,12 @@ PluginMaker::PluginMaker(QWidget* parent) :
 // -----------------------------------------------------------------------------
 void PluginMaker::setupGui()
 {
+
+  QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
+  m_OutputDir->setCompleter(com);
+  QObject::connect(com, SIGNAL(activated(const QString &)), this, SLOT(on_m_OutputDir_textChanged(const QString &)));
+
+
 
   QString pathTemplate;
 
@@ -405,7 +414,7 @@ void PluginMaker::on_generateButton_clicked()
 
       hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
       srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");
-  
+
     pluginName = m_GenObjects[i]->getPluginName();
   }
 
@@ -546,7 +555,7 @@ void PluginMaker::on_addFilterBtn_clicked()
   addFilterDialog->exec();
 
   QString filterTitle = addFilterDialog->getFilterName();
-    
+
   if ( addFilterDialog->getBtnClicked() )
   {
     /* This simulates the user clicking on the "Add Filter" button */
@@ -574,7 +583,7 @@ void PluginMaker::on_addFilterBtn_clicked()
       cppgen->setNameChangeable(false);
       QString tempPluginName = cppgen->cleanName(m_PluginName->text());
       cppgen->setPluginName(tempPluginName);
-      
+
 
     /* This simulates the user clicking on the "Add Filter" button */
     QTreeWidgetItem* filt2h = new QTreeWidgetItem(F_name);
@@ -649,7 +658,7 @@ void PluginMaker::on_removeFilterBtn_clicked() {
     return;
   }
   QString namecheck = ptr->text(0);
-  
+
   for (int i=0; i<m_FilterBundles.size(); i++)
   {
     if (m_FilterBundles[i].containsTreeWidgetItem(ptr))
