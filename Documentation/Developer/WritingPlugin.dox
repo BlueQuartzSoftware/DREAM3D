@@ -7,47 +7,103 @@
   Creating a plugin for the DREAM.3D Application involves many different types of
 files being created and being placed in the correct positions in the project directory.
 To alleviate the developer of the tedious task of creating all of these files there
-is a shortcut that has been written using the CMake build system.@n
+is a shortcut that has been written using the CMake build system. Nicely enough
+there is a <b>PluginMaker</b> application that the developer can Launch and fill
+in a few text fields and then have all the files generated with skeleton source
+code. This minimal set of files will compile with DREAM3D but will have no functionality.
+The developer now needs to add their own algorithms to filter the results and
+produce what they need.@n
 @n
- The developer needs to clone the git repository using the following command:
-@code
-  git clone git://scm.bluequartz.net/DREAM3DPluginTemplate.git
-@endcode
-or you can get a compressed archive from the following web site:
 
-@n
-Launch the CMake-Gui.exe or CMake-GUI.app (or ccmake on Linux). Click the "Configure" button
-or type the 'c' key if using ccmake. This will reveal another variable called <b>
-PluginName</b>. Enter the Name of your Plugin for this variable. You do
-<b>NOT</b> and should NOT end the name with "Plugin". The code will do this step
-for you. If you want the code generated in another location that is different than
-the default location then set the <b>Plugin_OutputDir</b> CMake variable.
-   Click the "configure" button or type the 'c' key for ccmake and CMake will
-now generate all the necessary files for the new plugin into the current build
-directory. If you look in the build directory for the project you will now see
-a folder with the name you set in the <b>PluginName</b> CMake variable. This
-folder contains everything you need to start writing your new plugin. <b>Move</b> this
-folder to another location so that it will not get over written the next time CMake
-is executed.@n
+@image html PluginMaker.png "PluginMaker Application"
+@image latex PluginMaker.png "PluginMaker Application" width=6in
+
 @n
   Now that we have the plugin files ready to go we need to tell the DREAM.3D build
 system where to find the new plugin. Go back to CMake-GUI.app/CMake-GUI.exe/ccmake
 and set the <b>DREAM3D_EXTRA_PLUGINS</b> cmake variable to have the name of your
-plugin. If you are building multiple extra plugins then use a semi-colon ";" to
+plugin. This is the same name you gave it in the <b>PluginMaker</b> application.
+If you are building multiple extra plugins then use a semi-colon ";" to
 separate each plugin name. You may have to tell CMake where the source directory
 is for the new plugin at which point you will be prompted to enter that path into
 CMake.
 
-@section filedescription File Descriptions
-  For example, if you wanted to create a plugin called "GrainAnalyzer" then you
-would end up with the following files:
+Keep configuring until all the errors are gone and no new CMake variables appear.
+Once that is complete click the "Generate" button (in the CMake-GUI) or press the
+"g" key in ccmake to generate the project files.
+
+Once the project files are created you can open your project and start coding your
+filter.
+
+@section Filter_methods Filter Methods to Implement
+
+The plugin will create a single filter by default with the same name as your Plugin.
+Open the .cpp file which should be located at {PluginName}/Code/Filters/{PluginName}Filter.cpp.
+
+Once this file is open there are some areas that you need to pay attention to:
+
+@subsection filteroptions Filter Options
+
+If you need to get some input from the user then you need to create one or more
+filter options. The proper place for this code is in the <tt>setupFilterOptions();</tt>
+method. Some basic code has been generated for you that is commented out. The
+following enumerations are available to describe the types of options that can
+be used in the GUI
+
+@code
+    enum WidgetType
+    {
+      StringWidget,
+      IntWidget,
+      DoubleWidget,
+      InputFileWidget,
+      OutputFileWidget,
+      BooleanWidget,
+      IntConstrainedWidget,
+      DoubleConstrainedWidget,
+      ChoiceWidget,
+      CustomWidget
+    };
+@endcode
+
+@li StringWidget - This will display a Text Edit for the user to enter a string
+of text characters
+@li IntWidget - This will display a Text Edit field that only accepts integer values
+@li DoubleWidget - This will display a Text Edit field that only accepts floating point values
+@li InputFileWidget - This will display a Text Field and a button that the user can
+use to select a file from the local file system
+@li OutputFileWidget - This will display a Text Field and a button that the user can
+use to save a file to the local file system
+@li BooleanWidget - This will display a Checkbox widget to the user to mark as True or False
+@li IntConstrainedWidget - This is not implemented yet
+@li DoubleConstrainedWidget - This is not implemented yet
+@li ChoiceWidget - This will display a ComboBox Drop Down menu that allows the user
+to select from a preset list of choices
+
+@subsection guigeneration Generating a Widget
+ As part of the build system a generic Filter Widget will be created for your filter
+and will be available when DREAM3D is compiled. If you have special needs for your
+filter then as a developer one can create a custom GUI. This is an advanced topic
+and not covered in this tutorial.
+
+@subsection filterOptionsWriting Writing Filter Options to a Configuration File
+  If you want your filter options to be written to a configuration file for later
+use the <tt>void writeFilterOptions(AbstractFilterOptionsWriter* writer);</tt> method
+needs to be fully implemented. An empty implementation was created for you and contains
+comments to get you started saving your options to a file.
+
+@subsection preflight Preflight Method
+  The Preflight method is implemented with code that performs checks for the proper
+arrays being created by previous filters that your filter will need. It is typically
+a simple pass through to the <tt>dataCheck(...)</tt> method.
 
 
-@section comments1 Misc Comments
-  Most of the plugins also have a console version of the code that can be run from
-a termninal environment. While template code is not available at this time the
-programmer can optionally create this type of program/executable if they see fit.
-Inspecting some of the other plugins should yield the proper clues on how to set
-everything up in both code and CMake.
+@subsection datacheck DataCheck Method
+
+
+
+@subsection executeMethod Execute Method
+
+
 
 */
