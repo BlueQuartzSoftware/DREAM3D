@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be
- * used to endorse or promote products derived from this software without specific
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
+ * used to endorse or promote products derived from this software without specific 
  * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -35,58 +35,53 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PLUGINMAKER_H_
-#define _PLUGINMAKER_H_
+#ifndef _FILTERBUNDLER_H_
+#define _FILTERBUNDLER_H_
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QVector>
-#include <QtGui/QMainWindow>
 #include <QtGui/QTreeWidgetItem>
+#include "PMFilterGenerator.h"
 
-#include "ui_PluginMaker.h"
-#include "FilterBundler.h"
-
-class PMDirGenerator;
-class PMFileGenerator;
-
-class PluginMaker : public QMainWindow, public Ui::PluginMaker
+class FilterBundler
 {
-  Q_OBJECT;
-
   public:
-    PluginMaker(QWidget* parent = 0);
+    FilterBundler();
+
+    FilterBundler(const FilterBundler& rhs)
+    {
+      cppfile = rhs.cppfile;
+      hfile = rhs.hfile;
+      htmlfile = rhs.htmlfile;
+    }
+
+    void operator=(const FilterBundler& rhs)
+    {
+      cppfile = rhs.cppfile;
+      hfile = rhs.hfile;
+      htmlfile = rhs.htmlfile;
+    }
+
+    FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile, PMFileGenerator* htmlfile);
+    virtual ~FilterBundler() {
+
+}
+
+    PMFileGenerator* getCPPGenerator();
+    PMFileGenerator* getHGenerator();
+    PMFileGenerator* getHTMLGenerator();
+
+
+    bool containsTreeWidgetItem(QTreeWidgetItem* item);
 
   protected:
-    void setupGui();
+   
 
-protected slots:
-  void on_selectButton_clicked();
-  void on_generateButton_clicked();
+  private:
+    PMFileGenerator* cppfile;
+    PMFileGenerator* hfile;
+    PMFileGenerator* htmlfile;
 
-  void on_m_PluginName_textChanged(const QString & text);
-  void on_m_OutputDir_textChanged(const QString & text);
-  void on_treeWidget_itemSelectionChanged();
-  void generationError(const QString& test);
-
-  void on_actionPlugin_Maker_Help_triggered();
-  void on_actionAbout_triggered();
-
-  void on_addFilterBtn_clicked();
-  void on_removeFilterBtn_clicked();
-
-private:
-  QString m_OpenDialogLastDirectory;
-  QString cleanName(QString name);
-  void previewFile(QString rTemplate, QString fileName);
-
-
-  QVector<PMDirGenerator*> m_GenObjects;
- // QVector<PMFileGenerator*> m_FilterClasses;
-  QVector<FilterBundler> m_FilterBundles;
-  QTreeWidgetItem* F_name;
-  QTreeWidgetItem* F_doc;
-  QTreeWidgetItem* F_namefilters;
+    // Copy Constructor Not Implemented
+     // Operator '=' Not Implemented
 
 };
 
