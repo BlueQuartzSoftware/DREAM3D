@@ -366,7 +366,7 @@ void  InsertPrecipitatePhases::place_precipitates()
     }
   }
 
-  Field field;
+  Precip precip;
   std::vector<float> curphasevol;
   curphasevol.resize(precipitatephases.size());
   float change = 0.0f;
@@ -381,8 +381,8 @@ void  InsertPrecipitatePhases::place_precipitates()
 	    iter++;
 	    Seed++;
 	    phase = precipitatephases[j];
-		generate_precipitate(phase, static_cast<int>(Seed), &field, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
-		currentsizedisterror = check_sizedisterror(&field);
+		generate_precipitate(phase, static_cast<int>(Seed), &precip, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
+		currentsizedisterror = check_sizedisterror(&precip);
 		change = (currentsizedisterror) - (oldsizedisterror);
 		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
 		{
@@ -393,7 +393,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 	      m->resizeFieldDataArrays(currentnumgrains + 1);
 	      dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
 	      m_Active[currentnumgrains] = true;
-	      transfer_attributes(currentnumgrains, &field);
+	      transfer_attributes(currentnumgrains, &precip);
 	      oldsizedisterror = currentsizedisterror;
 	      curphasevol[j] = curphasevol[j] + m_Volumes[currentnumgrains];
 	      //FIXME: Initialize the Grain with some sort of default data
@@ -624,7 +624,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 
 }
 
-void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Field* field, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
+void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
@@ -690,32 +690,32 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Field* f
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
   if(shapeclass == DREAM3D::ShapeType::EllipsoidShape) omega3f = 1;
 
-  field->m_Volumes = vol;
-  field->m_EquivalentDiameters = diam;
-  field->m_AxisLengths[0] = r1;
-  field->m_AxisLengths[1] = r2;
-  field->m_AxisLengths[2] = r3;
-  field->m_AxisEulerAngles[0] = phi1;
-  field->m_AxisEulerAngles[1] = PHI;
-  field->m_AxisEulerAngles[2] = phi2;
-  field->m_Omega3s = omega3f;
-  field->m_FieldPhases = phase;
-  field->m_Neighborhoods = 0;
+  precip->m_Volumes = vol;
+  precip->m_EquivalentDiameters = diam;
+  precip->m_AxisLengths[0] = r1;
+  precip->m_AxisLengths[1] = r2;
+  precip->m_AxisLengths[2] = r3;
+  precip->m_AxisEulerAngles[0] = phi1;
+  precip->m_AxisEulerAngles[1] = PHI;
+  precip->m_AxisEulerAngles[2] = phi2;
+  precip->m_Omega3s = omega3f;
+  precip->m_FieldPhases = phase;
+  precip->m_Neighborhoods = 0;
 }
 
-void InsertPrecipitatePhases::transfer_attributes(int gnum, Field* field)
+void InsertPrecipitatePhases::transfer_attributes(int gnum, Precip* precip)
 {
-  m_Volumes[gnum] = field->m_Volumes;
-  m_EquivalentDiameters[gnum] = field->m_EquivalentDiameters;
-  m_AxisLengths[3*gnum+0] = field->m_AxisLengths[0];
-  m_AxisLengths[3*gnum+1] = field->m_AxisLengths[1];
-  m_AxisLengths[3*gnum+2] = field->m_AxisLengths[2];
-  m_AxisEulerAngles[3*gnum+0] = field->m_AxisEulerAngles[0];
-  m_AxisEulerAngles[3*gnum+1] = field->m_AxisEulerAngles[1];
-  m_AxisEulerAngles[3*gnum+2] = field->m_AxisEulerAngles[2];
-  m_Omega3s[gnum] = field->m_Omega3s;
-  m_FieldPhases[gnum] = field->m_FieldPhases;
-  m_Neighborhoods[gnum] = field->m_Neighborhoods;
+  m_Volumes[gnum] = precip->m_Volumes;
+  m_EquivalentDiameters[gnum] = precip->m_EquivalentDiameters;
+  m_AxisLengths[3*gnum+0] = precip->m_AxisLengths[0];
+  m_AxisLengths[3*gnum+1] = precip->m_AxisLengths[1];
+  m_AxisLengths[3*gnum+2] = precip->m_AxisLengths[2];
+  m_AxisEulerAngles[3*gnum+0] = precip->m_AxisEulerAngles[0];
+  m_AxisEulerAngles[3*gnum+1] = precip->m_AxisEulerAngles[1];
+  m_AxisEulerAngles[3*gnum+2] = precip->m_AxisEulerAngles[2];
+  m_Omega3s[gnum] = precip->m_Omega3s;
+  m_FieldPhases[gnum] = precip->m_FieldPhases;
+  m_Neighborhoods[gnum] = precip->m_Neighborhoods;
 }
 
 void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, float zc)
@@ -907,7 +907,7 @@ void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<st
   }
 }
 
-float InsertPrecipitatePhases::check_sizedisterror(Field* field)
+float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
 {
   DataContainer* m = getDataContainer();
 
@@ -940,9 +940,9 @@ float InsertPrecipitatePhases::check_sizedisterror(Field* field)
         count++;
       }
     }
-    if(field->m_FieldPhases == phase)
+    if(precip->m_FieldPhases == phase)
     {
-      dia = field->m_EquivalentDiameters;
+      dia = precip->m_EquivalentDiameters;
       dia = (dia - (statsDataArray[phase]->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
       if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
