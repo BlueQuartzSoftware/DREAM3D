@@ -49,11 +49,20 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+
+typedef struct {
+    float m_Volumes;
+    float m_EquivalentDiameters;
+    float m_AxisLengths[3];
+    float m_AxisEulerAngles[3];
+    float m_Omega3s;
+    int m_FieldPhases;
+    int m_Neighborhoods;
+} Precip;
 
 /**
  * @class InsertPrecipitatePhases InsertPrecipitatePhases.h DREAM3DLib/SyntheticBuilderFilters/InsertPrecipitatePhases.h
@@ -113,14 +122,14 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     void place_precipitates();
     void initialize_packinggrid();
 
-	static void generate_precipitate(int phase, int Seed, Field* grain, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+	static void generate_precipitate(int phase, int Seed, Precip* precip, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
 
-    void transfer_attributes(int gnum, Field* field);
+    void transfer_attributes(int gnum, Precip* precip);
     void insert_precipitate(size_t grainNum);
 
     void move_precipitate(size_t grainNum, float xc, float yc, float zc);
 
-    float check_sizedisterror(Field* field);
+    float check_sizedisterror(Precip* precip);
     void determine_neighbors(size_t grainNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
