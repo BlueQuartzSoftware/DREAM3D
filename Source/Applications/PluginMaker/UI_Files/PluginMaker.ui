@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
-    <height>503</height>
+    <width>1007</width>
+    <height>782</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -62,7 +62,7 @@
     <item row="1" column="1" colspan="4">
      <widget class="QLineEdit" name="m_OutputDir"/>
     </item>
-    <item row="2" column="0" colspan="6">
+    <item row="2" column="0" colspan="3">
      <widget class="QTreeWidget" name="treeWidget">
       <property name="autoExpandDelay">
        <number>0</number>
@@ -118,7 +118,7 @@
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QPushButton" name="removeFilter">
+     <widget class="QPushButton" name="removeFilterBtn">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -141,6 +141,13 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="3" colspan="3">
+     <widget class="QTextEdit" name="filePreview">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -148,8 +155,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>632</width>
-     <height>22</height>
+     <width>1007</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
