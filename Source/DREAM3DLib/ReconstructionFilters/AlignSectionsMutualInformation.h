@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
   public:
     DREAM3D_SHARED_POINTERS(AlignSectionsMutualInformation)
     DREAM3D_STATIC_NEW_MACRO(AlignSectionsMutualInformation)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMutualInformation, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMutualInformation, AlignSections)
 
     virtual ~AlignSectionsMutualInformation();
 
