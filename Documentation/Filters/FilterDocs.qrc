@@ -28,6 +28,8 @@
 <file>IOFilters/VtkGrainIdWriter.html</file>
 <file>IOFilters/EbsdToH5Ebsd.html</file>
 <file>IOFilters/ReadH5Ebsd.html</file>
+<file>IOFilters/YSChoiAbaqusReader.html</file>
+<file>IOFilters/H5VoxelFileReader.html</file>
 
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
@@ -62,11 +64,11 @@
 <file>StatisticsFilters/FindSizes.html</file>
 <file>StatisticsFilters/FindLocalMisorientationGradients.html</file>
 
-<file>SyntheticBuilderFilters/AdjustVolume.html</file>
-<file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>
-<file>SyntheticBuilderFilters/MatchCrystallography.html</file>
-<file>SyntheticBuilderFilters/InsertPrecipitatePhases.html</file>
-<file>SyntheticBuilderFilters/EstablishMatrixPhase.html</file>
-<file>SyntheticBuilderFilters/InitializeSyntheticVolume.html</file>
+<file>Synthetic_BuilderFilters/AdjustVolume.html</file>
+<file>Synthetic_BuilderFilters/PackPrimaryPhases.html</file>
+<file>Synthetic_BuilderFilters/MatchCrystallography.html</file>
+<file>Synthetic_BuilderFilters/InsertPrecipitatePhases.html</file>
+<file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>
+<file>Synthetic_BuilderFilters/InitializeSyntheticVolume.html</file>
 </qresource>
 </RCC>
