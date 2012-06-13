@@ -93,6 +93,7 @@ WidgetGeneration(GenericFilters GenericFilters)
 WidgetGeneration(IOFilters IOFilters)
 WidgetGeneration(ProcessingFilters ProcessingFilters)
 WidgetGeneration(ReconstructionFilters ReconstructionFilters)
+WidgetGeneration(SamplingFilters SamplingFilters)
 WidgetGeneration(StatisticsFilters StatisticsFilters)
 WidgetGeneration(SyntheticBuilderFilters Synthetic_BuilderFilters)
 
