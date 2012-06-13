@@ -745,7 +745,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
-  fprintf(f, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">");
+  fprintf(f, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
   fprintf(f, "<html>\n");
   fprintf(f, "<head>\n");
   fprintf(f, "<meta name=\"qrichtext\" content=\"1\" />\n");
