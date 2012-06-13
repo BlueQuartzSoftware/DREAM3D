@@ -34,6 +34,7 @@ set (PluginMaker_SRCS
 	${PluginMaker_SOURCE_DIR}/PMFileGenerator.cpp
 	${PluginMaker_SOURCE_DIR}/PMFilterGenerator.cpp
 	${PluginMaker_SOURCE_DIR}/AddFilterWidget.cpp
+	${PluginMaker_SOURCE_DIR}/FilterBundler.cpp
     ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.cpp
 	)
 
@@ -49,6 +50,7 @@ SET(PluginMaker_MOC_HDRS
     ${PluginMaker_SOURCE_DIR}/PMFilterGenerator.h
   	${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
 	${PluginMaker_SOURCE_DIR}/AddFilterWidget.h
+	${PluginMaker_SOURCE_DIR}/FilterBundler.h
 	${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
 	)
 cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS}" "${PluginMaker_SRCS}" "${PROJECT_INSTALL_HEADERS}")
@@ -94,6 +96,7 @@ include_directories(${PluginMaker_SOURCE_DIR} )
 include_directories(${PluginMaker_SOURCE_DIR}/.. )
 include_directories(${PluginMaker_BINARY_DIR} )
 include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 
 
 IF(APPLE)
@@ -113,7 +116,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES ${QT_LIBRARIES}
+    LINK_LIBRARIES ${QT_LIBRARIES} QtSupport
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}
