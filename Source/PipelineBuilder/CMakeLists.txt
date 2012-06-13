@@ -114,14 +114,14 @@ endif()
 
 
 
-INSTALL(TARGETS ${PROJECT_NAME}  
-    COMPONENT Applications
-    RUNTIME DESTINATION ${install_dir}
-    LIBRARY DESTINATION ${lib_install_dir}
-    ARCHIVE DESTINATION ${lib_install_dir}       
-    BUNDLE DESTINATION "."
-) 
-
-
+if ( NOT APPLE)
+    INSTALL(TARGETS ${PROJECT_NAME}  
+        COMPONENT Applications
+        RUNTIME DESTINATION ${install_dir}
+        LIBRARY DESTINATION ${lib_install_dir}
+        ARCHIVE DESTINATION ${lib_install_dir}       
+        BUNDLE DESTINATION "."
+    ) 
+endif() 
 
 

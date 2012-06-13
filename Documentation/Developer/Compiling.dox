@@ -30,9 +30,9 @@ which will have everything you need.
  <b>Windows Visual Studio Users</b> Nokia provides pre-built binaries for Qt for Visual Studio (VS)
 BUT they are ONLY 32 bit and they are ONLY for Visual Studio 2008 and ONLY for a specific version
 of Visual Studio 2008. If your version of Visual Studio does NOT match theirs, down to the exact
-sercurity patches and service packs otherwise you will get errors due to "manifests", C/C++ runtime
+sercurity patches and service packs you <B>will</b> get errors due to "manifests", C/C++ runtime
 DLL issues and a few other things. If you fall into the category of mismatching versions the easiest,
-thought initially longest, solution is to build Qt from scratch. Or if you need 64 bit support.
+though initially longest, solution is to build Qt from scratch. Or if you need 64 bit support.
 
 @subsection qtwin Building Qt on Windows
   Download the source code from qt.nokia.com and decompress the archive into the final location where
@@ -47,10 +47,8 @@ and answer a few of the questions. That will run for a short while after which y
 @code
 nmake
 @endcode
-to build the rest of Qt. <b>Warning</b>Completely compiling Qt can take HOURS even on a very fast
-computer. Allow enough time to get this step completed. If you have a Multi-Core or Multi-CPU machine
-you can speed up the compilation by using "jom" which is a drop in replacement for nmake and will
-better utilize all of your Cores/CPUs.
+to build the rest of Qt. <b>Warning</b>Completely compiling Qt can take 8 HOURS even on a very fast
+computer. Allow enough time to get this step completed.
 
 @section qwt Building Qwt
 Use Git to clone the Qwt source code repository:
@@ -68,7 +66,7 @@ Compile and Install HDF5 into a location of your choice. Export the "HDF5_INSTAL
 environment variable to make configuring DREAM3D with CMake easier.
 
 @section boost Building Boost
- Download Boost from the official Boost.org website or build from a subset of boost
+ Download Boost from the official http://www.boost.org website or build from a subset of boost
 that is provided by the BlueQuartz Git repository at http://www.bluequartz.net/gitweb/?p=MXABoost.git;a=summary
 
 Use CMake to configure Boost for your development environment. After CMake has generated the
@@ -95,11 +93,11 @@ the main web site. Here is the list of things to do in the order they need to be
 performed:
 
 @li Open the Top level CMakeLists.txt file and adjust the <tt>CMP_VERSION_MAJOR</tt>
-and <tt>CMP_VERSION_MINOR</tt> to the desired version for this release. Refer to
+to the desired version for this release. Refer to
 the documentation for determining the version number and how/what to set it to.
 @li Save the CMakeLists.txt file
 @li Peform one last "git commit ...." to commit this version number.
-@li Run CMake to generate new headers with the latest version number.
+@li Run CMake to generate new sources with the latest version number.
 @li Compile DREAM.3D one last time.
 @li Create the downloadable package by either running the <b>PACKAGE</b> project in
 Visual Studio or running <tt>make package</tt> on Makfile based systems.

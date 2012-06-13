@@ -29,25 +29,76 @@ AbstractFilter()
 void @ClassName@::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
-  /* Place all your option initialization code here
+  /* Place all your option initialization code here 
+   * For String input use this code
+   {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("STL Output Prefix");
+    option->setPropertyName("StlFilePrefix");
+    option->setWidgetType(FilterOption::StringWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+    For an Integer use this code
   {
     FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("Output File");
-    option->setPropertyName("OutputFile");
+    option->setHumanLabel("Max Iterations");
+    option->setPropertyName("MaxIterations");
+    option->setWidgetType(FilterOption::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+    For a Floating point value use this code
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Misorientation Tolerance");
+    option->setPropertyName("MisorientationTolerance");
+    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    options.push_back(option);
+  }
+    For an input file use this code
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Input File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+    For an output file use this code
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Alignment File");
+    option->setPropertyName("AlignmentShiftFileName");
     option->setWidgetType(FilterOption::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-    {
+    For a simple true/false boolean use this code
+  {
     FilterOption::Pointer option = FilterOption::New();
-    option->setHumanLabel("X Res");
-    option->setPropertyName("XRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
-    option->setValueType("float");
+    option->setHumanLabel("Write Alignment Shift File");
+    option->setPropertyName("WriteAlignmentShifts");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
     options.push_back(option);
   }
-  
-  */
+    For presenting a set of choices to the user use this code
+  {
+    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    option->setHumanLabel("Conversion Type");
+    option->setPropertyName("ConversionType");
+    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Degrees To Radians");
+    choices.push_back("Radians To Degrees");
+    option->setChoices(choices);
+    options.push_back(option);
+  }
+*/
   
   setFilterOptions(options);
 }
