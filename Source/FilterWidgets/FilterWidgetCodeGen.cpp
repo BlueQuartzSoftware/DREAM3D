@@ -50,7 +50,7 @@
 
 
 
-#define GENERATE_HTML_FILE 0
+#define GENERATE_HTML_FILE 1
 #define OVERWRITE_SOURCE_DOCS 0
 #define GENERATE_OPTIONS_WRITER_CODE 0
 
@@ -741,7 +741,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 #else
       << FILTER_WIDGETS_BINARY_DIR()
 #endif
-      << "/Documentation/Filters" << group << "/" << filter << ".html" << std::endl;
+      << "/Documentation/Filters/" << group << "/" << filter << ".html" << std::endl;
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
@@ -749,30 +749,36 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "<html>\n");
   fprintf(f, "<head>\n");
   fprintf(f, "<meta name=\"qrichtext\" content=\"1\" />\n");
-  fprintf(f, "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>\n");
+  fprintf(f, "<style type=\"text/css\">\n");
+  fprintf(f, "h1.pHeading1 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: x-large; font-weight: bold; text-align: left }\n");
+  fprintf(f, "h2.pHeading2 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: large; font-weight: bold; text-align: left }\n");
+  fprintf(f, "p.pBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }\n");
+  fprintf(f, "p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }\n");
+  fprintf(f, "</style>\n");
   fprintf(f, "<title>%s</title>\n", t->getHumanLabel().c_str());
   fprintf(f, "</head>\n");
   fprintf(f, "<body>\n");
-  fprintf(f, "<h3>%s Filter</h3><br>\n", t->getHumanLabel().c_str());
-  fprintf(f, "<b>Author:</b> Michael A. Groeber<br>\n");
-  fprintf(f, "<b>Author:</b> Michael A. Jackson<br>\n");
-  fprintf(f, "<b>Contact Info:</b> dream3d@bluequartz.net<br>\n");
-  fprintf(f, "<b>Version:</b> <br>\n");
-  fprintf(f, "<b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>\n");
-  fprintf(f, "<h4>Summary</h4>\n");
-  fprintf(f, "<!-- Write all your documentation here -->\n");
-  fprintf(f, "This filter does ....\n");
-  fprintf(f, "<!-- Do NOT write documentation below this line -->\n\n");
-
-
+  fprintf(f, "<h1 class=\"pHeading1\">%s Filter</h1>\n<p class=\"pCellBody\">\n", t->getHumanLabel().c_str());
+  fprintf(f, "<a href=\"MFESurfaceSmoothingFilter.html#wp2\">Description</a> ");
+  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp3\">Options</a> ");
+  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp4\">Required Arrays</a> ");
+  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp5\">Created Arrays</a>");
+  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp1\">Authors</a> ");
+  fprintf(f, "</p>\n<a name=\"wp2\"> </a>");
+  fprintf(f, "<h2 class=\"pHeading2\">Description</h2>\n<p class=\"pBody\">\n");
+  fprintf(f, "<!-- Write all your documentation here -->\n\n");
+//  fprintf(f, "This filter does ....\n");
+  fprintf(f, "<!-- Do NOT write documentation below this line -->\n</p>\n\n");
   fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->\n");
+  fprintf(f, "<!-- A TABLE OF Options FOR YOUR FILTER -->\n");
+  fprintf(f, "<a name=\"wp3\"> </a><h2 class=\"pHeading2\">Options</h2>\n");
   if (options.size() > 0) {
-  fprintf(f, "<h4>Options</h4>\n");
-  fprintf(f, "<table cellpadding=\"5px\">\n<tr><th>Option Name</th><th>Option Type</th></tr>\n");
+    fprintf(f, "<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
+    fprintf(f, "<tr bgcolor=\"#A2A2A2\"><th>Name</th><th>Type</th></tr>\n");
   }
   for (size_t i = 0; i < options.size(); ++i)
   {
-    fprintf(f, "<tr>\n");
+    fprintf(f, "<tr bgcolor=\"#E2E2E2\">\n");
     FilterOption::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
@@ -825,93 +831,92 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   t->setDataContainer(m.get());
   t->preflight();
 
+  fprintf(f, "<!-- A table of Required Data for your filter -->\n");
+  fprintf(f, "<a name=\"wp4\"> </a><h2 class=\"pHeading2\">Required Arrays</h2>\n");
+  fprintf(f, "<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
+  fprintf(f, "<tr bgcolor=\"#A2A2A2\"><th>Type</th><th>Name</th><th>Comment</th></tr>\n");
   {
     std::set<std::string> list = t->getRequiredCellData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Required Cell Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
-        fprintf(f, "<li>");
-        fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>\n");
+        fprintf(f, "<tr bgcolor=\"#E2E2E2\"><td>Cell</td><td>%s</td><td></td></tr>\n",(*iter).c_str());
       }
-      fprintf(f, "</ul>\n");
-    }
-  }
-  {
-    std::set<std::string> list = t->getCreatedCellData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "<h4>Created Cell Data</h4>\n<ul>\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "<li>");
-        fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>\n");
-      }
-      fprintf(f, "</ul>\n");
     }
   }
   {
     std::set<std::string> list = t->getRequiredFieldData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Required Field Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
-        fprintf(f, "<li>");
-        fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>\n");
+        fprintf(f, "<tr bgcolor=\"#E2E2E2\"><td>Field</td><td>%s</td><td></td></tr>\n",(*iter).c_str());
       }
-      fprintf(f, "</ul>\n");
     }
   }
-  {
-    std::set<std::string> list = t->getCreatedFieldData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "<h4>Created Field Data</h4>\n<ul>\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "<li>");
-        fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>\n");
-      }
-      fprintf(f, "</ul>\n");
-    }
-  }
-
   {
     std::set<std::string> list = t->getRequiredEnsembleData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Required Ensemble Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
-        fprintf(f, "<li>");
-        fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>\n");
+        fprintf(f, "<tr bgcolor=\"#E2E2E2\"><td>Ensemble</td><td>%s</td><td></td></tr>\n",(*iter).c_str());
       }
-      fprintf(f, "</ul>\n");
     }
   }
+  fprintf(f, "</table>\n");
+
+  fprintf(f, "<!-- A table of Created Data for your filter -->\n");
+  fprintf(f, "<a name=\"wp5\"> </a><h2 class=\"pHeading2\">Created Arrays</h2>\n");
+  fprintf(f, "<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
+  fprintf(f, "<tr bgcolor=\"#A2A2A2\"><th>Type</th><th>Name</th><th>Comment</th></tr>\n");
+  {
+    std::set<std::string> list = t->getCreatedCellData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<tr bgcolor=\"#E2E2E2\"><td>Cell</td><td>%s</td><td></td></tr>\n",(*iter).c_str());
+      }
+    }
+  }
+
+  {
+    std::set<std::string> list = t->getCreatedFieldData();
+    if(list.size() > 0)
+    {
+      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+      {
+        fprintf(f, "<tr bgcolor=\"#E2E2E2\"><td>Field</td><td>%s</td><td></td></tr>\n",(*iter).c_str());
+      }
+    }
+  }
+
+
   {
     std::set<std::string> list = t->getCreatedEnsembleData();
     if(list.size() > 0)
     {
-      fprintf(f, "<h4>Created Ensemble Data</h4>\n<ul>\n");
       for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
       {
-        fprintf(f, "<li>");
-        fprintf(f, "%s", (*iter).c_str());
-        fprintf(f, "</li>\n");
+        fprintf(f, "<tr bgcolor=\"#E2E2E2\"><td>Ensemble</td><td>%s</td><td></td></tr>\n",(*iter).c_str());
       }
-      fprintf(f, "</ul>\n");
     }
   }
+  fprintf(f, "</table>\n");
 
   t->setDataContainer(NULL);
+
+  fprintf(f, "<a name=\"wp1\"> </a><h2 class=\"pHeading2\">Authors</h2>\n<p class=\"pBody\">\n");
+
+  fprintf(f, "Copyright 2012 Michael A. Groeber (AFRL), ");
+  fprintf(f, "Michael A. Jackson (BlueQuartz Software)<br>\n");
+  fprintf(f, "Contact Info: dream3d@bluequartz.net<br>\n");
+  fprintf(f, "Version: 1.0.0\n");
+  fprintf(f, "License: See the License.txt file that came with DREAM3D.<br>\n");
+  fprintf(f, "</p>\n");
+
   fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->\n");
 
   fprintf(f, "</body>\n");

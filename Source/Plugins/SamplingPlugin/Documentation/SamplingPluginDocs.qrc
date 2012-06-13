@@ -1,8 +1,0 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource>
-<file>SamplingFilters/ChangeResolution.html</file>
-<file>SamplingFilters/CropVolume.html</file>
-<file>Sampling_Icon.png</file>
-</qresource>
-</RCC>
