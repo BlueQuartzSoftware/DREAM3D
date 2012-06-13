@@ -353,11 +353,14 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
+
   if(docErrorTabs->currentIndex() == 0 || (m_DocErrorTabsIsOpen == false))
   {
     docErrorTabs->setCurrentIndex(0);
     m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
-
+#if 1
+    docErrorTabs->setHidden(!m_DocErrorTabsIsOpen);
+#else
     QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
     if(m_DocErrorTabsIsOpen)
     {
@@ -377,6 +380,7 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
       animation1->setEndValue(end);
     }
     animation1->start();
+#endif
   }
   else
   {
@@ -393,6 +397,9 @@ void PipelineBuilderWidget::on_showErrors_clicked()
   {
     docErrorTabs->setCurrentIndex(1);
     m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
+#if 1
+    docErrorTabs->setHidden(!m_DocErrorTabsIsOpen);
+#else
     int deltaX;
     QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
 
@@ -416,6 +423,7 @@ void PipelineBuilderWidget::on_showErrors_clicked()
       animation1->setEndValue(end);
     }
     animation1->start();
+#endif
   }
   else
   {
