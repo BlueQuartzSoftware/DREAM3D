@@ -10,10 +10,32 @@
 <b>Author:</b> Michael A. Jackson<br>
 <b>Contact Info:</b> dream3d@bluequartz.net<br>
 <b>Version:</b> <br>
-<b>CopyRight/License:</b> See the License.txt file that came with DREAM3D.<br>
+<b>Copyright/License:</b> See the License.txt file that came with DREAM3D.<br>
 <h4>Summary</h4>
 <!-- Write all your documentation here -->
-This filter does ....
+This filter segments 2D slices, creates grain Ids that are used to determine the mutual information and then aligns the slices. These grain ids are temporary, and they apply to this filter only. So they are not related to the GrainIds generated in other filters.<br>
+<br>
+The user choses the level of misorientation tolerance by which to align voxels, where here the tolerance means the misorientation cannot exceed a given value. If the rotation angle is below the tolerance, then the voxel is grouped with other voxels that satisfy the criterion.<br>
+<br>
+The approach used in this filter is to group neighboring voxels on a slice that have a misorientation below the tolerance the user entered. Misorientation here means the minimum rotation angle of one voxel's crystal axis to coincide with another voxel's crystal axis. When the grains in the slices are defined, they are moved until 'disks' in neighboring slices align with each other. 
+<br><br>
+Mutual information is one of many quantities that measures how much one random variable
+tells us about another. It is a dimensionless quantity with (generally) units of bits, and can be
+thought of as the reduction in uncertainty about one random variable given knowledge of another.
+High mutual information indicates a large reduction in uncertainty; low mutual information
+indicates a small reduction; and zero mutual information between two random variables
+means the variables are independent.
+<br><br>
+Source: <i>www.scholarpedia.org/article/Mutual_information </i>. A more detailed discussion is presented on this site. <br>
+<b>Journal articles on Mutual Information that are useful:</b><br>
+Cover, T.M. and Thomas, J.A. (1991). <i>Elements of information theory</i>. John Wiley & Sons, New York, NY.<br>
+Gray, R.M. (1990). <i>Entropy and Information Theory</i>. Springer-Verlag, New York, NY.<br>
+Nirenberg, S. and Latham, P.E. (2003). <i>Decoding neuronal spike trains: how important are correlations?</i> Proc. Natl. Acad. Sci. 100:7348-7353.<br>
+Shannon, C.E. and Weaver, W. (1949). <i>The mathematical theory of communication</i>. University of Illinois Press, Urbana, Illinois.<br>
+Mézard, M. and Monatanari, A. (2009). <i>Information, Physics, and Computation</i>. Oxford University Press, Oxford.
+<br>
+<b>Options:</b>
+Misorientation Tolerance: min = ; max = ;
 <!-- Do NOT write documentation below this line -->
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
