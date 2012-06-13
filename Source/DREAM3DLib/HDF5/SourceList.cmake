@@ -13,6 +13,11 @@ SET (DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/VTKH5Constants.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrimaryStatsDataDelegate.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrecipitateStatsDataDelegate.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5TransformationStatsDataDelegate.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5BoundaryStatsDataDelegate.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5MatrixStatsDataDelegate.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5Macros.h
 )
@@ -20,6 +25,11 @@ SET (DREAM3DLib_HDF5_HDRS
 SET (DREAM3DLib_HDF5_SRCS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrimaryStatsDataDelegate.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrecipitateStatsDataDelegate.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5TransformationStatsDataDelegate.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5BoundaryStatsDataDelegate.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5MatrixStatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/HDF5" "${DREAM3DLib_HDF5_HDRS}" "${DREAM3DLib_HDF5_SRCS}" "0")
