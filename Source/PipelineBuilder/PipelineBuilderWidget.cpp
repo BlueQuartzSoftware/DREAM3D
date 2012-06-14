@@ -58,37 +58,6 @@
 
 #include "QFilterWidget.h"
 
-class PipelinePreset
-{
-  public:
-    PipelinePreset(QString name, QStringList filterList, PipelineViewWidget* view) :\
-      m_Name(name),
-      m_FilterList(filterList),
-      m_View(view)
-    {
-
-    }
-    virtual ~PipelinePreset() {}
-
-    void createPipeline()
-    {
-      m_View->clearWidgets();
-      for (int i = 0; i < m_FilterList.count(); ++i)
-      {
-        QFilterWidget* w = m_View->addFilter(m_FilterList.at(i));
-      }
-    }
-
-  private:
-    QString m_Name;
-    QStringList m_FilterList;
-    PipelineViewWidget* m_View;
-
-    PipelinePreset(const PipelinePreset&); // Copy Constructor Not Implemented
-    void operator=(const PipelinePreset&); // Operator '=' Not Implemented
-};
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -210,6 +179,10 @@ void PipelineBuilderWidget::setupGui()
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, "Library");
 
+  QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
+  presets->setText(0, "Presets");
+  presets->setExpanded(true);
+
 //  std::cout << "Groups Found: " << std::endl;
   for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
@@ -241,16 +214,26 @@ void PipelineBuilderWidget::setupGui()
   //on_showErrors_clicked();
 
   on_filterLibraryTree_itemClicked(library, 0);
+  
+  {
+  QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+  presetFilter->setText(0, "Ebsd 3D Reconstruction");
+  QStringList presetFilterList;
+  presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" <<
+    "DataContainerWriter" << "VtkRectilinearGridWriter";
+  Fmap["Ebsd 3D Reconstruction"] = presetFilterList;
+  }
 
-
-
-  QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
-  presets->setText(0, "Presets");
-  presets->setExpanded(true);
-
-  QTreeWidgetItem* preset1 = new QTreeWidgetItem(presets);
-  preset1->setText(0, "EBSD Grain Size Analysis");
-
+  {
+  QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+  presetFilter->setText(0, "Statistics");
+  QStringList presetFilterList;
+  presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" << 
+    "FindShapes" << "FindAxisODF" << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" << 
+      "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
+  Fmap["Statistics"] = presetFilterList;
+  }
+  
 }
 
 
@@ -285,13 +268,13 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
+    updateFilterGroupList(factories);
   }
-  else
+  else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
+    updateFilterGroupList(factories);
   }
-
-  updateFilterGroupList(factories);
 }
 
 // -----------------------------------------------------------------------------
@@ -299,11 +282,13 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-  // Get the QFilterWidget Mangager Instance
+  // Get the QFilterWidget Manager Instance
   QTreeWidgetItem* parent = item->parent();
   if (NULL != parent && parent->text(0).compare("Presets") == 0)
   {
-    std::cout << "Preset was double clicked: " << item->text(0).toStdString() << std::endl;
+    QString text = item->text(0);
+    QStringList presetList = Fmap[text];
+    loadPreset(presetList);
   }
 }
 
@@ -666,5 +651,17 @@ void PipelineBuilderWidget::addProgressMessage(QString message)
 {
   if (NULL != this->statusBar()) {
     this->statusBar()->showMessage(message);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::loadPreset(QStringList filterList) {
+  //Clear any existing pipeline
+  m_PipelineViewWidget->clearWidgets();
+
+  for (int i=0; i< filterList.size(); i++) {
+    m_PipelineViewWidget->addFilter(filterList[i]);
   }
 }
