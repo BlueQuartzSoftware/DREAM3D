@@ -37,11 +37,11 @@ p.pCellBody
 <body>
 <h1 class="pHeading1">@PluginName@ Filter</h1>
 <p class="pCellBody"> 
-<a href="@PluginName@Filter.html#wp2">Summary</a> 
-| <a href="@PluginName@Filter.html#wp3">Options</a> 
-| <a href="@PluginName@Filter.html#wp4">Required Arrays</a>
-| <a href="@PluginName@Filter.html#wp5">Created Arrays</a>
-| <a href="@PluginName@Filter.html#wp1">Authors</a>
+<a href="@HTML_FILE_NAME@#wp2">Summary</a> 
+| <a href="@HTML_FILE_NAME@#wp3">Options</a> 
+| <a href="@HTML_FILE_NAME@#wp4">Required Arrays</a>
+| <a href="@HTML_FILE_NAME@#wp5">Created Arrays</a>
+| <a href="@HTML_FILE_NAME@#wp1">Authors</a>
 </p>
 <a name="wp2"> </a>
 <h2 class="pHeading2">Summary</h2>
