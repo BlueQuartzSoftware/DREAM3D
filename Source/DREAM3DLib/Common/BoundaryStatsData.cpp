@@ -33,17 +33,28 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "BoundaryStatsData.h"
 
-#include "H5StatsDataDelegate.h"
+#include <string>
+#include <vector>
 
-#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
+#include "DREAM3DLib/HDF5/H5BoundaryStatsDataDelegate.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::H5StatsDataDelegate()
+BoundaryStatsData::BoundaryStatsData()
+{
+  initialize();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+BoundaryStatsData::~BoundaryStatsData()
 {
 
 }
@@ -51,16 +62,20 @@ H5StatsDataDelegate::H5StatsDataDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::~H5StatsDataDelegate()
+void BoundaryStatsData::initialize()
 {
+
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
+int BoundaryStatsData::writeHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5BoundaryStatsDataDelegate::Pointer writer = H5BoundaryStatsDataDelegate::New();
+  err = writer->writeBoundaryStatsData(this, groupId);
   return err;
 }
 
@@ -68,9 +83,10 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
+int BoundaryStatsData::readHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5BoundaryStatsDataDelegate::Pointer reader = H5BoundaryStatsDataDelegate::New();
+  err = reader->readBoundaryStatsData(this, groupId);
   return err;
 }
-

@@ -263,6 +263,7 @@ namespace DREAM3D
     const unsigned int PrecipitatePhase = 1;          //!<
     const unsigned int TransformationPhase = 2;       //!<
     const unsigned int MatrixPhase = 3;              //!<
+    const unsigned int BoundaryPhase = 4;              //!<
     const unsigned int UnknownPhaseType = 999;    //!<
   }
 

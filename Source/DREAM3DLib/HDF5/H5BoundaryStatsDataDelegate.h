@@ -34,43 +34,55 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5StatsDataDelegate.h"
+#ifndef _H5BoundarySTATSDATA_DELEGATE_H_
+#define _H5BoundarySTATSDATA_DELEGATE_H_
 
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include <string>
+
+#include <hdf5.h>
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5StatsDataDelegate::H5StatsDataDelegate()
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/BoundaryStatsData.h"
+#include "DREAM3DLib/HDF5/H5StatsDataDelegate.h"
+
+
+/**
+ * @class H5BoundaryStatsDataDelegate H5BoundaryStatsDataDelegate.h DREAM3DLib/HDF5/H5BoundaryStatsDataDelegate.h
+ * @brief This class handles reading to and writing from a Statistics file that is
+ * HDF5 based.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 22, 2012
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT H5BoundaryStatsDataDelegate : public H5StatsDataDelegate
 {
+  public:
 
-}
+    DREAM3D_SHARED_POINTERS(H5BoundaryStatsDataDelegate)
+    DREAM3D_STATIC_NEW_MACRO(H5BoundaryStatsDataDelegate)
+    DREAM3D_TYPE_MACRO_SUPER(H5BoundaryStatsDataDelegate, H5StatsDataDelegate)
+    virtual ~H5BoundaryStatsDataDelegate();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5StatsDataDelegate::~H5StatsDataDelegate()
-{
-}
+    int writeBoundaryStatsData(BoundaryStatsData* data, hid_t groupId);
+    int readBoundaryStatsData(BoundaryStatsData* data, hid_t groupId);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
-{
-  int err = 0;
-  return err;
-}
+  protected:
+    H5BoundaryStatsDataDelegate();
 
+    int writeBoundaryArea(BoundaryStatsData* data, hid_t groupId);
+    int readBoundaryArea(BoundaryStatsData* data, hid_t groupId);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
-{
-  int err = 0;
-  return err;
-}
+	int writePhaseFraction(BoundaryStatsData* data, hid_t groupId);
+    int readPhaseFraction(BoundaryStatsData* data, hid_t groupId);
 
+    int writeParentPhase(BoundaryStatsData* data, hid_t groupId);
+    int readParentPhase(BoundaryStatsData* data, hid_t groupId);
+
+  private:
+    H5BoundaryStatsDataDelegate(const H5BoundaryStatsDataDelegate&); // Copy Constructor Not Implemented
+    void operator=(const H5BoundaryStatsDataDelegate&); // Operator '=' Not Implemented
+};
+
+#endif /* _H5STATSDATA_DELEGATE_H_ */

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSDATATUPLE_H_
-#define _STATSDATATUPLE_H_
+#ifndef _BoundaryStatsDataTUPLE_H_
+#define _BoundaryStatsDataTUPLE_H_
 
 #include <hdf5.h>
 
@@ -43,11 +43,12 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/StatsData.h"
 
 typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
 
 /**
- * @class StatsData StatsData.h DREAM3DLib/Common/StatsData.h
+ * @class BoundaryStatsData BoundaryStatsData.h DREAM3DLib/Common/BoundaryStatsData.h
  * @brief This class holds the statistical data for a single phase of a microstructure.
  * There are several statistics that are held by this class in a varying number of
  * storage types. Some types have specific ordering of the sub arrays with in them. Those
@@ -79,14 +80,14 @@ typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
  * @date Feb 9, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT StatsData
+class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
 {
   public:
-    DREAM3D_SHARED_POINTERS(StatsData);
-    DREAM3D_STATIC_NEW_MACRO(StatsData);
-    DREAM3D_TYPE_MACRO(StatsData);
+    DREAM3D_SHARED_POINTERS(BoundaryStatsData);
+    DREAM3D_STATIC_NEW_MACRO(BoundaryStatsData);
+	DREAM3D_TYPE_MACRO_SUPER(BoundaryStatsData, StatsData)
 
-    virtual ~StatsData();
+    virtual ~BoundaryStatsData();
 
     /**
      * @brief Creates the Vector of FloatArrayType for a give distribution type
@@ -100,17 +101,22 @@ class DREAM3DLib_EXPORT StatsData
     static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
     static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
+
+    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
+    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
+    DREAM3D_INSTANCE_PROPERTY(float, ParentPhase);
+
     virtual void initialize();
 
     virtual int writeHDF5Data(hid_t groupId);
     virtual int readHDF5Data(hid_t groupId);
 
   protected:
-    StatsData();
+    BoundaryStatsData();
 
   private:
-    StatsData(const StatsData&); // Copy Constructor Not Implemented
-    void operator=(const StatsData&); // Operator '=' Not Implemented
+    BoundaryStatsData(const BoundaryStatsData&); // Copy Constructor Not Implemented
+    void operator=(const BoundaryStatsData&); // Operator '=' Not Implemented
 };
 
-#endif /* _STATSDATATUPLE_H_ */
+#endif /* _BoundaryStatsDataTUPLE_H_ */

@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5StatsDataDelegate.h"
+#include "H5MatrixStatsDataDelegate.h"
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
@@ -43,7 +43,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::H5StatsDataDelegate()
+H5MatrixStatsDataDelegate::H5MatrixStatsDataDelegate()
 {
 
 }
@@ -51,16 +51,19 @@ H5StatsDataDelegate::H5StatsDataDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::~H5StatsDataDelegate()
+H5MatrixStatsDataDelegate::~H5MatrixStatsDataDelegate()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
+int H5MatrixStatsDataDelegate::readMatrixStatsData(MatrixStatsData* data, hid_t groupId)
 {
   int err = 0;
+  //Read the PhaseFraction
+  err = readPhaseFraction(data, groupId);
+
   return err;
 }
 
@@ -68,9 +71,40 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
+int H5MatrixStatsDataDelegate::writeMatrixStatsData(MatrixStatsData* data, hid_t groupId)
 {
+  if (NULL == data)
+  {
+    return -1;
+  }
   int err = 0;
+
+  // Write the PhaseFraction
+  err = writePhaseFraction(data, groupId);
+  if (err < 0)
+  {
+    return err;
+  }
+
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5MatrixStatsDataDelegate::writePhaseFraction(MatrixStatsData* data, hid_t pid)
+{
+  float phaseFraction = data->getPhaseFraction();
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5MatrixStatsDataDelegate::readPhaseFraction(MatrixStatsData* data, hid_t pid)
+{
+  float phaseFraction = 0.0f;
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  data->setPhaseFraction(phaseFraction);
+  return err;
+}
