@@ -62,6 +62,10 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.cpp
+    ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/PrecipitatePhaseWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
     )
 set (StatsGenerator_HDRS 
 #    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -78,6 +82,10 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
     ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.h
+    ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.h
+    ${StatsGenerator_SOURCE_DIR}/PrecipitatePhaseWidget.h
+    ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.h
+    ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -148,7 +156,10 @@ SET( StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenMDFWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/EditPhaseDialog.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/TextureDialog.ui
-  ${StatsGenerator_SOURCE_DIR}/UI_Files/SGWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/PrimaryPhaseWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/PrecipitatePhaseWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/MatrixPhaseWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/TransformationPhaseWidget.ui
 )
 cmp_IDE_GENERATED_PROPERTIES("StatsGenerator/UI_Files" "${StatsGenerator_UIS}" "")
 

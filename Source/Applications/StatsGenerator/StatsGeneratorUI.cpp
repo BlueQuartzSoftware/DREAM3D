@@ -268,7 +268,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
     m_SGWidget->setPhaseFraction(dialog.getPhaseFraction());
     m_SGWidget->setPhaseType(dialog.getPhaseType());
     m_SGWidget->setPptFraction(dialog.getPptFraction());
-	m_SGWidget->setParentPhase(dialog.getParentPhase());
+	  m_SGWidget->setParentPhase(dialog.getParentPhase());
     QString cName = m_SGWidget->getComboString();
     phaseCombo->blockSignals(true);
     phaseCombo->clear();

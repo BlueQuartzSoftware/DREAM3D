@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SGWidget</class>
- <widget class="QWidget" name="SGWidget">
+ <class>PrimaryPhaseWidget</class>
+ <widget class="SGWidget" name="PrimaryPhaseWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,7 +23,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="sizeDistributionTab">
       <attribute name="title">
@@ -467,8 +467,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>753</width>
-            <height>584</height>
+            <width>98</width>
+            <height>38</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
