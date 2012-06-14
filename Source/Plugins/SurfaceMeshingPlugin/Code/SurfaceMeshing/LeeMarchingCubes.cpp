@@ -750,7 +750,7 @@ void LeeMarchingCubes::execute()
   }
 
   SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
-  writer->setVisualizationFile(m_VtkOutputFile);
+  writer->setOutputVtkFile(m_VtkOutputFile);
   writer->setNodesFile(NodesFile);
   writer->setTrianglesFile(TrianglesFile);
   writer->setWriteBinaryFile(m_WriteBinaryVTKFiles);

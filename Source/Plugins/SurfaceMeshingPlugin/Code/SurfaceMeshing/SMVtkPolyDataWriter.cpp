@@ -59,6 +59,7 @@ AbstractFilter(),
 m_WriteBinaryFile(false),
 m_WriteConformalMesh(true)
 {
+  setupFilterOptions();
 }
 
 // -----------------------------------------------------------------------------
@@ -73,6 +74,69 @@ SMVtkPolyDataWriter::~SMVtkPolyDataWriter()
 void SMVtkPolyDataWriter::preflight()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SMVtkPolyDataWriter::setupFilterOptions()
+{
+  std::vector<FilterOption::Pointer> options;
+  {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Nodes File");
+     option->setPropertyName("NodesFile");
+     option->setWidgetType(FilterOption::InputFileWidget);
+     option->setValueType("string");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Triangles File");
+     option->setPropertyName("TrianglesFile");
+     option->setWidgetType(FilterOption::InputFileWidget);
+     option->setValueType("string");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Output Vtk File");
+     option->setPropertyName("OutputVtkFile");
+     option->setWidgetType(FilterOption::OutputFileWidget);
+     option->setValueType("string");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Write Binary Vtk File");
+     option->setPropertyName("WriteBinaryFile");
+     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setValueType("bool");
+     options.push_back(option);
+   }
+   {
+     FilterOption::Pointer option = FilterOption::New();
+     option->setHumanLabel("Write Conformal Mesh");
+     option->setPropertyName("WriteConformalMesh");
+     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setValueType("bool");
+     options.push_back(option);
+   }
+
+   setFilterOptions(options);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SMVtkPolyDataWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+{
+  writer->writeValue("NodesFile", getNodesFile() );
+  writer->writeValue("TrianglesFile", getTrianglesFile() );
+  writer->writeValue("OutputVtkFile", getOutputVtkFile() );
+  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
+  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+}
+
 
 #if 0
 // -----------------------------------------------------------------------------
@@ -345,11 +409,11 @@ void SMVtkPolyDataWriter::execute()
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
-  vtkFile = fopen(m_VisualizationFile.c_str(), "wb");
+  vtkFile = fopen(m_OutputVtkFile.c_str(), "wb");
   if (NULL == vtkFile)
   {
     s.str("");
-    s << getNameOfClass() << ": Error creating Triangles VTK Visualization '" << m_VisualizationFile << "'";
+    s << getNameOfClass() << ": Error creating Triangles VTK Visualization '" << m_OutputVtkFile << "'";
     setErrorCondition(-1);
     setErrorMessage(s.str());
     notify(getErrorMessage(), 0, UpdateErrorMessage);

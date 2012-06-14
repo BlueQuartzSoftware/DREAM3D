@@ -43,6 +43,8 @@
 #include <QtCore/QVector>
 #include <QtGui/QMainWindow>
 #include <QtGui/QTreeWidgetItem>
+#include <QtGui/QCloseEvent>
+#include <QtCore/QSettings>
 
 #include "ui_PluginMaker.h"
 #include "FilterBundler.h"
@@ -78,6 +80,13 @@ protected slots:
 private:
   QString m_OpenDialogLastDirectory;
   QString cleanName(QString name);
+  QString cleanName_filters(QString name);
+  void closeEvent(QCloseEvent *event);
+  qint32 checkDirtyDocument();
+  void writeSettings();
+  void readSettings();
+  void readWindowSettings(QSettings &prefs);
+  void writeWindowSettings(QSettings &prefs);
   void previewFile(QString rTemplate, QString fileName);
 
 
