@@ -214,7 +214,6 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
   }
   ParentPhase->setEnabled(b);
   ParentPhaseLabel->setEnabled(b);
-
 }
 
 
