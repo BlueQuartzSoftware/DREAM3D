@@ -89,23 +89,14 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
 
     virtual ~PrecipitateStatsData();
 
-    /**
-     * @brief Creates the Vector of FloatArrayType for a give distribution type
-     * and sized according to numBins
-     * @param distributionType The type of distribution as laid out in the DREAM3D::DistributionType
-     * namespace which should be found in Constants.h.
-     * @param numBins The number of bins that the array should be sized to
-     * @return a VectorOfFloatArray object which could be empty if an unrecognized
-     * distribution type is passed in.
-     */
-    static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
-    static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
-
-
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
     DREAM3D_INSTANCE_PROPERTY(float, PrecipBoundaryFraction);
 
+	 /**
+     * @breif this will generate the Bin Numbers values;
+     */
+    FloatArrayType::Pointer generateBinNumbers();
     /**
      * @brief The values are encoded into 3 floats: Average, Max, Min
      */
@@ -126,11 +117,8 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
     DREAM3D_INSTANCE_PROPERTY(uint32_t, GrainSize_DistType);
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers);
-    /**
-     * @breif this will generate the Bin Numbers values;
-     */
-    FloatArrayType::Pointer generateBinNumbers();
-    size_t getNumberOfBins()
+
+	size_t getNumberOfBins()
     {
       return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
     }
@@ -160,10 +148,10 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
     /* 5 Vectors: Euler 1, Euler 2, Euler 3, Sigma, Weights */
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, AxisODF_Weights);
 
-    void initialize();
+    virtual void initialize();
 
-    int writeHDF5Data(hid_t groupId);
-    int readHDF5Data(hid_t groupId);
+    virtual int writeHDF5Data(hid_t groupId);
+    virtual int readHDF5Data(hid_t groupId);
 
   protected:
     PrecipitateStatsData();

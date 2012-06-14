@@ -91,10 +91,10 @@ class DREAM3DLib_EXPORT MatrixStatsData : public StatsData
 
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
 
-    void initialize();
+    virtual void initialize();
 
-    int writeHDF5Data(hid_t groupId);
-    int readHDF5Data(hid_t groupId);
+    virtual int writeHDF5Data(hid_t groupId);
+    virtual int readHDF5Data(hid_t groupId);
 
   protected:
     MatrixStatsData();

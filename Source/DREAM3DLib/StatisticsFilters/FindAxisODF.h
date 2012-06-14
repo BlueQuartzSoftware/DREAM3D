@@ -73,6 +73,8 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Axis ODF"; }
@@ -93,6 +95,7 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     int32_t* m_FieldPhases;
     float* m_AxisEulerAngles;
 
+    unsigned int* m_PhaseTypes;
 	StatsDataArray* m_StatsDataArray;
 
 	std::vector<OrientationMath*> m_OrientationOps;
