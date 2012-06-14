@@ -52,9 +52,11 @@ class AddFilterWidget : public QDialog, public Ui::Dialog
   protected slots:
     void on_addfilterOKButton_clicked();
     void on_addfilterCancelButton_clicked();
+    void on_filterName_textChanged(const QString & text);
 
   private:
     bool BtnClicked;
+    QString cleanName(QString name);
 };
 
 #endif
