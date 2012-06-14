@@ -98,6 +98,8 @@ PluginMaker::PluginMaker(QWidget* parent) :
 
   // move window to desired coordinates
   move (x, y);
+
+  readSettings();
 }
 
 // -----------------------------------------------------------------------------
@@ -504,6 +506,17 @@ QString PluginMaker::cleanName(QString name) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString PluginMaker::cleanName_filters(QString name) {
+  //Remove all spaces and illegal characters from plugin name
+  name.trimmed();
+  name.remove(" ");
+  name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+  return name;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PluginMaker::on_m_PluginName_textChanged(const QString & text) {
   statusbar->showMessage("Ready");
 
@@ -558,6 +571,8 @@ void PluginMaker::on_addFilterBtn_clicked()
 
   if ( addFilterDialog->getBtnClicked() )
   {
+    filterTitle = cleanName_filters(filterTitle);
+
     /* This simulates the user clicking on the "Add Filter" button */
     QTreeWidgetItem* filt2cpp = new QTreeWidgetItem(F_name);
     filt2cpp->setText(0, filterTitle + ".cpp");
@@ -730,4 +745,126 @@ void PluginMaker::previewFile(QString rTemplate, QString fileName) {
       filePreview->setText(text);
     }
     #endif
+}
+
+// -----------------------------------------------------------------------------
+//  Called when the main window is closed.
+// -----------------------------------------------------------------------------
+void PluginMaker::closeEvent(QCloseEvent *event)
+{
+  qint32 err = checkDirtyDocument();
+  if (err < 0)
+  {
+    event->ignore();
+  }
+  else
+  {
+    writeSettings();
+    event->accept();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+qint32 PluginMaker::checkDirtyDocument()
+{
+  qint32 err = -1;
+
+  if (this->isWindowModified() == true)
+  {
+    int r = QMessageBox::warning(this, tr("DREAM.3D"),
+                            tr("The Data has been modified.\nDo you want to save your changes?"),
+                            QMessageBox::Save | QMessageBox::Default,
+                            QMessageBox::Discard,
+                            QMessageBox::Cancel | QMessageBox::Escape);
+    if (r == QMessageBox::Save)
+    {
+      //TODO: Save the current document or otherwise save the state.
+    }
+    else if (r == QMessageBox::Discard)
+    {
+      err = 1;
+    }
+    else if (r == QMessageBox::Cancel)
+    {
+      err = -1;
+    }
+  }
+  else
+  {
+    err = 1;
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//  Write our Prefs to file
+// -----------------------------------------------------------------------------
+void PluginMaker::writeSettings()
+{
+  // std::cout << "writeSettings" << std::endl;
+#if defined (Q_OS_MAC)
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+
+  //Save the Plugin Name and Output Directory fields to the QSettings object
+  prefs.setValue("Plugin Name", m_PluginName->text());
+  prefs.setValue("Output Directory", m_OutputDir->text());
+
+  writeWindowSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PluginMaker::writeWindowSettings(QSettings &prefs)
+{
+  prefs.beginGroup("WindowSettings");
+  QByteArray geo_data = saveGeometry();
+  QByteArray layout_data = saveState();
+  prefs.setValue(QString("Geometry"), geo_data);
+  prefs.setValue(QString("Layout"), layout_data);
+  prefs.endGroup();
+}
+
+void PluginMaker::readSettings()
+{
+  // std::cout << "Read Settings" << std::endl;
+#if defined (Q_OS_MAC)
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+
+  // Have the PipelineBuilder Widget read its settings
+  m_PluginName->setText( prefs.value("Plugin Name").toString() );
+  m_OutputDir->setText( prefs.value("Output Directory").toString() );
+
+  readWindowSettings(prefs);
+}
+
+void PluginMaker::readWindowSettings(QSettings &prefs)
+{
+  bool ok = false;
+  prefs.beginGroup("WindowSettings");
+  if (prefs.contains(QString("Geometry")) )
+  {
+    QByteArray geo_data = prefs.value(QString("Geometry")).toByteArray();
+    ok = restoreGeometry(geo_data);
+    if (!ok)
+    {
+    	std::cout << "Error Restoring the Window Geometry" << std::endl;
+    }
+  }
+
+  if (prefs.contains(QString("Layout")))
+  {
+    QByteArray layout_data = prefs.value(QString("Layout")).toByteArray();
+    restoreState(layout_data);
+  }
+  prefs.endGroup();
 }
