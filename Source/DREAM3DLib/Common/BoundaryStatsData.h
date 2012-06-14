@@ -106,10 +106,10 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
     DREAM3D_INSTANCE_PROPERTY(float, ParentPhase);
 
-    void initialize();
+    virtual void initialize();
 
-    int writeHDF5Data(hid_t groupId);
-    int readHDF5Data(hid_t groupId);
+    virtual int writeHDF5Data(hid_t groupId);
+    virtual int readHDF5Data(hid_t groupId);
 
   protected:
     BoundaryStatsData();

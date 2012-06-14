@@ -88,10 +88,22 @@ class DREAM3DLib_EXPORT StatsData
 
     virtual ~StatsData();
 
-    void initialize();
+    /**
+     * @brief Creates the Vector of FloatArrayType for a give distribution type
+     * and sized according to numBins
+     * @param distributionType The type of distribution as laid out in the DREAM3D::DistributionType
+     * namespace which should be found in Constants.h.
+     * @param numBins The number of bins that the array should be sized to
+     * @return a VectorOfFloatArray object which could be empty if an unrecognized
+     * distribution type is passed in.
+     */
+    static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
+    static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
-    int writeHDF5Data(hid_t groupId);
-    int readHDF5Data(hid_t groupId);
+    virtual void initialize();
+
+    virtual int writeHDF5Data(hid_t groupId);
+    virtual int readHDF5Data(hid_t groupId);
 
   protected:
     StatsData();
