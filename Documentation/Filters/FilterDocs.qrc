@@ -7,7 +7,7 @@
 <file>catalog.css</file>
 
 
-<file>GenericFilters/DetermineGoodVoxels.html</file>
+
 <file>GenericFilters/FindNeighbors.html</file>
 <file>GenericFilters/FindGrainPhases.html</file>
 <file>GenericFilters/FindSurfaceCells.html</file>
@@ -24,8 +24,6 @@
 <file>IOFilters/DxReader.html</file>
 <file>IOFilters/PhWriter.html</file>
 <file>IOFilters/PhReader.html</file>
-<file>IOFilters/VtkGrainIdReader.html</file>
-<file>IOFilters/VtkGrainIdWriter.html</file>
 <file>IOFilters/EbsdToH5Ebsd.html</file>
 <file>IOFilters/ReadH5Ebsd.html</file>
 <file>IOFilters/YSChoiAbaqusReader.html</file>
