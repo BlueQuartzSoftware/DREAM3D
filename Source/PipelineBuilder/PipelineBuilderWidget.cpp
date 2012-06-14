@@ -214,7 +214,7 @@ void PipelineBuilderWidget::setupGui()
   //on_showErrors_clicked();
 
   on_filterLibraryTree_itemClicked(library, 0);
-  
+
   {
   QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
   presetFilter->setText(0, "Ebsd 3D Reconstruction");
@@ -228,12 +228,12 @@ void PipelineBuilderWidget::setupGui()
   QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
   presetFilter->setText(0, "Statistics");
   QStringList presetFilterList;
-  presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" << 
-    "FindShapes" << "FindAxisODF" << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" << 
+  presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" <<
+    "FindShapes" << "FindAxisODF" << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" <<
       "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
   Fmap["Statistics"] = presetFilterList;
   }
-  
+
 }
 
 
@@ -245,11 +245,11 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   // Get the QFilterWidget Mangager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories;
-  if ( item->text(0).compare("Library") == 0)
+  if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
   }
-  else
+  else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
   }
@@ -268,13 +268,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
-    updateFilterGroupList(factories);
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
-    updateFilterGroupList(factories);
   }
+  updateFilterGroupList(factories);
 }
 
 // -----------------------------------------------------------------------------
