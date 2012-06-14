@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>579</width>
-    <height>278</height>
+    <height>235</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -150,7 +150,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="2" column="4">
-      <widget class="QDoubleSpinBox" name="m_ZResolution">
+      <widget class="QDoubleSpinBox" name="m_YResolution">
        <property name="decimals">
         <number>6</number>
        </property>
@@ -163,7 +163,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="3" column="4">
-      <widget class="QDoubleSpinBox" name="m_YResolution">
+      <widget class="QDoubleSpinBox" name="m_ZResolution">
        <property name="decimals">
         <number>6</number>
        </property>
@@ -362,8 +362,19 @@ font-size: 11px;
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_InputFile</tabstop>
+  <tabstop>m_XPoints</tabstop>
+  <tabstop>m_YPoints</tabstop>
+  <tabstop>m_ZPoints</tabstop>
+  <tabstop>m_XResolution</tabstop>
+  <tabstop>m_YResolution</tabstop>
+  <tabstop>m_ZResolution</tabstop>
+  <tabstop>m_ShapeTypeScrollArea</tabstop>
+  <tabstop>m_InputFileBtn</tabstop>
+ </tabstops>
  <resources>
-  <include location="../../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>
