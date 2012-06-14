@@ -147,6 +147,7 @@ void PMFileGenerator::generateOutput()
       QFileInfo fi(m_FileName);
       QString className = fi.baseName();
       text.replace("@ClassName@", className);
+      text.replace("@HTML_FILE_NAME@", m_FileName);
 
       QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
       parentPath = QDir::toNativeSeparators(parentPath);

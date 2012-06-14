@@ -35,6 +35,8 @@
 #include <QtCore/QSettings>
 #include <QtCore/QEvent>
 #include <QtGui/QDropEvent>
+#include <QtCore/QMap>
+#include <QtCore/QStringList>
 
 
 
@@ -97,6 +99,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      * @param factories
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
+    
+    void loadPreset(QStringList filterList);
 
 
 
@@ -133,11 +137,12 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
 
   private:
-    QList<QWidget*>           m_WidgetList;
-    QFilterPipeline*          m_FilterPipeline;
-    QThread*                  m_WorkerThread;
-    bool                      m_DocErrorTabsIsOpen;
-    QString                   m_OpenDialogLastDirectory;
+    QList<QWidget*>             m_WidgetList;
+    QFilterPipeline*            m_FilterPipeline;
+    QThread*                    m_WorkerThread;
+    bool                        m_DocErrorTabsIsOpen;
+    QString                     m_OpenDialogLastDirectory;
+    QMap<QString,QStringList>   Fmap;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented
