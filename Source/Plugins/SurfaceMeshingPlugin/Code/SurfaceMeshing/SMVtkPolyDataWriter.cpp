@@ -55,6 +55,7 @@ using namespace meshing;
 //
 // -----------------------------------------------------------------------------
 SMVtkPolyDataWriter::SMVtkPolyDataWriter() :
+AbstractFilter(),
 m_WriteBinaryFile(false),
 m_WriteConformalMesh(true)
 {
