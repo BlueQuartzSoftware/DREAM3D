@@ -39,17 +39,19 @@
 
 AddFilterWidget::AddFilterWidget(QWidget *parent) {
   setupUi(this);
+  addfilterOKButton->setEnabled(false);
+  BtnClicked = false;
 }
 
 // -----------------------------------------------------------------------------
-//
+//  
 // -----------------------------------------------------------------------------
 QString AddFilterWidget::getFilterName() {
   return ( filterName->text() );
 }
 
 // -----------------------------------------------------------------------------
-//
+//  Called when the OK button is clicked.
 // -----------------------------------------------------------------------------
 void AddFilterWidget::on_addfilterOKButton_clicked() {
   BtnClicked = true;
@@ -57,7 +59,7 @@ void AddFilterWidget::on_addfilterOKButton_clicked() {
 }
 
 // -----------------------------------------------------------------------------
-//
+//  Called when the Cancel button is clicked.
 // -----------------------------------------------------------------------------
 void AddFilterWidget::on_addfilterCancelButton_clicked() {
   BtnClicked = false;
@@ -65,8 +67,32 @@ void AddFilterWidget::on_addfilterCancelButton_clicked() {
 }
 
 // -----------------------------------------------------------------------------
-//
+//  
 // -----------------------------------------------------------------------------
 bool AddFilterWidget::getBtnClicked() {
   return BtnClicked;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterWidget::on_filterName_textChanged(const QString & text) {
+  QString filterName_clean = cleanName(filterName->text());
+  if ( filterName_clean.isEmpty() ) {
+    addfilterOKButton->setEnabled(false);
+  }
+  else {
+    addfilterOKButton->setEnabled(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AddFilterWidget::cleanName(QString name) {
+  //Remove all spaces and illegal characters from plugin name
+  name.trimmed();
+  name.remove(" ");
+  name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+  return name;
 }

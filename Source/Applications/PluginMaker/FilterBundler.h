@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
+ * used to endorse or promote products derived from this software without specific 
+ * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -34,55 +35,54 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef SURFACEMESHINGPLUGIN_H_
-#define SURFACEMESHINGPLUGIN_H_
+#ifndef _FILTERBUNDLER_H_
+#define _FILTERBUNDLER_H_
 
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include "QtSupport/DREAM3DPluginInterface.h"
+#include <QtGui/QTreeWidgetItem>
+#include "PMFilterGenerator.h"
 
-
-/**
- * @class SamplingPlugin SamplingPlugin.h SurfaceMeshing/SamplingPlugin.h
- * @brief
- * @author Michael A. Jackson for BlueQuartz Software
- * @date May 10, 2012
- * @version 1.0
- */
-class SamplingPlugin : public QObject, public DREAM3DPluginInterface
+class FilterBundler
 {
-    Q_OBJECT;
-    Q_INTERFACES(DREAM3DPluginInterface)
-
   public:
-    SamplingPlugin();
-    virtual ~SamplingPlugin();
-    /**
-     * @brief Returns the name of the plugin
-     */
-    virtual QString getPluginName();
+    FilterBundler();
 
-    /**
-     * @brief Register all the filters with the FilterWidgetFactory
-     */
-    virtual void registerFilterWidgets();
+    FilterBundler(const FilterBundler& rhs)
+    {
+      cppfile = rhs.cppfile;
+      hfile = rhs.hfile;
+      htmlfile = rhs.htmlfile;
+    }
 
-    /**
-     * @brief Writes the settings in the input gui to the Application's preference file
-     * @param prefs A valid QSettings pointer.
-     */
-    virtual void writeSettings(QSettings &prefs);
+    void operator=(const FilterBundler& rhs)
+    {
+      cppfile = rhs.cppfile;
+      hfile = rhs.hfile;
+      htmlfile = rhs.htmlfile;
+    }
 
-    /**
-     * @brief Reads the settings from the Application's preference file and sets
-     * the input GUI widgets accordingly.
-     * @param prefs
-     */
-    virtual void readSettings(QSettings &prefs);
+    FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile, PMFileGenerator* htmlfile);
+    virtual ~FilterBundler() {
+
+}
+
+    PMFileGenerator* getCPPGenerator();
+    PMFileGenerator* getHGenerator();
+    PMFileGenerator* getHTMLGenerator();
+
+
+    bool containsTreeWidgetItem(QTreeWidgetItem* item);
+
+  protected:
+   
 
   private:
-    SamplingPlugin(const SamplingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const SamplingPlugin&); // Operator '=' Not Implemented
+    PMFileGenerator* cppfile;
+    PMFileGenerator* hfile;
+    PMFileGenerator* htmlfile;
+
+    // Copy Constructor Not Implemented
+     // Operator '=' Not Implemented
+
 };
 
-#endif /* SURFACEMESHINGPLUGIN_H_ */
+#endif

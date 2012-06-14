@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
     int writeBoundaryArea(StatsData* data, hid_t groupId);
     int readBoundaryArea(StatsData* data, hid_t groupId);
 
-	int writePhaseFraction(StatsData* data, hid_t groupId);
+	  int writePhaseFraction(StatsData* data, hid_t groupId);
     int readPhaseFraction(StatsData* data, hid_t groupId);
 
     int writePrecipBoundaryFraction(StatsData* data, hid_t groupId);
