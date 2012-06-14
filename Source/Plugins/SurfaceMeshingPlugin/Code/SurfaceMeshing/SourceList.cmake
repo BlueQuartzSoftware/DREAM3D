@@ -12,8 +12,16 @@
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 set (SurfaceMeshingPlugin_SurfaceMeshing_HDRS
     ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/LeeMarchingCubes.h
+    
+)
+
+#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
+SET (DREAM3DLib_SurfaceMeshing_HDRS
+    ${SurfaceMeshingPlugin_SurfaceMeshing_HDRS}
     ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/SMVtkPolyDataWriter.h
 )
+
+
 set (SurfaceMeshingPlugin_SurfaceMeshing_SRCS
     ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/LeeMarchingCubes.cpp
     ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/SMVtkPolyDataWriter.cpp
