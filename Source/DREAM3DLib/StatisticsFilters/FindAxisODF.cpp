@@ -145,7 +145,7 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -153,6 +153,7 @@ void FindAxisODF::execute()
     return;
   }
 
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystruct
