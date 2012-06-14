@@ -107,7 +107,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem * current, QTreeWidgetItem * previous );
-
+    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
     void on_filterList_currentItemChanged( QListWidgetItem * item, QListWidgetItem * previous );

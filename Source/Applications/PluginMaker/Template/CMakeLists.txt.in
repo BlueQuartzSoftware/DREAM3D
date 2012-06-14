@@ -46,6 +46,16 @@ set(FILTER_SRCS
   ${@PluginName@Plugin_@PluginName@_SRCS}
 )
 
+
+# --------------------------------------------------------------------
+# If you have additional NON-Qt, NON-Filter source code that you need to have
+# compiled then include those source files here.
+set( @PluginName@_EXTRA_HDRS )
+set( @PluginName@_EXTRA_SRCS )
+cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/Extra" "${@PluginName@_EXTRA_HDRS}" "${@PluginName@_EXTRA_SRCS}" "0")
+
+
+
 # --------------------------------------------------------------------
 # Clear out these variables as they are going to get populated with a 
 # list of source files that got generated and need to be compiled.
@@ -58,7 +68,7 @@ GenerateFilterWidgets( PLUGIN_NAME ${PLUGIN_NAME}
                        FILTER_GROUP @PluginName@Filters
                        INCLUDE_PATH @PluginName@Filters
                        SOURCE_DIR ${@PluginName@Plugin_SOURCE_DIR}
-                       FILTER_SOURCES ${FILTER_SRCS}
+                       FILTER_SOURCES ${FILTER_SRCS} ${@PluginName@_EXTRA_SRCS}
                        FILTER_HEADERS "${@PluginName@Plugin_@PluginName@_HDRS}"
                        BINARY_DIR ${@PluginName@Plugin_BINARY_DIR}
                        WIDGET_GEN_SRCS @PluginName@Plugin_GEN_SRCS
@@ -82,14 +92,6 @@ set (@PluginName@Plugin_SRCS
  ${PROJECT_SOURCE_DIR}/Code/@PluginName@Plugin.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/" "${@PluginName@Plugin_HDRS}" "${@PluginName@Plugin_SRCS}" "0")
-
-
-# --------------------------------------------------------------------
-# If you have additional NON-Qt, NON-Filter source code that you need to have
-# compiled then include those source files here.
-set( @PluginName@_EXTRA_HDRS )
-set( @PluginName@_EXTRA_SRCS )
-cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/Extra" "${@PluginName@_EXTRA_HDRS}" "${@PluginName@_EXTRA_SRCS}" "0")
 
 
 # --------------------------------------------------------------------

@@ -96,6 +96,7 @@ include_directories(${PluginMaker_SOURCE_DIR} )
 include_directories(${PluginMaker_SOURCE_DIR}/.. )
 include_directories(${PluginMaker_BINARY_DIR} )
 include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 
 
 IF(APPLE)
@@ -115,7 +116,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES ${QT_LIBRARIES}
+    LINK_LIBRARIES ${QT_LIBRARIES} QtSupport
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}

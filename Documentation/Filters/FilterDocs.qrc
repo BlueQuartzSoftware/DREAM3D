@@ -5,6 +5,8 @@
 <qresource>
 <file>document.css</file>
 <file>catalog.css</file>
+
+
 <file>GenericFilters/DetermineGoodVoxels.html</file>
 <file>GenericFilters/FindNeighbors.html</file>
 <file>GenericFilters/FindGrainPhases.html</file>
@@ -26,6 +28,8 @@
 <file>IOFilters/VtkGrainIdWriter.html</file>
 <file>IOFilters/EbsdToH5Ebsd.html</file>
 <file>IOFilters/ReadH5Ebsd.html</file>
+<file>IOFilters/YSChoiAbaqusReader.html</file>
+<file>IOFilters/H5VoxelFileReader.html</file>
 
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
@@ -33,7 +37,6 @@
 <file>ProcessingFilters/OpenCloseBadData.html</file>
 <file>ProcessingFilters/IdentifySample.html</file>
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
-
 
 <file>ReconstructionFilters/AlignSectionsMisorientation.html</file>
 <file>ReconstructionFilters/AlignSectionsMutualInformation.html</file>
@@ -44,6 +47,9 @@
 <file>ReconstructionFilters/MergeColonies.html</file>
 <file>ReconstructionFilters/GroupMicroTextureRegions.html</file>
 <file>ReconstructionFilters/CAxisSegmentGrains.html</file>
+
+<file>SamplingFilters/ChangeResolution.html</file>
+<file>SamplingFilters/CropVolume.html</file>
 
 <file>StatisticsFilters/FindAvgOrientations.html</file>
 <file>StatisticsFilters/FindAxisODF.html</file>

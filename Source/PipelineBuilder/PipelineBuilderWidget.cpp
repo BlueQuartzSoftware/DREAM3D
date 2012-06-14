@@ -58,7 +58,35 @@
 
 #include "QFilterWidget.h"
 
+class PipelinePreset
+{
+  public:
+    PipelinePreset(QString name, QStringList filterList, PipelineViewWidget* view) :\
+      m_Name(name),
+      m_FilterList(filterList),
+      m_View(view)
+    {
 
+    }
+    virtual ~PipelinePreset() {}
+
+    void createPipeline()
+    {
+      m_View->clearWidgets();
+      for (int i = 0; i < m_FilterList.count(); ++i)
+      {
+        QFilterWidget* w = m_View->addFilter(m_FilterList.at(i));
+      }
+    }
+
+  private:
+    QString m_Name;
+    QStringList m_FilterList;
+    PipelineViewWidget* m_View;
+
+    PipelinePreset(const PipelinePreset&); // Copy Constructor Not Implemented
+    void operator=(const PipelinePreset&); // Operator '=' Not Implemented
+};
 
 
 
@@ -213,6 +241,16 @@ void PipelineBuilderWidget::setupGui()
   //on_showErrors_clicked();
 
   on_filterLibraryTree_itemClicked(library, 0);
+
+
+
+  QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
+  presets->setText(0, "Presets");
+  presets->setExpanded(true);
+
+  QTreeWidgetItem* preset1 = new QTreeWidgetItem(presets);
+  preset1->setText(0, "EBSD Grain Size Analysis");
+
 }
 
 
@@ -254,6 +292,19 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   }
 
   updateFilterGroupList(factories);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
+{
+  // Get the QFilterWidget Mangager Instance
+  QTreeWidgetItem* parent = item->parent();
+  if (NULL != parent && parent->text(0).compare("Presets") == 0)
+  {
+    std::cout << "Preset was double clicked: " << item->text(0).toStdString() << std::endl;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -353,11 +404,14 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
+
   if(docErrorTabs->currentIndex() == 0 || (m_DocErrorTabsIsOpen == false))
   {
     docErrorTabs->setCurrentIndex(0);
     m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
-
+#if 1
+    docErrorTabs->setHidden(!m_DocErrorTabsIsOpen);
+#else
     QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
     if(m_DocErrorTabsIsOpen)
     {
@@ -377,6 +431,7 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
       animation1->setEndValue(end);
     }
     animation1->start();
+#endif
   }
   else
   {
@@ -393,6 +448,9 @@ void PipelineBuilderWidget::on_showErrors_clicked()
   {
     docErrorTabs->setCurrentIndex(1);
     m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
+#if 1
+    docErrorTabs->setHidden(!m_DocErrorTabsIsOpen);
+#else
     int deltaX;
     QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
 
@@ -416,6 +474,7 @@ void PipelineBuilderWidget::on_showErrors_clicked()
       animation1->setEndValue(end);
     }
     animation1->start();
+#endif
   }
   else
   {
