@@ -33,17 +33,28 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "MatrixStatsData.h"
 
-#include "H5StatsDataDelegate.h"
+#include <string>
+#include <vector>
 
-#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
+#include "DREAM3DLib/HDF5/H5MatrixStatsDataDelegate.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::H5StatsDataDelegate()
+MatrixStatsData::MatrixStatsData()
+{
+  initialize();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MatrixStatsData::~MatrixStatsData()
 {
 
 }
@@ -51,16 +62,20 @@ H5StatsDataDelegate::H5StatsDataDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::~H5StatsDataDelegate()
+void MatrixStatsData::initialize()
 {
+
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
+int MatrixStatsData::writeHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5MatrixStatsDataDelegate::Pointer writer = H5MatrixStatsDataDelegate::New();
+  err = writer->writeMatrixStatsData(this, groupId);
   return err;
 }
 
@@ -68,9 +83,10 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
+int MatrixStatsData::readHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5MatrixStatsDataDelegate::Pointer reader = H5MatrixStatsDataDelegate::New();
+  err = reader->readMatrixStatsData(this, groupId);
   return err;
 }
-

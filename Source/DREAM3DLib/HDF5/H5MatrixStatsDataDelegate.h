@@ -34,43 +34,48 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5StatsDataDelegate.h"
+#ifndef _H5MatrixStatsData_DELEGATE_H_
+#define _H5MatrixStatsData_DELEGATE_H_
 
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include <string>
+
+#include <hdf5.h>
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5StatsDataDelegate::H5StatsDataDelegate()
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/MatrixStatsData.h"
+#include "DREAM3DLib/HDF5/H5StatsDataDelegate.h"
+
+/**
+ * @class H5MatrixStatsDataDelegate H5MatrixStatsDataDelegate.h DREAM3DLib/HDF5/H5MatrixStatsDataDelegate.h
+ * @brief This class handles reading to and writing from a Statistics file that is
+ * HDF5 based.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 22, 2012
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT H5MatrixStatsDataDelegate : public H5StatsDataDelegate
 {
+  public:
 
-}
+    DREAM3D_SHARED_POINTERS(H5MatrixStatsDataDelegate)
+    DREAM3D_STATIC_NEW_MACRO(H5MatrixStatsDataDelegate)
+    DREAM3D_TYPE_MACRO_SUPER(H5MatrixStatsDataDelegate, H5StatsDataDelegate)
+    virtual ~H5MatrixStatsDataDelegate();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-H5StatsDataDelegate::~H5StatsDataDelegate()
-{
-}
+    int writeMatrixStatsData(MatrixStatsData* data, hid_t groupId);
+    int readMatrixStatsData(MatrixStatsData* data, hid_t groupId);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
-{
-  int err = 0;
-  return err;
-}
+  protected:
+    H5MatrixStatsDataDelegate();
 
+	int writePhaseFraction(MatrixStatsData* data, hid_t groupId);
+    int readPhaseFraction(MatrixStatsData* data, hid_t groupId);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
-{
-  int err = 0;
-  return err;
-}
+  private:
+    H5MatrixStatsDataDelegate(const H5MatrixStatsDataDelegate&); // Copy Constructor Not Implemented
+    void operator=(const H5MatrixStatsDataDelegate&); // Operator '=' Not Implemented
+};
 
+#endif /* _H5MatrixStatsData_DELEGATE_H_ */

@@ -33,17 +33,28 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "PrimaryStatsData.h"
 
-#include "H5StatsDataDelegate.h"
+#include <string>
+#include <vector>
 
-#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
+#include "DREAM3DLib/HDF5/H5PrimaryStatsDataDelegate.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::H5StatsDataDelegate()
+PrimaryStatsData::PrimaryStatsData()
+{
+  initialize();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PrimaryStatsData::~PrimaryStatsData()
 {
 
 }
@@ -51,16 +62,43 @@ H5StatsDataDelegate::H5StatsDataDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::~H5StatsDataDelegate()
+void PrimaryStatsData::initialize()
 {
+  m_GrainSize_DistType = DREAM3D::DistributionType::LogNormal;
+  m_BOverA_DistType = DREAM3D::DistributionType::Beta;
+  m_COverA_DistType = DREAM3D::DistributionType::Beta;
+  m_Neighbors_DistType = DREAM3D::DistributionType::LogNormal;
+  m_Omegas_DistType = DREAM3D::DistributionType::Beta;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FloatArrayType::Pointer PrimaryStatsData::generateBinNumbers()
+{
+  float grainDiameterInfo[3];
+  getGrainDiameterInfo(grainDiameterInfo);
+  std::vector<float> bins;
+  float d = grainDiameterInfo[2];
+  while (d <= grainDiameterInfo[1])
+  {
+  //  std::cout << d << std::endl;
+    bins.push_back(d);
+    d = d + grainDiameterInfo[0];
+  }
+  // Copy this into the DataArray<float>
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size(),DREAM3D::HDF5::BinNumber );
+  ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
+  return m_BinNumbers;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
+int PrimaryStatsData::writeHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5PrimaryStatsDataDelegate::Pointer writer = H5PrimaryStatsDataDelegate::New();
+  err = writer->writePrimaryStatsData(this, groupId);
   return err;
 }
 
@@ -68,9 +106,10 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
+int PrimaryStatsData::readHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5PrimaryStatsDataDelegate::Pointer reader = H5PrimaryStatsDataDelegate::New();
+  err = reader->readPrimaryStatsData(this, groupId);
   return err;
 }
-

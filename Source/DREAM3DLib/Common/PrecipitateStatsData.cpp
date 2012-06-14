@@ -33,34 +33,72 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "PrecipitateStatsData.h"
 
-#include "H5StatsDataDelegate.h"
+#include <string>
+#include <vector>
 
-#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
+#include "DREAM3DLib/HDF5/H5PrecipitateStatsDataDelegate.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::H5StatsDataDelegate()
+PrecipitateStatsData::PrecipitateStatsData()
 {
-
+  initialize();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5StatsDataDelegate::~H5StatsDataDelegate()
+PrecipitateStatsData::~PrecipitateStatsData()
 {
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
+{
+  float grainDiameterInfo[3];
+  getGrainDiameterInfo(grainDiameterInfo);
+  std::vector<float> bins;
+  float d = grainDiameterInfo[2];
+  while (d <= grainDiameterInfo[1])
+  {
+  //  std::cout << d << std::endl;
+    bins.push_back(d);
+    d = d + grainDiameterInfo[0];
+  }
+  // Copy this into the DataArray<float>
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size(),DREAM3D::HDF5::BinNumber );
+  ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
+  return m_BinNumbers;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
+void PrecipitateStatsData::initialize()
+{
+  m_GrainSize_DistType = DREAM3D::DistributionType::LogNormal;
+  m_BOverA_DistType = DREAM3D::DistributionType::Beta;
+  m_COverA_DistType = DREAM3D::DistributionType::Beta;
+  m_Neighbors_DistType = DREAM3D::DistributionType::LogNormal;
+  m_Omegas_DistType = DREAM3D::DistributionType::Beta;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PrecipitateStatsData::writeHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5PrecipitateStatsDataDelegate::Pointer writer = H5PrecipitateStatsDataDelegate::New();
+  err = writer->writePrecipitateStatsData(this, groupId);
   return err;
 }
 
@@ -68,9 +106,10 @@ int H5StatsDataDelegate::readStatsData(StatsData* data, hid_t groupId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5StatsDataDelegate::writeStatsData(StatsData* data, hid_t groupId)
+int PrecipitateStatsData::readHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5PrecipitateStatsDataDelegate::Pointer reader = H5PrecipitateStatsDataDelegate::New();
+  err = reader->readPrecipitateStatsData(this, groupId);
   return err;
 }
-

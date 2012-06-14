@@ -33,28 +33,17 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "StatsData.h"
 
-#include <string>
-#include <vector>
+#include "H5BoundaryStatsDataDelegate.h"
 
+#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
-#include "DREAM3DLib/HDF5/H5StatsDataDelegate.h"
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsData::StatsData()
-{
-  initialize();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-StatsData::~StatsData()
+H5BoundaryStatsDataDelegate::H5BoundaryStatsDataDelegate()
 {
 
 }
@@ -62,75 +51,25 @@ StatsData::~StatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins)
+H5BoundaryStatsDataDelegate::~H5BoundaryStatsDataDelegate()
 {
-  VectorOfFloatArray v;
-  if(distributionType == DREAM3D::DistributionType::Beta)
-  {
-    v.resize(DREAM3D::HDF5::BetaColumnCount);
-    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Alpha);
-    v[0]->initializeWithZeros();
-    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Beta);
-    v[1]->initializeWithZeros();
-  }
-  else if(distributionType == DREAM3D::DistributionType::LogNormal)
-  {
-	v.resize(DREAM3D::HDF5::LogNormalColumnCount);
-    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Average);
-    v[0]->initializeWithZeros();
-    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::StandardDeviation);
-    v[1]->initializeWithZeros();
-  }
-  else if(distributionType == DREAM3D::DistributionType::Power)
-  {
-    v.resize(DREAM3D::HDF5::LogNormalColumnCount);
-    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Alpha);
-    v[0]->initializeWithZeros();
-    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Exp_k);
-    v[1]->initializeWithZeros();
-    v[2] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Beta);
-    v[2]->initializeWithZeros();
-  }
-  return v;
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributionType)
-{
-	FloatArrayType::Pointer v;
-  if(distributionType == DREAM3D::DistributionType::Beta)
-  {
-	v = FloatArrayType::CreateArray(DREAM3D::HDF5::BetaColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
-    v->initializeWithZeros();
-  }
-  else if(distributionType == DREAM3D::DistributionType::LogNormal)
-  {
-	v = FloatArrayType::CreateArray(DREAM3D::HDF5::LogNormalColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
-    v->initializeWithZeros();
-  }
-  else if(distributionType == DREAM3D::DistributionType::Power)
-  {
-	v = FloatArrayType::CreateArray(DREAM3D::HDF5::PowerLawColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
-    v->initializeWithZeros();
-  }
-  return v;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsData::initialize()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsData::writeHDF5Data(hid_t groupId)
+int H5BoundaryStatsDataDelegate::readBoundaryStatsData(BoundaryStatsData* data, hid_t groupId)
 {
   int err = 0;
+  //Read the NumFields
+  err = readBoundaryArea(data, groupId);
+
+  //Read the PhaseFraction
+  err = readPhaseFraction(data, groupId);
+
+  // Read the Parent Phase
+  err = readParentPhase(data, groupId);
+
   return err;
 }
 
@@ -138,8 +77,88 @@ int StatsData::writeHDF5Data(hid_t groupId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsData::readHDF5Data(hid_t groupId)
+int H5BoundaryStatsDataDelegate::writeBoundaryStatsData(BoundaryStatsData* data, hid_t groupId)
 {
+  if (NULL == data)
+  {
+    return -1;
+  }
   int err = 0;
+
+  // Write the NumFields
+  err = writeBoundaryArea(data, groupId);
+  if (err < 0)
+  {
+    return err;
+  }
+
+  // Write the PhaseFraction
+  err = writePhaseFraction(data, groupId);
+  if (err < 0)
+  {
+    return err;
+  }
+
+  // Write the Parent Phase
+  err = writeParentPhase(data, groupId);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5BoundaryStatsDataDelegate::writeBoundaryArea(BoundaryStatsData* data, hid_t pid)
+{
+  float BoundaryArea = data->getBoundaryArea();
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5BoundaryStatsDataDelegate::readBoundaryArea(BoundaryStatsData* data, hid_t pid)
+{
+  float BoundaryArea = 0.0f;
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  data->setBoundaryArea(BoundaryArea);
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5BoundaryStatsDataDelegate::writePhaseFraction(BoundaryStatsData* data, hid_t pid)
+{
+  float phaseFraction = data->getPhaseFraction();
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5BoundaryStatsDataDelegate::readPhaseFraction(BoundaryStatsData* data, hid_t pid)
+{
+  float phaseFraction = 0.0f;
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  data->setPhaseFraction(phaseFraction);
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5BoundaryStatsDataDelegate::writeParentPhase(BoundaryStatsData* data, hid_t pid)
+{
+  unsigned int var = data->getParentPhase();
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::ParentPhase, var);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5BoundaryStatsDataDelegate::readParentPhase(BoundaryStatsData* data, hid_t pid)
+{
+  unsigned int parentPhase = 0.0f;
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::ParentPhase, parentPhase);
+  data->setParentPhase(parentPhase);
   return err;
 }
