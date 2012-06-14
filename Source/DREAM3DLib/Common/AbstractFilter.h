@@ -90,7 +90,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     /**
      * @brief Cancel the operation
      */
-    DREAM3D_INSTANCE_PROPERTY(bool, Cancel);
+    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel);
 
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<FilterOption::Pointer>, FilterOptions);

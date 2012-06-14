@@ -126,7 +126,7 @@ set(EbsdLib_PROJECT_SRCS
 #-- in order to reduce the deployment issues.
 if(DEFINED DREAM3DProj_BINARY_DIR)
 
-    add_library(${PROJECT_NAME}  ${LIB_TYPE} ${EbsdLib_PROJECT_SRCS})
+    add_library(${PROJECT_NAME} ${LIB_TYPE} ${EbsdLib_PROJECT_SRCS})
     if (EbsdLib_ENABLE_HDF5)
         target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
     endif()

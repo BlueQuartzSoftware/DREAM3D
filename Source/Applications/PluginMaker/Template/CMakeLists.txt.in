@@ -46,6 +46,16 @@ set(FILTER_SRCS
   ${@PluginName@Plugin_@PluginName@_SRCS}
 )
 
+
+# --------------------------------------------------------------------
+# If you have additional NON-Qt, NON-Filter source code that you need to have
+# compiled then include those source files here.
+set( @PluginName@_EXTRA_HDRS )
+set( @PluginName@_EXTRA_SRCS )
+cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/Extra" "${@PluginName@_EXTRA_HDRS}" "${@PluginName@_EXTRA_SRCS}" "0")
+
+
+
 # --------------------------------------------------------------------
 # Clear out these variables as they are going to get populated with a 
 # list of source files that got generated and need to be compiled.
@@ -58,7 +68,7 @@ GenerateFilterWidgets( PLUGIN_NAME ${PLUGIN_NAME}
                        FILTER_GROUP @PluginName@Filters
                        INCLUDE_PATH @PluginName@Filters
                        SOURCE_DIR ${@PluginName@Plugin_SOURCE_DIR}
-                       FILTER_SOURCES ${FILTER_SRCS}
+                       FILTER_SOURCES ${FILTER_SRCS} ${@PluginName@_EXTRA_SRCS}
                        FILTER_HEADERS "${@PluginName@Plugin_@PluginName@_HDRS}"
                        BINARY_DIR ${@PluginName@Plugin_BINARY_DIR}
                        WIDGET_GEN_SRCS @PluginName@Plugin_GEN_SRCS
@@ -85,14 +95,6 @@ cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/" "${@PluginName@Plugin_HDRS}" "${@Plug
 
 
 # --------------------------------------------------------------------
-# If you have additional NON-Qt, NON-Filter source code that you need to have
-# compiled then include those source files here.
-set( @PluginName@_EXTRA_HDRS )
-set( @PluginName@_EXTRA_SRCS )
-cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/Extra" "${@PluginName@_EXTRA_HDRS}" "${@PluginName@_EXTRA_SRCS}" "0")
-
-
-# --------------------------------------------------------------------
 # We need to run Qt's moc system on our Qt based files (Anything deriving from QObject)
 # This cmake code sets up moc to be run.
 QT4_WRAP_CPP( @PluginName@Plugin_Generated_MOC_SRCS ${@PluginName@Plugin_GEN_HDRS})
@@ -105,7 +107,7 @@ set_source_files_properties( ${@PluginName@Plugin_MOC_SRCS} PROPERTIES HEADER_FI
 
 # --------------------------------------------------------------------
 # -- Create a Qt Resource header file of the documentation html files
-QT4_ADD_RESOURCES( @PluginName@Plugin_Generated_RC_SRCS "${@PluginName@Plugin_SOURCE_DIR}/Documentation/@PluginName@PluginDocs.qrc"  )
+QT4_ADD_RESOURCES( @PluginName@Plugin_Generated_RC_SRCS "${@PluginName@Plugin_SOURCE_DIR}/Documentation/PluginDocumentation.qrc"  )
 
 # --------------------------------------------------------------------
 # Group all the generated source files in IDE's that support it. Makes it clear

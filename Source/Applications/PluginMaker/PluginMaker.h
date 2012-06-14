@@ -43,8 +43,11 @@
 #include <QtCore/QVector>
 #include <QtGui/QMainWindow>
 #include <QtGui/QTreeWidgetItem>
+#include <QtGui/QCloseEvent>
+#include <QtCore/QSettings>
 
 #include "ui_PluginMaker.h"
+#include "FilterBundler.h"
 
 class PMDirGenerator;
 class PMFileGenerator;
@@ -65,20 +68,31 @@ protected slots:
 
   void on_m_PluginName_textChanged(const QString & text);
   void on_m_OutputDir_textChanged(const QString & text);
+  void on_treeWidget_itemSelectionChanged();
   void generationError(const QString& test);
 
   void on_actionPlugin_Maker_Help_triggered();
   void on_actionAbout_triggered();
 
   void on_addFilterBtn_clicked();
+  void on_removeFilterBtn_clicked();
 
 private:
   QString m_OpenDialogLastDirectory;
   QString cleanName(QString name);
+  QString cleanName_filters(QString name);
+  void closeEvent(QCloseEvent *event);
+  qint32 checkDirtyDocument();
+  void writeSettings();
+  void readSettings();
+  void readWindowSettings(QSettings &prefs);
+  void writeWindowSettings(QSettings &prefs);
+  void previewFile(QString rTemplate, QString fileName);
 
 
   QVector<PMDirGenerator*> m_GenObjects;
-  QVector<PMFileGenerator*> m_FilterClasses;
+ // QVector<PMFileGenerator*> m_FilterClasses;
+  QVector<FilterBundler> m_FilterBundles;
   QTreeWidgetItem* F_name;
   QTreeWidgetItem* F_doc;
   QTreeWidgetItem* F_namefilters;

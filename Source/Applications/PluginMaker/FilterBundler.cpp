@@ -35,28 +35,35 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ADDFILTERWIDGET_H_
-#define _ADDFILTERWIDGET_H_
+#include "FilterBundler.h"
 
-#include "ui_AddFilterWidget.h"
+FilterBundler::FilterBundler() {
 
-class AddFilterWidget : public QDialog, public Ui::Dialog
-{
-  Q_OBJECT;
+}
 
-  public:
-    AddFilterWidget(QWidget* parent = 0);
-    QString getFilterName();
-    bool getBtnClicked();
+FilterBundler::FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile, PMFileGenerator* htmlfile) {
+  this->cppfile = cppfile;
+  this->hfile = hfile;
+  this->htmlfile = htmlfile;
+}
 
-  protected slots:
-    void on_addfilterOKButton_clicked();
-    void on_addfilterCancelButton_clicked();
-    void on_filterName_textChanged(const QString & text);
+PMFileGenerator* FilterBundler::getCPPGenerator() {
+  return cppfile;
+}
 
-  private:
-    bool BtnClicked;
-    QString cleanName(QString name);
-};
+PMFileGenerator* FilterBundler::getHGenerator() {
+  return hfile;
+}
 
-#endif
+PMFileGenerator* FilterBundler::getHTMLGenerator() {
+  return htmlfile;
+}
+
+bool FilterBundler::containsTreeWidgetItem(QTreeWidgetItem* item) {
+  if ( item == cppfile->getTreeWidgetItem() || 
+        item == hfile->getTreeWidgetItem() || 
+          item == htmlfile->getTreeWidgetItem() )
+    return true;
+  else
+    return false;
+}
