@@ -114,6 +114,7 @@ void PMFilterGenerator::generateOutput()
       QString text = in.readAll();
       text.replace("@PluginName@", pluginName);
       text.replace("@ClassName@", m_ClassName);
+      text.replace("@HTML_FILE_NAME@", m_ClassName + ".html");
 
       QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
       parentPath = QDir::toNativeSeparators(parentPath);
