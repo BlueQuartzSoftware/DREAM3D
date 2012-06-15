@@ -81,6 +81,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
                            float xres, float yres, float zres);
     void estimateNumGrainsSetup();
 
+    QFilterWidget* createDeepCopy();
 
   protected slots:
     // Auto Hookup Slots

@@ -125,6 +125,14 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QFilterWidget* QReadH5EbsdWidget::createDeepCopy()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
 //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;

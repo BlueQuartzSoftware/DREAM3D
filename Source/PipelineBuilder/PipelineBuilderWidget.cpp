@@ -85,11 +85,18 @@ PipelineBuilderWidget::~PipelineBuilderWidget()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::readSettings(QSettings &prefs)
+{
+  readSettings(prefs, m_PipelineViewWidget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
 {
   // Clear Any Existing Pipeline
   m_PipelineViewWidget->clearWidgets();
@@ -111,25 +118,30 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
 
     QString filterName = prefs.value("Filter_Name", "").toString();
 
-    QFilterWidget* w = m_PipelineViewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+    QFilterWidget* w = viewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
     if(w) {
       w->blockSignals(true);
       w->readOptions(prefs);
       w->blockSignals(false);
       w->emitParametersChanged();
     }
-
     prefs.endGroup();
   }
   m_PipelineViewWidget->preflightPipeline();
-
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::writeSettings(QSettings &prefs)
+{
+  writeSettings(prefs, m_PipelineViewWidget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
 {
   prefs.beginGroup("PipelineBuilder");
 
@@ -141,7 +153,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 
   for(qint32 i = 0; i < count; ++i)
   {
-    QFilterWidget* fw = m_PipelineViewWidget->filterWidgetAt(i);
+    QFilterWidget* fw = viewWidget->filterWidgetAt(i);
     if (fw)
     {
       //QString name = QString::fromStdString(fw->getFilter()->getNameOfClass() );
@@ -151,8 +163,6 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
       prefs.endGroup();
     }
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
