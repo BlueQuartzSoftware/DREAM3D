@@ -17,8 +17,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <p class="pBody">
 <!-- Write all your documentation here -->
 This filter removes small noise in data, but keeps larger regions that are possibly features, e.g., pores or defects.<br />
-This filter collects the <i>bad voxels</i> (grain id = 0) and sets the <i>close</i> operation, as in the <i>open/close</i> filter, to be run on those <i>bad voxels</i> until none remain. However, those <i>bad voxels</i> that satisfy the following are not changed:<br />
-The <i>voxels</i> that are contiguous to any group of <i>bad voxels</i> are tested to determine if they have as many as or more <i>voxels</i> than the minimum defect size. If true, then then the <i>bad voxels</i> remain unchanged when run in the <i>close</i> operations. 
+This filter collects the <i>bad voxels</i> (grain id = 0) and sets the <i>close</i> operation, as in the <i>open/close</i> filter, to be run on those <i>bad voxels</i> until none remain. <br>
+However, those <i>bad voxels</i> that satisfy the following are not changed:<br />
+The <i>voxels</i> that are contiguous to any group of <i>bad voxels</i> are tested to determine if they have as many as or more <i>voxels</i> than the minimum defect size. If true, then then the <i>bad voxels</i> remain unchanged when run in the <i>close</i> operations.<br>
+ 
 <!-- Do NOT write documentation below this line -->
 </p>
 
