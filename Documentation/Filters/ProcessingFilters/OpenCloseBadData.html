@@ -16,10 +16,11 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-Bad data means a voxel has a grain id of 0, which means the voxel failed one of the quality metrics in the ReadH5Ebsd Filter. To remedy this situation, this filter opens or closes the bad data. <br />
-If the bad data is opened, the filter grows the bad data by one voxel in an iteration sequence. The grain id of any neighboring voxel will be changed to 0. The number of iterations to grow the voxel is limited to the situation in which only one grain remains or there is no place to grow.<br />
-For the close option, the grain id of the bad data voxel is changed to the grain id of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero grain id.<br />
-If there is a tie between two grain ids, then one of the grain ids, chosen randomly, will be assigned to the bad voxel. <br />
+Bad data means a <i>voxel</i> has a <B>GrainID</B> of 0, which means the <i>voxel</i> failed one of the quality metrics in the <i>ReadH5Ebsd Filter</i>. To remedy this situation, this filter <i>opens</i> or <i>closes</i> the bad data. <br />
+If the bad data is <i>opened</i>, the filter grows the bad data by one <i>voxel</i> in an iteration sequence. The <B>GrainID</B> of any neighboring <i>voxel</i> will be changed to 0. The number of iterations to grow the <i>voxel</i> is limited to the situation in which only one grain remains or there is no place to grow.<br />
+For the <i>close</i> option, the <B>GrainID</B> of the bad data <i>voxel</i> is changed to the <B>GrainID</B> of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero <B>GrainID</B>.<br />
+If there is a tie between two <B>GrainID</B>s, then one of the <B>GrainID</B>s, chosen randomly, will be assigned to the bad <i>voxel</i>. <br />
+Arrays that must be available are The <B>Cell CellPhases</B> and <B>GrainIds</B>, and <B>Field FiledPhases</B> arrays.
 The user is expected to use this filter based on a goal or reason for applying the filter.
 <!-- Do NOT write documentation below this line -->
 </p>
