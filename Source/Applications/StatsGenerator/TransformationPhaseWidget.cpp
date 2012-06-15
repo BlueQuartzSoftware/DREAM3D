@@ -101,7 +101,6 @@ SGWidget(parent),
 m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
-m_PptFraction(-1.0f),
 m_ParentPhase(0),
 m_DataHasBeenGenerated(false),
 m_PhaseIndex(0),
@@ -763,16 +762,16 @@ int TransformationPhaseWidget::gatherStatsData(DataContainer::Pointer m)
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+  TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
 
   //H5StatsWriter::Pointer writer = H5StatsWriter::New();
 
-  statsData->setPhaseFraction(calcPhaseFraction);
-  statsData->setPrecipBoundaryFraction(m_PptFraction);
-  statsData->setParentPhase(m_ParentPhase);
+  transformationStatsData->setPhaseFraction(calcPhaseFraction);
+  transformationStatsData->setParentPhase(m_ParentPhase);
   // Grain Diameter Info
-  statsData->setBinStepSize(stepSize);
-  statsData->setMaxGrainDiameter(maxdiameter);
-  statsData->setMinGrainDiameter(mindiameter);
+  transformationStatsData->setBinStepSize(stepSize);
+  transformationStatsData->setMaxGrainDiameter(maxdiameter);
+  transformationStatsData->setMinGrainDiameter(mindiameter);
   // Grain Size Distribution
   {
     VectorOfFloatArray data;
@@ -782,42 +781,38 @@ int TransformationPhaseWidget::gatherStatsData(DataContainer::Pointer m)
     data.push_back(d2);
     d1->SetValue(0, avglogdiam);
     d2->SetValue(0, sdlogdiam);
-    statsData->setGrainSizeDistribution(data);
-    statsData->setGrainSize_DistType(DREAM3D::DistributionType::LogNormal);
+    transformationStatsData->setGrainSizeDistribution(data);
+    transformationStatsData->setGrainSize_DistType(DREAM3D::DistributionType::LogNormal);
   }
-//  err = writer->writePhaseInformation(m_PhaseIndex, m_PhaseType, m_CrystalStructure, calcPhaseFraction, m_PptFraction);
-//  CHECK_ERROR_ON_WRITE(err, "PhaseInformation")
-//  err = writer->writeSizeDistribution(m_PhaseIndex, maxdiameter, mindiameter, stepSize, avglogdiam, sdlogdiam, nBins);
-//  CHECK_ERROR_ON_WRITE(err, "Size Distribution")
 
   // Now that we have bins and grain sizes, push those to the other plot widgets
 
   //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
   {
     VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
-    statsData->setGrainSize_Omegas(data);
-    statsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
+    transformationStatsData->setGrainSize_Omegas(data);
+    transformationStatsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
   }
 
   //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
   {
     VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
-    statsData->setGrainSize_BOverA(data);
-    statsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
+    transformationStatsData->setGrainSize_BOverA(data);
+    transformationStatsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
   }
 
   //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
   {
     VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
-    statsData->setGrainSize_COverA(data);
-    statsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
+    transformationStatsData->setGrainSize_COverA(data);
+    transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
   }
 
  // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
   {
     VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
-    statsData->setGrainSize_Neighbors(data);
-    statsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
+    transformationStatsData->setGrainSize_Neighbors(data);
+    transformationStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
   }
 
 
@@ -860,19 +855,11 @@ void TransformationPhaseWidget::extractStatsData(DataContainer::Pointer m, int i
     return;
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
-  m_PhaseFraction = statsData->getPhaseFraction();
+  TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
 
-  m_PptFraction = -1.0;
-  if(DREAM3D::PhaseType::PrecipitatePhase == m_PhaseType)
-  {
-    m_PptFraction = statsData->getPrecipBoundaryFraction();
-  }
+  m_PhaseFraction = transformationStatsData->getPhaseFraction();
 
-  m_ParentPhase = 0;
-  if(DREAM3D::PhaseType::TransformationPhase == m_PhaseType)
-  {
-    m_ParentPhase = statsData->getParentPhase();
-  }
+  m_ParentPhase = transformationStatsData->getParentPhase();
 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
@@ -883,20 +870,20 @@ void TransformationPhaseWidget::extractStatsData(DataContainer::Pointer m, int i
 
 
   /* SEt the BinNumbers data set */
-  FloatArrayType::Pointer bins = statsData->getBinNumbers();
+  FloatArrayType::Pointer bins = transformationStatsData->getBinNumbers();
 
 
   /* Set the Grain_Diameter_Info Data */
 
-  binStepSize = statsData->getBinStepSize();
+  binStepSize = transformationStatsData->getBinStepSize();
   m_BinStepSize->blockSignals(true);
   m_BinStepSize->setValue(binStepSize);
   m_BinStepSize->blockSignals(false);
-  maxGrainSize = statsData->getMaxGrainDiameter();
-  minGrainSize = statsData->getMinGrainDiameter();
+  maxGrainSize = transformationStatsData->getMaxGrainDiameter();
+  minGrainSize = transformationStatsData->getMinGrainDiameter();
 
   /* Set the Grain_Size_Distribution Data */
-  VectorOfFloatArray distData = statsData->getGrainSizeDistribution();
+  VectorOfFloatArray distData = transformationStatsData->getGrainSizeDistribution();
   mu = distData[0]->GetValue(0);
   sigma = distData[1]->GetValue(0);
   m_Mu_SizeDistribution->blockSignals(true);
@@ -930,28 +917,28 @@ void TransformationPhaseWidget::extractStatsData(DataContainer::Pointer m, int i
     qbins[i] = bins->GetValue(i);
   }
 
-  m_Omega3Plot->setDistributionType(statsData->getOmegas_DistType(), false);
-  m_Omega3Plot->extractStatsData(m, index, qbins, statsData->getGrainSize_Omegas());
+  m_Omega3Plot->setDistributionType(transformationStatsData->getOmegas_DistType(), false);
+  m_Omega3Plot->extractStatsData(m, index, qbins, transformationStatsData->getGrainSize_Omegas());
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_BOverAPlot->setDistributionType(statsData->getBOverA_DistType(), false);
-  m_BOverAPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_BOverA());
+  m_BOverAPlot->setDistributionType(transformationStatsData->getBOverA_DistType(), false);
+  m_BOverAPlot->extractStatsData(m, index, qbins, transformationStatsData->getGrainSize_BOverA());
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_COverAPlot->setDistributionType(statsData->getCOverA_DistType(), false);
-  m_COverAPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_COverA());
+  m_COverAPlot->setDistributionType(transformationStatsData->getCOverA_DistType(), false);
+  m_COverAPlot->extractStatsData(m, index, qbins, transformationStatsData->getGrainSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_NeighborPlot->setDistributionType(statsData->getNeighbors_DistType(), false);
-  m_NeighborPlot->extractStatsData(m, index, qbins, statsData->getGrainSize_Neighbors());
+  m_NeighborPlot->setDistributionType(transformationStatsData->getNeighbors_DistType(), false);
+  m_NeighborPlot->extractStatsData(m, index, qbins, transformationStatsData->getGrainSize_Neighbors());
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(m, index, statsData.get());
+  m_ODFWidget->extractStatsData(m, index, transformationStatsData);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(m, index, statsData.get());
+  m_AxisODFWidget->extractStatsData(m, index, transformationStatsData);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

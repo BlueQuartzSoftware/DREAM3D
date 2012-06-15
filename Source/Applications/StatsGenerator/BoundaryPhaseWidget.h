@@ -5,11 +5,11 @@
  *      Author: mjackson
  */
 
-#ifndef MatrixPhaseWidget_H_
-#define MatrixPhaseWidget_H_
+#ifndef BoundaryPhaseWidget_H_
+#define BoundaryPhaseWidget_H_
 
 #include "SGWidget.h"
-#include "ui_MatrixPhaseWidget.h"
+#include "ui_BoundaryPhaseWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -25,14 +25,14 @@ class QwtPlotMarker;
 /*
  *
  */
-class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
+class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
 {
 
   Q_OBJECT ;
 
    public:
-     MatrixPhaseWidget(QWidget *parent = 0);
-     virtual ~MatrixPhaseWidget();
+     BoundaryPhaseWidget(QWidget *parent = 0);
+     virtual ~BoundaryPhaseWidget();
 
      void updatePlots();
 
@@ -82,8 +82,8 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
      QList<QWidget*>      m_WidgetList;
      QwtPlotGrid*         m_grid;
 
-     MatrixPhaseWidget(const MatrixPhaseWidget&); // Copy Constructor Not Implemented
-     void operator=(const MatrixPhaseWidget&); // Operator '=' Not Implemented
+     BoundaryPhaseWidget(const BoundaryPhaseWidget&); // Copy Constructor Not Implemented
+     void operator=(const BoundaryPhaseWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* MatrixPhaseWidget_H_ */
+#endif /* BoundaryPhaseWidget_H_ */
