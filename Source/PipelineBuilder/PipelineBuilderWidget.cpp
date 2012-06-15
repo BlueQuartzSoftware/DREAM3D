@@ -57,6 +57,7 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "QFilterWidget.h"
+#include "AddFavoriteWidget.h"
 
 
 // -----------------------------------------------------------------------------
@@ -171,7 +172,7 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
-  // Get the QFilterWidget Mangager Instance
+  // Get the QFilterWidget Manager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
 
   std::set<std::string> groupNames = fm->getGroupNames();
@@ -182,6 +183,10 @@ void PipelineBuilderWidget::setupGui()
   QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
   presets->setText(0, "Presets");
   presets->setExpanded(true);
+
+  favorites = new QTreeWidgetItem(filterLibraryTree);
+  favorites->setText(0, "Favorites");
+  favorites->setExpanded(true);
 
 //  std::cout << "Groups Found: " << std::endl;
   for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
@@ -663,5 +668,34 @@ void PipelineBuilderWidget::loadPreset(QStringList filterList) {
 
   for (int i=0; i< filterList.size(); i++) {
     m_PipelineViewWidget->addFilter(filterList[i]);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
+  addfavoriteDialog->exec();
+
+  QString favoriteTitle = addfavoriteDialog->getFavoriteName();
+
+  if ( addfavoriteDialog->getBtnClicked() ) {
+    QTreeWidgetItem* favName = new QTreeWidgetItem(favorites);
+    favName->setText(0, addfavoriteDialog->getFavoriteName());
+
+    
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  if (NULL != parent && parent->text(0).compare("Favorites") == 0) {
+    filterLibraryTree->removeItemWidget(item, 0);
+    delete item;
   }
 }
