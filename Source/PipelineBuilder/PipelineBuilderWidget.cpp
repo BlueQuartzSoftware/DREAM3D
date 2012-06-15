@@ -57,6 +57,7 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "QFilterWidget.h"
+#include "AddFavoriteWidget.h"
 
 
 // -----------------------------------------------------------------------------
@@ -255,11 +256,11 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   // Get the QFilterWidget Mangager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories;
-  if (item->parent() == NULL && item->text(0).compare("Library") == 0)
+  if ( item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
   }
-  else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
+  else
   {
     factories = fm->getFactories(item->text(0).toStdString());
   }
@@ -278,12 +279,13 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
+    updateFilterGroupList(factories);
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
+    updateFilterGroupList(factories);
   }
-  updateFilterGroupList(factories);
 }
 
 // -----------------------------------------------------------------------------
@@ -672,5 +674,52 @@ void PipelineBuilderWidget::loadPreset(QStringList filterList) {
 
   for (int i=0; i< filterList.size(); i++) {
     m_PipelineViewWidget->addFilter(filterList[i]);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
+  addfavoriteDialog->exec();
+
+  QString favoriteTitle = addfavoriteDialog->getFavoriteName();
+
+  if ( addfavoriteDialog->getBtnClicked() ) {
+    QTreeWidgetItem* favName = new QTreeWidgetItem(favorites);
+    favName->setText(0, addfavoriteDialog->getFavoriteName());
+
+#if 0
+#if defined (Q_OS_MAC)
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+  get the filename of the prefs
+
+  get the parent folder of the filename
+
+
+  foreach (Fav in favorites)
+  make sure folder exists
+  QString newPrefsFilePath = create a new prefs with parent path + "Favorites/" + some unique name for current favorite
+   QSettings newPrefs(newPrefPath);
+   PipelineViewWidget* copy = deepCopy();
+   writeSettings(newPrefs, copy);
+  endforeach
+#endif
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  if (NULL != parent && parent->text(0).compare("Favorites") == 0) {
+    filterLibraryTree->removeItemWidget(item, 0);
+    delete item;
   }
 }
