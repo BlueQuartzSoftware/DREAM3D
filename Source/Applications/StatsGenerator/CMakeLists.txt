@@ -65,6 +65,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/PrecipitatePhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
     )
 set (StatsGenerator_HDRS 
@@ -85,6 +86,7 @@ SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/PrecipitatePhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.h
+    ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
@@ -159,6 +161,7 @@ SET( StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/PrimaryPhaseWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/PrecipitatePhaseWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/MatrixPhaseWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/BoundaryPhaseWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/TransformationPhaseWidget.ui
 )
 cmp_IDE_GENERATED_PROPERTIES("StatsGenerator/UI_Files" "${StatsGenerator_UIS}" "")

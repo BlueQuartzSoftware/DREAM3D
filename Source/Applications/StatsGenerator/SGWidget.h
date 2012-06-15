@@ -65,7 +65,7 @@ class SGWidget : public QWidget
     virtual bool getDataHasBeenGenerated();
     virtual void extractStatsData(DataContainer::Pointer m, int index);
     virtual QString getComboString();
-    int gatherStatsData(DataContainer::Pointer m);
+    virtual int gatherStatsData(DataContainer::Pointer m);
 
 
 

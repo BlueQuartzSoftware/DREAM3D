@@ -42,8 +42,6 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
      MXA_INSTANCE_PROPERTY(unsigned int, PhaseType);
      MXA_INSTANCE_PROPERTY(float, PhaseFraction);
      MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
-     MXA_INSTANCE_PROPERTY(float, PptFraction);
-     MXA_INSTANCE_PROPERTY(unsigned int, ParentPhase);
      MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
      void extractStatsData(DataContainer::Pointer m, int index);
