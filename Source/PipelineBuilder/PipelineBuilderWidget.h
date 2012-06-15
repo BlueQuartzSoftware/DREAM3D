@@ -99,7 +99,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      * @param factories
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
-    
+
     void loadPreset(QStringList filterList);
 
 
@@ -124,6 +124,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_filterUp_clicked();
     void on_filterDown_clicked();
 #endif
+
+    void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
+    void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
+
 
   private slots:
     // slots for our worker thread to communicate

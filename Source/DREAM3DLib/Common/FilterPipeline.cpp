@@ -375,7 +375,8 @@ void FilterPipeline::execute()
       pipelineProgress(100);
       pipelineFinished();
       return;
-    }CHECK_FOR_CANCELED(DataContainer, "Pipeline was canceled", write_fielddata)
+    }
+    CHECK_FOR_CANCELED(DataContainer, "Pipeline was canceled", write_fielddata)
 
     if(DREAM3D_BENCHMARKS)
     {

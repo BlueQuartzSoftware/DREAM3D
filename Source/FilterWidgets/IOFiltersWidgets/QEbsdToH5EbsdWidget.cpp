@@ -128,6 +128,14 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {

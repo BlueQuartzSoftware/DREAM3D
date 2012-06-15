@@ -68,6 +68,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     void on_m_H5EbsdBtn_clicked();
     void on_m_H5EbsdFile_textChanged(const QString &text);
 
+    QFilterWidget* createDeepCopy();
 
   private slots:
     void phaseTypeEdited(int i);

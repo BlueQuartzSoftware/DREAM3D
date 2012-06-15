@@ -116,6 +116,13 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
   return filter;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QFilterWidget* QInitializeSyntheticVolumeWidget::createDeepCopy()
+{
+
+}
 
 // -----------------------------------------------------------------------------
 //
