@@ -102,6 +102,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void loadPreset(QStringList filterList);
 
+    PipelineViewWidget* createDeepCopy();
+
 
   protected slots:
     void on_m_GoBtn_clicked();

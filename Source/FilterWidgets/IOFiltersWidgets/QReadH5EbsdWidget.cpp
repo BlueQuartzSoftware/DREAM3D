@@ -127,7 +127,42 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
 // -----------------------------------------------------------------------------
 QFilterWidget* QReadH5EbsdWidget::createDeepCopy()
 {
+  #if 0
+  int count = phaseTypeList->count();
 
+  DataArray<unsigned int>::Pointer phaseTypes = DataArray<unsigned int>::CreateArray(count + 1, DREAM3D::EnsembleData::PhaseTypes);
+  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+
+  bool ok = false;
+  for (int i = 0; i < count; ++i)
+  {
+    QListWidgetItem* item = phaseTypeList->item(i);
+    QComboBox* cb = qobject_cast<QComboBox*>(phaseTypeList->itemWidget(item));
+    unsigned int enPtValue = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    if(enPtValue >= DREAM3D::PhaseType::UnknownPhaseType)
+    {
+      QString msg("The Phase Type for phase ");
+      msg.append(QString::number(i)).append(" is not set correctly. Please set the phase to Primary or Precipitate.");
+      QMessageBox::critical(this, QString("Grain Generator"), msg, QMessageBox::Ok | QMessageBox::Default);
+      return NULL;
+    }
+    phaseTypes->SetValue(i + 1, enPtValue);
+  }
+
+  QReadH5EbsdWidget* w = new QReadH5EbsdWidget();
+  ReadH5Ebsd::Pointer f = ReadH5Ebsd::New();
+  f->setPhaseTypes(phaseTypes);
+  w->setupQualityMetricFilters(f);
+
+  // Update the Filter with all of these values;
+  f->setH5EbsdFile(m_H5EbsdFile->text().toStdString());
+  f->setZStartIndex(m_ZStartIndex->value());
+  f->setZEndIndex(m_ZEndIndex->value());
+
+  f->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
+  return w;
+  #endif
+  return NULL;
 }
 
 // -----------------------------------------------------------------------------

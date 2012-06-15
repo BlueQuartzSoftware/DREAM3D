@@ -690,25 +690,25 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
     QTreeWidgetItem* favName = new QTreeWidgetItem(favorites);
     favName->setText(0, addfavoriteDialog->getFavoriteName());
 
-#if 0
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-  get the filename of the prefs
+    #if defined (Q_OS_MAC)
+        QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    #else
+        QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    #endif
 
-  get the parent folder of the filename
-
-
-  foreach (Fav in favorites)
-  make sure folder exists
-  QString newPrefsFilePath = create a new prefs with parent path + "Favorites/" + some unique name for current favorite
-   QSettings newPrefs(newPrefPath);
-   PipelineViewWidget* copy = deepCopy();
-   writeSettings(newPrefs, copy);
-  endforeach
-#endif
+    QString prefFile = prefs.fileName();
+    QFileInfo prefFileInfo = QFileInfo(prefFile);
+    QString parentPath = prefFileInfo.path();
+    QDir parentPathDir = QDir(parentPath);
+  
+    for (int i=1; i<=favorites->childCount(); i++) {
+      if ( parentPathDir.mkpath(parentPath) ) {
+        QString newPrefPath = parentPath + "Favorites/favorite" + i;
+        QSettings newPrefs(newPrefPath);
+        PipelineViewWidget* copy = createDeepCopy();
+        writeSettings(newPrefs, copy);
+      }
+    }
   }
 }
 
@@ -722,4 +722,12 @@ void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
     filterLibraryTree->removeItemWidget(item, 0);
     delete item;
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PipelineViewWidget* PipelineBuilderWidget::createDeepCopy() {
+  PipelineViewWidget* widget = new PipelineViewWidget;
+  return widget;
 }
