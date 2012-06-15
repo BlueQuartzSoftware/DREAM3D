@@ -206,15 +206,18 @@ int DxWriter::writeFile()
   out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << std::endl;
 
   // Add a complete layer of surface voxels
+  size_t rnIndex = 1;
   if(m_AddSurfaceLayer)
   {
     for (int i = 0; i < (fileXDim * fileYDim); ++i)
     {
       out << "-3 ";
-      if(i % fileXDim == 0)
+      if(rnIndex == 20)
       {
+        rnIndex = 0;
         out << std::endl;
       }
+      rnIndex++;
     }
   }
 
@@ -271,13 +274,16 @@ int DxWriter::writeFile()
   // Add a complete layer of surface voxels
   if(m_AddSurfaceLayer)
   {
+    rnIndex = 1;
     for (int i = 0; i < (fileXDim * fileYDim); ++i)
     {
       out << "-8 ";
-      if(i % fileXDim == 0)
+      if(rnIndex == 20)
       {
         out << std::endl;
+        rnIndex = 0;
       }
+      rnIndex++;
     }
   }
   out << std::endl;
