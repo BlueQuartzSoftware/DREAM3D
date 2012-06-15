@@ -99,8 +99,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      * @param factories
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
-
+    
     void loadPreset(QStringList filterList);
+
 
 
   protected slots:
@@ -115,9 +116,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
     void on_filterList_currentItemChanged( QListWidgetItem * item, QListWidgetItem * previous );
 
-    void on_addFavoriteBtn_clicked();
-    void on_removeFavoriteBtn_clicked();
-
 
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
@@ -126,10 +124,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_filterUp_clicked();
     void on_filterDown_clicked();
 #endif
-
-    void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
-    void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
-
 
   private slots:
     // slots for our worker thread to communicate
@@ -149,7 +143,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
     QMap<QString,QStringList>   Fmap;
-    QTreeWidgetItem*            favorites;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented
