@@ -57,6 +57,7 @@ set (PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.h  
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
+	${PROJECT_SOURCE_DIR}/AddFavoriteWidget.h
     )
     
 set (PipelineBuilderLib_SRCS 
@@ -64,6 +65,7 @@ set (PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.cpp
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
+	${PROJECT_SOURCE_DIR}/AddFavoriteWidget.cpp
     )
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")
@@ -73,7 +75,9 @@ cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${
 QT4_ADD_RESOURCES( PipelineBuilderLib_Generated_RC_SRCS ""  )
     
 QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS 
-            ${PROJECT_SOURCE_DIR}/UI_Files/PipelineBuilderWidget.ui)
+            ${PROJECT_SOURCE_DIR}/UI_Files/PipelineBuilderWidget.ui
+			${PROJECT_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
+			)
 
 QT4_WRAP_CPP( PipelineBuilderLib_Generated_MOC_SRCS ${PipelineBuilderLib_HDRS} )
 #set_source_files_properties( ${PipelineBuilderLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
