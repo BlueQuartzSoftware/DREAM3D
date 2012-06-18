@@ -103,6 +103,13 @@ echo "export CMAKE_INSTALL=$SDK_INSTALL/cmake-2.8.6" >  $SDK_INSTALL/initvars.sh
 echo "export PATH=\$CMAKE_INSTALL/bin:\$PATH" >>  $SDK_INSTALL/initvars.sh
 fi
 
+#------------------------------------------------------------------------------
+cd $SDK_SOURCE
+# Remove any previous Qwt
+#rm -rf Qwt
+git clone ssh://code@scm.bluequartz.net/CMP.git CMP
+
+
 if [ "$BUILD_MXABOOST" == "1" ]
 then
 #------------------------------------------------------------------------------
