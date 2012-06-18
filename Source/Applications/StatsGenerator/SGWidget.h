@@ -74,11 +74,11 @@ class SGWidget : public QWidget
     virtual int gatherStatsData(DataContainer::Pointer m);
 
    public slots:
-     void on_m_GenerateDefaultData_clicked();
+     virtual void on_m_GenerateDefaultData_clicked();
 
    protected slots:
 
-     void dataWasEdited();
+     virtual void dataWasEdited();
 
   protected:
 
