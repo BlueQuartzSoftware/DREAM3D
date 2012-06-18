@@ -128,6 +128,37 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
+{
+  #if 0
+  QFilterWidget* w = new QFilterWidget();
+
+  bool ok = false;
+  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
+
+
+  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+    .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+    .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+  m_GeneratedFileNameExample->setText(filename);
+
+  int start = m_ZStartIndex->value();
+  int end = m_ZEndIndex->value();
+  bool hasMissingFiles = false;
+
+  // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+
+  w->setEbsdFileList(fileList);
+
+  return w;
+  #endif
+  return NULL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {

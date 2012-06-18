@@ -94,6 +94,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
      */
     virtual void setupGui();
 
+    QFilterWidget* createDeepCopy();
 
     virtual void checkIOFiles();
 

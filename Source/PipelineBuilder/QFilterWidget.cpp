@@ -91,6 +91,15 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QFilterWidget* QFilterWidget::createDeepCopy()
+{
+  QFilterWidget* widget = new QFilterWidget();
+  return widget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterWidget::setBorderColorStyle(QString s)
 {
   m_BorderColorStyle = s;

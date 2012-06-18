@@ -69,12 +69,13 @@ class CropVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, XMax)
     DREAM3D_INSTANCE_PROPERTY(int, YMax)
     DREAM3D_INSTANCE_PROPERTY(int, ZMax)
+    DREAM3D_INSTANCE_PROPERTY(bool, RenumberGrains)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const std::string getHumanLabel() { return "Crop Volume"; }
 
-	virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterOptions();
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 	/**
      * @brief Reimplemented from @see AbstractFilter class

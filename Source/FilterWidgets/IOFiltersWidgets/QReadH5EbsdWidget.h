@@ -55,7 +55,11 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
-
+      /**
+     * @brief
+     * @param r
+     */
+    void setupQualityMetricFilters(ReadH5Ebsd::Pointer filter);
   protected slots:
 
     void on_addQualityMetric_clicked();
@@ -68,6 +72,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     void on_m_H5EbsdBtn_clicked();
     void on_m_H5EbsdFile_textChanged(const QString &text);
 
+    QFilterWidget* createDeepCopy();
 
   private slots:
     void phaseTypeEdited(int i);
@@ -89,11 +94,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
      */
     bool checkPhaseTypes();
 
-    /**
-     * @brief
-     * @param r
-     */
-    void setupQualityMetricFilters(ReadH5Ebsd::Pointer filter);
+
 
     QReadH5EbsdWidget(const QReadH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const QReadH5EbsdWidget&); // Operator '=' Not Implemented

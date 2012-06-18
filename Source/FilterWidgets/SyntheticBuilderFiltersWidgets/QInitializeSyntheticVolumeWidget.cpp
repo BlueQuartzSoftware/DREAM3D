@@ -117,6 +117,41 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
   return filter;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QFilterWidget* QInitializeSyntheticVolumeWidget::createDeepCopy()
+{
+  #if 0
+  QFilterWidget* w = new QFilterWidget();
+
+  // Update the filter with the latest values from the GUI
+
+  w->setInputFile(m_InputFile->text().toStdString());
+  w->setXVoxels(m_XPoints->value());
+  w->setYVoxels(m_YPoints->value());
+  w->setZVoxels(m_ZPoints->value());
+  w->setXRes(m_XResolution->value());
+  w->setYRes(m_YResolution->value());
+  w->setZRes(m_ZResolution->value());
+
+  int count = m_ShapeTypeCombos.count();
+  DataArray<unsigned int>::Pointer shapeTypes =
+    DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
+  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  bool ok = false;
+  for (int i = 0; i < count; ++i)
+  {
+    QComboBox* cb = m_ShapeTypeCombos.at(i);
+    unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+    shapeTypes->SetValue(i+1, sType);
+  }
+  w->setShapeTypes(shapeTypes);
+
+  return w;
+  #endif
+  return NULL;
+}
 
 // -----------------------------------------------------------------------------
 //

@@ -42,8 +42,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-
-//#include "DREAM3DLib/HDF5/H5VoxelReader.h"
+#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -55,7 +54,8 @@ m_YMin(0),
 m_ZMin(0),
 m_XMax(0),
 m_YMax(0),
-m_ZMax(0)
+m_ZMax(0),
+m_RenumberGrains(false)
 {
   setupFilterOptions();
 }
@@ -121,6 +121,14 @@ void CropVolume::setupFilterOptions()
     option->setValueType("int");
     options.push_back(option);
   }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Renumber Grains");
+    option->setPropertyName("RenumberGrains");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
   setFilterOptions(options);
 }
 // -----------------------------------------------------------------------------
@@ -132,6 +140,7 @@ void CropVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
   writer->writeValue("XMax", getXMax() );
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
+  writer->writeValue("RenumberGrains", getRenumberGrains() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -230,5 +239,39 @@ void CropVolume::execute()
     IDataArray::Pointer p = m->getCellData(*iter);
     err = p->Resize(totalPoints);
   }
-  notify("Cropping Volume Complete", 0, Observable::UpdateProgressValueAndMessage);
+
+  if (m_RenumberGrains == true)
+  {
+    std::string m_GrainIdsArrayName(DREAM3D::CellData::GrainIds);
+    std::stringstream ss;
+    int32_t* m_GrainIds = NULL;
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, totalPoints, 1);
+
+    // Find the unique set of grain ids
+    std::set<int32_t> grainIdSet;
+    for (int64_t i = 0; i < totalPoints; ++i)
+    {
+      grainIdSet.insert(m_GrainIds[i]);
+    }
+
+    size_t fields = grainIdSet.size();
+    bool* m_Active;
+    std::string m_ActiveArrayName(DREAM3D::FieldData::Active);
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+    for (size_t i = 0; i < fields; ++i)
+    {
+      m_Active[i] = true;
+    }
+
+    RenumberGrains::Pointer renum = RenumberGrains::New();
+    renum->setDataContainer(m);
+    renum->setObservers(getObservers());
+    renum->execute();
+    setErrorCondition(renum->getErrorCondition());
+    setErrorMessage(renum->getErrorMessage());
+  }
+
+
+  notify("Completed", 0, Observable::UpdateProgressMessage);
 }
+
