@@ -57,7 +57,7 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "QFilterWidget.h"
-
+#include "AddFavoriteWidget.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -251,8 +251,9 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
-    factories = fm->getFactories(item->text(0).toStdString());
+    factories = fm->getFactories();
   }
+
 
   updateFilterGroupList(factories);
 }
@@ -663,4 +664,32 @@ void PipelineBuilderWidget::loadPreset(QStringList filterList) {
   for (int i=0; i< filterList.size(); i++) {
     m_PipelineViewWidget->addFilter(filterList[i]);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_addFavoriteBtn_clicked()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  if (NULL != parent && parent->text(0).compare("Favorites") == 0) {
+    filterLibraryTree->removeItemWidget(item, 0);
+    delete item;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PipelineViewWidget* PipelineBuilderWidget::createDeepCopy() {
+  PipelineViewWidget* widget = new PipelineViewWidget;
+  return widget;
 }
