@@ -110,6 +110,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void emitParametersChanged();
 
+    virtual QFilterWidget* createDeepCopy();
+
   signals:
     void dragStarted(QFilterWidget* widget);
     void parametersChanged();

@@ -154,7 +154,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "    virtual AbstractFilter::Pointer getFilter();\n");
   fprintf(f, "    void writeOptions(QSettings &prefs);\n");
   fprintf(f, "    void readOptions(QSettings &prefs);\n\n");
-
+  fprintf(f, "    QFilterWidget* createDeepCopy();\n\n");
 
 
  // Loop on all the filter options
@@ -526,6 +526,25 @@ void createSourceFile( const std::string &group, const std::string &filter)
    fprintf(f, "  return filter;\n");
    fprintf(f, "}\n");
 
+   fprintf(f, "// -----------------------------------------------------------------------------\n");
+   fprintf(f, "QFilterWidget* Q%sWidget::createDeepCopy() \n{\n", filter.c_str());
+   fprintf(f, "  Q%sWidget* w = new Q%sWidget(NULL);\n", filter.c_str(), filter.c_str());
+   for(size_t i = 0; i < options.size(); ++i)
+   {
+     FilterOption::Pointer opt = options[i];
+     std::string prop = opt->getPropertyName();
+     std::string typ = opt->getValueType();
+     if (opt->getValueType().compare("string") == 0)
+     {
+       fprintf(f, "  w->set%s( get%s() );\n", prop.c_str(), prop.c_str());
+     }
+     else
+     {
+       fprintf(f, "  w->set%s( get%s() );\n", prop.c_str(), prop.c_str());
+     }
+   }
+   fprintf(f, "  return w;\n");
+   fprintf(f, "}\n");
 
 
   // Loop on all the filter options
