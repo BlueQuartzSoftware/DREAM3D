@@ -99,8 +99,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      * @param factories
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
-    
+
     void loadPreset(QStringList filterList);
+
+    PipelineViewWidget* createDeepCopy();
 
 
 
@@ -119,6 +121,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
+
+    void on_addFavoriteBtn_clicked();
+    void on_removeFavoriteBtn_clicked();
 
 #if 0
     void on_filterUp_clicked();

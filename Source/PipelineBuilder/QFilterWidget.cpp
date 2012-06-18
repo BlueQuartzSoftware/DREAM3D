@@ -93,7 +93,8 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 QFilterWidget* QFilterWidget::createDeepCopy()
 {
-
+  QFilterWidget* widget = new QFilterWidget();
+  return widget;
 }
 
 // -----------------------------------------------------------------------------
