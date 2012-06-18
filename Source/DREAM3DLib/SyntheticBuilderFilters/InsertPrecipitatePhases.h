@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     void place_precipitates();
     void initialize_packinggrid();
 
-	static void generate_precipitate(int phase, int Seed, Precip* precip, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+	void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
 
     void transfer_attributes(int gnum, Precip* precip);
     void insert_precipitate(size_t grainNum);

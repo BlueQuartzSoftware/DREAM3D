@@ -50,6 +50,7 @@
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/Common/PrimaryStatsData.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
@@ -403,14 +404,12 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType->GetNumberOfTuples(); ++i)
   {
-    if (phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+    if (phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase && pp != NULL)
     {
       primaryphases.push_back(i);
-      statsData = statsDataArray[i];
-      if (NULL != statsData.get()) {
-        primaryphasefractions.push_back(statsData->getPhaseFraction());
-        totalprimaryfractions = totalprimaryfractions + statsData->getPhaseFraction();
-      }
+        primaryphasefractions.push_back(pp->getPhaseFraction());
+        totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
     }
   }
   // scale the primary phase fractions to total to 1
@@ -436,22 +435,19 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 	{
 	    volgood = 0;
 	    phase = primaryphases[j];
-	    if (phase >= 0 && phase < statsDataArray.GetNumberOfTuples())
-	    {statsData = statsDataArray[phase];}
-	    else
-	    {statsData = StatsData::NullPointer();}
-	    while (volgood == 0)
+		PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+		while (volgood == 0)
 	    {
 	      volgood = 1;
 	     // u = rg.genrand_res53();
-	      if (statsDataArray[phase]->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
+	      if (pp->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
 	      {
-	        float avgdiam = statsDataArray[phase]->getGrainSizeDistribution().at(0)->GetValue(0);
-	        float sddiam = statsDataArray[phase]->getGrainSizeDistribution().at(1)->GetValue(0);
+	        float avgdiam = pp->getGrainSizeDistribution().at(0)->GetValue(0);
+	        float sddiam = pp->getGrainSizeDistribution().at(1)->GetValue(0);
 	        diam = rg.genrand_norm(avgdiam, sddiam);
 	        diam = exp(diam);
-	        if(diam >= statsDataArray[phase]->getMaxGrainDiameter()) volgood = 0;
-	        if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
+	        if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
+	        if(diam < pp->getMinGrainDiameter()) volgood = 0;
 	        vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
 	      }
 	    }
