@@ -76,7 +76,6 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find ODF"; }
@@ -104,7 +103,6 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     bool* m_SurfaceFields;
 
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
 	StatsDataArray* m_StatsDataArray;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

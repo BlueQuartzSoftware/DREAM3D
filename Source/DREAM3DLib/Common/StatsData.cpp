@@ -122,7 +122,33 @@ FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributio
 // -----------------------------------------------------------------------------
 void StatsData::initialize()
 {
+  m_GrainSize_DistType = DREAM3D::DistributionType::LogNormal;
+  m_BOverA_DistType = DREAM3D::DistributionType::Beta;
+  m_COverA_DistType = DREAM3D::DistributionType::Beta;
+  m_Neighbors_DistType = DREAM3D::DistributionType::LogNormal;
+  m_Omegas_DistType = DREAM3D::DistributionType::Beta;
+}
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FloatArrayType::Pointer StatsData::generateBinNumbers()
+{
+  float grainDiameterInfo[3];
+  getGrainDiameterInfo(grainDiameterInfo);
+  std::vector<float> bins;
+  float d = grainDiameterInfo[2];
+  while (d <= grainDiameterInfo[1])
+  {
+  //  std::cout << d << std::endl;
+    bins.push_back(d);
+    d = d + grainDiameterInfo[0];
+  }
+  // Copy this into the DataArray<float>
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size(),DREAM3D::HDF5::BinNumber );
+  ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
+  return m_BinNumbers;
 }
 
 // -----------------------------------------------------------------------------
@@ -131,6 +157,8 @@ void StatsData::initialize()
 int StatsData::writeHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5StatsDataDelegate::Pointer writer = H5StatsDataDelegate::New();
+  err = writer->writeStatsData(this, groupId);
   return err;
 }
 
@@ -141,5 +169,7 @@ int StatsData::writeHDF5Data(hid_t groupId)
 int StatsData::readHDF5Data(hid_t groupId)
 {
   int err = 0;
+  H5StatsDataDelegate::Pointer reader = H5StatsDataDelegate::New();
+  err = reader->readStatsData(this, groupId);
   return err;
 }

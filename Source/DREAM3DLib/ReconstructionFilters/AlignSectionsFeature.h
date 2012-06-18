@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
   public:
     DREAM3D_SHARED_POINTERS(AlignSectionsFeature)
     DREAM3D_STATIC_NEW_MACRO(AlignSectionsFeature)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeature, AlignSections)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeature, AbstractFilter)
 
     virtual ~AlignSectionsFeature();
 

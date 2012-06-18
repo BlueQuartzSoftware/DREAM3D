@@ -35,11 +35,6 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrimaryStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrecipitateStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/TransformationStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixStatsData.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/BoundaryStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
@@ -66,11 +61,6 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrimaryStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/PrecipitateStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/TransformationStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixStatsData.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/BoundaryStatsData.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp

@@ -37,7 +37,7 @@
 #define SGWIDGET_H_
 
 #include <QtGui/QWidget>
-
+#include "ui_SGWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
@@ -53,7 +53,7 @@ class QwtPlotMarker;
 /*
  *
  */
-class SGWidget : public QWidget
+class SGWidget : public QWidget, private Ui::SGWidget
 {
 
   Q_OBJECT ;
@@ -62,29 +62,84 @@ class SGWidget : public QWidget
     SGWidget(QWidget *parent = 0);
     virtual ~SGWidget();
 
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
+    void updatePlots();
 
-    virtual void extractStatsData(DataContainer::Pointer m, int index);
-    virtual QString getComboString();
-    virtual int gatherStatsData(DataContainer::Pointer m);
+    void setPhaseIndex(int index);
+    int getPhaseIndex();
 
-   public slots:
-     virtual void on_m_GenerateDefaultData_clicked();
+    MXA_INSTANCE_PROPERTY(unsigned int, PhaseType);
+    MXA_INSTANCE_PROPERTY(float, PhaseFraction);
+    MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
+    MXA_INSTANCE_PROPERTY(float, PptFraction);
+    MXA_INSTANCE_PROPERTY(unsigned int, ParentPhase);
+    MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
-   protected slots:
+    void extractStatsData(DataContainer::Pointer m, int index);
 
-     virtual void dataWasEdited();
+    void setCrystalStructure(unsigned int xtal);
+    unsigned int getCrystalStructure();
 
+    void plotSizeDistribution();
+    void updateSizeDistributionPlot();
+    int computeBinsAndCutOffs( float mu, float sigma,
+                               float minCutOff, float maxCutOff,
+                               float binStepSize,
+                               QwtArray<float> &binsizes,
+                               QwtArray<float> &xCo,
+                               QwtArray<float> &yCo,
+                               float &xMax, float &yMax,
+                               QwtArray<float> &x,
+                               QwtArray<float> &y);
+
+    QString getComboString();
+
+    void calculateNumberOfBins();
+    int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
+    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
+
+    int gatherStatsData(DataContainer::Pointer m);
+
+  public slots:
+    void on_m_GenerateDefaultData_clicked();
+
+  protected slots:
+
+    void on_m_Mu_SizeDistribution_textChanged(const QString &text);
+    void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
+    void on_m_MinSigmaCutOff_textChanged(const QString &text);
+    void on_m_MaxSigmaCutOff_textChanged(const QString &text);
+    void on_m_BinStepSize_valueChanged(double v);
+
+    void on_microstructurePresetCombo_currentIndexChanged(int index);
+
+
+    void dataWasEdited();
   protected:
 
+    /**
+     * @brief Enables or Disables all the widgets in a list
+     * @param b
+     */
+    void setWidgetListEnabled(bool b);
+
+    void setupGui();
+
+    /**
+     * @brief Enables or disables the various PlotWidgetTabs
+     * @param b Enable or disable the plotwidgets
+     */
+    void setTabsPlotTabsEnabled(bool b);
 
   private:
+    int                  m_PhaseIndex;
+    unsigned int  m_CrystalStructure;
 
+    QList<QWidget*>      m_WidgetList;
+    QwtPlotCurve*        m_SizeDistributionCurve;
+    QwtPlotMarker*       m_CutOffMin;
+    QwtPlotMarker*       m_CutOffMax;
+    QwtPlotGrid*         m_grid;
+    AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented
     void operator=(const SGWidget&); // Operator '=' Not Implemented
