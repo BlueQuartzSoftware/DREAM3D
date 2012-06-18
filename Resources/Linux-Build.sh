@@ -103,7 +103,7 @@ fi
 
 #------------------------------------------------------------------------------
 cd $SDK_SOURCE
-git clone ssh://code@scm.bluequartz.net/CMP.git CMP
+git clone git://scm.bluequartz.net/CMP.git CMP
 
 
 if [ "$BUILD_MXABOOST" == "1" ];
@@ -128,21 +128,28 @@ fi
 if [ "$BUILD_HDF5" == "1" ];
 then
 # Build the HDF5 libraries we need and set our Environment Variable.
-cd $sourcedir
+cd $SDK_SOURCE
+if [ ! -e "$SDK_SOURCE/hdf5-1.8.9.tar.gz" ];
+then
 $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.9.tar.gz" -o hdf5-1.8.9.tar.gz
+fi
+
+if [ ! -e "$SDK_SOURCE/hdf5-1.8.9" ];
+then
 tar -xvzf hdf5-1.8.9.tar.gz
+fi
 # We assume we already have downloaded the source for HDF5 Version 1.8.7 and have it in a folder
-# called hdf5-187
+# called hdf5-189
 cd hdf5-1.8.9
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-188 -DCMAKE_BUILD_TYPE=Debug  -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-189 -DCMAKE_BUILD_TYPE=Debug  -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j$makeJobs
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-188 -DCMAKE_BUILD_TYPE=Release   -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-189 -DCMAKE_BUILD_TYPE=Release   -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j$makeJobs
 make install
 export HDF5_INSTALL=$SDK_INSTALL/hdf5-189
@@ -178,9 +185,12 @@ export QWT_INSTALL=$SDK_INSTALL/Qwt
 echo "export QWT_INSTALL=$SDK_INSTALL/Qwt" >> $SDK_INSTALL/initvars.sh
 fi
 
-
-git clone --recursive ssh://code@scm.bluequartz.net/DREAM3D.git
+cd $SDK_SOURCE
+git clone  ssh://code@scm.bluequartz.net/DREAM3D.git
 cd DREAM3D
+git fetch
+git checkout b1
+git pull origin b1
 mkdir Build
 cd Build
 cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=OFF ../
