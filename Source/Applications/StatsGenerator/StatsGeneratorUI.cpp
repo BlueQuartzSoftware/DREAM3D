@@ -798,10 +798,33 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   for(int i = 0; i < nPhases; ++i)
   {
-    StatsData::Pointer data = StatsData::New();
-    statsDataArray->setStatsData(i+1, data);
     SGWidget* sgwidget = m_SGWidgets[i];
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+	{
+	    PrimaryStatsData::Pointer data = PrimaryStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+	    PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+	{
+	    TransformationStatsData::Pointer data = TransformationStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+	{
+	    MatrixStatsData::Pointer data = MatrixStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+	{
+	    BoundaryStatsData::Pointer data = BoundaryStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
     err = sgwidget->gatherStatsData(m);
     if (err < 0)
     {
