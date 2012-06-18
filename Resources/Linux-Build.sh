@@ -129,30 +129,30 @@ if [ "$BUILD_HDF5" == "1" ];
 then
 # Build the HDF5 libraries we need and set our Environment Variable.
 cd $SDK_SOURCE
-if [ ! -e "$SDK_SOURCE/hdf5-1.8.9.tar.gz" ];
+if [ ! -e "$SDK_SOURCE/hdf5-1.8.8.tar.gz" ];
 then
-$DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.9.tar.gz" -o hdf5-1.8.9.tar.gz
+$DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/prev-releases/hdf5-1.8.8/src/hdf5-1.8.8.tar.gz" -o hdf5-1.8.8.tar.gz
 fi
 
-if [ ! -e "$SDK_SOURCE/hdf5-1.8.9" ];
+if [ ! -e "$SDK_SOURCE/hdf5-1.8.8" ];
 then
-tar -xvzf hdf5-1.8.9.tar.gz
+tar -xvzf hdf5-1.8.8.tar.gz
 fi
 # We assume we already have downloaded the source for HDF5 Version 1.8.7 and have it in a folder
-# called hdf5-189
-cd hdf5-1.8.9
+# called hdf5-188
+cd hdf5-1.8.8
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-189 -DCMAKE_BUILD_TYPE=Debug  -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-188 -DCMAKE_BUILD_TYPE=Debug  -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j$makeJobs
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-189 -DCMAKE_BUILD_TYPE=Release   -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-188 -DCMAKE_BUILD_TYPE=Release   -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j$makeJobs
 make install
-export HDF5_INSTALL=$SDK_INSTALL/hdf5-189
+export HDF5_INSTALL=$SDK_INSTALL/hdf5-188
 fi
 
 if [ "$BUILD_QWT" = "1" ];
