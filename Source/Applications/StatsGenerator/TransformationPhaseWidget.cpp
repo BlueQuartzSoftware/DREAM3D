@@ -817,10 +817,10 @@ int TransformationPhaseWidget::gatherStatsData(DataContainer::Pointer m)
 
 
   //err = m_ODFWidget->writeDataToHDF5(writer);
-  m_ODFWidget->getOrientationData(statsData);
+  m_ODFWidget->getOrientationData(transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
 
 
-  err = m_AxisODFWidget->getOrientationData(statsData);
+  err = m_AxisODFWidget->getOrientationData(transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
 
   return retErr;
 }
@@ -935,10 +935,10 @@ void TransformationPhaseWidget::extractStatsData(DataContainer::Pointer m, int i
 
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(m, index, transformationStatsData);
+  m_ODFWidget->extractStatsData(m, index, transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(m, index, transformationStatsData);
+  m_AxisODFWidget->extractStatsData(m, index, transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

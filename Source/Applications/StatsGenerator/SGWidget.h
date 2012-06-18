@@ -62,12 +62,21 @@ class SGWidget : public QWidget
     SGWidget(QWidget *parent = 0);
     virtual ~SGWidget();
 
-    virtual bool getDataHasBeenGenerated();
+     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType);
+     MXA_INSTANCE_PROPERTY(float, PhaseFraction);
+     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
+     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
+
     virtual void extractStatsData(DataContainer::Pointer m, int index);
     virtual QString getComboString();
     virtual int gatherStatsData(DataContainer::Pointer m);
 
+   public slots:
+     void on_m_GenerateDefaultData_clicked();
 
+   protected slots:
+
+     void dataWasEdited();
 
   protected:
 

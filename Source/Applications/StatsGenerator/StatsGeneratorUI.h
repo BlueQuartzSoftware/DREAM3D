@@ -43,6 +43,11 @@
 #include <QtGui/QMainWindow>
 
 #include "SGWidget.h"
+#include "PrimaryPhaseWidget.h"
+#include "PrecipitatePhaseWidget.h"
+#include "MatrixPhaseWidget.h"
+#include "BoundaryPhaseWidget.h"
+#include "TransformationPhaseWidget.h"
 
 class HelpDialog;
 

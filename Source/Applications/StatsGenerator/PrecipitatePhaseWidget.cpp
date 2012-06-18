@@ -817,10 +817,10 @@ int PrecipitatePhaseWidget::gatherStatsData(DataContainer::Pointer m)
 
 
   //err = m_ODFWidget->writeDataToHDF5(writer);
-  m_ODFWidget->getOrientationData(statsData);
+  m_ODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
 
 
-  err = m_AxisODFWidget->getOrientationData(statsData);
+  err = m_AxisODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
 
   return retErr;
 }
@@ -935,10 +935,10 @@ void PrecipitatePhaseWidget::extractStatsData(DataContainer::Pointer m, int inde
 
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(m, index, precipitateStatsData);
+  m_ODFWidget->extractStatsData(m, index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(m, index, precipitateStatsData);
+  m_AxisODFWidget->extractStatsData(m, index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
