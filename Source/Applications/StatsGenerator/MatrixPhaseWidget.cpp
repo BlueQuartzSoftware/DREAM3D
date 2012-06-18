@@ -96,7 +96,7 @@ SGWidget(parent),
 m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
-m_DataHasBeenGenerated(false),
+m_DataHasBeenGenerated(true),
 m_PhaseIndex(0),
 m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
 m_grid(NULL)
@@ -247,7 +247,7 @@ void MatrixPhaseWidget::extractStatsData(DataContainer::Pointer m, int index)
 // -----------------------------------------------------------------------------
 void MatrixPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
-
+  m_DataHasBeenGenerated = true;
 }
 // -----------------------------------------------------------------------------
 //

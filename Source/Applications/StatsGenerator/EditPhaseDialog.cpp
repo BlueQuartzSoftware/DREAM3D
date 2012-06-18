@@ -163,6 +163,10 @@ void EditPhaseDialog::setupGui()
   m_PptFractionValidator->setBottom(0.0);
   m_PptFractionValidator->setTop(1.0);
   m_PptFractionValidator->setDecimals(6);
+  if(m_EditFlag == true) phaseTypeCombo->setEnabled(false);
+  if(m_EditFlag == false) phaseTypeCombo->setEnabled(true);
+  if(m_EditFlag == true) phaseTypeComboLabel->setEnabled(false);
+  if(m_EditFlag == false) phaseTypeComboLabel->setEnabled(true);
   pptFraction->setEnabled(false);
   ParentPhase->setEnabled(false);
   pptFractionLabel->setEnabled(false);
@@ -192,6 +196,14 @@ void EditPhaseDialog::setOtherPhaseFractionTotal(float t)
 {
   m_OtherPhaseFractions = t;
   on_phaseFraction_textChanged(QString());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setEditFlag(bool flag)
+{
+  m_EditFlag = flag;
 }
 
 // -----------------------------------------------------------------------------

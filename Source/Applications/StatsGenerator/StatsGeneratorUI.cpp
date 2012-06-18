@@ -248,6 +248,7 @@ void StatsGeneratorUI::on_addPhase_clicked()
   }
 
   EditPhaseDialog dialog;
+  dialog.setEditFlag(false);
   dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
   int r = dialog.exec();
   if (r == QDialog::Accepted)
@@ -342,6 +343,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
 {
   double phaseFractionTotal = 0.0;
   EditPhaseDialog dialog;
+  dialog.setEditFlag(true);
   for(int p = 0; p < m_SGWidgets.size(); ++p)
   {
     if (m_SGWidget != m_SGWidgets[p]) 
