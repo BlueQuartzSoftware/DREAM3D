@@ -52,8 +52,6 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_PhaseTypes(NULL),
 m_AvgQuats(NULL),
 m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
@@ -140,17 +138,12 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -303,  float, FloatArrayType, ensembles, 1);
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	StatsDataArray::Pointer p = StatsDataArray::New();
-	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    setErrorCondition(-308);
   }
-
 
   setErrorMessage(ss.str());
 }
@@ -273,21 +266,7 @@ void FindMDF::execute()
  // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setMisorientationBins(misobin[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setMisorientationBins(misobin[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  tp->setMisorientationBins(misobin[i]);
-	  }
+	  statsDataArray[i]->setMisorientationBins(misobin[i]);
   }
 
   notify("FindMDF Completed", 0, Observable::UpdateProgressMessage);

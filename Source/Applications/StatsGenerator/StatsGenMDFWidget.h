@@ -45,9 +45,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-#include "DREAM3DLib/Common/TransformationStatsData.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 
@@ -77,8 +74,8 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
     DREAM3D_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
 
-    int getMisorientationData(StatsData* statsData, unsigned int phaseType);
-    void extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);
+    int getMisorientationData(StatsData::Pointer statsData);
+    void extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData);
 
     std::vector<float> generateODFData();
 
