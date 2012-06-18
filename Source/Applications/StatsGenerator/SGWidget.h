@@ -62,12 +62,12 @@ class SGWidget : public QWidget
     SGWidget(QWidget *parent = 0);
     virtual ~SGWidget();
 
-     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType);
-     MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
-     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
-     MXA_INSTANCE_PROPERTY(float, PhaseFraction);
-     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
-     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType);
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex);
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction);
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction);
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
     virtual void extractStatsData(DataContainer::Pointer m, int index);
     virtual QString getComboString();
