@@ -75,6 +75,8 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
@@ -108,6 +110,7 @@ private:
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
 
+    unsigned int* m_PhaseTypes;
 	StatsDataArray* m_StatsDataArray;
 
 	std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
