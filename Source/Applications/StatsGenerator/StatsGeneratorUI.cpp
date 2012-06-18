@@ -248,7 +248,7 @@ void StatsGeneratorUI::on_addPhase_clicked()
   }
 
   EditPhaseDialog dialog;
-  dialog.setEditFlag(false);
+  dialog.setEditFlag(true);
   dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
   int r = dialog.exec();
   if (r == QDialog::Accepted)
@@ -343,7 +343,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
 {
   double phaseFractionTotal = 0.0;
   EditPhaseDialog dialog;
-  dialog.setEditFlag(true);
+  dialog.setEditFlag(false);
   for(int p = 0; p < m_SGWidgets.size(); ++p)
   {
     if (m_SGWidget != m_SGWidgets[p]) 
@@ -798,10 +798,33 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   for(int i = 0; i < nPhases; ++i)
   {
-    StatsData::Pointer data = StatsData::New();
-    statsDataArray->setStatsData(i+1, data);
     SGWidget* sgwidget = m_SGWidgets[i];
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+	{
+	    PrimaryStatsData::Pointer data = PrimaryStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+	    PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+	{
+	    TransformationStatsData::Pointer data = TransformationStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+	{
+	    MatrixStatsData::Pointer data = MatrixStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+	{
+	    BoundaryStatsData::Pointer data = BoundaryStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
     err = sgwidget->gatherStatsData(m);
     if (err < 0)
     {

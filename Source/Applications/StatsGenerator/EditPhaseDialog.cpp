@@ -204,6 +204,7 @@ void EditPhaseDialog::setOtherPhaseFractionTotal(float t)
 void EditPhaseDialog::setEditFlag(bool flag)
 {
   m_EditFlag = flag;
+  phaseTypeCombo->setEnabled(flag);
 }
 
 // -----------------------------------------------------------------------------
