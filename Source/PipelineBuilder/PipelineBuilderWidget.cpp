@@ -59,7 +59,6 @@
 #include "QFilterWidget.h"
 #include "AddFavoriteWidget.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -86,18 +85,11 @@ PipelineBuilderWidget::~PipelineBuilderWidget()
 {
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs)
-{
-  readSettings(prefs, m_PipelineViewWidget);
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
+void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
   // Clear Any Existing Pipeline
   m_PipelineViewWidget->clearWidgets();
@@ -119,30 +111,25 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
 
     QString filterName = prefs.value("Filter_Name", "").toString();
 
-    QFilterWidget* w = viewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+    QFilterWidget* w = m_PipelineViewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
     if(w) {
       w->blockSignals(true);
       w->readOptions(prefs);
       w->blockSignals(false);
       w->emitParametersChanged();
     }
+
     prefs.endGroup();
   }
   m_PipelineViewWidget->preflightPipeline();
+
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::writeSettings(QSettings &prefs)
-{
-  writeSettings(prefs, m_PipelineViewWidget);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
 {
   prefs.beginGroup("PipelineBuilder");
 
@@ -154,7 +141,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
 
   for(qint32 i = 0; i < count; ++i)
   {
-    QFilterWidget* fw = viewWidget->filterWidgetAt(i);
+    QFilterWidget* fw = m_PipelineViewWidget->filterWidgetAt(i);
     if (fw)
     {
       //QString name = QString::fromStdString(fw->getFilter()->getNameOfClass() );
@@ -164,6 +151,8 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
       prefs.endGroup();
     }
   }
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -256,14 +245,15 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   // Get the QFilterWidget Mangager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories;
-  if ( item->text(0).compare("Library") == 0)
+  if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
   }
-  else
+  else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
-    factories = fm->getFactories(item->text(0).toStdString());
+    factories = fm->getFactories();
   }
+
 
   updateFilterGroupList(factories);
 }
@@ -279,13 +269,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
-    updateFilterGroupList(factories);
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
-    updateFilterGroupList(factories);
   }
+  updateFilterGroupList(factories);
 }
 
 // -----------------------------------------------------------------------------
@@ -680,36 +669,9 @@ void PipelineBuilderWidget::loadPreset(QStringList filterList) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
-  addfavoriteDialog->exec();
+void PipelineBuilderWidget::on_addFavoriteBtn_clicked()
+{
 
-  QString favoriteTitle = addfavoriteDialog->getFavoriteName();
-
-  if ( addfavoriteDialog->getBtnClicked() ) {
-    QTreeWidgetItem* favName = new QTreeWidgetItem(favorites);
-    favName->setText(0, addfavoriteDialog->getFavoriteName());
-
-    #if defined (Q_OS_MAC)
-        QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    #else
-        QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    #endif
-
-    QString prefFile = prefs.fileName();
-    QFileInfo prefFileInfo = QFileInfo(prefFile);
-    QString parentPath = prefFileInfo.path();
-    QDir parentPathDir = QDir(parentPath);
-  
-    for (int i=1; i<=favorites->childCount(); i++) {
-      if ( parentPathDir.mkpath(parentPath) ) {
-        QString newPrefPath = parentPath + "Favorites/favorite" + i;
-        QSettings newPrefs(newPrefPath);
-        PipelineViewWidget* copy = createDeepCopy();
-        writeSettings(newPrefs, copy);
-      }
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
