@@ -15,6 +15,20 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
+    <widget class="QLabel" name="label_8">
+     <property name="styleSheet">
+      <string notr="true">QLabel
+{
+font-weight: bold;
+font-size: 150%;
+}</string>
+     </property>
+     <property name="text">
+      <string>Transformation Phase</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
@@ -468,7 +482,7 @@ font-size: 12px;
             <x>0</x>
             <y>0</y>
             <width>98</width>
-            <height>38</height>
+            <height>34</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -538,8 +552,15 @@ font-size: 12px;
    <extends>QWidget</extends>
    <header location="global">SGAxisODFWidget.h</header>
   </customwidget>
+  <customwidget>
+   <class>SGWidget</class>
+   <extends>QWidget</extends>
+   <header>sgwidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
