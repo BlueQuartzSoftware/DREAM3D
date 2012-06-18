@@ -105,8 +105,6 @@ fi
 
 #------------------------------------------------------------------------------
 cd $SDK_SOURCE
-# Remove any previous Qwt
-#rm -rf Qwt
 git clone ssh://code@scm.bluequartz.net/CMP.git CMP
 
 
