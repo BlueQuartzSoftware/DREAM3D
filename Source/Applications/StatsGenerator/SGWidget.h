@@ -63,6 +63,8 @@ class SGWidget : public QWidget
     virtual ~SGWidget();
 
      MXA_INSTANCE_PROPERTY(unsigned int, PhaseType);
+     MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
+     MXA_INSTANCE_PROPERTY(int, PhaseIndex);
      MXA_INSTANCE_PROPERTY(float, PhaseFraction);
      MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
      MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
