@@ -12,12 +12,10 @@
 project(PipelineBuilderLib)
 
 SET (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB)
-IF (BUILD_SHARED_LIBS)
-    SET (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB 1)
-    IF (WIN32)
-        ADD_DEFINITIONS("-DPipelineBuilderLib_BUILT_AS_DYNAMIC_LIB")
-    ENDIF (WIN32)
-ENDIF (BUILD_SHARED_LIBS)
+SET (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB 1)
+IF (WIN32)
+    ADD_DEFINITIONS("-DPipelineBuilderLib_BUILT_AS_DYNAMIC_LIB")
+ENDIF (WIN32)
 
 # Get the Directory where the plugin lives
 #get_filename_component(PluginPath ${PROJECT_SOURCE_DIR} PATH)
@@ -99,6 +97,9 @@ set (PipelineBuilderLib_PROJECT_SRCS
 # ---------- Setup output Directories -------------------------
 # This library MUST be shared because there is a singleton instance
 # variable that ALL plugins should use.
+if (LINUX)
+  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
+endif()
 add_library(${PROJECT_NAME} SHARED ${PipelineBuilderLib_PROJECT_SRCS})
 target_link_libraries(${PROJECT_NAME}                     
                         MXA
