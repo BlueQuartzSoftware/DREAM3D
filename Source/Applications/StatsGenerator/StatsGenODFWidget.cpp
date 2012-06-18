@@ -86,9 +86,24 @@ StatsGenODFWidget::~StatsGenODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
+void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
 {
-  VectorOfFloatArray arrays = statsData->getODF_Weights();
+  VectorOfFloatArray arrays;
+  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+  {
+	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+	  arrays = pp->getODF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  {
+	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+	  arrays = pp->getODF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+  {
+	  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+	  arrays = tp->getODF_Weights();
+  }
   if (arrays.size() > 0)
   {
     QVector<float> e1(arrays[0]->GetNumberOfTuples());
@@ -115,7 +130,7 @@ void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, St
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {
-    m_MDFWidget->extractStatsData(m, index, statsData);
+    m_MDFWidget->extractStatsData(m, index, statsData, phaseType);
   }
   updatePlots();
 }
@@ -123,7 +138,7 @@ void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, St
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::getOrientationData(StatsData::Pointer statsData)
+int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType)
 {
   int retErr = 0;
 
@@ -159,7 +174,21 @@ int StatsGenODFWidget::getOrientationData(StatsData::Pointer statsData)
   if (odf.size() > 0)
   {
     FloatArrayType::Pointer p = FloatArrayType::FromStdVector(odf, DREAM3D::HDF5::ODF);
-    statsData->setODF(p);
+	if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+	{
+	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+	  pp->setODF(p);
+ 	}
+	if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+	  pp->setODF(p);
+ 	}
+	if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+	{
+	  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+	  tp->setODF(p);
+	}
     if (e1s.size() > 0)
     {
       FloatArrayType::Pointer euler1 = FloatArrayType::FromStdVector(e1s, DREAM3D::HDF5::Euler1);
@@ -174,13 +203,27 @@ int StatsGenODFWidget::getOrientationData(StatsData::Pointer statsData)
       odfWeights.push_back(euler3);
       odfWeights.push_back(sigma);
       odfWeights.push_back(weight);
-      statsData->setODF_Weights(odfWeights);
+	  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+		pp->setODF_Weights(odfWeights);
+ 	  }
+	  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+		pp->setODF_Weights(odfWeights);
+ 	  }
+	  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+		tp->setODF_Weights(odfWeights);
+	  }
     }
   }
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {
-    m_MDFWidget->getMisorientationData(statsData);
+    m_MDFWidget->getMisorientationData(statsData, phaseType);
   }
   return retErr;
 }
