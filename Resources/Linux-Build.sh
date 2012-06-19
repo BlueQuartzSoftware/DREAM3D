@@ -30,27 +30,25 @@ echo "Host System: $HOST_SYSTEM"
 # Adjust these to "0" if you want to skip those compilations. The default is to build
 # everything.
 BUILD_CMAKE="0"
-BUILD_MXABOOST="1"
+BUILD_MXABOOST="0"
 BUILD_QWT="1"
 BUILD_HDF5="1"
 
 make_command=gmake
-if [ "$HOST_SYSTEM" = "Darwin" ];
+if [[ "$HOST_SYSTEM" = "Darwin" ]];
   then
   make_command=make
 fi
 
-
-
 GIT=`type -P git`
-if [ $GIT == "" ]
+if [ $GIT == "" ];
   then
   echo "Git is needed for this script. Please install it on your system and be sure it is on your path."
   exit 1
 fi
 
 QMAKE=`type -P qmake`
-if [ $QMAKE == "" ]
+if [[ $QMAKE == "" ]];
   then
   echo "An installation of Qt is required. Please install a version of Qt of at least 4.6 or greater."
   exit 1
@@ -59,9 +57,9 @@ fi
 WGET=`type -P wget`
 CURL=`type -P curl`
 
-if [ "$WGET" == "" ]
+if [ "$WGET" == "" ];
    then
-  if [ "$CURL" == "" ]
+  if [ "$CURL" == "" ];
      then
     echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
     exit 1
@@ -88,22 +86,27 @@ fi
 if [ "$BUILD_CMAKE" == "1" ]
 then
 #Download and Compile CMake
-$DOWNLOAD_PROG "http://www.cmake.org/files/v2.8/cmake-2.8.6.tar.gz" $DOWNLOAD_ARGS
-tar -xvzf cmake-2.8.6.tar.gz
-cd cmake-2.8.6
-./configure --prefix=$SDK_INSTALL/cmake-2.8.6 --parallel $PARALLEL_BUILD
+$DOWNLOAD_PROG "http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz" $DOWNLOAD_ARGS
+tar -xvzf cmake-2.8.7.tar.gz
+cd cmake-2.8.7
+./configure --prefix=$SDK_INSTALL/cmake-2.8.7 --parallel $PARALLEL_BUILD
 $make_command -j $PARALLEL_BUILD install
 
 # Export these variables for our use and then echo them into a file that people can use
 # to setup their environment
-export CMAKE_INSTALL=$SDK_INSTALL/cmake-2.8.6
+export CMAKE_INSTALL=$SDK_INSTALL/cmake-2.8.7
 export PATH=$CMAKE_INSTALL/bin:$PATH
 
 echo "export CMAKE_INSTALL=$SDK_INSTALL/cmake-2.8.6" >  $SDK_INSTALL/initvars.sh
 echo "export PATH=\$CMAKE_INSTALL/bin:\$PATH" >>  $SDK_INSTALL/initvars.sh
 fi
 
-if [ "$BUILD_MXABOOST" == "1" ]
+#------------------------------------------------------------------------------
+cd $SDK_SOURCE
+git clone git://scm.bluequartz.net/CMP.git CMP
+
+
+if [ "$BUILD_MXABOOST" == "1" ];
 then
 #------------------------------------------------------------------------------
 # We now need MXABoost on the system
@@ -122,30 +125,37 @@ echo "export BOOST_ROOT=$SDK_INSTALL/MXABoost-1.44" >> $SDK_INSTALL/initvars.sh
 fi
 
 
-if [ "$BUILD_HDF5" == "1" ]
+if [ "$BUILD_HDF5" == "1" ];
 then
 # Build the HDF5 libraries we need and set our Environment Variable.
-cd $sourcedir
-$DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.8.tar.gz" -o hdf5-1.8.8.tar.gz
+cd $SDK_SOURCE
+if [ ! -e "$SDK_SOURCE/hdf5-1.8.8.tar.gz" ];
+then
+$DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/prev-releases/hdf5-1.8.8/src/hdf5-1.8.8.tar.gz" -o hdf5-1.8.8.tar.gz
+fi
+
+if [ ! -e "$SDK_SOURCE/hdf5-1.8.8" ];
+then
 tar -xvzf hdf5-1.8.8.tar.gz
+fi
 # We assume we already have downloaded the source for HDF5 Version 1.8.7 and have it in a folder
-# called hdf5-187
+# called hdf5-188
 cd hdf5-1.8.8
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5-188 -DCMAKE_BUILD_TYPE=Debug  -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-188 -DCMAKE_BUILD_TYPE=Debug  -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j$makeJobs
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$sandbox/hdf5-188 -DCMAKE_BUILD_TYPE=Release   -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
+cmake -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-188 -DCMAKE_BUILD_TYPE=Release   -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF ../
 make -j$makeJobs
 make install
-export HDF5_INSTALL=$sandbox/hdf5-188
+export HDF5_INSTALL=$SDK_INSTALL/hdf5-188
 fi
 
-if [ "$BUILD_QWT" = "1" ]
+if [ "$BUILD_QWT" = "1" ];
 then
 #------------------------------------------------------------------------------
 cd $SDK_SOURCE
@@ -175,9 +185,12 @@ export QWT_INSTALL=$SDK_INSTALL/Qwt
 echo "export QWT_INSTALL=$SDK_INSTALL/Qwt" >> $SDK_INSTALL/initvars.sh
 fi
 
-
-git clone --recursive ssh://code@scm.bluequartz.net/DREAM3D.git
+cd $SDK_SOURCE
+git clone  ssh://code@scm.bluequartz.net/DREAM3D.git
 cd DREAM3D
+git fetch
+git checkout b1
+git pull origin b1
 mkdir Build
 cd Build
 cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=OFF ../
