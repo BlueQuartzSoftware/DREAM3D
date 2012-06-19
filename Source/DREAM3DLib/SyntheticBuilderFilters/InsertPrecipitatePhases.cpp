@@ -53,8 +53,6 @@
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-
 const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
@@ -321,13 +319,12 @@ void  InsertPrecipitatePhases::place_precipitates()
 
   for (size_t i = 1; i < numensembles; ++i)
   {
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase && pp != NULL)
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
 	  m_NumFields[i] = 0;
       precipitatephases.push_back(i);
-      precipitatephasefractions.push_back(pp->getPhaseFraction());
-      totalprecipitatefractions = totalprecipitatefractions + pp->getPhaseFraction();
+      precipitatephasefractions.push_back(statsDataArray[i]->getPhaseFraction());
+      totalprecipitatefractions = totalprecipitatefractions + statsDataArray[i]->getPhaseFraction();
     }
   }
   for (size_t i = 0; i < precipitatephases.size(); i++)
@@ -343,20 +340,19 @@ void  InsertPrecipitatePhases::place_precipitates()
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     phase = precipitatephases[i];
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-    grainsizediststep[i] = ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
+    grainsizediststep[i] = ((2 * statsDataArray[phase]->getMaxGrainDiameter()) - (statsDataArray[phase]->getMinGrainDiameter() / 2.0))
         / grainsizedist[i].size();
     float input = 0;
     float previoustotal = 0;
-    VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
+    VectorOfFloatArray GSdist = statsDataArray[phase]->getGrainSizeDistribution();
     float avg = GSdist[0]->GetValue(0);
     float stdev = GSdist[1]->GetValue(0);
     float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
     for (size_t j = 0; j < grainsizedist[i].size(); j++)
     {
-      input = (float(j + 1) * grainsizediststep[i]) + (pp->getMinGrainDiameter() / 2.0f);
+      input = (float(j + 1) * grainsizediststep[i]) + (statsDataArray[phase]->getMinGrainDiameter() / 2.0f);
       float logInput = logf(input);
       if(logInput <= avg)
       {
@@ -385,7 +381,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 	    iter++;
 	    Seed++;
 	    phase = precipitatephases[j];
-		generate_precipitate(phase, static_cast<int>(Seed), &precip, m_ShapeTypes[phase], m_OrthoOps);
+		generate_precipitate(phase, static_cast<int>(Seed), &precip, m_StatsDataArray, m_ShapeTypes[phase], m_OrthoOps);
 		currentsizedisterror = check_sizedisterror(&precip);
 		change = (currentsizedisterror) - (oldsizedisterror);
 		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
@@ -413,10 +409,9 @@ void  InsertPrecipitatePhases::place_precipitates()
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     phase = precipitatephases[i];
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-	neighbordist[i].resize(pp->getBinNumbers()->GetSize());
-    simneighbordist[i].resize(pp->getBinNumbers()->GetSize());
-	VectorOfFloatArray Neighdist = pp->getGrainSize_Neighbors();
+	neighbordist[i].resize(statsDataArray[phase]->getBinNumbers()->GetSize());
+    simneighbordist[i].resize(statsDataArray[phase]->getBinNumbers()->GetSize());
+	VectorOfFloatArray Neighdist = statsDataArray[phase]->getGrainSize_Neighbors();
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
 		neighbordist[i][j].resize(40);
@@ -427,7 +422,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
 		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
 		{
-		  input = (float(k + 1) * grainsizediststep[i]) + (pp->getMinGrainDiameter() / 2.0f);
+		  input = (float(k + 1) * grainsizediststep[i]) + (statsDataArray[phase]->getMinGrainDiameter() / 2.0f);
 		  float logInput = logf(input);
 		  if(logInput <= avg)
 		  {
@@ -458,8 +453,7 @@ void  InsertPrecipitatePhases::place_precipitates()
     ss << "Packing Grains - Placing Grain #" << i;
     notify(ss.str(), 0, Observable::UpdateProgressMessage);
 
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
-	precipboundaryfraction = pp->getPrecipBoundaryFraction();
+	precipboundaryfraction = statsDataArray[m_FieldPhases[i]]->getPrecipBoundaryFraction();
     random = rg.genrand_res53();
     if(random <= precipboundaryfraction)
     {
@@ -551,8 +545,7 @@ void  InsertPrecipitatePhases::place_precipitates()
       if(randomgrain >= numgrains) randomgrain = numgrains - 1;
       Seed++;
 
-	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
-      precipboundaryfraction = pp->getPrecipBoundaryFraction();
+      precipboundaryfraction = statsDataArray[m_FieldPhases[randomgrain]]->getPrecipBoundaryFraction();
 	  random = rg.genrand_res53();
       if(random <= precipboundaryfraction)
       {
@@ -631,11 +624,9 @@ void  InsertPrecipitatePhases::place_precipitates()
 
 }
 
-void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
+void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
-
-  DataContainer* m = getDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -647,8 +638,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
   int volgood = 0;
   float phi1, PHI, phi2;
   float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (m_pi));
-  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-  VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
+  VectorOfFloatArray GSdist = statsDataArray[phase]->getGrainSizeDistribution();
   float avg = GSdist[0]->GetValue(0);
   float stdev = GSdist[1]->GetValue(0);
   while (volgood == 0)
@@ -656,14 +646,14 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
     volgood = 1;
     diam = static_cast<float>(rg.genrand_norm(avg, stdev));
     diam = exp(diam);
-    if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
-    if(diam < pp->getMinGrainDiameter()) volgood = 0;
+    if(diam >= statsDataArray[phase]->getMaxGrainDiameter()) volgood = 0;
+    if(diam < statsDataArray[phase]->getMinGrainDiameter()) volgood = 0;
     vol = fourThirdsPi * ((diam / 2.0f) * (diam / 2.0f) * (diam / 2.0f));
   }
-   int diameter = int((diam - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+   int diameter = int((diam - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
   float r2 = 0, r3 = 1;
-  VectorOfFloatArray bovera = pp->getGrainSize_BOverA();
-  VectorOfFloatArray covera = pp->getGrainSize_COverA();
+  VectorOfFloatArray bovera = statsDataArray[phase]->getGrainSize_BOverA();
+  VectorOfFloatArray covera = statsDataArray[phase]->getGrainSize_COverA();
   while (r2 < r3)
   {
 	  r2 = 0, r3 = 0;
@@ -687,14 +677,14 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
   float random = rg.genrand_res53();
   float totaldensity = 0;
   int bin = 0;
-  FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
+  FloatArrayType::Pointer axisodf = statsDataArray[phase]->getAxisOrientation();
   while (random > totaldensity && bin < axisodf->GetSize())
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
   }
   OrthoOps->determineEulerAngles(bin, phi1, PHI, phi2);
-  VectorOfFloatArray omega3 = pp->getGrainSize_Omegas();
+  VectorOfFloatArray omega3 = statsDataArray[phase]->getGrainSize_Omegas();
   float mf = omega3[0]->GetValue(diameter);
   float s = omega3[1]->GetValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
@@ -814,7 +804,6 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
   {
     phase = precipitatephases[iter];
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count.resize(simneighbordist[iter].size(), 0);
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
@@ -839,9 +828,9 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
       if(index != gremove && m_FieldPhases[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
-        if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
-        if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-		dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+        if(dia > statsDataArray[phase]->getMaxGrainDiameter()) dia = statsDataArray[phase]->getMaxGrainDiameter();
+        if(dia < statsDataArray[phase]->getMinGrainDiameter()) dia = statsDataArray[phase]->getMinGrainDiameter();
+		dia = int((dia - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
         nnum = m_Neighborhoods[index];
 		bin = nnum/2;
 		if(bin >= 40) bin = 39;
@@ -852,9 +841,9 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
       dia = m_EquivalentDiameters[index];
-      if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
-      if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-	  dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+      if(dia > statsDataArray[phase]->getMaxGrainDiameter()) dia = statsDataArray[phase]->getMaxGrainDiameter();
+      if(dia < statsDataArray[phase]->getMinGrainDiameter()) dia = statsDataArray[phase]->getMinGrainDiameter();
+	  dia = int((dia - statsDataArray[phase]->getMinGrainDiameter()) / statsDataArray[phase]->getBinStepSize());
       nnum = m_Neighborhoods[index];
 	  bin = nnum/2;
 	  if(bin >= 40) bin = 39;
@@ -933,7 +922,6 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
   for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
   {
     phase = precipitatephases[iter];
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count = 0;
     for (size_t i = 0; i < grainsizedist[iter].size(); i++)
     {
@@ -945,7 +933,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
       if(m_FieldPhases[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
-        dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
+        dia = (dia - (statsDataArray[phase]->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
         if(dia < 0) dia = 0;
         if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
         simgrainsizedist[iter][int(dia)]++;
@@ -955,7 +943,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
     if(precip->m_FieldPhases == phase)
     {
       dia = precip->m_EquivalentDiameters;
-      dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
+      dia = (dia - (statsDataArray[phase]->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
       if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
       simgrainsizedist[iter][int(dia)]++;
@@ -1573,8 +1561,7 @@ void InsertPrecipitatePhases::cleanup_grains()
     touchessurface = 0;
     if(checked[i] == false && m_GrainIds[i] > 0)
     {
-	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
-	  minsize = pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f;
+	  minsize = statsDataArray[m_CellPhases[i]]->getMinGrainDiameter() * statsDataArray[m_CellPhases[i]]->getMinGrainDiameter() * statsDataArray[m_CellPhases[i]]->getMinGrainDiameter() * M_PI / 6.0f;
       minsize = int(minsize / (resConst));
       currentvlist.push_back(i);
       count = 0;

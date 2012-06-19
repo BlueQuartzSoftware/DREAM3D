@@ -77,7 +77,6 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find MDF"; }
@@ -107,7 +106,6 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     NeighborList<float>* m_SharedSurfaceAreaList;
 
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
 	StatsDataArray* m_StatsDataArray;
 
 	std::vector<std::vector<float> > misorientationlists;

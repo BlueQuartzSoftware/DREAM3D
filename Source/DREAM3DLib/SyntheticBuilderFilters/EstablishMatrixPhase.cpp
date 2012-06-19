@@ -44,7 +44,6 @@
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 
-#include "DREAM3DLib/Common/MatrixStatsData.h"
 
 
 // -----------------------------------------------------------------------------
@@ -199,12 +198,11 @@ void  EstablishMatrixPhase::establish_matrix()
 
   for (size_t i = 1; i < numensembles; ++i)
   {
-	MatrixStatsData* mp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
-	if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase && mp != NULL)
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
     {
       matrixphases.push_back(i);
-      matrixphasefractions.push_back(mp->getPhaseFraction());
-      totalmatrixfractions = totalmatrixfractions + mp->getPhaseFraction();
+      matrixphasefractions.push_back(statsDataArray[i]->getPhaseFraction());
+      totalmatrixfractions = totalmatrixfractions + statsDataArray[i]->getPhaseFraction();
     }
   }
   for (size_t i = 0; i < matrixphases.size(); i++)

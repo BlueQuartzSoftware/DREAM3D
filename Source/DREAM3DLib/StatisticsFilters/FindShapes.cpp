@@ -66,8 +66,6 @@ m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
 m_AxisLengthsArrayName(DREAM3D::FieldData::AxisLengths),
 m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
 m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_PhaseTypes(NULL),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
 m_FieldPhases(NULL),
@@ -186,14 +184,12 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float, FloatArrayType, 0, fields, 2);
 
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
 	StatsDataArray::Pointer p = StatsDataArray::New();
 	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
 	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
@@ -249,6 +245,7 @@ void FindShapes::find_moments()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
+  StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -262,42 +259,16 @@ void FindShapes::find_moments()
   float u101 = 0;
   std::vector<VectorOfFloatArray> omega3s;
   std::vector<std::vector<std::vector<float> > > values;
-  std::vector<float> mindiams;
-  std::vector<float> binsteps;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
   omega3s.resize(numensembles);
   values.resize(numensembles);
-  mindiams.resize(numensembles);
-  binsteps.resize(numensembles);
   for(size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  omega3s[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  values[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  omega3s[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  values[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  omega3s[i] = tp->CreateCorrelatedDistributionArrays(getDistributionType(), tp->getBinNumbers()->GetSize());
-		  values[i].resize(tp->getBinNumbers()->GetSize());
-		  mindiams[i] = tp->getMinGrainDiameter();
-		  binsteps[i] = tp->getBinStepSize();
-	  }
+	  omega3s[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  values[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
   }
 
   float xRes = m->getXRes();
@@ -398,30 +369,14 @@ void FindShapes::find_moments()
     m_Omega3s[i] = omega3;
 	if(m_BiasedFields[i] == false)
 	{
-		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_FieldPhases[i]]->getMinGrainDiameter())/statsDataArray[m_FieldPhases[i]]->getBinStepSize());
 		values[m_FieldPhases[i]][bin].push_back(m_Omega3s[i]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], omega3s[i]);
-		  pp->setGrainSize_Omegas(omega3s[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], omega3s[i]);
-		  pp->setGrainSize_Omegas(omega3s[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], omega3s[i]);
-		  tp->setGrainSize_Omegas(omega3s[i]);
-	  }
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], omega3s[i]);
+	  statsDataArray[i]->setGrainSize_Omegas(omega3s[i]);
   }
 }
 void FindShapes::find_moments2D()
@@ -499,8 +454,6 @@ void FindShapes::find_axes()
   std::vector<VectorOfFloatArray> coveras;
   std::vector<std::vector<std::vector<float> > > bvalues;
   std::vector<std::vector<std::vector<float> > > cvalues;
-  std::vector<float> mindiams;
-  std::vector<float> binsteps;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
@@ -510,40 +463,12 @@ void FindShapes::find_axes()
   coveras.resize(numensembles);
   bvalues.resize(numensembles);
   cvalues.resize(numensembles);
-  mindiams.resize(numensembles);
-  binsteps.resize(numensembles);
   for(size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  boveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  coveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  bvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  cvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  boveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  coveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  bvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  cvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  boveras[i] = tp->CreateCorrelatedDistributionArrays(getDistributionType(), tp->getBinNumbers()->GetSize());
-		  coveras[i] = tp->CreateCorrelatedDistributionArrays(getDistributionType(), tp->getBinNumbers()->GetSize());
-		  bvalues[i].resize(tp->getBinNumbers()->GetSize());
-		  cvalues[i].resize(tp->getBinNumbers()->GetSize());
-		  mindiams[i] = tp->getMinGrainDiameter();
-		  binsteps[i] = tp->getBinStepSize();
-	  }
+	  boveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  coveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  bvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+	  cvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
   }
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -607,37 +532,17 @@ void FindShapes::find_axes()
     m_AspectRatios[2*i+1] = covera;
 	if(m_BiasedFields[i] == false)
 	{
-		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_FieldPhases[i]]->getMinGrainDiameter())/statsDataArray[m_FieldPhases[i]]->getBinStepSize());
 		bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
 		cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-		  pp->setGrainSize_BOverA(boveras[i]);
-		  pp->setGrainSize_COverA(coveras[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-		  pp->setGrainSize_BOverA(boveras[i]);
-		  pp->setGrainSize_COverA(coveras[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-		  tp->setGrainSize_BOverA(boveras[i]);
-		  tp->setGrainSize_COverA(coveras[i]);
-	  }
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
+	  statsDataArray[i]->setGrainSize_BOverA(boveras[i]);
+	  statsDataArray[i]->setGrainSize_COverA(coveras[i]);
   }
 }
 void FindShapes::find_axes2D()
@@ -655,8 +560,6 @@ void FindShapes::find_axes2D()
   std::vector<VectorOfFloatArray> coveras;
   std::vector<std::vector<std::vector<float> > > bvalues;
   std::vector<std::vector<std::vector<float> > > cvalues;
-  std::vector<float> mindiams;
-  std::vector<float> binsteps;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
@@ -665,40 +568,12 @@ void FindShapes::find_axes2D()
   coveras.resize(numensembles);
   bvalues.resize(numensembles);
   cvalues.resize(numensembles);
-  mindiams.resize(numensembles);
-  binsteps.resize(numensembles);
   for(size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  boveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  coveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  bvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  cvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  boveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  coveras[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  bvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  cvalues[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  boveras[i] = tp->CreateCorrelatedDistributionArrays(getDistributionType(), tp->getBinNumbers()->GetSize());
-		  coveras[i] = tp->CreateCorrelatedDistributionArrays(getDistributionType(), tp->getBinNumbers()->GetSize());
-		  bvalues[i].resize(tp->getBinNumbers()->GetSize());
-		  cvalues[i].resize(tp->getBinNumbers()->GetSize());
-		  mindiams[i] = tp->getMinGrainDiameter();
-		  binsteps[i] = tp->getBinStepSize();
-	  }
+	  boveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  coveras[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), statsDataArray[i]->getBinNumbers()->GetSize());
+	  bvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
+	  cvalues[i].resize(statsDataArray[i]->getBinNumbers()->GetSize());
   }
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -721,37 +596,17 @@ void FindShapes::find_axes2D()
 	m_AspectRatios[2*i+1] = 0;
 	if(m_BiasedFields[i] == false)
 	{
-		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+		bin = size_t((m_EquivalentDiameters[i]-statsDataArray[m_FieldPhases[i]]->getMinGrainDiameter())/statsDataArray[m_FieldPhases[i]]->getBinStepSize());
 		bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
 		cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
 	}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-		  pp->setGrainSize_BOverA(boveras[i]);
-		  pp->setGrainSize_COverA(coveras[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-		  pp->setGrainSize_BOverA(boveras[i]);
-		  pp->setGrainSize_COverA(coveras[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
-		  tp->setGrainSize_BOverA(boveras[i]);
-		  tp->setGrainSize_COverA(coveras[i]);
-	  }
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
+	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
+	  statsDataArray[i]->setGrainSize_BOverA(boveras[i]);
+	  statsDataArray[i]->setGrainSize_COverA(coveras[i]);
   }
 }
 float FindShapes::find_xcoord(size_t index)

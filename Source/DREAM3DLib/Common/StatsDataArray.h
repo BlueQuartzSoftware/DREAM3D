@@ -43,11 +43,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-#include "DREAM3DLib/Common/TransformationStatsData.h"
-#include "DREAM3DLib/Common/BoundaryStatsData.h"
-#include "DREAM3DLib/Common/MatrixStatsData.h"
 
 /*
  *
@@ -92,19 +87,14 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     /**
     *
     */
-    void fillArrayWithNewStatsData(size_t n, unsigned int* phase_types)
+    void fillArrayWithNewStatsData(size_t n)
     {
       m_StatsDataArray.resize(n);
       for (size_t i = 0; i < n; ++i)
       {
           if (m_StatsDataArray[i].get() == NULL)
           {
-			  if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) m_StatsDataArray[i] = PrimaryStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) m_StatsDataArray[i] = PrecipitateStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) m_StatsDataArray[i] = TransformationStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) m_StatsDataArray[i] = BoundaryStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) m_StatsDataArray[i] = MatrixStatsData::New();
-			  else m_StatsDataArray[i] = StatsData::New();
+            m_StatsDataArray[i] = StatsData::New();
           }
       }
     }
