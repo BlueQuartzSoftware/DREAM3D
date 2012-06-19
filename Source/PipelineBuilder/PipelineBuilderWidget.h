@@ -102,7 +102,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void loadPreset(QStringList filterList);
 
-    PipelineViewWidget* createDeepCopy();
+    void loadFavorites(QString path);
 
 
   protected slots:
@@ -139,7 +139,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void addWarningMessage(QString message);
     virtual void addProgressMessage(QString message);
 
-    /* Surface Mesh Thread communicates throught these methods */
+    /* Surface Mesh Thread communicates through these methods */
     virtual void pipelineComplete();
     virtual void pipelineProgress(int value);
 
@@ -150,7 +150,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QThread*                    m_WorkerThread;
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
-    QMap<QString,QStringList>   Fmap;
+    QMap<QString,QStringList>   presetMap;
+    QMap<QString,QString>       favoritesMap;
     QTreeWidgetItem*            favorites;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
