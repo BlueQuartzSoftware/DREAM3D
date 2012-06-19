@@ -16,7 +16,48 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This filter reads the <B>GrainIds</B> from a Dx file.
+This filter Reads from a Dx file. This is a file in a format generated using the OpenDX Source Software based on IBM's Visualization Data Explorer. <br>
+An example of the format is show below:<br>
+object 1 class gridpositions counts 6 5 4<br>
+origin 0 0 0<br>
+delta  1 0 0<br>
+delta  0 1 0<br>
+delta  0 0 1<br>
+<br>
+object 2 class gridconnections counts 6 5 4<br>
+<br>
+object 3 class array type int rank 0 items 60 data follows<br>
+100 101 102 <br>
+103 104 105 <br>
+106 107 108 <br>
+109 110 111 <br>
+112 113 114 <br>
+115 116 117 <br>
+118 119 120 <br>
+121 122 123 <br>
+124 125 126 <br>
+127 128 129 <br>
+130 131 132 <br>
+133 134 135 <br>
+136 137 138 <br>
+139 140 141 <br>
+142 143 144 <br>
+145 146 147 <br>
+148 149 150 <br>
+151 152 153 <br>
+154 155 156 <br>
+157 158 159 <br>
+<br>
+attribute "dep" string "connections"<br>
+
+object "DREAM3D Generated" class field<br>
+component  "positions"    value 1<br>
+component  "connections"  value 2<br>
+component  "data"         value 3<br>
+<br>
+end<br>
+
+See: www.opendx.org for more information.
 <!-- Do NOT write documentation below this line -->
 </p>
 
