@@ -58,6 +58,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/Common/PrecipitateStatsData.h"
+#include "DREAM3DLib/Common/TransformationStatsData.h"
 
 #include "PoleFigureMaker.h"
 
@@ -93,8 +96,8 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void setCrystalStructure(unsigned int value);
     unsigned int getCrystalStructure();
 
-    int getOrientationData(StatsData::Pointer statsData);
-    void extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData);
+    int getOrientationData(StatsData* statsData, unsigned int phaseType);
+    void extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 

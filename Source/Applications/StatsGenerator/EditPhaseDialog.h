@@ -71,6 +71,8 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
 
     void setOtherPhaseFractionTotal(float t);
 
+    void setEditFlag(bool flag);
+
     float getPptFraction();
     void setPptFraction(float d);
 
@@ -87,6 +89,7 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
 
   private:
     float m_OtherPhaseFractions;
+	bool m_EditFlag;
     QDoubleValidator* m_PhaseFractionValidator;
     QDoubleValidator* m_ParentPhaseValidator;
     QDoubleValidator* m_PptFractionValidator;
