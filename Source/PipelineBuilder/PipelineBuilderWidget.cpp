@@ -59,7 +59,6 @@
 #include "QFilterWidget.h"
 #include "AddFavoriteWidget.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -85,6 +84,7 @@ m_OpenDialogLastDirectory("~/")
 PipelineBuilderWidget::~PipelineBuilderWidget()
 {}
 
+<<<<<<< HEAD
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -99,11 +99,13 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
 
   readSettings(prefs, m_PipelineViewWidget);
 }
+=======
+>>>>>>> bf55ff77c6a03f93be9442b731627e5b893c62f7
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
+void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
   // Clear Any Existing Pipeline
   m_PipelineViewWidget->clearWidgets();
@@ -123,16 +125,18 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
 
     QString filterName = prefs.value("Filter_Name", "").toString();
 
-    QFilterWidget* w = viewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+    QFilterWidget* w = m_PipelineViewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
     if(w) {
       w->blockSignals(true);
       w->readOptions(prefs);
       w->blockSignals(false);
       w->emitParametersChanged();
     }
+
     prefs.endGroup();
   }
   m_PipelineViewWidget->preflightPipeline();
+<<<<<<< HEAD
 
 
   //Get Favorites from Pref File and Update Tree Widget
@@ -187,13 +191,16 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
   prefs.endGroup();
 
   writeSettings(prefs, m_PipelineViewWidget); 
+=======
+
+>>>>>>> bf55ff77c6a03f93be9442b731627e5b893c62f7
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
+void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 {
   prefs.beginGroup("PipelineBuilder");
   qint32 count = m_PipelineViewWidget->filterCount();
@@ -202,7 +209,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
 
   for(qint32 i = 0; i < count; ++i)
   {
-    QFilterWidget* fw = viewWidget->filterWidgetAt(i);
+    QFilterWidget* fw = m_PipelineViewWidget->filterWidgetAt(i);
     if (fw)
     {
       QString groupName = QString::number(i);
@@ -212,7 +219,11 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
     }
   }
 
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> bf55ff77c6a03f93be9442b731627e5b893c62f7
 }
 
 // -----------------------------------------------------------------------------
@@ -309,6 +320,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   // Get the QFilterWidget Manager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories;
+<<<<<<< HEAD
 
   //If the user clicks on "Library", display all
   if ( item->text(0).compare("Library") == 0)
@@ -316,9 +328,17 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
     factories = fm->getFactories();
   }
   else if (NULL != item->parent() && item->parent()->text(0).compare("Library") == 0)
+=======
+  if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
-    factories = fm->getFactories(item->text(0).toStdString());
+    factories = fm->getFactories();
   }
+  else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
+>>>>>>> bf55ff77c6a03f93be9442b731627e5b893c62f7
+  {
+    factories = fm->getFactories();
+  }
+
 
   updateFilterGroupList(factories);
 }
@@ -334,13 +354,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   if (item->parent() == NULL && item->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories();
-    updateFilterGroupList(factories);
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
-    updateFilterGroupList(factories);
   }
+  updateFilterGroupList(factories);
 }
 
 // -----------------------------------------------------------------------------
@@ -741,6 +760,7 @@ void PipelineBuilderWidget::loadPreset(QStringList filterList) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+<<<<<<< HEAD
 void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
   AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
   addfavoriteDialog->exec();
@@ -819,6 +839,11 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
         }
       }
   }
+=======
+void PipelineBuilderWidget::on_addFavoriteBtn_clicked()
+{
+
+>>>>>>> bf55ff77c6a03f93be9442b731627e5b893c62f7
 }
 
 // -----------------------------------------------------------------------------
@@ -850,6 +875,7 @@ void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+<<<<<<< HEAD
 void PipelineBuilderWidget::loadFavorites(QString path) {
   #if defined (Q_OS_MAC)
     QSettings prefs(path, QSettings::NativeFormat);
@@ -859,3 +885,9 @@ void PipelineBuilderWidget::loadFavorites(QString path) {
 
   readSettings(prefs, m_PipelineViewWidget);
 }
+=======
+PipelineViewWidget* PipelineBuilderWidget::createDeepCopy() {
+  PipelineViewWidget* widget = new PipelineViewWidget;
+  return widget;
+}
+>>>>>>> bf55ff77c6a03f93be9442b731627e5b893c62f7
