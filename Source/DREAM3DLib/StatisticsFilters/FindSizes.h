@@ -75,8 +75,6 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
 	DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
@@ -107,8 +105,6 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 	float* m_Volumes;
     float* m_EquivalentDiameters;
     int32_t* m_NumCells;
-
-    unsigned int* m_PhaseTypes;
 
 	StatsDataArray* m_StatsDataArray;
 

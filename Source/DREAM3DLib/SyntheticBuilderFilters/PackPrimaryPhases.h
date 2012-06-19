@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     void initialize_packinggrid();
 
-	void generate_grain(int phase, int Seed, Field* grain, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+	static void generate_grain(int phase, int Seed, Field* grain, StatsDataArray* m_StatsDataArray, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
 
     void transfer_attributes(int gnum, Field* field);
     void insert_grain(size_t grainNum);

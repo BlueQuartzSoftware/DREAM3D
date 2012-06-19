@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Common/FilterOption.h"
 
 
-#define GENERATE_FILTER_TEXT_LIST 1
+#define GENERATE_FILTER_TEXT_LIST 0
 #define GENERATE_HTML_FILE 0
 #define OVERWRITE_SOURCE_DOCS 0
 #define GENERATE_OPTIONS_WRITER_CODE 0
@@ -718,12 +718,11 @@ template<typename T>
 void createListFile( const std::string &group, const std::string &filter)
 {
 
-#if GENERATE_FILTER_TEXT_LIST
   std::string s = FILTER_WIDGETS_TEMP_DIR();
   s.append("/Mike_list.txt");
   FILE* f = fopen(s.c_str(), "ab+");
   fprintf(f, "FILTERNAME: %s\n", filter.c_str());
-#endif
+
 
   typename T::Pointer t = T::New();
    std::vector<FilterOption::Pointer> options = t->getFilterOptions();
@@ -861,8 +860,9 @@ void createListFile( const std::string &group, const std::string &filter)
 template<typename T>
 void createHTMLFile( const std::string &group, const std::string &filter)
 {
-
+#if (GENERATE_FILTER_TEXT_LIST == 1)
   createListFile<T>(group, filter);
+#endif
 
 #if (GENERATE_HTML_FILE == 0)
   return;

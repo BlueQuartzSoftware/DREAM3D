@@ -69,6 +69,54 @@ class DREAM3DLib_EXPORT H5StatsDataDelegate
   protected:
     H5StatsDataDelegate();
 
+    int writeBoundaryArea(StatsData* data, hid_t groupId);
+    int readBoundaryArea(StatsData* data, hid_t groupId);
+
+	  int writePhaseFraction(StatsData* data, hid_t groupId);
+    int readPhaseFraction(StatsData* data, hid_t groupId);
+
+    int writePrecipBoundaryFraction(StatsData* data, hid_t groupId);
+    int readPrecipBoundaryFraction(StatsData* data, hid_t groupId);
+
+    int writeParentPhase(StatsData* data, hid_t groupId);
+    int readParentPhase(StatsData* data, hid_t groupId);
+
+    int writeGrainDiameterInfo(StatsData* data, hid_t groupId);
+    int readGrainDiameterInfo(StatsData* data, hid_t groupId);
+
+    int writeBinNumbers(StatsData* data, hid_t groupId);
+    int readBinNumbers(StatsData* data, hid_t groupId);
+
+    int readMDFWeights(hid_t pid, StatsData* data);
+    int readODFWeights(hid_t pid, StatsData* data);
+    int readAxisODFWeights(hid_t pid, StatsData* data);
+
+    int writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
+                                              VectorOfFloatArray colData);
+
+    int writeDistributionData(hid_t pid,
+                              uint32_t disType,
+                              const std::string &hdf5GroupName,
+                              VectorOfFloatArray colData);
+
+    uint32_t readDistributionType(hid_t pid, const std::string &hdf5GroupName);
+
+    int readDistributionData(hid_t pid,
+                              const std::string &hdf5GroupName,
+                              VectorOfFloatArray colData);
+
+
+    int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
+    int readVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
+
+    VectorOfFloatArray createDistributionVector(unsigned int distType);
+
+    VectorOfFloatArray createBetaDistributionArrays();
+
+    VectorOfFloatArray createPowerDistributionArrays();
+
+    VectorOfFloatArray createLogNormalDistributionArrays();
+
   private:
     H5StatsDataDelegate(const H5StatsDataDelegate&); // Copy Constructor Not Implemented
     void operator=(const H5StatsDataDelegate&); // Operator '=' Not Implemented
