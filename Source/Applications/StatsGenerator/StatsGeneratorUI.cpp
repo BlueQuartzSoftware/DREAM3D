@@ -506,10 +506,6 @@ void StatsGeneratorUI::on_actionSave_triggered()
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
-//  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(nPhases + 1);
-//  shapeTypes->SetName(DREAM3D::EnsembleData::ShapeTypes);
-//  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
-
   // Loop on all the phases
 
   for(int i = 0; i < nPhases; ++i)
