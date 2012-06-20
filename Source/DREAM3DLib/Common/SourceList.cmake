@@ -22,6 +22,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ErrorMessage.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
@@ -55,6 +56,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ErrorMessage.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
