@@ -16,9 +16,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This filter determines for each <B>Field</B> the number of <i>neighboring fields</i>.  This is accomplished by iterating through the cells and querying the <B>Field</B> that owns each cell and its neighboring cells.  If two neighboring cells are owned by different Fields, then those Fields are said to be <i>neighbors</i>. <br />
-In determining for each <B>Field</B> the number of <i>neighboring fields</i> (and the list of <i>neighbors</i>), the cells that have neighboring cell(s) with a different <B>Field</B> owner are flagged as surface cells and are said to lie on the surface of the <B>Field</B> (i.e. the grain/field boundary). <br />
-Additionally, the surface areas shared between two <i>neighboring fields</i> are calculated by tracking the number of times two neighboring cells correspond to a <i>neighboring field</i> pair. <br />
+This filter determines for each <B>Field</B> the number of <i>neighboring fields</i>.  This is accomplished by iterating through the <B>Cell</B>s and querying the <B>Field</B> that owns each <B>cell</B> and its neighboring <B>Cell</B>s.  If two neighboring <B>Cell</B>s are owned by different <B>Fields</B>, then those <B>Fields</B> are said to be <i>neighbors</i>. <br />
+In determining for each <B>Field</B> the number of <i>neighboring fields</i> (and the list of <i>neighbors</i>), the <B>Cells</B> that have neighboring <B>Cell</B>(s) with a different <B>Field</B> owner are flagged as surface <B>Cell</B>s and are said to lie on the surface of the <B>Field</B> (i.e. the grain/field boundary). <br />
+Additionally, the surface areas shared between two <i>neighboring fields</i> are calculated by tracking the number of times two neighboring <B>Cell</B>s correspond to a <i>neighboring field</i> pair.
+<br />
 <!-- Do NOT write documentation below this line -->
 </p>
 
