@@ -81,6 +81,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
+
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
@@ -111,8 +112,6 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
-
-//    unsigned long long int Seed;
 
     int tempxpoints;
     int tempypoints;
@@ -154,6 +153,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         return -1;
       }
       m_PTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+
       for(size_t i=0;i<phases.size();i++)
       {
         int phaseID = phases[i]->getPhaseIndex();

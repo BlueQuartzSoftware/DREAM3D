@@ -112,7 +112,9 @@ void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 	writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
 	ss.str("");
   }
+
   int numPhaseType = m_PTypes->GetNumberOfTuples();
+
   writer->writeValue("NumPhaseTypes", numPhaseType);
   for(int i = 0; i < numPhaseType; ++i)
   {
@@ -250,6 +252,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   typedef DataArray<unsigned int> PTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1);
+
 }
 
 // -----------------------------------------------------------------------------

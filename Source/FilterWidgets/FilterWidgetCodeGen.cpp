@@ -717,8 +717,6 @@ void createSourceFile( const std::string &group, const std::string &filter)
 template<typename T>
 void createListFile( const std::string &group, const std::string &filter)
 {
-
-
   std::string s = FILTER_WIDGETS_TEMP_DIR();
   s.append("/Mike_list.txt");
   FILE* f = fopen(s.c_str(), "ab+");

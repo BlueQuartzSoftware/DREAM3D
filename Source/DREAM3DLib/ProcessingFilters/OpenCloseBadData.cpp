@@ -268,6 +268,7 @@ void OpenCloseBadData::execute()
 			  }
 			}
 		}
+
     }
     for (int j = 0; j < totalPoints; j++)
     {
