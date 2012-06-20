@@ -149,7 +149,7 @@
             </size>
            </property>
            <property name="toolTip">
-            <string>Add MDF Weight</string>
+            <string>Add Weighting</string>
            </property>
            <property name="text">
             <string/>
@@ -190,7 +190,7 @@
             </size>
            </property>
            <property name="toolTip">
-            <string>Remove MDF Weight</string>
+            <string>Delete Weighting</string>
            </property>
            <property name="text">
             <string/>
