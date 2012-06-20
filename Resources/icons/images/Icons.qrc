@@ -39,5 +39,12 @@
   <file>gear_delete.png</file>
   <file>gear_edit.png</file>
   <file>refresh.png</file>
+  <file>flash.png</file>
+  <file>flash_add.png</file>
+  <file>flash_delete.png</file>
+  <file>cubes.png</file>
+  <file>flag_blue_scroll.png</file>
+  <file>scroll.png</file>
+  <file>bullet_ball_yellow.png</file>
  </qresource>
  </RCC>
