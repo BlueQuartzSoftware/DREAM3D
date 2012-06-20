@@ -323,9 +323,8 @@ void StatsGenODFWidget::setupGui()
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
 
-//  initQwtPlot("RD", "TD", m_ODF_001Plot);
-//  initQwtPlot("RD", "TD", m_ODF_011Plot);
-//  initQwtPlot("RD", "TD", m_ODF_111Plot);
+  addODFTextureBtn->setToolTip("Add ODF Weight");
+  deleteODFTextureBtn->setToolTip("Delete ODF Weight");
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
