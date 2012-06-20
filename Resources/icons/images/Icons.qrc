@@ -35,5 +35,9 @@
   <file>bookmark_add.png</file>
   <file>bookmark_delete.png</file>
   <file>bookmarks.png</file>
+  <file>gear_add.png</file>
+  <file>gear_delete.png</file>
+  <file>gear_edit.png</file>
+  <file>refresh.png</file>
  </qresource>
  </RCC>
