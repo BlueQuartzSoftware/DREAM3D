@@ -946,3 +946,12 @@ void PrecipitatePhaseWidget::extractStatsData(DataContainer::Pointer m, int inde
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PrecipitatePhaseWidget::getTabTitle()
+{
+  return QString("Precipitate");
+}
+
