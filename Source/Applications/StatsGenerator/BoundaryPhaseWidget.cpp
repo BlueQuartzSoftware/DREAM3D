@@ -249,6 +249,7 @@ void BoundaryPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   m_DataHasBeenGenerated = true;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -256,3 +257,12 @@ void BoundaryPhaseWidget::dataWasEdited()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString BoundaryPhaseWidget::getTabTitle()
+{
+  return QString("Boundary");
+}
+

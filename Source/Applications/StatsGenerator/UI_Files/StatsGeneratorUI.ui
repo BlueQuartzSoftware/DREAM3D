@@ -29,25 +29,27 @@
     </property>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QComboBox" name="phaseCombo">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
       <item>
        <widget class="QPushButton" name="addPhase">
         <property name="minimumSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="toolTip">
@@ -61,13 +63,16 @@
         </property>
         <property name="icon">
          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-          <normaloff>:/gear_add.png</normaloff>:/gear_add.png</iconset>
+          <normaloff>:/cube_molecule_add.png</normaloff>:/cube_molecule_add.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
+        </property>
+        <property name="shortcut">
+         <string>Enter</string>
         </property>
         <property name="flat">
          <bool>true</bool>
@@ -76,10 +81,16 @@
       </item>
       <item>
        <widget class="QPushButton" name="deletePhase">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="toolTip">
@@ -93,12 +104,12 @@
         </property>
         <property name="icon">
          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-          <normaloff>:/gear_delete.png</normaloff>:/gear_delete.png</iconset>
+          <normaloff>:/cube_molecule_delete.png</normaloff>:/cube_molecule_delete.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="flat">
@@ -110,14 +121,14 @@
        <widget class="QPushButton" name="editPhase">
         <property name="minimumSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="toolTip">
@@ -131,12 +142,12 @@
         </property>
         <property name="icon">
          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-          <normaloff>:/gear_edit.png</normaloff>:/gear_edit.png</iconset>
+          <normaloff>:/cube_molecule_gearwheel.png</normaloff>:/cube_molecule_gearwheel.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>24</width>
-          <height>24</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="flat">
@@ -160,15 +171,15 @@
      </layout>
     </item>
     <item>
-     <widget class="QTabWidget" name="phaseTabWidget">
+     <widget class="QTabWidget" name="phaseTabs">
       <property name="tabPosition">
-       <enum>QTabWidget::South</enum>
+       <enum>QTabWidget::North</enum>
       </property>
       <property name="tabShape">
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="usesScrollButtons">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -177,22 +188,14 @@
        <bool>true</bool>
       </property>
       <property name="movable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <widget class="SGWidget" name="tab_SGWidget_1">
        <attribute name="title">
         <string>Tab 1</string>
        </attribute>
       </widget>
-      <widget class="SGWidget" name="tab_SGWidget_2">
-       <attribute name="title">
-        <string>Tab 2</string>
-       </attribute>
-      </widget>
      </widget>
-    </item>
-    <item>
-     <widget class="SGWidget" name="m_SGWidget" native="true"/>
     </item>
    </layout>
   </widget>

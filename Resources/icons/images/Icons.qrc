@@ -46,5 +46,8 @@
   <file>flag_blue_scroll.png</file>
   <file>scroll.png</file>
   <file>bullet_ball_yellow.png</file>
+  <file>cube_molecule_add.png</file>
+  <file>cube_molecule_delete.png</file>
+  <file>cube_molecule_gearwheel.png</file>
  </qresource>
  </RCC>

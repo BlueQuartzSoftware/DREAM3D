@@ -73,6 +73,7 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
      MXA_INSTANCE_PROPERTY(unsigned int, ParentPhase);
      MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
+
      void extractStatsData(DataContainer::Pointer m, int index);
 
      void setCrystalStructure(unsigned int xtal);
@@ -91,6 +92,8 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
                                 QwtArray<float> &y);
 
      QString getComboString();
+     QString getTabTitle();
+
 
      void calculateNumberOfBins();
      int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
@@ -98,7 +101,7 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
 
      int gatherStatsData(DataContainer::Pointer m);
 
-   public slots:
+  // public slots:
      void on_m_GenerateDefaultData_clicked();
 
    protected slots:
