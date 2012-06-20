@@ -81,11 +81,6 @@ IF (BUILD_SHARED_LIBS)
     endif()
 ENDIF (BUILD_SHARED_LIBS)
 
-# Seems GCC _really_ wants us to have this flag
-if (LINUX)
-  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
-endif()
-
 # ---------- Find Boost Headers/Libraries -----------------------
 #SET (Boost_FIND_REQUIRED FALSE)
 SET (Boost_DEBUG FALSE)

@@ -50,6 +50,9 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
+#include "DREAM3DLib/Common/PrecipitateStatsData.h"
+#include "DREAM3DLib/Common/PrimaryStatsData.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,6 +67,7 @@ m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_MaxIterations(1),
@@ -78,6 +82,7 @@ m_NeighborList(NULL),
 m_SharedSurfaceAreaList(NULL),
 m_TotalSurfaceAreas(NULL),
 m_CrystalStructures(NULL),
+m_PhaseTypes(NULL),
 m_NumFields(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -164,7 +169,9 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1);
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -309, float, FloatArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
@@ -238,8 +245,18 @@ void MatchCrystallography::initializeArrays()
   simmdf.resize(size);
   for (size_t i = 1; i < size; ++i)
   {
-	actualodf[i] = statsDataArray[i]->getODF();
-	actualmdf[i] = statsDataArray[i]->getMisorientationBins();
+	if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+		PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		actualodf[i] = pp->getODF();
+		actualmdf[i] = pp->getMisorientationBins();
+	}
+	if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	{
+		PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		actualodf[i] = pp->getODF();
+		actualmdf[i] = pp->getMisorientationBins();
+	}
 
 	simodf[i] = FloatArrayType::CreateArray(actualodf[i]->GetSize(), DREAM3D::HDF5::ODF);
 	simmdf[i] = FloatArrayType::CreateArray(actualmdf[i]->GetSize(), DREAM3D::HDF5::MisorientationBins);

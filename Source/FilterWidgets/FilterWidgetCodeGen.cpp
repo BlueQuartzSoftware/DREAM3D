@@ -860,6 +860,7 @@ void createListFile( const std::string &group, const std::string &filter)
 template<typename T>
 void createHTMLFile( const std::string &group, const std::string &filter)
 {
+
 #if (GENERATE_FILTER_TEXT_LIST == 1)
   createListFile<T>(group, filter);
 #endif
@@ -1094,11 +1095,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 int main(int argc, char **argv)
 {
 
+#if (GENERATE_FILTER_TEXT_LIST == 1)
   std::string s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Mike_list.txt");
   FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
   fclose(f);
-
+#endif
   setFilters();
 
   return 0;
