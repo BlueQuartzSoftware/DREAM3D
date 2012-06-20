@@ -79,12 +79,13 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
-    DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PhaseTypes)
+    DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PTypes)
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer);
 
@@ -109,6 +110,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     float* m_CellEulerAngles;
 
     unsigned int* m_CrystalStructures;
+    unsigned int* m_PhaseTypes;
 
 //    unsigned long long int Seed;
 
@@ -147,18 +149,18 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
       crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-      if (m_PhaseTypes.get() == NULL || m_PhaseTypes->GetSize() == 0)
+      if (m_PTypes.get() == NULL || m_PTypes->GetSize() == 0)
       {
         return -1;
       }
-      m_PhaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+      m_PTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
       for(size_t i=0;i<phases.size();i++)
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
       }
       getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypes);
+      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PTypes);
       getDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }

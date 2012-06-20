@@ -110,7 +110,7 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
   }
 
   ReadH5Ebsd::Pointer filter =  ReadH5Ebsd::New();
-  filter->setPhaseTypes(phaseTypes);
+  filter->setPTypes(phaseTypes);
   setupQualityMetricFilters(filter);
 
   // Update the Filter with all of these values;
