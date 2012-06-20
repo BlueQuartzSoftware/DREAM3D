@@ -90,14 +90,11 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
   protected:
     MinSize();
 
-    void remove_smallgrains();
-    void assign_badpoints();
+    void remove_smallgrains(Int32ArrayType::Pointer neighborsPtr, BoolArrayType::Pointer alreadCheckedPtr);
+    void assign_badpoints(Int32ArrayType::Pointer neighborsPtr, BoolArrayType::Pointer alreadCheckedPtr);
 
 
   private:
-    bool* m_AlreadyChecked;
-    int32_t* m_Neighbors;
-
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     int32_t* m_FieldPhases;
