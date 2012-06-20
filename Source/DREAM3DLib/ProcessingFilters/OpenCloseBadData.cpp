@@ -192,8 +192,6 @@ void OpenCloseBadData::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  std::vector<int > neighs;
-  std::vector<int > remove;
 //  size_t count = 1;
   int good = 1;
 //  int neighbor;
@@ -212,64 +210,61 @@ void OpenCloseBadData::execute()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
 
+  size_t count = 0;
+  int current, most, curgrain;
   std::vector<int > n(numgrains + 1);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
-    for (int i = 0; i < totalPoints; i++)
+    count = 0;
+    for (int k = 0; k < dims[2]; k++)
     {
-	  std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-      int grainname = m_GrainIds[i];
-      if ((grainname == 0 && m_Direction == 1) || (grainname > 0 && m_Direction == 0))
-      {
-        for (size_t c = 1; c < numgrains; c++)
-        {
-          n[c] = 0;
-        }
-        x = static_cast<float>(i % dims[0]);
-        y = static_cast<float>((i / dims[0]) % dims[1]);
-        z = static_cast<float>(i / (dims[0] * dims[1]));
-        for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighpoint = i + neighpoints[j];
-          if (j == 0 && z == 0) good = 0;
-          if (j == 5 && z == (dims[2] - 1)) good = 0;
-          if (j == 1 && y == 0) good = 0;
-          if (j == 4 && y == (dims[1] - 1)) good = 0;
-          if (j == 2 && x == 0) good = 0;
-          if (j == 3 && x == (dims[0] - 1)) good = 0;
-          if (good == 1)
-          {
-            int grain = m_GrainIds[neighpoint];
-			if ((grain > 0 && m_Direction == 1) || (grain == 0 && m_Direction == 0))
-            {
-              neighs.push_back(grain);
-            }
-          }
-        }
-        int current = 0;
-        int most = 0;
-        int curgrain = 0;
-        int size = int(neighs.size());
-        for (int k = 0; k < size; k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-          if (current > most)
-          {
-            most = current;
-            curgrain = neighbor;
-          }
-        }
-        if (size > 0)
-        {
-          m_Neighbors[i] = curgrain;
-          neighs.clear();
-        }
-      }
+	    for (int j = 0; j < dims[1]; j++)
+	    {
+		    for (int i = 0; i < dims[0]; i++)
+		    {
+			  std::stringstream ss;
+		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
+		//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+			  int grainname = m_GrainIds[count];
+			  if (grainname == 0)
+			  {
+				current = 0;
+				most = 0;
+				n.resize(numgrains+1,0);
+				for (int l = 0; l < 6; l++)
+				{
+				  good = 1;
+				  neighpoint = count + neighpoints[l];
+				  if (l == 0 && k == 0) good = 0;
+				  if (l == 5 && k == (dims[2] - 1)) good = 0;
+				  if (l == 1 && j == 0) good = 0;
+				  if (l == 4 && j == (dims[1] - 1)) good = 0;
+				  if (l == 2 && i == 0) good = 0;
+				  if (l == 3 && i == (dims[0] - 1)) good = 0;
+				  if (good == 1)
+				  {
+					if (m_Direction == 0)
+					{
+						m_Neighbors[neighpoint] = 0;
+					}
+					int grain = m_GrainIds[neighpoint];
+					if ((grain > 0 && m_Direction == 1))
+					{
+//					  n[grain]++;
+//					  current = n[grain];
+//					  if (current > most)
+//					  {
+//						most = current;
+					    m_Neighbors[i] = grain;
+//					  }
+					}
+				  }
+				}
+				n.clear();
+			  }
+			  count++;
+			}
+		}
     }
     for (int j = 0; j < totalPoints; j++)
     {
