@@ -37,7 +37,19 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="addPhase">
+       <widget class="QPushButton" name="addPhase">
+        <property name="minimumSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>Add a new Phase</string>
         </property>
@@ -45,16 +57,31 @@
          <string>Add a new Phase</string>
         </property>
         <property name="text">
-         <string>...</string>
+         <string/>
         </property>
         <property name="icon">
          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-          <normaloff>:/plus.png</normaloff>:/plus.png</iconset>
+          <normaloff>:/gear_add.png</normaloff>:/gear_add.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="deletePhase">
+       <widget class="QPushButton" name="deletePhase">
+        <property name="maximumSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>Delete the current phase</string>
         </property>
@@ -62,16 +89,37 @@
          <string>Delete the current phase</string>
         </property>
         <property name="text">
-         <string>...</string>
+         <string/>
         </property>
         <property name="icon">
          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-          <normaloff>:/minus.png</normaloff>:/minus.png</iconset>
+          <normaloff>:/gear_delete.png</normaloff>:/gear_delete.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="editPhase">
+       <widget class="QPushButton" name="editPhase">
+        <property name="minimumSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>Edit the current Phase</string>
         </property>
@@ -79,11 +127,20 @@
          <string>Edit the current Phase</string>
         </property>
         <property name="text">
-         <string>...</string>
+         <string/>
         </property>
         <property name="icon">
          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-          <normaloff>:/preferences.png</normaloff>:/preferences.png</iconset>
+          <normaloff>:/gear_edit.png</normaloff>:/gear_edit.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -101,6 +158,38 @@
        </spacer>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="phaseTabWidget">
+      <property name="tabPosition">
+       <enum>QTabWidget::South</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="usesScrollButtons">
+       <bool>false</bool>
+      </property>
+      <property name="documentMode">
+       <bool>true</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <widget class="SGWidget" name="tab_SGWidget_1">
+       <attribute name="title">
+        <string>Tab 1</string>
+       </attribute>
+      </widget>
+      <widget class="SGWidget" name="tab_SGWidget_2">
+       <attribute name="title">
+        <string>Tab 2</string>
+       </attribute>
+      </widget>
+     </widget>
     </item>
     <item>
      <widget class="SGWidget" name="m_SGWidget" native="true"/>
