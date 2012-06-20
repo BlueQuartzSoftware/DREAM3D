@@ -87,10 +87,25 @@ SGAxisODFWidget::~SGAxisODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
+void SGAxisODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
 {
 
-  VectorOfFloatArray arrays = statsData->getAxisODF_Weights();
+  VectorOfFloatArray arrays;
+  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+  {
+	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+	  arrays = pp->getAxisODF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  {
+	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+	  arrays = pp->getAxisODF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+  {
+	  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+	  arrays = tp->getAxisODF_Weights();
+  }
   if (arrays.size() > 0 ) {
   QVector<float> e1(arrays[0]->GetNumberOfTuples());
   ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
@@ -119,7 +134,7 @@ void SGAxisODFWidget::extractStatsData(DataContainer::Pointer m, int index, Stat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGAxisODFWidget::getOrientationData(StatsData::Pointer statsData)
+int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType)
 {
   int retErr = 0;
 
@@ -148,7 +163,21 @@ int SGAxisODFWidget::getOrientationData(StatsData::Pointer statsData)
   if (aodf.size() > 0)
   {
     FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf, DREAM3D::HDF5::AxisOrientation);
-    statsData->setAxisOrientation(aodfData);
+	if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+	{
+	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+	  pp->setAxisOrientation(aodfData);
+	}
+	if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+	  pp->setAxisOrientation(aodfData);
+	}
+	if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+	{
+	  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+	  tp->setAxisOrientation(aodfData);
+	}
 
     if(e1s.size() > 0)
     {
@@ -164,7 +193,21 @@ int SGAxisODFWidget::getOrientationData(StatsData::Pointer statsData)
       aodfWeights.push_back(euler3);
       aodfWeights.push_back(sigma);
       aodfWeights.push_back(weight);
-      statsData->setAxisODF_Weights(aodfWeights);
+	  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+		  pp->setAxisODF_Weights(aodfWeights);
+ 	  }
+	  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+		  pp->setAxisODF_Weights(aodfWeights);
+ 	  }
+	  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+		  tp->setAxisODF_Weights(aodfWeights);
+	  }
     }
 
   }
@@ -224,9 +267,8 @@ void SGAxisODFWidget::setupGui()
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
 
-//  initQwtPlot("RD", "TD", m_ODF_001Plot);
-//  initQwtPlot("RD", "TD", m_ODF_011Plot);
-//  initQwtPlot("RD", "TD", m_ODF_111Plot);
+  addODFTextureBtn->setToolTip("Add Axis ODF Weight");
+  deleteODFTextureBtn->setToolTip("Delete Axis ODF Weight");
 
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);

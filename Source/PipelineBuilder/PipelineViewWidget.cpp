@@ -168,6 +168,7 @@ void PipelineViewWidget::clearWidgets()
       w->deleteLater();
     }
   }
+  m_SelectedFilterWidget = NULL;
 }
 
 // -----------------------------------------------------------------------------

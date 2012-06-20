@@ -52,6 +52,8 @@ AbstractFilter(),
 m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+m_PhaseTypes(NULL),
 m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
 m_AxisEulerAngles(NULL)
@@ -109,14 +111,17 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   }
 
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
 	StatsDataArray::Pointer p = StatsDataArray::New();
 	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
 	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
+
 
   setErrorMessage(ss.str());
 }
@@ -199,7 +204,21 @@ void FindAxisODF::execute()
  // int err;
   for(size_t i=1;i<numXTals;i++)
   {
-	  statsDataArray[i]->setAxisOrientation(axisodf[i]);
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setAxisOrientation(axisodf[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setAxisOrientation(axisodf[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  tp->setAxisOrientation(axisodf[i]);
+	  }
   }
 
   notify("Completed", 0, Observable::UpdateProgressMessage);

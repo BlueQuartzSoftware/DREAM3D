@@ -263,9 +263,24 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData)
+void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
 {
-  VectorOfFloatArray arrays = statsData->getMDF_Weights();
+  VectorOfFloatArray arrays;
+  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+  {
+	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+	  arrays = pp->getMDF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  {
+	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+	  arrays = pp->getMDF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+  {
+	  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+	  arrays = tp->getMDF_Weights();
+  }
   if (arrays.size() > 0 ) {
   QVector<float> angle(arrays[0]->GetNumberOfTuples());
   ::memcpy( &(angle.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*angle.size() );
@@ -288,7 +303,7 @@ void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, St
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::getMisorientationData(StatsData::Pointer statsData)
+int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int phaseType)
 {
   int retErr = 0;
   std::vector<float> x;
@@ -319,7 +334,21 @@ int StatsGenMDFWidget::getMisorientationData(StatsData::Pointer statsData)
   if (mdf.size() > 0)
   {
     FloatArrayType::Pointer p = FloatArrayType::FromStdVector(mdf, DREAM3D::HDF5::MisorientationBins);
-    statsData->setMisorientationBins(p);
+	if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+	{
+	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+	  pp->setMisorientationBins(p);
+ 	}
+	if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+	  pp->setMisorientationBins(p);
+ 	}
+	if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+	{
+	  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+	  tp->setMisorientationBins(p);
+	}
 
     if(angles.size() > 0)
     {
@@ -334,7 +363,21 @@ int StatsGenMDFWidget::getMisorientationData(StatsData::Pointer statsData)
       mdfWeights.push_back(anglesArray);
       mdfWeights.push_back(axisArray);
       mdfWeights.push_back(weightArray);
-      statsData->setMDF_Weights(mdfWeights);
+	  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+		pp->setMDF_Weights(mdfWeights);
+ 	  }
+	  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+		pp->setMDF_Weights(mdfWeights);
+ 	  }
+	  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+		tp->setMDF_Weights(mdfWeights);
+	  }
     }
 
   }

@@ -56,11 +56,13 @@ m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_GrainIds(NULL),
 m_FieldPhases(NULL),
 m_Volumes(NULL),
 m_EquivalentDiameters(NULL),
+m_PhaseTypes(NULL),
 m_NumCells(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
@@ -138,12 +140,14 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, 0, fields, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1);
 
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
 	StatsDataArray::Pointer p = StatsDataArray::New();
 	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles);
+	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
 	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
@@ -193,7 +197,6 @@ void FindSizes::find_sizes()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
-  StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -214,7 +217,7 @@ void FindSizes::find_sizes()
   fractions.resize(numensembles,0.0);
   for(size_t i = 1; i < numensembles; i++)
   {
-	  sizedist[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), 1);
+	  sizedist[i] = statsDataArray[i]->CreateCorrelatedDistributionArrays(getDistributionType(), 1);
 	  values[i].resize(1);
   }
 
@@ -250,15 +253,45 @@ void FindSizes::find_sizes()
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  statsDataArray[i]->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
-	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
-	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
-	  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-	  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
-	  statsDataArray[i]->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
-	  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
-	  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
-	  statsDataArray[i]->setBinNumbers(binnumbers);
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
+		  pp->setGrainSizeDistribution(sizedist[i]);
+		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+		  pp->setBinNumbers(binnumbers);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
+		  pp->setGrainSizeDistribution(sizedist[i]);
+		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+		  pp->setBinNumbers(binnumbers);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  tp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
+		  tp->setGrainSizeDistribution(sizedist[i]);
+		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  tp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+		  tp->setBinNumbers(binnumbers);
+	  }
   }
 }
 void FindSizes::find_sizes2D()
@@ -273,14 +306,17 @@ void FindSizes::find_sizes2D()
   float diameter;
   float maxdiam;
   float mindiam;
+  float totalUnbiasedVolume = 0.0;
   std::vector<VectorOfFloatArray> sizedist;
   std::vector<std::vector<std::vector<float > > > values;
+  std::vector<float> fractions;
   FloatArrayType::Pointer binnumbers;
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
 
   sizedist.resize(numensembles);
   values.resize(numensembles);
+  fractions.resize(numensembles,0.0);
   for(size_t i = 1; i < numensembles; i++)
   {
 	  sizedist[i] = stats_data->CreateCorrelatedDistributionArrays(getDistributionType(), 1);
@@ -307,21 +343,54 @@ void FindSizes::find_sizes2D()
     radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;
-	if(m_BiasedFields[i] == false)
-	{
-		values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
-	}
+    if(m_BiasedFields[i] == false)
+    {
+      values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
+      fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + m_Volumes[i];
+      totalUnbiasedVolume = totalUnbiasedVolume + m_Volumes[i];
+    }
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-	  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
-	  statsDataArray[i]->setGrainSizeDistribution(sizedist[i]);
-	  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-	  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
-	  statsDataArray[i]->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
-	  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
-	  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
-	  statsDataArray[i]->setBinNumbers(binnumbers);
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
+		  pp->setGrainSizeDistribution(sizedist[i]);
+		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+		  pp->setBinNumbers(binnumbers);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
+		  pp->setGrainSizeDistribution(sizedist[i]);
+		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+		  pp->setBinNumbers(binnumbers);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  tp->setPhaseFraction((fractions[i]/totalUnbiasedVolume));
+		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
+		  tp->setGrainSizeDistribution(sizedist[i]);
+		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  tp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
+		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
+		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
+		  tp->setBinNumbers(binnumbers);
+	  }
   }
 }
 

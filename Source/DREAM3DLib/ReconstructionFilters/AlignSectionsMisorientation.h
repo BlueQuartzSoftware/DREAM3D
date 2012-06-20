@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
   public:
     DREAM3D_SHARED_POINTERS(AlignSectionsMisorientation)
     DREAM3D_STATIC_NEW_MACRO(AlignSectionsMisorientation)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMisorientation, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMisorientation, AlignSections)
 
     virtual ~AlignSectionsMisorientation();
 
