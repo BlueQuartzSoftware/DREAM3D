@@ -241,6 +241,7 @@ void PipelineBuilderWidget::setupGui()
 
   QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
   presets->setText(0, "Presets");
+  presets->setIcon(0, QIcon(":/signpost.png"));
   presets->setExpanded(true);
   
   favorites = new QTreeWidgetItem(filterLibraryTree);
