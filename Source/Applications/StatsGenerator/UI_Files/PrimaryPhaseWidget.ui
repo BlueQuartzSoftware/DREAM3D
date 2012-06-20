@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SGWidget</class>
- <widget class="QWidget" name="SGWidget">
+ <class>PrimaryPhaseWidget</class>
+ <widget class="SGWidget" name="PrimaryPhaseWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,6 +14,20 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QLabel" name="label_8">
+     <property name="styleSheet">
+      <string notr="true">QLabel
+{
+font-weight: bold;
+font-size: 150%;
+}</string>
+     </property>
+     <property name="text">
+      <string>Primary Phase</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="tabPosition">
@@ -467,8 +481,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>753</width>
-            <height>584</height>
+            <width>759</width>
+            <height>567</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -538,8 +552,15 @@ font-size: 12px;
    <extends>QWidget</extends>
    <header location="global">SGAxisODFWidget.h</header>
   </customwidget>
+  <customwidget>
+   <class>SGWidget</class>
+   <extends>QWidget</extends>
+   <header>SGWidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections/>

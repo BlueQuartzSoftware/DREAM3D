@@ -151,13 +151,23 @@ void StatsGeneratorUI::writeSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::setupGui()
 {
-  m_SGWidget->setPhaseIndex(1);
-  m_SGWidget->setCrystalStructure(Ebsd::CrystalStructure::Cubic);
-  m_SGWidget->setPhaseFraction(1.0);
-  m_SGWidget->setTotalPhaseFraction(1.0);
-  m_SGWidgets.push_back(m_SGWidget);
+  verticalLayout_2->removeWidget(m_SGWidget);
+  m_SGWidget->hide();
+  m_SGWidget->deleteLater();
+  m_SGWidget = new PrimaryPhaseWidget(centralwidget);
+  m_SGWidget->setObjectName(QString::fromUtf8("m_SGWidget"));
+  verticalLayout_2->addWidget(m_SGWidget);
+  m_SGWidget->show();
+
+  PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(m_SGWidget);
+  ppw->setPhaseIndex(1);
+  ppw->setPhaseType(DREAM3D::PhaseType::PrimaryPhase);
+  ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic);
+  ppw->setPhaseFraction(1.0);
+  ppw->setTotalPhaseFraction(1.0);
+  m_SGWidgets.push_back(ppw);
   QString cName = m_SGWidget->getComboString();
-  m_SGWidget->setObjectName(cName);
+  ppw->setObjectName(cName);
   phaseCombo->blockSignals(true);
   phaseCombo->addItem(cName);
   phaseCombo->blockSignals(false);
@@ -210,31 +220,119 @@ void StatsGeneratorUI::on_addPhase_clicked()
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < m_SGWidgets.size(); ++p)
   {
-    phaseFractionTotal += m_SGWidgets[p]->getPhaseFraction();
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+		{
+		  PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += ppw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+		{
+		  PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += ppw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+		{
+		  TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += tpw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+		{
+		  MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += mpw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+		{
+		  BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += bpw->getPhaseFraction();
+		}
   }
 
   EditPhaseDialog dialog;
+  dialog.setEditFlag(true);
   dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
   int r = dialog.exec();
   if (r == QDialog::Accepted)
   {
-    SGWidget* widget = new SGWidget(centralwidget);
-    m_SGWidgets.push_back(widget);
-    widget->setPhaseIndex(m_SGWidgets.size());
-    widget->setCrystalStructure(dialog.getCrystalStructure());
-    widget->setPhaseFraction(dialog.getPhaseFraction());
-    widget->setPhaseType(dialog.getPhaseType());
-    widget->setPptFraction(dialog.getPptFraction());
-	widget->setParentPhase(dialog.getParentPhase());
-    QString cName = widget->getComboString();
-
-    widget->setObjectName(cName);
-    widget->updatePlots();
-
-    phaseCombo->addItem(cName);
-
-    phaseCombo->setCurrentIndex(phaseCombo->count()-1);
-    setWindowModified(true);
+	if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+	{
+		PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget(centralwidget);
+	    m_SGWidgets.push_back(ppw);
+	    ppw->setPhaseIndex(m_SGWidgets.size());
+		ppw->setPhaseType(DREAM3D::PhaseType::PrimaryPhase);
+	    ppw->setCrystalStructure(dialog.getCrystalStructure());
+	    ppw->setPhaseFraction(dialog.getPhaseFraction());
+	    ppw->setPhaseType(dialog.getPhaseType());
+	    QString cName = ppw->getComboString();
+	    ppw->setObjectName(cName);
+	    ppw->updatePlots();
+	    phaseCombo->addItem(cName);
+	    phaseCombo->setCurrentIndex(phaseCombo->count()-1);
+	    setWindowModified(true);
+	}
+	else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+		PrecipitatePhaseWidget* ppw = new PrecipitatePhaseWidget(centralwidget);
+	    m_SGWidgets.push_back(ppw);
+	    ppw->setPhaseIndex(m_SGWidgets.size());
+		ppw->setPhaseType(DREAM3D::PhaseType::PrecipitatePhase);
+	    ppw->setCrystalStructure(dialog.getCrystalStructure());
+	    ppw->setPhaseFraction(dialog.getPhaseFraction());
+	    ppw->setPhaseType(dialog.getPhaseType());
+	    ppw->setPptFraction(dialog.getPptFraction());
+	    QString cName = ppw->getComboString();
+	    ppw->setObjectName(cName);
+	    ppw->updatePlots();
+	    phaseCombo->addItem(cName);
+	    phaseCombo->setCurrentIndex(phaseCombo->count()-1);
+	    setWindowModified(true);
+	}
+	else if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+	{
+		TransformationPhaseWidget* tpw = new TransformationPhaseWidget(centralwidget);
+	    m_SGWidgets.push_back(tpw);
+	    tpw->setPhaseIndex(m_SGWidgets.size());
+		tpw->setPhaseType(DREAM3D::PhaseType::TransformationPhase);
+	    tpw->setCrystalStructure(dialog.getCrystalStructure());
+	    tpw->setPhaseFraction(dialog.getPhaseFraction());
+	    tpw->setPhaseType(dialog.getPhaseType());
+		tpw->setParentPhase(dialog.getParentPhase());
+	    QString cName = tpw->getComboString();
+	    tpw->setObjectName(cName);
+	    tpw->updatePlots();
+	    phaseCombo->addItem(cName);
+	    phaseCombo->setCurrentIndex(phaseCombo->count()-1);
+	    setWindowModified(true);
+	}
+	else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+	{
+		MatrixPhaseWidget* mpw = new MatrixPhaseWidget(centralwidget);
+	    m_SGWidgets.push_back(mpw);
+	    mpw->setPhaseIndex(m_SGWidgets.size());
+		mpw->setPhaseType(DREAM3D::PhaseType::MatrixPhase);
+	    mpw->setCrystalStructure(dialog.getCrystalStructure());
+	    mpw->setPhaseFraction(dialog.getPhaseFraction());
+	    mpw->setPhaseType(dialog.getPhaseType());
+	    QString cName = mpw->getComboString();
+	    mpw->setObjectName(cName);
+	    phaseCombo->addItem(cName);
+	    phaseCombo->setCurrentIndex(phaseCombo->count()-1);
+	    setWindowModified(true);
+	}
+	else if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+	{
+		BoundaryPhaseWidget* bpw = new BoundaryPhaseWidget(centralwidget);
+	    m_SGWidgets.push_back(bpw);
+	    bpw->setPhaseIndex(m_SGWidgets.size());
+		bpw->setPhaseType(DREAM3D::PhaseType::BoundaryPhase);
+	    bpw->setCrystalStructure(dialog.getCrystalStructure());
+	    bpw->setPhaseFraction(dialog.getPhaseFraction());
+	    bpw->setPhaseType(dialog.getPhaseType());
+	    QString cName = bpw->getComboString();
+	    bpw->setObjectName(cName);
+	    phaseCombo->addItem(cName);
+	    phaseCombo->setCurrentIndex(phaseCombo->count()-1);
+	    setWindowModified(true);
+	}
   }
 }
 
@@ -245,43 +343,197 @@ void StatsGeneratorUI::on_editPhase_clicked()
 {
   double phaseFractionTotal = 0.0;
   EditPhaseDialog dialog;
+  dialog.setEditFlag(false);
   for(int p = 0; p < m_SGWidgets.size(); ++p)
   {
-    if (m_SGWidget != m_SGWidgets[p]) {
-      phaseFractionTotal += m_SGWidgets[p]->getPhaseFraction();
+    if (m_SGWidget != m_SGWidgets[p]) 
+	{
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+		{
+		  PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += ppw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+		{
+		  PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += ppw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+		{
+		  TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += tpw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+		{
+		  MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += mpw->getPhaseFraction();
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+		{
+		  BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(m_SGWidgets[p]);
+	      phaseFractionTotal += bpw->getPhaseFraction();
+		}
     }
     else
     {
-      dialog.setPhaseFraction(m_SGWidget->getPhaseFraction());
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+		{
+		  PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(m_SGWidgets[p]);
+		  dialog.setPhaseFraction(ppw->getPhaseFraction());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+		{
+		  PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(m_SGWidgets[p]);
+		  dialog.setPhaseFraction(ppw->getPhaseFraction());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+		{
+		  TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(m_SGWidgets[p]);
+		  dialog.setPhaseFraction(tpw->getPhaseFraction());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+		{
+		  MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(m_SGWidgets[p]);
+		  dialog.setPhaseFraction(mpw->getPhaseFraction());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+		{
+		  BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(m_SGWidgets[p]);
+		  dialog.setPhaseFraction(bpw->getPhaseFraction());
+		}
     }
   }
-  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
-  dialog.setCrystalStructure(m_SGWidget->getCrystalStructure());
   dialog.setPhaseType(m_SGWidget->getPhaseType());
-  dialog.setPptFraction(m_SGWidget->getPptFraction());
-  dialog.setParentPhase(m_SGWidget->getParentPhase());
+  if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+  {
+	  PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(m_SGWidget);
+	  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+	  dialog.setCrystalStructure(ppw->getCrystalStructure());
+  }
+  else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+  {
+	  PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(m_SGWidget);
+	  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+	  dialog.setCrystalStructure(ppw->getCrystalStructure());
+	  dialog.setPptFraction(ppw->getPptFraction());
+  }
+  else if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+  {
+	  TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(m_SGWidget);
+	  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+	  dialog.setCrystalStructure(tpw->getCrystalStructure());
+	  dialog.setParentPhase(tpw->getParentPhase());
+  }
+  else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+  {
+	  MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(m_SGWidget);
+	  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+	  dialog.setCrystalStructure(mpw->getCrystalStructure());
+  }
+  else if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+  {
+	  BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(m_SGWidget);
+	  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+	  dialog.setCrystalStructure(bpw->getCrystalStructure());
+  }
   int r = dialog.exec();
   if (r == QDialog::Accepted)
   {
-    int index = phaseCombo->currentIndex();
-    m_SGWidget->setCrystalStructure(dialog.getCrystalStructure());
-    m_SGWidget->setPhaseFraction(dialog.getPhaseFraction());
-    m_SGWidget->setPhaseType(dialog.getPhaseType());
-    m_SGWidget->setPptFraction(dialog.getPptFraction());
-	m_SGWidget->setParentPhase(dialog.getParentPhase());
-    QString cName = m_SGWidget->getComboString();
-    phaseCombo->blockSignals(true);
-    phaseCombo->clear();
-    for(int p = 0; p < m_SGWidgets.size(); ++p)
-    {
-      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
-    }
-    phaseCombo->setCurrentIndex(index);
-    setWindowModified(true);
-
-    phaseCombo->blockSignals(false);
-
-    m_SGWidget->updatePlots();
+	if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+	{
+		PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(m_SGWidget);
+	    int index = phaseCombo->currentIndex();
+	    ppw->setCrystalStructure(dialog.getCrystalStructure());
+	    ppw->setPhaseFraction(dialog.getPhaseFraction());
+	    ppw->setPhaseType(dialog.getPhaseType());
+	    QString cName = ppw->getComboString();
+	    phaseCombo->blockSignals(true);
+	    phaseCombo->clear();
+	    for(int p = 0; p < m_SGWidgets.size(); ++p)
+	    {
+	      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
+	    }
+	    phaseCombo->setCurrentIndex(index);
+	    setWindowModified(true);
+	    phaseCombo->blockSignals(false);	
+	    ppw->updatePlots();
+	}
+	if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+		PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(m_SGWidget);
+	    int index = phaseCombo->currentIndex();
+	    ppw->setCrystalStructure(dialog.getCrystalStructure());
+	    ppw->setPhaseFraction(dialog.getPhaseFraction());
+	    ppw->setPhaseType(dialog.getPhaseType());
+	    ppw->setPptFraction(dialog.getPptFraction());
+	    QString cName = ppw->getComboString();
+	    phaseCombo->blockSignals(true);
+	    phaseCombo->clear();
+	    for(int p = 0; p < m_SGWidgets.size(); ++p)
+	    {
+	      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
+	    }
+	    phaseCombo->setCurrentIndex(index);
+	    setWindowModified(true);
+	    phaseCombo->blockSignals(false);	
+	    ppw->updatePlots();
+	}
+	if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+	{
+		TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(m_SGWidget);
+	    int index = phaseCombo->currentIndex();
+	    tpw->setCrystalStructure(dialog.getCrystalStructure());
+	    tpw->setPhaseFraction(dialog.getPhaseFraction());
+	    tpw->setPhaseType(dialog.getPhaseType());
+	    tpw->setParentPhase(dialog.getParentPhase());
+	    QString cName = tpw->getComboString();
+	    phaseCombo->blockSignals(true);
+	    phaseCombo->clear();
+	    for(int p = 0; p < m_SGWidgets.size(); ++p)
+	    {
+	      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
+	    }
+	    phaseCombo->setCurrentIndex(index);
+	    setWindowModified(true);
+	    phaseCombo->blockSignals(false);	
+	    tpw->updatePlots();
+	}
+	if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+	{
+		MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(m_SGWidget);
+	    int index = phaseCombo->currentIndex();
+	    mpw->setCrystalStructure(dialog.getCrystalStructure());
+	    mpw->setPhaseFraction(dialog.getPhaseFraction());
+	    mpw->setPhaseType(dialog.getPhaseType());
+	    QString cName = mpw->getComboString();
+	    phaseCombo->blockSignals(true);
+	    phaseCombo->clear();
+	    for(int p = 0; p < m_SGWidgets.size(); ++p)
+	    {
+	      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
+	    }
+	    phaseCombo->setCurrentIndex(index);
+	    setWindowModified(true);
+	    phaseCombo->blockSignals(false);	
+	}
+	if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+	{
+		BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(m_SGWidget);
+	    int index = phaseCombo->currentIndex();
+	    bpw->setCrystalStructure(dialog.getCrystalStructure());
+	    bpw->setPhaseFraction(dialog.getPhaseFraction());
+	    bpw->setPhaseType(dialog.getPhaseType());
+	    QString cName = bpw->getComboString();
+	    phaseCombo->blockSignals(true);
+	    phaseCombo->clear();
+	    for(int p = 0; p < m_SGWidgets.size(); ++p)
+	    {
+	      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
+	    }
+	    phaseCombo->setCurrentIndex(index);
+	    setWindowModified(true);
+	    phaseCombo->blockSignals(false);	
+	}
   }
 
 }
@@ -303,9 +555,41 @@ void StatsGeneratorUI::on_deletePhase_clicked()
     // Reset the phase index for each SGPhase object
     for(int p = 0; p < m_SGWidgets.size(); ++p)
     {
-      m_SGWidgets[p]->setPhaseIndex(p+1);
-      phaseCombo->addItem(m_SGWidgets[p]->getComboString());
-      m_SGWidgets[p]->setObjectName(m_SGWidgets[p]->getComboString());
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+		{
+		  PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(m_SGWidgets[p]);
+	      ppw->setPhaseIndex(p+1);
+	      phaseCombo->addItem(ppw->getComboString());
+	      ppw->setObjectName(ppw->getComboString());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+		{
+		  PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(m_SGWidgets[p]);
+	      ppw->setPhaseIndex(p+1);
+	      phaseCombo->addItem(ppw->getComboString());
+	      ppw->setObjectName(ppw->getComboString());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+		{
+		  TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(m_SGWidgets[p]);
+	      tpw->setPhaseIndex(p+1);
+	      phaseCombo->addItem(tpw->getComboString());
+	      tpw->setObjectName(tpw->getComboString());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+		{
+		  MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(m_SGWidgets[p]);
+	      mpw->setPhaseIndex(p+1);
+	      phaseCombo->addItem(mpw->getComboString());
+	      mpw->setObjectName(mpw->getComboString());
+		}
+		if(m_SGWidgets[p]->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+		{
+		  BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(m_SGWidgets[p]);
+	      bpw->setPhaseIndex(p+1);
+	      phaseCombo->addItem(bpw->getComboString());
+	      bpw->setObjectName(bpw->getComboString());
+		}
     }
 
     SGWidget* widget = m_SGWidgets[0];
@@ -510,10 +794,33 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   for(int i = 0; i < nPhases; ++i)
   {
-    StatsData::Pointer data = StatsData::New();
-    statsDataArray->setStatsData(i+1, data);
     SGWidget* sgwidget = m_SGWidgets[i];
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+	{
+	    PrimaryStatsData::Pointer data = PrimaryStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+	{
+	    PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+	{
+	    TransformationStatsData::Pointer data = TransformationStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+	{
+	    MatrixStatsData::Pointer data = MatrixStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
+	if(sgwidget->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+	{
+	    BoundaryStatsData::Pointer data = BoundaryStatsData::New();
+	    statsDataArray->setStatsData(i+1, data);
+	}
     err = sgwidget->gatherStatsData(m);
     if (err < 0)
     {

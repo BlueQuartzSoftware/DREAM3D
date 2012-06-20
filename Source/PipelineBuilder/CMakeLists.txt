@@ -97,6 +97,9 @@ set (PipelineBuilderLib_PROJECT_SRCS
 # ---------- Setup output Directories -------------------------
 # This library MUST be shared because there is a singleton instance
 # variable that ALL plugins should use.
+if (LINUX)
+  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
+endif()
 add_library(${PROJECT_NAME} SHARED ${PipelineBuilderLib_PROJECT_SRCS})
 target_link_libraries(${PROJECT_NAME}                     
                         MXA
