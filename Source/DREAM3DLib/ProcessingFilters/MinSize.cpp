@@ -60,8 +60,6 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_MinAllowedGrainSize(1),
-m_AlreadyChecked(NULL),
-m_Neighbors(NULL),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL),
@@ -164,15 +162,13 @@ void MinSize::execute()
   setErrorCondition(0);
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  m_Neighbors = neighborsPtr->GetPointer(0);
   neighborsPtr->initializeWithZeros();
 
-  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
-  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
+  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked"); 
   alreadCheckedPtr->initializeWithZeros();
 
-  remove_smallgrains();
-  assign_badpoints();
+  remove_smallgrains(neighborsPtr, alreadCheckedPtr);
+  assign_badpoints(neighborsPtr, alreadCheckedPtr);
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
@@ -194,8 +190,11 @@ void MinSize::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::assign_badpoints()
+void MinSize::assign_badpoints(Int32ArrayType::Pointer neighborsPtr, BoolArrayType::Pointer alreadCheckedPtr)
 {
+  bool* alreadyChecked = alreadCheckedPtr->GetPointer(0);
+  int32_t* neighbors = neighborsPtr->GetPointer(0);
+
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
@@ -279,14 +278,14 @@ void MinSize::assign_badpoints()
             }
           }
         }
-        m_Neighbors[i] = curgrain;
+        neighbors[i] = curgrain;
 		n.clear();
       }
     }
     for (int j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
+      int neighbor = neighbors[j];
       if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
@@ -299,8 +298,11 @@ void MinSize::assign_badpoints()
   }
 }
 
-void MinSize::remove_smallgrains()
+void MinSize::remove_smallgrains(Int32ArrayType::Pointer neighborsPtr, BoolArrayType::Pointer alreadCheckedPtr)
 {
+  bool* alreadyChecked = alreadCheckedPtr->GetPointer(0);
+  int32_t* neighbors = neighborsPtr->GetPointer(0);
+
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
@@ -344,7 +346,7 @@ void MinSize::remove_smallgrains()
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    m_AlreadyChecked[i] = false;
+    alreadyChecked[i] = false;
     gnum = m_GrainIds[i];
     if(gnum >= 0) nuclei[gnum] = static_cast<int>(i);
   }
@@ -357,7 +359,8 @@ void MinSize::remove_smallgrains()
       size = 0;
       int nucleus = nuclei[i];
       voxellists[i].push_back(nucleus);
-      m_AlreadyChecked[nucleus] = true;
+      assert(nucleus <= totalPoints);
+      alreadyChecked[nucleus] = true;
       size++;
       for (size_t j = 0; j < size; j++)
       {
@@ -375,13 +378,14 @@ void MinSize::remove_smallgrains()
           if (k == 4 && row == (dims[1] - 1)) good = 0;
           if (k == 2 && col == 0) good = 0;
           if (k == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && m_AlreadyChecked[neighbor] == false)
+          if (good == 1 && alreadyChecked[neighbor] == false)
           {
             size_t grainname = static_cast<size_t>(m_GrainIds[neighbor]);
             if (grainname == i)
             {
               voxellists[i].push_back(neighbor);
-              m_AlreadyChecked[neighbor] = true;
+              assert(neighbor <= totalPoints);
+              alreadyChecked[neighbor] = true;
               size++;
             }
           }
