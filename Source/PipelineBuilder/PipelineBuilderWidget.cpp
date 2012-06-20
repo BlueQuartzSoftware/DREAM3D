@@ -136,7 +136,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
 
 
   //Get Favorites from Pref File and Update Tree Widget
-  prefs.beginGroup("Favorites");
+  prefs.beginGroup("Favorite Pipelines");
 
   int favoriteCount = prefs.value("count").toInt(&ok);
   if (false == ok) {
@@ -155,6 +155,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
 
     QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(favorites);
     favoriteItem->setText(0, favName);
+    favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
   }
 
   prefs.endGroup();
@@ -166,13 +167,13 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 {
- 
+
   prefs.setValue("splitter_1", splitter_1->saveState());
   prefs.setValue("splitter_2", splitter_2->saveState());
 
 
 
-  prefs.beginGroup("Favorites");
+  prefs.beginGroup("Favorite Pipelines");
   prefs.clear();
   prefs.setValue( "count", favoritesMap.size() );
 
@@ -186,7 +187,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
   }
   prefs.endGroup();
 
-  writeSettings(prefs, m_PipelineViewWidget); 
+  writeSettings(prefs, m_PipelineViewWidget);
 
 }
 
@@ -212,7 +213,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
     }
   }
 
- 
+
 }
 
 // -----------------------------------------------------------------------------
@@ -238,14 +239,17 @@ void PipelineBuilderWidget::setupGui()
 
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, "Library");
+  library->setIcon(0, QIcon(":/cubes.png"));
 
   QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
-  presets->setText(0, "Presets");
-  presets->setIcon(0, QIcon(":/signpost.png"));
+  presets->setText(0, "Prebuilt Pipelines");
+  presets->setIcon(0, QIcon(":/flag_blue_scroll.png"));
   presets->setExpanded(true);
-  
+
   favorites = new QTreeWidgetItem(filterLibraryTree);
-  favorites->setText(0, "Favorites");
+  favorites->setText(0, "Favorite Pipelines");
+  favorites->setIcon(0, QIcon(":/flash.png"));
+
   favorites->setExpanded(true);
 
 //  std::cout << "Groups Found: " << std::endl;
@@ -283,6 +287,7 @@ void PipelineBuilderWidget::setupGui()
   {
   QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
   presetFilter->setText(0, "Ebsd 3D Reconstruction");
+  presetFilter->setIcon(0, QIcon(":/scroll.png"));
   QStringList presetFilterList;
   presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" <<
     "DataContainerWriter" << "VtkRectilinearGridWriter";
@@ -292,6 +297,7 @@ void PipelineBuilderWidget::setupGui()
   {
   QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
   presetFilter->setText(0, "Statistics");
+  presetFilter->setIcon(0, QIcon(":/scroll.png"));
   QStringList presetFilterList;
   presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" <<
     "FindShapes" << "FindAxisODF" << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" <<
@@ -352,12 +358,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
   // Get the QFilterWidget Manager Instance
   QTreeWidgetItem* parent = item->parent();
   if (NULL != parent) {
-    if (parent->text(0).compare("Presets") == 0) {
+    if (parent->text(0).compare("Prebuilt Pipelines") == 0) {
       QString text = item->text(0);
       QStringList presetList = presetMap[text];
       loadPreset(presetList);
     }
-    else if (parent->text(0).compare("Favorites") == 0) {
+    else if (parent->text(0).compare("Favorite Pipelines") == 0) {
       QString favoriteName = item->text(0);
       QString favoritePath = favoritesMap[favoriteName];
       loadFavorites(favoritePath);
@@ -753,72 +759,81 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
   favoriteTitle.remove(" ");
   favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
 
-  if ( addfavoriteDialog->getBtnClicked() ) {
+  if(addfavoriteDialog->getBtnClicked())
+  {
     QTreeWidgetItem* favName = new QTreeWidgetItem();
     favName->setText(0, favoriteTitle);
+    favName->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
 
-  for (int i=0; i <= favoritesMap.size(); i++) {
-    QString listLower;
-    QChar listChar;
-    if (favoritesMap.size() != i) {
-      listLower = favorites->child(i)->text(0).toLower();
-      listChar = favorites->child(i)->text(0).at(0).toLower();
-    }
-    QString insertLower = favoriteTitle.toLower();
-    QChar insertChar = favoriteTitle.at(0).toLower();
-    
-    //Handle insert-empty and insert-last cases
-    if (favoritesMap.size() == i) {
-      favorites->insertChild(i, favName);
-      break;
+    for (int i = 0; i <= favoritesMap.size(); i++)
+    {
+      QString listLower;
+      QChar listChar;
+      if(favoritesMap.size() != i)
+      {
+        listLower = favorites->child(i)->text(0).toLower();
+        listChar = favorites->child(i)->text(0).at(0).toLower();
+      }
+      QString insertLower = favoriteTitle.toLower();
+      QChar insertChar = favoriteTitle.at(0).toLower();
+
+      //Handle insert-empty and insert-last cases
+      if(favoritesMap.size() == i)
+      {
+        favorites->insertChild(i, favName);
+        break;
+      }
+
+      //Handle duplicate case
+      else if(listLower == insertLower)
+      {
+        QMessageBox::critical(this, QString("DREAM3D"), QString("A favorite named " + favoriteTitle + " already exists.\nPlease try again."));
+        delete favName;
+        break;
+      }
+
+      //Insert in alphabetical order
+      else if(listChar > insertChar)
+      {
+        favorites->insertChild(i, favName);
+        break;
+      }
     }
 
-    //Handle duplicate case
-    else if (listLower == insertLower) {
-      QMessageBox::critical(this, QString("DREAM3D"), QString("A favorite named " + favoriteTitle + " already exists.\nPlease try again."));
-      delete favName;
-      break;
-    }
-
-    //Insert in alphabetical order
-    else if (listChar > insertChar) {
-      favorites->insertChild(i, favName);
-      break;
-    }
-  }
-
-    #if defined (Q_OS_MAC)
-        QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-        QString extension = ".plist";
-    #else
-        QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-        QString extension = ".ini";
-    #endif
+#if defined (Q_OS_MAC)
+    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QString extension = ".ini";
+#else
+    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QString extension = ".ini";
+#endif
 
     QString prefFile = prefs.fileName();
     QFileInfo prefFileInfo = QFileInfo(prefFile);
     QString parentPath = prefFileInfo.path();
     QDir parentPathDir = QDir(parentPath);
-  
-      if ( parentPathDir.mkpath(parentPath) ) {
-        QString newParentPrefPath = parentPath + "/Favorites";
-        QString newPrefPath = newParentPrefPath + "/" + favoriteTitle + extension;
 
-        newPrefPath = QDir::toNativeSeparators(newPrefPath);
-        newParentPrefPath = QDir::toNativeSeparators(newParentPrefPath);
+    if(parentPathDir.mkpath(parentPath))
+    {
+      QString newParentPrefPath = parentPath + "/DREAM3D_Favorites";
+      QString newPrefPath = newParentPrefPath + "/" + favoriteTitle + extension;
 
-        favoritesMap[favoriteTitle] = newPrefPath;
+      newPrefPath = QDir::toNativeSeparators(newPrefPath);
+      newParentPrefPath = QDir::toNativeSeparators(newParentPrefPath);
 
-        QDir newParentPrefPathDir = QDir(newParentPrefPath);
+      favoritesMap[favoriteTitle] = newPrefPath;
 
-        if ( newParentPrefPathDir.mkpath(newParentPrefPath) ) {
-          QSettings newPrefs(newPrefPath, QSettings::IniFormat);
-          newPrefs.beginGroup("favorite_config");
-          newPrefs.setValue("Name", favoriteTitle);
-          newPrefs.endGroup();
-          writeSettings(newPrefs, m_PipelineViewWidget);
-        }
+      QDir newParentPrefPathDir = QDir(newParentPrefPath);
+
+      if(newParentPrefPathDir.mkpath(newParentPrefPath))
+      {
+        QSettings newPrefs(newPrefPath, QSettings::IniFormat);
+        newPrefs.beginGroup("favorite_config");
+        newPrefs.setValue("Name", favoriteTitle);
+        newPrefs.endGroup();
+        writeSettings(newPrefs, m_PipelineViewWidget);
       }
+    }
   }
 }
 
@@ -828,7 +843,7 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
 void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
-  if (NULL != parent && parent->text(0).compare("Favorites") == 0) {
+  if (NULL != parent && parent->text(0).compare("Favorite Pipelines") == 0) {
     QString favoriteName = item->text(0);
     QString filePath = favoritesMap[item->text(0)];
     QFileInfo filePathInfo = QFileInfo(filePath);
@@ -852,11 +867,6 @@ void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::loadFavorites(QString path) {
-  #if defined (Q_OS_MAC)
-    QSettings prefs(path, QSettings::NativeFormat);
-  #else
-    QSettings prefs(path, QSettings::IniFormat);
-  #endif
-
+  QSettings prefs(path, QSettings::IniFormat);
   readSettings(prefs, m_PipelineViewWidget);
 }

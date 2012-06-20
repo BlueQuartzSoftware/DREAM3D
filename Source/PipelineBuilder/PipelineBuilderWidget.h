@@ -73,10 +73,20 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
       */
     virtual void readSettings(QSettings &prefs);
 
+    /**
+      * @brief Reads the Preferences from the users pref file
+      */
+    virtual void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
+
      /**
       * @brief Writes the preferences to the users pref file
       */
     virtual void writeSettings(QSettings &prefs);
+
+    /**
+     * @brief Writes the preferences to the users pref file
+     */
+   virtual void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
 
     /**
      * @brief Enables or Disables all the widgets in a list
@@ -147,13 +157,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QThread*                    m_WorkerThread;
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
-<<<<<<< HEAD
+
     QMap<QString,QStringList>   presetMap;
     QMap<QString,QString>       favoritesMap;
     QTreeWidgetItem*            favorites;
-=======
-    QMap<QString,QStringList>   Fmap;
->>>>>>> bf55ff77c6a03f93be9442b731627e5b893c62f7
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented

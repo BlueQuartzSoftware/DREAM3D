@@ -413,7 +413,7 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="icon">
              <iconset resource="../../../Resources/icons/images/Icons.qrc">
-              <normaloff>:/bookmark_add.png</normaloff>:/bookmark_add.png</iconset>
+              <normaloff>:/flash_add.png</normaloff>:/flash_add.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -460,7 +460,7 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="icon">
              <iconset resource="../../../Resources/icons/images/Icons.qrc">
-              <normaloff>:/bookmark_delete.png</normaloff>:/bookmark_delete.png</iconset>
+              <normaloff>:/flash_delete.png</normaloff>:/flash_delete.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -641,7 +641,7 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>543</width>
+         <width>579</width>
          <height>782</height>
         </rect>
        </property>
