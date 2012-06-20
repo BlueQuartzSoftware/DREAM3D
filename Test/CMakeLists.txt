@@ -52,9 +52,9 @@ add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest
 # --------------------------------------------------------------------------
 # StatsData Test
 # --------------------------------------------------------------------------
-add_executable(StatsDataTest StatsDataTest.cpp )
-target_link_libraries(StatsDataTest DREAM3DLib)
-add_test(StatsDataTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsDataTest)
+#add_executable(StatsDataTest StatsDataTest.cpp )
+#target_link_libraries(StatsDataTest DREAM3DLib)
+#add_test(StatsDataTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsDataTest)
 
 # --------------------------------------------------------------------------
 # DataContainer Test
