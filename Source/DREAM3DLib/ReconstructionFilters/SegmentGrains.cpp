@@ -182,7 +182,7 @@ void SegmentGrains::execute()
       gnum++;
       ss.str("");
       ss << "Total Grains: " << gnum;
-      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      if(gnum%100 == 0) notify(ss.str(), 0, Observable::UpdateProgressMessage);
     }
   }
 
