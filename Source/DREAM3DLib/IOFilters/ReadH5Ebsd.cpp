@@ -75,6 +75,7 @@ m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
@@ -82,6 +83,7 @@ m_ZEndIndex(0),
 m_Manufacturer(Ebsd::UnknownManufacturer),
 m_CellPhases(NULL),
 m_GoodVoxels(NULL),
+m_PhaseTypes(NULL),
 m_CellEulerAngles(NULL)
 {
  // Seed = MXA::getMilliSeconds();
@@ -110,12 +112,12 @@ void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 	writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
 	ss.str("");
   }
-  int numPhaseType = m_PhaseTypes->GetNumberOfTuples();
+  int numPhaseType = m_PTypes->GetNumberOfTuples();
   writer->writeValue("NumPhaseTypes", numPhaseType);
   for(int i = 0; i < numPhaseType; ++i)
   {
     ss << "PhaseType-" << i;
-    writer->writeValue(ss.str(), m_PhaseTypes->GetValue(i));
+    writer->writeValue(ss.str(), m_PTypes->GetValue(i));
     ss.str("");
   }
 }
@@ -245,7 +247,9 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> PTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1);
 }
 
 // -----------------------------------------------------------------------------
