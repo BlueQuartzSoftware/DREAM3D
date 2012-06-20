@@ -181,6 +181,7 @@ void PipelineBuilderWidget::setupGui()
 
   QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
   presets->setText(0, "Presets");
+  presets->setIcon(0, QIcon(":/signpost.png"));
   presets->setExpanded(true);
 
 //  std::cout << "Groups Found: " << std::endl;
@@ -216,22 +217,21 @@ void PipelineBuilderWidget::setupGui()
   on_filterLibraryTree_itemClicked(library, 0);
 
   {
-  QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-  presetFilter->setText(0, "Ebsd 3D Reconstruction");
-  QStringList presetFilterList;
-  presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" <<
-    "DataContainerWriter" << "VtkRectilinearGridWriter";
-  Fmap["Ebsd 3D Reconstruction"] = presetFilterList;
+    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+    presetFilter->setText(0, "Ebsd 3D Reconstruction");
+    QStringList presetFilterList;
+    presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" << "DataContainerWriter"
+        << "VtkRectilinearGridWriter";
+    Fmap["Ebsd 3D Reconstruction"] = presetFilterList;
   }
 
   {
-  QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-  presetFilter->setText(0, "Statistics");
-  QStringList presetFilterList;
-  presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" <<
-    "FindShapes" << "FindAxisODF" << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" <<
-      "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
-  Fmap["Statistics"] = presetFilterList;
+    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+    presetFilter->setText(0, "Statistics");
+    QStringList presetFilterList;
+    presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindShapes" << "FindAxisODF"
+        << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" << "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
+    Fmap["Statistics"] = presetFilterList;
   }
 
 }
