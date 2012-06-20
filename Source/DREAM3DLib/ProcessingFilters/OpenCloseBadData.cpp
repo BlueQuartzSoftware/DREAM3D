@@ -211,21 +211,25 @@ void OpenCloseBadData::execute()
   std::vector<int> currentvlist;
 
   size_t count = 0;
+  int kstride, jstride;
+  int grainname, grain;
   int current, most, curgrain;
   std::vector<int > n(numgrains + 1);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
-    count = 0;
-    for (int k = 0; k < dims[2]; k++)
+    for (int k = 1; k < dims[2]-1; k++)
     {
-	    for (int j = 0; j < dims[1]; j++)
+		kstride = dims[0]*dims[1]*k;
+	    for (int j = 1; j < dims[1]-1; j++)
 	    {
-		    for (int i = 0; i < dims[0]; i++)
+			jstride = dims[0]*j;
+		    for (int i = 1; i < dims[0]-1; i++)
 		    {
+			  count = kstride+jstride+i;
 			  std::stringstream ss;
 		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
 		//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-			  int grainname = m_GrainIds[count];
+			  grainname = m_GrainIds[count];
 			  if (grainname == 0)
 			  {
 				current = 0;
@@ -233,36 +237,35 @@ void OpenCloseBadData::execute()
 				n.resize(numgrains+1,0);
 				for (int l = 0; l < 6; l++)
 				{
-				  good = 1;
+//				  good = 1;
 				  neighpoint = count + neighpoints[l];
-				  if (l == 0 && k == 0) good = 0;
-				  if (l == 5 && k == (dims[2] - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (dims[1] - 1)) good = 0;
-				  if (l == 2 && i == 0) good = 0;
-				  if (l == 3 && i == (dims[0] - 1)) good = 0;
-				  if (good == 1)
-				  {
-					if (m_Direction == 0)
+//				  if (l == 0 && k == 0) good = 0;
+//				  if (l == 5 && k == (dims[2] - 1)) good = 0;
+//				  if (l == 1 && j == 0) good = 0;
+//				  if (l == 4 && j == (dims[1] - 1)) good = 0;
+//				  if (l == 2 && i == 0) good = 0;
+//				  if (l == 3 && i == (dims[0] - 1)) good = 0;
+//				  if (good == 1)
+//				  {
+					grain = m_GrainIds[neighpoint];
+					if (m_Direction == 0 && grain > 0)
 					{
 						m_Neighbors[neighpoint] = 0;
 					}
-					int grain = m_GrainIds[neighpoint];
 					if ((grain > 0 && m_Direction == 1))
 					{
-//					  n[grain]++;
-//					  current = n[grain];
-//					  if (current > most)
-//					  {
-//						most = current;
+					  n[grain]++;
+					  current = n[grain];
+					  if (current > most)
+					  {
+						most = current;
 					    m_Neighbors[i] = grain;
-//					  }
+					  }
 					}
-				  }
+//				  }
 				}
 				n.clear();
 			  }
-			  count++;
 			}
 		}
     }
