@@ -60,6 +60,8 @@ class DREAM3DLib_EXPORT PhaseType
     static std::string PrimaryStr() { return std::string("Primary"); }
     static std::string PrecipitateStr() { return std::string("Precipitate"); }
     static std::string TransformationStr() { return std::string("Transformation"); }
+    static std::string MatrixStr() { return std::string("Matrix"); }
+    static std::string BoundaryStr() { return std::string("Boundary"); }
     static std::string UnknownPhaseTypeStr() { return std::string("Unknown Phase Type"); }
 
 
@@ -73,6 +75,10 @@ class DREAM3DLib_EXPORT PhaseType
           return PrecipitateStr();
         case DREAM3D::PhaseType::TransformationPhase:
           return TransformationStr();
+        case DREAM3D::PhaseType::MatrixPhase:
+          return MatrixStr();
+        case DREAM3D::PhaseType::BoundaryPhase:
+          return BoundaryStr();
         case DREAM3D::PhaseType::UnknownPhaseType:
           return UnknownPhaseTypeStr();
         default:
@@ -95,6 +101,14 @@ class DREAM3DLib_EXPORT PhaseType
       {
         return DREAM3D::PhaseType::TransformationPhase;
       }
+      else if (MatrixStr().compare(str) == 0)
+      {
+        return DREAM3D::PhaseType::MatrixPhase;
+      }
+      else if (BoundaryStr().compare(str) == 0)
+      {
+        return DREAM3D::PhaseType::BoundaryPhase;
+      }
       return DREAM3D::PhaseType::UnknownPhaseType;
     }
 
@@ -104,7 +118,9 @@ class DREAM3DLib_EXPORT PhaseType
       strings.clear();
       strings.push_back(PrimaryStr());
       strings.push_back(PrecipitateStr());
-//      strings.push_back(TransformationStr());
+      strings.push_back(TransformationStr());
+      strings.push_back(MatrixStr());
+      strings.push_back(BoundaryStr());
       strings.push_back(UnknownPhaseTypeStr());
     }
 
@@ -113,7 +129,9 @@ class DREAM3DLib_EXPORT PhaseType
       types.clear();
       types.push_back(DREAM3D::PhaseType::PrimaryPhase);
       types.push_back(DREAM3D::PhaseType::PrecipitatePhase);
-//      types.push_back(AIM::Reconstruction::TransformationPhase);
+      types.push_back(DREAM3D::PhaseType::TransformationPhase);
+      types.push_back(DREAM3D::PhaseType::MatrixPhase);
+      types.push_back(DREAM3D::PhaseType::BoundaryPhase);
       types.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     }
 
@@ -122,7 +140,9 @@ class DREAM3DLib_EXPORT PhaseType
       map.clear();
       map[DREAM3D::PhaseType::PrimaryPhase] = PrimaryStr();
       map[DREAM3D::PhaseType::PrecipitatePhase] = PrecipitateStr();
-//      map[AIM::Reconstruction::TransformationPhase] = TransformationStr();
+      map[DREAM3D::PhaseType::TransformationPhase] = TransformationStr();
+      map[DREAM3D::PhaseType::MatrixPhase] = MatrixStr();
+      map[DREAM3D::PhaseType::BoundaryPhase] = BoundaryStr();
       map[DREAM3D::PhaseType::UnknownPhaseType] = UnknownPhaseTypeStr();
     }
 

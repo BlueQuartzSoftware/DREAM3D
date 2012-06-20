@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       m_StatsDataArray.resize(n);
       for (size_t i = 0; i < n; ++i)
       {
-          if (m_StatsDataArray[i].get() == NULL)
+          if (m_StatsDataArray[i].get() == NULL && phase_types != NULL)
           {
 			  if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) m_StatsDataArray[i] = PrimaryStatsData::New();
 			  else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) m_StatsDataArray[i] = PrecipitateStatsData::New();
@@ -106,6 +106,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 			  else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) m_StatsDataArray[i] = MatrixStatsData::New();
 			  else m_StatsDataArray[i] = StatsData::New();
           }
+		  if(phase_types == NULL) m_StatsDataArray[i] = StatsData::New();
       }
     }
 
