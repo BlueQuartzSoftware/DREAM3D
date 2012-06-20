@@ -100,83 +100,13 @@ class DREAM3DLib_EXPORT StatsData
     static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
     static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
+    virtual void initialize();
 
-    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
-    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
-    DREAM3D_INSTANCE_PROPERTY(float, PrecipBoundaryFraction);
-    DREAM3D_INSTANCE_PROPERTY(float, ParentPhase);
-
-    /**
-     * @brief The values are encoded into 3 floats: Average, Max, Min
-     */
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, GrainDiameterInfo);
-    void setBinStepSize(float v) { m_GrainDiameterInfo[0] = v;}
-    float getBinStepSize() { return m_GrainDiameterInfo[0]; }
-
-    void setMaxGrainDiameter(float v) { m_GrainDiameterInfo[1] = v;}
-    float getMaxGrainDiameter() { return m_GrainDiameterInfo[1]; }
-
-    void setMinGrainDiameter(float v) { m_GrainDiameterInfo[2] = v;}
-    float getMinGrainDiameter() { return m_GrainDiameterInfo[2]; }
-
-    /**
-      * @brief The values are encoded into float arrays
-      */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSizeDistribution);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, GrainSize_DistType);
-
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers);
-    /**
-     * @breif this will generate the Bin Numbers values;
-     */
-    FloatArrayType::Pointer generateBinNumbers();
-    size_t getNumberOfBins()
-    {
-      return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
-    }
-
-
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_BOverA);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, BOverA_DistType);
-
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverA);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, COverA_DistType);
-
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Neighbors);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, Neighbors_DistType);
-
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Omegas);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, Omegas_DistType);
-
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, MisorientationBins);
-    /* 3 Vectors: Angles, Axis, Weights */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, MDF_Weights);
-
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, ODF);
-    /* 5 Vectors: Euler 1, Euler 2, Euler 3, Sigma, Weights */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, ODF_Weights);
-
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, AxisOrientation);
-    /* 5 Vectors: Euler 1, Euler 2, Euler 3, Sigma, Weights */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, AxisODF_Weights);
-
-    void initialize();
-
-    int writeHDF5Data(hid_t groupId);
-    int readHDF5Data(hid_t groupId);
+    virtual int writeHDF5Data(hid_t groupId);
+    virtual int readHDF5Data(hid_t groupId);
 
   protected:
     StatsData();
-
-//    int writePhaseFraction(hid_t groupId);
-//    int writeGrainDiameterInfo(hid_t groupId);
-//    int writeGrainSizeDistribution(hid_t groupId);
-//    int writeBinNumbers(hid_t groupId);
-//    int writeDistributionData(hid_t pid, const std::string &disType,
-//                                          const std::string &hdf5GroupName,
-//                                          VectorOfFloatArray colData);
-//    int writeVectorOfArrays(hid_t pid, const std::string &hdf5GroupName,
-//                                               VectorOfFloatArray colData);
 
   private:
     StatsData(const StatsData&); // Copy Constructor Not Implemented

@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
 
@@ -142,6 +143,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     //Ensemble Data
     float* m_TotalSurfaceAreas;
     unsigned int* m_CrystalStructures;
+    unsigned int* m_PhaseTypes;
 	int32_t* m_NumFields;
 	StatsDataArray* m_StatsDataArray;
 

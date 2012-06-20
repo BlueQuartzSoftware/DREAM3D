@@ -23,14 +23,14 @@ SDK_INSTALL=/tmp/DREAM3D_SDK
 
 # If you are on a Multicore system and want to build faster set the variable to the number
 # of cores/CPUs available to you.
-PARALLEL_BUILD=8
+PARALLEL_BUILD=4
 
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 # Adjust these to "0" if you want to skip those compilations. The default is to build
 # everything.
 BUILD_CMAKE="0"
-BUILD_MXABOOST="0"
+BUILD_MXABOOST="1"
 BUILD_QWT="1"
 BUILD_HDF5="1"
 
@@ -41,7 +41,7 @@ if [[ "$HOST_SYSTEM" = "Darwin" ]];
 fi
 
 GIT=`type -P git`
-if [ $GIT == "" ];
+if [[ $GIT == "" ]];
   then
   echo "Git is needed for this script. Please install it on your system and be sure it is on your path."
   exit 1
@@ -57,9 +57,9 @@ fi
 WGET=`type -P wget`
 CURL=`type -P curl`
 
-if [ "$WGET" == "" ];
+if [[ "$WGET" == "" ]];
    then
-  if [ "$CURL" == "" ];
+  if [[ "$CURL" == "" ]];
      then
     echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
     exit 1
@@ -74,16 +74,18 @@ cd $SDK_SOURCE
 DOWNLOAD_PROG=""
 DOWNLOAD_ARGS=""
 
-if [ "$WGET" != "" ]; then
+if [[ "$WGET" != "" ]];
+then
   DOWNLOAD_PROG=$WGET
 fi
 
-if [ "$CURL" != "" ]; then
+if [[ "$CURL" != "" ]];
+then
   DOWNLOAD_PROG=$CURL
   DOWNLOAD_ARGS="-o cmake-2.8.6.tar.gz"
 fi
 
-if [ "$BUILD_CMAKE" == "1" ]
+if [[ "$BUILD_CMAKE" == "1" ]];
 then
 #Download and Compile CMake
 $DOWNLOAD_PROG "http://www.cmake.org/files/v2.8/cmake-2.8.7.tar.gz" $DOWNLOAD_ARGS
