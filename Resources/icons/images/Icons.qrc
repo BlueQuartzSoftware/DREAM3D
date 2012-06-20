@@ -30,5 +30,21 @@
   <file>Statistics_Icon.png</file>
   <file>Synthetic_Builder_Icon.png</file>
   <file>debug_error.png</file>
+  <file>help2.png</file>
+  <file>signpost.png</file>
+  <file>bookmark_add.png</file>
+  <file>bookmark_delete.png</file>
+  <file>bookmarks.png</file>
+  <file>gear_add.png</file>
+  <file>gear_delete.png</file>
+  <file>gear_edit.png</file>
+  <file>refresh.png</file>
+  <file>flash.png</file>
+  <file>flash_add.png</file>
+  <file>flash_delete.png</file>
+  <file>cubes.png</file>
+  <file>flag_blue_scroll.png</file>
+  <file>scroll.png</file>
+  <file>bullet_ball_yellow.png</file>
  </qresource>
  </RCC>
