@@ -16,20 +16,20 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-Bad data means a <i>voxel</i> has a <B>GrainID</B> of 0, which means the <i>voxel</i> failed one of the quality metrics in the <i>ReadH5Ebsd Filter</i>. To remedy this situation, this filter <i>opens</i> or <i>closes</i> the bad data. <br />
-If the bad data is <i>opened</i>, the filter grows the bad data by one <i>voxel</i> in an iteration sequence. The <B>GrainID</B> of any neighboring <i>voxel</i> will be changed to 0. The number of iterations to grow the <i>voxel</i> is limited to the situation in which only one grain remains or there is no place to grow.<br />
-For the <i>close</i> option, the <B>GrainID</B> of the bad data <i>voxel</i> is changed to the <B>GrainID</B> of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero <B>GrainID</B>.<br />
-If there is a tie between two <B>GrainID</B>s, then one of the <B>GrainID</B>s, chosen randomly, will be assigned to the bad <i>voxel</i>. <br />
+Bad data means a <i>voxel</i> has a <b>GrainID</b> of 0, which means the <i>voxel</i> failed one of the quality metrics in the <i>ReadH5Ebsd Filter</i>. To remedy this situation, this filter <i>opens</i> or <i>closes</i> the bad data. <br />
+If the bad data is <i>opened</i>, the filter grows the bad data by one <i>voxel</i> in an iteration sequence. The <b>GrainID</b> of any neighboring <i>voxel</i> will be changed to 0. The number of iterations to grow the <i>voxel</i> is limited to the situation in which only one grain remains or there is no place to grow.<br />
+For the <i>close</i> option, the <b>GrainID</b> of the bad data <i>voxel</i> is changed to the <b>GrainID</b> of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero <b>GrainID</b>.<br />
+If there is a tie between two <b>GrainID</b>s, then one of the <b>GrainID</b>s, chosen randomly, will be assigned to the bad <i>voxel</i>. <br />
 Goals a user might be trying to accomplish with this Filter
-are<br>
+are<br />
  1) to remove small or thin regions of bad data by running a single
-(or two) iteration closing operation.<br>  
+(or two) iteration closing operation.<br />  
 2) increasing the size of a "bad" data region by running an opening operation. This might be useful if the experimental technique always underestimates the size of certain
-objects. <br> 
+objects. <br /> 
 For example, when running EBSD, the pores (which show up as
 bad data) are always smaller in the scans than in the specimen, because the
 beam, when it is just inside the pore, still can pick up signal from the
-material just beneath the pore.  <br>
+material just beneath the pore.  <br />
 Running the <i>open-close</i> operations in pairs can
 often change the size of some objects without affecting others.  For
 example, if there were a number of big pores and a number of single <i>voxel</i> bad

@@ -146,23 +146,35 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder)
 # --------------------------------------------------------------------
 # Add in ONLY those headers and sources that need to have various Qt related
 # utilities run against them
-set (QFilterWidget_HDRS
+set(IOFILTER_WIDGET_HDRS 
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricItemDelegate.h
-    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.h
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h    
 )
-
-set(QFilterWidget_SRCS
+set(IOFILTER_WIDGET_SRCS
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.cpp
-    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${QFilterWidget_HDRS}" "${QFilterWidget_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/IOFiltersWidgets" "${IOFILTER_WIDGET_HDRS}" "${IOFILTER_WIDGET_SRCS}" "0")
+set(SYNTHETIC_WIDGET_HDRS
+    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
+)
+set(SYNTHETIC_WIDGET_SRCS
+    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/SyntheticBuilderFiltersWidgets" "${SYNTHETIC_WIDGET_HDRS}" "${SYNTHETIC_WIDGET_SRCS}" "0")
+set (QFilterWidget_HDRS
+${IOFILTER_WIDGET_HDRS} ${SYNTHETIC_WIDGET_HDRS}
+)
+
+set(QFilterWidget_SRCS
+${IOFILTER_WIDGET_SRCS} ${SYNTHETIC_WIDGET_SRCS}
+)
+
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
@@ -179,9 +191,8 @@ QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
 QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS 
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui 
-
     ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui 
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
 )
