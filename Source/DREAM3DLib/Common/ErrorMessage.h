@@ -33,20 +33,37 @@
 #include <string>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
+/**
+ * @class ErrorMessage ErrorMessage.h DREAM3DLib/Common/ErrorMessage.h
+ * @brief
+ * @author Joey Kleingers (SOCHE)
+ * @date Jun 21, 2012
+ * @version 1.0
+ */
 class ErrorMessage
 {
   public:
 
     DREAM3D_SHARED_POINTERS(ErrorMessage)
     DREAM3D_STATIC_NEW_MACRO(ErrorMessage)
-    static Pointer New(std::string filterName, std::string errorDescription, int errorCode) {
+
+    static Pointer New(const std::string &filterName, const std::string &errorDescription, int errorCode) {
       Pointer sharedPtr(new ErrorMessage);
       return sharedPtr;
     }
+
     DREAM3D_TYPE_MACRO(ErrorMessage)
 
+    virtual ~ErrorMessage() {}
+    /**
+     * @brief
+     * @return
+     */
     std::string getFilterName() { return filterName; }
+    /**
+     * @brief
+     * @param val
+     */
     void setFilterName(std::string val) { filterName = val; }
 
     std::string getErrorDescription() { return errorDescription; }
@@ -55,7 +72,24 @@ class ErrorMessage
     int getErrorCode() { return errorCode; }
     void setErrorCode(int val) { errorCode = val; }
 
-    virtual ~ErrorMessage() {}
+    std::string generateErrorString()
+    {
+      std::stringstream ss;
+      ss << "Error(" << errorCode << "):" << filterName << " :" << errorDescription;
+      return ss.str();
+    }
+    std::string generateWarningString()
+    {
+      std::stringstream ss;
+      ss << "Warning(" << errorCode << "):" << filterName << " :" << errorDescription;
+      return ss.str();
+    }
+    std::string generateStatusString()
+     {
+       std::stringstream ss;
+       ss << filterName << ":" << errorDescription;
+       return ss.str();
+     }
 
   protected:
     ErrorMessage() {}

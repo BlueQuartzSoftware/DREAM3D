@@ -68,7 +68,7 @@ class PipelineViewWidget : public QFrame
     QFilterWidget* addFilter(QString filterName, int index =-1);
     void setErrorsTextArea(QTableWidget* t);
 
-    
+
 
   public slots:
     void removeFilterWidget();
@@ -78,7 +78,7 @@ class PipelineViewWidget : public QFrame
 
     // Slots for the pipeline to communicate back to us
   public slots:
-    void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream);
+    void preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream);
 
 
   signals:

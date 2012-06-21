@@ -35,7 +35,6 @@
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
 m_DataContainer(NULL),
-m_ErrorMessage(""),
 m_ErrorCondition(0),
 m_Cancel(false)
 {
@@ -63,8 +62,9 @@ void AbstractFilter::setupFilterOptions()
 void AbstractFilter::execute()
 {
   setErrorCondition(-1);
-  setErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.");
-  notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
+  ErrorMessage::Pointer msg = ErrorMessage::New(getNameOfClass(), "AbstractFilter does not implement an execute method. Please use a subclass instead.", -1);
+  addErrorMessage(msg);
+  notify(msg, 0, Observable::UpdateErrorMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -177,6 +177,14 @@ void AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 // -----------------------------------------------------------------------------
 void AbstractFilter::addErrorMessage(ErrorMessage::Pointer msg) {
   m_ErrorMessages.push_back(msg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode)
+{
+  m_ErrorMessages.push_back(ErrorMessage::New(filterName, errorDescription, errorCode));
 }
 
 // -----------------------------------------------------------------------------

@@ -120,15 +120,22 @@ void Observable::notify(const std::string msg, int progress, ObserverAspect a)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+//void Observable::notify(ErrorMessage::Pointer msg, int progress, ObserverAspect)
+//{
+//
+//}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notify(const char* msg, int progress, ObserverAspect a)
-{
-  std::string m(msg);
-  notify(m, progress, a);
-}
+//void Observable::notify(const char* msg, int progress, ObserverAspect a)
+//{
+//  std::string m(msg);
+//  notify(m, progress, a);
+//}
 
 // -----------------------------------------------------------------------------
 //
