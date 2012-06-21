@@ -42,7 +42,9 @@
 //
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
-FileReader()
+FileReader(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_GrainIds(NULL)
 {
   setupFilterOptions();
 }
@@ -76,11 +78,17 @@ void DxReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxReader::preflight()
+void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
   if (getInputFile().empty() == true)
   {
     std::stringstream ss;
@@ -88,6 +96,17 @@ void DxReader::preflight()
     setErrorMessage(ss.str());
     setErrorCondition(-387);
   }
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DxReader::preflight()
+{
+  dataCheck(true, 1, 1, 1);
 }
 
 //-----------------------------------------------------------------------------
@@ -104,12 +123,13 @@ int DxReader::readHeader()
 int DxReader::readFile()
 {
   std::stringstream ss;
-  if (NULL == getDataContainer())
+  DataContainer* m = getDataContainer();
+  if (NULL == m)
   {
-    ss.clear();
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
     setErrorCondition(-1);
+    std::stringstream ss;
+    ss << getNameOfClass() << " DataContainer was NULL";
+    setErrorMessage(ss.str());
     return -1;
   }
 
@@ -248,7 +268,14 @@ int DxReader::readFile()
   finished_data = false;
   size_t index = 0;
 
-  Int32ArrayType::Pointer m_Data = Int32ArrayType::CreateArray(nx * ny * nz, DREAM3D::CellData::GrainIds);
+  size_t totalPoints = nx * nz * nz;
+  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  if (getErrorCondition() < 0)
+  {
+    return -1;
+  }
+
+
   while (getline(inFile, line, '\n') != NULL)
   {
 
@@ -271,7 +298,7 @@ int DxReader::readFile()
       for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
       {
         error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
-        m_Data->SetValue(index, spin);
+        m_GrainIds[index] =  spin;
         ++index;
       }
     }
@@ -288,7 +315,7 @@ int DxReader::readFile()
     return -495;
   }
 
-  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
+//  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
   getDataContainer()->setDimensions(nx, ny, nz);
 
   getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);

@@ -92,7 +92,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
   prefs.beginGroup("PipelineBuilder");
 
-  bool ok = false;
+//  bool ok = false;
   splitter_1->restoreState(prefs.value("splitter_1").toByteArray());
   splitter_2->restoreState(prefs.value("splitter_2").toByteArray());
   prefs.endGroup();
