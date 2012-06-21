@@ -943,3 +943,12 @@ void PrimaryPhaseWidget::extractStatsData(DataContainer::Pointer m, int index)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PrimaryPhaseWidget::getTabTitle()
+{
+  return QString("Primary");
+}
+
+

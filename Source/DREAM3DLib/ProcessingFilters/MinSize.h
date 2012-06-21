@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
-    int32_t* m_GrainIds;
+	int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     int32_t* m_FieldPhases;
     bool* m_Active;

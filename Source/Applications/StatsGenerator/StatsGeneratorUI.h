@@ -93,10 +93,11 @@ Q_OBJECT    ;
     void on_actionLicense_Information_triggered();
     void on_actionStatsGenerator_Help_triggered();
 
-    void on_phaseCombo_currentIndexChanged(int index);
     void on_addPhase_clicked();
     void on_deletePhase_clicked();
     void on_editPhase_clicked();
+
+    void on_phaseTabs_tabCloseRequested ( int index );
 
   protected:
 
@@ -161,7 +162,7 @@ Q_OBJECT    ;
   private:
     QString              m_FilePath;
     bool                 m_FileSelected;
-    QVector<SGWidget*>   m_SGWidgets;
+  //  QVector<SGWidget*>   m_SGWidgets;
     HelpDialog*          m_HelpDialog;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list

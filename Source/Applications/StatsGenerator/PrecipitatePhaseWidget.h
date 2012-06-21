@@ -63,6 +63,7 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
                                 QwtArray<float> &y);
 
      QString getComboString();
+     QString getTabTitle();
 
      void calculateNumberOfBins();
      int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);

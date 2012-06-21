@@ -74,6 +74,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+
+
     DREAM3D_INSTANCE_PROPERTY(int, PipelineIndex);
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)

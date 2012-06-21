@@ -256,3 +256,12 @@ void MatrixPhaseWidget::dataWasEdited()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString MatrixPhaseWidget::getTabTitle()
+{
+  return QString("Matrix");
+}
+

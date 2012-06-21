@@ -70,8 +70,10 @@ class SGWidget : public QWidget
      DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
 
     virtual void extractStatsData(DataContainer::Pointer m, int index);
-    virtual QString getComboString();
     virtual int gatherStatsData(DataContainer::Pointer m);
+
+    virtual QString getComboString();
+    virtual QString getTabTitle();
 
    public slots:
      virtual void on_m_GenerateDefaultData_clicked();

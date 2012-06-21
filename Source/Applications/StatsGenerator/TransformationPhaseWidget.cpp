@@ -946,3 +946,12 @@ void TransformationPhaseWidget::extractStatsData(DataContainer::Pointer m, int i
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString TransformationPhaseWidget::getTabTitle()
+{
+  return QString("Transformation");
+}
+
