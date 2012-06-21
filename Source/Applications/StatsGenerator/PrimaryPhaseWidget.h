@@ -62,6 +62,7 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
                                 QwtArray<float> &y);
 
      QString getComboString();
+     QString getTabTitle();
 
      void calculateNumberOfBins();
      int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);

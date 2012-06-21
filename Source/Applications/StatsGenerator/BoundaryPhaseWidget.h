@@ -50,10 +50,11 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
      unsigned int getCrystalStructure();
 
      QString getComboString();
+     QString getTabTitle();
 
      int gatherStatsData(DataContainer::Pointer m);
 
-   public slots:
+  // public slots:
      void on_m_GenerateDefaultData_clicked();
 
    protected slots:
