@@ -61,6 +61,9 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
     virtual ~DxReader();
 
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Dx File (Grain Ids)"; }
 
@@ -75,7 +78,10 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     virtual int readHeader();
     virtual int readFile();
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
   private:
+    int32_t* m_GrainIds;
     DxReader(const DxReader&); // Copy Constructor Not Implemented
     void operator=(const DxReader&); // Operator '=' Not Implemented
 };
