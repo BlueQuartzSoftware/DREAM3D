@@ -42,7 +42,7 @@
 
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){setErrorCondition(err##000);\
-  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
+  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl; }\
   std::string _s(#Name); addRequired##DType(_s);\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
   if (NULL == m_##Name ) {\
@@ -54,7 +54,7 @@
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10000);\
-  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
+  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl; }\
   std::string _s(#Name); addCreated##DType(_s);\
   int preFlightError = getErrorCondition();\
   std::string errorMsg = getErrorMessage();\
@@ -130,7 +130,7 @@ IDataArray::Pointer iDataArray = GetMethod(arrayName);\
 if (iDataArray.get() == 0) {\
   std::stringstream s;\
   s << getNameOfClass() << "::" << #GetMethod << "(std::string name) where name = '" << arrayName \
-  << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer";\
+  << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer\n";\
   if (NULL != obv) {obv->setErrorCondition(-500);\
   obv->setErrorMessage(s.str());}\
   return gi;\
@@ -138,7 +138,7 @@ if (iDataArray.get() == 0) {\
 if (size != iDataArray->GetSize()) {\
   std::stringstream s;\
   s << getNameOfClass() << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
-  s << " Required: " << size << " Contains: " << iDataArray->GetSize();\
+  s << " Required: " << size << " Contains: " << iDataArray->GetSize() << "\n";\
   if (NULL != obv) {obv->setErrorCondition(-501);\
   obv->setErrorMessage(s.str());}\
   return gi;\
@@ -146,7 +146,7 @@ if (size != iDataArray->GetSize()) {\
 gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
 if (NULL == gi) {\
   std::stringstream s;\
-  s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
+  s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.\n";\
   if (NULL != obv) {obv->setErrorCondition(-502);\
   obv->setErrorMessage(s.str());}\
   return gi;\
@@ -168,7 +168,7 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
     iDataArray->SetNumberOfComponents(numComp);\
     if (NULL == iDataArray.get()) { \
       std::stringstream s;\
-      s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
+      s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.\n";\
       if (NULL != obv) {obv->setErrorCondition(-25);\
       obv->setErrorMessage(s.str());}\
       return valuePtr;\
@@ -179,7 +179,7 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;";\
+    s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;\n";\
     if (NULL != obv) {obv->setErrorCondition(-12);\
     obv->setErrorMessage(s.str());}\
     return valuePtr;\
@@ -194,14 +194,14 @@ type* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer\n";\
     setErrorCondition(-10);\
     setErrorMessage(s.str());\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
     std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.\n";\
     setErrorCondition(-20);\
     setErrorMessage(s.str());\
     return -20;\
@@ -210,7 +210,7 @@ type* valuePtr = NULL;\
   IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type << "\n";\
     setErrorCondition(-30);\
     setErrorMessage(s.str());\
     return -30;\
