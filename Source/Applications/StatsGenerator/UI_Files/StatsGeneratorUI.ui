@@ -52,6 +52,9 @@
           <height>48</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Add a new Phase</string>
         </property>
@@ -93,6 +96,9 @@
           <height>48</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Delete the current phase</string>
         </property>
@@ -130,6 +136,9 @@
           <width>48</width>
           <height>48</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="toolTip">
          <string>Edit the current Phase</string>
