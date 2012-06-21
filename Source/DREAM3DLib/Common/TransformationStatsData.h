@@ -85,9 +85,12 @@ class DREAM3DLib_EXPORT TransformationStatsData : public StatsData
   public:
     DREAM3D_SHARED_POINTERS(TransformationStatsData);
     DREAM3D_STATIC_NEW_MACRO(TransformationStatsData);
-	DREAM3D_TYPE_MACRO_SUPER(TransformationStatsData, StatsData)
+	  DREAM3D_TYPE_MACRO_SUPER(TransformationStatsData, StatsData)
 
     virtual ~TransformationStatsData();
+
+    virtual std::string getStatsType();
+    virtual unsigned int getPhaseType();
 
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
