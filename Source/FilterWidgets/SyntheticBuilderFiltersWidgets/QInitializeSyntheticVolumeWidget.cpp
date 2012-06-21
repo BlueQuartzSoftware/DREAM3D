@@ -122,35 +122,42 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
 // -----------------------------------------------------------------------------
 QFilterWidget* QInitializeSyntheticVolumeWidget::createDeepCopy()
 {
-  #if 0
-  QFilterWidget* w = new QFilterWidget();
+
+  QInitializeSyntheticVolumeWidget* w = new QInitializeSyntheticVolumeWidget;
 
   // Update the filter with the latest values from the GUI
+  w->blockSignals(true);
+  w->on_m_InputFile_textChanged(m_InputFile->text());
+  w->on_m_XPoints_valueChanged(m_XPoints->value());
+  w->on_m_YPoints_valueChanged(m_YPoints->value());
+  w->on_m_ZPoints_valueChanged(m_ZPoints->value());
+  w->on_m_XResolution_valueChanged(m_XResolution->value());
+  w->on_m_YResolution_valueChanged(m_YResolution->value());
+  w->on_m_ZResolution_valueChanged(m_ZResolution->value());
 
-  w->setInputFile(m_InputFile->text().toStdString());
-  w->setXVoxels(m_XPoints->value());
-  w->setYVoxels(m_YPoints->value());
-  w->setZVoxels(m_ZPoints->value());
-  w->setXRes(m_XResolution->value());
-  w->setYRes(m_YResolution->value());
-  w->setZRes(m_ZResolution->value());
-
-  int count = m_ShapeTypeCombos.count();
-  DataArray<unsigned int>::Pointer shapeTypes =
-    DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
-  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-  bool ok = false;
-  for (int i = 0; i < count; ++i)
-  {
-    QComboBox* cb = m_ShapeTypeCombos.at(i);
-    unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    shapeTypes->SetValue(i+1, sType);
-  }
-  w->setShapeTypes(shapeTypes);
-
+//  int count = m_ShapeTypeCombos.count();
+//  DataArray<unsigned int>::Pointer shapeTypes =
+//    DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
+//  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+//  bool ok = false;
+//  for (int i = 0; i < count; ++i)
+//  {
+//    QComboBox* cb = m_ShapeTypeCombos.at(i);
+//    unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
+//    shapeTypes->SetValue(i+1, sType);
+//  }
+//  w->setShapeTypes(shapeTypes);
+  w->blockSignals(false);
   return w;
-  #endif
-  return NULL;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QInitializeSyntheticVolumeWidget::setShapeTypes(DataArray<unsigned int>::Pointer array)
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -299,6 +306,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
 
     }
   }
+  emit parametersChanged();
 }
 
 
@@ -309,6 +317,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
 void QInitializeSyntheticVolumeWidget::on_m_XPoints_valueChanged(int v)
 {
   estimateNumGrainsSetup();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -317,6 +326,7 @@ void QInitializeSyntheticVolumeWidget::on_m_XPoints_valueChanged(int v)
 void QInitializeSyntheticVolumeWidget::on_m_YPoints_valueChanged(int v)
 {
   estimateNumGrainsSetup();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -325,6 +335,7 @@ void QInitializeSyntheticVolumeWidget::on_m_YPoints_valueChanged(int v)
 void QInitializeSyntheticVolumeWidget::on_m_ZPoints_valueChanged(int v)
 {
   estimateNumGrainsSetup();
+  emit parametersChanged();
 }
 
 
@@ -334,6 +345,7 @@ void QInitializeSyntheticVolumeWidget::on_m_ZPoints_valueChanged(int v)
 void QInitializeSyntheticVolumeWidget::on_m_ZResolution_valueChanged(double v)
 {
   estimateNumGrainsSetup();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -342,6 +354,7 @@ void QInitializeSyntheticVolumeWidget::on_m_ZResolution_valueChanged(double v)
 void QInitializeSyntheticVolumeWidget::on_m_YResolution_valueChanged(double v)
 {
   estimateNumGrainsSetup();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -350,6 +363,7 @@ void QInitializeSyntheticVolumeWidget::on_m_YResolution_valueChanged(double v)
 void QInitializeSyntheticVolumeWidget::on_m_XResolution_valueChanged(double v)
 {
   estimateNumGrainsSetup();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -373,7 +387,7 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 //  std::vector<float> mindiameter;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
-  if (m_DataContainer.get() == NULL)
+  if(m_DataContainer.get() == NULL)
   {
     // This will force a read of the DataContainer from the data file
     on_m_InputFile_textChanged(QString(""));
@@ -389,7 +403,10 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 
   iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::Statistics);
   StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
-  if (NULL == statsDataArrayPtr) { return -1; }
+  if(NULL == statsDataArrayPtr)
+  {
+    return -1;
+  }
 
   // Create a Reference Variable so we can use the [] syntax
   StatsDataArray& statsDataArray = *statsDataArrayPtr;
@@ -404,12 +421,12 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType->GetNumberOfTuples(); ++i)
   {
-	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-    if (phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase && pp != NULL)
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+    if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase && pp != NULL)
     {
       primaryphases.push_back(i);
-        primaryphasefractions.push_back(pp->getPhaseFraction());
-        totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
+      primaryphasefractions.push_back(pp->getPhaseFraction());
+      totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
     }
   }
   // scale the primary phase fractions to total to 1
@@ -430,30 +447,30 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   int volgood = 0;
   for (size_t j = 0; j < primaryphases.size(); ++j)
   {
-	float curphasetotalvol = totalvol*primaryphasefractions[j];
-	while (currentvol < (curphasetotalvol))
-	{
-	    volgood = 0;
-	    phase = primaryphases[j];
-		PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
-		while (volgood == 0)
-	    {
-	      volgood = 1;
-	     // u = rg.genrand_res53();
-	      if (pp->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
-	      {
-	        float avgdiam = pp->getGrainSizeDistribution().at(0)->GetValue(0);
-	        float sddiam = pp->getGrainSizeDistribution().at(1)->GetValue(0);
-	        diam = rg.genrand_norm(avgdiam, sddiam);
-	        diam = exp(diam);
-	        if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
-	        if(diam < pp->getMinGrainDiameter()) volgood = 0;
-	        vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
-	      }
-	    }
-	    currentvol = currentvol + vol;
-	    gid++;
-	}
+    float curphasetotalvol = totalvol * primaryphasefractions[j];
+    while (currentvol < (curphasetotalvol))
+    {
+      volgood = 0;
+      phase = primaryphases[j];
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      while (volgood == 0)
+      {
+        volgood = 1;
+        // u = rg.genrand_res53();
+        if(pp->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
+        {
+          float avgdiam = pp->getGrainSizeDistribution().at(0)->GetValue(0);
+          float sddiam = pp->getGrainSizeDistribution().at(1)->GetValue(0);
+          diam = rg.genrand_norm(avgdiam, sddiam);
+          diam = exp(diam);
+          if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
+          if(diam < pp->getMinGrainDiameter()) volgood = 0;
+          vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
+        }
+      }
+      currentvol = currentvol + vol;
+      gid++;
+    }
   }
 #endif
   return gid;
