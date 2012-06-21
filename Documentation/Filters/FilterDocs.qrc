@@ -68,5 +68,6 @@
 <file>Synthetic_BuilderFilters/InsertPrecipitatePhases.html</file>
 <file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>
 <file>Synthetic_BuilderFilters/InitializeSyntheticVolume.html</file>
+<file>Synthetic_BuilderFilters/InitSynthVol.jpg</file>
 </qresource>
 </RCC>
