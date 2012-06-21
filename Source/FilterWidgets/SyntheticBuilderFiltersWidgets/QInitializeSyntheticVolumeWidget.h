@@ -64,16 +64,6 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
 
     virtual AbstractFilter::Pointer getFilter();
 
-//    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-//    void setInputFile(QString v)
-//    {
-//      m_Filter->setInputFile(v.toStdString());
-//    }
-//    QString getInputFile()
-//    {
-//      return QString::fromStdString(m_Filter->getInputFile());
-//    }
-
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
 
@@ -82,6 +72,9 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     void estimateNumGrainsSetup();
 
     QFilterWidget* createDeepCopy();
+
+    void setShapeTypes(DataArray<unsigned int>::Pointer array);
+
 
   protected slots:
     // Auto Hookup Slots
@@ -98,6 +91,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
   //  InitializeSyntheticVolume::Pointer m_Filter;
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
+
     QString                     m_OpenDialogLastDirectory;
     DataContainer::Pointer      m_DataContainer;
     QList<QLabel*>              m_ShapeTypeLabels;

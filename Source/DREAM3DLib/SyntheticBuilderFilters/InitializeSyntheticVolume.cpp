@@ -139,6 +139,10 @@ void InitializeSyntheticVolume::writeFilterOptions(AbstractFilterOptionsWriter* 
   writer->writeValue("Y Res", getYRes() );
   writer->writeValue("Z Res", getZRes() );
 }
+
+#define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
+if (m_##var <= 0) { ss << getNameOfClass() << ":" <<  #var << " must be a value > 0\n"; setErrorCondition(errCond); }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -154,14 +158,23 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if(m_InputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
+    ss << getNameOfClass() << ": The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
   }
+
+  INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
+  INIT_SYNTH_VOLUME_CHECK(YVoxels, -5001);
+  INIT_SYNTH_VOLUME_CHECK(ZVoxels, -5002);
+  INIT_SYNTH_VOLUME_CHECK(XRes, -5003);
+  INIT_SYNTH_VOLUME_CHECK(YRes, -5004);
+  INIT_SYNTH_VOLUME_CHECK(ZRes, -5005);
+
+
 
   addRequiredEnsembleData(DREAM3D::EnsembleData::ShapeTypes);
   if (m_ShapeTypes.get() ==  NULL || m_ShapeTypes->GetNumberOfTuples() == 0)
   {
-    ss << getNameOfClass() << ": No ShapeTypes have been set and a shape type for each phase.";
+    ss << getNameOfClass() << ": No ShapeTypes have been set and a shape type for each phase.\n";
     setErrorCondition(-801);
   }
   setErrorMessage(ss.str());
@@ -184,6 +197,10 @@ void InitializeSyntheticVolume::preflight()
   read_data->setReadEnsembleData(true);
   read_data->setDataContainer(getDataContainer());
   read_data->preflight();
+  if (read_data->getErrorCondition() < 0)
+  {
+    setErrorCondition(read_data->getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------
