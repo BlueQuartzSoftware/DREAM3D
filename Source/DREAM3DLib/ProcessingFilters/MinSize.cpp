@@ -161,14 +161,8 @@ void MinSize::execute()
   }
   setErrorCondition(0);
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  neighborsPtr->initializeWithZeros();
-
-  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked"); 
-  alreadCheckedPtr->initializeWithZeros();
-
-  remove_smallgrains(neighborsPtr, alreadCheckedPtr);
-  assign_badpoints(neighborsPtr, alreadCheckedPtr);
+  remove_smallgrains();
+  assign_badpoints();
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
@@ -190,11 +184,8 @@ void MinSize::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::assign_badpoints(Int32ArrayType::Pointer neighborsPtr, BoolArrayType::Pointer alreadCheckedPtr)
+void MinSize::assign_badpoints()
 {
-  bool* alreadyChecked = alreadCheckedPtr->GetPointer(0);
-  int32_t* neighbors = neighborsPtr->GetPointer(0);
-
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
@@ -210,8 +201,11 @@ void MinSize::assign_badpoints(Int32ArrayType::Pointer neighborsPtr, BoolArrayTy
     static_cast<DimType>(udims[2]),
   };
 
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
+  m_Neighbors = neighborsPtr->GetPointer(0);
+  neighborsPtr->initializeWithValues(-1);
+
   std::vector<int > remove;
-  size_t count = 1;
   int good = 1;
 //  int neighbor;
 //  int index = 0;
@@ -232,60 +226,81 @@ void MinSize::assign_badpoints(Int32ArrayType::Pointer neighborsPtr, BoolArrayTy
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
 
-
-  std::vector<int > n(numgrains + 1);
-  while (count != 0)
+  size_t counter = 1;
+  size_t count = 0;
+  int kstride, jstride;
+  int grainname, grain;
+  std::vector<int > n(numgrains + 1,0);
+  while (counter != 0)
   {
-    count = 0;
-    for (int i = 0; i < totalPoints; i++)
+    counter = 0;
+    for (int k = 0; k < dims[2]; k++)
     {
-	  std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-      int grainname = m_GrainIds[i];
-      if (grainname < 0)
-      {
-        count++;
-		n.resize(numgrains+1,0);
-        x = static_cast<float>(i % dims[0]);
-        y = static_cast<float>((i / dims[0]) % dims[1]);
-        z = static_cast<float>(i / (dims[0] * dims[1]));
-		current = 0;
-		most = 0;
-		curgrain = -1;
-        for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighpoint = i + neighpoints[j];
-          if (j == 0 && z == 0) good = 0;
-          if (j == 5 && z == (dims[2] - 1)) good = 0;
-          if (j == 1 && y == 0) good = 0;
-          if (j == 4 && y == (dims[1] - 1)) good = 0;
-          if (j == 2 && x == 0) good = 0;
-          if (j == 3 && x == (dims[0] - 1)) good = 0;
-          if (good == 1)
-          {
-            int grain = m_GrainIds[neighpoint];
-			if (grain >= 0)
-            {
-	          n[grain]++;
-	          current = n[grain];
-	          if (current > most)
-	          {
-	            most = current;
-	            curgrain = grain;
-	          }
-            }
-          }
-        }
-        neighbors[i] = curgrain;
-		n.clear();
-      }
-    }
+		kstride = dims[0]*dims[1]*k;
+	    for (int j = 0; j < dims[1]; j++)
+	    {
+			jstride = dims[0]*j;
+		    for (int i = 0; i < dims[0]; i++)
+		    {
+			  count = kstride+jstride+i;
+			  std::stringstream ss;
+		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
+		//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+			  grainname = m_GrainIds[count];
+			  if (grainname < 0)
+			  {
+			    counter++;
+				current = 0;
+				most = 0;
+				for (int l = 0; l < 6; l++)
+				{
+				  good = 1;
+				  neighpoint = count + neighpoints[l];
+				  if (l == 0 && k == 0) good = 0;
+				  if (l == 5 && k == (dims[2] - 1)) good = 0;
+				  if (l == 1 && j == 0) good = 0;
+				  if (l == 4 && j == (dims[1] - 1)) good = 0;
+				  if (l == 2 && i == 0) good = 0;
+				  if (l == 3 && i == (dims[0] - 1)) good = 0;
+				  if (good == 1)
+				  {
+					grain = m_GrainIds[neighpoint];
+					if (grain >= 0)
+					{
+					  n[grain]++;
+					  current = n[grain];
+					  if (current > most)
+					  {
+						most = current;
+					    m_Neighbors[count] = grain;
+					  }
+					}
+				  }
+				}
+				for (int l = 0; l < 6; l++)
+				{
+//				  good = 1;
+				  neighpoint = count + neighpoints[l];
+				  if (l == 0 && k == 0) good = 0;
+				  if (l == 5 && k == (dims[2] - 1)) good = 0;
+				  if (l == 1 && j == 0) good = 0;
+				  if (l == 4 && j == (dims[1] - 1)) good = 0;
+				  if (l == 2 && i == 0) good = 0;
+				  if (l == 3 && i == (dims[0] - 1)) good = 0;
+				  if (good == 1)
+				  {
+					grain = m_GrainIds[neighpoint];
+					if(grain >= 0) n[grain] = 0;
+				  }
+				}
+			}
+		  }
+		}
+	}
     for (int j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
-      int neighbor = neighbors[j];
+      int neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
@@ -298,11 +313,8 @@ void MinSize::assign_badpoints(Int32ArrayType::Pointer neighborsPtr, BoolArrayTy
   }
 }
 
-void MinSize::remove_smallgrains(Int32ArrayType::Pointer neighborsPtr, BoolArrayType::Pointer alreadCheckedPtr)
+void MinSize::remove_smallgrains()
 {
-  bool* alreadyChecked = alreadCheckedPtr->GetPointer(0);
-  int32_t* neighbors = neighborsPtr->GetPointer(0);
-
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
@@ -317,6 +329,10 @@ void MinSize::remove_smallgrains(Int32ArrayType::Pointer neighborsPtr, BoolArray
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
   };
+
+  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
+  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
+  alreadCheckedPtr->initializeWithZeros();
 
   size_t size = 0;
   int good = 0;
@@ -333,7 +349,6 @@ void MinSize::remove_smallgrains(Int32ArrayType::Pointer neighborsPtr, BoolArray
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
-
   DimType numgrains = m->getNumFieldTuples();
 
   nuclei.resize(numgrains, -1);
@@ -346,7 +361,7 @@ void MinSize::remove_smallgrains(Int32ArrayType::Pointer neighborsPtr, BoolArray
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    alreadyChecked[i] = false;
+    m_AlreadyChecked[i] = false;
     gnum = m_GrainIds[i];
     if(gnum >= 0) nuclei[gnum] = static_cast<int>(i);
   }
@@ -358,51 +373,58 @@ void MinSize::remove_smallgrains(Int32ArrayType::Pointer neighborsPtr, BoolArray
 //	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       size = 0;
       int nucleus = nuclei[i];
-      voxellists[i].push_back(nucleus);
-      assert(nucleus <= totalPoints);
-      alreadyChecked[nucleus] = true;
-      size++;
-      for (size_t j = 0; j < size; j++)
-      {
-        int currentpoint = voxellists[i][j];
-        col = currentpoint % dims[0];
-        row = (currentpoint / dims[0]) % dims[1];
-        plane = currentpoint / (dims[0] * dims[1]);
-        for (size_t k = 0; k < 6; k++)
-        {
-          good = 1;
-          neighbor = currentpoint + neighpoints[k];
-          if (k == 0 && plane == 0) good = 0;
-          if (k == 5 && plane == (dims[2] - 1)) good = 0;
-          if (k == 1 && row == 0) good = 0;
-          if (k == 4 && row == (dims[1] - 1)) good = 0;
-          if (k == 2 && col == 0) good = 0;
-          if (k == 3 && col == (dims[0] - 1)) good = 0;
-          if (good == 1 && alreadyChecked[neighbor] == false)
-          {
-            size_t grainname = static_cast<size_t>(m_GrainIds[neighbor]);
-            if (grainname == i)
-            {
-              voxellists[i].push_back(neighbor);
-              assert(neighbor <= totalPoints);
-              alreadyChecked[neighbor] = true;
-              size++;
-            }
-          }
-        }
-      }
-      if(voxellists[i].size() >= static_cast<size_t>(m_MinAllowedGrainSize) )
-      {
-		m_Active[i] = true;
-      }
-      if(voxellists[i].size() < static_cast<size_t>(m_MinAllowedGrainSize) )
-      {
+	  if(nucleus >= 0)
+	  {
+		  voxellists[i].push_back(nucleus);
+		  assert(nucleus <= totalPoints);
+		  m_AlreadyChecked[nucleus] = true;
+		  size++;
+		  for (size_t j = 0; j < size; j++)
+		  {
+			int currentpoint = voxellists[i][j];
+			col = currentpoint % dims[0];
+			row = (currentpoint / dims[0]) % dims[1];
+			plane = currentpoint / (dims[0] * dims[1]);
+			for (size_t k = 0; k < 6; k++)
+			{
+			  good = 1;
+			  neighbor = currentpoint + neighpoints[k];
+			  if (k == 0 && plane == 0) good = 0;
+			  if (k == 5 && plane == (dims[2] - 1)) good = 0;
+			  if (k == 1 && row == 0) good = 0;
+			  if (k == 4 && row == (dims[1] - 1)) good = 0;
+			  if (k == 2 && col == 0) good = 0;
+			  if (k == 3 && col == (dims[0] - 1)) good = 0;
+			  if (good == 1 && m_AlreadyChecked[neighbor] == false)
+			  {
+				size_t grainname = static_cast<size_t>(m_GrainIds[neighbor]);
+				if (grainname == i)
+				{
+				  voxellists[i].push_back(neighbor);
+				  assert(neighbor <= totalPoints);
+				  m_AlreadyChecked[neighbor] = true;
+				  size++;
+				}
+			  }
+			}
+		  }
+		  if(voxellists[i].size() >= static_cast<size_t>(m_MinAllowedGrainSize) )
+		  {
+			m_Active[i] = true;
+		  }
+		  if(voxellists[i].size() < static_cast<size_t>(m_MinAllowedGrainSize) )
+		  {
+			m_Active[i] = false;
+			for (size_t b = 0; b < voxellists[i].size(); b++)
+			{
+			  int index = voxellists[i][b];
+			  m_GrainIds[index] = -1;
+			}
+		  }
+	  }
+	  else if(nucleus < 0)
+	  {
 		m_Active[i] = false;
-        for (size_t b = 0; b < voxellists[i].size(); b++)
-        {
-          int index = voxellists[i][b];
-          m_GrainIds[index] = -1;
-        }
-      }
+	  }
   }
 }

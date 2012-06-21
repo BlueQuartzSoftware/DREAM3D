@@ -214,7 +214,7 @@ void OpenCloseBadData::execute()
   int kstride, jstride;
   int grainname, grain;
   int current, most, curgrain;
-  std::vector<int > n(numgrains + 1);
+  std::vector<int > n(numgrains + 1,0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
     for (int k = 0; k < dims[2]; k++)
@@ -234,10 +234,9 @@ void OpenCloseBadData::execute()
 			  {
 				current = 0;
 				most = 0;
-//				n.resize(numgrains+1,0);
 				for (int l = 0; l < 6; l++)
 				{
-//				  good = 1;
+				  good = 1;
 				  neighpoint = count + neighpoints[l];
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
@@ -254,17 +253,35 @@ void OpenCloseBadData::execute()
 					}
 					if ((grain > 0 && m_Direction == 1))
 					{
-//					  n[grain]++;
-//					  current = n[grain];
-//					  if (current > most)
-//					  {
-//						most = current;
+					  n[grain]++;
+					  current = n[grain];
+					  if (current > most)
+					  {
+						most = current;
 					    m_Neighbors[i] = grain;
-//					  }
+					  }
 					}
 				  }
 				}
-//				n.clear();
+				if (m_Direction == 1)
+				{
+					for (int l = 0; l < 6; l++)
+					{
+	//				  good = 1;
+					  neighpoint = count + neighpoints[l];
+					  if (l == 0 && k == 0) good = 0;
+					  if (l == 5 && k == (dims[2] - 1)) good = 0;
+					  if (l == 1 && j == 0) good = 0;
+					  if (l == 4 && j == (dims[1] - 1)) good = 0;
+					  if (l == 2 && i == 0) good = 0;
+					  if (l == 3 && i == (dims[0] - 1)) good = 0;
+					  if (good == 1)
+					  {
+						grain = m_GrainIds[neighpoint];
+						n[grain] = 0;
+					  }
+					}
+				}
 			  }
 			}
 		}
