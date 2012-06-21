@@ -66,7 +66,7 @@ m_SelectedFilterWidget(NULL),
 m_FilterWidgetLayout(NULL),
 m_FilterBeingDragged(NULL),
 m_DropIndex(-1),
-m_ErrorsArea(NULL)
+errorTableWidget(NULL)
 {
   setupGui();
 }
@@ -124,9 +124,9 @@ void PipelineViewWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::setErrorsTextArea(QTextEdit* t)
+void PipelineViewWidget::setErrorsTextArea(QTableWidget* t)
 {
-  this->m_ErrorsArea = t;
+  this->errorTableWidget = t;
 }
 
 // -----------------------------------------------------------------------------
@@ -211,7 +211,7 @@ void PipelineViewWidget::preflightPipeline()
 
   // clear all the error messages
   m_PipelineErrorList.clear();
-  m_ErrorsArea->clear();
+  errorTableWidget->clear();
 
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();
@@ -237,23 +237,58 @@ void PipelineViewWidget::preflightPipeline()
       if(err < 0)
       {
         preflightError |= err;
-        preflightErrorMessage(filter->getErrorMessage().c_str());
+        //preflightErrorMessage(filter->getErrorMessage().c_str());
         fw->setHasPreflightErrors(true);
       }
+
+      ErrorMessage::Pointer test = ErrorMessage::New();
+      errorStream.push_back(test);
+      preflightErrorMessage(errorStream);
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(const QString &str)
+void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream)
 {
-  m_PipelineErrorList << str;
-  if (NULL != m_ErrorsArea)
+  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
+    errorTableWidget->removeRow(i);
+  }
+  errorTableWidget->setRowCount(0);
+
+  if (NULL != errorTableWidget)
   {
-    m_ErrorsArea->append(str);
+    int rc = errorTableWidget->rowCount();
+
+    for (int i=0; i<errorStream.size(); ++i) {
+      errorTableWidget->insertRow(rc);
+
+      QString filterName = QString::fromStdString( errorStream.at(i)->getFilterName() );
+      QString errorDescription = QString::fromStdString( errorStream.at(i)->getErrorDescription() );
+      int errorCode = errorStream.at(i)->getErrorCode();
+
+      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
+      QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
+      QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem( QString::number(errorCode) );
+
+      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
+      errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
+    }
+
+
+    #if 0
+    //How to add items to a table
+    int rc = m_ErrorsArea->rowCount();
+
+    m_ErrorsArea->insertRow(rc);
+
+    m_ErrorsArea->setItem(rc, 0, filterName);
+    m_ErrorsArea->setItem(rc, 1, errorDescription);
+    m_ErrorsArea->setItem(rc, 2, errorCode);
+    #endif
   }
 }
 
