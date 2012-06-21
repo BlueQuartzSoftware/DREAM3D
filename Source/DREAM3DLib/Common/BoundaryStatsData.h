@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
   public:
     DREAM3D_SHARED_POINTERS(BoundaryStatsData);
     DREAM3D_STATIC_NEW_MACRO(BoundaryStatsData);
-	DREAM3D_TYPE_MACRO_SUPER(BoundaryStatsData, StatsData)
+    DREAM3D_TYPE_MACRO_SUPER(BoundaryStatsData, StatsData)
 
     virtual ~BoundaryStatsData();
 
@@ -111,6 +111,8 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
     virtual int writeHDF5Data(hid_t groupId);
     virtual int readHDF5Data(hid_t groupId);
 
+    virtual std::string getStatsType();
+    virtual unsigned int getPhaseType();
   protected:
     BoundaryStatsData();
 

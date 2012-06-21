@@ -253,6 +253,8 @@ int StatsDataArray::writeH5Data(hid_t parentId)
     if (m_StatsDataArray[i].get() != NULL) {
     std::string indexString = StringUtils::numToString(i);
     hid_t tupleId = H5Utilities::createGroup(gid, indexString);
+    err |= H5Lite::writeStringAttribute(tupleId, indexString, DREAM3D::HDF5::StatsType, m_StatsDataArray[i]->getStatsType() );
+    err |= H5Lite::writeScalarAttribute(tupleId, indexString, DREAM3D::HDF5::PhaseType, m_StatsDataArray[i]->getPhaseType() );
     err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
     err |= H5Utilities::closeHDF5Object(tupleId);
     }
