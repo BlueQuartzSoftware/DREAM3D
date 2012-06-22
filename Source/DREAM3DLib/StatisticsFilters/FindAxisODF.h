@@ -91,14 +91,15 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     FindAxisODF();
 
   private:
+    unsigned int* m_PhaseTypes;
     bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
     float* m_AxisEulerAngles;
 
-    unsigned int* m_PhaseTypes;
-	StatsDataArray* m_StatsDataArray;
 
-	std::vector<OrientationMath*> m_OrientationOps;
+    StatsDataArray* m_StatsDataArray;
+
+    std::vector<OrientationMath*> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

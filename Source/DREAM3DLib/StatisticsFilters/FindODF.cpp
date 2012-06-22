@@ -55,7 +55,9 @@ m_PhaseTypes(NULL),
 m_Volumes(NULL),
 m_FieldEulerAngles(NULL),
 m_FieldPhases(NULL),
-m_SurfaceFields(NULL)
+m_SurfaceFields(NULL),
+m_CrystalStructures(NULL),
+m_StatsDataArray(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
