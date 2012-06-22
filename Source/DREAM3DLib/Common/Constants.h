@@ -232,6 +232,15 @@ namespace DREAM3D
     const std::string Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
     const std::string Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
     const std::string Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
+    const std::string StatsType("StatsType");
+
+    const std::string StatsData("StatsData");
+    const std::string PrimaryStatsData("PrimaryStatsData");
+    const std::string PrecipitateStatsData("PrecipitateStatsData");
+    const std::string BoundaryStatsData("BoundaryStatsData");
+    const std::string MatrixStatsData("MatrixStatsData");
+    const std::string TransformationStatsData("TransformationStatsData");
+
 
     const std::string BinNumber("BinNumber");
 

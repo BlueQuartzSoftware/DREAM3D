@@ -93,6 +93,9 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
     DREAM3D_INSTANCE_PROPERTY(float, PrecipBoundaryFraction);
 
+    virtual std::string getStatsType();
+    virtual unsigned int getPhaseType();
+
 	 /**
      * @breif this will generate the Bin Numbers values;
      */

@@ -264,7 +264,7 @@ void PackPrimaryPhases::execute()
   float totalprimaryvol = 0;
   for(size_t i=0;i<(dims[0]*dims[1]*dims[2]);i++)
   {
-	if(m_GrainIds[i] <= 0) totalprimaryvol++;
+    if(m_GrainIds[i] <= 0) totalprimaryvol++;
   }
   totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getXRes()*m->getXRes());
 
@@ -288,11 +288,21 @@ void PackPrimaryPhases::execute()
   // find which phases are primary phases
   for (size_t i = 1; i < numensembles; ++i)
   {
-	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-	if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      if (NULL == pp)
+      {
+        ss << getNameOfClass() << ": Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
+        ss << "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[" << i << "] = " << m_PhaseTypes[i] <<  " does not match up ";
+        ss << "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n";
+        setErrorMessage(ss.str());
+        setErrorCondition(-666);
+        return;
+      }
       primaryphases.push_back(i);
-	  primaryphasefractions.push_back(pp->getPhaseFraction());
+      primaryphasefractions.push_back(pp->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
     }
   }
