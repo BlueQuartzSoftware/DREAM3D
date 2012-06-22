@@ -105,6 +105,9 @@ class DREAM3DLib_EXPORT StatsData
     virtual int writeHDF5Data(hid_t groupId);
     virtual int readHDF5Data(hid_t groupId);
 
+    virtual std::string getStatsType();
+    virtual unsigned int getPhaseType();
+
   protected:
     StatsData();
 

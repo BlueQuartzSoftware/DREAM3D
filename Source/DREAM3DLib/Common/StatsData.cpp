@@ -59,6 +59,23 @@ StatsData::~StatsData()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string StatsData::getStatsType()
+{
+  return DREAM3D::HDF5::StatsData;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int StatsData::getPhaseType()
+{
+  return DREAM3D::PhaseType::UnknownPhaseType;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -75,7 +92,7 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
   }
   else if(distributionType == DREAM3D::DistributionType::LogNormal)
   {
-	v.resize(DREAM3D::HDF5::LogNormalColumnCount);
+	  v.resize(DREAM3D::HDF5::LogNormalColumnCount);
     v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Average);
     v[0]->initializeWithZeros();
     v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::StandardDeviation);

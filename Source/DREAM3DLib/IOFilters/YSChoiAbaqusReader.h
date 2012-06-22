@@ -80,8 +80,8 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     bool* m_SurfaceFields;
-	float* m_Quats;
-	float* m_CellEulerAngles;
+    float* m_Quats;
+    float* m_CellEulerAngles;
 
 	unsigned int* m_CrystalStructures;
 

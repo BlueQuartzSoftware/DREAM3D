@@ -55,11 +55,11 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
     virtual ~InitializeSyntheticVolume();
 
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	  //------ Required Ensemble Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
     virtual const std::string getGroupName()
     {
@@ -70,8 +70,8 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
       return "Initialize Synthetic Volume";
     }
 
-    
-	DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(int, XVoxels)
     DREAM3D_INSTANCE_PROPERTY(int, YVoxels)
     DREAM3D_INSTANCE_PROPERTY(int, ZVoxels)
@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void preflight();
 
