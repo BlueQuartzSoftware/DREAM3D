@@ -18,7 +18,7 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 This filter sets the minimum number (an integer) of <b>Field</b> <b>Neighbors</b> a grain must have to remain in the structure. Entering 0 (zero) is valid because the grain may occupy the whole volume and would therefore have no <b>Neighbors</b>. Also, entering zero results in nothing changing in other grains.<br />
 Entering a number larger than the grain that has the maximum number of <b>Neighbors</b> generates an <i>error</i> (all grains have been removed!). The user needs to proceed conservatively here when choosing the value for the minimum to avoid accidentally exceeding the max and generating an error later in the pipeline.<br />
-Using minimum number entries between 1 and a value less than the <i>maxmimum</i> number of <b>Neighbors</b> associated with a grain results in removal of those grains that have the entered number of <b>Neighbors</b>. After these grains are removed, the remaining grains are <i>coarsened</i> iteratively, one <i>voxel</i> per iteration, until the gaps left by the removed grains are filled.<br />
+Using minimum number entries between 1 and a value less than the <i>maxmimum</i> number of <b>Neighbors</b> associated with a grain results in removal of those grains that have the entered number of <b>Neighbors</b> or fewer. After these grains are removed, the remaining grains are <i>coarsened</i> iteratively, one <i>voxel</i> per iteration, until the gaps left by the removed grains are filled.<br />
 
 <!-- Do NOT write documentation below this line -->
 </p>
