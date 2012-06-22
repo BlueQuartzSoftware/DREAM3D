@@ -16,11 +16,11 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This Filter segments 2D slices, creates grain Ids that are used to determine the <i>mutual information</i> and then aligns the slices. These grain ids are temporary, and they apply to this filter only. So they are not related to the <b>GrainIds</b> generated in other Filters.<br />
+This Filter segments 2D slices, creates <b>GrainIds</b> that are used to determine the <i>mutual information</i> and then aligns the slices. These <b>GrainIds</b> are temporary, and they apply to this filter only. So they are not related to the <b>GrainIds</b> generated in other Filters.<br />
 <br />
 The user choses the level of <i>misorientation tolerance</i> by which to align <i>voxels</i>, where here the tolerance means the <i>misorientation</i> cannot exceed a given value. If the rotation angle is below the tolerance, then the <i>voxel</i> is grouped with other <i>voxels</i> that satisfy the criterion.<br />
 <br />
-The approach used in this filter is to group <i>neighboring voxels</i> on a slice that have a <i>misorientation</i> below the tolerance the user entered. <i>Misorientation</i> here means the minimum rotation angle of one <i>voxel</i>'s crystal axis to coincide with another <i>voxel</i>'s crystal axis. When the grains in the slices are defined, they are moved until <i>'disks'</i> in neighboring slices align with each other. 
+The approach used in this filter is to group <i>neighboring voxels</i> on a slice that have a <i>misorientation</i> below the tolerance the user entered. <i>Misorientation</i> here means the minimum rotation angle of one <i>voxel</i>'s crystal axis needed to coincide with another <i>voxel</i>'s crystal axis. When the grains in the slices are defined, they are moved until <i>'disks'</i> in neighboring slices align with each other. 
 <br /><br />
 <i>Mutual information</i> is one of many quantities that measures how much one random variable
 tells us about another. It is a dimensionless quantity with (generally) units of bits, and can be
@@ -35,7 +35,7 @@ Cover, T.M. and Thomas, J.A. (1991). <i>Elements of information theory</i>. John
 Gray, R.M. (1990). <i>Entropy and Information Theory</i>. Springer-Verlag, New York, NY.<br />
 Nirenberg, S. and Latham, P.E. (2003). <i>Decoding neuronal spike trains: how important are correlations?</i> Proc. Natl. Acad. Sci. 100:7348-7353.<br />
 Shannon, C.E. and Weaver, W. (1949). <i>The mathematical theory of communication</i>. University of Illinois Press, Urbana, Illinois.<br />
-M�zard, M. and Monatanari, A. (2009). <i>Information, Physics, and Computation</i>. Oxford University Press, Oxford.
+Mézard, M. and Monatanari, A. (2009). <i>Information, Physics, and Computation</i>. Oxford University Press, Oxford.
 <br />
 <!-- Do NOT write documentation below this line -->
 </p>
