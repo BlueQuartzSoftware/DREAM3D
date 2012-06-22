@@ -135,8 +135,6 @@ void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields,
   DataContainer* m = getDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3);
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -153,12 +151,12 @@ void ConvertEulerAngles::preflight()
 void ConvertEulerAngles::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -193,5 +191,5 @@ void ConvertEulerAngles::execute()
   serial.convert(0, totalPoints);
 #endif
 
-  notify("Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
 }

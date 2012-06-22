@@ -108,8 +108,9 @@ using namespace meshing;
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      setErrorMessage(Message);\
-      notify(getErrorMessage(), 0, UpdateErrorMessage);\
+      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), #Message, err);\
+      addErrorMessage(em);\
+      notifyMessage(em, 0, UpdateErrorMessage);\
       return;   }
 
 #define DREAM3D_BENCHMARKS 0
@@ -126,8 +127,9 @@ using namespace meshing;
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
       setErrorCondition(-1000);\
-      setErrorMessage(Message);\
-      notify(getErrorMessage(), 0, UpdateWarningMessage);\
+      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), #Message, -1);\
+      addErrorMessage(em);\
+      notifyMessage(em, 0, UpdateWarningMessage);\
       return;}\
       if(DREAM3D_BENCHMARKS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
@@ -424,23 +426,26 @@ void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     if (true == m_StlOutputDirectory.empty())
     {
-      ss << getHumanLabel() << " needs the STL Output directory set";
+      ss.str(""); ss << getHumanLabel() << " needs the STL Output directory set";
       setErrorCondition(-387);
+      addErrorMessage(getNameOfClass(), ss.str(), -387);
     }
     if (true == m_StlFilePrefix.empty())
     {
-      ss << getHumanLabel() << " needs the STL File Prefix set";
+      ss.str(""); ss << getHumanLabel() << " needs the STL File Prefix set";
       setErrorCondition(-388);
+      addErrorMessage(getNameOfClass(), ss.str(), -388);
     }
   }
   if (true == m_VtkOutputFile.empty())
   {
-    ss << getHumanLabel() << " needs the VTK output file set";
+    ss.str(""); ss << getHumanLabel() << " needs the VTK output file set";
     setErrorCondition(-387);
+    addErrorMessage(getNameOfClass(), ss.str(), -387);
   }
 
 
-  setErrorMessage(ss.str());
+
 }
 
 // -----------------------------------------------------------------------------
@@ -459,12 +464,12 @@ void LeeMarchingCubes::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -612,8 +617,8 @@ void LeeMarchingCubes::execute()
   {
     ss.str("");
     ss << " Layers " << i << " and " << i + 1 << " of " << zFileDim;
-    notify(ss.str(), (i * 90 / zFileDim), UpdateProgressValueAndMessage);
-    notify(ss.str(), (i * 90 / zFileDim), UpdateProgressMessage);
+    notifyProgress(ss.str(), (i * 90 / zFileDim), UpdateProgressValueAndMessage);
+    notifyProgress(ss.str(), (i * 90 / zFileDim), UpdateProgressMessage);
 
     // Get a pointer into the GrainIds Array at the appropriate offset
     int32_t* fileVoxelLayer = m_GrainIds + (i * xFileDim * yFileDim);
@@ -685,7 +690,7 @@ void LeeMarchingCubes::execute()
 
   ss.str("");
   ss << "Marching Cubes Between Layers " << zFileDim - 1 << " and " << zFileDim << " of " << zFileDim;
-  notify((ss.str().c_str()), (zFileDim * 90 / zFileDim), UpdateProgressValueAndMessage);
+  notifyProgress((ss.str().c_str()), (zFileDim * 90 / zFileDim), UpdateProgressValueAndMessage);
 
   // ---------------------------------------------------------------
   // Run one more with the top layer being -3
@@ -766,8 +771,7 @@ void LeeMarchingCubes::execute()
 
 
   setErrorCondition(0);
-  setErrorMessage("Surface Meshing Complete");
-  notify(getErrorMessage(), 0, UpdateProgressMessage);
+  notifyProgress("Surface Meshing Complete", 0, UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------

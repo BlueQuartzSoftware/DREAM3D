@@ -157,7 +157,6 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -176,12 +175,12 @@ void AlignSectionsMisorientation::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -197,7 +196,7 @@ void AlignSectionsMisorientation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
 }
 
 
@@ -255,7 +254,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   {
     std::stringstream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
     slice = (dims[2] - 1) - iter;
     oldxshift = -1;

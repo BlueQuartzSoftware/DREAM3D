@@ -103,8 +103,6 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -124,12 +122,12 @@ void AdjustVolume::execute()
   setErrorCondition(0);
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -200,7 +198,7 @@ void AdjustVolume::execute()
   {
     std::stringstream ss;
 	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
-	notify(ss.str(), 0, Observable::UpdateProgressMessage);
+	notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     iterations++;
     good = 0;
     while (good == 0)
@@ -318,5 +316,5 @@ void AdjustVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Adjusting Grain Boundaries Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Adjusting Grain Boundaries Complete", 0, Observable::UpdateProgressMessage);
 }

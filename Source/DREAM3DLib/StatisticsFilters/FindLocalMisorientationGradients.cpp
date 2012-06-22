@@ -136,9 +136,6 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1);
-
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -162,8 +159,8 @@ void FindLocalMisorientationGradients::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -367,5 +364,5 @@ void FindLocalMisorientationGradients::execute()
   }
   delete avgmiso;
 
-  notify("FindLocalMisorientationGradients Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("FindLocalMisorientationGradients Completed", 0, Observable::UpdateProgressMessage);
 }

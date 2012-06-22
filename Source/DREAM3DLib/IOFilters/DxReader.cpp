@@ -85,7 +85,7 @@ void DxReader::preflight()
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -4);
     setErrorCondition(-387);
   }
 }
@@ -108,7 +108,7 @@ int DxReader::readFile()
   {
     ss.clear();
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -5);
     setErrorCondition(-1);
     return -1;
   }
@@ -133,7 +133,7 @@ int DxReader::readFile()
     ss.clear();
     ss << ClassName() << " Runtime Error. The input file '" << getInputFile() << "' could not be"
         << " opened for reading. Do you have access to this file?";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -6);
     setErrorCondition(-498);
     return -498;
   }
@@ -164,7 +164,7 @@ int DxReader::readFile()
       {
         ss.clear();
         ss << "ERROR: Unable to read data dimensions from the header" << std::endl;
-        setErrorMessage(ss.str());
+        addErrorMessage(getNameOfClass(), ss.str(), -7);
         setErrorCondition(-499);
         inFile.close();
         return -499;
@@ -226,7 +226,7 @@ int DxReader::readFile()
       {
         ss.clear();
         ss << "ERROR: Unable to locate the last header line" << std::endl;
-        setErrorMessage(ss.str());
+        addErrorMessage(getNameOfClass(), ss.str(), -8);
         setErrorCondition(-496);
         inFile.close();
         return -496;
@@ -282,7 +282,7 @@ int DxReader::readFile()
     ss.clear();
     ss << "ERROR: data size does not match header dimensions" << std::endl;
     ss << "\t" << index << "\t" << nz * nx * ny << std::endl;
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -9);
     setErrorCondition(-495);
     inFile.close();
     return -495;
@@ -298,7 +298,7 @@ int DxReader::readFile()
   tokens.clear();
   inFile.close();
 
-  notify("Complete", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
   return 0;
 }
 

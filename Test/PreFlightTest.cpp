@@ -179,7 +179,11 @@ void SyntheticBuilder_PreFlight()
     {
       preflightError |= err;
       preflightMessageStream << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;
-      preflightMessageStream << (*filter)->getErrorMessage() << std::endl;
+      std::vector<ErrorMessage::Pointer> ems = (*filter)->getErrorMessages();
+      for (std::vector<ErrorMessage::Pointer>::iterator iter = ems.begin(); iter != ems.end(); ++iter )
+      {
+        preflightMessageStream << (*iter)->generateErrorString();
+      }
     }
   }
 
@@ -209,7 +213,10 @@ void name##_PreFlightTest() {\
     if(err < 0) {\
       preflightError |= err;\
       ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
-      ss << (*filter)->getErrorMessage();\
+      std::vector<ErrorMessage::Pointer> ems = (*filter)->getErrorMessages();\
+      for (std::vector<ErrorMessage::Pointer>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
+        ss << (*iter)->generateErrorString();\
+      }\
     }\
   }\
   std::cout << ss.str() << std::endl;\

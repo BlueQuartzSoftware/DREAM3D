@@ -149,8 +149,6 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -168,12 +166,12 @@ void FindSchmids::preflight()
 void FindSchmids::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -212,5 +210,5 @@ void FindSchmids::execute()
 	  m_SlipSystems[i] = ss;
   }
 
-  notify("FindSchmids Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("FindSchmids Completed", 0, Observable::UpdateProgressMessage);
 }

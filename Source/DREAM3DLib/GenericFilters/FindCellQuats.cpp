@@ -94,7 +94,6 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -118,8 +117,8 @@ void FindCellQuats::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -163,7 +162,7 @@ void FindCellQuats::execute()
   std::stringstream ss;
   ss.str("");
   ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 }
 
 

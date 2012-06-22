@@ -91,11 +91,7 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -125,7 +121,7 @@ int PhWriter::writeFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -2);
     setErrorCondition(-1);
     return -1;
   }
@@ -219,7 +215,7 @@ int PhWriter::writeFile()
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
-  notify("Writing Ph File Complete", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Writing Ph File Complete", 0, Observable::UpdateProgressMessage);
   return 0;
 }
 

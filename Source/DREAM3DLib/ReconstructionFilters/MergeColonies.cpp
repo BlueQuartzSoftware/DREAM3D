@@ -176,14 +176,13 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 	{
 		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
 		setErrorCondition(-304);
+	  addErrorMessage(getNameOfClass(), ss.str(), -1);
 	}
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -200,12 +199,12 @@ void MergeColonies::preflight()
 void MergeColonies::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   m->clearFieldData();
@@ -218,13 +217,13 @@ void MergeColonies::execute()
     return;
   }
 
-  notify("Merging Colonies", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Merging Colonies", 0, Observable::UpdateProgressMessage);
   merge_colonies();
 
-  notify("Characterizing Colonies", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Characterizing Colonies", 0, Observable::UpdateProgressMessage);
   characterize_colonies();
 
-  notify("Renumbering Grains", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -245,7 +244,7 @@ void MergeColonies::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------

@@ -95,7 +95,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-387);
   }
 
@@ -117,7 +117,7 @@ void H5VoxelFileReader::execute()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
@@ -130,7 +130,8 @@ void H5VoxelFileReader::execute()
   err = reader->getSizeResolutionOrigin(volDims, spacing, origin);
   if(err < 0)
   {
-    setErrorMessage("Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File", -1);
+  addErrorMessage(em);
   }
   size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
   getDataContainer()->setDimensions(dcDims);
@@ -143,13 +144,14 @@ void H5VoxelFileReader::execute()
   DataArray<int>::Pointer phases = DataArray<int>::CreateArray(totalpoints, DREAM3D::CellData::Phases);
   DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints*3, DREAM3D::CellData::EulerAngles);
   eulers->SetNumberOfComponents(3);
-  
+
   std::string arrayname = "GrainID";
   err = reader->readScalarData<int>(arrayname, grainIds->GetPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
-    setErrorMessage("Error Reading the GrainIDs from the .h5voxel file.");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the GrainIDs from the .h5voxel file.", err);
+  addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
   arrayname = "PhaseID";
@@ -157,7 +159,8 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     setErrorCondition(err);
-    setErrorMessage("Error Reading the Phases from the .h5voxel file.");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the Phases from the .h5voxel file.", err);
+  addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
   arrayname = "Euler Angles";
@@ -165,7 +168,8 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     setErrorCondition(err);
-    setErrorMessage("Error Reading the Euler Angles from the .h5voxel file.");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the Euler Angles from the .h5voxel file.", err);
+  addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
 
@@ -189,13 +193,15 @@ void H5VoxelFileReader::execute()
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, crystruct);
   if(err < 0)
   {
-      setErrorMessage("H5VoxelReader Error Reading the Crystal Structure Field Data");
+      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
+      addErrorMessage(em);
   }
   arrayname = "PhaseType";
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, phaseType);
   if(err < 0)
   {
-      setErrorMessage("H5VoxelReader Error Reading the Phase Type Data");
+      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5VoxelReader Error Reading the Phase Type Data", err);
+      addErrorMessage(em);
   }
 
   DataArray<unsigned int>::Pointer crystructs = DataArray<unsigned int>::CreateArray(crystruct.size(), DREAM3D::EnsembleData::CrystalStructures);

@@ -45,19 +45,19 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
 
-  private:
-
-    std::string m_ErrorMessage;
-  public:
-
-    void setErrorMessage(const std::string &value)
-    {
-      this->m_ErrorMessage = value;
-    }
-    std::string getErrorMessage()
-    {
-      return m_ErrorMessage;
-    }
+//  private:
+//
+//    std::string m_ErrorMessage;
+//  public:
+//
+//    void setErrorMessage(const std::string &value)
+//    {
+//      this->m_ErrorMessage = value;
+//    }
+//    std::string getErrorMessage()
+//    {
+//      return m_ErrorMessage;
+//    }
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<ErrorMessage::Pointer>, ErrorMessages);
 

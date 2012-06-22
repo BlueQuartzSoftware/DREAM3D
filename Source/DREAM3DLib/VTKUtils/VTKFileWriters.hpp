@@ -49,6 +49,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
 
@@ -57,16 +58,15 @@
  * @brief This is the SuperClass to implement if you want to write scalars to
  * a VTK Legacy File. The only method you need to implement is the writeScalars(FILE* f).
  */
-class VtkScalarWriter
+class VtkScalarWriter : public AbstractFilter
 {
   public:
-    VtkScalarWriter() : m_WriteBinaryFiles(true), m_ErrorMessage(""),m_ErrorCondition(0){}
+    VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0){}
     DREAM3D_TYPE_MACRO(VtkScalarWriter);
 
     virtual ~VtkScalarWriter(){}
 
     bool m_WriteBinaryFiles;
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
 
     virtual int writeScalars(FILE* f)
@@ -302,18 +302,17 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
  * @date Jun 13, 2011
  * @version 1.0
  */
-class VTKRectilinearGridFileWriter
+class VTKRectilinearGridFileWriter : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileWriter);
     DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileWriter);
     DREAM3D_TYPE_MACRO(VTKRectilinearGridFileWriter);
 
-    VTKRectilinearGridFileWriter() : m_WriteBinaryFiles(false), m_ErrorMessage(""),m_ErrorCondition(0) {}
+    VTKRectilinearGridFileWriter() : AbstractFilter(), m_WriteBinaryFiles(false), m_ErrorCondition(0) {}
     virtual ~VTKRectilinearGridFileWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
 
     /**
@@ -409,7 +408,7 @@ class VTKRectilinearGridFileWriter
         if (err < 0)
         {
           setErrorCondition((*iter)->getErrorCondition());
-          setErrorMessage((*iter)->getErrorMessage());
+          addErrorMessages((*iter)->getErrorMessages());
           break;
         }
       }
@@ -490,7 +489,7 @@ class VTKStructuredPointsFileWriter
  * @date Feb 19, 2011
  * @version 1.0
  */
-class VtkMiscFileWriter
+class VtkMiscFileWriter : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(VtkMiscFileWriter);
@@ -500,7 +499,6 @@ class VtkMiscFileWriter
     virtual ~VtkMiscFileWriter(){}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
 
     /**
@@ -595,7 +593,7 @@ class VtkMiscFileWriter
 
 
   protected:
-    VtkMiscFileWriter(){}
+    VtkMiscFileWriter() : AbstractFilter() { }
 
   private:
     VtkMiscFileWriter(const VtkMiscFileWriter&); // Copy Constructor Not Implemented

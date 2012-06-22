@@ -80,7 +80,6 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -104,8 +103,8 @@ void FindGrainCentroids::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -125,7 +124,7 @@ void FindGrainCentroids::execute()
   std::stringstream ss;
   ss.str("");
   ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 }
 void FindGrainCentroids::find_centroids()
 {
