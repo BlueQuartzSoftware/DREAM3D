@@ -77,7 +77,8 @@ m_AxisLengths(NULL),
 m_Omega3s(NULL),
 m_EquivalentDiameters(NULL),
 m_Volumes(NULL),
-m_AspectRatios(NULL)
+m_AspectRatios(NULL),
+m_StatsDataArray(NULL)
 {
   grainmoments = NULL;
   graineigenvals = NULL;
