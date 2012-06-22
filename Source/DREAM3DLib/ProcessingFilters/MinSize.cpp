@@ -124,8 +124,6 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -145,12 +143,12 @@ void MinSize::execute()
   setErrorCondition(0);
  // int err = 0;
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -183,12 +181,12 @@ void MinSize::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    setErrorMessage(renumber_grains->getErrorMessage());
+    addErrorMessages(renumber_grains->getErrorMessages());
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Minimum Size Filter Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Minimum Size Filter Complete", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -242,7 +240,7 @@ void MinSize::assign_badpoints()
     {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
       int grainname = m_GrainIds[i];
       if (grainname < 0)
       {
@@ -353,7 +351,7 @@ void MinSize::remove_smallgrains()
   {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
       size = 0;
       int nucleus = nuclei[i];
       voxellists[i].push_back(nucleus);

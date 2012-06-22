@@ -161,7 +161,6 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -180,12 +179,12 @@ void AlignSectionsMutualInformation::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -204,7 +203,7 @@ void AlignSectionsMutualInformation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
 }
 
 
@@ -270,7 +269,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   {
     std::stringstream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
     slice = (dims[2] - 1) - iter;
     graincount1 = graincounts[slice];
@@ -469,7 +468,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
- //   notify(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)

@@ -54,6 +54,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5Macros.h"
@@ -66,7 +67,7 @@
  * @date Jun 30, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT H5VoxelReader
+class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 {
   public:
     MXA_SHARED_POINTERS(H5VoxelReader)
@@ -76,7 +77,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
     virtual ~H5VoxelReader();
 
     MXA_INSTANCE_STRING_PROPERTY(FileName);
-    MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
+ //   MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
 
     int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 
@@ -106,7 +107,7 @@ class DREAM3DLib_EXPORT H5VoxelReader
 	  {
 	    if(m_FileName.empty() == true)
 	      {
-	        m_ErrorMessage = "H5VoxelReader Error; Filename was empty";
+	      addErrorMessage(getNameOfClass(), "H5VoxelReader Error; Filename was empty", -1);
 	        return -1;
 	      }
 	    OPEN_HDF5_FILE(fileId, m_FileName);
@@ -120,8 +121,8 @@ class DREAM3DLib_EXPORT H5VoxelReader
  	  if(err < 0)
 	  {
 	    std::stringstream ss;
-	    ss << getNameOfClass() << ": Error Reading the " << dsetName;
-	    m_ErrorMessage = ss.str();
+	    ss << " Error Reading the " << dsetName;
+	    addErrorMessage(getNameOfClass(), ss.str(), err);
 	    err = H5Gclose(scalarGid);
 	    err = H5Gclose(reconGid);
 	    return err;
@@ -143,13 +144,13 @@ class DREAM3DLib_EXPORT H5VoxelReader
     {
       if(m_FileName.empty() == true)
         {
-          m_ErrorMessage = "H5ReconVolumeReader Error; Filename was empty";
+        addErrorMessage(getNameOfClass(), "H5ReconVolumeReader Error; Filename was empty", -1);
           return -1;
         }
       OPEN_HDF5_FILE(fileId, m_FileName);
       m_FileId = fileId;
     }
-	OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
+    OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
     OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
 
     std::vector<NativeType> nativeData;
@@ -157,8 +158,8 @@ class DREAM3DLib_EXPORT H5VoxelReader
     if(err < 0)
     {
       std::stringstream ss;
-      ss << getNameOfClass() << ": Error Reading the " << dsetName;
-      m_ErrorMessage = ss.str();
+      ss <<  ": Error Reading the " << dsetName;
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       err |= H5Gclose(fieldGid);
       err |= H5Gclose(reconGid);
       return err;

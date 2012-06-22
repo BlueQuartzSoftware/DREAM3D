@@ -169,7 +169,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
-  }  
+  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
   if(getErrorCondition() == -305)
   {
@@ -180,7 +180,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	if(preflight == true) find_graincentroids->preflight();
 	if(preflight == false) find_graincentroids->execute();
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
-  }  
+  }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
@@ -191,13 +191,12 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	StatsDataArray::Pointer p = StatsDataArray::New();
-	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    StatsDataArray::Pointer p = StatsDataArray::New();
+    m_StatsDataArray = p.get();
+    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
+    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -214,12 +213,12 @@ void FindShapes::preflight()
 void FindShapes::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -239,7 +238,7 @@ void FindShapes::execute()
   if(m->getZPoints() > 1) find_axiseulers();
   if(m->getZPoints() == 1) find_axiseulers2D();
 
-  notify("FindShapes Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("FindShapes Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------

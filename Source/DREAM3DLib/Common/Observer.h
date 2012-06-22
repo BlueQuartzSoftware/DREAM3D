@@ -59,10 +59,8 @@ class DREAM3DLib_EXPORT Observer
       * @param message The message to print
       * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
       */
-//     virtual void updateProgressAndMessage(const char* message, int progress);
-//     virtual void updateProgressAndMessage(const std::string &msg, int progress);
-     virtual void updateProgressAndMessage(ErrorMessage::Pointer msg, int progress);
-     virtual void updateProgressAndMessage(std::vector<ErrorMessage::Pointer> &messages, int progress);
+     virtual void updateProgressAndMessage(const char* message, int progress);
+     virtual void updateProgressAndMessage(const std::string &msg, int progress);
 
      /**
       * @brief This method reports progress such that a user interface element such
@@ -77,10 +75,9 @@ class DREAM3DLib_EXPORT Observer
       * on a GUI or printed to a console or possibly saved to a log file
       * @param message
       */
-//     virtual void pipelineProgressMessage(const char* message);
-//     virtual void pipelineProgressMessage(const std::string &msg);
-     virtual void pipelineProgressMessage(ErrorMessage::Pointer msg);
-     virtual void pipelineProgressMessage(std::vector<ErrorMessage::Pointer> &messages);
+     virtual void pipelineProgressMessage(const char* message);
+     virtual void pipelineProgressMessage(const std::string &msg);
+
 
 
      /**
@@ -89,7 +86,7 @@ class DREAM3DLib_EXPORT Observer
       * @param message
       */
      virtual void pipelineWarningMessage(ErrorMessage::Pointer msg);
-     virtual void pipelineWarningMessage(std::vector<ErrorMessage::Pointer> &messages);
+     virtual void pipelineWarningMessage(std::vector<ErrorMessage::Pointer> messages);
 
      /**
       * @brief This message reports some human readable message suitable for display
@@ -97,7 +94,7 @@ class DREAM3DLib_EXPORT Observer
       * @param message
       */
      virtual void pipelineErrorMessage(ErrorMessage::Pointer msg);
-     virtual void pipelineErrorMessage(std::vector<ErrorMessage::Pointer> &messages);
+     virtual void pipelineErrorMessage(std::vector<ErrorMessage::Pointer> messages);
 
 
 

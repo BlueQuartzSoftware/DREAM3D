@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,85 +33,66 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "FileWriter.h"
 
+#include <string>
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/ErrorMessage.h"
 
-
+#include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileWriter::FileWriter() :
-AbstractFilter()
+void RemoveTestFiles()
 {
 
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileWriter::~FileWriter()
+void TestErrorMessage()
 {
+  ErrorMessage::Pointer e0 = ErrorMessage::New();
+
+  std::string a0("Some Class Name");
+  std::string a1("Description");
+  int eCode = -10;
+  ErrorMessage::Pointer e1 = ErrorMessage::New();
+
+
+  ErrorMessage::Pointer e2 = ErrorMessage::New(a0, a1, eCode);
+
+  AbstractFilter::Pointer f = AbstractFilter::New();
+  f->addErrorMessage(a0, a1, eCode);
+  f->addErrorMessage("Some Other Class", "A description", -10);
+
 
 }
 
 // -----------------------------------------------------------------------------
-//
+//  Use test framework
 // -----------------------------------------------------------------------------
-int FileWriter::writeHeader()
+int main(int argc, char **argv)
 {
-  setErrorCondition(-1);
-  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
-  addErrorMessage(em);
-  notifyMessage(em, 0, UpdateErrorMessage);
-  return -1;
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FileWriter::writeFile()
-{
-  setErrorCondition(-1);
-  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
-  addErrorMessage(em);
-  notifyMessage(em, 0, UpdateErrorMessage);
-  return -1;
-}
+  int err = EXIT_SUCCESS;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FileWriter::execute()
-{
-  if (getDataContainer() == NULL)
-  {
-    setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
-  addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
-    return;
-  }
-  setErrorCondition(0);
-  int err = writeHeader();
-  if (err < 0)
-  {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Writing the Header portion of the file", err);
-  addErrorMessage(em);
-    setErrorCondition(err);
-    notifyMessage(em, 0, UpdateErrorMessage);
-    return;
-  }
-  err = writeFile();
-  if (err < 0)
-  {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Writing the file", err);
-  addErrorMessage(em);
-    setErrorCondition(err);
-    notifyMessage(em, 0, UpdateErrorMessage);
-    return;
-  }
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
+  DREAM3D_REGISTER_TEST( TestErrorMessage() );
+
+#if REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
+  PRINT_TEST_SUMMARY();
+  return err;
 }
 
 

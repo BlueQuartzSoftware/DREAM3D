@@ -64,7 +64,7 @@ void AbstractFilter::execute()
   setErrorCondition(-1);
   ErrorMessage::Pointer msg = ErrorMessage::New(getNameOfClass(), "AbstractFilter does not implement an execute method. Please use a subclass instead.", -1);
   addErrorMessage(msg);
-  notify(msg, 0, Observable::UpdateErrorMessage);
+  notifyMessage(msg, 0, Observable::UpdateErrorMessage);
 }
 
 // -----------------------------------------------------------------------------

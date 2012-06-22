@@ -105,12 +105,11 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Output File Set and it was not.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-387);
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -141,7 +140,7 @@ int DxWriter::writeFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -316,7 +315,7 @@ int DxWriter::writeFile()
 #endif
 
   // If there is an error set this to something negative and also set a message
-  notify("Complete", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
   return err;
 }
 

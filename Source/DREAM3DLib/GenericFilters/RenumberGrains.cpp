@@ -98,8 +98,6 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -123,8 +121,8 @@ void RenumberGrains::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -143,13 +141,13 @@ void RenumberGrains::execute()
   NewNames.resize(totalFields);
 
   ss << getNameOfClass() << " - Generating Active Grain List";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
   std::vector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
     std::stringstream ss;
     // ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
-    // notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    // notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     if(m_Active[i] == false)
     {
       RemoveList.push_back(i);
@@ -172,7 +170,7 @@ void RenumberGrains::execute()
       ss.str("");
       ss << getNameOfClass() << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
       ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
-      //notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      //notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
       if((*iter).compare(DREAM3D::FieldData::NeighborList) == 0) m->removeFieldData(*iter);
       else if((*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) == 0) m->removeFieldData(*iter);
       else p->EraseTuples(RemoveList);
@@ -187,14 +185,14 @@ void RenumberGrains::execute()
     {
       std::stringstream ss;
       ss << "Renumbering Grains - Updating Cell Grain Ids - " << ((float)i / totalPoints) * 100 << " Percent Complete";
-      //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
       if(m_GrainIds[i] > 0) m_GrainIds[i] = NewNames[m_GrainIds[i]];
     }
   }
 
   ss.str("");
   ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 }
 
 

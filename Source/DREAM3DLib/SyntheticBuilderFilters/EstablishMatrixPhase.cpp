@@ -102,8 +102,6 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
     ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-308);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -128,8 +126,8 @@ void EstablishMatrixPhase::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -145,7 +143,7 @@ void EstablishMatrixPhase::execute()
   establish_matrix();
 
   // If there is an error set this to something negative and also set a message
-  notify("EstablishMatrixPhases Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("EstablishMatrixPhases Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +151,7 @@ void EstablishMatrixPhase::execute()
 // -----------------------------------------------------------------------------
 void  EstablishMatrixPhase::establish_matrix()
 {
-  notify("Establishing Matrix", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Establishing Matrix", 0, Observable::UpdateProgressMessage);
   DREAM3D_RANDOMNG_NEW()
 
   DataContainer* m = getDataContainer();

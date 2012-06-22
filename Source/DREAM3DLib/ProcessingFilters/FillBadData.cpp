@@ -120,8 +120,6 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 	if(preflight == false) find_grainphases->execute();
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -141,12 +139,12 @@ void FillBadData::execute()
   setErrorCondition(0);
  // int err = 0;
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -259,12 +257,12 @@ void FillBadData::execute()
   std::vector<int > n(numgrains + 1);
   int cycle = 0;
   while (count != 0)
-  {    
+  {
     count = 0;
 	  std::stringstream ss;
 	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << cycle << " - Count - " << count;
 	  cycle++;
-	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     for (int i = 0; i < totalPoints; i++)
     {
       int grainname = m_GrainIds[i];
@@ -333,5 +331,5 @@ void FillBadData::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Filling Bad Data Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Filling Bad Data Complete", 0, Observable::UpdateProgressMessage);
 }

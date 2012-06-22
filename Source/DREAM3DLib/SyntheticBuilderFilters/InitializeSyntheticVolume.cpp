@@ -156,6 +156,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   {
     ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
     setErrorCondition(-800);
+    addErrorMessage(getNameOfClass(), ss.str(), -800);
   }
 
   addRequiredEnsembleData(DREAM3D::EnsembleData::ShapeTypes);
@@ -163,8 +164,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   {
     ss << getNameOfClass() << ": No ShapeTypes have been set and a shape type for each phase.";
     setErrorCondition(-801);
+    addErrorMessage(getNameOfClass(), ss.str(), -801);
   }
-  setErrorMessage(ss.str());
+
 }
 
 // -----------------------------------------------------------------------------
@@ -193,12 +195,12 @@ void InitializeSyntheticVolume::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -226,6 +228,6 @@ void InitializeSyntheticVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("InitializeSyntheticVolume Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("InitializeSyntheticVolume Complete", 0, Observable::UpdateProgressMessage);
 }
 

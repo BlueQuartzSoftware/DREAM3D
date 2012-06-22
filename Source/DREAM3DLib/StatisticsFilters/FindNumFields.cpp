@@ -77,8 +77,6 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -102,8 +100,8 @@ void FindNumFields::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -129,5 +127,5 @@ void FindNumFields::execute()
   std::stringstream ss;
   ss.str("");
   ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 }

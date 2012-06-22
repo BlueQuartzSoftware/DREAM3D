@@ -162,8 +162,8 @@ void CropVolume::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -207,7 +207,7 @@ void CropVolume::execute()
   {
     std::stringstream ss;
     ss << "Cropping Volume - " << ((float)i / m->getZPoints()) * 100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -268,10 +268,10 @@ void CropVolume::execute()
     renum->setObservers(getObservers());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
-    setErrorMessage(renum->getErrorMessage());
+    addErrorMessages(renum->getErrorMessages());
   }
 
 
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
 }
 
