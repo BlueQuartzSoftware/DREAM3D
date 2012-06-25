@@ -42,14 +42,14 @@
        <widget class="QPushButton" name="addPhase">
         <property name="minimumSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -70,12 +70,9 @@
         </property>
         <property name="iconSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
-        </property>
-        <property name="shortcut">
-         <string>Enter</string>
         </property>
         <property name="flat">
          <bool>true</bool>
@@ -86,14 +83,14 @@
        <widget class="QPushButton" name="deletePhase">
         <property name="minimumSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -114,8 +111,8 @@
         </property>
         <property name="iconSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="flat">
@@ -127,14 +124,14 @@
        <widget class="QPushButton" name="editPhase">
         <property name="minimumSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -155,8 +152,8 @@
         </property>
         <property name="iconSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>24</width>
+          <height>24</height>
          </size>
         </property>
         <property name="flat">
