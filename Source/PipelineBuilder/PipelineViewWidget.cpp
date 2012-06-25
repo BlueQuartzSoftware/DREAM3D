@@ -45,9 +45,11 @@
 #include <QtGui/QLabel>
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QHeaderView>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/ErrorMessage.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 
@@ -212,6 +214,11 @@ void PipelineViewWidget::preflightPipeline()
   // clear all the error messages
   m_PipelineErrorList.clear();
   errorTableWidget->clear();
+  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
+    errorTableWidget->removeRow(i);
+  }
+  errorTableWidget->setRowCount(0);
+
 
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();
@@ -234,16 +241,12 @@ void PipelineViewWidget::preflightPipeline()
       filter->setDataContainer(m.get());
       filter->preflight();
       int err = filter->getErrorCondition();
-      if(err < 0)
+      std::vector<ErrorMessage::Pointer> msgs = filter->getErrorMessages();
+      if(msgs.size() > 0)
       {
-        preflightError |= err;
-        //preflightErrorMessage(filter->getErrorMessage().c_str());
+        preflightErrorMessage(msgs);
         fw->setHasPreflightErrors(true);
       }
-
-      ErrorMessage::Pointer test = ErrorMessage::New();
-      errorStream.push_back(test);
-      preflightErrorMessage(errorStream);
     }
   }
 }
@@ -253,11 +256,6 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream)
 {
-  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
-    errorTableWidget->removeRow(i);
-  }
-  errorTableWidget->setRowCount(0);
-
   if (NULL != errorTableWidget)
   {
     int rc = errorTableWidget->rowCount();
@@ -277,18 +275,6 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
     }
-
-
-    #if 0
-    //How to add items to a table
-    int rc = m_ErrorsArea->rowCount();
-
-    m_ErrorsArea->insertRow(rc);
-
-    m_ErrorsArea->setItem(rc, 0, filterName);
-    m_ErrorsArea->setItem(rc, 1, errorDescription);
-    m_ErrorsArea->setItem(rc, 2, errorCode);
-    #endif
   }
 }
 
