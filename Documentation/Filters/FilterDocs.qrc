@@ -5,8 +5,7 @@
 <qresource>
 <file>document.css</file>
 <file>catalog.css</file>
-
-
+<file>index.html</file>
 
 <file>GenericFilters/FindNeighbors.html</file>
 <file>GenericFilters/FindGrainPhases.html</file>
