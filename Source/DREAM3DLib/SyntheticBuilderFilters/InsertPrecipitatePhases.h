@@ -211,6 +211,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     std::vector<std::vector<std::vector<float> > > simneighbordist;
 
     std::vector<float> grainsizediststep;
+    std::vector<float> neighbordiststep;
 
     std::vector<int> newnames;
     std::vector<int> packqualities;

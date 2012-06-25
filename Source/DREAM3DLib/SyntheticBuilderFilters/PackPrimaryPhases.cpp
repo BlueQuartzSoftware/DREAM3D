@@ -459,7 +459,7 @@ void PackPrimaryPhases::execute()
 		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
 		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
 		{
-		  input = (float(k + 1) * neighbordiststep[i]) + (pp->getMinGrainDiameter() / 2.0f);
+		  input = (float(k + 1) * neighbordiststep[i]);
 		  float logInput = logf(input);
 		  if(logInput <= avg)
 		  {
@@ -1664,7 +1664,7 @@ void PackPrimaryPhases::cleanup_grains()
   for (int i = 0; i < totpoints; i++)
   {
     touchessurface = 0;
-    if(checked[i] == false && m_GrainIds[i] > 0)
+    if(checked[i] == false && m_GrainIds[i] > firstPrimaryField)
     {
 	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
 	  minsize = pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f;

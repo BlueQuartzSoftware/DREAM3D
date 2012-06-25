@@ -321,9 +321,9 @@ void  InsertPrecipitatePhases::place_precipitates()
 
   for (size_t i = 1; i < numensembles; ++i)
   {
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase && pp != NULL)
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
+	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
 	  m_NumFields[i] = 0;
       precipitatephases.push_back(i);
       precipitatephasefractions.push_back(pp->getPhaseFraction());
@@ -410,6 +410,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(precipitatephases.size());
   simneighbordist.resize(precipitatephases.size());
+  neighbordiststep.resize(precipitatephases.size());
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     phase = precipitatephases[i];
@@ -417,6 +418,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 	neighbordist[i].resize(pp->getBinNumbers()->GetSize());
     simneighbordist[i].resize(pp->getBinNumbers()->GetSize());
 	VectorOfFloatArray Neighdist = pp->getGrainSize_Neighbors();
+	float normalizer = 0;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
 		neighbordist[i][j].resize(40);
@@ -424,10 +426,11 @@ void  InsertPrecipitatePhases::place_precipitates()
 		float previoustotal = 0;
 		float avg = Neighdist[0]->GetValue(j);
 		float stdev = Neighdist[1]->GetValue(j);
+		neighbordiststep[i] = 2;		
 		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
 		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
 		{
-		  input = (float(k + 1) * grainsizediststep[i]) + (pp->getMinGrainDiameter() / 2.0f);
+		  input = (float(k + 1) * neighbordiststep[i]);
 		  float logInput = logf(input);
 		  if(logInput <= avg)
 		  {
@@ -438,6 +441,14 @@ void  InsertPrecipitatePhases::place_precipitates()
 			neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
 		  }
 		  previoustotal = previoustotal + neighbordist[i][j][k];
+		}
+		normalizer = normalizer + previoustotal;
+    }
+    for (size_t j = 0; j < neighbordist[i].size(); j++)
+    {
+		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+		{
+			neighbordist[i][j][k] = neighbordist[i][j][k]/normalizer;
 		}
     }
   }
@@ -810,6 +821,7 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
   size_t bin = 0;
   int index = 0;
   std::vector<int> count;
+  int counter = 0;
   int phase;
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
   {
@@ -843,10 +855,11 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
         if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
 		dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
         nnum = m_Neighborhoods[index];
-		bin = nnum/2;
+		bin = nnum/neighbordiststep[iter];
 		if(bin >= 40) bin = 39;
         simneighbordist[iter][dia][bin]++;
         count[dia]++;
+		counter++;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
@@ -856,17 +869,18 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
 	  dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
       nnum = m_Neighborhoods[index];
-	  bin = nnum/2;
+	  bin = nnum/neighbordiststep[iter];
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
       count[dia]++;
+	  counter++;
     }
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
       for (size_t j = 0; j < 40; j++)
       {
-        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
-        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
+        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(counter);
+        if(counter == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
@@ -1571,7 +1585,7 @@ void InsertPrecipitatePhases::cleanup_grains()
   for (int i = 0; i < totpoints; i++)
   {
     touchessurface = 0;
-    if(checked[i] == false && m_GrainIds[i] > 0)
+    if(checked[i] == false && m_GrainIds[i] > firstPrecipitateField)
     {
 	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
 	  minsize = pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f;
