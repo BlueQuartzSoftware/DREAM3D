@@ -17,15 +17,14 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <p class="pBody">
 <!-- Write all your documentation here -->
 Bad data means a <i>voxel</i> has a <b>GrainID</b> of 0, which means the <i>voxel</i> failed one of the quality metrics in the <i>ReadH5Ebsd Filter</i>. To remedy this situation, this filter <i>opens</i> or <i>closes</i> the bad data. <br />
-If the bad data is <i>opened</i>, the filter grows the bad data by one <i>voxel</i> in an iteration sequence. The <b>GrainID</b> of any neighboring <i>voxel</i> will be changed to 0. The number of iterations to grow the <i>voxel</i> is limited to the situation in which only one grain remains or there is no place to grow.<br />
+If the bad data is <i>opened</i>, the filter grows the bad data by one <i>voxel</i> in an iteration sequence. The number of iterations to grow the <i>voxel</i> is limited to the situation in which only one grain remains or there is no place to grow.<br />The <b>GrainID</b> of any neighboring <i>voxel</i> will be changed to 0. <br />
 For the <i>close</i> option, the <b>GrainID</b> of the bad data <i>voxel</i> is changed to the <b>GrainID</b> of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero <b>GrainID</b>.<br />
 If there is a tie between two <b>GrainID</b>s, then one of the <b>GrainID</b>s, chosen randomly, will be assigned to the bad <i>voxel</i>. <br />
 Goals a user might be trying to accomplish with this Filter
 are<br />
  1) to remove small or thin regions of bad data by running a single
-(or two) iteration closing operation.<br />  
-2) increasing the size of a "bad" data region by running an opening operation. This might be useful if the experimental technique always underestimates the size of certain
-objects. <br /> 
+(or two) iteration <i>close</i> operation.<br />  
+2) to increase the size of a "bad" data region by running an <i>open operation</i>. This might be useful if the experimental technique always underestimates the size of certain objects. <br /> 
 For example, when running EBSD, the pores (which show up as
 bad data) are always smaller in the scans than in the specimen, because the
 beam, when it is just inside the pore, still can pick up signal from the
@@ -36,7 +35,7 @@ example, if there were a number of big pores and a number of single <i>voxel</i>
 data regions, running a single <i>close</i> operation would remove
 the single <i>voxel</i> regions and reduce the pores by one <i>voxel</i>. If this is followed immediately by  an <i>open</i> operation, then the pores would grow by one
 <i>voxel</i> and return to their original size. Because the single <i>voxel</i>s would be gone, they would not be able to grow back.
-
+<br />
 <!-- Do NOT write documentation below this line -->
 </p>
 
