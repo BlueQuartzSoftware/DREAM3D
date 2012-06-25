@@ -36,6 +36,10 @@
 
 #include "FieldDataCSVWriter.h"
 
+
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -115,8 +119,19 @@ void FieldDataCSVWriter::execute()
     return;
   }
 
-//  int64_t totalPoints = m->totalPoints();
-//  int totalFields = m->getNumFieldTuples();
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      std::stringstream ss;
+      ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
+      setErrorMessage(ss.str());
+      setErrorCondition(-1);
+      return;
+  }
+
+
 
   std::string filename = getFieldDataFile();
 

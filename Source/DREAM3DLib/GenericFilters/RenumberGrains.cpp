@@ -188,8 +188,26 @@ void RenumberGrains::execute()
       std::stringstream ss;
       ss << "Renumbering Grains - Updating Cell Grain Ids - " << ((float)i / totalPoints) * 100 << " Percent Complete";
       //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-      if(m_GrainIds[i] > 0) m_GrainIds[i] = NewNames[m_GrainIds[i]];
+      if(m_GrainIds[i] > 0)
+      {
+        m_GrainIds[i] = NewNames[m_GrainIds[i]];
+      }
     }
+
+#if 0
+    // Find the unique set of grain ids
+    std::set<int32_t> grainIdSet;
+    for (int64_t i = 0; i < totalPoints; ++i)
+    {
+      grainIdSet.insert(m_GrainIds[i]);
+    }
+    for (std::set<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
+    {
+      std::cout << "Grain ID: " << (*iter) << std::endl;
+    }
+#endif
+
+
   }
 
   ss.str("");
