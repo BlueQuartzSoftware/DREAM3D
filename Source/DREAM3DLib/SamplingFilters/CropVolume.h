@@ -61,6 +61,10 @@ class CropVolume : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter);
 
     virtual ~CropVolume();
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, XMin)
     DREAM3D_INSTANCE_PROPERTY(int, YMin)
@@ -88,6 +92,10 @@ class CropVolume : public AbstractFilter
 
 
   private:
+    int32_t* m_GrainIds;
+    bool* m_Active;
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     CropVolume(const CropVolume&); // Copy Constructor Not Implemented
     void operator=(const CropVolume&); // Operator '=' Not Implemented
