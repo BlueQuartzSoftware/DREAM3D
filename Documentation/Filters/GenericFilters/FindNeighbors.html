@@ -25,10 +25,15 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <h1 class="pHeading1">Find Neighbors Filter</h1>
 <p class="pCellBody">
 <a href="MFESurfaceSmoothingFilter.html#wp2">Description</a> | <a href="MFESurfaceSmoothingFilter.html#wp3">Options</a> | <a href="MFESurfaceSmoothingFilter.html#wp4">Required Arrays</a> | <a href="MFESurfaceSmoothingFilter.html#wp5">Created Arrays</a>| <a href="MFESurfaceSmoothingFilter.html#wp1">Authors</a> </p>
+<a name="wp7"></a>
+<h2 class="pHeading2">Group</h2>
+<p class="pBody">Generic Filters</p>
+
+
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This filter determines for each <b>Field</b> the number of <i>neighboring fields</i>.  This is accomplished by iterating through the <b>Cell</b>s and querying the <b>Field</b> that owns each <b>Cell</b> and neighboring <b>Cell</b>s.  If two neighboring <b>Cell</b>s are owned by different <b>Fields</b>, then those <b>Fields</b> are said to be <i>neighbors</i>. <br />
+This Filter determines for each <b>Field</b> the number of <i>neighboring <b>Fields</b></i>.  This is accomplished by iterating through the <b>Cell</b>s and querying the <b>Field</b> that owns each <b>Cell</b> and neighboring <b>Cell</b>s.  If two neighboring <b>Cell</b>s are owned by different <b>Fields</b>, then those <b>Fields</b> are said to be <i>neighbors</i>. <br />
 In determining for each <b>Field</b> the number of <i>neighboring fields</i> (and the list of <i>neighbors</i>), the <b>Cells</b> that have neighboring <b>Cell</b>(s) with a different <b>Field</b> owner are flagged as <i>surface</i> <b>Cell</b>s and are said to lie on the surface of the <b>Field</b> (i.e. the grain/field boundary). <br />
 Additionally, the surface areas shared between two <i>neighboring fields</i> are calculated by tracking the number of times two neighboring <b>Cell</b>s correspond to a <i>neighboring field</i> pair.
 <br />

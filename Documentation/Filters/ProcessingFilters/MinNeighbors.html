@@ -25,10 +25,16 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <h1 class="pHeading1">Minimum Number of Neighbors Filter</h1>
 <p class="pCellBody">
 <a href="MFESurfaceSmoothingFilter.html#wp2">Description</a> | <a href="MFESurfaceSmoothingFilter.html#wp3">Options</a> | <a href="MFESurfaceSmoothingFilter.html#wp4">Required Arrays</a> | <a href="MFESurfaceSmoothingFilter.html#wp5">Created Arrays</a>| <a href="MFESurfaceSmoothingFilter.html#wp1">Authors</a> </p>
+
+<a name="wp7"></a>
+<h2 class="pHeading2">Group</h2>
+<p class="pBody">Processing Filters</p>
+
+
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This filter sets the minimum number (an integer) of <b>Field</b> <b>Neighbors</b> a grain must have to remain in the structure. Entering 0 (zero) is valid because the grain may occupy the whole volume and would therefore have no <b>Neighbors</b>. Also, entering zero results in nothing changing in other grains.<br />
+This Filter sets the minimum number (an integer) of <b>Field</b> <b>Neighbors</b> a grain must have to remain in the structure. Entering 0 (zero) is valid because the grain may occupy the whole volume and would therefore have no <b>Neighbors</b>. Also, entering zero results in nothing changing in other grains.<br />
 Entering a number larger than the grain that has the maximum number of <b>Neighbors</b> generates an <i>error</i> (all grains have been removed!). The user needs to proceed conservatively here when choosing the value for the minimum to avoid accidentally exceeding the max and generating an error later in the pipeline.<br />
 Using minimum number entries between 1 and a value less than the <i>maxmimum</i> number of <b>Neighbors</b> associated with a grain results in removal of those grains that have the entered number of <b>Neighbors</b> or fewer. After these grains are removed, the remaining grains are <i>coarsened</i> iteratively, one <i>voxel</i> per iteration, until the gaps left by the removed grains are filled.<br />
 
