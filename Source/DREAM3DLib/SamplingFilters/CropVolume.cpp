@@ -49,13 +49,17 @@
 // -----------------------------------------------------------------------------
 CropVolume::CropVolume() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_XMin(0),
 m_YMin(0),
 m_ZMin(0),
 m_XMax(0),
 m_YMax(0),
 m_ZMax(0),
-m_RenumberGrains(false)
+m_RenumberGrains(false),
+m_GrainIds(NULL),
+m_Active(NULL)
 {
   setupFilterOptions();
 }
@@ -142,12 +146,31 @@ void CropVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
   writer->writeValue("ZMax", getZMax() );
   writer->writeValue("RenumberGrains", getRenumberGrains() );
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
+  if (m_RenumberGrains == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1);
+  }
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void CropVolume::preflight()
 {
-
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -240,12 +263,17 @@ void CropVolume::execute()
     err = p->Resize(totalPoints);
   }
 
+  // Grain Ids MUST already be renumbered.
   if (m_RenumberGrains == true)
   {
+    int64_t totalPoints = m->getTotalPoints();
+    size_t totalFields = m->getNumFieldTuples();
+    dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+
     std::string m_GrainIdsArrayName(DREAM3D::CellData::GrainIds);
     std::stringstream ss;
-    int32_t* m_GrainIds = NULL;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, totalPoints, 1);
+//    int32_t* m_GrainIds = NULL;
+//    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, 48957, int32_t, Int32ArrayType, 0, totalPoints);
 
     // Find the unique set of grain ids
     std::set<int32_t> grainIdSet;
@@ -255,13 +283,13 @@ void CropVolume::execute()
     }
 
     size_t fields = grainIdSet.size();
-    bool* m_Active;
-    std::string m_ActiveArrayName(DREAM3D::FieldData::Active);
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-    for (size_t i = 0; i < fields; ++i)
-    {
-      m_Active[i] = true;
-    }
+//    bool* m_Active;
+//    std::string m_ActiveArrayName(DREAM3D::FieldData::Active);
+//    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+//    for (size_t i = 0; i < fields; ++i)
+//    {
+//      m_Active[i] = true;
+//    }
 
     RenumberGrains::Pointer renum = RenumberGrains::New();
     renum->setDataContainer(m);
