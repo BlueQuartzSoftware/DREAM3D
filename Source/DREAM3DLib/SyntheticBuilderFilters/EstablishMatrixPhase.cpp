@@ -199,9 +199,9 @@ void  EstablishMatrixPhase::establish_matrix()
 
   for (size_t i = 1; i < numensembles; ++i)
   {
-	MatrixStatsData* mp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
-	if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase && mp != NULL)
+	if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
     {
+	  MatrixStatsData* mp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
       matrixphases.push_back(i);
       matrixphasefractions.push_back(mp->getPhaseFraction());
       totalmatrixfractions = totalmatrixfractions + mp->getPhaseFraction();

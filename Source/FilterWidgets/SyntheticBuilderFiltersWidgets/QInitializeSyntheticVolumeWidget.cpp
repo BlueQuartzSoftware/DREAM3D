@@ -421,9 +421,9 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType->GetNumberOfTuples(); ++i)
   {
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-    if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase && pp != NULL)
+    if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
     {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);
       primaryphasefractions.push_back(pp->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
