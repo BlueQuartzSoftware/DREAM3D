@@ -25,10 +25,15 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <h1 class="pHeading1">Find Boundary Cells Filter</h1>
 <p class="pCellBody">
 <a href="MFESurfaceSmoothingFilter.html#wp2">Description</a> | <a href="MFESurfaceSmoothingFilter.html#wp3">Options</a> | <a href="MFESurfaceSmoothingFilter.html#wp4">Required Arrays</a> | <a href="MFESurfaceSmoothingFilter.html#wp5">Created Arrays</a>| <a href="MFESurfaceSmoothingFilter.html#wp1">Authors</a> </p>
+<a name="wp7"></a>
+<h2 class="pHeading2">Group</h2>
+<p class="pBody">Generic Filters</p>
+
+
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This filter determines which <b>Cell</b>s are on the surface of a <b>Field</b> (i.e. the field/grain boundary).  This is accomplished by iterating through the <b>Cell</b>s and querying each <b>Cell</b>'s neighboring <b>Cell</b>s to determine if they have a different <b>Field</b> owner.  A <b>Cell</b> is said to be a <i>surface <b>Cell</b></i> if any one of its neighboring <b>Cell</b>s has a different <b>Field</b> owner. <br />
+This Filter determines which <b>Cell</b>s are on the surface of a <b>Field</b> (i.e. the field/grain boundary).  This is accomplished by iterating through the <b>Cell</b>s and querying each <b>Cell</b>'s neighboring <b>Cell</b>s to determine if they have a different <b>Field</b> owner.  A <b>Cell</b> is said to be a <i>surface <b>Cell</b></i> if any one of its neighboring <b>Cell</b>s has a different <b>Field</b> owner. <br />
 Note that all <b>Cell</b>s that lie on the outer surface of the sample will also be called <i>surface cells</i>. 
 
 <br />
