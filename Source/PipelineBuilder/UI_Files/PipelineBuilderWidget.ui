@@ -214,6 +214,18 @@ p, li { white-space: pre-wrap; }
             </property>
             <item>
              <widget class="QTableWidget" name="tableWidget">
+              <property name="textElideMode">
+               <enum>Qt::ElideRight</enum>
+              </property>
+              <property name="verticalScrollMode">
+               <enum>QAbstractItemView::ScrollPerPixel</enum>
+              </property>
+              <property name="horizontalScrollMode">
+               <enum>QAbstractItemView::ScrollPerPixel</enum>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
               <attribute name="horizontalHeaderDefaultSectionSize">
                <number>150</number>
               </attribute>

@@ -47,8 +47,8 @@ class ErrorMessage
     DREAM3D_SHARED_POINTERS(ErrorMessage)
     DREAM3D_STATIC_NEW_MACRO(ErrorMessage)
 
-    static Pointer New(const std::string &filterName, const std::string &errorDescription, int errorCode) {
-      Pointer sharedPtr(new ErrorMessage);
+    static Pointer New(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) {
+      Pointer sharedPtr(new ErrorMessage(m_filterName, m_errorDescription, m_errorCode));
       return sharedPtr;
     }
 
@@ -59,45 +59,51 @@ class ErrorMessage
      * @brief
      * @return
      */
-    std::string getFilterName() { return filterName; }
+    std::string getFilterName() { return m_filterName; }
     /**
      * @brief
      * @param val
      */
-    void setFilterName(std::string val) { filterName = val; }
+    void setFilterName(std::string val) { m_filterName = val; }
 
-    std::string getErrorDescription() { return errorDescription; }
-    void setErrorDescription(std::string val) { errorDescription = val; }
+    std::string getErrorDescription() { return m_errorDescription; }
+    void setErrorDescription(std::string val) { m_errorDescription = val; }
 
-    int getErrorCode() { return errorCode; }
-    void setErrorCode(int val) { errorCode = val; }
+    int getErrorCode() { return m_errorCode; }
+    void setErrorCode(int val) { m_errorCode = val; }
 
     std::string generateErrorString()
     {
       std::stringstream ss;
-      ss << "Error(" << errorCode << "):" << filterName << " :" << errorDescription;
+      ss << "Error(" << m_errorCode << "):" << m_filterName << " :" << m_errorDescription;
       return ss.str();
     }
     std::string generateWarningString()
     {
       std::stringstream ss;
-      ss << "Warning(" << errorCode << "):" << filterName << " :" << errorDescription;
+      ss << "Warning(" << m_errorCode << "):" << m_filterName << " :" << m_errorDescription;
       return ss.str();
     }
     std::string generateStatusString()
      {
        std::stringstream ss;
-       ss << filterName << ":" << errorDescription;
+       ss << m_filterName << ":" << m_errorDescription;
        return ss.str();
      }
 
   protected:
     ErrorMessage() {}
+    ErrorMessage(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) :
+      m_filterName(m_filterName),
+      m_errorDescription(m_errorDescription),
+      m_errorCode(m_errorCode)
+  {}
+      
 
   private:
-    std::string filterName;
-    std::string errorDescription;
-    int errorCode;
+    std::string m_filterName;
+    std::string m_errorDescription;
+    int m_errorCode;
 
     ErrorMessage(const ErrorMessage&); // Copy Constructor Not Implemented
     void operator=(const ErrorMessage&); // Operator '=' Not Implemented
