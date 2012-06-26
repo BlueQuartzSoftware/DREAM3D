@@ -37,6 +37,10 @@
 
 #include "VtkRectilinearGridWriter.h"
 
+
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/CtfFields.h"
 
@@ -252,6 +256,18 @@ void VtkRectilinearGridWriter::execute()
     return;
   }
   setErrorCondition(0);
+
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      std::stringstream ss;
+      ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
+      setErrorMessage(ss.str());
+      setErrorCondition(-1);
+      return;
+  }
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();

@@ -145,6 +145,7 @@ int DxWriter::writeFile()
     setErrorCondition(-1);
     return -1;
   }
+
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, 1, 1);
   if (getErrorCondition() < 0)

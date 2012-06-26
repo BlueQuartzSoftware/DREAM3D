@@ -325,6 +325,17 @@ int DxReader::readFile()
   tokens.clear();
   inFile.close();
 
+  // Find the unique set of grain ids
+  std::set<int32_t> grainIdSet;
+  for (int64_t i = 0; i < totalPoints; ++i)
+  {
+    grainIdSet.insert(m_GrainIds[i]);
+  }
+  for (std::set<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
+  {
+    std::cout << "Grain ID: " << (*iter) << std::endl;
+  }
+
   notify("Complete", 0, Observable::UpdateProgressMessage);
   return 0;
 }
