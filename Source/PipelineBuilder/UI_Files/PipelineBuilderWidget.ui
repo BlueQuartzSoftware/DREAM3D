@@ -214,6 +214,9 @@ p, li { white-space: pre-wrap; }
             </property>
             <item>
              <widget class="QTableWidget" name="tableWidget">
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
               <property name="textElideMode">
                <enum>Qt::ElideRight</enum>
               </property>
@@ -229,19 +232,31 @@ p, li { white-space: pre-wrap; }
               <attribute name="horizontalHeaderDefaultSectionSize">
                <number>150</number>
               </attribute>
+              <attribute name="verticalHeaderDefaultSectionSize">
+               <number>30</number>
+              </attribute>
               <column>
                <property name="text">
                 <string notr="true">Filter Name</string>
+               </property>
+               <property name="textAlignment">
+                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
                </property>
               </column>
               <column>
                <property name="text">
                 <string notr="true">Error Description</string>
                </property>
+               <property name="textAlignment">
+                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+               </property>
               </column>
               <column>
                <property name="text">
                 <string notr="true">Error Code</string>
+               </property>
+               <property name="textAlignment">
+                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
                </property>
               </column>
              </widget>
