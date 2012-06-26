@@ -86,8 +86,8 @@ m_AspectRatios(NULL)
   INIT_DataArray(m_GrainEigenVals,float);
 
   m_DistributionAnalysis.push_back(BetaOps::New());
-  m_DistributionAnalysis.push_back(PowerLawOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
+  m_DistributionAnalysis.push_back(PowerLawOps::New());
   setupFilterOptions();
 }
 
