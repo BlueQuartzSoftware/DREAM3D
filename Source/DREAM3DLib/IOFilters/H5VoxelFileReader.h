@@ -74,6 +74,7 @@
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Legacy DREAM.3D H5Voxel File"; }
@@ -93,6 +94,7 @@
 	  float* m_CellEulerAngles;
 
 	  unsigned int* m_CrystalStructures;
+	  unsigned int* m_PhaseTypes;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

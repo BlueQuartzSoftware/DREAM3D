@@ -249,7 +249,8 @@ namespace DREAM3D
 
     const std::string Alpha("Alpha");
     const std::string Beta("Beta");
-    const std::string Exp_k("Exponent K");
+    const std::string Exp_k("K");
+    const std::string MinimumValue("Minimum Value");
 
     const std::string UnknownDistribution("Unknown Distribution");
     const std::string DistributionType("Distribution Type");
@@ -261,7 +262,7 @@ namespace DREAM3D
     {
       BetaColumnCount = 2,       //!<
       LogNormalColumnCount = 2,  //!<
-      PowerLawColumnCount = 3,   //!<
+      PowerLawColumnCount = 2,   //!<
       UnknownColumCount = 0      //!<
     };
   }
