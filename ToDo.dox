@@ -4,12 +4,11 @@
 This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
-@section todoMain ToDo List for Version 2 Release
+@section todoMain ToDo List for Version 3 Release
 
 
 
 @subsection statsgen StatsGenerator
-@li Update the Stats writing to use the Data Container Writer
 @li Update/Create a user manual for the stats generator - last parts need pasting
 @li Add menu for displaying help
 
@@ -18,14 +17,21 @@ so it can be integrated with the other documentation pages.
 @section roadmap RoadMap (The way Forward)
 
 @li Figure out a better way to compile the PipelineBuilder and FilterWidgets libraries
-@li Update all the stats filters to use the StatsDataArray and StatsData classes
 @li Combine the threshold_points and DetermineGoodVoxels into a single filter
 @li Update the H5EbsdVolumeReader to only read those arrays asked for by the user
 or by the QualityMetricFilters
-@li Create html help file for each filter
 @li Figure out where to load the help from: Internal to the compilation or from the file system.
-@li Implement the saving/loading of pipelines to some sort of file: XML? HDF5? Plain Text?
 @li Reorganize the .h5ebsd file to include Images
+
+
+@section cmu_meshing CMU Surface Meshing
+
+@li Add option to quiet the output from the Surface Meshing filter
+@li Add ability to cancel the Surface Meshing filter
+@li Add Ability to set all 3 output file names
+
+
+
 
 
 */
