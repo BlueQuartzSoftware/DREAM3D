@@ -95,10 +95,10 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > 
 	  {
 		alpha = alpha + log(data[i][j]/min);		
 	  }
-	  alpha = 1.0/alpha;
+	  if(alpha != 0) alpha = 1.0/alpha;
 	  alpha = 1 + (alpha*data[i].size());
-	  outputs[i]->SetValue(0, alpha);
-	  outputs[i]->SetValue(1, min);
+	  outputs[0]->SetValue(i, alpha);
+	  outputs[1]->SetValue(i, min);
   }
   return err;
 }
