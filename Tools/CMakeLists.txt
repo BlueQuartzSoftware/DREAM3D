@@ -101,7 +101,7 @@ COMPILE_TOOL (
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}" 
-    LINK_LIBRARIES EbsdLib MXA ${TIFF_LIBRARY}
+    LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
 )
 
 endif()
