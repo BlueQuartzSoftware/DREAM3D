@@ -46,7 +46,7 @@ m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_CellEulerAngles(NULL),
@@ -107,9 +107,9 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1);
+  typedef DataArray<unsigned int> PTypeArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1);
 }
 
 void H5VoxelFileReader::preflight()
