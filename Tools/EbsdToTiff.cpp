@@ -43,6 +43,7 @@
 #include "MXA/MXA.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Common/LogTime.h"
+#include "MXA/Common/Win32Defines.h"
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
@@ -51,6 +52,7 @@
 #include "EbsdLib/EbsdReader.h"
 #include "EbsdLib/EbsdLibVersion.h"
 
+#include "EbsdLib/EbsdLibVersion.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfConstants.h"
@@ -116,7 +118,7 @@ int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image
 
 
    memset(software, 0, 1024);
-   snprintf(software, 1024, "%s using libTif", EbsdLib_PACKAGE_COMPLETE);
+   snprintf(software, 1024, "%s using libTif", EbsdLib::Version::Complete());
 
    err = TIFFSetField(out, TIFFTAG_SOFTWARE, software);
 
@@ -183,7 +185,7 @@ int main(int argc, char **argv)
   int width = ebsdReader->getXDimension();
   int height = ebsdReader->getYDimension();
   int total = width *height;
-  DataArray<uint8_t>::Pointer rgbArray = DataArray<uint8_t>::CreateArray(total * 3);
+  DataArray<uint8_t>::Pointer rgbArray = DataArray<uint8_t>::CreateArray(total * 3, "Tiff Data");
   rgbArray->SetNumberOfComponents(3);
   rgbArray->WritePointer(0, total*3);
   // Splat 0xFF across all the data
