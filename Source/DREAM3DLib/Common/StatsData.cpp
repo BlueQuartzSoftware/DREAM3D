@@ -103,10 +103,8 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
     v.resize(DREAM3D::HDF5::LogNormalColumnCount);
     v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Alpha);
     v[0]->initializeWithZeros();
-    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Exp_k);
+	v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::MinimumValue);
     v[1]->initializeWithZeros();
-    v[2] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Beta);
-    v[2]->initializeWithZeros();
   }
   return v;
 }
