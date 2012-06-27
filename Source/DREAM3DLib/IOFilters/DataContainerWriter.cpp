@@ -154,7 +154,7 @@ void DataContainerWriter::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-/*  if(!MXADir::mkdir(parentPath, true))
+  if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
       ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
@@ -162,7 +162,7 @@ void DataContainerWriter::execute()
       setErrorCondition(-1);
       return;
   }
-*/
+
 
 
   err = openFile(false); // Do NOT append to any existing file

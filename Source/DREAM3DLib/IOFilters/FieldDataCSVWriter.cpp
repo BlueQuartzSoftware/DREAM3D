@@ -122,7 +122,7 @@ void FieldDataCSVWriter::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   std::string parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
-/*  if(!MXADir::mkdir(parentPath, true))
+  if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
       ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
@@ -130,7 +130,7 @@ void FieldDataCSVWriter::execute()
       setErrorCondition(-1);
       return;
   }
-*/
+
 
 
   std::string filename = getFieldDataFile();
