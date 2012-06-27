@@ -13,8 +13,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _USUL_SYSTEM_LOCAL_HOST_MACHINE_CLASS_H_
-#define _USUL_SYSTEM_LOCAL_HOST_MACHINE_CLASS_H_
+#ifndef _MXAMEMORY_H_
+#define _MXAMEMORY_H_
 
 
 
@@ -28,7 +28,7 @@
 
 #include <string>
 
-#include "MXA/MXATypes.h"
+#include "MXA/MXA.h"
 
 
 
@@ -65,4 +65,4 @@ class MXA_EXPORT MXAMemory
 
 
 
-#endif // _USUL_SYSTEM_LOCAL_HOST_MACHINE_CLASS_H_
+#endif // _MXAMEMORY_H_

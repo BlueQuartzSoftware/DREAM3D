@@ -373,7 +373,7 @@ int MakeDirectoriesTest()
   isAbsolute = MXADir::isAbsolutePath(dirPath);
   DREAM3D_REQUIRE_EQUAL(isAbsolute, true);
 
-
+#ifndef _MSC_VER
   path = MXADir::cleanPath("/tmp/");
   if (path.compare("/tmp") != 0)
   {
@@ -385,7 +385,7 @@ int MakeDirectoriesTest()
   {
       std::cout << "This is bad" << std::endl;
   }
-
+#endif
 
 
   return err;

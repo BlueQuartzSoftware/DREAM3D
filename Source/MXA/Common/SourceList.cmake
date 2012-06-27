@@ -29,24 +29,31 @@ endif()
 
 
 SET (MXA_Common_SOURCES
-
+    ${MXA_SOURCE_DIR}/Common/MXAMemory.cpp
 )
 
 SET (MXA_Common_HEADERS
     ${MXA_SOURCE_DIR}/Common/LogTime.h
-    ${MXA_SOURCE_DIR}/Common/DLLExport.h
     ${MXA_SOURCE_DIR}/Common/MXAEndian.h
-    ${MXA_SOURCE_DIR}/Common/MXATypeDefs.h
     ${MXA_SOURCE_DIR}/Common/MXAErrorDefinitions.h
+    ${MXA_SOURCE_DIR}/Common/MXAMemory.h
     ${MXA_SOURCE_DIR}/Common/MXASetGetMacros.h
-    ${MXA_SOURCE_DIR}/Common/IO/MXAFileReader64.h
-    ${MXA_SOURCE_DIR}/Common/IO/MXAFileWriter64.h
-    ${MXA_SOURCE_DIR}/Common/Cast/Cast.h
+    ${MXA_SOURCE_DIR}/Common/MXATypeDefs.h
+    ${MXA_SOURCE_DIR}/Common/RTTIMacros.h
     ${MXA_SOURCE_DIR}/Common/Win32Defines.h
 )
-
-
 cmp_IDE_SOURCE_PROPERTIES( "MXA/Common" "${MXA_Common_HEADERS}" "${MXA_Common_SOURCES}" "0")
+
+set (MXA_IO_HDRS
+    ${MXA_SOURCE_DIR}/Common/IO/MXAFileReader64.h
+    ${MXA_SOURCE_DIR}/Common/IO/MXAFileWriter64.h
+    )
+cmp_IDE_SOURCE_PROPERTIES( "MXA/Common/IO" "${MXA_IO_HDRS}" "" "0") 
+
+set (MXA_Cast_HDRS
+    ${MXA_SOURCE_DIR}/Common/Cast/Cast.h  
+)
+cmp_IDE_SOURCE_PROPERTIES( "MXA/Common/Cast" "${MXA_Cast_HDRS}" "" "0") 
 
 SET (MXA_Common_SRCS
     ${MXA_WIN_Common_SRCS}
@@ -55,9 +62,11 @@ SET (MXA_Common_SRCS
 )
 
 SET (MXA_Common_HDRS 
-    ${MXA_Common_HDRS}
     ${MXA_WIN_Common_HDRS}
     ${MXA_UNIX_Common_HDRS}
+    ${MXA_Common_HEADERS}
+    ${MXA_IO_HDRS}
+    ${MXA_Cast_HDRS}
 )
 
 if ( ${MXA_INSTALL_FILES} EQUAL 1 )
