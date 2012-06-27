@@ -365,11 +365,10 @@ std::string MXA_FILESYSTEM_BASE_CLASS::cleanPath(const std::string &fsPath)
      std::string::size_type pos = 0;
      std::string::size_type pos1 = 0;
 
-     // Check for UNC style paths first
-
      pos = path.find_first_of(slash, pos);
      pos1 = path.find_first_of(slash, pos + 1);
    #if defined (WIN32)
+     // Check for UNC style paths first
      if (pos == 0 && pos1 == 1)
      {
        pos1 = path.find_first_of(slash, pos1 + 1);
@@ -378,6 +377,11 @@ std::string MXA_FILESYSTEM_BASE_CLASS::cleanPath(const std::string &fsPath)
      if (pos != 0)
      {
        stk.push_back(path.substr(0, pos));
+     }
+     // check for a top level Unix Path:
+     if (pos == 0 && pos1 == std::string::npos)
+     {
+         stk.push_back(path);
      }
 
 
