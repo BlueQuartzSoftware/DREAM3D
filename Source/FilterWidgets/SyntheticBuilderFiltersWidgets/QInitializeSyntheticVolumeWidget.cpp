@@ -222,6 +222,10 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString &text)
 {
+  if (m_InputFile->text().isEmpty())
+  {
+    return;
+  }
   if(verifyPathExists(m_InputFile->text(), m_InputFile))
   {
     QFileInfo fi(m_InputFile->text());
@@ -387,6 +391,10 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 //  std::vector<float> mindiameter;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
+  if (totalvol == 0.0)
+  {
+    return -1;
+  }
   if(m_DataContainer.get() == NULL)
   {
     // This will force a read of the DataContainer from the data file
