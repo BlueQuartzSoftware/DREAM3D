@@ -213,8 +213,8 @@ std::string MXA_FILESYSTEM_BASE_CLASS::currentPath()
 // -----------------------------------------------------------------------------
 std::string MXA_FILESYSTEM_BASE_CLASS::absolutePath(const std::string &path)
 {
-  std::string abspath;
-  if ( true == MXA_FILESYSTEM_BASE_CLASS::isAbsolutePath(path))
+  std::string abspath = MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(path);
+  if ( true == MXA_FILESYSTEM_BASE_CLASS::isAbsolutePath(abspath))
   { return path; }
 
   abspath = MXA_FILESYSTEM_BASE_CLASS::currentPath();
