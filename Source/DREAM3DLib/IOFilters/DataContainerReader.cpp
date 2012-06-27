@@ -37,7 +37,7 @@
 #include "DataContainerReader.h"
 
 #include <hdf5.h>
-
+#include "MXA/Utilities/MXAFileInfo.h"
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
@@ -129,6 +129,12 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
   if(m_InputFile.empty() == true)
   {
     ss << getNameOfClass() << ": The input file must be set before executing this filter.";
+    setErrorMessage(ss.str());
+    setErrorCondition(-1);
+  }
+  else if (MXAFileInfo::exists(m_InputFile) == false)
+  {
+    ss << getNameOfClass() << ": The input file does not exist.";
     setErrorMessage(ss.str());
     setErrorCondition(-1);
   }
@@ -272,7 +278,7 @@ int DataContainerReader::gatherData(bool preflight)
   float origin[3] = { 0.0f, 0.0f, 0.0f };
   DataContainer* m = getDataContainer();
 
-  hid_t fileId = H5Utilities::openFile(m_InputFile, false);
+  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
     ss.str("");

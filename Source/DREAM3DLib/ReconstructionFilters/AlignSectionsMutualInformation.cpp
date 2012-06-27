@@ -55,7 +55,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-using namespace std;
+
 
 const static float m_pi = M_PI;
 
@@ -216,7 +216,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   DataContainer* m = getDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
-  ofstream outFile;
+  std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
     outFile.open(getAlignmentShiftFileName().c_str());
   }
@@ -388,7 +388,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
     yshifts[iter] = yshifts[iter-1] + newyshift;
     if(getWriteAlignmentShifts() == true)
     {
-      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
     delete[] mutualinfo1;
     delete[] mutualinfo2;
