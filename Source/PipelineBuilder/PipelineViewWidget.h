@@ -61,6 +61,8 @@ class PipelineViewWidget : public QFrame
     void clearWidgets();
     QFilterWidget* addFilter(QString filterName, int index =-1);
     void setErrorsTextArea(QTextEdit* t);
+    void newEmptyPipelineViewLayout();
+    void resetLayout();
 
   public slots:
     void removeFilterWidget();
@@ -91,6 +93,7 @@ class PipelineViewWidget : public QFrame
     int                       m_DropIndex;
     QStringList               m_PipelineErrorList;
     QTextEdit*                m_ErrorsArea;
+    QLabel*                   m_EmptyPipelineLabel;
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented
