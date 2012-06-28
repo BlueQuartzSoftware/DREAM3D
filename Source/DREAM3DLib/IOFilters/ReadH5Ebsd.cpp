@@ -83,8 +83,12 @@ m_ZEndIndex(0),
 m_Manufacturer(Ebsd::UnknownManufacturer),
 m_CellPhases(NULL),
 m_GoodVoxels(NULL),
+m_CellEulerAngles(NULL),
+m_CrystalStructures(NULL),
 m_PhaseTypes(NULL),
-m_CellEulerAngles(NULL)
+tempxpoints(0),
+tempypoints(0),
+totaltemppoints(0)
 {
  // Seed = MXA::getMilliSeconds();
 }

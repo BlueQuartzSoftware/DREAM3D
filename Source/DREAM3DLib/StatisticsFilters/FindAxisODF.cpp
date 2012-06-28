@@ -53,10 +53,10 @@ m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_PhaseTypes(NULL),
 m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
-m_AxisEulerAngles(NULL)
+m_AxisEulerAngles(NULL),
+m_PhaseTypes(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));

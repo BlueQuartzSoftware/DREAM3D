@@ -60,13 +60,13 @@ m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_PhaseTypes(NULL),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL)
+m_Neighborhoods(NULL),
+m_PhaseTypes(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
