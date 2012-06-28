@@ -68,6 +68,9 @@ class PipelineViewWidget : public QFrame
     QFilterWidget* addFilter(QString filterName, int index =-1);
     void setErrorsTextArea(QTableWidget* t);
 
+    QStringList getPipelineErrorList() {return m_PipelineErrorList;}
+    QTableWidget* getTableWidget() {return errorTableWidget;}
+
 
 
   public slots:
