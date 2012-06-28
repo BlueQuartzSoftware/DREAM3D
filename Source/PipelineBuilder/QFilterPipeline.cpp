@@ -108,7 +108,8 @@ void QFilterPipeline::pipelineProgressMessage(std::vector<ErrorMessage::Pointer>
 // -----------------------------------------------------------------------------
 void QFilterPipeline::pipelineWarningMessage(ErrorMessage::Pointer msg)
 {
-  emit warningMessage(QString::fromStdString(msg->generateStatusString()));
+  emit warningMessage( QString::fromStdString( (*msg).getFilterName() ), 
+      QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +128,8 @@ void QFilterPipeline::pipelineWarningMessage(std::vector<ErrorMessage::Pointer> 
 // -----------------------------------------------------------------------------
 void QFilterPipeline::pipelineErrorMessage(ErrorMessage::Pointer msg)
 {
-  emit errorMessage(QString::fromStdString(msg->generateStatusString()));
+  emit errorMessage( QString::fromStdString( (*msg).getFilterName() ), 
+      QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
 }
 
 // -----------------------------------------------------------------------------

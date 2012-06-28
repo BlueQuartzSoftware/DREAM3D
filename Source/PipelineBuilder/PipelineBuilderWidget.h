@@ -142,8 +142,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
   private slots:
     // slots for our worker thread to communicate
-    virtual void addErrorMessage(QString message);
-    virtual void addWarningMessage(QString message);
+    virtual void addErrorMessage(QString errName, QString errDesc, int errNum);
+    virtual void addWarningMessage(QString warnName, QString warnDesc, int warnNum);
     virtual void addProgressMessage(QString message);
 
     /* Surface Mesh Thread communicates through these methods */
@@ -158,9 +158,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
 
-    QMap<QString,QStringList>   presetMap;
-    QMap<QString,QString>       favoritesMap;
-    QTreeWidgetItem*            favorites;
+    QMap<QString,QStringList>   m_presetMap;
+    QMap<QString,QString>       m_favoritesMap;
+    QTreeWidgetItem*            m_favorites;
+    bool                        m_hasErrors;
+    bool                        m_hasWarnings;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented

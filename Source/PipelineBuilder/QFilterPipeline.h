@@ -112,8 +112,8 @@ class QFilterPipeline : public QObject, public FilterPipeline
      */
      signals:
        void progressMessage(const QString &message);
-       void warningMessage(const QString &message);
-       void errorMessage(const QString &message);
+       void warningMessage(QString warnName, QString warnDesc, int warnNum);
+       void errorMessage(QString errName, QString errDesc, int errNum);
        void updateProgress(int value);
        void finished();
 

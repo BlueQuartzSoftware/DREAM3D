@@ -270,11 +270,18 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer
       int errorCode = errorStream.at(i)->getErrorCode();
 
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
-      filterNameWidgetItem->setTextAlignment(Qt::AlignHCenter);
+      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
       QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem( QString::number(errorCode) );
-      errorCodeWidgetItem->setTextAlignment(Qt::AlignHCenter);
+      errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
 
+      QColor errColor(255, 191, 193);
+      QBrush errBrush(errColor);
+
+      filterNameWidgetItem->setBackground(errBrush);
+      errorDescriptionWidgetItem->setBackground(errBrush);
+      errorCodeWidgetItem->setBackground(errBrush);
+    
       errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
