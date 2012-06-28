@@ -59,6 +59,12 @@
 #include "QFilterWidget.h"
 #include "AddFavoriteWidget.h"
 
+namespace Detail
+{
+  const QString Library("Filter Library");
+  const QString PrebuiltPipelines("Prebuilt Pipelines");
+  const QString FavoritePipelines("Favorite Pipelines");
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -136,7 +142,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
 
 
   //Get Favorites from Pref File and Update Tree Widget
-  prefs.beginGroup("Favorite Pipelines");
+  prefs.beginGroup(Detail::FavoritePipelines);
 
   int favoriteCount = prefs.value("count").toInt(&ok);
   if (false == ok) {
@@ -173,7 +179,7 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 
 
 
-  prefs.beginGroup("Favorite Pipelines");
+  prefs.beginGroup(Detail::FavoritePipelines);
   prefs.clear();
   prefs.setValue( "count", favoritesMap.size() );
 
@@ -238,16 +244,16 @@ void PipelineBuilderWidget::setupGui()
   std::set<std::string> groupNames = fm->getGroupNames();
 
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
-  library->setText(0, "Library");
+  library->setText(0, Detail::Library);
   library->setIcon(0, QIcon(":/cubes.png"));
 
   QTreeWidgetItem* presets = new QTreeWidgetItem(filterLibraryTree);
-  presets->setText(0, "Prebuilt Pipelines");
+  presets->setText(0, Detail::PrebuiltPipelines);
   presets->setIcon(0, QIcon(":/flag_blue_scroll.png"));
   presets->setExpanded(true);
 
   favorites = new QTreeWidgetItem(filterLibraryTree);
-  favorites->setText(0, "Favorite Pipelines");
+  favorites->setText(0, Detail::FavoritePipelines);
   favorites->setIcon(0, QIcon(":/flash.png"));
 
   favorites->setExpanded(true);
@@ -317,12 +323,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories;
 
-  //If the user clicks on "Library", display all
-  if ( item->text(0).compare("Library") == 0)
+  //If the user clicks on Detail::Library, display all
+  if ( item->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories();
   }
-  else if (NULL != item->parent() && item->parent()->text(0).compare("Library") == 0)
+  else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
   }
@@ -338,12 +344,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   // Get the QFilterWidget Manager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories;
-  if (item->parent() == NULL && item->text(0).compare("Library") == 0)
+  if (item->parent() == NULL && item->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories();
     updateFilterGroupList(factories);
   }
-  else if (item->parent() != NULL && item->parent()->text(0).compare("Library") == 0)
+  else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
     updateFilterGroupList(factories);
@@ -358,12 +364,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
   // Get the QFilterWidget Manager Instance
   QTreeWidgetItem* parent = item->parent();
   if (NULL != parent) {
-    if (parent->text(0).compare("Prebuilt Pipelines") == 0) {
+    if (parent->text(0).compare(Detail::PrebuiltPipelines) == 0) {
       QString text = item->text(0);
       QStringList presetList = presetMap[text];
       loadPreset(presetList);
     }
-    else if (parent->text(0).compare("Favorite Pipelines") == 0) {
+    else if (parent->text(0).compare(Detail::FavoritePipelines) == 0) {
       QString favoriteName = item->text(0);
       QString favoritePath = favoritesMap[favoriteName];
       loadFavorites(favoritePath);
@@ -843,7 +849,7 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
 void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
-  if (NULL != parent && parent->text(0).compare("Favorite Pipelines") == 0) {
+  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0) {
     QString favoriteName = item->text(0);
     QString filePath = favoritesMap[item->text(0)];
     QFileInfo filePathInfo = QFileInfo(filePath);
