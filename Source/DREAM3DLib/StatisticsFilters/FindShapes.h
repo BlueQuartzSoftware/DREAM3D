@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
-	
+
 	virtual void execute();
     virtual void preflight();
 
@@ -131,7 +131,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_AspectRatios;
 
     unsigned int* m_PhaseTypes;
-	StatsDataArray* m_StatsDataArray;
+    StatsDataArray* m_StatsDataArray;
 
     std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
 

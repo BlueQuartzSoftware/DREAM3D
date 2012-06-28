@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
- * used to endorse or promote products derived from this software without specific 
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
  * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -38,10 +38,15 @@
 #ifndef _HELPWIDGET_H_
 #define _HELPWIDGET_H_
 
+#include <QtCore/QObject>
+
+
 #include "ui_HelpWidget.h"
 
 class HelpWidget : public QWidget, public Ui::helpWidget
 {
+  Q_OBJECT;
+
   public:
     HelpWidget(QWidget* parent = 0);
 };

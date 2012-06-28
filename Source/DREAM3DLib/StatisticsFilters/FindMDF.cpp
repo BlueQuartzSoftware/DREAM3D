@@ -53,13 +53,14 @@ m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_PhaseTypes(NULL),
 m_AvgQuats(NULL),
 m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
 m_TotalSurfaceAreas(NULL),
 m_NeighborList(NULL),
-m_SharedSurfaceAreaList(NULL)
+m_SharedSurfaceAreaList(NULL),
+m_CrystalStructures(NULL),
+m_PhaseTypes(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
