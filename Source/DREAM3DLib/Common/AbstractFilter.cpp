@@ -35,7 +35,6 @@
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
 m_DataContainer(NULL),
-m_ErrorMessage(""),
 m_ErrorCondition(0),
 m_Cancel(false)
 {
@@ -63,8 +62,9 @@ void AbstractFilter::setupFilterOptions()
 void AbstractFilter::execute()
 {
   setErrorCondition(-1);
-  setErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.");
-  notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
+  ErrorMessage::Pointer msg = ErrorMessage::New(getNameOfClass(), "AbstractFilter does not implement an execute method. Please use a subclass instead.", -1);
+  addErrorMessage(msg);
+  notifyMessage(msg, 0, Observable::UpdateErrorMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -170,4 +170,84 @@ void AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   assert(writer != NULL);
   std::cout << "AbstractFilter::writeFilterOptions() -> Writing Filter Options" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessage(ErrorMessage::Pointer msg) {
+  m_ErrorMessages.push_back(msg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode)
+{
+  m_ErrorMessages.push_back(ErrorMessage::New(filterName, errorDescription, errorCode));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::removeErrorMessage(ErrorMessage::Pointer msg) {
+  for (std::vector<ErrorMessage::Pointer>::iterator iter = m_ErrorMessages.begin(); iter!=m_ErrorMessages.end(); ++iter) {
+    if (*iter == msg) {
+      m_ErrorMessages.erase(iter);
+      return;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::removeErrorMessage(int index) {
+  int count = 0;
+
+  for (std::vector<ErrorMessage::Pointer>::iterator iter = m_ErrorMessages.begin(); iter!=m_ErrorMessages.end(); ++iter) {
+    if (count == index) {
+      m_ErrorMessages.erase(iter);
+      return;
+    }
+    count++;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::removeErrorMessages(int start, int end) {
+  int count = 0;
+
+  for (std::vector<ErrorMessage::Pointer>::iterator iter = m_ErrorMessages.begin(); iter!=m_ErrorMessages.end(); ++iter) {
+    if (count == start) {
+      while (count <= end) {
+        iter = m_ErrorMessages.erase(iter);
+        count++;
+      }
+      return;
+    }
+    count++;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessages(std::vector<ErrorMessage::Pointer> msgVector) {
+  for (int i=0; i < msgVector.size(); ++i) {
+    m_ErrorMessages.push_back(msgVector[i]);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::clearErrorMessages() {
+  std::vector<ErrorMessage::Pointer>::iterator iter = m_ErrorMessages.begin();
+
+  while ( iter != m_ErrorMessages.end() ) {
+    iter = m_ErrorMessages.erase(iter);
+  }
 }

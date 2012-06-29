@@ -84,7 +84,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	if(preflight == true) find_graincentroids->preflight();
 	if(preflight == false) find_graincentroids->execute();
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -301, float, FloatArrayType, fields, 3);
-  }  
+  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
@@ -95,11 +95,9 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	if(preflight == true) find_surfacegrains->preflight();
 	if(preflight == false) find_surfacegrains->execute();
     GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
-  }  
+  }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, bool, BoolArrayType, false, fields, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -120,8 +118,8 @@ void FindBoundingBoxGrains::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -135,7 +133,7 @@ void FindBoundingBoxGrains::execute()
   if(m->getZPoints() > 1) find_boundingboxgrains();
   if(m->getZPoints() == 1) find_boundingboxgrains2D();
 
-  notify("FindBoundingBoxGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("FindBoundingBoxGrains Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------

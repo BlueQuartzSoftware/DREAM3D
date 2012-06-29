@@ -81,7 +81,6 @@ void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 1, fields, 1);
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -105,8 +104,8 @@ void FindGrainPhases::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -129,8 +128,8 @@ void FindGrainPhases::execute()
 
   std::stringstream ss;
   ss.str("");
-  ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  ss << " - Complete";
+  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 }
 
 

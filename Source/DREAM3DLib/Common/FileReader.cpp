@@ -69,11 +69,9 @@ void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   if(getInputFile().empty() == true)
   {
-    ss << getNameOfClass() << ": The intput file must be set before executing this filter.";
     setErrorCondition(-1);
+    addErrorMessage(getNameOfClass(), "The input file must be set before executing this filter.", -1);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -82,8 +80,9 @@ void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 int FileReader::readHeader()
 {
   setErrorCondition(-1);
-  setErrorMessage("FileReader should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
+  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileReader should be subclassed and functionality implemented there", -1);
+  addErrorMessage(em);
+  notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
 }
 
@@ -93,8 +92,9 @@ int FileReader::readHeader()
 int FileReader::readFile()
 {
   setErrorCondition(-1);
-  setErrorMessage("FileReader should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
+  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileReader should be subclassed and functionality implemented there", -1);
+  addErrorMessage(em);
+  notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
 }
 
@@ -108,8 +108,9 @@ void FileReader::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-    setErrorMessage("The DataContainer Object was NOT set correctly.");
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
+    addErrorMessage(em);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
   setErrorCondition(0);
@@ -117,17 +118,13 @@ void FileReader::execute()
   int err = 0;
 
   err = readHeader();
-  if (err < 0)
+  if(err < 0)
   {
-    setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
     return;
   }
   err = readFile();
-  if (err < 0)
+  if(err < 0)
   {
-    setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
     return;
   }
 

@@ -58,19 +58,21 @@ QFilterPipeline::~QFilterPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::updateProgressAndMessage(const char* message, int value)
+void QFilterPipeline::updateProgressAndMessage(ErrorMessage::Pointer msg, int progress)
 {
-  emit updateProgress(value);
-  emit progressMessage(QString(message));
+  emit updateProgress(progress);
+  emit progressMessage(QString::fromStdString(msg->generateStatusString()));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::updateProgressAndMessage(const std::string &message, int value)
+void QFilterPipeline::updateProgressAndMessage(std::vector<ErrorMessage::Pointer> &messages, int progress)
 {
-  emit updateProgress(value);
-  emit progressMessage(QString::fromStdString(message));
+  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  {
+    updateProgressAndMessage(*iter, progress);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -85,36 +87,58 @@ void QFilterPipeline::pipelineProgress(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineProgressMessage(const char* message)
+void QFilterPipeline::pipelineProgressMessage(ErrorMessage::Pointer msg)
 {
-  emit progressMessage(QString(message));
+  emit progressMessage(QString::fromStdString(msg->generateStatusString()));
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineWarningMessage(const char* message)
+void QFilterPipeline::pipelineProgressMessage(std::vector<ErrorMessage::Pointer> &messages)
 {
-  emit warningMessage(QString(message));
+  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  {
+    pipelineProgressMessage(*iter);
+  }
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineErrorMessage(const char* message)
+void QFilterPipeline::pipelineWarningMessage(ErrorMessage::Pointer msg)
 {
-  emit errorMessage(QString(message));
+  emit warningMessage(QString::fromStdString(msg->generateStatusString()));
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineFinished()
+void QFilterPipeline::pipelineWarningMessage(std::vector<ErrorMessage::Pointer> &messages)
 {
-  emit finished();
+  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  {
+    pipelineWarningMessage(*iter);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterPipeline::pipelineErrorMessage(ErrorMessage::Pointer msg)
+{
+  emit errorMessage(QString::fromStdString(msg->generateStatusString()));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterPipeline::pipelineErrorMessage(std::vector<ErrorMessage::Pointer> &messages)
+{
+  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  {
+    pipelineErrorMessage(*iter);
+  }
 }
 
 // -----------------------------------------------------------------------------

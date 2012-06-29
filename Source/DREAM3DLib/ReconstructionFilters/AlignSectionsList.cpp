@@ -113,11 +113,12 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   if(true == m_InputFile.empty())
   {
-    ss << getNameOfClass() << ": The Input file name must be set before executing this filter.";
+    ss << ": The Input file name must be set before executing this filter.";
     setErrorCondition(-1);
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
   }
 
-  setErrorMessage(ss.str());
+
 }
 
 // -----------------------------------------------------------------------------
@@ -135,12 +136,12 @@ void AlignSectionsList::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -156,7 +157,7 @@ void AlignSectionsList::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
 }
 
 

@@ -81,8 +81,8 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+	  //------ Required Ensemble Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
@@ -98,9 +98,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
      */
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	  virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
-	virtual void execute();
+	  virtual void execute();
     virtual void preflight();
 
 
@@ -118,6 +118,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float find_zcoord(size_t index);
 
   private:
+    unsigned int* m_PhaseTypes;
     int32_t* m_GrainIds;
 
     bool* m_BiasedFields;
@@ -130,7 +131,6 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_Volumes;
     float* m_AspectRatios;
 
-    unsigned int* m_PhaseTypes;
     StatsDataArray* m_StatsDataArray;
 
     std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;

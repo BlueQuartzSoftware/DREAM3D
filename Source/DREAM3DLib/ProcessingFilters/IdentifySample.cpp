@@ -88,10 +88,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -111,12 +108,12 @@ void IdentifySample::execute()
   setErrorCondition(0);
  // int err = 0;
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -177,7 +174,7 @@ void IdentifySample::execute()
     {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
       int grainname = m_GrainIds[i];
       if ((grainname == 0 && m_Direction == 1) || (grainname > 0 && m_Direction == 0))
       {
@@ -246,5 +243,5 @@ void IdentifySample::execute()
   }
 */
   // If there is an error set this to something negative and also set a message
-  notify("Identifying Sample Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Identifying Sample Complete", 0, Observable::UpdateProgressMessage);
 }

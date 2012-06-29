@@ -87,13 +87,18 @@ std::string Observable::getMessagePrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notify(const std::string msg, int progress, ObserverAspect a)
+void Observable::notifyProgress(const char* msg, int progress, ObserverAspect a)
 {
-  std::string s = msg;
-  if(m_Prefix.empty() == false)
-  {
-    s = m_Prefix + msg;
-  }
+  std::string m(msg);
+  notifyProgress(m, progress, a);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyProgress(const std::string &msg, int progress, ObserverAspect a)
+{
+
   for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
   {
     switch(a)
@@ -102,16 +107,10 @@ void Observable::notify(const std::string msg, int progress, ObserverAspect a)
         (*iter)->pipelineProgress(progress);
         break;
       case UpdateProgressMessage:
-        (*iter)->pipelineProgressMessage(s);
-        break;
-      case UpdateWarningMessage:
-        (*iter)->pipelineWarningMessage(s);
-        break;
-      case UpdateErrorMessage:
-        (*iter)->pipelineErrorMessage(s);
+        (*iter)->pipelineProgressMessage(msg);
         break;
       case UpdateProgressValueAndMessage:
-        (*iter)->updateProgressAndMessage(s, progress);
+        (*iter)->updateProgressAndMessage(msg, progress);
         break;
       default:
         break;
@@ -120,15 +119,38 @@ void Observable::notify(const std::string msg, int progress, ObserverAspect a)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyMessage(ErrorMessage::Pointer msg, int progress, ObserverAspect a)
+{
+  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
+  {
+    switch(a)
+    {
+      case UpdateWarningMessage:
+        (*iter)->pipelineWarningMessage(msg);
+        break;
+      case UpdateErrorMessage:
+        (*iter)->pipelineErrorMessage(msg);
+        break;
+      default:
+        break;
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notify(const char* msg, int progress, ObserverAspect a)
-{
-  std::string m(msg);
-  notify(m, progress, a);
-}
+//void Observable::notifyMessage(std::vector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a)
+//{
+//  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+//  {
+//    notifyMessage(*iter, progress, a);
+//  }
+//}
+
 
 // -----------------------------------------------------------------------------
 //

@@ -128,8 +128,6 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   //Ensemble Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, float, FloatArrayType, 0, ensembles, 1);
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -153,8 +151,8 @@ void FindNeighbors::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -212,7 +210,7 @@ void FindNeighbors::execute()
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Initializing Neighbor Lists - " << ((float)i/totalFields)*100 << " Percent Complete";
- //   notify(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
@@ -225,7 +223,7 @@ void FindNeighbors::execute()
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Determining Neighbor Lists - " << ((float)j/totalPoints)*100 << " Percent Complete";
- //   notify(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     onsurf = 0;
     grain = m_GrainIds[j];
     if(grain > 0)
@@ -271,7 +269,7 @@ void FindNeighbors::execute()
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
-  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     int phase = m_FieldPhases[i];
 
     std::map<int, int> neighToCount;
@@ -315,6 +313,6 @@ void FindNeighbors::execute()
     m_SharedSurfaceAreaList->setList(i, sharedSAL);
   }
 
-  notify("Finding Neighbors Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Finding Neighbors Complete", 0, Observable::UpdateProgressMessage);
 }
 

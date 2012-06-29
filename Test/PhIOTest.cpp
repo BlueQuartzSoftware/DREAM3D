@@ -81,8 +81,8 @@ class GenerateGrainIds : public AbstractFilter
       {
         setErrorCondition(-1);
         std::stringstream ss;
-        ss << getNameOfClass() << " DataContainer was NULL";
-        setErrorMessage(ss.str());
+        ss << " DataContainer was NULL";
+        addErrorMessage(getNameOfClass(), ss.str(), -1);
         return;
       }
       int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
@@ -123,8 +123,6 @@ class GenerateGrainIds : public AbstractFilter
       std::stringstream ss;
       DataContainer* m = getDataContainer();
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
-
-      setErrorMessage(ss.str());
     }
 
     GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented

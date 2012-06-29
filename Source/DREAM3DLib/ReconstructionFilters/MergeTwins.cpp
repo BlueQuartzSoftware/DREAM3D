@@ -174,14 +174,13 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	{
 		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
 		setErrorCondition(-304);
+		addErrorMessage(getNameOfClass(), ss.str(), -304);
 	}
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -198,12 +197,12 @@ void MergeTwins::preflight()
 void MergeTwins::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   m->clearFieldData();
@@ -217,13 +216,13 @@ void MergeTwins::execute()
     return;
   }
 
-  notify("Merging Twins", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Merging Twins", 0, Observable::UpdateProgressMessage);
   merge_twins();
 
-  notify("Characterizing Twins", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Characterizing Twins", 0, Observable::UpdateProgressMessage);
   characterize_twins();
 
-  notify("Renumbering Grains", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -243,7 +242,7 @@ void MergeTwins::execute()
 	m_NumFields[m_FieldPhases[i]]++;
   }
 
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------

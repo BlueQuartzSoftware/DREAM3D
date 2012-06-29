@@ -76,7 +76,7 @@ class GenerateGrainIds : public AbstractFilter
       {
         setErrorCondition(-1);
         std::stringstream ss;
-        ss << getNameOfClass() << " DataContainer was NULL";
+        ss << " DataContainer was NULL";
         setErrorMessage(ss.str());
         return;
       }

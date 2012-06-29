@@ -37,12 +37,13 @@
 #include "H5VoxelReader.h"
 
 #include <limits>
-
+#include "DREAM3DLib/Common/ErrorMessage.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 H5VoxelReader::H5VoxelReader() :
+AbstractFilter(),
 m_FileId(-1)
 {
 
@@ -68,7 +69,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
 
   if(m_FileName.empty() == true)
   {
-    setErrorMessage("H5ReconVolumeReader Error; Filename was empty");
+    addErrorMessage(getNameOfClass(), "H5ReconVolumeReader Error; Filename was empty", -1);
     return -1;
   }
 
@@ -78,7 +79,8 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   err = H5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Dimensions");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Dimensions", err);
+  addErrorMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;
@@ -86,8 +88,9 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   err = H5Lite::readPointerDataset(reconGid, H5_SPACING, spacing);
   if(err < 0)
   {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Spacing (Resolution)");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Spacing (Resolution)", err);
     err = H5Gclose(reconGid);
+  addErrorMessage(em);
     err = H5Fclose(fileId);
     return err;
   }
@@ -95,7 +98,8 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   err = H5Lite::readPointerDataset(reconGid, H5_ORIGIN, origin);
   if(err < 0)
   {
-    setErrorMessage("H5ReconVolumeReader Error Reading the Origin");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Origin", err);
+  addErrorMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
     return err;
@@ -175,7 +179,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   int err = 0;
   if(m_FileName.empty() == true)
   {
-    m_ErrorMessage = "H5ReconVolumeReader Error; Filename was empty";
+    addErrorMessage(getNameOfClass(), "H5ReconVolumeReader Error; Filename was empty", -1);
     return -1;
   }
 
@@ -196,7 +200,8 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
 #if   (CMP_SIZEOF_SSIZE_T==4)
   if (totalpoints * 3 > static_cast<int64_t>(std::numeric_limits<size_t>::max()) )
   {
-    setErrorMessage("Trying to read more data than this architecture can handle.");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Trying to read more data than this architecture can handle.", XXXX);
+  addErrorMessage(em);
     return -400;
   }
 #endif
@@ -208,9 +213,9 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   err = readScalarData(DREAM3D::CellData::EulerAngles, eulerangles);
   if(err < 0)
   {
-    m_ErrorMessage = "H5VoxelReader Error Reading the Euler Angles";
-    err = H5Gclose(scalarGid);
-    err = H5Gclose(reconGid);
+    addErrorMessage(getNameOfClass(), "H5VoxelReader Error Reading the Euler Angles", err);
+    err |= H5Gclose(scalarGid);
+    err |= H5Gclose(reconGid);
     return err;
   }
 
@@ -221,7 +226,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::CrystalStructures, crystruct);
   if(err < 0)
     {
-      m_ErrorMessage = "H5VoxelReader Error Reading the Crystal Structure Field Data";
+      addErrorMessage(getNameOfClass(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
       err |= H5Gclose(reconGid);
       return err;
     }
@@ -229,7 +234,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   err = readFieldData<unsigned int, uint32_t>(DREAM3D::EnsembleData::PhaseTypes, phaseType);
   if(err < 0)
     {
-      m_ErrorMessage = "H5VoxelReader Error Reading the Phase Type Data";
+      addErrorMessage(getNameOfClass(), "H5VoxelReader Error Reading the Phase Type Data", err);
       err |= H5Gclose(reconGid);
       return err;
     }

@@ -31,9 +31,11 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/ErrorMessage.h"
 
 /**
  * @class Observer Observer.h DREAM3D/Common/Observer.h
@@ -75,21 +77,24 @@ class DREAM3DLib_EXPORT Observer
       */
      virtual void pipelineProgressMessage(const char* message);
      virtual void pipelineProgressMessage(const std::string &msg);
-     /**
-      * @brief This message reports some human readable message suitable for display
-      * on a GUI or printed to a console or possibly saved to a log file
-      * @param message
-      */
-     virtual void pipelineWarningMessage(const char* message);
-     virtual void pipelineWarningMessage(const std::string &msg);
+
+
 
      /**
       * @brief This message reports some human readable message suitable for display
       * on a GUI or printed to a console or possibly saved to a log file
       * @param message
       */
-     virtual void pipelineErrorMessage(const char* message);
-     virtual void pipelineErrorMessage(const std::string &msg);
+     virtual void pipelineWarningMessage(ErrorMessage::Pointer msg);
+     virtual void pipelineWarningMessage(std::vector<ErrorMessage::Pointer> messages);
+
+     /**
+      * @brief This message reports some human readable message suitable for display
+      * on a GUI or printed to a console or possibly saved to a log file
+      * @param message
+      */
+     virtual void pipelineErrorMessage(ErrorMessage::Pointer msg);
+     virtual void pipelineErrorMessage(std::vector<ErrorMessage::Pointer> messages);
 
 
 
