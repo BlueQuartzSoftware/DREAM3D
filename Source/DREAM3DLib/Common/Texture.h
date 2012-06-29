@@ -52,7 +52,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 using namespace std;
 
@@ -118,7 +118,7 @@ class DREAM3DLib_EXPORT Texture
 
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = 0.0;
+        odf[i] = 0;
       }
       for (typename T::size_type i = 0; i < weights.size(); i++)
       {
@@ -163,13 +163,13 @@ class DREAM3DLib_EXPORT Texture
         float scale = (totaladdweight / totalweight);
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = odf[i] / scale;
+          odf[i] = static_cast<int>( odf[i] / scale );
         }
       }
       float remainingweight = totalweight;
       for (size_t i = 0; i < odfsize; i++)
       {
-        remainingweight = remainingweight - odf[i];
+        remainingweight = static_cast<int>( remainingweight - odf[i] );
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
@@ -191,7 +191,7 @@ class DREAM3DLib_EXPORT Texture
         // Normalize the odf
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = odf[i] / totalweight;
+          odf[i] = static_cast<int>( odf[i] / totalweight );
         }
       }
     }
@@ -242,7 +242,7 @@ class DREAM3DLib_EXPORT Texture
 
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = 0.0;
+        odf[i] = 0;
       }
       for (typename T::size_type i = 0; i < e1s.size(); i++)
       {
@@ -287,13 +287,13 @@ class DREAM3DLib_EXPORT Texture
         float scale = (totaladdweight / totalweight);
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = odf[i] / scale;
+          odf[i] = static_cast<int>( odf[i] / scale );
         }
       }
       float remainingweight = totalweight;
       for (size_t i = 0; i < odfsize; i++)
       {
-        remainingweight = remainingweight - odf[i];
+        remainingweight = static_cast<int>( remainingweight - odf[i] );
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
@@ -315,7 +315,7 @@ class DREAM3DLib_EXPORT Texture
         // Normalize the odf
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = odf[i] / totalweight;
+          odf[i] = static_cast<int>( odf[i] / totalweight );
         }
       }
     }
@@ -364,7 +364,7 @@ class DREAM3DLib_EXPORT Texture
 
     for (size_t i = 0; i < odfsize; i++)
     {
-      odf[i] = 0.0;
+      odf[i] = 0;
     }
     for (typename T::size_type i = 0; i < e1s.size(); i++)
     {
@@ -409,13 +409,13 @@ class DREAM3DLib_EXPORT Texture
 		float scale = (totaladdweight/totalweight);
 	    for (size_t i = 0; i < odfsize; i++)
 	    {
-	      odf[i] = odf[i]/scale;
+	      odf[i] = static_cast<int>( odf[i]/scale );
 	    }
 	}
     float remainingweight = totalweight;
     for (size_t i = 0; i < odfsize; i++)
     {
-      remainingweight = remainingweight-odf[i];
+      remainingweight = static_cast<int>( remainingweight-odf[i] );
     }
 	float random1, random2, random3;
 	float ea1, ea2, ea3;
@@ -437,7 +437,7 @@ class DREAM3DLib_EXPORT Texture
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i] / totalweight;
+        odf[i] = static_cast<int>( odf[i] / totalweight );
       }
     }
 
