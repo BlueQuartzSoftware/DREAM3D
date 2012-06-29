@@ -107,7 +107,7 @@ int SMStlWriter::writeHeader(const std::string &header)
     return -1;
   }
   char h[80];
-  int headlength = 80;
+  size_t headlength = 80;
   if(header.length() < 80) headlength = header.length();
   ::memset(h, 0, 80);
   ::memcpy(h, header.data(), headlength);

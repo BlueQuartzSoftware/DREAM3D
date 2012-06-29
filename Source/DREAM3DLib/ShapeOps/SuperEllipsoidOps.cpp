@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 
@@ -120,7 +120,7 @@ float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
     float b = DREAM3DMath::Gamma(5.0f / ShapeClass2Omega3[i][1]);
     float c = DREAM3DMath::Gamma(3.0f / ShapeClass2Omega3[i][1]);
     float d = DREAM3DMath::Gamma(1.0f + 3.0f / ShapeClass2Omega3[i][1]);
-    ShapeClass2Omega3[i][0] = powf(20.0f * ((a*a*a) * b) / (c * powf(d, 5.0f / 3.0f)), 3) / (2000.0f * M_PI * M_PI / 9.0f);
+    ShapeClass2Omega3[i][0] = powf(20.0f * ((a*a*a) * b) / (c * powf(d, 5.0f / 3.0f)), 3.0f) / (2000.0f * M_PI * M_PI / 9.0f);
     Nvaluedist = fabsf(omega3 - ShapeClass2Omega3[i][0]);
     if (Nvaluedist < bestNvaluedist)
     {
