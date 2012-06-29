@@ -215,7 +215,6 @@ void OpenCloseBadData::execute()
 
   int current;
   int most;
-  //int curgrain;
 
   std::vector<int > n(numgrains + 1,0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
