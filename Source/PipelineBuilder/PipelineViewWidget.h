@@ -67,6 +67,10 @@ class PipelineViewWidget : public QFrame
     void clearWidgets();
     QFilterWidget* addFilter(QString filterName, int index =-1);
 
+    QStringList getPipelineErrorList() {return m_PipelineErrorList;}
+    QTableWidget* getTableWidget() {return errorTableWidget;}
+
+
     void setErrorsTextArea(QTableWidget* t);
     void newEmptyPipelineViewLayout();
     void resetLayout();
