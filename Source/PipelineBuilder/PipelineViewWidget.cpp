@@ -284,9 +284,6 @@ void PipelineViewWidget::preflightPipeline()
 
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();
-//  m->addObserver(static_cast<Observer*>(this));
-//  setErrorCondition(0);
-  int preflightError = 0;
   std::stringstream ss;
 
 
@@ -304,7 +301,7 @@ void PipelineViewWidget::preflightPipeline()
       filter->preflight();
       int err = filter->getErrorCondition();
       std::vector<ErrorMessage::Pointer> msgs = filter->getErrorMessages();
-      if(msgs.size() > 0)
+      if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
         fw->setHasPreflightErrors(true);
@@ -320,21 +317,22 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream)
 {
-  if (NULL != errorTableWidget)
+  if(NULL != errorTableWidget)
   {
     int rc = errorTableWidget->rowCount();
 
-    for (int i=0; i<errorStream.size(); ++i) {
+    for (std::vector<ErrorMessage::Pointer>::size_type i = 0; i < errorStream.size(); ++i)
+    {
       errorTableWidget->insertRow(rc);
 
-      QString filterName = QString::fromStdString( errorStream.at(i)->getFilterName() );
-      QString errorDescription = QString::fromStdString( errorStream.at(i)->getErrorDescription() );
+      QString filterName = QString::fromStdString(errorStream.at(i)->getFilterName());
+      QString errorDescription = QString::fromStdString(errorStream.at(i)->getErrorDescription());
       int errorCode = errorStream.at(i)->getErrorCode();
 
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
       filterNameWidgetItem->setTextAlignment(Qt::AlignHCenter);
       QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
-      QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem( QString::number(errorCode) );
+      QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
       errorCodeWidgetItem->setTextAlignment(Qt::AlignHCenter);
 
       errorTableWidget->setItem(rc, 0, filterNameWidgetItem);

@@ -425,7 +425,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 		float previoustotal = 0;
 		float avg = Neighdist[0]->GetValue(j);
 		float stdev = Neighdist[1]->GetValue(j);
-		neighbordiststep[i] = 2;		
+		neighbordiststep[i] = 2;
 		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
 		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
 		{
@@ -645,7 +645,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  DataContainer* m = getDataContainer();
+ // DataContainer* m = getDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
