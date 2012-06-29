@@ -87,20 +87,17 @@ void QFilterPipeline::pipelineProgress(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineProgressMessage(ErrorMessage::Pointer msg)
+void QFilterPipeline::pipelineProgressMessage(const char* message)
 {
-  emit progressMessage(QString::fromStdString(msg->generateStatusString()));
+  emit progressMessage(QString(message));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineProgressMessage(std::vector<ErrorMessage::Pointer> &messages)
+void QFilterPipeline::pipelineProgressMessage(const std::string &msg)
 {
-  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
-  {
-    pipelineProgressMessage(*iter);
-  }
+  pipelineProgressMessage(msg.c_str());
 }
 
 // -----------------------------------------------------------------------------
