@@ -58,7 +58,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 
