@@ -702,15 +702,10 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 void PipelineBuilderWidget::pipelineComplete()
 {
  // std::cout << "PipelineBuilderWidget::PipelineBuilder_Finished()" << std::endl;
-  if (m_hasErrors) {
-    displayDialogBox(QString::fromStdString("Pipeline Errors"), 
-      QString::fromStdString("Errors occurred during processing.\nPlease check the error table for more information."), 
+  if (m_hasErrors || m_hasWarnings) {
+    displayDialogBox(QString::fromStdString("Pipeline Errors | Warnings"), 
+      QString::fromStdString("Errors and/or warnings occurred during processing.\nPlease check the error table for more information."), 
         QMessageBox::Critical);
-  }
-  else if (m_hasWarnings) {
-    displayDialogBox(QString::fromStdString("Pipeline Warnings"), 
-      QString::fromStdString("Warnings occurred during processing.\nPlease check the error table for more information."), 
-      QMessageBox::Warning);
   }
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);

@@ -146,6 +146,14 @@ void QFilterPipeline::pipelineErrorMessage(std::vector<ErrorMessage::Pointer> &m
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QFilterPipeline::pipelineFinished()
+{
+  emit finished();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterPipeline::on_CancelWorker()
 {
   setCancel(true);
@@ -161,5 +169,3 @@ void QFilterPipeline::run()
   setDataContainer(DataContainer::NullPointer()); // This _should_ clean up the memory as nothing else should have
   // a reference to the DataContainer
 }
-
-

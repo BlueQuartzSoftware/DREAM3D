@@ -103,7 +103,7 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * @brief This method is called from the run() method just before exiting and
      * signals the end of the pipeline execution
      */
-    //virtual void pipelineFinished();
+    virtual void pipelineFinished();
 
 
 
