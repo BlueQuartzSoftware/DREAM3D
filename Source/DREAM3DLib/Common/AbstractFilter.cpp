@@ -236,7 +236,7 @@ void AbstractFilter::removeErrorMessages(int start, int end) {
 //
 // -----------------------------------------------------------------------------
 void AbstractFilter::addErrorMessages(std::vector<ErrorMessage::Pointer> msgVector) {
-  for (int i=0; i < msgVector.size(); ++i) {
+  for (std::vector<ErrorMessage::Pointer>::size_type i=0; i < msgVector.size(); ++i) {
     m_ErrorMessages.push_back(msgVector[i]);
   }
 }

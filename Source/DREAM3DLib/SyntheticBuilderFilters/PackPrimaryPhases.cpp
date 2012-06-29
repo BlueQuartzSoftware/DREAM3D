@@ -729,7 +729,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  DataContainer* m = getDataContainer();
+  //DataContainer* m = getDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 

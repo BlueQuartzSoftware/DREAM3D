@@ -195,7 +195,7 @@ void OpenCloseBadData::execute()
   int good = 1;
 //  int neighbor;
 //  int index = 0;
-  float x, y, z;
+//  float x, y, z;
 //  DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
@@ -212,7 +212,7 @@ void OpenCloseBadData::execute()
   size_t count = 0;
   int kstride, jstride;
   int grainname, grain;
-  int current, most, curgrain;
+  int current, most;
   std::vector<int > n(numgrains + 1,0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
