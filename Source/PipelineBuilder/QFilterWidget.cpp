@@ -121,9 +121,9 @@ void QFilterWidget::setHasPreflightErrors(bool hasErrors)
   m_HasPreflightErrors = hasErrors;
   if (m_HasPreflightErrors == true)
   {
-//    m_timer->start(100);
-    m_CurrentBorderColorFactor = 64;
-    m_BorderIncrement = 16;
+    m_timer->start(100);
+//    m_CurrentBorderColorFactor = 64;
+//    m_BorderIncrement = 16;
   }
   else
   {
