@@ -262,7 +262,8 @@ void PackPrimaryPhases::execute()
   totalvol = sizex*sizey*sizez;
 
   float totalprimaryvol = 0;
-  for(size_t i=0;i<(dims[0]*dims[1]*dims[2]);i++)
+  size_t totalVox = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
+  for (size_t i = 0; i < totalVox; i++)
   {
     if(m_GrainIds[i] <= 0) totalprimaryvol++;
   }
@@ -274,7 +275,7 @@ void PackPrimaryPhases::execute()
   // float change1, change2;
   float change = 0.0f;
   int phase = 0;
-  size_t randomgrain;
+  int randomgrain;
  //   float random = 0.0f;
 //  int newgrain;
   // float check;
@@ -557,8 +558,14 @@ void PackPrimaryPhases::execute()
     if(option == 0)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-      if(randomgrain < firstPrimaryField) randomgrain = firstPrimaryField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain < static_cast<int>(firstPrimaryField)) {
+        randomgrain = static_cast<int>(firstPrimaryField);
+      }
+
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
 
       xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
@@ -589,8 +596,13 @@ void PackPrimaryPhases::execute()
     if(option == 1)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-      if(randomgrain < firstPrimaryField) randomgrain = firstPrimaryField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain < firstPrimaryField) {
+        randomgrain = firstPrimaryField;
+      }
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
@@ -729,7 +741,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  DataContainer* m = getDataContainer();
+  //DataContainer* m = getDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -782,7 +794,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < axisodf->GetSize())
+  while (random > totaldensity && bin < static_cast<int>(axisodf->GetSize()) )
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
@@ -1597,22 +1609,26 @@ void PackPrimaryPhases::assign_gaps()
 		  }
 		}
 	  }
-	  for (size_t i = 0; i < totpoints; i++)
+	  for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
 	  {
-	    if (ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
-		if (m_GrainIds[i] <= 0) unassignedcount++;
-		newowners[i] = -1;
-		ellipfuncs[i] = -1.0;
-	  }
+      if(ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
+      if(m_GrainIds[i] <= 0) unassignedcount++;
+      newowners[i] = -1;
+      ellipfuncs[i] = -1.0;
+    }
   }
   for (int i = 0; i < totpoints; i++)
   {
 	  if(m_GrainIds[i] > 0) m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]];
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::cleanup_grains()
 {
- notifyProgress("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
 
   DataContainer* m = getDataContainer();
 

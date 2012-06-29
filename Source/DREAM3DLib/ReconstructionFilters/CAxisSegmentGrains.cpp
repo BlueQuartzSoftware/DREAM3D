@@ -314,7 +314,7 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   float w = 10000.0;
   float q1[5];
   float q2[5];
-  float n1, n2, n3;
+ // float n1, n2, n3;
   unsigned int phase1, phase2;
   float cx1, cx2, cy1, cy2, cz1, cz2;
   float denom1, denom2;

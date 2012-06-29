@@ -217,10 +217,14 @@ void YSChoiAbaqusReader::execute()
       }
     }
 	float ea1, ea2, ea3;
+<<<<<<< HEAD
 	//double cosine1;
   //double cosine3;
   //double sine1;
   //double sine3;
+=======
+//	double cosine1, cosine3, sine1, sine3;
+>>>>>>> bcca1a4fbe44fbb79cef04d2571080f539ee1f76
 	float q[5];
 	double denom;
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)

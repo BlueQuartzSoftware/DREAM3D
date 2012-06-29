@@ -213,7 +213,7 @@ void EditPhaseDialog::setEditFlag(bool flag)
 void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
 {
   bool b = false;
-  if (phaseTypeCombo->currentIndex() == DREAM3D::PhaseType::PrecipitatePhase)
+  if (static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == DREAM3D::PhaseType::PrecipitatePhase)
   {
     b = true;
   }
@@ -221,7 +221,7 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
   pptFractionLabel->setEnabled(b);
 
   b = false;
-  if (phaseTypeCombo->currentIndex() == DREAM3D::PhaseType::TransformationPhase)
+  if (static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == DREAM3D::PhaseType::TransformationPhase)
   {
     b = true;
   }
