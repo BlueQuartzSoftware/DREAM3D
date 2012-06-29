@@ -558,7 +558,10 @@ void  InsertPrecipitatePhases::place_precipitates()
     {
       randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains-firstPrecipitateField));
       if(randomgrain < firstPrecipitateField) randomgrain = firstPrecipitateField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
 
 	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
@@ -611,7 +614,10 @@ void  InsertPrecipitatePhases::place_precipitates()
     {
       randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains-firstPrecipitateField));
       if(randomgrain < firstPrecipitateField) randomgrain = firstPrecipitateField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
@@ -698,7 +704,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < axisodf->GetSize())
+  while (random > totaldensity && bin < static_cast<int>(axisodf->GetSize()))
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;

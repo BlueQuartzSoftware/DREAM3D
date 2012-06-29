@@ -281,27 +281,34 @@ void MatchCrystallography::initializeArrays()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
   DataContainer* m = getDataContainer();
 
-  int totalPoints = m->getNumCellTuples();
-  int totalFields = m->getNumFieldTuples();
+  size_t totalPoints = m->getNumCellTuples();
+  size_t totalFields = m->getNumFieldTuples();
 
   for (size_t i = 0; i < totalFields; i++)
   {
-	m_Volumes[i] = 0.0;
+    m_Volumes[i] = 0.0;
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	m_Volumes[m_GrainIds[i]]++;
+    m_Volumes[m_GrainIds[i]]++;
   }
-  float res_scalar = m->getXRes()*m->getYRes()*m->getZRes();
+  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
   for (size_t i = 0; i < totalFields; i++)
   {
-	m_Volumes[i] = m_Volumes[i]*res_scalar;
+    m_Volumes[i] = m_Volumes[i] * res_scalar;
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::assign_eulers()
 {
   DREAM3D_RANDOMNG_NEW()
@@ -480,7 +487,9 @@ void MatchCrystallography::matchCrystallography()
       {
         counter = 0;
         selectedgrain1 = int(rg.genrand_res53() * numfields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_FieldPhases[selectedgrain1] != iter) && counter < numfields)
+        while ((m_SurfaceFields[selectedgrain1] == true
+            || m_FieldPhases[selectedgrain1] != static_cast<int32_t>(iter) )
+            && counter < numfields)
         {
           if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
@@ -565,7 +574,9 @@ void MatchCrystallography::matchCrystallography()
       {
         counter = 0;
         selectedgrain1 = int(rg.genrand_res53() * numfields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_FieldPhases[selectedgrain1] != iter) && counter < numfields)
+        while ((m_SurfaceFields[selectedgrain1] == true
+            || m_FieldPhases[selectedgrain1] != static_cast<int32_t>(iter) )
+            && counter < numfields)
         {
           if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
@@ -579,12 +590,15 @@ void MatchCrystallography::matchCrystallography()
 		{
 			counter = 0;
 			selectedgrain2 = int(rg.genrand_res53() * numfields);
-			while ((m_SurfaceFields[selectedgrain2] == true || m_FieldPhases[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < numfields)
-			{
-			  if(selectedgrain2 >= numfields) selectedgrain2 = selectedgrain2 - numfields;
-			  selectedgrain2++;
-			  counter++;
-			}
+			while ((m_SurfaceFields[selectedgrain2] == true
+			        || m_FieldPhases[selectedgrain2] != static_cast<int32_t>(iter)
+			        || selectedgrain2 == selectedgrain1)
+			        && counter < numfields)
+          {
+            if(selectedgrain2 >= numfields) selectedgrain2 = selectedgrain2 - numfields;
+            selectedgrain2++;
+            counter++;
+          }
 	        if(counter == numfields)
 			{
 				badtrycount = 10*m_NumFields[iter];
@@ -639,9 +653,9 @@ void MatchCrystallography::matchCrystallography()
 				  ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 				  OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 				  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
-				  if(neighbor != selectedgrain2)
+				  if(neighbor != static_cast<int>(selectedgrain2) )
 				  {
-					MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m_CrystalStructures[phase], q1, q2);
+				    MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m_CrystalStructures[phase], q1, q2);
 				  }
 				}
 
@@ -753,7 +767,7 @@ void MatchCrystallography::measure_misorientations()
 
   misorientationlists.resize(totalFields);
   std::stringstream ss;
-  for (int i = 1; i < totalFields; i++)
+  for (size_t i = 1; i < totalFields; i++)
   {
     if (((float)i / totalFields) * 100.0f > threshold)
     {
@@ -817,7 +831,9 @@ void MatchCrystallography::measure_misorientations()
         mbin = m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3 * j], misorientationlists[i][3 * j + 1], misorientationlists[i][3 * j + 2]);
       }
 
-      if(m_SurfaceFields[i] == false && (nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
+      if(m_SurfaceFields[i] == false
+          && (nname > static_cast<int>(i) || m_SurfaceFields[nname] == true)
+          && phase1 == phase2)
       {
 		  simmdf[m_FieldPhases[i]]->SetValue(mbin, (simmdf[m_FieldPhases[i]]->GetValue(mbin)+(neighsurfarea/m_TotalSurfaceAreas[m_FieldPhases[i]])));
       }

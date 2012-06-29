@@ -211,7 +211,7 @@ void  EstablishMatrixPhase::establish_matrix()
     if(i > 0) matrixphasefractions[i] = matrixphasefractions[i] + matrixphasefractions[i - 1];
   }
   size_t j = 0;
-  for (size_t i = 0; i < totalPoints; ++i)
+  for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
 	  if(m_GrainIds[i] <= 0)
 	  {
