@@ -231,7 +231,7 @@ void PackPrimaryPhases::execute()
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumFieldTuples();
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -303,7 +303,7 @@ void PackPrimaryPhases::execute()
         setErrorCondition(-666);
         return;
       }
-      primaryphases.push_back(i);
+      primaryphases.push_back(static_cast<int>(i) );
       primaryphasefractions.push_back(pp->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
     }
@@ -354,7 +354,7 @@ void PackPrimaryPhases::execute()
   }
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   Field field;
-  int gid = m->getNumFieldTuples();
+  int gid = static_cast<int>(m->getNumFieldTuples());
   if(gid == 0)
   {
 	  m->resizeFieldDataArrays(1);
