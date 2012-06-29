@@ -79,8 +79,8 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineProgressMessage(ErrorMessage::Pointer msg);
-    virtual void pipelineProgressMessage(std::vector<ErrorMessage::Pointer> &messages);
+    virtual void pipelineProgressMessage(const char* message);
+    virtual void pipelineProgressMessage(const std::string &msg);
 
 
     /**
