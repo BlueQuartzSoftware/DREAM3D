@@ -217,7 +217,10 @@ void YSChoiAbaqusReader::execute()
       }
     }
 	float ea1, ea2, ea3;
-	double cosine1, cosine3, sine1, sine3;
+	//double cosine1;
+  //double cosine3;
+  //double sine1;
+  //double sine3;
 	float q[5];
 	double denom;
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
@@ -253,10 +256,10 @@ void YSChoiAbaqusReader::execute()
 		if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
 		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;*/
 		q[0] = 1;
-		q[4] = sqrt((1.0+mat[i][0]+mat[i][4]+mat[i][8]))/2;
-		q[1] = (mat[i][5]-mat[i][7])/(4*q[4]);
-		q[2] = (mat[i][6]-mat[i][2])/(4*q[4]);
-		q[3] = (mat[i][1]-mat[i][3])/(4*q[4]);
+		q[4] = static_cast<float>( sqrt((1.0+mat[i][0]+mat[i][4]+mat[i][8]))/2 );
+		q[1] = static_cast<float>( (mat[i][5]-mat[i][7])/(4*q[4]) );
+		q[2] = static_cast<float>( (mat[i][6]-mat[i][2])/(4*q[4]) );
+		q[3] = static_cast<float>( (mat[i][1]-mat[i][3])/(4*q[4]) );
 		m_Quats[5*i] = 1;
 		m_Quats[5*i+1] = q[1];
 		m_Quats[5*i+2] = q[2];

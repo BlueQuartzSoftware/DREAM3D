@@ -58,7 +58,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 
@@ -107,7 +107,7 @@ void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
   writer->writeValue("H5EbsdFile", getH5EbsdFile() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
-  int numQFilters = getQualityMetricFilters().size();
+  int numQFilters = static_cast<int>( getQualityMetricFilters().size() );
   writer->writeValue("NumQualityFilters",  numQFilters);
   std::stringstream ss;
   for(size_t i = 0; i < getQualityMetricFilters().size(); i++)
@@ -117,7 +117,7 @@ void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 	ss.str("");
   }
 
-  int numPhaseType = m_PTypes->GetNumberOfTuples();
+  int numPhaseType = static_cast<int>( m_PTypes->GetNumberOfTuples() );
 
   writer->writeValue("NumPhaseTypes", numPhaseType);
   for(int i = 0; i < numPhaseType; ++i)

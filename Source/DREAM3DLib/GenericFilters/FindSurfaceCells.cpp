@@ -148,13 +148,13 @@ void FindSurfaceCells::execute()
     grain = m_GrainIds[j];
     if(grain > 0)
     {
-      column = j % dims[0];
-      row = (j / dims[0]) % dims[1];
-      plane = j / (dims[0] * dims[1]);
+      column = static_cast<float>( j % dims[0] );
+      row = static_cast<float>( (j / dims[0]) % dims[1] );
+      plane = static_cast<float>( j / (dims[0] * dims[1]) );
       for (int k = 0; k < 6; k++)
       {
         good = 1;
-        neighbor = j + neighpoints[k];
+        neighbor = static_cast<int>( j + neighpoints[k] );
         if(k == 0 && plane == 0) good = 0;
         if(k == 5 && plane == (dims[2] - 1)) good = 0;
         if(k == 1 && row == 0) good = 0;

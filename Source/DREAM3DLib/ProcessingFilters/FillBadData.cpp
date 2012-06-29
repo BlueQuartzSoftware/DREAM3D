@@ -207,7 +207,7 @@ void FillBadData::execute()
   {
 		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
 		{
-			currentvlist.push_back(i);
+			currentvlist.push_back( static_cast<int>(i) );
 			count = 0;
 			while(count < currentvlist.size())
 			{
