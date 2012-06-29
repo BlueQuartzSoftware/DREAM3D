@@ -207,7 +207,7 @@ void MinSize::assign_badpoints()
   int good = 1;
 //  int neighbor;
 //  int index = 0;
-  float x, y, z;
+//  float x, y, z;
   int current = 0;
   int most = 0;
   int curgrain = 0;
@@ -235,10 +235,10 @@ void MinSize::assign_badpoints()
     for (int k = 0; k < dims[2]; k++)
     {
 
-		kstride = dims[0]*dims[1]*k;
+		kstride = static_cast<int>( dims[0]*dims[1]*k );
 	    for (int j = 0; j < dims[1]; j++)
 	    {
-			jstride = dims[0]*j;
+			jstride = static_cast<int>( dims[0]*j );
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
@@ -254,7 +254,7 @@ void MinSize::assign_badpoints()
 				for (int l = 0; l < 6; l++)
 				{
 				  good = 1;
-				  neighpoint = count + neighpoints[l];
+				  neighpoint = static_cast<int>( count + neighpoints[l] );
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
 				  if (l == 1 && j == 0) good = 0;
@@ -279,7 +279,7 @@ void MinSize::assign_badpoints()
 				for (int l = 0; l < 6; l++)
 				{
 //				  good = 1;
-				  neighpoint = count + neighpoints[l];
+				  neighpoint = static_cast<int>( count + neighpoints[l] );
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
 				  if (l == 1 && j == 0) good = 0;

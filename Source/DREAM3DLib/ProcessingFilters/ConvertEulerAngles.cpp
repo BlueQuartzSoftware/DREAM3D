@@ -172,11 +172,11 @@ void ConvertEulerAngles::execute()
   float conversionFactor = 1.0;
   if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
   {
-    conversionFactor = M_PI / 180.0f;
+    conversionFactor = static_cast<float>( M_PI / 180.0f );
   }
   else if (conversionFactor == DREAM3D::EulerAngleConversionType::RadiansToDegrees)
   {
-    conversionFactor = 180.0f / M_PI;
+    conversionFactor = static_cast<float>( 180.0f / M_PI );
   }
 
   totalPoints = totalPoints * 3;

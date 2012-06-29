@@ -188,7 +188,7 @@ void RenumberGrains::execute()
       //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       if(m_GrainIds[i] > 0)
       {
-        m_GrainIds[i] = NewNames[m_GrainIds[i]];
+        m_GrainIds[i] = static_cast<int32_t>( NewNames[m_GrainIds[i]] );
       }
 
     }

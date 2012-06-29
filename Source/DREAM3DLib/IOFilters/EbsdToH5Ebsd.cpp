@@ -285,7 +285,7 @@ void EbsdToH5Ebsd::execute()
 
   std::vector<int> indices;
   // Loop on Each EBSD File
-  float total = m_ZEndIndex - m_ZStartIndex;
+  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
   int64_t z = m_ZStartIndex;
   int64_t xDim, yDim;
@@ -319,7 +319,7 @@ void EbsdToH5Ebsd::execute()
   for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
     std::string ebsdFName = *filepath;
-    progress = z - m_ZStartIndex;
+    progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
     std::string msg = "Converting File: " + ebsdFName;
     ss.str("");
@@ -347,7 +347,7 @@ void EbsdToH5Ebsd::execute()
       addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(-1);
     }
-    indices.push_back(z);
+    indices.push_back( static_cast<int>(z) );
     ++z;
     if(getCancel() == true)
     {
