@@ -212,9 +212,13 @@ void OpenCloseBadData::execute()
   size_t count = 0;
   int kstride, jstride;
   int grainname, grain;
+<<<<<<< HEAD
   int current;
   int most;
   //int curgrain;
+=======
+  int current, most;
+>>>>>>> bcca1a4fbe44fbb79cef04d2571080f539ee1f76
   std::vector<int > n(numgrains + 1,0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {

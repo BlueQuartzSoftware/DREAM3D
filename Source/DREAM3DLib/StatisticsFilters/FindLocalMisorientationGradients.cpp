@@ -174,8 +174,8 @@ void FindLocalMisorientationGradients::execute()
 
 
   // We need to keep a reference to the wrapper DataArray class in addition to the raw pointer
-  FloatArrayType* m_KernelMisorientations =
-      FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType*>(m->getCellData(DREAM3D::CellData::KernelAverageMisorientations).get());
+//  FloatArrayType* m_KernelMisorientations =
+//      FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType*>(m->getCellData(DREAM3D::CellData::KernelAverageMisorientations).get());
 
   std::vector<float> gamVec(totalPoints);
   float* gam = &(gamVec.front());
@@ -278,10 +278,10 @@ void FindLocalMisorientationGradients::execute()
           {
             m_KernelAverageMisorientations[point] = 0;
           }
-		  if(m_GrainIds[point] == 191)
-		  {
-			int stop = 0;
-		  }
+//		  if(m_GrainIds[point] == 191)
+//		  {
+//			int stop = 0;
+//		  }
           q2[0] = m_AvgQuats[5*m_GrainIds[point]];
           q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
           q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];

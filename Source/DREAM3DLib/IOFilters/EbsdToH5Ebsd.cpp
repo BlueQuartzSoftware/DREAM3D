@@ -121,7 +121,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+//  DataContainer* m = getDataContainer();
 
   if(m_OutputFile.empty() == true)
   {

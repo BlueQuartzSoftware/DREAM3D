@@ -210,7 +210,7 @@ void MinSize::assign_badpoints()
 //  float x, y, z;
   int current = 0;
   int most = 0;
-  int curgrain = 0;
+//  int curgrain = 0;
  // DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
