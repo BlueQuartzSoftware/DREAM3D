@@ -101,7 +101,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     void find_neighborhoods();
 
 private:
-
+    unsigned int* m_PhaseTypes;
     int32_t* m_GrainIds;
 
     bool* m_BiasedFields;
@@ -110,7 +110,7 @@ private:
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
 
-    unsigned int* m_PhaseTypes;
+
 	StatsDataArray* m_StatsDataArray;
 
 	std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;

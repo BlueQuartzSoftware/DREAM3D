@@ -138,27 +138,24 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3);
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3);
 
-
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+    setErrorCondition(0);
+    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+    find_grainphases->setObservers(this->getObservers());
+    find_grainphases->setDataContainer(getDataContainer());
+    if(preflight == true) find_grainphases->preflight();
+    if(preflight == false) find_grainphases->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1);
 
-  setErrorMessage(ss.str());
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -167,18 +164,19 @@ void FindDeformationStatistics::preflight()
 {
   dataCheck(true, 1,1 ,1);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -741,5 +739,5 @@ void FindDeformationStatistics::execute()
   }
   fclose(vtkFile);
 
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
 }

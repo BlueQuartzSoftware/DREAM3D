@@ -150,7 +150,8 @@ int VtkGrainIdWriter::writeFile()
   if (err < 0)
   {
     setErrorCondition(err);
-    setErrorMessage("Error Writing GrainId Vtk RectilinearGrid File");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Writing GrainId Vtk RectilinearGrid File", XXXX);
+  addErrorMessage(em);
   }
   return err;
 }

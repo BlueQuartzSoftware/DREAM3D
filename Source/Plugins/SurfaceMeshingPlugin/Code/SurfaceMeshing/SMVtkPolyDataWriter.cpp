@@ -34,7 +34,6 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SMVtkPolyDataWriter.h"
 
 #include <string.h>
@@ -43,7 +42,6 @@
 
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
-
 
 #include "SurfaceMeshing/Meshing/Node.h"
 #include "SurfaceMeshing/Meshing/Face.h"
@@ -55,9 +53,7 @@ using namespace meshing;
 //
 // -----------------------------------------------------------------------------
 SMVtkPolyDataWriter::SMVtkPolyDataWriter() :
-AbstractFilter(),
-m_WriteBinaryFile(false),
-m_WriteConformalMesh(true)
+    AbstractFilter(), m_WriteBinaryFile(false), m_WriteConformalMesh(true)
 {
   setupFilterOptions();
 }
@@ -82,47 +78,47 @@ void SMVtkPolyDataWriter::setupFilterOptions()
 {
   std::vector<FilterOption::Pointer> options;
   {
-     FilterOption::Pointer option = FilterOption::New();
-     option->setHumanLabel("Nodes File");
-     option->setPropertyName("NodesFile");
-     option->setWidgetType(FilterOption::InputFileWidget);
-     option->setValueType("string");
-     options.push_back(option);
-   }
-   {
-     FilterOption::Pointer option = FilterOption::New();
-     option->setHumanLabel("Triangles File");
-     option->setPropertyName("TrianglesFile");
-     option->setWidgetType(FilterOption::InputFileWidget);
-     option->setValueType("string");
-     options.push_back(option);
-   }
-   {
-     FilterOption::Pointer option = FilterOption::New();
-     option->setHumanLabel("Output Vtk File");
-     option->setPropertyName("OutputVtkFile");
-     option->setWidgetType(FilterOption::OutputFileWidget);
-     option->setValueType("string");
-     options.push_back(option);
-   }
-   {
-     FilterOption::Pointer option = FilterOption::New();
-     option->setHumanLabel("Write Binary Vtk File");
-     option->setPropertyName("WriteBinaryFile");
-     option->setWidgetType(FilterOption::BooleanWidget);
-     option->setValueType("bool");
-     options.push_back(option);
-   }
-   {
-     FilterOption::Pointer option = FilterOption::New();
-     option->setHumanLabel("Write Conformal Mesh");
-     option->setPropertyName("WriteConformalMesh");
-     option->setWidgetType(FilterOption::BooleanWidget);
-     option->setValueType("bool");
-     options.push_back(option);
-   }
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Nodes File");
+    option->setPropertyName("NodesFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Triangles File");
+    option->setPropertyName("TrianglesFile");
+    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Output Vtk File");
+    option->setPropertyName("OutputVtkFile");
+    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write Binary Vtk File");
+    option->setPropertyName("WriteBinaryFile");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
+    FilterOption::Pointer option = FilterOption::New();
+    option->setHumanLabel("Write Conformal Mesh");
+    option->setPropertyName("WriteConformalMesh");
+    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
 
-   setFilterOptions(options);
+  setFilterOptions(options);
 }
 
 // -----------------------------------------------------------------------------
@@ -130,13 +126,12 @@ void SMVtkPolyDataWriter::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void SMVtkPolyDataWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
-  writer->writeValue("NodesFile", getNodesFile() );
-  writer->writeValue("TrianglesFile", getTrianglesFile() );
-  writer->writeValue("OutputVtkFile", getOutputVtkFile() );
-  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
-  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+  writer->writeValue("NodesFile", getNodesFile());
+  writer->writeValue("TrianglesFile", getTrianglesFile());
+  writer->writeValue("OutputVtkFile", getOutputVtkFile());
+  writer->writeValue("WriteBinaryFile", getWriteBinaryFile());
+  writer->writeValue("WriteConformalMesh", getWriteConformalMesh());
 }
-
 
 #if 0
 // -----------------------------------------------------------------------------
@@ -172,7 +167,7 @@ int SMVtkPolyDataWriter::readZSlice(int xDim, int yDim, int zDim, int* voxels)
     {
       m_InputFile >> tmp;
       voxels[i] = tmp;
-        }
+    }
   }
   return 0;
 }
@@ -223,9 +218,9 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   }
   char buf[kBufferSize];
   m_InputFile.getline(buf, kBufferSize); // Read Line 1
-  m_InputFile.getline(buf, kBufferSize); // Read Line 2
+  m_InputFile.getline(buf, kBufferSize);// Read Line 2
   ::memset(buf, 0, kBufferSize);
-  m_InputFile.getline(buf, kBufferSize); // Read Line 3
+  m_InputFile.getline(buf, kBufferSize);// Read Line 3
   std::string fileType(buf);
   if (fileType.find("BINARY", 0) == 0)
   {
@@ -239,7 +234,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   {
     err = -1;
     std::cout << logTime() << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        << std::endl;
+    << std::endl;
     return err;
   }
   m_InputFile.getline(buf, kBufferSize); // Read Line 4
@@ -248,7 +243,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   int xpoints = 0;
   int ypoints = 0;
   int zpoints = 0;
-  m_InputFile >> dimension_label >>  xpoints >>  ypoints >>  zpoints; // Read Line 5
+  m_InputFile >> dimension_label >> xpoints >> ypoints >> zpoints;// Read Line 5
 
   // Add a layer of padding around the volume which are going to be our boundary voxels
   m->getXPoints() = xpoints + 2;
@@ -263,9 +258,9 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   m->cSquare = new Face[3 * 2 * m->NSP];
   m->cVertex = new Node[2 * 7 * m->NSP];
 
-  m_InputFile.getline(buf, kBufferSize); // Read Remainder of Line 5
+  m_InputFile.getline(buf, kBufferSize);// Read Remainder of Line 5
   ::memset(buf, 0, kBufferSize);
-  m_InputFile.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
+  m_InputFile.getline(buf, kBufferSize);// Read Line 6 which is the Origin values
   float origin[3];
   err = parseFloat3V(buf, origin, 0.0f);
   m->xOrigin = origin[0];
@@ -273,7 +268,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   m->zOrigin = origin[2];
 
   ::memset(buf, 0, kBufferSize);
-  m_InputFile.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
+  m_InputFile.getline(buf, kBufferSize);// Read Line 7 which is the Scaling values
   float scaling[3];
   err = parseFloat3V(buf, scaling, 1.0f);
   m->getXRes() = scaling[0];
@@ -281,7 +276,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
   m->getZRes() = scaling[2];
   ::memset(buf, 0, kBufferSize);
 
-  m_InputFile.getline(buf, kBufferSize); // Read Line 8
+  m_InputFile.getline(buf, kBufferSize);// Read Line 8
   ::memset(buf, 0, kBufferSize);
 
   char text1[kBufferSize]; ::memset(text1, 0, kBufferSize);
@@ -297,7 +292,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
     ::memset(text1, 0, kBufferSize);
     ::memset(text2, 0, kBufferSize);
     ::memset(text3, 0, kBufferSize);
-    readLine(m_InputFile, buf, kBufferSize); // Read Line 10
+    readLine(m_InputFile, buf, kBufferSize);// Read Line 10
     int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
     if (n != 4)
     {
@@ -346,20 +341,21 @@ void SMVtkPolyDataWriter::execute()
   std::stringstream s;
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.c_str(), "rb+");
-  if (nodesFile == NULL)
+  if(nodesFile == NULL)
   {
     s.str("");
     s << "Error opening nodes file '" << m_NodesFile << "'";
     setErrorCondition(-1);
-    setErrorMessage(s.str());
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
 
   // Calculate how many nodes are in the file based on the file size
   fseek(nodesFile, 0, SEEK_END);
   size_t fLength = ftell(nodesFile);
-  int nNodes = fLength/20;
+  int nNodes = fLength / 20;
   fseek(nodesFile, 0, SEEK_SET);
   fLength = ftell(nodesFile);
   if(0 != fLength)
@@ -367,30 +363,31 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after nodes count.'" << m_NodesFile << "'";
     setErrorCondition(-1);
-    setErrorMessage(s.str());
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
   s.str("");
   s << "Calc Node Count from Nodes.bin File: " << nNodes;
-  notify(s.str(), 0, UpdateProgressMessage);
-
+  notifyProgress(s.str(), 0, UpdateProgressMessage);
 
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.c_str(), "rb+");
-  if (triFile == NULL)
+  if(triFile == NULL)
   {
     s.str("");
     s << getNameOfClass() << ": Error opening Triangles file '" << triFile << "'";
     setErrorCondition(-1);
-    setErrorMessage(s.str());
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
   // Calculate how many nodes are in the file based in the file size
   fseek(triFile, 0, SEEK_END);
   fLength = ftell(triFile);
-  int nTriangles = fLength/24;
+  int nTriangles = fLength / 24;
   fseek(triFile, 0, SEEK_SET);
   fLength = ftell(triFile);
   if(0 != fLength)
@@ -398,33 +395,37 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after triangles count.'" << m_TrianglesFile << "'";
     setErrorCondition(-1);
-    setErrorMessage(s.str());
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
   s.str("");
 
   s << "Calc Triangle Count from Triangles.bin File: " << nTriangles;
-  notify(s.str(), 0, UpdateProgressMessage);
+  notifyProgress(s.str(), 0, UpdateProgressMessage);
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
   vtkFile = fopen(m_OutputVtkFile.c_str(), "wb");
-  if (NULL == vtkFile)
+  if(NULL == vtkFile)
   {
     s.str("");
     s << getNameOfClass() << ": Error creating Triangles VTK Visualization '" << m_OutputVtkFile << "'";
     setErrorCondition(-1);
-    setErrorMessage(s.str());
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if(m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -440,22 +441,26 @@ void SMVtkPolyDataWriter::execute()
   for (int i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
-    if (nread != 1)
+    if(nread != 1)
     {
-        break;
+      break;
     }
-    if (m_WriteBinaryFile == true) {
-      vec3f[0] = vec3d[0]; vec3f[1] = vec3d[1]; vec3f[2] = vec3d[2];
+    if(m_WriteBinaryFile == true)
+    {
+      vec3f[0] = vec3d[0];
+      vec3f[1] = vec3d[1];
+      vec3f[2] = vec3d[2];
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[0]);
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[1]);
       MXA::Endian::FromSystemToBig::convert<float>(vec3f[2]);
       totalWritten = fwrite(vec3f, sizeof(float), 3, vtkFile);
-      if (totalWritten != sizeof(float) * 3)
+      if(totalWritten != sizeof(float) * 3)
       {
 
       }
     }
-    else {
+    else
+    {
       fprintf(vtkFile, "%f %f %f\n", vec3d[0], vec3d[1], vec3d[2]); // Write the positions to the output file
     }
   }
@@ -464,7 +469,7 @@ void SMVtkPolyDataWriter::execute()
   // Write the triangle indices into the vtk File
   int tData[6];
   int triangleCount = nTriangles;
-  if (false == m_WriteConformalMesh)
+  if(false == m_WriteConformalMesh)
   {
     triangleCount = nTriangles * 2;
   }
@@ -474,7 +479,7 @@ void SMVtkPolyDataWriter::execute()
   {
     // Read from the Input Triangles Temp File
     nread = fread(tData, sizeof(int), 6, triFile);
-    if (m_WriteBinaryFile == true)
+    if(m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
       MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
@@ -482,7 +487,7 @@ void SMVtkPolyDataWriter::execute()
       MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
       MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
       fwrite(tData, sizeof(int), 4, vtkFile);
-      if (false == m_WriteConformalMesh)
+      if(false == m_WriteConformalMesh)
       {
         tData[0] = tData[1];
         tData[1] = tData[3];
@@ -495,7 +500,7 @@ void SMVtkPolyDataWriter::execute()
     else
     {
       fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
-      if (false == m_WriteConformalMesh)
+      if(false == m_WriteConformalMesh)
       {
         fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
       }
@@ -518,19 +523,21 @@ void SMVtkPolyDataWriter::execute()
     {
       sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = 0; sBuf[3] = 0;
     }
-    else {
+    else
+    {
       sBuf[0] = '5'; sBuf[1] =0; sBuf[2] = '5'; sBuf[3] = 0;
     }
     for (int i = 0; i < triangleCount; i++)
     {
       fprintf(vtkFile, "%s ", sBuf);
-      if (triangleCount % 80 == 0) { fprintf(vtkFile, "\n"); }
+      if (triangleCount % 80 == 0)
+      { fprintf(vtkFile, "\n");}
     }
   }
 #endif
 
   // Write the CELL_DATA section
-  if (m_WriteBinaryFile == true)
+  if(m_WriteBinaryFile == true)
   {
     err = writeBinaryCellData(m_TrianglesFile, vtkFile, nTriangles, m_WriteConformalMesh);
   }
@@ -539,9 +546,8 @@ void SMVtkPolyDataWriter::execute()
     err = writeASCIICellData(m_TrianglesFile, vtkFile, nTriangles, m_WriteConformalMesh);
   }
 
-
   // Write the POINT_DATA section
-  if (m_WriteBinaryFile == true)
+  if(m_WriteBinaryFile == true)
   {
     err = writeBinaryPointData(m_NodesFile, vtkFile, nNodes, m_WriteConformalMesh);
   }
@@ -550,16 +556,13 @@ void SMVtkPolyDataWriter::execute()
     err = writeASCIIPointData(m_NodesFile, vtkFile, nNodes, m_WriteConformalMesh);
   }
 
-
-
   fprintf(vtkFile, "\n");
   // Free the memory
   // Close the input and output files
   fclose(vtkFile);
 
   setErrorCondition(0);
-  setErrorMessage("");
-  notify("Vtk PolyData File Writing Complete", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Vtk PolyData File Writing Complete", 0, Observable::UpdateProgressMessage);
 
   return;
 }
@@ -580,21 +583,21 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
-  std::vector<int> data (nNodes, 0);
+  std::vector<int> data(nNodes, 0);
   for (int i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
-    if (nread != 1)
+    if(nread != 1)
     {
-        break;
+      break;
     }
     swapped = *nodeKind;
-    MXA::Endian::FromSystemToBig::convert<int>( swapped );
+    MXA::Endian::FromSystemToBig::convert<int>(swapped);
     data[i] = swapped;
   }
-  int totalWritten = fwrite( &(data.front()), sizeof(int), nNodes, vtkFile);
+  int totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
   fclose(nodesFile);
-  if (totalWritten != nNodes)
+  if(totalWritten != nNodes)
   {
     return -1;
   }
@@ -608,11 +611,11 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
 {
   int err = 0;
   unsigned char nodeData[20];
- // double* vec3d = (double*)(&nodeData[8]);
- // int* nodeId = (int*)(&nodeData[0]);
+  // double* vec3d = (double*)(&nodeData[8]);
+  // int* nodeId = (int*)(&nodeData[0]);
   int* nodeKind = (int*)(&nodeData[4]);
   int nread = 0;
- // float vec3f[3];
+  // float vec3f[3];
 
   FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
   fprintf(vtkFile, "\n");
@@ -622,8 +625,9 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
   for (int i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
-    if (nread != 1){
-        break;
+    if(nread != 1)
+    {
+      break;
     }
     fprintf(vtkFile, "%d\n", *nodeKind); // Write the Node Kind to the output file
   }
@@ -644,9 +648,8 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
 
-
   int triangleCount = nTriangles;
-  if (false == conformalMesh)
+  if(false == conformalMesh)
   {
     triangleCount = nTriangles * 2;
     offset = 2;
@@ -663,23 +666,24 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   for (int i = 0; i < nTriangles; i++)
   {
     nread = fread(tData, sizeof(int), 6, triFile);
-    if (nread != 6) {
-                return -1;
+    if(nread != 6)
+    {
+      return -1;
     }
     MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-    tri_ids[i*offset] = tData[0];
+    tri_ids[i * offset] = tData[0];
     MXA::Endian::FromSystemToBig::convert<int>(tData[4]);
-    cell_data[i*offset] = tData[4];
-    if (false == conformalMesh)
+    cell_data[i * offset] = tData[4];
+    if(false == conformalMesh)
     {
       MXA::Endian::FromSystemToBig::convert<int>(tData[5]);
-      cell_data[i*offset + 1] = tData[5];
-      tri_ids[i*offset + 1] = tData[0];
+      cell_data[i * offset + 1] = tData[5];
+      tri_ids[i * offset + 1] = tData[0];
     }
   }
 
-  int totalWritten = fwrite( &(cell_data.front()), sizeof(int), triangleCount, vtkFile);
-  if (totalWritten != triangleCount)
+  int totalWritten = fwrite(&(cell_data.front()), sizeof(int), triangleCount, vtkFile);
+  if(totalWritten != triangleCount)
   {
     return -1;
   }
@@ -689,8 +693,8 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   fprintf(vtkFile, "SCALARS TriangleID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
-  totalWritten = fwrite( &(tri_ids.front()), sizeof(int), triangleCount, vtkFile);
-  if (totalWritten != triangleCount)
+  totalWritten = fwrite(&(tri_ids.front()), sizeof(int), triangleCount, vtkFile);
+  if(totalWritten != triangleCount)
   {
     return -1;
   }
@@ -705,12 +709,12 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
 // -----------------------------------------------------------------------------
 int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
-        int nread = 0;
+  int nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
   // Write the GrainId Data to the file
   int triangleCount = nTriangles;
-  if (false == conformalMesh)
+  if(false == conformalMesh)
   {
     triangleCount = nTriangles * 2;
   }
@@ -723,12 +727,12 @@ int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FI
   for (int i = 0; i < nTriangles; i++)
   {
     nread = fread(tData, sizeof(int), 6, triFile);
-    if (nread != 6)
+    if(nread != 6)
     {
-        break;
+      break;
     }
     fprintf(vtkFile, "%d\n", tData[4]);
-    if (false == conformalMesh)
+    if(false == conformalMesh)
     {
       fprintf(vtkFile, "%d\n", tData[5]);
     }

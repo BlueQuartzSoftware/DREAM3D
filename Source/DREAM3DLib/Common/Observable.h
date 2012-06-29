@@ -36,13 +36,11 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
+#include "DREAM3DLib/Common/ErrorMessage.h"
 
 
 class Observer;
 
-//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::vector<Observer*>;
-//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::string;
 
 /**
  * @class Observable Observable.h DREAM3D/Common/Observable.h
@@ -93,7 +91,7 @@ class DREAM3DLib_EXPORT Observable
      * @param progress A progress to indicate how much pipeline has been accomplished
      * @param a The type of notification to send.
      */
-    virtual void notify(const char* msg, int progress, ObserverAspect a);
+    virtual void notifyProgress(const char* msg, int progress, ObserverAspect a);
 
     /**
      * @brief Sends the notification to all observers. Conveneince function.
@@ -101,9 +99,13 @@ class DREAM3DLib_EXPORT Observable
      * @param progress A progress to indicate how much pipeline has been accomplished
      * @param a The type of notification to send.
      */
-    virtual void notify(const std::string msg, int progress, ObserverAspect a);
+    virtual void notifyProgress(const std::string &msg, int progress, ObserverAspect a);
 
-    //virtual void getObservers(std::vector<Observer*> &observers);
+
+    virtual void notifyMessage(ErrorMessage::Pointer msg, int progress, ObserverAspect a);
+    //virtual void notfiyMessage(std::vector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a);
+
+
     virtual std::vector<Observer*> getObservers();
 
     virtual void setObservers(std::vector<Observer*> obs);

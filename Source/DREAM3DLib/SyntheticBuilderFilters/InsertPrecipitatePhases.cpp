@@ -194,9 +194,8 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   {
     ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-308);
+    addErrorMessage(getNameOfClass(), ss.str(), -308);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -221,8 +220,8 @@ void InsertPrecipitatePhases::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -241,20 +240,20 @@ void InsertPrecipitatePhases::execute()
 
   totalvol = sizex * sizey * sizez;
 
-  notify("Packing Precipitates - Generating and Placing Precipitates", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Packing Precipitates - Generating and Placing Precipitates", 0, Observable::UpdateProgressMessage);
   initialize_packinggrid();
   place_precipitates();
 
-  notify("Packing Precipitates - Assigning Voxels", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Packing Precipitates - Assigning Voxels", 0, Observable::UpdateProgressMessage);
   assign_voxels();
 
-  notify("Packing Precipitates - Filling Gaps", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Packing Precipitates - Filling Gaps", 0, Observable::UpdateProgressMessage);
   assign_gaps();
 
-  notify("Packing Precipitates - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Packing Precipitates - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
   cleanup_grains();
 
-  notify("Packing Precipitates - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Packing Precipitates - Renumbering Grains", 0, Observable::UpdateProgressMessage);
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -263,17 +262,17 @@ void InsertPrecipitatePhases::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    setErrorMessage(renumber_grains->getErrorMessage());
+    addErrorMessages(renumber_grains->getErrorMessages());
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("InsertPrecipitatePhases Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("InsertPrecipitatePhases Completed", 0, Observable::UpdateProgressMessage);
 }
 
 void  InsertPrecipitatePhases::place_precipitates()
 {
-  notify("Placing Precipitates", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Placing Precipitates", 0, Observable::UpdateProgressMessage);
   DREAM3D_RANDOMNG_NEW()
 
   DataContainer* m = getDataContainer();
@@ -392,7 +391,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 		{
 	      std::stringstream ss;
 	      ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
-	      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+	      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 
 	      m->resizeFieldDataArrays(currentnumgrains + 1);
 	      dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
@@ -467,7 +466,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     std::stringstream ss;
     ss << "Packing Grains - Placing Grain #" << i;
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 
 	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
 	precipboundaryfraction = pp->getPrecipBoundaryFraction();
@@ -538,7 +537,7 @@ void  InsertPrecipitatePhases::place_precipitates()
     }
   }
 
-  notify("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
 
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
@@ -548,7 +547,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(iteration%100 == 0) notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
 
 //    change1 = 0;
 //    change2 = 0;
@@ -1169,7 +1168,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
 void InsertPrecipitatePhases::assign_voxels()
 {
-  notify("Assigning Voxels", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Assigning Voxels", 0, Observable::UpdateProgressMessage);
 
   DataContainer* m = getDataContainer();
   int index;
@@ -1344,7 +1343,7 @@ void InsertPrecipitatePhases::assign_voxels()
 
 void InsertPrecipitatePhases::assign_gaps()
 {
-  notify("Assigning Gaps", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Assigning Gaps", 0, Observable::UpdateProgressMessage);
 
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->getTotalPoints();
@@ -1531,7 +1530,7 @@ void InsertPrecipitatePhases::assign_gaps()
 }
 void InsertPrecipitatePhases::cleanup_grains()
 {
-  notify("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
 
   DataContainer* m = getDataContainer();
 

@@ -55,7 +55,9 @@ m_PhaseTypes(NULL),
 m_Volumes(NULL),
 m_FieldEulerAngles(NULL),
 m_FieldPhases(NULL),
-m_SurfaceFields(NULL)
+m_SurfaceFields(NULL),
+m_CrystalStructures(NULL),
+m_StatsDataArray(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -88,28 +90,28 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -301)
   {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
+    setErrorCondition(0);
+    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+    find_grainphases->setObservers(this->getObservers());
+    find_grainphases->setDataContainer(getDataContainer());
+    if(preflight == true) find_grainphases->preflight();
+    if(preflight == false) find_grainphases->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3);
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
-	setErrorCondition(0);
-	FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-	find_surfacefields->setObservers(this->getObservers());
-	find_surfacefields->setDataContainer(getDataContainer());
-	if(preflight == true) find_surfacefields->preflight();
-	if(preflight == false) find_surfacefields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
+    setErrorCondition(0);
+    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+    find_surfacefields->setObservers(this->getObservers());
+    find_surfacefields->setDataContainer(getDataContainer());
+    if(preflight == true) find_surfacefields->preflight();
+    if(preflight == false) find_surfacefields->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1);
 
@@ -120,14 +122,11 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	StatsDataArray::Pointer p = StatsDataArray::New();
-	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    StatsDataArray::Pointer p = StatsDataArray::New();
+    m_StatsDataArray = p.get();
+    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
+    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
-
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -144,12 +143,12 @@ void FindODF::preflight()
 void FindODF::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -239,5 +238,5 @@ void FindODF::execute()
 	  }
   }
 
-  notify("FindODF Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("FindODF Completed", 0, Observable::UpdateProgressMessage);
 }

@@ -64,8 +64,9 @@ FileWriter::~FileWriter()
 int FileWriter::writeHeader()
 {
   setErrorCondition(-1);
-  setErrorMessage("FileWriter should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
+  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
+  addErrorMessage(em);
+  notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
 }
 
@@ -75,8 +76,9 @@ int FileWriter::writeHeader()
 int FileWriter::writeFile()
 {
   setErrorCondition(-1);
-  setErrorMessage("FileWriter should be subclassed and functionality implemented there");
-  notify(getErrorMessage(), 0, UpdateErrorMessage);
+  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
+  addErrorMessage(em);
+  notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
 }
 
@@ -88,8 +90,9 @@ void FileWriter::execute()
   if (getDataContainer() == NULL)
   {
     setErrorCondition(-1);
-    setErrorMessage("The DataContainer Object was NOT set correctly.");
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
+    addErrorMessage(em);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
   setErrorCondition(0);
@@ -100,8 +103,9 @@ void FileWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
-      setErrorMessage(ss.str());
+      ss << ": Error creating parent path '" << parentPath << "'";
+      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(em);
       setErrorCondition(-1);
       return;
   }
@@ -111,17 +115,19 @@ void FileWriter::execute()
   int err = writeHeader();
   if (err < 0)
   {
-    setErrorMessage("Error Writing the Header portion of the file");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Writing the Header portion of the file", err);
+  addErrorMessage(em);
     setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
   err = writeFile();
   if (err < 0)
   {
-    setErrorMessage("Error Writing the file");
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Writing the file", err);
+  addErrorMessage(em);
     setErrorCondition(err);
-    notify(getErrorMessage(), 0, UpdateErrorMessage);
+    notifyMessage(em, 0, UpdateErrorMessage);
     return;
   }
 }

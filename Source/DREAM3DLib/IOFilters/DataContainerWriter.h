@@ -143,7 +143,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
         {
           setErrorCondition(err);
           std::stringstream ss;
-          ss << getNameOfClass() << ": Error writing Ensemble data set '" << label << "'";
+          ss << ": Error writing Ensemble data set '" << label << "'";
         }
       }
 

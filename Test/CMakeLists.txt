@@ -87,6 +87,13 @@ add_test(MXAFileSystemPathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MXAFileSystemPa
 #add_test(StatsDataTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsDataTest)
 
 # --------------------------------------------------------------------------
+# ErrorMessageTest
+# --------------------------------------------------------------------------
+add_executable(ErrorMessageTest ErrorMessageTest.cpp )
+target_link_libraries(ErrorMessageTest DREAM3DLib)
+add_test(ErrorMessageTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ErrorMessageTest)
+
+# --------------------------------------------------------------------------
 # DataContainer Test
 # --------------------------------------------------------------------------
 add_executable(DataContainerTest DataContainerTest.cpp )

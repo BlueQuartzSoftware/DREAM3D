@@ -168,7 +168,6 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
 
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -186,12 +185,12 @@ void EBSDSegmentGrains::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -260,7 +259,7 @@ void EBSDSegmentGrains::execute()
 
 
   // If there is an error set this to something negative and also set a message
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
 }
 
 
@@ -275,8 +274,8 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return -1;
   }
 

@@ -242,8 +242,6 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, int32_t, Int32ArrayType, 0, voxels, 3);
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, float, FloatArrayType, 0, voxels, 3);
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -260,12 +258,12 @@ void FindEuclideanDistMap::preflight()
 void FindEuclideanDistMap::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -277,7 +275,7 @@ void FindEuclideanDistMap::execute()
   }
 
   find_euclideandistmap();
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
 }
 
 

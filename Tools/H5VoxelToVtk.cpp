@@ -146,7 +146,7 @@ int main(int argc, char **argv)
   if (err < 0)
   {
     setErrorCondition(err);
-    setErrorMessage(h5Reader->getErrorMessage());
+ //   addErrorMessages(h5Reader->getErrorMessages());
     return EXIT_FAILURE;
   }
   m->getDimensions(dcDims);

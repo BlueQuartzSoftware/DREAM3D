@@ -141,7 +141,7 @@ void InitializeSyntheticVolume::writeFilterOptions(AbstractFilterOptionsWriter* 
 }
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-if (m_##var <= 0) { ss << getNameOfClass() << ":" <<  #var << " must be a value > 0\n"; setErrorCondition(errCond); }
+if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; setErrorCondition(errCond); }
 
 // -----------------------------------------------------------------------------
 //
@@ -158,8 +158,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if(m_InputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The intput file must be set before executing this filter.\n";
+    ss << ": The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
+    addErrorMessage(getNameOfClass(), ss.str(), -800);
   }
 
   INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
@@ -174,10 +175,11 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   addRequiredEnsembleData(DREAM3D::EnsembleData::ShapeTypes);
   if (m_ShapeTypes.get() ==  NULL || m_ShapeTypes->GetNumberOfTuples() == 0)
   {
-    ss << getNameOfClass() << ": No ShapeTypes have been set and a shape type for each phase.\n";
+    ss << ": No ShapeTypes have been set and a shape type for each phase.\n";
     setErrorCondition(-801);
+    addErrorMessage(getNameOfClass(), ss.str(), -801);
   }
-  setErrorMessage(ss.str());
+
 }
 
 // -----------------------------------------------------------------------------
@@ -210,12 +212,12 @@ void InitializeSyntheticVolume::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -243,6 +245,6 @@ void InitializeSyntheticVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("InitializeSyntheticVolume Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("InitializeSyntheticVolume Complete", 0, Observable::UpdateProgressMessage);
 }
 

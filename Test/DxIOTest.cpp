@@ -57,8 +57,8 @@ class GenerateGrainIds : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
     DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
 
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual ~GenerateGrainIds(){};
     virtual const std::string getGroupName()
@@ -77,8 +77,8 @@ class GenerateGrainIds : public AbstractFilter
       {
         setErrorCondition(-1);
         std::stringstream ss;
-        ss << getNameOfClass() << " DataContainer was NULL";
-        setErrorMessage(ss.str());
+        ss << " DataContainer was NULL";
+        addErrorMessage(getNameOfClass(), ss.str(), -1);
         return;
       }
       int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
@@ -119,8 +119,6 @@ class GenerateGrainIds : public AbstractFilter
       std::stringstream ss;
       DataContainer* m = getDataContainer();
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
-
-      setErrorMessage(ss.str());
     }
 
     GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented

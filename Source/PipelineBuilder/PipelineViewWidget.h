@@ -41,8 +41,14 @@
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTextEdit>
+#include <QtGui/QTableWidget>
 
 #include "PipelineBuilder/QFilterWidget.h"
+#include "DREAM3DLib/Common/ErrorMessage.h"
+
+#include <vector>
+
+#include "DREAM3DLib/Common/ErrorMessage.h"
 
 
 /*
@@ -60,7 +66,8 @@ class PipelineViewWidget : public QFrame
     QFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
     QFilterWidget* addFilter(QString filterName, int index =-1);
-    void setErrorsTextArea(QTextEdit* t);
+
+    void setErrorsTextArea(QTableWidget* t);
     void newEmptyPipelineViewLayout();
     void resetLayout();
 
@@ -72,7 +79,7 @@ class PipelineViewWidget : public QFrame
 
     // Slots for the pipeline to communicate back to us
   public slots:
-    void preflightErrorMessage(const QString &str);
+    void preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream);
 
 
   signals:
@@ -92,8 +99,10 @@ class PipelineViewWidget : public QFrame
     QFilterWidget*            m_FilterBeingDragged;
     int                       m_DropIndex;
     QStringList               m_PipelineErrorList;
-    QTextEdit*                m_ErrorsArea;
     QLabel*                   m_EmptyPipelineLabel;
+    QTableWidget*                       errorTableWidget;
+    std::vector<ErrorMessage::Pointer>       errorStream;
+
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented

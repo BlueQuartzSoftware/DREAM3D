@@ -279,7 +279,7 @@ void PipelineBuilderWidget::setupGui()
   }
   library->setExpanded(true);
 
-  m_PipelineViewWidget->setErrorsTextArea(errorsTextEdit);
+  m_PipelineViewWidget->setErrorsTextArea(tableWidget);
 
   m_DocErrorTabsIsOpen = false;
 
@@ -310,7 +310,6 @@ void PipelineBuilderWidget::setupGui()
       "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
   presetMap["Statistics"] = presetFilterList;
   }
-
 }
 
 

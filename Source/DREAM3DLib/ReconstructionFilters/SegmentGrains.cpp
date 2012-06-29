@@ -84,7 +84,6 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   setErrorCondition(0);
   std::stringstream ss;
 
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -106,9 +105,8 @@ void SegmentGrains::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   // int64_t totalPoints = m->getTotalPoints();
@@ -182,12 +180,12 @@ void SegmentGrains::execute()
       gnum++;
       ss.str("");
       ss << "Total Grains: " << gnum;
-      if(gnum%100 == 0) notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      if(gnum%100 == 0) notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     }
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyProgress("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------

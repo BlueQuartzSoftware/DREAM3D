@@ -128,14 +128,15 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
 
   if(m_InputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The input file must be set before executing this filter.";
-    setErrorMessage(ss.str());
+    ss << ": The input file must be set before executing this filter.";
+    addErrorMessage(getNameOfClass(), ss.str(), 1);
     setErrorCondition(-1);
   }
   else if (MXAFileInfo::exists(m_InputFile) == false)
   {
-    ss << getNameOfClass() << ": The input file does not exist.";
-    setErrorMessage(ss.str());
+    ss << ": The input file does not exist.";
+    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(em);
     setErrorCondition(-1);
   }
   else
@@ -162,7 +163,7 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
 
   if(m_InputFile.empty() == true)
   {
-    setErrorMessage("DataContainerReader Error; Filename was empty");
+    addErrorMessage(getNameOfClass(), "DataContainerReader Error; Filename was empty", -1);
     return -1;
   }
   std::stringstream ss;
@@ -171,9 +172,9 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
   if(fileId < 0)
   {
     ss.str("");
-    ss << getNameOfClass() << ": Error opening input file '" << m_InputFile << "'";
+    ss <<": Error opening input file '" << m_InputFile << "'";
     setErrorCondition(-150);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return -1;
   }
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
@@ -181,9 +182,9 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
   {
     err = H5Utilities::closeFile(fileId);
     ss.str("");
-    ss << getNameOfClass() << ": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
+    ss <<": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
     setErrorCondition(-150);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -150);
     return -1;
   }
 
@@ -204,8 +205,8 @@ void DataContainerReader::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss <<" DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -232,7 +233,7 @@ void DataContainerReader::execute()
   err = gatherData(false);
 
   setErrorCondition(err);
-  notify("Complete", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -243,7 +244,8 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
   int err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
    if(err < 0)
    {
-     setErrorMessage("DataContainerReader Error Reading the Dimensions");
+     ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "DataContainerReader Error Reading the Dimensions", err);
+  addErrorMessage(em);
      setErrorCondition(-151);
      return -1;
    }
@@ -251,7 +253,8 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
    err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
    if(err < 0)
    {
-     setErrorMessage("DataContainerReader Error Reading the Spacing (Resolution)");
+     ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
+  addErrorMessage(em);
      setErrorCondition(-152);
      return -1;
    }
@@ -259,7 +262,8 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
    err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
    if(err < 0)
    {
-     setErrorMessage("DataContainerReader Error Reading the Origin");
+     ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "DataContainerReader Error Reading the Origin", err);
+  addErrorMessage(em);
      setErrorCondition(-153);
      return -1;
    }
@@ -282,9 +286,9 @@ int DataContainerReader::gatherData(bool preflight)
   if(fileId < 0)
   {
     ss.str("");
-    ss << getNameOfClass() << ": Error opening input file '" << m_InputFile << "'";
+    ss <<": Error opening input file '" << m_InputFile << "'";
     setErrorCondition(-150);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     return -1;
   }
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
@@ -292,9 +296,9 @@ int DataContainerReader::gatherData(bool preflight)
   {
     err = H5Utilities::closeFile(fileId);
     ss.str("");
-    ss << getNameOfClass() << ": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
+    ss <<": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
     setErrorCondition(-150);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     return -1;
   }
 
@@ -368,7 +372,7 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
     ss.str("");
     ss << "Error opening HDF5 Group " << groupName << std::endl;
     setErrorCondition(-154);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     return -154;
   }
 

@@ -123,11 +123,12 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
   {
-    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    ss << ": The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
   }
 
-  setErrorMessage(ss.str());
+
 }
 
 
@@ -150,8 +151,8 @@ void AlignSections::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -195,7 +196,7 @@ void AlignSections::execute()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
-   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
+   // notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     slice = (dims[2] - 1) - i;
     for (DimType l = 0; l < dims[1]; l++)
     {
@@ -231,7 +232,7 @@ void AlignSections::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
 }
 
 

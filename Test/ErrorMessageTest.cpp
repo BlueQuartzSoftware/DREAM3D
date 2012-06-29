@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,49 +34,21 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindNumFields.h"
+#include <string>
 
-#include <sstream>
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/ErrorMessage.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FindNumFields::FindNumFields() :
-AbstractFilter(),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
-m_FieldPhases(NULL),
-m_NumFields(NULL)
-{
-
-}
+#include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNumFields::~FindNumFields()
-{
-}
-// -----------------------------------------------------------------------------
-void FindNumFields::writeFilterOptions(AbstractFilterOptionsWriter* writer)
-{
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void RemoveTestFiles()
 {
 
-  setErrorCondition(0);
-  std::stringstream ss;
-  DataContainer* m = getDataContainer();
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
 }
 
 
@@ -84,48 +56,43 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNumFields::preflight()
+void TestErrorMessage()
 {
-  dataCheck(true, 1, 1, 1);
+  ErrorMessage::Pointer e0 = ErrorMessage::New();
+
+  std::string a0("Some Class Name");
+  std::string a1("Description");
+  int eCode = -10;
+  ErrorMessage::Pointer e1 = ErrorMessage::New();
+
+
+  ErrorMessage::Pointer e2 = ErrorMessage::New(a0, a1, eCode);
+
+  AbstractFilter::Pointer f = AbstractFilter::New();
+  f->addErrorMessage(a0, a1, eCode);
+  f->addErrorMessage("Some Other Class", "A description", -10);
+
+
 }
 
 // -----------------------------------------------------------------------------
-//
+//  Use test framework
 // -----------------------------------------------------------------------------
-void FindNumFields::execute()
+int main(int argc, char **argv)
 {
-  setErrorCondition(0);
-  DataContainer* m = getDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
-    return;
-  }
-  setErrorCondition(0);
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+  int err = EXIT_SUCCESS;
 
-  for(size_t i = 1; i < totalEnsembles; i++)
-  {
-    m_NumFields[i] = 0;
-  }
-  for(size_t i = 1; i < totalFields; i++)
-  {
-    m_NumFields[m_FieldPhases[i]]++;
-  }
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
+  DREAM3D_REGISTER_TEST( TestErrorMessage() );
 
-  std::stringstream ss;
-  ss.str("");
-  ss << " - Complete";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+#if REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+#endif
+  PRINT_TEST_SUMMARY();
+  return err;
 }
+
+
