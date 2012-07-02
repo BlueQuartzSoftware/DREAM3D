@@ -169,7 +169,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
         err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
         if (err >= 0)
         {
-          m_NumPhases = names.size();
+          m_NumPhases = static_cast<int>( names.size() );
         }
         H5Gclose(phasesGid);
       }

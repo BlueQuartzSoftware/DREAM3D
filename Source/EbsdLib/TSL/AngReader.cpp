@@ -569,11 +569,11 @@ void AngReader::transformData()
 	   {
 		   if (p1[i] - M_PI_2 < 0.0f)
 		   {
-			  p1[i] = p1[i] + M_PI_2*3.0f;
+			  p1[i] = static_cast<float>( p1[i] + M_PI_2*3.0f );
 		   }
 		   else
 		   {
-			  p1[i] = p1[i] - M_PI_2;
+			  p1[i] = static_cast<float>( p1[i] - M_PI_2 );
 		   }
 	   }
        shuffleTable[(row*xCells)+col] = offset;

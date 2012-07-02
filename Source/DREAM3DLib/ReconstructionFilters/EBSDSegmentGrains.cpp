@@ -54,7 +54,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\
@@ -224,7 +224,7 @@ void EBSDSegmentGrains::execute()
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
     Generator numberGenerator(generator, distribution);
-    generator.seed(MXA::getMilliSeconds()); // seed with the current time
+    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
@@ -292,7 +292,7 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
   randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
   while (seed == -1 && counter < totalPoints)
   {
-      if (randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
+      if (randpoint > totalPMinus1) randpoint = static_cast<int>( randpoint - totalPoints );
       if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) seed = randpoint;
       randpoint++;
       counter++;

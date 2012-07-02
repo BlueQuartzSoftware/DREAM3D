@@ -215,7 +215,7 @@ void  EstablishMatrixPhase::establish_matrix()
   {
 	  if(m_GrainIds[i] <= 0)
 	  {
-		random = rg.genrand_res53();
+		random = static_cast<float>( rg.genrand_res53() );
 		j = 0;
 		while(random > matrixphasefractions[j])
 		{

@@ -357,7 +357,7 @@ void FilterPipeline::execute()
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
     progress = progress + 1.0f;
-    pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);
+    pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
     ss.str("");
     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
     pipelineProgressMessage(ss.str());

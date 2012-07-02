@@ -292,7 +292,7 @@ void FindNeighborhoods::find_neighborhoods()
 	  if(m_BiasedFields[i] == false)
 	  {
 		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
-		values[m_FieldPhases[i]][bin].push_back(m_Neighborhoods[i]);
+		values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
 	  }
   }
   for (size_t i = 1; i < numensembles; i++)

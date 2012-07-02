@@ -53,7 +53,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\
@@ -304,7 +304,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 			  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
 			  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
 			  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
-			  w = 180.0*acosf(w)/m_pi;
+			  w = 180.0f*acosf(w)/m_pi;
               if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
               {
                 newnumbers[neigh] = i;

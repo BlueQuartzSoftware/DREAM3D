@@ -57,7 +57,7 @@
 
 using namespace std;
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -194,7 +194,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
   //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
-    slice = (dims[2] - 1) - iter;
+    slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
     oldyshift = -1;
     newxshift = 0;
@@ -225,8 +225,8 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
               {
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
-                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
-                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
+                  refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
+                  curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
 	              count++;
                 }

@@ -342,7 +342,7 @@ void MatchCrystallography::assign_eulers()
         threshold = ((float)i / totalFields) * 100.0f;
       }
     }
-    random = rg.genrand_res53();
+    random = static_cast<float>( rg.genrand_res53() );
     choose = 0;
     totaldensity = 0;
     phase = m_FieldPhases[i];
@@ -481,7 +481,7 @@ void MatchCrystallography::matchCrystallography()
       }
       iterations++;
       badtrycount++;
-      random = rg.genrand_res53();
+      random = static_cast<float>( rg.genrand_res53() );
 
       if(random < 0.5) // SwapOutOrientation
       {
@@ -507,7 +507,7 @@ void MatchCrystallography::matchCrystallography()
 			OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
 			int phase = m_FieldPhases[selectedgrain1];
 			g1odfbin = m_OrientationOps[m_CrystalStructures[phase]]->getOdfBin(r1, r2, r3);
-			random = rg.genrand_res53();
+			random = static_cast<float>( rg.genrand_res53() );
 			int choose = 0;
 			totaldensity = 0;
 			for (int i = 0; i < numbins; i++)

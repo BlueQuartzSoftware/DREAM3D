@@ -57,7 +57,7 @@
 
 
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 #define NEW_SHARED_ARRAY(var, type, size)\
   boost::shared_array<type> var##Array(new type[size]);\
@@ -271,7 +271,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
   //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
-    slice = (dims[2] - 1) - iter;
+    slice = static_cast<int>( (dims[2] - 1) - iter );
     graincount1 = graincounts[slice];
     graincount2 = graincounts[slice + 1];
     mutualinfo12 = new float *[graincount1];
@@ -318,8 +318,8 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
               {
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
-                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
-                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
+                  refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
+                  curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   refgnum = m_GrainIds[refposition];
                   curgnum = m_GrainIds[curposition];
                   if(curgnum >= 0 && refgnum >= 0)
@@ -371,7 +371,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
                   mutualinfo2[c] = 0;
                 }
             }
-            disorientation = 1.0 / disorientation;
+            disorientation = static_cast<float>( 1.0 / disorientation );
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
             if(disorientation < mindisorientation)
             {
@@ -485,7 +485,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
           z = slice;
           if(x > dims[0] - 1) x = x - dims[0];
           if(y > dims[1] - 1) y = y - dims[1];
-          point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
+          point = static_cast<int>( (z * dims[0] * dims[1]) + (y * dims[0]) + x );
           if(m_GoodVoxels[point] == true && m_GrainIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
@@ -515,7 +515,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
           for (int i = 0; i < 4; i++)
           {
             good = 1;
-            neighbor = currentpoint + neighpoints[i];
+            neighbor = static_cast<int>( currentpoint + neighpoints[i] );
             if((i == 0) && row == 0) good = 0;
             if((i == 3) && row == (dims[1] - 1)) good = 0;
             if((i == 1) && col == 0) good = 0;

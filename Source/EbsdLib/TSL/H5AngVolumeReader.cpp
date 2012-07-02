@@ -254,8 +254,8 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     float* fitPtr = reader->getFitPointer();
 
 
-    xpointstemp = xpoints;
-    ypointstemp = ypoints;
+    xpointstemp = static_cast<int>(xpoints);
+    ypointstemp = static_cast<int>(ypoints);
     xstartspot = (xpointstemp - xpointsslice) / 2;
     ystartspot = (ypointstemp - ypointsslice) / 2;
     xstop = xpointsslice;
@@ -267,7 +267,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
       ZDir = getStackingOrder();
     }
     if(ZDir == Ebsd::LowtoHigh) zval = slice;
-    if(ZDir == Ebsd::HightoLow) zval = (zpoints - 1) - slice;
+    if(ZDir == Ebsd::HightoLow) zval = static_cast<int>( (zpoints - 1) - slice );
 
     // Copy the data from the current storage into the ReconstructionFunc Storage Location
     for (int j = 0; j < ystop; j++)
