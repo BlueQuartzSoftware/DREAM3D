@@ -32,7 +32,14 @@
 
 #include <string>
 
+
+
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#if defined(QT_CORE_LIB)
+#include <QtCore/QMetaType>
+#endif
+
 /**
  * @class ErrorMessage ErrorMessage.h DREAM3DLib/Common/ErrorMessage.h
  * @brief
@@ -45,6 +52,25 @@ class ErrorMessage
   public:
 
     DREAM3D_SHARED_POINTERS(ErrorMessage)
+
+    ErrorMessage() {}
+
+    explicit ErrorMessage(const ErrorMessage& rhs)
+    {
+
+    }
+    void operator=(const ErrorMessage& rhs)
+    {
+
+    }
+
+    ErrorMessage(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) :
+      m_filterName(m_filterName),
+      m_errorDescription(m_errorDescription),
+      m_errorCode(m_errorCode)
+  {}
+
+
     DREAM3D_STATIC_NEW_MACRO(ErrorMessage)
 
     static Pointer New(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) {
@@ -55,6 +81,7 @@ class ErrorMessage
     DREAM3D_TYPE_MACRO(ErrorMessage)
 
     virtual ~ErrorMessage() {}
+
     /**
      * @brief
      * @return
@@ -92,21 +119,20 @@ class ErrorMessage
      }
 
   protected:
-    ErrorMessage() {}
-    ErrorMessage(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) :
-      m_filterName(m_filterName),
-      m_errorDescription(m_errorDescription),
-      m_errorCode(m_errorCode)
-  {}
-      
+
+
 
   private:
     std::string m_filterName;
     std::string m_errorDescription;
     int m_errorCode;
 
-    ErrorMessage(const ErrorMessage&); // Copy Constructor Not Implemented
-    void operator=(const ErrorMessage&); // Operator '=' Not Implemented
+
 };
+
+#if defined(QT_CORE_LIB)
+// insert the custom custom Qt signal/slot macro dohicky thingie here
+Q_DECLARE_METATYPE(ErrorMessage);
+#endif
 
 #endif /* _ErrorMessage_H */
