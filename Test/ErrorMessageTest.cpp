@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -58,15 +58,15 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void TestErrorMessage()
 {
-  ErrorMessage::Pointer e0 = ErrorMessage::New();
+  PipelineMessage::Pointer e0 = PipelineMessage::New();
 
   std::string a0("Some Class Name");
   std::string a1("Description");
   int eCode = -10;
-  ErrorMessage::Pointer e1 = ErrorMessage::New();
+  PipelineMessage::Pointer e1 = PipelineMessage::New();
 
 
-  ErrorMessage::Pointer e2 = ErrorMessage::New(a0, a1, eCode);
+  PipelineMessage::Pointer e2 = PipelineMessage::New(a0, a1, eCode);
 
   AbstractFilter::Pointer f = AbstractFilter::New();
   f->addErrorMessage(a0, a1, eCode);

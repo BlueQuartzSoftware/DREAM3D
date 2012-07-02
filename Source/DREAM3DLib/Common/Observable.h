@@ -36,7 +36,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 
 class Observer;
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT Observable
     virtual void notifyProgress(const std::string &msg, int progress, ObserverAspect a);
 
 
-    virtual void notifyMessage(ErrorMessage::Pointer msg, int progress, ObserverAspect a);
+    virtual void notifyMessage(PipelineMessage::Pointer msg, int progress, ObserverAspect a);
     //virtual void notfiyMessage(std::vector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a);
 
 

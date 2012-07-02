@@ -37,7 +37,7 @@
 #include "H5VoxelReader.h"
 
 #include <limits>
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -79,7 +79,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   err = H5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Dimensions", err);
+    PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Dimensions", err);
   addErrorMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
@@ -88,7 +88,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   err = H5Lite::readPointerDataset(reconGid, H5_SPACING, spacing);
   if(err < 0)
   {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Spacing (Resolution)", err);
+    PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Spacing (Resolution)", err);
     err = H5Gclose(reconGid);
   addErrorMessage(em);
     err = H5Fclose(fileId);
@@ -98,7 +98,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
   err = H5Lite::readPointerDataset(reconGid, H5_ORIGIN, origin);
   if(err < 0)
   {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Origin", err);
+    PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "H5ReconVolumeReader Error Reading the Origin", err);
   addErrorMessage(em);
     err = H5Gclose(reconGid);
     err = H5Fclose(fileId);
@@ -200,7 +200,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
 #if   (CMP_SIZEOF_SSIZE_T==4)
   if (totalpoints * 3 > static_cast<int64_t>(std::numeric_limits<size_t>::max()) )
   {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Trying to read more data than this architecture can handle.", XXXX);
+    PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "Trying to read more data than this architecture can handle.", XXXX);
   addErrorMessage(em);
     return -400;
   }

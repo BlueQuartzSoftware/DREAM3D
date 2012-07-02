@@ -155,7 +155,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   herr_t err = -1;
   setCancel(false);
   setErrorCondition(false);
-  setErrorMessage("");
+  setPipelineMessage("");
 
 //  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
   AngReader reader;
@@ -187,7 +187,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     {
       ss << "H5AngImporter Error: Unknown error.";
     }
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
@@ -200,7 +200,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     std::ostringstream ss;
     ss << "H5AngImporter Error: A Group for Z index " << z << " could not be created."
          << " Please check other error messages from the HDF5 library for possible reasons.";
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-500);
     return -1;
   }
@@ -213,7 +213,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
          << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-600);
     return -1;
   }
@@ -258,7 +258,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
          << " Please check other error messages from the HDF5 library for possible reasons."<< std::endl;
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-700);
     return -1;
   }

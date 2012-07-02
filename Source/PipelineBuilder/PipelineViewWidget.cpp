@@ -49,7 +49,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 
@@ -299,7 +299,7 @@ void PipelineViewWidget::preflightPipeline()
       filter->setDataContainer(m.get());
       filter->preflight();
       int err = filter->getErrorCondition();
-      std::vector<ErrorMessage::Pointer> msgs = filter->getErrorMessages();
+      std::vector<PipelineMessage::Pointer> msgs = filter->getErrorMessages();
       if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
@@ -314,13 +314,13 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream)
+void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage::Pointer> errorStream)
 {
   if(NULL != errorTableWidget)
   {
     int rc = errorTableWidget->rowCount();
 
-    for (std::vector<ErrorMessage::Pointer>::size_type i = 0; i < errorStream.size(); ++i)
+    for (std::vector<PipelineMessage::Pointer>::size_type i = 0; i < errorStream.size(); ++i)
     {
       errorTableWidget->insertRow(rc);
 

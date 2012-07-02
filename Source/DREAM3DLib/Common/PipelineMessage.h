@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ERRORMESSAGE_H_
-#define _ERRORMESSAGE_H_
+#ifndef _PIPELINEMESSAGE_H_
+#define _PIPELINEMESSAGE_H_
 
 #include <string>
 
@@ -41,46 +41,46 @@
 #endif
 
 /**
- * @class ErrorMessage ErrorMessage.h DREAM3DLib/Common/ErrorMessage.h
+ * @class PipelineMessage PipelineMessage.h DREAM3DLib/Common/PipelineMessage.h
  * @brief
  * @author Joey Kleingers (SOCHE)
  * @date Jun 21, 2012
  * @version 1.0
  */
-class ErrorMessage
+class PipelineMessage
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(ErrorMessage)
+    DREAM3D_SHARED_POINTERS(PipelineMessage)
 
-    ErrorMessage() {}
+    PipelineMessage() {}
 
-    explicit ErrorMessage(const ErrorMessage& rhs)
+    explicit PipelineMessage(const PipelineMessage& rhs)
     {
 
     }
-    void operator=(const ErrorMessage& rhs)
+    void operator=(const PipelineMessage& rhs)
     {
 
     }
 
-    ErrorMessage(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) :
+    PipelineMessage(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) :
       m_filterName(m_filterName),
       m_errorDescription(m_errorDescription),
       m_errorCode(m_errorCode)
   {}
 
 
-    DREAM3D_STATIC_NEW_MACRO(ErrorMessage)
+    DREAM3D_STATIC_NEW_MACRO(PipelineMessage)
 
     static Pointer New(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) {
-      Pointer sharedPtr(new ErrorMessage(m_filterName, m_errorDescription, m_errorCode));
+      Pointer sharedPtr(new PipelineMessage(m_filterName, m_errorDescription, m_errorCode));
       return sharedPtr;
     }
 
-    DREAM3D_TYPE_MACRO(ErrorMessage)
+    DREAM3D_TYPE_MACRO(PipelineMessage)
 
-    virtual ~ErrorMessage() {}
+    virtual ~PipelineMessage() {}
 
     /**
      * @brief
@@ -131,8 +131,7 @@ class ErrorMessage
 };
 
 #if defined(QT_CORE_LIB)
-// insert the custom custom Qt signal/slot macro dohicky thingie here
-Q_DECLARE_METATYPE(ErrorMessage);
+  Q_DECLARE_METATYPE(PipelineMessage);
 #endif
 
-#endif /* _ErrorMessage_H */
+#endif /* _PipelineMessage_H */

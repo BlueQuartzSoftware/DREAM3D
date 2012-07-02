@@ -22,7 +22,6 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/ErrorMessage.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
@@ -32,6 +31,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
 #  ${DREAM3DLib_SOURCE_DIR}/Common/PreFlightArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.h
