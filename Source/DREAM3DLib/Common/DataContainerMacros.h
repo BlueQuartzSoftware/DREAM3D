@@ -36,16 +36,33 @@
 #ifndef _DATACONTAINERMACROS_H_
 #define _DATACONTAINERMACROS_H_
 
+
+#define TEST_PREREQ_DATA( dc, NameSpace, DType, Name, errVariable, errCode, ptrType, ArrayType, size, NumComp)\
+  {if (m_##Name##ArrayName.empty() == true){ \
+    setErrorCondition(errCode##000);\
+    std::stringstream _##Name##_ss;\
+    _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
+    addErrorMessage(getNameOfClass(), _##Name##_ss.str(), errCode##000);\
+  }\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  if (NULL == m_##Name ) {\
+    errVariable = errCode;\
+  }}
+
+
+
 /**
  * @brief These are used in the filters to run checks on available arrays
  */
-
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(err##000);\
-  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
-  addErrorMessage(getNameOfClass(), ss.str(), err);}\
-  std::string _s(#Name); addRequired##DType(_s);\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
+  {if (m_##Name##ArrayName.empty() == true){ \
+    setErrorCondition(err##000);\
+    ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
+    addErrorMessage(getNameOfClass(), ss.str(), err);\
+  }\
+  std::string _s(#Name); \
+  addRequired##DType(_s);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
   if (NULL == m_##Name ) {\
     ss.str(""); ss << "\nFilter " << getNameOfClass() << " requires " << #DType << " array '" << \
     m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
@@ -54,11 +71,13 @@
   }}
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(-10000);\
-  ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; \
-  addErrorMessage(getNameOfClass(), ss.str(), -10000); }\
-  std::string _s(#Name); addCreated##DType(_s);\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  {if (m_##Name##ArrayName.empty() == true){\
+      setErrorCondition(-10000);\
+      ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; \
+      addErrorMessage(getNameOfClass(), ss.str(), -10000);\
+      }\
+      std::string _s(#Name); addCreated##DType(_s);\
+      m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
   if (NULL ==  m_##Name ) {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
     if (NULL == p.get()) {\
