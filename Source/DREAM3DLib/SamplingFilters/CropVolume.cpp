@@ -272,15 +272,14 @@ void CropVolume::execute()
     std::stringstream ss;
 
     // Find the unique set of grain ids
-    for (int64_t i = 0; i < totalFields; ++i)
+    for (size_t i = 0; i < totalFields; ++i)
     {
-		m_Active[i] = false;
-	}
+      m_Active[i] = false;
+    }
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-		m_Active[m_GrainIds[i]] = true;
-	}
-
+      m_Active[m_GrainIds[i]] = true;
+    }
 
     RenumberGrains::Pointer renum = RenumberGrains::New();
     renum->setDataContainer(m);

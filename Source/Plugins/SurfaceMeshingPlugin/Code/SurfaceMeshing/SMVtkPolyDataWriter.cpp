@@ -429,7 +429,7 @@ void SMVtkPolyDataWriter::execute()
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
-  fprintf(vtkFile, "POINTS %d float\n", nNodes);
+  fprintf(vtkFile, "POINTS %ld float\n", nNodes);
   unsigned char nodeData[32];
   float* vec3d = (float*)(&nodeData[8]);
 //  int* nodeId = (int*)(&nodeData[0]);
@@ -438,7 +438,7 @@ void SMVtkPolyDataWriter::execute()
   size_t totalWritten = 0;
   size_t nread = 0;
   // Write the POINTS data (Vertex)
-  for (int i = 0; i < nNodes; i++)
+  for (size_t i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of positions from the nodes file
     if(nread != 1)
@@ -475,7 +475,7 @@ void SMVtkPolyDataWriter::execute()
   }
   // Write the CELLS Data
   fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (int i = 0; i < nTriangles; i++)
+  for (size_t i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
     nread = fread(tData, sizeof(int), 6, triFile);
@@ -595,7 +595,7 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
     MXA::Endian::FromSystemToBig::convert<int>(swapped);
     data[i] = swapped;
   }
-  size_t totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
+  int totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
   fclose(nodesFile);
   if(totalWritten != nNodes)
   {
@@ -648,7 +648,7 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
 
-  int triangleCount = nTriangles;
+  size_t triangleCount = nTriangles;
   if(false == conformalMesh)
   {
     triangleCount = nTriangles * 2;

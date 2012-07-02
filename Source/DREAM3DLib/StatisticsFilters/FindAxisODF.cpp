@@ -48,24 +48,16 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FindAxisODF::FindAxisODF() :
-AbstractFilter(),
-m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_SurfaceFields(NULL),
-m_FieldPhases(NULL),
-m_AxisEulerAngles(NULL),
-m_PhaseTypes(NULL)
+    AbstractFilter(), m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles), m_FieldPhasesArrayName(DREAM3D::FieldData::Phases), m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields), m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes), m_SurfaceFields(NULL), m_FieldPhases(NULL), m_AxisEulerAngles(NULL), m_PhaseTypes(NULL)
 {
   m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
 
   m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_CubicOps.get()));
 
   m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
   setupFilterOptions();
 }
 // -----------------------------------------------------------------------------
@@ -91,24 +83,23 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
   if(getErrorCondition() == -302)
   {
-	setErrorCondition(0);
-	FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-	find_surfacefields->setObservers(this->getObservers());
-	find_surfacefields->setDataContainer(getDataContainer());
-	if(preflight == true) find_surfacefields->preflight();
-	if(preflight == false) find_surfacefields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+    setErrorCondition(0);
+    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+    find_surfacefields->setObservers(this->getObservers());
+    find_surfacefields->setDataContainer(getDataContainer());
+    if(preflight == true) find_surfacefields->preflight();
+    if(preflight == false) find_surfacefields->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
+  }GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   if(getErrorCondition() == -303)
   {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
+    setErrorCondition(0);
+    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+    find_grainphases->setObservers(this->getObservers());
+    find_grainphases->setDataContainer(getDataContainer());
+    if(preflight == true) find_grainphases->preflight();
+    if(preflight == false) find_grainphases->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
   }
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -116,10 +107,10 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	StatsDataArray::Pointer p = StatsDataArray::New();
-	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    StatsDataArray::Pointer p = StatsDataArray::New();
+    m_StatsDataArray = p.get();
+    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
+    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 }
 
@@ -128,7 +119,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 // -----------------------------------------------------------------------------
 void FindAxisODF::preflight()
 {
-  dataCheck(true, 1,1, 1);
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,10 +138,8 @@ void FindAxisODF::execute()
   }
   setErrorCondition(0);
 
-
-
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
@@ -158,8 +147,7 @@ void FindAxisODF::execute()
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
+  XTalType* crystruct = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
   float r1, r2, r3;
   int bin;
@@ -168,22 +156,22 @@ void FindAxisODF::execute()
   size_t numXTals = crystruct->GetNumberOfTuples();
   axisodf.resize(numXTals);
   totalaxes.resize(numXTals);
-  for(size_t i=1;i<numXTals;i++)
+  for (size_t i = 1; i < numXTals; i++)
   {
     totalaxes[i] = 0.0;
-	axisodf[i] = FloatArrayType::CreateArray((36*36*36), DREAM3D::HDF5::AxisOrientation);
+    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::HDF5::AxisOrientation);
     for (int j = 0; j < (36 * 36 * 36); j++)
     {
-		axisodf[i]->SetValue(j, 0.0);
+      axisodf[i]->SetValue(j, 0.0);
     }
   }
   size_t numgrains = m->getNumFieldTuples();
-  for (int i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
-    if (m_SurfaceFields[i] == false)
+    if(m_SurfaceFields[i] == false)
     {
       totalaxes[m_FieldPhases[i]]++;
-	}
+    }
   }
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -195,28 +183,28 @@ void FindAxisODF::execute()
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
-	  axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>( (1.0/totalaxes[m_FieldPhases[i]]) )));
+      axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));
     }
   }
- // int err;
-  for(size_t i=1;i<numXTals;i++)
+  // int err;
+  for (size_t i = 1; i < numXTals; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setAxisOrientation(axisodf[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setAxisOrientation(axisodf[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  tp->setAxisOrientation(axisodf[i]);
-	  }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->setAxisOrientation(axisodf[i]);
+    }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->setAxisOrientation(axisodf[i]);
+    }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    {
+      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      tp->setAxisOrientation(axisodf[i]);
+    }
   }
 
- notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+  notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
 }
