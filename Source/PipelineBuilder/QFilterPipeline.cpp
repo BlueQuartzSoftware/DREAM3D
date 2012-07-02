@@ -87,20 +87,17 @@ void QFilterPipeline::pipelineProgress(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineProgressMessage(ErrorMessage::Pointer msg)
+void QFilterPipeline::pipelineProgressMessage(const char* message)
 {
-  emit progressMessage(QString::fromStdString(msg->generateStatusString()));
+  emit progressMessage(QString(message));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineProgressMessage(std::vector<ErrorMessage::Pointer> &messages)
+void QFilterPipeline::pipelineProgressMessage(const std::string &msg)
 {
-  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
-  {
-    pipelineProgressMessage(*iter);
-  }
+  pipelineProgressMessage(msg.c_str());
 }
 
 // -----------------------------------------------------------------------------
@@ -108,7 +105,8 @@ void QFilterPipeline::pipelineProgressMessage(std::vector<ErrorMessage::Pointer>
 // -----------------------------------------------------------------------------
 void QFilterPipeline::pipelineWarningMessage(ErrorMessage::Pointer msg)
 {
-  emit warningMessage(QString::fromStdString(msg->generateStatusString()));
+  emit warningMessage( QString::fromStdString( (*msg).getFilterName() ), 
+      QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +125,8 @@ void QFilterPipeline::pipelineWarningMessage(std::vector<ErrorMessage::Pointer> 
 // -----------------------------------------------------------------------------
 void QFilterPipeline::pipelineErrorMessage(ErrorMessage::Pointer msg)
 {
-  emit errorMessage(QString::fromStdString(msg->generateStatusString()));
+  emit errorMessage( QString::fromStdString( (*msg).getFilterName() ), 
+      QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
 }
 
 // -----------------------------------------------------------------------------
@@ -139,6 +138,14 @@ void QFilterPipeline::pipelineErrorMessage(std::vector<ErrorMessage::Pointer> &m
   {
     pipelineErrorMessage(*iter);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterPipeline::pipelineFinished()
+{
+  emit finished();
 }
 
 // -----------------------------------------------------------------------------
@@ -159,5 +166,3 @@ void QFilterPipeline::run()
   setDataContainer(DataContainer::NullPointer()); // This _should_ clean up the memory as nothing else should have
   // a reference to the DataContainer
 }
-
-

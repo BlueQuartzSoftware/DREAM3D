@@ -79,8 +79,8 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineProgressMessage(ErrorMessage::Pointer msg);
-    virtual void pipelineProgressMessage(std::vector<ErrorMessage::Pointer> &messages);
+    virtual void pipelineProgressMessage(const char* message);
+    virtual void pipelineProgressMessage(const std::string &msg);
 
 
     /**
@@ -103,7 +103,7 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * @brief This method is called from the run() method just before exiting and
      * signals the end of the pipeline execution
      */
-    //virtual void pipelineFinished();
+    virtual void pipelineFinished();
 
 
 
@@ -112,8 +112,8 @@ class QFilterPipeline : public QObject, public FilterPipeline
      */
      signals:
        void progressMessage(const QString &message);
-       void warningMessage(const QString &message);
-       void errorMessage(const QString &message);
+       void warningMessage(QString warnName, QString warnDesc, int warnNum);
+       void errorMessage(QString errName, QString errDesc, int errNum);
        void updateProgress(int value);
        void finished();
 
