@@ -58,7 +58,7 @@ QFilterPipeline::~QFilterPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::updateProgressAndMessage(PipelineMessage::Pointer msg, int progress)
+void QFilterPipeline::updateProgressAndMessage(PipelineMessage msg, int progress)
 {
   emit updateProgress(progress);
   emit progressMessage(QString::fromStdString(msg->generateStatusString()));
@@ -67,9 +67,9 @@ void QFilterPipeline::updateProgressAndMessage(PipelineMessage::Pointer msg, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::updateProgressAndMessage(std::vector<PipelineMessage::Pointer> &messages, int progress)
+void QFilterPipeline::updateProgressAndMessage(std::vector<PipelineMessage> &messages, int progress)
 {
-  for (std::vector<PipelineMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
   {
     updateProgressAndMessage(*iter, progress);
   }
@@ -103,7 +103,7 @@ void QFilterPipeline::pipelineProgressMessage(const std::string &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineWarningMessage(PipelineMessage::Pointer msg)
+void QFilterPipeline::pipelineWarningMessage(PipelineMessage msg)
 {
   emit warningMessage( QString::fromStdString( (*msg).getFilterName() ), 
       QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
@@ -112,9 +112,9 @@ void QFilterPipeline::pipelineWarningMessage(PipelineMessage::Pointer msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineWarningMessage(std::vector<PipelineMessage::Pointer> &messages)
+void QFilterPipeline::pipelineWarningMessage(std::vector<PipelineMessage> &messages)
 {
-  for (std::vector<PipelineMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
   {
     pipelineWarningMessage(*iter);
   }
@@ -123,7 +123,7 @@ void QFilterPipeline::pipelineWarningMessage(std::vector<PipelineMessage::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineErrorMessage(PipelineMessage::Pointer msg)
+void QFilterPipeline::pipelineErrorMessage(PipelineMessage msg)
 {
   emit errorMessage( QString::fromStdString( (*msg).getFilterName() ), 
       QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
@@ -132,9 +132,9 @@ void QFilterPipeline::pipelineErrorMessage(PipelineMessage::Pointer msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineErrorMessage(std::vector<PipelineMessage::Pointer> &messages)
+void QFilterPipeline::pipelineErrorMessage(std::vector<PipelineMessage> &messages)
 {
-  for (std::vector<PipelineMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
   {
     pipelineErrorMessage(*iter);
   }

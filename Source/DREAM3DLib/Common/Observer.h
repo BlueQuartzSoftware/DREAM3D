@@ -85,16 +85,16 @@ class DREAM3DLib_EXPORT Observer
       * on a GUI or printed to a console or possibly saved to a log file
       * @param message
       */
-     virtual void pipelineWarningMessage(PipelineMessage::Pointer msg);
-     virtual void pipelineWarningMessage(std::vector<PipelineMessage::Pointer> messages);
+     virtual void pipelineWarningMessage(PipelineMessage msg);
+     virtual void pipelineWarningMessage(std::vector<PipelineMessage> messages);
 
      /**
       * @brief This message reports some human readable message suitable for display
       * on a GUI or printed to a console or possibly saved to a log file
       * @param message
       */
-     virtual void pipelineErrorMessage(PipelineMessage::Pointer msg);
-     virtual void pipelineErrorMessage(std::vector<PipelineMessage::Pointer> messages);
+     virtual void pipelineErrorMessage(PipelineMessage msg);
+     virtual void pipelineErrorMessage(std::vector<PipelineMessage> messages);
 
 
 

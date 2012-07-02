@@ -81,7 +81,7 @@ class PipelineViewWidget : public QFrame
 
     // Slots for the pipeline to communicate back to us
   public slots:
-    void preflightErrorMessage(std::vector<PipelineMessage::Pointer> errorStream);
+    void preflightErrorMessage(std::vector<PipelineMessage> errorStream);
 
 
   signals:
@@ -103,7 +103,7 @@ class PipelineViewWidget : public QFrame
     QStringList               m_PipelineErrorList;
     QLabel*                   m_EmptyPipelineLabel;
     QTableWidget*                       errorTableWidget;
-    std::vector<PipelineMessage::Pointer>       errorStream;
+    std::vector<PipelineMessage>       errorStream;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented

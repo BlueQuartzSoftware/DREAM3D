@@ -298,7 +298,7 @@ void PackPrimaryPhases::execute()
         ss << ": Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
         ss << "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[" << i << "] = " << m_PhaseTypes[i] <<  " does not match up ";
         ss << "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n";
-        PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), ss.str(), -666);
+        PipelineMessage em = PipelineMessage(getNameOfClass(), ss.str(), -666);
         addErrorMessage(em);
         setErrorCondition(-666);
         return;
@@ -659,7 +659,7 @@ void PackPrimaryPhases::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    addErrorMessages(renumber_grains->getErrorMessages());
+    addErrorMessages(renumber_grains->getPipelineMessages());
     return;
   }
 
@@ -678,7 +678,7 @@ int PackPrimaryPhases::writeVtkFile()
   if(outFile.is_open() == false)
   {
     std::cout << "m_VtkOutputFile: " << m_VtkOutputFile << std::endl;
-    PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "Could not open Vtk File for writing from PackGrains", -1);
+    PipelineMessage em = PipelineMessage(getNameOfClass(), "Could not open Vtk File for writing from PackGrains", -1);
     addErrorMessage(em);
     setErrorCondition(-55);
     return -1;

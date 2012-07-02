@@ -89,17 +89,17 @@ void Observer::pipelineProgressMessage(const char* message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineWarningMessage(PipelineMessage::Pointer msg)
+void Observer::pipelineWarningMessage(PipelineMessage msg)
 {
-  std::cout << "Warning - "<< msg->getFilterName() << "(" << msg->getErrorCode() << "):" << msg->getErrorDescription() << std::endl;
+  std::cout << "Warning - "<< msg.getFilterName() << "(" << msg.getErrorCode() << "):" << msg.getErrorDescription() << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineWarningMessage(std::vector<PipelineMessage::Pointer> messages)
+void Observer::pipelineWarningMessage(std::vector<PipelineMessage> messages)
 {
-  for (std::vector<PipelineMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
   {
     pipelineWarningMessage(*iter);
   }
@@ -108,17 +108,17 @@ void Observer::pipelineWarningMessage(std::vector<PipelineMessage::Pointer> mess
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineErrorMessage(PipelineMessage::Pointer msg)
+void Observer::pipelineErrorMessage(PipelineMessage msg)
 {
-  std::cout << "Error - "<< msg->getFilterName() << "(" << msg->getErrorCode() << "):" << msg->getErrorDescription() << std::endl;
+  std::cout << "Error - "<< msg.getFilterName() << "(" << msg.getErrorCode() << "):" << msg.getErrorDescription() << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineErrorMessage(std::vector<PipelineMessage::Pointer> messages)
+void Observer::pipelineErrorMessage(std::vector<PipelineMessage> messages)
 {
-  for (std::vector<PipelineMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
   {
     pipelineErrorMessage(*iter);
   }

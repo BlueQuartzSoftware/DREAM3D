@@ -286,7 +286,7 @@ void CropVolume::execute()
     renum->setObservers(getObservers());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
-    addErrorMessages(renum->getErrorMessages());
+    addErrorMessages(renum->getPipelineMessages());
   }
 
 
