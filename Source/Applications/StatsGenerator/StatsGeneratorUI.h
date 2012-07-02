@@ -60,7 +60,7 @@ class HelpDialog;
  */
 class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
 {
-Q_OBJECT    ;
+  Q_OBJECT
 
     public:
     StatsGeneratorUI(QWidget *parent = 0);

@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 6 Array
+     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float) // N x 6 Array
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
      virtual const std::string getHumanLabel() { return "Find Field Centroids"; }

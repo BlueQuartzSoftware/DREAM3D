@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -59,8 +59,8 @@
 class DefaultStatsPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(DefaultStatsPreset);
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset);
+    MXA_SHARED_POINTERS(DefaultStatsPreset)
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset)
     virtual ~DefaultStatsPreset();
 
 
@@ -77,7 +77,7 @@ class DefaultStatsPreset : public AbstractMicrostructurePreset
     void operator=(const DefaultStatsPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, "Default" );
+DECLARE_FACTORY_CLASS(DefaultStatsPresetFactory, DefaultStatsPreset, "Default" )
 
 
 #endif /* DEFAULTSTATSPRESET_H_ */

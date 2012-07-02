@@ -495,11 +495,11 @@ void PluginMaker::on_generateButton_clicked()
 QString PluginMaker::cleanName(QString name) {
   //Remove all uses of "Plugin", "plugin", "Filter", and "filter"
   QRegExp rx("Plugin|plugin|Filter|filter");
-  name.replace(rx, "");
+  name = name.replace(rx, "");
   //Remove all spaces and illegal characters from plugin name
-  name.trimmed();
-  name.remove(" ");
-  name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+  name = name.trimmed();
+  name = name.remove(" ");
+  name = name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
   return name;
 }
 
@@ -508,9 +508,9 @@ QString PluginMaker::cleanName(QString name) {
 // -----------------------------------------------------------------------------
 QString PluginMaker::cleanName_filters(QString name) {
   //Remove all spaces and illegal characters from plugin name
-  name.trimmed();
-  name.remove(" ");
-  name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+  name = name.trimmed();
+  name = name.remove(" ");
+  name = name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
   return name;
 }
 

@@ -41,7 +41,6 @@
 
 
 Q_EXPORT_PLUGIN2(MeshSmoothingPlugin, MeshSmoothingPlugin)
-;
 
 namespace Detail
 {

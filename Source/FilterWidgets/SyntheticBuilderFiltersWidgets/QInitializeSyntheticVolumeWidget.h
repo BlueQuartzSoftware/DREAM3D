@@ -56,7 +56,7 @@
  */
 class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInitializeSyntheticVolumeWidget
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     QInitializeSyntheticVolumeWidget(QWidget* parent = NULL);

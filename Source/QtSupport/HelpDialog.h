@@ -46,7 +46,7 @@
 
 class HelpDialog : public QDialog, private Ui::HelpDialog
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     HelpDialog(QWidget *parent = 0);

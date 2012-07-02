@@ -706,7 +706,7 @@ void CtfReader::transformData()
   size_t offset = 0;
   size_t yCells = getYCells();
   size_t xCells = getXCells();
-  size_t zCells = getZCells();
+  int zCells = getZCells();
   if (zCells < 0 || m_SingleSliceRead >= 0)
   {
     zCells = 1;
@@ -721,7 +721,7 @@ void CtfReader::transformData()
   int* intPtr = allocateArray<int>(rowsPerSlice);
   float* floatPtr = allocateArray<float>(rowsPerSlice);
 
-  for (size_t slice = 0; slice < zCells; ++slice)
+  for (int slice = 0; slice < zCells; ++slice)
   {
     for (size_t row = 0; row < yCells; ++row)
     {

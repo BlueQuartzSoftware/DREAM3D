@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);
+    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }

@@ -51,7 +51,6 @@ class QRecentFileList: public QObject
 {
 
   Q_OBJECT
-    ;
 
   public:
     QRecentFileList(QObject* parent = 0);

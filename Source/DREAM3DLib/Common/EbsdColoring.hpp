@@ -389,8 +389,8 @@ class EbsdColoring
 
 
   protected:
-    EbsdColoring() {};
-    ~EbsdColoring() {};
+    EbsdColoring() {}
+    ~EbsdColoring() {}
 
 
   private:

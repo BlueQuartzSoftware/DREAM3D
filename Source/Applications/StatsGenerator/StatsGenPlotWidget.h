@@ -63,7 +63,7 @@ namespace UIA
 class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
 
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
 

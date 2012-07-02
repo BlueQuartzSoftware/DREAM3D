@@ -51,7 +51,7 @@
  */
 class PoleFigureData : QObject
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     PoleFigureData()

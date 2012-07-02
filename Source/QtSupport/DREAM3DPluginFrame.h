@@ -60,7 +60,7 @@ class QLineEdit;
  */
 class DREAM3DPluginFrame : public QFrame
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     DREAM3DPluginFrame(QWidget *parent = NULL);

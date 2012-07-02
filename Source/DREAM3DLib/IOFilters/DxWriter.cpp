@@ -109,7 +109,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     setErrorCondition(-387);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------

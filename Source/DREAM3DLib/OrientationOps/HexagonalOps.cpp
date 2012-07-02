@@ -551,3 +551,4 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
 	if(schmid23 > schmidfactor) schmidfactor = schmid23, slipsys = 23;
 	if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
 }
+

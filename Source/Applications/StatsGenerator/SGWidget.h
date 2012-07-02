@@ -56,7 +56,7 @@ class QwtPlotMarker;
 class SGWidget : public QWidget
 {
 
-  Q_OBJECT ;
+  Q_OBJECT
 
   public:
     SGWidget(QWidget *parent = 0);
