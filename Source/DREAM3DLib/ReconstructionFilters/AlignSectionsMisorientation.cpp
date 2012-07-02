@@ -256,7 +256,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
   //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
     mindisorientation = 100000000;
-    slice = (dims[2] - 1) - iter;
+    slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
     oldyshift = -1;
     newxshift = 0;
@@ -287,8 +287,8 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
               {
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
-                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
-                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
+                  refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
+                  curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                   {
                       w = 10000.0;

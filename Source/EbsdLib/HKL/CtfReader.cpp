@@ -150,7 +150,7 @@ void CtfReader::setPointerByName(const std::string &name, void* p)
     // Data does not exist in Map
     size_t i = m_ColumnData.size();
     m_ColumnData.push_back(p);
-    m_NameIndexMap[name] = i;
+    m_NameIndexMap[name] = static_cast<int>(i);
     m_NamePointerMap[name] = m_ColumnData[i];
     if (m_DataParsers.size() <= i)
     {
@@ -392,7 +392,7 @@ int CtfReader::readData(std::ifstream &in)
     {
       return -1; // Could not allocate the memory
     }
-    m_NameIndexMap[tokens[i]] = i;
+    m_NameIndexMap[tokens[i]] = static_cast<int>(i);
     m_NamePointerMap[tokens[i]] = m_ColumnData[i];
     m_DataParsers[i] = getParser(tokens[i], m_ColumnData[i], totalDataRows);
   }

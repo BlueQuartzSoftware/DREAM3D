@@ -53,8 +53,8 @@
 
 	const float acos_neg_one = acosf(-1.0f);
 	const float acos_pos_one = acosf(1.0f);
-	const float sin_wmin_neg_1_over_2 = sinf(acos_neg_one/2.0);
-	const float sin_wmin_pos_1_over_2 = sinf(acos_pos_one/2.0);
+	const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(acos_neg_one/2.0) );
+	const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(acos_pos_one/2.0) );
   const float sin_of_acos_neg_1 = sinf(acos_neg_one);
   const float sin_of_acos_pos_1 = sinf(acos_pos_one);
 
@@ -187,7 +187,7 @@ void OrientationMath::_calcNearestQuat(const float quatsym[24][5], int numsym, f
   {
 //	OrientationMath::multiplyQuaternions(q2, quatsym[i], qc);
   MULT_QUAT(q2, quatsym[i], qc);
-    dist = 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
+    dist = static_cast<float>( 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3])) );
     if(dist < smallestdist)
     {
       smallestdist = dist;
@@ -260,13 +260,13 @@ int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float step[3], fl
   size_t miso1bin = size_t((r1+dim[0])/step[0]);
   size_t miso2bin = size_t((r2+dim[1])/step[1]);
   size_t miso3bin = size_t((r3+dim[2])/step[2]);
-  if(miso1bin >= bins[0]) miso1bin = bins[0]-1;
-  if(miso2bin >= bins[1]) miso2bin = bins[1]-1;
-  if(miso3bin >= bins[2]) miso3bin = bins[2]-1;
+  if(miso1bin >= bins[0]) miso1bin = static_cast<size_t>( bins[0]-1 );
+  if(miso2bin >= bins[1]) miso2bin = static_cast<size_t>( bins[1]-1 );
+  if(miso3bin >= bins[2]) miso3bin = static_cast<size_t>( bins[2]-1 );
   if(miso1bin < 0) miso1bin = 0;
   if(miso2bin < 0) miso2bin = 0;
   if(miso3bin < 0) miso3bin = 0;
-  return ((bins[0]*bins[1]*miso3bin)+(bins[0]*miso2bin)+miso1bin);
+  return (static_cast<int>( (bins[0]*bins[1]*miso3bin)+(bins[0]*miso2bin)+miso1bin ));
 }
 
 void OrientationMath::_calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3)
@@ -274,11 +274,11 @@ void OrientationMath::_calcDetermineHomochoricValues(float init[3], float step[3
   float random;
 
   DREAM3D_RANDOMNG_NEW()
-  random = rg.genrand_res53();
+  random = static_cast<float>( rg.genrand_res53() );
   r1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
-  random = rg.genrand_res53();
+  random = static_cast<float>( rg.genrand_res53() );
   r2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
-  random = rg.genrand_res53();
+  random = static_cast<float>( rg.genrand_res53() );
   r3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
 }
 
@@ -291,13 +291,13 @@ int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], flo
   g1euler1bin = size_t((r1+dim[0])/step[0]);
   g1euler2bin = size_t((r2+dim[1])/step[1]);
   g1euler3bin = size_t((r3+dim[2])/step[2]);
-  if(g1euler1bin >= bins[0]) g1euler1bin = bins[0]-1;
-  if(g1euler2bin >= bins[1]) g1euler2bin = bins[1]-1;
-  if(g1euler3bin >= bins[2]) g1euler3bin = bins[2]-1;
+  if(g1euler1bin >= bins[0]) g1euler1bin = static_cast<size_t>( bins[0]-1 );
+  if(g1euler2bin >= bins[1]) g1euler2bin = static_cast<size_t>( bins[1]-1 );
+  if(g1euler3bin >= bins[2]) g1euler3bin = static_cast<size_t>( bins[2]-1 );
   if(g1euler1bin < 0) g1euler1bin = 0;
   if(g1euler2bin < 0) g1euler2bin = 0;
   if(g1euler3bin < 0) g1euler3bin = 0;
-  g1odfbin = (g1euler3bin*bins[0]*bins[1])+(g1euler2bin*bins[0])+(g1euler1bin);
+  g1odfbin = static_cast<size_t>( (g1euler3bin*bins[0]*bins[1])+(g1euler2bin*bins[0])+(g1euler1bin) );
   return g1odfbin;
 }
 
@@ -348,7 +348,7 @@ void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
   r2 = r2 / rmag;
   r3 = r3 / rmag;
   if(rmag == 0.0) r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
-  w = 2.0*atan(rmag);
+  w = static_cast<float>( 2.0*atan(rmag) );
   float const1 = powf(((3.0f / 4.0f) * (w - sinf(w))), (1.0f / 3.0f));
   r1 = r1 * const1;
   r2 = r2 * const1;
@@ -366,7 +366,7 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   r2 = r2 / hmag;
   r3 = r3 / hmag;
   if(hmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
-  w = powf((8*hmag*hmag*hmag),(1.0/3.0));
+  w = static_cast<float>( powf((8*hmag*hmag*hmag),(1.0/3.0)) );
   x = m_OnePointThree*hmag*hmag*hmag;
   for(size_t i = 1; i < 10; i++)
   {
@@ -385,7 +385,7 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = sqrt(rmag);
-  w = 2.0*atan(rmag);
+  w = static_cast<float>( 2.0*atan(rmag) );
   n1 = r1 / rmag;
   n2 = r2 / rmag;
   n3 = r3 / rmag;
@@ -394,7 +394,7 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
 
 void OrientationMath::QuattoAxisAngle(float *q, float &w, float &n1, float &n2, float &n3)
 {
-  w = 2.0*acos(q[4]);
+  w = static_cast<float>( 2.0*acos(q[4]) );
   n1 = q[1] / sqrt(1-(q[4]*q[4]));
   n2 = q[2] / sqrt(1-(q[4]*q[4]));
   n3 = q[3] / sqrt(1-(q[4]*q[4]));
@@ -416,7 +416,7 @@ void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
   q[1] = r1 * const1;
   q[2] = r2 * const1;
   q[3] = r3 * const1;
-  q[4] = cosf(w/2.0);
+  q[4] = static_cast<float>( cosf(w/2.0) );
 }
 
 void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
@@ -430,7 +430,7 @@ void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
   n2 = q[2] / qmag;
   n3 = q[3] / qmag;
   if(qmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
-  w = 2.0*acos(q[4]);
+  w = static_cast<float>( 2.0*acos(q[4]) );
   float const1 = tanf(w * 0.5f);
   r1 = n1 * const1;
   r2 = n2 * const1;
@@ -467,10 +467,10 @@ void OrientationMath::normalizeQuat(float* qr)
 {
   double norm = qr[1]*qr[1]+qr[2]*qr[2]+qr[3]*qr[3]+qr[4]*qr[4];
   norm = sqrt(norm);
-  qr[1] = qr[1]/norm;
-  qr[2] = qr[2]/norm;
-  qr[3] = qr[3]/norm;
-  qr[4] = qr[4]/norm;
+  qr[1] = static_cast<float>( qr[1]/norm );
+  qr[2] = static_cast<float>( qr[2]/norm );
+  qr[3] = static_cast<float>( qr[3]/norm );
+  qr[4] = static_cast<float>( qr[4]/norm );
 }
 
 void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
@@ -492,7 +492,7 @@ void OrientationMath::RodtoEuler(float r1, float r2, float r3, float &ea1, float
   float sum = atan(r3);
   float diff = atan(r2 / r1);
   ea1 = sum + diff;
-  ea2 = 2. * atan(r1 * cosf(sum) / cosf(diff));
+  ea2 = static_cast<float>( 2. * atan(r1 * cosf(sum) / cosf(diff)) );
   ea3 = sum - diff;
 }
 

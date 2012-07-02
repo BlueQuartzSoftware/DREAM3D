@@ -329,8 +329,8 @@ void PackPrimaryPhases::execute()
 	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-    grainsizediststep[i] = ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
-        / grainsizedist[i].size();
+    grainsizediststep[i] = static_cast<float>( ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
+        / grainsizedist[i].size() );
     float input = 0;
     float previoustotal = 0;
     VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
@@ -607,9 +607,9 @@ void PackPrimaryPhases::execute()
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
-      xc = oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx));
-      yc = oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy));
-      zc = oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz));
+      xc = static_cast<float>( oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx)) );
+      yc = static_cast<float>( oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy)) );
+      zc = static_cast<float>( oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz)) );
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_grain(randomgrain, xc, yc, zc);
@@ -788,9 +788,9 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
 		  a3 = covera[0]->GetValue(diameter-1);
 		  b3 = covera[1]->GetValue(diameter-1);
 	  }
-	  r3 = rg.genrand_beta(a3, b3);
+	  r3 = static_cast<float>( rg.genrand_beta(a3, b3) );
   }
-  float random = rg.genrand_res53();
+  float random = static_cast<float>( rg.genrand_res53() );
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
@@ -842,12 +842,12 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
   float oxc = m_Centroids[3*gnum];
   float oyc = m_Centroids[3*gnum+1];
   float ozc = m_Centroids[3*gnum+2];
-  occolumn = (oxc - (packingresx / 2.0f)) / packingresx;
-  ocrow = (oyc - (packingresy / 2.0f)) / packingresy;
-  ocplane = (ozc - (packingresz / 2.0f)) / packingresz;
-  nccolumn = (xc - (packingresx / 2.0f)) / packingresx;
-  ncrow = (yc - (packingresy / 2.0f)) / packingresy;
-  ncplane = (zc - (packingresz / 2.0f)) / packingresz;
+  occolumn = static_cast<int>( (oxc - (packingresx / 2.0f)) / packingresx );
+  ocrow = static_cast<int>( (oyc - (packingresy / 2.0f)) / packingresy );
+  ocplane = static_cast<int>( (ozc - (packingresz / 2.0f)) / packingresz );
+  nccolumn = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
+  ncrow = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
+  ncplane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
@@ -948,9 +948,9 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         dia = m_EquivalentDiameters[index];
         if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
         if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-		dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+		dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
         nnum = m_Neighborhoods[index];
-		bin = nnum/neighbordiststep[iter];
+		bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 		if(bin >= 40) bin = 39;
         simneighbordist[iter][dia][bin]++;
         count[dia]++;
@@ -962,9 +962,9 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       dia = m_EquivalentDiameters[index];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-	  dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+	  dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
       nnum = m_Neighborhoods[index];
-	  bin = nnum/neighbordiststep[iter];
+	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
       count[dia]++;
@@ -976,7 +976,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       {
 //        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
 //        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
-        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(counter);
+        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / double(counter) );
         if(counter == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
@@ -1124,7 +1124,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
         }
       }
     }
-    packqualities[gadd] = packquality / float(size);
+    packqualities[gadd] = static_cast<int>( packquality / float(size) );
   }
   if(gremove > 0)
   {
@@ -1215,9 +1215,9 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
-  centercolumn = (xc - (packingresx / 2)) / packingresx;
-  centerrow = (yc - (packingresy / 2)) / packingresy;
-  centerplane = (zc - (packingresz / 2)) / packingresz;
+  centercolumn = static_cast<int>( (xc - (packingresx / 2)) / packingresx );
+  centerrow = static_cast<int>( (yc - (packingresy / 2)) / packingresy );
+  centerplane = static_cast<int>( (zc - (packingresz / 2)) / packingresz );
   xmin = int(centercolumn - ((radcur1 / packingresx) + 1));
   xmax = int(centercolumn + ((radcur1 / packingresx) + 1));
   ymin = int(centerrow - ((radcur1 / packingresy) + 1));
@@ -1347,9 +1347,9 @@ void PackPrimaryPhases::assign_voxels()
     ga[2][0] = sinf(phi1) * sinf(PHI);
     ga[2][1] = -cosf(phi1) * sinf(PHI);
     ga[2][2] = cosf(PHI);
-    column = (xc - (xRes / 2.0f)) / xRes;
-    row = (yc - (yRes / 2.0f)) / yRes;
-    plane = (zc - (zRes / 2.0f)) / zRes;
+    column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
+    row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
+    plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
     xmin = int(column - ((radcur1 / xRes) + 1));
     xmax = int(column + ((radcur1 / xRes) + 1));
     ymin = int(row - ((radcur1 / yRes) + 1));
@@ -1513,9 +1513,9 @@ void PackPrimaryPhases::assign_gaps()
 
 		float radcur2 = (radcur1 * bovera);
 		float radcur3 = (radcur1 * covera);
-		radcur1 = (float(timestep)/100.0)*radcur1;
-		radcur2 = (float(timestep)/100.0)*radcur2;
-		radcur3 = (float(timestep)/100.0)*radcur3;
+		radcur1 = static_cast<float>( (float(timestep)/100.0)*radcur1 );
+		radcur2 = static_cast<float>( (float(timestep)/100.0)*radcur2 );
+		radcur3 = static_cast<float>( (float(timestep)/100.0)*radcur3 );
 		float phi1 = m_AxisEulerAngles[3*i];
 		float PHI = m_AxisEulerAngles[3*i+1];
 		float phi2 = m_AxisEulerAngles[3*i+2];
@@ -1529,9 +1529,9 @@ void PackPrimaryPhases::assign_gaps()
 		ga[2][0] = sinf(phi1) * sinf(PHI);
 		ga[2][1] = -cosf(phi1) * sinf(PHI);
 		ga[2][2] = cosf(PHI);
-		column = (xc - (xRes / 2.0f)) / xRes;
-		row = (yc - (yRes / 2.0f)) / yRes;
-		plane = (zc - (zRes / 2.0f)) / zRes;
+		column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
+		row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
+		plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
 		xmin = int(column - ((radcur1 / xRes) + 1));
 		xmax = int(column + ((radcur1 / xRes) + 1));
 		ymin = int(row - ((radcur1 / yRes) + 1));
@@ -1571,7 +1571,7 @@ void PackPrimaryPhases::assign_gaps()
 			  if (iter2 > dims[1] - 1) row = iter2 - dims[1];
 			  if (iter3 < 0) plane = iter3 + dims[2];
 			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
-			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
+			  index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
@@ -1685,8 +1685,8 @@ void PackPrimaryPhases::cleanup_grains()
     if(checked[i] == false && m_GrainIds[i] > firstPrimaryField)
     {
 	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
-	  minsize = pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f;
-      minsize = int(minsize / (resConst));
+	  minsize = static_cast<float>( pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f );
+      minsize = static_cast<float>( int(minsize / (resConst)) );
       currentvlist.push_back(i);
       count = 0;
       while (count < currentvlist.size())
@@ -1699,7 +1699,7 @@ void PackPrimaryPhases::cleanup_grains()
         for (int j = 0; j < 6; j++)
         {
           good = 1;
-          neighbor = index + neighpoints[j];
+          neighbor = static_cast<int>( index + neighpoints[j] );
           if(m_PeriodicBoundaries == false)
           {
             if(j == 0 && plane == 0) good = 0;
@@ -1716,12 +1716,12 @@ void PackPrimaryPhases::cleanup_grains()
           }
           else if(m_PeriodicBoundaries == true)
           {
-            if(j == 0 && plane == 0) neighbor = neighbor + (xp * yp * zp);
-            if(j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp * yp * zp);
-            if(j == 1 && row == 0) neighbor = neighbor + (xp * yp);
-            if(j == 4 && row == (yp - 1)) neighbor = neighbor - (xp * yp);
-            if(j == 2 && column == 0) neighbor = neighbor + (xp);
-            if(j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
+            if(j == 0 && plane == 0) neighbor = static_cast<int>( neighbor + (xp * yp * zp) );
+            if(j == 5 && plane == (zp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp * zp) );
+            if(j == 1 && row == 0) neighbor = static_cast<int>( neighbor + (xp * yp) );
+            if(j == 4 && row == (yp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp) );
+            if(j == 2 && column == 0) neighbor = static_cast<int>( neighbor + (xp) );
+            if(j == 3 && column == (xp - 1)) neighbor = static_cast<int>( neighbor - (xp) );
             if(m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
             {
               currentvlist.push_back(neighbor);

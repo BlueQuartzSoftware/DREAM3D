@@ -53,7 +53,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
 #define NEW_SHARED_ARRAY(var, type, size)\
@@ -265,7 +265,7 @@ void MergeTwins::merge_twins()
   float w;
   float n1, n2, n3;
   float angtol = m_AngleTolerance;
-  float axistol = m_AxisTolerance*M_PI/180.0f;
+  float axistol = static_cast<float>( m_AxisTolerance*M_PI/180.0f );
   float q1[5];
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();

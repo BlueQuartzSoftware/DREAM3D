@@ -203,7 +203,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
   m_NumSlicesImported = 0;
   for(int slice = 0; slice < zSlices; ++slice)
   {
-    writeSliceData(fileId, reader, z + slice, slice);
+    writeSliceData(fileId, reader, static_cast<int>(z) + slice, slice);
     ++m_NumSlicesImported;
   }
   return err;

@@ -705,8 +705,8 @@ void FindDeformationStatistics::execute()
 
   for(size_t i=1;i<size;i++)
   {
-		float x = float(m_Poles[3*i]) - (float(m_Poles[3*i]) * (float(m_Poles[3*i+2]) / (float(m_Poles[3*i+2]) + 1.0)));;
-		float y = float(m_Poles[3*i+1]) - (float(m_Poles[3*i+1]) * (float(m_Poles[3*i+2]) / (float(m_Poles[3*i+2]) + 1.0)));;
+		float x = static_cast<float>( m_Poles[3*i] - (m_Poles[3*i] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1.0))) );
+		float y = static_cast<float>( m_Poles[3*i+1] - (m_Poles[3*i+1] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1.0))) );
 		float z = 0.0;
 		fprintf(vtkFile, "%f %f %f\n", x, y, z);
   }

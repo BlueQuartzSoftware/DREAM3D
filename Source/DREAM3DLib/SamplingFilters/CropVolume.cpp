@@ -213,9 +213,9 @@ void CropVolume::execute()
     return;
   }
 
-  float m_XP = (m_XMax - m_XMin)+1;
-  float m_YP = (m_YMax - m_YMin)+1;
-  float m_ZP = (m_ZMax - m_ZMin)+1;
+  float m_XP = static_cast<float>( (m_XMax - m_XMin)+1 );
+  float m_YP = static_cast<float>( (m_YMax - m_YMin)+1 );
+  float m_ZP = static_cast<float>( (m_ZMax - m_ZMin)+1 );
   float m_XStart = m_XMin * m->getXRes();
   float m_YStart = m_YMin * m->getYRes();
   float m_ZStart = m_ZMin * m->getZRes();
@@ -241,7 +241,7 @@ void CropVolume::execute()
         row = int(y / m->getYRes());
         plane = int(z / m->getZRes());
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
-        index = (i * m_XP * m_YP) + (j * m_XP) + k;
+        index = static_cast<int>( (i * m_XP * m_YP) + (j * m_XP) + k );
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           std::string name = *iter;
@@ -251,9 +251,9 @@ void CropVolume::execute()
       }
     }
   }
-  m->setDimensions(m_XP, m_YP, m_ZP);
+  m->setDimensions(static_cast<size_t>(m_XP), static_cast<size_t>(m_YP), static_cast<size_t>(m_ZP));
   int64_t totalPoints = m->getTotalPoints();
-  totalPoints = m_XP * m_YP * m_ZP;
+  totalPoints = static_cast<int64_t>( m_XP * m_YP * m_ZP );
 
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {

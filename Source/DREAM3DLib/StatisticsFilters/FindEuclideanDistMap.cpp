@@ -338,7 +338,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 	  for (size_t k = 0; k < 6; k++)
 	  {
 		good = 1;
-		neighbor = a + neighbors[k];
+		neighbor = static_cast<int>( a + neighbors[k] );
 		if(k == 0 && plane == 0) good = 0;
 		if(k == 5 && plane == (zPoints - 1)) good = 0;
 		if(k == 1 && row == 0) good = 0;

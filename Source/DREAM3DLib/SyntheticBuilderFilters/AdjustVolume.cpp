@@ -209,7 +209,7 @@ void AdjustVolume::execute()
       if (selectedgrain == 0) selectedgrain = 1;
     }
     growth = 1;
-    random = rg.genrand_res53();
+    random = static_cast<float>( rg.genrand_res53() );
     if(random < 0.5) growth = -1;
     nucleus = 0;
     count = 0;
@@ -230,7 +230,7 @@ void AdjustVolume::execute()
       for(DimType j=0;j<6;j++)
       {
         good = 1;
-        neighpoint = index+neighpoints[j];
+        neighpoint = static_cast<int>( index+neighpoints[j] );
         if(j == 0 && z == 0) good = 0;
         if(j == 5 && z == (dims[2]-1)) good = 0;
         if(j == 1 && y == 0) good = 0;

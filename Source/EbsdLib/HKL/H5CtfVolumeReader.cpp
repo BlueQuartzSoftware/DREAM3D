@@ -266,8 +266,8 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
 
     xpointstemp = xpoints;
     ypointstemp = ypoints;
-    xstartspot = (xpointstemp - xpointsslice) / 2;
-    ystartspot = (ypointstemp - ypointsslice) / 2;
+    xstartspot = static_cast<int>( (xpointstemp - xpointsslice) / 2 );
+    ystartspot = static_cast<int>( (ypointstemp - ypointsslice) / 2 );
 
     // If no stacking order preference was passed, read it from the file and use that value
     if(ZDir == Ebsd::UnknownRefFrameZDirection)
@@ -275,14 +275,14 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
       ZDir = getStackingOrder();
     }
     if (ZDir == 0) zval = slice;
-    if (ZDir == 1) zval = (zpoints - 1) - slice;
+    if (ZDir == 1) zval = static_cast<int>( (zpoints - 1) - slice );
 
     // Copy the data from the current storage into the Storage Location
     for (int j = 0; j < ypointsslice; j++)
     {
       for (int i = 0; i < xpointsslice; i++)
       {
-        index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
+        index = static_cast<int>( (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot) );
         m_Phase[index] = phasePtr[readerIndex]; // Phase Add 1 to the phase number because .ctf files are zero based for phases
         m_X[index] = xPtr[readerIndex];
         m_Y[index] = yPtr[readerIndex];
