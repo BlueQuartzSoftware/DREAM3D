@@ -60,9 +60,9 @@
 class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SegmentGrains);
-    DREAM3D_STATIC_NEW_MACRO(SegmentGrains);
-    DREAM3D_TYPE_MACRO_SUPER(SegmentGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(SegmentGrains)
+    DREAM3D_STATIC_NEW_MACRO(SegmentGrains)
+    DREAM3D_TYPE_MACRO_SUPER(SegmentGrains, AbstractFilter)
 
     virtual ~SegmentGrains();
 

@@ -47,7 +47,7 @@ class FilterOption
     DREAM3D_SHARED_POINTERS(FilterOption)
     DREAM3D_STATIC_NEW_MACRO(FilterOption)
     DREAM3D_TYPE_MACRO(FilterOption)
-    virtual ~FilterOption(){};
+    virtual ~FilterOption(){}
 
     enum WidgetType
     {
@@ -63,11 +63,11 @@ class FilterOption
       CustomWidget
     };
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel);
-    DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName);
-    DREAM3D_INSTANCE_PROPERTY(WidgetType, WidgetType);
-    DREAM3D_INSTANCE_STRING_PROPERTY(ValueType);
-    DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType);
+    DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)
+    DREAM3D_INSTANCE_PROPERTY(WidgetType, WidgetType)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ValueType)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
 
   protected:
     FilterOption() : m_ValueType("Not_Set"){}
@@ -88,7 +88,7 @@ class ConstrainedFilterOption : public FilterOption
     DREAM3D_STATIC_NEW_MACRO(ConstrainedFilterOption<T>)
     DREAM3D_TYPE_MACRO_SUPER(ConstrainedFilterOption<T>, FilterOption)
 
-    virtual ~ConstrainedFilterOption(){};
+    virtual ~ConstrainedFilterOption(){}
 
     DREAM3D_INSTANCE_PROPERTY(T, Minimum)
     DREAM3D_INSTANCE_PROPERTY(T, Maximum)
@@ -112,9 +112,9 @@ class ChoiceFilterOption : public FilterOption
     DREAM3D_STATIC_NEW_MACRO(ChoiceFilterOption)
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterOption, FilterOption)
 
-    virtual ~ChoiceFilterOption(){};
+    virtual ~ChoiceFilterOption(){}
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, Choices);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, Choices)
 
   protected:
     ChoiceFilterOption() {}

@@ -1193,9 +1193,9 @@ void TestTypeDetection()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( TestTypeDetection() );
-  DREAM3D_REGISTER_TEST( H5LiteTest() );
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( TestTypeDetection() )
+  DREAM3D_REGISTER_TEST( H5LiteTest() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 
   PRINT_TEST_SUMMARY();
   return err;

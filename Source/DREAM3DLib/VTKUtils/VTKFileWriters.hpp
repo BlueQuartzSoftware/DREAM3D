@@ -62,12 +62,12 @@ class VtkScalarWriter : public AbstractFilter
 {
   public:
     VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0){}
-    DREAM3D_TYPE_MACRO(VtkScalarWriter);
+    DREAM3D_TYPE_MACRO(VtkScalarWriter)
 
     virtual ~VtkScalarWriter(){}
 
     bool m_WriteBinaryFiles;
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
     virtual int writeScalars(FILE* f)
     {
@@ -305,15 +305,15 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
 class VTKRectilinearGridFileWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileWriter);
-    DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileWriter);
-    DREAM3D_TYPE_MACRO(VTKRectilinearGridFileWriter);
+    DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileWriter)
+    DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileWriter)
+    DREAM3D_TYPE_MACRO(VTKRectilinearGridFileWriter)
 
     VTKRectilinearGridFileWriter() : AbstractFilter(), m_WriteBinaryFiles(false), m_ErrorCondition(0) {}
     virtual ~VTKRectilinearGridFileWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed
@@ -430,9 +430,9 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
 class VTKStructuredPointsFileWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VTKStructuredPointsFileWriter);
-    DREAM3D_STATIC_NEW_MACRO(VTKStructuredPointsFileWriter);
-    DREAM3D_TYPE_MACRO(VTKStructuredPointsFileWriter);
+    DREAM3D_SHARED_POINTERS(VTKStructuredPointsFileWriter)
+    DREAM3D_STATIC_NEW_MACRO(VTKStructuredPointsFileWriter)
+    DREAM3D_TYPE_MACRO(VTKStructuredPointsFileWriter)
 
     virtual ~VTKStructuredPointsFileWriter(){}
 
@@ -492,14 +492,14 @@ class VTKStructuredPointsFileWriter
 class VtkMiscFileWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VtkMiscFileWriter);
-    DREAM3D_STATIC_NEW_MACRO(VtkMiscFileWriter);
-    DREAM3D_TYPE_MACRO(VtkMiscFileWriter);
+    DREAM3D_SHARED_POINTERS(VtkMiscFileWriter)
+    DREAM3D_STATIC_NEW_MACRO(VtkMiscFileWriter)
+    DREAM3D_TYPE_MACRO(VtkMiscFileWriter)
 
     virtual ~VtkMiscFileWriter(){}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
      * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and grain ID.

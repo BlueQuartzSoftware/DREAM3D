@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MinSize);
-    DREAM3D_STATIC_NEW_MACRO(MinSize);
-    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MinSize)
+    DREAM3D_STATIC_NEW_MACRO(MinSize)
+    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter)
 
     virtual ~MinSize();
 
@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize);
+    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }

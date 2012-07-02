@@ -57,9 +57,9 @@
 class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindEuclideanDistMap);
-    DREAM3D_STATIC_NEW_MACRO(FindEuclideanDistMap);
-    DREAM3D_TYPE_MACRO_SUPER(FindEuclideanDistMap, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindEuclideanDistMap)
+    DREAM3D_STATIC_NEW_MACRO(FindEuclideanDistMap)
+    DREAM3D_TYPE_MACRO_SUPER(FindEuclideanDistMap, AbstractFilter)
 
     virtual ~FindEuclideanDistMap();
 

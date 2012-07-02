@@ -83,8 +83,8 @@ typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
 class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
 {
   public:
-    DREAM3D_SHARED_POINTERS(PrimaryStatsData);
-    DREAM3D_STATIC_NEW_MACRO(PrimaryStatsData);
+    DREAM3D_SHARED_POINTERS(PrimaryStatsData)
+    DREAM3D_STATIC_NEW_MACRO(PrimaryStatsData)
     DREAM3D_TYPE_MACRO_SUPER(PrimaryStatsData, StatsData)
 
     virtual ~PrimaryStatsData();
@@ -92,8 +92,8 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
     virtual std::string getStatsType();
     virtual unsigned int getPhaseType();
 
-    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
-    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
+    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea)
+    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
 
 	 /**
      * @breif this will generate the Bin Numbers values;
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
     /**
      * @brief The values are encoded into 3 floats: Average, Max, Min
      */
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, GrainDiameterInfo);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, GrainDiameterInfo)
     void setBinStepSize(float v) { m_GrainDiameterInfo[0] = v;}
     float getBinStepSize() { return m_GrainDiameterInfo[0]; }
 
@@ -115,10 +115,10 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
     /**
       * @brief The values are encoded into float arrays
       */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSizeDistribution);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, GrainSize_DistType);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSizeDistribution)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, GrainSize_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers);
+    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)
 
 	size_t getNumberOfBins()
     {
@@ -126,29 +126,29 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
     }
 
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_BOverA);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, BOverA_DistType);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_BOverA)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, BOverA_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverA);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, COverA_DistType);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_COverA)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, COverA_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Neighbors);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, Neighbors_DistType);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Neighbors)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, Neighbors_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Omegas);
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, Omegas_DistType);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, GrainSize_Omegas)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, Omegas_DistType)
 
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, MisorientationBins);
+    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, MisorientationBins)
     /* 3 Vectors: Angles, Axis, Weights */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, MDF_Weights);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, MDF_Weights)
 
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, ODF);
+    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, ODF)
     /* 5 Vectors: Euler 1, Euler 2, Euler 3, Sigma, Weights */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, ODF_Weights);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, ODF_Weights)
 
-    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, AxisOrientation);
+    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, AxisOrientation)
     /* 5 Vectors: Euler 1, Euler 2, Euler 3, Sigma, Weights */
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, AxisODF_Weights);
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, AxisODF_Weights)
 
     virtual void initialize();
 

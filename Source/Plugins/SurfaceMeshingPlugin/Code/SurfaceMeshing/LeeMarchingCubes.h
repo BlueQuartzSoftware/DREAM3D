@@ -107,27 +107,27 @@ class LeeMarchingCubes : public AbstractFilter
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(LeeMarchingCubes);
-    DREAM3D_STATIC_NEW_MACRO(LeeMarchingCubes);
-    DREAM3D_TYPE_MACRO_SUPER(LeeMarchingCubes, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(LeeMarchingCubes)
+    DREAM3D_STATIC_NEW_MACRO(LeeMarchingCubes)
+    DREAM3D_TYPE_MACRO_SUPER(LeeMarchingCubes, AbstractFilter)
 
     virtual ~LeeMarchingCubes();
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    //DREAM3D_INSTANCE_STRING_PROPERTY(InputFile);
-    DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles);
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSTLFile);
-    DREAM3D_INSTANCE_STRING_PROPERTY(StlOutputDirectory);
-    DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix);
+    //DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteSTLFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(StlOutputDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile);
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles);
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
+    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
-    DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, NodesFile);
-    DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile);
+    DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, NodesFile)
+    DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile)
 
     virtual void preflight();
 

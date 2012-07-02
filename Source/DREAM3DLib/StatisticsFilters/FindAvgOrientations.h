@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT FindAvgOrientations : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindAvgOrientations);
-    DREAM3D_STATIC_NEW_MACRO(FindAvgOrientations);
-    DREAM3D_TYPE_MACRO_SUPER(FindAvgOrientations, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindAvgOrientations)
+    DREAM3D_STATIC_NEW_MACRO(FindAvgOrientations)
+    DREAM3D_TYPE_MACRO_SUPER(FindAvgOrientations, AbstractFilter)
 
     virtual ~FindAvgOrientations();
 

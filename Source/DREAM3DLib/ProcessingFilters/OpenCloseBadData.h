@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(OpenCloseBadData);
-    DREAM3D_STATIC_NEW_MACRO(OpenCloseBadData);
-    DREAM3D_TYPE_MACRO_SUPER(OpenCloseBadData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(OpenCloseBadData)
+    DREAM3D_STATIC_NEW_MACRO(OpenCloseBadData)
+    DREAM3D_TYPE_MACRO_SUPER(OpenCloseBadData, AbstractFilter)
 
     virtual ~OpenCloseBadData();
 
@@ -73,8 +73,8 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction);
-    DREAM3D_INSTANCE_PROPERTY(int, NumIterations);
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction)
+    DREAM3D_INSTANCE_PROPERTY(int, NumIterations)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Open/Close Bad Data"; }

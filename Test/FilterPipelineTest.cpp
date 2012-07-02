@@ -119,12 +119,12 @@ void TestFilterPipeline()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
-  DREAM3D_REGISTER_TEST( TestFilterPipeline() );
+  DREAM3D_REGISTER_TEST( TestFilterPipeline() )
 
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
   PRINT_TEST_SUMMARY();
   return err;

@@ -67,9 +67,9 @@ class Int32Parser : public DataParser
 
     virtual ~Int32Parser() {}
 
-    EBSD_INSTANCE_PROPERTY(int32_t*, Ptr);
-    EBSD_INSTANCE_PROPERTY(size_t, Size);
-    EBSD_INSTANCE_STRING_PROPERTY(ColumnName);
+    EBSD_INSTANCE_PROPERTY(int32_t*, Ptr)
+    EBSD_INSTANCE_PROPERTY(size_t, Size)
+    EBSD_INSTANCE_STRING_PROPERTY(ColumnName)
 
     virtual void parse(const std::string &token, size_t offset)
     {
@@ -109,9 +109,9 @@ class FloatParser : public DataParser
 
     virtual ~FloatParser() {}
 
-    EBSD_INSTANCE_PROPERTY(float*, Ptr);
-    EBSD_INSTANCE_PROPERTY(size_t, Size);
-    EBSD_INSTANCE_STRING_PROPERTY(ColumnName);
+    EBSD_INSTANCE_PROPERTY(float*, Ptr)
+    EBSD_INSTANCE_PROPERTY(size_t, Size)
+    EBSD_INSTANCE_STRING_PROPERTY(ColumnName)
 
     virtual void parse(const std::string &token, size_t offset)
     {

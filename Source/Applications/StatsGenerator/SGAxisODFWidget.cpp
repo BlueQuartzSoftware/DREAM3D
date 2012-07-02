@@ -434,7 +434,7 @@ void SGAxisODFWidget::poleFigureGenerationComplete()
 QImage generateAxisODFPoleFigure(const PoleFigureData &data)
 {
   PoleFigureMaker colorPoleFigure;
-#if 1
+#if COLOR_POLE_FIGURES
   return colorPoleFigure.generatePoleFigureImage(data);
 #else
   return colorPoleFigure.generateColorPoleFigureImage(data);

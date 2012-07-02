@@ -71,12 +71,12 @@ class EbsdLib_EXPORT EbsdReader
     EBSD_INSTANCE_PROPERTY(bool, AlignEulers)
 
     /** @brief Sets the file name of the ebsd file to be read */
-    EBSD_INSTANCE_STRING_PROPERTY(FileName);
+    EBSD_INSTANCE_STRING_PROPERTY(FileName)
     /** @brief The Number of Columns of Data in the Ebsd Data file */
-    EBSD_INSTANCE_PROPERTY(int, NumFields);
+    EBSD_INSTANCE_PROPERTY(int, NumFields)
 
     /** @brief The unchanged header from teh data file */
-    EBSD_INSTANCE_STRING_PROPERTY(OriginalHeader);
+    EBSD_INSTANCE_STRING_PROPERTY(OriginalHeader)
     /**
      * @brief Appends text to the current Original Header Text
      * @param more The text to be appended
@@ -88,11 +88,11 @@ class EbsdLib_EXPORT EbsdReader
      * for the various columns of data and how that memory is managed.
      */
     /** @brief Will this class be responsible for deallocating the memory for the data arrays */
-    EBSD_INSTANCE_PROPERTY(bool, ManageMemory);
+    EBSD_INSTANCE_PROPERTY(bool, ManageMemory)
     /** @brief Has the complete header been read */
-    EBSD_INSTANCE_PROPERTY(bool, HeaderIsComplete);
+    EBSD_INSTANCE_PROPERTY(bool, HeaderIsComplete)
     /** @brief The number of elements in a column of data. This should be rows * columns */
-    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
+    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements)
 
     /*
      * Different manufacturers call this value different thingsl. TSL = NumRows | NumCols,

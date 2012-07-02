@@ -517,14 +517,14 @@ int FileNameExtensionTest()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( MakeDirectoriesTest() );
-  DREAM3D_REGISTER_TEST( FilesTest() );
-  DREAM3D_REGISTER_TEST( FileNameTest() );
-  DREAM3D_REGISTER_TEST( AbsolutePathTest() );
-  DREAM3D_REGISTER_TEST( DirListTest() );
-  DREAM3D_REGISTER_TEST( RemoveDirectoriesTest() );
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
-  DREAM3D_REGISTER_TEST( FileNameExtensionTest() );
+  DREAM3D_REGISTER_TEST( MakeDirectoriesTest() )
+  DREAM3D_REGISTER_TEST( FilesTest() )
+  DREAM3D_REGISTER_TEST( FileNameTest() )
+  DREAM3D_REGISTER_TEST( AbsolutePathTest() )
+  DREAM3D_REGISTER_TEST( DirListTest() )
+  DREAM3D_REGISTER_TEST( RemoveDirectoriesTest() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  DREAM3D_REGISTER_TEST( FileNameExtensionTest() )
   PRINT_TEST_SUMMARY();
   return err;
 }

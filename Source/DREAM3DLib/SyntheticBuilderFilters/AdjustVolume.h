@@ -59,9 +59,9 @@
 class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AdjustVolume);
-    DREAM3D_STATIC_NEW_MACRO(AdjustVolume);
-    DREAM3D_TYPE_MACRO_SUPER(AdjustVolume, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(AdjustVolume)
+    DREAM3D_STATIC_NEW_MACRO(AdjustVolume)
+    DREAM3D_TYPE_MACRO_SUPER(AdjustVolume, AbstractFilter)
 
     virtual ~AdjustVolume();
 

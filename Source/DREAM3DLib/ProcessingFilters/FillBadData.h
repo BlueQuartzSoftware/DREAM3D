@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FillBadData);
-    DREAM3D_STATIC_NEW_MACRO(FillBadData);
-    DREAM3D_TYPE_MACRO_SUPER(FillBadData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FillBadData)
+    DREAM3D_STATIC_NEW_MACRO(FillBadData)
+    DREAM3D_TYPE_MACRO_SUPER(FillBadData, AbstractFilter)
 
     virtual ~FillBadData();
 
@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize);
+	DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Fill Bad Data"; }

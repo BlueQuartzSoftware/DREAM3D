@@ -52,16 +52,16 @@
 class DREAM3DLib_EXPORT ConvertEulerAngles : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ConvertEulerAngles);
-    DREAM3D_STATIC_NEW_MACRO(ConvertEulerAngles);
-    DREAM3D_TYPE_MACRO_SUPER(ConvertEulerAngles, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(ConvertEulerAngles)
+    DREAM3D_STATIC_NEW_MACRO(ConvertEulerAngles)
+    DREAM3D_TYPE_MACRO_SUPER(ConvertEulerAngles, AbstractFilter)
     virtual ~ConvertEulerAngles();
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
 
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, ConversionType);
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, ConversionType)
 
     virtual void preflight();
 

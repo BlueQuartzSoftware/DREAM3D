@@ -216,10 +216,10 @@ int TestDxReader()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
-  DREAM3D_REGISTER_TEST( TestDxWriter() );
-  DREAM3D_REGISTER_TEST( TestDxReader() );
+  DREAM3D_REGISTER_TEST( TestDxWriter() )
+  DREAM3D_REGISTER_TEST( TestDxReader() )
 
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();
   return err;
 }

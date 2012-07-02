@@ -57,9 +57,9 @@
 class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(RenumberGrains);
-    DREAM3D_STATIC_NEW_MACRO(RenumberGrains);
-    DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(RenumberGrains)
+    DREAM3D_STATIC_NEW_MACRO(RenumberGrains)
+    DREAM3D_TYPE_MACRO_SUPER(RenumberGrains, AbstractFilter)
 
     virtual ~RenumberGrains();
 

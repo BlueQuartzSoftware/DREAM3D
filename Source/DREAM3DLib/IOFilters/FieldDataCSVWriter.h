@@ -57,9 +57,9 @@
 class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FieldDataCSVWriter);
-    DREAM3D_STATIC_NEW_MACRO(FieldDataCSVWriter);
-    DREAM3D_TYPE_MACRO_SUPER(FieldDataCSVWriter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FieldDataCSVWriter)
+    DREAM3D_STATIC_NEW_MACRO(FieldDataCSVWriter)
+    DREAM3D_TYPE_MACRO_SUPER(FieldDataCSVWriter, AbstractFilter)
 
     virtual ~FieldDataCSVWriter();
 

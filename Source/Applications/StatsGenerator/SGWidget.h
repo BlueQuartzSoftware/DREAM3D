@@ -62,12 +62,12 @@ class SGWidget : public QWidget
     SGWidget(QWidget *parent = 0);
     virtual ~SGWidget();
 
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction);
-     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex)
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction)
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
     virtual void extractStatsData(DataContainer::Pointer m, int index);
     virtual int gatherStatsData(DataContainer::Pointer m);

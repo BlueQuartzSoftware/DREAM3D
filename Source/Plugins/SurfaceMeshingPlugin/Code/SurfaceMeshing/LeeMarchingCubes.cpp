@@ -145,8 +145,8 @@ using namespace meshing;
 class GrainChecker
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainChecker);
-    DREAM3D_STATIC_NEW_MACRO(GrainChecker);
+    DREAM3D_SHARED_POINTERS(GrainChecker)
+    DREAM3D_STATIC_NEW_MACRO(GrainChecker)
     virtual ~GrainChecker(){}
     typedef std::map<int, int>  MapType;
 

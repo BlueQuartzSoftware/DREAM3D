@@ -57,7 +57,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 {
 
   public:
-    EBSD_SHARED_POINTERS(CtfHeaderEntry<T >);
+    EBSD_SHARED_POINTERS(CtfHeaderEntry<T >)
     HEADERENTRY_NEW_SUPERCLASS(CtfHeaderEntry<T>, EbsdHeaderEntry);
     EBSD_TYPE_MACRO_SUPER(CtfHeaderEntry, EbsdHeaderEntry)
 
@@ -109,7 +109,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 class CtfStringHeaderEntry : public EbsdHeaderEntry
 {
   public:
-    EBSD_SHARED_POINTERS(CtfStringHeaderEntry);
+    EBSD_SHARED_POINTERS(CtfStringHeaderEntry)
     HEADERENTRY_NEW_SUPERCLASS(CtfStringHeaderEntry, EbsdHeaderEntry);
 
     virtual ~CtfStringHeaderEntry() {}
