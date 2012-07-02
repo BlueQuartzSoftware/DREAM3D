@@ -55,19 +55,19 @@ namespace smooth {
 class DREAM3DLib_EXPORT Smoothing : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(Smoothing);
-    DREAM3D_STATIC_NEW_MACRO(Smoothing);
-    DREAM3D_TYPE_MACRO_SUPER(Smoothing, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(Smoothing)
+    DREAM3D_STATIC_NEW_MACRO(Smoothing)
+    DREAM3D_TYPE_MACRO_SUPER(Smoothing, AbstractFilter)
 
     virtual ~Smoothing();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
-    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
+    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
-    DREAM3D_INSTANCE_PROPERTY(size_t, OutputInterval);
-    DREAM3D_INSTANCE_PROPERTY(size_t, Iterations);
-    DREAM3D_INSTANCE_PROPERTY(bool, LockQuads);
+    DREAM3D_INSTANCE_PROPERTY(size_t, OutputInterval)
+    DREAM3D_INSTANCE_PROPERTY(size_t, Iterations)
+    DREAM3D_INSTANCE_PROPERTY(bool, LockQuads)
 
     void execute();
 

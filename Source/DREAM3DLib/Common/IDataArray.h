@@ -36,8 +36,8 @@
 class DREAM3DLib_EXPORT IDataArray
 {
   public:
-    DREAM3D_SHARED_POINTERS(IDataArray);
-    DREAM3D_TYPE_MACRO(IDataArray);
+    DREAM3D_SHARED_POINTERS(IDataArray)
+    DREAM3D_TYPE_MACRO(IDataArray)
 
     /**
      * This templated method is used to get at the low level pointer that points

@@ -80,8 +80,8 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Merge Colonies"; }
 
-    DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance);
-    DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance);
+    DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
+    DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
 
     virtual void setupFilterOptions();
 	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);

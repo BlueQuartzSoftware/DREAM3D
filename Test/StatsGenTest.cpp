@@ -95,7 +95,7 @@ void GenHexMDFPlotData()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST(GenHexMDFPlotData());
+  DREAM3D_REGISTER_TEST(GenHexMDFPlotData())
 
   PRINT_TEST_SUMMARY();
   //return err;

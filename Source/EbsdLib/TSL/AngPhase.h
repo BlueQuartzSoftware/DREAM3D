@@ -75,7 +75,7 @@ typedef struct
 class EbsdLib_EXPORT HKLFamily
 {
   public:
-    EBSD_SHARED_POINTERS(HKLFamily);
+    EBSD_SHARED_POINTERS(HKLFamily)
     EBSD_STATIC_NEW_MACRO(HKLFamily);
     EBSD_TYPE_MACRO(HKLFamily)
 

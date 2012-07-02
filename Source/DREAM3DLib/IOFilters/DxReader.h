@@ -55,9 +55,9 @@
 class DREAM3DLib_EXPORT DxReader : public FileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(DxReader);
-    DREAM3D_STATIC_NEW_MACRO(DxReader);
-    DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader);
+    DREAM3D_SHARED_POINTERS(DxReader)
+    DREAM3D_STATIC_NEW_MACRO(DxReader)
+    DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader)
 
     virtual ~DxReader();
 

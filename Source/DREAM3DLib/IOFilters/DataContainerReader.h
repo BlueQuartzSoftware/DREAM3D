@@ -51,16 +51,16 @@
 class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DataContainerReader);
-    DREAM3D_STATIC_NEW_MACRO(DataContainerReader);
-    DREAM3D_TYPE_MACRO_SUPER(DataContainerReader, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(DataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(DataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerReader, AbstractFilter)
 
     virtual ~DataContainerReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData);
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData);
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData);
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
     virtual void preflight();
 

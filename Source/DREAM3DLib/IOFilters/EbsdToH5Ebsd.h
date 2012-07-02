@@ -69,8 +69,8 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(EbsdToH5Ebsd)
-    DREAM3D_STATIC_NEW_MACRO(EbsdToH5Ebsd);
-    DREAM3D_TYPE_MACRO_SUPER(EbsdToH5Ebsd, AbstractFilter);
+    DREAM3D_STATIC_NEW_MACRO(EbsdToH5Ebsd)
+    DREAM3D_TYPE_MACRO_SUPER(EbsdToH5Ebsd, AbstractFilter)
 
     virtual ~EbsdToH5Ebsd();
 
@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
     DREAM3D_INSTANCE_PROPERTY(bool, ReorderArray)
     DREAM3D_INSTANCE_PROPERTY(bool, RotateSlice)
     DREAM3D_INSTANCE_PROPERTY(bool, AlignEulers)

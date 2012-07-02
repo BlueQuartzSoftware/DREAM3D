@@ -56,9 +56,9 @@
 class ChangeResolution : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ChangeResolution);
-    DREAM3D_STATIC_NEW_MACRO(ChangeResolution);
-    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(ChangeResolution)
+    DREAM3D_STATIC_NEW_MACRO(ChangeResolution)
+    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter)
 
     virtual ~ChangeResolution();
 

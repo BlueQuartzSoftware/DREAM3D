@@ -57,9 +57,9 @@
 class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindBoundingBoxGrains);
-    DREAM3D_STATIC_NEW_MACRO(FindBoundingBoxGrains);
-    DREAM3D_TYPE_MACRO_SUPER(FindBoundingBoxGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindBoundingBoxGrains)
+    DREAM3D_STATIC_NEW_MACRO(FindBoundingBoxGrains)
+    DREAM3D_TYPE_MACRO_SUPER(FindBoundingBoxGrains, AbstractFilter)
 
     virtual ~FindBoundingBoxGrains();
 

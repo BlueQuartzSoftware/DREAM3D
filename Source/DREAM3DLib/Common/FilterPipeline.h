@@ -47,17 +47,17 @@
 class DREAM3DLib_EXPORT FilterPipeline : public Observer
 {
   public:
-    DREAM3D_SHARED_POINTERS(FilterPipeline);
-    DREAM3D_TYPE_MACRO_SUPER(FilterPipeline, Observer);
-    DREAM3D_STATIC_NEW_MACRO(FilterPipeline);
+    DREAM3D_SHARED_POINTERS(FilterPipeline)
+    DREAM3D_TYPE_MACRO_SUPER(FilterPipeline, Observer)
+    DREAM3D_STATIC_NEW_MACRO(FilterPipeline)
 
     virtual ~FilterPipeline();
 
     typedef std::list<AbstractFilter::Pointer>  FilterContainerType;
 
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
-    DREAM3D_INSTANCE_PROPERTY(DataContainer::Pointer, DataContainer);
-    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_PROPERTY(DataContainer::Pointer, DataContainer)
+    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter)
 
     /**
      * @brief Cancel the operation

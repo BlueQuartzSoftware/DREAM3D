@@ -538,18 +538,18 @@ int main(int argc, char **argv)
   int err = EXIT_SUCCESS;
 
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
 
-  DREAM3D_REGISTER_TEST( TestInsertDelete() );
-  DREAM3D_REGISTER_TEST( TestArrayCreation() );
+  DREAM3D_REGISTER_TEST( TestInsertDelete() )
+  DREAM3D_REGISTER_TEST( TestArrayCreation() )
 
-  DREAM3D_REGISTER_TEST( TestDataContainerWriter() );
-  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
+  DREAM3D_REGISTER_TEST( TestDataContainerWriter() )
+  DREAM3D_REGISTER_TEST( TestDataContainerReader() )
 
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
   PRINT_TEST_SUMMARY();

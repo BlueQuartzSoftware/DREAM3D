@@ -63,9 +63,9 @@
 class DREAM3DLib_EXPORT FindODF : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindODF);
-    DREAM3D_STATIC_NEW_MACRO(FindODF);
-    DREAM3D_TYPE_MACRO_SUPER(FindODF, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindODF)
+    DREAM3D_STATIC_NEW_MACRO(FindODF)
+    DREAM3D_TYPE_MACRO_SUPER(FindODF, AbstractFilter)
 
     virtual ~FindODF();
 

@@ -62,9 +62,9 @@
 class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindShapes);
-    DREAM3D_STATIC_NEW_MACRO(FindShapes);
-    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindShapes)
+    DREAM3D_STATIC_NEW_MACRO(FindShapes)
+    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter)
 
     virtual ~FindShapes();
 

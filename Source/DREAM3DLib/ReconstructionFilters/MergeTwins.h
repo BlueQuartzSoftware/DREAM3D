@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MergeTwins);
-    DREAM3D_STATIC_NEW_MACRO(MergeTwins);
-    DREAM3D_TYPE_MACRO_SUPER(MergeTwins, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MergeTwins)
+    DREAM3D_STATIC_NEW_MACRO(MergeTwins)
+    DREAM3D_TYPE_MACRO_SUPER(MergeTwins, AbstractFilter)
 
     virtual ~MergeTwins();
 
@@ -79,8 +79,8 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 	//------ Created Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance);
-    DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance);
+    DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
+    DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Merge Twins"; }

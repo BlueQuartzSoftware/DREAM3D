@@ -53,9 +53,9 @@
 class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindCellQuats);
-    DREAM3D_STATIC_NEW_MACRO(FindCellQuats);
-    DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindCellQuats)
+    DREAM3D_STATIC_NEW_MACRO(FindCellQuats)
+    DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter)
 
     virtual ~FindCellQuats();
 

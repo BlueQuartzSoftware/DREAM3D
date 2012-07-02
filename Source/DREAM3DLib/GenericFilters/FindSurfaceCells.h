@@ -52,9 +52,9 @@
 class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSurfaceCells);
-     DREAM3D_STATIC_NEW_MACRO(FindSurfaceCells);
-     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceCells, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindSurfaceCells)
+     DREAM3D_STATIC_NEW_MACRO(FindSurfaceCells)
+     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceCells, AbstractFilter)
 
      virtual ~FindSurfaceCells();
 

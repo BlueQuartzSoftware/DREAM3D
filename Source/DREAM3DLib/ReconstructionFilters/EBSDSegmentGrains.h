@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
 {
   public:
-    DREAM3D_SHARED_POINTERS(EBSDSegmentGrains);
-    DREAM3D_STATIC_NEW_MACRO(EBSDSegmentGrains);
-    DREAM3D_TYPE_MACRO_SUPER(EBSDSegmentGrains, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(EBSDSegmentGrains)
+    DREAM3D_STATIC_NEW_MACRO(EBSDSegmentGrains)
+    DREAM3D_TYPE_MACRO_SUPER(EBSDSegmentGrains, AbstractFilter)
 
     virtual ~EBSDSegmentGrains();
 
@@ -79,8 +79,8 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance);
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds);
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Segment Grains (Misorientation)"; }

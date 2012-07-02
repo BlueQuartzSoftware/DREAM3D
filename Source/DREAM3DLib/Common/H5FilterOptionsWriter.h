@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT H5FilterOptionsWriter : public AbstractFilterOptionsWrit
 
     virtual ~H5FilterOptionsWriter();
 
-    DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId);
+    DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId)
 
     virtual int openOptionsGroup(AbstractFilter* filter);
     virtual int closeOptionsGroup();

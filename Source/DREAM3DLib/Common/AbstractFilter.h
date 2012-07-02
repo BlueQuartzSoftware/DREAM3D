@@ -43,7 +43,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual const std::string getFilterVersion() { return DREAM3DLib::Version::Complete(); }
 
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer);
+    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
 
 //  private:
 //
@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 //      return m_ErrorMessage;
 //    }
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ErrorMessage::Pointer>, ErrorMessages);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<ErrorMessage::Pointer>, ErrorMessages)
 
     void addErrorMessage(ErrorMessage::Pointer msg);
     void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);
@@ -71,29 +71,29 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     void clearErrorMessages();
 
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
 
-    DREAM3D_INSTANCE_PROPERTY(int, PipelineIndex);
+    DREAM3D_INSTANCE_PROPERTY(int, PipelineIndex)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredCellData);
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedCellData);
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredCellData)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedCellData)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredFieldData);
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedFieldData);
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredFieldData)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedFieldData)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredEnsembleData);
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedEnsembleData);
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredEnsembleData)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedEnsembleData)
 
     /**
      * @brief Cancel the operation
      */
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel);
+    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
 
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<FilterOption::Pointer>, FilterOptions);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<FilterOption::Pointer>, FilterOptions)
 
     virtual void printValues(std::ostream &out){}
 

@@ -71,11 +71,11 @@ class  SMVtkPolyDataWriter : public AbstractFilter
 
     virtual ~SMVtkPolyDataWriter();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile);
-    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
-    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile);
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const std::string getHumanLabel() { return "Write VTK PolyData File"; }

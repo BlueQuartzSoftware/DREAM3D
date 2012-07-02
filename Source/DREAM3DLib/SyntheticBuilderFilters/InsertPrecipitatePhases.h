@@ -74,9 +74,9 @@ typedef struct {
 class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(InsertPrecipitatePhases);
-    DREAM3D_STATIC_NEW_MACRO(InsertPrecipitatePhases);
-    DREAM3D_TYPE_MACRO_SUPER(InsertPrecipitatePhases, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(InsertPrecipitatePhases)
+    DREAM3D_STATIC_NEW_MACRO(InsertPrecipitatePhases)
+    DREAM3D_TYPE_MACRO_SUPER(InsertPrecipitatePhases, AbstractFilter)
 
     virtual ~InsertPrecipitatePhases();
 
@@ -101,7 +101,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 	//------ Created Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
+    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
     virtual const std::string getHumanLabel() { return "Insert Precipitate Phases"; }
