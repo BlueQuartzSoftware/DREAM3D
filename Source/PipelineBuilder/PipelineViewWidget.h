@@ -44,11 +44,9 @@
 #include <QtGui/QTableWidget>
 
 #include "PipelineBuilder/QFilterWidget.h"
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 #include <vector>
-
-#include "DREAM3DLib/Common/ErrorMessage.h"
 
 
 /*
@@ -83,7 +81,7 @@ class PipelineViewWidget : public QFrame
 
     // Slots for the pipeline to communicate back to us
   public slots:
-    void preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream);
+    void preflightErrorMessage(std::vector<PipelineMessage::Pointer> errorStream);
 
 
   signals:
@@ -105,7 +103,7 @@ class PipelineViewWidget : public QFrame
     QStringList               m_PipelineErrorList;
     QLabel*                   m_EmptyPipelineLabel;
     QTableWidget*                       errorTableWidget;
-    std::vector<ErrorMessage::Pointer>       errorStream;
+    std::vector<PipelineMessage::Pointer>       errorStream;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented

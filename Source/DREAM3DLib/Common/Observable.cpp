@@ -122,7 +122,7 @@ void Observable::notifyProgress(const std::string &msg, int progress, ObserverAs
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyMessage(ErrorMessage::Pointer msg, int progress, ObserverAspect a)
+void Observable::notifyMessage(PipelineMessage::Pointer msg, int progress, ObserverAspect a)
 {
   for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
   {

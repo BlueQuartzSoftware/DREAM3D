@@ -179,8 +179,8 @@ void SyntheticBuilder_PreFlight()
     {
       preflightError |= err;
       preflightMessageStream << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;
-      std::vector<ErrorMessage::Pointer> ems = (*filter)->getErrorMessages();
-      for (std::vector<ErrorMessage::Pointer>::iterator iter = ems.begin(); iter != ems.end(); ++iter )
+      std::vector<PipelineMessage::Pointer> ems = (*filter)->getErrorMessages();
+      for (std::vector<PipelineMessage::Pointer>::iterator iter = ems.begin(); iter != ems.end(); ++iter )
       {
         preflightMessageStream << (*iter)->generateErrorString();
       }
@@ -213,8 +213,8 @@ void name##_PreFlightTest() {\
     if(err < 0) {\
       preflightError |= err;\
       ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
-      std::vector<ErrorMessage::Pointer> ems = (*filter)->getErrorMessages();\
-      for (std::vector<ErrorMessage::Pointer>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
+      std::vector<PipelineMessage::Pointer> ems = (*filter)->getErrorMessages();\
+      for (std::vector<PipelineMessage::Pointer>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
         ss << (*iter)->generateErrorString();\
       }\
     }\

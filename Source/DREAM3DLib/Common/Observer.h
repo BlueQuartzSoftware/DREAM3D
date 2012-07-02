@@ -35,7 +35,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 /**
  * @class Observer Observer.h DREAM3D/Common/Observer.h
@@ -85,16 +85,16 @@ class DREAM3DLib_EXPORT Observer
       * on a GUI or printed to a console or possibly saved to a log file
       * @param message
       */
-     virtual void pipelineWarningMessage(ErrorMessage::Pointer msg);
-     virtual void pipelineWarningMessage(std::vector<ErrorMessage::Pointer> messages);
+     virtual void pipelineWarningMessage(PipelineMessage::Pointer msg);
+     virtual void pipelineWarningMessage(std::vector<PipelineMessage::Pointer> messages);
 
      /**
       * @brief This message reports some human readable message suitable for display
       * on a GUI or printed to a console or possibly saved to a log file
       * @param message
       */
-     virtual void pipelineErrorMessage(ErrorMessage::Pointer msg);
-     virtual void pipelineErrorMessage(std::vector<ErrorMessage::Pointer> messages);
+     virtual void pipelineErrorMessage(PipelineMessage::Pointer msg);
+     virtual void pipelineErrorMessage(std::vector<PipelineMessage::Pointer> messages);
 
 
 

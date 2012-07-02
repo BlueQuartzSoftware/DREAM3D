@@ -12,7 +12,7 @@
 #include "DREAM3DLib/Common/FilterOption.h"
 #include "DREAM3DLib/Common/AbstractFilterOptionsWriter.h"
 
-#include "ErrorMessage.h"
+#include "PipelineMessage.h"
 
 
 
@@ -59,13 +59,13 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 //      return m_ErrorMessage;
 //    }
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ErrorMessage::Pointer>, ErrorMessages);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage::Pointer>, ErrorMessages);
 
-    void addErrorMessage(ErrorMessage::Pointer msg);
+    void addErrorMessage(PipelineMessage::Pointer msg);
     void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);
 
-    void addErrorMessages(std::vector<ErrorMessage::Pointer> msgVector);
-    void removeErrorMessage(ErrorMessage::Pointer msg);
+    void addErrorMessages(std::vector<PipelineMessage::Pointer> msgVector);
+    void removeErrorMessage(PipelineMessage::Pointer msg);
     void removeErrorMessage(int index);
     void removeErrorMessages(int start, int end);
 

@@ -156,7 +156,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
   herr_t err = -1;
   setCancel(false);
   setErrorCondition(0);
-  setErrorMessage("");
+  setPipelineMessage("");
 
 //  std::cout << "H5CtfImporter: Importing " << ctfFile << std::endl;
   CtfReader reader;
@@ -181,7 +181,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     {
       ss << "H5CtfImporter Error: Unknown error.";
     }
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
@@ -223,7 +223,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
     std::ostringstream ss;
     ss << "H5CtfImporter Error: A Group for Z index " << z << " could not be created."
         << " Please check other error messages from the HDF5 library for possible reasons.";
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-500);
     return -1;
   }
@@ -236,7 +236,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
         << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(ctfGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-600);
     return -1;
   }
@@ -282,7 +282,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
     progressMessage(ss.str(), 100);
     err = H5Gclose(gid);
     err = H5Gclose(ctfGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-600);
     return -1;
   }
@@ -306,7 +306,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
         << " Please check other error messages from the HDF5 library for possible reasons." << std::endl;
     progressMessage(ss.str(), 100);
     err = H5Gclose(ctfGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-700);
     return -1;
   }

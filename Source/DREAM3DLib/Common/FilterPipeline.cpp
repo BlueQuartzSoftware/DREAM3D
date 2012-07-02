@@ -67,7 +67,7 @@
     if(err < 0) {\
       setErrorCondition(err);\
       std::string msg = std::string(Message);\
-      pipelineErrorMessage(ErrorMessage::New(getNameOfClass(), msg, err));\
+      pipelineErrorMessage(PipelineMessage::New(getNameOfClass(), msg, err));\
       pipelineProgress(0);\
       pipelineFinished();\
       return;   }

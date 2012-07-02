@@ -158,7 +158,7 @@ void DataContainerWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
+      PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), ss.str(), -1);
       addErrorMessage(em);
       setErrorCondition(-1);
       return;
