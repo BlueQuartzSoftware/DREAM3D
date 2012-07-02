@@ -80,7 +80,7 @@ void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 int FileReader::readHeader()
 {
   setErrorCondition(-1);
-  PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "FileReader should be subclassed and functionality implemented there", -1);
+  PipelineMessage em = PipelineMessage(getNameOfClass(), "FileReader should be subclassed and functionality implemented there", -1);
   addErrorMessage(em);
   notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
@@ -92,7 +92,7 @@ int FileReader::readHeader()
 int FileReader::readFile()
 {
   setErrorCondition(-1);
-  PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "FileReader should be subclassed and functionality implemented there", -1);
+  PipelineMessage em = PipelineMessage(getNameOfClass(), "FileReader should be subclassed and functionality implemented there", -1);
   addErrorMessage(em);
   notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
@@ -108,7 +108,7 @@ void FileReader::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-    PipelineMessage::Pointer em = PipelineMessage::New(getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
+    PipelineMessage em = PipelineMessage(getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
     addErrorMessage(em);
     notifyMessage(em, 0, UpdateErrorMessage);
     return;

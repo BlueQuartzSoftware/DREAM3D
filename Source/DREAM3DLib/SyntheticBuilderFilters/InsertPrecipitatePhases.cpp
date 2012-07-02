@@ -262,7 +262,7 @@ void InsertPrecipitatePhases::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    addErrorMessages(renumber_grains->getErrorMessages());
+    addErrorMessages(renumber_grains->getPipelineMessages());
     return;
   }
 

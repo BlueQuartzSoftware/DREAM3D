@@ -51,8 +51,6 @@ class PipelineMessage
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(PipelineMessage)
-
     PipelineMessage() {}
 
     explicit PipelineMessage(const PipelineMessage& rhs)
@@ -69,14 +67,6 @@ class PipelineMessage
       m_errorDescription(m_errorDescription),
       m_errorCode(m_errorCode)
   {}
-
-
-    DREAM3D_STATIC_NEW_MACRO(PipelineMessage)
-
-    static Pointer New(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) {
-      Pointer sharedPtr(new PipelineMessage(m_filterName, m_errorDescription, m_errorCode));
-      return sharedPtr;
-    }
 
     DREAM3D_TYPE_MACRO(PipelineMessage)
 
@@ -119,7 +109,6 @@ class PipelineMessage
      }
 
   protected:
-
 
 
   private:

@@ -408,7 +408,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
         if (err < 0)
         {
           setErrorCondition((*iter)->getErrorCondition());
-          addErrorMessages((*iter)->getErrorMessages());
+          addErrorMessages((*iter)->getPipelineMessages());
           break;
         }
       }

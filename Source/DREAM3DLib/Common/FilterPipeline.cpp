@@ -67,7 +67,7 @@
     if(err < 0) {\
       setErrorCondition(err);\
       std::string msg = std::string(Message);\
-      pipelineErrorMessage(PipelineMessage::New(getNameOfClass(), msg, err));\
+      pipelineErrorMessage(PipelineMessage(getNameOfClass(), msg, err));\
       pipelineProgress(0);\
       pipelineFinished();\
       return;   }
@@ -308,8 +308,8 @@ int FilterPipeline::preflightPipeline()
       preflightError |= err;
       setErrorCondition(preflightError);
       setErrorCondition(err);
-      pipelineErrorMessage( (*filter)->getErrorMessages());
-      pipelineErrorMessage((*filter)->getErrorMessages() );
+      pipelineErrorMessage( (*filter)->getPipelineMessages());
+      pipelineErrorMessage((*filter)->getPipelineMessages() );
     }
   }
 
@@ -373,7 +373,7 @@ void FilterPipeline::execute()
     if(err < 0)
     {
       setErrorCondition(err);
-      pipelineErrorMessage((*iter)->getErrorMessages());
+      pipelineErrorMessage((*iter)->getPipelineMessages());
       pipelineProgress(100);
       pipelineFinished();
       return;

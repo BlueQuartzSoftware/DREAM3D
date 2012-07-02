@@ -59,13 +59,13 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 //      return m_ErrorMessage;
 //    }
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage::Pointer>, ErrorMessages);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages);
 
-    void addErrorMessage(PipelineMessage::Pointer msg);
+    void addErrorMessage(PipelineMessage msg);
     void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);
 
-    void addErrorMessages(std::vector<PipelineMessage::Pointer> msgVector);
-    void removeErrorMessage(PipelineMessage::Pointer msg);
+    void addErrorMessages(std::vector<PipelineMessage> msgVector);
+    void removeErrorMessage(PipelineMessage msg);
     void removeErrorMessage(int index);
     void removeErrorMessages(int start, int end);
 

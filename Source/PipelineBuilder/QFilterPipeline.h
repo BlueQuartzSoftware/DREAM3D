@@ -57,14 +57,14 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * @param message The message to print
      * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
      */
-    virtual void updateProgressAndMessage(PipelineMessage::Pointer msg, int progress);
+    virtual void updateProgressAndMessage(PipelineMessage msg, int progress);
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
      * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
      */
-    virtual void updateProgressAndMessage(std::vector<PipelineMessage::Pointer> &messages, int progress);
+    virtual void updateProgressAndMessage(std::vector<PipelineMessage> &messages, int progress);
 
     /**
      * @brief This method reports progress such that a user interface element such
@@ -88,16 +88,16 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineWarningMessage(PipelineMessage::Pointer msg);
-    virtual void pipelineWarningMessage(std::vector<PipelineMessage::Pointer> &messages);
+    virtual void pipelineWarningMessage(PipelineMessage msg);
+    virtual void pipelineWarningMessage(std::vector<PipelineMessage> &messages);
 
     /**
      * @brief This message reports some human readable message suitable for display
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineErrorMessage(PipelineMessage::Pointer msg);
-    virtual void pipelineErrorMessage(std::vector<PipelineMessage::Pointer> &messages);
+    virtual void pipelineErrorMessage(PipelineMessage msg);
+    virtual void pipelineErrorMessage(std::vector<PipelineMessage> &messages);
 
     /**
      * @brief This method is called from the run() method just before exiting and

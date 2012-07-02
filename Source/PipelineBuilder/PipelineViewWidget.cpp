@@ -299,7 +299,7 @@ void PipelineViewWidget::preflightPipeline()
       filter->setDataContainer(m.get());
       filter->preflight();
       int err = filter->getErrorCondition();
-      std::vector<PipelineMessage::Pointer> msgs = filter->getErrorMessages();
+      std::vector<PipelineMessage> msgs = filter->getPipelineMessages();
       if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
@@ -314,13 +314,13 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage::Pointer> errorStream)
+void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> errorStream)
 {
   if(NULL != errorTableWidget)
   {
     int rc = errorTableWidget->rowCount();
 
-    for (std::vector<PipelineMessage::Pointer>::size_type i = 0; i < errorStream.size(); ++i)
+    for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
     {
       errorTableWidget->insertRow(rc);
 
