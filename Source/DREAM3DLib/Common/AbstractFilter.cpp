@@ -62,9 +62,9 @@ void AbstractFilter::setupFilterOptions()
 void AbstractFilter::execute()
 {
   setErrorCondition(-1);
-  PipelineMessage msg = PipelineMessage(getNameOfClass(), "AbstractFilter does not implement an execute method. Please use a subclass instead.", -1);
-  addErrorMessage(msg);
-  notifyMessage(msg, 0, Observable::UpdateErrorMessage);
+  PipelineMessage em (getNameOfClass(), "AbstractFilter does not implement an execute method. Please use a subclass instead.", -1);
+  addErrorMessage(em);
+  notifyMessage(em, 0, Observable::UpdateErrorMessage);
 }
 
 // -----------------------------------------------------------------------------
@@ -175,7 +175,8 @@ void AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(PipelineMessage msg) {
+void AbstractFilter::addErrorMessage(PipelineMessage &msg)
+{
   m_PipelineMessages.push_back(msg);
 }
 
@@ -184,8 +185,19 @@ void AbstractFilter::addErrorMessage(PipelineMessage msg) {
 // -----------------------------------------------------------------------------
 void AbstractFilter::addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode)
 {
-  m_PipelineMessages.push_back(PipelineMessage(filterName, errorDescription, errorCode));
+  PipelineMessage em(filterName, errorDescription, errorCode);
+  m_PipelineMessages.push_back(em);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessages(std::vector<PipelineMessage> msgVector) {
+  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+    m_PipelineMessages.push_back(msgVector[i]);
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -229,15 +241,6 @@ void AbstractFilter::removeErrorMessages(int start, int end) {
       return;
     }
     count++;
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessages(std::vector<PipelineMessage> msgVector) {
-  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
-    m_PipelineMessages.push_back(msgVector[i]);
   }
 }
 

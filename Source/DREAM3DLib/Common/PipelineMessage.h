@@ -53,13 +53,19 @@ class PipelineMessage
 
     PipelineMessage() {}
 
-    explicit PipelineMessage(const PipelineMessage& rhs)
+    PipelineMessage(const PipelineMessage& rhs)
     {
-
+      m_filterName = rhs.m_filterName;
+      m_errorDescription = rhs.m_errorDescription;
+      m_errorCode = rhs.m_errorCode;
     }
-    void operator=(const PipelineMessage& rhs)
-    {
 
+
+    PipelineMessage(const std::string &m_filterName, const char* message, int m_errorCode) :
+      m_filterName(m_filterName),
+      m_errorDescription(m_errorDescription),
+      m_errorCode(m_errorCode)
+    {
     }
 
     PipelineMessage(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) :
@@ -71,6 +77,20 @@ class PipelineMessage
     DREAM3D_TYPE_MACRO(PipelineMessage)
 
     virtual ~PipelineMessage() {}
+
+    bool operator==(const PipelineMessage& rhs)
+    {
+      return (m_filterName == rhs.m_filterName &&
+          m_errorDescription == rhs.m_errorDescription &&
+            m_errorCode == rhs.m_errorCode);
+    }
+
+    void operator=(const PipelineMessage& rhs)
+    {
+      m_filterName = rhs.m_filterName;
+      m_errorDescription = rhs.m_errorDescription;
+      m_errorCode = rhs.m_errorCode;
+    }
 
     /**
      * @brief
@@ -115,6 +135,7 @@ class PipelineMessage
     std::string m_filterName;
     std::string m_errorDescription;
     int m_errorCode;
+
 
 
 };

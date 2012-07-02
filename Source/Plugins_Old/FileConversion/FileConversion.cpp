@@ -84,7 +84,7 @@ namespace Detail {
        int writeFile()
        {
          int err = -1;
-         ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ".h5voxel output files are NOT currently supported", XXXX);
+         PipelineMessage em (getNameOfClass(), ".h5voxel output files are NOT currently supported", XXXX);
   addErrorMessage(em);
          /*
          int totalpoints = xpoints * ypoints * zpoints;
