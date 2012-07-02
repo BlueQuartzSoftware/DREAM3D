@@ -167,13 +167,13 @@ class DREAM3DPluginFrame : public QFrame
        * @brief Slot to add an Error message to display to the user
        * @param message
        */
-      virtual void addErrorMessage(QString message) = 0;
+      virtual void addErrorMessage(QString errName, QString errDesc, int errNum) = 0;
 
       /**
        * @brief Slot to add a Warning message to display to the user
        * @param message
        */
-      virtual void addWarningMessage(QString message) = 0;
+      virtual void addWarningMessage(QString warnName, QString warnDesc, int warnNum) = 0;
 
       /**
        * @brief Slot to add a Progress message to display to the user

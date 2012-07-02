@@ -50,7 +50,8 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
-
+#include <QtGui/QColor>
+#include <QtGui/QBrush>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -157,9 +158,9 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
     QString favFilePath = QString::number(r) + QString("_Favorite_File");
     QString favPath = prefs.value(favFilePath).toString();
 
-    favoritesMap[favName] = favPath;
+    m_favoritesMap[favName] = favPath;
 
-    QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(favorites);
+    QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites);
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
   }
@@ -181,10 +182,10 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 
   prefs.beginGroup(Detail::FavoritePipelines);
   prefs.clear();
-  prefs.setValue( "count", favoritesMap.size() );
+  prefs.setValue( "count", m_favoritesMap.size() );
 
   int index = 0;
-  QMapIterator<QString, QString> i(favoritesMap);
+  QMapIterator<QString, QString> i(m_favoritesMap);
   while (i.hasNext()) {
     i.next();
     prefs.setValue( QString::number(index) + "_Favorite_Name", i.key() );
@@ -238,6 +239,9 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
+  m_hasErrors = false;
+  m_hasWarnings = false;
+
   // Get the QFilterWidget Manager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
 
@@ -252,11 +256,12 @@ void PipelineBuilderWidget::setupGui()
   presets->setIcon(0, QIcon(":/flag_blue_scroll.png"));
   presets->setExpanded(true);
 
-  favorites = new QTreeWidgetItem(filterLibraryTree);
-  favorites->setText(0, Detail::FavoritePipelines);
-  favorites->setIcon(0, QIcon(":/flash.png"));
 
-  favorites->setExpanded(true);
+  m_favorites = new QTreeWidgetItem(filterLibraryTree);
+  m_favorites->setText(0, Detail::FavoritePipelines);
+  m_favorites->setIcon(0, QIcon(":/flash.png"));
+
+  m_favorites->setExpanded(true);
 
 //  std::cout << "Groups Found: " << std::endl;
   for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
@@ -297,7 +302,7 @@ void PipelineBuilderWidget::setupGui()
   QStringList presetFilterList;
   presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" <<
     "DataContainerWriter" << "VtkRectilinearGridWriter";
-  presetMap["Ebsd 3D Reconstruction"] = presetFilterList;
+  m_presetMap["Ebsd 3D Reconstruction"] = presetFilterList;
   }
 
   {
@@ -308,7 +313,7 @@ void PipelineBuilderWidget::setupGui()
   presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" <<
     "FindShapes" << "FindAxisODF" << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" <<
       "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
-  presetMap["Statistics"] = presetFilterList;
+  m_presetMap["Statistics"] = presetFilterList;
   }
 }
 
@@ -365,12 +370,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
   if (NULL != parent) {
     if (parent->text(0).compare(Detail::PrebuiltPipelines) == 0) {
       QString text = item->text(0);
-      QStringList presetList = presetMap[text];
+      QStringList presetList = m_presetMap[text];
       loadPreset(presetList);
     }
     else if (parent->text(0).compare(Detail::FavoritePipelines) == 0) {
       QString favoriteName = item->text(0);
-      QString favoritePath = favoritesMap[favoriteName];
+      QString favoritePath = m_favoritesMap[favoriteName];
       loadFavorites(favoritePath);
     }
   }
@@ -605,6 +610,16 @@ void PipelineBuilderWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_m_GoBtn_clicked()
 {
+  QTableWidget* errorTableWidget = m_PipelineViewWidget->getTableWidget();
+  QStringList m_PipelineErrorList = m_PipelineViewWidget->getPipelineErrorList();
+
+  // clear all the error messages
+  m_PipelineErrorList.clear();
+
+  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
+    errorTableWidget->removeRow(i);
+  }
+  errorTableWidget->setRowCount(0);
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
@@ -673,12 +688,12 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
           this, SLOT(addProgressMessage(QString) ));
 
   // Send progress messages from PipelineBuilder to this object for display
-  connect(m_FilterPipeline, SIGNAL (warningMessage(QString)),
-          this, SLOT(addWarningMessage(QString) ));
+  connect(m_FilterPipeline, SIGNAL (warningMessage(QString, QString, int)),
+          this, SLOT(addWarningMessage(QString, QString, int) ));
 
   // Send progress messages from PipelineBuilder to this object for display
-  connect(m_FilterPipeline, SIGNAL (errorMessage(QString)),
-          this, SLOT(addErrorMessage(QString) ));
+  connect(m_FilterPipeline, SIGNAL (errorMessage(QString, QString, int)),
+          this, SLOT(addErrorMessage(QString, QString, int) ));
 
 
 
@@ -694,6 +709,11 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 void PipelineBuilderWidget::pipelineComplete()
 {
  // std::cout << "PipelineBuilderWidget::PipelineBuilder_Finished()" << std::endl;
+  if (m_hasErrors || m_hasWarnings) {
+    displayDialogBox(QString::fromStdString("Pipeline Errors | Warnings"),
+      QString::fromStdString("Errors and/or warnings occurred during processing.\nPlease check the error table for more information."),
+        QMessageBox::Critical);
+  }
   m_GoBtn->setText("Go");
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
@@ -713,19 +733,43 @@ void PipelineBuilderWidget::pipelineProgress(int val)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addErrorMessage(QString message)
+void PipelineBuilderWidget::addErrorMessage(QString errName, QString errDesc, int errNum)
 {
-  QString title = QString::fromStdString("PipelineBuilderWidget Error");
-  displayDialogBox(title, message, QMessageBox::Critical);
+  m_hasErrors = true;
+
+  QTableWidget* errorTableWidget = m_PipelineViewWidget->getTableWidget();
+
+  int rc = errorTableWidget->rowCount();
+
+  errorTableWidget->insertRow(rc);
+
+  QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(errName);
+  filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+  QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errDesc);
+  QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem( QString::number(errNum) );
+  errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+  QColor errColor(255, 191, 193);
+  QBrush errBrush(errColor);
+
+  filterNameWidgetItem->setBackground(errBrush);
+  errorDescriptionWidgetItem->setBackground(errBrush);
+  errorCodeWidgetItem->setBackground(errBrush);
+
+  errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+  errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
+  errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addWarningMessage(QString message)
+void PipelineBuilderWidget::addWarningMessage(QString warnName, QString warnDesc, int warnNum)
 {
-  QString title = QString::fromStdString("PipelineBuilderWidget Warning");
-  displayDialogBox(title, message, QMessageBox::Warning);
+  m_hasWarnings = true;
+
+  //QString title = QString::fromStdString("PipelineBuilderWidget Warning");
+  //displayDialogBox(title, message, QMessageBox::Warning);
 }
 
 // -----------------------------------------------------------------------------
@@ -770,22 +814,22 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
     favName->setText(0, favoriteTitle);
     favName->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
 
-    for (int i = 0; i <= favoritesMap.size(); i++)
+    for (int i = 0; i <= m_favoritesMap.size(); i++)
     {
       QString listLower;
       QChar listChar;
-      if(favoritesMap.size() != i)
+      if(m_favoritesMap.size() != i)
       {
-        listLower = favorites->child(i)->text(0).toLower();
-        listChar = favorites->child(i)->text(0).at(0).toLower();
+        listLower = m_favorites->child(i)->text(0).toLower();
+        listChar = m_favorites->child(i)->text(0).at(0).toLower();
       }
       QString insertLower = favoriteTitle.toLower();
       QChar insertChar = favoriteTitle.at(0).toLower();
 
       //Handle insert-empty and insert-last cases
-      if(favoritesMap.size() == i)
+      if(m_favoritesMap.size() == i)
       {
-        favorites->insertChild(i, favName);
+        m_favorites->insertChild(i, favName);
         break;
       }
 
@@ -800,7 +844,7 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
       //Insert in alphabetical order
       else if(listChar > insertChar)
       {
-        favorites->insertChild(i, favName);
+        m_favorites->insertChild(i, favName);
         break;
       }
     }
@@ -826,7 +870,7 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
       newPrefPath = QDir::toNativeSeparators(newPrefPath);
       newParentPrefPath = QDir::toNativeSeparators(newParentPrefPath);
 
-      favoritesMap[favoriteTitle] = newPrefPath;
+      m_favoritesMap[favoriteTitle] = newPrefPath;
 
       QDir newParentPrefPathDir = QDir(newParentPrefPath);
 
@@ -850,7 +894,7 @@ void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
   QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
   if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0) {
     QString favoriteName = item->text(0);
-    QString filePath = favoritesMap[item->text(0)];
+    QString filePath = m_favoritesMap[item->text(0)];
     QFileInfo filePathInfo = QFileInfo(filePath);
     QString fileParentPath = filePathInfo.path();
     QString fileName = filePathInfo.fileName();
@@ -860,7 +904,7 @@ void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
     fileParentPathDir.remove(fileName);
 
     //Remove favorite from favoritesMap
-    favoritesMap.remove(favoriteName);
+    m_favoritesMap.remove(favoriteName);
 
     //Remove favorite, graphically, from the DREAM3D interface
     filterLibraryTree->removeItemWidget(item, 0);

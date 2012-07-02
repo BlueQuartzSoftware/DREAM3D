@@ -97,7 +97,6 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
 {
   if(m_EmptyPipelineLabel == NULL)
   {
-    std::cout << "newEmptyPipelineViewLayout" << std::endl;
     QGridLayout* gridLayout = new QGridLayout(this);
     gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
     QSpacerItem* verticalSpacer = new QSpacerItem(20, 341, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -330,10 +329,18 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer
       int errorCode = errorStream.at(i)->getErrorCode();
 
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
-      filterNameWidgetItem->setTextAlignment(Qt::AlignHCenter);
+      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
+
       QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
       errorCodeWidgetItem->setTextAlignment(Qt::AlignHCenter);
+
+      QColor errColor(255, 191, 193);
+      QBrush errBrush(errColor);
+
+      filterNameWidgetItem->setBackground(errBrush);
+      errorDescriptionWidgetItem->setBackground(errBrush);
+      errorCodeWidgetItem->setBackground(errBrush);
 
       errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);

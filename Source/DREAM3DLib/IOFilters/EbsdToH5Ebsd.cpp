@@ -37,6 +37,7 @@
 
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 
 #include "EbsdLib/EbsdImporter.h"
@@ -171,6 +172,18 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
     return;
   }
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      std::stringstream ss;
+      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(em);
+      setErrorCondition(-1);
+      return;
+  }
+
   // Create File
   fileId = H5Utilities::createFile(m_OutputFile);
   if(fileId < 0)
