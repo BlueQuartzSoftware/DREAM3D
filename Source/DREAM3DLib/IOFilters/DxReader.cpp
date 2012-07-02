@@ -96,7 +96,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     addErrorMessage(getNameOfClass(), ss.str(), -4);
     setErrorCondition(-387);
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
 
 }

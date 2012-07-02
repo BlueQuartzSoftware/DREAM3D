@@ -89,7 +89,7 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationMath
   public:
     MXA_SHARED_POINTERS(HexagonalOps)
     MXA_TYPE_MACRO(HexagonalOps)
-    MXA_STATIC_NEW_MACRO(HexagonalOps);
+    MXA_STATIC_NEW_MACRO(HexagonalOps)
 
     HexagonalOps();
     virtual ~HexagonalOps();

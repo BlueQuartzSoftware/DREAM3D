@@ -64,7 +64,7 @@ class AngResFixer
 {
   public:
     AngResFixer();
-    virtual~AngResFixer() {};
+    virtual~AngResFixer() {}
 
     virtual int fixFile();
     std::string headerWord(char* buf, size_t length);
@@ -72,10 +72,10 @@ class AngResFixer
                        std::vector<std::string> &headerLines);
 
     /** @brief Sets the file name of the ebsd file to be read */
-    MXA_INSTANCE_STRING_PROPERTY(FileName);
+    MXA_INSTANCE_STRING_PROPERTY(FileName)
     MXA_INSTANCE_STRING_PROPERTY(OutputFileName)
-    MXA_INSTANCE_PROPERTY(float, XStepFix);
-    MXA_INSTANCE_PROPERTY(float, YStepFix);
+    MXA_INSTANCE_PROPERTY(float, XStepFix)
+    MXA_INSTANCE_PROPERTY(float, YStepFix)
   private:
 
 

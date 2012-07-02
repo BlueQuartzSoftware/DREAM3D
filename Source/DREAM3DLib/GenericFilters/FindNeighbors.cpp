@@ -85,11 +85,11 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, 0, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, 0, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1)
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
@@ -122,12 +122,12 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     }
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
 
   //Ensemble Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, float, FloatArrayType, 0, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, float, FloatArrayType, 0, ensembles, 1)
 }
 
 

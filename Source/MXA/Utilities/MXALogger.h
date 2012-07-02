@@ -125,7 +125,7 @@ class MXA_EXPORT MXALogger_Implementation
 class MXA_EXPORT MXALogger
 {
   public:
-	MXA_SHARED_POINTERS(MXALogger);
+	MXA_SHARED_POINTERS(MXALogger)
 	virtual ~MXALogger();
 
     static MXALogger::Pointer instance();

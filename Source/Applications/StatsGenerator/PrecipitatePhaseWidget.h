@@ -28,7 +28,7 @@ class QwtPlotMarker;
 class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidget
 {
 
-  Q_OBJECT ;
+  Q_OBJECT
 
    public:
      PrecipitatePhaseWidget(QWidget *parent = 0);
@@ -39,11 +39,11 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
      void setPhaseIndex(int index);
      int getPhaseIndex();
 
-     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType);
-     MXA_INSTANCE_PROPERTY(float, PhaseFraction);
-     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
-     MXA_INSTANCE_PROPERTY(float, PptFraction);
-     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
+     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType)
+     MXA_INSTANCE_PROPERTY(float, PhaseFraction)
+     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+     MXA_INSTANCE_PROPERTY(float, PptFraction)
+     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
      void extractStatsData(DataContainer::Pointer m, int index);
 

@@ -111,7 +111,7 @@ class TestException : public std::exception
        int getLineNumber() const { return m_LineNumber; }
 
   protected:
-     TestException() {};
+     TestException() {}
 
   private:
 

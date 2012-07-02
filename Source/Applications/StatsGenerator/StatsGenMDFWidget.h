@@ -64,7 +64,7 @@ class QwtPlotCurve;
  */
 class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     StatsGenMDFWidget(QWidget *parent = 0);

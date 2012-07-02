@@ -53,7 +53,7 @@
 
 class QualityMetricItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     explicit QualityMetricItemDelegate(QStringList possibleFields, int numPhases, QObject *parent = 0) :

@@ -257,12 +257,12 @@ void OrientationMath::_calcQuatNearestOrigin(const float quatsym[24][5], int num
 
 int OrientationMath::_calcMisoBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3)
 {
-  size_t miso1bin = size_t((r1+dim[0])/step[0]);
-  size_t miso2bin = size_t((r2+dim[1])/step[1]);
-  size_t miso3bin = size_t((r3+dim[2])/step[2]);
-  if(miso1bin >= bins[0]) miso1bin = static_cast<size_t>( bins[0]-1 );
-  if(miso2bin >= bins[1]) miso2bin = static_cast<size_t>( bins[1]-1 );
-  if(miso3bin >= bins[2]) miso3bin = static_cast<size_t>( bins[2]-1 );
+  int miso1bin = int((r1+dim[0])/step[0]);
+  int miso2bin = int((r2+dim[1])/step[1]);
+  int miso3bin = int((r3+dim[2])/step[2]);
+  if(miso1bin >= bins[0]) miso1bin = static_cast<int>( bins[0]-1 );
+  if(miso2bin >= bins[1]) miso2bin = static_cast<int>( bins[1]-1 );
+  if(miso3bin >= bins[2]) miso3bin = static_cast<int>( bins[2]-1 );
   if(miso1bin < 0) miso1bin = 0;
   if(miso2bin < 0) miso2bin = 0;
   if(miso3bin < 0) miso3bin = 0;
@@ -284,20 +284,20 @@ void OrientationMath::_calcDetermineHomochoricValues(float init[3], float step[3
 
 int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3)
 {
-  size_t g1euler1bin;
-  size_t g1euler2bin;
-  size_t g1euler3bin;
-  size_t g1odfbin;
-  g1euler1bin = size_t((r1+dim[0])/step[0]);
-  g1euler2bin = size_t((r2+dim[1])/step[1]);
-  g1euler3bin = size_t((r3+dim[2])/step[2]);
-  if(g1euler1bin >= bins[0]) g1euler1bin = static_cast<size_t>( bins[0]-1 );
-  if(g1euler2bin >= bins[1]) g1euler2bin = static_cast<size_t>( bins[1]-1 );
-  if(g1euler3bin >= bins[2]) g1euler3bin = static_cast<size_t>( bins[2]-1 );
+  int g1euler1bin;
+  int g1euler2bin;
+  int g1euler3bin;
+  int g1odfbin;
+  g1euler1bin = int((r1+dim[0])/step[0]);
+  g1euler2bin = int((r2+dim[1])/step[1]);
+  g1euler3bin = int((r3+dim[2])/step[2]);
+  if(g1euler1bin >= bins[0]) g1euler1bin = static_cast<int>( bins[0]-1 );
+  if(g1euler2bin >= bins[1]) g1euler2bin = static_cast<int>( bins[1]-1 );
+  if(g1euler3bin >= bins[2]) g1euler3bin = static_cast<int>( bins[2]-1 );
   if(g1euler1bin < 0) g1euler1bin = 0;
   if(g1euler2bin < 0) g1euler2bin = 0;
   if(g1euler3bin < 0) g1euler3bin = 0;
-  g1odfbin = static_cast<size_t>( (g1euler3bin*bins[0]*bins[1])+(g1euler2bin*bins[0])+(g1euler1bin) );
+  g1odfbin = static_cast<int>( (g1euler3bin*bins[0]*bins[1])+(g1euler2bin*bins[0])+(g1euler1bin) );
   return g1odfbin;
 }
 
@@ -372,7 +372,7 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   {
 	w_new = w - ((x-w+sin(w))/(-1+cos(w)));
 	w = w_new;
-  }	
+  }
   float const1 = tanf(w/2.0f);
   r1 = r1 * const1;
   r2 = r2 * const1;

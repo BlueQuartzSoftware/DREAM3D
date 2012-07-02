@@ -101,7 +101,7 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
     setErrorCondition(-1);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 }
 
 

@@ -58,7 +58,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
 
   public:
     EBSD_SHARED_POINTERS(AngHeaderEntry<T >)
-    HEADERENTRY_NEW_SUPERCLASS(AngHeaderEntry<T>, EbsdHeaderEntry);
+    HEADERENTRY_NEW_SUPERCLASS(AngHeaderEntry<T>, EbsdHeaderEntry)
 
     virtual ~AngHeaderEntry() {}
 
@@ -105,7 +105,7 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 {
   public:
     EBSD_SHARED_POINTERS(AngStringHeaderEntry)
-    HEADERENTRY_NEW_SUPERCLASS(AngStringHeaderEntry, EbsdHeaderEntry);
+    HEADERENTRY_NEW_SUPERCLASS(AngStringHeaderEntry, EbsdHeaderEntry)
 
     virtual ~AngStringHeaderEntry() {}
 

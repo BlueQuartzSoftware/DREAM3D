@@ -147,7 +147,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     fprintf(f, "#include \"%s/%s/%s.h\"\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
   }
   fprintf(f, "class Q%sWidget : public QFilterWidget \n{\n", filter.c_str());
-  fprintf(f, "   Q_OBJECT;\n");
+  fprintf(f, "   Q_OBJECT\n");
   fprintf(f, " public:\n");
   fprintf(f, "    Q%sWidget(QWidget* parent = NULL);\n", filter.c_str());
   fprintf(f, "    virtual ~Q%sWidget();\n", filter.c_str());
@@ -191,7 +191,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     else
     {
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s);\n", typ.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n", typ.c_str(), prop.c_str());
     }
   }
 

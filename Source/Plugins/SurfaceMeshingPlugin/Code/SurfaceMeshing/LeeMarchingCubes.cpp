@@ -420,7 +420,7 @@ void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, s
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
   if (true == m_WriteSTLFile )
   {
