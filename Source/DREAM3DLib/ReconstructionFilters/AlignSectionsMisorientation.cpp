@@ -140,8 +140,9 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
     setErrorCondition(-1);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
-  if(getErrorCondition() == -301)
+  int err = 0; // Pay Attention to the arguments: | Some have changed
+  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -301, float, FloatArrayType, voxels, 5)
+  if(err == -301) // If err is the same as the error code we passed in then the array was not in the DataContainer
   {
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
@@ -149,6 +150,10 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
     find_cellquats->setDataContainer(getDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
+  }
+  else // The array was in the Data Container so get that array.
+  {
     GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
   }
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
