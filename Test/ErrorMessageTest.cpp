@@ -58,15 +58,15 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void TestErrorMessage()
 {
-  PipelineMessage::Pointer e0 = PipelineMessage::New();
+  PipelineMessage e0;
 
   std::string a0("Some Class Name");
   std::string a1("Description");
   int eCode = -10;
-  PipelineMessage::Pointer e1 = PipelineMessage::New();
+  PipelineMessage e1;
 
 
-  PipelineMessage::Pointer e2 = PipelineMessage::New(a0, a1, eCode);
+  PipelineMessage e2(a0, a1, eCode);
 
   AbstractFilter::Pointer f = AbstractFilter::New();
   f->addErrorMessage(a0, a1, eCode);

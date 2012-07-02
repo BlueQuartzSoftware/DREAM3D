@@ -108,7 +108,7 @@ using namespace meshing;
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), #Message, err);\
+      PipelineMessage em (getNameOfClass(), #Message, err);\
       addErrorMessage(em);\
       notifyMessage(em, 0, UpdateErrorMessage);\
       return;   }
@@ -127,7 +127,7 @@ using namespace meshing;
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
       setErrorCondition(-1000);\
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), #Message, -1);\
+      PipelineMessage em (getNameOfClass(), #Message, -1);\
       addErrorMessage(em);\
       notifyMessage(em, 0, UpdateWarningMessage);\
       return;}\

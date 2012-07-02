@@ -264,7 +264,7 @@ void VtkRectilinearGridWriter::execute()
   {
       std::stringstream ss;
       ss << ": Error creating parent path '" << parentPath << "'";
-      PipelineMessage em = PipelineMessage(getNameOfClass(), ss.str(), -1);
+      PipelineMessage em (getNameOfClass(), ss.str(), -1);
       addErrorMessage(em);
       setErrorCondition(-1);
       return;

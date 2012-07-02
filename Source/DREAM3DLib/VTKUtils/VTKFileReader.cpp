@@ -138,7 +138,7 @@ int VTKFileReader::readHeader()
   if (getInputFile().empty() == true)
   {
     setErrorCondition(-1);
-    PipelineMessage em = PipelineMessage(getNameOfClass(), "FileName was not set and must be valid", -1);
+    PipelineMessage em (getNameOfClass(), "FileName was not set and must be valid", -1);
     addErrorMessage(em);
     return -1;
   }
@@ -146,7 +146,7 @@ int VTKFileReader::readHeader()
   if (NULL == getDataContainer())
   {
     setErrorCondition(-1);
-    PipelineMessage em = PipelineMessage(getNameOfClass(), "DataContainer Pointer was NULL and must be valid", -1);
+    PipelineMessage em (getNameOfClass(), "DataContainer Pointer was NULL and must be valid", -1);
     addErrorMessage(em);
     return -1;
   }

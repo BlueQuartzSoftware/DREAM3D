@@ -346,7 +346,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << "Error opening nodes file '" << m_NodesFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em, 0, UpdateErrorMessage);
     return;
@@ -363,7 +363,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after nodes count.'" << m_NodesFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em, 0, UpdateErrorMessage);
     return;
@@ -379,7 +379,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error opening Triangles file '" << triFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em, 0, UpdateErrorMessage);
     return;
@@ -395,7 +395,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after triangles count.'" << m_TrianglesFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em, 0, UpdateErrorMessage);
     return;
@@ -413,7 +413,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error creating Triangles VTK Visualization '" << m_OutputVtkFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em, 0, UpdateErrorMessage);
     return;

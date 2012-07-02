@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT Observable
     virtual void notifyProgress(const std::string &msg, int progress, ObserverAspect a);
 
 
-    virtual void notifyMessage(PipelineMessage msg, int progress, ObserverAspect a);
+    virtual void notifyMessage(PipelineMessage &msg, int progress, ObserverAspect a);
     //virtual void notfiyMessage(std::vector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a);
 
 

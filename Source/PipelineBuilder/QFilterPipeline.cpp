@@ -61,7 +61,7 @@ QFilterPipeline::~QFilterPipeline()
 void QFilterPipeline::updateProgressAndMessage(PipelineMessage msg, int progress)
 {
   emit updateProgress(progress);
-  emit progressMessage(QString::fromStdString(msg->generateStatusString()));
+  emit progressMessage(QString::fromStdString(msg.generateStatusString()));
 }
 
 // -----------------------------------------------------------------------------
@@ -105,8 +105,8 @@ void QFilterPipeline::pipelineProgressMessage(const std::string &msg)
 // -----------------------------------------------------------------------------
 void QFilterPipeline::pipelineWarningMessage(PipelineMessage msg)
 {
-  emit warningMessage( QString::fromStdString( (*msg).getFilterName() ), 
-      QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
+  emit warningMessage( QString::fromStdString( msg.getFilterName() ),
+      QString::fromStdString( msg.getErrorDescription() ), msg.getErrorCode() );
 }
 
 // -----------------------------------------------------------------------------
@@ -125,8 +125,8 @@ void QFilterPipeline::pipelineWarningMessage(std::vector<PipelineMessage> &messa
 // -----------------------------------------------------------------------------
 void QFilterPipeline::pipelineErrorMessage(PipelineMessage msg)
 {
-  emit errorMessage( QString::fromStdString( (*msg).getFilterName() ), 
-      QString::fromStdString( (*msg).getErrorDescription() ), (*msg).getErrorCode() );
+  emit errorMessage( QString::fromStdString( msg.getFilterName() ),
+      QString::fromStdString( msg.getErrorDescription() ), msg.getErrorCode() );
 }
 
 // -----------------------------------------------------------------------------

@@ -64,7 +64,7 @@ FileWriter::~FileWriter()
 int FileWriter::writeHeader()
 {
   setErrorCondition(-1);
-  PipelineMessage em = PipelineMessage(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
+  PipelineMessage em (getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
   addErrorMessage(em);
   notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
@@ -76,7 +76,7 @@ int FileWriter::writeHeader()
 int FileWriter::writeFile()
 {
   setErrorCondition(-1);
-  PipelineMessage em = PipelineMessage(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
+  PipelineMessage em (getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
   addErrorMessage(em);
   notifyMessage(em, 0, UpdateErrorMessage);
   return -1;
@@ -90,7 +90,7 @@ void FileWriter::execute()
   if (getDataContainer() == NULL)
   {
     setErrorCondition(-1);
-    PipelineMessage em = PipelineMessage(getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
+    PipelineMessage em (getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
     addErrorMessage(em);
     notifyMessage(em, 0, UpdateErrorMessage);
     return;
@@ -104,7 +104,7 @@ void FileWriter::execute()
   {
       std::stringstream ss;
       ss << ": Error creating parent path '" << parentPath << "'";
-      PipelineMessage em = PipelineMessage(getNameOfClass(), ss.str(), -1);
+      PipelineMessage em (getNameOfClass(), ss.str(), -1);
       addErrorMessage(em);
       setErrorCondition(-1);
       return;
@@ -115,7 +115,7 @@ void FileWriter::execute()
   int err = writeHeader();
   if (err < 0)
   {
-    PipelineMessage em = PipelineMessage(getNameOfClass(), "Error Writing the Header portion of the file", err);
+    PipelineMessage em (getNameOfClass(), "Error Writing the Header portion of the file", err);
   addErrorMessage(em);
     setErrorCondition(err);
     notifyMessage(em, 0, UpdateErrorMessage);
@@ -124,7 +124,7 @@ void FileWriter::execute()
   err = writeFile();
   if (err < 0)
   {
-    PipelineMessage em = PipelineMessage(getNameOfClass(), "Error Writing the file", err);
+    PipelineMessage em (getNameOfClass(), "Error Writing the file", err);
   addErrorMessage(em);
     setErrorCondition(err);
     notifyMessage(em, 0, UpdateErrorMessage);

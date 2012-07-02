@@ -340,7 +340,7 @@ void ReadH5Ebsd::execute()
     if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
-      PipelineMessage em = PipelineMessage(getNameOfClass(), "Could not Create H5AngVolumeReader object.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not Create H5AngVolumeReader object.", -1);
       addErrorMessage(em);
       return;
     }
@@ -349,7 +349,7 @@ void ReadH5Ebsd::execute()
     if(err < 0)
     {
       setErrorCondition(-1);
-      PipelineMessage em = PipelineMessage(getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
       addErrorMessage(em);
       return;
     }
@@ -360,7 +360,7 @@ void ReadH5Ebsd::execute()
     if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
-      PipelineMessage em = PipelineMessage(getNameOfClass(), "Could not Create H5CtfVolumeReader object.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not Create H5CtfVolumeReader object.", -1);
       addErrorMessage(em);
       return;
     }
@@ -369,7 +369,7 @@ void ReadH5Ebsd::execute()
     if(err < 0)
     {
       setErrorCondition(-1);
-      PipelineMessage em = PipelineMessage(getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
       addErrorMessage(em);
       return;
     }
@@ -406,7 +406,7 @@ void ReadH5Ebsd::execute()
   if(err < 0)
   {
     setErrorCondition(err);
-    PipelineMessage em = PipelineMessage(getNameOfClass(), "Error Loading Data from Ebsd Data file.", -1);
+    PipelineMessage em (getNameOfClass(), "Error Loading Data from Ebsd Data file.", -1);
     addErrorMessage(em);
     return;
   }
