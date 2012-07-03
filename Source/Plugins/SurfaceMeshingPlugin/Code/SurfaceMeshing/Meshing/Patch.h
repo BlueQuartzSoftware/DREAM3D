@@ -90,8 +90,8 @@ namespace meshing {
 class  Patch
 {
   public:
-    DREAM3D_SHARED_POINTERS(Patch);
-    DREAM3D_STATIC_NEW_MACRO(Patch);
+    DREAM3D_SHARED_POINTERS(Patch)
+    DREAM3D_STATIC_NEW_MACRO(Patch)
     virtual ~Patch();
 
     typedef std::vector<Pointer> ContainerType;

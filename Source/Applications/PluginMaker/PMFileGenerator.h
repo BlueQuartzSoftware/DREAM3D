@@ -44,7 +44,7 @@
  */
 class PMFileGenerator : public PMDirGenerator
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     PMFileGenerator(QString outputDir,

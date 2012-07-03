@@ -471,16 +471,16 @@ int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  DREAM3D_REGISTER_TEST( TestDataArray() );
-  DREAM3D_REGISTER_TEST( TestEraseElements() );
-  DREAM3D_REGISTER_TEST( TestCopyTuples() );
-  DREAM3D_REGISTER_TEST( TestNeighborList() );
+  DREAM3D_REGISTER_TEST( TestDataArray() )
+  DREAM3D_REGISTER_TEST( TestEraseElements() )
+  DREAM3D_REGISTER_TEST( TestCopyTuples() )
+  DREAM3D_REGISTER_TEST( TestNeighborList() )
 
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
 

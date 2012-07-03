@@ -252,7 +252,7 @@ template <> struct ReverseBytes < sizeof ( uint64_t ) >
 //
 
 
-};
+}
 
 
 

@@ -46,7 +46,7 @@
 class IFilterWidgetFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory);
+    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory)
     DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
 
 

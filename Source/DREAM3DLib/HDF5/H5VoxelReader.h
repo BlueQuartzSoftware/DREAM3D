@@ -76,8 +76,8 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 
     virtual ~H5VoxelReader();
 
-    MXA_INSTANCE_STRING_PROPERTY(FileName);
- //   MXA_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    MXA_INSTANCE_STRING_PROPERTY(FileName)
+ //   MXA_INSTANCE_STRING_PROPERTY(ErrorMessage)
 
     int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 

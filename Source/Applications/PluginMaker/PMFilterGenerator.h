@@ -15,7 +15,7 @@
  */
 class PMFilterGenerator : public PMFileGenerator
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     PMFilterGenerator(QString outputDir,

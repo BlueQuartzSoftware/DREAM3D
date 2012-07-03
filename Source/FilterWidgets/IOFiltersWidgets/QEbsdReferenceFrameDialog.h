@@ -60,7 +60,7 @@ class QGraphicsPixmapItem;
  */
 class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFrameDialog
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     QEbsdReferenceFrameDialog(QString filename, QWidget *parent = 0);

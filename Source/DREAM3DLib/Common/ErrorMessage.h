@@ -132,7 +132,7 @@ class ErrorMessage
 
 #if defined(QT_CORE_LIB)
 // insert the custom custom Qt signal/slot macro dohicky thingie here
-Q_DECLARE_METATYPE(ErrorMessage);
+Q_DECLARE_METATYPE(ErrorMessage)
 #endif
 
 #endif /* _ErrorMessage_H */

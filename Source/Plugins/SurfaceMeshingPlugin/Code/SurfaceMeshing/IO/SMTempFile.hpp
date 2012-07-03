@@ -59,8 +59,8 @@ class SMTempFile
       MXADir::remove(m_FilePath); }
     }
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FilePath);
-    DREAM3D_INSTANCE_PROPERTY(bool, AutoDelete);
+    DREAM3D_INSTANCE_STRING_PROPERTY(FilePath)
+    DREAM3D_INSTANCE_PROPERTY(bool, AutoDelete)
 
   protected:
     SMTempFile()

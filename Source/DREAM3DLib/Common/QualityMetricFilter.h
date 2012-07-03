@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT QualityMetricFilter
     DREAM3D_INSTANCE_PROPERTY(void*, Input)
     DREAM3D_INSTANCE_PROPERTY(int32_t*, InputPhaseData)
     DREAM3D_INSTANCE_PROPERTY(size_t, NumValues)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::NumType, DataType);
+    DREAM3D_INSTANCE_PROPERTY(Ebsd::NumType, DataType)
     DREAM3D_INSTANCE_PROPERTY(DataArray<bool>::Pointer, Output)
 
     int filter();

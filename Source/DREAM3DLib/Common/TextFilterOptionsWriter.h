@@ -51,9 +51,9 @@
 class DREAM3DLib_EXPORT TextFilterOptionsWriter : public AbstractFilterOptionsWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(TextFilterOptionsWriter);
-    DREAM3D_STATIC_NEW_MACRO(TextFilterOptionsWriter);
-    DREAM3D_TYPE_MACRO_SUPER(TextFilterOptionsWriter, AbstractFilterOptionsWriter);
+    DREAM3D_SHARED_POINTERS(TextFilterOptionsWriter)
+    DREAM3D_STATIC_NEW_MACRO(TextFilterOptionsWriter)
+    DREAM3D_TYPE_MACRO_SUPER(TextFilterOptionsWriter, AbstractFilterOptionsWriter)
 
 
     virtual ~TextFilterOptionsWriter();

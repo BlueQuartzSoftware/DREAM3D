@@ -107,7 +107,7 @@ class EbsdLib_EXPORT AngDirectoryPatterns
     /**
      * @brief Sets/Gets the Maximum slice value instance variable.
      */
-    EBSD_INSTANCE_PROPERTY(int32_t, MaxSlice);
+    EBSD_INSTANCE_PROPERTY(int32_t, MaxSlice)
 
     /**
      * @brief Creates an absolution path to a specific data file indicated by its index

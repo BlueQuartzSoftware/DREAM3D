@@ -52,9 +52,9 @@
 class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindNumFields);
-    DREAM3D_STATIC_NEW_MACRO(FindNumFields);
-    DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindNumFields)
+    DREAM3D_STATIC_NEW_MACRO(FindNumFields)
+    DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter)
 
     virtual ~FindNumFields();
 

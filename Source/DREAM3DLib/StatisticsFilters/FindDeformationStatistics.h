@@ -73,9 +73,9 @@
 class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindDeformationStatistics);
-    DREAM3D_STATIC_NEW_MACRO(FindDeformationStatistics);
-    DREAM3D_TYPE_MACRO_SUPER(FindDeformationStatistics, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindDeformationStatistics)
+    DREAM3D_STATIC_NEW_MACRO(FindDeformationStatistics)
+    DREAM3D_TYPE_MACRO_SUPER(FindDeformationStatistics, AbstractFilter)
 
     virtual ~FindDeformationStatistics();
 

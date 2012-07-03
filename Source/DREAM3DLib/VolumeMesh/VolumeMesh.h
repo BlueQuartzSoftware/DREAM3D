@@ -77,13 +77,13 @@ Q_OBJECT
 #endif
 
   public:
-    MXA_SHARED_POINTERS(VolumeMesh);
-    MXA_TYPE_MACRO(VolumeMesh);
+    MXA_SHARED_POINTERS(VolumeMesh)
+    MXA_TYPE_MACRO(VolumeMesh)
 
 #ifdef DREAM3D_USE_QT
     static Pointer New (QObject* parent = 0);
 #else
-    MXA_STATIC_NEW_MACRO(VolumeMesh);
+    MXA_STATIC_NEW_MACRO(VolumeMesh)
 #endif
     virtual ~VolumeMesh();
 
@@ -108,7 +108,7 @@ Q_OBJECT
     /**
      * @brief Cancel the operation
      */
-    MXA_INSTANCE_PROPERTY(bool, Cancel);
+    MXA_INSTANCE_PROPERTY(bool, Cancel)
 
     /**
      * @brief Either prints a message or sends the message to the User Interface

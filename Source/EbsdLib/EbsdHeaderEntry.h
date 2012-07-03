@@ -64,7 +64,7 @@
 class EbsdLib_EXPORT EbsdHeaderEntry
 {
   public:
-    EBSD_SHARED_POINTERS(EbsdHeaderEntry);
+    EBSD_SHARED_POINTERS(EbsdHeaderEntry)
     EBSD_TYPE_MACRO(EbsdHeaderEntry)
 
     virtual ~EbsdHeaderEntry() {}

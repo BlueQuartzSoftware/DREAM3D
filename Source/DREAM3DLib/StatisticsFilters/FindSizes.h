@@ -60,9 +60,9 @@
 class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSizes);
-    DREAM3D_STATIC_NEW_MACRO(FindSizes);
-    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindSizes)
+    DREAM3D_STATIC_NEW_MACRO(FindSizes)
+    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
 
     virtual ~FindSizes();
 

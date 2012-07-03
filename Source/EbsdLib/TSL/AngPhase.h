@@ -75,11 +75,11 @@ typedef struct
 class EbsdLib_EXPORT HKLFamily
 {
   public:
-    EBSD_SHARED_POINTERS(HKLFamily);
-    EBSD_STATIC_NEW_MACRO(HKLFamily);
+    EBSD_SHARED_POINTERS(HKLFamily)
+    EBSD_STATIC_NEW_MACRO(HKLFamily)
     EBSD_TYPE_MACRO(HKLFamily)
 
-    virtual ~HKLFamily() {};
+    virtual ~HKLFamily() {}
 
     int h;
     int k;
@@ -128,7 +128,7 @@ class EbsdLib_EXPORT HKLFamily
     }
 
   protected:
-    HKLFamily() {};
+    HKLFamily() {}
 
   private:
     HKLFamily(const HKLFamily&); // Copy Constructor Not Implemented

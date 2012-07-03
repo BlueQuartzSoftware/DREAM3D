@@ -62,13 +62,13 @@ int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::
   float stddev = 0;
   for(size_t i = 0; i < data.size(); i++)
   {
-	avg = avg + log(data[i]);		
+	avg = avg + log(data[i]);
   }
   avg = avg/float(data.size());
   outputs->SetValue(0, avg);
   for(size_t i = 0; i < data.size(); i++)
   {
-	stddev = stddev + ((avg - log(data[i]))*(avg - log(data[i])));		
+	stddev = stddev + ((avg - log(data[i]))*(avg - log(data[i])));
   }
   stddev = stddev/float(data.size());
   stddev = sqrt(stddev);
@@ -89,13 +89,13 @@ int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> >
 	  stddev = 0;
 	  for(size_t j = 0; j < data[i].size(); j++)
 	  {
-		avg = avg + log(data[i][j]);		
+		avg = avg + log(data[i][j]);
 	  }
 	  avg = avg/float(data[i].size());
 	  outputs[0]->SetValue(i, avg);
 	  for(size_t j = 0; j < data[i].size(); j++)
 	  {
-		stddev = stddev + ((avg - log(data[i][j]))*(avg - log(data[i][j])));		
+		stddev = stddev + ((avg - log(data[i][j]))*(avg - log(data[i][j])));
 	  }
 	  stddev = stddev/float(data[i].size());
 	  stddev = sqrt(stddev);
@@ -103,3 +103,4 @@ int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> >
   }
   return err;
 }
+

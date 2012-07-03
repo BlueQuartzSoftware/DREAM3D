@@ -64,7 +64,7 @@ class QwtPlotCurve;
  */
 class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     StatsGenMDFWidget(QWidget *parent = 0);
@@ -73,9 +73,9 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex);
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
-    DREAM3D_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel);
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    DREAM3D_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel)
 
     int getMisorientationData(StatsData* statsData, unsigned int phaseType);
     void extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);

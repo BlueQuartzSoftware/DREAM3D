@@ -73,14 +73,14 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * from which may be different from the "ZStartIndex" which is saved in the
      * HDF5 file.
      */
-    EBSD_INSTANCE_PROPERTY(int, SliceStart);
+    EBSD_INSTANCE_PROPERTY(int, SliceStart)
 
     /**
      * @brief This is the actual ending slice that the user wants to start
      * from which may be different from the "ZEndIndex" which is saved in the
      * HDF5 file.
      */
-    EBSD_INSTANCE_PROPERTY(int, SliceEnd);
+    EBSD_INSTANCE_PROPERTY(int, SliceEnd)
 
     /**
      * @brief This method does the actual loading of the OIM data from the data
@@ -101,10 +101,10 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
 
 
     /** @brief Will this class be responsible for deallocating the memory for the data arrays */
-    EBSD_INSTANCE_PROPERTY(bool, ManageMemory);
+    EBSD_INSTANCE_PROPERTY(bool, ManageMemory)
 
     /** @brief The number of elements in a column of data. This should be rows * columns */
-    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements);
+    EBSD_INSTANCE_PROPERTY(size_t, NumberOfElements)
 
     /**
     * @brief Returns the pointer to the data for a given field

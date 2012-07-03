@@ -116,7 +116,7 @@ class DREAM3DPluginFrame;
  *     in the header file.
  *
  *    @code
- *      Q_OBJECT;
+ *      Q_OBJECT
  *      Q_INTERFACES(DREAM3DPluginInterface )
  *    @endcode
  *    The programmer will also need to add the following macros to their implementation file.
@@ -147,7 +147,7 @@ class DREAM3DPluginFrame;
 class DREAM3DPluginInterface
 {
   public:
-    virtual ~DREAM3DPluginInterface(){};
+    virtual ~DREAM3DPluginInterface(){}
 
     /**
      * @brief Returns the name of the plugin

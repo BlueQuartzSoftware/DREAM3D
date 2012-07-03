@@ -56,7 +56,7 @@ class QwtPlotMarker;
 class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPhaseWidget
 {
 
-  Q_OBJECT ;
+  Q_OBJECT
 
    public:
      TransformationPhaseWidget(QWidget *parent = 0);
@@ -67,11 +67,11 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
      void setPhaseIndex(int index);
      int getPhaseIndex();
 
-     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType);
-     MXA_INSTANCE_PROPERTY(float, PhaseFraction);
-     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction);
-     MXA_INSTANCE_PROPERTY(unsigned int, ParentPhase);
-     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated);
+     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType)
+     MXA_INSTANCE_PROPERTY(float, PhaseFraction)
+     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+     MXA_INSTANCE_PROPERTY(unsigned int, ParentPhase)
+     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
 
      void extractStatsData(DataContainer::Pointer m, int index);

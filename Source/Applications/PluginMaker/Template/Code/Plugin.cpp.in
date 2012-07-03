@@ -8,7 +8,7 @@
 
 #include "moc_@PluginName@Plugin.cxx"
 
-Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin);
+Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin)
 
 namespace Detail
 {

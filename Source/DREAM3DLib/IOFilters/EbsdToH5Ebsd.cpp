@@ -55,9 +55,9 @@
 class EbsdToH5EbsdFunc : public Observable
 {
   public:
-    MXA_SHARED_POINTERS(EbsdToH5EbsdFunc)
-    ;MXA_STATIC_NEW_MACRO(EbsdToH5EbsdFunc)
-    ;
+    DREAM3D_SHARED_POINTERS(EbsdToH5EbsdFunc)
+    DREAM3D_STATIC_NEW_MACRO(EbsdToH5EbsdFunc)
+
 
     virtual ~EbsdToH5EbsdFunc()
     {

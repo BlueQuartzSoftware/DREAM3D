@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
- * used to endorse or promote products derived from this software without specific 
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
  * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -44,7 +44,7 @@ AddFilterWidget::AddFilterWidget(QWidget *parent) {
 }
 
 // -----------------------------------------------------------------------------
-//  
+//
 // -----------------------------------------------------------------------------
 QString AddFilterWidget::getFilterName() {
   return ( filterName->text() );
@@ -67,7 +67,7 @@ void AddFilterWidget::on_addfilterCancelButton_clicked() {
 }
 
 // -----------------------------------------------------------------------------
-//  
+//
 // -----------------------------------------------------------------------------
 bool AddFilterWidget::getBtnClicked() {
   return BtnClicked;
@@ -91,8 +91,8 @@ void AddFilterWidget::on_filterName_textChanged(const QString & text) {
 // -----------------------------------------------------------------------------
 QString AddFilterWidget::cleanName(QString name) {
   //Remove all spaces and illegal characters from plugin name
-  name.trimmed();
-  name.remove(" ");
-  name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+  name = name.trimmed();
+  name = name.remove(" ");
+  name = name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
   return name;
 }

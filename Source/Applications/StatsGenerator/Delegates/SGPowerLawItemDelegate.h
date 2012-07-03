@@ -177,8 +177,8 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
 
   private:
     QModelIndex m_Index;
-    QWidget* m_Widget;
-    QAbstractItemModel* m_Model;
+ //   QWidget* m_Widget;
+ //   QAbstractItemModel* m_Model;
 
 };
 

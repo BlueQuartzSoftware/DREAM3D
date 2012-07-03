@@ -59,9 +59,9 @@ void DistributionAnalysisOps::determinemaxandminvalues(std::vector<float> &data,
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		value = data[i];
-		if(value > max) max = value;				
-		if(value < min) min = value;				
-	}	
+		if(value > max) max = value;
+		if(value < min) min = value;
+	}
 }
 void DistributionAnalysisOps::determinebinnumbers(float &max, float &min, float &stepsize, FloatArrayType::Pointer binnumbers)
 {
@@ -74,3 +74,4 @@ void DistributionAnalysisOps::determinebinnumbers(float &max, float &min, float 
 		current = (float(iter)*stepsize) + min;
 	}
 }
+

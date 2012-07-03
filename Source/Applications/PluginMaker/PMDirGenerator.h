@@ -46,7 +46,7 @@
  */
 class PMDirGenerator : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
 
