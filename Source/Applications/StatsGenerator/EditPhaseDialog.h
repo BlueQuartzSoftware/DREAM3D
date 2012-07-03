@@ -54,7 +54,7 @@
  */
 class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     EditPhaseDialog(QWidget *parent = 0);

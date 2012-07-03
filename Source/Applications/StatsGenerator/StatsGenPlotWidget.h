@@ -63,7 +63,7 @@ namespace UIA
 class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
 
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
 
@@ -99,14 +99,14 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 //    void setBins(QVector<float> &binValues);
     bool userUpdatedData();
 
-    DREAM3D_INSTANCE_PROPERTY(float, Mu);
-    DREAM3D_INSTANCE_PROPERTY(float, Sigma);
-    DREAM3D_INSTANCE_PROPERTY(float, MinCutOff);
-    DREAM3D_INSTANCE_PROPERTY(float, MaxCutOff);
-    DREAM3D_INSTANCE_PROPERTY(float, BinStep);
+    DREAM3D_INSTANCE_PROPERTY(float, Mu)
+    DREAM3D_INSTANCE_PROPERTY(float, Sigma)
+    DREAM3D_INSTANCE_PROPERTY(float, MinCutOff)
+    DREAM3D_INSTANCE_PROPERTY(float, MaxCutOff)
+    DREAM3D_INSTANCE_PROPERTY(float, BinStep)
 
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex);
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
 
 
     void setSizeDistributionValues(float mu, float sigma,

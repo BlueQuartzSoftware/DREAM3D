@@ -52,11 +52,11 @@
 class DREAM3DLib_EXPORT TexturePreset
 {
   public:
-    MXA_SHARED_POINTERS(TexturePreset);
+    MXA_SHARED_POINTERS(TexturePreset)
     typedef std::vector<Pointer> Container;
 
-    MXA_STATIC_NEW_MACRO(TexturePreset);
-    MXA_TYPE_MACRO(TexturePreset);
+    MXA_STATIC_NEW_MACRO(TexturePreset)
+    MXA_TYPE_MACRO(TexturePreset)
     static Pointer New(unsigned int xtal,
                        const std::string &name,
                        double e1, double e2, double e3)
@@ -72,11 +72,11 @@ class DREAM3DLib_EXPORT TexturePreset
 
     virtual ~TexturePreset();
 
-    MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure);
-    MXA_INSTANCE_STRING_PROPERTY(Name);
-    MXA_INSTANCE_PROPERTY(double, Euler1);
-    MXA_INSTANCE_PROPERTY(double, Euler2);
-    MXA_INSTANCE_PROPERTY(double, Euler3);
+    MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    MXA_INSTANCE_STRING_PROPERTY(Name)
+    MXA_INSTANCE_PROPERTY(double, Euler1)
+    MXA_INSTANCE_PROPERTY(double, Euler2)
+    MXA_INSTANCE_PROPERTY(double, Euler3)
 
   protected:
     TexturePreset();

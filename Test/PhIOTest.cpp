@@ -122,7 +122,7 @@ class GenerateGrainIds : public AbstractFilter
       setErrorCondition(0);
       std::stringstream ss;
       DataContainer* m = getDataContainer();
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
     GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented
@@ -257,11 +257,11 @@ int main(int argc, char **argv)
 
   int err = EXIT_SUCCESS;
 
-  DREAM3D_REGISTER_TEST( TestPhWriter() );
-  DREAM3D_REGISTER_TEST( TestPhReader() );
-  DREAM3D_REGISTER_TEST( TestCasting() );
+  DREAM3D_REGISTER_TEST( TestPhWriter() )
+  DREAM3D_REGISTER_TEST( TestPhReader() )
+  DREAM3D_REGISTER_TEST( TestCasting() )
 
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();
   return err;
 }

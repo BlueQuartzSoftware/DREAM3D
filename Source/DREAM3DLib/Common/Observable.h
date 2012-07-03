@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT Observable
     Observable();
     virtual ~Observable();
 
-    DREAM3D_TYPE_MACRO(Observable);
+    DREAM3D_TYPE_MACRO(Observable)
 
     enum ObserverAspect
     {

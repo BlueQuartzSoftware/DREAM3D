@@ -52,9 +52,9 @@
 class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DetermineGoodVoxels);
-    DREAM3D_STATIC_NEW_MACRO(DetermineGoodVoxels);
-    DREAM3D_TYPE_MACRO_SUPER(DetermineGoodVoxels, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(DetermineGoodVoxels)
+    DREAM3D_STATIC_NEW_MACRO(DetermineGoodVoxels)
+    DREAM3D_TYPE_MACRO_SUPER(DetermineGoodVoxels, AbstractFilter)
 
     virtual ~DetermineGoodVoxels();
 
@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
-    DREAM3D_INSTANCE_PROPERTY(H5EbsdVolumeReader::Pointer, EbsdVolumeReader);
+    DREAM3D_INSTANCE_PROPERTY(H5EbsdVolumeReader::Pointer, EbsdVolumeReader)
 
     virtual void preflight();
 

@@ -238,10 +238,10 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, int32_t, Int32ArrayType, 0, voxels, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, float, FloatArrayType, 0, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, int32_t, Int32ArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, float, FloatArrayType, 0, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------

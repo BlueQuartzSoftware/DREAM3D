@@ -64,12 +64,12 @@ int BetaOps::calculateParameters(std::vector<float> &data, FloatArrayType::Point
   float beta = 0;
   for(size_t i = 0; i < data.size(); i++)
   {
-	avg = avg + data[i];		
+	avg = avg + data[i];
   }
   avg = avg/float(data.size());
   for(size_t i = 0; i < data.size(); i++)
   {
-	stddev = stddev + ((avg - data[i])*(avg - data[i]));		
+	stddev = stddev + ((avg - data[i])*(avg - data[i]));
   }
   stddev = stddev/float(data.size());
   alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
@@ -96,12 +96,12 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &dat
 	//  beta = 0;
 	  for(size_t j = 0; j < data[i].size(); j++)
 	  {
-		avg = avg + data[i][j];		
+		avg = avg + data[i][j];
 	  }
 	  avg = avg/float(data[i].size());
 	  for(size_t j = 0; j < data[i].size(); j++)
 	  {
-		stddev = stddev + ((avg - data[i][j])*(avg - data[i][j]));		
+		stddev = stddev + ((avg - data[i][j])*(avg - data[i][j]));
 	  }
 	  stddev = stddev/float(data[i].size());
 	  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
@@ -111,3 +111,4 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &dat
   }
   return err;
 }
+

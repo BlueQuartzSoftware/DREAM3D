@@ -492,7 +492,7 @@ void StatsGenODFWidget::poleFigureGenerationComplete()
 QImage generateODFPoleFigure(const PoleFigureData &data)
 {
   PoleFigureMaker colorPoleFigure;
-#if 1
+#if COLOR_POLE_FIGURES
   return colorPoleFigure.generatePoleFigureImage(data);
 #else
   return colorPoleFigure.generateColorPoleFigureImage(data);

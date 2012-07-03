@@ -64,9 +64,9 @@
 class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindMDF);
-    DREAM3D_STATIC_NEW_MACRO(FindMDF);
-    DREAM3D_TYPE_MACRO_SUPER(FindMDF, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindMDF)
+    DREAM3D_STATIC_NEW_MACRO(FindMDF)
+    DREAM3D_TYPE_MACRO_SUPER(FindMDF, AbstractFilter)
 
     virtual ~FindMDF();
 

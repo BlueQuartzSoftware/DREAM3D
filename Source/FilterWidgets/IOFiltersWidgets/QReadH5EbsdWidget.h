@@ -46,7 +46,7 @@ class QualityMetricTableModel;
 
 class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 {
-  Q_OBJECT;
+  Q_OBJECT
   public:
     QReadH5EbsdWidget(QWidget* parent = NULL);
     virtual ~QReadH5EbsdWidget();

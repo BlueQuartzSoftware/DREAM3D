@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -156,7 +156,7 @@ void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 	FZn1 = fabs(n1);
 	FZn2 = fabs(n2);
 	FZn3 = fabs(n3);
-	
+
 	axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
@@ -266,3 +266,4 @@ void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz
 {
 
 }
+

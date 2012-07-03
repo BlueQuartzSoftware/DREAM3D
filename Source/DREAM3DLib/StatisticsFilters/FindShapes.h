@@ -62,9 +62,9 @@
 class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindShapes);
-    DREAM3D_STATIC_NEW_MACRO(FindShapes);
-    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindShapes)
+    DREAM3D_STATIC_NEW_MACRO(FindShapes)
+    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter)
 
     virtual ~FindShapes();
 
@@ -86,8 +86,8 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
-    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float); // N x 6 Array
-    DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float); // N x 3 Array
+    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float) // N x 6 Array
+    DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float) // N x 3 Array
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Shapes"; }

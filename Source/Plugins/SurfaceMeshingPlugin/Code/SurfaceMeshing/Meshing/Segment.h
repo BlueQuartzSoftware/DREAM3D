@@ -89,8 +89,8 @@ namespace meshing {
 class  Segment
 {
 public:
-    DREAM3D_SHARED_POINTERS(Segment);
-    DREAM3D_STATIC_NEW_MACRO(Segment);
+    DREAM3D_SHARED_POINTERS(Segment)
+    DREAM3D_STATIC_NEW_MACRO(Segment)
 
     virtual ~Segment();
 

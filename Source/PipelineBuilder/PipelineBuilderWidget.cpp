@@ -804,9 +804,9 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
   QString favoriteTitle = addfavoriteDialog->getFavoriteName();
 
   //Remove all spaces and illegal characters from favorite name
-  favoriteTitle.trimmed();
-  favoriteTitle.remove(" ");
-  favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+  favoriteTitle = favoriteTitle.trimmed();
+  favoriteTitle = favoriteTitle.remove(" ");
+  favoriteTitle = favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
 
   if(addfavoriteDialog->getBtnClicked())
   {

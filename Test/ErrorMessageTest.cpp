@@ -84,12 +84,12 @@ int main(int argc, char **argv)
   int err = EXIT_SUCCESS;
 
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
-  DREAM3D_REGISTER_TEST( TestErrorMessage() );
+  DREAM3D_REGISTER_TEST( TestErrorMessage() )
 
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
   PRINT_TEST_SUMMARY();
   return err;

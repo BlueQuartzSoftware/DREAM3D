@@ -93,7 +93,7 @@ class QMouseEvent;
  */
 class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 {
-    Q_OBJECT;
+    Q_OBJECT
   public:
     QFilterWidget(QWidget* parent = NULL);
     virtual ~QFilterWidget();

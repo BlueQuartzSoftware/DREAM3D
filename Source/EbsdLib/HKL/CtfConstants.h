@@ -64,7 +64,7 @@ namespace Ctf
     LG_Hexagonal_High = 9,
     LG_Cubic_Low = 10,
     LG_Cubic_High = 11,
-    UnknownSymmetry = 12,
+    UnknownSymmetry = 12
   };
 
   class LaueGroupStrings
@@ -85,7 +85,7 @@ namespace Ctf
          m_Values.push_back("Cubic-High m3m");
          m_Values.push_back("Unknown(12)");
        }
-       virtual ~LaueGroupStrings() {};
+       virtual ~LaueGroupStrings() {}
 
        std::string getString(LaueGroupTable i)
        {
@@ -103,54 +103,54 @@ namespace Ctf
 
 // These are Header related
   const std::string ChannelTextFile("Channel Text File");
-  DECLARE_STRING_CONST(Prj);
-  DECLARE_STRING_CONST(Author);
-  DECLARE_STRING_CONST(JobMode);
-  DECLARE_STRING_CONST(XCells);
-  DECLARE_STRING_CONST(YCells);
-  DECLARE_STRING_CONST(ZCells);
-  DECLARE_STRING_CONST(XStep);
-  DECLARE_STRING_CONST(YStep);
-  DECLARE_STRING_CONST(ZStep);
-  DECLARE_STRING_CONST(AcqE1);
-  DECLARE_STRING_CONST(AcqE2);
-  DECLARE_STRING_CONST(AcqE3);
-  DECLARE_STRING_CONST(Euler);
-  DECLARE_STRING_CONST(Mag);
-  DECLARE_STRING_CONST(Coverage);
-  DECLARE_STRING_CONST(Device);
-  DECLARE_STRING_CONST(KV);
-  DECLARE_STRING_CONST(TiltAngle);
-  DECLARE_STRING_CONST(TiltAxis);
+  DECLARE_STRING_CONST(Prj)
+  DECLARE_STRING_CONST(Author)
+  DECLARE_STRING_CONST(JobMode)
+  DECLARE_STRING_CONST(XCells)
+  DECLARE_STRING_CONST(YCells)
+  DECLARE_STRING_CONST(ZCells)
+  DECLARE_STRING_CONST(XStep)
+  DECLARE_STRING_CONST(YStep)
+  DECLARE_STRING_CONST(ZStep)
+  DECLARE_STRING_CONST(AcqE1)
+  DECLARE_STRING_CONST(AcqE2)
+  DECLARE_STRING_CONST(AcqE3)
+  DECLARE_STRING_CONST(Euler)
+  DECLARE_STRING_CONST(Mag)
+  DECLARE_STRING_CONST(Coverage)
+  DECLARE_STRING_CONST(Device)
+  DECLARE_STRING_CONST(KV)
+  DECLARE_STRING_CONST(TiltAngle)
+  DECLARE_STRING_CONST(TiltAxis)
   const std::string NumPhases("Phases");
 
   // These are phase related
-  DECLARE_STRING_CONST(LatticeDimensions);
-  DECLARE_STRING_CONST(LatticeAngles);
-  DECLARE_STRING_CONST(PhaseName);
-  DECLARE_STRING_CONST(LaueGroup);
-  DECLARE_STRING_CONST(SpaceGroup);
-  DECLARE_STRING_CONST(Internal1);
-  DECLARE_STRING_CONST(Internal2);
-  DECLARE_STRING_CONST(Comment);
+  DECLARE_STRING_CONST(LatticeDimensions)
+  DECLARE_STRING_CONST(LatticeAngles)
+  DECLARE_STRING_CONST(PhaseName)
+  DECLARE_STRING_CONST(LaueGroup)
+  DECLARE_STRING_CONST(SpaceGroup)
+  DECLARE_STRING_CONST(Internal1)
+  DECLARE_STRING_CONST(Internal2)
+  DECLARE_STRING_CONST(Comment)
 
   // These are the names of the Data Columns
   const std::string Phase("Phase");
   const std::string X("X");
   const std::string Y("Y");
   const std::string Z("Z");
-  DECLARE_STRING_CONST(Bands);
-  DECLARE_STRING_CONST(Error);
+  DECLARE_STRING_CONST(Bands)
+  DECLARE_STRING_CONST(Error)
   const std::string Euler1("Euler1");
   const std::string Euler2("Euler2");
   const std::string Euler3("Euler3");
-  DECLARE_STRING_CONST(MAD);
-  DECLARE_STRING_CONST(BC); // BC
-  DECLARE_STRING_CONST(BS); // BS
-  DECLARE_STRING_CONST(GrainIndex); // GrainIndex
-  DECLARE_STRING_CONST(GrainRandomColourR);
-  DECLARE_STRING_CONST(GrainRandomColourG);
-  DECLARE_STRING_CONST(GrainRandomColourB);
+  DECLARE_STRING_CONST(MAD)
+  DECLARE_STRING_CONST(BC) // BC
+  DECLARE_STRING_CONST(BS) // BS
+  DECLARE_STRING_CONST(GrainIndex) // GrainIndex
+  DECLARE_STRING_CONST(GrainRandomColourR)
+  DECLARE_STRING_CONST(GrainRandomColourG)
+  DECLARE_STRING_CONST(GrainRandomColourB)
 
 } // End namespace Ctf
 

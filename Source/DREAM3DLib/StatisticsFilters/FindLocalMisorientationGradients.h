@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindLocalMisorientationGradients);
-    DREAM3D_STATIC_NEW_MACRO(FindLocalMisorientationGradients);
-    DREAM3D_TYPE_MACRO_SUPER(FindLocalMisorientationGradients, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindLocalMisorientationGradients)
+    DREAM3D_STATIC_NEW_MACRO(FindLocalMisorientationGradients)
+    DREAM3D_TYPE_MACRO_SUPER(FindLocalMisorientationGradients, AbstractFilter)
 
     virtual ~FindLocalMisorientationGradients();
 
@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Local Misorientation Gradients"; }
 
-    DREAM3D_INSTANCE_PROPERTY(int, KernelSize);
+    DREAM3D_INSTANCE_PROPERTY(int, KernelSize)
 
 
     virtual void setupFilterOptions();

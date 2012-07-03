@@ -71,7 +71,7 @@ class PipelineBuilderWidget;
 */
 class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     DREAM3D_UI(QWidget *parent = 0);

@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -58,8 +58,8 @@
 class RolledPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(RolledPreset);
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset);
+    MXA_SHARED_POINTERS(RolledPreset)
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
     virtual ~RolledPreset();
 
     void displayUserInputDialog();
@@ -82,7 +82,7 @@ class RolledPreset : public AbstractMicrostructurePreset
     void operator=(const RolledPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(RolledPresetFactory, RolledPreset, "Rolled");
+DECLARE_FACTORY_CLASS(RolledPresetFactory, RolledPreset, "Rolled")
 
 
 #endif /* ROLLEDPRESET_H_ */

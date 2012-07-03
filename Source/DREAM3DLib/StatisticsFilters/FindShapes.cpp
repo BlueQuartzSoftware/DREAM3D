@@ -134,10 +134,10 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -146,10 +146,10 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	find_sizes->setDataContainer(getDataContainer());
 	if(preflight == true) find_sizes->preflight();
 	if(preflight == false) find_sizes->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
   if(getErrorCondition() == -303)
   {
 	setErrorCondition(0);
@@ -158,9 +158,9 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	find_biasedfields->setDataContainer(getDataContainer());
 	if(preflight == true) find_biasedfields->preflight();
 	if(preflight == false) find_biasedfields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -304)
   {
 	setErrorCondition(0);
@@ -169,9 +169,9 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
   if(getErrorCondition() == -305)
   {
 	setErrorCondition(0);
@@ -180,15 +180,15 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 	find_graincentroids->setDataContainer(getDataContainer());
 	if(preflight == true) find_graincentroids->preflight();
 	if(preflight == false) find_graincentroids->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float, FloatArrayType, 0, fields, 2);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float, FloatArrayType, 0, fields, 2)
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {

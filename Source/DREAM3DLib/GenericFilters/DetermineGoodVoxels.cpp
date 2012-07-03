@@ -80,8 +80,8 @@ void DetermineGoodVoxels::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 }
 
 // -----------------------------------------------------------------------------

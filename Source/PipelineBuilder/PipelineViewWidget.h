@@ -56,7 +56,7 @@
  */
 class PipelineViewWidget : public QFrame
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     PipelineViewWidget(QWidget* parent = 0);

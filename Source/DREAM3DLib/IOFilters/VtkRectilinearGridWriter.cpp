@@ -201,35 +201,35 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 
   if(m_WriteGrainIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WritePhaseIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteGoodVoxels == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
   }
   if(m_WriteKAMs == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteLMGs == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -303, float, FloatArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteGAMs == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -303, float, FloatArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteBandContrasts == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteIPFColors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
 }
 

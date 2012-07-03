@@ -224,9 +224,9 @@ void HklImport()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( TSLImport() );
-  DREAM3D_REGISTER_TEST( HklImport() );
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( TSLImport() )
+  DREAM3D_REGISTER_TEST( HklImport() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 
   PRINT_TEST_SUMMARY();
   return err;
