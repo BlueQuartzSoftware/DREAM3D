@@ -195,6 +195,7 @@ void EBSDSegmentGrains::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
+  m->resizeFieldDataArrays(1);
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
