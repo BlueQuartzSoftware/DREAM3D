@@ -138,7 +138,7 @@ void RenumberGrains::execute()
   std::stringstream ss;
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
-  NewNames.resize(totalFields);
+  NewNames.resize(totalFields,0);
 
   ss << " - Generating Active Grain List";
   notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);

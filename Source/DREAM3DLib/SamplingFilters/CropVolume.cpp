@@ -272,7 +272,7 @@ void CropVolume::execute()
     std::stringstream ss;
 
     // Find the unique set of grain ids
-    for (size_t i = 0; i < totalFields; ++i)
+    for (size_t i = 1; i < totalFields; ++i)
     {
       m_Active[i] = false;
     }
