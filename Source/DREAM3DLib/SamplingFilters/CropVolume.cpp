@@ -229,7 +229,7 @@ void CropVolume::execute()
   {
     std::stringstream ss;
     ss << "Cropping Volume - " << ((float)i / m->getZPoints()) * 100 << " Percent Complete";
-    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -290,6 +290,6 @@ void CropVolume::execute()
   }
 
 
- notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 

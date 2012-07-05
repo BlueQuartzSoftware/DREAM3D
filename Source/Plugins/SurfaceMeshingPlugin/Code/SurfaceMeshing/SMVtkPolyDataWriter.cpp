@@ -562,7 +562,7 @@ void SMVtkPolyDataWriter::execute()
   fclose(vtkFile);
 
   setErrorCondition(0);
-  notifyProgress("Vtk PolyData File Writing Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Vtk PolyData File Writing Complete");
 
   return;
 }

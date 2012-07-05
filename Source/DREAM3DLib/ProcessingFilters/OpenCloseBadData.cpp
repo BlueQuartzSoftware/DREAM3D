@@ -230,7 +230,7 @@ void OpenCloseBadData::execute()
 			  count = kstride+jstride+i;
 			  std::stringstream ss;
 		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-		//	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+		//	  notifyStatusMessage(ss.str());
 			  grainname = m_GrainIds[count];
 			  if (grainname == 0)
 			  {

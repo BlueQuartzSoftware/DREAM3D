@@ -354,7 +354,7 @@ void VtkRectilinearGridWriter::execute()
     setErrorCondition(-1);
   }
 
-  notifyProgress("VtkRectilinearGridWriter Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("VtkRectilinearGridWriter Complete");
 }
 
 

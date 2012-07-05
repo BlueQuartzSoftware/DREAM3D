@@ -395,11 +395,11 @@ void ReadH5Ebsd::execute()
   int64_t totalPoints = m->getTotalPoints();
   ss.str("");
   ss << getHumanLabel() << " - Initializing " << totalPoints << " voxels";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
 
   ss.str("");
   ss << getHumanLabel() << " - Reading Ebsd Data from file";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   err = ebsdReader->loadData(m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir);
@@ -550,5 +550,5 @@ void ReadH5Ebsd::execute()
   // If there is an error set this to something negative and also set a message
   ss.str("");
   ss << getHumanLabel() << " Completed";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
 }

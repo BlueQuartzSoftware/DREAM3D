@@ -233,7 +233,7 @@ void DataContainerReader::execute()
   err = gatherData(false);
 
   setErrorCondition(err);
-  notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -165,7 +165,7 @@ void ChangeResolution::execute()
   {
     std::stringstream ss;
     ss << "Changing Resolution - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
-    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)

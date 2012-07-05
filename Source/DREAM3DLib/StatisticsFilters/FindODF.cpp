@@ -238,5 +238,5 @@ void FindODF::execute()
 	  }
   }
 
- notifyProgress("FindODF Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindODF Completed");
 }

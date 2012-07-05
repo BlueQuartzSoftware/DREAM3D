@@ -235,7 +235,7 @@ void MatchCrystallography::execute()
   matchCrystallography();
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Matching Crystallography Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Matching Crystallography Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -336,7 +336,7 @@ void MatchCrystallography::assign_eulers()
     if (((float)i / totalFields) * 100.0f > threshold) {
       ss.str("");
       ss << "Matching Crystallography - Assigning Euler Angles - " << ((float)i / totalFields) * 100 << "Percent Complete";
-      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+      notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / totalFields) * 100.0f) {
         threshold = ((float)i / totalFields) * 100.0f;
@@ -468,7 +468,7 @@ void MatchCrystallography::matchCrystallography()
     {
       std::stringstream ss;
       ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/float(1000*totalFields))*100 << "% Complete";
-//      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+//      notifyStatusMessage(ss.str());
       currentodferror = 0;
       currentmdferror = 0;
       for (int i = 0; i < numbins; i++)
@@ -773,7 +773,7 @@ void MatchCrystallography::measure_misorientations()
     {
       ss.str("");
       ss << "Matching Crystallography - Measuring Misorientations - " << ((float)i / totalFields) * 100 << "% Complete";
-      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+      notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / totalFields) * 100.0f)
       {

@@ -201,13 +201,13 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
- notifyProgress("Grouping MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
- notifyProgress("Characterizing MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Characterizing MicroTexture Regions");
   characterize_micro_texture_regions();
 
- notifyProgress("Renumbering Fields", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Renumbering Fields");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -235,7 +235,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("GroupMicroTextureRegions Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("GroupMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------

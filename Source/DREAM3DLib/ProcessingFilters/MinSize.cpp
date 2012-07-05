@@ -176,7 +176,7 @@ void MinSize::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Minimum Size Filter Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Minimum Size Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -370,7 +370,7 @@ void MinSize::remove_smallgrains()
   {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyStatusMessage(ss.str());
       size = 0;
       int nucleus = nuclei[i];
 	  if(nucleus >= 0)

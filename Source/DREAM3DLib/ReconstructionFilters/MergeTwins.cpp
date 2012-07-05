@@ -216,13 +216,13 @@ void MergeTwins::execute()
     return;
   }
 
- notifyProgress("Merging Twins", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Merging Twins");
   merge_twins();
 
- notifyProgress("Characterizing Twins", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Characterizing Twins");
   characterize_twins();
 
- notifyProgress("Renumbering Grains", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -242,7 +242,7 @@ void MergeTwins::execute()
 	m_NumFields[m_FieldPhases[i]]++;
   }
 
- notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------

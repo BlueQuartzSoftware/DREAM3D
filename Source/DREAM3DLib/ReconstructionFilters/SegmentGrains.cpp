@@ -180,12 +180,12 @@ void SegmentGrains::execute()
       gnum++;
       ss.str("");
       ss << "Total Grains: " << gnum;
-      if(gnum%100 == 0) notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+      if(gnum%100 == 0) notifyStatusMessage(ss.str());
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("SegmentGrains Completed");
 }
 
 // -----------------------------------------------------------------------------

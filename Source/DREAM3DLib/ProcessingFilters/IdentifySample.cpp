@@ -174,7 +174,7 @@ void IdentifySample::execute()
     {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyStatusMessage(ss.str());
       int grainname = m_GrainIds[i];
       if ((grainname == 0 && m_Direction == 1) || (grainname > 0 && m_Direction == 0))
       {
@@ -243,5 +243,5 @@ void IdentifySample::execute()
   }
 */
   // If there is an error set this to something negative and also set a message
- notifyProgress("Identifying Sample Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Identifying Sample Complete");
 }

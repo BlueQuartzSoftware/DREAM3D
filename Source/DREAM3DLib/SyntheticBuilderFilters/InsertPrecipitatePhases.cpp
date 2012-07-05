@@ -267,12 +267,12 @@ void InsertPrecipitatePhases::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("InsertPrecipitatePhases Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("InsertPrecipitatePhases Completed");
 }
 
 void  InsertPrecipitatePhases::place_precipitates()
 {
- notifyProgress("Placing Precipitates", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
   DataContainer* m = getDataContainer();
@@ -391,7 +391,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 		{
 	      std::stringstream ss;
 	      ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
-	      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+	      notifyStatusMessage(ss.str());
 
 	      m->resizeFieldDataArrays(currentnumgrains + 1);
 	      dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
@@ -466,7 +466,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     std::stringstream ss;
     ss << "Packing Grains - Placing Grain #" << i;
-    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
 
 	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
 	precipboundaryfraction = pp->getPrecipBoundaryFraction();
@@ -547,7 +547,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(iteration%100 == 0) notifyStatusMessage(ss.str());
 
 //    change1 = 0;
 //    change2 = 0;
@@ -1174,7 +1174,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
 void InsertPrecipitatePhases::assign_voxels()
 {
- notifyProgress("Assigning Voxels", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Voxels");
 
   DataContainer* m = getDataContainer();
   int index;
@@ -1349,7 +1349,7 @@ void InsertPrecipitatePhases::assign_voxels()
 
 void InsertPrecipitatePhases::assign_gaps()
 {
- notifyProgress("Assigning Gaps", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Gaps");
 
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->getTotalPoints();
@@ -1536,7 +1536,7 @@ void InsertPrecipitatePhases::assign_gaps()
 }
 void InsertPrecipitatePhases::cleanup_grains()
 {
- notifyProgress("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Cleaning Up Grains");
 
   DataContainer* m = getDataContainer();
 

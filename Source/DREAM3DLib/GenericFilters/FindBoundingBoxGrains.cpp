@@ -133,7 +133,7 @@ void FindBoundingBoxGrains::execute()
   if(m->getZPoints() > 1) find_boundingboxgrains();
   if(m->getZPoints() == 1) find_boundingboxgrains2D();
 
- notifyProgress("FindBoundingBoxGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindBoundingBoxGrains Completed");
 }
 
 // -----------------------------------------------------------------------------

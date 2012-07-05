@@ -206,5 +206,5 @@ void FindAxisODF::execute()
     }
   }
 
-  notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Completed");
 }

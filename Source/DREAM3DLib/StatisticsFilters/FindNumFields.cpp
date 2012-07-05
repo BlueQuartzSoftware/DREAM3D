@@ -127,5 +127,5 @@ void FindNumFields::execute()
   std::stringstream ss;
   ss.str("");
   ss << " - Complete";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
 }
