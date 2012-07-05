@@ -122,7 +122,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * to the VTK file. This class is specifically setup for writing voxel based
  * properties to the VTK file
  */
-#define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, type, format)\
+#define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
 {\
@@ -134,11 +134,11 @@ class name : public VtkScalarWriter\
       int err = 0;\
       std::string file;\
       int64_t totalPoints = r->getTotalPoints();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, totalPoints, var);\
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
       if (m_WriteBinaryFiles == true) {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, type, var)\
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, m_msgType, var)\
       }    else    {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, type, var, format)\
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
       }\
       return err;\
   }\
@@ -148,7 +148,7 @@ class name : public VtkScalarWriter\
     void operator=(const name&);\
 };
 
-#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, type, format)\
+#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
 {\
@@ -160,11 +160,11 @@ class name : public VtkScalarWriter\
     int err = 0;\
     std::string file;\
     int64_t totalPoints = r->getTotalPoints();\
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, totalPoints, var);\
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
     if (m_WriteBinaryFiles == true) {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, type, var)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, m_msgType, var)\
     }    else    {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, type, var, format)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
     }\
     return err;\
   }\

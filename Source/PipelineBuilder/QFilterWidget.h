@@ -57,21 +57,21 @@
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define QFILTERWIDGET_SET_PROPERTY(type, prpty) \
-  void set##prpty(type value) { this->m_##prpty = value; emit parametersChanged(); }
+#define QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty) \
+  void set##prpty(m_msgType value) { this->m_##prpty = value; emit parametersChanged(); }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define QFILTERWIDGET_GET_PROPERTY(type, prpty) \
-  type get##prpty() { return m_##prpty; }
+#define QFILTERWIDGET_GET_PROPERTY(m_msgType, prpty) \
+  m_msgType get##prpty() { return m_##prpty; }
 
-#define QFILTERWIDGET_INSTANCE_PROPERTY(type, prpty)\
+#define QFILTERWIDGET_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      type   m_##prpty;\
+      m_msgType   m_##prpty;\
   public:\
-    QFILTERWIDGET_SET_PROPERTY(type, prpty)\
-    QFILTERWIDGET_GET_PROPERTY(type, prpty)
+    QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty)\
+    QFILTERWIDGET_GET_PROPERTY(m_msgType, prpty)
 
 #endif
 

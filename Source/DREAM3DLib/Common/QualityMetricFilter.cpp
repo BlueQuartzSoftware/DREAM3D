@@ -54,10 +54,10 @@ QualityMetricFilter::~QualityMetricFilter()
 
 
 
-#define FILTER_DATA(type) \
-    if (m_FieldOperator.compare("<") == 0) filterDataLessThan<type>();\
-    else if (m_FieldOperator.compare(">") == 0) filterDataGreaterThan<type>();\
-    else if (m_FieldOperator.compare("=") == 0) filterDataEqualTo<type>();
+#define FILTER_DATA(m_msgType) \
+    if (m_FieldOperator.compare("<") == 0) filterDataLessThan<m_msgType>();\
+    else if (m_FieldOperator.compare(">") == 0) filterDataGreaterThan<m_msgType>();\
+    else if (m_FieldOperator.compare("=") == 0) filterDataEqualTo<m_msgType>();
 
 
 // -----------------------------------------------------------------------------

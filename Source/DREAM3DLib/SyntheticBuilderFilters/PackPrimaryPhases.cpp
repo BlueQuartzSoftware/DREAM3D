@@ -57,9 +57,9 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }

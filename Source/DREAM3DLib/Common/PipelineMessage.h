@@ -51,28 +51,37 @@ class PipelineMessage
 {
   public:
 
+    enum messageType_t {Error, Warning, StatusMessage, StatusValue, StatusMessageAndValue, UnknownMessageType};
+
     PipelineMessage() {}
 
     PipelineMessage(const PipelineMessage& rhs)
     {
       m_filterName = rhs.m_filterName;
-      m_errorDescription = rhs.m_errorDescription;
-      m_errorCode = rhs.m_errorCode;
+      m_Message = rhs.m_Message;
+      m_Code = rhs.m_Code;
+      m_msgType = rhs.m_msgType;
+      m_status = rhs.m_status;
     }
 
 
-    PipelineMessage(const std::string &m_filterName, const char* message, int m_errorCode) :
-      m_filterName(m_filterName),
-      m_errorDescription(m_errorDescription),
-      m_errorCode(m_errorCode)
-    {
-    }
+    PipelineMessage(const std::string &m_filterName, const char* message, int code, 
+      messageType_t m_msgType = UnknownMessageType, int status = -1) :
+        m_filterName(m_filterName),
+        m_Message(message),
+        m_Code(code),
+        m_msgType(m_msgType),
+        m_status(status)
+    {}
 
-    PipelineMessage(const std::string &m_filterName, const std::string &m_errorDescription, int m_errorCode) :
-      m_filterName(m_filterName),
-      m_errorDescription(m_errorDescription),
-      m_errorCode(m_errorCode)
-  {}
+    PipelineMessage(const std::string &filterName, const std::string &message, int code, 
+      messageType_t msgType = UnknownMessageType, int status = -1) :
+        m_filterName(filterName),
+        m_Message(message),
+        m_Code(code),
+        m_msgType(msgType),
+        m_status(status)
+    {}
 
     DREAM3D_TYPE_MACRO(PipelineMessage)
 
@@ -81,15 +90,19 @@ class PipelineMessage
     bool operator==(const PipelineMessage& rhs)
     {
       return (m_filterName == rhs.m_filterName &&
-          m_errorDescription == rhs.m_errorDescription &&
-            m_errorCode == rhs.m_errorCode);
+          m_Message == rhs.m_Message &&
+            m_Code == rhs.m_Code &&
+              m_msgType == rhs.m_msgType &&
+                m_status == rhs.m_status);
     }
 
     void operator=(const PipelineMessage& rhs)
     {
       m_filterName = rhs.m_filterName;
-      m_errorDescription = rhs.m_errorDescription;
-      m_errorCode = rhs.m_errorCode;
+      m_Message = rhs.m_Message;
+      m_Code = rhs.m_Code;
+      m_msgType = rhs.m_msgType;
+      m_status = rhs.m_status;
     }
 
     /**
@@ -103,28 +116,34 @@ class PipelineMessage
      */
     void setFilterName(std::string val) { m_filterName = val; }
 
-    std::string getErrorDescription() { return m_errorDescription; }
-    void setErrorDescription(std::string val) { m_errorDescription = val; }
+    std::string getMessageText() { return m_Message; }
+    void setMessageText(std::string val) { m_Message = val; }
 
-    int getErrorCode() { return m_errorCode; }
-    void setErrorCode(int val) { m_errorCode = val; }
+    int getMessageCode() { return m_Code; }
+    void setMessageCode(int val) { m_Code = val; }
+
+    PipelineMessage::messageType_t getMessageType() { return m_msgType; }
+    void setMessageType(PipelineMessage::messageType_t val) { m_msgType = val; }
+
+    int getStatusVar() const { return m_status; }
+    void setStatusVar(int val) { m_status = val; }
 
     std::string generateErrorString()
     {
       std::stringstream ss;
-      ss << "Error(" << m_errorCode << "):" << m_filterName << " :" << m_errorDescription;
+      ss << "Error(" << m_Code << "):" << m_filterName << " :" << m_Message;
       return ss.str();
     }
     std::string generateWarningString()
     {
       std::stringstream ss;
-      ss << "Warning(" << m_errorCode << "):" << m_filterName << " :" << m_errorDescription;
+      ss << "Warning(" << m_Code << "):" << m_filterName << " :" << m_Message;
       return ss.str();
     }
     std::string generateStatusString()
      {
        std::stringstream ss;
-       ss << m_filterName << ":" << m_errorDescription;
+       ss << m_filterName << ":" << m_Message;
        return ss.str();
      }
 
@@ -133,10 +152,10 @@ class PipelineMessage
 
   private:
     std::string m_filterName;
-    std::string m_errorDescription;
-    int m_errorCode;
-
-
+    std::string m_Message;
+    int m_Code;
+    messageType_t m_msgType;
+    int m_status;
 
 };
 

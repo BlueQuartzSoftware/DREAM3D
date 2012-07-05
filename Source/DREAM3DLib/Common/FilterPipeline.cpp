@@ -308,8 +308,7 @@ int FilterPipeline::preflightPipeline()
       preflightError |= err;
       setErrorCondition(preflightError);
       setErrorCondition(err);
-      pipelineErrorMessage( (*filter)->getPipelineMessages());
-      pipelineErrorMessage((*filter)->getPipelineMessages() );
+      pipelineMessage( (*filter)->getPipelineMessages());
     }
   }
 
@@ -373,7 +372,7 @@ void FilterPipeline::execute()
     if(err < 0)
     {
       setErrorCondition(err);
-      pipelineErrorMessage((*iter)->getPipelineMessages());
+      pipelineMessage((*iter)->getPipelineMessages());
       pipelineProgress(100);
       pipelineFinished();
       return;

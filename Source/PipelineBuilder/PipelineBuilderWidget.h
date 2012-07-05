@@ -142,8 +142,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
   private slots:
     // slots for our worker thread to communicate
-    virtual void addErrorMessage(QString errName, QString errDesc, int errNum);
-    virtual void addWarningMessage(QString warnName, QString warnDesc, int warnNum);
+    virtual void addMessage(PipelineMessage msg);
     virtual void addProgressMessage(QString message);
 
     /* Surface Mesh Thread communicates through these methods */

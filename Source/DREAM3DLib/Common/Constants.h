@@ -70,14 +70,14 @@
  * This will perform a deep copy of the content of the shared vector from
  * target to destination. This is NOT just a simple pointer copy.
  */
-#define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, type)\
+#define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, m_msgType)\
 if (NULL != sharedPtr.get())\
 {\
-  sharedPtr = VType(static_cast<std::vector<type>*>(NULL));\
+  sharedPtr = VType(static_cast<std::vector<m_msgType>*>(NULL));\
 }\
 if (NULL != obj->sharedPtr.get())\
 {\
-  sharedPtr = VType(new std::vector<type>(*(obj->sharedPtr.get())));\
+  sharedPtr = VType(new std::vector<m_msgType>(*(obj->sharedPtr.get())));\
 }
 
 
