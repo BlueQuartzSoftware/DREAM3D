@@ -290,33 +290,52 @@ void PipelineBuilderWidget::setupGui()
 
   toggleDocs->setChecked(false);
   showErrors->setChecked(false);
+
+
+  setDocsToIndexFile();
+
+
+
   on_toggleDocs_clicked();
   //on_showErrors_clicked();
 
   on_filterLibraryTree_itemClicked(library, 0);
 
   {
-  QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-  presetFilter->setText(0, "Ebsd 3D Reconstruction");
-  presetFilter->setIcon(0, QIcon(":/scroll.png"));
-  QStringList presetFilterList;
-  presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" <<
-    "DataContainerWriter" << "VtkRectilinearGridWriter";
-  m_presetMap["Ebsd 3D Reconstruction"] = presetFilterList;
+    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+    presetFilter->setText(0, "Ebsd 3D Reconstruction");
+    presetFilter->setIcon(0, QIcon(":/scroll.png"));
+    QStringList presetFilterList;
+    presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" << "DataContainerWriter"
+        << "VtkRectilinearGridWriter";
+    m_presetMap["Ebsd 3D Reconstruction"] = presetFilterList;
   }
 
   {
-  QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-  presetFilter->setText(0, "Statistics");
-  presetFilter->setIcon(0, QIcon(":/scroll.png"));
-  QStringList presetFilterList;
-  presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" <<
-    "FindShapes" << "FindAxisODF" << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" <<
-      "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
-  m_presetMap["Statistics"] = presetFilterList;
+    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+    presetFilter->setText(0, "Statistics");
+    presetFilter->setIcon(0, QIcon(":/scroll.png"));
+    QStringList presetFilterList;
+    presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindShapes" << "FindAxisODF"
+        << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" << "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
+    m_presetMap["Statistics"] = presetFilterList;
   }
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::setDocsToIndexFile()
+{
 
+  QString html;
+  QString resName = QString(":/index.html");
+  QFile f(resName);
+  if ( f.open(QIODevice::ReadOnly) )
+  {
+    html = QLatin1String(f.readAll());
+  }
+  helpText->setHtml(html);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -352,6 +371,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   {
     factories = fm->getFactories();
     updateFilterGroupList(factories);
+
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
   {
@@ -436,7 +456,7 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
   AbstractFilter::Pointer filter = wf->getFilterInstance();
   if (NULL == filter.get())
   {
-    helpTextEdit->setHtml("");
+    helpText->setHtml("");
     return;
   }
 
@@ -461,7 +481,24 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
     html.append("</body></html>\n");
   }
 
-  helpTextEdit->setHtml(html);
+  helpText->setHtml(html);
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_helpText_anchorClicked ( const QUrl & link )
+{
+//  std::cout << "PipelineBuilderWidget::on_helpText_anchorClicked()" << std::endl;
+  QUrl u(link);
+  u.setScheme("qrc");
+//  std::cout << "URL: " << u.scheme().toStdString()<< "  " << u.path().toStdString() << std::endl;
+  helpText->blockSignals(true);
+  helpText->setSource(u);
+  helpText->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
