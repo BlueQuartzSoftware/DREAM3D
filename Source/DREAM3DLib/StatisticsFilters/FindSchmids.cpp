@@ -210,5 +210,5 @@ void FindSchmids::execute()
 	  m_SlipSystems[i] = ss;
   }
 
- notifyProgress("FindSchmids Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindSchmids Completed");
 }

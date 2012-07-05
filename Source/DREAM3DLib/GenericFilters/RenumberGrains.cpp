@@ -141,13 +141,13 @@ void RenumberGrains::execute()
   NewNames.resize(totalFields);
 
   ss << " - Generating Active Grain List";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
   std::vector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
     std::stringstream ss;
     // ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
-    // notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    // notifyStatusMessage(ss.str());
     if(m_Active[i] == false)
     {
       RemoveList.push_back(i);
@@ -170,7 +170,7 @@ void RenumberGrains::execute()
       ss.str("");
       ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
       ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
-      //notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+      //notifyStatusMessage(ss.str());
       if((*iter).compare(DREAM3D::FieldData::NeighborList) == 0) m->removeFieldData(*iter);
       else if((*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) == 0) m->removeFieldData(*iter);
       else p->EraseTuples(RemoveList);
@@ -209,7 +209,7 @@ void RenumberGrains::execute()
 
   ss.str("");
   ss << " - Complete";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
 }
 
 

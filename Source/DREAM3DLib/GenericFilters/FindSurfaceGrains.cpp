@@ -104,7 +104,7 @@ void FindSurfaceGrains::execute()
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
   ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)
   {
@@ -122,7 +122,7 @@ void FindSurfaceGrains::execute()
   if (getErrorCondition() < 0)
   {return;}
 
- notifyProgress("FindSurfaceGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindSurfaceGrains Completed");
 }
 
 // -----------------------------------------------------------------------------

@@ -262,7 +262,7 @@ void FillBadData::execute()
 	  std::stringstream ss;
 	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << cycle << " - Count - " << count;
 	  cycle++;
-	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+	  notifyStatusMessage(ss.str());
     for (int i = 0; i < totalPoints; i++)
     {
       int grainname = m_GrainIds[i];
@@ -331,5 +331,5 @@ void FillBadData::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Filling Bad Data Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Filling Bad Data Complete");
 }

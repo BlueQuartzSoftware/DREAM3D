@@ -245,6 +245,6 @@ void InitializeSyntheticVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("InitializeSyntheticVolume Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("InitializeSyntheticVolume Complete");
 }
 

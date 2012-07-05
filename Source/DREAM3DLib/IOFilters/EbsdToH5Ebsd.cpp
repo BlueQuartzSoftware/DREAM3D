@@ -364,7 +364,7 @@ void EbsdToH5Ebsd::execute()
     ++z;
     if(getCancel() == true)
     {
-     notifyProgress("Conversion was Canceled", 0, Observable::UpdateProgressMessage);
+     notifyStatusMessage("Conversion was Canceled");
       return;
     }
   }
@@ -435,6 +435,6 @@ void EbsdToH5Ebsd::execute()
   err = H5Utilities::closeFile(fileId);
   // err = H5Fclose(fileId);
   m = EbsdToH5EbsdFunc::NullPointer();
- notifyProgress("Import Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Import Complete");
 }
 

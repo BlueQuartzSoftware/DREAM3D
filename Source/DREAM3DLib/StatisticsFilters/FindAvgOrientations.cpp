@@ -210,7 +210,7 @@ void FindAvgOrientations::execute()
 	  m_AvgQuats[5*i] = 1;
   }
 
- notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 
 

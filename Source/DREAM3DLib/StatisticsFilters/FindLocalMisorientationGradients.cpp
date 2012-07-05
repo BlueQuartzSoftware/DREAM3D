@@ -364,5 +364,5 @@ void FindLocalMisorientationGradients::execute()
   }
   delete avgmiso;
 
- notifyProgress("FindLocalMisorientationGradients Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindLocalMisorientationGradients Completed");
 }

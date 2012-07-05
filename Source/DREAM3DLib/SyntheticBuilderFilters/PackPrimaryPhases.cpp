@@ -382,7 +382,7 @@ void PackPrimaryPhases::execute()
 		{
 	      std::stringstream ss;
 	      ss << "Packing Grains - Generating Grain #" << gid;
-	      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+	      notifyStatusMessage(ss.str());
 
 	      m->resizeFieldDataArrays(gid + 1);
 	      dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -420,7 +420,7 @@ void PackPrimaryPhases::execute()
 		{
 		  std::stringstream ss;
 		  ss << "Packing Grains - Generating Grain #" << gid;
-		  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+		  notifyStatusMessage(ss.str());
 
 		  m->resizeFieldDataArrays(gid + 1);
 		  dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -497,7 +497,7 @@ void PackPrimaryPhases::execute()
   {
     std::stringstream ss;
     ss << "Packing Grains - Placing Grain #" << i;
-    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
 
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
@@ -542,7 +542,7 @@ void PackPrimaryPhases::execute()
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(iteration%100 == 0) notifyStatusMessage(ss.str());
 
 //    change1 = 0;
 //    change2 = 0;
@@ -664,7 +664,7 @@ void PackPrimaryPhases::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Packing Grains Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Packing Grains Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -1266,7 +1266,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
 
 void PackPrimaryPhases::assign_voxels()
 {
- notifyProgress("Assigning Voxels", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Voxels");
 
   DataContainer* m = getDataContainer();
   int index;
@@ -1437,7 +1437,7 @@ void PackPrimaryPhases::assign_voxels()
 
 void PackPrimaryPhases::assign_gaps()
 {
- notifyProgress("Assigning Gaps", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Gaps");
 
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->getTotalPoints();
@@ -1628,7 +1628,7 @@ void PackPrimaryPhases::assign_gaps()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::cleanup_grains()
 {
-  notifyProgress("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Cleaning Up Grains");
 
   DataContainer* m = getDataContainer();
 

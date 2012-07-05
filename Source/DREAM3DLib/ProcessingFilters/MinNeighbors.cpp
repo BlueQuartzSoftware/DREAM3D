@@ -199,7 +199,7 @@ void MinNeighbors::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Minimum Number of Neighbors Filter Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Minimum Number of Neighbors Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -322,7 +322,7 @@ void MinNeighbors::merge_containedgrains()
   {
 	std::stringstream ss;
 //	ss << "Cleaning Up Grains - Removing Contained Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+//	notifyStatusMessage(ss.str());
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_FieldPhases[grainname] > 0)
     {

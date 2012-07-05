@@ -206,7 +206,7 @@ void FindNeighborhoods::execute()
   }
 
   find_neighborhoods();
- notifyProgress("FindNeighborhoods Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindNeighborhoods Completed");
 }
 
 // -----------------------------------------------------------------------------

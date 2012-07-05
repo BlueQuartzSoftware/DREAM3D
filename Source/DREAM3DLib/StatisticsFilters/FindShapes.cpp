@@ -239,7 +239,7 @@ void FindShapes::execute()
   if(m->getZPoints() > 1) find_axiseulers();
   if(m->getZPoints() == 1) find_axiseulers2D();
 
- notifyProgress("FindShapes Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindShapes Completed");
 }
 
 // -----------------------------------------------------------------------------

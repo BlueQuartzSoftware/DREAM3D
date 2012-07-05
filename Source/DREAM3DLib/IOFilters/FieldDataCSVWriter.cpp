@@ -182,7 +182,7 @@ void FieldDataCSVWriter::execute()
     if (((float)i / numTuples) * 100.0f > threshold) {
       ss.str("");
       ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
-      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+      notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f) {
         threshold = ((float)i / numTuples) * 100.0f;
@@ -203,7 +203,7 @@ void FieldDataCSVWriter::execute()
   outFile.close();
 
   // If there is an error set this to something negative and also set a message
-  notifyProgress("FieldDataCSVWriter Completed", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("FieldDataCSVWriter Completed");
 
 }
 

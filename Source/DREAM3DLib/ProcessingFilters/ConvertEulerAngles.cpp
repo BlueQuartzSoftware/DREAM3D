@@ -191,5 +191,5 @@ void ConvertEulerAngles::execute()
   serial.convert(0, totalPoints);
 #endif
 
- notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Complete");
 }

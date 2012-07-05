@@ -217,13 +217,13 @@ void MergeColonies::execute()
     return;
   }
 
- notifyProgress("Merging Colonies", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Merging Colonies");
   merge_colonies();
 
- notifyProgress("Characterizing Colonies", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Characterizing Colonies");
   characterize_colonies();
 
- notifyProgress("Renumbering Grains", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -244,7 +244,7 @@ void MergeColonies::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------

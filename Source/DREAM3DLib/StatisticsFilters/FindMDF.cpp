@@ -288,5 +288,5 @@ void FindMDF::execute()
 	  }
   }
 
- notifyProgress("FindMDF Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindMDF Completed");
 }

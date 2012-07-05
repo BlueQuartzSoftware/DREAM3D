@@ -198,7 +198,7 @@ void AdjustVolume::execute()
   {
     std::stringstream ss;
 	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
-	notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+	notifyStatusMessage(ss.str());
     iterations++;
     good = 0;
     while (good == 0)
@@ -316,5 +316,5 @@ void AdjustVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Adjusting Grain Boundaries Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Adjusting Grain Boundaries Complete");
 }

@@ -196,7 +196,7 @@ void AlignSections::execute()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
-   // notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+   // notifyStatusMessage(ss.str());
     slice = static_cast<int>( (dims[2] - 1) - i );
     for (DimType l = 0; l < dims[1]; l++)
     {
@@ -232,7 +232,7 @@ void AlignSections::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Aligning Sections Complete");
 }
 
 
