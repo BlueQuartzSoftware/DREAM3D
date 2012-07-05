@@ -273,7 +273,6 @@ void PipelineViewWidget::preflightPipeline()
 
   // clear all the error messages
   m_PipelineErrorList.clear();
-  errorTableWidget->clearContents();
 
   for (int i=0; i<errorTableWidget->rowCount(); ++i) {
     errorTableWidget->removeRow(i);
@@ -346,6 +345,7 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
     }
+   // errorTableWidget->verticalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
   }
 }
 
