@@ -47,6 +47,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 /**
 * @brief This is a subclass of the @CLASS_NAME@ class that controls this pipeline
@@ -63,7 +64,7 @@ class Q@CLASS_NAME@ : public QObject, public FilterPipeline
     {
     }
     virtual ~Q@CLASS_NAME@() {}
-
+;lkijhjkilkjjhhhj
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
@@ -95,26 +96,20 @@ class Q@CLASS_NAME@ : public QObject, public FilterPipeline
     {
       emit progressMessage(QString(message));
     }
-    
-    /**
-     * @brief This message reports some human readable message suitable for display
-     * on a GUI or printed to a console or possibly saved to a log file
-     * @param message
-     */
-    virtual void pipelineWarningMessage(const char* message)
-    {
-      emit warningMessage(QString(message));
-    }
-    
-    /**
-     * @brief This message reports some human readable message suitable for display
-     * on a GUI or printed to a console or possibly saved to a log file
-     * @param message
-     */
-    virtual void pipelineErrorMessage(const char* message)
-    {
-      emit errorMessage(QString(message));
-    }
+ 
+
+	virtual void pipelineMessage(PipelineMessage msg)
+	{
+		emit firePipelineMessage(msg);
+	}
+	
+	virtual void pipelineMessage(std::vector<PipelineMessage> &messages)
+	{
+		for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+		{
+			pipelineMessage(*iter);
+		}
+	}
     
     /**
      * @brief This method is called from the run() method just before exiting and
@@ -130,8 +125,7 @@ class Q@CLASS_NAME@ : public QObject, public FilterPipeline
      */
      signals:
        void progressMessage(QString message);
-       void warningMessage(QString message);
-       void errorMessage(QString message);
+       void firePipelineMessage(PipelineMessage msg);
        void updateProgress(int value);
        void finished();
 

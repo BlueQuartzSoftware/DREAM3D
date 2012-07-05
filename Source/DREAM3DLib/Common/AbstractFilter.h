@@ -65,6 +65,10 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);
     void addErrorMessages(std::vector<PipelineMessage> msgVector);
 
+    void addWarningMessage(PipelineMessage &msg);
+    void addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode);
+    void addWarningMessages(std::vector<PipelineMessage> msgVector);
+
     void removeErrorMessage(PipelineMessage msg);
     void removeErrorMessage(int index);
     void removeErrorMessages(int start, int end);

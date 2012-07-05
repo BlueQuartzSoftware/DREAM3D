@@ -188,8 +188,8 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
 }
 
 
-#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
+#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
@@ -207,18 +207,18 @@ type* valuePtr = NULL;\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << ": Array " << name << " from the DataContainer class could not be cast to type " << #type;\
+    s << ": Array " << name << " from the DataContainer class could not be cast to type " << #m_msgType;\
     setErrorCondition(-30);\
     addErrorMessage(getNameOfClass(), s.str(), -30);\
     return -30;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
@@ -228,14 +228,14 @@ type* valuePtr = NULL;\
     return;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     return;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
@@ -246,7 +246,7 @@ type* valuePtr = NULL;\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     return -30;\
   }\

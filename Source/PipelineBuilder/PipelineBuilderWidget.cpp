@@ -688,12 +688,9 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
           this, SLOT(addProgressMessage(QString) ));
 
   // Send progress messages from PipelineBuilder to this object for display
-  connect(m_FilterPipeline, SIGNAL (warningMessage(QString, QString, int)),
-          this, SLOT(addWarningMessage(QString, QString, int) ));
-
-  // Send progress messages from PipelineBuilder to this object for display
-  connect(m_FilterPipeline, SIGNAL (errorMessage(QString, QString, int)),
-          this, SLOT(addErrorMessage(QString, QString, int) ));
+  qRegisterMetaType<PipelineMessage>();
+  connect(m_FilterPipeline, SIGNAL (fireMessage(PipelineMessage)),
+          this, SLOT(addMessage(PipelineMessage) ));
 
 
 
@@ -709,9 +706,9 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 void PipelineBuilderWidget::pipelineComplete()
 {
  // std::cout << "PipelineBuilderWidget::PipelineBuilder_Finished()" << std::endl;
-  if (m_hasErrors || m_hasWarnings) {
-    displayDialogBox(QString::fromStdString("Pipeline Errors | Warnings"),
-      QString::fromStdString("Errors and/or warnings occurred during processing.\nPlease check the error table for more information."),
+  if (m_hasErrors) {
+    displayDialogBox(QString::fromStdString("Pipeline Errors"),
+      QString::fromStdString("Errors occurred during processing.\nPlease check the error table for more information."),
         QMessageBox::Critical);
   }
   m_GoBtn->setText("Go");
@@ -733,43 +730,98 @@ void PipelineBuilderWidget::pipelineProgress(int val)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addErrorMessage(QString errName, QString errDesc, int errNum)
+void PipelineBuilderWidget::addMessage(PipelineMessage pipelineMsg)
 {
-  m_hasErrors = true;
+  QColor msgColor;
+  switch( pipelineMsg.getMessageType() )
+  {
+  case PipelineMessage::Error:
+    m_hasErrors = true;
+    msgColor.setRed(255);
+    msgColor.setGreen(191);
+    msgColor.setBlue(193);
 
-  QTableWidget* errorTableWidget = m_PipelineViewWidget->getTableWidget();
+    {
+    QBrush msgBrush(msgColor);
 
-  int rc = errorTableWidget->rowCount();
+    QString msgName = QString::fromStdString( pipelineMsg.getFilterName() );
+    QString msgDesc = QString::fromStdString( pipelineMsg.getMessageText() );
+    int msgCode = pipelineMsg.getMessageCode();
 
-  errorTableWidget->insertRow(rc);
+    QTableWidget* msgTableWidget = m_PipelineViewWidget->getTableWidget();
 
-  QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(errName);
-  filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-  QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errDesc);
-  QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem( QString::number(errNum) );
-  errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
+    int rc = msgTableWidget->rowCount();
 
-  QColor errColor(255, 191, 193);
-  QBrush errBrush(errColor);
+    msgTableWidget->insertRow(rc);
 
-  filterNameWidgetItem->setBackground(errBrush);
-  errorDescriptionWidgetItem->setBackground(errBrush);
-  errorCodeWidgetItem->setBackground(errBrush);
+    QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+    filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+    QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+    QTableWidgetItem* codeWidgetItem = new QTableWidgetItem( QString::number(msgCode) );
+    codeWidgetItem->setTextAlignment(Qt::AlignCenter);
 
-  errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
-  errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
-  errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
-}
+    filterNameWidgetItem->setBackground(msgBrush);
+    descriptionWidgetItem->setBackground(msgBrush);
+    codeWidgetItem->setBackground(msgBrush);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addWarningMessage(QString warnName, QString warnDesc, int warnNum)
-{
-  m_hasWarnings = true;
+    msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+    msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
+    msgTableWidget->setItem(rc, 2, codeWidgetItem);
+    }
+    break;
 
-  //QString title = QString::fromStdString("PipelineBuilderWidget Warning");
-  //displayDialogBox(title, message, QMessageBox::Warning);
+  case PipelineMessage::Warning:
+    m_hasWarnings = true;
+    msgColor.setRed(251);
+    msgColor.setGreen(254);
+    msgColor.setBlue(137);
+
+    {
+    QBrush msgBrush(msgColor);
+
+    QString msgName = QString::fromStdString( pipelineMsg.getFilterName() );
+    QString msgDesc = QString::fromStdString( pipelineMsg.getMessageText() );
+    int msgCode = pipelineMsg.getMessageCode();
+
+    QTableWidget* msgTableWidget = m_PipelineViewWidget->getTableWidget();
+
+    int rc = msgTableWidget->rowCount();
+
+    msgTableWidget->insertRow(rc);
+
+    QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+    filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+    QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+    QTableWidgetItem* codeWidgetItem = new QTableWidgetItem( QString::number(msgCode) );
+    codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+    filterNameWidgetItem->setBackground(msgBrush);
+    descriptionWidgetItem->setBackground(msgBrush);
+    codeWidgetItem->setBackground(msgBrush);
+
+    msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+    msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
+    msgTableWidget->setItem(rc, 2, codeWidgetItem);
+    }
+    break;
+
+  case PipelineMessage::StatusValue:
+    this->m_progressBar->setValue( pipelineMsg.getStatusVar() );
+
+  case PipelineMessage::StatusMessage:
+    if (NULL != this->statusBar()) {
+      this->statusBar()->showMessage( QString::fromStdString(pipelineMsg.getMessageText()) );
+    }
+
+  case PipelineMessage::StatusMessageAndValue:
+    this->m_progressBar->setValue( pipelineMsg.getStatusVar() );
+    if (NULL != this->statusBar()) {
+      this->statusBar()->showMessage( QString::fromStdString(pipelineMsg.getMessageText()) );
+    }
+
+  default:
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------

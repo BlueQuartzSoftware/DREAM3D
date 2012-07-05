@@ -87,58 +87,54 @@ std::string Observable::getMessagePrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyProgress(const char* msg, int progress, ObserverAspect a)
-{
-  std::string m(msg);
-  notifyProgress(m, progress, a);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observable::notifyProgress(const std::string &msg, int progress, ObserverAspect a)
-{
-
-  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
-  {
-    switch(a)
-    {
-      case UpdateProgressValue:
-        (*iter)->pipelineProgress(progress);
-        break;
-      case UpdateProgressMessage:
-        (*iter)->pipelineProgressMessage(msg);
-        break;
-      case UpdateProgressValueAndMessage:
-        (*iter)->updateProgressAndMessage(msg, progress);
-        break;
-      default:
-        break;
-    }
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Observable::notifyMessage(PipelineMessage &msg, int progress, ObserverAspect a)
 {
   for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
   {
-    switch(a)
-    {
-      case UpdateWarningMessage:
-        (*iter)->pipelineWarningMessage(msg);
-        break;
-      case UpdateErrorMessage:
-        (*iter)->pipelineErrorMessage(msg);
-        break;
-      default:
-        break;
-    }
+    (*iter)->pipelineMessage(msg);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyErrorMessage(std::string errDesc, int errCode) {
+  PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
+  notifyMessage(errorMsg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
+  PipelineMessage warningMsg(getNameOfClass(), warnDesc, warnCode, PipelineMessage::Warning);
+  notifyMessage(warningMsg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyStatusMessage(std::string statusDesc) {
+  PipelineMessage statusMsg("", statusDesc, 0, PipelineMessage::StatusMessage);
+  notifyMessage(statusMsg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyProgressValue(int statusVal) {
+  PipelineMessage statusValueUpdate("", "", 0, PipelineMessage::StatusValue, statusVal);
+  notifyMessage(statusValueUpdate);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) {
+  PipelineMessage statusUpdate("", statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
+  notifyMessage(statusUpdate);
+}
+
 
 // -----------------------------------------------------------------------------
 //

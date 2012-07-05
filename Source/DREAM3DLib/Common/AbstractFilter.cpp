@@ -185,7 +185,7 @@ void AbstractFilter::addErrorMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 void AbstractFilter::addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode)
 {
-  PipelineMessage em(filterName, errorDescription, errorCode);
+  PipelineMessage em(filterName, errorDescription, errorCode, PipelineMessage::Error);
   m_PipelineMessages.push_back(em);
 }
 
@@ -193,6 +193,32 @@ void AbstractFilter::addErrorMessage(const std::string &filterName, const std::s
 //
 // -----------------------------------------------------------------------------
 void AbstractFilter::addErrorMessages(std::vector<PipelineMessage> msgVector) {
+  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+    m_PipelineMessages.push_back(msgVector[i]);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addWarningMessage(PipelineMessage &msg)
+{
+  m_PipelineMessages.push_back(msg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode)
+{
+  PipelineMessage em(filterName, warnDescription, warnCode, PipelineMessage::Warning);
+  m_PipelineMessages.push_back(em);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addWarningMessages(std::vector<PipelineMessage> msgVector) {
   for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
     m_PipelineMessages.push_back(msgVector[i]);
   }

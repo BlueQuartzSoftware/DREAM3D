@@ -325,15 +325,15 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
       errorTableWidget->insertRow(rc);
 
       QString filterName = QString::fromStdString(errorStream.at(i).getFilterName());
-      QString errorDescription = QString::fromStdString(errorStream.at(i).getErrorDescription());
-      int errorCode = errorStream.at(i).getErrorCode();
+      QString errorDescription = QString::fromStdString(errorStream.at(i).getMessageText());
+      int errorCode = errorStream.at(i).getMessageCode();
 
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
 
       QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
-      errorCodeWidgetItem->setTextAlignment(Qt::AlignHCenter);
+      errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
 
       QColor errColor(255, 191, 193);
       QBrush errBrush(errColor);

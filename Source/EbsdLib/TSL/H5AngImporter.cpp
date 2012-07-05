@@ -79,9 +79,9 @@ H5AngImporter::~H5AngImporter()
 }
 
 
-#define WRITE_ANG_HEADER_DATA(reader, type, prpty, key)\
+#define WRITE_ANG_HEADER_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader.get##prpty();\
+  m_msgType t = reader.get##prpty();\
   err = H5Lite::writeScalarDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -92,9 +92,9 @@ H5AngImporter::~H5AngImporter()
     return -1; }\
 }
 
-#define WRITE_ANG_HEADER_STRING_DATA(reader, type, prpty, key)\
+#define WRITE_ANG_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader.get##prpty();\
+  m_msgType t = reader.get##prpty();\
   err = H5Lite::writeStringDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -105,9 +105,9 @@ H5AngImporter::~H5AngImporter()
     return -1; }\
 }
 
-#define WRITE_ANG_DATA_ARRAY(reader, type, gid, prpty, key)\
+#define WRITE_ANG_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  type* dataPtr = reader.get##prpty##Pointer();\
+  m_msgType* dataPtr = reader.get##prpty##Pointer();\
   if (NULL != dataPtr) {\
     err = H5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
     if (err < 0) {\
@@ -286,9 +286,9 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
 }
 
 
-#define WRITE_PHASE_HEADER_DATA(reader, type, prpty, key)\
+#define WRITE_PHASE_HEADER_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader->get##prpty();\
+  m_msgType t = reader->get##prpty();\
   err = H5Lite::writeScalarDataset(pid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -299,9 +299,9 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     return -1; }\
 }
 
-#define WRITE_PHASE_HEADER_STRING_DATA(reader, type, prpty, key)\
+#define WRITE_PHASE_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader->get##prpty();\
+  m_msgType t = reader->get##prpty();\
   err = H5Lite::writeStringDataset(pid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -312,11 +312,11 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     return -1; }\
 }
 
-#define WRITE_PHASE_DATA_ARRAY(reader, type, gid, prpty, key)\
+#define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  std::vector<type> tempVar = reader->get##prpty();\
+  std::vector<m_msgType> tempVar = reader->get##prpty();\
   dims[0] = tempVar.size();\
-  type* dataPtr = &(tempVar.front());\
+  m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
     err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
     if (err < 0) {\
