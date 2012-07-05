@@ -669,7 +669,8 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
   }
 
 
-
+  m_hasErrors = false;
+  m_hasWarnings = false;
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
