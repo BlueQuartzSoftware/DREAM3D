@@ -34,9 +34,11 @@
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 #include <QtCore/QEvent>
-#include <QtGui/QDropEvent>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
+#include <QtCore/QUrl>
+#include <QtGui/QDropEvent>
+
 
 
 
@@ -134,6 +136,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void on_addFavoriteBtn_clicked();
     void on_removeFavoriteBtn_clicked();
+
+    void on_helpText_anchorClicked ( const QUrl & link );
+    void setDocsToIndexFile();
 
 #if 0
     void on_filterUp_clicked();

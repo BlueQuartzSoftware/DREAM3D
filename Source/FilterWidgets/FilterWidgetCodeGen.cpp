@@ -50,6 +50,7 @@
 
 
 #define GENERATE_FILTER_TEXT_LIST 0
+#define GENERATE_HTML_FRAGMENT 0
 #define GENERATE_HTML_FILE 0
 #define OVERWRITE_SOURCE_DOCS 0
 #define GENERATE_OPTIONS_WRITER_CODE 0
@@ -242,6 +243,33 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   }
 
 }
+
+template<typename T>
+void createHTMLFragment( const std::string &group, const std::string &filter)
+{
+
+#if (GENERATE_HTML_FRAGMENT == 0)
+  if (true) return;
+#endif
+  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  s.append("_html_fragment.html");
+  FILE* f = fopen(s.c_str(), "ab+");
+
+  typename T::Pointer t = T::New();
+
+
+  DataContainer::Pointer m = DataContainer::New();
+  t->setDataContainer(m.get());
+  t->preflight();
+
+  fprintf(f, "<a href=\"../%s/%s.html#wp2\">Description</a> ", group.c_str(), filter.c_str());
+  fprintf(f, "| <a href=\"../%s/%s.html#wp3\">Options</a> ", group.c_str(), filter.c_str());
+  fprintf(f, "| <a href=\"../%s/%s.html#wp4\">Required Arrays</a> ", group.c_str(), filter.c_str());
+  fprintf(f, "| <a href=\"../%s/%s.html#wp5\">Created Arrays</a> ", group.c_str(), filter.c_str());
+  fprintf(f, "| <a href=\"../%s/%s.html#wp1\">Authors</a> </p>\n\n\n", group.c_str(), filter.c_str());
+  fclose(f);
+}
+
 
 
 template<typename T>
@@ -862,6 +890,10 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   createListFile<T>(group, filter);
 #endif
 
+#if (GENERATE_HTML_FRAGMENT == 1)
+  createHTMLFragment<T>(group, filter);
+#endif
+
 #if (GENERATE_HTML_FILE == 0)
   return;
 #endif
@@ -920,8 +952,8 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp3\">Options</a> ");
   fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp4\">Required Arrays</a> ");
   fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp5\">Created Arrays</a>");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp1\">Authors</a> ");
-  fprintf(f, "</p>\n<a name=\"wp2\"> </a>");
+  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp1\">Authors</a> </p>\n");
+  fprintf(f, "<a name=\"wp2\"> </a>");
   fprintf(f, "<h2 class=\"pHeading2\">Description</h2>\n<p class=\"pBody\">\n");
   fprintf(f, "<!-- Write all your documentation here -->\n\n");
 //  fprintf(f, "This filter does ....\n");
@@ -1093,6 +1125,14 @@ int main(int argc, char **argv)
 {
 
 #if (GENERATE_FILTER_TEXT_LIST == 1)
+  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  s.append("html_fragment.html");
+  FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
+  fclose(f);
+#endif
+
+
+#if (GENERATE_HTML_FRAGMENT == 1)
   std::string s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Mike_list.txt");
   FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
