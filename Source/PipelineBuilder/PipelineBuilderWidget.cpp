@@ -284,7 +284,14 @@ void PipelineBuilderWidget::setupGui()
   }
   library->setExpanded(true);
 
-  m_PipelineViewWidget->setErrorsTextArea(tableWidget);
+  errorTableWidget->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
+  errorTableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::Interactive);
+  errorTableWidget->horizontalHeader()->resizeSection(1, 250);
+  errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
+
+  errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+
+  m_PipelineViewWidget->setErrorsTextArea(errorTableWidget);
 
   m_DocErrorTabsIsOpen = false;
 
@@ -775,8 +782,11 @@ void PipelineBuilderWidget::addErrorMessage(QString errName, QString errDesc, in
 {
   m_hasErrors = true;
 
-  QTableWidget* errorTableWidget = m_PipelineViewWidget->getTableWidget();
-
+  //QTableWidget* errorTableWidget = m_PipelineViewWidget->getTableWidget();
+  if (errorTableWidget == NULL)
+  {
+    return;
+  }
   int rc = errorTableWidget->rowCount();
 
   errorTableWidget->insertRow(rc);
@@ -797,6 +807,11 @@ void PipelineBuilderWidget::addErrorMessage(QString errName, QString errDesc, in
   errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
   errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
   errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
+
+
+  errorTableWidget->resizeRowsToContents();
+
+
 }
 
 // -----------------------------------------------------------------------------
