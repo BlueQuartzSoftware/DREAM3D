@@ -71,20 +71,26 @@
   }}
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){\
-      setErrorCondition(-10000);\
-      ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; \
-      addErrorMessage(getNameOfClass(), ss.str(), -10000);\
-      }\
-      std::string _s(#Name); addCreated##DType(_s);\
-      m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
-  if (NULL ==  m_##Name ) {\
+  {\
+  if (m_##Name##ArrayName.empty() == true)\
+  {\
+    setErrorCondition(-10000);\
+    ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; \
+    addErrorMessage(getNameOfClass(), ss.str(), -10000);\
+  }\
+  std::string _s(#Name);\
+  addCreated##DType(_s);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  if (NULL ==  m_##Name ) \
+  {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
-    if (NULL == p.get()) {\
+    if (NULL == p.get()) \
+    {\
       ss.str(""); ss << "Filter " << getNameOfClass() << " attempted to create array "; \
-      if (m_##Name##ArrayName.empty() == true) {\
-          ss << " with an empty name and that is not allowed." << std::endl;;\
-          setErrorCondition(-501);\
+      if (m_##Name##ArrayName.empty() == true) \
+      {\
+        ss << " with an empty name and that is not allowed." << std::endl;;\
+        setErrorCondition(-501);\
       } else {\
         ss << "'" << m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
         setErrorCondition(-500);\
