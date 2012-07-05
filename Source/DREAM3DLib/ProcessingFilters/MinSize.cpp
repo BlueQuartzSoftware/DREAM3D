@@ -304,11 +304,11 @@ void MinSize::assign_badpoints()
       if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
-		m_CellPhases[j] = m_FieldPhases[neighbor];
-		if(m_FieldPhases[neighbor] != 1 && m_FieldPhases[neighbor] != 2)
+		if(m_CellPhases[j] != 2 && m_FieldPhases[neighbor] == 2)
 		{
 			int stop = 0;
 		}
+		m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;
