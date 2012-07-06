@@ -50,7 +50,6 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -249,11 +248,6 @@ void EBSDSegmentGrains::execute()
        m_GrainIds[i] = gid[ m_GrainIds[i] ];
     }
   }
-
-  	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	find_grainphases->execute();
 
   // If there is an error set this to something negative and also set a message
  notifyStatusMessage("Completed");
