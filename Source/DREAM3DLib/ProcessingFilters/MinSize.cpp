@@ -304,10 +304,6 @@ void MinSize::assign_badpoints()
       if (grainname < 0 && neighbor >= 0)
       {
         m_GrainIds[j] = neighbor;
-		if(m_CellPhases[j] != 2 && m_FieldPhases[neighbor] == 2)
-		{
-			int stop = 0;
-		}
 		m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
