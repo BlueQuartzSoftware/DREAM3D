@@ -79,9 +79,9 @@ H5AngImporter::~H5AngImporter()
 }
 
 
-#define WRITE_ANG_HEADER_DATA(reader, type, prpty, key)\
+#define WRITE_ANG_HEADER_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader.get##prpty();\
+  m_msgType t = reader.get##prpty();\
   err = H5Lite::writeScalarDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -92,9 +92,9 @@ H5AngImporter::~H5AngImporter()
     return -1; }\
 }
 
-#define WRITE_ANG_HEADER_STRING_DATA(reader, type, prpty, key)\
+#define WRITE_ANG_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader.get##prpty();\
+  m_msgType t = reader.get##prpty();\
   err = H5Lite::writeStringDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -105,9 +105,9 @@ H5AngImporter::~H5AngImporter()
     return -1; }\
 }
 
-#define WRITE_ANG_DATA_ARRAY(reader, type, gid, prpty, key)\
+#define WRITE_ANG_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  type* dataPtr = reader.get##prpty##Pointer();\
+  m_msgType* dataPtr = reader.get##prpty##Pointer();\
   if (NULL != dataPtr) {\
     err = H5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
     if (err < 0) {\
@@ -155,7 +155,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   herr_t err = -1;
   setCancel(false);
   setErrorCondition(false);
-  setErrorMessage("");
+  setPipelineMessage("");
 
 //  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
   AngReader reader;
@@ -187,7 +187,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     {
       ss << "H5AngImporter Error: Unknown error.";
     }
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
@@ -200,7 +200,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     std::ostringstream ss;
     ss << "H5AngImporter Error: A Group for Z index " << z << " could not be created."
          << " Please check other error messages from the HDF5 library for possible reasons.";
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-500);
     return -1;
   }
@@ -213,7 +213,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
          << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-600);
     return -1;
   }
@@ -258,7 +258,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
          << " Please check other error messages from the HDF5 library for possible reasons."<< std::endl;
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-700);
     return -1;
   }
@@ -286,9 +286,9 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
 }
 
 
-#define WRITE_PHASE_HEADER_DATA(reader, type, prpty, key)\
+#define WRITE_PHASE_HEADER_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader->get##prpty();\
+  m_msgType t = reader->get##prpty();\
   err = H5Lite::writeScalarDataset(pid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -299,9 +299,9 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     return -1; }\
 }
 
-#define WRITE_PHASE_HEADER_STRING_DATA(reader, type, prpty, key)\
+#define WRITE_PHASE_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader->get##prpty();\
+  m_msgType t = reader->get##prpty();\
   err = H5Lite::writeStringDataset(pid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -312,11 +312,11 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     return -1; }\
 }
 
-#define WRITE_PHASE_DATA_ARRAY(reader, type, gid, prpty, key)\
+#define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  std::vector<type> tempVar = reader->get##prpty();\
+  std::vector<m_msgType> tempVar = reader->get##prpty();\
   dims[0] = tempVar.size();\
-  type* dataPtr = &(tempVar.front());\
+  m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
     err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
     if (err < 0) {\

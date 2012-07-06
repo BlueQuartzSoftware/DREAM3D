@@ -153,17 +153,17 @@ static Pointer New args \
 #define EBSD_TYPE_MACRO(thisClass) \
   public: \
   virtual const char* getNameOfClass() const  {return #thisClass;}\
-  static int IsTypeOf(const char *type) \
+  static int IsTypeOf(const char *m_msgType) \
   { \
-    if ( !strcmp(#thisClass,type) ) \
+    if ( !strcmp(#thisClass,m_msgType) ) \
       { \
       return 1; \
       } \
     return 0; \
   } \
-  virtual int IsA(const char *type) \
+  virtual int IsA(const char *m_msgType) \
   { \
-    return this->thisClass::IsTypeOf(type); \
+    return this->thisClass::IsTypeOf(m_msgType); \
   } \
   template <class Target, class Source>\
   inline Target polymorphic_downcast(Source* x) { \
@@ -177,17 +177,17 @@ static Pointer New args \
 #define EBSD_TYPE_MACRO_SUPER(thisClass,superclass) \
   public: \
   virtual const char* getNameOfClass() const  {return #thisClass;}\
-  static int IsTypeOf(const char *type) \
+  static int IsTypeOf(const char *m_msgType) \
   { \
-    if ( !strcmp(#thisClass,type) ) \
+    if ( !strcmp(#thisClass,m_msgType) ) \
       { \
       return 1; \
       } \
-    return superclass::IsTypeOf(type); \
+    return superclass::IsTypeOf(m_msgType); \
   } \
-  virtual int IsA(const char *type) \
+  virtual int IsA(const char *m_msgType) \
   { \
-    return this->thisClass::IsTypeOf(type); \
+    return this->thisClass::IsTypeOf(m_msgType); \
   } \
   template <class Target, class Source>\
   static Target polymorphic_downcast(Source* x) { \
@@ -210,53 +210,53 @@ static Pointer New args \
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define EBSD_SET_PROPERTY(type, prpty) \
-  void set##prpty(type value) { this->m_##prpty = value; }
+#define EBSD_SET_PROPERTY(m_msgType, prpty) \
+  void set##prpty(m_msgType value) { this->m_##prpty = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define EBSD_GET_PROPERTY(type, prpty) \
-  type get##prpty() { return m_##prpty; }
+#define EBSD_GET_PROPERTY(m_msgType, prpty) \
+  m_msgType get##prpty() { return m_##prpty; }
 
 
 
-#define EBSD_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
+#define EBSD_VIRTUAL_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      type   m_##prpty;\
+      m_msgType   m_##prpty;\
   public:\
-    virtual EBSD_SET_PROPERTY(type, prpty)\
-    virtual EBSD_GET_PROPERTY(type, prpty)
+    virtual EBSD_SET_PROPERTY(m_msgType, prpty)\
+    virtual EBSD_GET_PROPERTY(m_msgType, prpty)
 
 
-#define EBSD_INSTANCE_PROPERTY(type, prpty)\
+#define EBSD_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      type   m_##prpty;\
+      m_msgType   m_##prpty;\
   public:\
-    EBSD_SET_PROPERTY(type, prpty)\
-    EBSD_GET_PROPERTY(type, prpty)
+    EBSD_SET_PROPERTY(m_msgType, prpty)\
+    EBSD_GET_PROPERTY(m_msgType, prpty)
 
 
 
-#define EBSD_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
-  void set##prpty(type value[2]) {\
+#define EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
+  void set##prpty(m_msgType value[2]) {\
       varname[0] = value[0]; varname[1] = value[1]; }\
-  void set##prpty(type value_0, type value_1) {\
+  void set##prpty(m_msgType value_0, m_msgType value_1) {\
       varname[0] = value_0; varname[1] = value_1; }
 
-#define EBSD_GET_2DVECTOR_PROPERTY(type, prpty, varname)\
-  void get##prpty(type value[2]) {\
+#define EBSD_GET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
+  void get##prpty(m_msgType value[2]) {\
       value[0] = varname[0]; value[1] = varname[1]; }\
-  void get##prpty(type &value_0, type &value_1) {\
+  void get##prpty(m_msgType &value_0, m_msgType &value_1) {\
       value_0 = varname[0]; value_1 = varname[1]; }
 
 
-#define EBSD_INSTANCE_2DVECTOR_PROPERTY(type, prpty)\
+#define EBSD_INSTANCE_2DVECTOR_PROPERTY(m_msgType, prpty)\
   private:\
-    type   m_##prpty[2];\
+    m_msgType   m_##prpty[2];\
   public:\
-    EBSD_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
-    EBSD_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
+    EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)\
+    EBSD_GET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -294,8 +294,8 @@ static Pointer New args \
 /**
  * @brief Creates a "setter" method to set the property.
  */
-#define EbsdHeader_SET_PROPERTY( HeaderType, type, prpty, key) \
-  void set##prpty(type value) { \
+#define EbsdHeader_SET_PROPERTY( HeaderType, m_msgType, prpty, key) \
+  void set##prpty(m_msgType value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
       std::cout << "Value for Key: " << key << " was null." << std::endl;} }
@@ -303,25 +303,25 @@ static Pointer New args \
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
  */
-#define EbsdHeader_GET_PROPERTY(HeaderType, type, prpty, key) \
-  type get##prpty() { \
+#define EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key) \
+  m_msgType get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
       std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
 
 
-#define EbsdHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)\
+#define EbsdHeader_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
   public:\
-    EbsdHeader_SET_PROPERTY(HeaderType, type, prpty, key)\
-    EbsdHeader_GET_PROPERTY(HeaderType, type, prpty, key)
+    EbsdHeader_SET_PROPERTY(HeaderType, m_msgType, prpty, key)\
+    EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key)
 
 
-#define EBSD_POINTER_PROPERTY(name, var, type)\
+#define EBSD_POINTER_PROPERTY(name, var, m_msgType)\
 private:\
-  type* m_##var;\
+  m_msgType* m_##var;\
 public:\
-type* get##name##Pointer() { return m_##var; }\
-void set##name##Pointer(type* f)\
+m_msgType* get##name##Pointer() { return m_##var; }\
+void set##name##Pointer(m_msgType* f)\
   {\
     if (m_##var != NULL && m_##var != f)\
     {\
@@ -331,10 +331,10 @@ void set##name##Pointer(type* f)\
     m_##var = f;\
   }
 
-#define EBSD_POINTER_PROP(name, var, type)\
+#define EBSD_POINTER_PROP(name, var, m_msgType)\
 public:\
-type* get##name##Pointer() { return static_cast<type*>(getPointerByName(#var)); }\
-void set##name##Pointer(type* p) { \
+m_msgType* get##name##Pointer() { return static_cast<m_msgType*>(getPointerByName(#var)); }\
+void set##name##Pointer(m_msgType* p) { \
   setPointerByName(#name,p);\
 }
 

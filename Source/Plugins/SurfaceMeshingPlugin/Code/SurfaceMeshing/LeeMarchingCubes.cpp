@@ -108,9 +108,9 @@ using namespace meshing;
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), #Message, err);\
+      PipelineMessage em (getNameOfClass(), #Message, err);\
       addErrorMessage(em);\
-      notifyMessage(em, 0, UpdateErrorMessage);\
+      notifyMessage(em);\
       return;   }
 
 #define DREAM3D_BENCHMARKS 0
@@ -127,9 +127,7 @@ using namespace meshing;
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
       setErrorCondition(-1000);\
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), #Message, -1);\
-      addErrorMessage(em);\
-      notifyMessage(em, 0, UpdateWarningMessage);\
+      notifyErrorMessage(#Message, -1);\
       return;}\
       if(DREAM3D_BENCHMARKS) {\
     std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
@@ -466,10 +464,8 @@ void LeeMarchingCubes::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -617,8 +613,8 @@ void LeeMarchingCubes::execute()
   {
     ss.str("");
     ss << " Layers " << i << " and " << i + 1 << " of " << zFileDim;
-    notifyProgress(ss.str(), (i * 90 / zFileDim), UpdateProgressValueAndMessage);
-    notifyProgress(ss.str(), (i * 90 / zFileDim), UpdateProgressMessage);
+    notifyProgressValue((i * 90 / zFileDim));
+    notifyStatusMessage(ss.str());
 
     // Get a pointer into the GrainIds Array at the appropriate offset
     int32_t* fileVoxelLayer = m_GrainIds + (i * xFileDim * yFileDim);
@@ -690,7 +686,8 @@ void LeeMarchingCubes::execute()
 
   ss.str("");
   ss << "Marching Cubes Between Layers " << zFileDim - 1 << " and " << zFileDim << " of " << zFileDim;
-  notifyProgress((ss.str().c_str()), (zFileDim * 90 / zFileDim), UpdateProgressValueAndMessage);
+  notifyProgressValue( (zFileDim * 90 / zFileDim));
+  notifyStatusMessage(ss.str());
 
   // ---------------------------------------------------------------
   // Run one more with the top layer being -3
@@ -771,7 +768,7 @@ void LeeMarchingCubes::execute()
 
 
   setErrorCondition(0);
-  notifyProgress("Surface Meshing Complete", 0, UpdateProgressMessage);
+  notifyStatusMessage("Surface Meshing Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -81,9 +81,9 @@ H5CtfImporter::~H5CtfImporter()
 {
 }
 
-#define WRITE_EBSD_HEADER_DATA(reader, type, prpty, key)\
+#define WRITE_EBSD_HEADER_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader.get##prpty();\
+  m_msgType t = reader.get##prpty();\
   err = H5Lite::writeScalarDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -94,9 +94,9 @@ H5CtfImporter::~H5CtfImporter()
     return -1; }\
 }
 
-#define WRITE_EBSD_HEADER_STRING_DATA(reader, type, prpty, key)\
+#define WRITE_EBSD_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader.get##prpty();\
+  m_msgType t = reader.get##prpty();\
   err = H5Lite::writeStringDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -107,7 +107,7 @@ H5CtfImporter::~H5CtfImporter()
     return -1; }\
 }
 
-#define WRITE_EBSD_DATA_ARRAY(reader, type, gid, key)\
+#define WRITE_EBSD_DATA_ARRAY(reader, m_msgType, gid, key)\
 {\
   if (NULL != dataPtr) {\
     err = H5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
@@ -156,7 +156,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
   herr_t err = -1;
   setCancel(false);
   setErrorCondition(0);
-  setErrorMessage("");
+  setPipelineMessage("");
 
 //  std::cout << "H5CtfImporter: Importing " << ctfFile << std::endl;
   CtfReader reader;
@@ -181,7 +181,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     {
       ss << "H5CtfImporter Error: Unknown error.";
     }
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
@@ -223,7 +223,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
     std::ostringstream ss;
     ss << "H5CtfImporter Error: A Group for Z index " << z << " could not be created."
         << " Please check other error messages from the HDF5 library for possible reasons.";
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-500);
     return -1;
   }
@@ -236,7 +236,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
         << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(ctfGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-600);
     return -1;
   }
@@ -282,7 +282,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
     progressMessage(ss.str(), 100);
     err = H5Gclose(gid);
     err = H5Gclose(ctfGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-600);
     return -1;
   }
@@ -306,7 +306,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
         << " Please check other error messages from the HDF5 library for possible reasons." << std::endl;
     progressMessage(ss.str(), 100);
     err = H5Gclose(ctfGroup);
-    setErrorMessage(ss.str());
+    setPipelineMessage(ss.str());
     setErrorCondition(-700);
     return -1;
   }
@@ -360,9 +360,9 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#define WRITE_PHASE_HEADER_DATA(reader, type, prpty, key)\
+#define WRITE_PHASE_HEADER_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader->get##prpty();\
+  m_msgType t = reader->get##prpty();\
   err = H5Lite::writeScalarDataset(pid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -373,9 +373,9 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
     return -1; }\
 }
 
-#define WRITE_PHASE_HEADER_STRING_DATA(reader, type, prpty, key)\
+#define WRITE_PHASE_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
-  type t = reader->get##prpty();\
+  m_msgType t = reader->get##prpty();\
   err = H5Lite::writeStringDataset(pid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -386,11 +386,11 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
     return -1; }\
 }
 
-#define WRITE_PHASE_DATA_ARRAY(reader, type, gid, prpty, key)\
+#define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  std::vector<type> tempVar = reader->get##prpty();\
+  std::vector<m_msgType> tempVar = reader->get##prpty();\
   dims[0] = tempVar.size();\
-  type* dataPtr = &(tempVar.front());\
+  m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
     err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
     if (err < 0) {\

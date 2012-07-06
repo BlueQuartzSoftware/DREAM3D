@@ -119,17 +119,17 @@ static Pointer New args \
 #define MXA_TYPE_MACRO(thisClass) \
 public: \
 virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
-static int IsTypeOf(const char *type) \
+static int IsTypeOf(const char *m_msgType) \
 { \
-if ( !strcmp(#thisClass,type) ) \
+if ( !strcmp(#thisClass,m_msgType) ) \
 { \
 return 1; \
 } \
 return 0; \
 } \
-virtual int IsA(const char *type) \
+virtual int IsA(const char *m_msgType) \
 { \
-return this->thisClass::IsTypeOf(type); \
+return this->thisClass::IsTypeOf(m_msgType); \
 } \
 template <class Source, class Target>\
 inline Target SafeObjectDownCast(Source x) { \
@@ -144,17 +144,17 @@ return static_cast<Target>(x);\
 public: \
 virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
 static std::string ClassName() {return std::string(#thisClass);}\
-static int IsTypeOf(const char *type) \
+static int IsTypeOf(const char *m_msgType) \
 { \
-if ( !strcmp(#thisClass,type) ) \
+if ( !strcmp(#thisClass,m_msgType) ) \
 { \
 return 1; \
 } \
-return superclass::IsTypeOf(type); \
+return superclass::IsTypeOf(m_msgType); \
 } \
-virtual int IsA(const char *type) \
+virtual int IsA(const char *m_msgType) \
 { \
-return this->thisClass::IsTypeOf(type); \
+return this->thisClass::IsTypeOf(m_msgType); \
 } \
 template <class Source, class Target>\
 static Target SafeObjectDownCast(Source x) { \
@@ -182,75 +182,75 @@ return SafeObjectDownCast<superclass*, thisClass*>(s);\
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define MXA_SET_PROPERTY(type, prpty) \
-  void set##prpty(type value) { this->m_##prpty = value; }
+#define MXA_SET_PROPERTY(m_msgType, prpty) \
+  void set##prpty(m_msgType value) { this->m_##prpty = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
-#define MXA_GET_PROPERTY(type, prpty) \
-  type get##prpty() { return m_##prpty; }
+#define MXA_GET_PROPERTY(m_msgType, prpty) \
+  m_msgType get##prpty() { return m_##prpty; }
 
 
 
-#define MXA_VIRTUAL_INSTANCE_PROPERTY(type, prpty)\
+#define MXA_VIRTUAL_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      type   m_##prpty;\
+      m_msgType   m_##prpty;\
   public:\
-    virtual MXA_SET_PROPERTY(type, prpty)\
-    virtual MXA_GET_PROPERTY(type, prpty)
+    virtual MXA_SET_PROPERTY(m_msgType, prpty)\
+    virtual MXA_GET_PROPERTY(m_msgType, prpty)
 
 
 
-#define MXA_INSTANCE_PROPERTY(type, prpty)\
+#define MXA_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      type   m_##prpty;\
+      m_msgType   m_##prpty;\
   public:\
-    MXA_SET_PROPERTY(type, prpty)\
-    MXA_GET_PROPERTY(type, prpty)
+    MXA_SET_PROPERTY(m_msgType, prpty)\
+    MXA_GET_PROPERTY(m_msgType, prpty)
 
 
 
-#define MXA_SET_2DVECTOR_PROPERTY(type, prpty, varname)\
-  void set##prpty(type value[2]) {\
+#define MXA_SET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
+  void set##prpty(m_msgType value[2]) {\
       varname[0] = value[0]; varname[1] = value[1]; }\
-  void set##prpty(type value_0, type value_1) {\
+  void set##prpty(m_msgType value_0, m_msgType value_1) {\
       varname[0] = value_0; varname[1] = value_1; }
 
-#define MXA_GET_2DVECTOR_PROPERTY(type, prpty, varname)\
-  void get##prpty(type value[2]) {\
+#define MXA_GET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
+  void get##prpty(m_msgType value[2]) {\
       value[0] = varname[0]; value[1] = varname[1]; }\
-  void get##prpty(type &value_0, type &value_1) {\
+  void get##prpty(m_msgType &value_0, m_msgType &value_1) {\
       value_0 = varname[0]; value_1 = varname[1]; }
 
 
-#define MXA_INSTANCE_2DVECTOR_PROPERTY(type, prpty)\
+#define MXA_INSTANCE_2DVECTOR_PROPERTY(m_msgType, prpty)\
   private:\
-    type   m_##prpty[2];\
+    m_msgType   m_##prpty[2];\
   public:\
-    MXA_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)\
-    MXA_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
+    MXA_SET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)\
+    MXA_GET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)
 
 
-#define MXA_SET_VEC3_PROPERTY(type, prpty, varname)\
-  void set##prpty(type value[3]) {\
+#define MXA_SET_VEC3_PROPERTY(m_msgType, prpty, varname)\
+  void set##prpty(m_msgType value[3]) {\
       varname[0] = value[0]; varname[1] = value[1]; varname[2] = value[2]; }\
-  void set##prpty(type value_0, type value_1, type value_2) {\
+  void set##prpty(m_msgType value_0, m_msgType value_1, m_msgType value_2) {\
       varname[0] = value_0; varname[1] = value_1; varname[2] = value_2; }
 
-#define MXA_GET_VEC3_PROPERTY(type, prpty, varname)\
-  void get##prpty(type value[3]) {\
+#define MXA_GET_VEC3_PROPERTY(m_msgType, prpty, varname)\
+  void get##prpty(m_msgType value[3]) {\
       value[0] = varname[0]; value[1] = varname[1]; value[2] = varname[2]; }\
-  void get##prpty(type &value_0, type &value_1, type &value_2) {\
+  void get##prpty(m_msgType &value_0, m_msgType &value_1, m_msgType &value_2) {\
       value_0 = varname[0]; value_1 = varname[1]; value_2 = varname[2]; }
 
 
-#define MXA_INSTANCE_VEC3_PROPERTY(type, prpty)\
+#define MXA_INSTANCE_VEC3_PROPERTY(m_msgType, prpty)\
   private:\
-    type   m_##prpty[3];\
+    m_msgType   m_##prpty[3];\
   public:\
-    MXA_SET_VEC3_PROPERTY(type, prpty, m_##prpty)\
-    MXA_GET_VEC3_PROPERTY(type, prpty, m_##prpty)
+    MXA_SET_VEC3_PROPERTY(m_msgType, prpty, m_##prpty)\
+    MXA_GET_VEC3_PROPERTY(m_msgType, prpty, m_##prpty)
 
 
 
@@ -323,23 +323,23 @@ namespace MXA
 * @param key The Key used for the property
 * @param value The value of the property
 */
-#define SET_PROPERTY_BODY(name_space, type, prpty, key, value) \
+#define SET_PROPERTY_BODY(name_space, m_msgType, prpty, key, value) \
   if (name_space::prpty.compare(key) == 0) { \
     try { \
-      this->set##prpty(MXA::lexical_cast<type>(value)); return 1; \
+      this->set##prpty(MXA::lexical_cast<m_msgType>(value)); return 1; \
     }  catch(MXA::bad_lexical_cast &excp) { \
       std::cout << excp.what() << std::endl; \
-      std::cout << "Could not convert value '" << value << "' to type '" << #type << "' for property '" << #prpty << "'" << std::endl; \
+      std::cout << "Could not convert value '" << value << "' to type '" << #m_msgType << "' for property '" << #prpty << "'" << std::endl; \
     } \
   }
 
-#define SET_STRING_PROPERTY_BODY(name_space, type, prpty, key, value) \
+#define SET_STRING_PROPERTY_BODY(name_space, m_msgType, prpty, key, value) \
   if (name_space::prpty.compare(key) == 0) { \
   try { \
   this->set##prpty(value); return 1; \
 }  catch(MXA::bad_lexical_cast &excp) { \
   std::cout << excp.what() << std::endl; \
-  std::cout << "Could not convert value '" << value << "' to type '" << #type << "' for property '" << #prpty << "'" << std::endl; \
+  std::cout << "Could not convert value '" << value << "' to type '" << #m_msgType << "' for property '" << #prpty << "'" << std::endl; \
 } \
   }
 
@@ -354,15 +354,15 @@ namespace MXA
 * @param value The value of the property
 */
 
-#define GET_PROPERTY_BODY(name_space, type, prpty, key, value)\
+#define GET_PROPERTY_BODY(name_space, m_msgType, prpty, key, value)\
     if (name_space::prpty.compare(key) == 0) {  \
       try { value = *(reinterpret_cast<T*>( &(m_##prpty))); return 1;} \
-  catch(MXA::bad_any_cast &) { std::cout << "Could not cast value '" << value << "' to type '" << #type << "' for property '" << #prpty << "'" << std::endl; } }
+  catch(MXA::bad_any_cast &) { std::cout << "Could not cast value '" << value << "' to type '" << #m_msgType << "' for property '" << #prpty << "'" << std::endl; } }
 
-#define GET_STRING_PROPERTY_BODY2(name_space, type, prpty, key, value)\
+#define GET_STRING_PROPERTY_BODY2(name_space, m_msgType, prpty, key, value)\
   if (name_space::prpty.compare(key) == 0) {  \
     try { value = m_##prpty; return 1;} \
-  catch(MXA::bad_any_cast &) { std::cout << "Could not cast value '" << value << "' to type '" << #type << "' for property '" << #prpty << "'" << std::endl; } }
+  catch(MXA::bad_any_cast &) { std::cout << "Could not cast value '" << value << "' to type '" << #m_msgType << "' for property '" << #prpty << "'" << std::endl; } }
 
 
 

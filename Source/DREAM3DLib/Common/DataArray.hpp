@@ -37,12 +37,12 @@
 #define RESIZE_ARRAY(sharedArray, pointer, size)\
   pointer = sharedArray->WritePointer(0, size);
 
-#define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, type)\
-  DataArray<type>::Pointer priVar;\
-  type* pubVar;
+#define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, m_msgType)\
+  DataArray<m_msgType>::Pointer priVar;\
+  m_msgType* pubVar;
 
-#define INIT_DataArray(var, type)\
-  var = DataArray<type>::CreateArray(0, #var);
+#define INIT_DataArray(var, m_msgType)\
+  var = DataArray<m_msgType>::CreateArray(0, #var);
 
 /**
  * @class DataArray DataArray.hpp DREAM3DLib/Common/DataArray.hpp

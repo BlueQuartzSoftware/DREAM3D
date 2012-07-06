@@ -49,7 +49,7 @@
     }
 
 
-#define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, type, cast)\
+#define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
     { cast t;\
     err = H5Lite::readScalarDataset(fileId, path, t);\
     if (err < 0) {\
@@ -57,7 +57,7 @@
       err = H5Utilities::closeFile(fileId);\
       return err;\
     }\
-    var = static_cast<type>(t); }
+    var = static_cast<m_msgType>(t); }
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;

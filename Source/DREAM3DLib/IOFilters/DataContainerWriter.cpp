@@ -134,7 +134,7 @@ void DataContainerWriter::execute()
     setErrorCondition(-1);
     std::stringstream ss;
     ss <<  " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -10);
+    notifyErrorMessage(ss.str(), -10);
     return;
   }
   setErrorCondition(0);
@@ -158,8 +158,8 @@ void DataContainerWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
-      addErrorMessage(em);
+      ss << ": Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -250,7 +250,7 @@ void DataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   closeFile();
 
-  notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 
 

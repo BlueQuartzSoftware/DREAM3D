@@ -46,9 +46,9 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -143,10 +143,8 @@ void MinSize::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -171,12 +169,12 @@ void MinSize::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    addErrorMessages(renumber_grains->getErrorMessages());
+    addErrorMessages(renumber_grains->getPipelineMessages());
     return;
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Minimum Size Filter Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Minimum Size Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -370,7 +368,7 @@ void MinSize::remove_smallgrains()
   {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyStatusMessage(ss.str());
       size = 0;
       int nucleus = nuclei[i];
 	  if(nucleus >= 0)

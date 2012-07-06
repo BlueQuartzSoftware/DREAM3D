@@ -119,7 +119,7 @@ void FindBoundingBoxGrains::execute()
     setErrorCondition(-1);
     std::stringstream ss;
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -133,7 +133,7 @@ void FindBoundingBoxGrains::execute()
   if(m->getZPoints() > 1) find_boundingboxgrains();
   if(m->getZPoints() == 1) find_boundingboxgrains2D();
 
- notifyProgress("FindBoundingBoxGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindBoundingBoxGrains Completed");
 }
 
 // -----------------------------------------------------------------------------
