@@ -844,7 +844,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       break;
 
     case PipelineMessage::StatusValue:
-      this->m_progressBar->setValue(msg.getStatusVar());
+      this->m_progressBar->setValue(msg.getProgressValue());
       break;
     case PipelineMessage::StatusMessage:
       if(NULL != this->statusBar())
@@ -855,7 +855,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       }
       break;
     case PipelineMessage::StatusMessageAndValue:
-      this->m_progressBar->setValue(msg.getStatusVar());
+      this->m_progressBar->setValue(msg.getProgressValue());
       if(NULL != this->statusBar())
       {
           QString s = QString::fromStdString(msg.getFilterName());

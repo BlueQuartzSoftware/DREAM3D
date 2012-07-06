@@ -118,6 +118,19 @@ class DataArray : public IDataArray
        return p;
      }
 
+     /**
+     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * contained in the vector. The number of components will be set to 1.
+     * @param vec The vector to copy the data from
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    {
+      IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, numComponents, name);
+      return p;
+    }
+
     /**
      * @brief Destructor
      */
