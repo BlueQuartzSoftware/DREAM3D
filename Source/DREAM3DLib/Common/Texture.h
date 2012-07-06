@@ -163,13 +163,13 @@ class DREAM3DLib_EXPORT Texture
         float scale = (totaladdweight / totalweight);
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = static_cast<int>( odf[i] / scale );
+          odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
       for (size_t i = 0; i < odfsize; i++)
       {
-        remainingweight = static_cast<int>( remainingweight - odf[i] );
+        remainingweight = remainingweight - odf[i];
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
@@ -191,7 +191,7 @@ class DREAM3DLib_EXPORT Texture
         // Normalize the odf
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = static_cast<int>( odf[i] / totalweight );
+          odf[i] = odf[i] / totalweight;
         }
       }
     }
@@ -287,13 +287,13 @@ class DREAM3DLib_EXPORT Texture
         float scale = (totaladdweight / totalweight);
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = static_cast<int>( odf[i] / scale );
+          odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
       for (size_t i = 0; i < odfsize; i++)
       {
-        remainingweight = static_cast<int>( remainingweight - odf[i] );
+        remainingweight = remainingweight - odf[i];
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
@@ -315,7 +315,7 @@ class DREAM3DLib_EXPORT Texture
         // Normalize the odf
         for (size_t i = 0; i < odfsize; i++)
         {
-          odf[i] = static_cast<int>( odf[i] / totalweight );
+          odf[i] = odf[i] / totalweight;
         }
       }
     }
@@ -409,13 +409,13 @@ class DREAM3DLib_EXPORT Texture
 		float scale = (totaladdweight/totalweight);
 	    for (size_t i = 0; i < odfsize; i++)
 	    {
-	      odf[i] = static_cast<int>( odf[i]/scale );
+	      odf[i] = odf[i]/scale;
 	    }
 	}
     float remainingweight = totalweight;
     for (size_t i = 0; i < odfsize; i++)
     {
-      remainingweight = static_cast<int>( remainingweight-odf[i] );
+      remainingweight = remainingweight-odf[i];
     }
 	float random1, random2, random3;
 	float ea1, ea2, ea3;
@@ -437,7 +437,7 @@ class DREAM3DLib_EXPORT Texture
       // Normalize the odf
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = static_cast<int>( odf[i] / totalweight );
+        odf[i] = odf[i] / totalweight;
       }
     }
 
@@ -447,12 +447,11 @@ class DREAM3DLib_EXPORT Texture
   template<typename T, class O>
   static void calculateMDFData(T angles, T axes, T weights, T odf, T &mdf)
   {
-    O orientationOps;
+      O orientationOps;
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
       mdf.resize(mdfsize);
-  //    float radtodeg = 180.0 / M_PI;
-
+      //    float radtodeg = 180.0 / M_PI;
 
       DREAM3D_RANDOMNG_NEW()
       //  int err = 0;
@@ -463,7 +462,7 @@ class DREAM3DLib_EXPORT Texture
       float ea21, ea22, ea23;
       float q1[5], q2[5];
       float totaldensity;
-  //    float denom;
+      //    float denom;
       float r1, r2, r3;
       float n1, n2, n3;
       float random1, random2, density;
@@ -478,7 +477,7 @@ class DREAM3DLib_EXPORT Texture
       for (int i = 0; i < aSize; i++)
       {
         OrientationMath::axisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
-		orientationOps.getMDFFZRod(r1, r2, r3);
+        orientationOps.getMDFFZRod(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         mdf[mbin] = -int((weights[i] / float(mdfsize)) * 10000.0);
         remainingcount = remainingcount + mdf[mbin];
@@ -499,27 +498,27 @@ class DREAM3DLib_EXPORT Texture
           ++odfPtr;
           float d = totaldensity;
           totaldensity = totaldensity + density;
-          if (random1 >= d && random1 < totaldensity) choose1 = static_cast<int> (j);
-          if (random2 >= d && random2 < totaldensity) choose2 = static_cast<int> (j);
+          if(random1 >= d && random1 < totaldensity) choose1 = static_cast<int>(j);
+          if(random2 >= d && random2 < totaldensity) choose2 = static_cast<int>(j);
         }
         orientationOps.determineEulerAngles(choose1, ea11, ea12, ea13);
         O::eulertoQuat(q1, ea11, ea12, ea13);
         orientationOps.determineEulerAngles(choose2, ea21, ea22, ea23);
         O::eulertoQuat(q2, ea21, ea22, ea23);
-        w = orientationOps.getMisoQuat( q1, q2, n1, n2, n3);
-		OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-		orientationOps.getMDFFZRod(r1, r2, r3);
+        w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);
+        OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+        orientationOps.getMDFFZRod(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
-        if (mdf[mbin] >= 0) mdf[mbin]++;
-        if (mdf[mbin] < 0) i = i - 1;
+        if(mdf[mbin] >= 0) mdf[mbin]++;
+        if(mdf[mbin] < 0) i = i - 1;
       }
       for (int i = 0; i < mdfsize; i++)
       {
-        if (mdf[i] < 0) mdf[i] = -mdf[i];
+        if(mdf[i] < 0) mdf[i] = -mdf[i];
         mdf[i] = mdf[i] / 10000.0;
       }
 
-  }
+    }
 
 
 
