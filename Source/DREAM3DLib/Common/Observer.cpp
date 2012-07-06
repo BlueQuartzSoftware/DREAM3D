@@ -89,7 +89,7 @@ void Observer::pipelineProgressMessage(const char* message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineMessage(PipelineMessage &msg)
+void Observer::receivePipelineMessage(PipelineMessage &msg)
 {
   std::stringstream ss;
   if(msg.getMessageType() == PipelineMessage::Error)
@@ -106,11 +106,11 @@ void Observer::pipelineMessage(PipelineMessage &msg)
   }
   else if(msg.getMessageType() == PipelineMessage::StatusValue)
   {
-    ss << msg.getStatusVar() << "%";
+    ss << msg.getProgressValue() << "%";
   }
   else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
   {
-    ss << msg.getStatusVar() << "%" << " " << msg.generateStatusString();
+    ss << msg.getProgressValue() << "%" << " " << msg.generateStatusString();
   }
   std::cout << ss.str() << std::endl;
 
@@ -123,7 +123,7 @@ void Observer::pipelineMessages(std::vector<PipelineMessage> messages)
 {
   for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter )
   {
-    pipelineMessage(*iter);
+    receivePipelineMessage(*iter);
   }
 }
 

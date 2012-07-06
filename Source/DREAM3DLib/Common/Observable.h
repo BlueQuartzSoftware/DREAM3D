@@ -64,16 +64,6 @@ class DREAM3DLib_EXPORT Observable
 
     DREAM3D_TYPE_MACRO(Observable)
 
-    enum ObserverAspect
-    {
-      UpdateProgressValue,
-      UpdateProgressMessage,
-      UpdateWarningMessage,
-      UpdateErrorMessage,
-      UpdateProgressValueAndMessage,
-      UnknownMessageType
-    };
-
     /**
      * @brief Adds an observer to notify when changes occur
      * @param observer The observer to notify

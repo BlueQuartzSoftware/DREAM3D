@@ -358,8 +358,8 @@ void FilterPipeline::execute()
   {
     progress = progress + 1.0f;
     progValue.setMessageType(PipelineMessage::StatusValue);
-    progValue.setStatusVar(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
-    pipelineMessage(progValue);
+    progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
+    receivePipelineMessage(progValue);
     //pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
 
     ss.str("");
@@ -367,7 +367,7 @@ void FilterPipeline::execute()
 
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss.str());
-    pipelineMessage(progValue);
+    receivePipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
     (*iter)->setDataContainer(m_DataContainer.get());
@@ -381,8 +381,8 @@ void FilterPipeline::execute()
       setErrorCondition(err);
       pipelineMessages((*iter)->getPipelineMessages());
       progValue.setMessageType(PipelineMessage::StatusValue);
-      progValue.setStatusVar(100);
-      pipelineMessage(progValue);
+      progValue.setProgressValue(100);
+      receivePipelineMessage(progValue);
       pipelineFinished();
       return;
     }
