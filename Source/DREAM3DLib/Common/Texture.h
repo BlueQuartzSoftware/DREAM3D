@@ -52,7 +52,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 using namespace std;
 

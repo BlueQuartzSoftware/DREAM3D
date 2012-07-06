@@ -183,6 +183,10 @@ void ChangeResolution::execute()
           std::string name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
           p->CopyTuple(index_old, index);
+          // Make a copy of the 'p' array that has the same name. When placed into
+          // the data container this will over write the current array with 
+          // the same name. At least in theory
+          IDataArray::Pointer newIndices = p->createNewArray(p->GetNumberOfTuples(), p->GetNumberOfComponents(), p->GetName());
         }
       }
     }
