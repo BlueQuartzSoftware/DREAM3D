@@ -62,9 +62,9 @@ const static float m_pi = static_cast<float>(M_PI);
 
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -112,9 +112,9 @@ void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
   std::stringstream ss;
   for(size_t i = 0; i < getQualityMetricFilters().size(); i++)
   {
-	ss << "QualityMetricFilter-" << i;
-	writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
-	ss.str("");
+    ss << "QualityMetricFilter-" << i;
+    writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
+    ss.str("");
   }
 
   int numPhaseType = static_cast<int>( m_PTypes->GetNumberOfTuples() );
@@ -340,7 +340,7 @@ void ReadH5Ebsd::execute()
     if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Could not Create H5AngVolumeReader object.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not Create H5AngVolumeReader object.", -1);
       addErrorMessage(em);
       return;
     }
@@ -349,7 +349,7 @@ void ReadH5Ebsd::execute()
     if(err < 0)
     {
       setErrorCondition(-1);
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
       addErrorMessage(em);
       return;
     }
@@ -360,7 +360,7 @@ void ReadH5Ebsd::execute()
     if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Could not Create H5CtfVolumeReader object.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not Create H5CtfVolumeReader object.", -1);
       addErrorMessage(em);
       return;
     }
@@ -369,7 +369,7 @@ void ReadH5Ebsd::execute()
     if(err < 0)
     {
       setErrorCondition(-1);
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
+      PipelineMessage em (getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
       addErrorMessage(em);
       return;
     }
@@ -394,19 +394,19 @@ void ReadH5Ebsd::execute()
   // Initialize all the arrays with some default values
   int64_t totalPoints = m->getTotalPoints();
   ss.str("");
-  ss << getHumanLabel() << " - Initializing " << totalPoints << " voxels";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  ss << " - Initializing " << totalPoints << " voxels";
+  notifyStatusMessage(ss.str());
 
   ss.str("");
-  ss << getHumanLabel() << " - Reading Ebsd Data from file";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  ss << " - Reading Ebsd Data from file";
+  notifyStatusMessage(ss.str());
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   err = ebsdReader->loadData(m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir);
   if(err < 0)
   {
     setErrorCondition(err);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Loading Data from Ebsd Data file.", -1);
+    PipelineMessage em (getNameOfClass(), "Error Loading Data from Ebsd Data file.", -1);
     addErrorMessage(em);
     return;
   }
@@ -550,5 +550,5 @@ void ReadH5Ebsd::execute()
   // If there is an error set this to something negative and also set a message
   ss.str("");
   ss << getHumanLabel() << " Completed";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
 }

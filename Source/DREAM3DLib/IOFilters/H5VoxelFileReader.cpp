@@ -135,7 +135,7 @@ void H5VoxelFileReader::execute()
   err = reader->getSizeResolutionOrigin(volDims, spacing, origin);
   if(err < 0)
   {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File", -1);
+    PipelineMessage em (getNameOfClass(), "Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File", -1);
   addErrorMessage(em);
   }
   size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
@@ -155,7 +155,7 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     setErrorCondition(err);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the GrainIDs from the .h5voxel file.", err);
+    PipelineMessage em (getNameOfClass(), "Error Reading the GrainIDs from the .h5voxel file.", err);
   addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
@@ -164,7 +164,7 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     setErrorCondition(err);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the Phases from the .h5voxel file.", err);
+    PipelineMessage em (getNameOfClass(), "Error Reading the Phases from the .h5voxel file.", err);
   addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
@@ -173,7 +173,7 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     setErrorCondition(err);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Reading the Euler Angles from the .h5voxel file.", err);
+    PipelineMessage em (getNameOfClass(), "Error Reading the Euler Angles from the .h5voxel file.", err);
   addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
@@ -198,14 +198,14 @@ void H5VoxelFileReader::execute()
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, crystruct);
   if(err < 0)
   {
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
+      PipelineMessage em (getNameOfClass(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
       addErrorMessage(em);
   }
   arrayname = "PhaseType";
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, phaseType);
   if(err < 0)
   {
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "H5VoxelReader Error Reading the Phase Type Data", err);
+      PipelineMessage em (getNameOfClass(), "H5VoxelReader Error Reading the Phase Type Data", err);
       addErrorMessage(em);
   }
 

@@ -49,7 +49,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 
@@ -298,7 +298,7 @@ void PipelineViewWidget::preflightPipeline()
       filter->setDataContainer(m.get());
       filter->preflight();
       int err = filter->getErrorCondition();
-      std::vector<ErrorMessage::Pointer> msgs = filter->getErrorMessages();
+      std::vector<PipelineMessage> msgs = filter->getPipelineMessages();
       if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
@@ -313,26 +313,26 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(std::vector<ErrorMessage::Pointer> errorStream)
+void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> errorStream)
 {
   if(NULL != errorTableWidget)
   {
     int rc = errorTableWidget->rowCount();
 
-    for (std::vector<ErrorMessage::Pointer>::size_type i = 0; i < errorStream.size(); ++i)
+    for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
     {
       errorTableWidget->insertRow(rc);
 
-      QString filterName = QString::fromStdString(errorStream.at(i)->getFilterName());
-      QString errorDescription = QString::fromStdString(errorStream.at(i)->getErrorDescription());
-      int errorCode = errorStream.at(i)->getErrorCode();
+      QString filterName = QString::fromStdString(errorStream.at(i).getFilterName());
+      QString errorDescription = QString::fromStdString(errorStream.at(i).getMessageText());
+      int errorCode = errorStream.at(i).getMessageCode();
 
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
 
       QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
-      errorCodeWidgetItem->setTextAlignment(Qt::AlignHCenter);
+      errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
 
       QColor errColor(255, 191, 193);
       QBrush errBrush(errColor);

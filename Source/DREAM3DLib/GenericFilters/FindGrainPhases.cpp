@@ -102,10 +102,8 @@ void FindGrainPhases::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -126,10 +124,7 @@ void FindGrainPhases::execute()
     m_FieldPhases[gnum] = m_CellPhases[i];
   }
 
-  std::stringstream ss;
-  ss.str("");
-  ss << " - Complete";
-  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 
 

@@ -135,7 +135,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
   else if (MXAFileInfo::exists(m_InputFile) == false)
   {
     ss << ": The input file does not exist.";
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
+    PipelineMessage em (getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
     setErrorCondition(-1);
   }
@@ -233,7 +233,7 @@ void DataContainerReader::execute()
   err = gatherData(false);
 
   setErrorCondition(err);
-  notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +244,7 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
   int err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
    if(err < 0)
    {
-     ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "DataContainerReader Error Reading the Dimensions", err);
+     PipelineMessage em (getNameOfClass(), "DataContainerReader Error Reading the Dimensions", err);
   addErrorMessage(em);
      setErrorCondition(-151);
      return -1;
@@ -253,7 +253,7 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
    err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
    if(err < 0)
    {
-     ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
+     PipelineMessage em (getNameOfClass(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
   addErrorMessage(em);
      setErrorCondition(-152);
      return -1;
@@ -262,7 +262,7 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
    err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
    if(err < 0)
    {
-     ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "DataContainerReader Error Reading the Origin", err);
+     PipelineMessage em (getNameOfClass(), "DataContainerReader Error Reading the Origin", err);
   addErrorMessage(em);
      setErrorCondition(-153);
      return -1;

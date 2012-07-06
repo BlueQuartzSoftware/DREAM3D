@@ -178,7 +178,7 @@ void EbsdToH5Ebsd::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
+      PipelineMessage em (getNameOfClass(), ss.str(), -1);
       addErrorMessage(em);
       setErrorCondition(-1);
       return;
@@ -337,7 +337,7 @@ void EbsdToH5Ebsd::execute()
     std::string msg = "Converting File: " + ebsdFName;
     ss.str("");
 
-    notifyProgress(msg.c_str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(msg.c_str());
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {
@@ -364,7 +364,7 @@ void EbsdToH5Ebsd::execute()
     ++z;
     if(getCancel() == true)
     {
-     notifyProgress("Conversion was Canceled", 0, Observable::UpdateProgressMessage);
+     notifyStatusMessage("Conversion was Canceled");
       return;
     }
   }
@@ -435,6 +435,6 @@ void EbsdToH5Ebsd::execute()
   err = H5Utilities::closeFile(fileId);
   // err = H5Fclose(fileId);
   m = EbsdToH5EbsdFunc::NullPointer();
- notifyProgress("Import Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Import Complete");
 }
 

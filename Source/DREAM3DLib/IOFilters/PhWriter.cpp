@@ -215,7 +215,7 @@ int PhWriter::writeFile()
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
-  notifyProgress("Writing Ph File Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Writing Ph File Complete");
   return 0;
 }
 

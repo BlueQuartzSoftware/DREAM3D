@@ -56,9 +56,9 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -187,10 +187,8 @@ void GroupMicroTextureRegions::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -201,13 +199,13 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
- notifyProgress("Grouping MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
- notifyProgress("Characterizing MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Characterizing MicroTexture Regions");
   characterize_micro_texture_regions();
 
- notifyProgress("Renumbering Fields", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Renumbering Fields");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -235,7 +233,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("GroupMicroTextureRegions Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("GroupMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------

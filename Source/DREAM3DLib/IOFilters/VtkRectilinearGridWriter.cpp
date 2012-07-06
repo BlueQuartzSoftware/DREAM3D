@@ -249,10 +249,8 @@ void VtkRectilinearGridWriter::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -264,8 +262,7 @@ void VtkRectilinearGridWriter::execute()
   {
       std::stringstream ss;
       ss << ": Error creating parent path '" << parentPath << "'";
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
-      addErrorMessage(em);
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -354,7 +351,7 @@ void VtkRectilinearGridWriter::execute()
     setErrorCondition(-1);
   }
 
-  notifyProgress("VtkRectilinearGridWriter Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("VtkRectilinearGridWriter Complete");
 }
 
 
@@ -395,7 +392,7 @@ int VtkRectilinearGridWriter::write(const std::string &file, DataContainer* r, s
     if(err < 0)
     {
       setErrorCondition((*iter)->getErrorCondition());
-      setErrorMessages((*iter)->getErrorMessages());
+      setPipelineMessages((*iter)->getPipelineMessages());
       break;
     }
   }

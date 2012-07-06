@@ -687,13 +687,13 @@ void CtfReader::setYDimension(int ydim)
   setYCells(ydim);
 }
 
-#define CTF_SHUFFLE_ARRAY(tempPtr, var, type, numRows)\
+#define CTF_SHUFFLE_ARRAY(tempPtr, var, m_msgType, numRows)\
   for (size_t i = 0; i < numRows; ++i) {\
     size_t nIdx = shuffleTable[i];\
     tempPtr[nIdx] = var[i];\
   }\
   /* Copy the values back into the array over writing the original values*/\
-  ::memcpy(var, tempPtr, numRows * sizeof(type));
+  ::memcpy(var, tempPtr, numRows * sizeof(m_msgType));
 
 
 

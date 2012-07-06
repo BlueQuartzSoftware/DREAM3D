@@ -12,7 +12,7 @@
 #include "DREAM3DLib/Common/FilterOption.h"
 #include "DREAM3DLib/Common/AbstractFilterOptionsWriter.h"
 
-#include "ErrorMessage.h"
+#include "PipelineMessage.h"
 
 
 
@@ -45,27 +45,17 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
 
-//  private:
-//
-//    std::string m_ErrorMessage;
-//  public:
-//
-//    void setErrorMessage(const std::string &value)
-//    {
-//      this->m_ErrorMessage = value;
-//    }
-//    std::string getErrorMessage()
-//    {
-//      return m_ErrorMessage;
-//    }
+    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages);
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ErrorMessage::Pointer>, ErrorMessages)
-
-    void addErrorMessage(ErrorMessage::Pointer msg);
+    void addErrorMessage(PipelineMessage &msg);
     void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);
+    void addErrorMessages(std::vector<PipelineMessage> msgVector);
 
-    void addErrorMessages(std::vector<ErrorMessage::Pointer> msgVector);
-    void removeErrorMessage(ErrorMessage::Pointer msg);
+    void addWarningMessage(PipelineMessage &msg);
+    void addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode);
+    void addWarningMessages(std::vector<PipelineMessage> msgVector);
+
+    void removeErrorMessage(PipelineMessage msg);
     void removeErrorMessage(int index);
     void removeErrorMessages(int start, int end);
 

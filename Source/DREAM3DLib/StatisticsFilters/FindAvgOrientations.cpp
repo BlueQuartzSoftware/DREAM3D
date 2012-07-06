@@ -123,10 +123,8 @@ void FindAvgOrientations::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -210,7 +208,7 @@ void FindAvgOrientations::execute()
 	  m_AvgQuats[5*i] = 1;
   }
 
- notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 
 

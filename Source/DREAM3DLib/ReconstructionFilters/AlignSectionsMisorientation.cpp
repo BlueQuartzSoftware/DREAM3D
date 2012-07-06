@@ -136,7 +136,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    ss << ": The Alignment Shift file name must be set before executing this filter.";
+    ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
   }
 
@@ -150,6 +150,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
     find_cellquats->setObservers(this->getObservers());
     find_cellquats->setDataContainer(getDataContainer());
+    find_cellquats->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
     GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
@@ -184,10 +185,8 @@ void AlignSectionsMisorientation::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -203,7 +202,7 @@ void AlignSectionsMisorientation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Complete");
 }
 
 
@@ -255,13 +254,13 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-	  misorients[a].resize(dims[1], 0.0);
+      misorients[a].resize(dims[1], 0.0);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
-    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    ss << "Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+    notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
@@ -299,7 +298,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                   if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                   {
                       w = 10000.0;
-	                  count++;
+                      count++;
                       if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                       {
                         q1[1] = m_Quats[refposition * 5 + 1];
