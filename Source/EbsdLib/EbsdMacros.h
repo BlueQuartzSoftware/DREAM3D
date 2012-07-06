@@ -37,9 +37,9 @@
 #ifndef EBSDMACROS_H_
 #define EBSDMACROS_H_
 
-#define READ_EBSD_HEADER_DATA(cname, class, type, getName, key)\
+#define READ_EBSD_HEADER_DATA(cname, class, m_msgType, getName, key)\
 {\
-  type t;\
+  m_msgType t;\
   err = H5Lite::readScalarDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -55,7 +55,7 @@
   }\
 }
 
-#define READ_EBSD_HEADER_STRING_DATA(cname, class, type, getName, key)\
+#define READ_EBSD_HEADER_STRING_DATA(cname, class, m_msgType, getName, key)\
 {\
   std::string t;\
   err = H5Lite::readStringDataset(gid, key, t);\
@@ -90,9 +90,9 @@
     }\
 }
 
-#define READ_PHASE_HEADER_DATA(cname, pid, type, fqKey, key, phase)\
+#define READ_PHASE_HEADER_DATA(cname, pid, m_msgType, fqKey, key, phase)\
 {\
-  type t;\
+  m_msgType t;\
   err = H5Lite::readScalarDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -106,9 +106,9 @@
   }\
 }
 
-#define READ_PHASE_HEADER_DATA_CAST(cname, pid, cast, type, fqKey, key, phase)\
+#define READ_PHASE_HEADER_DATA_CAST(cname, pid, cast, m_msgType, fqKey, key, phase)\
 {\
-  type t;\
+  m_msgType t;\
   err = H5Lite::readScalarDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -122,9 +122,9 @@
   }\
 }
 
-#define READ_PHASE_HEADER_ARRAY(cname, pid, type, fqKey, key, phase)\
+#define READ_PHASE_HEADER_ARRAY(cname, pid, m_msgType, fqKey, key, phase)\
 {\
-  type t;\
+  m_msgType t;\
   err = H5Lite::readVectorDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -147,8 +147,8 @@
 
 #define kBufferSize 1024
 
-#define SHUFFLE_ARRAY(name, var, type)\
-  { type* f = allocateArray<type>(totalDataRows);\
+#define SHUFFLE_ARRAY(name, var, m_msgType)\
+  { m_msgType* f = allocateArray<m_msgType>(totalDataRows);\
   for (size_t i = 0; i < totalDataRows; ++i)\
   {\
     size_t nIdx = shuffleTable[i];\

@@ -182,10 +182,8 @@ void CropVolume::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -229,7 +227,7 @@ void CropVolume::execute()
   {
     std::stringstream ss;
     ss << "Cropping Volume - " << ((float)i / m->getZPoints()) * 100 << " Percent Complete";
-    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -267,6 +265,12 @@ void CropVolume::execute()
   {
     int64_t totalPoints = m->getTotalPoints();
     size_t totalFields = m->getNumFieldTuples();
+    if (0 == totalFields)
+    {
+        notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
+        notifyStatusMessage("Completed");
+        return;
+    }
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
     std::stringstream ss;
@@ -286,10 +290,10 @@ void CropVolume::execute()
     renum->setObservers(getObservers());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
-    addErrorMessages(renum->getErrorMessages());
+    addErrorMessages(renum->getPipelineMessages());
   }
 
 
- notifyProgress("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 

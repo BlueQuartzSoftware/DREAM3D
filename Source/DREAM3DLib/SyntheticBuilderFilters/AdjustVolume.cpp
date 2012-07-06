@@ -42,9 +42,9 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -124,10 +124,8 @@ void AdjustVolume::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -198,7 +196,7 @@ void AdjustVolume::execute()
   {
     std::stringstream ss;
 	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
-	notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+	notifyStatusMessage(ss.str());
     iterations++;
     good = 0;
     while (good == 0)
@@ -316,5 +314,5 @@ void AdjustVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Adjusting Grain Boundaries Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Adjusting Grain Boundaries Complete");
 }

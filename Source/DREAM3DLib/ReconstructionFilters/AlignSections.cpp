@@ -152,7 +152,7 @@ void AlignSections::execute()
     setErrorCondition(-1);
     std::stringstream ss;
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
 
@@ -196,7 +196,7 @@ void AlignSections::execute()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
-   // notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+   // notifyStatusMessage(ss.str());
     slice = static_cast<int>( (dims[2] - 1) - i );
     for (DimType l = 0; l < dims[1]; l++)
     {
@@ -215,7 +215,7 @@ void AlignSections::execute()
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-        	  p->CopyTuple(currentPosition, newPosition);
+              p->CopyTuple(currentPosition, newPosition);
           }
         }
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
@@ -225,14 +225,14 @@ void AlignSections::execute()
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-        	  p->InitializeTuple(newPosition, 0.0);          }
+              p->InitializeTuple(newPosition, 0.0);          }
         }
       }
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Complete");
 }
 
 

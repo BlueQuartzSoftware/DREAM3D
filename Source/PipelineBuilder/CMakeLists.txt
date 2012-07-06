@@ -46,9 +46,7 @@ if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
 endif()
 
 set(CLASS_NAME "PipelineBuilder")
-#SET(ORIGINAL_FILE ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in)
-#configure_file( ${PROJECT_CODE_DIR}/QtSupport/QAbstractPipelineWrapper.h.in
-#                ${${CLASS_NAME}Plugin_BINARY_DIR}/Q${CLASS_NAME}.h @ONLY IMMEDIATE)
+
 
 set (PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/QFilterWidget.h

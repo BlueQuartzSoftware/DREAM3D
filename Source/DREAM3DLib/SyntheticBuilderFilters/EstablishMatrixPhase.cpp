@@ -124,10 +124,8 @@ void EstablishMatrixPhase::execute()
 
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -143,7 +141,7 @@ void EstablishMatrixPhase::execute()
   establish_matrix();
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("EstablishMatrixPhases Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("EstablishMatrixPhases Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -151,7 +149,7 @@ void EstablishMatrixPhase::execute()
 // -----------------------------------------------------------------------------
 void  EstablishMatrixPhase::establish_matrix()
 {
- notifyProgress("Establishing Matrix", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Establishing Matrix");
   DREAM3D_RANDOMNG_NEW()
 
   DataContainer* m = getDataContainer();

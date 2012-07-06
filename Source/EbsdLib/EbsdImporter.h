@@ -62,7 +62,7 @@ class EbsdLib_EXPORT EbsdImporter
     /**
      * @brief Sets an Error Message
      */
-    EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(ErrorMessage)
+    EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(PipelineMessage);
 
     /**
      * @brief Sets an error condition
@@ -119,7 +119,7 @@ class EbsdLib_EXPORT EbsdImporter
       m_ErrorCondition(0),
       m_Cancel(false)
     {
-      m_ErrorMessage = "";
+      m_PipelineMessage = "";
     }
 
   private:

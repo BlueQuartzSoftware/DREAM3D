@@ -100,10 +100,8 @@ void DetermineGoodVoxels::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -147,7 +145,7 @@ void DetermineGoodVoxels::execute()
     m_QualityMetricFilters[i]->filter();
     ss.str("");
     ss << getHumanLabel() << " - " << i << "/" << nFilters-1 << " Quality Metric Filters Complete";
-    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
   }
 
   // Get the first bool array to use as a reference
@@ -203,6 +201,6 @@ void DetermineGoodVoxels::execute()
   }
 
   m->addCellData(DREAM3D::CellData::GoodVoxels, baseArray);
- notifyProgress("Determine Good Voxels Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Determine Good Voxels Complete");
 }
 

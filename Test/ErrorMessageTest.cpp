@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/ErrorMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -58,20 +58,30 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void TestErrorMessage()
 {
-  ErrorMessage::Pointer e0 = ErrorMessage::New();
+  PipelineMessage e0;
 
   std::string a0("Some Class Name");
   std::string a1("Description");
   int eCode = -10;
-  ErrorMessage::Pointer e1 = ErrorMessage::New();
+  PipelineMessage e1;
 
 
-  ErrorMessage::Pointer e2 = ErrorMessage::New(a0, a1, eCode);
+  PipelineMessage e2(a0, a1, eCode);
 
   AbstractFilter::Pointer f = AbstractFilter::New();
   f->addErrorMessage(a0, a1, eCode);
   f->addErrorMessage("Some Other Class", "A description", -10);
+  
+  PipelineMessage pm("Joey's Test", "Testing Warning Message...", -23, PipelineMessage::Warning);
+  PipelineMessage pm1("Joey's Test", "Testing Error Message...", -23, PipelineMessage::Error);
+  PipelineMessage pm2("Joey's Test", "Testing Status Message...", -23, PipelineMessage::StatusMessage);
+  PipelineMessage pm3("Joey's Test", "Testing Status Message...", -23, PipelineMessage::StatusValue, 23);
+  f->notifyMessage(pm);
+  f->notifyMessage(pm1);
+  f->notifyMessage(pm2);
 
+  if (true)
+    return;
 
 }
 

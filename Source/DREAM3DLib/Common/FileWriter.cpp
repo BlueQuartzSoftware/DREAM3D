@@ -64,9 +64,9 @@ FileWriter::~FileWriter()
 int FileWriter::writeHeader()
 {
   setErrorCondition(-1);
-  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
+  PipelineMessage em (getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
   addErrorMessage(em);
-  notifyMessage(em, 0, UpdateErrorMessage);
+  notifyMessage(em);
   return -1;
 }
 
@@ -76,9 +76,9 @@ int FileWriter::writeHeader()
 int FileWriter::writeFile()
 {
   setErrorCondition(-1);
-  ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
+  PipelineMessage em (getNameOfClass(), "FileWriter should be subclassed and functionality implemented there", -1);
   addErrorMessage(em);
-  notifyMessage(em, 0, UpdateErrorMessage);
+  notifyMessage(em);
   return -1;
 }
 
@@ -90,9 +90,9 @@ void FileWriter::execute()
   if (getDataContainer() == NULL)
   {
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
+    PipelineMessage em (getNameOfClass(), "The DataContainer Object was NOT set correctly.", -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   setErrorCondition(0);
@@ -104,8 +104,7 @@ void FileWriter::execute()
   {
       std::stringstream ss;
       ss << ": Error creating parent path '" << parentPath << "'";
-      ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -1);
-      addErrorMessage(em);
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -115,19 +114,18 @@ void FileWriter::execute()
   int err = writeHeader();
   if (err < 0)
   {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Writing the Header portion of the file", err);
-  addErrorMessage(em);
+    PipelineMessage em (getNameOfClass(), "Error Writing the Header portion of the file", err);
     setErrorCondition(err);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   err = writeFile();
   if (err < 0)
   {
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Error Writing the file", err);
+    PipelineMessage em (getNameOfClass(), "Error Writing the file", err);
   addErrorMessage(em);
     setErrorCondition(err);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
 }

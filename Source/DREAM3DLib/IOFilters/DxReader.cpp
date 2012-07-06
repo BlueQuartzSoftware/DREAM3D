@@ -337,7 +337,7 @@ int DxReader::readFile()
 //    std::cout << "Grain ID: " << (*iter) << std::endl;
 //  }
 
-  notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
   return 0;
 }
 

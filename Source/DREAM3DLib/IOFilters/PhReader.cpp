@@ -211,6 +211,6 @@ int  PhReader::readFile()
   tokens.clear();
   inFile.close();
 
-  notifyProgress("PhReader Complete", 0, UpdateProgressMessage);
+  notifyStatusMessage("Complete");
   return 0;
 }

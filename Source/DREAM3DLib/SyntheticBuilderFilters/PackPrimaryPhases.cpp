@@ -57,9 +57,9 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
@@ -298,7 +298,7 @@ void PackPrimaryPhases::execute()
         ss << ": Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
         ss << "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[" << i << "] = " << m_PhaseTypes[i] <<  " does not match up ";
         ss << "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n";
-        ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), ss.str(), -666);
+        PipelineMessage em (getNameOfClass(), ss.str(), -666);
         addErrorMessage(em);
         setErrorCondition(-666);
         return;
@@ -315,7 +315,7 @@ void PackPrimaryPhases::execute()
     if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
 
-  notifyProgress("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initializing Volume");
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
 
@@ -382,7 +382,7 @@ void PackPrimaryPhases::execute()
 		{
 	      std::stringstream ss;
 	      ss << "Packing Grains - Generating Grain #" << gid;
-	      notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+	      notifyStatusMessage(ss.str());
 
 	      m->resizeFieldDataArrays(gid + 1);
 	      dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -420,7 +420,7 @@ void PackPrimaryPhases::execute()
 		{
 		  std::stringstream ss;
 		  ss << "Packing Grains - Generating Grain #" << gid;
-		  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+		  notifyStatusMessage(ss.str());
 
 		  m->resizeFieldDataArrays(gid + 1);
 		  dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -436,7 +436,7 @@ void PackPrimaryPhases::execute()
 	}
   }
 
-  notifyProgress("Packing Grains - Grain Generation Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Grain Generation Complete");
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -497,7 +497,7 @@ void PackPrimaryPhases::execute()
   {
     std::stringstream ss;
     ss << "Packing Grains - Placing Grain #" << i;
-    notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
 
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
@@ -528,7 +528,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyProgress("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
 
   // determine neighborhoods and initial neighbor distribution errors
   for (size_t i = firstPrimaryField; i < numgrains; i++)
@@ -542,7 +542,7 @@ void PackPrimaryPhases::execute()
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(iteration%100 == 0) notifyStatusMessage(ss.str());
 
 //    change1 = 0;
 //    change2 = 0;
@@ -630,7 +630,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyProgress("Packing Grains - Grain Adjustment Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Grain Adjustment Complete");
 
   if(m_VtkOutputFile.empty() == false)
   {
@@ -641,16 +641,16 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyProgress("Packing Grains - Assigning Voxels", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Assigning Voxels");
   assign_voxels();
 
-  notifyProgress("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Filling Gaps");
   assign_gaps();
 
-  notifyProgress("Packing Grains - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Cleaning Up Volume");
   cleanup_grains();
 
-  notifyProgress("Packing Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -659,12 +659,12 @@ void PackPrimaryPhases::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    addErrorMessages(renumber_grains->getErrorMessages());
+    addErrorMessages(renumber_grains->getPipelineMessages());
     return;
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Packing Grains Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Packing Grains Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -678,7 +678,7 @@ int PackPrimaryPhases::writeVtkFile()
   if(outFile.is_open() == false)
   {
     std::cout << "m_VtkOutputFile: " << m_VtkOutputFile << std::endl;
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), "Could not open Vtk File for writing from PackGrains", -1);
+    PipelineMessage em (getNameOfClass(), "Could not open Vtk File for writing from PackGrains", -1);
     addErrorMessage(em);
     setErrorCondition(-55);
     return -1;
@@ -1266,7 +1266,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
 
 void PackPrimaryPhases::assign_voxels()
 {
- notifyProgress("Assigning Voxels", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Voxels");
 
   DataContainer* m = getDataContainer();
   int index;
@@ -1437,7 +1437,7 @@ void PackPrimaryPhases::assign_voxels()
 
 void PackPrimaryPhases::assign_gaps()
 {
- notifyProgress("Assigning Gaps", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Gaps");
 
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->getTotalPoints();
@@ -1628,7 +1628,7 @@ void PackPrimaryPhases::assign_gaps()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::cleanup_grains()
 {
-  notifyProgress("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Cleaning Up Grains");
 
   DataContainer* m = getDataContainer();
 
