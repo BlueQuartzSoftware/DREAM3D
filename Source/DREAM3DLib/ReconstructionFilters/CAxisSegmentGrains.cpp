@@ -50,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -72,16 +73,12 @@ m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_CellPhases(NULL),
-m_FieldPhases(NULL),
-m_Active(NULL),
 m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -161,9 +158,6 @@ void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields,
     GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
@@ -254,6 +248,10 @@ void CAxisSegmentGrains::execute()
     }
   }
 
+  	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+	find_grainphases->setObservers(this->getObservers());
+	find_grainphases->setDataContainer(getDataContainer());
+	find_grainphases->execute();
 
   // If there is an error set this to something negative and also set a message
  notifyStatusMessage("Completed");
@@ -299,8 +297,6 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
 	  m_GrainIds[seed] = gnum;
 	  m->resizeFieldDataArrays(gnum+1);
 	  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-	  m_Active[gnum] = true;
-	  m_FieldPhases[gnum] = m_CellPhases[seed];
   }
   return seed;
 }
