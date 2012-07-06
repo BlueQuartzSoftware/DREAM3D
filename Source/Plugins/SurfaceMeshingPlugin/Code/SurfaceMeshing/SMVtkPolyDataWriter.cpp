@@ -348,7 +348,7 @@ void SMVtkPolyDataWriter::execute()
     setErrorCondition(-1);
     PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
 
@@ -365,12 +365,12 @@ void SMVtkPolyDataWriter::execute()
     setErrorCondition(-1);
     PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   s.str("");
   s << "Calc Node Count from Nodes.bin File: " << nNodes;
-  notifyProgress(s.str(), 0, UpdateProgressMessage);
+  notifyStatusMessage(s.str());
 
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.c_str(), "rb+");
@@ -381,7 +381,7 @@ void SMVtkPolyDataWriter::execute()
     setErrorCondition(-1);
     PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   // Calculate how many nodes are in the file based in the file size
@@ -397,13 +397,13 @@ void SMVtkPolyDataWriter::execute()
     setErrorCondition(-1);
     PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   s.str("");
 
   s << "Calc Triangle Count from Triangles.bin File: " << nTriangles;
-  notifyProgress(s.str(), 0, UpdateProgressMessage);
+  notifyStatusMessage(s.str());
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
@@ -415,7 +415,7 @@ void SMVtkPolyDataWriter::execute()
     setErrorCondition(-1);
     PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");

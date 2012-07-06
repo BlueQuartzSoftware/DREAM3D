@@ -112,10 +112,8 @@ void FieldDataCSVWriter::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -126,8 +124,7 @@ void FieldDataCSVWriter::execute()
   {
       std::stringstream ss;
       ss << ": Error creating parent path '" << parentPath << "'";
-      PipelineMessage em (getNameOfClass(), ss.str(), -1);
-      addErrorMessage(em);
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }

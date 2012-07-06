@@ -51,7 +51,12 @@ class PipelineMessage
 {
   public:
 
-    enum messageType_t {Error, Warning, StatusMessage, StatusValue, StatusMessageAndValue, UnknownMessageType};
+    enum messageType_t {Error,
+                        Warning,
+                        StatusMessage,
+                        StatusValue,
+                        StatusMessageAndValue,
+                        UnknownMessageType};
 
     PipelineMessage() {}
 
@@ -65,16 +70,16 @@ class PipelineMessage
     }
 
 
-    PipelineMessage(const std::string &m_filterName, const char* message, int code, 
-      messageType_t m_msgType = UnknownMessageType, int status = -1) :
-        m_filterName(m_filterName),
+    PipelineMessage(const std::string &filterName, const char* message, int code,
+                   messageType_t msgType = UnknownMessageType, int status = -1) :
+        m_filterName(filterName),
         m_Message(message),
         m_Code(code),
-        m_msgType(m_msgType),
+        m_msgType(msgType),
         m_status(status)
     {}
 
-    PipelineMessage(const std::string &filterName, const std::string &message, int code, 
+    PipelineMessage(const std::string &filterName, const std::string &message, int code,
       messageType_t msgType = UnknownMessageType, int status = -1) :
         m_filterName(filterName),
         m_Message(message),
@@ -114,10 +119,10 @@ class PipelineMessage
      * @brief
      * @param val
      */
-    void setFilterName(std::string val) { m_filterName = val; }
+    void setFilterName(const std::string &val) { m_filterName = val; }
 
     std::string getMessageText() { return m_Message; }
-    void setMessageText(std::string val) { m_Message = val; }
+    void setMessageText(const std::string &val) { m_Message = val; }
 
     int getMessageCode() { return m_Code; }
     void setMessageCode(int val) { m_Code = val; }

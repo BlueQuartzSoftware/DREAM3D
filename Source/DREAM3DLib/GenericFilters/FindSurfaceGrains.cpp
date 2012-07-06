@@ -96,7 +96,7 @@ void FindSurfaceGrains::execute()
     setErrorCondition(-1);
     std::stringstream ss;
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
   setErrorCondition(0);

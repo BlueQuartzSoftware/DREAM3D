@@ -89,16 +89,42 @@ void Observer::pipelineProgressMessage(const char* message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineMessage(PipelineMessage msg)
+void Observer::pipelineMessage(PipelineMessage &msg)
 {
-  std::cout << "Warning - "<< msg.getFilterName() << "(" << msg.getMessageCode() << "):" << msg.getMessageText() << std::endl;
+  std::stringstream ss;
+  if(msg.getMessageType() == PipelineMessage::Error)
+  {
+    ss << msg.generateErrorString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::Warning)
+  {
+    ss << msg.generateWarningString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusMessage)
+  {
+    ss << msg.generateStatusString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusValue)
+  {
+    ss << msg.getStatusVar() << "%";
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
+  {
+    ss << msg.getStatusVar() << "%" << " " << msg.generateStatusString();
+  }
+  std::cout << ss.str() << std::endl;
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineMessage(std::vector<PipelineMessage> &messages) {
-  assert(false);
+void Observer::pipelineMessages(std::vector<PipelineMessage> messages)
+{
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter )
+  {
+    pipelineMessage(*iter);
+  }
 }
 
 

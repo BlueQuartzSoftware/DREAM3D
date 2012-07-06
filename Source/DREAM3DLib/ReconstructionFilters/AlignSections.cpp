@@ -152,7 +152,7 @@ void AlignSections::execute()
     setErrorCondition(-1);
     std::stringstream ss;
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
 
@@ -215,7 +215,7 @@ void AlignSections::execute()
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-        	  p->CopyTuple(currentPosition, newPosition);
+              p->CopyTuple(currentPosition, newPosition);
           }
         }
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
@@ -225,14 +225,14 @@ void AlignSections::execute()
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-        	  p->InitializeTuple(newPosition, 0.0);          }
+              p->InitializeTuple(newPosition, 0.0);          }
         }
       }
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Aligning Sections Complete");
+ notifyStatusMessage("Complete");
 }
 
 

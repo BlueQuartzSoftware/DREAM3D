@@ -112,9 +112,9 @@ void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
   std::stringstream ss;
   for(size_t i = 0; i < getQualityMetricFilters().size(); i++)
   {
-	ss << "QualityMetricFilter-" << i;
-	writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
-	ss.str("");
+    ss << "QualityMetricFilter-" << i;
+    writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
+    ss.str("");
   }
 
   int numPhaseType = static_cast<int>( m_PTypes->GetNumberOfTuples() );
@@ -394,11 +394,11 @@ void ReadH5Ebsd::execute()
   // Initialize all the arrays with some default values
   int64_t totalPoints = m->getTotalPoints();
   ss.str("");
-  ss << getHumanLabel() << " - Initializing " << totalPoints << " voxels";
+  ss << " - Initializing " << totalPoints << " voxels";
   notifyStatusMessage(ss.str());
 
   ss.str("");
-  ss << getHumanLabel() << " - Reading Ebsd Data from file";
+  ss << " - Reading Ebsd Data from file";
   notifyStatusMessage(ss.str());
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
