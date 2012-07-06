@@ -265,6 +265,12 @@ void CropVolume::execute()
   {
     int64_t totalPoints = m->getTotalPoints();
     size_t totalFields = m->getNumFieldTuples();
+    if (0 == totalFields)
+    {
+        notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
+        notifyStatusMessage("Completed");
+        return;
+    }
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
     std::stringstream ss;
