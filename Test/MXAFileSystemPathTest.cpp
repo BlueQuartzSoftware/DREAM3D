@@ -231,16 +231,17 @@ int AbsolutePathTest()
   std::string testdir = MXAUnitTest::MXATempDir + MXAUnitTest::MXAFileSystemPathTest::TestDir;
 
   std::string currentPath = MXADir::currentPath();
-  std::cout << "|++ currentPath:           " << currentPath << std::endl;
-  std::cout << "|++ MXATestBinaryDirectory:" << MXAUnitTest::MXABuildDir << std::endl;
-  success = currentPath.compare(MXAUnitTest::MXABuildDir);
+  std::string refPath = MXAUnitTest::MXATestBinaryDirectory;
+  std::cout << "|++ currentPath: " << currentPath << std::endl;
+  std::cout << "|++ refPath:     " << refPath << std::endl;
+  success = currentPath.compare(refPath);
   DREAM3D_REQUIRE_EQUAL(success, 0);
 
   std::string file = MXAUnitTest::MXAFileSystemPathTest::OutputFileName;
   PRINT_LINE_NUMBER();
   CheckFile(MXAUnitTest::MXAFileSystemPathTest::OutputFileName, file, "bin");
   file = MXADir::absolutePath(file);
-  std::string refPath = MXAUnitTest::MXABuildDir + MXADir::Separator + MXAUnitTest::MXAFileSystemPathTest::OutputFileName;
+  refPath = MXAUnitTest::MXATestBinaryDirectory + MXADir::Separator + MXAUnitTest::MXAFileSystemPathTest::OutputFileName;
   std::cout << "|-- file:    " << file << std::endl;
   std::cout << "|-- refPath: " << refPath << std::endl;
   success = file.compare(refPath);
@@ -253,7 +254,7 @@ int AbsolutePathTest()
   PRINT_LINE_NUMBER();
   CheckFile("." + MXADir::getSeparator() + MXAUnitTest::MXAFileSystemPathTest::OutputFileName, file, "bin");
   file = MXADir::absolutePath(file);
-  refPath = MXAUnitTest::MXABuildDir + MXADir::Separator + MXAUnitTest::MXAFileSystemPathTest::OutputFileName;
+  refPath = MXAUnitTest::MXATestBinaryDirectory + MXADir::Separator + MXAUnitTest::MXAFileSystemPathTest::OutputFileName;
   std::cout << "|-- file:    " << file << std::endl;
   std::cout << "|-- refPath: " << refPath << std::endl;
   success = file.compare(refPath);
@@ -516,14 +517,14 @@ int FileNameExtensionTest()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( MakeDirectoriesTest() );
-  DREAM3D_REGISTER_TEST( FilesTest() );
-  DREAM3D_REGISTER_TEST( FileNameTest() );
-  DREAM3D_REGISTER_TEST( AbsolutePathTest() );
-  DREAM3D_REGISTER_TEST( DirListTest() );
-  DREAM3D_REGISTER_TEST( RemoveDirectoriesTest() );
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
-  DREAM3D_REGISTER_TEST( FileNameExtensionTest() );
+  DREAM3D_REGISTER_TEST( MakeDirectoriesTest() )
+  DREAM3D_REGISTER_TEST( FilesTest() )
+  DREAM3D_REGISTER_TEST( FileNameTest() )
+  DREAM3D_REGISTER_TEST( AbsolutePathTest() )
+  DREAM3D_REGISTER_TEST( DirListTest() )
+  DREAM3D_REGISTER_TEST( RemoveDirectoriesTest() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  DREAM3D_REGISTER_TEST( FileNameExtensionTest() )
   PRINT_TEST_SUMMARY();
   return err;
 }

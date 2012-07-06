@@ -59,7 +59,7 @@ class QGraphicsScene;
  */
 class AIMImageGraphicsDelegate : public QObject
 {
-  Q_OBJECT;
+  Q_OBJECT
 
 
   public:

@@ -46,7 +46,7 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
   public:
     DREAM3D_SHARED_POINTERS(QFilterWidgetFactory<Widget> )
     DREAM3D_TYPE_MACRO_SUPER(QFilterWidgetFactory<Widget>, IFilterWidgetFactory)
-    DREAM3D_STATIC_NEW_MACRO(QFilterWidgetFactory<Widget>);
+    DREAM3D_STATIC_NEW_MACRO(QFilterWidgetFactory<Widget>)
 
     /**
      * @brief Creates a new widget for this filter. The Calling method MUST set

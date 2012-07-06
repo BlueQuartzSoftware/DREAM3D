@@ -157,8 +157,8 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1)
   if(getErrorCondition() == -301)
   {
 	setErrorCondition(0);
@@ -167,36 +167,35 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
 	find_surfacecells->setDataContainer(getDataContainer());
 	if(preflight == true) find_surfacecells->preflight();
 	if(preflight == false) find_surfacecells->execute();
-    GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-308);
+    addErrorMessage(getNameOfClass(), ss.str(), -308);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -219,10 +218,8 @@ void InsertPrecipitatePhases::execute()
 
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -241,20 +238,20 @@ void InsertPrecipitatePhases::execute()
 
   totalvol = sizex * sizey * sizez;
 
-  notify("Packing Precipitates - Generating and Placing Precipitates", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Generating and Placing Precipitates");
   initialize_packinggrid();
   place_precipitates();
 
-  notify("Packing Precipitates - Assigning Voxels", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Assigning Voxels");
   assign_voxels();
 
-  notify("Packing Precipitates - Filling Gaps", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Filling Gaps");
   assign_gaps();
 
-  notify("Packing Precipitates - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Cleaning Up Volume");
   cleanup_grains();
 
-  notify("Packing Precipitates - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -263,17 +260,17 @@ void InsertPrecipitatePhases::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    setErrorMessage(renumber_grains->getErrorMessage());
+    addErrorMessages(renumber_grains->getPipelineMessages());
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("InsertPrecipitatePhases Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("InsertPrecipitatePhases Completed");
 }
 
 void  InsertPrecipitatePhases::place_precipitates()
 {
-  notify("Placing Precipitates", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
   DataContainer* m = getDataContainer();
@@ -332,7 +329,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   }
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
-    precipitatephasefractions[i] = precipitatephasefractions[i] / totalprecipitatefractions;
+    precipitatephasefractions[i] = static_cast<float>( precipitatephasefractions[i] / totalprecipitatefractions );
     if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i - 1];
   }
 
@@ -346,8 +343,8 @@ void  InsertPrecipitatePhases::place_precipitates()
 	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-    grainsizediststep[i] = ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
-        / grainsizedist[i].size();
+    grainsizediststep[i] = static_cast<float>( ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
+        / grainsizedist[i].size() );
     float input = 0;
     float previoustotal = 0;
     VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
@@ -379,7 +376,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
 	  curphasevol[j] = 0;
-	  float curphasetotalvol = totalvol*totalprecipitatefractions*precipitatephasefractions[j];
+	  float curphasetotalvol = static_cast<float>( totalvol*totalprecipitatefractions*precipitatephasefractions[j] );
 	  while (curphasevol[j] < (factor * curphasetotalvol))
 	  {
 	    iter++;
@@ -392,7 +389,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 		{
 	      std::stringstream ss;
 	      ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
-	      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+	      notifyStatusMessage(ss.str());
 
 	      m->resizeFieldDataArrays(currentnumgrains + 1);
 	      dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
@@ -426,7 +423,7 @@ void  InsertPrecipitatePhases::place_precipitates()
 		float previoustotal = 0;
 		float avg = Neighdist[0]->GetValue(j);
 		float stdev = Neighdist[1]->GetValue(j);
-		neighbordiststep[i] = 2;		
+		neighbordiststep[i] = 2;
 		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
 		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
 		{
@@ -467,27 +464,27 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     std::stringstream ss;
     ss << "Packing Grains - Placing Grain #" << i;
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
 
 	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
 	precipboundaryfraction = pp->getPrecipBoundaryFraction();
-    random = rg.genrand_res53();
+    random = static_cast<float>( rg.genrand_res53() );
     if(random <= precipboundaryfraction)
     {
       random2 = int(rg.genrand_res53() * double(totalPoints - 1));
       while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
       {
         random2++;
-        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+        if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
       }
     }
     else if(random > precipboundaryfraction)
     {
-      random2 = rg.genrand_res53() * (totalPoints - 1);
+      random2 = static_cast<int>( rg.genrand_res53() * (totalPoints - 1) );
       while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
       {
         random2++;
-        if(random2 >= totalPoints) random2 = random2 - totalPoints;
+        if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
       }
     }
     xc = find_xcoord(random2);
@@ -500,23 +497,23 @@ void  InsertPrecipitatePhases::place_precipitates()
     fillingerror = check_fillingerror(i, -1000);
     for (int iter = 0; iter < 10; iter++)
     {
-      random = rg.genrand_res53();
+      random = static_cast<float>( rg.genrand_res53() );
       if(random <= precipboundaryfraction)
       {
         random2 = int(rg.genrand_res53() * double(totalPoints - 1));
         while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
         }
       }
       else if(random > precipboundaryfraction)
       {
-        random2 = rg.genrand_res53() * (totalPoints - 1);
+        random2 = static_cast<int>( rg.genrand_res53() * (totalPoints - 1) );
         while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
         }
       }
       xc = find_xcoord(random2);
@@ -538,7 +535,7 @@ void  InsertPrecipitatePhases::place_precipitates()
     }
   }
 
-  notify("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
 
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
@@ -548,7 +545,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(iteration%100 == 0) notifyStatusMessage(ss.str());
 
 //    change1 = 0;
 //    change2 = 0;
@@ -559,28 +556,31 @@ void  InsertPrecipitatePhases::place_precipitates()
     {
       randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains-firstPrecipitateField));
       if(randomgrain < firstPrecipitateField) randomgrain = firstPrecipitateField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
 
 	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
       precipboundaryfraction = pp->getPrecipBoundaryFraction();
-	  random = rg.genrand_res53();
+	  random = static_cast<float>( rg.genrand_res53() );
       if(random <= precipboundaryfraction)
       {
         random2 = int(rg.genrand_res53() * double(totalPoints - 1));
         while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
         }
       }
       else if(random > precipboundaryfraction)
       {
-        random2 = rg.genrand_res53() * (totalPoints - 1);
+        random2 = static_cast<int>( rg.genrand_res53() * (totalPoints - 1) );
         while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = random2 - totalPoints;
+          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
         }
       }
       xc = find_xcoord(random2);
@@ -612,14 +612,17 @@ void  InsertPrecipitatePhases::place_precipitates()
     {
       randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains-firstPrecipitateField));
       if(randomgrain < firstPrecipitateField) randomgrain = firstPrecipitateField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
-      xc = oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx));
-      yc = oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy));
-      zc = oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz));
+      xc = static_cast<float>( oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx)) );
+      yc = static_cast<float>( oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy)) );
+      zc = static_cast<float>( oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz)) );
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_precipitate(randomgrain, xc, yc, zc);
@@ -646,7 +649,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  DataContainer* m = getDataContainer();
+ // DataContainer* m = getDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -693,13 +696,13 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
 		  a3 = covera[0]->GetValue(diameter-1);
 		  b3 = covera[1]->GetValue(diameter-1);
 	  }
-	  r3 = rg.genrand_beta(a3, b3);
+	  r3 = static_cast<float>( rg.genrand_beta(a3, b3) );
   }
-  float random = rg.genrand_res53();
+  float random = static_cast<float>( rg.genrand_res53() );
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < axisodf->GetSize())
+  while (random > totaldensity && bin < static_cast<int>(axisodf->GetSize()))
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
@@ -747,12 +750,12 @@ void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, 
   float oxc = m_Centroids[3*gnum];
   float oyc = m_Centroids[3*gnum+1];
   float ozc = m_Centroids[3*gnum+2];
-  occolumn = (oxc - (packingresx / 2.0f)) / packingresx;
-  ocrow = (oyc - (packingresy / 2.0f)) / packingresy;
-  ocplane = (ozc - (packingresz / 2.0f)) / packingresz;
-  nccolumn = (xc - (packingresx / 2.0f)) / packingresx;
-  ncrow = (yc - (packingresy / 2.0f)) / packingresy;
-  ncplane = (zc - (packingresz / 2.0f)) / packingresz;
+  occolumn = static_cast<int>( (oxc - (packingresx / 2.0f)) / packingresx );
+  ocrow = static_cast<int>( (oyc - (packingresy / 2.0f)) / packingresy );
+  ocplane = static_cast<int>( (ozc - (packingresz / 2.0f)) / packingresz );
+  nccolumn = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
+  ncrow = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
+  ncplane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
@@ -853,9 +856,9 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
         dia = m_EquivalentDiameters[index];
         if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
         if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-		dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+		dia = static_cast<float>( (dia - pp->getMinGrainDiameter()) / pp->getBinStepSize() );
         nnum = m_Neighborhoods[index];
-		bin = nnum/neighbordiststep[iter];
+		bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 		if(bin >= 40) bin = 39;
         simneighbordist[iter][dia][bin]++;
         count[dia]++;
@@ -867,9 +870,9 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
       dia = m_EquivalentDiameters[index];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-	  dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+	  dia = static_cast<float>( (dia - pp->getMinGrainDiameter()) / pp->getBinStepSize() );
       nnum = m_Neighborhoods[index];
-	  bin = nnum/neighbordiststep[iter];
+	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
       count[dia]++;
@@ -879,7 +882,7 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
     {
       for (size_t j = 0; j < 40; j++)
       {
-        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(counter);
+        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / static_cast<float>(counter);
         if(counter == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
@@ -961,7 +964,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
         dia = m_EquivalentDiameters[index];
         dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
         if(dia < 0) dia = 0;
-        if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+        if(dia > grainsizedist[iter].size() - 1) dia = static_cast<float>( grainsizedist[iter].size() - 1 );
         simgrainsizedist[iter][int(dia)]++;
         count++;
       }
@@ -971,7 +974,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
       dia = precip->m_EquivalentDiameters;
       dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
-      if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+      if(dia > grainsizedist[iter].size() - 1) dia = static_cast<float>( grainsizedist[iter].size() - 1 );
       simgrainsizedist[iter][int(dia)]++;
       count++;
     }
@@ -1027,7 +1030,7 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove)
         }
       }
     }
-    packqualities[gadd] = packquality / float(size);
+    packqualities[gadd] = static_cast<int>( packquality / float(size) );
   }
   if(gremove > 0)
   {
@@ -1118,9 +1121,9 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
-  centercolumn = (xc - (packingresx / 2)) / packingresx;
-  centerrow = (yc - (packingresy / 2)) / packingresy;
-  centerplane = (zc - (packingresz / 2)) / packingresz;
+  centercolumn = static_cast<int>( (xc - (packingresx / 2)) / packingresx );
+  centerrow = static_cast<int>( (yc - (packingresy / 2)) / packingresy );
+  centerplane = static_cast<int>( (zc - (packingresz / 2)) / packingresz );
   xmin = int(centercolumn - ((radcur1 / packingresx) + 1));
   xmax = int(centercolumn + ((radcur1 / packingresx) + 1));
   ymin = int(centerrow - ((radcur1 / packingresy) + 1));
@@ -1169,7 +1172,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
 void InsertPrecipitatePhases::assign_voxels()
 {
-  notify("Assigning Voxels", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Voxels");
 
   DataContainer* m = getDataContainer();
   int index;
@@ -1255,9 +1258,9 @@ void InsertPrecipitatePhases::assign_voxels()
     ga[2][0] = sinf(phi1) * sinf(PHI);
     ga[2][1] = -cosf(phi1) * sinf(PHI);
     ga[2][2] = cosf(PHI);
-    column = (xc - (xRes / 2.0f)) / xRes;
-    row = (yc - (yRes / 2.0f)) / yRes;
-    plane = (zc - (zRes / 2.0f)) / zRes;
+    column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
+    row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
+    plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
     xmin = int(column - ((radcur1 / xRes) + 1));
     xmax = int(column + ((radcur1 / xRes) + 1));
     ymin = int(row - ((radcur1 / yRes) + 1));
@@ -1344,7 +1347,7 @@ void InsertPrecipitatePhases::assign_voxels()
 
 void InsertPrecipitatePhases::assign_gaps()
 {
-  notify("Assigning Gaps", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Gaps");
 
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->getTotalPoints();
@@ -1420,9 +1423,9 @@ void InsertPrecipitatePhases::assign_gaps()
 
 		float radcur2 = (radcur1 * bovera);
 		float radcur3 = (radcur1 * covera);
-		radcur1 = (float(timestep)/100.0)*radcur1;
-		radcur2 = (float(timestep)/100.0)*radcur2;
-		radcur3 = (float(timestep)/100.0)*radcur3;
+		radcur1 = (float(timestep)/100.0f)*radcur1;
+		radcur2 = (float(timestep)/100.0f)*radcur2;
+		radcur3 = (float(timestep)/100.0f)*radcur3;
 		float phi1 = m_AxisEulerAngles[3*i];
 		float PHI = m_AxisEulerAngles[3*i+1];
 		float phi2 = m_AxisEulerAngles[3*i+2];
@@ -1436,9 +1439,9 @@ void InsertPrecipitatePhases::assign_gaps()
 		ga[2][0] = sinf(phi1) * sinf(PHI);
 		ga[2][1] = -cosf(phi1) * sinf(PHI);
 		ga[2][2] = cosf(PHI);
-		column = (xc - (xRes / 2.0f)) / xRes;
-		row = (yc - (yRes / 2.0f)) / yRes;
-		plane = (zc - (zRes / 2.0f)) / zRes;
+		column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
+		row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
+		plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
 		xmin = int(column - ((radcur1 / xRes) + 1));
 		xmax = int(column + ((radcur1 / xRes) + 1));
 		ymin = int(row - ((radcur1 / yRes) + 1));
@@ -1478,7 +1481,7 @@ void InsertPrecipitatePhases::assign_gaps()
 			  if (iter2 > dims[1] - 1) row = iter2 - dims[1];
 			  if (iter3 < 0) plane = iter3 + dims[2];
 			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
-			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
+			  index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
@@ -1531,7 +1534,7 @@ void InsertPrecipitatePhases::assign_gaps()
 }
 void InsertPrecipitatePhases::cleanup_grains()
 {
-  notify("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Cleaning Up Grains");
 
   DataContainer* m = getDataContainer();
 
@@ -1588,8 +1591,8 @@ void InsertPrecipitatePhases::cleanup_grains()
     if(checked[i] == false && m_GrainIds[i] > firstPrecipitateField)
     {
 	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
-	  minsize = pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f;
-      minsize = int(minsize / (resConst));
+	  minsize = static_cast<float>( pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f );
+      minsize = static_cast<float>( int(minsize / (resConst)) );
       currentvlist.push_back(i);
       count = 0;
       while (count < currentvlist.size())
@@ -1602,7 +1605,7 @@ void InsertPrecipitatePhases::cleanup_grains()
         for (int j = 0; j < 6; j++)
         {
           good = 1;
-          neighbor = index + neighpoints[j];
+          neighbor = static_cast<int>( index + neighpoints[j] );
           if(m_PeriodicBoundaries == false)
           {
             if(j == 0 && plane == 0) good = 0;
@@ -1619,12 +1622,12 @@ void InsertPrecipitatePhases::cleanup_grains()
           }
           else if(m_PeriodicBoundaries == true)
           {
-            if(j == 0 && plane == 0) neighbor = neighbor + (xp * yp * zp);
-            if(j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp * yp * zp);
-            if(j == 1 && row == 0) neighbor = neighbor + (xp * yp);
-            if(j == 4 && row == (yp - 1)) neighbor = neighbor - (xp * yp);
-            if(j == 2 && column == 0) neighbor = neighbor + (xp);
-            if(j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
+            if(j == 0 && plane == 0) neighbor = static_cast<int>( neighbor + (xp * yp * zp) );
+            if(j == 5 && plane == (zp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp * zp) );
+            if(j == 1 && row == 0) neighbor = static_cast<int>( neighbor + (xp * yp) );
+            if(j == 4 && row == (yp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp) );
+            if(j == 2 && column == 0) neighbor = static_cast<int>( neighbor + (xp) );
+            if(j == 3 && column == (xp - 1)) neighbor = static_cast<int>( neighbor - (xp) );
             if(m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
             {
               currentvlist.push_back(neighbor);

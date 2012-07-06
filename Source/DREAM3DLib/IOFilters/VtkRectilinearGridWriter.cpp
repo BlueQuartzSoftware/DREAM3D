@@ -194,43 +194,43 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 
   if(m_OutputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The output file must be set before executing this filter.";
+    ss << ": The output file must be set before executing this filter.";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
   if(m_WriteGrainIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WritePhaseIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteGoodVoxels == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
   }
   if(m_WriteKAMs == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteLMGs == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -303, float, FloatArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteGAMs == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -303, float, FloatArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteBandContrasts == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteIPFColors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -249,10 +249,8 @@ void VtkRectilinearGridWriter::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -263,8 +261,8 @@ void VtkRectilinearGridWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
-      setErrorMessage(ss.str());
+      ss << ": Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -348,13 +346,12 @@ void VtkRectilinearGridWriter::execute()
   if (err < 0)
   {
     std::stringstream ss;
-    ss << getNameOfClass() << ": Error writing output vtk file '" << m_OutputFile << "'\n "
-        << getErrorMessage();
-    setErrorMessage(ss.str());
+    ss << ": Error writing output vtk file '" << m_OutputFile << "'\n ";
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
-  notify("VtkRectilinearGridWriter Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("VtkRectilinearGridWriter Complete");
 }
 
 
@@ -395,7 +392,7 @@ int VtkRectilinearGridWriter::write(const std::string &file, DataContainer* r, s
     if(err < 0)
     {
       setErrorCondition((*iter)->getErrorCondition());
-      setErrorMessage((*iter)->getErrorMessage());
+      setPipelineMessages((*iter)->getPipelineMessages());
       break;
     }
   }

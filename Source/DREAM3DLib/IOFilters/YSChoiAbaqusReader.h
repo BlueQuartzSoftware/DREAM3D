@@ -45,9 +45,9 @@
 class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 {
   public:
-  DREAM3D_SHARED_POINTERS(YSChoiAbaqusReader);
-  DREAM3D_STATIC_NEW_MACRO(YSChoiAbaqusReader);
-  DREAM3D_TYPE_MACRO_SUPER(YSChoiAbaqusReader, FileReader);
+  DREAM3D_SHARED_POINTERS(YSChoiAbaqusReader)
+  DREAM3D_STATIC_NEW_MACRO(YSChoiAbaqusReader)
+  DREAM3D_TYPE_MACRO_SUPER(YSChoiAbaqusReader, FileReader)
 
 
     virtual ~YSChoiAbaqusReader();
@@ -55,11 +55,11 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
 	//------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName);
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName);
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName);
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName);
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 

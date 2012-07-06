@@ -83,8 +83,8 @@ typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
 class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
 {
   public:
-    DREAM3D_SHARED_POINTERS(BoundaryStatsData);
-    DREAM3D_STATIC_NEW_MACRO(BoundaryStatsData);
+    DREAM3D_SHARED_POINTERS(BoundaryStatsData)
+    DREAM3D_STATIC_NEW_MACRO(BoundaryStatsData)
     DREAM3D_TYPE_MACRO_SUPER(BoundaryStatsData, StatsData)
 
     virtual ~BoundaryStatsData();
@@ -102,9 +102,9 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
     static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
 
-    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea);
-    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
-    DREAM3D_INSTANCE_PROPERTY(float, ParentPhase);
+    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea)
+    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
+    DREAM3D_INSTANCE_PROPERTY(float, ParentPhase)
 
     virtual void initialize();
 

@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -60,15 +60,15 @@
  * DECLARE_FACTORY_CLASS(CastAlMicrostructurePresetFactory, CastAlMicrostructurePreset, "Cast Al" );
  * @endcode
  */
-#define DECLARE_FACTORY_CLASS(name, type, display)\
+#define DECLARE_FACTORY_CLASS(name, m_msgType, display)\
   class name : public AbstractMicrostructurePresetFactory {\
     public:\
-    MXA_SHARED_POINTERS(name);\
-    MXA_TYPE_MACRO(name);\
+    MXA_SHARED_POINTERS(name)\
+    MXA_TYPE_MACRO(name)\
     MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePresetFactory, name)\
-    virtual ~name(){};\
+    virtual ~name(){}\
     AbstractMicrostructurePreset::Pointer newMicrostructurePreset() {\
-        return type::New();\
+        return m_msgType::New();\
     }\
     virtual bool canCreateClass(const std::string &name) {\
         std::string cn = this->className();\
@@ -76,10 +76,10 @@
         if (cn.compare(name) == 0 || dn.compare(name) == 0) {return true;}\
         return false;\
     }\
-    const std::string className() { return std::string(#type); }\
+    const std::string className() { return std::string(#m_msgType); }\
     const std::string displayName() { return std::string(display); }\
     protected:\
-    name(){};\
+    name(){}\
     private:\
     name(const name &);\
     void operator=(const name &);\
@@ -103,7 +103,7 @@ class AbstractMicrostructurePresetFactory
     MXA_TYPE_MACRO(AbstractMicrostructurePresetFactory)
 
     typedef std::vector<Pointer>                        Collection;
-    virtual ~AbstractMicrostructurePresetFactory(){};
+    virtual ~AbstractMicrostructurePresetFactory(){}
 
     /**
      * @brief Creates a new AbstractMicrostructurePreset based on a class name
@@ -135,7 +135,7 @@ class AbstractMicrostructurePresetFactory
 
 
   protected:
-    AbstractMicrostructurePresetFactory() {};
+    AbstractMicrostructurePresetFactory() {}
 
   private:
         AbstractMicrostructurePresetFactory(const     AbstractMicrostructurePresetFactory&); // Copy Constructor Not Implemented

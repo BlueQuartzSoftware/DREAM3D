@@ -63,9 +63,9 @@
 class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindAxisODF);
-    DREAM3D_STATIC_NEW_MACRO(FindAxisODF);
-    DREAM3D_TYPE_MACRO_SUPER(FindAxisODF, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindAxisODF)
+    DREAM3D_STATIC_NEW_MACRO(FindAxisODF)
+    DREAM3D_TYPE_MACRO_SUPER(FindAxisODF, AbstractFilter)
 
     virtual ~FindAxisODF();
 
@@ -94,11 +94,11 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
     bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
     float* m_AxisEulerAngles;
-
     unsigned int* m_PhaseTypes;
-	StatsDataArray* m_StatsDataArray;
 
-	std::vector<OrientationMath*> m_OrientationOps;
+    StatsDataArray* m_StatsDataArray;
+
+    std::vector<OrientationMath*> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

@@ -117,9 +117,9 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
   if(getErrorCondition() == -303)
   {
 	setErrorCondition(0);
@@ -128,17 +128,14 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
 	find_cellquats->setDataContainer(getDataContainer());
 	if(preflight == true) find_cellquats->preflight();
 	if(preflight == false) find_cellquats->execute();
-	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
+	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, float, FloatArrayType, 0, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, float, FloatArrayType, 0, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, float, FloatArrayType, 0, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, float, FloatArrayType, 0, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1);
-
-
-  setErrorMessage(ss.str());
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -160,10 +157,8 @@ void FindLocalMisorientationGradients::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -177,8 +172,8 @@ void FindLocalMisorientationGradients::execute()
 
 
   // We need to keep a reference to the wrapper DataArray class in addition to the raw pointer
-  FloatArrayType* m_KernelMisorientations =
-      FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType*>(m->getCellData(DREAM3D::CellData::KernelAverageMisorientations).get());
+//  FloatArrayType* m_KernelMisorientations =
+//      FloatArrayType::SafeObjectDownCast<IDataArray*, FloatArrayType*>(m->getCellData(DREAM3D::CellData::KernelAverageMisorientations).get());
 
   std::vector<float> gamVec(totalPoints);
   float* gam = &(gamVec.front());
@@ -281,10 +276,10 @@ void FindLocalMisorientationGradients::execute()
           {
             m_KernelAverageMisorientations[point] = 0;
           }
-		  if(m_GrainIds[point] == 191)
-		  {
-			int stop = 0;
-		  }
+//		  if(m_GrainIds[point] == 191)
+//		  {
+//			int stop = 0;
+//		  }
           q2[0] = m_AvgQuats[5*m_GrainIds[point]];
           q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
           q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
@@ -367,5 +362,5 @@ void FindLocalMisorientationGradients::execute()
   }
   delete avgmiso;
 
-  notify("FindLocalMisorientationGradients Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindLocalMisorientationGradients Completed");
 }

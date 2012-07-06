@@ -45,6 +45,8 @@
 #include <QtGui/QIcon>
 #include <QtGui/QMessageBox>
 
+#include "DREAM3DLib/Common/PipelineMessage.h"
+
 class QLineEdit;
 
 
@@ -60,7 +62,7 @@ class QLineEdit;
  */
 class DREAM3DPluginFrame : public QFrame
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     DREAM3DPluginFrame(QWidget *parent = NULL);
@@ -162,18 +164,11 @@ class DREAM3DPluginFrame : public QFrame
       void pipelineErrorMessage(const QString &);
 
     private slots:
-
       /**
-       * @brief Slot to add an Error message to display to the user
+       * @brief Slot to add a message to display to the user
        * @param message
        */
-      virtual void addErrorMessage(QString message) = 0;
-
-      /**
-       * @brief Slot to add a Warning message to display to the user
-       * @param message
-       */
-      virtual void addWarningMessage(QString message) = 0;
+      virtual void addMessage(PipelineMessage msg) = 0;
 
       /**
        * @brief Slot to add a Progress message to display to the user

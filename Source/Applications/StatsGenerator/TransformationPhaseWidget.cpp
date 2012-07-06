@@ -911,7 +911,7 @@ void TransformationPhaseWidget::extractStatsData(DataContainer::Pointer m, int i
   m_NumberBinsGenerated->setText(QString::number(bins->GetNumberOfTuples()));
 
   // Now have each of the plots set it's own data
-  QVector<float> qbins (bins->GetNumberOfTuples());
+  QVector<float> qbins (static_cast<int>(bins->GetNumberOfTuples()));
   for(int i = 0; i < qbins.size(); ++i)
   {
     qbins[i] = bins->GetValue(i);

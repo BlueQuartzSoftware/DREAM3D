@@ -36,13 +36,11 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 
 class Observer;
 
-//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::vector<Observer*>;
-//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::string;
 
 /**
  * @class Observable Observable.h DREAM3D/Common/Observable.h
@@ -64,16 +62,7 @@ class DREAM3DLib_EXPORT Observable
     Observable();
     virtual ~Observable();
 
-    DREAM3D_TYPE_MACRO(Observable);
-
-    enum ObserverAspect
-    {
-      UpdateProgressValue,
-      UpdateProgressMessage,
-      UpdateWarningMessage,
-      UpdateErrorMessage,
-      UpdateProgressValueAndMessage
-    };
+    DREAM3D_TYPE_MACRO(Observable)
 
     /**
      * @brief Adds an observer to notify when changes occur
@@ -87,23 +76,18 @@ class DREAM3DLib_EXPORT Observable
      */
     virtual void removeObserver(Observer* observer);
 
-    /**
-     * @brief Sends the notification to all observers
-     * @param msg A message for a user to read
-     * @param progress A progress to indicate how much pipeline has been accomplished
-     * @param a The type of notification to send.
-     */
-    virtual void notify(const char* msg, int progress, ObserverAspect a);
+    virtual void notifyMessage(PipelineMessage &msg);
 
-    /**
-     * @brief Sends the notification to all observers. Conveneince function.
-     * @param msg A message for a user to read
-     * @param progress A progress to indicate how much pipeline has been accomplished
-     * @param a The type of notification to send.
-     */
-    virtual void notify(const std::string msg, int progress, ObserverAspect a);
+    void notifyErrorMessage(std::string errDesc, int errCode);
 
-    //virtual void getObservers(std::vector<Observer*> &observers);
+    void notifyWarningMessage(std::string warnDesc, int warnCode);
+
+    void notifyStatusMessage(std::string statusDesc);
+
+    void notifyProgressValue(int status);
+
+    void notifyStatusAndProgress(std::string statusDesc, int statusVal);
+
     virtual std::vector<Observer*> getObservers();
 
     virtual void setObservers(std::vector<Observer*> obs);

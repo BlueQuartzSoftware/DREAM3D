@@ -80,10 +80,8 @@ void DetermineGoodVoxels::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1);
-
-  setErrorMessage(ss.str());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -102,10 +100,8 @@ void DetermineGoodVoxels::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -134,7 +130,7 @@ void DetermineGoodVoxels::execute()
     ss.str("");
     ss << getHumanLabel() << " - No filters have been added to do the analysis.";
     setErrorCondition(-100);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -149,7 +145,7 @@ void DetermineGoodVoxels::execute()
     m_QualityMetricFilters[i]->filter();
     ss.str("");
     ss << getHumanLabel() << " - " << i << "/" << nFilters-1 << " Quality Metric Filters Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
   }
 
   // Get the first bool array to use as a reference
@@ -159,7 +155,7 @@ void DetermineGoodVoxels::execute()
     ss.str("");
     ss << getHumanLabel() << " - QualityMetricFilter[0] is NULL";
     setErrorCondition(-100);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   BoolArrayType::Pointer baseArray = m_QualityMetricFilters[0]->getOutput();
@@ -170,7 +166,7 @@ void DetermineGoodVoxels::execute()
     ss.str("");
     ss << getHumanLabel() << " - baseArrayPtr is NULL";
     setErrorCondition(-101);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
 
@@ -182,7 +178,7 @@ void DetermineGoodVoxels::execute()
       ss.str("");
       ss << getHumanLabel() << " - currentArray is NULL";
       setErrorCondition(-102);
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), -1);
       return;
     }
 
@@ -192,7 +188,7 @@ void DetermineGoodVoxels::execute()
       ss.str("");
       ss << getHumanLabel() << " - currentArray returned NULL";
       setErrorCondition(-103);
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), -1);
       return;
     }
     for (int64_t p = 0; p < nPoints; ++p)
@@ -205,6 +201,6 @@ void DetermineGoodVoxels::execute()
   }
 
   m->addCellData(DREAM3D::CellData::GoodVoxels, baseArray);
-  notify("Determine Good Voxels Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Determine Good Voxels Complete");
 }
 

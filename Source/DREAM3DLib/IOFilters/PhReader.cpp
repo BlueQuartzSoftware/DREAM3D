@@ -95,8 +95,8 @@ void PhReader::preflight()
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    setErrorMessage(ss.str());
     setErrorCondition(-387);
+    addErrorMessage(getNameOfClass(), ss.str(), -397);
   }
 }
 
@@ -119,7 +119,7 @@ int  PhReader::readFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -140,7 +140,7 @@ int  PhReader::readFile()
     std::stringstream ss;
     ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return -1;
   }
 
@@ -197,7 +197,7 @@ int  PhReader::readFile()
     ss << "ERROR: data size does not match header dimensions. ";
     ss << "\t" << index << "\t" << nz * nx * ny;
     setErrorCondition(-1);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), 1);
     return -1;
     inFile.close();
   }
@@ -211,7 +211,6 @@ int  PhReader::readFile()
   tokens.clear();
   inFile.close();
 
-  setErrorMessage("PhReader Complete");
-  notify(getErrorMessage(), 0, UpdateProgressMessage);
+  notifyStatusMessage("Complete");
   return 0;
 }

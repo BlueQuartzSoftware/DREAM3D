@@ -35,7 +35,6 @@
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
 m_DataContainer(NULL),
-m_ErrorMessage(""),
 m_ErrorCondition(0),
 m_Cancel(false)
 {
@@ -62,9 +61,8 @@ void AbstractFilter::setupFilterOptions()
 // -----------------------------------------------------------------------------
 void AbstractFilter::execute()
 {
-  setErrorCondition(-1);
-  setErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.");
-  notify(getErrorMessage().c_str(), 0, Observable::UpdateErrorMessage);
+  setErrorCondition(-999);
+  notifyErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.", -999);
 }
 
 // -----------------------------------------------------------------------------
@@ -170,4 +168,113 @@ void AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   assert(writer != NULL);
   std::cout << "AbstractFilter::writeFilterOptions() -> Writing Filter Options" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessage(PipelineMessage &msg)
+{
+  m_PipelineMessages.push_back(msg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode)
+{
+  PipelineMessage em(filterName, errorDescription, errorCode, PipelineMessage::Error);
+  m_PipelineMessages.push_back(em);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addErrorMessages(std::vector<PipelineMessage> msgVector) {
+  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+    m_PipelineMessages.push_back(msgVector[i]);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addWarningMessage(PipelineMessage &msg)
+{
+  m_PipelineMessages.push_back(msg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode)
+{
+  PipelineMessage em(filterName, warnDescription, warnCode, PipelineMessage::Warning);
+  m_PipelineMessages.push_back(em);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addWarningMessages(std::vector<PipelineMessage> msgVector) {
+  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+    m_PipelineMessages.push_back(msgVector[i]);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
+  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
+    if (*iter == msg) {
+      m_PipelineMessages.erase(iter);
+      return;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::removeErrorMessage(int index) {
+  int count = 0;
+
+  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
+    if (count == index) {
+      m_PipelineMessages.erase(iter);
+      return;
+    }
+    count++;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::removeErrorMessages(int start, int end) {
+  int count = 0;
+
+  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
+    if (count == start) {
+      while (count <= end) {
+        iter = m_PipelineMessages.erase(iter);
+        count++;
+      }
+      return;
+    }
+    count++;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::clearErrorMessages() {
+  std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin();
+
+  while ( iter != m_PipelineMessages.end() ) {
+    iter = m_PipelineMessages.erase(iter);
+  }
 }

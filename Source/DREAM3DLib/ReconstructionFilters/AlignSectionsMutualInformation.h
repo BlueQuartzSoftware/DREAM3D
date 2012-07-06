@@ -50,14 +50,14 @@
 
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 
-#define     DREAM3D_DECLARE_ARRAY(type, ptr, prpty )\
+#define     DREAM3D_DECLARE_ARRAY(m_msgType, ptr, prpty )\
     private:\
-      DataArray<type>::Pointer m_##prpty;\
-      type* ptr;\
+      DataArray<m_msgType>::Pointer m_##prpty;\
+      m_msgType* ptr;\
   public:\
     public:\
-    DREAM3D_SET_PROPERTY(DataArray<type>::Pointer, prpty)\
-    DREAM3D_GET_PROPERTY(DataArray<type>::Pointer, prpty)
+    DREAM3D_SET_PROPERTY(DataArray<m_msgType>::Pointer, prpty)\
+    DREAM3D_GET_PROPERTY(DataArray<m_msgType>::Pointer, prpty)
 
 
 /**
@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts);
+    DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }

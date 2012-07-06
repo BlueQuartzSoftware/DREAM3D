@@ -31,6 +31,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
 #  ${DREAM3DLib_SOURCE_DIR}/Common/PreFlightArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.h

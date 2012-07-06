@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -59,8 +59,8 @@
 class EquiaxedPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(EquiaxedPreset);
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset);
+    MXA_SHARED_POINTERS(EquiaxedPreset)
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset)
     virtual ~EquiaxedPreset();
 
     void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
@@ -77,6 +77,6 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
     void operator=(const EquiaxedPreset&); // Operator '=' Not Implemented
 };
 
-DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, "Equiaxed" );
+DECLARE_FACTORY_CLASS(EquiaxedPresetFactory, EquiaxedPreset, "Equiaxed" )
 
 #endif /* EQUIAXEDPRESETFACTORY_H_ */

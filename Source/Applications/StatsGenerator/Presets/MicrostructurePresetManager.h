@@ -57,8 +57,8 @@
 class MicrostructurePresetManager
 {
   public:
-    MXA_SHARED_POINTERS(MicrostructurePresetManager);
-    MXA_TYPE_MACRO(MicrostructurePresetManager);
+    MXA_SHARED_POINTERS(MicrostructurePresetManager)
+    MXA_TYPE_MACRO(MicrostructurePresetManager)
 
     virtual ~MicrostructurePresetManager();
 

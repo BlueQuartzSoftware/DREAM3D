@@ -41,7 +41,6 @@
 #include "moc_SurfaceMeshingPlugin.cxx"
 
 Q_EXPORT_PLUGIN2(SurfaceMeshingPlugin, SurfaceMeshingPlugin)
-;
 
 namespace Detail
 {

@@ -299,7 +299,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
         for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
         {
           cb->addItem(QString::fromStdString(shapeTypeStrings[s]), shapeTypeEnums[s]);
-          cb->setItemData(s, shapeTypeEnums[s], Qt::UserRole);
+          cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);
         }
         m_ShapeTypeCombos << cb;
         formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);

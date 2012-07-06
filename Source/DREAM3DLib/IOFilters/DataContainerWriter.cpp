@@ -105,11 +105,12 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
 
   if (m_OutputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The output file must be set before executing this filter.";
+    ss <<  ": The output file must be set before executing this filter.";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
-  setErrorMessage(ss.str());
+
 }
 
 // -----------------------------------------------------------------------------
@@ -132,8 +133,8 @@ void DataContainerWriter::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss <<  " DataContainer was NULL";
+    notifyErrorMessage(ss.str(), -10);
     return;
   }
   setErrorCondition(0);
@@ -157,8 +158,8 @@ void DataContainerWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
-      setErrorMessage(ss.str());
+      ss << ": Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -169,9 +170,9 @@ void DataContainerWriter::execute()
   if (err < 0)
   {
     ss.str("");
-    ss << getNameOfClass() << ": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_OutputFile<< "]";
+    ss <<  ": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_OutputFile<< "]";
     setErrorCondition(-59);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     return;
   }
 
@@ -182,7 +183,7 @@ void DataContainerWriter::execute()
     ss.str("");
     ss << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     setErrorCondition(-60);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     return;
   }
   dcGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.c_str(), H5P_DEFAULT );
@@ -191,7 +192,7 @@ void DataContainerWriter::execute()
     ss.str("");
     ss << "Error opening Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     setErrorCondition(-61);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     return;
   }
 
@@ -200,9 +201,9 @@ void DataContainerWriter::execute()
   if (err < 0)
   {
     ss.str("");
-    ss << getNameOfClass() << ":Error Writing header information to output file" << std::endl;
+    ss <<  ":Error Writing header information to output file" << std::endl;
     setErrorCondition(-62);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
@@ -249,7 +250,7 @@ void DataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   closeFile();
 
-  notify("Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 
 
@@ -357,7 +358,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
     ss.str("");
     ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-63);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -367,7 +368,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
     ss.str("");
     ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-64);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -380,7 +381,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group
@@ -420,7 +421,7 @@ int DataContainerWriter::writeFieldData(hid_t dcGid)
     ss.str("");
     ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-65);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -433,7 +434,7 @@ int DataContainerWriter::writeFieldData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing field array '" << *iter << "' to the HDF5 File";
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(err);
       H5Gclose(fieldGroupId); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group
@@ -461,7 +462,7 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
     ss.str("");
     ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-66);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -473,7 +474,7 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
     ss.str("");
     ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-67);
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -486,7 +487,7 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(err);
       H5Gclose(ensembleGid); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group

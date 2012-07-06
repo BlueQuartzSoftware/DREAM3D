@@ -74,11 +74,9 @@ void FindSurfaceCells::dataCheck(bool preflight, size_t voxels, size_t fields, s
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, 0, voxels, 1);
-
-  setErrorMessage(ss.str());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, 0, voxels, 1)
 }
 
 
@@ -100,10 +98,8 @@ void FindSurfaceCells::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -150,13 +146,13 @@ void FindSurfaceCells::execute()
     grain = m_GrainIds[j];
     if(grain > 0)
     {
-      column = j % dims[0];
-      row = (j / dims[0]) % dims[1];
-      plane = j / (dims[0] * dims[1]);
+      column = static_cast<float>( j % dims[0] );
+      row = static_cast<float>( (j / dims[0]) % dims[1] );
+      plane = static_cast<float>( j / (dims[0] * dims[1]) );
       for (int k = 0; k < 6; k++)
       {
         good = 1;
-        neighbor = j + neighpoints[k];
+        neighbor = static_cast<int>( j + neighpoints[k] );
         if(k == 0 && plane == 0) good = 0;
         if(k == 5 && plane == (dims[2] - 1)) good = 0;
         if(k == 1 && row == 0) good = 0;
@@ -172,10 +168,7 @@ void FindSurfaceCells::execute()
     m_SurfaceVoxels[j] = onsurf;
   }
 
-  std::stringstream ss;
-  ss.str("");
-  ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 
 

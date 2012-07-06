@@ -60,9 +60,9 @@
 class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSizes);
-    DREAM3D_STATIC_NEW_MACRO(FindSizes);
-    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindSizes)
+    DREAM3D_STATIC_NEW_MACRO(FindSizes)
+    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
 
     virtual ~FindSizes();
 
@@ -102,17 +102,16 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
   private:
     int32_t* m_GrainIds;
 
-	bool* m_BiasedFields;
-	int32_t* m_FieldPhases;
-	float* m_Volumes;
+    bool* m_BiasedFields;
+    int32_t* m_FieldPhases;
+    float* m_Volumes;
     float* m_EquivalentDiameters;
+    unsigned int* m_PhaseTypes;
     int32_t* m_NumCells;
 
-    unsigned int* m_PhaseTypes;
+    StatsDataArray* m_StatsDataArray;
 
-	StatsDataArray* m_StatsDataArray;
-
-	std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
+    std::vector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

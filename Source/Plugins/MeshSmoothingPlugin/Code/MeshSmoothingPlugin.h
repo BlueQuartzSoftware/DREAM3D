@@ -51,7 +51,7 @@
  */
 class MeshSmoothingPlugin : public QObject, public DREAM3DPluginInterface
 {
-    Q_OBJECT;
+    Q_OBJECT
     Q_INTERFACES(DREAM3DPluginInterface)
 
   public:

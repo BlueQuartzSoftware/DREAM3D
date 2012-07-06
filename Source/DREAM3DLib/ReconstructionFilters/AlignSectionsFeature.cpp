@@ -57,7 +57,7 @@
 
 using namespace std;
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -97,13 +97,11 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    ss << ": The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
-
-  setErrorMessage(ss.str());
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 }
 
 
@@ -122,12 +120,10 @@ void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -143,7 +139,7 @@ void AlignSectionsFeature::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Aligning Sections Complete");
 }
 
 
@@ -194,9 +190,9 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
   {
     std::stringstream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
-    slice = (dims[2] - 1) - iter;
+    slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
     oldyshift = -1;
     newxshift = 0;
@@ -227,8 +223,8 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
               {
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
-                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
-                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
+                  refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
+                  curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
 	              count++;
                 }

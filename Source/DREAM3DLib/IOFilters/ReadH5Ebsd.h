@@ -64,9 +64,9 @@
 class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ReadH5Ebsd);
-    DREAM3D_STATIC_NEW_MACRO(ReadH5Ebsd);
-    DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(ReadH5Ebsd)
+    DREAM3D_STATIC_NEW_MACRO(ReadH5Ebsd)
+    DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter)
 
     virtual ~ReadH5Ebsd();
 
@@ -84,11 +84,11 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex);
-    DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex);
+    DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
+    DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PTypes)
     DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer);
+    DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }

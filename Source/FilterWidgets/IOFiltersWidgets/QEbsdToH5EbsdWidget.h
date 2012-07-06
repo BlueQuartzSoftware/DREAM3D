@@ -72,7 +72,7 @@
  */
 class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidget
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     QEbsdToH5EbsdWidget(QWidget *parent = 0);

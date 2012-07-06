@@ -54,9 +54,9 @@
 class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DataContainerWriter);
-    DREAM3D_STATIC_NEW_MACRO(DataContainerWriter);
-    DREAM3D_TYPE_MACRO_SUPER(DataContainerWriter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(DataContainerWriter)
+    DREAM3D_STATIC_NEW_MACRO(DataContainerWriter)
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerWriter, AbstractFilter)
 
     virtual ~DataContainerWriter();
 
@@ -143,7 +143,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
         {
           setErrorCondition(err);
           std::stringstream ss;
-          ss << getNameOfClass() << ": Error writing Ensemble data set '" << label << "'";
+          ss << ": Error writing Ensemble data set '" << label << "'";
         }
       }
 

@@ -54,9 +54,9 @@ class QualityMetricFilter;
 class DREAM3DLib_EXPORT AbstractFilterOptionsWriter
 {
   public:
- //   DREAM3D_SHARED_POINTERS(AbstractFilterOptionsWriter);
-  //  DREAM3D_STATIC_NEW_MACRO(AbstractFilterOptionsWriter);
-    DREAM3D_TYPE_MACRO(AbstractFilterOptionsWriter);
+ //   DREAM3D_SHARED_POINTERS(AbstractFilterOptionsWriter)
+  //  DREAM3D_STATIC_NEW_MACRO(AbstractFilterOptionsWriter)
+    DREAM3D_TYPE_MACRO(AbstractFilterOptionsWriter)
 
 
     virtual ~AbstractFilterOptionsWriter();

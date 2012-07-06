@@ -97,7 +97,7 @@ void FieldDataCSVWriter::preflight()
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-387);
   }
 }
@@ -112,10 +112,8 @@ void FieldDataCSVWriter::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -125,8 +123,8 @@ void FieldDataCSVWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << getNameOfClass() << ": Error creating parent path '" << parentPath << "'\n " << getErrorMessage();
-      setErrorMessage(ss.str());
+      ss << ": Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -181,7 +179,7 @@ void FieldDataCSVWriter::execute()
     if (((float)i / numTuples) * 100.0f > threshold) {
       ss.str("");
       ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
-      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f) {
         threshold = ((float)i / numTuples) * 100.0f;
@@ -202,7 +200,7 @@ void FieldDataCSVWriter::execute()
   outFile.close();
 
   // If there is an error set this to something negative and also set a message
-  notify("FieldDataCSVWriter Completed", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("FieldDataCSVWriter Completed");
 
 }
 

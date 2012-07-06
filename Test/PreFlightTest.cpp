@@ -179,7 +179,11 @@ void SyntheticBuilder_PreFlight()
     {
       preflightError |= err;
       preflightMessageStream << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;
-      preflightMessageStream << (*filter)->getErrorMessage() << std::endl;
+      std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();
+      for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter )
+      {
+        preflightMessageStream << (*iter).generateErrorString();
+      }
     }
   }
 
@@ -209,7 +213,10 @@ void name##_PreFlightTest() {\
     if(err < 0) {\
       preflightError |= err;\
       ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
-      ss << (*filter)->getErrorMessage();\
+      std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
+      for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
+        ss << (*iter).generateErrorString();\
+      }\
     }\
   }\
   std::cout << ss.str() << std::endl;\
@@ -254,34 +261,34 @@ MAKE_FILTER_TEST(  InsertPrecipitatePhases, FAIL_IS_PASS)
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( SyntheticBuilder_PreFlight() );
-  DREAM3D_REGISTER_TEST( ReadH5Ebsd_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( AlignSections_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( SegmentGrains_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( MinSize_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( MinNeighbors_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( MergeTwins_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( MergeColonies_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindNeighbors_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FieldDataCSVWriter_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindAvgOrientations_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindAxisODF_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindBoundingBoxGrains_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindEuclideanDistMap_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindMDF_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindNeighborhoods_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindODF_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindDeformationStatistics_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindSchmids_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindShapes_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindSizes_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindLocalMisorientationGradients_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( FindSurfaceGrains_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( AdjustVolume_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( PackPrimaryPhases_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( MatchCrystallography_PreFlightTest() );
-  DREAM3D_REGISTER_TEST( InsertPrecipitatePhases_PreFlightTest() );
-//  DREAM3D_REGISTER_TEST( SurfaceMeshFilter_PreFlightTest() );
+  DREAM3D_REGISTER_TEST( SyntheticBuilder_PreFlight() )
+  DREAM3D_REGISTER_TEST( ReadH5Ebsd_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( AlignSections_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( SegmentGrains_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( MinSize_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( MinNeighbors_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( MergeTwins_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( MergeColonies_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindNeighbors_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FieldDataCSVWriter_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindAvgOrientations_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindAxisODF_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindBoundingBoxGrains_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindEuclideanDistMap_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindMDF_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindNeighborhoods_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindODF_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindDeformationStatistics_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindSchmids_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindShapes_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindSizes_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindLocalMisorientationGradients_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( FindSurfaceGrains_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( AdjustVolume_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( PackPrimaryPhases_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( MatchCrystallography_PreFlightTest() )
+  DREAM3D_REGISTER_TEST( InsertPrecipitatePhases_PreFlightTest() )
+//  DREAM3D_REGISTER_TEST( SurfaceMeshFilter_PreFlightTest() )
 
 
   PRINT_TEST_SUMMARY();

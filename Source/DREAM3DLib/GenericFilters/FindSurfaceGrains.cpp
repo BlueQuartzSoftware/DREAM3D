@@ -70,13 +70,12 @@ void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1);
-
-  setErrorMessage(ss.str());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -84,6 +83,7 @@ void FindSurfaceGrains::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -95,8 +95,8 @@ void FindSurfaceGrains::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -104,7 +104,7 @@ void FindSurfaceGrains::execute()
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
   ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage(ss.str());
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)
   {
@@ -122,7 +122,7 @@ void FindSurfaceGrains::execute()
   if (getErrorCondition() < 0)
   {return;}
 
-  notify("FindSurfaceGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindSurfaceGrains Completed");
 }
 
 // -----------------------------------------------------------------------------

@@ -43,9 +43,9 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -88,10 +88,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1);
-
-  setErrorMessage(ss.str());
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1)
 }
 
 
@@ -111,12 +108,10 @@ void IdentifySample::execute()
   setErrorCondition(0);
  // int err = 0;
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -177,7 +172,7 @@ void IdentifySample::execute()
     {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyStatusMessage(ss.str());
       int grainname = m_GrainIds[i];
       if ((grainname == 0 && m_Direction == 1) || (grainname > 0 && m_Direction == 0))
       {
@@ -246,5 +241,5 @@ void IdentifySample::execute()
   }
 */
   // If there is an error set this to something negative and also set a message
-  notify("Identifying Sample Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Identifying Sample Complete");
 }

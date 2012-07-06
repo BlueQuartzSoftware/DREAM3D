@@ -76,11 +76,10 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -102,10 +101,8 @@ void FindGrainCentroids::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -122,10 +119,7 @@ void FindGrainCentroids::execute()
   if(m->getZPoints() > 1) find_centroids();
   if(m->getZPoints() == 1) find_centroids2D();
 
-  std::stringstream ss;
-  ss.str("");
-  ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 void FindGrainCentroids::find_centroids()
 {

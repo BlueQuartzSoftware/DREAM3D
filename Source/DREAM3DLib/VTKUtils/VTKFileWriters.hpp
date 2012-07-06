@@ -49,6 +49,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
 
@@ -57,17 +58,16 @@
  * @brief This is the SuperClass to implement if you want to write scalars to
  * a VTK Legacy File. The only method you need to implement is the writeScalars(FILE* f).
  */
-class VtkScalarWriter
+class VtkScalarWriter : public AbstractFilter
 {
   public:
-    VtkScalarWriter() : m_WriteBinaryFiles(true), m_ErrorMessage(""),m_ErrorCondition(0){}
-    DREAM3D_TYPE_MACRO(VtkScalarWriter);
+    VtkScalarWriter() : AbstractFilter(), m_WriteBinaryFiles(true), m_ErrorCondition(0){}
+    DREAM3D_TYPE_MACRO(VtkScalarWriter)
 
     virtual ~VtkScalarWriter(){}
 
     bool m_WriteBinaryFiles;
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
     virtual int writeScalars(FILE* f)
     {
@@ -122,7 +122,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
  * to the VTK file. This class is specifically setup for writing voxel based
  * properties to the VTK file
  */
-#define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, type, format)\
+#define VtkSCALARWRITER_CLASS_DEF(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
 {\
@@ -134,11 +134,11 @@ class name : public VtkScalarWriter\
       int err = 0;\
       std::string file;\
       int64_t totalPoints = r->getTotalPoints();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, totalPoints, var);\
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
       if (m_WriteBinaryFiles == true) {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, type, var)\
+        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(r, scalarName, m_msgType, var)\
       }    else    {\
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, type, var, format)\
+        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
       }\
       return err;\
   }\
@@ -148,7 +148,7 @@ class name : public VtkScalarWriter\
     void operator=(const name&);\
 };
 
-#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, type, format)\
+#define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
 {\
@@ -160,11 +160,11 @@ class name : public VtkScalarWriter\
     int err = 0;\
     std::string file;\
     int64_t totalPoints = r->getTotalPoints();\
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, type, totalPoints, var);\
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
     if (m_WriteBinaryFiles == true) {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, type, var)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(r, scalarName, m_msgType, var)\
     }    else    {\
-      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, type, var, format)\
+      WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(r, scalarName, m_msgType, var, format)\
     }\
     return err;\
   }\
@@ -302,19 +302,18 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
  * @date Jun 13, 2011
  * @version 1.0
  */
-class VTKRectilinearGridFileWriter
+class VTKRectilinearGridFileWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileWriter);
-    DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileWriter);
-    DREAM3D_TYPE_MACRO(VTKRectilinearGridFileWriter);
+    DREAM3D_SHARED_POINTERS(VTKRectilinearGridFileWriter)
+    DREAM3D_STATIC_NEW_MACRO(VTKRectilinearGridFileWriter)
+    DREAM3D_TYPE_MACRO(VTKRectilinearGridFileWriter)
 
-    VTKRectilinearGridFileWriter() : m_WriteBinaryFiles(false), m_ErrorMessage(""),m_ErrorCondition(0) {}
+    VTKRectilinearGridFileWriter() : AbstractFilter(), m_WriteBinaryFiles(false), m_ErrorCondition(0) {}
     virtual ~VTKRectilinearGridFileWriter() {}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed
@@ -409,7 +408,7 @@ class VTKRectilinearGridFileWriter
         if (err < 0)
         {
           setErrorCondition((*iter)->getErrorCondition());
-          setErrorMessage((*iter)->getErrorMessage());
+          addErrorMessages((*iter)->getPipelineMessages());
           break;
         }
       }
@@ -431,9 +430,9 @@ class VTKRectilinearGridFileWriter
 class VTKStructuredPointsFileWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VTKStructuredPointsFileWriter);
-    DREAM3D_STATIC_NEW_MACRO(VTKStructuredPointsFileWriter);
-    DREAM3D_TYPE_MACRO(VTKStructuredPointsFileWriter);
+    DREAM3D_SHARED_POINTERS(VTKStructuredPointsFileWriter)
+    DREAM3D_STATIC_NEW_MACRO(VTKStructuredPointsFileWriter)
+    DREAM3D_TYPE_MACRO(VTKStructuredPointsFileWriter)
 
     virtual ~VTKStructuredPointsFileWriter(){}
 
@@ -490,18 +489,17 @@ class VTKStructuredPointsFileWriter
  * @date Feb 19, 2011
  * @version 1.0
  */
-class VtkMiscFileWriter
+class VtkMiscFileWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VtkMiscFileWriter);
-    DREAM3D_STATIC_NEW_MACRO(VtkMiscFileWriter);
-    DREAM3D_TYPE_MACRO(VtkMiscFileWriter);
+    DREAM3D_SHARED_POINTERS(VtkMiscFileWriter)
+    DREAM3D_STATIC_NEW_MACRO(VtkMiscFileWriter)
+    DREAM3D_TYPE_MACRO(VtkMiscFileWriter)
 
     virtual ~VtkMiscFileWriter(){}
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
      * @brief Writes a VTK visualization file with vector arrays for the disorientation colors and grain ID.
@@ -595,7 +593,7 @@ class VtkMiscFileWriter
 
 
   protected:
-    VtkMiscFileWriter(){}
+    VtkMiscFileWriter() : AbstractFilter() { }
 
   private:
     VtkMiscFileWriter(const VtkMiscFileWriter&); // Copy Constructor Not Implemented

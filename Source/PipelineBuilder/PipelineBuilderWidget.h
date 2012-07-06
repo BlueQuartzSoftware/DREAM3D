@@ -34,9 +34,11 @@
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 #include <QtCore/QEvent>
-#include <QtGui/QDropEvent>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
+#include <QtCore/QUrl>
+#include <QtGui/QDropEvent>
+
 
 
 
@@ -135,6 +137,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_addFavoriteBtn_clicked();
     void on_removeFavoriteBtn_clicked();
 
+    void on_helpText_anchorClicked ( const QUrl & link );
+    void setDocsToIndexFile();
+
 #if 0
     void on_filterUp_clicked();
     void on_filterDown_clicked();
@@ -142,8 +147,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
   private slots:
     // slots for our worker thread to communicate
-    virtual void addErrorMessage(QString message);
-    virtual void addWarningMessage(QString message);
+    virtual void addMessage(PipelineMessage msg);
     virtual void addProgressMessage(QString message);
 
     /* Surface Mesh Thread communicates through these methods */
@@ -158,9 +162,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
 
-    QMap<QString,QStringList>   presetMap;
-    QMap<QString,QString>       favoritesMap;
-    QTreeWidgetItem*            favorites;
+    QMap<QString,QStringList>   m_presetMap;
+    QMap<QString,QString>       m_favoritesMap;
+    QTreeWidgetItem*            m_favorites;
+    bool                        m_hasErrors;
+    bool                        m_hasWarnings;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented

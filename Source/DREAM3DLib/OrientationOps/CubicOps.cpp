@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -354,14 +354,14 @@ void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 		}
 		else FZn1 = n3, FZn2 = n2, FZn3 = n1;
 	}
-	
+
 	OrientationMath::axisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
 void CubicOps::getNearestQuat( float *q1, float *q2)
 {
   int numsym = 24;
- 
+
   _calcNearestQuat(CubicQuatSym, numsym, q1, q2);
 }
 

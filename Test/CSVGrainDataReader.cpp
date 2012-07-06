@@ -213,7 +213,7 @@ int CSVGrainDataReader::readFile()
   for(size_t row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
   {
     in.getline(buf, kBufferSize);
-    this->readData(buf, row, counter);
+    this->readData(buf, static_cast<int>(row), counter);
     // Read the next line of data
     ++counter;
   }

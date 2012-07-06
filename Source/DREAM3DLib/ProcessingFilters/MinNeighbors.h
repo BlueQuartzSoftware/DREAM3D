@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MinNeighbors);
-    DREAM3D_STATIC_NEW_MACRO(MinNeighbors);
-    DREAM3D_TYPE_MACRO_SUPER(MinNeighbors, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MinNeighbors)
+    DREAM3D_STATIC_NEW_MACRO(MinNeighbors)
+    DREAM3D_TYPE_MACRO_SUPER(MinNeighbors, AbstractFilter)
 
     virtual ~MinNeighbors();
 
@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors);
+    DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Minimum Number of Neighbors Filter"; }

@@ -53,12 +53,12 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -130,45 +130,45 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303,  int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -303)
   {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
+    setErrorCondition(0);
+    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+    find_grainphases->setObservers(this->getObservers());
+    find_grainphases->setDataContainer(getDataContainer());
+    if(preflight == true) find_grainphases->preflight();
+    if(preflight == false) find_grainphases->execute();
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-	setErrorCondition(0);
-	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-	find_neighbors->setObservers(this->getObservers());
-	find_neighbors->setDataContainer(getDataContainer());
-	if(preflight == true) find_neighbors->preflight();
-	if(preflight == false) find_neighbors->execute();
-	m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-	if(m_NeighborList == NULL)
-	{
-		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-		setErrorCondition(-304);
-	}
+    setErrorCondition(0);
+    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+    find_neighbors->setObservers(this->getObservers());
+    find_neighbors->setDataContainer(getDataContainer());
+    if(preflight == true) find_neighbors->preflight();
+    if(preflight == false) find_neighbors->execute();
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    if(m_NeighborList == NULL)
+    {
+      ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      setErrorCondition(-304);
+      addErrorMessage(getNameOfClass(), ss.str(), -1);
+    }
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
 
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -185,12 +185,10 @@ void GroupMicroTextureRegions::preflight()
 void GroupMicroTextureRegions::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -201,13 +199,13 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
-  notify("Grouping MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
-  notify("Characterizing MicroTexture Regions", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Characterizing MicroTexture Regions");
   characterize_micro_texture_regions();
 
-  notify("Renumbering Fields", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Renumbering Fields");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -235,7 +233,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("GroupMicroTextureRegions Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("GroupMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -291,7 +289,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
           if (neigh != i && newnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal) 
+			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
 			{
 			  q2[0] = 1;
               q2[1] = m_AvgQuats[5*neigh+1];
@@ -304,7 +302,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 			  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
 			  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
 			  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
-			  w = 180.0*acosf(w)/m_pi;
+			  w = 180.0f*acosf(w)/m_pi;
               if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
               {
                 newnumbers[neigh] = i;

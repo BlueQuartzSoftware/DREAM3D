@@ -136,28 +136,35 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
-  if(getErrorCondition() == -301)
+  // The 'err' variable is set inside the macro to the value you pass in (-301 in this case)
+  //  if the named array does NOT exist.
+  int err = 0; // Pay Attention to the arguments: | Some have changed
+  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -301, float, FloatArrayType, voxels, 5)
+  if(err == -301) // If err is the same as the error code we passed in then the array was not in the DataContainer
   {
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
     find_cellquats->setObservers(this->getObservers());
     find_cellquats->setDataContainer(getDataContainer());
+    find_cellquats->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
-    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+  else // The array was in the Data Container so get that array.
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
+  }
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -176,12 +183,10 @@ void AlignSectionsMisorientation::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -197,7 +202,7 @@ void AlignSectionsMisorientation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Complete");
 }
 
 
@@ -249,15 +254,15 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-	  misorients[a].resize(dims[1], 0.0);
+      misorients[a].resize(dims[1], 0.0);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
-    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    ss << "Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+    notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
-    slice = (dims[2] - 1) - iter;
+    slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
     oldyshift = -1;
     newxshift = 0;
@@ -288,12 +293,12 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
               {
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
-                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
-                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
+                  refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
+                  curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                   {
                       w = 10000.0;
-	                  count++;
+                      count++;
                       if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                       {
                         q1[1] = m_Quats[refposition * 5 + 1];

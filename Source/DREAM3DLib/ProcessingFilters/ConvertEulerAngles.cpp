@@ -134,9 +134,7 @@ void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields,
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3);
-
-  setErrorMessage(ss.str());
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -153,12 +151,10 @@ void ConvertEulerAngles::preflight()
 void ConvertEulerAngles::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -174,11 +170,11 @@ void ConvertEulerAngles::execute()
   float conversionFactor = 1.0;
   if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
   {
-    conversionFactor = M_PI / 180.0f;
+    conversionFactor = static_cast<float>( M_PI / 180.0f );
   }
   else if (conversionFactor == DREAM3D::EulerAngleConversionType::RadiansToDegrees)
   {
-    conversionFactor = 180.0f / M_PI;
+    conversionFactor = static_cast<float>( 180.0f / M_PI );
   }
 
   totalPoints = totalPoints * 3;
@@ -193,5 +189,5 @@ void ConvertEulerAngles::execute()
   serial.convert(0, totalPoints);
 #endif
 
-  notify("Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Complete");
 }

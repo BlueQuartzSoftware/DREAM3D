@@ -319,31 +319,38 @@ set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra Exter
 #-- Attempt to look in our local source directory for the plugin. Anywhere else
 # and the user will have to put the entire path into CMake manually.
 foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
-    
-    if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
-      #  add_subdirectory(${${userPlugin}_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${userPlugin}) 
-        DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
-               PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
-    else()            
-        #message(STATUS "Looking for Plugin: ${userPlugin}...")
-        if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
-            message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${DREAM3D_SOURCE_DIR}/Plugins/${userPlugin}")
-            set(${userPlugin}_SOURCE_DIR ${PROJECT_CODE_DIR}/Plugins/${userPlugin} CACHE PATH "Path to ${userPlugin} directory")
-        endif()
-        #message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
-        if(EXISTS ${${userPlugin}_SOURCE_DIR})
-            #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}")
-            if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
-                #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
-                set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
-                message(STATUS "Plugin: ${userPlugin} Found")
-                DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
-                                        PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})                
-            endif()
-        else()
-            message(WARNING "${userPlugin}_SOURCE_DIR was NOT defined and it needs to be in order to compile the ${userPlugin} Plugin")
-        endif()
-    endif()
+
+#message(STATUS "Looking for Plugin: ${userPlugin}...")
+  if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
+      set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
+      if(EXISTS ${pluginSearchDir})
+	set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+	message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
+      else()
+	set(pluginSearchDir ${DREAM3DProj_SOURCE_DIR}/../${userPlugin})
+	if(EXISTS ${pluginSearchDir})
+	  set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+	  message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
+	endif()
+      endif()
+  endif()
+
+  #Now that we have defined where the user's plugin directory is at we
+  # need to make sure it have a CMakeLists.txt file in it
+  if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
+      #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
+      set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt) 
+  endif()
+
+# By this point we should have everything defined and ready to go...
+  if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
+      message(STATUS "Adding Plugin ${${userPlugin}_SOURCE_DIR}") 
+      DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin} 
+	      PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
+  else()            
+      set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "" FORCE)
+      message(FATAL_ERROR "The directory for plugin ${userPlugin} was not found. Please set this directory manually")
+  endif()
 
 endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 

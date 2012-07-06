@@ -64,25 +64,25 @@
 class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindMDF);
-    DREAM3D_STATIC_NEW_MACRO(FindMDF);
-    DREAM3D_TYPE_MACRO_SUPER(FindMDF, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindMDF)
+    DREAM3D_STATIC_NEW_MACRO(FindMDF)
+    DREAM3D_TYPE_MACRO_SUPER(FindMDF, AbstractFilter)
 
     virtual ~FindMDF();
 
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find MDF"; }
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
 	/**
      * @brief Reimplemented from @see AbstractFilter class
@@ -108,9 +108,10 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
-	StatsDataArray* m_StatsDataArray;
 
-	std::vector<std::vector<float> > misorientationlists;
+    StatsDataArray* m_StatsDataArray;
+
+    std::vector<std::vector<float> > misorientationlists;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

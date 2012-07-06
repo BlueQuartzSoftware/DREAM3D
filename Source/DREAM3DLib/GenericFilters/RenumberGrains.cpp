@@ -95,11 +95,9 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1);
-
-  setErrorMessage(ss.str());
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1)
 }
 
 
@@ -121,10 +119,8 @@ void RenumberGrains::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -142,14 +138,14 @@ void RenumberGrains::execute()
   std::vector<size_t> NewNames;
   NewNames.resize(totalFields);
 
-  ss << getNameOfClass() << " - Generating Active Grain List";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  ss << " - Generating Active Grain List";
+  notifyStatusMessage(ss.str());
   std::vector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
     std::stringstream ss;
     // ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
-    // notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    // notifyStatusMessage(ss.str());
     if(m_Active[i] == false)
     {
       RemoveList.push_back(i);
@@ -170,9 +166,9 @@ void RenumberGrains::execute()
     {
       IDataArray::Pointer p = m->getFieldData(*iter);
       ss.str("");
-      ss << getNameOfClass() << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
+      ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
       ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
-      //notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      //notifyStatusMessage(ss.str());
       if((*iter).compare(DREAM3D::FieldData::NeighborList) == 0) m->removeFieldData(*iter);
       else if((*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) == 0) m->removeFieldData(*iter);
       else p->EraseTuples(RemoveList);
@@ -190,8 +186,9 @@ void RenumberGrains::execute()
       //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       if(m_GrainIds[i] > 0)
       {
-        m_GrainIds[i] = NewNames[m_GrainIds[i]];
+        m_GrainIds[i] = static_cast<int32_t>( NewNames[m_GrainIds[i]] );
       }
+
     }
 
 #if 0
@@ -206,13 +203,9 @@ void RenumberGrains::execute()
       std::cout << "Grain ID: " << (*iter) << std::endl;
     }
 #endif
-
-
   }
 
-  ss.str("");
-  ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }
 
 

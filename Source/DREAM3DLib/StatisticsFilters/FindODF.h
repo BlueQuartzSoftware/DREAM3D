@@ -63,9 +63,9 @@
 class DREAM3DLib_EXPORT FindODF : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindODF);
-    DREAM3D_STATIC_NEW_MACRO(FindODF);
-    DREAM3D_TYPE_MACRO_SUPER(FindODF, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindODF)
+    DREAM3D_STATIC_NEW_MACRO(FindODF)
+    DREAM3D_TYPE_MACRO_SUPER(FindODF, AbstractFilter)
 
     virtual ~FindODF();
 
@@ -97,15 +97,15 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
-
+    unsigned int* m_PhaseTypes;
     float* m_Volumes;
     float* m_FieldEulerAngles;
     int32_t* m_FieldPhases;
     bool* m_SurfaceFields;
 
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
-	StatsDataArray* m_StatsDataArray;
+
+    StatsDataArray* m_StatsDataArray;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

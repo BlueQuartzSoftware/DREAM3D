@@ -54,23 +54,25 @@ QFilterPipeline::~QFilterPipeline()
 {
 }
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::updateProgressAndMessage(const char* message, int value)
+void QFilterPipeline::updateProgressAndMessage(PipelineMessage msg, int progress)
 {
-  emit updateProgress(value);
-  emit progressMessage(QString(message));
+  emit updateProgress(progress);
+  emit progressMessage(QString::fromStdString(msg.generateStatusString()));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::updateProgressAndMessage(const std::string &message, int value)
+void QFilterPipeline::updateProgressAndMessage(std::vector<PipelineMessage> &messages, int progress)
 {
-  emit updateProgress(value);
-  emit progressMessage(QString::fromStdString(message));
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  {
+    updateProgressAndMessage(*iter, progress);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -90,22 +92,57 @@ void QFilterPipeline::pipelineProgressMessage(const char* message)
   emit progressMessage(QString(message));
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterPipeline::pipelineProgressMessage(const std::string &msg)
+{
+  pipelineProgressMessage(msg.c_str());
+}
+#endif
+
+#if 0
+std::stringstream ss;
+if(msg.getMessageType() == PipelineMessage::Error)
+{
+  ss << msg.generateErrorString();
+}
+else if(msg.getMessageType() == PipelineMessage::Warning)
+{
+  ss << msg.generateWarningString();
+}
+else if(msg.getMessageType() == PipelineMessage::StatusMessage)
+{
+  ss << msg.generateStatusString();
+}
+else if(msg.getMessageType() == PipelineMessage::StatusValue)
+{
+  ss << msg.getStatusVar() << "%";
+}
+else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
+{
+  ss << msg.getStatusVar() << "%" << " " << msg.generateStatusString();
+}
+std::cout << ss.str() << std::endl;
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineWarningMessage(const char* message)
+void QFilterPipeline::receivePipelineMessage(PipelineMessage &msg)
 {
-  emit warningMessage(QString(message));
+  emit sendPipelineMessage(msg);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineErrorMessage(const char* message)
+void QFilterPipeline::pipelineMessages(std::vector<PipelineMessage> messages)
 {
-  emit errorMessage(QString(message));
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  {
+    receivePipelineMessage(*iter);
+  }
 }
 
 
@@ -135,5 +172,3 @@ void QFilterPipeline::run()
   setDataContainer(DataContainer::NullPointer()); // This _should_ clean up the memory as nothing else should have
   // a reference to the DataContainer
 }
-
-

@@ -176,8 +176,8 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
     }
   }
 
-  QwtArray<double> xD(x.size());
-  QwtArray<double> yD(x.size());
+  QwtArray<double> xD(static_cast<int>(x.size()));
+  QwtArray<double> yD(static_cast<int>(x.size()));
   for (std::vector<float>::size_type i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x[i]);
@@ -282,13 +282,13 @@ void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, St
 	  arrays = tp->getMDF_Weights();
   }
   if (arrays.size() > 0 ) {
-  QVector<float> angle(arrays[0]->GetNumberOfTuples());
+  QVector<float> angle(static_cast<int>(arrays[0]->GetNumberOfTuples()));
   ::memcpy( &(angle.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*angle.size() );
 
-  QVector<float> weights(arrays[0]->GetNumberOfTuples());
+  QVector<float> weights(static_cast<int>(arrays[0]->GetNumberOfTuples()));
   ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
 
-  QVector<float> axis(arrays[0]->GetSize()); // This one is 3xn in size
+  QVector<float> axis(static_cast<int>(arrays[0]->GetSize())); // This one is 3xn in size
   ::memcpy( &(axis.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*axis.size() );
 
   if (angle.size() > 0)

@@ -115,11 +115,11 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -128,9 +128,9 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 	find_surfacefields->setDataContainer(getDataContainer());
 	if(preflight == true) find_surfacefields->preflight();
 	if(preflight == false) find_surfacefields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -303)
   {
 	setErrorCondition(0);
@@ -139,11 +139,11 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
@@ -171,9 +171,9 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
   if(getErrorCondition() == -308)
   {
 	setErrorCondition(0);
@@ -182,17 +182,16 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 	find_numfields->setDataContainer(getDataContainer());
 	if(preflight == true) find_numfields->preflight();
 	if(preflight == false) find_numfields->execute();
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1);
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -309, float, FloatArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -309, float, FloatArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-310);
+    addErrorMessage(getNameOfClass(), ss.str(), -310);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -213,10 +212,8 @@ void MatchCrystallography::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -236,7 +233,7 @@ void MatchCrystallography::execute()
   matchCrystallography();
 
   // If there is an error set this to something negative and also set a message
-  notify("Matching Crystallography Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Matching Crystallography Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -282,27 +279,34 @@ void MatchCrystallography::initializeArrays()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
   DataContainer* m = getDataContainer();
 
-  int totalPoints = m->getNumCellTuples();
-  int totalFields = m->getNumFieldTuples();
+  size_t totalPoints = m->getNumCellTuples();
+  size_t totalFields = m->getNumFieldTuples();
 
   for (size_t i = 0; i < totalFields; i++)
   {
-	m_Volumes[i] = 0.0;
+    m_Volumes[i] = 0.0;
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	m_Volumes[m_GrainIds[i]]++;
+    m_Volumes[m_GrainIds[i]]++;
   }
-  float res_scalar = m->getXRes()*m->getYRes()*m->getZRes();
+  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
   for (size_t i = 0; i < totalFields; i++)
   {
-	m_Volumes[i] = m_Volumes[i]*res_scalar;
+    m_Volumes[i] = m_Volumes[i] * res_scalar;
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::assign_eulers()
 {
   DREAM3D_RANDOMNG_NEW()
@@ -330,13 +334,13 @@ void MatchCrystallography::assign_eulers()
     if (((float)i / totalFields) * 100.0f > threshold) {
       ss.str("");
       ss << "Matching Crystallography - Assigning Euler Angles - " << ((float)i / totalFields) * 100 << "Percent Complete";
-      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / totalFields) * 100.0f) {
         threshold = ((float)i / totalFields) * 100.0f;
       }
     }
-    random = rg.genrand_res53();
+    random = static_cast<float>( rg.genrand_res53() );
     choose = 0;
     totaldensity = 0;
     phase = m_FieldPhases[i];
@@ -462,7 +466,7 @@ void MatchCrystallography::matchCrystallography()
     {
       std::stringstream ss;
       ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/float(1000*totalFields))*100 << "% Complete";
-//      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+//      notifyStatusMessage(ss.str());
       currentodferror = 0;
       currentmdferror = 0;
       for (int i = 0; i < numbins; i++)
@@ -475,13 +479,15 @@ void MatchCrystallography::matchCrystallography()
       }
       iterations++;
       badtrycount++;
-      random = rg.genrand_res53();
+      random = static_cast<float>( rg.genrand_res53() );
 
       if(random < 0.5) // SwapOutOrientation
       {
         counter = 0;
         selectedgrain1 = int(rg.genrand_res53() * numfields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_FieldPhases[selectedgrain1] != iter) && counter < numfields)
+        while ((m_SurfaceFields[selectedgrain1] == true
+            || m_FieldPhases[selectedgrain1] != static_cast<int32_t>(iter) )
+            && counter < numfields)
         {
           if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
@@ -499,7 +505,7 @@ void MatchCrystallography::matchCrystallography()
 			OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
 			int phase = m_FieldPhases[selectedgrain1];
 			g1odfbin = m_OrientationOps[m_CrystalStructures[phase]]->getOdfBin(r1, r2, r3);
-			random = rg.genrand_res53();
+			random = static_cast<float>( rg.genrand_res53() );
 			int choose = 0;
 			totaldensity = 0;
 			for (int i = 0; i < numbins; i++)
@@ -566,7 +572,9 @@ void MatchCrystallography::matchCrystallography()
       {
         counter = 0;
         selectedgrain1 = int(rg.genrand_res53() * numfields);
-        while ((m_SurfaceFields[selectedgrain1] == true || m_FieldPhases[selectedgrain1] != iter) && counter < numfields)
+        while ((m_SurfaceFields[selectedgrain1] == true
+            || m_FieldPhases[selectedgrain1] != static_cast<int32_t>(iter) )
+            && counter < numfields)
         {
           if(selectedgrain1 >= numfields) selectedgrain1 = selectedgrain1 - numfields;
           selectedgrain1++;
@@ -580,12 +588,15 @@ void MatchCrystallography::matchCrystallography()
 		{
 			counter = 0;
 			selectedgrain2 = int(rg.genrand_res53() * numfields);
-			while ((m_SurfaceFields[selectedgrain2] == true || m_FieldPhases[selectedgrain2] != iter || selectedgrain2 == selectedgrain1) && counter < numfields)
-			{
-			  if(selectedgrain2 >= numfields) selectedgrain2 = selectedgrain2 - numfields;
-			  selectedgrain2++;
-			  counter++;
-			}
+			while ((m_SurfaceFields[selectedgrain2] == true
+			        || m_FieldPhases[selectedgrain2] != static_cast<int32_t>(iter)
+			        || selectedgrain2 == selectedgrain1)
+			        && counter < numfields)
+          {
+            if(selectedgrain2 >= numfields) selectedgrain2 = selectedgrain2 - numfields;
+            selectedgrain2++;
+            counter++;
+          }
 	        if(counter == numfields)
 			{
 				badtrycount = 10*m_NumFields[iter];
@@ -640,9 +651,9 @@ void MatchCrystallography::matchCrystallography()
 				  ea3 = m_FieldEulerAngles[3 * neighbor + 2];
 				  OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
 				  float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
-				  if(neighbor != selectedgrain2)
+				  if(neighbor != static_cast<int>(selectedgrain2) )
 				  {
-					MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m_CrystalStructures[phase], q1, q2);
+				    MC_LoopBody1(selectedgrain1, phase, j, neighsurfarea, m_CrystalStructures[phase], q1, q2);
 				  }
 				}
 
@@ -754,13 +765,13 @@ void MatchCrystallography::measure_misorientations()
 
   misorientationlists.resize(totalFields);
   std::stringstream ss;
-  for (int i = 1; i < totalFields; i++)
+  for (size_t i = 1; i < totalFields; i++)
   {
     if (((float)i / totalFields) * 100.0f > threshold)
     {
       ss.str("");
       ss << "Matching Crystallography - Measuring Misorientations - " << ((float)i / totalFields) * 100 << "% Complete";
-      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / totalFields) * 100.0f)
       {
@@ -818,7 +829,9 @@ void MatchCrystallography::measure_misorientations()
         mbin = m_OrientationOps[phase1]->getMisoBin(misorientationlists[i][3 * j], misorientationlists[i][3 * j + 1], misorientationlists[i][3 * j + 2]);
       }
 
-      if(m_SurfaceFields[i] == false && (nname > i || m_SurfaceFields[nname] == true) && phase1 == phase2)
+      if(m_SurfaceFields[i] == false
+          && (nname > static_cast<int>(i) || m_SurfaceFields[nname] == true)
+          && phase1 == phase2)
       {
 		  simmdf[m_FieldPhases[i]]->SetValue(mbin, (simmdf[m_FieldPhases[i]]->GetValue(mbin)+(neighsurfarea/m_TotalSurfaceAreas[m_FieldPhases[i]])));
       }
