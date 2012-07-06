@@ -73,9 +73,6 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -109,8 +106,6 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     int32_t* m_GrainIds;
     float* m_Quats;
     int32_t* m_CellPhases;
-    int32_t* m_FieldPhases;
-    bool* m_Active;
     bool* m_GoodVoxels;
 
     unsigned int* m_CrystalStructures;
