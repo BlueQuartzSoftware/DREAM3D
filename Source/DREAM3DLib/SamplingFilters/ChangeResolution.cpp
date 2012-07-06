@@ -121,18 +121,16 @@ void ChangeResolution::execute()
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
   setErrorCondition(0);
 
-  
+
   if (getErrorCondition() < 0)
   {
     return;
@@ -165,7 +163,7 @@ void ChangeResolution::execute()
   {
     std::stringstream ss;
     ss << "Changing Resolution - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -201,5 +199,5 @@ void ChangeResolution::execute()
     IDataArray::Pointer p = m->getCellData(*iter);
     err = p->Resize(totalPoints);
   }
-  notify("Changing Resolution Complete", 0, Observable::UpdateProgressValueAndMessage);
+  notifyStatusMessage("Changing Resolution Complete");
 }

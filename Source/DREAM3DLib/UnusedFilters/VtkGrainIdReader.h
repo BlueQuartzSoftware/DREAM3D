@@ -44,17 +44,17 @@
 class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
 {
   public:
-  DREAM3D_SHARED_POINTERS(VtkGrainIdReader);
-  DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader);
-  DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, FileReader);
+  DREAM3D_SHARED_POINTERS(VtkGrainIdReader)
+  DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader)
+  DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, FileReader)
 
 
     virtual ~VtkGrainIdReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(Comment);
-    DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType);
-    DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary);
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
+    DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
+    DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Vtk File (Rectilinear Grid, Grain Ids Only)"; }

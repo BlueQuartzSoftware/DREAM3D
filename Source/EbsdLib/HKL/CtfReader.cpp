@@ -150,7 +150,7 @@ void CtfReader::setPointerByName(const std::string &name, void* p)
     // Data does not exist in Map
     size_t i = m_ColumnData.size();
     m_ColumnData.push_back(p);
-    m_NameIndexMap[name] = i;
+    m_NameIndexMap[name] = static_cast<int>(i);
     m_NamePointerMap[name] = m_ColumnData[i];
     if (m_DataParsers.size() <= i)
     {
@@ -392,7 +392,7 @@ int CtfReader::readData(std::ifstream &in)
     {
       return -1; // Could not allocate the memory
     }
-    m_NameIndexMap[tokens[i]] = i;
+    m_NameIndexMap[tokens[i]] = static_cast<int>(i);
     m_NamePointerMap[tokens[i]] = m_ColumnData[i];
     m_DataParsers[i] = getParser(tokens[i], m_ColumnData[i], totalDataRows);
   }
@@ -687,13 +687,13 @@ void CtfReader::setYDimension(int ydim)
   setYCells(ydim);
 }
 
-#define CTF_SHUFFLE_ARRAY(tempPtr, var, type, numRows)\
+#define CTF_SHUFFLE_ARRAY(tempPtr, var, m_msgType, numRows)\
   for (size_t i = 0; i < numRows; ++i) {\
     size_t nIdx = shuffleTable[i];\
     tempPtr[nIdx] = var[i];\
   }\
   /* Copy the values back into the array over writing the original values*/\
-  ::memcpy(var, tempPtr, numRows * sizeof(type));
+  ::memcpy(var, tempPtr, numRows * sizeof(m_msgType));
 
 
 
@@ -706,7 +706,7 @@ void CtfReader::transformData()
   size_t offset = 0;
   size_t yCells = getYCells();
   size_t xCells = getXCells();
-  size_t zCells = getZCells();
+  int zCells = getZCells();
   if (zCells < 0 || m_SingleSliceRead >= 0)
   {
     zCells = 1;
@@ -721,7 +721,7 @@ void CtfReader::transformData()
   int* intPtr = allocateArray<int>(rowsPerSlice);
   float* floatPtr = allocateArray<float>(rowsPerSlice);
 
-  for (size_t slice = 0; slice < zCells; ++slice)
+  for (int slice = 0; slice < zCells; ++slice)
   {
     for (size_t row = 0; row < yCells; ++row)
     {

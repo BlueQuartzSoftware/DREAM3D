@@ -60,9 +60,9 @@
 class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindNeighborhoods);
-    DREAM3D_STATIC_NEW_MACRO(FindNeighborhoods);
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighborhoods, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindNeighborhoods)
+    DREAM3D_STATIC_NEW_MACRO(FindNeighborhoods)
+    DREAM3D_TYPE_MACRO_SUPER(FindNeighborhoods, AbstractFilter)
 
     virtual ~FindNeighborhoods();
 
@@ -101,7 +101,6 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     void find_neighborhoods();
 
 private:
-
     int32_t* m_GrainIds;
 
     bool* m_BiasedFields;
@@ -109,8 +108,8 @@ private:
     float* m_Centroids;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
+    uint32_t* m_PhaseTypes;
 
-    unsigned int* m_PhaseTypes;
 	StatsDataArray* m_StatsDataArray;
 
 	std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;

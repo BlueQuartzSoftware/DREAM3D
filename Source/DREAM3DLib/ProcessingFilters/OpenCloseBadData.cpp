@@ -45,9 +45,9 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -118,10 +118,10 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
   DataContainer* m = getDataContainer();
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -130,10 +130,9 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   }
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -153,12 +152,10 @@ void OpenCloseBadData::execute()
   setErrorCondition(0);
  // int err = 0;
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -196,7 +193,7 @@ void OpenCloseBadData::execute()
   int good = 1;
 //  int neighbor;
 //  int index = 0;
-  float x, y, z;
+//  float x, y, z;
 //  DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
@@ -213,22 +210,25 @@ void OpenCloseBadData::execute()
   size_t count = 0;
   int kstride, jstride;
   int grainname, grain;
-  int current, most, curgrain;
+
+  int current;
+  int most;
+
   std::vector<int > n(numgrains + 1,0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
     for (int k = 0; k < dims[2]; k++)
     {
-		kstride = dims[0]*dims[1]*k;
+		kstride = static_cast<int>( dims[0]*dims[1]*k );
 	    for (int j = 0; j < dims[1]; j++)
 	    {
-			jstride = dims[0]*j;
+			jstride = static_cast<int>( dims[0]*j );
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
 			  std::stringstream ss;
 		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-		//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+		//	  notifyStatusMessage(ss.str());
 			  grainname = m_GrainIds[count];
 			  if (grainname == 0)
 			  {
@@ -237,7 +237,7 @@ void OpenCloseBadData::execute()
 				for (int l = 0; l < 6; l++)
 				{
 				  good = 1;
-				  neighpoint = count + neighpoints[l];
+				  neighpoint = static_cast<int>( count + neighpoints[l] );
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
 				  if (l == 1 && j == 0) good = 0;
@@ -268,7 +268,7 @@ void OpenCloseBadData::execute()
 					for (int l = 0; l < 6; l++)
 					{
 	//				  good = 1;
-					  neighpoint = count + neighpoints[l];
+					  neighpoint = static_cast<int>( count + neighpoints[l] );
 					  if (l == 0 && k == 0) good = 0;
 					  if (l == 5 && k == (dims[2] - 1)) good = 0;
 					  if (l == 1 && j == 0) good = 0;
@@ -304,5 +304,5 @@ void OpenCloseBadData::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Opening/Closing Bad Data Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }

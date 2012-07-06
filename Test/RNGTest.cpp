@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     float random;
   for (int i = 0; i < 1000000; ++i)
   {
-    random = rg.genrand_res53();
+    random = static_cast<float>( rg.genrand_res53() );
     if (random > 0.95)
     {
       std::cout << "Here" << std::endl;

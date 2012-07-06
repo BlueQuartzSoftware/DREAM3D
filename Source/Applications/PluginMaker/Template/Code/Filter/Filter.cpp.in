@@ -124,7 +124,9 @@ void @ClassName@::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 
   if (m_OutputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The output file must be set before executing this filter.";
+    ss << "The output file must be set before executing this filter.";
+    PipelineMessage em(getNameOfClass(), ss.str(), -666);
+    addErrorMessage(em);
     setErrorCondition(-1);
   }
   */
@@ -155,14 +157,14 @@ void @ClassName@::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
   
   /* Place all your code to execute your filter here. */
   
-  
-  notify("@PluginName@ Filter Complete", 0, Observable::UpdateProgressValueAndMessage);
+  /* Let the GUI know we are done with this filter */
+   notifyStatusMessage("Complete");
 }

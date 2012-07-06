@@ -273,7 +273,7 @@ S40:
 S50:
     w = a*exp(v);
 S60:
-    z = powf(u1,2.0)*u2;
+    z = powf(static_cast<float>(u1),2.0f)*static_cast<float>(u2);
     r = gamma*v-1.3862944;
     s = a+r-w;
     if(s+2.609438 >= 5.0*z) goto S70;
@@ -313,7 +313,7 @@ S120:
     if(0.25*u2+z-y >= k1) goto S120;
     goto S170;
 S130:
-    z = powf(u1,2.0)*u2;
+    z = powf(static_cast<float>(u1),2.0f)*static_cast<float>(u2);
     if(!(z <= 0.25)) goto S160;
     v = beta*log(u1/(1.0-u1));
     if(!(v > expmax)) goto S140;

@@ -158,8 +158,8 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   if (m_RenumberGrains == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
   }
 }
 
@@ -182,10 +182,8 @@ void CropVolume::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -213,9 +211,9 @@ void CropVolume::execute()
     return;
   }
 
-  float m_XP = (m_XMax - m_XMin)+1;
-  float m_YP = (m_YMax - m_YMin)+1;
-  float m_ZP = (m_ZMax - m_ZMin)+1;
+  float m_XP = static_cast<float>( (m_XMax - m_XMin)+1 );
+  float m_YP = static_cast<float>( (m_YMax - m_YMin)+1 );
+  float m_ZP = static_cast<float>( (m_ZMax - m_ZMin)+1 );
   float m_XStart = m_XMin * m->getXRes();
   float m_YStart = m_YMin * m->getYRes();
   float m_ZStart = m_ZMin * m->getZRes();
@@ -229,7 +227,7 @@ void CropVolume::execute()
   {
     std::stringstream ss;
     ss << "Cropping Volume - " << ((float)i / m->getZPoints()) * 100 << " Percent Complete";
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -241,7 +239,7 @@ void CropVolume::execute()
         row = int(y / m->getYRes());
         plane = int(z / m->getZRes());
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
-        index = (i * m_XP * m_YP) + (j * m_XP) + k;
+        index = static_cast<int>( (i * m_XP * m_YP) + (j * m_XP) + k );
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           std::string name = *iter;
@@ -251,9 +249,9 @@ void CropVolume::execute()
       }
     }
   }
-  m->setDimensions(m_XP, m_YP, m_ZP);
+  m->setDimensions(static_cast<size_t>(m_XP), static_cast<size_t>(m_YP), static_cast<size_t>(m_ZP));
   int64_t totalPoints = m->getTotalPoints();
-  totalPoints = m_XP * m_YP * m_ZP;
+  totalPoints = static_cast<int64_t>( m_XP * m_YP * m_ZP );
 
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
@@ -267,30 +265,35 @@ void CropVolume::execute()
   {
     int64_t totalPoints = m->getTotalPoints();
     size_t totalFields = m->getNumFieldTuples();
+    if (0 == totalFields)
+    {
+        notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
+        notifyStatusMessage("Completed");
+        return;
+    }
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
     std::stringstream ss;
 
     // Find the unique set of grain ids
-    for (int64_t i = 0; i < totalFields; ++i)
+    for (size_t i = 0; i < totalFields; ++i)
     {
-		m_Active[i] = false;
-	}
+      m_Active[i] = false;
+    }
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-		m_Active[m_GrainIds[i]] = true;
-	}
-
+      m_Active[m_GrainIds[i]] = true;
+    }
 
     RenumberGrains::Pointer renum = RenumberGrains::New();
     renum->setDataContainer(m);
     renum->setObservers(getObservers());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
-    setErrorMessage(renum->getErrorMessage());
+    addErrorMessages(renum->getPipelineMessages());
   }
 
 
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 

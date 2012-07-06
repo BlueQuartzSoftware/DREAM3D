@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
   public:
     DREAM3D_SHARED_POINTERS(DataContainer)
     DREAM3D_STATIC_NEW_MACRO(DataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(DataContainer, Observable);
+    DREAM3D_TYPE_MACRO_SUPER(DataContainer, Observable)
 
     virtual ~DataContainer();
 
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Ensemble)
 
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData);
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData);
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData);
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData)
 
 
    /**
@@ -129,7 +129,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * in during a set of filtering operations then the a value of '32' would be returned.
     * @return
     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellTuples);
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellTuples)
 
 
     /**
@@ -177,7 +177,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * in during a set of filtering operations then the a value of '32' would be returned.
     * @return
     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples);
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples)
 
     /**
     * @brief Resizes all of the Field Arrays to have 'size' tuples
@@ -216,12 +216,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
     int getNumEnsembleArrays();
 
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples);
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
 
 
     /* ****************** END Map Based Methods *******************************/
 
-    DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)
 
     size_t getXPoints() { return m_Dimensions[0];}
     size_t getYPoints() { return m_Dimensions[1];}
@@ -232,7 +232,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 // -----------------------------------------------------------------------------
 //  Resolution Methods
 // -----------------------------------------------------------------------------
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution)
 
 	  float getXRes() { return m_Resolution[0];}
     float getYRes() { return m_Resolution[1];}
@@ -241,7 +241,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     // -----------------------------------------------------------------------------
     //  Origin Methods
     // -----------------------------------------------------------------------------
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin);
+    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
   protected:
     DataContainer();

@@ -74,11 +74,9 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1);
-
-  setErrorMessage(ss.str());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
 }
 
 
@@ -100,10 +98,8 @@ void FindNumFields::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -126,8 +122,5 @@ void FindNumFields::execute()
     m_NumFields[m_FieldPhases[i]]++;
   }
 
-  std::stringstream ss;
-  ss.str("");
-  ss << getNameOfClass() << " - Complete";
-  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Complete");
 }

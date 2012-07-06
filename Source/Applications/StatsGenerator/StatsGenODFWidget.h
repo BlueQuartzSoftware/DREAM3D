@@ -77,7 +77,7 @@ class StatsGenMDFWidget;
  */
 class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     StatsGenODFWidget(QWidget *parent = 0);

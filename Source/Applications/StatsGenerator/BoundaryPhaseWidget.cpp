@@ -186,7 +186,6 @@ int BoundaryPhaseWidget::gatherStatsData(DataContainer::Pointer m)
     return -1;
   }
   int retErr = 0;
-  int err = 0;
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
 
   typedef DataArray<unsigned int> XTalStructArrayType;

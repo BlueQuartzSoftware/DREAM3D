@@ -52,9 +52,9 @@
 class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindGrainCentroids);
-     DREAM3D_STATIC_NEW_MACRO(FindGrainCentroids);
-     DREAM3D_TYPE_MACRO_SUPER(FindGrainCentroids, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindGrainCentroids)
+     DREAM3D_STATIC_NEW_MACRO(FindGrainCentroids)
+     DREAM3D_TYPE_MACRO_SUPER(FindGrainCentroids, AbstractFilter)
 
      virtual ~FindGrainCentroids();
 
@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float); // N x 6 Array
+     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float) // N x 6 Array
 
      virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
      virtual const std::string getHumanLabel() { return "Find Field Centroids"; }

@@ -54,12 +54,12 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 
 
@@ -147,9 +147,9 @@ void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields,
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
   if(getErrorCondition() == -303)
   {
     setErrorCondition(0);
@@ -158,17 +158,16 @@ void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields,
     find_cellquats->setDataContainer(getDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
-    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -186,12 +185,10 @@ void CAxisSegmentGrains::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -225,7 +222,7 @@ void CAxisSegmentGrains::execute()
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
     Generator numberGenerator(generator, distribution);
-    generator.seed(MXA::getMilliSeconds()); // seed with the current time
+    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
@@ -258,7 +255,7 @@ void CAxisSegmentGrains::execute()
 
 
   // If there is an error set this to something negative and also set a message
-  notify("Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Completed");
 }
 
 
@@ -273,8 +270,8 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return -1;
   }
 
@@ -291,7 +288,7 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
   randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
   while (seed == -1 && counter < totalPoints)
   {
-      if (randpoint > totalPMinus1) randpoint = randpoint - totalPoints;
+      if (randpoint > totalPMinus1) randpoint = static_cast<int>( randpoint - totalPoints );
       if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) seed = randpoint;
       randpoint++;
       counter++;
@@ -315,7 +312,7 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   float w = 10000.0;
   float q1[5];
   float q2[5];
-  float n1, n2, n3;
+ // float n1, n2, n3;
   unsigned int phase1, phase2;
   float cx1, cx2, cy1, cy2, cz1, cz2;
   float denom1, denom2;
@@ -348,7 +345,7 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 		  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
 
 		  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
-		  w = 180.0*acosf(w)/m_pi;
+		  w = static_cast<float>( 180.0*acosf(w)/m_pi );
 		  if (w <= m_MisorientationTolerance || (180.0-w) <= m_MisorientationTolerance)
 		  {
 			group = true;

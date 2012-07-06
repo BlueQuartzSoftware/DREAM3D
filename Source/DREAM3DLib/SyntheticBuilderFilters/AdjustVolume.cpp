@@ -42,9 +42,9 @@
 #include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -100,11 +100,9 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1);
-
-  setErrorMessage(ss.str());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -124,12 +122,10 @@ void AdjustVolume::execute()
   setErrorCondition(0);
   DREAM3D_RANDOMNG_NEW()
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -200,7 +196,7 @@ void AdjustVolume::execute()
   {
     std::stringstream ss;
 	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
-	notify(ss.str(), 0, Observable::UpdateProgressMessage);
+	notifyStatusMessage(ss.str());
     iterations++;
     good = 0;
     while (good == 0)
@@ -211,7 +207,7 @@ void AdjustVolume::execute()
       if (selectedgrain == 0) selectedgrain = 1;
     }
     growth = 1;
-    random = rg.genrand_res53();
+    random = static_cast<float>( rg.genrand_res53() );
     if(random < 0.5) growth = -1;
     nucleus = 0;
     count = 0;
@@ -232,7 +228,7 @@ void AdjustVolume::execute()
       for(DimType j=0;j<6;j++)
       {
         good = 1;
-        neighpoint = index+neighpoints[j];
+        neighpoint = static_cast<int>( index+neighpoints[j] );
         if(j == 0 && z == 0) good = 0;
         if(j == 5 && z == (dims[2]-1)) good = 0;
         if(j == 1 && y == 0) good = 0;
@@ -318,5 +314,5 @@ void AdjustVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Adjusting Grain Boundaries Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Adjusting Grain Boundaries Complete");
 }

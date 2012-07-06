@@ -45,9 +45,9 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -106,10 +106,10 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   DataContainer* m = getDataContainer();
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -118,10 +118,8 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   }
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -141,12 +139,10 @@ void FillBadData::execute()
   setErrorCondition(0);
  // int err = 0;
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -209,7 +205,7 @@ void FillBadData::execute()
   {
 		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
 		{
-			currentvlist.push_back(i);
+			currentvlist.push_back( static_cast<int>(i) );
 			count = 0;
 			while(count < currentvlist.size())
 			{
@@ -259,12 +255,12 @@ void FillBadData::execute()
   std::vector<int > n(numgrains + 1);
   int cycle = 0;
   while (count != 0)
-  {    
+  {
     count = 0;
 	  std::stringstream ss;
 	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << cycle << " - Count - " << count;
 	  cycle++;
-	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+	  notifyStatusMessage(ss.str());
     for (int i = 0; i < totalPoints; i++)
     {
       int grainname = m_GrainIds[i];
@@ -333,5 +329,5 @@ void FillBadData::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Filling Bad Data Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Filling Bad Data Complete");
 }

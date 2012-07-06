@@ -48,18 +48,19 @@ Observer::~Observer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updateProgressAndMessage(const std::string &msg, int progress)
+void Observer::updateProgressAndMessage(const char* message, int progress)
 {
-  std::cout << progress << "% " << msg << std::endl;
+  std::cout << progress << "% " << message << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updateProgressAndMessage(const char* message, int progress)
+void Observer::updateProgressAndMessage(const std::string &msg, int progress)
 {
-  std::cout << progress << "% " << message << std::endl;
+  std::cout << progress << "% " << msg << std::endl;
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -74,7 +75,7 @@ void Observer::pipelineProgress(int value)
 // -----------------------------------------------------------------------------
 void Observer::pipelineProgressMessage(const std::string &msg)
 {
-  pipelineProgressMessage(msg.c_str());
+  std::cout << msg << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -88,31 +89,42 @@ void Observer::pipelineProgressMessage(const char* message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineWarningMessage(const char* message)
+void Observer::receivePipelineMessage(PipelineMessage &msg)
 {
-  std::cout << "Warning Message: " << message << std::endl;
+  std::stringstream ss;
+  if(msg.getMessageType() == PipelineMessage::Error)
+  {
+    ss << msg.generateErrorString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::Warning)
+  {
+    ss << msg.generateWarningString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusMessage)
+  {
+    ss << msg.generateStatusString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusValue)
+  {
+    ss << msg.getProgressValue() << "%";
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
+  {
+    ss << msg.getProgressValue() << "%" << " " << msg.generateStatusString();
+  }
+  std::cout << ss.str() << std::endl;
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineWarningMessage(const std::string &msg)
+void Observer::pipelineMessages(std::vector<PipelineMessage> messages)
 {
-  std::cout << "Warning Message: " << msg << std::endl;
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter )
+  {
+    receivePipelineMessage(*iter);
+  }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::pipelineErrorMessage(const char* message)
-{
-  std::cout << "Error Message: " << message << std::endl;
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::pipelineErrorMessage(const std::string &msg)
-{
-  std::cout << "Error Message: " << msg << std::endl;
-}

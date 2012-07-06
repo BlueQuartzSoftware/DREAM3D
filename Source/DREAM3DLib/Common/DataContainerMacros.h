@@ -36,41 +36,66 @@
 #ifndef _DATACONTAINERMACROS_H_
 #define _DATACONTAINERMACROS_H_
 
+
+#define TEST_PREREQ_DATA( dc, NameSpace, DType, Name, errVariable, errCode, ptrType, ArrayType, size, NumComp)\
+  {if (m_##Name##ArrayName.empty() == true){ \
+    setErrorCondition(errCode##000);\
+    std::stringstream _##Name##_ss;\
+    _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
+    addErrorMessage(getNameOfClass(), _##Name##_ss.str(), errCode##000);\
+  }\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  if (NULL == m_##Name ) {\
+    errVariable = errCode;\
+  }}
+
+
+
 /**
  * @brief These are used in the filters to run checks on available arrays
  */
-
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(err##000);\
-  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl; }\
-  std::string _s(#Name); addRequired##DType(_s);\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
+  {if (m_##Name##ArrayName.empty() == true){ \
+    setErrorCondition(err##000);\
+    ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
+    addErrorMessage(getNameOfClass(), ss.str(), err);\
+  }\
+  std::string _s(#Name); \
+  addRequired##DType(_s);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
   if (NULL == m_##Name ) {\
-    ss << getErrorMessage() << "\nFilter " << getNameOfClass() << " requires " << #DType << " array '" << \
+    ss.str(""); ss << "\nFilter " << getNameOfClass() << " requires " << #DType << " array '" << \
     m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
-    /* ss << "Data Container Issued the following error message\n" << getErrorMessage() << std::endl; */ \
+    addErrorMessage(getNameOfClass(), ss.str(), err); \
     setErrorCondition(err);\
   }}
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10000);\
-  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl; }\
-  std::string _s(#Name); addCreated##DType(_s);\
-  int preFlightError = getErrorCondition();\
-  std::string errorMsg = getErrorMessage();\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
-  if (NULL ==  m_##Name ) {\
-    setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
+  {\
+  if (m_##Name##ArrayName.empty() == true)\
+  {\
+    setErrorCondition(-10000);\
+    ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; \
+    addErrorMessage(getNameOfClass(), ss.str(), -10000);\
+  }\
+  std::string _s(#Name);\
+  addCreated##DType(_s);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  if (NULL ==  m_##Name ) \
+  {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
-    if (NULL == p.get()) {\
-      ss << "Filter " << getNameOfClass() << " attempted to create array "; \
-      if (m_##Name##ArrayName.empty() == true) {\
-          ss << " with an empty name and that is not allowed." << std::endl;;\
-          setErrorCondition(-501);\
+    if (NULL == p.get()) \
+    {\
+      ss.str(""); ss << "Filter " << getNameOfClass() << " attempted to create array "; \
+      if (m_##Name##ArrayName.empty() == true) \
+      {\
+        ss << " with an empty name and that is not allowed." << std::endl;;\
+        setErrorCondition(-501);\
       } else {\
         ss << "'" << m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
         setErrorCondition(-500);\
       }\
+      addErrorMessage(getNameOfClass(), ss.str(), -500);\
     } else {\
       p->initializeWithValues(initValue);\
       p->SetNumberOfComponents(NumComp);\
@@ -129,26 +154,26 @@ PtrType* gi = NULL;\
 IDataArray::Pointer iDataArray = GetMethod(arrayName);\
 if (iDataArray.get() == 0) {\
   std::stringstream s;\
-  s << getNameOfClass() << "::" << #GetMethod << "(std::string name) where name = '" << arrayName \
-  << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer\n";\
+  s << #GetMethod << "(std::string name) where name = '" << arrayName \
+  << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer";\
   if (NULL != obv) {obv->setErrorCondition(-500);\
-  obv->setErrorMessage(s.str());}\
+  obv->addErrorMessage(getNameOfClass(), s.str(), -500);}\
   return gi;\
 }\
 if (size != iDataArray->GetSize()) {\
   std::stringstream s;\
-  s << getNameOfClass() << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
-  s << " Required: " << size << " Contains: " << iDataArray->GetSize() << "\n";\
+  s << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
+  s << " Required: " << size << " Contains: " << iDataArray->GetSize();\
   if (NULL != obv) {obv->setErrorCondition(-501);\
-  obv->setErrorMessage(s.str());}\
+  obv->addErrorMessage(getNameOfClass(), s.str(), -501);}\
   return gi;\
 }\
 gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
 if (NULL == gi) {\
   std::stringstream s;\
-  s << getNameOfClass() << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.\n";\
+  s << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
   if (NULL != obv) {obv->setErrorCondition(-502);\
-  obv->setErrorMessage(s.str());}\
+  obv->addErrorMessage(getNameOfClass(), s.str(), -502);}\
   return gi;\
 }\
 return gi;\
@@ -168,9 +193,9 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
     iDataArray->SetNumberOfComponents(numComp);\
     if (NULL == iDataArray.get()) { \
       std::stringstream s;\
-      s << getNameOfClass() << ": Array '" << arrayName << "' could not allocate " << size << " elements.\n";\
+      s << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
       if (NULL != obv) {obv->setErrorCondition(-25);\
-      obv->setErrorMessage(s.str());}\
+      obv->addErrorMessage(getNameOfClass(), s.str(), -25);}\
       return valuePtr;\
     }\
     add##Field##Data(arrayName, iDataArray);\
@@ -179,46 +204,46 @@ PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numC
   IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << getNameOfClass() << ": Array '" << arrayName << "' could not be cast to proper type;\n";\
+    s << ": Array '" << arrayName << "' could not be cast to proper type;";\
     if (NULL != obv) {obv->setErrorCondition(-12);\
-    obv->setErrorMessage(s.str());}\
+    obv->addErrorMessage(getNameOfClass(), s.str(), -12);}\
     return valuePtr;\
   }\
   return valuePtr;\
 }
 
 
-#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
+#define GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
     std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class was not in the DataContainer\n";\
+    s << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
     setErrorCondition(-10);\
-    setErrorMessage(s.str());\
+    addErrorMessage(getNameOfClass(), s.str(), -10);\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
     std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class did not have the correct number of elements.\n";\
+    s << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
     setErrorCondition(-20);\
-    setErrorMessage(s.str());\
+    addErrorMessage(getNameOfClass(), s.str(), -20);\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     std::stringstream s;\
-    s << getNameOfClass() << ": Array " << name << " from the DataContainer class could not be cast to type " << #type << "\n";\
+    s << ": Array " << name << " from the DataContainer class could not be cast to type " << #m_msgType;\
     setErrorCondition(-30);\
-    setErrorMessage(s.str());\
+    addErrorMessage(getNameOfClass(), s.str(), -30);\
     return -30;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
@@ -228,14 +253,14 @@ type* valuePtr = NULL;\
     return;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     return;\
   }\
 }
 
-#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, type, size, valuePtr) \
-type* valuePtr = NULL;\
+#define GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(dataContainer, field, name, typeClass, m_msgType, size, valuePtr) \
+m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
@@ -246,7 +271,7 @@ type* valuePtr = NULL;\
     return -20;\
   }\
   valuePtr =\
-  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, type* >(dataContainer->get##field##Data(name).get());\
+  IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
     return -30;\
   }\
@@ -260,70 +285,70 @@ type* valuePtr = NULL;\
 /*
    // Cell Data
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, -300, bool, BoolArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -300, float, FloatArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -300, float, FloatArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType,  voxels, 3);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, -300, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType,  voxels, 3)
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, fields, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1);
-  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, voxels, 3);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, fields, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, voxels, 3)
 
 
   // Field Data
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields, 3);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, -308, float, FloatArrayType, fields);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields, 3);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1);
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -304, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, -308, float, FloatArrayType, fields)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -310, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1)
 
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, bool, BoolArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float,FloatArrayType, fields, 2);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, bool, BoolArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, fields, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float,FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, float,FloatArrayType, fields, 2)
 
  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >

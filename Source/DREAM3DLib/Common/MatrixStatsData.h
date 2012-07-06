@@ -83,13 +83,13 @@ typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
 class DREAM3DLib_EXPORT MatrixStatsData : public StatsData
 {
   public:
-    DREAM3D_SHARED_POINTERS(MatrixStatsData);
-    DREAM3D_STATIC_NEW_MACRO(MatrixStatsData);
+    DREAM3D_SHARED_POINTERS(MatrixStatsData)
+    DREAM3D_STATIC_NEW_MACRO(MatrixStatsData)
 	DREAM3D_TYPE_MACRO_SUPER(MatrixStatsData, StatsData)
 
     virtual ~MatrixStatsData();
 
-    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction);
+    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
 
     virtual void initialize();
 

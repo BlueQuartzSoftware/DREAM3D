@@ -62,9 +62,9 @@
 class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindShapes);
-    DREAM3D_STATIC_NEW_MACRO(FindShapes);
-    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindShapes)
+    DREAM3D_STATIC_NEW_MACRO(FindShapes)
+    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter)
 
     virtual ~FindShapes();
 
@@ -81,13 +81,13 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+	  //------ Required Ensemble Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
-    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float); // N x 6 Array
-    DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float); // N x 3 Array
+    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float) // N x 6 Array
+    DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float) // N x 3 Array
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Shapes"; }
@@ -98,9 +98,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
      */
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
-	
-	virtual void execute();
+	  virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+
+	  virtual void execute();
     virtual void preflight();
 
 
@@ -118,6 +118,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float find_zcoord(size_t index);
 
   private:
+    unsigned int* m_PhaseTypes;
     int32_t* m_GrainIds;
 
     bool* m_BiasedFields;
@@ -130,8 +131,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float* m_Volumes;
     float* m_AspectRatios;
 
-    unsigned int* m_PhaseTypes;
-	StatsDataArray* m_StatsDataArray;
+    StatsDataArray* m_StatsDataArray;
 
     std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
 

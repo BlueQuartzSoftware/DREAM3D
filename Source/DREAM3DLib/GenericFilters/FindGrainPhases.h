@@ -52,9 +52,9 @@
 class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindGrainPhases);
-     DREAM3D_STATIC_NEW_MACRO(FindGrainPhases);
-     DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindGrainPhases)
+     DREAM3D_STATIC_NEW_MACRO(FindGrainPhases)
+     DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter)
 
      virtual ~FindGrainPhases();
 

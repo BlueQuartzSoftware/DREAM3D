@@ -800,7 +800,7 @@ void H5Utilities::printHDFClassType(H5T_class_t class_type)
 // -----------------------------------------------------------------------------
 herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &name)
 {
-  herr_t err = -1;
+  ssize_t err = -1;
   // call H5Gget_objname_by_idx with name as NULL to get its length
   ssize_t name_len = H5Lget_name_by_idx(fileId, ".", H5_INDEX_NAME, H5_ITER_NATIVE, (hsize_t)idx, NULL, 0, H5P_DEFAULT);
   if(name_len < 0) {
@@ -816,7 +816,7 @@ herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &na
   } else {
     name.append( &(buf.front()) ); //Append the string to the given string
   }
-  return err;
+  return static_cast<herr_t>(err);
 }
 
 // -----------------------------------------------------------------------------

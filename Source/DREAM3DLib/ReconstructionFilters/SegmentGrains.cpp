@@ -50,12 +50,12 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +84,6 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
   setErrorCondition(0);
   std::stringstream ss;
 
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -106,9 +105,8 @@ void SegmentGrains::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   // int64_t totalPoints = m->getTotalPoints();
@@ -182,12 +180,12 @@ void SegmentGrains::execute()
       gnum++;
       ss.str("");
       ss << "Total Grains: " << gnum;
-      if(gnum%100 == 0) notify(ss.str(), 0, Observable::UpdateProgressMessage);
+      if(gnum%100 == 0) notifyStatusMessage(ss.str());
     }
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("SegmentGrains Completed");
 }
 
 // -----------------------------------------------------------------------------

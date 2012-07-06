@@ -87,48 +87,73 @@ std::string Observable::getMessagePrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notify(const std::string msg, int progress, ObserverAspect a)
+void Observable::notifyMessage(PipelineMessage &msg)
 {
-  std::string s = msg;
-  if(m_Prefix.empty() == false)
-  {
-    s = m_Prefix + msg;
-  }
-  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
-  {
-    switch(a)
+    // If the programmer set a prefix (which FilterPipeline does) we are going to
+    // use the prefix in place of the 'FilterName' because this gives us more
+    // information to use and display to the user.
+    if (m_Prefix.empty() == false)
     {
-      case UpdateProgressValue:
-        (*iter)->pipelineProgress(progress);
-        break;
-      case UpdateProgressMessage:
-        (*iter)->pipelineProgressMessage(s);
-        break;
-      case UpdateWarningMessage:
-        (*iter)->pipelineWarningMessage(s);
-        break;
-      case UpdateErrorMessage:
-        (*iter)->pipelineErrorMessage(s);
-        break;
-      case UpdateProgressValueAndMessage:
-        (*iter)->updateProgressAndMessage(s, progress);
-        break;
-      default:
-        break;
+       msg.setFilterName(m_Prefix);
     }
-  }
+    for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
+    {
+        (*iter)->receivePipelineMessage(msg);
+    }
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyErrorMessage(std::string errDesc, int errCode) {
+  PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
+  notifyMessage(errorMsg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
+  PipelineMessage warningMsg(getNameOfClass(), warnDesc, warnCode, PipelineMessage::Warning);
+  notifyMessage(warningMsg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyStatusMessage(std::string statusDesc) {
+  PipelineMessage statusMsg(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessage);
+  notifyMessage(statusMsg);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyProgressValue(int statusVal) {
+  PipelineMessage statusValueUpdate(getNameOfClass(), "", 0, PipelineMessage::StatusValue, statusVal);
+  notifyMessage(statusValueUpdate);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) {
+  PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
+  notifyMessage(statusUpdate);
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notify(const char* msg, int progress, ObserverAspect a)
-{
-  std::string m(msg);
-  notify(m, progress, a);
-}
+//void Observable::notifyMessage(std::vector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a)
+//{
+//  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+//  {
+//    notifyMessage(*iter, progress, a);
+//  }
+//}
+
 
 // -----------------------------------------------------------------------------
 //

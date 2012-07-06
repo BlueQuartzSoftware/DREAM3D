@@ -75,9 +75,9 @@ typedef struct {
 class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(PackPrimaryPhases);
-    DREAM3D_STATIC_NEW_MACRO(PackPrimaryPhases);
-    DREAM3D_TYPE_MACRO_SUPER(PackPrimaryPhases, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(PackPrimaryPhases)
+    DREAM3D_STATIC_NEW_MACRO(PackPrimaryPhases)
+    DREAM3D_TYPE_MACRO_SUPER(PackPrimaryPhases, AbstractFilter)
 
     virtual ~PackPrimaryPhases();
 
@@ -106,8 +106,8 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries);
-    DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight);
+    DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
+    DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight)
 
 
     virtual void setupFilterOptions();

@@ -40,6 +40,7 @@
 #include <QtCore/QVector>
 #include <QtGui/QImage>
 
+#define COLOR_POLE_FIGURES 1
 
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h
@@ -50,7 +51,7 @@
  */
 class PoleFigureData : QObject
 {
-  Q_OBJECT;
+  Q_OBJECT
 
   public:
     PoleFigureData()

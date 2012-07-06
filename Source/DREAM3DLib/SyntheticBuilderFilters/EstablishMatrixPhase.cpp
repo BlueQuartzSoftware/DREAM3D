@@ -86,24 +86,22 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
   DataContainer* m = getDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss,  int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss,  int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1)
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-308);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -126,10 +124,8 @@ void EstablishMatrixPhase::execute()
 
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -145,7 +141,7 @@ void EstablishMatrixPhase::execute()
   establish_matrix();
 
   // If there is an error set this to something negative and also set a message
-  notify("EstablishMatrixPhases Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("EstablishMatrixPhases Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +149,7 @@ void EstablishMatrixPhase::execute()
 // -----------------------------------------------------------------------------
 void  EstablishMatrixPhase::establish_matrix()
 {
-  notify("Establishing Matrix", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Establishing Matrix");
   DREAM3D_RANDOMNG_NEW()
 
   DataContainer* m = getDataContainer();
@@ -213,11 +209,11 @@ void  EstablishMatrixPhase::establish_matrix()
     if(i > 0) matrixphasefractions[i] = matrixphasefractions[i] + matrixphasefractions[i - 1];
   }
   size_t j = 0;
-  for (size_t i = 0; i < totalPoints; ++i)
+  for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
 	  if(m_GrainIds[i] <= 0)
 	  {
-		random = rg.genrand_res53();
+		random = static_cast<float>( rg.genrand_res53() );
 		j = 0;
 		while(random > matrixphasefractions[j])
 		{

@@ -44,7 +44,7 @@
 #include "DREAM3DLib/GenericFilters/FindBoundingBoxGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -56,8 +56,8 @@ m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_GrainIds(NULL),
 m_FieldPhases(NULL),
 m_Volumes(NULL),
@@ -112,9 +112,9 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1)
   if(getErrorCondition() == -301)
   {
 	setErrorCondition(0);
@@ -123,9 +123,9 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 	find_boundingboxfields->setDataContainer(getDataContainer());
 	if(preflight == true) find_boundingboxfields->preflight();
 	if(preflight == false) find_boundingboxfields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -301, bool, BoolArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -134,24 +134,23 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float,FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	StatsDataArray::Pointer p = StatsDataArray::New();
-	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    StatsDataArray::Pointer p = StatsDataArray::New();
+    m_StatsDataArray = p.get();
+    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
+    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -168,12 +167,10 @@ void FindSizes::preflight()
 void FindSizes::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -187,7 +184,7 @@ void FindSizes::execute()
 
   if(m->getZPoints() > 1) find_sizes();
   if(m->getZPoints() == 1) find_sizes2D();
-  notify("FindSizes Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindSizes Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -236,10 +233,10 @@ void FindSizes::find_sizes()
     graincounts[gnum]++;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = (4.0/3.0)*m_pi;
+  float vol_term = static_cast<float>( (4.0/3.0)*m_pi );
   for (size_t i = 1; i < numgrains; i++)
   {
-    m_NumCells[i] = graincounts[i];
+    m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
     m_Volumes[i] = (graincounts[i] * res_scalar);
     radcubed = m_Volumes[i] / vol_term;
     diameter = 2.0f * powf(radcubed, 0.3333333333f);
@@ -260,7 +257,7 @@ void FindSizes::find_sizes()
 		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 		  pp->setGrainSizeDistribution(sizedist[i]);
 		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  float stepsize = (1.01f*(maxdiam-mindiam))/10.0f;
 		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
@@ -273,7 +270,7 @@ void FindSizes::find_sizes()
 		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 		  pp->setGrainSizeDistribution(sizedist[i]);
 		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  float stepsize = (1.01f*(maxdiam-mindiam))/10.0f;
 		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
@@ -286,7 +283,7 @@ void FindSizes::find_sizes()
 		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 		  tp->setGrainSizeDistribution(sizedist[i]);
 		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  float stepsize = (1.01f*(maxdiam-mindiam))/10.0f;
 		  tp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
@@ -338,7 +335,7 @@ void FindSizes::find_sizes2D()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    m_NumCells[i] = graincounts[i];
+    m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
     m_Volumes[i] = (graincounts[i] * m->getXRes() * m->getYRes());
     radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
@@ -359,7 +356,7 @@ void FindSizes::find_sizes2D()
 		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 		  pp->setGrainSizeDistribution(sizedist[i]);
 		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  float stepsize = (1.01f*(maxdiam-mindiam))/10.0f;
 		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
@@ -372,7 +369,7 @@ void FindSizes::find_sizes2D()
 		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 		  pp->setGrainSizeDistribution(sizedist[i]);
 		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  float stepsize = (1.01f*(maxdiam-mindiam))/10.0f;
 		  pp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);
@@ -385,7 +382,7 @@ void FindSizes::find_sizes2D()
 		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], sizedist[i]);
 		  tp->setGrainSizeDistribution(sizedist[i]);
 		  DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-		  float stepsize = (1.01*(maxdiam-mindiam))/10.0;
+		  float stepsize = (1.01f*(maxdiam-mindiam))/10.0f;
 		  tp->setGrainDiameterInfo(stepsize, maxdiam, mindiam);
 		  binnumbers = FloatArrayType::CreateArray(10, DREAM3D::HDF5::BinNumber);
 		  DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, stepsize, binnumbers);

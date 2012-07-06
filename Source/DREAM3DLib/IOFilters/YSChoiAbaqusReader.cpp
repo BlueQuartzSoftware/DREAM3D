@@ -116,18 +116,18 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-387);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 1, voxels, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic, ensembles, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic, ensembles, 1)
 }
 
 void YSChoiAbaqusReader::preflight()
@@ -217,7 +217,7 @@ void YSChoiAbaqusReader::execute()
       }
     }
 	float ea1, ea2, ea3;
-	double cosine1, cosine3, sine1, sine3;
+
 	float q[5];
 	double denom;
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
@@ -253,10 +253,10 @@ void YSChoiAbaqusReader::execute()
 		if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
 		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;*/
 		q[0] = 1;
-		q[4] = sqrt((1.0+mat[i][0]+mat[i][4]+mat[i][8]))/2;
-		q[1] = (mat[i][5]-mat[i][7])/(4*q[4]);
-		q[2] = (mat[i][6]-mat[i][2])/(4*q[4]);
-		q[3] = (mat[i][1]-mat[i][3])/(4*q[4]);
+		q[4] = static_cast<float>( sqrt((1.0+mat[i][0]+mat[i][4]+mat[i][8]))/2 );
+		q[1] = static_cast<float>( (mat[i][5]-mat[i][7])/(4*q[4]) );
+		q[2] = static_cast<float>( (mat[i][6]-mat[i][2])/(4*q[4]) );
+		q[3] = static_cast<float>( (mat[i][1]-mat[i][3])/(4*q[4]) );
 		m_Quats[5*i] = 1;
 		m_Quats[5*i+1] = q[1];
 		m_Quats[5*i+2] = q[2];

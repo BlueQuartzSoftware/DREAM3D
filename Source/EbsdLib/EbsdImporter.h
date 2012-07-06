@@ -57,22 +57,22 @@ class EbsdLib_EXPORT EbsdImporter
     EBSD_SHARED_POINTERS(EbsdImporter)
     EBSD_TYPE_MACRO(EbsdImporter)
 
-    virtual ~EbsdImporter(){};
+    virtual ~EbsdImporter(){}
 
     /**
      * @brief Sets an Error Message
      */
-    EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(PipelineMessage);
 
     /**
      * @brief Sets an error condition
      */
-    EBSD_VIRTUAL_INSTANCE_PROPERTY(int, ErrorCondition);
+    EBSD_VIRTUAL_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
      * @brief Cancel the operation
      */
-    EBSD_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel);
+    EBSD_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
 
     /**
      * @brief Either prints a message or sends the message to the User Interface
@@ -119,7 +119,7 @@ class EbsdLib_EXPORT EbsdImporter
       m_ErrorCondition(0),
       m_Cancel(false)
     {
-      m_ErrorMessage = "";
+      m_PipelineMessage = "";
     }
 
   private:

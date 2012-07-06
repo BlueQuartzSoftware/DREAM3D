@@ -57,11 +57,11 @@
 
 
 
-const static float m_pi = M_PI;
+const static float m_pi = static_cast<float>(M_PI);
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -138,13 +138,13 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    ss << ": The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
   }
 
- // CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1);
+ // CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
   if(getErrorCondition() == -301)
   {
     setErrorCondition(0);
@@ -153,15 +153,14 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
     find_cellquats->setDataContainer(getDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
-    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5);
+    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  setErrorMessage(ss.str());
 }
 
 
@@ -180,12 +179,10 @@ void AlignSectionsMutualInformation::execute()
 {
   setErrorCondition(0);
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -204,7 +201,7 @@ void AlignSectionsMutualInformation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Aligning Sections Complete");
 }
 
 
@@ -270,9 +267,9 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   {
     std::stringstream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
-    slice = (dims[2] - 1) - iter;
+    slice = static_cast<int>( (dims[2] - 1) - iter );
     graincount1 = graincounts[slice];
     graincount2 = graincounts[slice + 1];
     mutualinfo12 = new float *[graincount1];
@@ -319,8 +316,8 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
               {
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
-                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
-                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
+                  refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
+                  curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   refgnum = m_GrainIds[refposition];
                   curgnum = m_GrainIds[curposition];
                   if(curgnum >= 0 && refgnum >= 0)
@@ -372,7 +369,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
                   mutualinfo2[c] = 0;
                 }
             }
-            disorientation = 1.0 / disorientation;
+            disorientation = static_cast<float>( 1.0 / disorientation );
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
             if(disorientation < mindisorientation)
             {
@@ -469,7 +466,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
- //   notify(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notifyStatusMessage(ss.str());
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)
@@ -486,7 +483,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
           z = slice;
           if(x > dims[0] - 1) x = x - dims[0];
           if(y > dims[1] - 1) y = y - dims[1];
-          point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
+          point = static_cast<int>( (z * dims[0] * dims[1]) + (y * dims[0]) + x );
           if(m_GoodVoxels[point] == true && m_GrainIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
@@ -516,7 +513,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
           for (int i = 0; i < 4; i++)
           {
             good = 1;
-            neighbor = currentpoint + neighpoints[i];
+            neighbor = static_cast<int>( currentpoint + neighpoints[i] );
             if((i == 0) && row == 0) good = 0;
             if((i == 3) && row == (dims[1] - 1)) good = 0;
             if((i == 1) && col == 0) good = 0;

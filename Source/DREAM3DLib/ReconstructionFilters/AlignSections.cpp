@@ -123,11 +123,12 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
   {
-    ss << getNameOfClass() << ": The Alignment Shift file name must be set before executing this filter.";
+    ss << ": The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
   }
 
-  setErrorMessage(ss.str());
+
 }
 
 
@@ -150,8 +151,8 @@ void AlignSections::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    ss << " DataContainer was NULL";
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
 
@@ -195,16 +196,16 @@ void AlignSections::execute()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
-   // notify(ss.str(), 0, Observable::UpdateProgressMessage);
-    slice = (dims[2] - 1) - i;
+   // notifyStatusMessage(ss.str());
+    slice = static_cast<int>( (dims[2] - 1) - i );
     for (DimType l = 0; l < dims[1]; l++)
     {
       for (DimType n = 0; n < dims[0]; n++)
       {
-        if(yshifts[i] >= 0) yspot = l;
-        if(xshifts[i] >= 0) xspot = n;
-        if(yshifts[i] < 0) yspot = dims[1] - 1 - l;
-        if(xshifts[i] < 0) xspot = dims[0] - 1 - n;
+        if(yshifts[i] >= 0) yspot = static_cast<int>(l);
+        if(xshifts[i] >= 0) xspot = static_cast<int>(n);
+        if(yshifts[i] < 0) yspot = static_cast<int>( dims[1] - 1 - l );
+        if(xshifts[i] < 0) xspot = static_cast<int>( dims[0] - 1 - n );
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
         currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
         if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
@@ -214,7 +215,7 @@ void AlignSections::execute()
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-        	  p->CopyTuple(currentPosition, newPosition);
+              p->CopyTuple(currentPosition, newPosition);
           }
         }
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
@@ -224,14 +225,14 @@ void AlignSections::execute()
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-        	  p->InitializeTuple(newPosition, 0.0);          }
+              p->InitializeTuple(newPosition, 0.0);          }
         }
       }
     }
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Complete");
 }
 
 

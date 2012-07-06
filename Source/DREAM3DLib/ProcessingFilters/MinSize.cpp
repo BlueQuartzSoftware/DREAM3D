@@ -46,9 +46,9 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -107,10 +107,10 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   DataContainer* m = getDataContainer();
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -119,11 +119,9 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 	find_grainphases->setDataContainer(getDataContainer());
 	if(preflight == true) find_grainphases->preflight();
 	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-
-  setErrorMessage(ss.str());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 }
 
 
@@ -143,12 +141,10 @@ void MinSize::execute()
   setErrorCondition(0);
  // int err = 0;
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -173,12 +169,12 @@ void MinSize::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    setErrorMessage(renumber_grains->getErrorMessage());
+    addErrorMessages(renumber_grains->getPipelineMessages());
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Minimum Size Filter Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Minimum Size Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -209,10 +205,10 @@ void MinSize::assign_badpoints()
   int good = 1;
 //  int neighbor;
 //  int index = 0;
-  float x, y, z;
+//  float x, y, z;
   int current = 0;
   int most = 0;
-  int curgrain = 0;
+//  int curgrain = 0;
  // DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
@@ -236,10 +232,11 @@ void MinSize::assign_badpoints()
     counter = 0;
     for (int k = 0; k < dims[2]; k++)
     {
-		kstride = dims[0]*dims[1]*k;
+
+		kstride = static_cast<int>( dims[0]*dims[1]*k );
 	    for (int j = 0; j < dims[1]; j++)
 	    {
-			jstride = dims[0]*j;
+			jstride = static_cast<int>( dims[0]*j );
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
@@ -255,7 +252,7 @@ void MinSize::assign_badpoints()
 				for (int l = 0; l < 6; l++)
 				{
 				  good = 1;
-				  neighpoint = count + neighpoints[l];
+				  neighpoint = static_cast<int>( count + neighpoints[l] );
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
 				  if (l == 1 && j == 0) good = 0;
@@ -280,7 +277,7 @@ void MinSize::assign_badpoints()
 				for (int l = 0; l < 6; l++)
 				{
 //				  good = 1;
-				  neighpoint = count + neighpoints[l];
+				  neighpoint = static_cast<int>( count + neighpoints[l] );
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
 				  if (l == 1 && j == 0) good = 0;
@@ -297,6 +294,7 @@ void MinSize::assign_badpoints()
 		  }
 		}
 	}
+
     for (int j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
@@ -370,7 +368,7 @@ void MinSize::remove_smallgrains()
   {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+//	  notifyStatusMessage(ss.str());
       size = 0;
       int nucleus = nuclei[i];
 	  if(nucleus >= 0)

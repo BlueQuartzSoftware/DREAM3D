@@ -67,7 +67,7 @@
     if(err < 0) {\
       setErrorCondition(err);\
       std::string msg = std::string(Message);\
-      pipelineErrorMessage(msg.c_str());\
+      pipelineErrorMessage(PipelineMessage(getNameOfClass(), msg, err));\
       pipelineProgress(0);\
       pipelineFinished();\
       return;   }
@@ -104,6 +104,7 @@ FilterPipeline::~FilterPipeline()
 // -----------------------------------------------------------------------------
 void FilterPipeline::pipelineFinished()
 {
+
 }
 
 // -----------------------------------------------------------------------------
@@ -307,7 +308,7 @@ int FilterPipeline::preflightPipeline()
       preflightError |= err;
       setErrorCondition(preflightError);
       setErrorCondition(err);
-      pipelineErrorMessage((*filter)->getErrorMessage().c_str());
+      pipelineMessages( (*filter)->getPipelineMessages());
     }
   }
 
@@ -352,14 +353,21 @@ void FilterPipeline::execute()
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   START_CLOCK()
-
+  PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
     progress = progress + 1.0f;
-    pipelineProgress(progress / (m_Pipeline.size() + 1) * 100.0f);
+    progValue.setMessageType(PipelineMessage::StatusValue);
+    progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
+    receivePipelineMessage(progValue);
+    //pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
+
     ss.str("");
     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-    pipelineProgressMessage(ss.str());
+
+    progValue.setMessageType(PipelineMessage::StatusMessage);
+    progValue.setMessageText(ss.str());
+    receivePipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
     (*iter)->setDataContainer(m_DataContainer.get());
@@ -371,8 +379,10 @@ void FilterPipeline::execute()
     if(err < 0)
     {
       setErrorCondition(err);
-      pipelineErrorMessage((*iter)->getErrorMessage().c_str());
-      pipelineProgress(100);
+      pipelineMessages((*iter)->getPipelineMessages());
+      progValue.setMessageType(PipelineMessage::StatusValue);
+      progValue.setProgressValue(100);
+      receivePipelineMessage(progValue);
       pipelineFinished();
       return;
     }

@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(IdentifySample);
-    DREAM3D_STATIC_NEW_MACRO(IdentifySample);
-    DREAM3D_TYPE_MACRO_SUPER(IdentifySample, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(IdentifySample)
+    DREAM3D_STATIC_NEW_MACRO(IdentifySample)
+    DREAM3D_TYPE_MACRO_SUPER(IdentifySample, AbstractFilter)
 
     virtual ~IdentifySample();
 

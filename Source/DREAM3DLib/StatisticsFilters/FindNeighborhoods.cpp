@@ -60,13 +60,13 @@ m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_PhaseTypes(NULL),
 m_GrainIds(NULL),
 m_BiasedFields(NULL),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL)
+m_Neighborhoods(NULL),
+m_PhaseTypes(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
@@ -115,9 +115,9 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   std::stringstream ss;
   DataContainer* m = getDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
     setErrorCondition(0);
@@ -126,9 +126,9 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_sizes->setDataContainer(getDataContainer());
     if(preflight == true) find_sizes->preflight();
     if(preflight == false) find_sizes->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1);
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
   if(getErrorCondition() == -303)
   {
     setErrorCondition(0);
@@ -137,9 +137,9 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_biasedfields->setDataContainer(getDataContainer());
     if(preflight == true) find_biasedfields->preflight();
     if(preflight == false) find_biasedfields->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1);
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -304)
   {
     setErrorCondition(0);
@@ -148,9 +148,9 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_grainphases->setDataContainer(getDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1);
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
   if(getErrorCondition() == -305)
   {
     setErrorCondition(0);
@@ -159,23 +159,20 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_graincentroids->setDataContainer(getDataContainer());
     if(preflight == true) find_graincentroids->preflight();
     if(preflight == false) find_graincentroids->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3);
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-	StatsDataArray::Pointer p = StatsDataArray::New();
-	m_StatsDataArray = p.get();
-	m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-	m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    StatsDataArray::Pointer p = StatsDataArray::New();
+    m_StatsDataArray = p.get();
+    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
+    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
-
-
-  setErrorMessage(ss.str());
 }
 
 
@@ -192,12 +189,10 @@ void FindNeighborhoods::preflight()
 void FindNeighborhoods::execute()
 {
   DataContainer* m = getDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << getNameOfClass() << " DataContainer was NULL";
-    setErrorMessage(ss.str());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -209,7 +204,7 @@ void FindNeighborhoods::execute()
   }
 
   find_neighborhoods();
-  notify("FindNeighborhoods Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindNeighborhoods Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -295,7 +290,7 @@ void FindNeighborhoods::find_neighborhoods()
 	  if(m_BiasedFields[i] == false)
 	  {
 		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
-		values[m_FieldPhases[i]][bin].push_back(m_Neighborhoods[i]);
+		values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
 	  }
   }
   for (size_t i = 1; i < numensembles; i++)

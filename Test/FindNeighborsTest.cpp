@@ -377,13 +377,13 @@ void OtherTest()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 #if !REMOVE_TEST_FILES
-//  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
-  DREAM3D_REGISTER_TEST( TestFindNeighbors() );
-//  DREAM3D_REGISTER_TEST( TestDataContainerReader() );
-//  DREAM3D_REGISTER_TEST( OtherTest() );
+  DREAM3D_REGISTER_TEST( TestFindNeighbors() )
+//  DREAM3D_REGISTER_TEST( TestDataContainerReader() )
+//  DREAM3D_REGISTER_TEST( OtherTest() )
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
   PRINT_TEST_SUMMARY();
   return err;

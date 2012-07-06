@@ -37,6 +37,7 @@
 
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 
 #include "EbsdLib/EbsdImporter.h"
@@ -54,9 +55,9 @@
 class EbsdToH5EbsdFunc : public Observable
 {
   public:
-    MXA_SHARED_POINTERS(EbsdToH5EbsdFunc)
-    ;MXA_STATIC_NEW_MACRO(EbsdToH5EbsdFunc)
-    ;
+    DREAM3D_SHARED_POINTERS(EbsdToH5EbsdFunc)
+    DREAM3D_STATIC_NEW_MACRO(EbsdToH5EbsdFunc)
+
 
     virtual ~EbsdToH5EbsdFunc()
     {
@@ -121,21 +122,21 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+//  DataContainer* m = getDataContainer();
 
   if(m_OutputFile.empty() == true)
   {
-    ss << getNameOfClass() << ": The output file must be set before executing this filter.";
+    ss << ": The output file must be set before executing this filter.";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
   if (m_EbsdFileList.size() == 0)
   {
-    ss << getNameOfClass() << ": No files have been selected for import.";
+    ss << ": No files have been selected for import.";
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
     setErrorCondition(-1);
   }
-
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -167,10 +168,22 @@ void EbsdToH5Ebsd::execute()
     s.append("'. Please set the output file before running the importer. ");
 
     ss << "EbsdToH5Ebsd input filename was empty";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
     return;
   }
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      std::stringstream ss;
+      PipelineMessage em (getNameOfClass(), ss.str(), -1);
+      addErrorMessage(em);
+      setErrorCondition(-1);
+      return;
+  }
+
   // Create File
   fileId = H5Utilities::createFile(m_OutputFile);
   if(fileId < 0)
@@ -178,7 +191,7 @@ void EbsdToH5Ebsd::execute()
     err = -1;
     ss.str("");
     ss << "The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
     return;
   }
@@ -188,7 +201,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Z Resolution Scalar to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
   unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
@@ -197,7 +210,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Stacking Order Scalar to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -207,7 +220,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Stacking Order Name Attribute to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -218,7 +231,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Rotate Slice Bool to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -229,7 +242,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Reorder Array Bool to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -240,7 +253,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Align Eulers Bool to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -256,7 +269,7 @@ void EbsdToH5Ebsd::execute()
     {
       ss.str("");
       ss << "Could not write the Manufacturer Data to the HDF5 File";
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(-1);
     }
     fileImporter = H5AngImporter::New();
@@ -268,7 +281,7 @@ void EbsdToH5Ebsd::execute()
     {
       ss.str("");
       ss << "Could not write the Manufacturer Data to the HDF5 File";
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(-1);
     }
     fileImporter = H5CtfImporter::New();
@@ -278,14 +291,14 @@ void EbsdToH5Ebsd::execute()
     err = -1;
     ss.str("");
     ss << "The File extension was not detected correctly";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
     return;
   }
 
   std::vector<int> indices;
   // Loop on Each EBSD File
-  float total = m_ZEndIndex - m_ZStartIndex;
+  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
   int64_t z = m_ZStartIndex;
   int64_t xDim, yDim;
@@ -319,18 +332,18 @@ void EbsdToH5Ebsd::execute()
   for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
     std::string ebsdFName = *filepath;
-    progress = z - m_ZStartIndex;
+    progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
     std::string msg = "Converting File: " + ebsdFName;
     ss.str("");
 
-    notify(msg.c_str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(msg.c_str());
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {
       ss.str("");
       ss << "Could not read raw EBSD Data file";
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(-1);
     }
     totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
@@ -344,14 +357,14 @@ void EbsdToH5Ebsd::execute()
     {
       ss.str("");
       ss << "Could not write dataset for slice to HDF5 file";
-      setErrorMessage(ss.str());
+      addErrorMessage(getNameOfClass(), ss.str(), err);
       setErrorCondition(-1);
     }
-    indices.push_back(z);
+    indices.push_back( static_cast<int>(z) );
     ++z;
     if(getCancel() == true)
     {
-      notify("Conversion was Canceled", 0, Observable::UpdateProgressMessage);
+     notifyStatusMessage("Conversion was Canceled");
       return;
     }
   }
@@ -362,7 +375,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Z Start Index Scalar to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -372,7 +385,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the Z End Index Scalar to the HDF5 File";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -381,7 +394,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the XPoints Scalar to HDF5 file";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -390,7 +403,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the YPoints Scalar to HDF5 file";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -399,7 +412,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the XResolution Scalar to HDF5 file";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -408,7 +421,7 @@ void EbsdToH5Ebsd::execute()
   {
     ss.str("");
     ss << "Could not write the YResolution Scalar to HDF5 file";
-    setErrorMessage(ss.str());
+    addErrorMessage(getNameOfClass(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -422,6 +435,6 @@ void EbsdToH5Ebsd::execute()
   err = H5Utilities::closeFile(fileId);
   // err = H5Fclose(fileId);
   m = EbsdToH5EbsdFunc::NullPointer();
-  notify("Import Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Import Complete");
 }
 

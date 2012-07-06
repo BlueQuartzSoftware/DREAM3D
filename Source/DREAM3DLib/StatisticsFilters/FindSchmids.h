@@ -61,9 +61,9 @@
 class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSchmids);
-    DREAM3D_STATIC_NEW_MACRO(FindSchmids);
-    DREAM3D_TYPE_MACRO_SUPER(FindSchmids, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(FindSchmids)
+    DREAM3D_STATIC_NEW_MACRO(FindSchmids)
+    DREAM3D_TYPE_MACRO_SUPER(FindSchmids, AbstractFilter)
 
     virtual ~FindSchmids();
 
@@ -80,9 +80,9 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Schmid Factors"; }
 
-    DREAM3D_INSTANCE_PROPERTY(float, XLoading);
-    DREAM3D_INSTANCE_PROPERTY(float, YLoading);
-    DREAM3D_INSTANCE_PROPERTY(float, ZLoading);
+    DREAM3D_INSTANCE_PROPERTY(float, XLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, YLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, ZLoading)
 
 
     virtual void setupFilterOptions();

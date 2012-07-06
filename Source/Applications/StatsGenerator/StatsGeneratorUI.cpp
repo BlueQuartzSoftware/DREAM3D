@@ -789,7 +789,7 @@ void StatsGeneratorUI::openFile(QString h5file)
     // Create a new Default SGPhase
     sgwidget = createNewSGWidget();
     phaseTabs->addTab(sgwidget, sgwidget->getTabTitle());
-    sgwidget->extractStatsData(m, i);
+    sgwidget->extractStatsData(m, static_cast<int>(i));
   }
 
   // Now delete the first Phase from the Combo which was left over from something else

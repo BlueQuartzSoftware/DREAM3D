@@ -64,9 +64,9 @@ class DREAM3DLib_EXPORT AbstractPipeline
     AbstractPipeline();
     virtual ~AbstractPipeline();
 
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition);
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
-    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter);
+    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter)
 
     /**
      * @brief Cancel the operation

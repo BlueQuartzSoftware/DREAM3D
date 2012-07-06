@@ -59,9 +59,9 @@
  class H5VoxelFileReader : public FileReader
   {
     public:
-      DREAM3D_SHARED_POINTERS(H5VoxelFileReader);
-      DREAM3D_STATIC_NEW_MACRO(H5VoxelFileReader);
-      DREAM3D_TYPE_MACRO_SUPER(H5VoxelFileReader, FileReader);
+      DREAM3D_SHARED_POINTERS(H5VoxelFileReader)
+      DREAM3D_STATIC_NEW_MACRO(H5VoxelFileReader)
+      DREAM3D_TYPE_MACRO_SUPER(H5VoxelFileReader, FileReader)
 
 
       virtual ~H5VoxelFileReader();
@@ -69,9 +69,9 @@
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
 	//------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName);
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName);
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName);
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)

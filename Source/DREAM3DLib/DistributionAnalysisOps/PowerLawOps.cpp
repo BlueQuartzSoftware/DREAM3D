@@ -70,7 +70,7 @@ int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::P
   {
 	alpha = alpha + log(data[i]/min);		
   }
-  alpha = 1.0/alpha;
+  alpha = 1.0f/alpha;
   alpha = 1 + (alpha*data.size());
   outputs->SetValue(0, alpha);
   outputs->SetValue(1, min);
@@ -95,8 +95,8 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > 
 	  {
 		alpha = alpha + log(data[i][j]/min);		
 	  }
-	  if(alpha != 0) alpha = 1.0/alpha;
-	  alpha = 1 + (alpha*data[i].size());
+	  if(alpha != 0.0f) alpha = 1.0f/alpha;
+	  alpha = 1.0f + (alpha*data[i].size());
 	  outputs[0]->SetValue(i, alpha);
 	  outputs[1]->SetValue(i, min);
   }

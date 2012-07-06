@@ -49,7 +49,7 @@
     }
 
 
-#define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, type, cast)\
+#define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
     { cast t;\
     err = H5Lite::readScalarDataset(fileId, path, t);\
     if (err < 0) {\
@@ -57,7 +57,7 @@
       err = H5Utilities::closeFile(fileId);\
       return err;\
     }\
-    var = static_cast<type>(t); }
+    var = static_cast<m_msgType>(t); }
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
@@ -124,7 +124,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   hid_t fileId = H5Utilities::openFile(m_FileName, true);
   if (fileId < 0)
   {
-    std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
+    //std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
     return -1;
   }
 
@@ -169,7 +169,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
         err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
         if (err >= 0)
         {
-          m_NumPhases = names.size();
+          m_NumPhases = static_cast<int>( names.size() );
         }
         H5Gclose(phasesGid);
       }

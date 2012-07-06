@@ -54,9 +54,9 @@ template<typename T>
 class NeighborList : public IDataArray
 {
   public:
-    DREAM3D_SHARED_POINTERS(NeighborList<T> );
-    DREAM3D_STATIC_NEW_MACRO(NeighborList<T> );
-    DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray);
+    DREAM3D_SHARED_POINTERS(NeighborList<T> )
+    DREAM3D_STATIC_NEW_MACRO(NeighborList<T> )
+    DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray)
 
     IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
     {

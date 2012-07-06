@@ -46,9 +46,9 @@
 
 
 
-#define H5ATTRIBUTE_INSTANCE(type, Suffix, key)\
-  Suffix##H5Attribute::Pointer type##_attr = Suffix##H5Attribute::New();\
-  type##_attr->setKey(key);
+#define H5ATTRIBUTE_INSTANCE(m_msgType, Suffix, key)\
+  Suffix##H5Attribute::Pointer m_msgType##_attr = Suffix##H5Attribute::New();\
+  m_msgType##_attr->setKey(key);
 
 
 //TODO: Test the Read/Write IMXAArray methods
@@ -1148,10 +1148,10 @@ void TestLargeFileSupport()
 
 }
 
-#define TYPE_DETECTION(type, check)\
+#define TYPE_DETECTION(m_msgType, check)\
 {\
-  type v = 0x00;\
-  hid_t t = H5Lite::HDFTypeForPrimitive<type>(v);\
+  m_msgType v = 0x00;\
+  hid_t t = H5Lite::HDFTypeForPrimitive<m_msgType>(v);\
   DREAM3D_REQUIRE_EQUAL(t, check);\
 }
 
@@ -1193,9 +1193,9 @@ void TestTypeDetection()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( TestTypeDetection() );
-  DREAM3D_REGISTER_TEST( H5LiteTest() );
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() );
+  DREAM3D_REGISTER_TEST( TestTypeDetection() )
+  DREAM3D_REGISTER_TEST( H5LiteTest() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 
   PRINT_TEST_SUMMARY();
   return err;

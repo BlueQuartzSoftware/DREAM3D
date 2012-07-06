@@ -57,9 +57,9 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
     for(size_t n = 0; n < size; ++n) { array[n] = (value); }
@@ -173,33 +173,33 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   DataContainer* m = getDataContainer();
 
   //Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
   //Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1);
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
     setErrorCondition(-308);
+    addErrorMessage(getNameOfClass(), ss.str(), -1);
   }
 
-  setErrorMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
@@ -231,7 +231,7 @@ void PackPrimaryPhases::execute()
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumFieldTuples();
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -262,7 +262,8 @@ void PackPrimaryPhases::execute()
   totalvol = sizex*sizey*sizez;
 
   float totalprimaryvol = 0;
-  for(size_t i=0;i<(dims[0]*dims[1]*dims[2]);i++)
+  size_t totalVox = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
+  for (size_t i = 0; i < totalVox; i++)
   {
     if(m_GrainIds[i] <= 0) totalprimaryvol++;
   }
@@ -274,7 +275,7 @@ void PackPrimaryPhases::execute()
   // float change1, change2;
   float change = 0.0f;
   int phase = 0;
-  size_t randomgrain;
+  int randomgrain;
  //   float random = 0.0f;
 //  int newgrain;
   // float check;
@@ -294,14 +295,15 @@ void PackPrimaryPhases::execute()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       if (NULL == pp)
       {
-        ss << getNameOfClass() << ": Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
+        ss << ": Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
         ss << "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[" << i << "] = " << m_PhaseTypes[i] <<  " does not match up ";
         ss << "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n";
-        setErrorMessage(ss.str());
+        PipelineMessage em (getNameOfClass(), ss.str(), -666);
+        addErrorMessage(em);
         setErrorCondition(-666);
         return;
       }
-      primaryphases.push_back(i);
+      primaryphases.push_back(static_cast<int>(i) );
       primaryphasefractions.push_back(pp->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
     }
@@ -313,7 +315,7 @@ void PackPrimaryPhases::execute()
     if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
 
-  notify("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initializing Volume");
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
 
@@ -327,8 +329,8 @@ void PackPrimaryPhases::execute()
 	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-    grainsizediststep[i] = ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
-        / grainsizedist[i].size();
+    grainsizediststep[i] = static_cast<float>( ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
+        / grainsizedist[i].size() );
     float input = 0;
     float previoustotal = 0;
     VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
@@ -352,7 +354,7 @@ void PackPrimaryPhases::execute()
   }
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   Field field;
-  int gid = m->getNumFieldTuples();
+  int gid = static_cast<int>(m->getNumFieldTuples());
   if(gid == 0)
   {
 	  m->resizeFieldDataArrays(1);
@@ -380,7 +382,7 @@ void PackPrimaryPhases::execute()
 		{
 	      std::stringstream ss;
 	      ss << "Packing Grains - Generating Grain #" << gid;
-	      notify(ss.str(), 0, Observable::UpdateProgressMessage);
+	      notifyStatusMessage(ss.str());
 
 	      m->resizeFieldDataArrays(gid + 1);
 	      dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -418,7 +420,7 @@ void PackPrimaryPhases::execute()
 		{
 		  std::stringstream ss;
 		  ss << "Packing Grains - Generating Grain #" << gid;
-		  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+		  notifyStatusMessage(ss.str());
 
 		  m->resizeFieldDataArrays(gid + 1);
 		  dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -434,7 +436,7 @@ void PackPrimaryPhases::execute()
 	}
   }
 
-  notify("Packing Grains - Grain Generation Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Grain Generation Complete");
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -495,7 +497,7 @@ void PackPrimaryPhases::execute()
   {
     std::stringstream ss;
     ss << "Packing Grains - Placing Grain #" << i;
-    notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(ss.str());
 
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
@@ -526,7 +528,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notify("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
 
   // determine neighborhoods and initial neighbor distribution errors
   for (size_t i = firstPrimaryField; i < numgrains; i++)
@@ -540,7 +542,7 @@ void PackPrimaryPhases::execute()
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notify(ss.str(), 0, Observable::UpdateProgressMessage);
+    if(iteration%100 == 0) notifyStatusMessage(ss.str());
 
 //    change1 = 0;
 //    change2 = 0;
@@ -556,8 +558,14 @@ void PackPrimaryPhases::execute()
     if(option == 0)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-      if(randomgrain < firstPrimaryField) randomgrain = firstPrimaryField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain < static_cast<int>(firstPrimaryField)) {
+        randomgrain = static_cast<int>(firstPrimaryField);
+      }
+
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
 
       xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
@@ -588,15 +596,20 @@ void PackPrimaryPhases::execute()
     if(option == 1)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-      if(randomgrain < firstPrimaryField) randomgrain = firstPrimaryField;
-      if(randomgrain >= numgrains) randomgrain = numgrains - 1;
+      if(randomgrain < firstPrimaryField) {
+        randomgrain = firstPrimaryField;
+      }
+      if(randomgrain >= static_cast<int>(numgrains))
+      {
+        randomgrain = static_cast<int>(numgrains) - 1;
+      }
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
-      xc = oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx));
-      yc = oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy));
-      zc = oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz));
+      xc = static_cast<float>( oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx)) );
+      yc = static_cast<float>( oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy)) );
+      zc = static_cast<float>( oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz)) );
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_grain(randomgrain, xc, yc, zc);
@@ -617,7 +630,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notify("Packing Grains - Grain Adjustment Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Grain Adjustment Complete");
 
   if(m_VtkOutputFile.empty() == false)
   {
@@ -628,16 +641,16 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notify("Packing Grains - Assigning Voxels", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Assigning Voxels");
   assign_voxels();
 
-  notify("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Filling Gaps");
   assign_gaps();
 
-  notify("Packing Grains - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Cleaning Up Volume");
   cleanup_grains();
 
-  notify("Packing Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -646,12 +659,12 @@ void PackPrimaryPhases::execute()
   if (err < 0)
   {
     setErrorCondition(renumber_grains->getErrorCondition());
-    setErrorMessage(renumber_grains->getErrorMessage());
+    addErrorMessages(renumber_grains->getPipelineMessages());
     return;
   }
 
   // If there is an error set this to something negative and also set a message
-  notify("Packing Grains Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Packing Grains Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -665,7 +678,8 @@ int PackPrimaryPhases::writeVtkFile()
   if(outFile.is_open() == false)
   {
     std::cout << "m_VtkOutputFile: " << m_VtkOutputFile << std::endl;
-    setErrorMessage("Could not open Vtk File for writing from PackGrains");
+    PipelineMessage em (getNameOfClass(), "Could not open Vtk File for writing from PackGrains", -1);
+    addErrorMessage(em);
     setErrorCondition(-55);
     return -1;
   }
@@ -727,7 +741,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  DataContainer* m = getDataContainer();
+  //DataContainer* m = getDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -774,13 +788,13 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
 		  a3 = covera[0]->GetValue(diameter-1);
 		  b3 = covera[1]->GetValue(diameter-1);
 	  }
-	  r3 = rg.genrand_beta(a3, b3);
+	  r3 = static_cast<float>( rg.genrand_beta(a3, b3) );
   }
-  float random = rg.genrand_res53();
+  float random = static_cast<float>( rg.genrand_res53() );
   float totaldensity = 0;
   int bin = 0;
   FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < axisodf->GetSize())
+  while (random > totaldensity && bin < static_cast<int>(axisodf->GetSize()) )
   {
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
@@ -828,12 +842,12 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
   float oxc = m_Centroids[3*gnum];
   float oyc = m_Centroids[3*gnum+1];
   float ozc = m_Centroids[3*gnum+2];
-  occolumn = (oxc - (packingresx / 2.0f)) / packingresx;
-  ocrow = (oyc - (packingresy / 2.0f)) / packingresy;
-  ocplane = (ozc - (packingresz / 2.0f)) / packingresz;
-  nccolumn = (xc - (packingresx / 2.0f)) / packingresx;
-  ncrow = (yc - (packingresy / 2.0f)) / packingresy;
-  ncplane = (zc - (packingresz / 2.0f)) / packingresz;
+  occolumn = static_cast<int>( (oxc - (packingresx / 2.0f)) / packingresx );
+  ocrow = static_cast<int>( (oyc - (packingresy / 2.0f)) / packingresy );
+  ocplane = static_cast<int>( (ozc - (packingresz / 2.0f)) / packingresz );
+  nccolumn = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
+  ncrow = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
+  ncplane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
@@ -934,9 +948,9 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         dia = m_EquivalentDiameters[index];
         if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
         if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-		dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+		dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
         nnum = m_Neighborhoods[index];
-		bin = nnum/neighbordiststep[iter];
+		bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 		if(bin >= 40) bin = 39;
         simneighbordist[iter][dia][bin]++;
         count[dia]++;
@@ -948,9 +962,9 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       dia = m_EquivalentDiameters[index];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-	  dia = int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize());
+	  dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
       nnum = m_Neighborhoods[index];
-	  bin = nnum/neighbordiststep[iter];
+	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
       count[dia]++;
@@ -962,7 +976,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       {
 //        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
 //        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
-        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(counter);
+        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / double(counter) );
         if(counter == 0) simneighbordist[iter][i][j] = 0.0;
       }
     }
@@ -1110,7 +1124,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
         }
       }
     }
-    packqualities[gadd] = packquality / float(size);
+    packqualities[gadd] = static_cast<int>( packquality / float(size) );
   }
   if(gremove > 0)
   {
@@ -1201,9 +1215,9 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
-  centercolumn = (xc - (packingresx / 2)) / packingresx;
-  centerrow = (yc - (packingresy / 2)) / packingresy;
-  centerplane = (zc - (packingresz / 2)) / packingresz;
+  centercolumn = static_cast<int>( (xc - (packingresx / 2)) / packingresx );
+  centerrow = static_cast<int>( (yc - (packingresy / 2)) / packingresy );
+  centerplane = static_cast<int>( (zc - (packingresz / 2)) / packingresz );
   xmin = int(centercolumn - ((radcur1 / packingresx) + 1));
   xmax = int(centercolumn + ((radcur1 / packingresx) + 1));
   ymin = int(centerrow - ((radcur1 / packingresy) + 1));
@@ -1252,7 +1266,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
 
 void PackPrimaryPhases::assign_voxels()
 {
-  notify("Assigning Voxels", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Voxels");
 
   DataContainer* m = getDataContainer();
   int index;
@@ -1333,9 +1347,9 @@ void PackPrimaryPhases::assign_voxels()
     ga[2][0] = sinf(phi1) * sinf(PHI);
     ga[2][1] = -cosf(phi1) * sinf(PHI);
     ga[2][2] = cosf(PHI);
-    column = (xc - (xRes / 2.0f)) / xRes;
-    row = (yc - (yRes / 2.0f)) / yRes;
-    plane = (zc - (zRes / 2.0f)) / zRes;
+    column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
+    row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
+    plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
     xmin = int(column - ((radcur1 / xRes) + 1));
     xmax = int(column + ((radcur1 / xRes) + 1));
     ymin = int(row - ((radcur1 / yRes) + 1));
@@ -1423,7 +1437,7 @@ void PackPrimaryPhases::assign_voxels()
 
 void PackPrimaryPhases::assign_gaps()
 {
-  notify("Assigning Gaps", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Assigning Gaps");
 
   DataContainer* m = getDataContainer();
   int64_t totpoints = m->getTotalPoints();
@@ -1499,9 +1513,9 @@ void PackPrimaryPhases::assign_gaps()
 
 		float radcur2 = (radcur1 * bovera);
 		float radcur3 = (radcur1 * covera);
-		radcur1 = (float(timestep)/100.0)*radcur1;
-		radcur2 = (float(timestep)/100.0)*radcur2;
-		radcur3 = (float(timestep)/100.0)*radcur3;
+		radcur1 = static_cast<float>( (float(timestep)/100.0)*radcur1 );
+		radcur2 = static_cast<float>( (float(timestep)/100.0)*radcur2 );
+		radcur3 = static_cast<float>( (float(timestep)/100.0)*radcur3 );
 		float phi1 = m_AxisEulerAngles[3*i];
 		float PHI = m_AxisEulerAngles[3*i+1];
 		float phi2 = m_AxisEulerAngles[3*i+2];
@@ -1515,9 +1529,9 @@ void PackPrimaryPhases::assign_gaps()
 		ga[2][0] = sinf(phi1) * sinf(PHI);
 		ga[2][1] = -cosf(phi1) * sinf(PHI);
 		ga[2][2] = cosf(PHI);
-		column = (xc - (xRes / 2.0f)) / xRes;
-		row = (yc - (yRes / 2.0f)) / yRes;
-		plane = (zc - (zRes / 2.0f)) / zRes;
+		column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
+		row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
+		plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
 		xmin = int(column - ((radcur1 / xRes) + 1));
 		xmax = int(column + ((radcur1 / xRes) + 1));
 		ymin = int(row - ((radcur1 / yRes) + 1));
@@ -1557,7 +1571,7 @@ void PackPrimaryPhases::assign_gaps()
 			  if (iter2 > dims[1] - 1) row = iter2 - dims[1];
 			  if (iter3 < 0) plane = iter3 + dims[2];
 			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
-			  index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
+			  index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
@@ -1595,22 +1609,26 @@ void PackPrimaryPhases::assign_gaps()
 		  }
 		}
 	  }
-	  for (size_t i = 0; i < totpoints; i++)
+	  for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
 	  {
-	    if (ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
-		if (m_GrainIds[i] <= 0) unassignedcount++;
-		newowners[i] = -1;
-		ellipfuncs[i] = -1.0;
-	  }
+      if(ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
+      if(m_GrainIds[i] <= 0) unassignedcount++;
+      newowners[i] = -1;
+      ellipfuncs[i] = -1.0;
+    }
   }
   for (int i = 0; i < totpoints; i++)
   {
 	  if(m_GrainIds[i] > 0) m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]];
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::cleanup_grains()
 {
-  notify("Cleaning Up Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Cleaning Up Grains");
 
   DataContainer* m = getDataContainer();
 
@@ -1667,8 +1685,8 @@ void PackPrimaryPhases::cleanup_grains()
     if(checked[i] == false && m_GrainIds[i] > firstPrimaryField)
     {
 	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
-	  minsize = pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f;
-      minsize = int(minsize / (resConst));
+	  minsize = static_cast<float>( pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f );
+      minsize = static_cast<float>( int(minsize / (resConst)) );
       currentvlist.push_back(i);
       count = 0;
       while (count < currentvlist.size())
@@ -1681,7 +1699,7 @@ void PackPrimaryPhases::cleanup_grains()
         for (int j = 0; j < 6; j++)
         {
           good = 1;
-          neighbor = index + neighpoints[j];
+          neighbor = static_cast<int>( index + neighpoints[j] );
           if(m_PeriodicBoundaries == false)
           {
             if(j == 0 && plane == 0) good = 0;
@@ -1698,12 +1716,12 @@ void PackPrimaryPhases::cleanup_grains()
           }
           else if(m_PeriodicBoundaries == true)
           {
-            if(j == 0 && plane == 0) neighbor = neighbor + (xp * yp * zp);
-            if(j == 5 && plane == (zp - 1)) neighbor = neighbor - (xp * yp * zp);
-            if(j == 1 && row == 0) neighbor = neighbor + (xp * yp);
-            if(j == 4 && row == (yp - 1)) neighbor = neighbor - (xp * yp);
-            if(j == 2 && column == 0) neighbor = neighbor + (xp);
-            if(j == 3 && column == (xp - 1)) neighbor = neighbor - (xp);
+            if(j == 0 && plane == 0) neighbor = static_cast<int>( neighbor + (xp * yp * zp) );
+            if(j == 5 && plane == (zp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp * zp) );
+            if(j == 1 && row == 0) neighbor = static_cast<int>( neighbor + (xp * yp) );
+            if(j == 4 && row == (yp - 1)) neighbor = static_cast<int>( neighbor - (xp * yp) );
+            if(j == 2 && column == 0) neighbor = static_cast<int>( neighbor + (xp) );
+            if(j == 3 && column == (xp - 1)) neighbor = static_cast<int>( neighbor - (xp) );
             if(m_GrainIds[neighbor] == m_GrainIds[index] && checked[neighbor] == false)
             {
               currentvlist.push_back(neighbor);

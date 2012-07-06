@@ -46,13 +46,13 @@
   class DREAM3DLib_EXPORT FileWriter : public AbstractFilter
   {
     public:
-      DREAM3D_SHARED_POINTERS(FileWriter);
-      DREAM3D_STATIC_NEW_MACRO(FileWriter);
+      DREAM3D_SHARED_POINTERS(FileWriter)
+      DREAM3D_STATIC_NEW_MACRO(FileWriter)
       DREAM3D_TYPE_MACRO_SUPER(FileWriter, AbstractFilter)
 
       virtual ~FileWriter();
 
-      DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile);
+      DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
       virtual void execute();
 

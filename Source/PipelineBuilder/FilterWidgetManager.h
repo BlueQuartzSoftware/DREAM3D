@@ -57,7 +57,7 @@
 class PipelineBuilderLib_EXPORT FilterWidgetManager
 {
   public:
-    DREAM3D_SHARED_POINTERS(FilterWidgetManager);
+    DREAM3D_SHARED_POINTERS(FilterWidgetManager)
     DREAM3D_TYPE_MACRO(FilterWidgetManager)
 
     virtual ~FilterWidgetManager();

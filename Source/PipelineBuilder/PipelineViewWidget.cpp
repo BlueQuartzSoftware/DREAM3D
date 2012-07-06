@@ -45,9 +45,11 @@
 #include <QtGui/QLabel>
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QHeaderView>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 
@@ -66,7 +68,8 @@ m_SelectedFilterWidget(NULL),
 m_FilterWidgetLayout(NULL),
 m_FilterBeingDragged(NULL),
 m_DropIndex(-1),
-m_ErrorsArea(NULL)
+m_EmptyPipelineLabel(NULL),
+errorTableWidget(NULL)
 {
   setupGui();
 }
@@ -79,54 +82,67 @@ PipelineViewWidget::~PipelineViewWidget()
 
 }
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QLayout* PipelineViewWidget::layout() const
-{
-  return QFrame::layout();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::setLayout(QLayout* l)
-{
-  QFrame::setLayout(l);
-  m_FilterWidgetLayout = qobject_cast<QVBoxLayout*>(l);
-}
-#endif
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setupGui()
 {
- // setAcceptDrops(true);
-
-//  setFrameShape(QFrame::Box);
-//  setFrameShadow(QFrame::Plain);
-//  setLineWidth(2);
-
-  m_FilterWidgetLayout = new QVBoxLayout(this);
-  m_FilterWidgetLayout->setObjectName(QString::fromUtf8("m_FilterWidgetLayout"));
-  m_FilterWidgetLayout->setContentsMargins(5, 15, 5, 15);
-  m_FilterWidgetLayout->setSpacing(15);
-  QSpacerItem* verticalSpacer = new QSpacerItem(20, 361, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-  m_FilterWidgetLayout->addItem(verticalSpacer);
-
-//  setLayout(m_FilterWidgetLayout);
+  newEmptyPipelineViewLayout();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::setErrorsTextArea(QTextEdit* t)
+void PipelineViewWidget::newEmptyPipelineViewLayout()
 {
-  this->m_ErrorsArea = t;
+  if(m_EmptyPipelineLabel == NULL)
+  {
+    QGridLayout* gridLayout = new QGridLayout(this);
+    gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+    QSpacerItem* verticalSpacer = new QSpacerItem(20, 341, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+    gridLayout->addItem(verticalSpacer, 0, 1, 1, 1);
+
+    QSpacerItem* horizontalSpacer_3 = new QSpacerItem(102, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    gridLayout->addItem(horizontalSpacer_3, 1, 0, 1, 1);
+
+    m_EmptyPipelineLabel = new QLabel(this);
+    m_EmptyPipelineLabel->setObjectName(QString::fromUtf8("label"));
+    m_EmptyPipelineLabel->setMinimumSize(QSize(325, 50));
+    m_EmptyPipelineLabel->setStyleSheet(QString::fromUtf8("QLabel {\n"
+                                                          "border-radius: 20px;\n"
+                                                          "border: 1px solid rgb(120, 120, 120);\n"
+                                                          "background-color: rgb(160, 160, 160);\n"
+                                                          "font-weight: bold;\n"
+                                                          "color : rgb(255, 255, 255);\n"
+                                                          "text-align: center;\n"
+                                                          "margin: 5px;\n"
+                                                          "padding: 10px;\n"
+                                                          "}"));
+    m_EmptyPipelineLabel->setAlignment(Qt::AlignCenter);
+    m_EmptyPipelineLabel->setText("Drag filters here to build up a pipeline");
+
+    gridLayout->addWidget(m_EmptyPipelineLabel, 1, 1, 1, 1);
+
+    QSpacerItem* horizontalSpacer_4 = new QSpacerItem(102, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    gridLayout->addItem(horizontalSpacer_4, 1, 2, 1, 1);
+
+    QSpacerItem* verticalSpacer_2 = new QSpacerItem(20, 341, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+    gridLayout->addItem(verticalSpacer_2, 2, 1, 1, 1);
+
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setErrorsTextArea(QTableWidget* t)
+{
+  this->errorTableWidget = t;
 }
 
 // -----------------------------------------------------------------------------
@@ -157,6 +173,28 @@ QFilterWidget* PipelineViewWidget::filterWidgetAt(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::resetLayout()
+{
+
+  // Check to see if we have removed all the filters
+  if (filterCount() <= 0)
+  {
+    // Remove the current Layout
+    QLayout* l = layout();
+    if (NULL != l && l == m_FilterWidgetLayout) {
+      qDeleteAll(l->children());
+      delete l;
+      m_FilterWidgetLayout = NULL;
+    }
+
+    // and add the empty pipeline layout instead
+    newEmptyPipelineViewLayout();
+  }
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::clearWidgets()
 {
   qint32 count = filterCount();
@@ -169,6 +207,7 @@ void PipelineViewWidget::clearWidgets()
     }
   }
   m_SelectedFilterWidget = NULL;
+  resetLayout();
 }
 
 // -----------------------------------------------------------------------------
@@ -184,6 +223,29 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
   {
     index = filterCount();
   }
+
+  if (filterCount() <= 0)
+  {
+    if (NULL != m_EmptyPipelineLabel) {
+      m_EmptyPipelineLabel->hide();
+      delete m_EmptyPipelineLabel;
+      m_EmptyPipelineLabel = NULL;
+    }
+    QLayout* l = layout();
+    if (NULL != l) {
+      qDeleteAll(l->children());
+      delete l;
+    }
+
+    m_FilterWidgetLayout = new QVBoxLayout(this);
+    m_FilterWidgetLayout->setObjectName(QString::fromUtf8("m_FilterWidgetLayout"));
+    m_FilterWidgetLayout->setContentsMargins(5, 15, 5, 15);
+    m_FilterWidgetLayout->setSpacing(15);
+    QSpacerItem* verticalSpacer = new QSpacerItem(20, 361, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    m_FilterWidgetLayout->addItem(verticalSpacer);
+  }
+
+
   m_FilterWidgetLayout->insertWidget(index, w);
   w->setParent(this);
   connect(w, SIGNAL(clicked(bool)),
@@ -211,13 +273,15 @@ void PipelineViewWidget::preflightPipeline()
 
   // clear all the error messages
   m_PipelineErrorList.clear();
-  m_ErrorsArea->clear();
+
+  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
+    errorTableWidget->removeRow(i);
+  }
+  errorTableWidget->setRowCount(0);
+
 
   // Create the DataContainer object
   DataContainer::Pointer m = DataContainer::New();
-//  m->addObserver(static_cast<Observer*>(this));
-//  setErrorCondition(0);
-  int preflightError = 0;
   std::stringstream ss;
 
 
@@ -234,25 +298,54 @@ void PipelineViewWidget::preflightPipeline()
       filter->setDataContainer(m.get());
       filter->preflight();
       int err = filter->getErrorCondition();
-      if(err < 0)
+      std::vector<PipelineMessage> msgs = filter->getPipelineMessages();
+      if(msgs.size() > 0 || err < 0)
       {
-        preflightError |= err;
-        preflightErrorMessage(filter->getErrorMessage().c_str());
+        preflightErrorMessage(msgs);
         fw->setHasPreflightErrors(true);
       }
     }
   }
+
+  errorTableWidget->resizeRowsToContents();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(const QString &str)
+void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> errorStream)
 {
-  m_PipelineErrorList << str;
-  if (NULL != m_ErrorsArea)
+  if(NULL != errorTableWidget)
   {
-    m_ErrorsArea->append(str);
+    int rc = errorTableWidget->rowCount();
+
+    for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
+    {
+      errorTableWidget->insertRow(rc);
+
+      QString filterName = QString::fromStdString(errorStream.at(i).getFilterName());
+      QString errorDescription = QString::fromStdString(errorStream.at(i).getMessageText());
+      int errorCode = errorStream.at(i).getMessageCode();
+
+      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
+      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+      QTableWidgetItem* errorDescriptionWidgetItem = new QTableWidgetItem(errorDescription);
+
+      QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
+      errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+      QColor errColor(255, 191, 193);
+      QBrush errBrush(errColor);
+
+      filterNameWidgetItem->setBackground(errBrush);
+      errorDescriptionWidgetItem->setBackground(errBrush);
+      errorCodeWidgetItem->setBackground(errBrush);
+
+      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
+      errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
+    }
+   // errorTableWidget->verticalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
   }
 }
 
@@ -276,6 +369,8 @@ void PipelineViewWidget::removeFilterWidget()
     }
   }
   preflightPipeline();
+
+  resetLayout();
 }
 
 // -----------------------------------------------------------------------------
