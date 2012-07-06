@@ -129,7 +129,7 @@ std::cout << ss.str() << std::endl;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineMessage(PipelineMessage &msg)
+void QFilterPipeline::receivePipelineMessage(PipelineMessage &msg)
 {
   emit sendPipelineMessage(msg);
 }
@@ -141,7 +141,7 @@ void QFilterPipeline::pipelineMessages(std::vector<PipelineMessage> messages)
 {
   for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
   {
-    pipelineMessage(*iter);
+    receivePipelineMessage(*iter);
   }
 }
 

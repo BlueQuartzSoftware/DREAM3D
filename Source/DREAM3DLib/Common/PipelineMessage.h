@@ -51,7 +51,7 @@ class PipelineMessage
 {
   public:
 
-    enum messageType_t {Error,
+    enum MessageType {Error,
                         Warning,
                         StatusMessage,
                         StatusValue,
@@ -71,7 +71,7 @@ class PipelineMessage
 
 
     PipelineMessage(const std::string &filterName, const char* message, int code,
-                   messageType_t msgType = UnknownMessageType, int status = -1) :
+                   MessageType msgType = UnknownMessageType, int status = -1) :
         m_filterName(filterName),
         m_Message(message),
         m_Code(code),
@@ -80,7 +80,7 @@ class PipelineMessage
     {}
 
     PipelineMessage(const std::string &filterName, const std::string &message, int code,
-      messageType_t msgType = UnknownMessageType, int status = -1) :
+      MessageType msgType = UnknownMessageType, int status = -1) :
         m_filterName(filterName),
         m_Message(message),
         m_Code(code),
@@ -127,11 +127,11 @@ class PipelineMessage
     int getMessageCode() { return m_Code; }
     void setMessageCode(int val) { m_Code = val; }
 
-    PipelineMessage::messageType_t getMessageType() { return m_msgType; }
-    void setMessageType(PipelineMessage::messageType_t val) { m_msgType = val; }
+    PipelineMessage::MessageType getMessageType() { return m_msgType; }
+    void setMessageType(PipelineMessage::MessageType val) { m_msgType = val; }
 
-    int getStatusVar() const { return m_status; }
-    void setStatusVar(int val) { m_status = val; }
+    int getProgressValue() const { return m_status; }
+    void setProgressValue(int val) { m_status = val; }
 
     std::string generateErrorString()
     {
@@ -159,7 +159,7 @@ class PipelineMessage
     std::string m_filterName;
     std::string m_Message;
     int m_Code;
-    messageType_t m_msgType;
+    MessageType m_msgType;
     int m_status;
 
 };
