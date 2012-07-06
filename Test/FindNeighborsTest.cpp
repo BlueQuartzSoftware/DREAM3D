@@ -210,7 +210,7 @@ void TestFindNeighbors()
   read_h5ebsd->setRefFrameZDir(Ebsd::LowtoHigh);
   read_h5ebsd->setZStartIndex(getZStartIndex());
   read_h5ebsd->setZEndIndex(getZEndIndex());
-  read_h5ebsd->setPhaseTypes(getPhaseTypes());
+  read_h5ebsd->setPTypes(getPhaseTypes());
   read_h5ebsd->setQualityMetricFilters(getQualityMetricFilters());
   pipeline->pushBack(read_h5ebsd);
 
