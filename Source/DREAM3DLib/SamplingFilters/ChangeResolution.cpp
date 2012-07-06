@@ -123,10 +123,8 @@ void ChangeResolution::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -197,5 +195,5 @@ void ChangeResolution::execute()
     IDataArray::Pointer p = m->getCellData(*iter);
     err = p->Resize(totalPoints);
   }
-  notifyProgress("Changing Resolution Complete", 0, Observable::UpdateProgressValueAndMessage);
+  notifyStatusMessage("Changing Resolution Complete");
 }

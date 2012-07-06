@@ -54,6 +54,8 @@ class DREAM3DLib_EXPORT Observer
 
     virtual ~Observer();
 
+    /* --------- These methods are typically called from a subclass of Observer *******/
+
     /**
       * @brief Either prints a message or sends the message to the User Interface
       * @param message The message to print
@@ -78,15 +80,15 @@ class DREAM3DLib_EXPORT Observer
      virtual void pipelineProgressMessage(const char* message);
      virtual void pipelineProgressMessage(const std::string &msg);
 
-
+     /* --------------------------------------- */
 
      /**
       * @brief This message reports some human readable message suitable for display
       * on a GUI or printed to a console or possibly saved to a log file
       * @param message
       */
-     virtual void pipelineMessage(PipelineMessage msg);
-     virtual void pipelineMessage(std::vector<PipelineMessage> &messages);
+     virtual void pipelineMessage(PipelineMessage &msg);
+     virtual void pipelineMessages(std::vector<PipelineMessage> messages);
 
 
   private:

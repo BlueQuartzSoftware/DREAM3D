@@ -54,7 +54,7 @@ QFilterPipeline::~QFilterPipeline()
 {
 }
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -99,25 +99,52 @@ void QFilterPipeline::pipelineProgressMessage(const std::string &msg)
 {
   pipelineProgressMessage(msg.c_str());
 }
+#endif
+
+#if 0
+std::stringstream ss;
+if(msg.getMessageType() == PipelineMessage::Error)
+{
+  ss << msg.generateErrorString();
+}
+else if(msg.getMessageType() == PipelineMessage::Warning)
+{
+  ss << msg.generateWarningString();
+}
+else if(msg.getMessageType() == PipelineMessage::StatusMessage)
+{
+  ss << msg.generateStatusString();
+}
+else if(msg.getMessageType() == PipelineMessage::StatusValue)
+{
+  ss << msg.getStatusVar() << "%";
+}
+else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
+{
+  ss << msg.getStatusVar() << "%" << " " << msg.generateStatusString();
+}
+std::cout << ss.str() << std::endl;
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineMessage(PipelineMessage msg)
+void QFilterPipeline::pipelineMessage(PipelineMessage &msg)
 {
-  emit fireMessage(msg);
+  emit sendPipelineMessage(msg);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::pipelineMessage(std::vector<PipelineMessage> &messages)
+void QFilterPipeline::pipelineMessages(std::vector<PipelineMessage> messages)
 {
   for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
   {
     pipelineMessage(*iter);
   }
 }
+
 
 // -----------------------------------------------------------------------------
 //

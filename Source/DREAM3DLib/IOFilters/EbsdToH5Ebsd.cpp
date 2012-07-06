@@ -337,7 +337,7 @@ void EbsdToH5Ebsd::execute()
     std::string msg = "Converting File: " + ebsdFName;
     ss.str("");
 
-    notifyProgress(msg.c_str(), 0, Observable::UpdateProgressMessage);
+    notifyStatusMessage(msg.c_str());
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {

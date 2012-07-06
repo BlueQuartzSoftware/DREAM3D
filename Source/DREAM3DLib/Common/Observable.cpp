@@ -87,12 +87,19 @@ std::string Observable::getMessagePrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyMessage(PipelineMessage &msg, int progress, ObserverAspect a)
+void Observable::notifyMessage(PipelineMessage &msg)
 {
-  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
-  {
-    (*iter)->pipelineMessage(msg);
-  }
+    // If the programmer set a prefix (which FilterPipeline does) we are going to
+    // use the prefix in place of the 'FilterName' because this gives us more
+    // information to use and display to the user.
+    if (m_Prefix.empty() == false)
+    {
+       msg.setFilterName(m_Prefix);
+    }
+    for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
+    {
+        (*iter)->pipelineMessage(msg);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +122,7 @@ void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
 //
 // -----------------------------------------------------------------------------
 void Observable::notifyStatusMessage(std::string statusDesc) {
-  PipelineMessage statusMsg("", statusDesc, 0, PipelineMessage::StatusMessage);
+  PipelineMessage statusMsg(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessage);
   notifyMessage(statusMsg);
 }
 
@@ -123,7 +130,7 @@ void Observable::notifyStatusMessage(std::string statusDesc) {
 //
 // -----------------------------------------------------------------------------
 void Observable::notifyProgressValue(int statusVal) {
-  PipelineMessage statusValueUpdate("", "", 0, PipelineMessage::StatusValue, statusVal);
+  PipelineMessage statusValueUpdate(getNameOfClass(), "", 0, PipelineMessage::StatusValue, statusVal);
   notifyMessage(statusValueUpdate);
 }
 
@@ -131,7 +138,7 @@ void Observable::notifyProgressValue(int statusVal) {
 //
 // -----------------------------------------------------------------------------
 void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) {
-  PipelineMessage statusUpdate("", statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
+  PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
   notifyMessage(statusUpdate);
 }
 

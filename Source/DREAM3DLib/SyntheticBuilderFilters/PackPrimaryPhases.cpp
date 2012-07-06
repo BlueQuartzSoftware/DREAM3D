@@ -315,7 +315,7 @@ void PackPrimaryPhases::execute()
     if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
 
-  notifyProgress("Packing Grains - Initializing Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initializing Volume");
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
   initialize_packinggrid();
 
@@ -436,7 +436,7 @@ void PackPrimaryPhases::execute()
 	}
   }
 
-  notifyProgress("Packing Grains - Grain Generation Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Grain Generation Complete");
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -528,7 +528,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyProgress("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
 
   // determine neighborhoods and initial neighbor distribution errors
   for (size_t i = firstPrimaryField; i < numgrains; i++)
@@ -630,7 +630,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyProgress("Packing Grains - Grain Adjustment Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Grain Adjustment Complete");
 
   if(m_VtkOutputFile.empty() == false)
   {
@@ -641,16 +641,16 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyProgress("Packing Grains - Assigning Voxels", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Assigning Voxels");
   assign_voxels();
 
-  notifyProgress("Packing Grains - Filling Gaps", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Filling Gaps");
   assign_gaps();
 
-  notifyProgress("Packing Grains - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Cleaning Up Volume");
   cleanup_grains();
 
-  notifyProgress("Packing Grains - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);

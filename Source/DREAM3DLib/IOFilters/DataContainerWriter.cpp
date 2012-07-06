@@ -134,7 +134,7 @@ void DataContainerWriter::execute()
     setErrorCondition(-1);
     std::stringstream ss;
     ss <<  " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -10);
+    notifyErrorMessage(ss.str(), -10);
     return;
   }
   setErrorCondition(0);
@@ -158,8 +158,8 @@ void DataContainerWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      PipelineMessage em (getNameOfClass(), ss.str(), -1);
-      addErrorMessage(em);
+      ss << ": Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }

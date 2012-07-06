@@ -260,10 +260,8 @@ void FindEuclideanDistMap::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);

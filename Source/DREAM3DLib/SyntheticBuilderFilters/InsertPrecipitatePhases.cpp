@@ -218,10 +218,8 @@ void InsertPrecipitatePhases::execute()
 
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -240,20 +238,20 @@ void InsertPrecipitatePhases::execute()
 
   totalvol = sizex * sizey * sizez;
 
-  notifyProgress("Packing Precipitates - Generating and Placing Precipitates", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Generating and Placing Precipitates");
   initialize_packinggrid();
   place_precipitates();
 
-  notifyProgress("Packing Precipitates - Assigning Voxels", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Assigning Voxels");
   assign_voxels();
 
-  notifyProgress("Packing Precipitates - Filling Gaps", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Filling Gaps");
   assign_gaps();
 
-  notifyProgress("Packing Precipitates - Cleaning Up Volume", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Cleaning Up Volume");
   cleanup_grains();
 
-  notifyProgress("Packing Precipitates - Renumbering Grains", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Precipitates - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
   renumber_grains->setDataContainer(m);
@@ -537,7 +535,7 @@ void  InsertPrecipitatePhases::place_precipitates()
     }
   }
 
-  notifyProgress("Packing Grains - Initial Grain Placement Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
 
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);

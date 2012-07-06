@@ -308,7 +308,7 @@ int FilterPipeline::preflightPipeline()
       preflightError |= err;
       setErrorCondition(preflightError);
       setErrorCondition(err);
-      pipelineMessage( (*filter)->getPipelineMessages());
+      pipelineMessages( (*filter)->getPipelineMessages());
     }
   }
 
@@ -353,14 +353,21 @@ void FilterPipeline::execute()
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   START_CLOCK()
-
+  PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
     progress = progress + 1.0f;
-    pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
+    progValue.setMessageType(PipelineMessage::StatusValue);
+    progValue.setStatusVar(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
+    pipelineMessage(progValue);
+    //pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
+
     ss.str("");
     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-    pipelineProgressMessage(ss.str());
+
+    progValue.setMessageType(PipelineMessage::StatusMessage);
+    progValue.setMessageText(ss.str());
+    pipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
     (*iter)->setDataContainer(m_DataContainer.get());
@@ -372,8 +379,10 @@ void FilterPipeline::execute()
     if(err < 0)
     {
       setErrorCondition(err);
-      pipelineMessage((*iter)->getPipelineMessages());
-      pipelineProgress(100);
+      pipelineMessages((*iter)->getPipelineMessages());
+      progValue.setMessageType(PipelineMessage::StatusValue);
+      progValue.setStatusVar(100);
+      pipelineMessage(progValue);
       pipelineFinished();
       return;
     }

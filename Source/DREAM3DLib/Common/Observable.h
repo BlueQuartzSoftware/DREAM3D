@@ -86,17 +86,16 @@ class DREAM3DLib_EXPORT Observable
      */
     virtual void removeObserver(Observer* observer);
 
-
-    virtual void notifyMessage(PipelineMessage &msg, int progress=0, ObserverAspect a=Observable::UnknownMessageType);
+    virtual void notifyMessage(PipelineMessage &msg);
 
     void notifyErrorMessage(std::string errDesc, int errCode);
-    
+
     void notifyWarningMessage(std::string warnDesc, int warnCode);
 
     void notifyStatusMessage(std::string statusDesc);
-    
+
     void notifyProgressValue(int status);
-  
+
     void notifyStatusAndProgress(std::string statusDesc, int statusVal);
 
     virtual std::vector<Observer*> getObservers();

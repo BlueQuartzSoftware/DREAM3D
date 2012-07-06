@@ -52,6 +52,7 @@ class QFilterPipeline : public QObject, public FilterPipeline
     QFilterPipeline(QObject* parent = 0);
     virtual ~QFilterPipeline();
 
+#if 0
     /**
      * @brief Either prints a message or sends the message to the User Interface
      * @param message The message to print
@@ -81,14 +82,15 @@ class QFilterPipeline : public QObject, public FilterPipeline
      */
     virtual void pipelineProgressMessage(const char* message);
     virtual void pipelineProgressMessage(const std::string &msg);
+#endif
 
     /**
      * @brief This message reports some human readable message suitable for display
      * on a GUI or printed to a console or possibly saved to a log file
      * @param message
      */
-    virtual void pipelineMessage(PipelineMessage msg);
-    virtual void pipelineMessage(std::vector<PipelineMessage> &messages);
+    virtual void pipelineMessage(PipelineMessage &msg);
+    virtual void pipelineMessages(std::vector<PipelineMessage> messages);
 
     /**
      * @brief This method is called from the run() method just before exiting and
@@ -102,9 +104,9 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * Qt Signals for connections
      */
      signals:
-       void progressMessage(const QString &message);
-       void fireMessage(PipelineMessage errMsg);
-       void updateProgress(int value);
+//       void progressMessage(const QString &message);
+       void sendPipelineMessage(PipelineMessage errMsg);
+//       void updateProgress(int value);
        void finished();
 
   public slots:
