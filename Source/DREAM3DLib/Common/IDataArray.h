@@ -66,6 +66,8 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void SetName(const std::string &name) = 0;
     virtual std::string GetName() = 0;
 
+    virtual Pointer createNewArray(size_t numElements, int numComponents, const std::string &name) = 0;
+
     /**
      * @brief Makes this class responsible for freeing the memory.
      */
