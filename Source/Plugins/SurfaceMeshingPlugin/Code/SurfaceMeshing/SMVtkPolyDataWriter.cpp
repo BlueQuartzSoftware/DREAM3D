@@ -346,9 +346,9 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << "Error opening nodes file '" << m_NodesFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
 
@@ -363,14 +363,14 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after nodes count.'" << m_NodesFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   s.str("");
   s << "Calc Node Count from Nodes.bin File: " << nNodes;
-  notifyProgress(s.str(), 0, UpdateProgressMessage);
+  notifyStatusMessage(s.str());
 
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.c_str(), "rb+");
@@ -379,9 +379,9 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error opening Triangles file '" << triFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   // Calculate how many nodes are in the file based in the file size
@@ -395,15 +395,15 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after triangles count.'" << m_TrianglesFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   s.str("");
 
   s << "Calc Triangle Count from Triangles.bin File: " << nTriangles;
-  notifyProgress(s.str(), 0, UpdateProgressMessage);
+  notifyStatusMessage(s.str());
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
@@ -413,9 +413,9 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error creating Triangles VTK Visualization '" << m_OutputVtkFile << "'";
     setErrorCondition(-1);
-    ErrorMessage::Pointer em = ErrorMessage::New(getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getNameOfClass(), s.str(), -1);
     addErrorMessage(em);
-    notifyMessage(em, 0, UpdateErrorMessage);
+    notifyMessage(em);
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
@@ -562,7 +562,7 @@ void SMVtkPolyDataWriter::execute()
   fclose(vtkFile);
 
   setErrorCondition(0);
-  notifyProgress("Vtk PolyData File Writing Complete", 0, Observable::UpdateProgressMessage);
+  notifyStatusMessage("Vtk PolyData File Writing Complete");
 
   return;
 }

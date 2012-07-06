@@ -153,10 +153,8 @@ void ConvertEulerAngles::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -191,5 +189,5 @@ void ConvertEulerAngles::execute()
   serial.convert(0, totalPoints);
 #endif
 
- notifyProgress("Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Complete");
 }

@@ -138,10 +138,8 @@ void AlignSectionsList::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -157,7 +155,7 @@ void AlignSectionsList::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Aligning Sections Complete");
 }
 
 

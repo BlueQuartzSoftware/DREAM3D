@@ -89,38 +89,42 @@ void Observer::pipelineProgressMessage(const char* message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineWarningMessage(ErrorMessage::Pointer msg)
+void Observer::pipelineMessage(PipelineMessage &msg)
 {
-  std::cout << "Warning - "<< msg->getFilterName() << "(" << msg->getErrorCode() << "):" << msg->getErrorDescription() << std::endl;
+  std::stringstream ss;
+  if(msg.getMessageType() == PipelineMessage::Error)
+  {
+    ss << msg.generateErrorString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::Warning)
+  {
+    ss << msg.generateWarningString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusMessage)
+  {
+    ss << msg.generateStatusString();
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusValue)
+  {
+    ss << msg.getStatusVar() << "%";
+  }
+  else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
+  {
+    ss << msg.getStatusVar() << "%" << " " << msg.generateStatusString();
+  }
+  std::cout << ss.str() << std::endl;
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineWarningMessage(std::vector<ErrorMessage::Pointer> messages)
+void Observer::pipelineMessages(std::vector<PipelineMessage> messages)
 {
-  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter )
   {
-    pipelineWarningMessage(*iter);
+    pipelineMessage(*iter);
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::pipelineErrorMessage(ErrorMessage::Pointer msg)
-{
-  std::cout << "Error - "<< msg->getFilterName() << "(" << msg->getErrorCode() << "):" << msg->getErrorDescription() << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Observer::pipelineErrorMessage(std::vector<ErrorMessage::Pointer> messages)
-{
-  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
-  {
-    pipelineErrorMessage(*iter);
-  }
-}
 

@@ -59,9 +59,9 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -181,10 +181,8 @@ void AlignSectionsMutualInformation::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -203,7 +201,7 @@ void AlignSectionsMutualInformation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("Aligning Sections Complete", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("Aligning Sections Complete");
 }
 
 
@@ -269,7 +267,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   {
     std::stringstream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+  //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     graincount1 = graincounts[slice];
@@ -468,7 +466,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
- //   notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+ //   notifyStatusMessage(ss.str());
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)

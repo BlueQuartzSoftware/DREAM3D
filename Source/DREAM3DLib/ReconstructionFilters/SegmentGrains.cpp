@@ -53,9 +53,9 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
-#define NEW_SHARED_ARRAY(var, type, size)\
-  boost::shared_array<type> var##Array(new type[size]);\
-  type* var = var##Array.get();
+#define NEW_SHARED_ARRAY(var, m_msgType, size)\
+  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
+  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -180,12 +180,12 @@ void SegmentGrains::execute()
       gnum++;
       ss.str("");
       ss << "Total Grains: " << gnum;
-      if(gnum%100 == 0) notifyProgress(ss.str(), 0, Observable::UpdateProgressMessage);
+      if(gnum%100 == 0) notifyStatusMessage(ss.str());
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyProgress("SegmentGrains Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("SegmentGrains Completed");
 }
 
 // -----------------------------------------------------------------------------

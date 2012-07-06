@@ -216,10 +216,8 @@ void FindShapes::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -239,7 +237,7 @@ void FindShapes::execute()
   if(m->getZPoints() > 1) find_axiseulers();
   if(m->getZPoints() == 1) find_axiseulers2D();
 
- notifyProgress("FindShapes Completed", 0, Observable::UpdateProgressMessage);
+ notifyStatusMessage("FindShapes Completed");
 }
 
 // -----------------------------------------------------------------------------
