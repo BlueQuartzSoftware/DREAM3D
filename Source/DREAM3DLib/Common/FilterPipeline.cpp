@@ -396,7 +396,9 @@ void FilterPipeline::execute()
   }
   ss.str("");
   ss << "Pipeline Complete";
-  pipelineProgressMessage(ss.str());
+  progValue.setMessageType(PipelineMessage::StatusMessage);
+  progValue.setMessageText(ss.str());
+  receivePipelineMessage(progValue);
 }
 
 // -----------------------------------------------------------------------------

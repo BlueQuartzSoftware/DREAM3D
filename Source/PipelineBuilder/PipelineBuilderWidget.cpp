@@ -313,7 +313,7 @@ void PipelineBuilderWidget::setupGui()
     presetFilter->setText(0, "Ebsd 3D Reconstruction");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "EbsdToH5Ebsd" << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" << "DataContainerWriter"
+    presetFilterList << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" << "DataContainerWriter"
         << "VtkRectilinearGridWriter";
     m_presetMap["Ebsd 3D Reconstruction"] = presetFilterList;
   }
@@ -888,6 +888,7 @@ void PipelineBuilderWidget::loadPreset(QStringList filterList) {
   for (int i=0; i< filterList.size(); i++) {
     m_PipelineViewWidget->addFilter(filterList[i]);
   }
+  m_PipelineViewWidget->preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
