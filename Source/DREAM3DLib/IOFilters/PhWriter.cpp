@@ -202,7 +202,8 @@ int PhWriter::writeFile()
   int count = 0;
   for (int k = 0; k < totalpoints; k++)
   {
-    outfile << std::setw(6) << m_GrainIds[k];
+//    outfile << std::setw(6) << m_GrainIds[k];
+    outfile << m_GrainIds[k] << " ";
     count++;
     if(count == 20)
     {

@@ -469,7 +469,12 @@ void QFilterWidget::updateQLineEditIntValue()
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
-    setProperty(whoSent->objectName().toStdString().c_str(), le->text().toInt(&ok));
+    int value = le->text().toInt(&ok);
+    if (false == ok) {
+      value = 0;
+      le->setText("0");
+    }
+    setProperty(whoSent->objectName().toStdString().c_str(), value);
   }
 }
 
@@ -484,12 +489,12 @@ void QFilterWidget::updateQLineEditDoubleValue()
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
-    ok = setProperty(whoSent->objectName().toStdString().c_str(), le->text().toDouble(&ok));
-    if (true == ok) { }
-    else
-    {
-  //    std::cout << "QLineEdit '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+    double value = le->text().toDouble(&ok);
+    if (false == ok) {
+      value = 0;
+      le->setText("0");
     }
+    setProperty(whoSent->objectName().toStdString().c_str(), value);
   }
 }
 

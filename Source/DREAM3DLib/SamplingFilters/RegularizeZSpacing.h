@@ -34,12 +34,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EBSDSegmentGrains_H_
-#define EBSDSegmentGrains_H_
+#ifndef RegularizeZSpacing_H_
+#define RegularizeZSpacing_H_
 
-#include <vector>
 #include <string>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -47,43 +45,34 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-
-#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
 /**
- * @class EBSDSegmentGrains EBSDSegmentGrains.h DREAM3DLib/ReconstructionFilters/EBSDSegmentGrains.h
+ * @class RegularizeZSpacing RegularizeZSpacing.h DREAM3DLib/SyntheticBuilderFilters/RegularizeZSpacing.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
+class RegularizeZSpacing : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(EBSDSegmentGrains)
-    DREAM3D_STATIC_NEW_MACRO(EBSDSegmentGrains)
-    DREAM3D_TYPE_MACRO_SUPER(EBSDSegmentGrains, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(RegularizeZSpacing)
+    DREAM3D_STATIC_NEW_MACRO(RegularizeZSpacing)
+    DREAM3D_TYPE_MACRO_SUPER(RegularizeZSpacing, AbstractFilter)
 
-    virtual ~EBSDSegmentGrains();
+    virtual ~RegularizeZSpacing();
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
+    DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    DREAM3D_INSTANCE_PROPERTY(float, YRes)
+    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Segment Grains (Misorientation)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const std::string getHumanLabel() { return "Regularize Z Spacing"; }
 
     virtual void setupFilterOptions();
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -91,30 +80,14 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     virtual void execute();
     virtual void preflight();
 
-    virtual int getSeed(size_t gnum);
-    virtual bool determineGrouping(int referencepoint, int neighborpoint, size_t gnum);
-
   protected:
-    EBSDSegmentGrains();
+    RegularizeZSpacing();
+
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
-    float* m_Quats;
-    int32_t* m_CellPhases;
-    bool* m_GoodVoxels;
-
-    unsigned int* m_CrystalStructures;
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
-
-    EBSDSegmentGrains(const EBSDSegmentGrains&); // Copy Constructor Not Implemented
-    void operator=(const EBSDSegmentGrains&); // Operator '=' Not Implemented
+    RegularizeZSpacing(const RegularizeZSpacing&); // Copy Constructor Not Implemented
+    void operator=(const RegularizeZSpacing&); // Operator '=' Not Implemented
 };
 
-#endif /* EBSDSegmentGrains_H_ */
+#endif /* RegularizeZSpacing_H_ */

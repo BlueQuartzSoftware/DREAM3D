@@ -258,7 +258,7 @@ void OpenCloseBadData::execute()
 					  if (current > most)
 					  {
 						most = current;
-					    m_Neighbors[i] = grain;
+					    m_Neighbors[count] = grain;
 					  }
 					}
 				  }
