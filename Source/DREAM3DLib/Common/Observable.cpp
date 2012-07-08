@@ -98,7 +98,7 @@ void Observable::notifyMessage(PipelineMessage &msg)
     }
     for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
     {
-        (*iter)->receivePipelineMessage(msg);
+        (*iter)->sendPipelineMessage(msg);
     }
 }
 

@@ -39,11 +39,11 @@
 
 /**
  * @class Observer Observer.h DREAM3D/Common/Observer.h
- * @brief This class implmements the <b>Observer</b> pattern from the <b>Gang of
+ * @brief This class implements the <b>Observer</b> pattern from the <b>Gang of
  * Four Design Patterns</b> book. There are various methods that are used for
- * notifications. The <b>Observerable</b> will decide which method to call.
+ * notifications. The <b>Observable</b> will decide which method to call.
  * @author Michael A. Jackson for BlueQuartz Software
- * @date Sep 22, 2011
+ * @date September 22, 2011
  * @version 1.0
  */
 class DREAM3DLib_EXPORT Observer
@@ -56,39 +56,39 @@ class DREAM3DLib_EXPORT Observer
 
     /* --------- These methods are typically called from a subclass of Observer *******/
 
-    /**
-      * @brief Either prints a message or sends the message to the User Interface
-      * @param message The message to print
+     /**
+      * @brief This function prints a progress integer to the console.  Progress integers are assumed to be
+      * between 0 and 100.
       * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
       */
-     virtual void updateProgressAndMessage(const char* message, int progress);
-     virtual void updateProgressAndMessage(const std::string &msg, int progress);
+     virtual void updatePipelineProgress(int progress);
 
      /**
-      * @brief This method reports progress such that a user interface element such
-      * as a progress bar could be updated. It is assumed the value will fluctuate
-      * between 0 and 100.
-      * @param value
+      * @brief These functions print human readable messages to the console.
+      * @param msg The message to be printed
       */
-     virtual void pipelineProgress(int value);
+     virtual void updatePipelineMessage(const char* msg);
+     virtual void updatePipelineMessage(const std::string &msg);
 
      /**
-      * @brief This message reports some human readable message suitable for display
-      * on a GUI or printed to a console or possibly saved to a log file
-      * @param message
+      * @brief These functions print both a human readable message and a progress integer to the console.
+      * Progress integers are assumed to be between 0 and 100.
+      * @param msg The message to be printed
+      * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
       */
-     virtual void pipelineProgressMessage(const char* message);
-     virtual void pipelineProgressMessage(const std::string &msg);
+     virtual void updatePipelineProgressAndMessage(const char* msg, int progress);
+     virtual void updatePipelineProgressAndMessage(const std::string &msg, int progress);
 
      /* --------------------------------------- */
 
      /**
-      * @brief This message reports some human readable message suitable for display
-      * on a GUI or printed to a console or possibly saved to a log file
-      * @param message
+      * @brief These functions send one or many pipeline messages to the DREAM3D GUI.  Error and Warning messages
+      * are sent to the table widget, and status messages are sent to the status bar.
+      * @param msg The message to be printed
+      * @param msgs The messages to be printed
       */
-     virtual void receivePipelineMessage(PipelineMessage &msg);
-     virtual void pipelineMessages(std::vector<PipelineMessage> messages);
+     virtual void sendPipelineMessage(PipelineMessage &msg);
+     virtual void sendPipelineMessages(std::vector<PipelineMessage> msgs);
 
 
   private:

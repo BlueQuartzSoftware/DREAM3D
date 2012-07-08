@@ -57,8 +57,8 @@
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
-              pipelineProgressMessage(#Message);\
-              pipelineProgress(0);\
+              updatePipelineMessage(#Message);\
+              updatePipelineProgress(0);\
               pipelineFinished();\
               return;}\
 
@@ -68,7 +68,7 @@
       setErrorCondition(err);\
       std::string msg = std::string(Message);\
       pipelineErrorMessage(PipelineMessage(getNameOfClass(), msg, err));\
-      pipelineProgress(0);\
+      updatePipelineProgress(0);\
       pipelineFinished();\
       return;   }
 
@@ -308,7 +308,7 @@ int FilterPipeline::preflightPipeline()
       preflightError |= err;
       setErrorCondition(preflightError);
       setErrorCondition(err);
-      pipelineMessages( (*filter)->getPipelineMessages());
+      sendPipelineMessages( (*filter)->getPipelineMessages());
     }
   }
 
@@ -359,7 +359,7 @@ void FilterPipeline::execute()
     progress = progress + 1.0f;
     progValue.setMessageType(PipelineMessage::StatusValue);
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
-    receivePipelineMessage(progValue);
+    sendPipelineMessage(progValue);
     //pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
 
     ss.str("");
@@ -367,7 +367,7 @@ void FilterPipeline::execute()
 
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss.str());
-    receivePipelineMessage(progValue);
+    sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
     (*iter)->setDataContainer(m_DataContainer.get());
@@ -379,10 +379,10 @@ void FilterPipeline::execute()
     if(err < 0)
     {
       setErrorCondition(err);
-      pipelineMessages((*iter)->getPipelineMessages());
+      sendPipelineMessages((*iter)->getPipelineMessages());
       progValue.setMessageType(PipelineMessage::StatusValue);
       progValue.setProgressValue(100);
-      receivePipelineMessage(progValue);
+      sendPipelineMessage(progValue);
       pipelineFinished();
       return;
     }
@@ -396,9 +396,7 @@ void FilterPipeline::execute()
   }
   ss.str("");
   ss << "Pipeline Complete";
-  progValue.setMessageType(PipelineMessage::StatusMessage);
-  progValue.setMessageText(ss.str());
-  receivePipelineMessage(progValue);
+  updatePipelineMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------

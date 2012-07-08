@@ -48,15 +48,15 @@ Observer::~Observer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updateProgressAndMessage(const char* message, int progress)
+void Observer::updatePipelineProgressAndMessage(const char* msg, int progress)
 {
-  std::cout << progress << "% " << message << std::endl;
+  std::cout << progress << "% " << msg << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updateProgressAndMessage(const std::string &msg, int progress)
+void Observer::updatePipelineProgressAndMessage(const std::string &msg, int progress)
 {
   std::cout << progress << "% " << msg << std::endl;
 }
@@ -65,15 +65,15 @@ void Observer::updateProgressAndMessage(const std::string &msg, int progress)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineProgress(int value)
+void Observer::updatePipelineProgress(int progress)
 {
-  std::cout << value << "%" << std::endl;
+  std::cout << progress << "%" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineProgressMessage(const std::string &msg)
+void Observer::updatePipelineMessage(const std::string &msg)
 {
   std::cout << msg << std::endl;
 }
@@ -81,15 +81,15 @@ void Observer::pipelineProgressMessage(const std::string &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineProgressMessage(const char* message)
+void Observer::updatePipelineMessage(const char* msg)
 {
-  std::cout << message << std::endl;
+  std::cout << msg << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::receivePipelineMessage(PipelineMessage &msg)
+void Observer::sendPipelineMessage(PipelineMessage &msg)
 {
   std::stringstream ss;
   if(msg.getMessageType() == PipelineMessage::Error)
@@ -119,11 +119,11 @@ void Observer::receivePipelineMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::pipelineMessages(std::vector<PipelineMessage> messages)
+void Observer::sendPipelineMessages(std::vector<PipelineMessage> msgs)
 {
-  for (std::vector<PipelineMessage>::iterator iter = messages.begin(); iter != messages.end(); ++iter )
+  for (std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
   {
-    receivePipelineMessage(*iter);
+    sendPipelineMessage(*iter);
   }
 }
 

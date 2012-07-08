@@ -42,7 +42,8 @@
 
 /**
  * @class PipelineMessage PipelineMessage.h DREAM3DLib/Common/PipelineMessage.h
- * @brief
+ * @brief This class enables the creation of Error, Warning, and Status messages that
+ * can be sent up from filters to the DREAM3D GUI.
  * @author Joey Kleingers (SOCHE)
  * @date Jun 21, 2012
  * @version 1.0
@@ -63,29 +64,29 @@ class PipelineMessage
     PipelineMessage(const PipelineMessage& rhs)
     {
       m_filterName = rhs.m_filterName;
-      m_Message = rhs.m_Message;
+      m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
       m_msgType = rhs.m_msgType;
-      m_status = rhs.m_status;
+      m_Progress = rhs.m_Progress;
     }
 
 
-    PipelineMessage(const std::string &filterName, const char* message, int code,
+    PipelineMessage(const std::string &filterName, const char* msg, int code,
                    MessageType msgType = UnknownMessageType, int status = -1) :
         m_filterName(filterName),
-        m_Message(message),
+        m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),
-        m_status(status)
+        m_Progress(status)
     {}
 
-    PipelineMessage(const std::string &filterName, const std::string &message, int code,
+    PipelineMessage(const std::string &filterName, const std::string &msg, int code,
       MessageType msgType = UnknownMessageType, int status = -1) :
         m_filterName(filterName),
-        m_Message(message),
+        m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),
-        m_status(status)
+        m_Progress(status)
     {}
 
     DREAM3D_TYPE_MACRO(PipelineMessage)
@@ -95,72 +96,112 @@ class PipelineMessage
     bool operator==(const PipelineMessage& rhs)
     {
       return (m_filterName == rhs.m_filterName &&
-          m_Message == rhs.m_Message &&
+          m_Msg == rhs.m_Msg &&
             m_Code == rhs.m_Code &&
               m_msgType == rhs.m_msgType &&
-                m_status == rhs.m_status);
+                m_Progress == rhs.m_Progress);
     }
 
     void operator=(const PipelineMessage& rhs)
     {
       m_filterName = rhs.m_filterName;
-      m_Message = rhs.m_Message;
+      m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
       m_msgType = rhs.m_msgType;
-      m_status = rhs.m_status;
+      m_Progress = rhs.m_Progress;
     }
 
     /**
-     * @brief
-     * @return
+     * @brief This function is the member m_filterName's accessor.
      */
     std::string getFilterName() { return m_filterName; }
+
     /**
-     * @brief
-     * @param val
+     * @brief This function is the member m_filterName's mutator.
+     * @param val Variable whose value is assigned to m_filterName.
      */
     void setFilterName(const std::string &val) { m_filterName = val; }
 
-    std::string getMessageText() { return m_Message; }
-    void setMessageText(const std::string &val) { m_Message = val; }
+    /**
+     * @brief This function is the member m_Msg's accessor.
+     */
+    std::string getMessageText() { return m_Msg; }
 
+    /**
+     * @brief This function is the member m_Msg's mutator.
+     * @param val Variable whose value is assigned to m_Msg.
+     */
+    void setMessageText(const std::string &val) { m_Msg = val; }
+
+    /**
+     * @brief This function is the member m_Code's accessor.
+     */
     int getMessageCode() { return m_Code; }
+
+    /**
+     * @brief This function is the member m_Code's mutator.
+     * @param val Variable whose value is assigned to m_Code.
+     */
     void setMessageCode(int val) { m_Code = val; }
 
+    /**
+     * @brief This function is the member m_msgType's accessor.
+     */
     PipelineMessage::MessageType getMessageType() { return m_msgType; }
+
+    /**
+     * @brief This function is the member m_msgType's mutator.
+     * @param val Variable whose value is assigned to m_msgType.
+     */
     void setMessageType(PipelineMessage::MessageType val) { m_msgType = val; }
 
-    int getProgressValue() const { return m_status; }
-    void setProgressValue(int val) { m_status = val; }
+    /**
+     * @brief This function is the member m_status's accessor.
+     */
+    int getProgressValue() const { return m_Progress; }
 
+    /**
+     * @brief This function is the member m_status's mutator.
+     * @param val Variable whose value is assigned to m_Progress.
+     */
+    void setProgressValue(int val) { m_Progress = val; }
+
+    /**
+     * @brief This function creates and returns a string for error messages
+     */
     std::string generateErrorString()
     {
       std::stringstream ss;
-      ss << "Error(" << m_Code << "):" << m_filterName << " :" << m_Message;
+      ss << "Error(" << m_Code << "):" << m_filterName << " :" << m_Msg;
       return ss.str();
     }
+
+    /**
+     * @brief This function creates and returns a string for warning messages
+     */
     std::string generateWarningString()
     {
       std::stringstream ss;
-      ss << "Warning(" << m_Code << "):" << m_filterName << " :" << m_Message;
+      ss << "Warning(" << m_Code << "):" << m_filterName << " :" << m_Msg;
       return ss.str();
     }
+
+    /**
+     * @brief This function creates and returns a string for status messages
+     */
     std::string generateStatusString()
      {
        std::stringstream ss;
-       ss << m_filterName << ":" << m_Message;
+       ss << m_filterName << ":" << m_Msg;
        return ss.str();
      }
 
-  protected:
-
-
   private:
-    std::string m_filterName;
-    std::string m_Message;
-    int m_Code;
-    MessageType m_msgType;
-    int m_status;
+    std::string m_filterName;   // Name of the Filter
+    std::string m_Msg;          // Message Text
+    int m_Code;                 // Error/Warning Code
+    MessageType m_msgType;      // Type of Message (see enumeration "MessageType")
+    int m_Progress;             // Progress integer
 
 };
 
