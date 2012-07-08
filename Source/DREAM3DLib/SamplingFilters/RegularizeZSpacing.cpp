@@ -190,14 +190,17 @@ void RegularizeZSpacing::execute()
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(p->GetNumberOfTuples(), p->GetNumberOfComponents(), p->GetName());
 	data->Resize(totalPoints);
+  void* source = NULL;
+  void* destination = NULL;
+  size_t newIndicies_I = 0;
+  int nComp = data->GetNumberOfComponents();
 	for(size_t i = 0; i < totalPoints; i++)
-	{
-//		for(size_t j = 0; j < data->GetNumberOfComponents(); j++)
-//		{
-			void* source = p->GetVoidPointer((data->GetNumberOfComponents()*newindicies[i]));
-			void* destination = data->GetVoidPointer((data->GetNumberOfComponents()*i));
+	{ 
+      newIndicies_I = newindicies[i];
+      
+      source = p->GetVoidPointer((nComp*newIndicies_I));
+			destination = data->GetVoidPointer((data->GetNumberOfComponents()*i));
 			::memcpy(destination, source, p->GetTypeSize()*data->GetNumberOfComponents());
-//		}
 	}
 	m->addCellData(*iter, data);
   }
