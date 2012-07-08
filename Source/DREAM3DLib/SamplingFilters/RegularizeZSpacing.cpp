@@ -192,12 +192,12 @@ void RegularizeZSpacing::execute()
 	data->Resize(totalPoints);
 	for(size_t i = 0; i < totalPoints; i++)
 	{
-		for(size_t j = 0; j < data->GetNumberOfComponents(); j++)
-		{
-			void* source = p->GetVoidPointer((data->GetNumberOfComponents()*newindicies[i])+j);
-			void* destination = data->GetVoidPointer((data->GetNumberOfComponents()*i)+j);
-			::memcpy(destination, source, p->GetTypeSize());
-		}
+//		for(size_t j = 0; j < data->GetNumberOfComponents(); j++)
+//		{
+			void* source = p->GetVoidPointer((data->GetNumberOfComponents()*newindicies[i]));
+			void* destination = data->GetVoidPointer((data->GetNumberOfComponents()*i));
+			::memcpy(destination, source, p->GetTypeSize()*data->GetNumberOfComponents());
+//		}
 	}
 	m->addCellData(*iter, data);
   }
