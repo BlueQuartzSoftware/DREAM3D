@@ -726,7 +726,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
-  connect(m_FilterPipeline, SIGNAL (sendPipelineMessage(PipelineMessage)),
+  connect(m_FilterPipeline, SIGNAL (firePipelineMessage(PipelineMessage)),
           this, SLOT(addMessage(PipelineMessage) ));
 
 

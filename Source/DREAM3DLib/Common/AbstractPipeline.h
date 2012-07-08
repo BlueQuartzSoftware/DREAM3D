@@ -120,8 +120,8 @@ class DREAM3DLib_EXPORT AbstractPipeline
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
-              pipelineProgressMessage(#Message);\
-              pipelineProgress(0);\
+              updatePipelineMessage(#Message);\
+              updatePipelineProgress(0);\
               pipelineFinished();\
               m = FuncClass::NullPointer();\
       return;}\
@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT AbstractPipeline
       setErrorCondition(err);\
       std::string msg = std::string(Message);\
       pipelineErrorMessage(msg.c_str());\
-      pipelineProgress(0);\
+      updatePipelineProgress(0);\
       pipelineFinished();\
       m = FuncClass::NullPointer();\
       return;   }
