@@ -11,6 +11,7 @@
 
 SET (SamplingFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.h
+    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.h
 )
 
@@ -20,6 +21,7 @@ SET (DREAM3DLib_SamplingFilters_HDRS
 
 SET (DREAM3DLib_SamplingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.cpp
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.cpp
 )
 

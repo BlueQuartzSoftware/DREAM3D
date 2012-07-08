@@ -72,16 +72,12 @@ m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
 m_Quats(NULL),
 m_CellPhases(NULL),
-m_FieldPhases(NULL),
-m_Active(NULL),
 m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -162,9 +158,6 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
@@ -193,6 +186,7 @@ void EBSDSegmentGrains::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
+  m->resizeFieldDataArrays(1);
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -255,7 +249,6 @@ void EBSDSegmentGrains::execute()
     }
   }
 
-
   // If there is an error set this to something negative and also set a message
  notifyStatusMessage("Completed");
 }
@@ -300,8 +293,6 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
 	  m_GrainIds[seed] = gnum;
 	  m->resizeFieldDataArrays(gnum+1);
 	  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-	  m_Active[gnum] = true;
-	  m_FieldPhases[gnum] = m_CellPhases[seed];
   }
   return seed;
 }
@@ -334,7 +325,7 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
 	  q2[4] = m_Quats[neighborpoint*5 + 4];
 
 //	  if (phase1 == phase2 && m_GoodVoxels[referencepoint] == true && m_GoodVoxels[neighborpoint] == true) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-	  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+	  if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 	  if (w < m_MisorientationTolerance)
 	  {
 		group = true;

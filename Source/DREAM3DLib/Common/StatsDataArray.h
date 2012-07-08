@@ -63,7 +63,11 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<StatsData::Pointer>, StatsDataArray)
 
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    {
 
+      return StatsDataArray::New();
+    }
 
     /**
      *
