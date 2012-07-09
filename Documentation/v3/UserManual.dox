@@ -1,0 +1,67 @@
+/**
+
+
+@page ack Acknowledgements / Funding
+
+
+@page intro Introduction
+
+
+
+@page launch Launching DREAM3D
+
+
+
+@page ui DREAM3D User Interface
+
+   After DREAM3D successfully opens the user is presented with the user interface
+presented in figure 4.1. There are 4 main areas of the window which are:
+
+@image html UI_1.png "4 Areas of the DREAM3D User Interface"
+@image latex UI_1.png "4 Areas of the DREAM3D User Interface" width=6.5in
+
+@section area1 The Filter Library | Prebuilt Pipelines | Favorite Pipelines
+   <b>Area 1</b>: This area of the user interface is broken into 3 basic groups: Filter Library,
+Prebuilt Pipelines and Favorite pipelines. The <i>Filter Library</i> section contains
+the various groups that the filters are organized into. The user can click a specific
+group and just the filters associated with that group will be displayed in the
+<i>Filter List</i> area of the user interface. DREAM3D provides several <i>Prebuilt Pipelines</i>
+that can aid the new user in getting started with DREAM3D. Simply double clicking
+a preset will clear any current filters in the pipeline area and populate the
+pipeline area with the filters from the Pipeline Preset. After the user builds
+a pipeline that they may want to save for later the user can click the "Add Favorites"
+button to save that specific pipeline configuration.
+
+@section area2 Filter List
+   <b>Area 2</b>:This section lists the filters that are associated with a specific group that is
+selected in the <i>Filter Library</i> area. If the <i>Filter Library</i> is itself
+selected then all filters will be shown in this list
+
+
+@section area3  Pipeline Area
+   <b>Area 3</b>:This area is where the user will construct their pipeline by either double clicking
+on a filter in the library area or dragging a filter from the Filter List and dropping
+the filter into the pipeline area. Filters in this section can be rearranged
+by simply dragging the filter into a new location.
+
+
+@section area4  Documentation and Errors area
+ <b>Area 4</b>: This area displays both the documentation for a specific filter
+and any errors associated with the filter if it is actively being used in a pipeline.
+The display of the documentation and errors can be toggled on and off by pressing the
+appropriate buttons
+
+
+@image html UI_2.png "Button Descriptions"
+@image latex UI_2.png "Button Descriptions" width=6.5in
+
+
+@page buildPipeline Building a Pipeline
+
+
+@image html UI_3.png "Building a Pipeline"
+@image latex UI_3.png "Building a Pipeline" width=6.5in
+
+
+
+ */
