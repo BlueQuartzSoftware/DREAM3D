@@ -130,8 +130,7 @@ void RegularizeZSpacing::execute()
 
   setErrorCondition(0);
 
-
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
@@ -144,48 +143,48 @@ void RegularizeZSpacing::execute()
 
   float zval;
   std::vector<float> zboundvalues;
-  zboundvalues.resize(dims[2]+1,0.0);
-  for (size_t iter = 0; iter < dims[2]+1; iter++)
+  zboundvalues.resize(dims[2] + 1, 0.0);
+  for (size_t iter = 0; iter < dims[2] + 1; iter++)
   {
-	inFile >> zval;
+    inFile >> zval;
     zboundvalues[iter] = zval;
   }
   inFile.close();
 
   m_XRes = m->getXRes();
   m_YRes = m->getYRes();
-  float sizex = (dims[0])*m_XRes;
-  float sizey = (dims[1])*m_YRes;
+//  float sizex = (dims[0]) * m_XRes;
+//  float sizey = (dims[1]) * m_YRes;
   float sizez = zboundvalues[dims[2]];
-  int m_XP = dims[0];
-  int m_YP = dims[1];
-  int m_ZP = int(sizez / m_ZRes);
-  int64_t totalPoints = m_XP*m_YP*m_ZP;
+  size_t m_XP = dims[0];
+  size_t m_YP = dims[1];
+  size_t m_ZP = static_cast<size_t>(sizez / m_ZRes);
+  int64_t totalPoints = m_XP * m_YP * m_ZP;
 
   int index, oldindex;
   int plane;
   std::vector<size_t> newindicies;
   newindicies.resize(totalPoints);
-  for(size_t i = 0; i < m_ZP; i++)
+  for (size_t i = 0; i < m_ZP; i++)
   {
-	  plane = 0;
-	  for(size_t iter = 1; iter < dims[2]; iter++)
-	  {
-		if((i*m_ZRes) > zboundvalues[iter]) plane = iter;
-	  }
-	  for(size_t j = 0; j < m_YP; j++)
-	  {
-		  for(size_t k = 0; k < m_XP; k++)
-		  {
-			  oldindex = (plane * dims[0] * dims[1]) + (j * dims[0]) + k;
-			  index = (i * dims[0] * dims[1]) + (j * dims[0]) + k;
-			  newindicies[index] = oldindex;
-		  }
-	  }
+    plane = 0;
+    for (size_t iter = 1; iter < dims[2]; iter++)
+    {
+      if((i * m_ZRes) > zboundvalues[iter]) plane = iter;
+    }
+    for (size_t j = 0; j < m_YP; j++)
+    {
+      for (size_t k = 0; k < m_XP; k++)
+      {
+        oldindex = (plane * dims[0] * dims[1]) + (j * dims[0]) + k;
+        index = (i * dims[0] * dims[1]) + (j * dims[0]) + k;
+        newindicies[index] = oldindex;
+      }
+    }
   }
 
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     std::string name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
@@ -193,20 +192,20 @@ void RegularizeZSpacing::execute()
     // the data container this will over write the current array with
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(p->GetNumberOfTuples(), p->GetNumberOfComponents(), p->GetName());
-	data->Resize(totalPoints);
-  void* source = NULL;
-  void* destination = NULL;
-  size_t newIndicies_I = 0;
-  int nComp = data->GetNumberOfComponents();
-	for(size_t i = 0; i < totalPoints; i++)
-	{
+    data->Resize(totalPoints);
+    void* source = NULL;
+    void* destination = NULL;
+    size_t newIndicies_I = 0;
+    int nComp = data->GetNumberOfComponents();
+    for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
+    {
       newIndicies_I = newindicies[i];
 
-      source = p->GetVoidPointer((nComp*newIndicies_I));
-			destination = data->GetVoidPointer((data->GetNumberOfComponents()*i));
-			::memcpy(destination, source, p->GetTypeSize()*data->GetNumberOfComponents());
-	}
-	m->addCellData(*iter, data);
+      source = p->GetVoidPointer((nComp * newIndicies_I));
+      destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
+      ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
+    }
+    m->addCellData(*iter, data);
   }
   m->setResolution(m_XRes, m_YRes, m_ZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);
