@@ -388,6 +388,9 @@ if(DREAM3D_BUILD_DOCS)
   # Add a target that builds just the High Level User Manuals/Tutorial type documentation
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
   
+  # Add a target that builds just the High Level User Manuals/Tutorial type documentation
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/v3 ${PROJECT_BINARY_DIR}/v3_Documentation)
+  
   # Generating the API Docs will also include the other "Developer Documentation"
   option(DREAM3D_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
   if (DREAM3D_BUILD_API_DOCS)
