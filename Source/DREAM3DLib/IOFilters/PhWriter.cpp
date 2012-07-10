@@ -199,7 +199,6 @@ int PhWriter::writeFile()
   outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";
   outfile << " 0.000 0.000 0.000          0        \n"; // << grains << endl;
 
-  int count = 0;
   for (int k = 0; k < totalpoints; k++)
   {
     outfile << m_GrainIds[k] << std::endl;
