@@ -202,17 +202,8 @@ int PhWriter::writeFile()
   int count = 0;
   for (int k = 0; k < totalpoints; k++)
   {
-//    outfile << std::setw(6) << m_GrainIds[k];
-    outfile << m_GrainIds[k] << " ";
-    count++;
-    if(count == 20)
-    {
-      outfile << "\n";
-      count = 0;
-    }
-    //                    outfile << grid[i][j][k] << endl;
+    outfile << m_GrainIds[k] << std::endl;
   }
-  outfile << "\n";
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
