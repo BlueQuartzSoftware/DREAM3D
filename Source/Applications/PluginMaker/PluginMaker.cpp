@@ -713,20 +713,58 @@ void PluginMaker::on_treeWidget_itemSelectionChanged() {
   
   QTreeWidgetItem* currentFile = treeWidget->currentItem();
 
-  for (int i = 0; i < m_FilterBundles.count(); i++) {
-    if (m_FilterBundles[i].containsTreeWidgetItem(currentFile) ) {
-      if ( currentFile->text(0).contains(".cpp") ) {
+  bool inBundle = false;
+
+  for (int i = 0; i < m_FilterBundles.count(); i++) 
+  {
+    if (m_FilterBundles[i].containsTreeWidgetItem(currentFile) ) 
+    {
+      if ( currentFile->text(0).contains(".cpp") ) 
+      {
         previewFile(m_FilterBundles[i].getCPPGenerator()->getCodeTemplateResourcePath(), currentFile->text(0));
         statusbar->showMessage("Currently viewing " + currentFile->text(0));
+        inBundle = true;
         break;
       }
-      else if ( currentFile->text(0).contains(".h") && !currentFile->text(0).contains(".html") ) {
+      else if ( currentFile->text(0).contains(".h") && !currentFile->text(0).contains(".html") ) 
+      {
         previewFile(m_FilterBundles[i].getHGenerator()->getCodeTemplateResourcePath(), currentFile->text(0));
         statusbar->showMessage("Currently viewing " + currentFile->text(0));
+        inBundle = true;
+        break;
+      }
+      else if ( currentFile->text(0).contains(".html") ) 
+      {
+        previewFile(m_FilterBundles[i].getHTMLGenerator()->getCodeTemplateResourcePath(), currentFile->text(0));
+        statusbar->showMessage("Currently viewing " + currentFile->text(0));
+        inBundle = true;
         break;
       }
     }
     else {
+      m_fileEditor->setText("");
+      statusbar->showMessage("Ready");
+    }
+  }
+  if (!inBundle) 
+  {
+    if ( currentFile->text(0).contains(".cmake") ) 
+    {
+      previewFile(":/Template/Code/Filter/SourceList.cmake.in", currentFile->text(0));
+      statusbar->showMessage("Currently viewing " + currentFile->text(0));
+    }
+    else if ( currentFile->text(0).contains(".txt") ) 
+    {
+      previewFile(":/Template/CMakeLists.txt.in", currentFile->text(0));
+      statusbar->showMessage("Currently viewing " + currentFile->text(0));
+    }
+    else if ( currentFile->text(0).contains(".qrc") ) 
+    {
+      previewFile_QRC();
+      statusbar->showMessage("Currently viewing " + currentFile->text(0));
+    }
+    else 
+    {
       m_fileEditor->setText("");
       statusbar->showMessage("Ready");
     }
@@ -884,15 +922,33 @@ void PluginMaker::readWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PluginMaker::on_m_fileEditor_textChanged(const QString & text) {
-  saveFileBtn->setEnabled(true);
-  saveFileBtn->setVisible(true);
-}
+void PluginMaker::previewFile_QRC() {
+  QString pluginName = m_PluginName->text();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PluginMaker::on_saveFileBtn_clicked() {
-  saveFileBtn->setEnabled(false);
-  
+  // WE need to generate the QRC file here because we possibly have
+  // more than a single filter
+  QString htmlPathCode("@PluginName@Filters/");
+  htmlPathCode.replace("@PluginName@", m_PluginName->text());
+
+  QString htmlContents = "";
+  for (int i = 0; i < m_FilterBundles.count(); ++i)
+  {
+    PMFileGenerator* htmlGen = m_FilterBundles[i].getHTMLGenerator();
+
+    htmlContents.append("<file>").append(htmlPathCode).append(htmlGen->getFileName()).append("</file>\n");
+
+    pluginName = m_GenObjects[i]->getPluginName();
+  }
+
+  // Create QRC File
+  QFile rfile2(":/Template/Documentation/FilterDocs.qrc.in");
+  if ( rfile2.open(QIODevice::ReadOnly | QIODevice::Text) )
+  {
+    QTextStream in(&rfile2);
+    QString text = in.readAll();
+    text.replace("@PluginName@", pluginName);
+    text.replace("@GENERATED_HTML_FILTERS_CODE@", htmlContents);
+
+    m_fileEditor->setText(text);
+  }
 }

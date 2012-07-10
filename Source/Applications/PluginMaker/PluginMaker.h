@@ -68,7 +68,6 @@ protected slots:
 
   void on_m_PluginName_textChanged(const QString & text);
   void on_m_OutputDir_textChanged(const QString & text);
-  void on_m_fileEditor_textChanged(const QString & text);
 
   void on_treeWidget_itemSelectionChanged();
   void generationError(const QString& test);
@@ -78,7 +77,6 @@ protected slots:
 
   void on_addFilterBtn_clicked();
   void on_removeFilterBtn_clicked();
-  void on_saveFileBtn_clicked();
 
 private:
   QString m_OpenDialogLastDirectory;
@@ -91,6 +89,7 @@ private:
   void readWindowSettings(QSettings &prefs);
   void writeWindowSettings(QSettings &prefs);
   void previewFile(QString rTemplate, QString fileName);
+  void previewFile_QRC();
 
 
   QVector<PMDirGenerator*> m_GenObjects;
