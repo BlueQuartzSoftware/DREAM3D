@@ -2,20 +2,25 @@
 
 
 @page ack Acknowledgements / Funding
+  Part of DREAM3D were written under US Air Force Contract FA8650-07-D-5800. Many
+others have contributed to the code including the following:
 
 
 @page intro Introduction
-
-
-
-@page launch Launching DREAM3D
-
-
+Welcome to DREAM.3D, an open and modular software package that allows users to
+reconstruct, instantiate, quantify, mesh, handle and visualize microstructure digitally.
+The core software package has four (4) major functionalities. First, a series of
+EBSD data files (either TSL .ang or HKL .ctf) can be read and packed into a single
+HDF5 data file in order to reduce data size and clutter.  Second, the sections can
+be aligned, cleaned, reconstructed, segmented and statistically characterized.
+Third, the statistics can be read in and used to generate statistically equivalent,
+synthetic microstructures. Fourth, the reconstructed volumes and the synthetic
+volumes can be surfaced meshed using a multi-material marching cubes algorithm.
 
 @page ui DREAM3D User Interface
-
-   After DREAM3D successfully opens the user is presented with the user interface
-presented in figure 4.1. There are 4 main areas of the window which are:
+  Locate the DREAM3D application and open the application in the normal method for
+your operating system. After DREAM3D successfully opens the user is presented with the user interface
+presented in figure 3.1. There are 4 main areas of the window which are:
 
 @image html UI_1.png "4 Areas of the DREAM3D User Interface"
 @image latex UI_1.png "4 Areas of the DREAM3D User Interface" width=6.5in
@@ -58,10 +63,58 @@ appropriate buttons
 
 @page buildPipeline Building a Pipeline
 
+    In order the build a pipeline the user can either double click on a particular
+filter or drag the filter from the <i>Filter List</i> into the <i>Pipeline Area</i>.
 
 @image html UI_3.png "Building a Pipeline"
 @image latex UI_3.png "Building a Pipeline" width=6.5in
 
+    After placing a filter into the Pipeline area the user interface will look like
+the next figure. The user should note the red outline of the filter widget which
+indicates that one or more of the input parameters has an error. By looking at the
+error table the user can read the error message from the pipeline and act accordingly.
+In the figure shown the error message is indicating that the input file for the filter
+is missing or has not been filled into the Text Edit (the widget with the Red outline).
 
+@image html UI_4.png "Pipeline with a single filter"
+@image latex UI_4.png "Pipeline with a single filter" width=6.5in
 
- */
+The user can place multiple filters into the pipeline to generate a workflow
+of data and analysis filters culminating in the output of one or several data files.
+The user can reorder the filters by simply using drag-and-drop of a selected filter
+in the pipeline and moving it into a new position in the pipeline.
+As filters are placed into the pipeline a basic error checking algorithm called
+the <b>Preflight</b> is executed on the entire pipeline. During the preflight stage
+the pipeline will have each filter check its input parameters and the availability
+needed data arrays. If the user places a filter that requires data that is <b>not</b>
+available an error will be added to the error table. The user will need to insert
+a filter into the pipeline before the error'ed filter that generates the missing
+data array.
+
+@page example1 Example Pipelines
+    DREAM3D is capable of a wide variety of reconstruction, data analysis and synthetic
+microstructure which can present issues to the new user with regards to how to get
+started contructing a working pipeline. In the section a few sample pipelines are
+presented which will hopefully allow the new user to get started quickly.
+
+@section ex_reconstruction EBSD Reconstruction
+    With the advent of 3D EBSD data collection systems the visualization of the
+collected data is typically the first order of business. Using the sample data set
+<i>Small IN100</i> which is a Nickel based super alloy we can use DREAM3D to build
+a 3D reconstruction of the 2D slices. The order of operations for this type of work
+flow is the following:
+@li Read H5Ebsd file
+@li Align the sections using a Misorientation Alignment filter
+@li Segment the grains using a Misorientation Algorithm
+@li Write out a DREAM3D data file
+@li Write out a VTK data file for viewing in ParaView.
+
+@image html ex_reconstruction.png "Screen Shot showing the EBSD Reconstruction Pipeline"
+@image latex ex_reconstruction.png "Screen Shot showing the EBSD Reconstruction Pipeline" width=6.5in
+
+After running the pipeline ParaView can be used to display the generated VTK file.
+
+@image html ex_reconstruction_2.png "Visualizing EBSD Reconstruction in ParaView"
+@image latex ex_reconstruction_2.png "Visualizing EBSD Reconstrucion in ParaView" width=6.5in
+
+*/

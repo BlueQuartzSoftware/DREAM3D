@@ -124,19 +124,28 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   std::stringstream ss;
 //  DataContainer* m = getDataContainer();
 
-  if(m_OutputFile.empty() == true)
+  for (std::vector<std::string>::iterator iter = m_EbsdFileList.begin(); iter != m_EbsdFileList.end(); ++iter )
   {
-    ss << ": The output file must be set before executing this filter.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
-    setErrorCondition(-1);
+    std::cout << (*iter) << std::endl;
   }
+
 
   if (m_EbsdFileList.size() == 0)
   {
-    ss << ": No files have been selected for import.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    ss.str("");
+    ss << "No files have been selected for import. Have you set the input directory?";
+    addErrorMessage(getNameOfClass(), ss.str(), -11);
     setErrorCondition(-1);
   }
+
+  if(m_OutputFile.empty() == true)
+  {
+    ss.str("");
+    ss << "The output file must be set before executing this filter.";
+    addErrorMessage(getNameOfClass(), ss.str(), -12);
+    setErrorCondition(-1);
+  }
+
 }
 
 // -----------------------------------------------------------------------------
