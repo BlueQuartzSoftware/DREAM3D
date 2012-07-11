@@ -116,22 +116,22 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-
+  int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
-  if(getErrorCondition() == -302)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
+  if(err == -302)
   {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+    setErrorCondition(0);
+    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+    find_grainphases->setObservers(this->getObservers());
+    find_grainphases->setDataContainer(getDataContainer());
+    if(preflight == true) find_grainphases->preflight();
+    if(preflight == false) find_grainphases->execute();
   }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
 }
 
