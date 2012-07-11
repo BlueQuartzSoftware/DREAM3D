@@ -2,10 +2,20 @@
 
 
 @page ack Acknowledgements / Funding
+  Part of DREAM3D were written under US Air Force Contract FA8650-07-D-5800. Many
+others have contributed to the code including the following:
 
 
 @page intro Introduction
-
+Welcome to DREAM.3D, an open and modular software package that allows users to
+reconstruct, instantiate, quantify, mesh, handle and visualize microstructure digitally.
+The core software package has four (4) major functionalities. First, a series of
+EBSD data files (either TSL .ang or HKL .ctf) can be read and packed into a single
+HDF5 data file in order to reduce data size and clutter.  Second, the sections can
+be aligned, cleaned, reconstructed, segmented and statistically characterized.
+Third, the statistics can be read in and used to generate statistically equivalent,
+synthetic microstructures. Fourth, the reconstructed volumes and the synthetic
+volumes can be surfaced meshed using a multi-material marching cubes algorithm.
 
 @page ui DREAM3D User Interface
   Locate the DREAM3D application and open the application in the normal method for
