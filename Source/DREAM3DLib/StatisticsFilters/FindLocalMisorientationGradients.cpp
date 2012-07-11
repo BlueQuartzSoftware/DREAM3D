@@ -119,7 +119,8 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+  int err = 0;
+  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
   if(getErrorCondition() == -303)
   {
 	setErrorCondition(0);
@@ -128,8 +129,10 @@ void FindLocalMisorientationGradients::dataCheck(bool preflight, size_t voxels, 
 	find_cellquats->setDataContainer(getDataContainer());
 	if(preflight == true) find_cellquats->preflight();
 	if(preflight == false) find_cellquats->execute();
-	GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
   }
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+
+
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, float, FloatArrayType, 0, voxels, 1)
