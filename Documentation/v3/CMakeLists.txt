@@ -52,7 +52,7 @@ endif()
 include ( ${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
 set (LATEX_TITLE "DREAM.3D:\\\\User Manual")
-set (LATEX_AUTHOR "Michael Groeber, Michael Jackson")
+set (LATEX_AUTHOR "DREAM3D Development Team")
 
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
@@ -65,7 +65,7 @@ set (LATEX_EPS_FILES
 )
 
 if (DOX_GENERATE_LATEX)
-    ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D User Manual"
+    ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_User_Manual"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX" 
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
