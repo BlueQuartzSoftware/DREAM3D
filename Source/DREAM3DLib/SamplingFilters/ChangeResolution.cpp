@@ -97,6 +97,8 @@ void ChangeResolution::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+
 // -----------------------------------------------------------------------------
 void ChangeResolution::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
