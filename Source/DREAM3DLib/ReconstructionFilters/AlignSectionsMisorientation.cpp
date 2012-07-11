@@ -153,12 +153,10 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
     find_cellquats->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
-    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
   }
-  else // The array was in the Data Container so get that array.
-  {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
-  }
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
+
+
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 
