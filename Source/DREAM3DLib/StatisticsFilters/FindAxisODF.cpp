@@ -78,10 +78,12 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+  int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
-  if(getErrorCondition() == -302)
+
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
+  if(err == -302)
   {
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
@@ -89,9 +91,12 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     find_surfacefields->setDataContainer(getDataContainer());
     if(preflight == true) find_surfacefields->preflight();
     if(preflight == false) find_surfacefields->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
-  }GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
-  if(getErrorCondition() == -303)
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+
+  err = 0;
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303, int32_t, Int32ArrayType, fields, 1)
+  if(err == -303)
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
@@ -99,8 +104,8 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     find_grainphases->setDataContainer(getDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
   }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)

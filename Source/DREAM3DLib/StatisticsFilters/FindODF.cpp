@@ -89,9 +89,10 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
+  int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1)
-  if(getErrorCondition() == -301)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -301, int32_t, Int32ArrayType, fields, 1)
+  if(err == -301)
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
@@ -99,11 +100,13 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     find_grainphases->setDataContainer(getDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1)
   }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1)
+
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1)
-  if(getErrorCondition() == -303)
+
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -303, bool, BoolArrayType, fields, 1)
+  if(err == -303)
   {
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
@@ -111,8 +114,10 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     find_surfacefields->setDataContainer(getDataContainer());
     if(preflight == true) find_surfacefields->preflight();
     if(preflight == false) find_surfacefields->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1)
   }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1)
+
+
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;

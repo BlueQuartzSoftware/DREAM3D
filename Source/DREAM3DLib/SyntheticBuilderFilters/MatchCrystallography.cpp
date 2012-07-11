@@ -113,34 +113,37 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-
+  int err = 0;
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
-  if(getErrorCondition() == -302)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
+  if(err == -302)
   {
-	setErrorCondition(0);
-	FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-	find_surfacefields->setObservers(this->getObservers());
-	find_surfacefields->setDataContainer(getDataContainer());
-	if(preflight == true) find_surfacefields->preflight();
-	if(preflight == false) find_surfacefields->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+    setErrorCondition(0);
+    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+    find_surfacefields->setObservers(this->getObservers());
+    find_surfacefields->setDataContainer(getDataContainer());
+    if(preflight == true) find_surfacefields->preflight();
+    if(preflight == false) find_surfacefields->execute();
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303, int32_t, Int32ArrayType, fields, 1)
   if(getErrorCondition() == -303)
   {
-	setErrorCondition(0);
-	FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	find_grainphases->setObservers(this->getObservers());
-	find_grainphases->setDataContainer(getDataContainer());
-	if(preflight == true) find_grainphases->preflight();
-	if(preflight == false) find_grainphases->execute();
-	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+    setErrorCondition(0);
+    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+    find_grainphases->setObservers(this->getObservers());
+    find_grainphases->setDataContainer(getDataContainer());
+    if(preflight == true) find_grainphases->preflight();
+    if(preflight == false) find_grainphases->execute();
   }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+
+
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
@@ -148,24 +151,25 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-	setErrorCondition(0);
-	FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-	find_neighbors->setObservers(this->getObservers());
-	find_neighbors->setDataContainer(getDataContainer());
-	if(preflight == true) find_neighbors->preflight();
-	if(preflight == false) find_neighbors->execute();
-	m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-	if(m_NeighborList == NULL)
-	{
-		ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-		setErrorCondition(-305);
-	}
-	m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-	if(m_SharedSurfaceAreaList == NULL)
-	{
-		ss << "SurfaceAreaLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
-		setErrorCondition(-306);
-	}
+    setErrorCondition(0);
+    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+    find_neighbors->setObservers(this->getObservers());
+    find_neighbors->setDataContainer(getDataContainer());
+    if(preflight == true) find_neighbors->preflight();
+    if(preflight == false) find_neighbors->execute();
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    if(m_NeighborList == NULL)
+    {
+      ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      setErrorCondition(-305);
+    }
+    m_SharedSurfaceAreaList =
+        NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+    if(m_SharedSurfaceAreaList == NULL)
+    {
+      ss << "SurfaceAreaLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      setErrorCondition(-306);
+    }
   }
 
   // Ensemble Data
@@ -173,17 +177,19 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
-  if(getErrorCondition() == -308)
+  TEST_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, err, -308, int32_t, Int32ArrayType, ensembles, 1)
+  if(err == -308)
   {
-	setErrorCondition(0);
-	FindNumFields::Pointer find_numfields = FindNumFields::New();
-	find_numfields->setObservers(this->getObservers());
-	find_numfields->setDataContainer(getDataContainer());
-	if(preflight == true) find_numfields->preflight();
-	if(preflight == false) find_numfields->execute();
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
+    setErrorCondition(0);
+    FindNumFields::Pointer find_numfields = FindNumFields::New();
+    find_numfields->setObservers(this->getObservers());
+    find_numfields->setDataContainer(getDataContainer());
+    if(preflight == true) find_numfields->preflight();
+    if(preflight == false) find_numfields->execute();
   }
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
+
+
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -309, float, FloatArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)

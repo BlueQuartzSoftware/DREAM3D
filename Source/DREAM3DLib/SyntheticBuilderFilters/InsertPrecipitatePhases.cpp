@@ -155,20 +155,23 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-
+  int err = 0;
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1)
-  if(getErrorCondition() == -301)
+
+  TEST_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, err, -301, int8_t, Int8ArrayType, voxels, 1)
+  if(err == -301)
   {
-	setErrorCondition(0);
-	FindSurfaceCells::Pointer find_surfacecells = FindSurfaceCells::New();
-	find_surfacecells->setObservers(this->getObservers());
-	find_surfacecells->setDataContainer(getDataContainer());
-	if(preflight == true) find_surfacecells->preflight();
-	if(preflight == false) find_surfacecells->execute();
-    GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1)
+    setErrorCondition(0);
+    FindSurfaceCells::Pointer find_surfacecells = FindSurfaceCells::New();
+    find_surfacecells->setObservers(this->getObservers());
+    find_surfacecells->setDataContainer(getDataContainer());
+    if(preflight == true) find_surfacecells->preflight();
+    if(preflight == false) find_surfacecells->execute();
   }
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1)
+
+
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data

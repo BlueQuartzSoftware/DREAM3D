@@ -120,12 +120,16 @@ void AlignSectionsMutualInformation::setupFilterOptions()
   }
   setFilterOptions(options);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 {
   AlignSections::writeFilterOptions(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -134,7 +138,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-
+  int err = 0;
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
@@ -144,8 +148,8 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 
  // CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
-  if(getErrorCondition() == -301)
+  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -301, float, FloatArrayType, voxels, 5)
+  if(err == -301)
   {
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
@@ -153,8 +157,10 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
     find_cellquats->setDataContainer(getDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
-    GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
   }
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
+
+
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 
@@ -162,7 +168,6 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
