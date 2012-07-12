@@ -57,16 +57,16 @@ set (LATEX_AUTHOR "")
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
 set (DOCUMENTATION_SOURCE_FILES
-    ${DREAM3D_SOURCE_DIR}/ToDo.dox
+    ${PROJECT_SOURCE_DIR}/Developer/DataContainerStrategies.dox
+    ${PROJECT_SOURCE_DIR}/Developer/WritingPlugin.dox
     ${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.dox
     ${PROJECT_SOURCE_DIR}/Developer/Compiling.dox
     ${PROJECT_SOURCE_DIR}/Developer/H5EbsdFile.dox
     ${PROJECT_SOURCE_DIR}/Developer/H5VoxelVolume.dox
     ${PROJECT_SOURCE_DIR}/Developer/MicrostructurePresets.dox
     ${PROJECT_SOURCE_DIR}/Developer/StructureReaders.dox
-    ${PROJECT_SOURCE_DIR}/Developer/SurfaceMeshing.dox
-    ${PROJECT_SOURCE_DIR}/Developer/WritingPlugin.dox
-    ${PROJECT_SOURCE_DIR}/Developer/DataContainerStrategies.dox
+    ${PROJECT_SOURCE_DIR}/Developer/SurfaceMeshing.dox 
+    ${DREAM3D_SOURCE_DIR}/ToDo.dox
 )
 
 set (LATEX_EPS_FILES 
