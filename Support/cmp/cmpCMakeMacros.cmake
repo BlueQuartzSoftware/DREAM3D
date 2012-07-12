@@ -813,55 +813,63 @@ function(cmpVersionStringsFromGit)
     set(options)
     set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH NAMESPACE cmpProjectName)
     cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    if(0)
+    message(STATUS "--------------------------------------------")
+    message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
+    message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
+    message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
+    endif()
     
-   # message(STATUS "--------------------------------------------")
-  #  message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
-  #  message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
-   # message(STATUS "GVS_GENERATED_FILE_PATH: ${GVS_GENERATED_FILE_PATH}")
-    
+    # Find Git executable
     Find_package(Git)
-        
-        if (GIT_FOUND)
+    # Run 'git describe' to get our tag offset
+    if (GIT_FOUND)
         execute_process(COMMAND ${GIT_EXECUTABLE} describe
-            OUTPUT_VARIABLE DVERS
-            RESULT_VARIABLE did_run
-            ERROR_VARIABLE git_error
-            WORKING_DIRECTORY ${DREAM3DProj_SOURCE_DIR} 
+        OUTPUT_VARIABLE DVERS
+        RESULT_VARIABLE did_run
+        ERROR_VARIABLE git_error
+        WORKING_DIRECTORY ${DREAM3DProj_SOURCE_DIR} 
          )
-        string(STRIP ${DVERS} DVERS)
-       # message(STATUS "DVERS: ${DVERS}")
-        string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
-       # message(STATUS "VERSION_LIST: ${VERSION_LIST}")
-       # list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
-        set(VERSION_GEN_VER_MAJOR ${CMP_VERSION_MAJOR})
-        list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
-        list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
-    
-        set (VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
-        set (VERSION_GEN_NAME "${GVS_cmpProjectName}")
-      #  message(STATUS "VERSION_GEN_VER_MAJOR: ${VERSION_GEN_VER_MAJOR}")
-      #  message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
-      #  message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
-
-        set (${GVS_cmpProjectName}_VER_MAJOR ${CMP_VERSION_MAJOR} CACHE STRING "" FORCE)
-        set (${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
-        set (${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "" FORCE)
-        set(VERSION_GEN_COMPLETE "${VERSION_GEN_VER_MAJOR}.${VERSION_GEN_VER_MINOR}.${VERSION_GEN_VER_PATCH}" )
-       # message(STATUS "VERSION_GEN_COMPLETE: ${VERSION_GEN_COMPLETE}")
-      #  message(STATUS "${GVS_cmpProjectName}_VER_MAJOR: ${${GVS_cmpProjectName}_VER_MAJOR}")
-       # message(STATUS "${GVS_cmpProjectName}_VER_MINOR: ${${GVS_cmpProjectName}_VER_MINOR}")
-       # message(STATUS "${GVS_cmpProjectName}_VER_PATCH: ${${GVS_cmpProjectName}_VER_PATCH}")
-        
-        set(${GVS_cmpProjectName}_VERSION "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
-       # message(STATUS "${GVS_cmpProjectName}_VERSION: ${${GVS_cmpProjectName}_VERSION}")
-        mark_as_advanced( ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
-        set (PROJECT_PREFIX "${GVS_cmpProjectName}")
-        configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}  )
-        configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GVS_GENERATED_SOURCE_FILE_PATH}  )
-    #    MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
+            
+        #-- Make sure that actually worked and if not just generate some dummy values
+        if (DVERS STREQUAL "")
+            cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
+        else() 
+            string(STRIP ${DVERS} DVERS)
+               # message(STATUS "DVERS: ${DVERS}")
+            string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
+               # message(STATUS "VERSION_LIST: ${VERSION_LIST}")
+               # list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
+            set(VERSION_GEN_VER_MAJOR ${CMP_VERSION_MAJOR})
+            list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
+            list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
+            
+            set (VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
+            set (VERSION_GEN_NAME "${GVS_cmpProjectName}")
+              #  message(STATUS "VERSION_GEN_VER_MAJOR: ${VERSION_GEN_VER_MAJOR}")
+              #  message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
+              #  message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
+            
+            set (${GVS_cmpProjectName}_VER_MAJOR ${CMP_VERSION_MAJOR} CACHE STRING "" FORCE)
+            set (${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
+            set (${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "" FORCE)
+            set(VERSION_GEN_COMPLETE "${VERSION_GEN_VER_MAJOR}.${VERSION_GEN_VER_MINOR}.${VERSION_GEN_VER_PATCH}" )
+               # message(STATUS "VERSION_GEN_COMPLETE: ${VERSION_GEN_COMPLETE}")
+              #  message(STATUS "${GVS_cmpProjectName}_VER_MAJOR: ${${GVS_cmpProjectName}_VER_MAJOR}")
+               # message(STATUS "${GVS_cmpProjectName}_VER_MINOR: ${${GVS_cmpProjectName}_VER_MINOR}")
+               # message(STATUS "${GVS_cmpProjectName}_VER_PATCH: ${${GVS_cmpProjectName}_VER_PATCH}")
+            
+            set(${GVS_cmpProjectName}_VERSION "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
+               # message(STATUS "${GVS_cmpProjectName}_VERSION: ${${GVS_cmpProjectName}_VERSION}")
+            mark_as_advanced( ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
+            set (PROJECT_PREFIX "${GVS_cmpProjectName}")
+            configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}  )
+            configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GVS_GENERATED_SOURCE_FILE_PATH}  )
+            #    MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
+            
+        endif()
     else()
-       cmpGenerateVersionString( ${GVS_GENERATED_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
-    
+       cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
     endif()
 
 endfunction()
