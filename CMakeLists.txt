@@ -311,7 +311,6 @@ if (DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
 endif()
 
-
 # --- Look for user defined external Plugins that the user has entered 
 # into CMake-GUI or through CCMake by the user.
 set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
@@ -320,7 +319,7 @@ set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra Exter
 # and the user will have to put the entire path into CMake manually.
 foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
-#message(STATUS "Looking for Plugin: ${userPlugin}...")
+  #message(STATUS "Looking for Plugin: ${userPlugin}...")
   if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
       set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
       if(EXISTS ${pluginSearchDir})
