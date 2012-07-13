@@ -43,7 +43,10 @@
 #include <ctype.h>
 #include <string.h> // Needed for memset
 
+
+#if defined (CMP_HAVE_UNISTD_H)
 #include <unistd.h>
+#endif
 
 #if defined (_MSC_VER)
 #include <direct.h>
