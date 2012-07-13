@@ -167,6 +167,10 @@ IF ( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-Wall)
 ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 
+IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+  ADD_DEFINITIONS(-fPIC)
+ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+
 # --------------------------------------------------------------------
 # If was are using GCC, make the compiler messages on a single line
 IF(CMAKE_COMPILER_IS_GNUCC)
