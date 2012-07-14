@@ -497,12 +497,15 @@ void LeeMarchingCubes::execute()
   START_CLOCK()
 
   // Create the output directory if needed
-  if (MXADir::exists(m_StlOutputDirectory) == false)
+  if(m_WriteSTLFile == true && m_StlOutputDirectory.empty() == false)
   {
-    if (MXADir::mkdir(m_StlOutputDirectory, true) == false)
-    {
-      CHECK_FOR_ERROR(LeeMarchingCubes, "SurfaceMesh could not create the output directory", -1)
-    }
+	  if (MXADir::exists(m_StlOutputDirectory) == false)
+	  {
+	    if (MXADir::mkdir(m_StlOutputDirectory, true) == false)
+	    {
+	      CHECK_FOR_ERROR(LeeMarchingCubes, "SurfaceMesh could not create the output directory", -1)
+	    }
+	  }
   }
 
   int cNodeID = 0;
