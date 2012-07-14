@@ -350,10 +350,9 @@ void EbsdToH5Ebsd::execute()
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {
-      ss.str("");
-      ss << "Could not read raw EBSD Data file";
-      addErrorMessage(getNameOfClass(), ss.str(), err);
-      setErrorCondition(-1);
+      addErrorMessage(getNameOfClass(), fileImporter->getPipelineMessage(), fileImporter->getErrorCondition());
+      setErrorCondition(err);
+      return;
     }
     totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
 
