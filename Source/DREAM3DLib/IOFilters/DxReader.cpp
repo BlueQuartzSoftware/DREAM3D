@@ -268,7 +268,7 @@ int DxReader::readFile()
   finished_data = false;
   size_t index = 0;
 
-  size_t totalPoints = nx * nz * nz;
+  size_t totalPoints = nx * ny * nz;
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
