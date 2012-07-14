@@ -102,7 +102,7 @@ endmacro()
 function(BuildQtAppBundle)
     set(options )
     set(oneValueArgs TARGET DEBUG_EXTENSION ICON_FILE VERSION_MAJOR VERSION_MINOR VERSION_PATCH 
-                     BINARY_DIR COMPONENT INSTALL_DEST )
+                     BINARY_DIR COMPONENT INSTALL_DEST PLUGIN_LIST_FILE)
     set(multiValueArgs SOURCES LINK_LIBRARIES LIB_SEARCH_DIRS QT_PLUGINS OTHER_PLUGINS)
     cmake_parse_arguments(QAB "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
        
@@ -233,9 +233,9 @@ function(BuildQtAppBundle)
     
 #-- Create last install rule that will run fixup_bundle() on OS X Machines. Other platforms we
 #-- are going to create the install rules elsewhere
-    if(APPLE)
+    if (APPLE)
         list(APPEND lib_search_dirs "${QAB_LIB_SEARCH_DIRS}")
-        
+
         set (OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT 
                     "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
         
