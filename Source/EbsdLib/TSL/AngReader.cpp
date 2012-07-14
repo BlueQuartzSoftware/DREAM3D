@@ -279,7 +279,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   if (yCells < 1)
   {
-    std::cout << "NumRows Sanity Check not correct. Check the entry for NROWS in the .ang file" << std::endl;
+    setErrorMessage("NumRows Sanity Check not correct. Check the entry for NROWS in the .ang file");
     return -200;
   }
   else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
@@ -291,12 +291,12 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0)
   {
-    std::cout << "Ang Files with Hex Grids Are NOT currently supported." << std::endl;
+    setErrorMessage("Ang Files with Hex Grids Are NOT currently supported.");
     return -400;
   }
   else // Grid was not set
   {
-    std::cout << "Ang file is missing the 'GRID' header entry." << std::endl;
+   setErrorMessage("Ang file is missing the 'GRID' header entry.");
     return -300;
   }
 
