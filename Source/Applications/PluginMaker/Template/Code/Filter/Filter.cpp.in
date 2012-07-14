@@ -117,7 +117,7 @@ void @ClassName@::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 void @ClassName@::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.
@@ -125,13 +125,13 @@ void @ClassName@::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   if (m_OutputFile.empty() == true)
   {
     ss << "The output file must be set before executing this filter.";
-    PipelineMessage em(getNameOfClass(), ss.str(), -666);
+    PipelineMessage em(getNameOfClass(), "There was an error", -666);
     addErrorMessage(em);
     setErrorCondition(-1);
   }
   */
   
-  setErrorMessage(ss.str());
+
 }
 
 
@@ -155,10 +155,8 @@ void @ClassName@::execute()
   DataContainer* m = getDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
