@@ -167,9 +167,11 @@ IF ( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-Wall)
 ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 
-IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+# On linux we need to set this because some of the libraries are Static
+# and some are shared.
+IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND NOT MSVC )
   ADD_DEFINITIONS(-fPIC)
-ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+ENDIF()
 
 # --------------------------------------------------------------------
 # If was are using GCC, make the compiler messages on a single line
