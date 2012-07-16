@@ -91,7 +91,15 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionLicense_Information_triggered();
     void on_actionAbout_triggered();
 
+    /**
+     * @brief Reads the Preferences from the users pref file
+     */
+    void readSettings();
 
+    /**
+     * @brief Writes the preferences to the users pref file
+     */
+    void writeSettings();
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -152,16 +160,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param b
      */
     void setWidgetListEnabled(bool b);
-
-    /**
-     * @brief Reads the Preferences from the users pref file
-     */
-    void readSettings();
-
-    /**
-     * @brief Writes the preferences to the users pref file
-     */
-    void writeSettings();
 
     /**
      *
