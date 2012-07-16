@@ -223,20 +223,27 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   qint32 i;
   //double d;
 
+  // Run the input dir FIRST as the side effect of running this will be resetting much of the user
+  // interface widgets to their default values. We then get the values from the prefs object
+  // and populate the user interface widgets
+  READ_FILEPATH_SETTING(prefs, m_, InputDir, ""); 
+
+
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
+
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
+
+  READ_SETTING(prefs, m_, TotalDigits, ok, i, 4 , Int);
+
   READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
 
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
+
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
+
   READ_STRING_SETTING(prefs, m_, FileExt, "ang");
 
   READ_FILEPATH_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
-
-  READ_FILEPATH_SETTING(prefs, m_, InputDir, ""); 
-
-  on_m_InputDir_textChanged(m_InputDir->text());
-
 }
 
 // -----------------------------------------------------------------------------
@@ -252,6 +259,7 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
   WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
   WRITE_STRING_SETTING(prefs, m_, zSpacing)
+  WRITE_STRING_SETTING(prefs, m_, TotalDigits)
   WRITE_STRING_SETTING(prefs, m_, OutputFile)
 
 

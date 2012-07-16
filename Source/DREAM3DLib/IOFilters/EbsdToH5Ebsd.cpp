@@ -63,7 +63,7 @@ class EbsdToH5EbsdFunc : public Observable
     {
       if(*m_FileId > 0)
       {
-        std::cout << "EbsdToH5EbsdFunc Closing HDF5 File" << std::endl;
+     //   std::cout << "EbsdToH5EbsdFunc Closing HDF5 File" << std::endl;
         H5Utilities::closeFile(*m_FileId);
       }
     }
@@ -124,10 +124,10 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   std::stringstream ss;
 //  DataContainer* m = getDataContainer();
 
-  for (std::vector<std::string>::iterator iter = m_EbsdFileList.begin(); iter != m_EbsdFileList.end(); ++iter )
-  {
-    std::cout << (*iter) << std::endl;
-  }
+//  for (std::vector<std::string>::iterator iter = m_EbsdFileList.begin(); iter != m_EbsdFileList.end(); ++iter )
+//  {
+//    std::cout << (*iter) << std::endl;
+//  }
 
 
   if (m_EbsdFileList.size() == 0)
