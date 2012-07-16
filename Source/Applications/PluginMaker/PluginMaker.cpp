@@ -787,7 +787,7 @@ void PluginMaker::previewFile(QString rTemplate, QString fileName) {
       QFileInfo fi(fileName);
       QString className = fi.baseName();
       text.replace("@ClassName@", className);
-      m_fileEditor->setText(text);
+      m_fileEditor->setPlainText(text);
     }
 }
 
@@ -949,6 +949,6 @@ void PluginMaker::previewFile_QRC() {
     text.replace("@PluginName@", pluginName);
     text.replace("@GENERATED_HTML_FILTERS_CODE@", htmlContents);
 
-    m_fileEditor->setText(text);
+    m_fileEditor->setPlainText(text);
   }
 }
