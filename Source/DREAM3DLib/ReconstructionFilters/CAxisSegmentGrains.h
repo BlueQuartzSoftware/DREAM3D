@@ -73,6 +73,8 @@ class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -107,6 +109,7 @@ class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
     float* m_Quats;
     int32_t* m_CellPhases;
     bool* m_GoodVoxels;
+    bool* m_Active;
 
     unsigned int* m_CrystalStructures;
 

@@ -69,6 +69,7 @@ const static float m_pi = static_cast<float>(M_PI);
 CAxisSegmentGrains::CAxisSegmentGrains() :
 SegmentGrains(),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
@@ -77,6 +78,7 @@ m_MisorientationTolerance(5.0f),
 m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
 m_Quats(NULL),
+m_Active(NULL),
 m_CellPhases(NULL),
 m_CrystalStructures(NULL)
 {
@@ -160,9 +162,8 @@ void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields,
   }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
-
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
@@ -251,6 +252,10 @@ void CAxisSegmentGrains::execute()
     {
        m_GrainIds[i] = gid[ m_GrainIds[i] ];
     }
+	for(size_t i = 0; i < totalFields; i++)
+	{
+		m_Active[i] = true;
+	}
   }
 
   // If there is an error set this to something negative and also set a message
