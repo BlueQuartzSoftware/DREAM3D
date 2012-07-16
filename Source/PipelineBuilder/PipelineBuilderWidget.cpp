@@ -323,9 +323,25 @@ void PipelineBuilderWidget::setupGui()
     presetFilter->setText(0, "Statistics");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "DataContainerReader" << "FindSizes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindShapes" << "FindAxisODF"
-        << "FindLocalMisorientationGradients" << "FindSchmids" << "FindMDF" << "FindODF" << "FieldDataCSVWriter" << "DataContainerWriter";
+    presetFilterList << "DataContainerReader" << "FindSizes"  << "FindShapes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindODF" << "FindMDF" 
+      << "FindAxisODF" << "FieldDataCSVWriter" << "DataContainerWriter";
     m_presetMap["Statistics"] = presetFilterList;
+  }
+  {
+    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+    presetFilter->setText(0, "Synthetic(Single Phases)");
+    presetFilter->setIcon(0, QIcon(":/scroll.png"));
+    QStringList presetFilterList;
+    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases" << "MatchCrystallography" << "DataContainerWriter" << "VtkRectilinearGridWriter";
+    m_presetMap["Synthetic(Single Phases)"] = presetFilterList;
+  }
+  {
+    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
+    presetFilter->setText(0, "Synthetic(Two Phases)");
+    presetFilter->setIcon(0, QIcon(":/scroll.png"));
+    QStringList presetFilterList;
+    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases"  << "InsertPrecipitatePhases" << "MatchCrystallography" << "DataContainerWriter" << "VtkRectilinearGridWriter";
+    m_presetMap["Synthetic(Two Phases)"] = presetFilterList;
   }
 }
 // -----------------------------------------------------------------------------

@@ -34,6 +34,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsGenMDFWidget.h"
+
+#if QWT_VERSION >= 0x060000
+#include "backwards.h"
+#endif
+
 //-- C++ Includes
 #include <iostream>
 
@@ -187,7 +192,11 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 
   // This will actually plot the XY data in the Qwt plot widget
   QwtPlotCurve* curve = m_PlotCurve;
+#if QWT_VERSION >= 0x060000
+  curve->setSamples(xD, yD);
+#else
   curve->setData(xD, yD);
+#endif
   curve->setStyle(QwtPlotCurve::Lines);
   curve->attach(m_MDFPlot);
   m_MDFPlot->replot();

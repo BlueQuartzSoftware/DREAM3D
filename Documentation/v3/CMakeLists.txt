@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 #
 # -----------------------------------------------------------------------------
-project (Docs)
+project (UserManual)
 cmake_minimum_required(VERSION 2.8.3)
 
 if (NOT DEFINED PROJECT_RESOURCES_DIR)
@@ -51,22 +51,13 @@ endif()
 
 include ( ${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
-set (LATEX_TITLE "DREAM.3D:\\\\Developer Documentation")
-set (LATEX_AUTHOR "")
+set (LATEX_TITLE "DREAM.3D:\\\\User Manual")
+set (LATEX_AUTHOR "DREAM3D Development Team")
 
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
 set (DOCUMENTATION_SOURCE_FILES
-    ${PROJECT_SOURCE_DIR}/Developer/DataContainerStrategies.dox
-    ${PROJECT_SOURCE_DIR}/Developer/WritingPlugin.dox
-    ${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.dox
-    ${PROJECT_SOURCE_DIR}/Developer/Compiling.dox
-    ${PROJECT_SOURCE_DIR}/Developer/H5EbsdFile.dox
-    ${PROJECT_SOURCE_DIR}/Developer/H5VoxelVolume.dox
-    ${PROJECT_SOURCE_DIR}/Developer/MicrostructurePresets.dox
-    ${PROJECT_SOURCE_DIR}/Developer/StructureReaders.dox
-    ${PROJECT_SOURCE_DIR}/Developer/SurfaceMeshing.dox 
-    ${DREAM3D_SOURCE_DIR}/ToDo.dox
+    ${PROJECT_SOURCE_DIR}/UserManual.dox
 )
 
 set (LATEX_EPS_FILES 
@@ -74,7 +65,7 @@ set (LATEX_EPS_FILES
 )
 
 if (DOX_GENERATE_LATEX)
-ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_Developer_Documentation"
+    ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_User_Manual"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX" 
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
@@ -85,16 +76,15 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_Developer_Documentation"
                      GENERATE_LATEX "YES"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Developer/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
 endif()
 
 set (DOCUMENTATION_SOURCE_FILES
-        ${PROJECT_SOURCE_DIR}/index.dox
         ${DOCUMENTATION_SOURCE_FILES})
 
 
 if (DOX_GENERATE_HTML)
-ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
+    ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      PROJECT_NAME  "${PROJECT_NAME}_HTML" 
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
@@ -105,11 +95,11 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Developer/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
 endif()
 
 if (DOX_GENERATE_RTF)
-ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
+    ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      PROJECT_NAME  "${PROJECT_NAME}_RTF" 
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
@@ -120,5 +110,5 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "${DOX_GENERATE_RTF}"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Developer/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
 endif()

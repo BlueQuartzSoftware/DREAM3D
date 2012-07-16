@@ -53,7 +53,11 @@
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
+#if QWT_VERSION >= 0x060000
+#include <qwt_series_data.h>
+#else
 #include <qwt_interval_data.h>
+#endif
 #include <qwt_painter.h>
 #include <qwt_scale_map.h>
 #include <qwt_plot_zoomer.h>
@@ -630,7 +634,11 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
     yD[i] = static_cast<double>(y[i]);
   }
 
+#if QWT_VERSION >= 0x060000
+  m_SizeDistributionCurve->setSamples(xD, yD);
+#else
   m_SizeDistributionCurve->setData(xD, yD);
+#endif
 
   m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xCo[0] - (xCo[0] * 0.1), xMax * 1.10);
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);

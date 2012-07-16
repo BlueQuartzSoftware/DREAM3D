@@ -33,7 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "SGAxisODFWidget.h"
+
+#if QWT_VERSION >= 0x060000
+#include "backwards.h"
+#endif
 
 //-- C++ Includes
 #include <iostream>
@@ -344,7 +349,11 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
     circleY[450+i] = -circleY[i];
   }
   m_CircleGrid = new QwtPlotCurve;
+#if QWT_VERSION >= 0x060000
+  m_CircleGrid->setSamples(circleX, circleY);
+#else
   m_CircleGrid->setData(circleX, circleY);
+#endif
   QColor c = QColor(Qt::darkMagenta);
   c.setAlpha(255);
   m_CircleGrid->setPen(QPen(c));
@@ -360,7 +369,11 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
     rotCrossX[1] = -0.7071067811f;
     rotCrossY[1] = -sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
     m_RotCross0 = new QwtPlotCurve;
+#if QWT_VERSION >= 0x060000
+    m_RotCross0->setSamples(rotCrossX, rotCrossY);
+#else
     m_RotCross0->setData(rotCrossX, rotCrossY);
+#endif
     QColor c = QColor(Qt::darkMagenta);
     c.setAlpha(200);
     m_RotCross0->setPen(QPen(c));
@@ -376,7 +389,11 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
     rotCrossX[1] = -0.7071067811f;
     rotCrossY[1] = sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
     m_RotCross1 = new QwtPlotCurve;
+#if QWT_VERSION >= 0x060000
+    m_RotCross1->setSamples(rotCrossX, rotCrossY);
+#else
     m_RotCross1->setData(rotCrossX, rotCrossY);
+#endif
     QColor c = QColor(Qt::darkMagenta);
     c.setAlpha(200);
     m_RotCross1->setPen(QPen(c));
@@ -566,21 +583,33 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 //  symbol.setSize(1,1);
 
   QwtPlotCurve* curve = m_PlotCurves[0];
+#if QWT_VERSION >= 0x060000
+  curve->setSamples(x001d, y001d);
+#else
   curve->setData(x001d, y001d);
+#endif
   curve->setStyle(QwtPlotCurve::Dots);
   curve->attach(m_ODF_001Plot);
 //  curve->setSymbol(symbol);
   m_ODF_001Plot->replot();
 
   curve = m_PlotCurves[1];
+#if QWT_VERSION >= 0x060000
+  curve->setSamples(x011d, y011d);
+#else
   curve->setData(x011d, y011d);
+#endif
   curve->setStyle(QwtPlotCurve::Dots);
  // curve->setSymbol(symbol);
   curve->attach(m_ODF_011Plot);
   m_ODF_011Plot->replot();
 
   curve = m_PlotCurves[2];
+#if QWT_VERSION >= 0x060000
+  curve->setSamples(x111d, y111d);
+#else
   curve->setData(x111d, y111d);
+#endif
   curve->setStyle(QwtPlotCurve::Dots);
  // curve->setSymbol(symbol);
   curve->attach(m_ODF_111Plot);

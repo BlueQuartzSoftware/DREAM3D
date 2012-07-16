@@ -50,8 +50,8 @@
 \title{ @LATEX_TITLE@}
 \author{@LATEX_AUTHOR@}
 \authoraddress{
-  \url{http://www.bluequartz.net}\\
-  Email: \email{mike.jackson@bluequartz.net}
+  \url{http://dream3d.bluequartz.net}\\
+  Email: \email{dream3d@bluequartz.net}
 }
 \date{\today}
 \begin{document}
