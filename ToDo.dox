@@ -13,6 +13,16 @@ so it can be integrated with the other documentation pages.
 @li A filter that finds all the twins in the microstructure and assigns them
 to another phase (phase 3), so that they can be visualised differently to the surrouding
 grains (phase 2) and grains that are untwinned (phase 1).
+@li Add filter to convert hex grid TSL .ang files into square grid .ang files
+
+@subsection bugs Outstanding Bugs
+@li EbsdToH5Ebsd - values are not being read back in properly for the start/stop z
+and for the Prefix and Suffix values
+@li PipelineBuilderWidget - Write current pipeline and all other "prefs" to the prefs
+file before running a pipeline
+
+
+
 
 @subsection statsgen StatsGenerator
 @li Update/Create a user manual for the stats generator - last parts need pasting
