@@ -142,8 +142,6 @@ void SyntheticBuilder_PreFlight()
     pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
     pipeline.push_back(pack_grains);
 
-    AdjustVolume::Pointer adjust_grains = AdjustVolume::New();
-    pipeline.push_back(adjust_grains);
   }
   else if(m_AlreadyFormed == true)
   {
@@ -247,7 +245,7 @@ MAKE_FILTER_TEST(  FindShapes, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindSizes, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindLocalMisorientationGradients, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  FindSurfaceGrains, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  AdjustVolume, FAIL_IS_PASS)
+
 MAKE_FILTER_TEST(  PackPrimaryPhases, PASS)
 MAKE_FILTER_TEST(  MatchCrystallography, FAIL_IS_PASS)
 MAKE_FILTER_TEST(  InsertPrecipitatePhases, FAIL_IS_PASS)
@@ -284,7 +282,6 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( FindSizes_PreFlightTest() )
   DREAM3D_REGISTER_TEST( FindLocalMisorientationGradients_PreFlightTest() )
   DREAM3D_REGISTER_TEST( FindSurfaceGrains_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( AdjustVolume_PreFlightTest() )
   DREAM3D_REGISTER_TEST( PackPrimaryPhases_PreFlightTest() )
   DREAM3D_REGISTER_TEST( MatchCrystallography_PreFlightTest() )
   DREAM3D_REGISTER_TEST( InsertPrecipitatePhases_PreFlightTest() )

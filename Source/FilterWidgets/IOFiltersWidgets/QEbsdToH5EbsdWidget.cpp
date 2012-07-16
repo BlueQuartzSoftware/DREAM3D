@@ -118,9 +118,18 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
   std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  std::vector<std::string> realFileList;
+  for(std::vector<std::string>::size_type i = 0; i < fileList.size(); ++i)
+  {
+    QString filePath = QString::fromStdString(fileList[i]);
+    QFileInfo fi(filePath);
+    if (fi.exists())
+    {
+      realFileList.push_back(fileList[i]);
+    }
+  }
 
-  filter->setEbsdFileList(fileList);
-
+  filter->setEbsdFileList(realFileList);
 
   return filter;
 }
@@ -214,15 +223,17 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   qint32 i;
   //double d;
 
-
-  READ_FILEPATH_SETTING(prefs, m_, InputDir, "");
-  READ_STRING_SETTING(prefs, m_, FilePrefix, "");
-  READ_STRING_SETTING(prefs, m_, FileSuffix, "");
-  READ_STRING_SETTING(prefs, m_, FileExt, "ang");
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
   READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
-  READ_STRING_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
+
+  READ_STRING_SETTING(prefs, m_, FilePrefix, "");
+  READ_STRING_SETTING(prefs, m_, FileSuffix, "");
+  READ_STRING_SETTING(prefs, m_, FileExt, "ang");
+
+  READ_FILEPATH_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
+
+  READ_FILEPATH_SETTING(prefs, m_, InputDir, ""); 
 
   on_m_InputDir_textChanged(m_InputDir->text());
 
@@ -252,6 +263,7 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 {
+  verifyPathExists(text, m_OutputFile);
   emit parametersChanged();
 }
 
@@ -363,6 +375,7 @@ Ebsd::RefFrameZDir QEbsdToH5EbsdWidget::getRefFrameZDir()
 void QEbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 {
   m_generateExampleEbsdInputFile();
+    emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -371,6 +384,7 @@ void QEbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 void QEbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
+    emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -379,6 +393,7 @@ void QEbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 void QEbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
+    emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -387,6 +402,7 @@ void QEbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 void QEbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 {
     m_generateExampleEbsdInputFile();
+      emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -395,6 +411,7 @@ void QEbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 void QEbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString &string)
 {
   m_generateExampleEbsdInputFile();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -403,6 +420,7 @@ void QEbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString &string)
 void QEbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString &string)
 {
   m_generateExampleEbsdInputFile();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -411,6 +429,7 @@ void QEbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString &string)
 void QEbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
 {
   m_generateExampleEbsdInputFile();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

@@ -448,13 +448,8 @@ class DataArray : public IDataArray
      */
     virtual void* GetVoidPointer(size_t i)
     {
-#ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
-#endif
-      if (i >= this->GetNumberOfTuples())
-      {
-        return 0x0;
-      }
+      if (i >= Size) { return NULL;}
+
       return (void*)(&(Array[i]));
     }
 

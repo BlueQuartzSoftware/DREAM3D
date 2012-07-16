@@ -62,14 +62,14 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 
     virtual ~PhReader();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Ph File (Grain Ids)"; }
 
     virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
 
     virtual void preflight();
 
@@ -79,8 +79,11 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual int readHeader();
     virtual int readFile();
 
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    int32_t* m_GrainIds;
+
     PhReader(const PhReader&); //Not Implemented
     void operator=(const PhReader&); //Not Implemented
 

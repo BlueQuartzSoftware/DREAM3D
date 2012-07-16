@@ -114,11 +114,11 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
   std::stringstream ss;
   DataContainer* m = getDataContainer();
-
+  int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
-  if(getErrorCondition() == -302)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, err, -302, float, FloatArrayType, fields, 1)
+  if(err == -302)
   {
     setErrorCondition(0);
     FindSizes::Pointer find_sizes = FindSizes::New();
@@ -126,10 +126,12 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_sizes->setDataContainer(getDataContainer());
     if(preflight == true) find_sizes->preflight();
     if(preflight == false) find_sizes->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
-  if(getErrorCondition() == -303)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+
+
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, err, -303, bool, BoolArrayType, fields, 1)
+  if(err == -303)
   {
     setErrorCondition(0);
     FindBoundingBoxGrains::Pointer find_biasedfields = FindBoundingBoxGrains::New();
@@ -137,10 +139,12 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_biasedfields->setDataContainer(getDataContainer());
     if(preflight == true) find_biasedfields->preflight();
     if(preflight == false) find_biasedfields->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
-  if(getErrorCondition() == -304)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
+
+
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -304, int32_t, Int32ArrayType, fields, 1)
+  if(err == -304)
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
@@ -148,10 +152,12 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_grainphases->setDataContainer(getDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
-  if(getErrorCondition() == -305)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
+
+
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, err, -305, float, FloatArrayType, fields, 3)
+  if(err == -305)
   {
     setErrorCondition(0);
     FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
@@ -159,8 +165,11 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     find_graincentroids->setDataContainer(getDataContainer());
     if(preflight == true) find_graincentroids->preflight();
     if(preflight == false) find_graincentroids->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
   }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+
+
+
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;

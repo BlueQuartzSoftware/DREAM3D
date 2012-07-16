@@ -34,8 +34,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "BoundaryPhaseWidget.h"
+#if QWT_VERSION >= 0x060000
+#include "backwards.h"
+#endif
 
+#include "BoundaryPhaseWidget.h"
 
 #include <iostream>
 #include <limits>
@@ -53,7 +56,11 @@
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
+#if QWT_VERSION >= 0x060000
+#include <qwt_series_data.h>
+#else
 #include <qwt_interval_data.h>
+#endif
 #include <qwt_painter.h>
 #include <qwt_scale_map.h>
 #include <qwt_plot_zoomer.h>
