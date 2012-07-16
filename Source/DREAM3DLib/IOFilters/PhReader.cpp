@@ -48,7 +48,8 @@
 // -----------------------------------------------------------------------------
 PhReader::PhReader() :
 FileReader(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds)
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_GrainIds(NULL)
 {
   setupFilterOptions();
 }
@@ -89,17 +90,32 @@ void PhReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::preflight()
+void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+
+  setErrorCondition(0);
+  std::stringstream ss;
+  DataContainer* m = getDataContainer();
+
   if (getInputFile().empty() == true)
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
+    addErrorMessage(getNameOfClass(), ss.str(), -4);
     setErrorCondition(-387);
-    addErrorMessage(getNameOfClass(), ss.str(), -397);
   }
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+
+
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PhReader::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+}
 
 // -----------------------------------------------------------------------------
 //

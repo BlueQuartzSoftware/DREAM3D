@@ -2,7 +2,7 @@
 
 @page DataContainerStrategies DataContainer Use in Filters
 
-@section Introduction
+@section filter_intro Introduction
   The DataContainer class within the DREAM3D development framework is designed
 to hold in memory all the data associated with a reconstructed microstructure. As
 such it is built in a way to hold generic high level C++ classes. For this the
@@ -52,23 +52,59 @@ way to go. An example of this is the following:
   Here we are using a template function from the DataContainer class that will ensure
 the array is properly extracted from the DataContainer class and returns a pointer
 to the internal memory location that holds the actual data. The template function
-is parameterized on the pointer type, DataArray Type and the a class that implemented
-at least the setErrorCondition() and setErrorMessage() methods.
+is parameterized on the pointer type, DataArray Type and the class that inherits from
+the <i>Observable</i> class, which <i>AbstractFilter</i> does.
 
-  This code first checks to make sure the data array is available, and if so checks
+  This <i>getVoxelDataSizeCheck()</i> method first checks to make sure the data array is available, and if so checks
 the size of the array to make sure it matches what the programmer thinks it should
-be. Then lastly we get a pointer to the internal data array, <b>gi</b> in this example.
+be.
 
-  If your filter is long and is broken up into several more methods and these variables
-are needed in those methods then another strategy is to assign the pointer to a
-<b>private</b> instance variable. In this case we may have a declaration in the
-header file of our filter for <tt>int32_t* grain_indicies;</tt> and then after the
-preprocessor macro is called we would have the following simple assignment:
+@section checkingforrequiredarray Checking for Required Arrays
+
+  In many filters that are written the filter itself is modifying or reading data
+from existing arrays. If this is the case there are several preprocessor macros
+defined in <i>DREAM3DLib/Common/DataContainerMacros.h</i>. The first macro to discuss
+checks for the availability of an array by name in the DataContainer. In the next
+example we are going to get the GrainIds array by name and store the pointer to
+the data in a private instance variable called "m_GrainIds". This macro also uses
+the instance variable called GrainIdsArrayName. That is a lot of information so
+lets take it one piece at a time.
+
+Here is the use of the Macro.
 @code
-this->grain_indicies = gi;
+GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 @endcode
-  An example of assignment to instance variables can be seen in the
-<i><b>DREAM3DLib/ReconstructionFilters/CleanupGrains</b></i> class.
+
+<b>Required instance Variables</b>\n
+@li int32_t* m_GrainIds;
+@li std::string m_GrainIdsArrayName;
+
+In the initializer list of the filter constructor we should be initializing these
+variables to known values. For example in the DxWriter class this is the class
+constructor:
+
+@code
+DxWriter::DxWriter() :
+FileWriter(),      // We inherit from FileWriter
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), // Set to known value
+m_AddSurfaceLayer(false),
+m_GrainIds(NULL) // Set to NULL
+{
+  setupFilterOptions();
+}
+@endcode
+
+
+@section creatingarrays Creating Arrays to Store in the DataContainer
+
+
+
+@code
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+
+@endcode
+
+
 
 
 

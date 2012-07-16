@@ -511,7 +511,9 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       }
       else
       {
-        p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
+        if (line.size() > 1) {
+          p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
+        }
       }
     }
 

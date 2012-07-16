@@ -188,6 +188,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
       ss << "H5AngImporter Error: Unknown error.";
     }
     setPipelineMessage(ss.str());
+    
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
