@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -57,19 +57,10 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuPlugins">
+   <widget class="QMenu" name="menuPipeline">
     <property name="title">
-     <string>Plugins</string>
+     <string>Pipeline</string>
     </property>
-    <widget class="QMenu" name="menuToolbar_Prefs">
-     <property name="title">
-      <string>Toolbar Prefs</string>
-     </property>
-     <addaction name="action_IconText"/>
-     <addaction name="action_IconOnly"/>
-     <addaction name="action_TextOnly"/>
-    </widget>
-    <addaction name="menuToolbar_Prefs"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -80,7 +71,7 @@
     <addaction name="actionLicense_Information"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuPlugins"/>
+   <addaction name="menuPipeline"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
