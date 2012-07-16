@@ -82,7 +82,11 @@
      </widget>
     </item>
     <item row="2" column="2" colspan="3">
-     <widget class="QTextEdit" name="m_fileEditor"/>
+     <widget class="QTextEdit" name="m_fileEditor">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="3" column="0">
      <widget class="QPushButton" name="addFilterBtn">
