@@ -53,8 +53,8 @@
 
 	const float acos_neg_one = acosf(-1.0f);
 	const float acos_pos_one = acosf(1.0f);
-	const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(acos_neg_one/2.0) );
-	const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(acos_pos_one/2.0) );
+	const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(acos_neg_one/2.0f) );
+	const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(acos_pos_one/2.0f) );
   const float sin_of_acos_neg_1 = sinf(acos_neg_one);
   const float sin_of_acos_pos_1 = sinf(acos_pos_one);
 
@@ -366,7 +366,7 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   r2 = r2 / hmag;
   r3 = r3 / hmag;
   if(hmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
-  w = static_cast<float>( powf((8*hmag*hmag*hmag),(1.0/3.0)) );
+  w = static_cast<float>( powf((8*hmag*hmag*hmag),(1.0f/3.0f)) );
   x = m_OnePointThree*hmag*hmag*hmag;
   for(size_t i = 1; i < 10; i++)
   {
@@ -416,7 +416,7 @@ void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
   q[1] = r1 * const1;
   q[2] = r2 * const1;
   q[3] = r3 * const1;
-  q[4] = static_cast<float>( cosf(w/2.0) );
+  q[4] = static_cast<float>( cosf(w/2.0f) );
 }
 
 void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
