@@ -52,6 +52,7 @@
 class QListWidgetItem;
 class QTreeWidgetItem;
 class QFilterWidget;
+class QMenu;
 
 /**
  * @class PipelineBuilderWidget PipelineBuilderWidget.h PipelineBuilder/UI/PipelineBuilderWidget.h
@@ -88,13 +89,23 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     /**
      * @brief Writes the preferences to the users pref file
      */
-   virtual void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
+    virtual void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
 
     /**
      * @brief Enables or Disables all the widgets in a list
      * @param b
      */
     virtual void setWidgetListEnabled(bool b);
+
+    /**
+    * @brief Sets the menu bar instance variable
+    */
+    virtual void setPipelineMenu(QMenu* menuBar);
+
+    /**
+    * @brief returns the menu bar
+    */
+    virtual QMenu* getPipelineMenu();
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
@@ -119,6 +130,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
 
   protected slots:
+    void actionClear_triggered();
+
+
     void on_m_GoBtn_clicked();
     void on_m_SaveSettingsBtn_clicked();
     void on_m_LoadSettingsBtn_clicked();
@@ -154,13 +168,19 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void pipelineComplete();
     virtual void pipelineProgress(int value);
 
+signals:
+  void fireWriteSettings();
+  void fireReadSettings();
+
 
   private:
     QList<QWidget*>             m_WidgetList;
     QFilterPipeline*            m_FilterPipeline;
+    QMenu*                      m_MenuPipeline;
     QThread*                    m_WorkerThread;
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
+    QAction*                    m_actionClear;
 
     QMap<QString,QStringList>   m_presetMap;
     QMap<QString,QString>       m_favoritesMap;
