@@ -122,7 +122,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      virtual void updateQLineEditDoubleValue();
      virtual void updateQLineEditIntValue();
      virtual void selectInputFile();
+     virtual void selectInputPath();
      virtual void selectOutputFile();
+     virtual void selectOutputPath();
      virtual void updateComboBoxValue(int v);
      virtual void updateQSpinBoxValue(int v);
      virtual void updateQDoubleSpinBoxValue(double v);
