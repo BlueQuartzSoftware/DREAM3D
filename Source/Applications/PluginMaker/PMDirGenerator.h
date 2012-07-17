@@ -81,6 +81,7 @@ class PMDirGenerator : public QObject
 
     QString cleanName(QString name);
 
+    virtual QString generateFileContents();
 
   protected slots:
    virtual void pluginNameChanged (const QString &plugname);

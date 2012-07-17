@@ -135,13 +135,6 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="3">
-     <widget class="QPushButton" name="saveFileBtn">
-      <property name="text">
-       <string>Save File</string>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="2">
      <spacer name="horizontalSpacer">
       <property name="orientation">
