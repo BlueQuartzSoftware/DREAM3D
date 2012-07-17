@@ -45,7 +45,7 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_GoodVoxels(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -58,17 +58,17 @@ DetermineGoodVoxels::~DetermineGoodVoxels()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineGoodVoxels::setupFilterOptions()
+void DetermineGoodVoxels::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineGoodVoxels::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DetermineGoodVoxels::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 

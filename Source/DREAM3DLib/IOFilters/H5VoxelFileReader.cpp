@@ -53,7 +53,7 @@ m_CellEulerAngles(NULL),
 m_CrystalStructures(NULL),
 m_PhaseTypes(NULL)
 {
-	setupFilterOptions();
+	setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -65,23 +65,23 @@ H5VoxelFileReader::~H5VoxelFileReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5VoxelFileReader::setupFilterOptions()
+void H5VoxelFileReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5VoxelFileReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }

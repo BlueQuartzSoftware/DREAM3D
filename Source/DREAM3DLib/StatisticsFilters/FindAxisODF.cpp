@@ -58,7 +58,7 @@ FindAxisODF::FindAxisODF() :
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
-  setupFilterOptions();
+  setupFilterParameters();
 }
 // -----------------------------------------------------------------------------
 //
@@ -67,7 +67,7 @@ FindAxisODF::~FindAxisODF()
 {
 }
 // -----------------------------------------------------------------------------
-void FindAxisODF::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

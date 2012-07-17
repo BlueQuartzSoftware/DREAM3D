@@ -88,7 +88,7 @@ m_NumFields(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -101,35 +101,35 @@ MergeColonies::~MergeColonies()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::setupFilterOptions()
+void MergeColonies::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Axis Tolerance");
     option->setPropertyName("AxisTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Angle Tolerance");
     option->setPropertyName("AngleTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeColonies::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );

@@ -92,7 +92,7 @@ m_NumFields(NULL)
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -102,7 +102,7 @@ MatchCrystallography::~MatchCrystallography()
 {
 }
 // -----------------------------------------------------------------------------
-void MatchCrystallography::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

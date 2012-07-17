@@ -56,7 +56,7 @@ m_ReadCellData(true),
 m_ReadFieldData(true),
 m_ReadEnsembleData(true)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -69,48 +69,48 @@ DataContainerReader::~DataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setupFilterOptions()
+void DataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Read Cell Data");
     option->setPropertyName("ReadCellData");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Read Field Data");
     option->setPropertyName("ReadFieldData");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Read Ensemble Data");
     option->setPropertyName("ReadEnsembleData");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadCellData", getReadCellData() );

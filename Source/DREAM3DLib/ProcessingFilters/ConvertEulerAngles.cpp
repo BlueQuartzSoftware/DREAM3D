@@ -85,7 +85,7 @@ m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians), // We convert from Degrees to Radians by Default
 m_CellEulerAngles(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -99,14 +99,14 @@ ConvertEulerAngles::~ConvertEulerAngles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertEulerAngles::setupFilterOptions()
+void ConvertEulerAngles::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Conversion Type");
     option->setPropertyName("ConversionType");
-    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Degrees To Radians");
@@ -114,13 +114,13 @@ void ConvertEulerAngles::setupFilterOptions()
     option->setChoices(choices);
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertEulerAngles::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("ConversionType", getConversionType() );
 }

@@ -72,7 +72,7 @@ FindNeighbors::~FindNeighbors()
 {
 }
 // -----------------------------------------------------------------------------
-void FindNeighbors::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

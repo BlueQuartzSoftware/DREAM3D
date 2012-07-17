@@ -90,7 +90,7 @@ m_CrystalStructures(NULL)
 
   graincounts = NULL;
   INIT_DataArray(m_GrainCounts, int);
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -103,30 +103,30 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::setupFilterOptions()
+void AlignSectionsMutualInformation::setupFilterParameters()
 {
   // Run the superclass first.
-  //AlignSections::setupFilterOptions();
+  //AlignSections::setupFilterParameters();
   // Now append our options
-  std::vector<FilterOption::Pointer> options = getFilterOptions();
+  std::vector<FilterParameter::Pointer> options = getFilterParameters();
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
     option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  AlignSections::writeFilterOptions(writer);
+  AlignSections::writeFilterParameters(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
 

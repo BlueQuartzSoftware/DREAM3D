@@ -44,7 +44,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/H5FilterOptionsWriter.h"
+#include "DREAM3DLib/Common/H5FilterParametersWriter.h"
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
@@ -59,7 +59,7 @@ DataContainerWriter::DataContainerWriter() :
 AbstractFilter(),
 m_FileId(-1)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -73,24 +73,24 @@ DataContainerWriter::~DataContainerWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::setupFilterOptions()
+void DataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }
@@ -229,7 +229,7 @@ void DataContainerWriter::execute()
     return;
   }
 
-  H5FilterOptionsWriter::Pointer optionsWriter = H5FilterOptionsWriter::New();
+  H5FilterParametersWriter::Pointer optionsWriter = H5FilterParametersWriter::New();
   hid_t pipelineGroupId = H5Utilities::createGroup(dcGid, DREAM3D::HDF5::PipelineGroupName);
   optionsWriter->setGroupId(pipelineGroupId);
 
@@ -237,12 +237,12 @@ void DataContainerWriter::execute()
   while (preFilter.get() != NULL)
   {
 	  optionsWriter->openOptionsGroup(preFilter.get());
-    preFilter->writeFilterOptions(optionsWriter.get());
+    preFilter->writeFilterParameters(optionsWriter.get());
     optionsWriter->closeOptionsGroup();
     preFilter = preFilter->getPreviousFilter();
   }
   optionsWriter->openOptionsGroup(this);
-  writeFilterOptions(optionsWriter.get());
+  writeFilterParameters(optionsWriter.get());
   optionsWriter->closeOptionsGroup();
 
   H5Gclose(pipelineGroupId);

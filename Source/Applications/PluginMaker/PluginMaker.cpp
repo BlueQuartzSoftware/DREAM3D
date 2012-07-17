@@ -73,6 +73,7 @@
 PluginMaker::PluginMaker(QWidget* parent) :
  QMainWindow(parent)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
 
   setupGui();
@@ -251,7 +252,7 @@ void PluginMaker::setupGui()
     connect(hPluginGen, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
 
-    PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin 
+    PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin
                                                         // CPP and H files in a FilterBundler)
 
     FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc);
@@ -710,30 +711,30 @@ void PluginMaker::on_removeFilterBtn_clicked() {
 // -----------------------------------------------------------------------------
 void PluginMaker::on_treeWidget_itemSelectionChanged() {
   QString pluginName = cleanName(m_PluginName->text());
-  
+
   QTreeWidgetItem* currentFile = treeWidget->currentItem();
 
   bool inBundle = false;
 
-  for (int i = 0; i < m_FilterBundles.count(); i++) 
+  for (int i = 0; i < m_FilterBundles.count(); i++)
   {
-    if (m_FilterBundles[i].containsTreeWidgetItem(currentFile) ) 
+    if (m_FilterBundles[i].containsTreeWidgetItem(currentFile) )
     {
-      if ( currentFile->text(0).contains(".cpp") ) 
+      if ( currentFile->text(0).contains(".cpp") )
       {
         previewFile(m_FilterBundles[i].getCPPGenerator()->getCodeTemplateResourcePath(), currentFile->text(0));
         statusbar->showMessage("Currently viewing " + currentFile->text(0));
         inBundle = true;
         break;
       }
-      else if ( currentFile->text(0).contains(".h") && !currentFile->text(0).contains(".html") ) 
+      else if ( currentFile->text(0).contains(".h") && !currentFile->text(0).contains(".html") )
       {
         previewFile(m_FilterBundles[i].getHGenerator()->getCodeTemplateResourcePath(), currentFile->text(0));
         statusbar->showMessage("Currently viewing " + currentFile->text(0));
         inBundle = true;
         break;
       }
-      else if ( currentFile->text(0).contains(".html") ) 
+      else if ( currentFile->text(0).contains(".html") )
       {
         previewFile(m_FilterBundles[i].getHTMLGenerator()->getCodeTemplateResourcePath(), currentFile->text(0));
         statusbar->showMessage("Currently viewing " + currentFile->text(0));
@@ -746,24 +747,24 @@ void PluginMaker::on_treeWidget_itemSelectionChanged() {
       statusbar->showMessage("Ready");
     }
   }
-  if (!inBundle) 
+  if (!inBundle)
   {
-    if ( currentFile->text(0).contains(".cmake") ) 
+    if ( currentFile->text(0).contains(".cmake") )
     {
       previewFile(":/Template/Code/Filter/SourceList.cmake.in", currentFile->text(0));
       statusbar->showMessage("Currently viewing " + currentFile->text(0));
     }
-    else if ( currentFile->text(0).contains(".txt") ) 
+    else if ( currentFile->text(0).contains(".txt") )
     {
       previewFile(":/Template/CMakeLists.txt.in", currentFile->text(0));
       statusbar->showMessage("Currently viewing " + currentFile->text(0));
     }
-    else if ( currentFile->text(0).contains(".qrc") ) 
+    else if ( currentFile->text(0).contains(".qrc") )
     {
       previewFile_QRC();
       statusbar->showMessage("Currently viewing " + currentFile->text(0));
     }
-    else 
+    else
     {
       m_fileEditor->setText("");
       statusbar->showMessage("Ready");

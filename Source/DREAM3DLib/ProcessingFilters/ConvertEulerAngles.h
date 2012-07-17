@@ -68,8 +68,8 @@ class DREAM3DLib_EXPORT ConvertEulerAngles : public AbstractFilter
     virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Convert Euler Angles"; }
 
-    virtual void setupFilterOptions();
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

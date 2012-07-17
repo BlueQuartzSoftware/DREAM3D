@@ -54,7 +54,7 @@ const static float m_pi = static_cast<float>(M_PI);
 FieldDataCSVWriter::FieldDataCSVWriter() :
 AbstractFilter()
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -66,24 +66,24 @@ FieldDataCSVWriter::~FieldDataCSVWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldDataCSVWriter::setupFilterOptions()
+void FieldDataCSVWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("FieldDataFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldDataCSVWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("FieldDataFile", getFieldDataFile() );
 }

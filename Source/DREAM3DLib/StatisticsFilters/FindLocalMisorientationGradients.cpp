@@ -75,7 +75,7 @@ m_Quats(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -88,22 +88,22 @@ FindLocalMisorientationGradients::~FindLocalMisorientationGradients()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindLocalMisorientationGradients::setupFilterOptions()
+void FindLocalMisorientationGradients::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Kernel Size");
     option->setPropertyName("KernelSize");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
-void FindLocalMisorientationGradients::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindLocalMisorientationGradients::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("KernelSize", getKernelSize() );
 }

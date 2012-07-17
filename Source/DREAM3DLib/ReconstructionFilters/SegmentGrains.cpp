@@ -76,7 +76,7 @@ SegmentGrains::~SegmentGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 

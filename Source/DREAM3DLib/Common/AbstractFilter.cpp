@@ -38,7 +38,7 @@ m_DataContainer(NULL),
 m_ErrorCondition(0),
 m_Cancel(false)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ AbstractFilter::~AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::setupFilterOptions()
+void AbstractFilter::setupFilterParameters()
 {
 }
 
@@ -164,10 +164,10 @@ void AbstractFilter::addCreatedEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   assert(writer != NULL);
-  std::cout << "AbstractFilter::writeFilterOptions() -> Writing Filter Options" << std::endl;
+  std::cout << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << std::endl;
 }
 
 // -----------------------------------------------------------------------------

@@ -121,7 +121,7 @@ m_ShapeTypes(NULL)
   m_OrientationOps.push_back(m_OrthoOps.get());
 
   Seed = MXA::getMilliSeconds();
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -134,31 +134,31 @@ PackPrimaryPhases::~PackPrimaryPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::setupFilterOptions()
+void PackPrimaryPhases::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Neighborhood Error Weight");
     option->setPropertyName("NeighborhoodErrorWeight");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
     option->setPropertyName("PeriodicBoundaries");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("NeighborhoodErrorWeight", getNeighborhoodErrorWeight() );
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );

@@ -51,7 +51,7 @@ FileReader(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -65,24 +65,24 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::setupFilterOptions()
+void PhReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }

@@ -113,7 +113,7 @@ m_NumFields(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -127,22 +127,22 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 //
 // -----------------------------------------------------------------------------
 
-void InsertPrecipitatePhases::setupFilterOptions()
+void InsertPrecipitatePhases::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
     option->setPropertyName("PeriodicBoundaries");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
 }

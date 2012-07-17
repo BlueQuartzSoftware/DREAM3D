@@ -70,13 +70,9 @@
 StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   QMainWindow(parent),
   m_FileSelected(false),
-  m_HelpDialog(NULL),
-#if defined(Q_WS_WIN)
-      m_OpenDialogLastDirectory("C:")
-#else
-      m_OpenDialogLastDirectory("~/Desktop")
-#endif
+  m_HelpDialog(NULL)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
   setupUi(this);
   setupGui();

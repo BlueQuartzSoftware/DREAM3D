@@ -65,7 +65,7 @@ m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,14 +78,14 @@ OpenCloseBadData::~OpenCloseBadData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::setupFilterOptions()
+void OpenCloseBadData::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Direction of Operation");
     option->setPropertyName("Direction");
-    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Dilate");
@@ -94,20 +94,24 @@ void OpenCloseBadData::setupFilterOptions()
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Number of Iterations");
     option->setPropertyName("NumIterations");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
+
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+//
+// -----------------------------------------------------------------------------
+void OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("NumIterations", getNumIterations() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

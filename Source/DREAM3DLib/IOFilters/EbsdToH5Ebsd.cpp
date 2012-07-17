@@ -101,17 +101,17 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setupFilterOptions()
+void EbsdToH5Ebsd::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 

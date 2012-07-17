@@ -83,8 +83,8 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
 
-    virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

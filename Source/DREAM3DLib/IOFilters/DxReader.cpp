@@ -46,7 +46,7 @@ FileReader(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -59,22 +59,22 @@ DxReader::~DxReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxReader::setupFilterOptions()
+void DxReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
-void DxReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }

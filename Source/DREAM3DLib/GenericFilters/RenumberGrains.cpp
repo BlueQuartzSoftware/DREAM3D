@@ -51,7 +51,7 @@ m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_GrainIds(NULL),
 m_Active(NULL)
 {
-//  setupFilterOptions();
+//  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -64,24 +64,24 @@ RenumberGrains::~RenumberGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenumberGrains::setupFilterOptions()
+void RenumberGrains::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Name of Array for Active Grains");
     option->setPropertyName("ActiveArrayName");
-    option->setWidgetType(FilterOption::StringWidget);
+    option->setWidgetType(FilterParameter::StringWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenumberGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void RenumberGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 

@@ -57,7 +57,7 @@ m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GoodVoxels(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -70,12 +70,12 @@ IdentifySample::~IdentifySample()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IdentifySample::setupFilterOptions()
+void IdentifySample::setupFilterParameters()
 {
 
 }
 // -----------------------------------------------------------------------------
-void IdentifySample::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 
 }

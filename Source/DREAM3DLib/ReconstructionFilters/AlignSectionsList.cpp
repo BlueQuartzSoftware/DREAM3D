@@ -66,7 +66,7 @@ AlignSectionsList::AlignSectionsList() :
 AlignSections(),
 m_GoodVoxels(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -79,25 +79,25 @@ AlignSectionsList::~AlignSectionsList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::setupFilterOptions()
+void AlignSectionsList::setupFilterParameters()
 {
   // Now append our options
-  std::vector<FilterOption::Pointer> options ;
+  std::vector<FilterParameter::Pointer> options ;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }

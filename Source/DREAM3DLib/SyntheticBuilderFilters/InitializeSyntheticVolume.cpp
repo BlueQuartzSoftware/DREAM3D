@@ -54,7 +54,7 @@ m_ZRes(1.0f),
 m_GrainIds(NULL),
 m_CellPhases(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -67,69 +67,69 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::setupFilterOptions()
+void InitializeSyntheticVolume::setupFilterParameters()
 {
- std::vector<FilterOption::Pointer> options;
+ std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Statistics File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Voxels");
     option->setPropertyName("XVoxels");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Voxels");
     option->setPropertyName("YVoxels");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Voxels");
     option->setPropertyName("ZVoxels");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Res");
     option->setPropertyName("XRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Res");
     option->setPropertyName("YRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Res");
     option->setPropertyName("ZRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("X Voxels", getXVoxels() );
