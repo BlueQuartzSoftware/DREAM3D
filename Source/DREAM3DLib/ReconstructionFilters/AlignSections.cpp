@@ -83,14 +83,14 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 void AlignSections::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");
     option->setPropertyName("WriteAlignmentShifts");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -98,10 +98,10 @@ void AlignSections::setupFilterParameters()
     option->setPropertyName("AlignmentShiftFileName");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

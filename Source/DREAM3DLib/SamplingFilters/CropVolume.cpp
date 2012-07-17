@@ -76,14 +76,14 @@ CropVolume::~CropVolume()
 // -----------------------------------------------------------------------------
 void CropVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min");
     option->setPropertyName("XMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -91,7 +91,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("YMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -99,7 +99,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("ZMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -107,7 +107,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("XMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -115,7 +115,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("YMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -123,7 +123,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("ZMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -131,9 +131,9 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("RenumberGrains");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)

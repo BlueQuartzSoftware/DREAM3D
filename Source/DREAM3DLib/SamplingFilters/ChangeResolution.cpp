@@ -70,14 +70,14 @@ ChangeResolution::~ChangeResolution()
 // -----------------------------------------------------------------------------
 void ChangeResolution::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Res");
     option->setPropertyName("XRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -85,7 +85,7 @@ void ChangeResolution::setupFilterParameters()
     option->setPropertyName("YRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -93,9 +93,9 @@ void ChangeResolution::setupFilterParameters()
     option->setPropertyName("ZRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 

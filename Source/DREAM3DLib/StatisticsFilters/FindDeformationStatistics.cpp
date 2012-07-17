@@ -96,14 +96,14 @@ FindDeformationStatistics::~FindDeformationStatistics()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Deformation Statistics File");
     option->setPropertyName("DeformationStatisticsFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -111,9 +111,9 @@ void FindDeformationStatistics::setupFilterParameters()
     option->setPropertyName("VtkOutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)

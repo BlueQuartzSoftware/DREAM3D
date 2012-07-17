@@ -76,14 +76,14 @@ void SMVtkPolyDataWriter::preflight()
 // -----------------------------------------------------------------------------
 void SMVtkPolyDataWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Nodes File");
     option->setPropertyName("NodesFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -91,7 +91,7 @@ void SMVtkPolyDataWriter::setupFilterParameters()
     option->setPropertyName("TrianglesFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -99,7 +99,7 @@ void SMVtkPolyDataWriter::setupFilterParameters()
     option->setPropertyName("OutputVtkFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -107,7 +107,7 @@ void SMVtkPolyDataWriter::setupFilterParameters()
     option->setPropertyName("WriteBinaryFile");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -115,10 +115,10 @@ void SMVtkPolyDataWriter::setupFilterParameters()
     option->setPropertyName("WriteConformalMesh");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

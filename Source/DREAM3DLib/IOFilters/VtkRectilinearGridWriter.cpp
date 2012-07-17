@@ -84,14 +84,14 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -99,7 +99,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteGrainIds");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -107,7 +107,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WritePhaseIds");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -115,7 +115,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteBandContrasts");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -123,7 +123,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteKAMs");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -131,7 +131,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteGAMs");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -139,7 +139,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteLMGs");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -147,7 +147,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteGoodVoxels");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -155,7 +155,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteIPFColors");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -163,9 +163,9 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setPropertyName("WriteBinaryFile");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

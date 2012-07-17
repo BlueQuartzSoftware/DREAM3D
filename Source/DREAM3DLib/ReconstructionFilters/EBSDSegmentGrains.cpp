@@ -106,7 +106,7 @@ EBSDSegmentGrains::~EBSDSegmentGrains()
 // -----------------------------------------------------------------------------
 void EBSDSegmentGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");
@@ -114,7 +114,7 @@ void EBSDSegmentGrains::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #if 0
   {
@@ -123,10 +123,10 @@ void EBSDSegmentGrains::setupFilterParameters()
     option->setPropertyName("RandomizeGrainIds");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #endif
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

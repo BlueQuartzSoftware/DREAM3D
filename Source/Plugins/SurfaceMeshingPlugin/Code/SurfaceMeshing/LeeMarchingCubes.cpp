@@ -308,7 +308,7 @@ LeeMarchingCubes::~LeeMarchingCubes()
 void LeeMarchingCubes::setupFilterParameters()
 {
 
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
 #if 0
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -316,7 +316,7 @@ void LeeMarchingCubes::setupFilterParameters()
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
    This should be read from the file so we are NOT going to expose it to the user
@@ -331,7 +331,7 @@ void LeeMarchingCubes::setupFilterParameters()
     choices.push_back("Low To High");
     choices.push_back("High To Low");
     option->setChoices(choices);
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #endif
    {
@@ -340,7 +340,7 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setPropertyName("VtkOutputFile");
      option->setWidgetType(FilterParameter::OutputFileWidget);
      option->setValueType("string");
-     options.push_back(option);
+     parameters.push_back(option);
    }
 
    {
@@ -349,7 +349,7 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setPropertyName("WriteSTLFile");
      option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
      FilterParameter::Pointer option = FilterParameter::New();
@@ -357,7 +357,7 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setPropertyName("StlOutputDirectory");
      option->setWidgetType(FilterParameter::OutputFileWidget);
      option->setValueType("string");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
      FilterParameter::Pointer option = FilterParameter::New();
@@ -365,7 +365,7 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setPropertyName("StlFilePrefix");
      option->setWidgetType(FilterParameter::StringWidget);
      option->setValueType("string");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
      FilterParameter::Pointer option = FilterParameter::New();
@@ -373,7 +373,7 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setPropertyName("DeleteTempFiles");
      option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
      FilterParameter::Pointer option = FilterParameter::New();
@@ -381,7 +381,7 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setPropertyName("WriteBinaryVTKFiles");
      option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
      FilterParameter::Pointer option = FilterParameter::New();
@@ -389,9 +389,9 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setPropertyName("WriteConformalMesh");
      option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

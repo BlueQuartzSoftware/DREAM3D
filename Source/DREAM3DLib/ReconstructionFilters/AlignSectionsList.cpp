@@ -82,16 +82,16 @@ AlignSectionsList::~AlignSectionsList()
 void AlignSectionsList::setupFilterParameters()
 {
   // Now append our options
-  std::vector<FilterParameter::Pointer> options ;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

@@ -104,7 +104,7 @@ FindShapes::~FindShapes()
 // -----------------------------------------------------------------------------
 void FindShapes::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Distribution Type");
@@ -116,9 +116,9 @@ void FindShapes::setupFilterParameters()
     choices.push_back("LogNormal");
     choices.push_back("Power");
     option->setChoices(choices);
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer)
