@@ -27,6 +27,8 @@ file before running a pipeline
 @subsection statsgen StatsGenerator
 @li Update/Create a user manual for the stats generator - last parts need pasting
 @li Add menu for displaying help
+@li Can not open previously created stats files
+@li Add Kearns Factors for Hexagonal lattice presets.
 
 
 
@@ -43,8 +45,11 @@ or by the QualityMetricFilters
 @section cmu_meshing CMU Surface Meshing
 
 @li Add ability to cancel the Surface Meshing filter
+@li bug in edges file is stopping the use in the smoothing filter
 
+@section mfe_smoothing MFE Smoothing
 
+@li add ability to stop the smoothing
 
 
 
