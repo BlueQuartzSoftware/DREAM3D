@@ -138,7 +138,7 @@ int VTKFileReader::readHeader()
   if (getInputFile().empty() == true)
   {
     setErrorCondition(-1);
-    PipelineMessage em (getNameOfClass(), "FileName was not set and must be valid", -1);
+    PipelineMessage em (getHumanLabel(), "FileName was not set and must be valid", -1);
     addErrorMessage(em);
     return -1;
   }
@@ -146,7 +146,7 @@ int VTKFileReader::readHeader()
   if (NULL == getDataContainer())
   {
     setErrorCondition(-1);
-    PipelineMessage em (getNameOfClass(), "DataContainer Pointer was NULL and must be valid", -1);
+    PipelineMessage em (getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
     addErrorMessage(em);
     return -1;
   }
@@ -212,7 +212,7 @@ int VTKFileReader::readHeader()
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
                 << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
-    addErrorMessage(getNameOfClass(), s.str(), err);
+    addErrorMessage(getHumanLabel(), s.str(), err);
     return err;
   }
 
@@ -223,7 +223,7 @@ int VTKFileReader::readHeader()
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
     s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);
-    addErrorMessage(getNameOfClass(), s.str(), -1);
+    addErrorMessage(getHumanLabel(), s.str(), -1);
     return err;
   }
 

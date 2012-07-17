@@ -158,9 +158,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if(m_InputFile.empty() == true)
   {
-    ss << ": The intput file must be set before executing this filter.\n";
+    ss << "The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
-    addErrorMessage(getNameOfClass(), ss.str(), -800);
+    addErrorMessage(getHumanLabel(), ss.str(), -800);
   }
 
   INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
@@ -175,9 +175,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   addRequiredEnsembleData(DREAM3D::EnsembleData::ShapeTypes);
   if (m_ShapeTypes.get() ==  NULL || m_ShapeTypes->GetNumberOfTuples() == 0)
   {
-    ss << ": No ShapeTypes have been set and a shape type for each phase.\n";
+    ss << "No ShapeTypes have been set and a shape type for each phase.\n";
     setErrorCondition(-801);
-    addErrorMessage(getNameOfClass(), ss.str(), -801);
+    addErrorMessage(getHumanLabel(), ss.str(), -801);
   }
 
 }

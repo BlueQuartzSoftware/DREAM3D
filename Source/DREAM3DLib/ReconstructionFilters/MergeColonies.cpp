@@ -176,9 +176,9 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
-      ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-304);
-      addErrorMessage(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
     }
   }
 

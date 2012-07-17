@@ -195,9 +195,9 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    ss << "Stats Array Not Initialized At Beginning Correctly" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getNameOfClass(), ss.str(), -308);
+    addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
 }
 

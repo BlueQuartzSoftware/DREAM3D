@@ -194,8 +194,8 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 
   if(m_OutputFile.empty() == true)
   {
-    ss << ": The output file must be set before executing this filter.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    ss << "The output file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
@@ -261,7 +261,7 @@ void VtkRectilinearGridWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << ": Error creating parent path '" << parentPath << "'";
+      ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
@@ -346,8 +346,8 @@ void VtkRectilinearGridWriter::execute()
   if (err < 0)
   {
     std::stringstream ss;
-    ss << ": Error writing output vtk file '" << m_OutputFile << "'\n ";
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    ss << "Error writing output vtk file '" << m_OutputFile << "'\n ";
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
   }
 

@@ -84,7 +84,7 @@ namespace Detail {
        int writeFile()
        {
          int err = -1;
-         PipelineMessage em (getNameOfClass(), ".h5voxel output files are NOT currently supported", XXXX);
+         PipelineMessage em (getHumanLabel(), ".h5voxel output files are NOT currently supported", XXXX);
   addErrorMessage(em);
          /*
          int totalpoints = xpoints * ypoints * zpoints;

@@ -99,8 +99,9 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    ss << "Stats Array Not Initialized Correctly" << std::endl;
     setErrorCondition(-308);
+    addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
 }
 

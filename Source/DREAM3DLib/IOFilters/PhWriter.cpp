@@ -121,7 +121,7 @@ int PhWriter::writeFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getNameOfClass(), ss.str(), -2);
+    addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
     return -1;
   }

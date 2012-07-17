@@ -69,17 +69,18 @@ const static float m_pi = static_cast<float>(M_PI);
 CAxisSegmentGrains::CAxisSegmentGrains() :
 SegmentGrains(),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_Active(NULL),
 m_CellPhases(NULL),
+m_GoodVoxels(NULL),
+m_Active(NULL),
 m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -275,7 +276,7 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
     setErrorCondition(-1);
     std::stringstream ss;
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
 

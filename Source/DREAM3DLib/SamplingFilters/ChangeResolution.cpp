@@ -197,5 +197,5 @@ void ChangeResolution::execute()
     IDataArray::Pointer p = m->getCellData(*iter);
     err = p->Resize(totalPoints);
   }
-  notifyStatusMessage("Changing Resolution Complete");
+  notifyStatusMessage("Complete");
 }

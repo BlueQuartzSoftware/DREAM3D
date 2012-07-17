@@ -101,7 +101,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getNameOfClass(), ss.str(), -4);
+    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -135,7 +135,7 @@ int  PhReader::readFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -156,7 +156,7 @@ int  PhReader::readFile()
     std::stringstream ss;
     ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
 
@@ -213,7 +213,7 @@ int  PhReader::readFile()
     ss << "ERROR: data size does not match header dimensions. ";
     ss << "\t" << index << "\t" << nz * nx * ny;
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), 1);
+    addErrorMessage(getHumanLabel(), ss.str(), 1);
     return -1;
     inFile.close();
   }

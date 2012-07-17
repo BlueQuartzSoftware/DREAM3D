@@ -75,8 +75,8 @@ namespace Detail
 PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
-m_WorkerThread(NULL),
 m_MenuPipeline(NULL),
+m_WorkerThread(NULL),
 m_DocErrorTabsIsOpen(false)
 {
   m_OpenDialogLastDirectory = QDir::homePath();

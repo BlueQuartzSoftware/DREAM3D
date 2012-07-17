@@ -149,7 +149,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer* m)
     std::stringstream s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
-    addErrorMessage(getNameOfClass(), s.str(), err);
+    addErrorMessage(getHumanLabel(), s.str(), err);
     return err;
   }
 
@@ -160,7 +160,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer* m)
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
     s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);
-    addErrorMessage(getNameOfClass(), s.str(), err);
+    addErrorMessage(getHumanLabel(), s.str(), err);
     return err;
   }
   return err;
@@ -178,7 +178,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   {
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
   else if (m_H5EbsdFile.empty() == false)
   {
@@ -189,7 +189,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     {
       ss << getHumanLabel() << ": Error reading VolumeInfo from H5Ebsd File";
       setErrorCondition(-1);
-      addErrorMessage(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
       return;
     }
 
@@ -206,7 +206,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     {
       ss << getHumanLabel() << ": Original Data source could not be determined. It should be TSL or HKL";
       setErrorCondition(-1);
-      addErrorMessage(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
       return;
     }
   }
@@ -230,7 +230,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   {
     ss << getHumanLabel() << ": Original Data source could not be determined. It should be TSL or HKL";
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
 
@@ -278,7 +278,7 @@ void ReadH5Ebsd::execute()
   {
     setErrorCondition(-1);
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
   int err = 0;
@@ -308,7 +308,7 @@ void ReadH5Ebsd::execute()
       std::stringstream s;
       s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
       setErrorCondition(err);
-      addErrorMessage(getNameOfClass(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
       return;
     }
 
@@ -319,7 +319,7 @@ void ReadH5Ebsd::execute()
       s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
       s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
       setErrorCondition(err);
-      addErrorMessage(getNameOfClass(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -340,7 +340,7 @@ void ReadH5Ebsd::execute()
     if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
-      PipelineMessage em (getNameOfClass(), "Could not Create H5AngVolumeReader object.", -1);
+      PipelineMessage em (getHumanLabel(), "Could not Create H5AngVolumeReader object.", -1);
       addErrorMessage(em);
       return;
     }
@@ -349,7 +349,7 @@ void ReadH5Ebsd::execute()
     if(err < 0)
     {
       setErrorCondition(-1);
-      PipelineMessage em (getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
+      PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
       addErrorMessage(em);
       return;
     }
@@ -360,7 +360,7 @@ void ReadH5Ebsd::execute()
     if(NULL == ebsdReader)
     {
       setErrorCondition(-1);
-      PipelineMessage em (getNameOfClass(), "Could not Create H5CtfVolumeReader object.", -1);
+      PipelineMessage em (getHumanLabel(), "Could not Create H5CtfVolumeReader object.", -1);
       addErrorMessage(em);
       return;
     }
@@ -369,7 +369,7 @@ void ReadH5Ebsd::execute()
     if(err < 0)
     {
       setErrorCondition(-1);
-      PipelineMessage em (getNameOfClass(), "Could not read information about the Ebsd Volume.", -1);
+      PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
       addErrorMessage(em);
       return;
     }
@@ -380,7 +380,7 @@ void ReadH5Ebsd::execute()
     std::string msg("Could not determine or match a supported manufacturer from the data file.");
     msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
     msg = msg.append(" and ").append(Ebsd::Ang::Manufacturer);
-    addErrorMessage(getNameOfClass(), msg, -1);
+    addErrorMessage(getHumanLabel(), msg, -1);
     return;
   }
 
@@ -406,7 +406,7 @@ void ReadH5Ebsd::execute()
   if(err < 0)
   {
     setErrorCondition(err);
-    PipelineMessage em (getNameOfClass(), "Error Loading Data from Ebsd Data file.", -1);
+    PipelineMessage em (getHumanLabel(), "Error Loading Data from Ebsd Data file.", -1);
     addErrorMessage(em);
     return;
   }
@@ -522,7 +522,7 @@ void ReadH5Ebsd::execute()
     std::string msg("Could not determine or match a supported manufacturer from the data file.");
     msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
     msg = msg.append(" and ").append(Ebsd::Ang::Manufacturer);
-    addErrorMessage(getNameOfClass(), msg, -10001);
+    addErrorMessage(getHumanLabel(), msg, -10001);
     return;
   }
 
@@ -542,7 +542,7 @@ void ReadH5Ebsd::execute()
     if(err < 0)
     {
       setErrorCondition(err);
-      addErrorMessage(getNameOfClass(), "Error Filtering Ebsd Data.", err);
+      addErrorMessage(getHumanLabel(), "Error Filtering Ebsd Data.", err);
       return;
     }
     filter = DetermineGoodVoxels::NullPointer(); // Clean up some memory

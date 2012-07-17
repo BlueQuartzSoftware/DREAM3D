@@ -97,7 +97,7 @@ void FieldDataCSVWriter::preflight()
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
 }
@@ -123,7 +123,7 @@ void FieldDataCSVWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << ": Error creating parent path '" << parentPath << "'";
+      ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;

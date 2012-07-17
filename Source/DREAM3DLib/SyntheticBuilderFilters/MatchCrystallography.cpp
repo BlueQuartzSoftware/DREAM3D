@@ -160,15 +160,19 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
-      ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      ss.str("");
+      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-305);
+      addErrorMessage(getHumanLabel(), ss.str(), -305);
     }
     m_SharedSurfaceAreaList =
         NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
-      ss << "SurfaceAreaLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      ss.str("");
+      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-306);
+      addErrorMessage(getHumanLabel(), ss.str(), -306);
     }
   }
 
@@ -194,9 +198,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    ss.str("");
+    ss << "Stats Array Not Initialized correctly" << std::endl;
     setErrorCondition(-310);
-    addErrorMessage(getNameOfClass(), ss.str(), -310);
+    addErrorMessage(getHumanLabel(), ss.str(), -310);
   }
 }
 
