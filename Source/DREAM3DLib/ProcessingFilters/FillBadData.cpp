@@ -254,22 +254,22 @@ void FillBadData::execute()
 		}
   }
 
-  std::vector<int > n(numgrains + 1);
-  int cycle = 0;
+  int grainname, grain;
+  int current = 0;
+  int most = 0;
+
+  std::vector<int > n(numgrains + 1,0);
   while (count != 0)
   {
     count = 0;
-	  std::stringstream ss;
-	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << cycle << " - Count - " << count;
-	  cycle++;
-	  notifyStatusMessage(ss.str());
     for (int i = 0; i < totalPoints; i++)
     {
-      int grainname = m_GrainIds[i];
+      grainname = m_GrainIds[i];
       if (grainname < 0)
       {
         count++;
-		n.resize(numgrains+1,0);
+		current = 0;
+		most = 0;
 		x = static_cast<float>(i % dims[0]);
         y = static_cast<float>((i / dims[0]) % dims[1]);
         z = static_cast<float>(i / (dims[0] * dims[1]));
@@ -285,44 +285,53 @@ void FillBadData::execute()
           if (j == 3 && x == (dims[0] - 1)) good = 0;
           if (good == 1)
           {
-            int grain = m_GrainIds[neighpoint];
-			if (grain >= 0)
+            grain = m_GrainIds[neighpoint];
+			if (grain > 0)
             {
-              neighs.push_back(grain);
-            }
-          }
-        }
-        int current = 0;
-        int most = 0;
-        int curgrain = 0;
-        int size = int(neighs.size());
-        for (int k = 0; k < size; k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-          if (current > most)
-          {
-            most = current;
-            curgrain = neighbor;
-          }
-        }
-        if (size > 0)
-        {
-          m_Neighbors[i] = curgrain;
-          neighs.clear();
-        }
-		n.clear();
+				n[grain]++;
+				current = n[grain];
+				if (current > most)
+				{
+					most = current;
+//				    m_Neighbors[i] = grain;
+					m_Neighbors[i] = neighpoint;
+				}
+			}
+		  }
+		}
+		for (int l = 0; l < 6; l++)
+		{
+//		  good = 1;
+          neighpoint = i + neighpoints[l];
+		  if (l == 0 && z == 0) good = 0;
+		  if (l == 5 && z == (dims[2] - 1)) good = 0;
+		  if (l == 1 && y == 0) good = 0;
+		  if (l == 4 && y == (dims[1] - 1)) good = 0;
+		  if (l == 2 && x == 0) good = 0;
+		  if (l == 3 && x == (dims[0] - 1)) good = 0;
+		  if (good == 1)
+		  {
+			grain = m_GrainIds[neighpoint];
+			if(grain > 0) n[grain] = 0;
+		  }
+		}
       }
     }
+    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
     {
-      int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor > 0)
+      grainname = m_GrainIds[j];
+      neighbor = m_Neighbors[j];
+      if (grainname < 0 && m_GrainIds[neighbor] > 0)
       {
-        m_GrainIds[j] = neighbor;
-		    m_CellPhases[j] = m_FieldPhases[neighbor];
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
+          }
+//		  m_GrainIds[j] = neighbor;
+//		  m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;

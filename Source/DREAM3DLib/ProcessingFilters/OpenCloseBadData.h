@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, NumIterations)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Open/Close Bad Data"; }
+    virtual const std::string getHumanLabel() { return "Erode/Dilate Bad Data"; }
 
     virtual void setupFilterOptions();
     virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
