@@ -87,7 +87,7 @@ m_NumFields(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -100,26 +100,26 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::setupFilterOptions()
+void GroupMicroTextureRegions::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("C-Axis Alignment Tolerance");
     option->setPropertyName("CAxisTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
 }
@@ -167,9 +167,9 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
-      ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-304);
-      addErrorMessage(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
     }
   }
 

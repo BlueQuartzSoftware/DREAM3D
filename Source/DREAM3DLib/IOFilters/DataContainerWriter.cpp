@@ -44,7 +44,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/H5FilterOptionsWriter.h"
+#include "DREAM3DLib/Common/H5FilterParametersWriter.h"
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
@@ -59,7 +59,7 @@ DataContainerWriter::DataContainerWriter() :
 AbstractFilter(),
 m_FileId(-1)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -73,24 +73,24 @@ DataContainerWriter::~DataContainerWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::setupFilterOptions()
+void DataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }
@@ -106,7 +106,7 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
   if (m_OutputFile.empty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
@@ -158,7 +158,7 @@ void DataContainerWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << ": Error creating parent path '" << parentPath << "'";
+      ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
@@ -172,7 +172,7 @@ void DataContainerWriter::execute()
     ss.str("");
     ss <<  ": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_OutputFile<< "]";
     setErrorCondition(-59);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
 
@@ -183,7 +183,7 @@ void DataContainerWriter::execute()
     ss.str("");
     ss << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     setErrorCondition(-60);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
   dcGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.c_str(), H5P_DEFAULT );
@@ -192,7 +192,7 @@ void DataContainerWriter::execute()
     ss.str("");
     ss << "Error opening Group " << DREAM3D::HDF5::DataContainerName << std::endl;
     setErrorCondition(-61);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
 
@@ -203,7 +203,7 @@ void DataContainerWriter::execute()
     ss.str("");
     ss <<  ":Error Writing header information to output file" << std::endl;
     setErrorCondition(-62);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
@@ -229,7 +229,7 @@ void DataContainerWriter::execute()
     return;
   }
 
-  H5FilterOptionsWriter::Pointer optionsWriter = H5FilterOptionsWriter::New();
+  H5FilterParametersWriter::Pointer optionsWriter = H5FilterParametersWriter::New();
   hid_t pipelineGroupId = H5Utilities::createGroup(dcGid, DREAM3D::HDF5::PipelineGroupName);
   optionsWriter->setGroupId(pipelineGroupId);
 
@@ -237,12 +237,12 @@ void DataContainerWriter::execute()
   while (preFilter.get() != NULL)
   {
 	  optionsWriter->openOptionsGroup(preFilter.get());
-    preFilter->writeFilterOptions(optionsWriter.get());
+    preFilter->writeFilterParameters(optionsWriter.get());
     optionsWriter->closeOptionsGroup();
     preFilter = preFilter->getPreviousFilter();
   }
   optionsWriter->openOptionsGroup(this);
-  writeFilterOptions(optionsWriter.get());
+  writeFilterParameters(optionsWriter.get());
   optionsWriter->closeOptionsGroup();
 
   H5Gclose(pipelineGroupId);
@@ -358,7 +358,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
     ss.str("");
     ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-63);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -368,7 +368,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
     ss.str("");
     ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-64);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -381,7 +381,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getNameOfClass(), ss.str(), err);
+      addErrorMessage(getHumanLabel(), ss.str(), err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group
@@ -421,7 +421,7 @@ int DataContainerWriter::writeFieldData(hid_t dcGid)
     ss.str("");
     ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-65);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -434,7 +434,7 @@ int DataContainerWriter::writeFieldData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing field array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getNameOfClass(), ss.str(), err);
+      addErrorMessage(getHumanLabel(), ss.str(), err);
       setErrorCondition(err);
       H5Gclose(fieldGroupId); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group
@@ -462,7 +462,7 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
     ss.str("");
     ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-66);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -474,7 +474,7 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
     ss.str("");
     ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-67);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -487,7 +487,7 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getNameOfClass(), ss.str(), err);
+      addErrorMessage(getHumanLabel(), ss.str(), err);
       setErrorCondition(err);
       H5Gclose(ensembleGid); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group

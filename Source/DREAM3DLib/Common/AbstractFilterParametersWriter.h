@@ -33,64 +33,62 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef H5FILTEROPTIONSWRITER_H_
-#define H5FILTEROPTIONSWRITER_H_
 
-#include "hdf5.h"
+#ifndef _AbstractFilterParametersWriter_H_
+#define _AbstractFilterParametersWriter_H_
 
 #include <string>
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/QualityMetricFilter.h"
+class AbstractFilter;
+class QualityMetricFilter;
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "AbstractFilterOptionsWriter.h"
-#include "QualityMetricFilter.h"
 
-/*
- *
+class AbstractFilter;
+class QualityMetricFilter;
+
+/**
+ * @class AbstractFilterParametersWriter AbstractFilterParametersWriter.h DREAM3DLib/Common/AbstractFilterParametersWriter.h
+ * @brief This class writes the various parameters of a filter to an output file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 17, 2012
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT H5FilterOptionsWriter : public AbstractFilterOptionsWriter
+class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(H5FilterOptionsWriter)
-    DREAM3D_STATIC_NEW_MACRO(H5FilterOptionsWriter)
-    DREAM3D_TYPE_MACRO_SUPER(H5FilterOptionsWriter, AbstractFilterOptionsWriter)
+ //   DREAM3D_SHARED_POINTERS(AbstractFilterParametersWriter)
+  //  DREAM3D_STATIC_NEW_MACRO(AbstractFilterParametersWriter)
+    DREAM3D_TYPE_MACRO(AbstractFilterParametersWriter)
 
 
-    virtual ~H5FilterOptionsWriter();
+    virtual ~AbstractFilterParametersWriter();
 
-    DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId)
+    virtual int openOptionsGroup(AbstractFilter* filter) = 0;
+    virtual int closeOptionsGroup() = 0;
 
-    virtual int openOptionsGroup(AbstractFilter* filter);
-    virtual int closeOptionsGroup();
+    virtual int writeValue(const std::string name, const std::string value) = 0;
 
-    virtual int writeValue(const std::string name, const std::string value);
+    virtual int writeValue(const std::string name, int8_t value) = 0;
+    virtual int writeValue(const std::string name, int16_t value) = 0;
+    virtual int writeValue(const std::string name, int32_t value) = 0;
+    virtual int writeValue(const std::string name, int64_t value) = 0;
+    virtual int writeValue(const std::string name, uint8_t value) = 0;
+    virtual int writeValue(const std::string name, uint16_t value) = 0;
+    virtual int writeValue(const std::string name, uint32_t value) = 0;
+    virtual int writeValue(const std::string name, uint64_t value) = 0;
+    virtual int writeValue(const std::string name, float value) = 0;
+    virtual int writeValue(const std::string name, double value) = 0;
 
-    virtual int writeValue(const std::string name, int8_t value);
-    virtual int writeValue(const std::string name, int16_t value);
-    virtual int writeValue(const std::string name, int32_t value);
-    virtual int writeValue(const std::string name, int64_t value);
-    virtual int writeValue(const std::string name, uint8_t value);
-    virtual int writeValue(const std::string name, uint16_t value);
-    virtual int writeValue(const std::string name, uint32_t value);
-    virtual int writeValue(const std::string name, uint64_t value);
-    virtual int writeValue(const std::string name, float value);
-    virtual int writeValue(const std::string name, double value);
-
-    virtual int writeValue(const std::string name, QualityMetricFilter* f);
+    virtual int writeValue(const std::string name, QualityMetricFilter* f) = 0;
 
   protected:
-    H5FilterOptionsWriter();
+    AbstractFilterParametersWriter();
 
   private:
-    hid_t m_CurrentGroupId;
-
-
-    H5FilterOptionsWriter(const H5FilterOptionsWriter&); // Copy Constructor Not Implemented
-    void operator=(const H5FilterOptionsWriter&); // Operator '=' Not Implemented
+    AbstractFilterParametersWriter(const AbstractFilterParametersWriter&); // Copy Constructor Not Implemented
+    void operator=(const AbstractFilterParametersWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* H5FILTEROPTIONSWRITER_H_ */
+#endif /* _AbstractFilterParametersWriter_H_ */

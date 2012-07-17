@@ -55,7 +55,7 @@ using namespace meshing;
 SMVtkPolyDataWriter::SMVtkPolyDataWriter() :
     AbstractFilter(), m_WriteBinaryFile(false), m_WriteConformalMesh(true)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -74,57 +74,57 @@ void SMVtkPolyDataWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SMVtkPolyDataWriter::setupFilterOptions()
+void SMVtkPolyDataWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Nodes File");
     option->setPropertyName("NodesFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Triangles File");
     option->setPropertyName("TrianglesFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Vtk File");
     option->setPropertyName("OutputVtkFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Binary Vtk File");
     option->setPropertyName("WriteBinaryFile");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Conformal Mesh");
     option->setPropertyName("WriteConformalMesh");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SMVtkPolyDataWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void SMVtkPolyDataWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("NodesFile", getNodesFile());
   writer->writeValue("TrianglesFile", getTrianglesFile());
@@ -346,7 +346,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << "Error opening nodes file '" << m_NodesFile << "'";
     setErrorCondition(-1);
-    PipelineMessage em (getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em);
     return;
@@ -363,7 +363,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after nodes count.'" << m_NodesFile << "'";
     setErrorCondition(-1);
-    PipelineMessage em (getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em);
     return;
@@ -379,7 +379,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error opening Triangles file '" << triFile << "'";
     setErrorCondition(-1);
-    PipelineMessage em (getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em);
     return;
@@ -395,7 +395,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error Could not rewind to beginning of file after triangles count.'" << m_TrianglesFile << "'";
     setErrorCondition(-1);
-    PipelineMessage em (getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em);
     return;
@@ -413,7 +413,7 @@ void SMVtkPolyDataWriter::execute()
     s.str("");
     s << getNameOfClass() << ": Error creating Triangles VTK Visualization '" << m_OutputVtkFile << "'";
     setErrorCondition(-1);
-    PipelineMessage em (getNameOfClass(), s.str(), -1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
     addErrorMessage(em);
     notifyMessage(em);
     return;

@@ -67,7 +67,7 @@ m_StatsDataArray(NULL)
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
-  setupFilterOptions();
+  setupFilterParameters();
 
 }
 
@@ -78,7 +78,7 @@ FindODF::~FindODF()
 {
 }
 // -----------------------------------------------------------------------------
-void FindODF::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindODF::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

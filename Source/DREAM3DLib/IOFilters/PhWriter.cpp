@@ -50,7 +50,7 @@ FileWriter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -64,21 +64,21 @@ PhWriter::~PhWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhWriter::setupFilterOptions()
+void PhWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void PhWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }
@@ -121,7 +121,7 @@ int PhWriter::writeFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getNameOfClass(), ss.str(), -2);
+    addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
     return -1;
   }

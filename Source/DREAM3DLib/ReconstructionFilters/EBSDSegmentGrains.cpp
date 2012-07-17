@@ -70,17 +70,18 @@ const static float m_pi = static_cast<float>(M_PI);
 EBSDSegmentGrains::EBSDSegmentGrains() :
 SegmentGrains(),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_Active(NULL),
 m_CellPhases(NULL),
+m_GoodVoxels(NULL),
+m_Active(NULL),
 m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -90,7 +91,7 @@ m_CrystalStructures(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,35 +105,35 @@ EBSDSegmentGrains::~EBSDSegmentGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::setupFilterOptions()
+void EBSDSegmentGrains::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");
     option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #if 0
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Randomly Reorder Generated Grain Ids");
     option->setPropertyName("RandomizeGrainIds");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #endif
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
@@ -277,7 +278,7 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
     setErrorCondition(-1);
     std::stringstream ss;
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
 

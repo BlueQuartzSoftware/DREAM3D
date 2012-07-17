@@ -81,8 +81,8 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(UInt32ArrayType::Pointer, ShapeTypes)
 
 
-    virtual void setupFilterOptions();
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     virtual void preflight();
 

@@ -54,7 +54,7 @@ const static float m_pi = static_cast<float>(M_PI);
 FieldDataCSVWriter::FieldDataCSVWriter() :
 AbstractFilter()
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -66,24 +66,24 @@ FieldDataCSVWriter::~FieldDataCSVWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldDataCSVWriter::setupFilterOptions()
+void FieldDataCSVWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("FieldDataFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldDataCSVWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("FieldDataFile", getFieldDataFile() );
 }
@@ -97,7 +97,7 @@ void FieldDataCSVWriter::preflight()
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
 }
@@ -123,7 +123,7 @@ void FieldDataCSVWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << ": Error creating parent path '" << parentPath << "'";
+      ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;

@@ -88,7 +88,7 @@ m_NumFields(NULL)
   m_OrientationOps.push_back(m_CubicOps.get());
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
-  setupFilterOptions();
+  setupFilterParameters();
 
 
 }
@@ -103,35 +103,35 @@ MergeTwins::~MergeTwins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeTwins::setupFilterOptions()
+void MergeTwins::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Axis Tolerance");
     option->setPropertyName("AxisTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Angle Tolerance");
     option->setPropertyName("AngleTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeTwins::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
@@ -179,9 +179,9 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
-      ss << "NeighborLists Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+      ss << "NeighborLists Array Not Initialized Correctly" << std::endl;
       setErrorCondition(-304);
-      addErrorMessage(getNameOfClass(), ss.str(), -304);
+      addErrorMessage(getHumanLabel(), ss.str(), -304);
     }
   }
 

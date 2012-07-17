@@ -55,7 +55,7 @@ m_XRes(1.0f),
 m_YRes(1.0f),
 m_ZRes(1.0f)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -68,39 +68,39 @@ ChangeResolution::~ChangeResolution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeResolution::setupFilterOptions()
+void ChangeResolution::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Res");
     option->setPropertyName("XRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Res");
     option->setPropertyName("YRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Res");
     option->setPropertyName("ZRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 
 // -----------------------------------------------------------------------------
-void ChangeResolution::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("XRes", getXRes() );
   writer->writeValue("YRes", getYRes() );
@@ -197,5 +197,5 @@ void ChangeResolution::execute()
     IDataArray::Pointer p = m->getCellData(*iter);
     err = p->Resize(totalPoints);
   }
-  notifyStatusMessage("Changing Resolution Complete");
+  notifyStatusMessage("Complete");
 }

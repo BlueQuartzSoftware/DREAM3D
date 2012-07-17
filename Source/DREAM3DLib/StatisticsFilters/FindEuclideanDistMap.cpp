@@ -226,7 +226,7 @@ FindEuclideanDistMap::~FindEuclideanDistMap()
 }
 
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

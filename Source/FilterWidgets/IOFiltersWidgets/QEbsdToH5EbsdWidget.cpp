@@ -66,13 +66,9 @@
 QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
 QFilterWidget(parent),
 m_RotateSlice(true),
-m_ReorderArray(true),
-#if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
-#else
-m_OpenDialogLastDirectory("~/")
-#endif
+m_ReorderArray(true)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   setupGui();
@@ -226,23 +222,15 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   // Run the input dir FIRST as the side effect of running this will be resetting much of the user
   // interface widgets to their default values. We then get the values from the prefs object
   // and populate the user interface widgets
-  READ_FILEPATH_SETTING(prefs, m_, InputDir, ""); 
-
+  READ_FILEPATH_SETTING(prefs, m_, InputDir, "");
 
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
-
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
-
   READ_SETTING(prefs, m_, TotalDigits, ok, i, 4 , Int);
-
   READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
-
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
-
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
-
   READ_STRING_SETTING(prefs, m_, FileExt, "ang");
-
   READ_FILEPATH_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
 }
 
@@ -261,20 +249,20 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, zSpacing)
   WRITE_STRING_SETTING(prefs, m_, TotalDigits)
   WRITE_STRING_SETTING(prefs, m_, OutputFile)
-
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 {
-  verifyPathExists(text, m_OutputFile);
+  if (verifyPathExists(text, m_OutputFile) == true )
+  {
+    QFileInfo fi(text);
+    m_OpenDialogLastDirectory = fi.path();
+  }
   emit parametersChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //

@@ -121,7 +121,7 @@ m_ShapeTypes(NULL)
   m_OrientationOps.push_back(m_OrthoOps.get());
 
   Seed = MXA::getMilliSeconds();
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -134,31 +134,31 @@ PackPrimaryPhases::~PackPrimaryPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::setupFilterOptions()
+void PackPrimaryPhases::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Neighborhood Error Weight");
     option->setPropertyName("NeighborhoodErrorWeight");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
     option->setPropertyName("PeriodicBoundaries");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("NeighborhoodErrorWeight", getNeighborhoodErrorWeight() );
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
@@ -195,9 +195,10 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    ss.str("");
+    ss << "Stats Array Not Initialized correctly" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
 
 }
@@ -295,10 +296,10 @@ void PackPrimaryPhases::execute()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       if (NULL == pp)
       {
-        ss << ": Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
+        ss << "Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
         ss << "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[" << i << "] = " << m_PhaseTypes[i] <<  " does not match up ";
         ss << "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n";
-        PipelineMessage em (getNameOfClass(), ss.str(), -666);
+        PipelineMessage em (getHumanLabel(), ss.str(), -666);
         addErrorMessage(em);
         setErrorCondition(-666);
         return;
@@ -678,7 +679,7 @@ int PackPrimaryPhases::writeVtkFile()
   if(outFile.is_open() == false)
   {
     std::cout << "m_VtkOutputFile: " << m_VtkOutputFile << std::endl;
-    PipelineMessage em (getNameOfClass(), "Could not open Vtk File for writing from PackGrains", -1);
+    PipelineMessage em (getHumanLabel(), "Could not open Vtk File for writing from PackGrains", -1);
     addErrorMessage(em);
     setErrorCondition(-55);
     return -1;

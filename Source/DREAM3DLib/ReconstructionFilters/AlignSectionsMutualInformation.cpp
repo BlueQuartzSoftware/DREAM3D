@@ -90,7 +90,7 @@ m_CrystalStructures(NULL)
 
   graincounts = NULL;
   INIT_DataArray(m_GrainCounts, int);
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -103,30 +103,30 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::setupFilterOptions()
+void AlignSectionsMutualInformation::setupFilterParameters()
 {
   // Run the superclass first.
-  //AlignSections::setupFilterOptions();
+  //AlignSections::setupFilterParameters();
   // Now append our options
-  std::vector<FilterOption::Pointer> options = getFilterOptions();
+  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
     option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  AlignSections::writeFilterOptions(writer);
+  AlignSections::writeFilterParameters(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
 
@@ -142,7 +142,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    ss << ": The Alignment Shift file name must be set before executing this filter.";
+    ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
   }
 
