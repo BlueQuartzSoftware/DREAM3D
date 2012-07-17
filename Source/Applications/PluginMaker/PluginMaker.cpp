@@ -787,6 +787,8 @@ void PluginMaker::previewFile(QString rTemplate, QString fileName) {
       QFileInfo fi(fileName);
       QString className = fi.baseName();
       text.replace("@ClassName@", className);
+      text.replace("@HTML_FILE_NAME@", fileName);
+
       m_fileEditor->setPlainText(text);
     }
 }
